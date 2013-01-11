@@ -1,0 +1,1 @@
+CREATE DOMAIN TLongVarChar varchar(255);
