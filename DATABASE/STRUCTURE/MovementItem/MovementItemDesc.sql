@@ -1,20 +1,16 @@
 /*
   Создание 
-    - таблицы ObjectDesc (классы oбъектов)
+    - таблицы MovementItemDesc (классы перемещений)
+    - cвязей
     - индексов
 */
 
 /*-------------------------------------------------------------------------------*/
 
-CREATE TABLE ObjectDesc(
+CREATE TABLE MovementItemDesc(
    Id                    INTEGER NOT NULL PRIMARY KEY, 
    Code                  TVarChar NOT NULL UNIQUE,
-   ItemName              TVarChar,
-   MainCode              TVarChar,
-   MainCodeItemName      TVarChar,
-   ValueDataCode         TVarChar,
-   ValueDataItemName     TVarChar,
-   isErased              TVarChar);
+   ItemName              TVarChar);
 
 
 /*-------------------------------------------------------------------------------*/
@@ -22,9 +18,9 @@ CREATE TABLE ObjectDesc(
 /*                                  Индексы                                      */
 
 
-CREATE UNIQUE INDEX ObjectDesc_Code ON ObjectDesc(Code);
+CREATE UNIQUE INDEX MovementItemDesc_Code ON MovementItemDesc(Code);
+CLUSTER MovementItemDesc_Code ON MovementItemDesc;  
 
-CLUSTER ObjectDesc_Code ON ObjectDesc; 
 
 
 /*
@@ -32,6 +28,7 @@ CLUSTER ObjectDesc_Code ON ObjectDesc;
  ИСТОРИЯ РАЗРАБОТКИ:
  ДАТА         АВТОР
  ----------------
-                 Климентьев К.И.   Кухтин И.В.   
-13.06.02                                         
+                 Климентьев К.И.   Кухтин И.В.  
+18.06.02                                        
+19.09.02                                        
 */

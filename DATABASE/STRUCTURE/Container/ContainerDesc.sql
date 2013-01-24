@@ -1,30 +1,23 @@
 /*
   Создание 
-    - таблицы ObjectDesc (классы oбъектов)
+    - таблицы ContainerDesc ()
+    - связей
     - индексов
 */
 
 /*-------------------------------------------------------------------------------*/
-
-CREATE TABLE ObjectDesc(
+CREATE TABLE ContainerDesc(
    Id                    INTEGER NOT NULL PRIMARY KEY, 
    Code                  TVarChar NOT NULL UNIQUE,
-   ItemName              TVarChar,
-   MainCode              TVarChar,
-   MainCodeItemName      TVarChar,
-   ValueDataCode         TVarChar,
-   ValueDataItemName     TVarChar,
-   isErased              TVarChar);
-
+   ItemName              TVarChar);
 
 /*-------------------------------------------------------------------------------*/
 
 /*                                  Индексы                                      */
 
 
-CREATE UNIQUE INDEX ObjectDesc_Code ON ObjectDesc(Code);
-
-CLUSTER ObjectDesc_Code ON ObjectDesc; 
+CREATE UNIQUE INDEX ContainerDesc_Code ON ContainerDesc(Code);
+CLUSTER ContainerDesc_Code ON ContainerDesc;
 
 
 /*
@@ -33,5 +26,6 @@ CLUSTER ObjectDesc_Code ON ObjectDesc;
  ДАТА         АВТОР
  ----------------
                  Климентьев К.И.   Кухтин И.В.   
-13.06.02                                         
+18.06.02                                         
+01.07.02                                         
 */

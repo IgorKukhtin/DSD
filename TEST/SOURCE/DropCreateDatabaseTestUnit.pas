@@ -49,7 +49,6 @@ begin
   ZConnection.Connected := true;
   ZQuery := TZQuery.Create(nil);
   ZQuery.Connection := ZConnection;
-
 end;
 
 procedure TDropCreateDataBase.TearDown;
