@@ -13,4 +13,18 @@ object Form1: TForm1
   OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
+  object ZConnection1: TZConnection
+    ControlsCodePage = cCP_UTF16
+    UTF8StringsAsWideField = True
+    Port = 0
+    Left = 496
+    Top = 184
+  end
+  object ZConnection2: TZConnection
+    ControlsCodePage = cCP_UTF16
+    UTF8StringsAsWideField = True
+    Port = 0
+    Left = 128
+    Top = 64
+  end
 end

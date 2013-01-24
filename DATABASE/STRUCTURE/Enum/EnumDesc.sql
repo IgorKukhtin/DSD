@@ -1,20 +1,17 @@
 /*
   Создание 
-    - таблицы ObjectDesc (классы oбъектов)
+    - таблицы EnumDesc (классы перечислимые типы)
+    - связи
     - индексов
 */
 
+
 /*-------------------------------------------------------------------------------*/
 
-CREATE TABLE ObjectDesc(
+CREATE TABLE EnumDesc(
    Id                    INTEGER NOT NULL PRIMARY KEY, 
    Code                  TVarChar NOT NULL UNIQUE,
-   ItemName              TVarChar,
-   MainCode              TVarChar,
-   MainCodeItemName      TVarChar,
-   ValueDataCode         TVarChar,
-   ValueDataItemName     TVarChar,
-   isErased              TVarChar);
+   ItemName              TVarChar);
 
 
 /*-------------------------------------------------------------------------------*/
@@ -22,9 +19,9 @@ CREATE TABLE ObjectDesc(
 /*                                  Индексы                                      */
 
 
-CREATE UNIQUE INDEX ObjectDesc_Code ON ObjectDesc(Code);
+CREATE UNIQUE INDEX EnumDesc_Code ON EnumDesc(Code);
 
-CLUSTER ObjectDesc_Code ON ObjectDesc; 
+CLUSTER EnumDesc_Code ON EnumDesc 
 
 
 /*
@@ -33,5 +30,5 @@ CLUSTER ObjectDesc_Code ON ObjectDesc;
  ДАТА         АВТОР
  ----------------
                  Климентьев К.И.   Кухтин И.В.   
-13.06.02                                         
+13.06.02                                              
 */

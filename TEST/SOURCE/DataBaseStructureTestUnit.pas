@@ -16,7 +16,12 @@ type
     procedure TearDown; override;
   published
     procedure CreateType;
+    procedure CreateEnum;
     procedure CreateObject;
+    procedure CreateContainer;
+    procedure CreateObjectFunction;
+    procedure CreateObjectDesc;
+    procedure CreateConstantObject;
   end;
 
 implementation
@@ -25,12 +30,75 @@ implementation
 
 const
   StructurePath = '..\DATABASE\STRUCTURE\';
+  ProcedurePath = '..\DATABASE\PROCEDURE\';
+  MetadataPath = '..\DATABASE\METADATA\';
+
+procedure TCheckDataBaseStructure.CreateConstantObject;
+begin
+
+end;
+
+procedure TCheckDataBaseStructure.CreateContainer;
+begin
+  ZQuery.SQL.LoadFromFile(StructurePath + 'Container\ContainerDesc.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(StructurePath + 'Container\Container.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(StructurePath + 'Container\ContainerLinkObject.sql');
+  ZQuery.ExecSQL;
+end;
+
+procedure TCheckDataBaseStructure.CreateEnum;
+begin
+  ZQuery.SQL.LoadFromFile(StructurePath + 'Enum\EnumDesc.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(StructurePath + 'Enum\Enum.sql');
+  ZQuery.ExecSQL;
+end;
 
 procedure TCheckDataBaseStructure.CreateObject;
 begin
   ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectDesc.sql');
   ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Object\Objects.sql');
+  ZQuery.SQL.LoadFromFile(StructurePath + 'Object\Object.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectStringDesc.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectString.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectEnumDesc.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectEnum.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectFloatDesc.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectFloat.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectLinkDesc.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectLink.sql');
+  ZQuery.ExecSQL;
+end;
+
+procedure TCheckDataBaseStructure.CreateObjectDesc;
+begin
+  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateObjectDescFunction.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateObjectStringDescFunction.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertObjectDesc.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertObjectStringDesc.sql');
+  ZQuery.ExecSQL;
+end;
+
+procedure TCheckDataBaseStructure.CreateObjectFunction;
+begin
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdateObject.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdateObjectString.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_User\gpInsertUpdateUser.sql');
   ZQuery.ExecSQL;
 end;
 
@@ -52,7 +120,6 @@ begin
   ZConnection.Connected := true;
   ZQuery := TZQuery.Create(nil);
   ZQuery.Connection := ZConnection;
-
 end;
 
 procedure TCheckDataBaseStructure.TearDown;

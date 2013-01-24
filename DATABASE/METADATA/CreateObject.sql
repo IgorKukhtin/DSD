@@ -1,0 +1,1 @@
+select gpInsertUpdateUser (0, 'Admin', 'admin', 'admin');
