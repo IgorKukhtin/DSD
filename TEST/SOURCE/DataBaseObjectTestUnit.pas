@@ -98,10 +98,10 @@ procedure TDataBaseObjectTest.UserTest;
 var Id: integer;
 begin
   Id := -1;
-
   // Вставка пользователя
   InsertUpdateUser(Id, 'UserName', 'Login', 'Password');
 
+  // Получение данных о пользователе
   Check(Id = -1);
 
   // Изменение пользователя
