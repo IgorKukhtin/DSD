@@ -1,5 +1,5 @@
 ﻿INSERT INTO ObjectStringDesc (id, objectdescid, itemname)
-VALUES (zc_user_password(), zc_user(), 'Password');
+VALUES (zc_object_user_password(), zc_object_user(), 'Password');
 
 INSERT INTO ObjectStringDesc (id, objectdescid, itemname)
-VALUES (zc_user_login(), zc_user(), 'Login');
+VALUES (zc_object_user_login(), zc_object_user(), 'Login');

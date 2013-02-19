@@ -35,7 +35,8 @@ const
 
 procedure TCheckDataBaseStructure.CreateConstantObject;
 begin
-
+  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateObject.sql');
+  ZQuery.ExecSQL;
 end;
 
 procedure TCheckDataBaseStructure.CreateContainer;
@@ -53,6 +54,13 @@ begin
   ZQuery.SQL.LoadFromFile(StructurePath + 'Enum\EnumDesc.sql');
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(StructurePath + 'Enum\Enum.sql');
+  ZQuery.ExecSQL;
+
+  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateEnumDescFunction.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertEnumDesc.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateEnum.sql');
   ZQuery.ExecSQL;
 end;
 
@@ -86,19 +94,39 @@ begin
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateObjectStringDescFunction.sql');
   ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateObjectEnumDescFunction.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateObjectLinkDescFunction.sql');
+  ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertObjectDesc.sql');
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertObjectStringDesc.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertObjectEnumDesc.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertObjectLinkDesc.sql');
   ZQuery.ExecSQL;
 end;
 
 procedure TCheckDataBaseStructure.CreateObjectFunction;
 begin
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdateObject.sql');
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_Object.sql');
   ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdateObjectString.sql');
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_ObjectString.sql');
   ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_User\gpInsertUpdateUser.sql');
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_ObjectEnum.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_ObjectLink.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_User\gpInsertUpdate_Object_User.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_User\gpSelect_User.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_User\gpGet_User.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\lpCheckRight.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\gpCheckLogin.sql');
   ZQuery.ExecSQL;
 end;
 

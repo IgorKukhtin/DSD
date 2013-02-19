@@ -24,7 +24,8 @@ uses
   UtilType in '..\..\SOURCE\UtilType.pas',
   AuthenticationTestUnit in '..\SOURCE\AuthenticationTestUnit.pas',
   UtilConst in '..\..\SOURCE\UtilConst.pas',
-  DataBaseObjectTestUnit in '..\SOURCE\DataBaseObjectTestUnit.pas';
+  DataBaseObjectTestUnit in '..\SOURCE\DataBaseObjectTestUnit.pas',
+  UtilConvert in '..\..\SOURCE\UtilConvert.pas';
 
 {$R *.RES}
 

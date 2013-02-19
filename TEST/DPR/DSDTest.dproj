@@ -92,6 +92,7 @@
 			<DCCReference Include="..\SOURCE\AuthenticationTestUnit.pas"/>
 			<DCCReference Include="..\..\SOURCE\UtilConst.pas"/>
 			<DCCReference Include="..\SOURCE\DataBaseObjectTestUnit.pas"/>
+			<DCCReference Include="..\..\SOURCE\UtilConvert.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

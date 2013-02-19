@@ -12,9 +12,6 @@ CREATE TABLE ObjectLinkDesc(
    ItemName           TVarChar,
    ParentObjectDescId Integer NOT NULL,
    ChildObjectDescId  Integer,
-   isObligate         TVarChar,
-   isManyLink         TVarChar,
-   isErased           TVarChar,
 
    CONSTRAINT ObjectLinkDesc_ParentObjectDescId_ObjectDesc FOREIGN KEY(ParentObjectDescId) REFERENCES ObjectDesc(Id),
    CONSTRAINT ObjectLinkDesc_ChildObjectDescId_ObjectDesc FOREIGN KEY(ChildObjectDescId) REFERENCES ObjectDesc(Id));

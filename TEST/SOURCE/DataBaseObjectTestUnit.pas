@@ -1,7 +1,8 @@
 unit DataBaseObjectTestUnit;
 
 interface
-uses TestFramework, ZConnection, ZDataset, ZStoredProcedure;
+uses TestFramework, AuthenticationUnit, ZConnection, ZDataset, ZStoredProcedure,
+     Db, XMLIntf;
 
 type
   TDataBaseObjectTest = class (TTestCase)
@@ -9,27 +10,32 @@ type
     ZConnection: TZConnection;
     ZQuery: TZQuery;
     ZStoredProcedure: TZStoredProc;
+    lUser: TUser;
     // добавление изменение пользователя
-    procedure InsertUpdateUser(var Id: integer; UserName, Login, Password: string);
+    procedure InsertUpdate_Object_User(var Id: integer; UserName, Login, Password: string; Session: string);
+    //
+    function Select_User: TDataSet;
+    //
+    function Get_User(Id: integer): IXMLDocument;
     // добавляет или изменяет данные об объекте
-    function lpInsertUpdateObject(Id, DescId, ObjectCode: integer; ValueData: String): Variant;
+    function lpInsertUpdate_Object(Id, DescId, ObjectCode: integer; ValueData: String): Variant;
     // добавляет или изменяет строковое данное об объекте
-    procedure lpInsertUpdateObjectString(DescId, ObjectId: integer; ValueData: String);
+    procedure lpInsertUpdate_ObjectString(DescId, ObjectId: integer; ValueData: String);
   protected
     // подготавливаем данные для тестирования
     procedure SetUp; override;
     // возвращаем данные для тестирования
     procedure TearDown; override;
   published
-    procedure UserTest;
+    procedure User_Test;
     procedure gpSetErased;
-    procedure lpInsertUpdateObjectTest;
-    procedure lpInsertUpdateObjectStringTest;
+    procedure lpInsertUpdate_Object_Test;
+    procedure lpInsertUpdate_ObjectString_Test;
   end;
 
 implementation
 
-uses ZDbcIntfs, Db, SysUtils;
+uses ZDbcIntfs, SysUtils, StorageUnit, DBClient, XMLDoc;
 
 { TDataBaseObjectTest }
 {------------------------------------------------------------------------------}
@@ -38,23 +44,27 @@ begin
 
 end;
 {------------------------------------------------------------------------------}
-procedure TDataBaseObjectTest.InsertUpdateUser(var Id: integer; UserName, Login,
-  Password: string);
+procedure TDataBaseObjectTest.InsertUpdate_Object_User(var Id: integer; UserName, Login,
+  Password: string; Session: string);
+const
+  pXML =
+  '<xml Session = "%s" >' +
+    '<gpInsertUpdate_Object_User OutputType="otResult">' +
+      '<ioId        DataType="ftInteger" Value="%d" />' +
+      '<inUserName  DataType="ftString"  Value="%s" />' +
+      '<inLogin     DataType="ftString"  Value="%s" />' +
+      '<inPassword  DataType="ftString"  Value="%s" />' +
+    '</gpInsertUpdate_Object_User>' +
+  '</xml>';
 begin
-  ZStoredProcedure.StoredProcName := 'gpInsertUpdateUser';
-  ZStoredProcedure.Params.Clear;
-  ZStoredProcedure.Params.CreateParam(ftInteger, 'ioId', ptInputOutput).Value := Id;
-  ZStoredProcedure.Params.CreateParam(ftString, 'inUserName', ptInput).Value := UserName;
-  ZStoredProcedure.Params.CreateParam(ftString, 'inLogin', ptInput).Value := Login;
-  ZStoredProcedure.Params.CreateParam(ftString, 'inPassword', ptInput).Value := Password;
-  ZStoredProcedure.ExecProc;
-  Id := ZStoredProcedure.Params.ParamByName('ioId').Value;
+  with LoadXMLData(TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Session, Id, UserName, Login, Password]))).DocumentElement do
+       Id := GetAttribute('ioid');
 end;
 {------------------------------------------------------------------------------}
-function TDataBaseObjectTest.lpInsertUpdateObject(Id, DescId,
+function TDataBaseObjectTest.lpInsertUpdate_Object(Id, DescId,
   ObjectCode: integer; ValueData: String): Variant;
 begin
-  ZStoredProcedure.StoredProcName := 'lpInsertUpdateObject';
+  ZStoredProcedure.StoredProcName := 'lpInsertUpdate_Object';
   ZStoredProcedure.Params.Clear;
   ZStoredProcedure.Params.CreateParam(ftInteger, 'ioId', ptInputOutput).Value := Id;
   ZStoredProcedure.Params.CreateParam(ftInteger, 'inDescId', ptInput).Value := DescId;
@@ -64,10 +74,10 @@ begin
   result := ZStoredProcedure.Params.ParamByName('ioId').Value;
 end;
 {------------------------------------------------------------------------------}
-procedure TDataBaseObjectTest.lpInsertUpdateObjectString(DescId,
+procedure TDataBaseObjectTest.lpInsertUpdate_ObjectString(DescId,
   ObjectId: integer; ValueData: String);
 begin
-  ZStoredProcedure.StoredProcName := 'lpInsertUpdateObjectString';
+  ZStoredProcedure.StoredProcName := 'lpInsertUpdate_ObjectString';
   ZStoredProcedure.Params.Clear;
   ZStoredProcedure.Params.CreateParam(ftInteger, 'inDescId', ptInput).Value := DescId;
   ZStoredProcedure.Params.CreateParam(ftInteger, 'inObjectId', ptInput).Value := ObjectId;
@@ -75,36 +85,81 @@ begin
   ZStoredProcedure.ExecProc;
 end;
 {------------------------------------------------------------------------------}
-procedure TDataBaseObjectTest.lpInsertUpdateObjectStringTest;
+procedure TDataBaseObjectTest.lpInsertUpdate_ObjectString_Test;
 var
   ObjectId: integer;
 begin
-  ObjectId := lpInsertUpdateObject(-1, 1, 45454545, 'test');
-  lpInsertUpdateObjectString(1, ObjectId, 'test');
+  ObjectId := lpInsertUpdate_Object(-1, 1, 45454545, 'test');
+  lpInsertUpdate_ObjectString(1, ObjectId, 'test');
 end;
 {------------------------------------------------------------------------------}
-procedure TDataBaseObjectTest.lpInsertUpdateObjectTest;
+procedure TDataBaseObjectTest.lpInsertUpdate_Object_Test;
 var
   Id: integer;
 begin
-  lpInsertUpdateObject(0, 1, 45454545, 'test');
-  lpInsertUpdateObject(-1, 1, 45454545, 'test');
-  Id := lpInsertUpdateObject(-1, 1, 45454545, 'test');
+  lpInsertUpdate_Object(0, 1, 45454545, 'test');
+  lpInsertUpdate_Object(-1, 1, 45454545, 'test');
+  Id := lpInsertUpdate_Object(-1, 1, 45454545, 'test');
 
   Check(Id = -1, IntToStr(Id));
 end;
 {------------------------------------------------------------------------------}
-procedure TDataBaseObjectTest.UserTest;
-var Id: integer;
+function TDataBaseObjectTest.Get_User(Id: integer): IXMLDocument;
+const
+   pXML =
+  '<xml Session = "%s">' +
+    '<gpGet_User OutputType="otResult">' +
+       '<inId DataType="ftInteger" Value="%d"/>' +
+    '</gpGet_User>' +
+  '</xml>';
 begin
+  result := LoadXMLData(TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [lUser.Session, Id])))
+end;
+{------------------------------------------------------------------------------}
+function TDataBaseObjectTest.Select_User: TDataSet;
+const
+   pXML =
+  '<xml Session = "%s" >' +
+    '<gpSelect_User OutputType="otDataSet"/>' +
+  '</xml>';
+begin
+  result := TClientDataSet.Create(nil);
+  TClientDataSet(result).XMLData := TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [lUser.Session]));
+end;
+{------------------------------------------------------------------------------}
+procedure TDataBaseObjectTest.User_Test;
+var Id: integer;
+    lRecordCount: Integer;
+begin
+  // Получим список пользователей
+  with Select_User do
+    try
+      lRecordCount := RecordCount;
+    finally
+       Free;
+    end;
   Id := -1;
   // Вставка пользователя
-  InsertUpdateUser(Id, 'UserName', 'Login', 'Password');
+  InsertUpdate_Object_User(Id, 'UserName', 'Login', 'Password', lUser.Session);
 
   // Получение данных о пользователе
-  Check(Id = -1);
+  with Get_User(Id).DocumentElement do
+    Check((GetAttribute('id') = -1) and (GetAttribute('name') = 'UserName'), 'Не сходятся данные Id = ' + GetAttribute('id'));
+
+  // Проверка на дублируемость
+  Id := 0;
+  InsertUpdate_Object_User(Id, 'UserName', 'Login', 'Password', lUser.Session);
+  Check(false, 'Нет сообщения об ошибке InsertUpdate_Object_User Id=0');
 
   // Изменение пользователя
+
+  // Получим список пользователей
+  with Select_User do
+    try
+      Check((RecordCount = lRecordCount + 1), 'Количество записей не изменилось');
+    finally
+       Free;
+    end;
 
 end;
 {------------------------------------------------------------------------------}
@@ -131,7 +186,9 @@ begin
   ZQuery.Connection := ZConnection;
   ZStoredProcedure.Connection := ZConnection;
   ZConnection.AutoCommit := true;
+  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', lUser);
   ZConnection.StartTransaction;
+
 end;
 {------------------------------------------------------------------------------}
 initialization

@@ -21,8 +21,8 @@ CREATE TABLE ObjectEnum(
 /*                                  »Ì‰ÂÍÒ˚                                      */
 
 
-CREATE UNIQUE INDEX ObjectEnum_DescId_EnumId_ObjectId ON ObjectEnum(DescId, EnumId, ObjectId); 
-CLUSTER ObjectEnum_DescId_EnumId_ObjectId ON ObjectEnum; 
+CREATE UNIQUE INDEX ObjectEnum_DescId_ObjectId_EnumId ON ObjectEnum(DescId, ObjectId, EnumId); 
+CLUSTER ObjectEnum_DescId_ObjectId_EnumId ON ObjectEnum; 
 
 /*
  œ–»Ã≈◊¿Õ»ﬂ:

@@ -1,0 +1,5 @@
+CREATE OR REPLACE FUNCTION zc_Object_UserRole_User()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 1;
+END;  $BODY$ LANGUAGE plpgsql;

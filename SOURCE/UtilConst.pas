@@ -211,6 +211,7 @@ const
   gcOnChangeData = 'OnChangeData';
   gcOpenExcel = 'OpenExcel';
   gcOpenForTuning = 'OpenForTuning';
+  gcOutputType = 'OutputType';
   gcParams = 'Params';
   gcParamName = 'ParamName';
   gcParamNameInExecuteXML = 'ParamNameInExecuteXML';
@@ -224,7 +225,6 @@ const
   gcOneQuot = char(39);
   gcPrefixSeparator = '_';
   gcReadOnly = 'ReadOnly';
-//  gcReportPath = '\\SERVER2\D\Projects\Release\Project\REPORTS\';
   gcRefreshForm = 'RefreshForm';
   gcResult = 'Result';
   gcTabSetName = 'TabSetName'; 
@@ -377,6 +377,7 @@ const
   {параметры ком. строки}
   gcAll = 'all'; {в лог-файл XMLLog.txt записываются все XML параметры, переданнные на 2-й уровень}
   gcError = 'error';{при возвращении ошибки со второго уровня в лог-файл XMLLog.txt записываются  XML параметры, переданнные на 2-й уровень}
+  gcErrorMessage = 'ErrorMessage';
 
   gcDefaultPath: string = '';
   gcLogFileName: string = '';

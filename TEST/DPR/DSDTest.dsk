@@ -1,37 +1,50 @@
 ﻿[Closed Files]
 File_0=TSourceModule,'c:\program files (x86)\embarcadero\rad studio\9.0\Source\DUnit\src\TestFramework.pas',0,1,2933,48,2946,0,0,,
-File_1=TSourceModule,'D:\WORK\DSD\DSD\SOURCE\StorageUnit.pas',0,1,45,29,60,0,0,,
-File_2=TSourceModule,'D:\WORK\DSD\DSD\TEST\SOURCE\AuthenticationTestUnit.pas',0,1,13,56,17,0,0,,
-File_3=TSourceModule,'D:\WORK\DSD\DSD\SOURCE\UtilConst.pas',0,1,378,1,386,0,0,,
-File_4=TSourceModule,'D:\WORK\DSD\DSD\SOURCE\UtilType.pas',0,1,1,1,9,0,0,,
-File_5=TSourceModule,'D:\WORK\DSD\DSD\TEST\SOURCE\DropCreateDatabaseTestUnit.pas',0,1,39,56,42,0,0,,
-File_6=TSourceModule,'c:\program files (x86)\embarcadero\rad studio\9.0\Source\DUnit\src\DUnitTestRunner.pas',0,1,1,21,1,0,0,,
-File_7=TSourceModule,'D:\WORK\DSD\DelphiLib\ANCESTOR\BillOperation\AncOperation.pas',0,1,241,1,253,0,0,,
-File_8=TSourceModule,'D:\WORK\DSD\DelphiLib\ANCESTOR\G_111\G_111.pas',0,1,1,1,1,0,0,,
-File_9=TSourceModule,'D:\WORK\DSD\DelphiLib\ANCESTOR\G_1\G_1.pas',0,1,1,1,1,0,0,,
-File_10=TSourceModule,'D:\WORK\DSD\DelphiLib\Ancestor\A_1\A_1.pas',0,1,1,1,1,0,0,,
-File_11=TSourceModule,'D:\WORK\DSD\DelphiLib\ANCESTOR\G_112\G_112.pas',0,1,1,1,1,0,0,,
-File_12=TSourceModule,'D:\WORK\DSD\House\SOURCE\ReturnToClient\biReturnToClientUnit.pas',0,1,21,1,29,0,0,,
+File_1=TSourceModule,'D:\WORK\DSD\DSD\TEST\SOURCE\AuthenticationTestUnit.pas',0,1,13,56,17,0,0,,
+File_2=TSourceModule,'D:\WORK\DSD\DSD\SOURCE\UtilConst.pas',0,1,378,1,386,0,0,,
+File_3=TSourceModule,'D:\WORK\DSD\DSD\SOURCE\UtilType.pas',0,1,1,1,9,0,0,,
+File_4=TSourceModule,'D:\WORK\DSD\DSD\TEST\SOURCE\DropCreateDatabaseTestUnit.pas',0,1,39,56,42,0,0,,
+File_5=TSourceModule,'c:\program files (x86)\embarcadero\rad studio\9.0\Source\DUnit\src\DUnitTestRunner.pas',0,1,1,21,1,0,0,,
+File_6=TSourceModule,'D:\WORK\DSD\DelphiLib\ANCESTOR\BillOperation\AncOperation.pas',0,1,241,1,253,0,0,,
+File_7=TSourceModule,'D:\WORK\DSD\DelphiLib\ANCESTOR\G_111\G_111.pas',0,1,1,1,1,0,0,,
+File_8=TSourceModule,'D:\WORK\DSD\DelphiLib\ANCESTOR\G_1\G_1.pas',0,1,1,1,1,0,0,,
+File_9=TSourceModule,'D:\WORK\DSD\DelphiLib\Ancestor\A_1\A_1.pas',0,1,1,1,1,0,0,,
+File_10=TSourceModule,'D:\WORK\DSD\DelphiLib\ANCESTOR\G_112\G_112.pas',0,1,1,1,1,0,0,,
+File_11=TSourceModule,'D:\WORK\DSD\House\SOURCE\ReturnToClient\biReturnToClientUnit.pas',0,1,21,1,29,0,0,,
 
 [Modules]
-Module0=D:\WORK\DSD\DSD\TEST\SOURCE\DataBaseObjectTestUnit.pas
-Module1=D:\WORK\DSD\DSD\TEST\DPR\DSDTest.dproj
-Module2=D:\WORK\DSD\DSD\TEST\SOURCE\DataBaseStructureTestUnit.pas
-Module3=D:\WORK\DSD\DSD\TEST\SOURCE\DataBaseUnit.pas
-Module4=D:\WORK\DSD\DSD\SOURCE\AuthenticationUnit.pas
-Module5=default.htm
-Count=6
+Module0=D:\WORK\DSD\DSD\SOURCE\StorageUnit.pas
+Module1=default.htm
+Module2=D:\WORK\DSD\DSD\TEST\DPR\DSDTest.dproj
+Module3=D:\WORK\DSD\DSD\SOURCE\AuthenticationUnit.pas
+Module4=D:\WORK\DSD\DSD\TEST\SOURCE\DataBaseStructureTestUnit.pas
+Module5=D:\WORK\DSD\DSD\TEST\SOURCE\DataBaseObjectTestUnit.pas
+Module6=D:\WORK\DSD\DSD\TEST\SOURCE\DataBaseUnit.pas
+Count=7
 EditWindowCount=1
 
-[D:\WORK\DSD\DSD\TEST\SOURCE\DataBaseObjectTestUnit.pas]
+[D:\WORK\DSD\DSD\SOURCE\StorageUnit.pas]
 ModuleType=TSourceModule
 FormState=0
 FormOnTop=0
 
+[default.htm]
+ModuleType=TURLModule
+
 [D:\WORK\DSD\DSD\TEST\DPR\DSDTest.dproj]
 ModuleType=TBaseProject
 
+[D:\WORK\DSD\DSD\SOURCE\AuthenticationUnit.pas]
+ModuleType=TSourceModule
+FormState=0
+FormOnTop=0
+
 [D:\WORK\DSD\DSD\TEST\SOURCE\DataBaseStructureTestUnit.pas]
+ModuleType=TSourceModule
+FormState=0
+FormOnTop=0
+
+[D:\WORK\DSD\DSD\TEST\SOURCE\DataBaseObjectTestUnit.pas]
 ModuleType=TSourceModule
 FormState=0
 FormOnTop=0
@@ -41,23 +54,16 @@ ModuleType=TSourceModule
 FormState=1
 FormOnTop=0
 
-[D:\WORK\DSD\DSD\SOURCE\AuthenticationUnit.pas]
-ModuleType=TSourceModule
-FormState=0
-FormOnTop=0
-
-[default.htm]
-ModuleType=TURLModule
-
 [EditWindow0]
-ViewCount=6
-CurrentEditView=D:\WORK\DSD\DSD\TEST\SOURCE\DataBaseObjectTestUnit.pas
+ViewCount=7
+CurrentEditView=D:\WORK\DSD\DSD\SOURCE\StorageUnit.pas
 View0=0
 View1=1
 View2=2
 View3=3
 View4=4
 View5=5
+View6=6
 PercentageSizes=1
 Create=1
 Visible=1
@@ -72,7 +78,6 @@ MaxTop=-1
 ClientWidth=10000
 ClientHeight=8324
 DockedToMainForm=1
-BorlandEditorCodeExplorer=BorlandEditorCodeExplorer@EditWindow0
 TopPanelSize=0
 LeftPanelSize=1896
 LeftPanelClients=PropertyInspector,DockSite3
@@ -105,9 +110,9 @@ EditViewName=D:\WORK\DSD\DSD\TEST\DPR\DSDTest.dpr
 [View2]
 CustomEditViewType=TEditView
 Module=D:\WORK\DSD\DSD\SOURCE\AuthenticationUnit.pas
-CursorX=6
-CursorY=38
-TopLine=68
+CursorX=35
+CursorY=55
+TopLine=40
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -115,16 +120,27 @@ EditViewName=D:\WORK\DSD\DSD\SOURCE\AuthenticationUnit.pas
 
 [View3]
 CustomEditViewType=TEditView
+Module=D:\WORK\DSD\DSD\SOURCE\StorageUnit.pas
+CursorX=23
+CursorY=55
+TopLine=27
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=D:\WORK\DSD\DSD\SOURCE\StorageUnit.pas
+
+[View4]
+CustomEditViewType=TEditView
 Module=D:\WORK\DSD\DSD\TEST\SOURCE\DataBaseObjectTestUnit.pas
-CursorX=1
-CursorY=101
+CursorX=5
+CursorY=105
 TopLine=90
 LeftCol=1
 Elisions=
 Bookmarks=
 EditViewName=D:\WORK\DSD\DSD\TEST\SOURCE\DataBaseObjectTestUnit.pas
 
-[View4]
+[View5]
 CustomEditViewType=TEditView
 Module=D:\WORK\DSD\DSD\TEST\SOURCE\DataBaseUnit.pas
 CursorX=3
@@ -135,12 +151,12 @@ Elisions=
 Bookmarks=
 EditViewName=D:\WORK\DSD\DSD\TEST\SOURCE\DataBaseUnit.pas
 
-[View5]
+[View6]
 CustomEditViewType=TEditView
 Module=D:\WORK\DSD\DSD\TEST\SOURCE\DataBaseStructureTestUnit.pas
-CursorX=1
-CursorY=38
-TopLine=36
+CursorX=39
+CursorY=40
+TopLine=24
 LeftCol=1
 Elisions=
 Bookmarks=
@@ -273,7 +289,7 @@ MaxLeft=-1
 MaxTop=-1
 ClientWidth=1896
 ClientHeight=4203
-TBDockHeight=8730
+TBDockHeight=5986
 LRDockWidth=1896
 Dockable=1
 StayOnTop=0
@@ -285,8 +301,8 @@ Create=1
 Visible=0
 Docked=1
 State=0
-Left=-1093
-Top=-94
+Left=-1009
+Top=-84
 Width=2840
 Height=6203
 MaxLeft=-1
@@ -305,7 +321,7 @@ Visible=0
 Docked=1
 State=0
 Left=-1229
-Top=-94
+Top=115
 Width=278
 Height=365
 MaxLeft=-1
@@ -409,11 +425,11 @@ State=0
 Left=0
 Top=0
 Width=2335
-Height=1135
+Height=905
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=2335
-ClientHeight=1135
+ClientHeight=905
 TBDockHeight=2311
 LRDockWidth=2826
 Dockable=1
@@ -447,11 +463,11 @@ State=0
 Left=0
 Top=0
 Width=2335
-Height=919
+Height=1135
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=2335
-ClientHeight=919
+ClientHeight=1135
 TBDockHeight=1149
 LRDockWidth=3675
 Dockable=1
@@ -474,11 +490,11 @@ State=0
 Left=0
 Top=0
 Width=1999
-Height=8392
+Height=5649
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=1999
-ClientHeight=8392
+ClientHeight=5649
 TBDockHeight=4878
 LRDockWidth=7152
 Dockable=1
@@ -493,11 +509,11 @@ State=0
 Left=0
 Top=0
 Width=1999
-Height=8392
+Height=5649
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=1999
-ClientHeight=8392
+ClientHeight=5649
 TBDockHeight=4878
 LRDockWidth=5307
 Dockable=1
@@ -510,7 +526,7 @@ Visible=0
 Docked=1
 State=0
 Left=-129
-Top=-94
+Top=-147
 Width=1845
 Height=3149
 MaxLeft=-1
@@ -776,25 +792,6 @@ LRDockWidth=3799
 Dockable=1
 StayOnTop=0
 
-[BorlandEditorCodeExplorer@EditWindow0]
-PercentageSizes=1
-Create=1
-Visible=0
-Docked=0
-State=0
-Left=0
-Top=0
-Width=1823
-Height=6176
-MaxLeft=-7
-MaxTop=-14
-ClientWidth=1764
-ClientHeight=5851
-TBDockHeight=6176
-LRDockWidth=1823
-Dockable=1
-StayOnTop=0
-
 [DockHosts]
 DockHostCount=5
 
@@ -831,7 +828,7 @@ Visible=0
 Docked=1
 State=0
 Left=0
-Top=0
+Top=23
 Width=3821
 Height=1419
 MaxLeft=-1
@@ -862,7 +859,7 @@ MaxLeft=-1
 MaxTop=-1
 ClientWidth=1999
 ClientHeight=4486
-TBDockHeight=8730
+TBDockHeight=5986
 LRDockWidth=1999
 Dockable=1
 StayOnTop=0
@@ -886,7 +883,7 @@ MaxLeft=-1
 MaxTop=-1
 ClientWidth=1896
 ClientHeight=3446
-TBDockHeight=8730
+TBDockHeight=5986
 LRDockWidth=1896
 Dockable=1
 StayOnTop=0
@@ -910,7 +907,7 @@ MaxLeft=-1
 MaxTop=-1
 ClientWidth=1999
 ClientHeight=3162
-TBDockHeight=8730
+TBDockHeight=5986
 LRDockWidth=1999
 Dockable=1
 StayOnTop=0

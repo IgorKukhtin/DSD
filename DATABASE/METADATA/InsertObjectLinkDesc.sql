@@ -1,0 +1,2 @@
+insert into ObjectLinkDesc(Id, Code, ItemName, ParentObjectDescId, ChildObjectDescId)
+values (zc_Object_UserRole_User(), 'UserRole_User', 'Связь с пользователем в справочнике ролей пользователя', zc_Object_UserRole(), zc_Object_User());

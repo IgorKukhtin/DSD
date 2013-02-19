@@ -18,8 +18,9 @@ CREATE TABLE ObjectLink(
 
 /*                                  »Ì‰ÂÍÒ˚                                      */
 
-CREATE UNIQUE INDEX ObjectLink_All ON ObjectLink(DescId, ParentObjectId, ChildObjectId);
-CLUSTER ObjectLink_All ON ObjectLink;
+CREATE UNIQUE INDEX ObjectLink_Parent_Child ON ObjectLink(DescId, ParentObjectId, ChildObjectId);
+CREATE UNIQUE INDEX ObjectLink_Child_Parent ON ObjectLink(DescId, ChildObjectId, ParentObjectId);
+CLUSTER ObjectLink_Parent_Child ON ObjectLink;
 
 /*
  œ–»Ã≈◊¿Õ»ﬂ:
