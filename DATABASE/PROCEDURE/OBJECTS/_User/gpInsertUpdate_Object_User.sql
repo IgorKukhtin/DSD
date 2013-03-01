@@ -13,6 +13,8 @@ IN inSession     TVarChar       /* текущий пользователь */
 $BODY$BEGIN
    PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
+   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_User(), inUserName);
+
    ioId := lpInsertUpdate_Object(ioId, zc_Object_User(), 0, inUserName);
 
    PERFORM lpInsertUpdate_ObjectString(zc_Object_User_Login(), ioId, inLogin);

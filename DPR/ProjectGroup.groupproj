@@ -3,7 +3,19 @@
 			<ProjectGuid>{488ED744-5DBB-4405-A88A-94FE3945F0F9}</ProjectGuid>
 		</PropertyGroup>
 		<ItemGroup>
+			<Projects Include="DSDComponent.dproj">
+				<Dependencies/>
+			</Projects>
 			<Projects Include="..\TEST\DPR\DSDTest.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="..\TEST\DPR\MainTestProject.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="DSD.dproj">
+				<Dependencies/>
+			</Projects>
+			<Projects Include="DSDFormContainer.dproj">
 				<Dependencies/>
 			</Projects>
 		</ItemGroup>
@@ -14,6 +26,15 @@
 				<Default.Personality/>
 			</BorlandProject>
 		</ProjectExtensions>
+		<Target Name="DSDComponent">
+			<MSBuild Projects="DSDComponent.dproj"/>
+		</Target>
+		<Target Name="DSDComponent:Clean">
+			<MSBuild Projects="DSDComponent.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="DSDComponent:Make">
+			<MSBuild Projects="DSDComponent.dproj" Targets="Make"/>
+		</Target>
 		<Target Name="DSDTest">
 			<MSBuild Projects="..\TEST\DPR\DSDTest.dproj"/>
 		</Target>
@@ -23,14 +44,41 @@
 		<Target Name="DSDTest:Make">
 			<MSBuild Projects="..\TEST\DPR\DSDTest.dproj" Targets="Make"/>
 		</Target>
+		<Target Name="MainTestProject">
+			<MSBuild Projects="..\TEST\DPR\MainTestProject.dproj"/>
+		</Target>
+		<Target Name="MainTestProject:Clean">
+			<MSBuild Projects="..\TEST\DPR\MainTestProject.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="MainTestProject:Make">
+			<MSBuild Projects="..\TEST\DPR\MainTestProject.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="DSD">
+			<MSBuild Projects="DSD.dproj"/>
+		</Target>
+		<Target Name="DSD:Clean">
+			<MSBuild Projects="DSD.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="DSD:Make">
+			<MSBuild Projects="DSD.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="DSDFormContainer">
+			<MSBuild Projects="DSDFormContainer.dproj"/>
+		</Target>
+		<Target Name="DSDFormContainer:Clean">
+			<MSBuild Projects="DSDFormContainer.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="DSDFormContainer:Make">
+			<MSBuild Projects="DSDFormContainer.dproj" Targets="Make"/>
+		</Target>
 		<Target Name="Build">
-			<CallTarget Targets="DSDTest"/>
+			<CallTarget Targets="DSDComponent;DSDTest;MainTestProject;DSD;DSDFormContainer"/>
 		</Target>
 		<Target Name="Clean">
-			<CallTarget Targets="DSDTest:Clean"/>
+			<CallTarget Targets="DSDComponent:Clean;DSDTest:Clean;MainTestProject:Clean;DSD:Clean;DSDFormContainer:Clean"/>
 		</Target>
 		<Target Name="Make">
-			<CallTarget Targets="DSDTest:Make"/>
+			<CallTarget Targets="DSDComponent:Make;DSDTest:Make;MainTestProject:Make;DSD:Make;DSDFormContainer:Make"/>
 		</Target>
 		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')" Project="$(BDS)\Bin\CodeGear.Group.Targets"/>
 	</Project>

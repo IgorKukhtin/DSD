@@ -34,6 +34,8 @@ end;
 
 procedure TDropCreateDataBase.DropDataBase;
 begin
+  ZQuery.SQL.LoadFromFile(StructurePath + 'KIllSession.sql');
+  ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(StructurePath + 'DropDataBase.sql');
   ZQuery.ExecSQL;
 end;
@@ -54,7 +56,8 @@ end;
 procedure TDropCreateDataBase.TearDown;
 begin
   inherited;
-
+  ZConnection.Free;
+  ZQuery.Free;
 end;
 
 initialization

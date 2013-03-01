@@ -1,43 +1,58 @@
-/*
-  Создание 
-    - таблицы MovementLinkObject (связи между перемещениями и объектами)
-    - связей
-    - индексов
+п»ї/*
+  РЎРѕР·РґР°РЅРёРµ 
+    - С‚Р°Р±Р»РёС†С‹ MovementLinkObject (СЃРІСЏР·Рё РјРµР¶РґСѓ РїРµСЂРµРјРµС‰РµРЅРёСЏРјРё Рё РѕР±СЉРµРєС‚Р°РјРё)
+    - СЃРІСЏР·РµР№
+    - РёРЅРґРµРєСЃРѕРІ
 */
 
 
-      /* если есть такая таблица - удалить ее */
-      IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'MovementLinkObject')
-      DROP TABLE MovementLinkObject
- 
 /*-------------------------------------------------------------------------------*/
 
-CREATE TABLE MovementLinkObject(
-   Id                    INTEGER NOT NULL PRIMARY KEY NONCLUSTERED IDENTITY (1,1), 
-   DescId                INTEGER,
-   ParentMovementId      INTEGER,
-   ChildObjectId         INTEGER,
- 
-   CONSTRAINT MovementLinkObject_DescId_MovementLinkObjectDesc FOREIGN KEY(DescId) REFERENCES MovementLinkObjectDesc(Id),
-   CONSTRAINT MovementLinkObject_ParentMovementId_Movement FOREIGN KEY(ParentMovementId) REFERENCES Movement(Id),
-   CONSTRAINT MovementLinkObject_ChildObjectId_Object FOREIGN KEY(ChildObjectId) REFERENCES Object(Id))
+-- Table: "MovementLinkObject"
 
+-- DROP TABLE MovementLinkObject;
+
+CREATE TABLE MovementLinkObject
+(
+  DescId integer NOT NULL,
+  ParentMovementId integer NOT NULL,
+  ChildObjectId integer NOT NULL,
+  CONSTRAINT MovementLinkObject_PKey PRIMARY KEY (DescId, ParentMovementId),
+  CONSTRAINT MovementLinkObject_DescId FOREIGN KEY (DescId)
+      REFERENCES MovementLinkObjectDesc (Id),
+  CONSTRAINT MovementLinkObject_Movement FOREIGN KEY (ParentMovementId)
+      REFERENCES Movement (id),
+  CONSTRAINT MovementLinkObject_Object FOREIGN KEY (ChildObjectId)
+      REFERENCES Object (Id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE MovementLinkObject
+  OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 
-/*                                  Индексы                                      */
+/*                                  РРЅРґРµРєСЃС‹                                      */
 
 
-CREATE NONCLUSTERED INDEX MovementLinkObject_DescId ON MovementLinkObject(DescId) 
-CREATE NONCLUSTERED INDEX MovementLinkObject_ParentMovementId ON MovementLinkObject(ParentMovementId) 
-CREATE NONCLUSTERED INDEX MovementLinkObject_ChildObjectId ON MovementLinkObject(ChildObjectId) 
+-- Index: "MovementLinkObject_All"
+
+-- DROP INDEX "MovementLinkObject_All";
+
+CREATE INDEX MovementLinkObject_All
+  ON MovementLinkObject
+  USING btree
+  (DescId, ParentMovementId, ChildObjectId);
+
+CLUSTER MovementLinkObject_All ON MovementLinkObject;
 
 
 /*
- ПРИМЕЧАНИЯ:
- ИСТОРИЯ РАЗРАБОТКИ:
- ДАТА         АВТОР
+ РџР РРњР•Р§РђРќРРЇ:
+ РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР:
+ Р”РђРўРђ         РђР’РўРћР 
  ----------------
-                 Климентьев К.И.   Кухтин И.В.   Тараненко А.Е.   Беленогов С.Б.
-18.06.02                                              *
+                 РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РљСѓС…С‚РёРЅ Р.Р’.   
+18.06.02                                         
 */

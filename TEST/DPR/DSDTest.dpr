@@ -25,7 +25,10 @@ uses
   AuthenticationTestUnit in '..\SOURCE\AuthenticationTestUnit.pas',
   UtilConst in '..\..\SOURCE\UtilConst.pas',
   DataBaseObjectTestUnit in '..\SOURCE\DataBaseObjectTestUnit.pas',
-  UtilConvert in '..\..\SOURCE\UtilConvert.pas';
+  UtilConvert in '..\..\SOURCE\UtilConvert.pas',
+  DataBaseMovementTestUnit in '..\SOURCE\DataBaseMovementTestUnit.pas',
+  dsdDataSetWrapperUnit in '..\..\SOURCE\COMPONENT\dsdDataSetWrapperUnit.pas',
+  CommonDataUnit in '..\..\SOURCE\CommonDataUnit.pas';
 
 {$R *.RES}
 

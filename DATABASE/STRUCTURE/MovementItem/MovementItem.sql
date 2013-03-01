@@ -1,8 +1,8 @@
-/*
-  Создание 
-    - таблицы MovementItem (перемещения)
-    - связей
-    - индексов
+п»ї/*
+  РЎРѕР·РґР°РЅРёРµ 
+    - С‚Р°Р±Р»РёС†С‹ MovementItem (РїРµСЂРµРјРµС‰РµРЅРёСЏ)
+    - СЃРІСЏР·РµР№
+    - РёРЅРґРµРєСЃРѕРІ
 */
 
 /*-------------------------------------------------------------------------------*/
@@ -13,39 +13,29 @@ CREATE TABLE MovementItem(
    MovementId   INTEGER,
    ContainerId  INTEGER,
    Amount       TFloat, 
-   OperDate     TDateTime, 
    isErased     TVarChar,
 
-   CONSTRAINT MovementItem_DescId_MovementItemDesc FOREIGN KEY(DescId) REFERENCES MovementDesc(Id),
-   CONSTRAINT Movement_Status_Enum FOREIGN KEY(Status) REFERENCES Enum(Id),
-   CONSTRAINT Movement_InsertUserId_Object FOREIGN KEY(InsertUserId) REFERENCES Object(Id),
-   CONSTRAINT Movement_UpdateUserId_Object FOREIGN KEY(UpdateUserId) REFERENCES Object(Id),
-   CONSTRAINT Movement_ParentId_Movement FOREIGN KEY(ParentId) REFERENCES Movement(Id))
+   CONSTRAINT MovementItem_DescId FOREIGN KEY(DescId) REFERENCES MovementDesc(Id),
+   CONSTRAINT MovementItem_MovementId FOREIGN KEY(MovementId) REFERENCES Movement(Id),
+   CONSTRAINT MovementItem_ContainerId FOREIGN KEY(ContainerId) REFERENCES Container(Id)   
+)
 
 /*-------------------------------------------------------------------------------*/
 
-/*                                  Индексы                                      */
+/*                                  РРЅРґРµРєСЃС‹                                      */
 
 
-
-CREATE NONCLUSTERED INDEX Movement_DescId ON Movement(DescId)
-CREATE NONCLUSTERED INDEX Movement_OperDate ON Movement(OperDate)
-CREATE NONCLUSTERED INDEX Movement_Status ON Movement(Status)
-CREATE NONCLUSTERED INDEX Movement_InsertUserId ON Movement(InsertUserId)
-CREATE NONCLUSTERED INDEX Movement_UpdateUserId ON Movement(UpdateUserId)
-CREATE NONCLUSTERED INDEX Movement_isErased ON Movement(isErased)
-CREATE NONCLUSTERED INDEX Movement_DescId_OperDate_Status ON Movement(DescId, OperDate, Status)
 
 
 /*-------------------------------------------------------------------------------*/
 
 
 /*
- ПРИМЕЧАНИЯ:
- ИСТОРИЯ РАЗРАБОТКИ:
- ДАТА         АВТОР
+ РџР РРњР•Р§РђРќРРЇ:
+ РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР:
+ Р”РђРўРђ         РђР’РўРћР 
  ----------------
-                 Климентьев К.И.   Кухтин И.В.   Тараненко А.Е.   Беленогов С.Б.
-18.06.02                                              *  
-19.09.02                                              *              
+                 РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РљСѓС…С‚РёРЅ Р.Р’.   
+18.06.02                                           
+19.09.02                                                       
 */

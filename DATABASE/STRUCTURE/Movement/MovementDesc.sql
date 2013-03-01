@@ -1,41 +1,46 @@
-/*
-  Создание 
-    - таблицы MovementDesc (классы перемещений)
-    - cвязей
-    - индексов
+п»ї/*
+  РЎРѕР·РґР°РЅРёРµ 
+    - С‚Р°Р±Р»РёС†С‹ MovementDesc (РєР»Р°СЃСЃС‹ РїРµСЂРµРјРµС‰РµРЅРёР№)
+    - cРІСЏР·РµР№
+    - РёРЅРґРµРєСЃРѕРІ
 */
-
-
-      /* если есть такая таблица - удалить ее */
-      IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'MovementDesc')
-      DROP TABLE MovementDesc
  
-/*-------------------------------------------------------------------------------*/
 
-CREATE TABLE MovementDesc(
-   Id                    INTEGER NOT NULL PRIMARY KEY NONCLUSTERED IDENTITY (1,1), 
-   Code                  TVarChar NOT NULL UNIQUE,
-   ItemName              TVarChar,
-   ParentDescId          Integer,
+-- Table: MovementDesc
 
-   CONSTRAINT MovementDesc_ParentDescId_MovementDesc FOREIGN KEY(ParentDescId) REFERENCES MovementDesc(Id))
-
+-- DROP TABLE MovementDesc;
 
 /*-------------------------------------------------------------------------------*/
+CREATE TABLE MovementDesc
+(
+  Id integer NOT NULL,
+  Code TVarChar,
+  ItemName TVarChar,
+  CONSTRAINT MovementDesc_PKey PRIMARY KEY (Id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE MovementDesc
+  OWNER TO postgres;
 
-/*                                  Индексы                                      */
 
 
-CREATE UNIQUE CLUSTERED INDEX MovementDesc_Code ON MovementDesc(Code) 
+/*-------------------------------------------------------------------------------*/
 
+/*                                  РРЅРґРµРєСЃС‹                                      */
+
+
+CREATE UNIQUE INDEX MovementDesc_Code ON MovementDesc(Code);
+CLUSTER MovementDesc_Code ON MovementDesc;
 
 
 /*
- ПРИМЕЧАНИЯ:
- ИСТОРИЯ РАЗРАБОТКИ:
- ДАТА         АВТОР
+ РџР РРњР•Р§РђРќРРЇ:
+ РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР:
+ Р”РђРўРђ         РђР’РўРћР 
  ----------------
-                 Климентьев К.И.   Кухтин И.В.   Тараненко А.Е.   Беленогов С.Б.
-18.06.02                                              *
-19.09.02                                              *
+                 РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РљСѓС…С‚РёРЅ Р.Р’.   
+18.06.02                                         
+19.09.02                                         
 */

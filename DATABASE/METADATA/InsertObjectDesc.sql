@@ -6,3 +6,16 @@ values (zc_Object_RoleRight(), 'RoleRight', 'Установка прав на роли');
 
 insert into ObjectDesc(Id, Code, ItemName)
 values (zc_Object_UserRole(), 'UserRole', 'Связь пользователей и ролей');
+
+insert into ObjectDesc(Id, Code, ItemName)
+values (zc_Object_Good(), 'Good', 'Справочник товаров');
+
+insert into ObjectDesc(Id, Code, ItemName)
+values (zc_Object_Unit(), 'Unit', 'Справочник подразделений');
+
+insert into ObjectDesc(Id, Code, ItemName)
+values (zc_Object_Form(), 'Form', 'Формы приложения');
+
+insert into ObjectDesc(Id, Code, ItemName)
+values (zc_Object_Measure(), 'Measure', 'Единицы измерения');
+

@@ -1,8 +1,9 @@
-﻿-- Function: gpselect_user()
+﻿-- Function: gpGet_Object_User()
 
---DROP FUNCTION gpSelect_User();
+--DROP FUNCTION gpGet_Object_User();
 
-CREATE OR REPLACE FUNCTION gpSelect_User(
+CREATE OR REPLACE FUNCTION gpGet_Object_User(
+IN inId          Integer,       /* пользователь */
 IN inSession     TVarChar       /* текущий пользователь */)
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Login TVarChar, Password TVarChar, isErased boolean) AS
 $BODY$BEGIN
@@ -24,13 +25,13 @@ $BODY$BEGIN
    LEFT JOIN ObjectString AS ObjectString_UserPassword 
           ON ObjectString_UserPassword.DescId = zc_Object_User_Password() 
          AND ObjectString_UserPassword.ObjectId = Object.Id
-   WHERE Object.DescId = zc_Object_User();
+   WHERE Object.Id = inId;
   
 END;$BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100
   ROWS 1000;
-ALTER FUNCTION gpSelect_User(TVarChar)
+ALTER FUNCTION gpGet_Object_User(integer, TVarChar)
   OWNER TO postgres;
 
 -- SELECT * FROM gpSelect_User('2')

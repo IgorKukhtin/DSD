@@ -203,6 +203,7 @@ const
   gcMenu = 'Menu';
   gcMenuPrefix = 'mi';
   gcMultiSelectGrid = 'MultiSelectGrid';
+  gcMultiDataSet = 'MultiDataSet';
   gcNil = 'nil';
   gcName = 'Name';
   gcNewEditor: boolean = false;

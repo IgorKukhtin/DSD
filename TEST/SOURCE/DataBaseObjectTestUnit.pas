@@ -2,7 +2,7 @@ unit DataBaseObjectTestUnit;
 
 interface
 uses TestFramework, AuthenticationUnit, ZConnection, ZDataset, ZStoredProcedure,
-     Db, XMLIntf;
+     Db, XMLIntf, dsdDataSetWrapperUnit;
 
 type
   TDataBaseObjectTest = class (TTestCase)
@@ -10,13 +10,15 @@ type
     ZConnection: TZConnection;
     ZQuery: TZQuery;
     ZStoredProcedure: TZStoredProc;
-    lUser: TUser;
+    FdsdDataSetWrapper: TdsdDataSetWrapper;
     // добавление изменение пользователя
     procedure InsertUpdate_Object_User(var Id: integer; UserName, Login, Password: string; Session: string);
     //
     function Select_User: TDataSet;
     //
     function Get_User(Id: integer): IXMLDocument;
+    //
+    procedure DeleteObject(Id: integer);
     // добавляет или изменяет данные об объекте
     function lpInsertUpdate_Object(Id, DescId, ObjectCode: integer; ValueData: String): Variant;
     // добавляет или изменяет строковое данное об объекте
@@ -28,6 +30,7 @@ type
     procedure TearDown; override;
   published
     procedure User_Test;
+    procedure Form_Test;
     procedure gpSetErased;
     procedure lpInsertUpdate_Object_Test;
     procedure lpInsertUpdate_ObjectString_Test;
@@ -35,7 +38,8 @@ type
 
 implementation
 
-uses ZDbcIntfs, SysUtils, StorageUnit, DBClient, XMLDoc;
+uses ZDbcIntfs, SysUtils, StorageUnit, DBClient, XMLDoc, CommonDataUnit, Forms,
+     Classes, UtilConvert, ZLibEx;
 
 { TDataBaseObjectTest }
 {------------------------------------------------------------------------------}
@@ -104,27 +108,99 @@ begin
   Check(Id = -1, IntToStr(Id));
 end;
 {------------------------------------------------------------------------------}
+procedure TDataBaseObjectTest.DeleteObject(Id: integer);
+const
+   pXML =
+  '<xml Session = "">' +
+    '<lpDelete_Object OutputType="otResult">' +
+       '<inId DataType="ftInteger" Value="%d"/>' +
+    '</lpDelete_Object>' +
+  '</xml>';
+begin
+  TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Id]))
+end;
+{------------------------------------------------------------------------------}
+procedure TDataBaseObjectTest.Form_Test;
+const  pXML =
+  '<xml Session = "%s" >' +
+    '<gpInsertUpdate_Object_Form OutputType="otResult">' +
+      '<inFormName  DataType="ftString"  Value="%s" />' +
+      '<inFormData  DataType="ftBlob"  Value="%s" />' +
+    '</gpInsertUpdate_Object_Form>' +
+  '</xml>';
+
+     pGetXML =
+     '<xml Session = "%s">' +
+        '<gpGet_Object_Form OutputType="otBlob">' +
+           '<inFormName DataType="ftString" Value="%s"/>' +
+        '</gpGet_Object_Form>' +
+      '</xml>';
+  var id: integer;
+      FormStr: String;
+      Form: TForm;
+      Stream: TStringStream;
+      MemoryStream: TMemoryStream;
+begin
+  // Нужно создать форму, сохранить ее в строку
+  Form := TForm.Create(nil);
+  Form.Caption := 'Проверка';
+  Stream := TStringStream.Create;
+  MemoryStream := TMemoryStream.Create;
+  try
+    MemoryStream.WriteComponent(Form);
+    MemoryStream.Position := 0;
+    ObjectBinaryToText(MemoryStream, Stream);
+    FormStr := Stream.DataString;
+  finally
+    Form.Free;
+    Stream.Free;
+    MemoryStream.Free;
+  end;
+  // Строку в базу
+
+  TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [gc_User.Session, 'Form1', gfStrToXmlStr(FormStr)]));
+
+  FormStr := TStorageFactory.GetStorage.ExecuteProc(Format(pGetXML, [gc_User.Session, 'Form1']));
+
+  // Потом считать это все.
+  Form := TForm.CreateNew(Application);
+  Stream := TStringStream.Create(FormStr);
+  MemoryStream := TMemoryStream.Create;
+  try
+    // Преобразовать текст в бинарные данные
+    ObjectTextToBinary(Stream, MemoryStream);
+    // Вернуть смещение
+    MemoryStream.Position := 0;
+    // Прочитать компонент из потока
+    MemoryStream.ReadComponent(Form);
+    Check (Form.Caption = 'Проверка', 'Не правильный заголовок формы');
+  finally
+    Form.Free;
+    Stream.Free;
+    MemoryStream.Free;
+  end;
+end;
+
 function TDataBaseObjectTest.Get_User(Id: integer): IXMLDocument;
 const
    pXML =
   '<xml Session = "%s">' +
-    '<gpGet_User OutputType="otResult">' +
+    '<gpGet_Object_User OutputType="otResult">' +
        '<inId DataType="ftInteger" Value="%d"/>' +
-    '</gpGet_User>' +
+    '</gpGet_Object_User>' +
   '</xml>';
 begin
-  result := LoadXMLData(TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [lUser.Session, Id])))
+  result := LoadXMLData(TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [gc_User.Session, Id])))
 end;
 {------------------------------------------------------------------------------}
 function TDataBaseObjectTest.Select_User: TDataSet;
-const
-   pXML =
-  '<xml Session = "%s" >' +
-    '<gpSelect_User OutputType="otDataSet"/>' +
-  '</xml>';
 begin
-  result := TClientDataSet.Create(nil);
-  TClientDataSet(result).XMLData := TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [lUser.Session]));
+  with FdsdDataSetWrapper do begin
+    DataSets.Add.DataSet := TClientDataSet.Create(nil);
+    StoredProcName := 'gpSelect_Object_User';
+    Execute;
+    result := DataSets[0].DataSet;
+  end
 end;
 {------------------------------------------------------------------------------}
 procedure TDataBaseObjectTest.User_Test;
@@ -140,7 +216,7 @@ begin
     end;
   Id := -1;
   // Вставка пользователя
-  InsertUpdate_Object_User(Id, 'UserName', 'Login', 'Password', lUser.Session);
+  InsertUpdate_Object_User(Id, 'UserName', 'Login', 'Password', gc_User.Session);
 
   // Получение данных о пользователе
   with Get_User(Id).DocumentElement do
@@ -148,9 +224,12 @@ begin
 
   // Проверка на дублируемость
   Id := 0;
-  InsertUpdate_Object_User(Id, 'UserName', 'Login', 'Password', lUser.Session);
-  Check(false, 'Нет сообщения об ошибке InsertUpdate_Object_User Id=0');
+  try
+    InsertUpdate_Object_User(Id, 'UserName', 'Login', 'Password', gc_User.Session);
+    Check(false, 'Нет сообщения об ошибке InsertUpdate_Object_User Id=0');
+  except
 
+  end;
   // Изменение пользователя
 
   // Получим список пользователей
@@ -161,6 +240,8 @@ begin
        Free;
     end;
 
+  DeleteObject(-1);
+
 end;
 {------------------------------------------------------------------------------}
 procedure TDataBaseObjectTest.TearDown;
@@ -168,6 +249,9 @@ begin
   inherited;
   ZConnection.Rollback;
   ZConnection.Connected := false;
+  ZConnection.Free;
+  ZQuery.Free;
+  ZStoredProcedure.Free;
 end;
 {------------------------------------------------------------------------------}
 procedure TDataBaseObjectTest.SetUp;
@@ -186,9 +270,9 @@ begin
   ZQuery.Connection := ZConnection;
   ZStoredProcedure.Connection := ZConnection;
   ZConnection.AutoCommit := true;
-  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', lUser);
+  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ',gc_User);
   ZConnection.StartTransaction;
-
+  FdsdDataSetWrapper := TdsdDataSetWrapper.Create(nil);
 end;
 {------------------------------------------------------------------------------}
 initialization
