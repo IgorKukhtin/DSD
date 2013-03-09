@@ -169,6 +169,8 @@ begin
   pS := StringReplace(pS, '''', '&apos;', [rfReplaceAll]);
   pS := StringReplace(pS, '"', '&quot;', [rfReplaceAll]);
   pS := StringReplace(pS, '<', '&lt;', [rfReplaceAll]);
+//  pS := StringReplace(pS, #13#10, '&#xA;', [rfReplaceAll]);
+//  pS := StringReplace(pS, , 'xA', [rfReplaceAll]);
   result := StringReplace(pS, '>', '&gt;', [rfReplaceAll]);
 end;
 {-----------------------------------------------------------------------------------------------}
@@ -176,8 +178,9 @@ end;
 function gfStrXmlToStr(const inStr: string): string;
 var pS: string;
 begin
-  //pS:=ReplaceStr(inStr,'&lt;','<');
-  //result:=ReplaceStr(pS,'&gt;','>');
+  pS:=StringReplace(inStr, '&lt;', '<', [rfReplaceAll]);
+  pS:=StringReplace(pS, '&#xA;', #13#10, [rfReplaceAll]);
+  result:=StringReplace(pS, '&gt;', '>', [rfReplaceAll]);
 end;
 {-----------------------------------------------------------------------------------------------}
 function gfFieldToString(const inField: TField): String;

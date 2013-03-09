@@ -28,7 +28,9 @@ uses
   UtilConvert in '..\..\SOURCE\UtilConvert.pas',
   DataBaseMovementTestUnit in '..\SOURCE\DataBaseMovementTestUnit.pas',
   dsdDataSetWrapperUnit in '..\..\SOURCE\COMPONENT\dsdDataSetWrapperUnit.pas',
-  CommonDataUnit in '..\..\SOURCE\CommonDataUnit.pas';
+  CommonDataUnit in '..\..\SOURCE\CommonDataUnit.pas',
+  UtilUnit in '..\SOURCE\UtilUnit.pas',
+  FarmacyTestUnit in '..\SOURCE\Farmacy\FarmacyTestUnit.pas';
 
 {$R *.RES}
 

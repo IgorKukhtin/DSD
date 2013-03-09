@@ -37,12 +37,14 @@ type
 
 implementation
 
+uses UtilUnit;
+
 { TCheckDataBaseStructure }
 
 const
-  StructurePath = '..\DATABASE\STRUCTURE\';
-  ProcedurePath = '..\DATABASE\PROCEDURE\';
-  MetadataPath = '..\DATABASE\METADATA\';
+  StructurePath = '..\DATABASE\COMMON\STRUCTURE\';
+  ProcedurePath = '..\DATABASE\COMMON\PROCEDURE\';
+  MetadataPath = '..\DATABASE\COMMON\METADATA\';
 
 procedure TCheckDataBaseStructure.CreateConstantObject;
 begin
@@ -264,13 +266,7 @@ end;
 procedure TCheckDataBaseStructure.SetUp;
 begin
   inherited;
-  ZConnection := TZConnection.Create(nil);
-  ZConnection.HostName := 'localhost';
-  ZConnection.Port := 5432;
-  ZConnection.Protocol := 'postgresql-9';
-  ZConnection.User := 'postgres';
-  ZConnection.Database := 'dsd';
-  ZConnection.Connected := true;
+  ZConnection := TConnectionFactory.GetConnection;
   ZQuery := TZQuery.Create(nil);
   ZQuery.Connection := ZConnection;
 end;

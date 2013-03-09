@@ -92,6 +92,21 @@
 			<DCCReference Include="..\SOURCE\AuthenticationUnit.pas"/>
 			<DCCReference Include="..\SOURCE\UtilConvert.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdActionUnit.pas"/>
+			<DCCReference Include="..\SOURCE\FormUnit.pas">
+				<Form>ParentForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\Forms\MeasureEditUnit.pas">
+				<Form>MeasureEditForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\FormContainerMainFormUnit.pas">
+				<Form>MainForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\Forms\ClientUnit.pas">
+				<Form>ParentForm1</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

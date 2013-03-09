@@ -22,9 +22,10 @@ type
 implementation
 
 { TCheckDataBaseStructure }
+uses UtilUnit;
 
 const
-  StructurePath = '..\DATABASE\STRUCTURE\';
+  StructurePath = '..\DATABASE\COMMON\STRUCTURE\';
 
 procedure TDropCreateDataBase.CreateDataBase;
 begin
@@ -43,11 +44,8 @@ end;
 procedure TDropCreateDataBase.SetUp;
 begin
   inherited;
-  ZConnection := TZConnection.Create(nil);
-  ZConnection.HostName := 'localhost';
-  ZConnection.Port := 5432;
-  ZConnection.Protocol := 'postgresql-9';
-  ZConnection.User := 'postgres';
+  ZConnection := TConnectionFactory.GetConnection;
+  ZConnection.Database := '';
   ZConnection.Connected := true;
   ZQuery := TZQuery.Create(nil);
   ZQuery.Connection := ZConnection;

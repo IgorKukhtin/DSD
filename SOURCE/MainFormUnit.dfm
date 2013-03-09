@@ -11,7 +11,6 @@ object MainForm: TMainForm
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
-  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object dxBarManager: TdxBarManager
@@ -72,8 +71,9 @@ object MainForm: TMainForm
       Category = 0
     end
     object bbGoodsGuides: TdxBarButton
-      Action = actGoodsGuides
+      Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1090#1086#1074#1072#1088#1086#1074
       Category = 0
+      Visible = ivAlways
     end
     object bbDocuments: TdxBarSubItem
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099
@@ -89,7 +89,15 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbGoodsGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMeasure'
         end>
+    end
+    object bbMeasure: TdxBarButton
+      Action = actMeasure
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -102,10 +110,13 @@ object MainForm: TMainForm
       ImageIndex = 43
       ShortCut = 16472
     end
-    object actGoodsGuides: TAction
+    object actMeasure: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1090#1086#1074#1072#1088#1086#1074
-      OnExecute = actGoodsGuidesExecute
+      Caption = #1045#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
+      Hint = #1045#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
+      FormName = 'MeasureForm'
+      GuiParams = <>
+      isShowModal = False
     end
   end
 end

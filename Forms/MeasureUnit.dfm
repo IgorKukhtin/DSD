@@ -1,16 +1,9 @@
-object MeasureForm: TMeasureForm
-  Left = 0
-  Top = 0
+inherited MeasureForm: TMeasureForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1077#1076#1080#1085#1080#1094' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
   ClientHeight = 376
   ClientWidth = 390
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  OldCreateOrder = False
+  ExplicitWidth = 398
+  ExplicitHeight = 403
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -26,10 +19,20 @@ object MeasureForm: TMeasureForm
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
+      OptionsBehavior.IncSearch = True
+      OptionsBehavior.IncSearchItem = clName
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
+      OptionsData.Inserting = False
       object clName: TcxGridDBColumn
         Caption = #1045#1076#1080#1085#1080#1094#1072' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
         DataBinding.FieldName = 'Name'
-        Width = 374
+        Width = 252
+      end
+      object clErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -45,16 +48,6 @@ object MeasureForm: TMeasureForm
     Aggregates = <>
     Params = <>
     Left = 96
-    Top = 144
-  end
-  object dsdDataSetWrapper: TdsdDataSetWrapper
-    StoredProcName = 'gpSelect_Object_Measure'
-    DataSets = <
-      item
-        DataSet = ClientDataSet
-      end>
-    Params = <>
-    Left = 152
     Top = 144
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -103,6 +96,14 @@ object MeasureForm: TMeasureForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEdit'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end>
       OneOnRow = True
@@ -112,19 +113,60 @@ object MeasureForm: TMeasureForm
       WholeRow = False
     end
     object bbRefresh: TdxBarButton
-      Action = dsdDataSetRefresh
+      Action = actRefresh
+      Category = 0
+    end
+    object bbInsert: TdxBarButton
+      Action = actInsert
+      Category = 0
+    end
+    object bbEdit: TdxBarButton
+      Action = actUpdate
       Category = 0
     end
   end
   object ActionList: TActionList
     Left = 232
     Top = 144
-    object dsdDataSetRefresh: TdsdDataSetRefresh
+    object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
-      DataSetWrapper = dsdDataSetWrapper
+      DataSetWrapper = dsdStoredProc
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
     end
+    object actInsert: TdsdOpenForm
+      Category = 'DSDLib'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 45
+      FormName = 'MeasureEditForm'
+      GuiParams = <>
+      isShowModal = True
+    end
+    object actUpdate: TdsdOpenForm
+      Category = 'DSDLib'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      ShortCut = 115
+      FormName = 'MeasureEditForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          DataType = ftInteger
+          ParamType = ptInput
+        end>
+      isShowModal = True
+    end
+  end
+  object dsdStoredProc: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Measure'
+    DataSets = <
+      item
+        DataSet = ClientDataSet
+      end>
+    Params = <>
+    Left = 152
+    Top = 152
   end
 end

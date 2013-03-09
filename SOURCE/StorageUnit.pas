@@ -31,7 +31,7 @@ type
 
 implementation
 
-uses SysUtils, ZLibEx, idGlobal, UtilConst, DBClient, Variants;
+uses SysUtils, ZLibEx, idGlobal, UtilConst, DBClient, Variants, UtilConvert;
 
 const
 

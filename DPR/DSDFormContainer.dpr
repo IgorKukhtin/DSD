@@ -12,43 +12,20 @@ uses
   CommonDataUnit in '..\SOURCE\CommonDataUnit.pas',
   AuthenticationUnit in '..\SOURCE\AuthenticationUnit.pas',
   UtilConvert in '..\SOURCE\UtilConvert.pas',
-  dsdActionUnit in '..\SOURCE\COMPONENT\dsdActionUnit.pas';
+  dsdActionUnit in '..\SOURCE\COMPONENT\dsdActionUnit.pas',
+  FormUnit in '..\SOURCE\FormUnit.pas' {ParentForm},
+  MeasureEditUnit in '..\Forms\MeasureEditUnit.pas' {MeasureEditForm},
+  FormContainerMainFormUnit in '..\SOURCE\FormContainerMainFormUnit.pas' {MainForm},
+  ClientUnit in '..\Forms\ClientUnit.pas' {ParentForm1};
 
 {$R *.res}
-var
-  Stream: TStringStream;
-  MemoryStream: TMemoryStream;
 
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TMainForm, MainForm);
+  Application.CreateForm(TMeasureEditForm, MeasureEditForm);
   Application.CreateForm(TMeasureForm, MeasureForm);
-  Stream := TStringStream.Create;
-  MemoryStream := TMemoryStream.Create;
-  with TdsdDataSetWrapper.Create(nil) do
-    try
-      OutputType := otResult;
-      StoredProcName := 'gpInsertUpdate_Object_Form';
-      with Params.Add do begin
-         Name := 'FormName';
-         ParamType := ptInput;
-         Value := 'MeasureForm';
-         UserDataType := ftString;
-      end;
-      MemoryStream.WriteComponent(MeasureForm);
-      MemoryStream.Position := 0;
-      ObjectBinaryToText(MemoryStream, Stream);
-      with Params.Add do begin
-         Name := 'FormData';
-         ParamType := ptInput;
-         Value := Stream.DataString;
-         UserDataType := ftBlob;
-      end;
-      Execute;
-    finally
-      Free;
-      Stream.Free;
-      MemoryStream.Free;
-    end;
+  Application.CreateForm(TParentForm1, ParentForm1);
   Application.Run;
 end.

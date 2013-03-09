@@ -34,7 +34,19 @@ requires
   DesignIde,
   IndyCore,
   IndySystem,
-  IndyProtocols;
+  IndyProtocols,
+  vclimg,
+  vcldb,
+  dxCoreRS16,
+  cxLibraryRS16,
+  dxGDIPlusRS16,
+  dxThemeRS16,
+  cxDataRS16,
+  dxBarRS16,
+  dxComnRS16,
+  cxEditorsRS16,
+  cxPageControlRS16,
+  cxGridRS16;
 
 contains
   dsdDataSetWrapperUnit in '..\SOURCE\COMPONENT\dsdDataSetWrapperUnit.pas',
@@ -44,6 +56,7 @@ contains
   CommonDataUnit in '..\SOURCE\CommonDataUnit.pas',
   AuthenticationUnit in '..\SOURCE\AuthenticationUnit.pas',
   dsdActionUnit in '..\SOURCE\COMPONENT\dsdActionUnit.pas',
-  UtilConvert in '..\SOURCE\UtilConvert.pas';
+  UtilConvert in '..\SOURCE\UtilConvert.pas',
+  FormUnit in '..\SOURCE\FormUnit.pas' {ParentForm};
 
 end.

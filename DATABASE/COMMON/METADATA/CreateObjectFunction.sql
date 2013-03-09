@@ -1,0 +1,11 @@
+CREATE OR REPLACE FUNCTION zc_Object_AccountPlan_Active()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 1001;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_Object_AccountPlan_Passive()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 1002;
+END;  $BODY$ LANGUAGE plpgsql;

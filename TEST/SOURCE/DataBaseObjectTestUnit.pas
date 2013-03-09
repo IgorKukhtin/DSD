@@ -10,7 +10,7 @@ type
     ZConnection: TZConnection;
     ZQuery: TZQuery;
     ZStoredProcedure: TZStoredProc;
-    FdsdDataSetWrapper: TdsdDataSetWrapper;
+    FdsdDataSetWrapper: TdsdStoredProc;
     // добавление изменение пользователя
     procedure InsertUpdate_Object_User(var Id: integer; UserName, Login, Password: string; Session: string);
     //
@@ -39,7 +39,7 @@ type
 implementation
 
 uses ZDbcIntfs, SysUtils, StorageUnit, DBClient, XMLDoc, CommonDataUnit, Forms,
-     Classes, UtilConvert, ZLibEx;
+     Classes, UtilConvert, ZLibEx, UtilUnit;
 
 { TDataBaseObjectTest }
 {------------------------------------------------------------------------------}
@@ -257,14 +257,9 @@ end;
 procedure TDataBaseObjectTest.SetUp;
 begin
   inherited;
-  ZConnection := TZConnection.Create(nil);
-  ZConnection.HostName := 'localhost';
-  ZConnection.Port := 5432;
-  ZConnection.Protocol := 'postgresql-9';
-  ZConnection.User := 'postgres';
-  ZConnection.Database := 'dsd';
-  ZConnection.TransactIsolationLevel := tiSerializable;
+  ZConnection := TConnectionFactory.GetConnection;
   ZConnection.Connected := true;
+  ZConnection.TransactIsolationLevel := tiSerializable;
   ZQuery := TZQuery.Create(nil);
   ZStoredProcedure := TZStoredProc.Create(nil);
   ZQuery.Connection := ZConnection;
@@ -272,7 +267,7 @@ begin
   ZConnection.AutoCommit := true;
   TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ',gc_User);
   ZConnection.StartTransaction;
-  FdsdDataSetWrapper := TdsdDataSetWrapper.Create(nil);
+  FdsdDataSetWrapper := TdsdStoredProc.Create(nil);
 end;
 {------------------------------------------------------------------------------}
 initialization

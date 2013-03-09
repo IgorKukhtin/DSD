@@ -1,0 +1,11 @@
+CREATE OR REPLACE FUNCTION zc_Object_AccountPlan_Foundation()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 1010;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_Object_AccountPlan_Cash()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 1011;
+END;  $BODY$ LANGUAGE plpgsql;

@@ -1,0 +1,17 @@
+CREATE OR REPLACE FUNCTION zc_Movement_Link_UnitFrom()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 1;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_Movement_Link_UnitTo()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 2;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_Movement_Link_Cash()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 3;
+END;  $BODY$ LANGUAGE plpgsql;

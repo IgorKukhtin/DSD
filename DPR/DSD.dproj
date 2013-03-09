@@ -93,7 +93,7 @@
 				<Form>MainForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\FormUnit.pas">
-				<Form>Form2</Form>
+				<Form>ParentForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\Forms\UnitTest.pas">
 				<Form>Form3</Form>

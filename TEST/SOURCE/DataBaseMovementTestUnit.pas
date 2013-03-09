@@ -19,6 +19,7 @@ type
 implementation
 
 //uses ZDbcIntfs, SysUtils, StorageUnit, DBClient, XMLDoc;
+uses UtilUnit;
 
 { TDataBaseObjectTest }
 {------------------------------------------------------------------------------}
@@ -34,13 +35,7 @@ end;
 procedure TDataBaseMovementTest.SetUp;
 begin
   inherited;
-  ZConnection := TZConnection.Create(nil);
-  ZConnection.HostName := 'localhost';
-  ZConnection.Port := 5432;
-  ZConnection.Protocol := 'postgresql-9';
-  ZConnection.User := 'postgres';
-  ZConnection.Database := 'dsd';
-  ZConnection.Connected := true;
+  ZConnection := TConnectionFactory.GetConnection;
   ZQuery := TZQuery.Create(nil);
   ZQuery.Connection := ZConnection;
 //  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', lUser);
