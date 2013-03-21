@@ -8,18 +8,16 @@
 /*-------------------------------------------------------------------------------*/
 
 CREATE TABLE ObjectStringDesc(
-   Id         INTEGER NOT NULL PRIMARY KEY,
-   ObjectDescId  INTEGER NOT NULL,
-   Code       TVarChar,
-   ItemName   TVarChar,
-   isErased   TVarChar,
-   CONSTRAINT ObjectStringDesc_ObjectDescId_ObjectDesc FOREIGN KEY(ObjectDescId) REFERENCES ObjectDesc(Id) );
+   Id                    INTEGER NOT NULL PRIMARY KEY,
+   ObjectDescId                INTEGER NOT NULL,
+   Code                  TVarChar,
+   ItemName              TVarChar,
+
+   CONSTRAINT fk_ObjectStringDesc_ObjectDescId FOREIGN KEY(ObjectDescId) REFERENCES ObjectDesc(Id) 
+);
 
 /*-------------------------------------------------------------------------------*/
 /*                                  Индексы                                      */
-
-CREATE UNIQUE INDEX ObjectStringDesc_Code ON ObjectStringDesc(Code);
-CLUSTER ObjectStringDesc_Code ON ObjectStringDesc;
 
 
 /*
@@ -27,6 +25,6 @@ CLUSTER ObjectStringDesc_Code ON ObjectStringDesc;
  ИСТОРИЯ РАЗРАБОТКИ:
  ДАТА         АВТОР
  ----------------
-                 Климентьев К.И.   Кухтин И.В.   Тараненко А.Е.   Беленогов С.Б.
-14.06.02                                              *
+                 Климентьев К.И.   Кухтин И.В.   
+14.06.02                                         
 */

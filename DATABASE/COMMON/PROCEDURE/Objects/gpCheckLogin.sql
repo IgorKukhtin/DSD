@@ -12,9 +12,9 @@ $BODY$BEGIN
      FROM ObjectString UserLogin
      JOIN ObjectString UserPassword
        ON UserLogin.ValueData = inUserLogin
-      AND UserLogin.DescId = zc_Object_User_Login() 
+      AND UserLogin.DescId = zc_ObjectString_User_Login() 
       AND UserLogin.ObjectId = UserPassword.ObjectId
-    WHERE UserPassword.ValueData = inUserPassword AND UserPassword.DescId = zc_Object_User_Password();
+    WHERE UserPassword.ValueData = inUserPassword AND UserPassword.DescId = zc_ObjectString_User_Password();
 
     IF NOT found THEN
        RAISE EXCEPTION 'Неправильный логин или пароль';

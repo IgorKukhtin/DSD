@@ -8,23 +8,18 @@
 /*-------------------------------------------------------------------------------*/
 
 CREATE TABLE ObjectFloatDesc(
-   Id           INTEGER NOT NULL PRIMARY KEY,
-   ObjectDescId INTEGER NOT NULL,
-   Code         TVarChar,
-   ItemName     TVarChar,
-   isErased     TVarChar,
+   Id                    INTEGER NOT NULL PRIMARY KEY,
+   ObjectDescId          INTEGER NOT NULL,
+   Code                  TVarChar,
+   ItemName              TVarChar,
 
-   CONSTRAINT ObjectFloatDesc_ObjectDescId_ObjectDesc FOREIGN KEY(ObjectDescId) REFERENCES ObjectDesc(Id) );
+   CONSTRAINT fk_ObjectFloatDesc_DescId FOREIGN KEY(ObjectDescId) REFERENCES ObjectDesc(Id) );
 
 
 
 /*-------------------------------------------------------------------------------*/
 
 /*                                  »Ì‰ÂÍÒ˚                                      */
-
-
-CREATE UNIQUE INDEX ObjectFloatDesc_Code ON ObjectFloatDesc(Code);
-CLUSTER ObjectFloatDesc_Code ON ObjectFloatDesc;
 
 /*
  œ–»Ã≈◊¿Õ»ﬂ:

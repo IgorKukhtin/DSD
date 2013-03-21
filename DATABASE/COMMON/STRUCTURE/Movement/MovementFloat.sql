@@ -16,10 +16,10 @@ CREATE TABLE MovementFloat(
   DescId integer NOT NULL,
   MovementId integer NOT NULL,
   Value TFloat NOT NULL,
-  CONSTRAINT MovementFloat_PKey PRIMARY KEY (DescId, MovementId),
-  CONSTRAINT MovementFloat_DescId FOREIGN KEY (DescId)
+  CONSTRAINT pk_MovementFloat PRIMARY KEY (DescId, MovementId),
+  CONSTRAINT fk_MovementFloat_DescId FOREIGN KEY (DescId)
       REFERENCES MovementFloatDesc (Id),
-  CONSTRAINT MovementFloat_Movement FOREIGN KEY (MovementId)
+  CONSTRAINT fk_MovementFloat_Movement FOREIGN KEY (MovementId)
       REFERENCES Movement (id)
 )
 WITH (
@@ -33,17 +33,11 @@ ALTER TABLE MovementFloat
 /*                                  Индексы                                      */
 
 
--- Index: "MovementFloat_All"
+-- Index: "idx_MovementFloat_MovementId_DescId_Value"
 
--- DROP INDEX "MovementFloat_All";
+-- DROP INDEX "idx_MovementFloat_MovementId_DescId_Value";
 
-CREATE INDEX MovementFloat_All
-  ON MovementFloat
-  USING btree
-  (DescId, MovementId, Value);
-
-CLUSTER MovementFloat_All ON MovementFloat;
-
+CREATE INDEX idx_MovementFloat_MovementId_DescId_Value ON MovementFloat(MovementId, DescId, Value);
 
 /*
  ПРИМЕЧАНИЯ:

@@ -8,21 +8,16 @@
 /*-------------------------------------------------------------------------------*/
 
 CREATE TABLE ObjectBLOB(
-   DescId     INTEGER NOT NULL,
-   ObjectId   INTEGER NOT NULL,
-   ValueData  TBLOB,
+   DescId                INTEGER NOT NULL,
+   ObjectId              INTEGER NOT NULL,
+   ValueData             TBLOB,
 
-   CONSTRAINT ObjectBLOB_PKey PRIMARY KEY (ObjectId, DescId),
-   CONSTRAINT ObjectBLOB_DescId_ObjectBLOBDesc FOREIGN KEY(DescId) REFERENCES ObjectBLOBDesc(Id),
-   CONSTRAINT ObjectBLOB_ObjectId_Object FOREIGN KEY(ObjectId) REFERENCES Object(Id) );
+   CONSTRAINT pk_ObjectBLOB           PRIMARY KEY (ObjectId, DescId),
+   CONSTRAINT fk_ObjectBLOB_DescId    FOREIGN KEY(DescId) REFERENCES ObjectBLOBDesc(Id),
+   CONSTRAINT fk_ObjectBLOB_ObjectId  FOREIGN KEY(ObjectId) REFERENCES Object(Id) );
 
 /*-------------------------------------------------------------------------------*/
 /*                                  Индексы                                      */
-
-
-CREATE INDEX ObjectBLOB_Claster ON ObjectBLOB
-  (ObjectId, DescId);
-CLUSTER ObjectBLOB_Claster ON ObjectBLOB; 
 
 /*
  ПРИМЕЧАНИЯ:

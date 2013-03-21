@@ -13,10 +13,9 @@
 
 CREATE TABLE ContainerLinkObjectDesc
 (
-  id integer NOT NULL,
-  code tvarchar,
-  itemname tvarchar,
-  CONSTRAINT ContainerLinkObjectDesc_PKey PRIMARY KEY (id)
+  Id                     INTEGER NOT NULL PRIMARY KEY,
+  Code                   TVarChar NOT NULL UNIQUE,
+  ItemName               TVarChar
 )
 WITH (
   OIDS=FALSE

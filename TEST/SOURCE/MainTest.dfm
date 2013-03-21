@@ -119,13 +119,21 @@ object MainForm: TMainForm
     Height = 25
     Caption = 'gp_Test_Insert4'
     TabOrder = 9
-    OnClick = Button8Click
   end
   object cxProgressBar1: TcxProgressBar
     Left = 721
     Top = 216
     TabOrder = 10
     Width = 170
+  end
+  object Button9: TButton
+    Left = 721
+    Top = 376
+    Width = 170
+    Height = 25
+    Caption = 'Button9'
+    TabOrder = 11
+    OnClick = Button9Click
   end
   object DataSource1: TDataSource
     DataSet = ClientDataSet1

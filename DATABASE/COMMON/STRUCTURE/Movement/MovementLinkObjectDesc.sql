@@ -12,10 +12,9 @@
 
 CREATE TABLE MovementLinkObjectDesc
 (
-  Id integer NOT NULL,
-  Code tvarchar,
-  ItemName tvarchar,
-  CONSTRAINT MovementLinkObjectDesc_PKey PRIMARY KEY (id)
+  Id                     Integer NOT NULL PRIMARY KEY,
+  Code                   TVarChar NOT NULL UNIQUE,
+  ItemName               TVarChar
 )
 WITH (
   OIDS=FALSE
@@ -26,8 +25,6 @@ ALTER TABLE MovementLinkObjectDesc
 /*-------------------------------------------------------------------------------*/
 
 /*                                  »Ì‰ÂÍÒ˚                                      */
-
-CLUSTER MovementLinkObjectDesc_PKey ON MovementLinkObjectDesc 
 
 /*
  œ–»Ã≈◊¿Õ»ﬂ:

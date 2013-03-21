@@ -1,16 +1,16 @@
 ﻿CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementLinkObject(
- inDescId                    Integer           ,  /* код класса свойства       */
- inParentMovementId          Integer           ,  /* ключ главного объекта     */
- inChildObjectId             Integer              /* ключ подчиненного объекта */
+ inDescId                Integer           ,  /* код класса свойства       */
+ inMovementId            Integer           ,  /* ключ главного объекта     */
+ inObjectId              Integer              /* ключ подчиненного объекта */
 )
   RETURNS boolean AS
 $BODY$BEGIN
 
-    UPDATE MovementLinkObject SET ChildObjectId = inChildObjectId WHERE ParentMovementId = inParentMovementId AND DescId = inDescId;
+    UPDATE MovementLinkObject SET ObjectId = inObjectId WHERE MovementId = inMovementId AND DescId = inDescId;
     IF NOT found THEN            
        /* вставить <ключ свойства> , <ключ главного объекта> и <ключ подчиненного объекта> */
-       INSERT INTO MovementLinkObject (DescId, ParentMovementId, ChildObjectId)
-           VALUES (inDescId, inParentMovementId, inChildObjectId);
+       INSERT INTO MovementLinkObject (DescId, MovementId, ObjectId)
+           VALUES (inDescId, inMovementId, inObjectId);
     END IF;             
     RETURN true;
 END;$BODY$

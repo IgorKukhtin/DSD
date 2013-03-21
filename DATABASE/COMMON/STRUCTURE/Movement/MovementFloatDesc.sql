@@ -12,10 +12,9 @@
 /*-------------------------------------------------------------------------------*/
 
 CREATE TABLE MovementFloatDesc(
-  Id integer NOT NULL,
-  Code tvarchar,
-  ItemName tvarchar,
-  CONSTRAINT MovementFloatDesc_PKey PRIMARY KEY (id)
+  Id                     Integer NOT NULL PRIMARY KEY,
+  Code                   TVarChar NOT NULL UNIQUE,
+  ItemName               TVarChar
 )
 WITH (
   OIDS=FALSE
@@ -25,10 +24,6 @@ ALTER TABLE MovementFloatDesc
 
 /*-------------------------------------------------------------------------------*/
 /*                                  Индексы                                      */
-
-
-
-CLUSTER MovementFloatDesc_PKey ON MovementFloatDesc 
 
 
 /*

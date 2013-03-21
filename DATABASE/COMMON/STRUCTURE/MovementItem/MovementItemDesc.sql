@@ -17,12 +17,6 @@ CREATE TABLE MovementItemDesc(
 
 /*                                  Индексы                                      */
 
-
-CREATE UNIQUE INDEX MovementItemDesc_Code ON MovementItemDesc(Code);
-CLUSTER MovementItemDesc_Code ON MovementItemDesc;  
-
-
-
 /*
  ПРИМЕЧАНИЯ:
  ИСТОРИЯ РАЗРАБОТКИ:

@@ -16,7 +16,6 @@ type
     procedure TearDown; override;
   published
     procedure CreateType;
-    procedure CreateEnum;
     procedure CreateObject;
     procedure CreateContainer;
     procedure CreateContainerFunction;
@@ -48,6 +47,8 @@ const
 
 procedure TCheckDataBaseStructure.CreateConstantObject;
 begin
+  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateObjectFunction.sql');
+  ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateObject.sql');
   ZQuery.ExecSQL;
 end;
@@ -82,22 +83,9 @@ end;
 
 procedure TCheckDataBaseStructure.CreateContainerProcedure;
 begin
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'Container\lpGet_Container.sql');
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'Container\lpGet_Container1.sql');
   ZQuery.ExecSQL;
-end;
-
-procedure TCheckDataBaseStructure.CreateEnum;
-begin
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Enum\EnumDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Enum\Enum.sql');
-  ZQuery.ExecSQL;
-
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateEnumDescFunction.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertEnumDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateEnum.sql');
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'Container\lpGet_Container2.sql');
   ZQuery.ExecSQL;
 end;
 
@@ -111,6 +99,10 @@ begin
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(StructurePath + 'Movement\MovementLinkObject.sql');
   ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(StructurePath + 'Movement\MovementFloatDesc.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(StructurePath + 'Movement\MovementFloat.sql');
+  ZQuery.ExecSQL;
 end;
 
 procedure TCheckDataBaseStructure.CreateMovementDesc;
@@ -119,6 +111,8 @@ begin
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertMovementLinkObjectDesc.sql');
   ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertMovementFloatDesc.sql');
+  ZQuery.ExecSQL;
 end;
 
 procedure TCheckDataBaseStructure.CreateMovementFunction;
@@ -126,6 +120,8 @@ begin
   ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateMovementDescFunction.sql');
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateMovementLinkObjectDescFunction.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateMovementFloatDescFunction.sql');
   ZQuery.ExecSQL;
 end;
 
@@ -159,6 +155,8 @@ begin
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'Movement\InsertUpdate\lpInsertUpdate_MovementLinkObject.sql');
   ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'Movement\InsertUpdate\lpInsertUpdate_MovementFloat.sql');
+  ZQuery.ExecSQL;
 end;
 
 procedure TCheckDataBaseStructure.CreateMovementItemContainerDesc;
@@ -177,13 +175,13 @@ begin
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectString.sql');
   ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectEnumDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectEnum.sql');
-  ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectFloatDesc.sql');
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectFloat.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectDateDesc.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectDate.sql');
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectBLOBDesc.sql');
   ZQuery.ExecSQL;
@@ -201,8 +199,6 @@ begin
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateObjectStringDescFunction.sql');
   ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateObjectEnumDescFunction.sql');
-  ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateObjectLinkDescFunction.sql');
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateObjectBLOBDescFunction.sql');
@@ -210,8 +206,6 @@ begin
   ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertObjectDesc.sql');
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertObjectStringDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertObjectEnumDesc.sql');
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertObjectBLOBDesc.sql');
   ZQuery.ExecSQL;
@@ -229,8 +223,6 @@ begin
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_ObjectBLOB.sql');
   ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_ObjectEnum.sql');
-  ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_ObjectLink.sql');
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\Delete\lpDelete_Object.sql');
@@ -241,12 +233,35 @@ begin
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_User\gpGet_Object_User.sql');
   ZQuery.ExecSQL;
+
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Cash\gpInsertUpdate_Object_Cash.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Cash\gpSelect_Object_Cash.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Cash\gpGet_Object_Cash.sql');
+  ZQuery.ExecSQL;
+
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Currency\gpInsertUpdate_Object_Currency.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Currency\gpSelect_Object_Currency.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Currency\gpGet_Object_Currency.sql');
+  ZQuery.ExecSQL;
+
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Measure\gpInsertUpdate_Object_Measure.sql');
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Measure\gpSelect_Object_Measure.sql');
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Measure\gpGet_Object_Measure.sql');
   ZQuery.ExecSQL;
+
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Juridical\gpInsertUpdate_Object_Juridical.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Juridical\gpSelect_Object_Juridical.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Juridical\gpGet_Object_Juridical.sql');
+  ZQuery.ExecSQL;
+
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Form\gpInsertUpdate_Object_Form.sql');
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Form\gpGet_Object_Form.sql');

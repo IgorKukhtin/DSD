@@ -34,14 +34,15 @@ type
     Button7: TButton;
     Button8: TButton;
     cxProgressBar1: TcxProgressBar;
+    Button9: TButton;
     procedure Button6Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button7Click(Sender: TObject);
-    procedure Button8Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
+    procedure Button9Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -53,7 +54,7 @@ var
 
 implementation
 
-uses StorageUnit;
+uses StorageUnit, ZLibExGZ;
 
 {$R *.dfm}
 const
@@ -222,9 +223,13 @@ begin
   ShowMessage('Время выполнения ' + FormatFloat('.##', (GetTickCount - Time) /1000) + ' сек');
 end;
 
-procedure TMainForm.Button8Click(Sender: TObject);
+procedure TMainForm.Button9Click(Sender: TObject);
+var
+  Time: cardinal;
 begin
-{}
+  Time := GetTickCount;
+  GZCompressFile('C:\CompToCash.e', 'C:\CompToCash.er');
+  ShowMessage('Время выполнения ' + FormatFloat('.##', (GetTickCount - Time) /1000) + ' сек');
 end;
 
 end.

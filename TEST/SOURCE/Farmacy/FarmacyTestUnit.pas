@@ -2,12 +2,14 @@ unit FarmacyTestUnit;
 
 interface
 
-uses TestFramework;
+uses TestFramework, Db;
 
 type
   TFarmacyTest = class (TTestCase)
   private
-    function InsertCash(CashName: string): string;
+    function InsertUpdate_Movement_FoundationCash
+          (ioId: Integer; inOperDate: TDateTime; inCashId: integer; inSumm: double): string;
+    procedure Update_Movement_FoundationCash_Complete(inMovementId: Integer);
   protected
     // подготавливаем данные для тестирования
     procedure SetUp; override;
@@ -17,32 +19,43 @@ type
     procedure CashFoundationTest;
   end;
 
-
 implementation
 
 { TFarmacyTest }
 
-uses dsdDataSetWrapperUnit, Db, UtilType;
+uses dsdDataSetWrapperUnit, UtilType, DBClient, SysUtils, DataBaseObjectTestUnit;
 
 procedure TFarmacyTest.CashFoundationTest;
+var
+  MovementId: String;
+  CashId: Integer;
 begin
-  // Добавляем кассу
+  with TCurrencyTest.Create do
+  try
+    CashId := GetDefault
+  finally
+    Free;
+  end;
   // Создаем операцию "Расчеты с учредителями"
+  MovementId := InsertUpdate_Movement_FoundationCash(0, Date, CashId, 123.45);
   // Проводим документ
+  Update_Movement_FoundationCash_Complete(StrToInt(MovementId));
   // Проверяем формирование баланса
-
 end;
 
-function TFarmacyTest.InsertCash(CashName: string): string;
+function TFarmacyTest.InsertUpdate_Movement_FoundationCash(ioId: Integer;
+  inOperDate: TDateTime; inCashId: integer; inSumm: double): string;
 begin
   with TdsdStoredProc.Create(nil) do
   try
-    StoredProcName := 'gpInsertUpdate_Cash';
+    StoredProcName := 'gpInsertUpdate_Movement_FoundationCash';
     OutputType := otResult;
-    Params.AddParam('Id', ftInteger, ptInputOutput, 0);
-    Params.AddParam('Name', ftString, ptInput, 'Главная касса');
+    Params.AddParam('ioId', ftInteger, ptInputOutput, 0);
+    Params.AddParam('inOperDate', ftDateTime, ptInput, inOperDate);
+    Params.AddParam('inCashId', ftInteger, ptInput, inCashId);
+    Params.AddParam('inSumm', ftFloat, ptInput, inSumm);
     Execute;
-    result := ParamByName('Id').Value
+    result := ParamByName('ioid').Value
   finally
     Free;
   end;
@@ -60,8 +73,21 @@ begin
 
 end;
 
-initialization
-  TestFramework.RegisterTest('TFarmacyTest', TFarmacyTest.Suite);
+procedure TFarmacyTest.Update_Movement_FoundationCash_Complete(
+  inMovementId: Integer);
+begin
+  with TdsdStoredProc.Create(nil) do
+  try
+    StoredProcName := 'gpUpdate_Movement_FoundationCash_Complete';
+    Params.AddParam('inMovementId', ftInteger, ptInputOutput, inMovementId);
+    OutputType := otResult;
+    Execute;
+  finally
+    Free;
+  end;
+end;
 
+initialization
+  TestFramework.RegisterTest('FarmacyTest', TFarmacyTest.Suite);
 
 end.

@@ -15,15 +15,12 @@
 CREATE TABLE MovementLinkObject
 (
   DescId integer NOT NULL,
-  ParentMovementId integer NOT NULL,
-  ChildObjectId integer NOT NULL,
-  CONSTRAINT MovementLinkObject_PKey PRIMARY KEY (DescId, ParentMovementId),
-  CONSTRAINT MovementLinkObject_DescId FOREIGN KEY (DescId)
-      REFERENCES MovementLinkObjectDesc (Id),
-  CONSTRAINT MovementLinkObject_Movement FOREIGN KEY (ParentMovementId)
-      REFERENCES Movement (id),
-  CONSTRAINT MovementLinkObject_Object FOREIGN KEY (ChildObjectId)
-      REFERENCES Object (Id)
+  MovementId integer NOT NULL,
+  ObjectId integer NOT NULL,
+  CONSTRAINT pk_MovementLinkObject PRIMARY KEY (MovementId, DescId),
+  CONSTRAINT fk_MovementLinkObject_DescId FOREIGN KEY (DescId) REFERENCES MovementLinkObjectDesc (Id),
+  CONSTRAINT fk_MovementLinkObject_Movement FOREIGN KEY (MovementId) REFERENCES Movement (id),
+  CONSTRAINT fk_MovementLinkObject_Object FOREIGN KEY (ObjectId) REFERENCES Object (Id)
 )
 WITH (
   OIDS=FALSE
@@ -36,17 +33,11 @@ ALTER TABLE MovementLinkObject
 /*                                  Индексы                                      */
 
 
--- Index: "MovementLinkObject_All"
+-- Index: "idx_MovementLinkObject_MovementId_DescId_ObjectId"
 
--- DROP INDEX "MovementLinkObject_All";
+-- DROP INDEX "idx_MovementLinkObject_MovementId_DescId_ObjectId";
 
-CREATE INDEX MovementLinkObject_All
-  ON MovementLinkObject
-  USING btree
-  (DescId, ParentMovementId, ChildObjectId);
-
-CLUSTER MovementLinkObject_All ON MovementLinkObject;
-
+CREATE INDEX idx_MovementLinkObject_MovementId_DescId_ObjectId ON MovementLinkObject(MovementId, DescId, ObjectId);
 
 /*
  ПРИМЕЧАНИЯ:

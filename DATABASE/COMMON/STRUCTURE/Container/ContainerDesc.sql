@@ -16,10 +16,6 @@ CREATE TABLE ContainerDesc(
 /*                                  »Ì‰ÂÍÒ˚                                      */
 
 
-CREATE UNIQUE INDEX ContainerDesc_Code ON ContainerDesc(Code);
-CLUSTER ContainerDesc_Code ON ContainerDesc;
-
-
 /*
  œ–»Ã≈◊¿Õ»ﬂ:
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »:

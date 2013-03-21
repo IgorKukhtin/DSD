@@ -7,7 +7,7 @@ IN inSession     TVarChar       /* текущий пользователь */)
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Login TVarChar, Password TVarChar, isErased boolean) AS
 $BODY$BEGIN
 
-   PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
+   PERFORM lpCheckRight(inSession, zc_Object_Process_User());
 
    RETURN QUERY 
    SELECT 
@@ -19,10 +19,10 @@ $BODY$BEGIN
    , Object.isErased
    FROM Object
    LEFT JOIN ObjectString AS ObjectString_UserLogin 
-          ON ObjectString_UserLogin.DescId = zc_Object_User_Login() 
+          ON ObjectString_UserLogin.DescId = zc_ObjectString_User_Login() 
          AND ObjectString_UserLogin.ObjectId = Object.Id
    LEFT JOIN ObjectString AS ObjectString_UserPassword 
-          ON ObjectString_UserPassword.DescId = zc_Object_User_Password() 
+          ON ObjectString_UserPassword.DescId = zc_ObjectString_User_Password() 
          AND ObjectString_UserPassword.ObjectId = Object.Id
    WHERE Object.DescId = zc_Object_User();
   

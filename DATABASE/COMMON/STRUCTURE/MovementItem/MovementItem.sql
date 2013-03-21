@@ -13,17 +13,20 @@ CREATE TABLE MovementItem(
    MovementId   INTEGER,
    ContainerId  INTEGER,
    Amount       TFloat, 
-   isErased     TVarChar,
+   isErased     Boolean NOT NULL DEFAULT false,
 
-   CONSTRAINT MovementItem_DescId FOREIGN KEY(DescId) REFERENCES MovementDesc(Id),
-   CONSTRAINT MovementItem_MovementId FOREIGN KEY(MovementId) REFERENCES Movement(Id),
-   CONSTRAINT MovementItem_ContainerId FOREIGN KEY(ContainerId) REFERENCES Container(Id)   
-)
+   CONSTRAINT fk_MovementItem_DescId FOREIGN KEY(DescId) REFERENCES MovementDesc(Id),
+   CONSTRAINT fk_MovementItem_MovementId FOREIGN KEY(MovementId) REFERENCES Movement(Id),
+   CONSTRAINT fk_MovementItem_ContainerId FOREIGN KEY(ContainerId) REFERENCES Container(Id)   
+);
 
 /*-------------------------------------------------------------------------------*/
 
 /*                                  Индексы                                      */
 
+CREATE INDEX idx_MovementItem_MovementId_DescId_isErased ON MovementItem (MovementId, DescId, isErased);
+
+CLUSTER idx_MovementItem_MovementId_DescId_isErased ON MovementItem;
 
 
 

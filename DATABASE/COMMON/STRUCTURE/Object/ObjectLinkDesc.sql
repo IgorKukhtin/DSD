@@ -7,24 +7,18 @@
 
 /*-------------------------------------------------------------------------------*/
 CREATE TABLE ObjectLinkDesc(
-   Id                 INTEGER NOT NULL PRIMARY KEY,
-   Code               TVarChar NOT NULL UNIQUE,
-   ItemName           TVarChar,
-   ParentObjectDescId Integer NOT NULL,
-   ChildObjectDescId  Integer,
+   Id                    INTEGER NOT NULL PRIMARY KEY,
+   Code                  TVarChar NOT NULL UNIQUE,
+   ItemName              TVarChar,
+   ObjectDescId          Integer NOT NULL,
+   ChildObjectDescId     Integer,
 
-   CONSTRAINT ObjectLinkDesc_ParentObjectDescId_ObjectDesc FOREIGN KEY(ParentObjectDescId) REFERENCES ObjectDesc(Id),
-   CONSTRAINT ObjectLinkDesc_ChildObjectDescId_ObjectDesc FOREIGN KEY(ChildObjectDescId) REFERENCES ObjectDesc(Id));
+   CONSTRAINT fk_ObjectLinkDesc_ObjectDescId       FOREIGN KEY(ObjectDescId) REFERENCES ObjectDesc(Id),
+   CONSTRAINT fk_ObjectLinkDesc_ChildObjectDescId  FOREIGN KEY(ChildObjectDescId)  REFERENCES ObjectDesc(Id));
 
 /*-------------------------------------------------------------------------------*/
 
 /*                                  »Ì‰ÂÍÒ˚                                      */
-
-
-
-CREATE UNIQUE INDEX ObjectLinkDesc_Code ON ObjectLinkDesc(Code); 
-CREATE INDEX ObjectLinkDesc_ParentObjectDescId ON ObjectLinkDesc(ParentObjectDescId); 
-CREATE INDEX ObjectLinkDesc_ChildObjectDescId ON ObjectLinkDesc(ChildObjectDescId); 
 
 /*
  œ–»Ã≈◊¿Õ»ﬂ:

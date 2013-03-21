@@ -22,7 +22,7 @@ BEGIN
 
    Id := lpInsertUpdate_Object(Id, zc_Object_Form(), 0, inFormName);
 
-   PERFORM lpInsertUpdate_ObjectBLOB(zc_Object_Form_Data(), Id, inFormData);
+   PERFORM lpInsertUpdate_ObjectBLOB(zc_ObjectBlob_Form_Data(), Id, inFormData);
    
    RETURN 0;
  

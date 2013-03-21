@@ -95,7 +95,7 @@ type
 implementation
 
 uses StorageUnit, CommonDataUnit, TypInfo, UtilConvert, SysUtils, cxTextEdit,
-     XMLDoc, XMLIntf;
+     XMLDoc, XMLIntf, StrUtils;
 
 procedure Register;
 begin
@@ -268,7 +268,9 @@ function TdsdParam.GetValue: String;
 // иначе из значени€ Value
 var
   i: integer;
+  ft: double;
 begin
+  Result := '';
   if Assigned(Component) then begin
      // ¬ зависимости от типа компонента Value содержитс€ в разных property
      if Component is TcxTextEdit then
@@ -290,6 +292,15 @@ begin
                       Result := FValue
                    else
                       Result := '0';
+                 end;
+      ftFloat:   begin
+                   if TryStrToFloat(FValue, ft) then
+                      Result := ReplaceStr(FValue, ',', '.')
+                   else
+                      Result := '0';
+                 end;
+      ftDateTime:begin
+                   Result := FValue
                  end;
       ftString, ftBlob: Result := FValue;
     end;

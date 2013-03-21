@@ -13,10 +13,9 @@
 /*-------------------------------------------------------------------------------*/
 CREATE TABLE MovementDesc
 (
-  Id integer NOT NULL,
-  Code TVarChar,
-  ItemName TVarChar,
-  CONSTRAINT MovementDesc_PKey PRIMARY KEY (Id)
+  Id                     Integer NOT NULL PRIMARY KEY, 
+  Code                   TVarChar NOT NULL UNIQUE,
+  ItemName               TVarChar
 )
 WITH (
   OIDS=FALSE
@@ -29,10 +28,6 @@ ALTER TABLE MovementDesc
 /*-------------------------------------------------------------------------------*/
 
 /*                                  Индексы                                      */
-
-
-CREATE UNIQUE INDEX MovementDesc_Code ON MovementDesc(Code);
-CLUSTER MovementDesc_Code ON MovementDesc;
 
 
 /*

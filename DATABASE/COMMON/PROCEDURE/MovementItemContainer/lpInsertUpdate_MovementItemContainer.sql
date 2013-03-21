@@ -5,16 +5,17 @@ INOUT ioId integer,
 IN inDescId integer, 
 IN inMovementId integer, 
 IN inContainerId integer,
-IN inAmount TFloat)
+IN inAmount TFloat,
+IN inOperDate TDateTime)
  AS
 $BODY$BEGIN
     /* изменить <код объекта> и <данные> по значению <ключа> */
-   UPDATE Container SET  Amount = Amount + inAmount WHERE Id = inContainerId;
+   UPDATE Container SET Amount = Amount + inAmount WHERE Id = inContainerId;
    /* вставить <ключ класса объекта> , <код объекта> , <данные> со значением <ключа> */
-   INSERT INTO MovementItemContainer (DescId, MovementId, ContainerId, Amount)
-               VALUES (inDescId, inMovementId, inContainerId, inAmount) RETURNING Id INTO ioId;
+   INSERT INTO MovementItemContainer (DescId, MovementId, ContainerId, Amount, OperDate)
+               VALUES (inDescId, inMovementId, inContainerId, inAmount, inOperDate) RETURNING Id INTO ioId;
 END;           $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
-ALTER FUNCTION lpInsertUpdate_MovementItemContainer(integer, integer, integer, integer, TFloat)
+ALTER FUNCTION lpInsertUpdate_MovementItemContainer(integer, integer, integer, integer, TFloat, TDateTime)
   OWNER TO postgres; 

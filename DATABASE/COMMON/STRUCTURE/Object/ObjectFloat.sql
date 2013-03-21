@@ -11,15 +11,15 @@ CREATE TABLE ObjectFloat(
    ObjectId   INTEGER NOT NULL,
    ValueData  TFloat,
 
-   CONSTRAINT ObjectFloat_DescId_ObjectFloatDesc FOREIGN KEY(DescId) REFERENCES ObjectFloatDesc(Id),
-   CONSTRAINT ObjectFloat_ObjectId_Object FOREIGN KEY(ObjectId) REFERENCES Object(Id) );
+   CONSTRAINT pk_ObjectFloat          PRIMARY KEY (ObjectId, DescId),
+   CONSTRAINT fk_ObjectFloat_DescId   FOREIGN KEY(DescId)   REFERENCES ObjectFloatDesc(Id),
+   CONSTRAINT fk_ObjectFloat_ObjectId FOREIGN KEY(ObjectId) REFERENCES Object(Id) );
 
 /*-------------------------------------------------------------------------------*/
 /*                                  »Ì‰ÂÍÒ˚                                      */
 
 
-CREATE UNIQUE INDEX ObjectFloat_ObjectId_DescId ON ObjectFloat(ObjectId, DescId); 
-CLUSTER ObjectFloat_ObjectId_DescId ON ObjectFloat;
+CREATE INDEX idx_ObjectFloat_ObjectId_DescId_ValueData ON ObjectFloat(ObjectId, DescId, ValueData); 
 
 /*
  œ–»Ã≈◊¿Õ»ﬂ:

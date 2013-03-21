@@ -8,18 +8,14 @@
 /*-------------------------------------------------------------------------------*/
 
 CREATE TABLE ObjectBLOBDesc(
-   Id         INTEGER NOT NULL PRIMARY KEY,
-   ObjectDescId  INTEGER NOT NULL,
-   Code       TVarChar,
-   ItemName   TVarChar,
-   isErased   TVarChar,
-   CONSTRAINT ObjectBLOBDesc_ObjectDescId_ObjectDesc FOREIGN KEY(ObjectDescId) REFERENCES ObjectDesc(Id) );
+   Id                    INTEGER NOT NULL PRIMARY KEY,
+   ObjectDescId          INTEGER NOT NULL,
+   Code                  TVarChar NOT NULL UNIQUE,
+   ItemName              TVarChar,
+   CONSTRAINT fk_ObjectBLOBDesc_ObjectDescId FOREIGN KEY(ObjectDescId) REFERENCES ObjectDesc(Id));
 
 /*-------------------------------------------------------------------------------*/
 /*                                  Индексы                                      */
-
-CREATE UNIQUE INDEX ObjectBLOBDesc_Code ON ObjectBLOBDesc(Code);
-CLUSTER ObjectBLOBDesc_Code ON ObjectBLOBDesc;
 
 
 /*

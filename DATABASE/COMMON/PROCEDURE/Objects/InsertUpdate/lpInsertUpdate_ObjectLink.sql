@@ -4,18 +4,18 @@
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_ObjectLink(
  inDescId                    Integer           ,  /* код класса свойства       */
- inParentObjectId            Integer           ,  /* ключ главного объекта     */
+ inObjectId                  Integer           ,  /* ключ главного объекта     */
  inChildObjectId             Integer              /* ключ подчиненного объекта */
 )
   RETURNS boolean AS
 $BODY$BEGIN
 
     /* изменить данные по значению <ключ свойства> и <ключ объекта> */
-    UPDATE ObjectLink SET ChildObjectId = inChildObjectId WHERE ParentObjectId = inParentObjectId AND DescId = inDescId;
+    UPDATE ObjectLink SET ChildObjectId = inChildObjectId WHERE ObjectId = inObjectId AND DescId = inDescId;
     IF NOT found THEN            
        /* вставить <ключ свойства> , <ключ главного объекта> и <ключ подчиненного объекта> */
-       INSERT INTO ObjectLink (DescId, ParentObjectId, ChildObjectId)
-           VALUES (inDescId, inParentObjectId, inChildObjectId);
+       INSERT INTO ObjectLink (DescId, ObjectId, ChildObjectId)
+           VALUES (inDescId, inObjectId, inChildObjectId);
     END IF;             
     RETURN true;
 END;$BODY$

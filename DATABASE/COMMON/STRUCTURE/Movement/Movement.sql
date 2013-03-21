@@ -12,14 +12,13 @@
 /*-------------------------------------------------------------------------------*/
 CREATE TABLE Movement
 (
-  Id serial NOT NULL,
-  DescId integer,
-  InvNumber TVarChar,
-  OperData TDateTime,
-  Status integer,
-  CONSTRAINT Movement_PKey PRIMARY KEY (Id),
-  CONSTRAINT Movement_MovementDesc FOREIGN KEY (DescId)  REFERENCES MovementDesc (id),
-  CONSTRAINT Movement_StatusId FOREIGN KEY (Status)      REFERENCES Enum (id)
+  Id         serial    NOT NULL PRIMARY KEY,
+  DescId     integer   NOT NULL,
+  InvNumber  TVarChar          ,
+  OperDate   TDateTime NOT NULL,
+  StatusId   integer   NOT NULL,
+  CONSTRAINT fk_Movement_MovementDesc FOREIGN KEY (DescId)  REFERENCES MovementDesc (id),
+  CONSTRAINT fk_Movement_StatusId FOREIGN KEY (StatusId)      REFERENCES Object (id)
 )
 WITH (
   OIDS=FALSE
@@ -31,16 +30,12 @@ ALTER TABLE Movement
 
 /*                                  Индексы                                      */
 
--- Index: Movement_OperDate_DescId
+-- Index: idx_Movement_All
 
--- DROP INDEX Movement_OperDate_DescId;
+-- DROP INDEX idx_Movement_All;
 
-CREATE INDEX Movement_OperDate_DescId
-  ON Movement
-  USING btree
-  (OperData, DescId);
+CREATE INDEX idx_Movement_All ON Movement(OperDate, DescId, StatusId, Id, InvNumber);
 
-CLUSTER Movement_OperDate_DescId ON Movement;
 
 
 /*-------------------------------------------------------------------------------*/

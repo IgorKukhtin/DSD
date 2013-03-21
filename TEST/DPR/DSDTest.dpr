@@ -30,7 +30,9 @@ uses
   dsdDataSetWrapperUnit in '..\..\SOURCE\COMPONENT\dsdDataSetWrapperUnit.pas',
   CommonDataUnit in '..\..\SOURCE\CommonDataUnit.pas',
   UtilUnit in '..\SOURCE\UtilUnit.pas',
-  FarmacyTestUnit in '..\SOURCE\Farmacy\FarmacyTestUnit.pas';
+  FarmacyStructureTestUnit in '..\SOURCE\Farmacy\FarmacyStructureTestUnit.pas',
+  FarmacyTestUnit in '..\SOURCE\Farmacy\FarmacyTestUnit.pas',
+  MeatGuidesTestUnit in '..\SOURCE\Meat\MeatGuidesTestUnit.pas';
 
 {$R *.RES}
 

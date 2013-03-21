@@ -12,14 +12,14 @@ CREATE TABLE Container(
    DescId                INTEGER, 
    Amount                TFloat,
 
-   CONSTRAINT Container_DescId_ContainerDesc FOREIGN KEY(DescId) REFERENCES ContainerDesc(Id));
+   CONSTRAINT fk_Container_DescId_ContainerDesc FOREIGN KEY(DescId) REFERENCES ContainerDesc(Id));
 
 
 /*-------------------------------------------------------------------------------*/
 /*                                  »Ì‰ÂÍÒ˚                                      */
 
 
-CREATE INDEX Container_DescId ON Container(DescId); 
+CREATE INDEX idx_Container_DescId ON Container(DescId); 
 
 /*
  œ–»Ã≈◊¿Õ»ﬂ:

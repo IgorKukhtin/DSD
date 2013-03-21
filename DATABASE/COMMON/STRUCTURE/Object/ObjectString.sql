@@ -8,21 +8,19 @@
 /*-------------------------------------------------------------------------------*/
 
 CREATE TABLE ObjectString(
-   DescId     INTEGER NOT NULL,
-   ObjectId   INTEGER NOT NULL,
-   ValueData  TVarChar,
+   DescId                INTEGER NOT NULL,
+   ObjectId              INTEGER NOT NULL,
+   ValueData             TVarChar,
 
-   CONSTRAINT ObjectString_PKey PRIMARY KEY (ObjectId, DescId),
-   CONSTRAINT ObjectString_DescId_ObjectStringDesc FOREIGN KEY(DescId) REFERENCES ObjectStringDesc(Id),
-   CONSTRAINT ObjectString_ObjectId_Object FOREIGN KEY(ObjectId) REFERENCES Object(Id) );
+   CONSTRAINT pk_ObjectString          PRIMARY KEY (ObjectId, DescId),
+   CONSTRAINT pk_ObjectString_DescId   FOREIGN KEY(DescId) REFERENCES ObjectStringDesc(Id),
+   CONSTRAINT pk_ObjectString_ObjectId FOREIGN KEY(ObjectId) REFERENCES Object(Id) );
 
 /*-------------------------------------------------------------------------------*/
 /*                                  »Ì‰ÂÍÒ˚                                      */
 
 
-CREATE INDEX ObjectString_Claster ON ObjectString
-  (ObjectId, DescId, ValueData);
-CLUSTER ObjectString_Claster ON ObjectString; 
+CREATE INDEX idx_ObjectString_ObjectId_DescId_ValueData ON ObjectString (ObjectId, DescId, ValueData);
 
 /*
  œ–»Ã≈◊¿Õ»ﬂ:

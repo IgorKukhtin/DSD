@@ -1,3 +1,3 @@
-﻿INSERT INTO ObjectBLOBDesc (id, objectdescid, itemname)
-VALUES (zc_object_form_Data(), zc_object_Form(), 'Данные формы');
+﻿INSERT INTO ObjectBLOBDesc (id, ObjectDescId, Code ,itemname)
+VALUES (zc_objectBlob_form_Data(), zc_object_Form(), 'FormData','Данные формы');
 

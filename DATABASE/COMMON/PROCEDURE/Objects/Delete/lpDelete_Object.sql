@@ -8,8 +8,7 @@ IN Session tvarchar)
   RETURNS void AS
 $BODY$BEGIN
 
-  DELETE FROM ObjectEnum WHERE ObjectId = inId;
-  DELETE FROM ObjectLink WHERE ParentObjectId = inId;
+  DELETE FROM ObjectLink WHERE ObjectId = inId;
   DELETE FROM ObjectLink WHERE ChildObjectId = inId;
   DELETE FROM ObjectString WHERE ObjectId = inId;
   DELETE FROM Object WHERE Id = inId;

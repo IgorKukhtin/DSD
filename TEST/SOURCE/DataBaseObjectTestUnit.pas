@@ -5,24 +5,63 @@ uses TestFramework, AuthenticationUnit, ZConnection, ZDataset, ZStoredProcedure,
      Db, XMLIntf, dsdDataSetWrapperUnit;
 
 type
+
+  TObjectTest = class
+  private
+    FspInsertUpdate: string;
+    FspSelect: string;
+    FspGet: string;
+    FParams: TdsdParams;
+    FdsdStoredProc: TdsdStoredProc;
+  protected
+    property spGet: string read FspGet write FspGet;
+    property spSelect: string read FspSelect write FspSelect;
+    property spInsertUpdate: string read FspInsertUpdate write FspInsertUpdate;
+    function InsertUpdate(dsdParams: TdsdParams): Integer;
+    function InsertDefault: integer; virtual; abstract;
+  public
+    function GetDefault: integer;
+    function GetDataSet: TDataSet;
+    function GetRecord(Id: integer): TDataSet;
+    constructor Create; virtual;
+    destructor Destoy;
+  end;
+
+  TJuridicalTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  public
+    function InsertUpdateJuridical(const Id: integer; Code: Integer;
+        Name, OKPO, INN, Phone, Address, GLNCode: string): integer;
+    constructor Create; override;
+  end;
+
+  TCurrencyTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  public
+    constructor Create; override;
+  end;
+
+  TUserTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  public
+    function InsertUpdateUser(const Id: integer; UserName, Login, Password: string): integer;
+    constructor Create; override;
+  end;
+
+  TCashTest = class(TObjectTest)
+    function InsertDefault: integer; override;
+  public
+    function InsertUpdateCash(const Id: integer; CashName: string; CurrencyId: Integer): integer;
+    constructor Create; override;
+  end;
+
   TDataBaseObjectTest = class (TTestCase)
   private
-    ZConnection: TZConnection;
-    ZQuery: TZQuery;
-    ZStoredProcedure: TZStoredProc;
-    FdsdDataSetWrapper: TdsdStoredProc;
-    // добавление изменение пользователя
-    procedure InsertUpdate_Object_User(var Id: integer; UserName, Login, Password: string; Session: string);
-    //
-    function Select_User: TDataSet;
-    //
-    function Get_User(Id: integer): IXMLDocument;
-    //
     procedure DeleteObject(Id: integer);
-    // добавляет или изменяет данные об объекте
-    function lpInsertUpdate_Object(Id, DescId, ObjectCode: integer; ValueData: String): Variant;
-    // добавляет или изменяет строковое данное об объекте
-    procedure lpInsertUpdate_ObjectString(DescId, ObjectId: integer; ValueData: String);
+    function GetRecordCount(ObjectTest: TObjectTest): integer;
   protected
     // подготавливаем данные для тестирования
     procedure SetUp; override;
@@ -30,84 +69,97 @@ type
     procedure TearDown; override;
   published
     procedure User_Test;
+    procedure Cash_Test;
     procedure Form_Test;
-    procedure gpSetErased;
-    procedure lpInsertUpdate_Object_Test;
-    procedure lpInsertUpdate_ObjectString_Test;
   end;
 
 implementation
 
 uses ZDbcIntfs, SysUtils, StorageUnit, DBClient, XMLDoc, CommonDataUnit, Forms,
-     Classes, UtilConvert, ZLibEx, UtilUnit;
+     Classes, UtilConvert, ZLibEx, UtilUnit, UtilType;
+
+
+{ TObjectTest }
+
+constructor TObjectTest.Create;
+begin
+  FdsdStoredProc := TdsdStoredProc.Create(nil);
+  FParams := TdsdParams.Create(TdsdParam);
+end;
+
+destructor TObjectTest.Destoy;
+begin
+  FdsdStoredProc.Free
+end;
+
+function TObjectTest.GetDataSet: TDataSet;
+begin
+  with FdsdStoredProc do begin
+    DataSets.Add.DataSet := TClientDataSet.Create(nil);
+    StoredProcName := FspSelect;
+    OutputType := otDataSet;
+    Params.Clear;
+    Execute;
+    result := DataSets[0].DataSet;
+  end;
+end;
+
+function TObjectTest.GetDefault: integer;
+begin
+  if GetDataSet.RecordCount > 0 then
+     result := GetDataSet.FieldByName('Id').AsInteger
+  else
+     result := InsertDefault;
+end;
+
+function TObjectTest.GetRecord(Id: integer): TDataSet;
+begin
+  with FdsdStoredProc do begin
+    DataSets.Add.DataSet := TClientDataSet.Create(nil);
+    StoredProcName := FspGet;
+    OutputType := otDataSet;
+    Params.Clear;
+    Params.AddParam('ioId', ftInteger, ptInputOutput, Id);
+    Execute;
+    result := DataSets[0].DataSet;
+  end;
+end;
+
+function TObjectTest.InsertUpdate(dsdParams: TdsdParams): Integer;
+begin
+  with FdsdStoredProc do begin
+    StoredProcName := FspInsertUpdate;
+    OutputType := otResult;
+    Params.Assign(dsdParams);
+    Execute;
+    Result := StrToInt(ParamByName('ioId').Value);
+  end;
+end;
 
 { TDataBaseObjectTest }
 {------------------------------------------------------------------------------}
-procedure TDataBaseObjectTest.gpSetErased;
+procedure TDataBaseObjectTest.Cash_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TCashTest;
 begin
+  ObjectTest := TCashTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка кассы
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных о кассе
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('name').AsString = 'Главная касса'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
 
+    // Получим список касс
+    Check((GetRecordCount(ObjectTest) = RecordCount + 1), 'Количество записей не изменилось');
+  finally
+    DeleteObject(Id);
+  end;
 end;
-{------------------------------------------------------------------------------}
-procedure TDataBaseObjectTest.InsertUpdate_Object_User(var Id: integer; UserName, Login,
-  Password: string; Session: string);
-const
-  pXML =
-  '<xml Session = "%s" >' +
-    '<gpInsertUpdate_Object_User OutputType="otResult">' +
-      '<ioId        DataType="ftInteger" Value="%d" />' +
-      '<inUserName  DataType="ftString"  Value="%s" />' +
-      '<inLogin     DataType="ftString"  Value="%s" />' +
-      '<inPassword  DataType="ftString"  Value="%s" />' +
-    '</gpInsertUpdate_Object_User>' +
-  '</xml>';
-begin
-  with LoadXMLData(TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Session, Id, UserName, Login, Password]))).DocumentElement do
-       Id := GetAttribute('ioid');
-end;
-{------------------------------------------------------------------------------}
-function TDataBaseObjectTest.lpInsertUpdate_Object(Id, DescId,
-  ObjectCode: integer; ValueData: String): Variant;
-begin
-  ZStoredProcedure.StoredProcName := 'lpInsertUpdate_Object';
-  ZStoredProcedure.Params.Clear;
-  ZStoredProcedure.Params.CreateParam(ftInteger, 'ioId', ptInputOutput).Value := Id;
-  ZStoredProcedure.Params.CreateParam(ftInteger, 'inDescId', ptInput).Value := DescId;
-  ZStoredProcedure.Params.CreateParam(ftInteger, 'inObjectCode', ptInput).Value := ObjectCode;
-  ZStoredProcedure.Params.CreateParam(ftString, 'inValueData', ptInput).Value := ValueData;
-  ZStoredProcedure.ExecProc;
-  result := ZStoredProcedure.Params.ParamByName('ioId').Value;
-end;
-{------------------------------------------------------------------------------}
-procedure TDataBaseObjectTest.lpInsertUpdate_ObjectString(DescId,
-  ObjectId: integer; ValueData: String);
-begin
-  ZStoredProcedure.StoredProcName := 'lpInsertUpdate_ObjectString';
-  ZStoredProcedure.Params.Clear;
-  ZStoredProcedure.Params.CreateParam(ftInteger, 'inDescId', ptInput).Value := DescId;
-  ZStoredProcedure.Params.CreateParam(ftInteger, 'inObjectId', ptInput).Value := ObjectId;
-  ZStoredProcedure.Params.CreateParam(ftString, 'inValueData', ptInput).Value := ValueData;
-  ZStoredProcedure.ExecProc;
-end;
-{------------------------------------------------------------------------------}
-procedure TDataBaseObjectTest.lpInsertUpdate_ObjectString_Test;
-var
-  ObjectId: integer;
-begin
-  ObjectId := lpInsertUpdate_Object(-1, 1, 45454545, 'test');
-  lpInsertUpdate_ObjectString(1, ObjectId, 'test');
-end;
-{------------------------------------------------------------------------------}
-procedure TDataBaseObjectTest.lpInsertUpdate_Object_Test;
-var
-  Id: integer;
-begin
-  lpInsertUpdate_Object(0, 1, 45454545, 'test');
-  lpInsertUpdate_Object(-1, 1, 45454545, 'test');
-  Id := lpInsertUpdate_Object(-1, 1, 45454545, 'test');
 
-  Check(Id = -1, IntToStr(Id));
-end;
-{------------------------------------------------------------------------------}
 procedure TDataBaseObjectTest.DeleteObject(Id: integer);
 const
    pXML =
@@ -180,96 +232,157 @@ begin
     MemoryStream.Free;
   end;
 end;
-
-function TDataBaseObjectTest.Get_User(Id: integer): IXMLDocument;
-const
-   pXML =
-  '<xml Session = "%s">' +
-    '<gpGet_Object_User OutputType="otResult">' +
-       '<inId DataType="ftInteger" Value="%d"/>' +
-    '</gpGet_Object_User>' +
-  '</xml>';
-begin
-  result := LoadXMLData(TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [gc_User.Session, Id])))
-end;
 {------------------------------------------------------------------------------}
-function TDataBaseObjectTest.Select_User: TDataSet;
+function TDataBaseObjectTest.GetRecordCount(ObjectTest: TObjectTest): integer;
 begin
-  with FdsdDataSetWrapper do begin
-    DataSets.Add.DataSet := TClientDataSet.Create(nil);
-    StoredProcName := 'gpSelect_Object_User';
-    Execute;
-    result := DataSets[0].DataSet;
-  end
+  with ObjectTest.GetDataSet do
+    try
+      Result := RecordCount;
+    finally
+       Free;
+    end;
 end;
 {------------------------------------------------------------------------------}
 procedure TDataBaseObjectTest.User_Test;
 var Id: integer;
-    lRecordCount: Integer;
+    RecordCount: Integer;
+    ObjectTest: TUserTest;
 begin
+  ObjectTest := TUserTest.Create;
   // Получим список пользователей
-  with Select_User do
-    try
-      lRecordCount := RecordCount;
-    finally
-       Free;
-    end;
-  Id := -1;
+  RecordCount := GetRecordCount(ObjectTest);
   // Вставка пользователя
-  InsertUpdate_Object_User(Id, 'UserName', 'Login', 'Password', gc_User.Session);
-
-  // Получение данных о пользователе
-  with Get_User(Id).DocumentElement do
-    Check((GetAttribute('id') = -1) and (GetAttribute('name') = 'UserName'), 'Не сходятся данные Id = ' + GetAttribute('id'));
-
-  // Проверка на дублируемость
-  Id := 0;
+  Id := ObjectTest.InsertDefault;
   try
-    InsertUpdate_Object_User(Id, 'UserName', 'Login', 'Password', gc_User.Session);
-    Check(false, 'Нет сообщения об ошибке InsertUpdate_Object_User Id=0');
-  except
-
-  end;
-  // Изменение пользователя
-
-  // Получим список пользователей
-  with Select_User do
+    // Получение данных о пользователе
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('name').AsString = 'UserName'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+    // Проверка на дублируемость
     try
-      Check((RecordCount = lRecordCount + 1), 'Количество записей не изменилось');
-    finally
-       Free;
+      ObjectTest.InsertUpdateUser(0, 'UserName', 'Login', 'Password');
+      Check(false, 'Нет сообщения об ошибке InsertUpdate_Object_User Id=0');
+    except
+
     end;
+    // Изменение пользователя
 
-  DeleteObject(-1);
-
+    // Получим список пользователей
+    Check((GetRecordCount(ObjectTest) = RecordCount + 1), 'Количество записей не изменилось');
+  finally
+    DeleteObject(Id);
+  end;
 end;
 {------------------------------------------------------------------------------}
 procedure TDataBaseObjectTest.TearDown;
 begin
   inherited;
-  ZConnection.Rollback;
-  ZConnection.Connected := false;
-  ZConnection.Free;
-  ZQuery.Free;
-  ZStoredProcedure.Free;
 end;
 {------------------------------------------------------------------------------}
 procedure TDataBaseObjectTest.SetUp;
 begin
   inherited;
-  ZConnection := TConnectionFactory.GetConnection;
-  ZConnection.Connected := true;
-  ZConnection.TransactIsolationLevel := tiSerializable;
-  ZQuery := TZQuery.Create(nil);
-  ZStoredProcedure := TZStoredProc.Create(nil);
-  ZQuery.Connection := ZConnection;
-  ZStoredProcedure.Connection := ZConnection;
-  ZConnection.AutoCommit := true;
-  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ',gc_User);
-  ZConnection.StartTransaction;
-  FdsdDataSetWrapper := TdsdStoredProc.Create(nil);
+  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
 end;
 {------------------------------------------------------------------------------}
+
+{ TCurrencyTest }
+
+constructor TCurrencyTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_Currency';
+  spSelect := 'gpSelect_Object_Currency';
+  spGet := 'gpGet_Object_Currency';
+end;
+
+function TCurrencyTest.InsertDefault: integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, 0);
+  FParams.AddParam('inCurrencyCode', ftInteger, ptInput, 920);
+  FParams.AddParam('inCurrencyName', ftString, ptInput, 'GRN');
+  FParams.AddParam('inFullName', ftString, ptInput, 'Гривна');
+  result := InsertUpdate(FParams);
+end;
+
+{ TUserTest }
+
+constructor TUserTest.Create;
+begin
+  inherited Create;
+  spInsertUpdate := 'gpInsertUpdate_Object_User';
+  spSelect := 'gpSelect_Object_User';
+  spGet := 'gpGet_Object_User';
+end;
+
+function TUserTest.InsertDefault: integer;
+begin
+  result := InsertUpdateUser(0, 'UserName', 'Login', 'Password');
+end;
+
+function TUserTest.InsertUpdateUser(const Id: integer; UserName, Login, Password: string): integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inUserName', ftString, ptInput, UserName);
+  FParams.AddParam('inLogin', ftString, ptInput, Login);
+  FParams.AddParam('inPassword', ftString, ptInput, Password);
+  result := InsertUpdate(FParams);
+end;
+
+{ TCashTest }
+
+constructor TCashTest.Create;
+begin
+  inherited Create;
+  spInsertUpdate := 'gpInsertUpdate_Object_Cash';
+  spSelect := 'gpSelect_Object_Cash';
+  spGet := 'gpGet_Object_Cash';
+end;
+
+function TCashTest.InsertDefault: integer;
+var CurrencyId: Integer;
+begin
+  with TCurrencyTest.Create do
+  try
+    CurrencyId := GetDefault
+  finally
+    Free;
+  end;
+  result := InsertUpdateCash(0, 'Главная касса', CurrencyId);
+end;
+
+function TCashTest.InsertUpdateCash(const Id: integer; CashName: string;
+  CurrencyId: Integer): integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCashName', ftString, ptInput, CashName);
+  FParams.AddParam('inCurrencyId', ftInteger, ptInput, CurrencyId);
+  result := InsertUpdate(FParams);
+end;
+
+{ TJuridicalTest }
+
+constructor TJuridicalTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_Juridical';
+  spSelect := 'gpSelect_Object_Juridical';
+  spGet := 'gpGet_Object_Juridical';
+end;
+
+function TJuridicalTest.InsertDefault: integer;
+begin
+
+end;
+
+function TJuridicalTest.InsertUpdateJuridical(const Id: integer; Code: Integer;
+  Name, OKPO, INN, Phone, Address, GLNCode: string): integer;
+begin
+
+end;
+
 initialization
   TestFramework.RegisterTest('DataBaseObjectTest', TDataBaseObjectTest.Suite);
 

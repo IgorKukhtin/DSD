@@ -8,19 +8,19 @@
 /*-------------------------------------------------------------------------------*/
 CREATE TABLE ObjectLink(
    DescId         INTEGER NOT NULL,
-   ParentObjectId INTEGER NOT NULL,
+   ObjectId       INTEGER NOT NULL,
    ChildObjectId  INTEGER,
 
-   CONSTRAINT ObjectLink_DescId_ObjectLinkDesc FOREIGN KEY(DescId) REFERENCES ObjectLinkDesc(Id),
-   CONSTRAINT ObjectLink_ParentObjectId_Object FOREIGN KEY(ParentObjectId) REFERENCES Object(Id),
-   CONSTRAINT ObjectLink_ChildObjectId_Object FOREIGN KEY(ChildObjectId) REFERENCES Object(Id));
+   CONSTRAINT pk_ObjectLink                PRIMARY KEY (ObjectId, DescId),
+   CONSTRAINT fk_ObjectLink_DescId         FOREIGN KEY(DescId) REFERENCES ObjectLinkDesc(Id),
+   CONSTRAINT fk_ObjectLink_ObjectId       FOREIGN KEY(ObjectId) REFERENCES Object(Id),
+   CONSTRAINT fk_ObjectLink_ChildObjectId  FOREIGN KEY(ChildObjectId) REFERENCES Object(Id));
 /*-------------------------------------------------------------------------------*/
 
 /*                                  »Ì‰ÂÍÒ˚                                      */
 
-CREATE UNIQUE INDEX ObjectLink_Parent_Child ON ObjectLink(DescId, ParentObjectId, ChildObjectId);
-CREATE UNIQUE INDEX ObjectLink_Child_Parent ON ObjectLink(DescId, ChildObjectId, ParentObjectId);
-CLUSTER ObjectLink_Parent_Child ON ObjectLink;
+CREATE INDEX idx_ObjectLink_ObjectId_DescId_ChildObjectId  ON ObjectLink(ObjectId, DescId, ChildObjectId);
+CREATE INDEX idx_ObjectLink_ChildObjectId_DescId_ObjectId  ON ObjectLink(ChildObjectId, DescId, ObjectId);
 
 /*
  œ–»Ã≈◊¿Õ»ﬂ:

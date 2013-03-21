@@ -13,21 +13,22 @@ CREATE TABLE MovementItemContainer(
    ContainerId    INTEGER,
    Amount         TFloat, 
    OperDate       TDateTime,
-   isErased       TVarChar,
-   ParentId       Integer,
    MovementItemId Integer,
+   ParentId       Integer,
 
-   CONSTRAINT MovementItemContainer_DescId FOREIGN KEY(DescId) REFERENCES MovementItemContainerDesc(Id),
-   CONSTRAINT MovementItemContainer_MovementId FOREIGN KEY(MovementId) REFERENCES Movement(Id),
-   CONSTRAINT MovementItemContainer_ContainerId FOREIGN KEY(ContainerId) REFERENCES Container(Id),
-   CONSTRAINT MovementItemContainer_MovementItemId FOREIGN KEY (MovementItemId) REFERENCES MovementItem(id),
-   CONSTRAINT MovementItemContainer_ParentId FOREIGN KEY (ParentId) REFERENCES MovementItemContainer(id)
-)
+   CONSTRAINT fk_MovementItemContainer_DescId FOREIGN KEY(DescId) REFERENCES MovementItemContainerDesc(Id),
+   CONSTRAINT fk_MovementItemContainer_MovementId FOREIGN KEY(MovementId) REFERENCES Movement(Id),
+   CONSTRAINT fk_MovementItemContainer_ContainerId FOREIGN KEY(ContainerId) REFERENCES Container(Id),
+   CONSTRAINT fk_MovementItemContainer_MovementItemId FOREIGN KEY (MovementItemId) REFERENCES MovementItem(id),
+   CONSTRAINT fk_MovementItemContainer_ParentId FOREIGN KEY (ParentId) REFERENCES MovementItemContainer(id)
+);
 
 /*-------------------------------------------------------------------------------*/
 
 /*                                  Индексы                                      */
 
+CREATE INDEX idx_MovementItemContainer_MovementId_DescId ON MovementItemContainer(MovementId, DescId);
+CREATE INDEX idx_MovementItemContainer_ContainerId_DescId_OperDate_Amount ON MovementItemContainer(ContainerId, DescId, OperDate, Amount);
 
 
 

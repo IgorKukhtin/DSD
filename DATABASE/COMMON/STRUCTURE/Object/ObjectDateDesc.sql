@@ -1,6 +1,6 @@
 /*
   Создание 
-    - таблицы ObjectDateDesc (свойства классов oбъектов типа TFloat)
+    - таблицы ObjectDateDesc (свойства классов oбъектов типа TDate)
     - связи
     - индексов
 */
@@ -8,23 +8,18 @@
 /*-------------------------------------------------------------------------------*/
 
 CREATE TABLE ObjectDateDesc(
-   Id           INTEGER NOT NULL PRIMARY KEY,
-   ObjectDescId INTEGER NOT NULL,
-   Code         TVarChar,
-   ItemName     TVarChar,
-   isErased     TVarChar,
+   Id                    INTEGER NOT NULL PRIMARY KEY,
+   ObjectDescId          INTEGER NOT NULL,
+   Code                  TVarChar,
+   ItemName              TVarChar,
 
-   CONSTRAINT ObjectDateDesc_ObjectDescId_ObjectDesc FOREIGN KEY(ObjectDescId) REFERENCES ObjectDesc(Id) );
+   CONSTRAINT fk_ObjectDateDesc_ObjectDescId FOREIGN KEY(ObjectDescId) REFERENCES ObjectDesc(Id) );
 
 
 
 /*-------------------------------------------------------------------------------*/
 
 /*                                  Индексы                                      */
-
-
-CREATE UNIQUE INDEX ObjectDateDesc_Code ON ObjectDateDesc(Code);
-CLUSTER ObjectDateDesc_Code ON ObjectDateDesc;
 
 /*
  ПРИМЕЧАНИЯ:

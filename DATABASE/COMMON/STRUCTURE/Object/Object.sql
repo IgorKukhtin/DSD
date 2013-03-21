@@ -9,23 +9,23 @@
 /*-------------------------------------------------------------------------------*/
 
 CREATE TABLE Object(
-   Id         SERIAL NOT NULL PRIMARY KEY, 
-   DescId     INTEGER NOT NULL,
-   ObjectCode INTEGER,
-   ValueData  TVarChar,
-   IsErased   boolean NOT NULL DEFAULT false,
+   Id                    SERIAL NOT NULL PRIMARY KEY, 
+   DescId                Integer NOT NULL,
+   ObjectCode            Integer,
+   ValueData             TVarChar,
+   IsErased              Boolean NOT NULL DEFAULT false,
 
    /* Связь с таблицей <ObjectDesc> - класс объекта */
-   CONSTRAINT Object_DescId_ObjectDesc FOREIGN KEY(DescId) REFERENCES ObjectDesc(Id));
+   CONSTRAINT fk_Object_DescId FOREIGN KEY(DescId) REFERENCES ObjectDesc(Id));
 
 /*-------------------------------------------------------------------------------*/
 
 /*                                  Индексы                                      */
 
 
-CREATE INDEX Object_DescId ON Object(DescId);
+CREATE INDEX idx_Object_DescId ON Object(DescId);
 
-CLUSTER Object_DescId ON Object; 
+CLUSTER idx_Object_DescId ON Object; 
 
 
 /*-------------------------------------------------------------------------------*/

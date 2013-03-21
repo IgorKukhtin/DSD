@@ -17,3 +17,9 @@ CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_Cash()
 $BODY$BEGIN
   RETURN 3;
 END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_Account()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 4;
+END;  $BODY$ LANGUAGE plpgsql;

@@ -4,7 +4,7 @@
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Cash(
 IN inSession     TVarChar       /* текущий пользователь */)
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, CurrencyName TVarChar) AS
 $BODY$BEGIN
 
    --PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
@@ -15,7 +15,13 @@ $BODY$BEGIN
    , Object.ObjectCode
    , Object.ValueData
    , Object.isErased
+   , Currency.ValueData AS CurrencyName
    FROM Object
+   JOIN ObjectLink 
+     ON ObjectLink.ObjectId = Object.Id
+    AND ObjectLink.DescId = zc_ObjectLink_Cash_Currency()
+   JOIN Object AS Currency
+     ON Currency.Id = ObjectLink.ChildObjectId
    WHERE Object.DescId = zc_Object_Cash();
   
 END;$BODY$

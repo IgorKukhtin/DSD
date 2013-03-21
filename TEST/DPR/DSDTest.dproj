@@ -97,7 +97,9 @@
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdDataSetWrapperUnit.pas"/>
 			<DCCReference Include="..\..\SOURCE\CommonDataUnit.pas"/>
 			<DCCReference Include="..\SOURCE\UtilUnit.pas"/>
+			<DCCReference Include="..\SOURCE\Farmacy\FarmacyStructureTestUnit.pas"/>
 			<DCCReference Include="..\SOURCE\Farmacy\FarmacyTestUnit.pas"/>
+			<DCCReference Include="..\SOURCE\Meat\MeatGuidesTestUnit.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

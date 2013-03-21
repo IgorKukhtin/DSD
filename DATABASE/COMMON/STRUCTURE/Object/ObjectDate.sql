@@ -1,37 +1,31 @@
 /*
   Создание 
-    - таблицы ObjectDate (свойства объектов типа TDateTime)
-    - связей
+    - таблицы ObjectDate (свойства oбъектов типа TDate)
+    - связи
     - индексов
 */
 
-
 /*-------------------------------------------------------------------------------*/
-
 CREATE TABLE ObjectDate(
    DescId     INTEGER NOT NULL,
    ObjectId   INTEGER NOT NULL,
    ValueData  TDateTime,
 
-   CONSTRAINT ObjectDate_DescId_ObjectDateDesc FOREIGN KEY(DescId) REFERENCES ObjectDateDesc(Id),
-   CONSTRAINT ObjectDate_ObjectId_Object FOREIGN KEY(ObjectId) REFERENCES Object(Id) )
-
+   CONSTRAINT pk_ObjectDate          PRIMARY KEY (ObjectId, DescId),
+   CONSTRAINT fk_ObjectDate_DescId   FOREIGN KEY(DescId)   REFERENCES ObjectDateDesc(Id),
+   CONSTRAINT fk_ObjectDate_ObjectId FOREIGN KEY(ObjectId) REFERENCES Object(Id) );
 
 /*-------------------------------------------------------------------------------*/
-
 /*                                  Индексы                                      */
 
 
-CREATE NONCLUSTERED INDEX ObjectDate_DescId ON ObjectDate(DescId)
-CREATE NONCLUSTERED INDEX ObjectDate_ObjectId ON ObjectDate(ObjectId)
-CREATE UNIQUE NONCLUSTERED INDEX ObjectDate_ObjectId_DescId ON ObjectDate(ObjectId,DescId) 
-
+CREATE INDEX idx_ObjectDate_ObjectId_DescId_ValueData ON ObjectDate(ObjectId, DescId, ValueData); 
 
 /*
  ПРИМЕЧАНИЯ:
  ИСТОРИЯ РАЗРАБОТКИ:
  ДАТА         АВТОР
  ----------------
-                 Климентьев К.И.   Кухтин И.В.   
-14.06.02                                                         
+                 Климентьев К.И.   Кухтин И.В. 
+14.06.02                                       
 */
