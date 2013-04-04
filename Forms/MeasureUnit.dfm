@@ -135,15 +135,23 @@ inherited MeasureForm: TMeasureForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
     end
-    object actInsert: TdsdOpenForm
+    object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       FormName = 'MeasureEditForm'
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'Id'
+          DataType = ftInteger
+          ParamType = ptOutput
+          Value = '0'
+        end>
       isShowModal = True
+      DataSet = ClientDataSet
+      DataSetRefresh = actRefresh
     end
-    object actUpdate: TdsdOpenForm
+    object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
@@ -157,6 +165,8 @@ inherited MeasureForm: TMeasureForm
           ParamType = ptInput
         end>
       isShowModal = True
+      DataSet = ClientDataSet
+      DataSetRefresh = actRefresh
     end
   end
   object dsdStoredProc: TdsdStoredProc

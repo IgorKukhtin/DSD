@@ -4,20 +4,20 @@
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Currency(
 INOUT ioId               Integer   ,   	/* ключ объекта <Валюта> */
-IN inCurrencyCode        Integer   ,    /* Международный код объекта <Валюта> */
-IN inCurrencyName        TVarChar  ,    /* Международное название объекта <Валюта> */
-IN inFullName            TVarChar  ,    /* Полное объекта <Валюта> */
+IN inCode                Integer   ,    /* Международный код объекта <Валюта> */
+IN inName                TVarChar  ,    /* Название объекта <Валюта> */
+IN inInternalName        TVarChar  ,    /* Международное наименование объекта <Валюта> */
 IN inSession             TVarChar       /* текущий пользователь */
 )
   RETURNS integer AS
 $BODY$BEGIN
 --   PERFORM lpCheckRight(inSession, zc_Enum_Process_Currency());
 
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Currency(), inCurrencyName);
+   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Currency(), inName);
 
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_Currency(), inCurrencyCode, inCurrencyName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_Currency(), inCode, inName);
    
-   PERFORM lpInsertUpdate_ObjectString(zc_objectString_Currency_FullName(), ioId, inFullName);
+   PERFORM lpInsertUpdate_ObjectString(zc_objectString_Currency_InternalName(), ioId, inInternalName);
 
 
 END;$BODY$

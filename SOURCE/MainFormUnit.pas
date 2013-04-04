@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, dxBar, cxClasses, Vcl.ActnList,
   Vcl.StdActns, Vcl.StdCtrls, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnMan,
-  dsdActionUnit;
+  dsdActionUnit, cxLocalization;
 
 type
   TMainForm = class(TForm)
@@ -20,6 +20,7 @@ type
     actExit: TFileExit;
     actMeasure: TdsdOpenForm;
     bbMeasure: TdxBarButton;
+    cxLocalizer: TcxLocalizer;
   private
     { Private declarations }
   public

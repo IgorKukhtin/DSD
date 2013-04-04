@@ -4,7 +4,8 @@
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Cash(
 IN inSession     TVarChar       /* текущий пользователь */)
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, CurrencyName TVarChar) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
+               CurrencyName TVarChar) AS
 $BODY$BEGIN
 
    --PERFORM lpCheckRight(inSession, zc_Enum_Process_User());

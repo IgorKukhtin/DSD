@@ -7,8 +7,8 @@ BEGIN
    PERFORM lpInsertUpdate_Object(zc_Object_Role_Admin(), zc_Object_Role(), 0, 'Роль администратора');
 
    -- Добавляем формы оплаты
-   PERFORM lpInsertUpdate_Object(zc_Object_PaidType_FirstForm(),  zc_Object_PaidType(), 0, 'Первая форма');
-   PERFORM lpInsertUpdate_Object(zc_Object_PaidType_SecondForm(), zc_Object_PaidType(), 0, 'Вторая форма');
+   PERFORM lpInsertUpdate_Object(zc_Object_PaidKind_FirstForm(),  zc_Object_PaidKind(), 0, 'Первая форма');
+   PERFORM lpInsertUpdate_Object(zc_Object_PaidKind_SecondForm(), zc_Object_PaidKind(), 0, 'Вторая форма');
 
    --  Добавляем статусы
    PERFORM lpInsertUpdate_Object(zc_Object_Status_UnComplete(), zc_Object_Status(), 0, 'Не проведен');

@@ -9,10 +9,10 @@
 
 CREATE TABLE ObjectBLOBDesc(
    Id                    INTEGER NOT NULL PRIMARY KEY,
-   ObjectDescId          INTEGER NOT NULL,
+   DescId                INTEGER NOT NULL,
    Code                  TVarChar NOT NULL UNIQUE,
    ItemName              TVarChar,
-   CONSTRAINT fk_ObjectBLOBDesc_ObjectDescId FOREIGN KEY(ObjectDescId) REFERENCES ObjectDesc(Id));
+   CONSTRAINT fk_ObjectBLOBDesc_DescId FOREIGN KEY(DescId) REFERENCES ObjectDesc(Id));
 
 /*-------------------------------------------------------------------------------*/
 /*                                  Индексы                                      */

@@ -30,7 +30,7 @@ var
   MovementId: String;
   CashId: Integer;
 begin
-  with TCurrencyTest.Create do
+  with TCashTest.Create do
   try
     CashId := GetDefault
   finally

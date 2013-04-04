@@ -9,17 +9,23 @@ IN inLogin       TVarChar  ,    /* логин пользователя */
 IN inPassword    TVarChar  ,    /* пароль пользователя */
 IN inSession     TVarChar       /* текущий пользователь */
 )
-  RETURNS integer AS
-$BODY$BEGIN
-   PERFORM lpCheckRight(inSession, zc_Object_Process_User());
+  RETURNS integer 
+  AS
+$BODY$
+  DECLARE
+     UserId Integer;
+BEGIN
+   UserId := lpCheckRight(inSession, zc_Object_Process_User());
 
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_User(), inUserName);
 
    ioId := lpInsertUpdate_Object(ioId, zc_Object_User(), 0, inUserName);
 
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_Login(), ioId, inLogin);
-
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_Password(), ioId, inPassword);
+
+   -- Ведение протокола
+   PERFORM lpInsert_ObjectProtocol(ioId, UserId);
  
 END;$BODY$
   LANGUAGE plpgsql VOLATILE

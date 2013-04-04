@@ -119,4 +119,8 @@ object MainForm: TMainForm
       isShowModal = False
     end
   end
+  object cxLocalizer: TcxLocalizer
+    Left = 256
+    Top = 56
+  end
 end

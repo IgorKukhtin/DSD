@@ -47,6 +47,8 @@ var
 begin
   for I := 0 to Application.ComponentCount - 1 do
     if (Application.Components[i] is TParentForm) and TParentForm(Application.Components[i]).Visible then begin
+      // „то бы форма не выскакивала после загрузки
+      TParentForm(Application.Components[i]).Visible := false;
       Stream := TStringStream.Create;
       MemoryStream := TMemoryStream.Create;
       XMLDocument:= TXMLDocument.Create(nil);

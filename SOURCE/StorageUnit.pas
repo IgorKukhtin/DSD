@@ -59,7 +59,7 @@ type
 
 class function TStorage.NewInstance: TObject;
 begin
-  if not Assigned(Instance) then begin
+  if true{not Assigned(Instance) }then begin
     Instance := TStorage(inherited NewInstance);
     Instance.FConnection := 'http://localhost/dsd/index.php';
     Instance.IdHTTP := TIdHTTP.Create(nil);

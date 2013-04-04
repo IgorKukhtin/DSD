@@ -9,6 +9,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_ObjectLink(
 )
   RETURNS boolean AS
 $BODY$BEGIN
+    IF inChildObjectId = 0 THEN
+       inChildObjectId := NULL;
+    END IF;
 
     /* изменить данные по значению <ключ свойства> и <ключ объекта> */
     UPDATE ObjectLink SET ChildObjectId = inChildObjectId WHERE ObjectId = inObjectId AND DescId = inDescId;

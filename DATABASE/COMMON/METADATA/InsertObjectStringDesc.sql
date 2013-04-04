@@ -1,26 +1,17 @@
-﻿INSERT INTO ObjectStringDesc (id, ObjectDescId, itemname)
-VALUES (zc_objectString_user_password(), zc_object_user(), 'Password');
+﻿INSERT INTO ObjectStringDesc (id, DescId, Code, itemname)
+VALUES (zc_objectString_user_password(), zc_object_user(), 'User_Password', 'Пароль');
 
-INSERT INTO ObjectStringDesc (id, ObjectDescId, itemname)
-VALUES (zc_objectString_user_login(), zc_object_user(), 'Login');
+INSERT INTO ObjectStringDesc (id, DescId, Code, itemname)
+VALUES (zc_objectString_user_login(), zc_object_user(), 'User_Login', 'Логин');
 
-INSERT INTO ObjectStringDesc (id, ObjectDescId, itemname)
-VALUES (zc_objectString_Currency_FullName(), zc_object_Currency(), 'Currency_FullName');
+INSERT INTO ObjectStringDesc (id, DescId, Code, itemname)
+VALUES (zc_objectString_Currency_InternalName(), zc_object_Currency(), 'Currency_InternalName', 'Международное наименование');
 
-INSERT INTO ObjectStringDesc (id, ObjectDescId, itemname)
-VALUES (zc_ObjectString_Juridical_OKPO(), zc_object_Juridical(), 'Juridical_OKPO');
+INSERT INTO ObjectStringDesc (id, DescId, Code, itemname)
+VALUES (zc_ObjectString_Juridical_GLNCode(), zc_object_Juridical(), 'Juridical_GLNCode', 'GLN Код');
 
-INSERT INTO ObjectStringDesc (id, ObjectDescId, itemname)
-VALUES (zc_ObjectString_Juridical_INN(), zc_object_Juridical(), 'Juridical_INN');
+INSERT INTO ObjectStringDesc (id, DescId, Code, itemname)
+VALUES (zc_ObjectString_Partner_GLNCode(), zc_object_Partner(), 'Partner_GLNCode', 'GLN Код');
 
-INSERT INTO ObjectStringDesc (id, ObjectDescId, itemname)
-VALUES (zc_ObjectString_Juridical_Phone(), zc_object_Juridical(), 'Juridical_Phone');
-
-INSERT INTO ObjectStringDesc (id, ObjectDescId, itemname)
-VALUES (zc_ObjectString_Juridical_Address(), zc_object_Juridical(), 'Juridical_Address');
-
-INSERT INTO ObjectStringDesc (id, ObjectDescId, itemname)
-VALUES (zc_ObjectString_Juridical_GLNCode(), zc_object_Juridical(), 'Juridical_GLNCode');
-
-INSERT INTO ObjectStringDesc (id, ObjectDescId, itemname)
-VALUES (zc_ObjectString_Juridical_FullName(), zc_object_Juridical(), 'Juridical_FullName');
+INSERT INTO ObjectStringDesc (id, DescId, Code, itemname)
+VALUES (zc_ObjectString_Bank_MFO(), zc_object_Bank(), 'Bank_MFO', 'МФО');

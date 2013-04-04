@@ -303,6 +303,7 @@ begin
                    Result := FValue
                  end;
       ftString, ftBlob: Result := FValue;
+      ftBoolean: Result := FValue
     end;
   end;
 end;
@@ -310,9 +311,14 @@ end;
 procedure TdsdParam.SetValue(const Value: string);
 begin
   FValue := Value;
+  // передаем значение параметра дальше по цепочке
   if Assigned(Component) then begin
      if Component is TcxTextEdit then
         (Component as TcxTextEdit).Text := FValue;
+     if Component is TdsdFormParams then
+        with (Component as TdsdFormParams) do begin
+          ParamByName(FComponentItem).Value := FValue
+        end;
   end
 end;
 

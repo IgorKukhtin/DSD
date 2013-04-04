@@ -2,6 +2,8 @@
 
 -- DROP FUNCTION lpCheckUnique_ObjectString_ValueData(integer, tvarchar);
 
+-- Процедура проверяет уникальность поля ValueData у объекта
+
 CREATE OR REPLACE FUNCTION lpCheckUnique_ObjectString_ValueData(
 inId integer, 
 inDescId integer,

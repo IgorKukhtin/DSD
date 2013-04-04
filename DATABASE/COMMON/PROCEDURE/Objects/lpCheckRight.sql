@@ -2,7 +2,7 @@
 IN inSession TVarChar, 
 IN inProcessId integer, 
 IN inOperDate date DEFAULT current_date)
-RETURNS void AS
+RETURNS integer AS
 $BODY$  
 DECLARE 
   UserName TVarChar;
@@ -27,8 +27,10 @@ BEGIN
      SELECT ValueData INTO UserName FROM Object WHERE Id = to_number(inSession, '00000000000');
      SELECT ValueData INTO ProcessName FROM Object WHERE Id = inProcessId;
      RAISE EXCEPTION 'Пользователь "%" не имеет прав на операцию "%" ' ,UserName, ProcessName;
-  END IF;
-    
+  ELSE
+     RETURN to_number(inSession, '00000000000');   
+  END IF;  
+  
 END;$BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;

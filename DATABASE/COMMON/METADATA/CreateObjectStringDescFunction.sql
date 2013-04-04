@@ -18,54 +18,14 @@ END;$BODY$
 ALTER FUNCTION zc_ObjectString_User_login()
   OWNER TO postgres;
 
-CREATE OR REPLACE FUNCTION zc_ObjectString_Currency_FullName()
+CREATE OR REPLACE FUNCTION zc_ObjectString_Currency_InternalName()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 3;
 END;$BODY$
   LANGUAGE plpgsql VOLATILE
   COST 1;
-ALTER FUNCTION zc_ObjectString_Currency_FullName()
-  OWNER TO postgres;
-
-CREATE OR REPLACE FUNCTION zc_ObjectString_Juridical_OKPO()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 4;
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 1;
-ALTER FUNCTION zc_ObjectString_Juridical_OKPO()
-  OWNER TO postgres;
-
-CREATE OR REPLACE FUNCTION zc_ObjectString_Juridical_INN()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 5;
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 1;
-ALTER FUNCTION zc_ObjectString_Juridical_INN()
-  OWNER TO postgres;
-
-CREATE OR REPLACE FUNCTION zc_ObjectString_Juridical_Phone()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 6;
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 1;
-ALTER FUNCTION zc_ObjectString_Juridical_Phone()
-  OWNER TO postgres;
-
-CREATE OR REPLACE FUNCTION zc_ObjectString_Juridical_Address()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 7;
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 1;
-ALTER FUNCTION zc_ObjectString_Juridical_Address()
+ALTER FUNCTION zc_ObjectString_Currency_InternalName()
   OWNER TO postgres;
 
 CREATE OR REPLACE FUNCTION zc_ObjectString_Juridical_GLNCode()
@@ -78,13 +38,22 @@ END;$BODY$
 ALTER FUNCTION zc_ObjectString_Juridical_GLNCode()
   OWNER TO postgres;
 
-CREATE OR REPLACE FUNCTION zc_ObjectString_Juridical_FullName()
+CREATE OR REPLACE FUNCTION zc_ObjectString_Partner_GLNCode()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 9;
 END;$BODY$
   LANGUAGE plpgsql VOLATILE
   COST 1;
-ALTER FUNCTION zc_ObjectString_Juridical_FullName()
+ALTER FUNCTION zc_ObjectString_Partner_GLNCode()
   OWNER TO postgres;
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_Bank_MFO()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 10;
+END;$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 1;
+ALTER FUNCTION zc_ObjectString_Bank_MFO()
+  OWNER TO postgres;

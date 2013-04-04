@@ -3,36 +3,31 @@
 -- DROP FUNCTION gpInsertUpdate_Object_Juridical();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
-INOUT ioId	 Integer   ,   	/* ключ объекта <Юридическое лицо> */
-IN inName        TVarChar  ,    /* Название объекта <Юридическое лицо> */
-IN inOKPO        TVarChar  ,    /*  */
-IN inINN         TVarChar  ,    /*  */
-IN inPhone       TVarChar  ,    /*  */
-IN inAddress     TVarChar  ,    /*  */
-IN inGLNCode     TVarChar  ,    /*  */
-IN inFullName    TVarChar  ,    /*  */
-IN inSession     TVarChar       /* текущий пользователь */
+INOUT ioId	         Integer   ,   	/* ключ объекта <Юридическое лицо> */
+IN inCode                Integer   ,
+IN inName                TVarChar  ,    /* Название объекта <Юридическое лицо> */
+IN inGLNCode             TVarChar  ,    /*  */
+IN inisCorporate         Boolean   ,    /*  */
+IN inJuridicalGroupId    Integer   ,    /*  */
+IN inGoodsPropertyId     Integer   ,    /*  */
+IN inSession             TVarChar       /* текущий пользователь */
 )
   RETURNS integer AS
 $BODY$BEGIN
 --   PERFORM lpCheckRight(inSession, zc_Enum_Process_Juridical());
 
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Juridical(), inName);
-   PERFORM lpCheckUnique_ObjectString_ValueData(ioId, zc_ObjectString_Juridical_OKPO(), inOKPO);
-   PERFORM lpCheckUnique_ObjectString_ValueData(ioId, zc_ObjectString_Juridical_INN(), inINN);
 
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_Juridical(), 0, inName);
-   PERFORM lpInsertUpdate_ObjectString(zc_objectString_Juridical_OKPO(), ioId, inOKPO);
-   PERFORM lpInsertUpdate_ObjectString(zc_objectString_Juridical_INN(), ioId, inINN);
-   PERFORM lpInsertUpdate_ObjectString(zc_objectString_Juridical_Phone(), ioId, inPhone);
-   PERFORM lpInsertUpdate_ObjectString(zc_objectString_Juridical_Address(), ioId, inAddress);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_Juridical(), inCode, inName);
    PERFORM lpInsertUpdate_ObjectString(zc_objectString_Juridical_GLNCode(), ioId, inGLNCode);
-   PERFORM lpInsertUpdate_ObjectString(zc_objectString_Juridical_FullName(), ioId, inFullName);
+   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_isCorporate(), ioId, inisCorporate);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Juridical_JuridicalGroup(), ioId, inJuridicalGroupId);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Juridical_GoodsProperty(), ioId, inGoodsPropertyId);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
-ALTER FUNCTION gpInsertUpdate_Object_Juridical(Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, tvarchar)
+ALTER FUNCTION gpInsertUpdate_Object_Juridical(Integer, Integer, TVarChar, TVarChar, Boolean, Integer, Integer, TVarChar)
   OWNER TO postgres;
 
   

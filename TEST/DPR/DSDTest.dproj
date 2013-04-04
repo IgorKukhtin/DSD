@@ -100,6 +100,7 @@
 			<DCCReference Include="..\SOURCE\Farmacy\FarmacyStructureTestUnit.pas"/>
 			<DCCReference Include="..\SOURCE\Farmacy\FarmacyTestUnit.pas"/>
 			<DCCReference Include="..\SOURCE\Meat\MeatGuidesTestUnit.pas"/>
+			<DCCReference Include="..\SOURCE\DataBaseUsersObjectTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

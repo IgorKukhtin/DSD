@@ -1,63 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>1899.12.30 00:00:00.000.890,=D:\WORK\DSD\DSD\SOURCE\UtilConst.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.371,=D:\WORK\DSD\DSD\TEST\SOURCE\DataBaseMovementTestUnit.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.552,D:\WORK\DSD\DSD\TEST\DPR\Unit1.dfm=D:\WORK\DSD\DSD\TEST\SOURCE\DataBaseUnit.dfm</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.971,=D:\WORK\DSD\DSD\SOURCE\COMPONENT\dsdDataSetWrapperUnit.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.590,D:\WORK\DSD\DSD\TEST\SOURCE\DataBaseStructureTestUnit.pas=D:\WORK\DSD\DSD\TEST\DPR\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.448,=D:\WORK\DSD\DSD\SOURCE\CommonDataUnit.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.533,D:\WORK\DSD\DSD\SOURCE\StorageUnit.pas=D:\WORK\DSD\DSD\TEST\DPR\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.189,=D:\WORK\DSD\DSD\SOURCE\UtilType.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.991,D:\WORK\DSD\DSD\TEST\SOURCE\Farmacy\FarmacyStructureTestUnit.pas=D:\WORK\DSD\DSD\TEST\DPR\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.113,D:\WORK\DSD\DSD\SOURCE\AuthenticationUnit.pas=D:\WORK\DSD\DSD\TEST\DPR\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.528,D:\WORK\DSD\DSD\TEST\DPR\DSDTest.dproj=D:\WORK\DSD\DSD\TEST\DPR\DSDTest.dproj</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.531,=D:\WORK\DSD\DSD\SOURCE\UtilConvert.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.800,D:\WORK\DSD\DSD\TEST\SOURCE\Meat\MeatGuidesTestUnit.pas=D:\WORK\DSD\DSD\TEST\SOURCE\Meat\MeatTestUnit.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.644,D:\WORK\DSD\DSD\TEST\SOURCE\Meat\MeatTestUnit.pas=D:\WORK\DSD\DSD\TEST\DPR\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.372,D:\WORK\DSD\DSD\TEST\SOURCE\DropCreateDatabaseTestUnit.pas=D:\WORK\DSD\DSD\TEST\DPR\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.097,=D:\WORK\DSD\DSD\TEST\DPR\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.090,D:\WORK\DSD\DSD\TEST\DPR\Unit1.pas=D:\WORK\DSD\DSD\TEST\SOURCE\DataBaseObjectTestUnit.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.704,D:\WORK\DSD\DSD\TEST\DPR\Unit1.pas=D:\WORK\DSD\DSD\TEST\SOURCE\UtilUnit.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.108,=D:\WORK\DSD\DSD\TEST\DPR\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.356,D:\WORK\DSD\DSD\TEST\DPR\Unit1.pas=D:\WORK\DSD\DSD\TEST\SOURCE\Farmacy\FarmacyTestUnit.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.552,D:\WORK\DSD\DSD\TEST\DPR\Unit1.pas=D:\WORK\DSD\DSD\TEST\SOURCE\DataBaseUnit.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.047,=D:\WORK\DSD\DSD\TEST\DPR\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.667,D:\WORK\DSD\DSD\TEST\DPR\Unit1.pas=D:\WORK\DSD\DSD\TEST\SOURCE\AuthenticationTestUnit.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.074,=D:\WORK\DSD\DSD\TEST\DPR\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.927,=D:\WORK\DSD\DSD\TEST\DPR\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.116,=D:\WORK\DSD\DSD\TEST\DPR\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.261,=D:\WORK\DSD\DSD\TEST\DPR\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.031,=D:\WORK\DSD\DSD\TEST\DPR\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.477,=D:\WORK\DSD\DSD\TEST\DPR\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.015,=D:\WORK\DSD\DSD\TEST\DPR\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.104,=D:\WORK\DSD\DSD\TEST\DPR\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.533,D:\WORK\DSD\DSD\TEST\DPR\Unit1.pas=D:\WORK\DSD\DSD\TEST\SOURCE\DataBaseUsersObjectTest.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.035,=D:\WORK\DSD\DSD\TEST\DPR\Unit1.pas</Transaction>
   </Transactions>
-	<ProjectSortOrder AutoSort="0" SortType="0">
-    <File Path="..\..\TEST"/>
-    <File Path="..\SOURCE"/>
-    <File Path="..\SOURCE\Farmacy"/>
-    <File Path="..\SOURCE\Farmacy\FarmacyTestUnit.pas"/>
-    <File Path="..\SOURCE\Farmacy\FarmacyStructureTestUnit.pas"/>
-    <File Path="..\SOURCE\Meat"/>
-    <File Path="..\SOURCE\Meat\MeatGuidesTestUnit.pas"/>
-    <File Path="..\SOURCE\AuthenticationTestUnit.pas"/>
-    <File Path="..\SOURCE\DataBaseMovementTestUnit.pas"/>
-    <File Path="..\SOURCE\DataBaseObjectTestUnit.pas"/>
-    <File Path="..\SOURCE\DataBaseStructureTestUnit.pas"/>
-    <File Path="..\SOURCE\DataBaseUnit.pas"/>
-    <File Path="..\SOURCE\DataBaseUnit.dfm"/>
-    <File Path="..\SOURCE\DropCreateDatabaseTestUnit.pas"/>
-    <File Path="..\SOURCE\UtilUnit.pas"/>
-    <File Path="..\..\..\DSD"/>
-    <File Path="..\..\SOURCE"/>
-    <File Path="..\..\SOURCE\COMPONENT"/>
-    <File Path="..\..\SOURCE\COMPONENT\dsdDataSetWrapperUnit.pas"/>
-    <File Path="..\..\SOURCE\AuthenticationUnit.pas"/>
-    <File Path="..\..\SOURCE\CommonDataUnit.pas"/>
-    <File Path="..\..\SOURCE\StorageUnit.pas"/>
-    <File Path="..\..\SOURCE\UtilConst.pas"/>
-    <File Path="..\..\SOURCE\UtilConvert.pas"/>
-    <File Path="..\..\SOURCE\UtilType.pas"/>
-  </ProjectSortOrder>
 </BorlandProject>

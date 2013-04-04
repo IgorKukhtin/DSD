@@ -11,9 +11,9 @@ type
     FspInsertUpdate: string;
     FspSelect: string;
     FspGet: string;
-    FParams: TdsdParams;
     FdsdStoredProc: TdsdStoredProc;
   protected
+    FParams: TdsdParams;
     property spGet: string read FspGet write FspGet;
     property spSelect: string read FspSelect write FspSelect;
     property spInsertUpdate: string read FspInsertUpdate write FspInsertUpdate;
@@ -25,15 +25,6 @@ type
     function GetRecord(Id: integer): TDataSet;
     constructor Create; virtual;
     destructor Destoy;
-  end;
-
-  TJuridicalTest = class(TObjectTest)
-  private
-    function InsertDefault: integer; override;
-  public
-    function InsertUpdateJuridical(const Id: integer; Code: Integer;
-        Name, OKPO, INN, Phone, Address, GLNCode: string): integer;
-    constructor Create; override;
   end;
 
   TCurrencyTest = class(TObjectTest)
@@ -54,19 +45,23 @@ type
   TCashTest = class(TObjectTest)
     function InsertDefault: integer; override;
   public
-    function InsertUpdateCash(const Id: integer; CashName: string; CurrencyId: Integer): integer;
+    function InsertUpdateCash(const Id: integer; CashName: string; CurrencyId: Integer; BranchId: integer): integer;
     constructor Create; override;
   end;
 
-  TDataBaseObjectTest = class (TTestCase)
-  private
-    procedure DeleteObject(Id: integer);
-    function GetRecordCount(ObjectTest: TObjectTest): integer;
+  TCustomDataBaseObjectTest = class (TTestCase)
   protected
+    // Удаление объекта
+    procedure DeleteObject(Id: integer);
+    // получение поличества записей
+    function GetRecordCount(ObjectTest: TObjectTest): integer;
     // подготавливаем данные для тестирования
     procedure SetUp; override;
     // возвращаем данные для тестирования
     procedure TearDown; override;
+  end;
+
+  TDataBaseObjectTest = class (TCustomDataBaseObjectTest)
   published
     procedure User_Test;
     procedure Cash_Test;
@@ -95,7 +90,8 @@ end;
 function TObjectTest.GetDataSet: TDataSet;
 begin
   with FdsdStoredProc do begin
-    DataSets.Add.DataSet := TClientDataSet.Create(nil);
+    if (DataSets.Count = 0) or not Assigned(DataSets[0].DataSet) then
+       DataSets.Add.DataSet := TClientDataSet.Create(nil);
     StoredProcName := FspSelect;
     OutputType := otDataSet;
     Params.Clear;
@@ -160,7 +156,7 @@ begin
   end;
 end;
 
-procedure TDataBaseObjectTest.DeleteObject(Id: integer);
+procedure TCustomDataBaseObjectTest.DeleteObject(Id: integer);
 const
    pXML =
   '<xml Session = "">' +
@@ -233,14 +229,9 @@ begin
   end;
 end;
 {------------------------------------------------------------------------------}
-function TDataBaseObjectTest.GetRecordCount(ObjectTest: TObjectTest): integer;
+function TCustomDataBaseObjectTest.GetRecordCount(ObjectTest: TObjectTest): integer;
 begin
-  with ObjectTest.GetDataSet do
-    try
-      Result := RecordCount;
-    finally
-       Free;
-    end;
+  Result := ObjectTest.GetDataSet.RecordCount;
 end;
 {------------------------------------------------------------------------------}
 procedure TDataBaseObjectTest.User_Test;
@@ -273,12 +264,12 @@ begin
   end;
 end;
 {------------------------------------------------------------------------------}
-procedure TDataBaseObjectTest.TearDown;
+procedure TCustomDataBaseObjectTest.TearDown;
 begin
   inherited;
 end;
 {------------------------------------------------------------------------------}
-procedure TDataBaseObjectTest.SetUp;
+procedure TCustomDataBaseObjectTest.SetUp;
 begin
   inherited;
   TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
@@ -349,38 +340,18 @@ begin
   finally
     Free;
   end;
-  result := InsertUpdateCash(0, 'Главная касса', CurrencyId);
+  result := InsertUpdateCash(0, 'Главная касса', CurrencyId, 0);
 end;
 
 function TCashTest.InsertUpdateCash(const Id: integer; CashName: string;
-  CurrencyId: Integer): integer;
+  CurrencyId, BranchId: Integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inCashName', ftString, ptInput, CashName);
   FParams.AddParam('inCurrencyId', ftInteger, ptInput, CurrencyId);
+  FParams.AddParam('inCurrencyId', ftInteger, ptInput, BranchId);
   result := InsertUpdate(FParams);
-end;
-
-{ TJuridicalTest }
-
-constructor TJuridicalTest.Create;
-begin
-  inherited;
-  spInsertUpdate := 'gpInsertUpdate_Object_Juridical';
-  spSelect := 'gpSelect_Object_Juridical';
-  spGet := 'gpGet_Object_Juridical';
-end;
-
-function TJuridicalTest.InsertDefault: integer;
-begin
-
-end;
-
-function TJuridicalTest.InsertUpdateJuridical(const Id: integer; Code: Integer;
-  Name, OKPO, INN, Phone, Address, GLNCode: string): integer;
-begin
-
 end;
 
 initialization

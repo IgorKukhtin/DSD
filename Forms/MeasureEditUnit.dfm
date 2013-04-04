@@ -24,6 +24,7 @@ inherited MeasureEditForm: TMeasureEditForm
     Height = 25
     Action = dsdExecStoredProc
     Default = True
+    ModalResult = 8
     TabOrder = 2
   end
   object cxButton2: TcxButton
@@ -61,14 +62,15 @@ inherited MeasureEditForm: TMeasureEditForm
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
+        Name = 'ioId'
         Component = dsdFormParams
         ComponentItem = 'Id'
         DataType = ftInteger
-        ParamType = ptInput
+        ParamType = ptInputOutput
+        Value = '0'
       end
       item
-        Name = 'MeasureName'
+        Name = 'inName'
         Component = edMeasureName
         DataType = ftString
         ParamType = ptInput
@@ -80,8 +82,9 @@ inherited MeasureEditForm: TMeasureEditForm
     Params = <
       item
         Name = 'Id'
-        DataType = ftUnknown
-        ParamType = ptInput
+        DataType = ftInteger
+        ParamType = ptInputOutput
+        Value = '0'
       end>
     Left = 240
     Top = 8
@@ -97,6 +100,7 @@ inherited MeasureEditForm: TMeasureEditForm
         ComponentItem = 'Id'
         DataType = ftInteger
         ParamType = ptInput
+        Value = '0'
       end
       item
         Name = 'Name'

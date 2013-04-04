@@ -25,10 +25,10 @@ type
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdOpenForm;
+    actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
     dsdStoredProc: TdsdStoredProc;
-    actUpdate: TdsdOpenForm;
+    actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     clErased: TcxGridDBColumn;
   private

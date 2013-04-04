@@ -2,7 +2,7 @@ unit dsdActionUnit;
 
 interface
 
-uses VCL.ActnList, Classes, dsdDataSetWrapperUnit;
+uses VCL.ActnList, Forms, Classes, dsdDataSetWrapperUnit, FormUnit, DB;
 
 type
 
@@ -32,6 +32,8 @@ type
     FParams: TdsdParams;
     FFormName: string;
     FisShowModal: boolean;
+  protected
+    procedure BeforeExecute(Form: TParentForm); virtual;
   public
     function Execute: boolean; override;
     constructor Create(AOwner: TComponent); override;
@@ -44,6 +46,22 @@ type
     property isShowModal: boolean read FisShowModal write FisShowModal;
   end;
 
+  // ƒанный класс дополн€ет поведение класса TdsdOpenForm по работе со справочниками
+  //   сожалению наследование самое удобное пока
+  TdsdInsertUpdateAction = class (TdsdOpenForm)
+  private
+    FdsdDataSetRefresh: TdsdDataSetRefresh;
+    FDataSet: TDataSet;
+    FForm: TParentForm;
+    procedure OnFormClose(Sender: TObject; var Action: TCloseAction);
+  protected
+    procedure BeforeExecute(Form: TParentForm); override;
+  published
+    property DataSet: TDataSet read FDataSet write FDataSet;
+    property DataSetRefresh: TdsdDataSetRefresh read FdsdDataSetRefresh write FdsdDataSetRefresh;
+  end;
+
+
   TdsdFormClose = class(TCustomAction)
   public
     function Execute: boolean; override;
@@ -53,7 +71,7 @@ type
 
 implementation
 
-uses Windows, FormUnit, Forms, StorageUnit, SysUtils, CommonDataUnit, UtilConvert;
+uses Windows, StorageUnit, SysUtils, CommonDataUnit, UtilConvert;
 
 procedure Register;
 begin
@@ -61,6 +79,7 @@ begin
   RegisterActions('DSDLib', [TdsdExecStoredProc], TdsdExecStoredProc);
   RegisterActions('DSDLib', [TdsdOpenForm], TdsdOpenForm);
   RegisterActions('DSDLib', [TdsdFormClose], TdsdFormClose);
+  RegisterActions('DSDLib', [TdsdInsertUpdateAction], TdsdInsertUpdateAction);
 end;
 
 { TdsdCustomDataSetAction }
@@ -84,6 +103,11 @@ end;
 
 { TdsdOpenForm }
 
+procedure TdsdOpenForm.BeforeExecute;
+begin
+
+end;
+
 constructor TdsdOpenForm.Create(AOwner: TComponent);
 begin
   inherited;
@@ -103,7 +127,7 @@ var Form: TParentForm;
     MemoryStream: TMemoryStream;
     Str: string;
 begin
-  Form := TParentForm.CreateNew(Application);
+  Form := TParentForm.Create(nil);//New(Application);
   Str := TStorageFactory.GetStorage.ExecuteProc(Format(pGetXML, [gc_User.Session, FormName]));
   Stream := TStringStream.Create(gfStrXmlToStr(Str));
   MemoryStream := TMemoryStream.Create;
@@ -118,7 +142,12 @@ begin
     Stream.Free;
     MemoryStream.Free;
   end;
+  BeforeExecute(Form);
   Form.Execute(FParams);
+  if isShowModal then
+     Form.ShowModal
+  else
+     Form.Show
 end;
 
 { TdsdFormClose }
@@ -127,6 +156,24 @@ function TdsdFormClose.Execute: boolean;
 begin
   if Owner is TForm then
      (Owner as TForm).Close;
+end;
+
+{ TdsdInsertUpdateAction }
+
+procedure TdsdInsertUpdateAction.BeforeExecute;
+begin
+  // —тавим у формы CallBack на событие закрыти€ формы
+  Form.OnClose := OnFormClose;
+  FForm := Form;
+end;
+
+procedure TdsdInsertUpdateAction.OnFormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Action := caFree;
+  // —обытие вызываетс€ в момент закрыти€ формы добавлени€ изменени€ справочника.
+  // Ќеобходимо в таком случае перечитать запрос и отпозиционироватьс€ в нем
+  DataSetRefresh.Execute;
+  DataSet.Locate('Id', FForm.Params.ParamByName('Id').Value, []);
 end;
 
 end.

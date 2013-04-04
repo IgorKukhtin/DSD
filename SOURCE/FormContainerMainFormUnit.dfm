@@ -24,7 +24,6 @@ object MainForm: TMainForm
     ColorMap.BtnSelectedColor = clBtnFace
     ColorMap.UnusedColor = 14410210
     Spacing = 0
-    ExplicitWidth = 719
   end
   object MainMenu: TMainMenu
     Left = 304

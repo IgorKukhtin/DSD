@@ -1,8 +1,8 @@
-﻿--Function: gpSelect_Object_PaidType()
+﻿-- Function: gpSelect_Object_Partner()
 
---DROP FUNCTION gpSelect_Object_PaidType();
+--DROP FUNCTION gpSelect_Object_Partner();
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_PaidType(
+CREATE OR REPLACE FUNCTION gpSelect_Object_Partner(
 IN inSession     TVarChar       /* текущий пользователь */)
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
 $BODY$BEGIN
@@ -16,13 +16,13 @@ $BODY$BEGIN
    , Object.ValueData
    , Object.isErased
    FROM Object
-   WHERE Object.DescId = zc_Object_PaidType();
+   WHERE Object.DescId = zc_Object_Partner();
   
 END;$BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100
   ROWS 100;
-ALTER FUNCTION gpSelect_Object_PaidType(TVarChar)
+ALTER FUNCTION gpSelect_Object_Partner(TVarChar)
   OWNER TO postgres;
 
--- SELECT * FROM gpSelect_Object_PaidType('2')
+-- SELECT * FROM gpSelect_Object_Partner('2')

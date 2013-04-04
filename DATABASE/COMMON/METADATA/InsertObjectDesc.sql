@@ -38,10 +38,43 @@ insert into ObjectDesc(Id, Code, ItemName)
 values (zc_Object_Currency(), 'Currency', 'Валюты');
 
 insert into ObjectDesc(Id, Code, ItemName)
-values (zc_Object_PaidType(), 'PaidType', 'Формы оплат');
+values (zc_Object_PaidKind(), 'PaidKind', 'Формы оплат');
 
 insert into ObjectDesc(Id, Code, ItemName)
 values (zc_Object_Branch(), 'Branch', 'Филиалы');
 
 insert into ObjectDesc(Id, Code, ItemName)
+values (zc_Object_JuridicalGroup(), 'JuridicalGroup', 'Группы юр. лиц');
+
+insert into ObjectDesc(Id, Code, ItemName)
 values (zc_Object_Juridical(), 'Juridical', 'Юр лица');
+
+insert into ObjectDesc(Id, Code, ItemName)
+values (zc_Object_GoodsProperty(), 'GoodsProperty', 'Классификаторы свойств товаров');
+
+insert into ObjectDesc(Id, Code, ItemName)
+values (zc_Object_Partner(), 'Partner', 'Контрагент');
+
+insert into ObjectDesc(Id, Code, ItemName)
+values (zc_Object_ContractKind(), 'ContractKind', 'Виды договоров');
+
+insert into ObjectDesc(Id, Code, ItemName)
+values (zc_Object_Business(), 'Business', 'Бизнесы');
+
+insert into ObjectDesc(Id, Code, ItemName)
+values (zc_Object_UnitGroup(), 'UnitGroup', 'Группы подразеделений');
+
+insert into ObjectDesc(Id, Code, ItemName)
+values (zc_Object_GoodsGroup(), 'GoodsGroup', 'Группы товаров');
+
+insert into ObjectDesc(Id, Code, ItemName)
+values (zc_Object_Bank(), 'Bank', 'Банки');
+
+insert into ObjectDesc(Id, Code, ItemName)
+values (zc_Object_GoodsKind(), 'GoodsKind', 'Тип товара');
+
+insert into ObjectDesc(Id, Code, ItemName)
+values (zc_Object_Account(), 'Account', 'Расчетный счет');
+
+insert into ObjectDesc(Id, Code, ItemName)
+values (zc_Object_PriceList(), 'PriceList', 'Прайс-лист');

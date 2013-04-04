@@ -28,13 +28,13 @@ $BODY$BEGIN
   RETURN 5;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_Object_PaidType_FirstForm()
+CREATE OR REPLACE FUNCTION zc_Object_PaidKind_FirstForm()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 6;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_Object_PaidType_SecondForm()
+CREATE OR REPLACE FUNCTION zc_Object_PaidKind_SecondForm()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 7;

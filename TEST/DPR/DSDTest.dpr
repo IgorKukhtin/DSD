@@ -32,7 +32,8 @@ uses
   UtilUnit in '..\SOURCE\UtilUnit.pas',
   FarmacyStructureTestUnit in '..\SOURCE\Farmacy\FarmacyStructureTestUnit.pas',
   FarmacyTestUnit in '..\SOURCE\Farmacy\FarmacyTestUnit.pas',
-  MeatGuidesTestUnit in '..\SOURCE\Meat\MeatGuidesTestUnit.pas';
+  MeatGuidesTestUnit in '..\SOURCE\Meat\MeatGuidesTestUnit.pas',
+  DataBaseUsersObjectTest in '..\SOURCE\DataBaseUsersObjectTest.pas';
 
 {$R *.RES}
 
