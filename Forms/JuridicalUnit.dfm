@@ -198,7 +198,7 @@ inherited JuridicalForm: TJuridicalForm
           Value = '0'
         end>
       isShowModal = True
-      DataSet = ClientDataSet
+      DataSource = DataSource
       DataSetRefresh = actRefresh
     end
     object actUpdate: TdsdInsertUpdateAction
@@ -215,7 +215,8 @@ inherited JuridicalForm: TJuridicalForm
           ParamType = ptInput
         end>
       isShowModal = True
-      DataSet = ClientDataSet
+      ActionType = acUpdate
+      DataSource = DataSource
       DataSetRefresh = actRefresh
     end
     object dsdSetErased: TdsdUpdateErased

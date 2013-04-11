@@ -178,7 +178,7 @@ inherited MeasureForm: TMeasureForm
           Value = '0'
         end>
       isShowModal = True
-      DataSet = ClientDataSet
+      DataSource = DataSource
       DataSetRefresh = actRefresh
     end
     object actUpdate: TdsdInsertUpdateAction
@@ -195,7 +195,8 @@ inherited MeasureForm: TMeasureForm
           ParamType = ptInput
         end>
       isShowModal = True
-      DataSet = ClientDataSet
+      ActionType = acUpdate
+      DataSource = DataSource
       DataSetRefresh = actRefresh
     end
     object dsdSetErased: TdsdUpdateErased

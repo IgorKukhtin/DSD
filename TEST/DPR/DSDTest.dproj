@@ -80,6 +80,10 @@
 			<DelphiCompile Include="$(MainSource)">
 				<MainSource>MainSource</MainSource>
 			</DelphiCompile>
+			<DCCReference Include="..\..\SOURCE\DataModul.pas">
+				<Form>dmMain</Form>
+				<DesignClass>TDataModule</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\SOURCE\DropCreateDatabaseTestUnit.pas"/>
 			<DCCReference Include="..\SOURCE\DataBaseStructureTestUnit.pas"/>
 			<DCCReference Include="..\SOURCE\DataBaseUnit.pas">
@@ -114,8 +118,8 @@
 			<DCCReference Include="..\..\Forms\GoodsPropertyUnit.pas">
 				<Form>GoodsPropertyForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\JuridicalEditUnit.pas">
-				<Form>JuridicalEditForm</Form>
+			<DCCReference Include="..\..\Forms\BranchEditUnit.pas">
+				<Form>BranchEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\JuridicalGroupEditUnit.pas">
 				<Form>JuridicalGroupEditForm</Form>
@@ -133,15 +137,17 @@
 				<Form>ParentForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdActionUnit.pas"/>
-			<DCCReference Include="..\..\SOURCE\DataModul.pas">
-				<Form>dmMain</Form>
-				<DesignClass>TDataModule</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\BusinessUnit.pas">
 				<Form>BusinessForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\BranchUnit.pas">
 				<Form>BranchForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\JuridicalEditUnit.pas">
+				<Form>JuridicalEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\JuridicalGroupUnit.pas">
+				<Form>JuridicalGroupForm</Form>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

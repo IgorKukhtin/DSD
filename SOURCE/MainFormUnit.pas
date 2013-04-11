@@ -29,6 +29,8 @@ type
     actJuridical: TdsdOpenForm;
     actBusiness: TdsdOpenForm;
     bbBusiness: TdxBarButton;
+    actBranch: TdsdOpenForm;
+    bbBranch: TdxBarButton;
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }

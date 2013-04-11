@@ -36,6 +36,7 @@ type
     bbUnErased: TdxBarButton;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
+    clJuridicalName: TcxGridDBColumn;
   private
     { Private declarations }
   public

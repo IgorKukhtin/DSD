@@ -17,6 +17,7 @@ program DSDTest;
 uses
   DUnitTestRunner,
   Forms,
+  DataModul in '..\..\SOURCE\DataModul.pas' {dmMain: TDataModule},
   DropCreateDatabaseTestUnit in '..\SOURCE\DropCreateDatabaseTestUnit.pas',
   DataBaseStructureTestUnit in '..\SOURCE\DataBaseStructureTestUnit.pas',
   DataBaseUnit in '..\SOURCE\DataBaseUnit.pas' {Form1},
@@ -41,16 +42,17 @@ uses
   GoodsGuidesUnit in '..\..\Forms\GoodsGuidesUnit.pas' {GoodsGuidesForm},
   GoodsPropertyEditUnit in '..\..\Forms\GoodsPropertyEditUnit.pas' {GoodsPropertyEditForm},
   GoodsPropertyUnit in '..\..\Forms\GoodsPropertyUnit.pas' {GoodsPropertyForm},
-  JuridicalEditUnit in '..\..\Forms\JuridicalEditUnit.pas' {JuridicalEditForm},
+  BranchEditUnit in '..\..\Forms\BranchEditUnit.pas' {BranchEditForm},
   JuridicalGroupEditUnit in '..\..\Forms\JuridicalGroupEditUnit.pas' {JuridicalGroupEditForm},
   JuridicalUnit in '..\..\Forms\JuridicalUnit.pas' {JuridicalForm},
   MeasureEditUnit in '..\..\Forms\MeasureEditUnit.pas' {MeasureEditForm},
   MeasureUnit in '..\..\Forms\MeasureUnit.pas' {MeasureForm},
   FormUnit in '..\..\SOURCE\FormUnit.pas' {ParentForm},
   dsdActionUnit in '..\..\SOURCE\COMPONENT\dsdActionUnit.pas',
-  DataModul in '..\..\SOURCE\DataModul.pas' {dmMain: TDataModule},
   BusinessUnit in '..\..\Forms\BusinessUnit.pas' {BusinessForm},
-  BranchUnit in '..\..\Forms\BranchUnit.pas' {BranchForm};
+  BranchUnit in '..\..\Forms\BranchUnit.pas' {BranchForm},
+  JuridicalEditUnit in '..\..\Forms\JuridicalEditUnit.pas' {JuridicalEditForm},
+  JuridicalGroupUnit in '..\..\Forms\JuridicalGroupUnit.pas' {JuridicalGroupForm};
 
 {$R *.RES}
 

@@ -173,7 +173,7 @@ inherited BusinessForm: TBusinessForm
       Category = 'DSDLib'
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
-      FormName = 'BusinessEditForm'
+      FormName = 'TBusinessEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -182,14 +182,14 @@ inherited BusinessForm: TBusinessForm
           Value = '0'
         end>
       isShowModal = True
-      DataSet = ClientDataSet
+      DataSource = DataSource
       DataSetRefresh = actRefresh
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      FormName = 'BusinessEditForm'
+      FormName = 'TBusinessEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -199,7 +199,8 @@ inherited BusinessForm: TBusinessForm
           ParamType = ptInput
         end>
       isShowModal = True
-      DataSet = ClientDataSet
+      ActionType = acUpdate
+      DataSource = DataSource
       DataSetRefresh = actRefresh
     end
     object dsdSetErased: TdsdUpdateErased

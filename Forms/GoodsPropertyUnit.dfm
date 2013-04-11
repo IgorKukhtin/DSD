@@ -182,7 +182,7 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
           Value = '0'
         end>
       isShowModal = True
-      DataSet = ClientDataSet
+      DataSource = DataSource
       DataSetRefresh = actRefresh
     end
     object actUpdate: TdsdInsertUpdateAction
@@ -199,7 +199,8 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
           ParamType = ptInput
         end>
       isShowModal = True
-      DataSet = ClientDataSet
+      ActionType = acUpdate
+      DataSource = DataSource
       DataSetRefresh = actRefresh
     end
     object dsdSetErased: TdsdUpdateErased

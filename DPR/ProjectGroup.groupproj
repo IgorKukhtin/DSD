@@ -15,9 +15,6 @@
 			<Projects Include="DSD.dproj">
 				<Dependencies/>
 			</Projects>
-			<Projects Include="DSDFormContainer.dproj">
-				<Dependencies/>
-			</Projects>
 		</ItemGroup>
 		<ProjectExtensions>
 			<Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -62,23 +59,14 @@
 		<Target Name="DSD:Make">
 			<MSBuild Projects="DSD.dproj" Targets="Make"/>
 		</Target>
-		<Target Name="DSDFormContainer">
-			<MSBuild Projects="DSDFormContainer.dproj"/>
-		</Target>
-		<Target Name="DSDFormContainer:Clean">
-			<MSBuild Projects="DSDFormContainer.dproj" Targets="Clean"/>
-		</Target>
-		<Target Name="DSDFormContainer:Make">
-			<MSBuild Projects="DSDFormContainer.dproj" Targets="Make"/>
-		</Target>
 		<Target Name="Build">
-			<CallTarget Targets="DSDComponent;DSDTest;MainTestProject;DSD;DSDFormContainer"/>
+			<CallTarget Targets="DSDComponent;DSDTest;MainTestProject;DSD"/>
 		</Target>
 		<Target Name="Clean">
-			<CallTarget Targets="DSDComponent:Clean;DSDTest:Clean;MainTestProject:Clean;DSD:Clean;DSDFormContainer:Clean"/>
+			<CallTarget Targets="DSDComponent:Clean;DSDTest:Clean;MainTestProject:Clean;DSD:Clean"/>
 		</Target>
 		<Target Name="Make">
-			<CallTarget Targets="DSDComponent:Make;DSDTest:Make;MainTestProject:Make;DSD:Make;DSDFormContainer:Make"/>
+			<CallTarget Targets="DSDComponent:Make;DSDTest:Make;MainTestProject:Make;DSD:Make"/>
 		</Target>
 		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')" Project="$(BDS)\Bin\CodeGear.Group.Targets"/>
 	</Project>

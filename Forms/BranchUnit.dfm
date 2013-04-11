@@ -1,15 +1,15 @@
 inherited BranchForm: TBranchForm
   Caption = #1060#1080#1083#1080#1072#1083#1099
   ClientHeight = 376
-  ClientWidth = 390
-  ExplicitWidth = 398
+  ClientWidth = 588
+  ExplicitWidth = 596
   ExplicitHeight = 403
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 390
+    Width = 588
     Height = 350
     Align = alClient
     TabOrder = 0
@@ -30,15 +30,22 @@ inherited BranchForm: TBranchForm
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        Width = 84
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
-        Width = 252
+        Width = 246
+      end
+      object clJuridicalName: TcxGridDBColumn
+        Caption = #1070#1088'. '#1083#1080#1094#1086
+        DataBinding.FieldName = 'JuridicalName'
+        Width = 199
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
+        Width = 57
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -173,7 +180,7 @@ inherited BranchForm: TBranchForm
       Category = 'DSDLib'
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
-      FormName = 'BusinessEditForm'
+      FormName = 'TBranchEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -182,13 +189,14 @@ inherited BranchForm: TBranchForm
           Value = '0'
         end>
       isShowModal = True
+      DataSource = DataSource
       DataSetRefresh = actRefresh
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      FormName = 'BusinessEditForm'
+      FormName = 'TBranchEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -198,6 +206,8 @@ inherited BranchForm: TBranchForm
           ParamType = ptInput
         end>
       isShowModal = True
+      ActionType = acUpdate
+      DataSource = DataSource
       DataSetRefresh = actRefresh
     end
     object dsdSetErased: TdsdUpdateErased

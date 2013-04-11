@@ -93,6 +93,7 @@ begin
     SaveStoredProc.ParamByName('FormData').Value := gfStrToXmlStr(copy(XML, 12, length(XML) - 15));
     SaveStoredProc.Execute;
   finally
+    Form.Free;
     Stream.Free;
     MemoryStream.Free;
   end;

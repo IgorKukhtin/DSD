@@ -108,8 +108,8 @@ type
     FForm: TParentForm;
     FActionType: TDataSetAcionType;
     procedure OnFormClose(Sender: TObject; var Action: TCloseAction);
-    function GetDataSet: TDataSet;
-    procedure SetDataSet(const Value: TDataSet);
+    function GetDataSource: TDataSource;
+    procedure SetDataSource(const Value: TDataSource);
   protected
     procedure BeforeExecute(Form: TParentForm); override;
   public
@@ -117,7 +117,7 @@ type
     constructor Create(AOwner: TComponent); override;
   published
     property ActionType: TDataSetAcionType read FActionType write FActionType default acInsert;
-    property DataSet: TDataSet read GetDataSet write SetDataSet;
+    property DataSource: TDataSource read GetDataSource write SetDataSource;
     property DataSetRefresh: TdsdDataSetRefresh read FdsdDataSetRefresh write FdsdDataSetRefresh;
   end;
 
@@ -247,13 +247,14 @@ end;
 procedure TdsdInsertUpdateAction.DataSetChanged;
 begin
   Enabled := false;
-  if Assigned(DataSet) then
-     Enabled := DataSet.RecordCount <> 0
+  if Assigned(DataSource) then
+     if Assigned(DataSource.DataSet) then
+        Enabled := (ActionType = acInsert) or (DataSource.DataSet.RecordCount <> 0)
 end;
 
-function TdsdInsertUpdateAction.GetDataSet: TDataSet;
+function TdsdInsertUpdateAction.GetDataSource: TDataSource;
 begin
-  result := FActionDataLink.DataSet
+  result := FActionDataLink.DataSource
 end;
 
 procedure TdsdInsertUpdateAction.OnFormClose(Sender: TObject; var Action: TCloseAction);
@@ -262,12 +263,14 @@ begin
   // Событие вызывается в момент закрытия формы добавления изменения справочника.
   // Необходимо в таком случае перечитать запрос и отпозиционироваться в нем
   DataSetRefresh.Execute;
-  DataSet.Locate('Id', FForm.Params.ParamByName('Id').Value, []);
+  if Assigned(DataSource) then
+     if Assigned(DataSource.DataSet) then
+        DataSource.DataSet.Locate('Id', FForm.Params.ParamByName('Id').Value, []);
 end;
 
-procedure TdsdInsertUpdateAction.SetDataSet(const Value: TDataSet);
+procedure TdsdInsertUpdateAction.SetDataSource(const Value: TDataSource);
 begin
-  FActionDataLink := TDataSetDataLink.Create(Self);
+  FActionDataLink.DataSource := Value;
 end;
 
 { TActionDataLink }
@@ -281,7 +284,8 @@ end;
 procedure TDataSetDataLink.DataSetChanged;
 begin
   inherited;
-  FAction.DataSetChanged;
+  if Assigned(FAction) then
+     FAction.DataSetChanged;
 end;
 
 { TdsdUpdateErased }
@@ -295,13 +299,16 @@ end;
 
 procedure TdsdUpdateErased.DataSetChanged;
 begin
-  if DataSource.DataSet.RecordCount = 0 then
-     Enabled := false
-  else
-    if FisSetErased then
-       Enabled := true
-    else
-       Enabled := false
+  Enabled := false;
+  if Assigned(DataSource) then
+     if Assigned(DataSource.DataSet) then
+        if DataSource.DataSet.RecordCount = 0 then
+           Enabled := false
+        else
+           if FisSetErased then
+              Enabled := true
+           else
+              Enabled := false
 end;
 
 function TdsdUpdateErased.Execute: boolean;

@@ -101,6 +101,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbBranch'
+        end
+        item
+          Visible = True
           ItemName = 'bbGoodsProperty'
         end
         item
@@ -132,6 +136,10 @@ object MainForm: TMainForm
       Action = actBusiness
       Category = 0
     end
+    object bbBranch: TdxBarButton
+      Action = actBranch
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Left = 192
@@ -147,7 +155,15 @@ object MainForm: TMainForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       Caption = #1045#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
       Hint = #1045#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
-      FormName = 'MeasureForm'
+      FormName = 'TMeasureForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actBranch: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1060#1080#1083#1080#1072#1083#1099
+      Hint = #1060#1080#1083#1080#1072#1083#1099
+      FormName = 'TBranchForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -155,7 +171,7 @@ object MainForm: TMainForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       Caption = #1043#1088#1091#1087#1087#1099' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
       Hint = #1043#1088#1091#1087#1087#1099' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
-      FormName = 'JuridicalGroupForm'
+      FormName = 'TJuridicalGroupForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -163,7 +179,7 @@ object MainForm: TMainForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       Caption = #1041#1080#1079#1085#1077#1089#1099
       Hint = #1041#1080#1079#1085#1077#1089#1099
-      FormName = 'BusinessForm'
+      FormName = 'TBusinessForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -171,7 +187,7 @@ object MainForm: TMainForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074
       Hint = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1099' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074
-      FormName = 'GoodsPropertyForm'
+      FormName = 'TGoodsPropertyForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -179,7 +195,7 @@ object MainForm: TMainForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
       Hint = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
-      FormName = 'JuridicalForm'
+      FormName = 'TJuridicalForm'
       GuiParams = <>
       isShowModal = False
     end
