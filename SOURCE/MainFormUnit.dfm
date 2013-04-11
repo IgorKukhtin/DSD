@@ -11,6 +11,7 @@ object MainForm: TMainForm
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object dxBarManager: TdxBarManager
@@ -88,6 +89,22 @@ object MainForm: TMainForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbJuridicalGroup'
+        end
+        item
+          Visible = True
+          ItemName = 'bbJuridical'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBusiness'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGoodsProperty'
+        end
+        item
+          Visible = True
           ItemName = 'bbGoodsGuides'
         end
         item
@@ -97,6 +114,22 @@ object MainForm: TMainForm
     end
     object bbMeasure: TdxBarButton
       Action = actMeasure
+      Category = 0
+    end
+    object bbJuridicalGroup: TdxBarButton
+      Action = actJuridicalGroup
+      Category = 0
+    end
+    object bbGoodsProperty: TdxBarButton
+      Action = actGoodsProperty
+      Category = 0
+    end
+    object bbJuridical: TdxBarButton
+      Action = actJuridical
+      Category = 0
+    end
+    object bbBusiness: TdxBarButton
+      Action = actBusiness
       Category = 0
     end
   end
@@ -118,9 +151,42 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actJuridicalGroup: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1043#1088#1091#1087#1087#1099' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
+      Hint = #1043#1088#1091#1087#1087#1099' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
+      FormName = 'JuridicalGroupForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actBusiness: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1041#1080#1079#1085#1077#1089#1099
+      Hint = #1041#1080#1079#1085#1077#1089#1099
+      FormName = 'BusinessForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actGoodsProperty: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074
+      Hint = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1099' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074
+      FormName = 'GoodsPropertyForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actJuridical: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
+      Hint = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
+      FormName = 'JuridicalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object cxLocalizer: TcxLocalizer
+    StorageType = lstResource
     Left = 256
-    Top = 56
+    Top = 48
   end
 end

@@ -14,14 +14,33 @@ type
     ActionManager: TActionManager;
     ActionToolBar1: TActionToolBar;
     actSave: TAction;
-    dsdStoredProc: TdsdStoredProc;
     N1: TMenuItem;
     N2: TMenuItem;
     N3: TMenuItem;
     N4: TMenuItem;
+    N5: TMenuItem;
+    N6: TMenuItem;
+    N7: TMenuItem;
+    N8: TMenuItem;
+    N9: TMenuItem;
+    N10: TMenuItem;
+    N11: TMenuItem;
+    N12: TMenuItem;
+    N13: TMenuItem;
+    N14: TMenuItem;
+    N15: TMenuItem;
+    N16: TMenuItem;
     procedure N3Click(Sender: TObject);
     procedure N4Click(Sender: TObject);
     procedure actSaveExecute(Sender: TObject);
+    procedure N6Click(Sender: TObject);
+    procedure N7Click(Sender: TObject);
+    procedure N9Click(Sender: TObject);
+    procedure N10Click(Sender: TObject);
+    procedure N12Click(Sender: TObject);
+    procedure N13Click(Sender: TObject);
+    procedure N15Click(Sender: TObject);
+    procedure N16Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -35,39 +54,23 @@ implementation
 
 {$R *.dfm}
 
-uses MeasureUnit, MeasureEditUnit, FormUnit, Xml.XMLDoc, UtilConvert;
+uses MeasureUnit, MeasureEditUnit,
+     JuridicalGroupUnit, JuridicalGroupEditUnit,
+     JuridicalUnit, JuridicalEditUnit,
+     GoodsPropertyUnit, GoodsPropertyEditUnit,
+     BusinessUnit, BusinessEditUnit,
+     FormUnit, UtilConvert, FormStorageUnit;
 
 procedure TMainForm.actSaveExecute(Sender: TObject);
 var
-  Stream: TStringStream;
-  MemoryStream: TMemoryStream;
   i: integer;
-  XMLDocument: TXMLDocument;
-  XML: String;
 begin
   for I := 0 to Application.ComponentCount - 1 do
     if (Application.Components[i] is TParentForm) and TParentForm(Application.Components[i]).Visible then begin
       // Что бы форма не выскакивала после загрузки
       TParentForm(Application.Components[i]).Visible := false;
-      Stream := TStringStream.Create;
-      MemoryStream := TMemoryStream.Create;
-      XMLDocument:= TXMLDocument.Create(nil);
-      try
-        MemoryStream.WriteComponent(Application.Components[i]);
-        MemoryStream.Position := 0;
-        ObjectBinaryToText(MemoryStream, Stream);
-        dsdStoredProc.ParamByName('FormName').Value := copy(Application.Components[i].ClassName, 2, MaxInt);
-        // Оборачиваем символы #13 и #10
-        XMLDocument.LoadFromXML('<xml Data="' + gfStrToXmlStr(Stream.DataString) + '"/>');
-        XMLDocument.SaveToXML(XML);
-
-        dsdStoredProc.ParamByName('FormData').Value := gfStrToXmlStr(copy(XML, 12, length(XML) - 15));
-        dsdStoredProc.Execute;
-      finally
-        Stream.Free;
-        MemoryStream.Free;
-      end;
-      ShowMessage('Форма ' + dsdStoredProc.ParamByName('FormName').Value + ' сохранена в базе')
+      TdsdFormStorageFactory.GetStorage.Save(Application.Components[i]);
+      ShowMessage('Форма ' + Application.Components[i].Name + ' сохранена в базе')
     end;
 end;
 
@@ -79,6 +82,47 @@ end;
 procedure TMainForm.N4Click(Sender: TObject);
 begin
   MeasureEditForm.Show;
+end;
+
+procedure TMainForm.N6Click(Sender: TObject);
+begin
+  JuridicalGroupForm.Show;
+end;
+
+procedure TMainForm.N7Click(Sender: TObject);
+begin
+  JuridicalGroupEditForm.Show;
+end;
+
+procedure TMainForm.N9Click(Sender: TObject);
+begin
+  GoodsPropertyForm.Show;
+end;
+
+procedure TMainForm.N10Click(Sender: TObject);
+begin
+  GoodsPropertyEditForm.Show
+end;
+
+
+procedure TMainForm.N12Click(Sender: TObject);
+begin
+  JuridicalForm.Show
+end;
+
+procedure TMainForm.N13Click(Sender: TObject);
+begin
+  JuridicalEditForm.Show
+end;
+
+procedure TMainForm.N15Click(Sender: TObject);
+begin
+  BusinessForm.Show
+end;
+
+procedure TMainForm.N16Click(Sender: TObject);
+begin
+  BusinessEditForm.Show
 end;
 
 end.

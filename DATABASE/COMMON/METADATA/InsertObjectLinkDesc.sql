@@ -47,12 +47,12 @@ insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
 values (zc_ObjectLink_Goods_Measure(), 'Goods_Measure', 'Связь товаров с единицей измерения', zc_Object_GoodsGroup(), zc_Object_GoodsGroup());
 
 insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
-values (zc_ObjectLink_Account_Juridical(), 'Account_Juridical', 'Связь счета с юр. лицом', zc_Object_Account(), zc_Object_Juridical());
+values (zc_ObjectLink_BankAccount_Juridical(), 'BankAccount_Juridical', 'Связь счета с юр. лицом', zc_Object_BankAccount(), zc_Object_Juridical());
 
 insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
-values (zc_ObjectLink_Account_Bank(), 'Account_Bank', 'Связь счета банком', zc_Object_Account(), zc_Object_Bank());
+values (zc_ObjectLink_BankAccount_Bank(), 'BankAccount_Bank', 'Связь счета банком', zc_Object_BankAccount(), zc_Object_Bank());
 
 insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
-values (zc_ObjectLink_Account_Currency(), 'Account_Currency', 'Связь счета с валютой', zc_Object_Account(), zc_Object_Currency());
+values (zc_ObjectLink_BankAccount_Currency(), 'BankAccount_Currency', 'Связь счета с валютой', zc_Object_BankAccount(), zc_Object_Currency());
 
 

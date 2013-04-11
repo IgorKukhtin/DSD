@@ -71,7 +71,7 @@ type
 implementation
 
 uses ZDbcIntfs, SysUtils, StorageUnit, DBClient, XMLDoc, CommonDataUnit, Forms,
-     Classes, UtilConvert, ZLibEx, UtilUnit, UtilType;
+     Classes, UtilConvert, ZLibEx, UtilUnit;
 
 
 { TObjectTest }

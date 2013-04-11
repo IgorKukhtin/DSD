@@ -18,7 +18,6 @@ type
     clName: TcxGridDBColumn;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
-    dsdDataSetWrapper: TdsdDataSetWrapper;
     clLogin: TcxGridDBColumn;
     cxPropertiesStore: TcxPropertiesStore;
   private
@@ -33,5 +32,6 @@ var
 implementation
 
 {$R *.dfm}
+
 
 end.

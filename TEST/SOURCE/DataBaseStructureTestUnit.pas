@@ -400,11 +400,11 @@ begin
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Goods\gpGet_Object_Goods.sql');
   ZQuery.ExecSQL;
 
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Account\gpInsertUpdate_Object_Account.sql');
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_BankAccount\gpInsertUpdate_Object_BankAccount.sql');
   ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Account\gpSelect_Object_Account.sql');
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_BankAccount\gpSelect_Object_BankAccount.sql');
   ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Account\gpGet_Object_Account.sql');
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_BankAccount\gpGet_Object_BankAccount.sql');
   ZQuery.ExecSQL;
 
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_PriceList\gpInsertUpdate_Object_PriceList.sql');

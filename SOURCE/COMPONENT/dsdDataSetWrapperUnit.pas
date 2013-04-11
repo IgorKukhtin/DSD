@@ -2,9 +2,11 @@ unit dsdDataSetWrapperUnit;
 
 interface
 
-uses Classes, DBClient, UtilType, DB;
+uses Classes, DBClient, DB;
 
 type
+
+  TOutputType = (otResult, otDataSet, otMultiDataSet, otBlob);
 
   TdsdParam = class(TCollectionItem)
   private
@@ -39,7 +41,7 @@ type
   public
     function ParamByName(const Value: string): TdsdParam;
     function Add: TdsdParam;
-    function AddParam(AName: string; ADataType: TFieldType; AParamType: TParamType; AValue: Variant): TParam;
+    function AddParam(AName: string; ADataType: TFieldType; AParamType: TParamType; AValue: Variant): TdsdParam;
     property Items[Index: Integer]: TdsdParam read GetItem write SetItem; default;
   end;
 
@@ -78,14 +80,21 @@ type
     function GetXML: String;
     function FillParams: String;
     procedure FillOutputParams(XML: String);
+    function GetDataSet: TClientDataSet;
+    procedure SetDataSet(const Value: TClientDataSet);
   public
-    procedure Execute;
+    function Execute: string;
     function ParamByName(const Value: string): TdsdParam;
     constructor Create(AOwner: TComponent); override;
   published
+    // Название процедуры на сервере
     property StoredProcName: String read FStoredProcName write FStoredProcName;
+    // ДатаСет с данными. Введен для удобства, так как зачастую DataSet = DataSets[0]
+    property DataSet: TClientDataSet read GetDataSet write SetDataSet;
+    // Обновляемые ДатаСеты
     property DataSets: TdsdDataSets read FDataSets write FDataSets;
     property OutputType: TOutputType read FOutputType write FOutputType default otDataSet;
+    // Параметры процедуры
     property Params: TdsdParams read FParams write FParams;
   end;
 
@@ -95,7 +104,7 @@ type
 implementation
 
 uses StorageUnit, CommonDataUnit, TypInfo, UtilConvert, SysUtils, cxTextEdit,
-     XMLDoc, XMLIntf, StrUtils;
+     XMLDoc, XMLIntf, StrUtils, cxCurrencyEdit, dsdGuidesUtilUnit, cxCheckBox;
 
 procedure Register;
 begin
@@ -131,13 +140,16 @@ begin
   OutputType := otDataSet;
 end;
 
-procedure TdsdStoredProc.Execute;
+function TdsdStoredProc.Execute;
 begin
+  result := '';
   if (OutputType = otDataSet) and (DataSets.Count > 0) and
       Assigned(DataSets[0]) and Assigned(DataSets[0].DataSet) then
          DataSets[0].DataSet.XMLData := TStorageFactory.GetStorage.ExecuteProc(GetXML);
   if (OutputType = otResult) then
      FillOutputParams(TStorageFactory.GetStorage.ExecuteProc(GetXML));
+  if (OutputType = otBlob) then
+      result := TStorageFactory.GetStorage.ExecuteProc(GetXML)
 end;
 
 procedure TdsdStoredProc.FillOutputParams(XML: String);
@@ -167,10 +179,34 @@ begin
 
 end;
 
+function TdsdStoredProc.GetDataSet: TClientDataSet;
+begin
+  if DataSets.Count > 0 then
+     result := DataSets[0].DataSet
+  else
+     result := nil
+end;
+
+procedure TdsdStoredProc.SetDataSet(const Value: TClientDataSet);
+begin
+  // Если устанавливается или
+  if Value <> nil then begin
+     if DataSets.Count > 0 then
+        DataSets[0].DataSet := Value
+     else
+        DataSets.Add.DataSet := Value;
+  end
+  else begin
+    //если ставится в NIL
+    if DataSets.Count > 0 then
+       DataSets.Delete(0);
+  end;
+end;
+
+
 function TdsdStoredProc.GetXML: String;
 var
-  Session, ParamValue: string;
-  i: integer;
+  Session: string;
 begin
   if Assigned(gc_User) then
      Session := gc_User.Session
@@ -197,9 +233,10 @@ begin
 end;
 
 function TdsdParams.AddParam(AName: string; ADataType: TFieldType;
-  AParamType: TParamType; AValue: Variant): TParam;
+  AParamType: TParamType; AValue: Variant): TdsdParam;
 begin
-  with Add do begin
+  result := Add;
+  with result do begin
     Name := AName;
     DataType := ADataType;
     ParamType := AParamType;
@@ -283,7 +320,13 @@ begin
         else
           case DataType of
             ftInteger: Result := '0';
-          end
+          end;
+     if Component is TcxCurrencyEdit then
+        Result := (Component as TcxCurrencyEdit).Text;
+     if Component is TdsdGuides then
+        Result := (Component as TdsdGuides).Key;
+     if Component is TcxCheckBox then
+        Result := BoolToStr((Component as TcxCheckBox).Checked, true);
   end
   else begin
     case DataType of
@@ -319,6 +362,15 @@ begin
         with (Component as TdsdFormParams) do begin
           ParamByName(FComponentItem).Value := FValue
         end;
+     if Component is TcxCurrencyEdit then
+        (Component as TcxCurrencyEdit).Value := StrToFloat(FValue);
+     if Component is TcxCheckBox then
+        (Component as TcxCheckBox).Checked := StrToBool(FValue);
+     if Component is TdsdGuides then
+        if LowerCase(ComponentItem) = 'name' then
+           (Component as TdsdGuides).TextValue := FValue
+        else
+           (Component as TdsdGuides).Key := FValue;
   end
 end;
 
@@ -335,7 +387,26 @@ begin
   result := FParams.ParamByName(Value)
 end;
 
+
+procedure VerifyBoolStrArray;
+begin
+  if Length(TrueBoolStrs) = 0 then
+  begin
+    SetLength(TrueBoolStrs, 2);
+    TrueBoolStrs[0] := DefaultTrueBoolStr;
+    TrueBoolStrs[1] := 't';
+  end;
+  if Length(FalseBoolStrs) = 0 then
+  begin
+    SetLength(FalseBoolStrs, 2);
+    FalseBoolStrs[0] := DefaultFalseBoolStr;
+    FalseBoolStrs[1] := 'f';
+  end;
+end;
+
 initialization
   RegisterClass(TdsdDataSets);
+  VerifyBoolStrArray;
+
 
 end.

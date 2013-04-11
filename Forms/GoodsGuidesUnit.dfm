@@ -50,16 +50,6 @@ object GoodsGuidesForm: TGoodsGuidesForm
     Left = 136
     Top = 144
   end
-  object dsdDataSetWrapper: TdsdDataSetWrapper
-    StoredProcName = 'gpSelect_User'
-    DataSets = <
-      item
-        DataSet = ClientDataSet
-      end>
-    Params = <>
-    Left = 208
-    Top = 168
-  end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item

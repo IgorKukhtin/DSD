@@ -23,7 +23,7 @@ implementation
 
 { TFarmacyTest }
 
-uses dsdDataSetWrapperUnit, UtilType, DBClient, SysUtils, DataBaseObjectTestUnit;
+uses dsdDataSetWrapperUnit, DBClient, SysUtils, DataBaseObjectTestUnit;
 
 procedure TFarmacyTest.CashFoundationTest;
 var

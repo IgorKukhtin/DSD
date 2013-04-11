@@ -6,13 +6,35 @@ uses VCL.ActnList, Forms, Classes, dsdDataSetWrapperUnit, FormUnit, DB;
 
 type
 
+  TDataSetAcionType = (acInsert, acUpdate);
+
+  TdsdStoredProcItem = class(TCollectionItem)
+  private
+    FStoredProc: TdsdStoredProc;
+  published
+    property StoredProc: TdsdStoredProc read FStoredProc write FStoredProc;
+  end;
+
+  TdsdStoredProcList = class(TCollection)
+  private
+    function GetItem(Index: Integer): TdsdStoredProcItem;
+    procedure SetItem(Index: Integer; const Value: TdsdStoredProcItem);
+  public
+    function Add: TdsdStoredProcItem;
+    property Items[Index: Integer]: TdsdStoredProcItem read GetItem write SetItem; default;
+  end;
+
   TdsdCustomDataSetAction = class(TCustomAction)
   private
-    FDataSetWrapper: TdsdStoredProc;
+    FStoredProcList: TdsdStoredProcList;
+    function GetStoredProc: TdsdStoredProc;
+    procedure SetStoredProc(const Value: TdsdStoredProc);
   public
     function Execute: boolean; override;
+    constructor Create(AOwner: TComponent); override;
   published
-    property DataSetWrapper: TdsdStoredProc read FDataSetWrapper write FDataSetWrapper;
+    property StoredProc: TdsdStoredProc read GetStoredProc write SetStoredProc;
+    property StoredProcList: TdsdStoredProcList read FStoredProcList write FStoredProcList;
     property Caption;
     property Hint;
     property ShortCut;
@@ -25,6 +47,37 @@ type
 
   TdsdExecStoredProc = class(TdsdCustomDataSetAction)
 
+  end;
+
+  IDataSetAction = interface
+    procedure DataSetChanged;
+  end;
+
+  TdsdUpdateErased = class;
+
+  TDataSetDataLink = class(TDataLink)
+  private
+    FAction: IDataSetAction;
+  protected
+    procedure DataSetChanged; override;
+  public
+    constructor Create(Action: IDataSetAction);
+  end;
+
+  TdsdUpdateErased = class(TdsdCustomDataSetAction, IDataSetAction)
+  private
+    FActionDataLink: TDataSetDataLink;
+    FisSetErased: boolean;
+    function GetDataSource: TDataSource;
+    procedure SetDataSource(const Value: TDataSource);
+    procedure SetisSetErased(const Value: boolean);
+  public
+    procedure DataSetChanged;
+    function Execute: boolean; override;
+    constructor Create(AOwner: TComponent); override;
+  published
+    property isSetErased: boolean read FisSetErased write SetisSetErased default true;
+    property DataSource: TDataSource read GetDataSource write SetDataSource;
   end;
 
   TdsdOpenForm = class(TCustomAction)
@@ -48,16 +101,23 @@ type
 
   // Данный класс дополняет поведение класса TdsdOpenForm по работе со справочниками
   // К сожалению наследование самое удобное пока
-  TdsdInsertUpdateAction = class (TdsdOpenForm)
+  TdsdInsertUpdateAction = class (TdsdOpenForm, IDataSetAction)
   private
+    FActionDataLink: TDataSetDataLink;
     FdsdDataSetRefresh: TdsdDataSetRefresh;
-    FDataSet: TDataSet;
     FForm: TParentForm;
+    FActionType: TDataSetAcionType;
     procedure OnFormClose(Sender: TObject; var Action: TCloseAction);
+    function GetDataSet: TDataSet;
+    procedure SetDataSet(const Value: TDataSet);
   protected
     procedure BeforeExecute(Form: TParentForm); override;
+  public
+    procedure DataSetChanged;
+    constructor Create(AOwner: TComponent); override;
   published
-    property DataSet: TDataSet read FDataSet write FDataSet;
+    property ActionType: TDataSetAcionType read FActionType write FActionType default acInsert;
+    property DataSet: TDataSet read GetDataSet write SetDataSet;
     property DataSetRefresh: TdsdDataSetRefresh read FdsdDataSetRefresh write FdsdDataSetRefresh;
   end;
 
@@ -71,7 +131,7 @@ type
 
 implementation
 
-uses Windows, StorageUnit, SysUtils, CommonDataUnit, UtilConvert;
+uses Windows, StorageUnit, SysUtils, CommonDataUnit, UtilConvert, FormStorageUnit;
 
 procedure Register;
 begin
@@ -80,16 +140,50 @@ begin
   RegisterActions('DSDLib', [TdsdOpenForm], TdsdOpenForm);
   RegisterActions('DSDLib', [TdsdFormClose], TdsdFormClose);
   RegisterActions('DSDLib', [TdsdInsertUpdateAction], TdsdInsertUpdateAction);
+  RegisterActions('DSDLib', [TdsdUpdateErased], TdsdUpdateErased);
 end;
 
 { TdsdCustomDataSetAction }
 
-function TdsdCustomDataSetAction.Execute: boolean;
+constructor TdsdCustomDataSetAction.Create(AOwner: TComponent);
 begin
-  if Assigned(DataSetWrapper) then
-     DataSetWrapper.Execute
+  inherited;
+  FStoredProcList := TdsdStoredProcList.Create(TdsdStoredProcItem);
 end;
 
+function TdsdCustomDataSetAction.Execute: boolean;
+var i: integer;
+begin
+  result := true;
+  for I := 0 to StoredProcList.Count - 1  do
+      if Assigned(StoredProcList[i]) then
+         StoredProcList[i].StoredProc.Execute
+end;
+
+
+function TdsdCustomDataSetAction.GetStoredProc: TdsdStoredProc;
+begin
+  if StoredProcList.Count > 0 then
+     result := StoredProcList[0].StoredProc
+  else
+     result := nil
+end;
+
+procedure TdsdCustomDataSetAction.SetStoredProc(const Value: TdsdStoredProc);
+begin
+  // Если устанавливается или
+  if Value <> nil then begin
+     if StoredProcList.Count > 0 then
+        StoredProcList[0].StoredProc := Value
+     else
+        StoredProcList.Add.StoredProc := Value;
+  end
+  else begin
+    //если ставится в NIL
+    if StoredProcList.Count > 0 then
+       StoredProcList.Delete(0);
+  end;
+end;
 
 { TdsdDataSetRefresh }
 
@@ -115,33 +209,10 @@ begin
 end;
 
 function TdsdOpenForm.Execute: boolean;
-const
-  pGetXML =
-  '<xml Session = "%s">' +
-    '<gpGet_Object_Form OutputType="otBlob">' +
-       '<inFormName DataType="ftString" Value="%s"/>' +
-    '</gpGet_Object_Form>' +
-   '</xml>';
-var Form: TParentForm;
-    Stream: TStringStream;
-    MemoryStream: TMemoryStream;
-    Str: string;
+var
+  Form: TParentForm;
 begin
-  Form := TParentForm.Create(nil);//New(Application);
-  Str := TStorageFactory.GetStorage.ExecuteProc(Format(pGetXML, [gc_User.Session, FormName]));
-  Stream := TStringStream.Create(gfStrXmlToStr(Str));
-  MemoryStream := TMemoryStream.Create;
-  try
-    // Преобразовать текст в бинарные данные
-    ObjectTextToBinary(Stream, MemoryStream);
-    // Вернуть смещение
-    MemoryStream.Position := 0;
-    // Прочитать компонент из потока
-    MemoryStream.ReadComponent(Form);
-  finally
-    Stream.Free;
-    MemoryStream.Free;
-  end;
+  Form := TdsdFormStorageFactory.GetStorage.Load(FormName);
   BeforeExecute(Form);
   Form.Execute(FParams);
   if isShowModal then
@@ -167,6 +238,24 @@ begin
   FForm := Form;
 end;
 
+constructor TdsdInsertUpdateAction.Create(AOwner: TComponent);
+begin
+  inherited;
+  FActionDataLink := TDataSetDataLink.Create(Self);
+end;
+
+procedure TdsdInsertUpdateAction.DataSetChanged;
+begin
+  Enabled := false;
+  if Assigned(DataSet) then
+     Enabled := DataSet.RecordCount <> 0
+end;
+
+function TdsdInsertUpdateAction.GetDataSet: TDataSet;
+begin
+  result := FActionDataLink.DataSet
+end;
+
 procedure TdsdInsertUpdateAction.OnFormClose(Sender: TObject; var Action: TCloseAction);
 begin
   Action := caFree;
@@ -174,6 +263,94 @@ begin
   // Необходимо в таком случае перечитать запрос и отпозиционироваться в нем
   DataSetRefresh.Execute;
   DataSet.Locate('Id', FForm.Params.ParamByName('Id').Value, []);
+end;
+
+procedure TdsdInsertUpdateAction.SetDataSet(const Value: TDataSet);
+begin
+  FActionDataLink := TDataSetDataLink.Create(Self);
+end;
+
+{ TActionDataLink }
+
+constructor TDataSetDataLink.Create(Action: IDataSetAction);
+begin
+  inherited Create;
+  FAction := Action;
+end;
+
+procedure TDataSetDataLink.DataSetChanged;
+begin
+  inherited;
+  FAction.DataSetChanged;
+end;
+
+{ TdsdUpdateErased }
+
+constructor TdsdUpdateErased.Create(AOwner: TComponent);
+begin
+  inherited;
+  FActionDataLink := TDataSetDataLink.Create(Self);
+  isSetErased := true;
+end;
+
+procedure TdsdUpdateErased.DataSetChanged;
+begin
+  if DataSource.DataSet.RecordCount = 0 then
+     Enabled := false
+  else
+    if FisSetErased then
+       Enabled := true
+    else
+       Enabled := false
+end;
+
+function TdsdUpdateErased.Execute: boolean;
+begin
+
+end;
+
+function TdsdUpdateErased.GetDataSource: TDataSource;
+begin
+  result := FActionDataLink.DataSource
+end;
+
+procedure TdsdUpdateErased.SetDataSource(const Value: TDataSource);
+begin
+  FActionDataLink.DataSource := Value
+end;
+
+procedure TdsdUpdateErased.SetisSetErased(const Value: boolean);
+begin
+  FisSetErased := Value;
+  if FisSetErased then
+  begin
+    Caption := 'Удалить';
+    Hint:='Удалить данные';
+    ShortCut:=VK_DELETE
+  end
+  else
+  begin
+    Caption := 'Восстановить';
+    Hint:='Восстановить данные';
+  end;
+end;
+
+{ TdsdStoredProcList }
+
+function TdsdStoredProcList.Add: TdsdStoredProcItem;
+begin
+  result := TdsdStoredProcItem(inherited Add)
+end;
+
+function TdsdStoredProcList.GetItem(Index: Integer): TdsdStoredProcItem;
+begin
+  Result := TdsdStoredProcItem(inherited GetItem(Index))
+end;
+
+procedure TdsdStoredProcList.SetItem(Index: Integer;
+  const Value: TdsdStoredProcItem);
+begin
+  inherited SetItem(Index, Value);
 end;
 
 end.

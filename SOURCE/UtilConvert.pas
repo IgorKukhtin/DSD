@@ -1,23 +1,8 @@
-{
-     Описание:
-     Файл содержит функции конвертации.
-
-
-
-     История изменений:
-
-     Автор         Дата создания
-     Кухтин И.В.   23.04.2002
-
-     Изменял            Дата модификации
-     Беленогов С.Б.  21.05.2002
-     Кухтин И.В.     08.07.2002  - убран параметр inFieldPrefix процедуры gfPutCurrentRecordFromDataSetToXML
-}
 unit UtilConvert;
 
 interface
 
-uses DB, UtilType;
+uses DB;
 
    {функции конвертации числа в строку}
    function gfIntToStr(const inInt: integer): string; //tested
@@ -48,13 +33,13 @@ uses DB, UtilType;
 
    {функция оборачивает первую запись рекордсета в строку формата XML
    <Result ParamOne="sad" ParamTwo="11213"/> }
-   function gfGetXMLFirstRecordFromDataSet(const inDataSet: TDataSet): TXML;//tested
+   function gfGetXMLFirstRecordFromDataSet(const inDataSet: TDataSet): String;//tested
 
    { функция оборачивает текущую запись рекордсета в строку формата XML
      при этом добавляет внутреннюю ноду с переданными параметрами
      <Result ParamOne="sad" ParamTwo="11213"></Result>
    }
-   function gfPutCurrentRecordFromDataSetToXML(const inDataSet: TDataSet; inOldResult: string): TXML;
+   function gfPutCurrentRecordFromDataSetToXML(const inDataSet: TDataSet; inOldResult: string): String;
    {возвращает в виде строки значение по умолчанию для указанного типа данных}
    function gfGetDefaultByType(inType: string): string;  //tested
    {функция возвращает тип данных по его строковому названию}
@@ -209,7 +194,7 @@ begin
   end{except}
 end;
 {--------------------------------------------------------------------------------------------------}
-function gfGetXMLFirstRecordFromDataSet(const inDataSet: TDataSet): TXML;
+function gfGetXMLFirstRecordFromDataSet(const inDataSet: TDataSet): String;
 const cProcName = 'gfGetXMLFirstRecordFromDataSet';
 {функция оборачивает первую запись рекордсета в строку формата XML
  <Result ParamOne="sad" ParamTwo="11213"/> }
@@ -238,7 +223,7 @@ begin
   end{except}
 end;
 {--------------------------------------------------------------------------------------------------}
-function gfPutCurrentRecordFromDataSetToXML(const inDataSet: TDataSet; inOldResult: string): TXML;
+function gfPutCurrentRecordFromDataSetToXML(const inDataSet: TDataSet; inOldResult: string): String;
 const cProcName = 'gfPutCurrentRecordFromDataSetToXML';
 {функция оборачивает текущую запись рекордсета в строку формата XML
  <Result ParamOne="sad" ParamTwo="11213"/> }

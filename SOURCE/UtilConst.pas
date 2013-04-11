@@ -1,18 +1,7 @@
-{
-     Описание:
-     Файл содержит глобальные константы.
-
-
-
-     История изменений:
-
-     Автор         Дата создания      Изменял            Дата модификации
-     Кухтин И.В.      21.03.2002                         01.05.2002
-}
 {$J+} {параметр компилятоcoра, позволяющий менять типизированные константы}
 unit UtilConst;
 interface
-uses Classes, UtilType, SysUtils;
+uses Classes, SysUtils;
 Type
   TrfFormState = (frmInsert, frmUpdate, frmMask);
   TrfProcType  = (ptInsert, ptUpdate, ptMask, ptInsertUpdate);
@@ -23,7 +12,7 @@ var FormatSettings: TFormatSettings;
     gc_DateEnd: TDateTime;
 
 const
-  gc_Minute : real = (1/24)/60; 
+  gc_Minute : real = (1/24)/60;
   gc_Test : boolean = false; {константа - тест ли это}
   gc_NewFormTest : boolean = false; {вставлять ли формы по новому}
   gc_ShowChangesOnTest: boolean = false;

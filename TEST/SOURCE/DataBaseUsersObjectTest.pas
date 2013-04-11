@@ -190,15 +190,13 @@ begin
   ObjectTest := TJuridicalTest.Create;
   // Получим список
   RecordCount := GetRecordCount(ObjectTest);
-  // Вставка кассы
+  // Вставка юр лица
   Id := ObjectTest.InsertDefault;
   try
-    // Получение данных о кассе
+    // Получение данных о юр лице
     with ObjectTest.GetRecord(Id) do
       Check((FieldByName('GLNCode').AsString = 'GLNCode'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
 
-    // Получим список касс
-    Check((GetRecordCount(ObjectTest) = RecordCount + 1), 'Количество записей не изменилось');
   finally
     DeleteObject(Id);
   end;

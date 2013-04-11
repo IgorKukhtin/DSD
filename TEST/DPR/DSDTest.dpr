@@ -16,12 +16,12 @@ program DSDTest;
 
 uses
   DUnitTestRunner,
+  Forms,
   DropCreateDatabaseTestUnit in '..\SOURCE\DropCreateDatabaseTestUnit.pas',
   DataBaseStructureTestUnit in '..\SOURCE\DataBaseStructureTestUnit.pas',
   DataBaseUnit in '..\SOURCE\DataBaseUnit.pas' {Form1},
   AuthenticationUnit in '..\..\SOURCE\AuthenticationUnit.pas',
   StorageUnit in '..\..\SOURCE\StorageUnit.pas',
-  UtilType in '..\..\SOURCE\UtilType.pas',
   AuthenticationTestUnit in '..\SOURCE\AuthenticationTestUnit.pas',
   UtilConst in '..\..\SOURCE\UtilConst.pas',
   DataBaseObjectTestUnit in '..\SOURCE\DataBaseObjectTestUnit.pas',
@@ -33,11 +33,31 @@ uses
   FarmacyStructureTestUnit in '..\SOURCE\Farmacy\FarmacyStructureTestUnit.pas',
   FarmacyTestUnit in '..\SOURCE\Farmacy\FarmacyTestUnit.pas',
   MeatGuidesTestUnit in '..\SOURCE\Meat\MeatGuidesTestUnit.pas',
-  DataBaseUsersObjectTest in '..\SOURCE\DataBaseUsersObjectTest.pas';
+  DataBaseUsersObjectTest in '..\SOURCE\DataBaseUsersObjectTest.pas',
+  dsdGuidesUtilUnit in '..\..\SOURCE\COMPONENT\dsdGuidesUtilUnit.pas',
+  LoadFormTestUnit in '..\SOURCE\LoadFormTestUnit.pas',
+  FormStorageUnit in '..\..\SOURCE\FormStorageUnit.pas',
+  BusinessEditUnit in '..\..\Forms\BusinessEditUnit.pas' {BusinessEditForm},
+  GoodsGuidesUnit in '..\..\Forms\GoodsGuidesUnit.pas' {GoodsGuidesForm},
+  GoodsPropertyEditUnit in '..\..\Forms\GoodsPropertyEditUnit.pas' {GoodsPropertyEditForm},
+  GoodsPropertyUnit in '..\..\Forms\GoodsPropertyUnit.pas' {GoodsPropertyForm},
+  JuridicalEditUnit in '..\..\Forms\JuridicalEditUnit.pas' {JuridicalEditForm},
+  JuridicalGroupEditUnit in '..\..\Forms\JuridicalGroupEditUnit.pas' {JuridicalGroupEditForm},
+  JuridicalUnit in '..\..\Forms\JuridicalUnit.pas' {JuridicalForm},
+  MeasureEditUnit in '..\..\Forms\MeasureEditUnit.pas' {MeasureEditForm},
+  MeasureUnit in '..\..\Forms\MeasureUnit.pas' {MeasureForm},
+  FormUnit in '..\..\SOURCE\FormUnit.pas' {ParentForm},
+  dsdActionUnit in '..\..\SOURCE\COMPONENT\dsdActionUnit.pas',
+  DataModul in '..\..\SOURCE\DataModul.pas' {dmMain: TDataModule},
+  BusinessUnit in '..\..\Forms\BusinessUnit.pas' {BusinessForm},
+  BranchUnit in '..\..\Forms\BranchUnit.pas' {BranchForm};
 
 {$R *.RES}
 
 begin
+  Application.Initialize;
+  Application.CreateForm(TdmMain, dmMain);
+  Application.Run;
   DUnitTestRunner.RunRegisteredTests;
 end.
 

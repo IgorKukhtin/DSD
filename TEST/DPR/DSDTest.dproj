@@ -84,11 +84,9 @@
 			<DCCReference Include="..\SOURCE\DataBaseStructureTestUnit.pas"/>
 			<DCCReference Include="..\SOURCE\DataBaseUnit.pas">
 				<Form>Form1</Form>
-				<FormType>dfm</FormType>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\AuthenticationUnit.pas"/>
 			<DCCReference Include="..\..\SOURCE\StorageUnit.pas"/>
-			<DCCReference Include="..\..\SOURCE\UtilType.pas"/>
 			<DCCReference Include="..\SOURCE\AuthenticationTestUnit.pas"/>
 			<DCCReference Include="..\..\SOURCE\UtilConst.pas"/>
 			<DCCReference Include="..\SOURCE\DataBaseObjectTestUnit.pas"/>
@@ -101,6 +99,50 @@
 			<DCCReference Include="..\SOURCE\Farmacy\FarmacyTestUnit.pas"/>
 			<DCCReference Include="..\SOURCE\Meat\MeatGuidesTestUnit.pas"/>
 			<DCCReference Include="..\SOURCE\DataBaseUsersObjectTest.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdGuidesUtilUnit.pas"/>
+			<DCCReference Include="..\SOURCE\LoadFormTestUnit.pas"/>
+			<DCCReference Include="..\..\SOURCE\FormStorageUnit.pas"/>
+			<DCCReference Include="..\..\Forms\BusinessEditUnit.pas">
+				<Form>BusinessEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\GoodsGuidesUnit.pas">
+				<Form>GoodsGuidesForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\GoodsPropertyEditUnit.pas">
+				<Form>GoodsPropertyEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\GoodsPropertyUnit.pas">
+				<Form>GoodsPropertyForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\JuridicalEditUnit.pas">
+				<Form>JuridicalEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\JuridicalGroupEditUnit.pas">
+				<Form>JuridicalGroupEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\JuridicalUnit.pas">
+				<Form>JuridicalForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\MeasureEditUnit.pas">
+				<Form>MeasureEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\MeasureUnit.pas">
+				<Form>MeasureForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\FormUnit.pas">
+				<Form>ParentForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdActionUnit.pas"/>
+			<DCCReference Include="..\..\SOURCE\DataModul.pas">
+				<Form>dmMain</Form>
+				<DesignClass>TDataModule</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\BusinessUnit.pas">
+				<Form>BusinessForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\BranchUnit.pas">
+				<Form>BranchForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

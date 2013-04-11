@@ -124,19 +124,19 @@ $BODY$BEGIN
   RETURN 19;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Account_Juridical()
+CREATE OR REPLACE FUNCTION zc_ObjectLink_BankAccount_Juridical()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 20;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Account_Bank()
+CREATE OR REPLACE FUNCTION zc_ObjectLink_BankAccount_Bank()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 21;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Account_Currency()
+CREATE OR REPLACE FUNCTION zc_ObjectLink_BankAccount_Currency()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 22;

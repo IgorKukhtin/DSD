@@ -49,10 +49,10 @@
 			<DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base_Win64)'!=''">
-			<DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;$(DCC_UsePackage)</DCC_UsePackage>
+			<DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;$(DCC_UsePackage)</DCC_UsePackage>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base_Win32)'!=''">
-			<DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;cxDataRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;$(DCC_UsePackage)</DCC_UsePackage>
+			<DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;cxDataRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;$(DCC_UsePackage)</DCC_UsePackage>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
 			<VerInfo_Locale>1033</VerInfo_Locale>
@@ -101,9 +101,8 @@
 			<DCCReference Include="cxEditorsRS16.dcp"/>
 			<DCCReference Include="cxPageControlRS16.dcp"/>
 			<DCCReference Include="cxGridRS16.dcp"/>
+			<DCCReference Include="cxTreeListRS16.dcp"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdDataSetWrapperUnit.pas"/>
-			<DCCReference Include="..\SOURCE\UtilType.pas"/>
-			<DCCReference Include="..\SOURCE\StorageUnit.pas"/>
 			<DCCReference Include="..\SOURCE\UtilConst.pas"/>
 			<DCCReference Include="..\SOURCE\CommonDataUnit.pas"/>
 			<DCCReference Include="..\SOURCE\AuthenticationUnit.pas"/>
@@ -112,6 +111,9 @@
 			<DCCReference Include="..\SOURCE\FormUnit.pas">
 				<Form>ParentForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdGuidesUtilUnit.pas"/>
+			<DCCReference Include="..\SOURCE\StorageUnit.pas"/>
+			<DCCReference Include="..\SOURCE\FormStorageUnit.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

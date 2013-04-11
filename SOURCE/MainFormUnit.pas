@@ -21,6 +21,15 @@ type
     actMeasure: TdsdOpenForm;
     bbMeasure: TdxBarButton;
     cxLocalizer: TcxLocalizer;
+    actJuridicalGroup: TdsdOpenForm;
+    bbJuridicalGroup: TdxBarButton;
+    actGoodsProperty: TdsdOpenForm;
+    bbGoodsProperty: TdxBarButton;
+    bbJuridical: TdxBarButton;
+    actJuridical: TdsdOpenForm;
+    actBusiness: TdsdOpenForm;
+    bbBusiness: TdxBarButton;
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -31,7 +40,18 @@ var
   MainForm: TMainForm;
 
 implementation
+
 uses FormUnit, dsdDataSetWrapperUnit, StorageUnit, CommonDataUnit;
+
+{$R DevExpressRus.res}
+
 {$R *.dfm}
+
+procedure TMainForm.FormCreate(Sender: TObject);
+begin
+  // Локализуем сообщения DevExpress
+  cxLocalizer.Active:= True;
+  cxLocalizer.Locale:= 1049;
+end;
 
 end.

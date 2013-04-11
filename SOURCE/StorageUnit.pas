@@ -2,7 +2,7 @@ unit StorageUnit;
 
 interface
 
-uses UtilType, IdHTTP, Xml.XMLDoc, XMLIntf, Classes;
+uses IdHTTP, Xml.XMLDoc, XMLIntf, Classes;
 
 type
 
@@ -51,7 +51,7 @@ type
     Str: RawByteString;
     XMLDocument: IXMLDocument;
     function ExecuteProc(pData: String): Variant;
-    procedure ProcessErrorCode(pData: TXML);
+    procedure ProcessErrorCode(pData: String);
     function ProcessMultiDataSet: Variant;
   public
     class function NewInstance: TObject; override;
@@ -71,7 +71,7 @@ begin
   NewInstance := Instance;
 end;
 
-procedure TStorage.ProcessErrorCode(pData: TXML);
+procedure TStorage.ProcessErrorCode(pData: String);
 begin
   with LoadXMLData(pData).DocumentElement do
     if NodeName = gcError then

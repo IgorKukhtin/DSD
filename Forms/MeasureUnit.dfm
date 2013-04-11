@@ -16,6 +16,7 @@ inherited MeasureForm: TMeasureForm
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
+      DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
@@ -25,6 +26,7 @@ inherited MeasureForm: TMeasureForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsView.ColumnAutoWidth = True
       object clName: TcxGridDBColumn
         Caption = #1045#1076#1080#1085#1080#1094#1072' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
         DataBinding.FieldName = 'Name'
@@ -73,7 +75,9 @@ inherited MeasureForm: TMeasureForm
       2)
     Categories.Visibles = (
       True)
+    ImageOptions.Images = dmMain.ImageList
     PopupMenuLinks = <>
+    ShowShortCutInHint = True
     UseSystemFont = True
     Left = 152
     Top = 88
@@ -104,6 +108,15 @@ inherited MeasureForm: TMeasureForm
         end
         item
           Visible = True
+          ItemName = 'bbSetErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnErased'
+        end
+        item
+          BeginGroup = True
+          Visible = True
           ItemName = 'bbRefresh'
         end>
       OneOnRow = True
@@ -115,14 +128,27 @@ inherited MeasureForm: TMeasureForm
     object bbRefresh: TdxBarButton
       Action = actRefresh
       Category = 0
+      ImageIndex = 4
     end
     object bbInsert: TdxBarButton
       Action = actInsert
       Category = 0
+      ImageIndex = 0
     end
     object bbEdit: TdxBarButton
       Action = actUpdate
       Category = 0
+      ImageIndex = 1
+    end
+    object bbSetErased: TdxBarButton
+      Action = dsdSetErased
+      Category = 0
+      ImageIndex = 2
+    end
+    object bbSetUnErased: TdxBarButton
+      Action = dsdSetUnErased
+      Category = 0
+      ImageIndex = 8
     end
   end
   object ActionList: TActionList
@@ -130,7 +156,11 @@ inherited MeasureForm: TMeasureForm
     Top = 144
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
-      DataSetWrapper = dsdStoredProc
+      StoredProc = dsdStoredProc
+      StoredProcList = <
+        item
+          StoredProc = dsdStoredProc
+        end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
@@ -168,9 +198,27 @@ inherited MeasureForm: TMeasureForm
       DataSet = ClientDataSet
       DataSetRefresh = actRefresh
     end
+    object dsdSetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 46
+      DataSource = DataSource
+    end
+    object dsdSetUnErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 32776
+      isSetErased = False
+      DataSource = DataSource
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Measure'
+    DataSet = ClientDataSet
     DataSets = <
       item
         DataSet = ClientDataSet

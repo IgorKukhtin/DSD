@@ -46,17 +46,19 @@ requires
   dxComnRS16,
   cxEditorsRS16,
   cxPageControlRS16,
-  cxGridRS16;
+  cxGridRS16,
+  cxTreeListRS16;
 
 contains
   dsdDataSetWrapperUnit in '..\SOURCE\COMPONENT\dsdDataSetWrapperUnit.pas',
-  UtilType in '..\SOURCE\UtilType.pas',
-  StorageUnit in '..\SOURCE\StorageUnit.pas',
   UtilConst in '..\SOURCE\UtilConst.pas',
   CommonDataUnit in '..\SOURCE\CommonDataUnit.pas',
   AuthenticationUnit in '..\SOURCE\AuthenticationUnit.pas',
   dsdActionUnit in '..\SOURCE\COMPONENT\dsdActionUnit.pas',
   UtilConvert in '..\SOURCE\UtilConvert.pas',
-  FormUnit in '..\SOURCE\FormUnit.pas' {ParentForm};
+  FormUnit in '..\SOURCE\FormUnit.pas' {ParentForm},
+  dsdGuidesUtilUnit in '..\SOURCE\COMPONENT\dsdGuidesUtilUnit.pas',
+  StorageUnit in '..\SOURCE\StorageUnit.pas',
+  FormStorageUnit in '..\SOURCE\FormStorageUnit.pas';
 
 end.

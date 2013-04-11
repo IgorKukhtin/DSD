@@ -9,18 +9,18 @@ $BODY$BEGIN
 
    --PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
-   RETURN QUERY 
-   SELECT 
-     Object.Id
-   , Object.ObjectCode
-   , Object.ValueData
-   , Object.isErased
-   , ObjectLink.ChildObjectId AS JuridicalGroupId
-   FROM Object
-   JOIN ObjectLink 
-     ON ObjectLink.ObjectId = Object.Id
-    AND ObjectLink.DescId = zc_ObjectLink_JuridicalGroup_JuridicalGroup()
-   WHERE Object.DescId = zc_Object_JuridicalGroup();
+     RETURN QUERY 
+     SELECT 
+       Object.Id
+     , Object.ObjectCode
+     , Object.ValueData
+     , Object.isErased
+     , ObjectLink.ChildObjectId AS JuridicalGroupId
+     FROM Object
+LEFT JOIN ObjectLink 
+       ON ObjectLink.ObjectId = Object.Id
+      AND ObjectLink.DescId = zc_ObjectLink_JuridicalGroup_JuridicalGroup()
+    WHERE Object.DescId = zc_Object_JuridicalGroup();
   
 END;$BODY$
   LANGUAGE plpgsql VOLATILE

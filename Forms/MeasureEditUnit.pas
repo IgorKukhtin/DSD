@@ -28,11 +28,11 @@ type
     { Public declarations }
   end;
 
-var
-  MeasureEditForm: TMeasureEditForm;
-
 implementation
 
 {$R *.dfm}
+
+initialization
+  RegisterClass(TMeasureEditForm);
 
 end.

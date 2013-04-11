@@ -21,7 +21,8 @@ implementation
 uses cxPropertiesStore, cxControls, cxContainer, cxEdit, cxGroupBox,
   dxBevel, cxButtons, cxGridDBTableView, cxGrid, DB, DBClient,
   dxBar, Vcl.ActnList, dsdActionUnit, cxTextEdit, cxLabel,
-  StdActns;
+  StdActns, cxDBTL, cxCurrencyEdit, cxDropDownEdit, dsdGuidesUtilUnit,
+  cxDBLookupComboBox, DBGrids, cxCheckBox;
 
 {$R *.dfm}
 
@@ -51,23 +52,33 @@ initialization
   RegisterClass (TClientDataSet);
   RegisterClass (TFileExit);
   RegisterClass (TActionList);
+  RegisterClass (TDBGrid);
   // Библиотека DevExpress
   RegisterClass (TdxBevel);
   RegisterClass (TcxButton);
+  RegisterClass (TcxCheckBox);
   RegisterClass (TcxGroupBox);
   RegisterClass (TcxGridDBTableView);
   RegisterClass (TcxGrid);
   RegisterClass (TcxPropertiesStore);
-  RegisterClass (TdxBarManager);
   RegisterClass (TcxTextEdit);
   RegisterClass (TcxLabel);
+  RegisterClass (TcxCurrencyEdit);
+  RegisterClass (TcxDBTreeList);
+  RegisterClass (TcxDBTreeListColumn);
+  RegisterClass (TcxPopupEdit);
+  RegisterClass (TcxLookupComboBox);
+  RegisterClass (TdxBarManager);
   // Собственнтые компоненты
   RegisterClass (TdsdOpenForm);
   RegisterClass (TdsdStoredProc);
   RegisterClass (TdsdFormParams);
   RegisterClass (TdsdFormClose);
+  RegisterClass (TdsdUpdateErased);
   RegisterClass (TdsdDataSetRefresh);
   RegisterClass (TdsdExecStoredProc);
   RegisterClass (TdsdInsertUpdateAction);
+  RegisterClass (TdsdGuides);
+
 
 end.

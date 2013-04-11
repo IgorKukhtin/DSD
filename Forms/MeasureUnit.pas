@@ -9,7 +9,7 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, cxGridLevel, cxClasses,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, Datasnap.DBClient, dsdDataSetWrapperUnit, cxPropertiesStore, dxBar,
-  Vcl.ActnList, dsdActionUnit, FormUnit;
+  Vcl.ActnList, dsdActionUnit, FormUnit, DataModul;
 
 type
   TMeasureForm = class(TParentForm)
@@ -31,18 +31,21 @@ type
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     clErased: TcxGridDBColumn;
+    dsdSetErased: TdsdUpdateErased;
+    dsdSetUnErased: TdsdUpdateErased;
+    bbSetErased: TdxBarButton;
+    bbSetUnErased: TdxBarButton;
   private
     { Private declarations }
   public
     { Public declarations }
   end;
 
-var
-  MeasureForm: TMeasureForm;
-
 implementation
 
 {$R *.dfm}
 
+initialization
+  RegisterClass(TMeasureForm);
 
 end.

@@ -33,7 +33,7 @@ type
 
 implementation
 
-uses UtilType, Xml.XMLDoc, UtilConst, SysUtils;
+uses Xml.XMLDoc, UtilConst, SysUtils;
 
 {------------------------------------------------------------------------------}
 constructor TUser.Create(ASession: String);

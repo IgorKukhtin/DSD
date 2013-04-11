@@ -1,9 +1,9 @@
 inherited MeasureEditForm: TMeasureEditForm
   Caption = #1045#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
-  ClientHeight = 155
-  ClientWidth = 364
-  ExplicitWidth = 372
-  ExplicitHeight = 182
+  ClientHeight = 142
+  ClientWidth = 349
+  ExplicitWidth = 357
+  ExplicitHeight = 169
   PixelsPerInch = 96
   TextHeight = 13
   object edMeasureName: TcxTextEdit
@@ -43,14 +43,22 @@ inherited MeasureEditForm: TMeasureEditForm
     Top = 72
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
-      DataSetWrapper = spGet
+      StoredProc = spGet
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
     end
     object dsdExecStoredProc: TdsdExecStoredProc
       Category = 'DSDLib'
-      DataSetWrapper = spInsertUpdate
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
       Caption = 'Ok'
     end
     object dsdFormClose1: TdsdFormClose

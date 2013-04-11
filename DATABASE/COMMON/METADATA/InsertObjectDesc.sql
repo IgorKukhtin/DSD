@@ -74,7 +74,7 @@ insert into ObjectDesc(Id, Code, ItemName)
 values (zc_Object_GoodsKind(), 'GoodsKind', 'Тип товара');
 
 insert into ObjectDesc(Id, Code, ItemName)
-values (zc_Object_Account(), 'Account', 'Расчетный счет');
+values (zc_Object_BankAccount(), 'BankAccount', 'Расчетный счет');
 
 insert into ObjectDesc(Id, Code, ItemName)
 values (zc_Object_PriceList(), 'PriceList', 'Прайс-лист');
