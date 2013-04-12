@@ -1,6 +1,5 @@
 CREATE DOMAIN TVarChar
-  AS character varying(255)
-  COLLATE pg_catalog."default";
+  AS character varying(255);
 ALTER DOMAIN TVarChar
   OWNER TO postgres;
 

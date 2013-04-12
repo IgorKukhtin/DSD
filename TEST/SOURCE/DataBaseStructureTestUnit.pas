@@ -420,6 +420,14 @@ begin
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_GoodsPropertyValue\gpGet_Object_GoodsPropertyValue.sql');
   ZQuery.ExecSQL;
+
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Contract\gpInsertUpdate_Object_Contract.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Contract\gpSelect_Object_Contract.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Contract\gpGet_Object_Contract.sql');
+  ZQuery.ExecSQL;
+
 end;
 
 procedure TCheckDataBaseStructure.CreateProtocol;
