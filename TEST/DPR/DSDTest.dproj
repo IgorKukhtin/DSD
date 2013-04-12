@@ -121,11 +121,8 @@
 			<DCCReference Include="..\..\Forms\BranchEditUnit.pas">
 				<Form>BranchEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\JuridicalGroupEditUnit.pas">
-				<Form>JuridicalGroupEditForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\JuridicalUnit.pas">
-				<Form>JuridicalForm</Form>
+			<DCCReference Include="..\..\Forms\GoodsGroupEditUnit.pas">
+				<Form>GoodsGroupEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\MeasureEditUnit.pas">
 				<Form>MeasureEditForm</Form>
@@ -143,11 +140,29 @@
 			<DCCReference Include="..\..\Forms\BranchUnit.pas">
 				<Form>BranchForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\JuridicalEditUnit.pas">
-				<Form>JuridicalEditForm</Form>
+			<DCCReference Include="..\..\Forms\GoodstGroupUnit.pas">
+				<Form>GoodsGroupForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\JuridicalGroupEditUnit.pas">
+				<Form>JuridicalGroupEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\JuridicalGroupUnit.pas">
 				<Form>JuridicalGroupForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\JuridicalEditUnit.pas">
+				<Form>JuridicalEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\UnitEditUnit.pas">
+				<Form>UnitEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\UnitGroupEditUnit.pas">
+				<Form>UnitGroupEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\UnitGroupUnit.pas">
+				<Form>UnitGroupForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\UnitUnit.pas">
+				<Form>UnitForm</Form>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

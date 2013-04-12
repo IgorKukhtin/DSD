@@ -43,16 +43,21 @@ uses
   GoodsPropertyEditUnit in '..\..\Forms\GoodsPropertyEditUnit.pas' {GoodsPropertyEditForm},
   GoodsPropertyUnit in '..\..\Forms\GoodsPropertyUnit.pas' {GoodsPropertyForm},
   BranchEditUnit in '..\..\Forms\BranchEditUnit.pas' {BranchEditForm},
-  JuridicalGroupEditUnit in '..\..\Forms\JuridicalGroupEditUnit.pas' {JuridicalGroupEditForm},
-  JuridicalUnit in '..\..\Forms\JuridicalUnit.pas' {JuridicalForm},
+  GoodsGroupEditUnit in '..\..\Forms\GoodsGroupEditUnit.pas' {GoodsGroupEditForm},
   MeasureEditUnit in '..\..\Forms\MeasureEditUnit.pas' {MeasureEditForm},
   MeasureUnit in '..\..\Forms\MeasureUnit.pas' {MeasureForm},
   FormUnit in '..\..\SOURCE\FormUnit.pas' {ParentForm},
   dsdActionUnit in '..\..\SOURCE\COMPONENT\dsdActionUnit.pas',
   BusinessUnit in '..\..\Forms\BusinessUnit.pas' {BusinessForm},
   BranchUnit in '..\..\Forms\BranchUnit.pas' {BranchForm},
+  GoodstGroupUnit in '..\..\Forms\GoodstGroupUnit.pas' {GoodsGroupForm},
+  JuridicalGroupEditUnit in '..\..\Forms\JuridicalGroupEditUnit.pas' {JuridicalGroupEditForm},
+  JuridicalGroupUnit in '..\..\Forms\JuridicalGroupUnit.pas' {JuridicalGroupForm},
   JuridicalEditUnit in '..\..\Forms\JuridicalEditUnit.pas' {JuridicalEditForm},
-  JuridicalGroupUnit in '..\..\Forms\JuridicalGroupUnit.pas' {JuridicalGroupForm};
+  UnitEditUnit in '..\..\Forms\UnitEditUnit.pas' {UnitEditForm},
+  UnitGroupEditUnit in '..\..\Forms\UnitGroupEditUnit.pas' {UnitGroupEditForm},
+  UnitGroupUnit in '..\..\Forms\UnitGroupUnit.pas' {UnitGroupForm},
+  UnitUnit in '..\..\Forms\UnitUnit.pas' {UnitForm};
 
 {$R *.RES}
 
