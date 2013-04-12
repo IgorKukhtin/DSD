@@ -57,3 +57,26 @@ END;$BODY$
   COST 1;
 ALTER FUNCTION zc_ObjectString_Bank_MFO()
   OWNER TO postgres;
+
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Contract_InvNumber()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 11;
+END;$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 1;
+ALTER FUNCTION zc_ObjectString_Contract_InvNumber()
+  OWNER TO postgres;
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Contract_Comment()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 12;
+END;$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 1;
+ALTER FUNCTION zc_ObjectString_Contract_Comment()
+  OWNER TO postgres;
+
+  

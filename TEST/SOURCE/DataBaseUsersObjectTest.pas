@@ -31,10 +31,20 @@ type
     constructor Create; override;
   end;
 
+  TContractTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  public
+    function InsertUpdateContract(const Id: integer; InvNumber, Comment: string): integer;
+    constructor Create; override;
+  end;
+
+
   TDataBaseUsersObjectTest = class (TCustomDataBaseObjectTest)
   published
     procedure JuridicalGroup_Test;
     procedure Juridical_Test;
+    procedure Contract_Test;
   end;
 
 implementation
@@ -200,6 +210,51 @@ begin
   finally
     DeleteObject(Id);
   end;
+end;
+
+procedure TDataBaseUsersObjectTest.Contract_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TContractTest;
+begin
+  ObjectTest := TContractTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка юр лица
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных о юр лице
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('InvNumber').AsString = '123456'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+
+  finally
+    DeleteObject(Id);
+  end;
+end;
+
+{ TContractTest }
+
+constructor TContractTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_Contract';
+  spSelect := 'gpSelect_Object_Contract';
+  spGet := 'gpGet_Object_Contract';
+end;
+
+function TContractTest.InsertDefault: integer;
+begin
+  result := InsertUpdateContract(0, '123456', 'comment');
+end;
+
+function TContractTest.InsertUpdateContract(const Id: integer; InvNumber,
+  Comment: string): integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
+  FParams.AddParam('inComment', ftString, ptInput, Comment);
+  result := InsertUpdate(FParams);
 end;
 
 initialization

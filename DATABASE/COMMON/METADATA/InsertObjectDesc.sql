@@ -78,3 +78,6 @@ values (zc_Object_BankAccount(), 'BankAccount', 'Расчетный счет');
 
 insert into ObjectDesc(Id, Code, ItemName)
 values (zc_Object_PriceList(), 'PriceList', 'Прайс-лист');
+
+insert into ObjectDesc(Id, Code, ItemName)
+values (zc_Object_Contract(), 'Contract', 'Договора');
