@@ -1,49 +1,31 @@
-п»ї/*
-  РЎРѕР·РґР°РЅРёРµ 
-    - С‚Р°Р±Р»РёС†С‹ MovementFloat (СЃРІРѕР№СЃС‚РІР° РїРµСЂРµРјРµС‰РµРЅРёР№ С‚РёРїР° TFloat)
-    - СЃРІСЏР·Рё
-    - РёРЅРґРµРєСЃРѕРІ
+/*
+  Создание 
+    - таблицы MovementFloat (свойства oбъектов типа TFloat)
+    - связи
+    - индексов
 */
 
--- Table: "MovementFloat"
-
--- DROP TABLE MovementFloat;
-
-
 /*-------------------------------------------------------------------------------*/
-
 CREATE TABLE MovementFloat(
-  DescId integer NOT NULL,
-  MovementId integer NOT NULL,
-  Value TFloat NOT NULL,
-  CONSTRAINT pk_MovementFloat PRIMARY KEY (DescId, MovementId),
-  CONSTRAINT fk_MovementFloat_DescId FOREIGN KEY (DescId)
-      REFERENCES MovementFloatDesc (Id),
-  CONSTRAINT fk_MovementFloat_Movement FOREIGN KEY (MovementId)
-      REFERENCES Movement (id)
-)
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE MovementFloat
-  OWNER TO postgres;
+   DescId     INTEGER NOT NULL,
+   MovementId   INTEGER NOT NULL,
+   ValueData  TFloat,
+
+   CONSTRAINT pk_MovementFloat          PRIMARY KEY (MovementId, DescId),
+   CONSTRAINT fk_MovementFloat_DescId   FOREIGN KEY(DescId)   REFERENCES MovementFloatDesc(Id),
+   CONSTRAINT fk_MovementFloat_MovementId FOREIGN KEY(MovementId) REFERENCES Movement(Id) );
 
 /*-------------------------------------------------------------------------------*/
+/*                                  Индексы                                      */
 
-/*                                  РРЅРґРµРєСЃС‹                                      */
 
-
--- Index: "idx_MovementFloat_MovementId_DescId_Value"
-
--- DROP INDEX "idx_MovementFloat_MovementId_DescId_Value";
-
-CREATE INDEX idx_MovementFloat_MovementId_DescId_Value ON MovementFloat(MovementId, DescId, Value);
+CREATE INDEX idx_MovementFloat_MovementId_DescId_ValueData ON MovementFloat(MovementId, DescId, ValueData); 
 
 /*
- РџР РРњР•Р§РђРќРРЇ:
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР:
- Р”РђРўРђ         РђР’РўРћР 
+ ПРИМЕЧАНИЯ:
+ ИСТОРИЯ РАЗРАБОТКИ:
+ ДАТА         АВТОР
  ----------------
-                 РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РљСѓС…С‚РёРЅ Р.Р’.   
-18.06.02                                         
+                 Климентьев К.И.   Кухтин И.В. 
+14.06.02                                       
 */

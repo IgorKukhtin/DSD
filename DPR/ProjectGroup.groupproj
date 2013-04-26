@@ -6,10 +6,10 @@
 			<Projects Include="DSDComponent.dproj">
 				<Dependencies/>
 			</Projects>
-			<Projects Include="..\TEST\DPR\DSDTest.dproj">
+			<Projects Include="DSDDesignComponent.dproj">
 				<Dependencies/>
 			</Projects>
-			<Projects Include="..\TEST\DPR\MainTestProject.dproj">
+			<Projects Include="..\TEST\DPR\DSDTest.dproj">
 				<Dependencies/>
 			</Projects>
 			<Projects Include="DSD.dproj">
@@ -32,6 +32,15 @@
 		<Target Name="DSDComponent:Make">
 			<MSBuild Projects="DSDComponent.dproj" Targets="Make"/>
 		</Target>
+		<Target Name="DSDDesignComponent">
+			<MSBuild Projects="DSDDesignComponent.dproj"/>
+		</Target>
+		<Target Name="DSDDesignComponent:Clean">
+			<MSBuild Projects="DSDDesignComponent.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="DSDDesignComponent:Make">
+			<MSBuild Projects="DSDDesignComponent.dproj" Targets="Make"/>
+		</Target>
 		<Target Name="DSDTest">
 			<MSBuild Projects="..\TEST\DPR\DSDTest.dproj"/>
 		</Target>
@@ -40,15 +49,6 @@
 		</Target>
 		<Target Name="DSDTest:Make">
 			<MSBuild Projects="..\TEST\DPR\DSDTest.dproj" Targets="Make"/>
-		</Target>
-		<Target Name="MainTestProject">
-			<MSBuild Projects="..\TEST\DPR\MainTestProject.dproj"/>
-		</Target>
-		<Target Name="MainTestProject:Clean">
-			<MSBuild Projects="..\TEST\DPR\MainTestProject.dproj" Targets="Clean"/>
-		</Target>
-		<Target Name="MainTestProject:Make">
-			<MSBuild Projects="..\TEST\DPR\MainTestProject.dproj" Targets="Make"/>
 		</Target>
 		<Target Name="DSD">
 			<MSBuild Projects="DSD.dproj"/>
@@ -60,13 +60,13 @@
 			<MSBuild Projects="DSD.dproj" Targets="Make"/>
 		</Target>
 		<Target Name="Build">
-			<CallTarget Targets="DSDComponent;DSDTest;MainTestProject;DSD"/>
+			<CallTarget Targets="DSDComponent;DSDDesignComponent;DSDTest;DSD"/>
 		</Target>
 		<Target Name="Clean">
-			<CallTarget Targets="DSDComponent:Clean;DSDTest:Clean;MainTestProject:Clean;DSD:Clean"/>
+			<CallTarget Targets="DSDComponent:Clean;DSDDesignComponent:Clean;DSDTest:Clean;DSD:Clean"/>
 		</Target>
 		<Target Name="Make">
-			<CallTarget Targets="DSDComponent:Make;DSDTest:Make;MainTestProject:Make;DSD:Make"/>
+			<CallTarget Targets="DSDComponent:Make;DSDDesignComponent:Make;DSDTest:Make;DSD:Make"/>
 		</Target>
 		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')" Project="$(BDS)\Bin\CodeGear.Group.Targets"/>
 	</Project>

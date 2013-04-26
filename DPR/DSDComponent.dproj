@@ -85,7 +85,6 @@
 			<DCCReference Include="rtl.dcp"/>
 			<DCCReference Include="dsnap.dcp"/>
 			<DCCReference Include="dbrtl.dcp"/>
-			<DCCReference Include="DesignIde.dcp"/>
 			<DCCReference Include="IndyCore.dcp"/>
 			<DCCReference Include="IndySystem.dcp"/>
 			<DCCReference Include="IndyProtocols.dcp"/>
@@ -102,18 +101,18 @@
 			<DCCReference Include="cxPageControlRS16.dcp"/>
 			<DCCReference Include="cxGridRS16.dcp"/>
 			<DCCReference Include="cxTreeListRS16.dcp"/>
-			<DCCReference Include="..\SOURCE\COMPONENT\dsdDataSetWrapperUnit.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
 			<DCCReference Include="..\SOURCE\UtilConst.pas"/>
-			<DCCReference Include="..\SOURCE\CommonDataUnit.pas"/>
-			<DCCReference Include="..\SOURCE\AuthenticationUnit.pas"/>
-			<DCCReference Include="..\SOURCE\COMPONENT\dsdActionUnit.pas"/>
+			<DCCReference Include="..\SOURCE\CommonData.pas"/>
+			<DCCReference Include="..\SOURCE\Authentication.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdAction.pas"/>
 			<DCCReference Include="..\SOURCE\UtilConvert.pas"/>
-			<DCCReference Include="..\SOURCE\FormUnit.pas">
+			<DCCReference Include="..\SOURCE\ParentForm.pas">
 				<Form>ParentForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\COMPONENT\dsdGuidesUtilUnit.pas"/>
-			<DCCReference Include="..\SOURCE\StorageUnit.pas"/>
-			<DCCReference Include="..\SOURCE\FormStorageUnit.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdGuides.pas"/>
+			<DCCReference Include="..\SOURCE\Storage.pas"/>
+			<DCCReference Include="..\SOURCE\FormStorage.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

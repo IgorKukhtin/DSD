@@ -1,36 +1,27 @@
-п»ї/*
-  РЎРѕР·РґР°РЅРёРµ 
-    - С‚Р°Р±Р»РёС†С‹ MovementFloatDesc (СЃРІРѕР№СЃС‚РІР° РєР»Р°СЃСЃРѕРІ РїРµСЂРµРјРµС‰РµРЅРёР№ С‚РёРїР° TFloat)
-    - СЃРІСЏР·РµР№
-    - РёРЅРґРµРєСЃРѕРІ
+/*
+  Создание 
+    - таблицы MovementFloatDesc (свойства классов oбъектов типа TFloat)
+    - связи
+    - индексов
 */
-
--- Table: MovementFloatDesc
-
--- DROP TABLE MovementFloatDesc;
 
 /*-------------------------------------------------------------------------------*/
 
 CREATE TABLE MovementFloatDesc(
-  Id                     Integer NOT NULL PRIMARY KEY,
-  Code                   TVarChar NOT NULL UNIQUE,
-  ItemName               TVarChar
+   Id                    INTEGER NOT NULL PRIMARY KEY,
+   Code                  TVarChar,
+   ItemName              TVarChar
 )
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE MovementFloatDesc
-  OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
-/*                                  РРЅРґРµРєСЃС‹                                      */
 
+/*                                  Индексы                                      */
 
 /*
- РџР РРњР•Р§РђРќРРЇ:
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР:
- Р”РђРўРђ         РђР’РўРћР 
+ ПРИМЕЧАНИЯ:
+ ИСТОРИЯ РАЗРАБОТКИ:
+ ДАТА         АВТОР
  ----------------
-                 РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РљСѓС…С‚РёРЅ Р.Р’.  
-18.06.02                                                       
+                 Климентьев К.И.   Кухтин И.В.   
+14.06.02                                         
 */

@@ -80,88 +80,146 @@
 			<DelphiCompile Include="$(MainSource)">
 				<MainSource>MainSource</MainSource>
 			</DelphiCompile>
+			<DCCReference Include="..\SOURCE\dbCreateStructureTest.pas"/>
+			<DCCReference Include="..\SOURCE\dbMetadataTest.pas"/>
+			<DCCReference Include="..\SOURCE\dbProcedureTest.pas"/>
+			<DCCReference Include="..\SOURCE\dbEnumTest.pas"/>
+			<DCCReference Include="..\SOURCE\AuthenticationTest.pas"/>
+			<DCCReference Include="..\SOURCE\dbObjectTest.pas"/>
+			<DCCReference Include="..\SOURCE\dbMovementTest.pas"/>
+			<DCCReference Include="..\SOURCE\LoadFormTest.pas"/>
 			<DCCReference Include="..\..\SOURCE\DataModul.pas">
 				<Form>dmMain</Form>
 				<DesignClass>TDataModule</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\DropCreateDatabaseTestUnit.pas"/>
-			<DCCReference Include="..\SOURCE\DataBaseStructureTestUnit.pas"/>
-			<DCCReference Include="..\SOURCE\DataBaseUnit.pas">
-				<Form>Form1</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\SOURCE\AuthenticationUnit.pas"/>
-			<DCCReference Include="..\..\SOURCE\StorageUnit.pas"/>
-			<DCCReference Include="..\SOURCE\AuthenticationTestUnit.pas"/>
+			<DCCReference Include="..\..\SOURCE\Authentication.pas"/>
+			<DCCReference Include="..\..\SOURCE\Storage.pas"/>
+			<DCCReference Include="..\SOURCE\zLibUtil.pas"/>
 			<DCCReference Include="..\..\SOURCE\UtilConst.pas"/>
-			<DCCReference Include="..\SOURCE\DataBaseObjectTestUnit.pas"/>
 			<DCCReference Include="..\..\SOURCE\UtilConvert.pas"/>
-			<DCCReference Include="..\SOURCE\DataBaseMovementTestUnit.pas"/>
-			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdDataSetWrapperUnit.pas"/>
-			<DCCReference Include="..\..\SOURCE\CommonDataUnit.pas"/>
-			<DCCReference Include="..\SOURCE\UtilUnit.pas"/>
-			<DCCReference Include="..\SOURCE\Farmacy\FarmacyStructureTestUnit.pas"/>
-			<DCCReference Include="..\SOURCE\Farmacy\FarmacyTestUnit.pas"/>
-			<DCCReference Include="..\SOURCE\Meat\MeatGuidesTestUnit.pas"/>
-			<DCCReference Include="..\SOURCE\DataBaseUsersObjectTest.pas"/>
-			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdGuidesUtilUnit.pas"/>
-			<DCCReference Include="..\SOURCE\LoadFormTestUnit.pas"/>
-			<DCCReference Include="..\..\SOURCE\FormStorageUnit.pas"/>
-			<DCCReference Include="..\..\Forms\BusinessEditUnit.pas">
-				<Form>BusinessEditForm</Form>
+			<DCCReference Include="..\..\SOURCE\CommonData.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdGuides.pas"/>
+			<DCCReference Include="..\..\SOURCE\FormStorage.pas"/>
+			<DCCReference Include="..\..\Forms\GoodsKindEdit.pas">
+				<Form>GoodsKindEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\GoodsGuidesUnit.pas">
-				<Form>GoodsGuidesForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\GoodsPropertyEditUnit.pas">
+			<DCCReference Include="..\..\Forms\GoodsPropertyEdit.pas">
 				<Form>GoodsPropertyEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\GoodsPropertyUnit.pas">
+			<DCCReference Include="..\..\Forms\GoodsProperty.pas">
 				<Form>GoodsPropertyForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\BranchEditUnit.pas">
-				<Form>BranchEditForm</Form>
+			<DCCReference Include="..\..\Forms\CurrencyEdit.pas">
+				<Form>CurencyEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\GoodsGroupEditUnit.pas">
+			<DCCReference Include="..\..\Forms\GoodsGroupEdit.pas">
 				<Form>GoodsGroupEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\MeasureEditUnit.pas">
-				<Form>MeasureEditForm</Form>
+			<DCCReference Include="..\..\Forms\PriceListEdit.pas">
+				<Form>PriceListEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\MeasureUnit.pas">
-				<Form>MeasureForm</Form>
+			<DCCReference Include="..\..\Forms\PriceList.pas">
+				<Form>PriceListForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\SOURCE\FormUnit.pas">
+			<DCCReference Include="..\..\SOURCE\ParentForm.pas">
 				<Form>ParentForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdActionUnit.pas"/>
-			<DCCReference Include="..\..\Forms\BusinessUnit.pas">
-				<Form>BusinessForm</Form>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdAction.pas"/>
+			<DCCReference Include="..\..\Forms\GoodsKind.pas">
+				<Form>GoodsKindForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\BranchUnit.pas">
-				<Form>BranchForm</Form>
+			<DCCReference Include="..\..\Forms\Bank.pas">
+				<Form>CurrencyForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\GoodstGroupUnit.pas">
+			<DCCReference Include="..\..\Forms\GoodsGroup.pas">
 				<Form>GoodsGroupForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\JuridicalGroupEditUnit.pas">
+			<DCCReference Include="..\..\Forms\JuridicalGroupEdit.pas">
 				<Form>JuridicalGroupEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\JuridicalGroupUnit.pas">
+			<DCCReference Include="..\..\Forms\JuridicalGroup.pas">
 				<Form>JuridicalGroupForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\JuridicalEditUnit.pas">
-				<Form>JuridicalEditForm</Form>
+			<DCCReference Include="..\..\Forms\PartnerEdit.pas">
+				<Form>PartnerEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\UnitEditUnit.pas">
-				<Form>UnitEditForm</Form>
+			<DCCReference Include="..\..\Forms\GoodsEdit.pas">
+				<Form>GoodsEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\UnitGroupEditUnit.pas">
+			<DCCReference Include="..\..\Forms\UnitGroupEdit.pas">
 				<Form>UnitGroupEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\UnitGroupUnit.pas">
+			<DCCReference Include="..\..\Forms\UnitGroup.pas">
 				<Form>UnitGroupForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\UnitUnit.pas">
+			<DCCReference Include="..\..\Forms\Goods.pas">
+				<Form>GoodsForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\UnitEdit.pas">
+				<Form>UnitEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\MeasureEdit.pas">
+				<Form>MeasureEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\PaidKind.pas">
+				<Form>PaidKindForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Partner.pas">
+				<Form>PartnerForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\CashEdit.pas">
+				<Form>CashEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Cash.pas">
+				<Form>CashForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Currency.pas">
+				<Form>CurrencyForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\BankEdit.pas">
+				<Form>BankEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\BranchEdit.pas">
+				<Form>BranchEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Branch.pas">
+				<Form>BranchForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Measure.pas">
+				<Form>MeasureForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\GoodsPropertyValue.pas">
+				<Form>GoodsPropertyValueForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\ContractKindEdit.pas">
+				<Form>ContractKindEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\ContractKind.pas">
+				<Form>ContractKindForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\GoodsPropertyValueEdit.pas">
+				<Form>GoodsPropertyValueEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\BankAccount.pas">
+				<Form>BankAccountForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\BankAccountEdit.pas">
+				<Form>BankAccountEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\BusinessEdit.pas">
+				<Form>BusinessEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Business.pas">
+				<Form>BusinessForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\JuridicalEdit.pas">
+				<Form>JuridicalEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Juridical.pas">
+				<Form>JuridicalForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdDB.pas"/>
+			<DCCReference Include="..\..\Forms\Units.pas">
 				<Form>UnitForm</Form>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -11,7 +11,7 @@ $BODY$
 DECLARE
   ObjectName TVarChar;  
 BEGIN
-  IF EXISTS (SELECT ValueData FROM Object WHERE DescId = inDescId AND ValueData = inValueData AND Id <> inId) THEN
+  IF EXISTS (SELECT ValueData FROM Object WHERE DescId = inDescId AND ValueData = inValueData AND Id <> COALESCE(inId, 0) ) THEN
      SELECT ItemName INTO ObjectName FROM ObjectDesc WHERE Id = inDescId;
      RAISE EXCEPTION 'Значение "%" не уникально для справочника "%"', inValueData, ObjectName;
   END IF; 

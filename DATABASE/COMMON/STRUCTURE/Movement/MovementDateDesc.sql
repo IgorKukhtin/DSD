@@ -1,37 +1,30 @@
 /*
   Создание 
-    - таблицы MovementDateDesc (свойства классов перемещений типа TDateTime)
-    - связей
+    - таблицы MovementDateDesc (свойства классов oбъектов типа TDate)
+    - связи
     - индексов
 */
-
-        /* если есть такая таблица - удалить ее */
-	IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'MovementDateDesc')
-	DROP TABLE MovementDateDesc
-
 
 /*-------------------------------------------------------------------------------*/
 
 CREATE TABLE MovementDateDesc(
-   Id              INTEGER NOT NULL PRIMARY KEY NONCLUSTERED IDENTITY (1,1),
-   MovementDescId  INTEGER NOT NULL,
-   Code            TVarChar NOT NULL UNIQUE,
-   ItemName        TVarChar,
+   Id                    INTEGER NOT NULL PRIMARY KEY,
+   Code                  TVarChar,
+   ItemName              TVarChar
 
-   CONSTRAINT MovementDateDesc_MovementDescId_MovementDesc FOREIGN KEY(MovementDescId) REFERENCES MovementDesc(Id) )
+);
+
 
 
 /*-------------------------------------------------------------------------------*/
+
 /*                                  Индексы                                      */
-
-
-CREATE UNIQUE CLUSTERED INDEX MovementDateDesc_Code ON MovementDateDesc(Code) 
 
 /*
  ПРИМЕЧАНИЯ:
  ИСТОРИЯ РАЗРАБОТКИ:
  ДАТА         АВТОР
  ----------------
-                 Климентьев К.И.   Кухтин И.В.   Тараненко А.Е.   Беленогов С.Б.
-18.06.02                                               *               
+                 Климентьев К.И.   Кухтин И.В.   
+14.06.02                                         
 */

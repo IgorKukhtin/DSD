@@ -17,8 +17,10 @@ CREATE TABLE Movement
   InvNumber  TVarChar          ,
   OperDate   TDateTime NOT NULL,
   StatusId   integer   NOT NULL,
-  CONSTRAINT fk_Movement_MovementDesc FOREIGN KEY (DescId)  REFERENCES MovementDesc (id),
-  CONSTRAINT fk_Movement_StatusId FOREIGN KEY (StatusId)      REFERENCES Object (id)
+  ParentId   Integer   ,
+  CONSTRAINT fk_Movement_MovementDesc FOREIGN KEY (DescId)    REFERENCES MovementDesc (id),
+  CONSTRAINT fk_Movement_StatusId FOREIGN KEY (StatusId)      REFERENCES Object (id),
+  CONSTRAINT fk_Movement_ParentId FOREIGN KEY (ParentId)      REFERENCES Movement (id)
 )
 WITH (
   OIDS=FALSE
@@ -30,12 +32,11 @@ ALTER TABLE Movement
 
 /*                                  Индексы                                      */
 
--- Index: idx_Movement_All
+-- Index: idx_Movement_OperDate_DescId
 
--- DROP INDEX idx_Movement_All;
+-- DROP INDEX idx_Movement_OperDate_DescId;
 
-CREATE INDEX idx_Movement_All ON Movement(OperDate, DescId, StatusId, Id, InvNumber);
-
+CREATE INDEX idx_Movement_OperDate_DescId ON Movement(OperDate, DescId);
 
 
 /*-------------------------------------------------------------------------------*/
@@ -47,6 +48,4 @@ CREATE INDEX idx_Movement_All ON Movement(OperDate, DescId, StatusId, Id, InvNum
  ДАТА         АВТОР
  ----------------
                  Климентьев К.И.   Кухтин И.В.   
-18.06.02                                           
-19.09.02                                                       
 */

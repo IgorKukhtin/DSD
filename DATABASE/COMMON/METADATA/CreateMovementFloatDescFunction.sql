@@ -1,6 +1,0 @@
-CREATE OR REPLACE FUNCTION zc_Movement_Float_Summ()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 1;
-END;  $BODY$ LANGUAGE plpgsql;
-

@@ -1,0 +1,65 @@
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSumm()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 1;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_VATPercent()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 2;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_DiscountPercent()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 3;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_ExtraChargesPercent()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 4;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalCountKg()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 5;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalCountSh()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 6;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalCountTare()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 7;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalCount()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 8;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummMVAT()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 9;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSummPVAT()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 10;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_MovementFloat_TotalSpending()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 11;
+END;  $BODY$ LANGUAGE plpgsql;
