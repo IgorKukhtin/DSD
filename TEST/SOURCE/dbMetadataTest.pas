@@ -78,6 +78,8 @@ begin
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertMovementDateDesc.sql');
   ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertMovementBooleanDesc.sql');
+  ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertMovementStringDesc.sql');
   ZQuery.ExecSQL;
 end;
@@ -91,6 +93,8 @@ begin
   ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateMovementFloatDescFunction.sql');
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateMovementDateDescFunction.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateMovementBooleanDescFunction.sql');
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateMovementStringDescFunction.sql');
   ZQuery.ExecSQL;

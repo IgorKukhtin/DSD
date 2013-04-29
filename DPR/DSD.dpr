@@ -4,19 +4,19 @@ uses
   Vcl.Forms,
   Controls,
   Classes,
-  LoginFormUnit in '..\SOURCE\LoginFormUnit.pas' {LoginForm},
-  StorageUnit in '..\SOURCE\StorageUnit.pas',
-  AuthenticationUnit in '..\SOURCE\AuthenticationUnit.pas',
+  LoginForm in '..\SOURCE\LoginForm.pas' {LoginForm},
+  Storage in '..\SOURCE\Storage.pas',
+  Authentication in '..\SOURCE\Authentication.pas',
   UtilConst in '..\SOURCE\UtilConst.pas',
-  CommonDataUnit in '..\SOURCE\CommonDataUnit.pas',
-  MainFormUnit in '..\SOURCE\MainFormUnit.pas' {MainForm},
-  FormUnit in '..\SOURCE\FormUnit.pas' {ParentForm},
-  dsdDataSetWrapperUnit in '..\SOURCE\COMPONENT\dsdDataSetWrapperUnit.pas',
+  CommonData in '..\SOURCE\CommonData.pas',
+  MainForm in '..\SOURCE\MainForm.pas' {MainForm},
+  ParentForm in '..\SOURCE\ParentForm.pas' {ParentForm},
+  dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
   UtilConvert in '..\SOURCE\UtilConvert.pas',
-  dsdActionUnit in '..\SOURCE\COMPONENT\dsdActionUnit.pas',
+  dsdAction in '..\SOURCE\COMPONENT\dsdAction.pas',
   DataModul in '..\SOURCE\DataModul.pas' {dmMain: TDataModule},
-  dsdGuidesUtilUnit in '..\SOURCE\COMPONENT\dsdGuidesUtilUnit.pas',
-  FormStorageUnit in '..\SOURCE\FormStorageUnit.pas';
+  dsdGuides in '..\SOURCE\COMPONENT\dsdGuides.pas',
+  FormStorage in '..\SOURCE\FormStorage.pas';
 
 {$R *.res}
 
@@ -29,7 +29,7 @@ begin
    // if ShowModal = mrOk then
    TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
 
-   Application.CreateForm(TMainForm, MainForm);
+   Application.CreateForm(TMainForm, MainFormInstance);
   Application.CreateForm(TdmMain, dmMain);
   Application.Run;
 end.

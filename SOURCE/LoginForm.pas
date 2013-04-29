@@ -1,4 +1,4 @@
-unit LoginFormUnit;
+unit LoginForm;
 
 interface
 
@@ -33,7 +33,7 @@ implementation
 {$R *.dfm}
 
 uses
-  StorageUnit, AuthenticationUnit, CommonDataUnit;
+  Storage, Authentication, CommonData;
 
 
 procedure TLoginForm.btnOkClick(Sender: TObject);

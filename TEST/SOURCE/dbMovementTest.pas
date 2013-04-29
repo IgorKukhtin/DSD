@@ -7,6 +7,8 @@ type
 
   TdbMovementTest = class (TTestCase)
   private
+    // ”даление документа
+    procedure DeleteMovement(Id: integer);
   protected
     // подготавливаем данные дл€ тестировани€
     procedure SetUp; override;
@@ -16,20 +18,20 @@ type
     procedure MovementIncomeTest;
   end;
 
-  TMovementIncome = class(TObjectTest)
+  TMovementIncomeTest = class(TObjectTest)
   private
     function InsertDefault: integer; override;
   public
     function InsertUpdateMovementIncome(Id: Integer; InvNumber: String; OperDate: TDateTime;
              FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId, PersonalPackerId: Integer;
              OperDatePartner: TDateTime; InvNumberPartner: String; PriceWithVAT: Boolean;
-             VATPercent, DiscountPercent, ExtraChargesPercent: double): integer;
+             VATPercent, DiscountPercent: double): integer;
     constructor Create; override;
   end;
 
 implementation
 
-uses DB;
+uses DB, Storage, SysUtils;
 { TDataBaseObjectTest }
 {------------------------------------------------------------------------------}
 procedure TdbMovementTest.TearDown;
@@ -37,11 +39,32 @@ begin
   inherited;
 end;
 {------------------------------------------------------------------------------}
-procedure TdbMovementTest.MovementIncomeTest;
+procedure TdbMovementTest.DeleteMovement(Id: integer);
+const
+   pXML =
+  '<xml Session = "">' +
+    '<lpDelete_Movement OutputType="otResult">' +
+       '<inId DataType="ftInteger" Value="%d"/>' +
+    '</lpDelete_Movement>' +
+  '</xml>';
 begin
+  TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Id]))
+end;
+{------------------------------------------------------------------------------}
+procedure TdbMovementTest.MovementIncomeTest;
+var
+  MovementIncome: TMovementIncomeTest;
+  Id: Integer;
+begin
+  MovementIncome := TMovementIncomeTest.Create;
+  Id := MovementIncome.InsertDefault;
   // создание документа
+  try
   // редактирование
-  // удаление
+  finally
+    // удаление
+    DeleteMovement(Id);
+  end;
 end;
 
 procedure TdbMovementTest.SetUp;
@@ -51,24 +74,24 @@ end;
 {------------------------------------------------------------------------------}
 { TMovementIncome }
 
-constructor TMovementIncome.Create;
+constructor TMovementIncomeTest.Create;
 begin
   inherited;
-  spInsertUpdate := 'gpInsertUpdate_Object_MovementIncome';
-  spSelect := 'gpSelect_Object_MovementIncome';
-  spGet := 'gpGet_Object_MovementIncome';
+  spInsertUpdate := 'gpInsertUpdate_Movement_Income';
+  spSelect := 'gpSelect_Movement_Income';
+  spGet := 'gpGet_Movement_Income';
 end;
 
-function TMovementIncome.InsertDefault: integer;
+function TMovementIncomeTest.InsertDefault: integer;
 begin
-
+  result := InsertUpdateMovementIncome(0, 'Ќомер 1',
+            Date, 0, 0, 0, 0, 0, 0, 0, Date, '', false, 20, 0);
 end;
 
-function TMovementIncome.InsertUpdateMovementIncome(Id: Integer; InvNumber: String;
+function TMovementIncomeTest.InsertUpdateMovementIncome(Id: Integer; InvNumber: String;
   OperDate: TDateTime; FromId, ToId, PaidKindId, ContractId, CarId,
   PersonalDriverId, PersonalPackerId: Integer; OperDatePartner: TDateTime;
-  InvNumberPartner: String; PriceWithVAT: Boolean; VATPercent, DiscountPercent,
-  ExtraChargesPercent: double): integer;
+  InvNumberPartner: String; PriceWithVAT: Boolean; VATPercent, DiscountPercent: double): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -86,7 +109,6 @@ begin
   FParams.AddParam('inPriceWithVAT', ftBoolean, ptInput, PriceWithVAT);
   FParams.AddParam('inVATPercent', ftFloat, ptInput, VATPercent);
   FParams.AddParam('inDiscountPercent', ftFloat, ptInput, DiscountPercent);
-  FParams.AddParam('inExtraChargesPercent', ftFloat, ptInput, ExtraChargesPercent);
   result := InsertUpdate(FParams);
 end;
 

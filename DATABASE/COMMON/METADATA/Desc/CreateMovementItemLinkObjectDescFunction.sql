@@ -1,0 +1,11 @@
+CREATE OR REPLACE FUNCTION zc_MovementLink_GoodsKind()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 1;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_MovementLink_Partion()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 2;
+END;  $BODY$ LANGUAGE plpgsql;

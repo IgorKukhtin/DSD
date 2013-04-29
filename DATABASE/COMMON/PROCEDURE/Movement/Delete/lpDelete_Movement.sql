@@ -8,8 +8,9 @@ IN Session tvarchar)
   RETURNS void AS
 $BODY$BEGIN
 
-  DELETE FROM MovementLink WHERE MovementId = inId;
+  DELETE FROM MovementLinkObject WHERE MovementId = inId;
   DELETE FROM MovementString WHERE MovementId = inId;
+  DELETE FROM MovementDate WHERE MovementId = inId;
   DELETE FROM MovementFloat WHERE MovementId = inId;
 --  DELETE FROM MovementProtocol WHERE MovementId = inId;
   DELETE FROM MovementBoolean WHERE MovementId = inId;
