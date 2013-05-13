@@ -17,9 +17,9 @@ $BODY$BEGIN
    , Object.isErased
    , Goods_GoodsGroup.ChildObjectId AS GoodsGroupId
    FROM Object
-   JOIN ObjectLink AS Goods_GoodsGroup
-     ON Goods_GoodsGroup.ObjectId = Object.Id
-    AND Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+LEFT JOIN ObjectLink AS Goods_GoodsGroup
+       ON Goods_GoodsGroup.ObjectId = Object.Id
+      AND Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
   WHERE Object.DescId = zc_Object_Goods();
   
 END;$BODY$

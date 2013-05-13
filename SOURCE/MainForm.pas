@@ -31,8 +31,24 @@ type
     bbBusiness: TdxBarButton;
     actBranch: TdsdOpenForm;
     bbBranch: TdxBarButton;
+    actPartner: TdsdOpenForm;
     actIncome: TdsdOpenForm;
     bbIncome: TdxBarButton;
+    bbPartner: TdxBarButton;
+    dxBarSeparator1: TdxBarSeparator;
+    actPaidKind: TdsdOpenForm;
+    actContractKind: TdsdOpenForm;
+    actUnitGroup: TdsdOpenForm;
+    actUnit: TdsdOpenForm;
+    actGoodsGroup: TdsdOpenForm;
+    actGoods: TdsdOpenForm;
+    actGoodsKind: TdsdOpenForm;
+    bbPaidKind: TdxBarButton;
+    bbContractKind: TdxBarButton;
+    bbUnitGroup: TdxBarButton;
+    bbUnit: TdxBarButton;
+    bbGoodsGroup: TdxBarButton;
+    bbGoods: TdxBarButton;
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }

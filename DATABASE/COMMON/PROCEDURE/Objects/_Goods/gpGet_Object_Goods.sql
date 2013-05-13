@@ -21,6 +21,7 @@ $BODY$BEGIN
      , GoodsGroup.ValueData AS GoodsGroupName  
      , Measure.Id AS MeasureId
      , Measure.ValueData AS MeasureName
+     , Weight.ValueData AS Weight
      FROM Object
 LEFT JOIN ObjectLink AS Goods_GoodsGroup
        ON Goods_GoodsGroup.ObjectId = Object.Id
@@ -32,6 +33,9 @@ LEFT JOIN ObjectLink AS Goods_Measure
       AND Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
 LEFT JOIN Object AS Measure
        ON Measure.Id = Goods_Measure.ChildObjectId
+LEFT JOIN ObjectFloat AS Weight 
+       ON Weight.ObjectId = Object.Id 
+      AND Weight.DescId = zc_ObjectFloat_Goods_Weight()
      WHERE Object.Id = inId;
   
 END;$BODY$

@@ -8,18 +8,33 @@ uses
   cxLookAndFeelPainters, cxStyles, cxCustomData, cxFilter, cxData,
   cxDataStorage, cxEdit, Data.DB, cxDBData, cxGridLevel, cxClasses,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, Datasnap.DBClient, cxPropertiesStore;
+  cxGrid, Datasnap.DBClient, dsdDB, cxPropertiesStore, dxBar,
+  Vcl.ActnList, dsdAction, DataModul, cxTL, cxTLdxBarBuiltInMenu,
+  cxInplaceContainer, cxTLData, cxDBTL, cxMaskEdit, ParentForm;
 
 type
-  TGoodsForm = class(TForm)
-    cxGridDBTableView: TcxGridDBTableView;
-    cxGridLevel: TcxGridLevel;
-    cxGrid: TcxGrid;
-    clName: TcxGridDBColumn;
+  TGoodsForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
-    clLogin: TcxGridDBColumn;
     cxPropertiesStore: TcxPropertiesStore;
+    dxBarManager: TdxBarManager;
+    dxBarManagerBar1: TdxBar;
+    ActionList: TActionList;
+    bbRefresh: TdxBarButton;
+    actRefresh: TdsdDataSetRefresh;
+    actInsert: TdsdInsertUpdateAction;
+    bbInsert: TdxBarButton;
+    dsdStoredProc: TdsdStoredProc;
+    actUpdate: TdsdInsertUpdateAction;
+    bbEdit: TdxBarButton;
+    bbErased: TdxBarButton;
+    bbUnErased: TdxBarButton;
+    dsdSetErased: TdsdUpdateErased;
+    dsdSetUnErased: TdsdUpdateErased;
+    cxDBTreeList: TcxDBTreeList;
+    cxDBTreeListcxDBTreeListColumn1: TcxDBTreeListColumn;
+    cxDBTreeListcxDBTreeListColumn3: TcxDBTreeListColumn;
+    cxDBTreeListcxDBTreeListColumn4: TcxDBTreeListColumn;
   private
     { Private declarations }
   public
