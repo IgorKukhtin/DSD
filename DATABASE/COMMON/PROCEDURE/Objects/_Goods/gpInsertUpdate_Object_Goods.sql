@@ -34,10 +34,12 @@ ALTER FUNCTION gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, Integer, 
   OWNER TO postgres;
 
   
+/*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  11.05.13                                        * rem lpCheckUnique_Object_ValueData
+
 */
 
 -- тест

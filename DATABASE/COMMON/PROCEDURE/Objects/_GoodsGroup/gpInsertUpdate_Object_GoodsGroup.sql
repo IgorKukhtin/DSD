@@ -29,12 +29,14 @@ END;$BODY$
 ALTER FUNCTION gpInsertUpdate_Object_GoodsGroup(Integer, Integer, TVarChar, Integer, tvarchar)
   OWNER TO postgres;
 
+
+/*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  11.05.13                                        * rem lpCheckUnique_Object_ValueData
+
 */
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Object_GoodsGroup
-                            
