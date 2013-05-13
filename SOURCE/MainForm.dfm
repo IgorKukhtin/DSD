@@ -80,7 +80,11 @@ object MainForm: TMainForm
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       Category = 0
       Visible = ivAlways
-      ItemLinks = <>
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbIncome'
+        end>
     end
     object bbGuides: TdxBarSubItem
       Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
@@ -140,6 +144,10 @@ object MainForm: TMainForm
       Action = actBranch
       Category = 0
     end
+    object bbIncome: TdxBarButton
+      Action = actIncome
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Left = 192
@@ -196,6 +204,13 @@ object MainForm: TMainForm
       Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
       Hint = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
       FormName = 'TJuridicalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actIncome: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      Caption = #1055#1088#1080#1093#1086#1076#1085#1099#1077' '#1085#1072#1082#1083#1072#1076#1085#1099#1077
+      FormName = 'TIncomeJournalForm'
       GuiParams = <>
       isShowModal = False
     end

@@ -21,7 +21,7 @@ var
   ConnectionString: string;
   List: TStringList;
 begin
-  AssignFile(F, '..\php\connectstring.php');
+  AssignFile(F, '..\php\init.php');
   Reset(f);
   readln(f, ConnectionString);
   readln(f, ConnectionString);

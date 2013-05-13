@@ -16,7 +16,7 @@ CREATE TABLE MovementItemLinkObject
 (
   DescId integer NOT NULL,
   MovementItemId integer NOT NULL,
-  ObjectId integer NOT NULL,
+  ObjectId integer,
   CONSTRAINT pk_MovementItemLinkObject PRIMARY KEY (MovementItemId, DescId),
   CONSTRAINT fk_MovementItemLinkObject_DescId FOREIGN KEY (DescId) REFERENCES MovementItemLinkObjectDesc (Id),
   CONSTRAINT fk_MovementItemLinkObject_MovementItem FOREIGN KEY (MovementItemId) REFERENCES MovementItem (id),

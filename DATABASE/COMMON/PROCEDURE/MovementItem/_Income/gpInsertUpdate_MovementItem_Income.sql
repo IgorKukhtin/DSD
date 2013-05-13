@@ -4,44 +4,32 @@
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income(
 INOUT ioId	         Integer,   	/* ключ объекта <Приходная накладная> */
-  IN inInvNumber         TVarChar, 
-  IN inOperDate          TDateTime,
-  IN inFromId            Integer,
-  IN inToId              Integer,
-  IN inPaidKindId        Integer,
-  IN inContractId        Integer,
-  IN inCarId             Integer,
-  IN inPersonalDriverId  Integer,
-  IN inPersonalPackerId  Integer,
-  IN inOperDatePartner   TDateTime,
-  IN inInvNumberPartner  TVarChar,
-  IN inPriceWithVAT      Boolean,
-  IN inVATPercent        TFloat,
-  IN inDiscountPercent   TFloat,
+  IN inMovementId        Integer,
+  IN inGoodsId           Integer,
+  IN inAmount            TFloat, 
+  IN inAmountPartner     TFloat, 
+  IN inPrice             TFloat, 
+  IN inCountForPrice     TFloat, 
+  IN inLiveWeight        TFloat, 
+  IN inHeadCount         TFloat, 
+  IN inGoodsKindId       Integer,
   IN inSession           TVarChar       /* текущий пользователь */
 )                              
   RETURNS integer AS
 $BODY$BEGIN
 --   PERFORM lpCheckRight(inSession, zc_Enum_Process_Measure());
 
-   ioId := lpInsertUpdate_MovementItem(ioId, zc_MovementItem_Income(), inInvNumber, inOperDate, NULL);
+   ioId := lpInsertUpdate_MovementItem(ioId, zc_MovementItem_Goods(), inGoodsId, inMovementId, inAmount, NULL);
    
-   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MovementItemLink_From(), ioId, inFromId);
-   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MovementItemLink_To(), ioId, inToId);
-   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MovementItemLink_PaidKind(), ioId, inPaidKindId);
-   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MovementItemLink_Contract(), ioId, inContractId);
-   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MovementItemLink_Car(), ioId, inCarId);
-   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MovementItemLink_PersonalDriver(), ioId, inPersonalDriverId);
-   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MovementItemLink_PersonalPacker(), ioId, inPersonalPackerId);
+   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MovementItemLink_GoodsKind(), ioId, inGoodsKindId);
+   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MovementItemLink_Partion(), ioId, null);
 
-   PERFORM lpInsertUpdate_MovementItemDate(zc_MovementItemDate_OperDatePartner(), ioId, inOperDatePartner);
+   PERFORM lpInsertUpdate_MovementItemFloat(zc_MovementItemFloat_AmountPartner(), ioId, inAmountPartner);
+   PERFORM lpInsertUpdate_MovementItemFloat(zc_MovementItemFloat_Price(), ioId, inPrice);
+   PERFORM lpInsertUpdate_MovementItemFloat(zc_MovementItemFloat_CountForPrice(), ioId, inCountForPrice);
+   PERFORM lpInsertUpdate_MovementItemFloat(zc_MovementItemFloat_LiveWeight(), ioId, inLiveWeight);
+   PERFORM lpInsertUpdate_MovementItemFloat(zc_MovementItemFloat_HeadCount(), ioId, inHeadCount);
 
-   PERFORM lpInsertUpdate_MovementItemString(zc_MovementItemString_InvNumberPartner(), ioId, inInvNumberPartner);
-
-   PERFORM lpInsertUpdate_MovementItemBoolean(zc_MovementItemBoolean_PriceWithVAT(), ioId, inPriceWithVAT);
-
-   PERFORM lpInsertUpdate_MovementItemFloat(zc_MovementItemFloat_VATPercent(), ioId, inVATPercent);
-   PERFORM lpInsertUpdate_MovementItemFloat(zc_MovementItemFloat_DiscountPercent(), ioId, inDiscountPercent);
 END;$BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;

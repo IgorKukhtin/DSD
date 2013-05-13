@@ -22,7 +22,7 @@ uses cxPropertiesStore, cxControls, cxContainer, cxEdit, cxGroupBox,
   dxBevel, cxButtons, cxGridDBTableView, cxGrid, DB, DBClient,
   dxBar, Vcl.ActnList, dsdAction, cxTextEdit, cxLabel,
   StdActns, cxDBTL, cxCurrencyEdit, cxDropDownEdit, dsdGuides,
-  cxDBLookupComboBox, DBGrids, cxCheckBox;
+  cxDBLookupComboBox, DBGrids, cxCheckBox, cxCalendar, ExtCtrls;
 
 {$R *.dfm}
 
@@ -48,15 +48,17 @@ end;
 
 initialization
   // Стандартные компоненты
-  RegisterClass (TDataSource);
-  RegisterClass (TClientDataSet);
-  RegisterClass (TFileExit);
   RegisterClass (TActionList);
+  RegisterClass (TClientDataSet);
+  RegisterClass (TDataSource);
   RegisterClass (TDBGrid);
+  RegisterClass (TFileExit);
+  RegisterClass (TPanel);
   // Библиотека DevExpress
   RegisterClass (TdxBevel);
   RegisterClass (TcxButton);
   RegisterClass (TcxCheckBox);
+  RegisterClass (TcxDateEdit);
   RegisterClass (TcxGroupBox);
   RegisterClass (TcxGridDBTableView);
   RegisterClass (TcxGrid);

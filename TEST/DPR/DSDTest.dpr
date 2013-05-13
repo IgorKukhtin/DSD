@@ -75,7 +75,10 @@ uses
   JuridicalEdit in '..\..\Forms\JuridicalEdit.pas' {JuridicalEditForm},
   Juridical in '..\..\Forms\Juridical.pas' {JuridicalForm},
   dsdDB in '..\..\SOURCE\COMPONENT\dsdDB.pas',
-  Units in '..\..\Forms\Units.pas' {UnitForm};
+  Units in '..\..\Forms\Units.pas' {UnitForm},
+  dbMovementItemTest in '..\SOURCE\dbMovementItemTest.pas',
+  Income in '..\..\Forms\Income.pas' {IncomeForm},
+  IncomeJournal in '..\..\Forms\IncomeJournal.pas' {ParentForm2};
 
 {$R *.RES}
 

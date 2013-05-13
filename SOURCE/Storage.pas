@@ -36,6 +36,7 @@ uses SysUtils, ZLibEx, idGlobal, UtilConst, DBClient, Variants, UtilConvert;
 const
 
    ResultTypeLenght = 13;
+   IsArchiveLenght = 2;
    XMLStructureLenghtLenght = 10;
 
 type
@@ -50,6 +51,8 @@ type
     FReceiveStream: TStringStream;
     Str: RawByteString;
     XMLDocument: IXMLDocument;
+    isArchive: boolean;
+    function PrepareStr: string;
     function ExecuteProc(pData: String): Variant;
     procedure ProcessErrorCode(pData: String);
     function ProcessMultiDataSet: Variant;
@@ -71,6 +74,14 @@ begin
   NewInstance := Instance;
 end;
 
+function TStorage.PrepareStr: string;
+begin
+  if isArchive then
+     result := ZDecompressStr(Str)
+  else
+     result := Str
+end;
+
 procedure TStorage.ProcessErrorCode(pData: String);
 begin
   with LoadXMLData(pData).DocumentElement do
@@ -84,7 +95,7 @@ var
   DataFromServer: AnsiString;
   i, StartPosition: integer;
 begin
-  DataFromServer := ZDecompressStr(Str);
+  DataFromServer := PrepareStr;
   // Для нескольких датасетов процедура более сложная.
   // В начале надо получить XML, где хранятся данные по ДатаСетам.
 
@@ -112,18 +123,22 @@ begin
   idHTTP.Post(FConnection, FSendList, FReceiveStream, TIdTextEncoding.GetEncoding(1251));
   // Определяем тип возвращаемого результата
   ResultType := trim(Copy(FReceiveStream.DataString, 1, ResultTypeLenght));
+  isArchive := trim(lowercase(Copy(FReceiveStream.DataString, ResultTypeLenght + 1, IsArchiveLenght))) = 't';
   // Сдвигаем указатель на нужное кол-во байт, что бы не копировать строку
-  Str := RawByteString(pointer(integer(FReceiveStream.Bytes) + ResultTypeLenght));
+  if isArchive then
+     Str := RawByteString(pointer(integer(FReceiveStream.Bytes) + ResultTypeLenght + IsArchiveLenght))
+  else
+     Str := Copy(FReceiveStream.DataString, ResultTypeLenght + IsArchiveLenght + 1, maxint);
   if ResultType = gcMultiDataSet then begin
      Result := ProcessMultiDataSet;
      exit;
   end;
   if ResultType = gcError then
-     ProcessErrorCode(ZDecompressStr(Str));
+     ProcessErrorCode(PrepareStr);
   if ResultType = gcResult then
-     Result := ZDecompressStr(Str);
+     Result := PrepareStr;
   if ResultType = gcDataSet then
-     Result := ZDecompressStr(Str);
+     Result := PrepareStr;
 end;
 
 class function TStorageFactory.GetStorage: IStorage;

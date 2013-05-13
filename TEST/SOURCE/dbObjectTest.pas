@@ -43,6 +43,7 @@ type
     procedure JuridicalGroup_Test;
     procedure Juridical_Test;
     procedure Contract_Test;
+    procedure Goods_Test;
   end;
 
   TJuridicalGroupTest = class(TObjectTest)
@@ -78,7 +79,6 @@ type
     constructor Create; override;
   end;
 
-
   TCurrencyTest = class(TObjectTest)
   private
     function InsertDefault: integer; override;
@@ -98,6 +98,14 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdateCash(const Id: integer; CashName: string; CurrencyId: Integer; BranchId: integer): integer;
+    constructor Create; override;
+  end;
+
+  TGoodsTest = class(TObjectTest)
+    function InsertDefault: integer; override;
+  public
+    function InsertUpdateGoods(Id, Code: Integer; Name: String;
+                               GoodsGroupId, MeasureId: Integer; Weight: Double): integer;
     constructor Create; override;
   end;
 
@@ -204,6 +212,26 @@ end;
 function TdbObjectTest.GetRecordCount(ObjectTest: TObjectTest): integer;
 begin
   Result := ObjectTest.GetDataSet.RecordCount;
+end;
+{------------------------------------------------------------------------------}
+procedure TdbObjectTest.Goods_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TGoodsTest;
+begin
+  ObjectTest := TGoodsTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка объекта
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных о юр лице
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Товар 1'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+
+  finally
+    DeleteObject(Id);
+  end;
 end;
 {------------------------------------------------------------------------------}
 procedure TdbObjectTest.User_Test;
@@ -536,6 +564,34 @@ begin
   result := InsertUpdate(FParams);
 end;
 
+
+{ TGoodsTest }
+
+constructor TGoodsTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_Goods';
+  spSelect := 'gpSelect_Object_Goods';
+  spGet := 'gpGet_Object_Goods';
+end;
+
+function TGoodsTest.InsertDefault: integer;
+begin
+  result := InsertUpdateGoods(0, 1, 'Товар 1 ', 0, 0, 1.0)
+end;
+
+function TGoodsTest.InsertUpdateGoods(Id, Code: Integer; Name: String;
+  GoodsGroupId, MeasureId: Integer; Weight: Double): integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  FParams.AddParam('inGoodsGroupId', ftInteger, ptInput, GoodsGroupId);
+  FParams.AddParam('inMeasureId', ftInteger, ptInput, MeasureId);
+  FParams.AddParam('inWeight', ftFloat, ptInput, Weight);
+  result := InsertUpdate(FParams);
+end;
 
 initialization
   TestFramework.RegisterTest('Справочники', TdbObjectTest.Suite);

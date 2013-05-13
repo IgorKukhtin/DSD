@@ -37,6 +37,7 @@ type
     procedure LoadBankAccountFormTest;
     procedure LoadCashFormTest;
     procedure LoadCurrencyFormTest;
+    procedure LoadIncomeFormTest;
   end;
 
 implementation
@@ -155,6 +156,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyValueForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPropertyValueEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyValueEditForm');
+end;
+
+procedure TLoadFormTest.LoadIncomeFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
 end;
 
 procedure TLoadFormTest.LoadJuridicalFormTest;

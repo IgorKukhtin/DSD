@@ -2,7 +2,20 @@
  include_once "createparamsarray.php";
  include_once "getfieldtype.php";
  include_once "filldataset.php";
- include_once "connectstring.php";
+ include_once "init.php";
+
+ function PrepareStr($str)
+ {
+   global $isArchive;
+   if ($isArchive)
+   {
+     return 't ' . gzcompress($str);
+   }
+   else
+   {
+     return 'f ' . $str;
+   }
+ };
 
  set_time_limit (0);
  
@@ -47,7 +60,7 @@ if ($result == false)
      $res = '<error ';
      $res .= 'ErrorMessage = "'.htmlspecialchars(pg_last_error(), ENT_COMPAT, 'WIN-1251').'"';
      $res .= ' />';
-     echo 'error        '.gzcompress($res);
+     echo 'error        '.PrepareStr($res);
 }
 else
 {
@@ -62,7 +75,7 @@ else
         }
     }
     $res .= "/>";
-    echo 'Result       '.gzcompress($res);
+    echo 'Result       '.PrepareStr($res);
   };
 
   if ($OutputType=='otBlob')
@@ -71,14 +84,14 @@ else
         foreach ($line as $col_value) {
             $res =  $col_value;
         }
-    echo 'Result       '.gzcompress($res);
+    echo 'Result       '.PrepareStr($res);
   };
   
   if ($OutputType=='otDataSet')
   {
      $res = FillDataSet($result);
      // возвращаем результат
-     echo 'DataSet      '.gzcompress($res);
+     echo 'DataSet      '.PrepareStr($res);
   };
    
   if ($OutputType=='otMultiDataSet')
@@ -101,7 +114,7 @@ else
     $XMLStructure .= '</DataSets>';
     // Закроем транзакцию
     pg_query($CursorsClose . 'COMMIT; END;');
-    echo 'MultiDataSet ' . gzcompress(sprintf("%010d", strlen($XMLStructure)) . $XMLStructure . $res);
+    echo 'MultiDataSet ' . PrepareStr(sprintf("%010d", strlen($XMLStructure)) . $XMLStructure . $res);
   };
   // Очистка результата
   pg_free_result($result);

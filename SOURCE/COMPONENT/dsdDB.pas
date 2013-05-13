@@ -106,7 +106,7 @@ type
 implementation
 
 uses Storage, CommonData, TypInfo, UtilConvert, SysUtils, cxTextEdit,
-     XMLDoc, XMLIntf, StrUtils, cxCurrencyEdit, dsdGuides, cxCheckBox;
+     XMLDoc, XMLIntf, StrUtils, cxCurrencyEdit, dsdGuides, cxCheckBox, cxCalendar;
 
 procedure Register;
 begin
@@ -337,6 +337,8 @@ begin
         Result := (Component as TdsdGuides).Key;
      if Component is TcxCheckBox then
         Result := BoolToStr((Component as TcxCheckBox).Checked, true);
+     if Component is TcxDateEdit then
+        Result := (Component as TcxDateEdit).Text;
   end
   else begin
     case DataType of

@@ -3,6 +3,8 @@
 --DROP FUNCTION gpSelect_Movement_Income();
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Income(
+IN inStartDate   TDateTime,
+IN inEndDate     TDateTime,
 IN inSession     TVarChar       /* текущий пользователь */)
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
 $BODY$BEGIN
@@ -11,12 +13,10 @@ $BODY$BEGIN
 
    RETURN QUERY 
    SELECT 
-     Object.Id
-   , Object.ObjectCode
-   , Object.ValueData
-   , Object.isErased
-   FROM Object
-   WHERE Object.DescId = zc_Movement_Income();
+     Movement.Id,
+    1, cast('fggg' AS TVarChar) , true
+   FROM Movement
+   WHERE Movement.DescId = zc_Movement_Income();
   
 END;$BODY$
   LANGUAGE plpgsql VOLATILE

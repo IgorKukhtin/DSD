@@ -25,7 +25,7 @@ type
 
 implementation
 
-uses dsdDB, TypInfo, Db, dsdGuides, cxTextEdit, cxCurrencyEdit, cxCheckBox;
+uses dsdDB, TypInfo, Db, dsdGuides, cxTextEdit, cxCurrencyEdit, cxCheckBox, cxCalendar;
 
 procedure Register;
 begin
@@ -40,6 +40,7 @@ procedure TdsdParamComponentProperty.GetValues(Proc: TGetStrProc);
 begin
   // Отображаем только те компоненты, с которыми умеет работать TdsdParam
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxTextEdit)), Proc);
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TcxDateEdit)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxCurrencyEdit)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TDataSet)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TdsdFormParams)), Proc);

@@ -31,6 +31,8 @@ type
     bbBusiness: TdxBarButton;
     actBranch: TdsdOpenForm;
     bbBranch: TdxBarButton;
+    actIncome: TdsdOpenForm;
+    bbIncome: TdxBarButton;
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }

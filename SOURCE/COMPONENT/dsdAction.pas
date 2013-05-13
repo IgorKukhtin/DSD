@@ -276,7 +276,8 @@ begin
   DataSetRefresh.Execute;
   if Assigned(DataSource) then
      if Assigned(DataSource.DataSet) then
-        DataSource.DataSet.Locate('Id', FForm.Params.ParamByName('Id').Value, []);
+        if Assigned(FForm.Params) then
+           DataSource.DataSet.Locate('Id', FForm.Params.ParamByName('Id').Value, []);
 end;
 
 procedure TdsdInsertUpdateAction.SetDataSource(const Value: TDataSource);
