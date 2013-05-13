@@ -1,6 +1,6 @@
-﻿-- Function: gpSelect_Object_Unit()
+-- Function: gpSelect_Object_Unit()
 
---DROP FUNCTION gpSelect_Object_Unit();
+-- DROP FUNCTION gpSelect_Object_Unit();
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Unit(
 IN inSession     TVarChar       /* текущий пользователь */)
@@ -10,23 +10,23 @@ $BODY$BEGIN
 --   PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
    RETURN QUERY 
-   SELECT 
-     Object.Id
-   , Object.ObjectCode
-   , Object.ValueData
-   , Object.isErased
-   , Unit_UnitGroup.ChildObjectId AS UnitGroupId
-   , Branch.ValueData AS BranchName
-   FROM Object
-   JOIN ObjectLink AS Unit_UnitGroup
-     ON Unit_UnitGroup.ObjectId = Object.Id
-    AND Unit_UnitGroup.DescId = zc_ObjectLink_Unit_UnitGroup()
-   JOIN ObjectLink AS Unit_Branch
-     ON Unit_Branch.ObjectId = Object.Id
-    AND Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-   JOIN Object AS Branch
-     ON Branch.Id = Unit_Branch.ChildObjectId
-  WHERE Object.DescId = zc_Object_Unit();
+   SELECT Object_Unit.Id
+        , Object_Unit.ObjectCode
+        , Object_Unit.ValueData
+        , Object_Unit.isErased
+        , ObjectLink_Unit_UnitGroup.ChildObjectId AS UnitGroupId
+        , Object_Branch.ValueData AS BranchName
+   FROM Object AS Object_Unit
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_UnitGroup
+                 ON ObjectLink_Unit_UnitGroup.ObjectId = Object_Unit.Id
+                AND ObjectLink_Unit_UnitGroup.DescId = zc_ObjectLink_Unit_UnitGroup()
+        LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
+                 ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
+                AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+
+        LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
+
+   WHERE Object_Unit.DescId = zc_Object_Unit();
   
 END;$BODY$
   LANGUAGE plpgsql VOLATILE
@@ -35,4 +35,4 @@ END;$BODY$
 ALTER FUNCTION gpSelect_Object_Unit(TVarChar)
   OWNER TO postgres;
 
--- SELECT * FROM gpSelect_Object_UnitGroup('2')
+-- SELECT * FROM gpSelect_Object_Unit ('2')
