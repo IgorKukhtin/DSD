@@ -15,8 +15,8 @@ IN inSession             TVarChar       /* текущий пользовател
 $BODY$BEGIN
 --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
 
-   -- Проверем уникальность имени
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Goods(), inName);
+   -- !!! Проверем уникальность имени
+   -- !!! PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Goods(), inName);
 
    -- Вставляем объект
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Goods(), inCode, inName);
@@ -34,4 +34,11 @@ ALTER FUNCTION gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, Integer, 
   OWNER TO postgres;
 
   
-                            
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.05.13                                        * rem lpCheckUnique_Object_ValueData
+*/
+
+-- тест
+-- SELECT * FROM gpInsertUpdate_Object_Goods                            
