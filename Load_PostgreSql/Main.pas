@@ -983,6 +983,7 @@ alter table dba.Unit add Id3_Postgres integer null;
 
 alter table dba.PriceList_byHistory add Id_Postgres integer null;
 
+
 --
 --!!!! при первой загрузке данных в постгрис, в сибасе надо обнулять ключи !!!
 --
