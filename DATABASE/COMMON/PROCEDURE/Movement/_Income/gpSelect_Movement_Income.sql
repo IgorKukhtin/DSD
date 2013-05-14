@@ -22,7 +22,7 @@ END;$BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100
   ROWS 100;
-ALTER FUNCTION gpSelect_Movement_Income(TVarChar)
+ALTER FUNCTION gpSelect_Movement_Income(TDateTime, TDateTime, TVarChar)
   OWNER TO postgres;
 
 -- SELECT * FROM gpSelect_Movement_Income('2')

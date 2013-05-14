@@ -20,7 +20,7 @@ $BODY$BEGIN
      FROM Object
 LEFT JOIN ObjectLink 
        ON ObjectLink.ObjectId = Object.Id
-      AND ObjectLink.DescId = zc_ObjectLink_JuridicalGroup_JuridicalGroup()
+      AND ObjectLink.DescId = zc_ObjectLink_JuridicalGroup_Parent()
     WHERE Object.DescId = zc_Object_JuridicalGroup()
     UNION
     SELECT 
