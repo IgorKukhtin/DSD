@@ -230,8 +230,8 @@ begin
              toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Parameters.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             //toStoredProc.Parameters.ParamByName('inParentId').Value:=FieldByName('ParentId_Postgres').AsInteger;
-             toStoredProc.Parameters.ParamByName('inGoodsGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             toStoredProc.Parameters.ParamByName('inParentId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             //toStoredProc.Parameters.ParamByName('inGoodsGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
              toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
@@ -512,8 +512,8 @@ begin
              toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Parameters.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             //toStoredProc.Parameters.ParamByName('inParentId').Value:=FieldByName('ParentId_Postgres').AsInteger;
-             toStoredProc.Parameters.ParamByName('inJuridicalGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             toStoredProc.Parameters.ParamByName('inParentId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             //toStoredProc.Parameters.ParamByName('inJuridicalGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
              toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
@@ -744,8 +744,8 @@ begin
              toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Parameters.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             //toStoredProc.Parameters.ParamByName('inParentId').Value:=FieldByName('ParentId_Postgres').AsInteger;
-             toStoredProc.Parameters.ParamByName('inUnitGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             toStoredProc.Parameters.ParamByName('inParentId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             //toStoredProc.Parameters.ParamByName('inUnitGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
              toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
@@ -846,6 +846,51 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadPriceList;
 begin
+     if (not cbPriceList.Checked)or(not cbPriceList.Enabled) then exit;
+     //
+     myEnabledCB(cbPriceList);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select PriceList_byHistory.Id as ObjectId');
+        Add('     , 0 as ObjectCode');
+        Add('     , PriceList_byHistory.PriceListName as ObjectName');
+        Add('     , PriceList_byHistory.Id_Postgres as Id_Postgres');
+        Add('from dba.PriceList_byHistory');
+        Add('order by ObjectId');
+        Open;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //exit;
+        toStoredProc.ProcedureName:='gpinsertupdate_object_pricelist';
+        toStoredProc.Parameters.Refresh;
+        //
+        //DisableControls;
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin {EnableControls;}exit;end;
+             //
+             toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Parameters.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.PriceList_byHistory set Id_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);//+' and Id_Postgres is null'
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        //EnableControls;
+     end;
+     //
+     myDisabledCB(cbPriceList);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -921,6 +966,9 @@ end;
 end.
 
 {
+--
+-- !!!! в базе сибасе надо создать ключи !!!
+--
 alter table dba.Goods add Id_Postgres integer null;
 alter table dba.GoodsProperty add Id_Postgres integer null;
 alter table dba.Measure add Id_Postgres integer null;
@@ -933,6 +981,11 @@ alter table dba.Unit add Id1_Postgres integer null;
 alter table dba.Unit add Id2_Postgres integer null;
 alter table dba.Unit add Id3_Postgres integer null;
 
+alter table dba.PriceList_byHistory add Id_Postgres integer null;
+
+--
+--!!!! при первой загрузке данных в постгрис, в сибасе надо обнулять ключи !!!
+--
 update dba.Goods set Id_Postgres = null;
 update dba.GoodsProperty set Id_Postgres = null;
 update dba.Measure set Id_Postgres = null;
@@ -943,5 +996,6 @@ update dba.ContractKind set Id_Postgres = null;
 
 update dba.Unit set Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = null;
 
+update dba.PriceList_byHistory set Id_Postgres = null;
 
 }
