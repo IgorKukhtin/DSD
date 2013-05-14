@@ -1,26 +1,26 @@
-п»ї-- Function: gpInsertUpdate_Object_JuridicalGroup()
+-- Function: gpInsertUpdate_Object_JuridicalGroup()
 
 -- DROP FUNCTION gpInsertUpdate_Object_JuridicalGroup();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalGroup(
-INOUT ioId	         Integer   ,   	/* РєР»СЋС‡ РѕР±СЉРµРєС‚Р° <Р“СЂСѓРїРїР° СЋСЂ Р»РёС†> */
-IN inCode                Integer   ,    /* РљРѕРґ РѕР±СЉРµРєС‚Р° <Р“СЂСѓРїРїР° СЋСЂ Р»РёС†> */
-IN inName                TVarChar  ,    /* РќР°Р·РІР°РЅРёРµ РѕР±СЉРµРєС‚Р° <Р“СЂСѓРїРїР° СЋСЂ Р»РёС†> */
-IN inJuridicalGroupId    Integer   ,    /* СЃСЃС‹Р»РєР° РЅР° РіСЂСѓРїРїСѓ СЋСЂ Р»РёС† */
-IN inSession             TVarChar       /* С‚РµРєСѓС‰РёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ */
+INOUT ioId	         Integer   ,   	-- ключ объекта <Группа юр лиц>
+IN inCode                Integer   ,    -- Код объекта <Группа юр лиц>
+IN inName                TVarChar  ,    -- Название объекта <Группа юр лиц>
+IN inJuridicalGroupId    Integer   ,    -- ссылка на группу юр лиц
+IN inSession             TVarChar       -- текущий пользователь
 )
   RETURNS integer AS
 $BODY$BEGIN
 --   PERFORM lpCheckRight(inSession, zc_Enum_Process_JuridicalGroup());
 
-   -- РџСЂРѕРІРµСЂРµРј СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚СЊ РёРјРµРЅРё
+   -- Проверем уникальность имени
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_JuridicalGroup(), inName);
-   -- РџСЂРѕРІРµСЂРµРј С†РёРєР» Сѓ РґРµСЂРµРІР°
+   -- Проверем цикл у дерева
    PERFORM lpCheck_Object_CycleLink(ioId, zc_ObjectLink_JuridicalGroup_Parent(), inJuridicalGroupId);
 
-   -- Р’СЃС‚Р°РІР»СЏРµРј РѕР±СЉРµРєС‚
+   -- Вставляем объект
    ioId := lpInsertUpdate_Object(ioId, zc_Object_JuridicalGroup(), inCode, inName);
-   -- Р’СЃС‚Р°РІР»СЏРµРј СЃСЃС‹Р»РєСѓ
+   -- Вставляем ссылку
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalGroup_Parent(), ioId, inJuridicalGroupId);
 
 END;$BODY$
@@ -29,5 +29,14 @@ END;$BODY$
 ALTER FUNCTION gpInsertUpdate_Object_JuridicalGroup(Integer, Integer, TVarChar, Integer, tvarchar)
   OWNER TO postgres;
 
-  
-                            
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.05.13                                        * Code Pages
+
+*/
+
+-- тест
+-- SELECT * FROM gpInsertUpdate_Object_JuridicalGroup()

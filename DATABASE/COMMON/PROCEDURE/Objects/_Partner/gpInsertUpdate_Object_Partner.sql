@@ -1,20 +1,20 @@
-п»ї-- Function: gpInsertUpdate_Object_Partner()
+-- Function: gpInsertUpdate_Object_Partner()
 
 -- DROP FUNCTION gpInsertUpdate_Object_Partner();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
-INOUT ioId	         Integer   ,   	/* РєР»СЋС‡ РѕР±СЉРµРєС‚Р° <РљРѕРЅС‚СЂР°РіРµРЅС‚> */
+INOUT ioId	         Integer   ,   	-- ключ объекта <Контрагент>
 IN inCode                Integer   ,
-IN inName                TVarChar  ,    /* РќР°Р·РІР°РЅРёРµ РѕР±СЉРµРєС‚Р° <РљРѕРЅС‚СЂР°РіРµРЅС‚> */
-IN inGLNCode             TVarChar  ,    /*  */
-IN inJuridicalId         Integer   ,    /* Р®СЂРёРґРёС‡РµСЃРєРѕРµ Р»РёС†Рѕ */
-IN inSession             TVarChar       /* С‚РµРєСѓС‰РёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ */
+IN inName                TVarChar  ,    -- Название объекта <Контрагент>
+IN inGLNCode             TVarChar  ,    --
+IN inJuridicalId         Integer   ,    -- Юридическое лицо
+IN inSession             TVarChar       -- текущий пользователь
 )
   RETURNS integer AS
 $BODY$BEGIN
 --   PERFORM lpCheckRight(inSession, zc_Enum_Process_Partner());
 
-   -- !!! РџСЂРѕРІРµСЂРµРј СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚СЊ РёРјРµРЅРё
+   -- !!! Проверем уникальность имени
    -- !!! PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Partner(), inName);
 
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Partner(), inCode, inName);
@@ -30,11 +30,11 @@ ALTER FUNCTION gpInsertUpdate_Object_Partner(Integer, Integer, TVarChar, TVarCha
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  14.05.13                                        * rem lpCheckUnique_Object_ValueData
 
 */
 
--- С‚РµСЃС‚
--- SELECT * FROM gpInsertUpdate_Object_Goods                            
+-- тест
+-- SELECT * FROM gpInsertUpdate_Object_Partner()

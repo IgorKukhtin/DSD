@@ -1,30 +1,30 @@
-п»ї-- Function: gpInsertUpdate_Object_Goods()
+-- Function: gpInsertUpdate_Object_Goods()
 
 -- DROP FUNCTION gpInsertUpdate_Object_Goods();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
-INOUT ioId	         Integer   ,   	/* РєР»СЋС‡ РѕР±СЉРµРєС‚Р° <РўРѕРІР°СЂ> */
-IN inCode                Integer   ,    /* РљРѕРґ РѕР±СЉРµРєС‚Р° <РўРѕРІР°СЂ> */
-IN inName                TVarChar  ,    /* РќР°Р·РІР°РЅРёРµ РѕР±СЉРµРєС‚Р° <РўРѕРІР°СЂ> */
-IN inGoodsGroupId        Integer   ,    /* СЃСЃС‹Р»РєР° РЅР° РіСЂСѓРїРїСѓ РўРѕРІР°СЂРѕРІ */
-IN inMeasureId           Integer   ,    /* СЃСЃС‹Р»РєР° РЅР° РµРґРёРЅРёС†Сѓ РёР·РјРµСЂРµРЅРёСЏ */
-IN inWeight              TFloat    ,    /* */
-IN inSession             TVarChar       /* С‚РµРєСѓС‰РёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ */
+INOUT ioId	         Integer   ,   	-- ключ объекта <Товар>
+IN inCode                Integer   ,    -- Код объекта <Товар>
+IN inName                TVarChar  ,    -- Название объекта <Товар>
+IN inGoodsGroupId        Integer   ,    -- ссылка на группу Товаров
+IN inMeasureId           Integer   ,    -- ссылка на единицу измерения
+IN inWeight              TFloat    ,    -- 
+IN inSession             TVarChar       -- текущий пользователь
 )
   RETURNS integer AS
 $BODY$BEGIN
 --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
 
-   -- !!! РџСЂРѕРІРµСЂРµРј СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚СЊ РёРјРµРЅРё
+   -- !!! Проверем уникальность имени
    -- !!! PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Goods(), inName);
 
-   -- Р’СЃС‚Р°РІР»СЏРµРј РѕР±СЉРµРєС‚
+   -- Вставляем объект
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Goods(), inCode, inName);
-   -- Р’СЃС‚Р°РІР»СЏРµРј СЃСЃС‹Р»РєСѓ
+   -- Вставляем ссылку
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_GoodsGroup(), ioId, inGoodsGroupId);
-   -- Р’СЃС‚Р°РІР»СЏРµРј СЃСЃС‹Р»РєСѓ
+   -- Вставляем ссылку
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Measure(), ioId, inMeasureId);
-   -- Р’СЃС‚Р°РІР»СЏРµРј РІРµСЃ
+   -- Вставляем вес
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Goods_Weight(), ioId, inWeight);
 
 END;$BODY$
@@ -35,10 +35,11 @@ ALTER FUNCTION gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, Integer, 
 
   
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  11.05.13                                        * rem lpCheckUnique_Object_ValueData
+
 */
 
--- С‚РµСЃС‚
--- SELECT * FROM gpInsertUpdate_Object_Goods                            
+-- тест
+-- SELECT * FROM gpInsertUpdate_Object_Goods
