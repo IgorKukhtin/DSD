@@ -998,4 +998,5 @@ update dba.Unit set Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = nul
 
 update dba.PriceList_byHistory set Id_Postgres = null;
 
+
 }
