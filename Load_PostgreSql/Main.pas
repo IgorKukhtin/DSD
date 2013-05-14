@@ -230,7 +230,8 @@ begin
              toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Parameters.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Parameters.ParamByName('inParentId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             //toStoredProc.Parameters.ParamByName('inParentId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             toStoredProc.Parameters.ParamByName('inGoodsGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
              toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
@@ -511,7 +512,8 @@ begin
              toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Parameters.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Parameters.ParamByName('inParentId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             //toStoredProc.Parameters.ParamByName('inParentId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             toStoredProc.Parameters.ParamByName('inJuridicalGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
              toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
@@ -742,7 +744,8 @@ begin
              toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Parameters.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Parameters.ParamByName('inParentId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             //toStoredProc.Parameters.ParamByName('inParentId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             toStoredProc.Parameters.ParamByName('inUnitGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
              toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
