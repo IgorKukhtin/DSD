@@ -222,6 +222,15 @@
 			<DCCReference Include="..\..\Forms\Units.pas">
 				<Form>UnitForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\dbMovementItemTest.pas"/>
+			<DCCReference Include="..\..\Forms\Income.pas">
+				<Form>IncomeForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\IncomeJournal.pas">
+				<Form>ParentForm2</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

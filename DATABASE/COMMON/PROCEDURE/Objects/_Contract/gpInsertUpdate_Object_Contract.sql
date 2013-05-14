@@ -39,10 +39,13 @@ LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpInsertUpdate_Object_Contract (Integer, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
 
 
+/*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  12.04.13                                        *
+
 */
 
 -- тест
+-- SELECT * FROM gpInsertUpdate_Object_Contract()

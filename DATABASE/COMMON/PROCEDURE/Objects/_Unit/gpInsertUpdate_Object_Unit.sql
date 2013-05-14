@@ -1,27 +1,27 @@
-п»ї-- Function: gpInsertUpdate_Object_Unit()
+-- Function: gpInsertUpdate_Object_Unit()
 
 -- DROP FUNCTION gpInsertUpdate_Object_Unit();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
-INOUT ioId	         Integer   ,   	/* РєР»СЋС‡ РѕР±СЉРµРєС‚Р° <РџРѕРґСЂР°Р·РґРµР»РµРЅРёРµ> */
-IN inCode                Integer   ,    /* РљРѕРґ РѕР±СЉРµРєС‚Р° <РџРѕРґСЂР°Р·РґРµР»РµРЅРёРµ> */
-IN inName                TVarChar  ,    /* РќР°Р·РІР°РЅРёРµ РѕР±СЉРµРєС‚Р° <РџРѕРґСЂР°Р·РґРµР»РµРЅРёРµ> */
-IN inUnitGroupId         Integer   ,    /* СЃСЃС‹Р»РєР° РЅР° РіСЂСѓРїРїСѓ РїРѕРґСЂР°Р·РґРµР»РµРЅРёР№ */
-IN inBranchId            Integer   ,    /* СЃСЃС‹Р»РєР° РЅР° С„РёР»РёР°Р» */
-IN inSession             TVarChar       /* С‚РµРєСѓС‰РёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ */
+INOUT ioId	         Integer   ,   	-- ключ объекта <Подразделение>
+IN inCode                Integer   ,    -- Код объекта <Подразделение>
+IN inName                TVarChar  ,    -- Название объекта <Подразделение>
+IN inUnitGroupId         Integer   ,    -- ссылка на группу подразделений
+IN inBranchId            Integer   ,    -- ссылка на филиал
+IN inSession             TVarChar       -- текущий пользователь
 )
   RETURNS integer AS
 $BODY$BEGIN
 --   PERFORM lpCheckRight(inSession, zc_Enum_Process_UnitGroup());
 
-   -- !!! -- РџСЂРѕРІРµСЂРµРј СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚СЊ РёРјРµРЅРё
+   -- !!! -- Проверем уникальность имени
    -- !!! PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Unit(), inName);
 
-   -- Р’СЃС‚Р°РІР»СЏРµРј РѕР±СЉРµРєС‚
+   -- Вставляем объект
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Unit(), inCode, inName);
-   -- Р’СЃС‚Р°РІР»СЏРµРј СЃСЃС‹Р»РєСѓ
+   -- Вставляем ссылку
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_UnitGroup(), ioId, inUnitGroupId);
-   -- Р’СЃС‚Р°РІР»СЏРµРј СЃСЃС‹Р»РєСѓ
+   -- Вставляем ссылку
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Branch(), ioId, inBranchId);
 
 END;$BODY$
@@ -33,11 +33,11 @@ ALTER FUNCTION gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, Integer, I
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  13.05.13                                        * rem lpCheckUnique_Object_ValueData
 
 */
 
--- С‚РµСЃС‚
--- SELECT * FROM gpInsertUpdate_Object_Goods                            
+-- тест
+-- SELECT * FROM gpInsertUpdate_Object_Unit ()                            

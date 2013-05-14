@@ -19,10 +19,12 @@ inherited GoodsForm: TGoodsForm
     DataController.ParentField = 'GoodsGroupId'
     DataController.KeyField = 'Id'
     Navigator.Buttons.CustomButtons = <>
+    Navigator.Buttons.Filter.Visible = False
     OptionsBehavior.IncSearch = True
     OptionsData.Editing = False
     OptionsData.Deleting = False
     OptionsView.ColumnAutoWidth = True
+    PopupMenus.ColumnHeaderMenu.UseBuiltInMenu = True
     RootValue = -1
     TabOrder = 4
     object cxDBTreeListcxDBTreeListColumn1: TcxDBTreeListColumn

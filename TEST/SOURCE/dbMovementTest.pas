@@ -21,6 +21,8 @@ type
   TMovementIncomeTest = class(TObjectTest)
   private
     function InsertDefault: integer; override;
+  protected
+    procedure SetDataSetParam; override;
   public
     function InsertUpdateMovementIncome(Id: Integer; InvNumber: String; OperDate: TDateTime;
              FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId, PersonalPackerId: Integer;
@@ -110,6 +112,13 @@ begin
   FParams.AddParam('inVATPercent', ftFloat, ptInput, VATPercent);
   FParams.AddParam('inDiscountPercent', ftFloat, ptInput, DiscountPercent);
   result := InsertUpdate(FParams);
+end;
+
+procedure TMovementIncomeTest.SetDataSetParam;
+begin
+  inherited;
+  FParams.AddParam('inStartDate', ftDateTime, ptInput, Date);
+  FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
 end;
 
 initialization

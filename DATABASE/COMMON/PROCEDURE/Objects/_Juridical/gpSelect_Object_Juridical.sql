@@ -1,46 +1,56 @@
-п»ї-- Function: gpSelect_Object_Juridical()
+-- Function: gpSelect_Object_Juridical()
 
 --DROP FUNCTION gpSelect_Object_Juridical(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical(
-IN inSession     TVarChar       /* С‚РµРєСѓС‰РёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ */)
+    IN inSession        TVarChar       -- сессия пользователя
+)
 RETURNS TABLE (Id Integer, Code Integer, JuridicalGroupName TVarChar, Name TVarChar, isErased BOOLEAN, JuridicalGroupId Integer) AS
 $BODY$BEGIN
 
-   --PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
+   -- проверка прав пользователя на вызов процедуры
+   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_User());
 
-     RETURN QUERY 
-      SELECT 
-       Object.Id
-     , Object.ObjectCode
-     , Object.ValueData         AS JuridicalGroupName
-     , CAST('' AS TVarChar)     AS Name
-     , Object.isErased
-     , ObjectLink.ChildObjectId AS JuridicalGroupId
-     FROM Object
-LEFT JOIN ObjectLink 
-       ON ObjectLink.ObjectId = Object.Id
-      AND ObjectLink.DescId = zc_ObjectLink_JuridicalGroup_Parent()
-    WHERE Object.DescId = zc_Object_JuridicalGroup()
-    UNION
-    SELECT 
-       Object.Id
-     , Object.ObjectCode
-     , CAST('' AS TVarChar)     AS JuridicalGroupName
-     , Object.ValueData         AS Name
-     , Object.isErased
-     , Juridical_JuridicalGroup.ChildObjectId AS JuridicalGroupId
-     FROM Object
-LEFT JOIN ObjectLink AS Juridical_JuridicalGroup
-       ON Juridical_JuridicalGroup.ObjectId = Object.Id 
-      AND Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
-    WHERE Object.DescId = zc_Object_Juridical();
+   RETURN QUERY 
+   SELECT 
+         Object_JuridicalGroup.Id
+       , Object_JuridicalGroup.ObjectCode
+       , Object_JuridicalGroup.ValueData AS JuridicalGroupName
+       , CAST ('' AS TVarChar)           AS Name
+       , Object_JuridicalGroup.isErased
+       , ObjectLink_JuridicalGroup_Parent.ChildObjectId AS JuridicalGroupId
+   FROM Object AS Object_JuridicalGroup
+        LEFT JOIN ObjectLink AS ObjectLink_JuridicalGroup_Parent
+                 ON ObjectLink_JuridicalGroup_Parent.ObjectId = Object_JuridicalGroup.Id
+                AND ObjectLink_JuridicalGroup_Parent.DescId = zc_ObjectLink_JuridicalGroup_Parent()
+   WHERE Object_JuridicalGroup.DescId = zc_Object_JuridicalGroup()
+  UNION
+   SELECT 
+         Object_Juridical.Id
+       , Object_Juridical.ObjectCode
+       , CAST ('' AS TVarChar)     AS JuridicalGroupName
+       , Object_Juridical.ValueData         AS Name
+       , Object_Juridical.isErased
+       , ObjectLink_Juridical_JuridicalGroup.ChildObjectId AS JuridicalGroupId
+   FROM Object AS Object_Juridical
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
+                 ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id 
+                AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+   WHERE Object_Juridical.DescId = zc_Object_Juridical();
   
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 100;
-ALTER FUNCTION gpSelect_Object_Juridical(TVarChar)
-  OWNER TO postgres;
 
+LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpSelect_Object_Juridical (TVarChar) OWNER TO postgres;
+
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.05.13                                        *
+
+*/
+
+-- тест
 -- SELECT * FROM gpSelect_Object_Juridical('2')

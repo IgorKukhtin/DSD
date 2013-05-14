@@ -1,22 +1,22 @@
-п»ї-- Function: gpInsertUpdate_Object_Juridical()
+-- Function: gpInsertUpdate_Object_Juridical()
 
 -- DROP FUNCTION gpInsertUpdate_Object_Juridical();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
-INOUT ioId	         Integer   ,   	/* РєР»СЋС‡ РѕР±СЉРµРєС‚Р° <Р®СЂРёРґРёС‡РµСЃРєРѕРµ Р»РёС†Рѕ> */
+INOUT ioId	         Integer   ,   	-- ключ объекта <Юридическое лицо>
 IN inCode                Integer   ,
-IN inName                TVarChar  ,    /* РќР°Р·РІР°РЅРёРµ РѕР±СЉРµРєС‚Р° <Р®СЂРёРґРёС‡РµСЃРєРѕРµ Р»РёС†Рѕ> */
-IN inGLNCode             TVarChar  ,    /*  */
-IN inisCorporate         Boolean   ,    /*  */
-IN inJuridicalGroupId    Integer   ,    /*  */
-IN inGoodsPropertyId     Integer   ,    /*  */
-IN inSession             TVarChar       /* С‚РµРєСѓС‰РёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ */
+IN inName                TVarChar  ,    -- Название объекта <Юридическое лицо>
+IN inGLNCode             TVarChar  ,    --
+IN inisCorporate         Boolean   ,    --
+IN inJuridicalGroupId    Integer   ,    --
+IN inGoodsPropertyId     Integer   ,    --
+IN inSession             TVarChar       -- текущий пользователь
 )
   RETURNS integer AS
 $BODY$BEGIN
 --   PERFORM lpCheckRight(inSession, zc_Enum_Process_Juridical());
 
-   -- !!! РџСЂРѕРІРµСЂРµРј СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚СЊ РёРјРµРЅРё
+   -- !!! Проверем уникальность имени
    -- !!! PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Juridical(), inName);
 
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Juridical(), inCode, inName);
@@ -34,11 +34,11 @@ ALTER FUNCTION gpInsertUpdate_Object_Juridical(Integer, Integer, TVarChar, TVarC
   
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  12.05.13                                        * rem lpCheckUnique_Object_ValueData
 
 */
 
--- С‚РµСЃС‚
--- SELECT * FROM gpInsertUpdate_Object_Goods                            
+-- тест
+-- SELECT * FROM gpInsertUpdate_Object_Juridical()

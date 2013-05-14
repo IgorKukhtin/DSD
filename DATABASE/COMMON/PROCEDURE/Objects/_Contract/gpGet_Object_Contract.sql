@@ -3,7 +3,7 @@
 -- DROP FUNCTION gpGet_Object_Contract (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Contract(
-    IN inId             Integer,       -- Ключ объекта <Договор>
+    IN inId             Integer,       -- ключ объекта <Договор>
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, Comment TVarChar, isErased Boolean) AS
@@ -33,10 +33,12 @@ LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Object_Contract (Integer, TVarChar) OWNER TO postgres;
 
 
+/*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  12.04.13                                        *
+
 */
 
 -- тест

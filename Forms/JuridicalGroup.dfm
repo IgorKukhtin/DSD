@@ -16,7 +16,7 @@ inherited JuridicalGroupForm: TJuridicalGroupForm
       item
       end>
     DataController.DataSource = DataSource
-    DataController.ParentField = 'JuridicalGroupId'
+    DataController.ParentField = 'ParentId'
     DataController.KeyField = 'Id'
     Navigator.Buttons.CustomButtons = <>
     OptionsView.ColumnAutoWidth = True

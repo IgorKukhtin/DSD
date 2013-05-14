@@ -19,6 +19,7 @@ type
     property spInsertUpdate: string read FspInsertUpdate write FspInsertUpdate;
     function InsertUpdate(dsdParams: TdsdParams): Integer;
     function InsertDefault: integer; virtual; abstract;
+    procedure SetDataSetParam; virtual;
   public
     function GetDefault: integer;
     function GetDataSet: TDataSet;
@@ -135,7 +136,8 @@ begin
        DataSets.Add.DataSet := TClientDataSet.Create(nil);
     StoredProcName := FspSelect;
     OutputType := otDataSet;
-    Params.Clear;
+    SetDataSetParam;
+    Params.Assign(FParams);
     Execute;
     result := DataSets[0].DataSet;
   end;
@@ -171,6 +173,11 @@ begin
     Execute;
     Result := StrToInt(ParamByName('ioId').Value);
   end;
+end;
+
+procedure TObjectTest.SetDataSetParam;
+begin
+  FdsdStoredProc.Params.Clear;
 end;
 
 { TDataBaseObjectTest }
@@ -577,7 +584,7 @@ end;
 
 function TGoodsTest.InsertDefault: integer;
 begin
-  result := InsertUpdateGoods(0, 1, 'Товар 1 ', 0, 0, 1.0)
+  result := InsertUpdateGoods(0, 1, 'Товар 1', 0, 0, 1.0)
 end;
 
 function TGoodsTest.InsertUpdateGoods(Id, Code: Integer; Name: String;
