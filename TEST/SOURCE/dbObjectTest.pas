@@ -136,6 +136,7 @@ begin
        DataSets.Add.DataSet := TClientDataSet.Create(nil);
     StoredProcName := FspSelect;
     OutputType := otDataSet;
+    FParams.Clear;
     SetDataSetParam;
     Params.Assign(FParams);
     Execute;
