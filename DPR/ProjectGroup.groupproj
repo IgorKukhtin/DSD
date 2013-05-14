@@ -15,7 +15,7 @@
 			<Projects Include="DSD.dproj">
 				<Dependencies/>
 			</Projects>
-			<Projects Include="..\Load_PostgreSql\XE2\Load_PostgreSql.dproj">
+			<Projects Include="Load_PostgreSql.dproj">
 				<Dependencies/>
 			</Projects>
 		</ItemGroup>
@@ -63,13 +63,13 @@
 			<MSBuild Projects="DSD.dproj" Targets="Make"/>
 		</Target>
 		<Target Name="Load_PostgreSql">
-			<MSBuild Projects="..\Load_PostgreSql\XE2\Load_PostgreSql.dproj"/>
+			<MSBuild Projects="Load_PostgreSql.dproj"/>
 		</Target>
 		<Target Name="Load_PostgreSql:Clean">
-			<MSBuild Projects="..\Load_PostgreSql\XE2\Load_PostgreSql.dproj" Targets="Clean"/>
+			<MSBuild Projects="Load_PostgreSql.dproj" Targets="Clean"/>
 		</Target>
 		<Target Name="Load_PostgreSql:Make">
-			<MSBuild Projects="..\Load_PostgreSql\XE2\Load_PostgreSql.dproj" Targets="Make"/>
+			<MSBuild Projects="Load_PostgreSql.dproj" Targets="Make"/>
 		</Target>
 		<Target Name="Build">
 			<CallTarget Targets="DSDComponent;DSDDesignComponent;DSDTest;DSD;Load_PostgreSql"/>

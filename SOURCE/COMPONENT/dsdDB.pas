@@ -82,6 +82,7 @@ type
     procedure FillOutputParams(XML: String);
     function GetDataSet: TClientDataSet;
     procedure SetDataSet(const Value: TClientDataSet);
+    procedure DataSetRefresh;
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
@@ -142,12 +143,28 @@ begin
   OutputType := otDataSet;
 end;
 
+procedure TdsdStoredProc.DataSetRefresh;
+var B: TBookMark;
+begin
+  if (DataSets.Count > 0) and
+      Assigned(DataSets[0]) and
+      Assigned(DataSets[0].DataSet) then
+   begin
+     if DataSets[0].DataSet.Active then
+        B := DataSets[0].DataSet.GetBookmark;
+     DataSets[0].DataSet.XMLData := TStorageFactory.GetStorage.ExecuteProc(GetXML);
+     if Assigned(B) then
+     begin
+        DataSets[0].DataSet.GotoBookmark(B);
+        DataSets[0].DataSet.FreeBookmark(B);
+     end;
+   end;
+end;
+
 function TdsdStoredProc.Execute;
 begin
   result := '';
-  if (OutputType = otDataSet) and (DataSets.Count > 0) and
-      Assigned(DataSets[0]) and Assigned(DataSets[0].DataSet) then
-         DataSets[0].DataSet.XMLData := TStorageFactory.GetStorage.ExecuteProc(GetXML);
+  if (OutputType = otDataSet) then DataSetRefresh;
   if (OutputType = otResult) then
      FillOutputParams(TStorageFactory.GetStorage.ExecuteProc(GetXML));
   if (OutputType = otBlob) then

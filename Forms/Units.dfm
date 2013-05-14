@@ -23,23 +23,25 @@ inherited UnitForm: TUnitForm
     OptionsData.Editing = False
     OptionsData.Deleting = False
     OptionsView.ColumnAutoWidth = True
+    OptionsView.GridLines = tlglBoth
+    OptionsView.TreeLineStyle = tllsSolid
     RootValue = -1
     TabOrder = 4
-    object cxDBTreeListcxDBTreeListColumn1: TcxDBTreeListColumn
-      Caption.Text = #1050#1086#1076
-      DataBinding.FieldName = 'Code'
-      Width = 59
-      Position.ColIndex = 1
+    object cxDBTreeListcxDBTreeListColumn2: TcxDBTreeListColumn
+      Caption.Text = #1043#1088#1091#1087#1087#1072
+      DataBinding.FieldName = 'UnitGroupName'
+      Width = 110
+      Position.ColIndex = 0
       Position.RowIndex = 0
       Position.BandIndex = 0
       Summary.FooterSummaryItems = <>
       Summary.GroupFooterSummaryItems = <>
     end
-    object cxDBTreeListcxDBTreeListColumn2: TcxDBTreeListColumn
-      Caption.Text = #1043#1088#1091#1087#1087#1072
-      DataBinding.FieldName = 'JuridicalGroupName'
-      Width = 110
-      Position.ColIndex = 0
+    object cxDBTreeListcxDBTreeListColumn1: TcxDBTreeListColumn
+      Caption.Text = #1050#1086#1076
+      DataBinding.FieldName = 'Code'
+      Width = 59
+      Position.ColIndex = 1
       Position.RowIndex = 0
       Position.BandIndex = 0
       Summary.FooterSummaryItems = <>

@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalGroup(
 INOUT ioId	         Integer   ,   	-- ключ объекта <Группа юр лиц>
 IN inCode                Integer   ,    -- Код объекта <Группа юр лиц>
 IN inName                TVarChar  ,    -- Название объекта <Группа юр лиц>
-IN inJuridicalGroupId    Integer   ,    -- ссылка на группу юр лиц
+IN inParentId            Integer   ,    -- ссылка на группу юр лиц
 IN inSession             TVarChar       -- текущий пользователь
 )
   RETURNS integer AS
@@ -16,12 +16,12 @@ $BODY$BEGIN
    -- Проверем уникальность имени
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_JuridicalGroup(), inName);
    -- Проверем цикл у дерева
-   PERFORM lpCheck_Object_CycleLink(ioId, zc_ObjectLink_JuridicalGroup_Parent(), inJuridicalGroupId);
+   PERFORM lpCheck_Object_CycleLink(ioId, zc_ObjectLink_JuridicalGroup_Parent(), inParentId);
 
    -- Вставляем объект
    ioId := lpInsertUpdate_Object(ioId, zc_Object_JuridicalGroup(), inCode, inName);
    -- Вставляем ссылку
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalGroup_Parent(), ioId, inJuridicalGroupId);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalGroup_Parent(), ioId, inParentId);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE
