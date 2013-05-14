@@ -17,7 +17,7 @@ insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
 SELECT zc_ObjectLink_Cash_Branch(), 'Cash_Branch', 'Связь кассы с филиалом', zc_Object_Cash(), zc_Object_Branch() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_Cash_Branch());
 
 insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
-SELECT zc_ObjectLink_JuridicalGroup_JuridicalGroup(), 'JuridicalGroup_JuridicalGroup', 'Связь группы юр лиц с группой юр лиц', zc_Object_JuridicalGroup(), zc_Object_JuridicalGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_JuridicalGroup_JuridicalGroup());
+SELECT zc_ObjectLink_JuridicalGroup_Parent(), 'JuridicalGroup_Parent', 'Связь группы юр лиц с группой юр лиц', zc_Object_JuridicalGroup(), zc_Object_JuridicalGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_JuridicalGroup_Parent());
 
 insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
 SELECT zc_ObjectLink_Juridical_JuridicalGroup(), 'Juridical_JuridicalGroup', 'Связь юр лица с группой юр лиц', zc_Object_Juridical(), zc_Object_JuridicalGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_Juridical_JuridicalGroup());
@@ -32,13 +32,13 @@ insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
 SELECT zc_ObjectLink_Branch_Juridical(), 'Branch_Juridical', 'Связь филиала с юр лицом', zc_Object_Branch(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_Branch_Juridical());
 
 insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
-SELECT zc_ObjectLink_UnitGroup_UnitGroup(), 'UnitGroup_UnitGroup', 'Связь группы подразделений с группой подразделений', zc_Object_UnitGroup(), zc_Object_UnitGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_UnitGroup_UnitGroup());
+SELECT zc_ObjectLink_UnitGroup_Parent(), 'UnitGroup_Parent', 'Связь группы подразделений с группой подразделений', zc_Object_UnitGroup(), zc_Object_UnitGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_UnitGroup_Parent());
 
 insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
 SELECT zc_ObjectLink_Bank_Juridical(), 'Bank_Juridical', 'Связь банка с юр лицом', zc_Object_Bank(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_Bank_Juridical());
 
 insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
-SELECT zc_ObjectLink_GoodsGroup_GoodsGroup(), 'GoodsGroup_GoodsGroup', 'Связь группы товаров с группой товаров', zc_Object_GoodsGroup(), zc_Object_GoodsGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_GoodsGroup_GoodsGroup());
+SELECT zc_ObjectLink_GoodsGroup_Parent(), 'GoodsGroup_Parent', 'Связь группы товаров с группой товаров', zc_Object_GoodsGroup(), zc_Object_GoodsGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_GoodsGroup_Parent());
 
 insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
 SELECT zc_ObjectLink_Goods_GoodsGroup(), 'Goods_GoodsGroup', 'Связь товаров с группой товаров', zc_Object_Goods(), zc_Object_GoodsGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_Goods_GoodsGroup());

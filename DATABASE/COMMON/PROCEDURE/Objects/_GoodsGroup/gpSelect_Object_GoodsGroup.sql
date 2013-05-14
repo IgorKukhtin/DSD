@@ -4,23 +4,23 @@
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsGroup(
 IN inSession     TVarChar       /* текущий пользователь */)
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, GoodsGroupId Integer) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, ParentId Integer) AS
 $BODY$BEGIN
 
    --PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
-   RETURN QUERY 
-   SELECT 
-     Object.Id
-   , Object.ObjectCode
-   , Object.ValueData
-   , Object.isErased
-   , ObjectLink.ChildObjectId AS GoodsGroupId
-   FROM Object
-   JOIN ObjectLink 
-     ON ObjectLink.ObjectId = Object.Id
-    AND ObjectLink.DescId = zc_ObjectLink_GoodsGroup_GoodsGroup()
-   WHERE Object.DescId = zc_Object_GoodsGroup();
+     RETURN QUERY 
+     SELECT 
+       Object.Id
+     , Object.ObjectCode
+     , Object.ValueData
+     , Object.isErased
+     , ObjectLink.ChildObjectId AS ParentId
+     FROM Object
+LEFT JOIN ObjectLink 
+       ON ObjectLink.ObjectId = Object.Id
+      AND ObjectLink.DescId = zc_ObjectLink_GoodsGroup_Parent()
+    WHERE Object.DescId = zc_Object_GoodsGroup();
   
 END;$BODY$
   LANGUAGE plpgsql VOLATILE

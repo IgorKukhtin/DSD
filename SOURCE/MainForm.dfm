@@ -71,11 +71,6 @@ object MainForm: TMainForm
       Action = actExit
       Category = 0
     end
-    object bbGoodsGuides: TdxBarButton
-      Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1090#1086#1074#1072#1088#1086#1074
-      Category = 0
-      Visible = ivAlways
-    end
     object bbDocuments: TdxBarSubItem
       Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       Category = 0
@@ -153,19 +148,19 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbGoodsKind'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMeasure'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarSeparator1'
         end
         item
           Visible = True
           ItemName = 'bbGoodsProperty'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGoodsGuides'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMeasure'
         end>
     end
     object bbMeasure: TdxBarButton
@@ -227,6 +222,10 @@ object MainForm: TMainForm
     end
     object bbGoods: TdxBarButton
       Action = actGoods
+      Category = 0
+    end
+    object bbGoodsKind: TdxBarButton
+      Action = actGoodsKind
       Category = 0
     end
   end
@@ -336,6 +335,22 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actBank: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1041#1072#1085#1082#1080
+      Hint = #1041#1072#1085#1082#1080
+      FormName = 'TBankForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actBankAccount: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1077' '#1089#1095#1077#1090#1072
+      Hint = #1056#1072#1089#1095#1077#1090#1085#1099#1077' '#1089#1095#1077#1090#1072
+      FormName = 'TBankAccountForm'
+      GuiParams = <>
+      isShowModal = False
+    end
     object actJuridical: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
@@ -356,6 +371,22 @@ object MainForm: TMainForm
       Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
       Hint = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
       FormName = 'TPartnerForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actCash: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1050#1072#1089#1089#1099
+      Hint = #1050#1072#1089#1089#1099
+      FormName = 'TCashForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actCurrency: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1042#1072#1083#1102#1090#1099
+      Hint = #1042#1072#1083#1102#1090#1099
+      FormName = 'TCurrencyForm'
       GuiParams = <>
       isShowModal = False
     end

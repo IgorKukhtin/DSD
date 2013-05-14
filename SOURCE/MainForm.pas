@@ -13,7 +13,6 @@ type
     dxBarManager: TdxBarManager;
     dxBarManager1Bar1: TdxBar;
     bbExit: TdxBarButton;
-    bbGoodsGuides: TdxBarButton;
     bbDocuments: TdxBarSubItem;
     bbGuides: TdxBarSubItem;
     ActionList: TActionList;
@@ -49,6 +48,11 @@ type
     bbUnit: TdxBarButton;
     bbGoodsGroup: TdxBarButton;
     bbGoods: TdxBarButton;
+    actBank: TdsdOpenForm;
+    actBankAccount: TdsdOpenForm;
+    actCash: TdsdOpenForm;
+    actCurrency: TdsdOpenForm;
+    bbGoodsKind: TdxBarButton;
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }

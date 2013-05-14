@@ -4,7 +4,7 @@
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_JuridicalGroup(
 IN inSession     TVarChar       /* текущий пользователь */)
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, JuridicalGroupId Integer) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, ParentId Integer) AS
 $BODY$BEGIN
 
    --PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
@@ -15,11 +15,11 @@ $BODY$BEGIN
      , Object.ObjectCode
      , Object.ValueData
      , Object.isErased
-     , ObjectLink.ChildObjectId AS JuridicalGroupId
+     , ObjectLink.ChildObjectId AS ParentId
      FROM Object
 LEFT JOIN ObjectLink 
        ON ObjectLink.ObjectId = Object.Id
-      AND ObjectLink.DescId = zc_ObjectLink_JuridicalGroup_JuridicalGroup()
+      AND ObjectLink.DescId = zc_ObjectLink_JuridicalGroup_Parent()
     WHERE Object.DescId = zc_Object_JuridicalGroup();
   
 END;$BODY$

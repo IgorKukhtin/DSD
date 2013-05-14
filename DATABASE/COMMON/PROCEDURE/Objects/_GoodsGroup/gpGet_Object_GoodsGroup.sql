@@ -5,7 +5,7 @@
 CREATE OR REPLACE FUNCTION gpGet_Object_GoodsGroup(
 IN inId          Integer,       /* Группа товаров */
 IN inSession     TVarChar       /* текущий пользователь */)
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, GoodsGroupId Integer, GoodsGroupName TVarChar) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, ParentId Integer, ParentName TVarChar) AS
 $BODY$BEGIN
 
 --   PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
@@ -16,12 +16,12 @@ $BODY$BEGIN
    , Object.ObjectCode
    , Object.ValueData
    , Object.isErased
-   , GoodsGroup.Id AS GoodsGroupId
-   , GoodsGroup.ValueData AS GoodsGroupName
+   , GoodsGroup.Id AS ParentId
+   , GoodsGroup.ValueData AS ParentName
    FROM Object
    JOIN ObjectLink 
      ON ObjectLink.ObjectId = Object.Id
-    AND ObjectLink.DescId = zc_ObjectLink_GoodsGroup_GoodsGroup()
+    AND ObjectLink.DescId = zc_ObjectLink_GoodsGroup_Parent()
    JOIN Object AS GoodsGroup
      ON GoodsGroup.Id = ObjectLink.ChildObjectId
    WHERE Object.Id = inId;

@@ -4,7 +4,7 @@
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_UnitGroup(
 IN inSession     TVarChar       /* текущий пользователь */)
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, UnitGroupId Integer) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, ParentId Integer) AS
 $BODY$BEGIN
 
    --PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
@@ -15,11 +15,11 @@ $BODY$BEGIN
    , Object.ObjectCode
    , Object.ValueData
    , Object.isErased
-   , ObjectLink.ChildObjectId AS UnitGroupId
+   , ObjectLink.ChildObjectId AS ParentId
    FROM Object
    JOIN ObjectLink 
      ON ObjectLink.ObjectId = Object.Id
-    AND ObjectLink.DescId = zc_ObjectLink_UnitGroup_UnitGroup()
+    AND ObjectLink.DescId = zc_ObjectLink_UnitGroup_Parent()
    WHERE Object.DescId = zc_Object_UnitGroup();
   
 END;$BODY$

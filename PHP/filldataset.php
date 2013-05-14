@@ -18,7 +18,7 @@
         $i = 0;
         $res .= '<ROW';
         foreach ($line as $col_value) {
-           $res .= ' '.$fieldname[$i].'="'.$col_value.'"'; 
+           $res .= ' '.$fieldname[$i].'="'.str_replace('"', '&quot;', $col_value).'"'; 
            $i++;
         }
         $res .= '/>';

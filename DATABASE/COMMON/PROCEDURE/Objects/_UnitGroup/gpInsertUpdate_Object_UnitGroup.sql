@@ -16,12 +16,12 @@ $BODY$BEGIN
    -- Проверем уникальность имени
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_UnitGroup(), inName);
    -- Проверем цикл у дерева
-   PERFORM lpCheck_Object_CycleLink(ioId, zc_ObjectLink_UnitGroup_UnitGroup(), inUnitGroupId);
+   PERFORM lpCheck_Object_CycleLink(ioId, zc_ObjectLink_UnitGroup_Parent(), inUnitGroupId);
 
    -- Вставляем объект
    ioId := lpInsertUpdate_Object(ioId, zc_Object_UnitGroup(), inCode, inName);
    -- Вставляем ссылку
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_UnitGroup_UnitGroup(), ioId, inUnitGroupId);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_UnitGroup_Parent(), ioId, inUnitGroupId);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE

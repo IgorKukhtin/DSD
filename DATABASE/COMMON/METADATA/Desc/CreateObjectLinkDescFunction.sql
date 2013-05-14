@@ -52,7 +52,7 @@ $BODY$BEGIN
   RETURN 7;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_ObjectLink_JuridicalGroup_JuridicalGroup()
+CREATE OR REPLACE FUNCTION zc_ObjectLink_JuridicalGroup_Parent()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 8;
@@ -94,7 +94,7 @@ $BODY$BEGIN
   RETURN 14;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_ObjectLink_UnitGroup_UnitGroup()
+CREATE OR REPLACE FUNCTION zc_ObjectLink_UnitGroup_Parent()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 15;
@@ -106,7 +106,7 @@ $BODY$BEGIN
   RETURN 16;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsGroup_GoodsGroup()
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsGroup_Parent()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 17;
