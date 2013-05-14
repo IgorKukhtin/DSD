@@ -15,6 +15,9 @@
 			<Projects Include="DSD.dproj">
 				<Dependencies/>
 			</Projects>
+			<Projects Include="..\Load_PostgreSql\XE2\Load_PostgreSql.dproj">
+				<Dependencies/>
+			</Projects>
 		</ItemGroup>
 		<ProjectExtensions>
 			<Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -59,14 +62,23 @@
 		<Target Name="DSD:Make">
 			<MSBuild Projects="DSD.dproj" Targets="Make"/>
 		</Target>
+		<Target Name="Load_PostgreSql">
+			<MSBuild Projects="..\Load_PostgreSql\XE2\Load_PostgreSql.dproj"/>
+		</Target>
+		<Target Name="Load_PostgreSql:Clean">
+			<MSBuild Projects="..\Load_PostgreSql\XE2\Load_PostgreSql.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="Load_PostgreSql:Make">
+			<MSBuild Projects="..\Load_PostgreSql\XE2\Load_PostgreSql.dproj" Targets="Make"/>
+		</Target>
 		<Target Name="Build">
-			<CallTarget Targets="DSDComponent;DSDDesignComponent;DSDTest;DSD"/>
+			<CallTarget Targets="DSDComponent;DSDDesignComponent;DSDTest;DSD;Load_PostgreSql"/>
 		</Target>
 		<Target Name="Clean">
-			<CallTarget Targets="DSDComponent:Clean;DSDDesignComponent:Clean;DSDTest:Clean;DSD:Clean"/>
+			<CallTarget Targets="DSDComponent:Clean;DSDDesignComponent:Clean;DSDTest:Clean;DSD:Clean;Load_PostgreSql:Clean"/>
 		</Target>
 		<Target Name="Make">
-			<CallTarget Targets="DSDComponent:Make;DSDDesignComponent:Make;DSDTest:Make;DSD:Make"/>
+			<CallTarget Targets="DSDComponent:Make;DSDDesignComponent:Make;DSDTest:Make;DSD:Make;Load_PostgreSql:Make"/>
 		</Target>
 		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')" Project="$(BDS)\Bin\CodeGear.Group.Targets"/>
 	</Project>
