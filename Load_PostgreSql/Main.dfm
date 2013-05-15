@@ -1,6 +1,6 @@
 object MainForm: TMainForm
   Left = 421
-  Top = 37
+  Top = 150
   Width = 1024
   Height = 674
   Caption = 'MainForm'
@@ -17,7 +17,7 @@ object MainForm: TMainForm
   object DBGrid: TDBGrid
     Left = 0
     Top = 0
-    Width = 746
+    Width = 711
     Height = 591
     Align = alClient
     DataSource = DataSource
@@ -73,9 +73,9 @@ object MainForm: TMainForm
     end
   end
   object Panel1: TPanel
-    Left = 746
+    Left = 711
     Top = 0
-    Width = 270
+    Width = 305
     Height = 591
     Align = alRight
     BevelOuter = bvNone
@@ -256,6 +256,24 @@ object MainForm: TMainForm
       Caption = '5.2. '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' - '#1094#1077#1085#1099
       Enabled = False
       TabOrder = 16
+    end
+    object cbGoodsProperty: TCheckBox
+      Tag = 10
+      Left = 15
+      Top = 391
+      Width = 289
+      Height = 17
+      Caption = '6.1. '#1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1099' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074
+      TabOrder = 17
+    end
+    object cbGoodsPropertyValue: TCheckBox
+      Tag = 10
+      Left = 15
+      Top = 411
+      Width = 289
+      Height = 17
+      Caption = '6.2. '#1047#1085#1072#1095#1077#1085#1080#1103' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074' '#1076#1083#1103' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1072
+      TabOrder = 18
     end
   end
   object DataSource: TDataSource

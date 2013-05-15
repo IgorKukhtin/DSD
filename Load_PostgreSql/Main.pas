@@ -40,6 +40,8 @@ type
     cbUnit: TCheckBox;
     cbPriceList: TCheckBox;
     cbPriceListItems: TCheckBox;
+    cbGoodsProperty: TCheckBox;
+    cbGoodsPropertyValue: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -69,6 +71,8 @@ type
     procedure pLoadUnitGroup;
     procedure pLoadUnit;
     procedure pLoadPriceList;
+    procedure pLoadGoodsProperty;
+    procedure pLoadGoodsPropertyValue;
 
     procedure myEnabledCB (cb:TCheckBox);
     procedure myDisabledCB (cb:TCheckBox);
@@ -131,6 +135,8 @@ begin
      if not fStop then pLoadUnitGroup;
      if not fStop then pLoadUnit;
      if not fStop then pLoadPriceList;
+     if not fStop then pLoadGoodsProperty;
+     if not fStop then pLoadGoodsPropertyValue;
      //
      Gauge.Visible:=false;
      DBGrid.Enabled:=true;
@@ -555,9 +561,26 @@ begin
         Add('            when Unit_parent9.Id1_Postgres is not null then Unit_parent9.Id1_Postgres');
         Add('            else Unit_parentAll.Id1_Postgres');
         Add('       end as ParentId_Postgres');
+        Add('     , GoodsProperty_PG.Id_Postgres as GoodsPropertyId_PG');
         Add('     , isnull(zf_ChangeTVarCharMediumToNull(ClientInformation.GLNMain),ClientInformation.GLN) as GLNCode');
         Add('from dba.Unit as Unit_all');
         Add('     join dba.Unit on Unit.Id = isnull(zf_ChangeIntToNull(Unit_all.DolgByUnitID), isnull(zf_ChangeIntToNull(Unit_all.InformationFromUnitID), Unit_all.Id))');
+        Add('     left outer join dba.GoodsProperty_Postgres as GoodsProperty_PG on GoodsProperty_PG.Id= case when fIsClient_ATB(Unit.Id)=zc_rvYes() then 1'
+                                                                                                       +'    when fIsClient_OK(Unit.Id)=zc_rvYes() then 2'
+                                                                                                       +'    when fIsClient_Metro(Unit.Id)=zc_rvYes() then 3'
+                                                                                                       +'    when fIsClient_Fozzi(Unit.Id)=zc_rvYes() or fIsClient_FozziM(Unit.Id)=zc_rvYes() then 5'
+                                                                                                       +'    when fIsClient_Kisheni(Unit.Id)=zc_rvYes() then 6'
+                                                                                                       +'    when fIsClient_Vivat(Unit.Id)=zc_rvYes() then 7'
+                                                                                                       +'    when fIsClient_Billa(Unit.Id)=zc_rvYes() then 8'
+                                                                                                       +'    when fIsClient_Amstor(Unit.Id)=zc_rvYes() then 9'
+                                                                                                       +'    when fIsClient_Omega(Unit.Id)=zc_rvYes() then 10'
+                                                                                                       +'    when fIsClient_Vostorg(Unit.Id)=zc_rvYes() then 11'
+                                                                                                       +'    when fIsClient_Ashan(Unit.Id)=zc_rvYes() then 12'
+                                                                                                       +'    when fIsClient_Real(Unit.Id)=zc_rvYes() then 13'
+                                                                                                       +'    when fIsClient_GD(Unit.Id)=zc_rvYes() then 14'
+                                                                                                       +'    else null'
+                                                                                                       +' end'
+            );
         Add('     left outer join dba.Unit as Unit_parentAll on Unit_parentAll.Id = 151'); // ВСЕ
         Add('     left outer join dba.Unit as Unit_parent1 on Unit_parent1.Id = Unit.ParentId');
         Add('     left outer join dba.Unit as Unit_parent2 on Unit_parent2.Id = Unit_parent1.ParentId');
@@ -583,6 +606,7 @@ begin
         Add('       , ObjectCode');
         Add('       , Id_Postgres');
         Add('       , ParentId_Postgres');
+        Add('       , GoodsPropertyId_PG');
         Add('       , GLNCode');
         Add('order by ObjectId');
         Open;
@@ -605,6 +629,7 @@ begin
              toStoredProc.Parameters.ParamByName('inGLNCode').Value:=FieldByName('GLNCode').AsString;
              toStoredProc.Parameters.ParamByName('inIsCorporate').Value:=false;
              toStoredProc.Parameters.ParamByName('inJuridicalGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             toStoredProc.Parameters.ParamByName('inJuridicalGroupId').Value:=FieldByName('GoodsPropertyId_PG').AsInteger;
              toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
@@ -893,6 +918,118 @@ begin
      myDisabledCB(cbPriceList);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadGoodsProperty;
+begin
+     if (not cbGoodsProperty.Checked)or(not cbGoodsProperty.Enabled) then exit;
+     //
+     myEnabledCB(cbGoodsProperty);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select GoodsProperty_Postgres.Id as ObjectId');
+        Add('     , 0 as ObjectCode');
+        Add('     , GoodsProperty_Postgres.Name_PG as ObjectName');
+        Add('     , GoodsProperty_Postgres.Id_Postgres as Id_Postgres');
+        Add('from dba.GoodsProperty_Postgres');
+        Add('order by ObjectId');
+        Open;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //exit;
+        toStoredProc.ProcedureName:='gpinsertupdate_object_pricelist';
+        toStoredProc.Parameters.Refresh;
+        //
+        //DisableControls;
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin {EnableControls;}exit;end;
+             //
+             toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Parameters.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.GoodsProperty_Postgres set Id_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);//+' and Id_Postgres is null'
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        //EnableControls;
+     end;
+     //
+     myDisabledCB(cbGoodsProperty);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadGoodsPropertyValue;
+begin
+     if (not cbGoodsPropertyValue.Checked)or(not cbGoodsPropertyValue.Enabled) then exit;
+     //
+     myEnabledCB(cbGoodsPropertyValue);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select GoodsProperty_Detail.Id as ObjectId');
+        Add('     , 0 as ObjectCode');
+        Add('     , GoodsProperty_Postgres.Name_PG as ObjectName');
+        Add('     , GoodsProperty_Postgres.Id_Postgres as Id_Postgres');
+        Add('from dba.GoodsProperty_Detail');
+        Add('     left outer join dba.GoodsProperty_Postgres as PG1 on PG1.Id=1');
+        Add('     left outer join dba.GoodsProperty_Postgres as PG2 on PG2.Id=2');
+        Add('     left outer join dba.GoodsProperty_Postgres as PG3 on PG3.Id=3');
+        Add('     left outer join dba.GoodsProperty_Postgres as PG4 on PG4.Id=4');
+        Add('     left outer join dba.GoodsProperty_Postgres as PG5 on PG5.Id=5');
+        Add('     left outer join dba.GoodsProperty_Postgres as PG6 on PG6.Id=6');
+        Add('     left outer join dba.GoodsProperty_Postgres as PG7 on PG7.Id=7');
+        Add('     left outer join dba.GoodsProperty_Postgres as PG8 on PG8.Id=8');
+        Add('     left outer join dba.GoodsProperty_Postgres as PG9 on PG9.Id=9');
+        Add('     left outer join dba.GoodsProperty_Postgres as PG10 on PG10.Id=10');
+        Add('     left outer join dba.GoodsProperty_Postgres as PG11 on PG11.Id=11');
+        Add('     left outer join dba.GoodsProperty_Postgres as PG12 on PG12.Id=12');
+        Add('     left outer join dba.GoodsProperty_Postgres as PG13 on PG13.Id=13');
+        Add('     left outer join dba.GoodsProperty_Postgres as PG14 on PG14.Id=14');
+        Add('order by ObjectId');
+        Open;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //exit;
+        toStoredProc.ProcedureName:='gpinsertupdate_object_pricelist';
+        toStoredProc.Parameters.Refresh;
+        //
+        //DisableControls;
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin {EnableControls;}exit;end;
+             //
+             toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Parameters.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.GoodsProperty_Postgres set Id_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);//+' and Id_Postgres is null'
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        //EnableControls;
+     end;
+     //
+     myDisabledCB(cbGoodsPropertyValue);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.FormatToVarCharServer_notNULL(_Value:string):string;
@@ -983,6 +1120,26 @@ alter table dba.Unit add Id3_Postgres integer null;
 
 alter table dba.PriceList_byHistory add Id_Postgres integer null;
 
+create table dba.GoodsProperty_Postgres (Id integer not null, Name_PG TVarCharMedium not null, Id_Postgres integer null);
+insert into dba.GoodsProperty_Postgres (Id, Name_PG)
+  select 1, 'АТБ' union all       // +fIsClient_ATB
+  select 2, 'Киев ОК' union all   // +fIsClient_OK
+  select 3, 'Метро' union all     // +fIsClient_Metro
+  select 4, 'Алан' union all      //
+  select 5, 'Фоззи' union all     // +fIsClient_Fozzi fIsClient_FozziM
+  select 6, 'Кишени' union all    // +fIsClient_Kisheni
+  select 7, 'Виват' union all     // +fIsClient_Vivat
+  select 8, 'Билла' union all     // +fIsClient_Billa
+  select 9, 'Амстор' union all    // +fIsClient_Amstor
+  select 10, 'Омега' union all    // ***fIsClient_Omega
+  select 11, 'Восторг' union all  // ***fIsClient_Vostorg
+  select 12, 'Ашан' union all     // +fIsClient_Ashan
+  select 13, 'Реал' union all     // +fIsClient_Real
+  select 14, 'ЖД';                // ***fIsClient_GD
+                                  // fIsClient_Furshet
+                                  // fIsClient_Obgora
+                                  // fIsClient_Tavriya
+
 --
 --!!!! при первой загрузке данных в постгрис, в сибасе надо обнулять ключи !!!
 --
@@ -997,6 +1154,5 @@ update dba.ContractKind set Id_Postgres = null;
 update dba.Unit set Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = null;
 
 update dba.PriceList_byHistory set Id_Postgres = null;
-
 
 }
