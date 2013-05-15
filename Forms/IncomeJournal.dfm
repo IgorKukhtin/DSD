@@ -14,8 +14,6 @@ inherited IncomeJournalForm: TIncomeJournalForm
     Align = alTop
     Caption = 'Panel1'
     TabOrder = 1
-    ExplicitLeft = 578
-    ExplicitWidth = 350
     object deStart: TcxDateEdit
       Left = 208
       Top = 8
@@ -220,12 +218,14 @@ inherited IncomeJournalForm: TIncomeJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        Value = '01.05.2013'
       end
       item
         Name = 'inEndDate'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        Value = '01.05.2014'
       end>
     Left = 152
     Top = 152

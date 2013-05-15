@@ -6,7 +6,7 @@ inherited UnitGroupForm: TUnitGroupForm
   ExplicitHeight = 403
   PixelsPerInch = 96
   TextHeight = 13
-  object cxDBTreeList1: TcxDBTreeList
+  object cxDBTreeList: TcxDBTreeList
     Left = 0
     Top = 26
     Width = 390
@@ -18,6 +18,7 @@ inherited UnitGroupForm: TUnitGroupForm
     DataController.DataSource = DataSource
     DataController.ParentField = 'ParentId'
     DataController.KeyField = 'Id'
+    Images = dmMain.TreeImageList
     Navigator.Buttons.CustomButtons = <>
     OptionsView.ColumnAutoWidth = True
     RootValue = -1
@@ -189,5 +190,10 @@ inherited UnitGroupForm: TUnitGroupForm
     Params = <>
     Left = 152
     Top = 152
+  end
+  object dsdDBTreeAddOn: TdsdDBTreeAddOn
+    DBTreeList = cxDBTreeList
+    Left = 152
+    Top = 216
   end
 end

@@ -6,7 +6,7 @@ inherited GoodsGroupForm: TGoodsGroupForm
   ExplicitHeight = 403
   PixelsPerInch = 96
   TextHeight = 13
-  object cxDBTreeList1: TcxDBTreeList
+  object cxDBTreeList: TcxDBTreeList
     Left = 0
     Top = 26
     Width = 390
@@ -18,24 +18,25 @@ inherited GoodsGroupForm: TGoodsGroupForm
     DataController.DataSource = DataSource
     DataController.ParentField = 'ParentId'
     DataController.KeyField = 'Id'
+    Images = dmMain.TreeImageList
     Navigator.Buttons.CustomButtons = <>
     OptionsView.ColumnAutoWidth = True
     RootValue = -1
     TabOrder = 4
-    object cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn
-      Caption.Text = #1050#1086#1076
-      DataBinding.FieldName = 'Code'
-      Width = 100
+    object cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn
+      Caption.Text = #1053#1072#1079#1074#1072#1085#1080#1077
+      DataBinding.FieldName = 'Name'
+      Width = 226
       Position.ColIndex = 0
       Position.RowIndex = 0
       Position.BandIndex = 0
       Summary.FooterSummaryItems = <>
       Summary.GroupFooterSummaryItems = <>
     end
-    object cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn
-      Caption.Text = #1053#1072#1079#1074#1072#1085#1080#1077
-      DataBinding.FieldName = 'Name'
-      Width = 226
+    object cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn
+      Caption.Text = #1050#1086#1076
+      DataBinding.FieldName = 'Code'
+      Width = 100
       Position.ColIndex = 1
       Position.RowIndex = 0
       Position.BandIndex = 0
@@ -208,7 +209,7 @@ inherited GoodsGroupForm: TGoodsGroupForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_UnitGroup'
+    StoredProcName = 'gpSelect_Object_GoodsGroup'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -217,5 +218,10 @@ inherited GoodsGroupForm: TGoodsGroupForm
     Params = <>
     Left = 152
     Top = 152
+  end
+  object dsdDBTreeAddOn: TdsdDBTreeAddOn
+    DBTreeList = cxDBTreeList
+    Left = 152
+    Top = 208
   end
 end

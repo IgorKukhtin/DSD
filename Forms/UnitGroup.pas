@@ -11,7 +11,7 @@ uses
   cxGrid, Datasnap.DBClient, cxPropertiesStore, dxBar,
   Vcl.ActnList, DataModul, Vcl.ComCtrls,
   cxTL, cxTLdxBarBuiltInMenu, cxInplaceContainer, cxTLData, cxDBTL, cxMaskEdit,
-  ParentForm, dsdDB, dsdAction;
+  ParentForm, dsdDB, dsdAction, dsdAddOn;
 
 type
   TUnitGroupForm = class(TParentForm)
@@ -28,9 +28,10 @@ type
     dsdStoredProc: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    cxDBTreeList1: TcxDBTreeList;
+    cxDBTreeList: TcxDBTreeList;
     cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn;
     cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn;
+    dsdDBTreeAddOn: TdsdDBTreeAddOn;
   private
     { Private declarations }
   public

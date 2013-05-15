@@ -25,20 +25,20 @@ inherited JuridicalForm: TJuridicalForm
     OptionsView.ColumnAutoWidth = True
     RootValue = -1
     TabOrder = 4
-    object cxDBTreeListcxDBTreeListColumn1: TcxDBTreeListColumn
-      Caption.Text = #1050#1086#1076
-      DataBinding.FieldName = 'Code'
-      Width = 68
+    object cxDBTreeListcxDBTreeListColumn2: TcxDBTreeListColumn
+      Caption.Text = #1043#1088#1091#1087#1087#1072
+      DataBinding.FieldName = 'JuridicalGroupName'
+      Width = 128
       Position.ColIndex = 0
       Position.RowIndex = 0
       Position.BandIndex = 0
       Summary.FooterSummaryItems = <>
       Summary.GroupFooterSummaryItems = <>
     end
-    object cxDBTreeListcxDBTreeListColumn2: TcxDBTreeListColumn
-      Caption.Text = #1043#1088#1091#1087#1087#1072
-      DataBinding.FieldName = 'JuridicalGroupName'
-      Width = 128
+    object cxDBTreeListcxDBTreeListColumn1: TcxDBTreeListColumn
+      Caption.Text = #1050#1086#1076
+      DataBinding.FieldName = 'Code'
+      Width = 67
       Position.ColIndex = 1
       Position.RowIndex = 0
       Position.BandIndex = 0
@@ -48,7 +48,7 @@ inherited JuridicalForm: TJuridicalForm
     object cxDBTreeListcxDBTreeListColumn3: TcxDBTreeListColumn
       Caption.Text = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
       DataBinding.FieldName = 'Name'
-      Width = 392
+      Width = 348
       Position.ColIndex = 2
       Position.RowIndex = 0
       Position.BandIndex = 0
@@ -58,7 +58,7 @@ inherited JuridicalForm: TJuridicalForm
     object cxDBTreeListcxDBTreeListColumn4: TcxDBTreeListColumn
       Caption.Text = #1059#1076#1072#1083#1077#1085
       DataBinding.FieldName = 'isErased'
-      Width = 47
+      Width = 92
       Position.ColIndex = 3
       Position.RowIndex = 0
       Position.BandIndex = 0

@@ -11,6 +11,7 @@ type
   TdmMain = class(TDataModule)
     ImageList: TImageList;
     MainImageList: TImageList;
+    TreeImageList: TImageList;
   end;
 
 var dmMain: TdmMain;

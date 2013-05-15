@@ -16,34 +16,34 @@ $BODY$BEGIN
      RETURN QUERY 
      SELECT 
        ObjectId,
-       Goods.ObjectCode  AS GoodsCode,
-       Goods.ValueData   AS GoodsName,
+       Object_Goods.ObjectCode  AS GoodsCode,
+       Object_Goods.ValueData   AS GoodsName,
        Amount,
        Erased
-     FROM Object AS Goods
+     FROM Object AS Object_Goods
 LEFT JOIN MovementItem
-       ON MovementItem.ObjectId = Goods.Id 
+       ON MovementItem.ObjectId = Object_Goods.Id 
       AND MovementItem.MovementId = inMovementId
       AND MovementItem.DescId =  zc_MovementItem_Goods()
 LEFT JOIN MovementItemLinkObject AS MovementItemLink_GoodsKind
        ON MovementItemLink_GoodsKind.MovementItemId = MovementItem.Id AND MovementItemLink_GoodsKind.DescId = zc_MovementItemLink_GoodsKind()
-LEFT JOIN Object AS GoodsKind
-       ON GoodsKind.Id = MovementItemLink_GoodsKind.ObjectId
+LEFT JOIN Object AS Object_GoodsKind
+       ON Object_GoodsKind.Id = MovementItemLink_GoodsKind.ObjectId
 LEFT JOIN MovementItemLinkObject AS MovementItemLink_Partion
        ON MovementItemLink_Partion.MovementItemId = MovementItem.Id AND MovementItemLink_Partion.DescId = zc_MovementItemLink_Partion()
-LEFT JOIN Object AS Partion
-       ON Partion.Id = MovementItemLink_Partion.ObjectId
-LEFT JOIN MovementItemFloat AS AmountPartner
-       ON AmountPartner.MovementItemId = MovementItem.Id AND AmountPartner.DescId = zc_MovementItemFloat_AmountPartner()
-LEFT JOIN MovementItemFloat AS Price
-       ON Price.MovementItemId = MovementItem.Id AND Price.DescId = zc_MovementItemFloat_Price()
-LEFT JOIN MovementItemFloat AS CountForPrice
-       ON CountForPrice.MovementItemId = MovementItem.Id AND CountForPrice.DescId = zc_MovementItemFloat_CountForPrice()
-LEFT JOIN MovementItemFloat AS LiveWeight
-       ON LiveWeight.MovementItemId = MovementItem.Id AND LiveWeight.DescId = zc_MovementItemFloat_LiveWeight()
-LEFT JOIN MovementItemFloat AS HeadCount
-       ON HeadCount.MovementItemId = MovementItem.Id AND HeadCount.DescId = zc_MovementItemFloat_HeadCount()
-    WHERE Goods.DescId = zc_Object_Goods();
+LEFT JOIN Object AS Object_Partion
+       ON Object_Partion.Id = MovementItemLink_Partion.ObjectId
+LEFT JOIN MovementItemFloat AS MovementItemFloat_AmountPartner
+       ON MovementItemFloat_AmountPartner.MovementItemId = MovementItem.Id AND MovementItemFloat_AmountPartner.DescId = zc_MovementItemFloat_AmountPartner()
+LEFT JOIN MovementItemFloat AS MovementItemFloat_Price
+       ON MovementItemFloat_Price.MovementItemId = MovementItem.Id AND MovementItemFloat_Price.DescId = zc_MovementItemFloat_Price()
+LEFT JOIN MovementItemFloat AS MovementItemFloat_CountForPrice
+       ON MovementItemFloat_CountForPrice.MovementItemId = MovementItem.Id AND MovementItemFloat_CountForPrice.DescId = zc_MovementItemFloat_CountForPrice()
+LEFT JOIN MovementItemFloat AS MovementItemFloat_LiveWeight
+       ON MovementItemFloat_LiveWeight.MovementItemId = MovementItem.Id AND MovementItemFloat_LiveWeight.DescId = zc_MovementItemFloat_LiveWeight()
+LEFT JOIN MovementItemFloat AS MovementItemFloat_HeadCount
+       ON MovementItemFloat_HeadCount.MovementItemId = MovementItem.Id AND MovementItemFloat_HeadCount.DescId = zc_MovementItemFloat_HeadCount()
+    WHERE Object_Goods.DescId = zc_Object_Goods();
 
   ELSE
   
@@ -55,26 +55,26 @@ LEFT JOIN MovementItemFloat AS HeadCount
        Amount,
        Erased
      FROM MovementItem
-LEFT JOIN Object AS Goods
-       ON Goods.Id = MovementItem.ObjectId
+LEFT JOIN Object AS Object_Goods
+       ON Object_Goods.Id = MovementItem.ObjectId
 LEFT JOIN MovementItemLinkObject AS MovementItemLink_GoodsKind
        ON MovementItemLink_GoodsKind.MovementItemId = MovementItem.Id AND MovementItemLink_GoodsKind.DescId = zc_MovementItemLink_GoodsKind()
-LEFT JOIN Object AS GoodsKind
-       ON GoodsKind.Id = MovementItemLink_GoodsKind.ObjectId
+LEFT JOIN Object AS Object_GoodsKind
+       ON Object_GoodsKind.Id = MovementItemLink_GoodsKind.ObjectId
 LEFT JOIN MovementItemLinkObject AS MovementItemLink_Partion
        ON MovementItemLink_Partion.MovementItemId = MovementItem.Id AND MovementItemLink_Partion.DescId = zc_MovementItemLink_Partion()
-LEFT JOIN Object AS Partion
-       ON Partion.Id = MovementItemLink_Partion.ObjectId
-LEFT JOIN MovementItemFloat AS AmountPartner
-       ON AmountPartner.MovementItemId = MovementItem.Id AND AmountPartner.DescId = zc_MovementItemFloat_AmountPartner()
-LEFT JOIN MovementItemFloat AS Price
-       ON Price.MovementItemId = MovementItem.Id AND Price.DescId = zc_MovementItemFloat_Price()
-LEFT JOIN MovementItemFloat AS CountForPrice
-       ON CountForPrice.MovementItemId = MovementItem.Id AND CountForPrice.DescId = zc_MovementItemFloat_CountForPrice()
-LEFT JOIN MovementItemFloat AS LiveWeight
-       ON LiveWeight.MovementItemId = MovementItem.Id AND LiveWeight.DescId = zc_MovementItemFloat_LiveWeight()
-LEFT JOIN MovementItemFloat AS HeadCount
-       ON HeadCount.MovementItemId = MovementItem.Id AND HeadCount.DescId = zc_MovementItemFloat_HeadCount()
+LEFT JOIN Object AS Object_Partion
+       ON Object_Partion.Id = MovementItemLink_Partion.ObjectId
+LEFT JOIN MovementItemFloat AS MovementItemFloat_AmountPartner
+       ON MovementItemFloat_AmountPartner.MovementItemId = MovementItem.Id AND MovementItemFloat_AmountPartner.DescId = zc_MovementItemFloat_AmountPartner()
+LEFT JOIN MovementItemFloat AS MovementItemFloat_Price
+       ON MovementItemFloat_Price.MovementItemId = MovementItem.Id AND MovementItemFloat_Price.DescId = zc_MovementItemFloat_Price()
+LEFT JOIN MovementItemFloat AS MovementItemFloat_CountForPrice
+       ON MovementItemFloat_CountForPrice.MovementItemId = MovementItem.Id AND MovementItemFloat_CountForPrice.DescId = zc_MovementItemFloat_CountForPrice()
+LEFT JOIN MovementItemFloat AS MovementItemFloat_LiveWeight
+       ON MovementItemFloat_LiveWeight.MovementItemId = MovementItem.Id AND MovementItemFloat_LiveWeight.DescId = zc_MovementItemFloat_LiveWeight()
+LEFT JOIN MovementItemFloat AS MovementItemFloat_HeadCount
+       ON MovementItemFloat_HeadCount.MovementItemId = MovementItem.Id AND MovementItemFloat_HeadCount.DescId = zc_MovementItemFloat_HeadCount()
     WHERE MovementItem.MovementId = inMovementId
       AND MovementItem.DescId =  zc_MovementItem_Goods();
  

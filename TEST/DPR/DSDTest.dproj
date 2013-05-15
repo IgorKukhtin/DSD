@@ -231,6 +231,7 @@
 				<Form>ParentForm2</Form>
 				<FormType>dfm</FormType>
 			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdAddOn.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

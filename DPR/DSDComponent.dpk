@@ -58,6 +58,7 @@ contains
   ParentForm in '..\SOURCE\ParentForm.pas' {ParentForm},
   dsdGuides in '..\SOURCE\COMPONENT\dsdGuides.pas',
   Storage in '..\SOURCE\Storage.pas',
-  FormStorage in '..\SOURCE\FormStorage.pas';
+  FormStorage in '..\SOURCE\FormStorage.pas',
+  dsdAddOn in '..\SOURCE\COMPONENT\dsdAddOn.pas';
 
 end.

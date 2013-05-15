@@ -10,7 +10,8 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, Datasnap.DBClient, dsdDB, cxPropertiesStore, dxBar,
   Vcl.ActnList, dsdAction, ParentForm, DataModul, Vcl.ComCtrls,
-  cxTL, cxTLdxBarBuiltInMenu, cxInplaceContainer, cxTLData, cxDBTL, cxMaskEdit;
+  cxTL, cxTLdxBarBuiltInMenu, cxInplaceContainer, cxTLData, cxDBTL, cxMaskEdit,
+  dsdAddOn;
 
 type
   TGoodsGroupForm = class(TParentForm)
@@ -27,13 +28,14 @@ type
     dsdStoredProc: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    cxDBTreeList1: TcxDBTreeList;
     cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn;
     cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     bbSetErased: TdxBarButton;
     bbSetUnErased: TdxBarButton;
+    cxDBTreeList: TcxDBTreeList;
+    dsdDBTreeAddOn: TdsdDBTreeAddOn;
   private
     { Private declarations }
   public

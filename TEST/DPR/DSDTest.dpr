@@ -78,7 +78,8 @@ uses
   Units in '..\..\Forms\Units.pas' {UnitForm},
   dbMovementItemTest in '..\SOURCE\dbMovementItemTest.pas',
   Income in '..\..\Forms\Income.pas' {IncomeForm},
-  IncomeJournal in '..\..\Forms\IncomeJournal.pas' {ParentForm2};
+  IncomeJournal in '..\..\Forms\IncomeJournal.pas' {ParentForm2},
+  dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas';
 
 {$R *.RES}
 

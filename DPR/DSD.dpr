@@ -9,14 +9,15 @@ uses
   Authentication in '..\SOURCE\Authentication.pas',
   UtilConst in '..\SOURCE\UtilConst.pas',
   CommonData in '..\SOURCE\CommonData.pas',
-  MainForm in '..\SOURCE\MainForm.pas' {MainForm},
   ParentForm in '..\SOURCE\ParentForm.pas' {ParentForm},
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
   UtilConvert in '..\SOURCE\UtilConvert.pas',
   dsdAction in '..\SOURCE\COMPONENT\dsdAction.pas',
   DataModul in '..\SOURCE\DataModul.pas' {dmMain: TDataModule},
   dsdGuides in '..\SOURCE\COMPONENT\dsdGuides.pas',
-  FormStorage in '..\SOURCE\FormStorage.pas';
+  FormStorage in '..\SOURCE\FormStorage.pas',
+  dsdAddOn in '..\SOURCE\COMPONENT\dsdAddOn.pas',
+  MainForm in '..\SOURCE\MainForm.pas' {MainForm};
 
 {$R *.res}
 
@@ -27,9 +28,9 @@ begin
  // with TLoginForm.Create(Application) do
     //Если все хорошо создаем главную форму Application.CreateForm();
    // if ShowModal = mrOk then
-   TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
+  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
 
-   Application.CreateForm(TMainForm, MainFormInstance);
+  Application.CreateForm(TMainForm, MainFormInstance);
   Application.CreateForm(TdmMain, dmMain);
   Application.Run;
 end.

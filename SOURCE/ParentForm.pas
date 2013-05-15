@@ -22,7 +22,7 @@ uses cxPropertiesStore, cxControls, cxContainer, cxEdit, cxGroupBox,
   dxBevel, cxButtons, cxGridDBTableView, cxGrid, DB, DBClient,
   dxBar, Vcl.ActnList, dsdAction, cxTextEdit, cxLabel,
   StdActns, cxDBTL, cxCurrencyEdit, cxDropDownEdit, dsdGuides,
-  cxDBLookupComboBox, DBGrids, cxCheckBox, cxCalendar, ExtCtrls;
+  cxDBLookupComboBox, DBGrids, cxCheckBox, cxCalendar, ExtCtrls, dsdAddOn;
 
 {$R *.dfm}
 
@@ -81,6 +81,6 @@ initialization
   RegisterClass (TdsdExecStoredProc);
   RegisterClass (TdsdInsertUpdateAction);
   RegisterClass (TdsdGuides);
-
+  RegisterClass (TdsdDBTreeAddOn);
 
 end.
