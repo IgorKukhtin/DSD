@@ -18,6 +18,7 @@ type
     procedure SetTextValue(const Value: String);
     procedure SetLookupControl(const Value: TWinControl);
     procedure OpenGuides;
+    procedure OnDblClick(Sender: TObject);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   published
@@ -64,6 +65,16 @@ begin
   inherited Notification(AComponent, Operation);
   if (Operation = opRemove) and (AComponent = FLookupControl) then
      FLookupControl := nil;
+end;
+
+procedure TdsdGuides.OnDblClick(Sender: TObject);
+begin
+  OpenGuides;
+end;
+
+procedure TdsdGuides.OpenGuides;
+begin
+
 end;
 
 procedure TdsdGuides.SetKey(const Value: String);
