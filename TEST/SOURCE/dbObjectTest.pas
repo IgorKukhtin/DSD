@@ -11,8 +11,8 @@ type
     FspInsertUpdate: string;
     FspSelect: string;
     FspGet: string;
-    FdsdStoredProc: TdsdStoredProc;
   protected
+    FdsdStoredProc: TdsdStoredProc;
     FParams: TdsdParams;
     property spGet: string read FspGet write FspGet;
     property spSelect: string read FspSelect write FspSelect;
@@ -22,7 +22,7 @@ type
     procedure SetDataSetParam; virtual;
   public
     function GetDefault: integer;
-    function GetDataSet: TDataSet;
+    function GetDataSet: TDataSet; virtual;
     function GetRecord(Id: integer): TDataSet;
     constructor Create; virtual;
     destructor Destoy;

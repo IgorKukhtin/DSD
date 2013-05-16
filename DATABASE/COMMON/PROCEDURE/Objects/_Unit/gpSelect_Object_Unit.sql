@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_Unit()
 
- DROP FUNCTION gpSelect_Object_Unit(TVarChar);
+-- DROP FUNCTION gpSelect_Object_Unit(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Unit(
 IN inSession     TVarChar       /* текущий пользователь */)

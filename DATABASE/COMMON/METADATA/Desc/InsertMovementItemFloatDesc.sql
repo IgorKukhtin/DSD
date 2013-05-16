@@ -18,3 +18,18 @@ INSERT INTO MovementItemFloatDesc(Id, Code, ItemName)
 SELECT zc_MovementItemFloat_HeadCount(), 'HeadCount', 'Количество голов' 
        WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Id = zc_MovementItemFloat_HeadCount()); 
 
+INSERT INTO MovementItemFloatDesc(Id, Code, ItemName)
+SELECT zc_MovementItemFloat_Count(), 'Count', 'Количество голов' 
+       WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Id = zc_MovementItemFloat_Count()); 
+
+INSERT INTO MovementItemFloatDesc(Id, Code, ItemName)
+SELECT zc_MovementItemFloat_RealWeight(), 'RealWeight', 'Реальный вес' 
+       WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Id = zc_MovementItemFloat_RealWeight()); 
+
+INSERT INTO MovementItemFloatDesc(Id, Code, ItemName)
+SELECT zc_MovementItemFloat_CuterCount(), 'CuterCount', 'Количество кутеров' 
+       WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Id = zc_MovementItemFloat_CuterCount()); 
+
+INSERT INTO MovementItemFloatDesc(Id, Code, ItemName)
+SELECT zc_MovementItemFloat_AmountReceipt(), 'AmountReceipt', 'Количество кутеров' 
+       WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Id = zc_MovementItemFloat_AmountReceipt()); 

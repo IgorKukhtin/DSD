@@ -25,7 +25,7 @@ inherited GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
     Action = dsdExecStoredProc
     Default = True
     ModalResult = 8
-    TabOrder = 14
+    TabOrder = 12
   end
   object cxButton2: TcxButton
     Left = 311
@@ -108,7 +108,7 @@ inherited GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
   object edBarCodeGLN: TcxTextEdit
     Left = 290
     Top = 143
-    TabOrder = 7
+    TabOrder = 6
     Width = 261
   end
   object cxLabel7: TcxLabel
@@ -119,13 +119,13 @@ inherited GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
   object edArticle: TcxTextEdit
     Left = 16
     Top = 199
-    TabOrder = 9
+    TabOrder = 7
     Width = 189
   end
   object edArticleGLN: TcxTextEdit
     Left = 221
     Top = 199
-    TabOrder = 10
+    TabOrder = 8
     Width = 189
   end
   object cxLabel8: TcxLabel

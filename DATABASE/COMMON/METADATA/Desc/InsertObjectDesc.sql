@@ -87,3 +87,6 @@ SELECT zc_Object_CarModel(), 'CarModel', 'Модели автомобиля' WHERE NOT EXISTS (S
 
 insert into ObjectDesc(Id, Code, ItemName)
 SELECT zc_Object_Car(), 'Car', 'Автомобиль' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_CarModel());
+
+insert into ObjectDesc(Id, Code, ItemName)
+SELECT zc_Object_GoodsPropertyValue(), 'GoodsPropertyValue', '' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_GoodsPropertyValue());

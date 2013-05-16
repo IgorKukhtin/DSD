@@ -17,12 +17,12 @@ type
     procedure SetKey(const Value: String);
     procedure SetTextValue(const Value: String);
     procedure SetLookupControl(const Value: TWinControl);
+    procedure OpenGuides;
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
-  public
+  published
     property Key: String read GetKey write SetKey;
     property TextValue: String read GetTextValue write SetTextValue;
-  published
     property LookupControl: TWinControl read FLookupControl write SetLookupControl;
     property FormName: string read FFormName write FFormName;
   end;
@@ -31,7 +31,7 @@ type
 
 implementation
 
-uses cxDBLookupComboBox, Variants;
+uses cxDBLookupComboBox, cxButtonEdit, Variants;
 
 procedure Register;
 begin

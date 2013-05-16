@@ -9,3 +9,9 @@ CREATE OR REPLACE FUNCTION zc_MovementItemLink_Partion()
 $BODY$BEGIN
   RETURN 2;
 END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_MovementItemLink_Receipt()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 3;
+END;  $BODY$ LANGUAGE plpgsql;

@@ -15,11 +15,11 @@ $BODY$BEGIN
 
      RETURN QUERY 
      SELECT 
-       ObjectId,
+       MovementItem.ObjectId,
        Object_Goods.ObjectCode  AS GoodsCode,
        Object_Goods.ValueData   AS GoodsName,
-       Amount,
-       Erased
+       MovementItem.Amount,
+       MovementItem.isErased
      FROM Object AS Object_Goods
 LEFT JOIN MovementItem
        ON MovementItem.ObjectId = Object_Goods.Id 
@@ -53,7 +53,7 @@ LEFT JOIN MovementItemFloat AS MovementItemFloat_HeadCount
        Goods.ObjectCode  AS GoodsCode,
        Goods.ValueData   AS GoodsName,
        Amount,
-       Erased
+       isErased
      FROM MovementItem
 LEFT JOIN Object AS Object_Goods
        ON Object_Goods.Id = MovementItem.ObjectId

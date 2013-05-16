@@ -114,6 +114,10 @@ begin
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateMovementItemFloatDescFunction.sql');
   ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateMovementItemBooleanDescFunction.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateMovementItemStringDescFunction.sql');
+  ZQuery.ExecSQL;
 end;
 
 procedure TdbMetaDataTest.InsertMovementItemContainerDesc;
@@ -129,6 +133,10 @@ begin
   ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertMovementItemLinkObjectDesc.sql');
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertMovementItemFloatDesc.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertMovementItemBooleanDesc.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertMovementItemStringDesc.sql');
   ZQuery.ExecSQL;
 end;
 

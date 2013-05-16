@@ -27,3 +27,27 @@ CREATE OR REPLACE FUNCTION zc_MovementItemFloat_HeadCount()
 $BODY$BEGIN
   RETURN 5;
 END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_MovementItemFloat_Count()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 6;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_MovementItemFloat_RealWeight()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 7;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_MovementItemFloat_CuterCount()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 8;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_MovementItemFloat_AmountReceipt()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 9;
+END;  $BODY$ LANGUAGE plpgsql;

@@ -22,7 +22,8 @@ uses cxPropertiesStore, cxControls, cxContainer, cxEdit, cxGroupBox,
   dxBevel, cxButtons, cxGridDBTableView, cxGrid, DB, DBClient,
   dxBar, Vcl.ActnList, dsdAction, cxTextEdit, cxLabel,
   StdActns, cxDBTL, cxCurrencyEdit, cxDropDownEdit, dsdGuides,
-  cxDBLookupComboBox, DBGrids, cxCheckBox, cxCalendar, ExtCtrls, dsdAddOn;
+  cxDBLookupComboBox, DBGrids, cxCheckBox, cxCalendar, ExtCtrls, dsdAddOn,
+  cxButtonEdit;
 
 {$R *.dfm}
 
@@ -55,22 +56,25 @@ initialization
   RegisterClass (TFileExit);
   RegisterClass (TPanel);
   // Библиотека DevExpress
-  RegisterClass (TdxBevel);
+
   RegisterClass (TcxButton);
+  RegisterClass (TcxButtonEdit);
   RegisterClass (TcxCheckBox);
+  RegisterClass (TcxCurrencyEdit);
   RegisterClass (TcxDateEdit);
+  RegisterClass (TcxDBTreeList);
+  RegisterClass (TcxDBTreeListColumn);
   RegisterClass (TcxGroupBox);
   RegisterClass (TcxGridDBTableView);
   RegisterClass (TcxGrid);
+  RegisterClass (TcxLabel);
+  RegisterClass (TcxLookupComboBox);
+  RegisterClass (TcxPopupEdit);
   RegisterClass (TcxPropertiesStore);
   RegisterClass (TcxTextEdit);
-  RegisterClass (TcxLabel);
-  RegisterClass (TcxCurrencyEdit);
-  RegisterClass (TcxDBTreeList);
-  RegisterClass (TcxDBTreeListColumn);
-  RegisterClass (TcxPopupEdit);
-  RegisterClass (TcxLookupComboBox);
+
   RegisterClass (TdxBarManager);
+  RegisterClass (TdxBevel);
   // Собственнтые компоненты
   RegisterClass (TdsdOpenForm);
   RegisterClass (TdsdStoredProc);

@@ -28,7 +28,6 @@ type
     dsdStoredProc: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn;
     cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;

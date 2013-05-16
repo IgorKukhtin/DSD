@@ -13,8 +13,6 @@ inherited IncomeForm: TIncomeForm
     Height = 274
     Align = alBottom
     TabOrder = 0
-    ExplicitTop = 88
-    ExplicitWidth = 652
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.Summary.DefaultGroupSummaryItems = <>
@@ -72,7 +70,7 @@ inherited IncomeForm: TIncomeForm
       Top = 4
       Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
-    object cxButtonEdit1: TcxButtonEdit
+    object edFrom: TcxButtonEdit
       Left = 288
       Top = 27
       Properties.Buttons = <
@@ -81,10 +79,9 @@ inherited IncomeForm: TIncomeForm
           Kind = bkEllipsis
         end>
       TabOrder = 4
-      Text = 'cxButtonEdit1'
       Width = 137
     end
-    object cxButtonEdit2: TcxButtonEdit
+    object edTo: TcxButtonEdit
       Left = 440
       Top = 27
       Properties.Buttons = <
@@ -93,7 +90,6 @@ inherited IncomeForm: TIncomeForm
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Text = 'cxButtonEdit2'
       Width = 145
     end
     object cxLabel3: TcxLabel
@@ -221,5 +217,15 @@ inherited IncomeForm: TIncomeForm
     Params = <>
     Left = 96
     Top = 152
+  end
+  object dsdGuidesFrom: TdsdGuides
+    LookupControl = edFrom
+    Left = 304
+    Top = 56
+  end
+  object dsdGuidesTo: TdsdGuides
+    LookupControl = edTo
+    Left = 448
+    Top = 56
   end
 end

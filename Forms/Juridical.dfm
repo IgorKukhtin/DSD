@@ -189,7 +189,7 @@ inherited JuridicalForm: TJuridicalForm
       Category = 'DSDLib'
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
-      FormName = 'JuridicalEditForm'
+      FormName = 'TJuridicalEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -205,7 +205,7 @@ inherited JuridicalForm: TJuridicalForm
       Category = 'DSDLib'
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      FormName = 'JuridicalEditForm'
+      FormName = 'TJuridicalEditForm'
       GuiParams = <
         item
           Name = 'Id'

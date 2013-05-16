@@ -11,7 +11,7 @@ uses
   cxGridDBTableView, cxGrid, Datasnap.DBClient, Vcl.ActnList, dsdAction,
   cxPropertiesStore, dxBar, Vcl.ExtCtrls, cxContainer, cxLabel, cxTextEdit,
   Vcl.ComCtrls, dxCore, cxDateUtils, cxButtonEdit, cxMaskEdit, cxDropDownEdit,
-  cxCalendar;
+  cxCalendar, dsdGuides;
 
 type
   TIncomeForm = class(TParentForm)
@@ -41,10 +41,12 @@ type
     cxLabel1: TcxLabel;
     edOperDate: TcxDateEdit;
     cxLabel2: TcxLabel;
-    cxButtonEdit1: TcxButtonEdit;
-    cxButtonEdit2: TcxButtonEdit;
+    edFrom: TcxButtonEdit;
+    edTo: TcxButtonEdit;
     cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
+    dsdGuidesFrom: TdsdGuides;
+    dsdGuidesTo: TdsdGuides;
   private
     { Private declarations }
   public

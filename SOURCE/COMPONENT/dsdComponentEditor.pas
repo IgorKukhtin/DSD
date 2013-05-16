@@ -12,6 +12,12 @@ type
     procedure GetValues(Proc: TGetStrProc); override;
   end;
 
+  // Редактор компонент позволяет отображать только используемые
+  TdsdGuidesComponentProperty = class(TComponentProperty)
+  public
+    procedure GetValues(Proc: TGetStrProc); override;
+  end;
+
   // Редактор ствойства компонент позволяет отображать
   // возможные значения свойств у компонент TDataSet, TdsdFormParams, TdsdGuides
 
@@ -25,7 +31,8 @@ type
 
 implementation
 
-uses dsdDB, TypInfo, Db, dsdGuides, cxTextEdit, cxCurrencyEdit, cxCheckBox, cxCalendar;
+uses dsdDB, TypInfo, Db, dsdGuides, cxTextEdit, cxCurrencyEdit, cxCheckBox,
+     cxCalendar, cxButtonEdit;
 
 procedure Register;
 begin
@@ -79,5 +86,18 @@ begin
        end
 end;
 
+
+{ TdsdGuidesComponentProperty }
+
+procedure TdsdGuidesComponentProperty.GetValues(Proc: TGetStrProc);
+begin
+  inherited;
+  // Отображаем только те компоненты, с которыми умеет работать TdsdGuides
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TcxButtonEdit)), Proc);
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TcxDateEdit)), Proc);
+
+
+
+end;
 
 end.

@@ -83,6 +83,7 @@ type
     function GetDataSet: TClientDataSet;
     procedure SetDataSet(const Value: TClientDataSet);
     procedure DataSetRefresh;
+    procedure MultiDataSetRefresh;
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
@@ -165,6 +166,7 @@ function TdsdStoredProc.Execute;
 begin
   result := '';
   if (OutputType = otDataSet) then DataSetRefresh;
+  if (OutputType = otMultiDataSet) then MultiDataSetRefresh;
   if (OutputType = otResult) then
      FillOutputParams(TStorageFactory.GetStorage.ExecuteProc(GetXML));
   if (OutputType = otBlob) then
@@ -237,6 +239,26 @@ begin
                    FillParams +
                 '</' + StoredProcName + '>' +
            '</xml>';
+end;
+
+procedure TdsdStoredProc.MultiDataSetRefresh;
+var B: TBookMark;
+    i: integer;
+    XMLResult: OleVariant;
+begin
+  XMLResult := TStorageFactory.GetStorage.ExecuteProc(GetXML);
+  try
+    for I := 0 to DataSets.Count - 1 do begin
+       if DataSets[i].DataSet.Active then
+          B := DataSets[i].DataSet.GetBookmark;
+       DataSets[i].DataSet.XMLData := XMLResult[i];
+       if Assigned(B) then
+          DataSets[i].DataSet.GotoBookmark(B);
+    end;
+  finally
+    if Assigned(B) then
+       DataSets[0].DataSet.FreeBookmark(B);
+  end;
 end;
 
 procedure TdsdStoredProc.Notification(AComponent: TComponent;

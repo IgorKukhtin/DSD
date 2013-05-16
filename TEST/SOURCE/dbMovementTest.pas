@@ -16,6 +16,7 @@ type
     procedure TearDown; override;
   published
     procedure MovementIncomeTest;
+    procedure MovementProductionUnionTest;
   end;
 
   TMovementIncomeTest = class(TObjectTest)
@@ -28,6 +29,17 @@ type
              FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId, PersonalPackerId: Integer;
              OperDatePartner: TDateTime; InvNumberPartner: String; PriceWithVAT: Boolean;
              VATPercent, DiscountPercent: double): integer;
+    constructor Create; override;
+  end;
+
+  TMovementProductionUnionTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  protected
+    procedure SetDataSetParam; override;
+  public
+    function InsertUpdateMovementProductionUnion(Id: Integer; InvNumber: String;
+             OperDate: TDateTime; FromId, ToId: Integer): integer;
     constructor Create; override;
   end;
 
@@ -60,6 +72,22 @@ var
 begin
   MovementIncome := TMovementIncomeTest.Create;
   Id := MovementIncome.InsertDefault;
+  // создание документа
+  try
+  // редактирование
+  finally
+    // удаление
+    DeleteMovement(Id);
+  end;
+end;
+
+procedure TdbMovementTest.MovementProductionUnionTest;
+var
+  MovementProductionUnion: TMovementProductionUnionTest;
+  Id: Integer;
+begin
+  MovementProductionUnion := TMovementProductionUnionTest.Create;
+  Id := MovementProductionUnion.InsertDefault;
   // создание документа
   try
   // редактирование
@@ -115,6 +143,41 @@ begin
 end;
 
 procedure TMovementIncomeTest.SetDataSetParam;
+begin
+  inherited;
+  FParams.AddParam('inStartDate', ftDateTime, ptInput, Date);
+  FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
+end;
+
+{ TMovementProductionUnionTest }
+
+constructor TMovementProductionUnionTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Movement_ProductionUnion';
+  spSelect := 'gpSelect_Movement_ProductionUnion';
+  spGet := 'gpGet_Movement_ProductionUnion';
+end;
+
+function TMovementProductionUnionTest.InsertDefault: integer;
+begin
+  result := InsertUpdateMovementProductionUnion(0, 'Номер 1', Date, 0, 0);
+end;
+
+function TMovementProductionUnionTest.InsertUpdateMovementProductionUnion(
+  Id: Integer; InvNumber: String; OperDate: TDateTime; FromId,
+  ToId: Integer): integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
+  FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
+  FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
+  FParams.AddParam('inToId', ftInteger, ptInput, ToId);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TMovementProductionUnionTest.SetDataSetParam;
 begin
   inherited;
   FParams.AddParam('inStartDate', ftDateTime, ptInput, Date);

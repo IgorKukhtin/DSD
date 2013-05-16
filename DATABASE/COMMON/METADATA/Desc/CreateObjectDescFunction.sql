@@ -177,3 +177,9 @@ CREATE OR REPLACE FUNCTION zc_Object_CarModel()
 $BODY$BEGIN
   RETURN 30;
 END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_Object_GoodsPropertyValue()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 31;
+END;  $BODY$ LANGUAGE plpgsql;

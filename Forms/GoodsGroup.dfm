@@ -20,6 +20,9 @@ inherited GoodsGroupForm: TGoodsGroupForm
     DataController.KeyField = 'Id'
     Images = dmMain.TreeImageList
     Navigator.Buttons.CustomButtons = <>
+    OptionsBehavior.IncSearch = True
+    OptionsData.Editing = False
+    OptionsData.Deleting = False
     OptionsView.ColumnAutoWidth = True
     RootValue = -1
     TabOrder = 4
@@ -28,16 +31,6 @@ inherited GoodsGroupForm: TGoodsGroupForm
       DataBinding.FieldName = 'Name'
       Width = 226
       Position.ColIndex = 0
-      Position.RowIndex = 0
-      Position.BandIndex = 0
-      Summary.FooterSummaryItems = <>
-      Summary.GroupFooterSummaryItems = <>
-    end
-    object cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn
-      Caption.Text = #1050#1086#1076
-      DataBinding.FieldName = 'Code'
-      Width = 100
-      Position.ColIndex = 1
       Position.RowIndex = 0
       Position.BandIndex = 0
       Summary.FooterSummaryItems = <>
@@ -56,7 +49,21 @@ inherited GoodsGroupForm: TGoodsGroupForm
     Top = 144
   end
   object cxPropertiesStore: TcxPropertiesStore
-    Components = <>
+    Components = <
+      item
+        Component = cxDBTreeList1cxDBTreeListColumn2
+        Properties.Strings = (
+          'SortIndex'
+          'SortOrder')
+      end
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
     StorageName = 'cxPropertiesStore'
     Left = 232
     Top = 96

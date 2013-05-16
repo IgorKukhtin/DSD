@@ -3,3 +3,15 @@ CREATE OR REPLACE FUNCTION zc_MovementItem_Goods()
 $BODY$BEGIN
   RETURN 1;
 END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_MovementItem_In()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 2;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_MovementItem_Out()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 3;
+END;  $BODY$ LANGUAGE plpgsql;
