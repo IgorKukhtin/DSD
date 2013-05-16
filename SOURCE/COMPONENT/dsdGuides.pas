@@ -6,6 +6,11 @@ uses Classes, Controls;
 
 type
 
+  TAccessControl = class(Controls.TWinControl)
+  public
+    property OnDblClick;
+  end;
+
   // Компонент работает со справочниками. Выбирает значение из эжлементов управления или форм
   TdsdGuides = class(TComponent)
   private
@@ -92,6 +97,7 @@ end;
 procedure TdsdGuides.SetLookupControl(const Value: TWinControl);
 begin
   FLookupControl := Value;
+  TAccessControl(FLookupControl).OnDblClick := OnDblClick;
 end;
 
 procedure TdsdGuides.SetTextValue(const Value: String);

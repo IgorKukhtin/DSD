@@ -39,36 +39,19 @@ type
     // возвращаем данные для тестирования
     procedure TearDown; override;
   published
-    procedure User_Test;
     procedure Cash_Test;
-    procedure JuridicalGroup_Test;
-    procedure Juridical_Test;
     procedure Contract_Test;
     procedure Goods_Test;
+    procedure GoodsPropertyValue_Test;
+    procedure JuridicalGroup_Test;
+    procedure Juridical_Test;
+    procedure User_Test;
   end;
 
-  TJuridicalGroupTest = class(TObjectTest)
-  private
+  TCashTest = class(TObjectTest)
     function InsertDefault: integer; override;
   public
-    function InsertUpdateJuridicalGroup(const Id, Code: Integer; Name: string; JuridicalGroupId: integer): integer;
-    constructor Create; override;
-  end;
-
-  TGoodsPropertyTest = class(TObjectTest)
-  private
-    function InsertDefault: integer; override;
-  public
-    function InsertUpdateGoodsProperty(const Id, Code: Integer; Name: string): integer;
-    constructor Create; override;
-  end;
-
-  TJuridicalTest = class(TObjectTest)
-  private
-    function InsertDefault: integer; override;
-  public
-    function InsertUpdateJuridical(const Id: integer; Code: Integer;
-        Name, GLNCode: string; isCorporate: boolean; JuridicalGroupId, GoodsPropertyId: integer): integer;
+    function InsertUpdateCash(const Id: integer; CashName: string; CurrencyId: Integer; BranchId: integer): integer;
     constructor Create; override;
   end;
 
@@ -87,26 +70,54 @@ type
     constructor Create; override;
   end;
 
-  TUserTest = class(TObjectTest)
-  private
-    function InsertDefault: integer; override;
-  public
-    function InsertUpdateUser(const Id: integer; UserName, Login, Password: string): integer;
-    constructor Create; override;
-  end;
-
-  TCashTest = class(TObjectTest)
-    function InsertDefault: integer; override;
-  public
-    function InsertUpdateCash(const Id: integer; CashName: string; CurrencyId: Integer; BranchId: integer): integer;
-    constructor Create; override;
-  end;
-
   TGoodsTest = class(TObjectTest)
     function InsertDefault: integer; override;
   public
     function InsertUpdateGoods(Id, Code: Integer; Name: String;
                                GoodsGroupId, MeasureId: Integer; Weight: Double): integer;
+    constructor Create; override;
+  end;
+
+  TGoodsPropertyTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  public
+    function InsertUpdateGoodsProperty(const Id, Code: Integer; Name: string): integer;
+    constructor Create; override;
+  end;
+
+  TGoodsPropertyValueTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  public
+    function InsertUpdateGoodsPropertyValue(const Id: Integer; Name: string;
+        Amount: double; BarCode, Article, BarCodeGLN, ArticleGLN: string;
+        GoodsPropertyId, GoodsId, GoodsKindId: Integer): integer;
+    constructor Create; override;
+  end;
+
+  TJuridicalTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  public
+    function InsertUpdateJuridical(const Id: integer; Code: Integer;
+        Name, GLNCode: string; isCorporate: boolean; JuridicalGroupId, GoodsPropertyId: integer): integer;
+    constructor Create; override;
+  end;
+
+  TJuridicalGroupTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  public
+    function InsertUpdateJuridicalGroup(const Id, Code: Integer; Name: string; JuridicalGroupId: integer): integer;
+    constructor Create; override;
+  end;
+
+  TUserTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  public
+    function InsertUpdateUser(const Id: integer; UserName, Login, Password: string): integer;
     constructor Create; override;
   end;
 
@@ -222,6 +233,26 @@ begin
   Result := ObjectTest.GetDataSet.RecordCount;
 end;
 {------------------------------------------------------------------------------}
+procedure TdbObjectTest.GoodsPropertyValue_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TGoodsPropertyValueTest;
+begin
+  ObjectTest := TGoodsPropertyValueTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка объекта
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных о юр лице
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'GoodsPropertyValue'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+
+  finally
+    DeleteObject(Id);
+  end;
+end;
+
 procedure TdbObjectTest.Goods_Test;
 var Id: integer;
     RecordCount: Integer;
@@ -598,6 +629,48 @@ begin
   FParams.AddParam('inGoodsGroupId', ftInteger, ptInput, GoodsGroupId);
   FParams.AddParam('inMeasureId', ftInteger, ptInput, MeasureId);
   FParams.AddParam('inWeight', ftFloat, ptInput, Weight);
+  result := InsertUpdate(FParams);
+end;
+
+{ TGoodsPropertyValueTest }
+
+constructor TGoodsPropertyValueTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_GoodsPropertyValue';
+  spSelect := 'gpSelect_Object_GoodsPropertyValue';
+  spGet := 'gpGet_Object_GoodsPropertyValue';
+end;
+
+function TGoodsPropertyValueTest.InsertDefault: integer;
+var
+  GoodsPropertyId, GoodsId, GoodsKindId: Integer;
+begin
+  GoodsId := TGoodsTest.Create.GetDefault;
+  GoodsPropertyId := TGoodsPropertyTest.Create.GetDefault;
+  GoodsKindId := 0;
+  result := InsertUpdateGoodsPropertyValue(0, 'GoodsPropertyValue', 10,
+         'BarCode', 'Article', 'BarCodeGLN', 'ArticleGLN',
+         GoodsPropertyId, GoodsId, GoodsKindId)
+end;
+
+function TGoodsPropertyValueTest.InsertUpdateGoodsPropertyValue(
+  const Id: Integer; Name: string; Amount: double; BarCode, Article, BarCodeGLN,
+  ArticleGLN: string; GoodsPropertyId, GoodsId, GoodsKindId: Integer): integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  FParams.AddParam('inAmount', ftFloat, ptInput, Amount);
+  FParams.AddParam('inBarCode', ftString, ptInput, BarCode);
+  FParams.AddParam('inArticle', ftString, ptInput, Article);
+  FParams.AddParam('inBarCodeGLN', ftString, ptInput, BarCodeGLN);
+  FParams.AddParam('inArticleGLN', ftString, ptInput, ArticleGLN);
+
+  FParams.AddParam('inGoodsPropertyId', ftInteger, ptInput, GoodsPropertyId);
+  FParams.AddParam('inGoodsId', ftInteger, ptInput, GoodsId);
+  FParams.AddParam('inGoodsKindId', ftInteger, ptInput, GoodsKindId);
+
   result := InsertUpdate(FParams);
 end;
 

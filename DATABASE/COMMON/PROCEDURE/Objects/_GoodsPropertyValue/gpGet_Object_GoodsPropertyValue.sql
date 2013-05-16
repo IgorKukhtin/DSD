@@ -5,7 +5,7 @@
 CREATE OR REPLACE FUNCTION gpGet_Object_GoodsPropertyValue(
 IN inId          Integer,       /* Классификатор свойств товаров */
 IN inSession     TVarChar       /* текущий пользователь */)
-RETURNS TABLE (Name TVarChar, Amount TFloat, BarCode TVarChar, Article TVarChar, 
+RETURNS TABLE (Id Integer, Name TVarChar, Amount TFloat, BarCode TVarChar, Article TVarChar, 
                BarCodeGLN TVarChar, ArticleGLN TVarChar, GoodsPropertyId Integer, GoodsPropertyName TVarChar, 
                GoodsId Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar) AS
 $BODY$BEGIN

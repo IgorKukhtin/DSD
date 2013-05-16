@@ -147,3 +147,21 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Cash_Branch()
 $BODY$BEGIN
   RETURN 23;
 END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 24;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsPropertyValue_Goods()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 25;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 26;
+END;  $BODY$ LANGUAGE plpgsql;

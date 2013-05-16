@@ -79,4 +79,43 @@ END;$BODY$
 ALTER FUNCTION zc_ObjectString_Contract_Comment()
   OWNER TO postgres;
 
+CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsPropertyValue_BarCode()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 13;
+END;$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 1;
+ALTER FUNCTION zc_ObjectString_GoodsPropertyValue_BarCode()
+  OWNER TO postgres;
   
+CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsPropertyValue_Article()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 14;
+END;$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 1;
+ALTER FUNCTION zc_ObjectString_GoodsPropertyValue_Article()
+  OWNER TO postgres;
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsPropertyValue_BarCodeGLN()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 15;
+END;$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 1;
+ALTER FUNCTION zc_ObjectString_GoodsPropertyValue_BarCodeGLN()
+  OWNER TO postgres;
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsPropertyValue_ArticleGLN()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 16;
+END;$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 1;
+ALTER FUNCTION zc_ObjectString_GoodsPropertyValue_ArticleGLN()
+  OWNER TO postgres;
+
