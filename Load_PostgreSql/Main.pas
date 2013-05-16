@@ -1047,9 +1047,9 @@ begin
                        toStoredProc.Parameters.ParamByName('inBarCode').Value:=FieldByName('BarCode1').AsString;
                        toStoredProc.Parameters.ParamByName('inArticle').Value:=FieldByName('Article1').AsString;
                        toStoredProc.Parameters.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN1').AsString;
-                       toStoredProc.Parameters.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId1').AsString;
-                       toStoredProc.Parameters.ParamByName('inGoodsId').Value:=FieldByName('GoodsId1').AsString;
-                       toStoredProc.Parameters.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId1').AsString;
+                       toStoredProc.Parameters.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId1').AsInteger;
+                       toStoredProc.Parameters.ParamByName('inGoodsId').Value:=FieldByName('GoodsId1').AsInteger;
+                       toStoredProc.Parameters.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId1').AsInteger;
                        toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
                        if not myExecToStoredProc then ;//exit;
                        //
@@ -1065,9 +1065,9 @@ begin
                        toStoredProc.Parameters.ParamByName('inBarCode').Value:=FieldByName('BarCode2').AsString;
                        toStoredProc.Parameters.ParamByName('inArticle').Value:=FieldByName('Article2').AsString;
                        toStoredProc.Parameters.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN2').AsString;
-                       toStoredProc.Parameters.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId2').AsString;
-                       toStoredProc.Parameters.ParamByName('inGoodsId').Value:=FieldByName('GoodsId2').AsString;
-                       toStoredProc.Parameters.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId2').AsString;
+                       toStoredProc.Parameters.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId2').AsInteger;
+                       toStoredProc.Parameters.ParamByName('inGoodsId').Value:=FieldByName('GoodsId2').AsInteger;
+                       toStoredProc.Parameters.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId2').AsInteger;
                        toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
                        if not myExecToStoredProc then ;//exit;
                        //
