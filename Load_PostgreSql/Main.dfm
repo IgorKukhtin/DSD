@@ -1,6 +1,6 @@
 object MainForm: TMainForm
-  Left = 421
-  Top = 150
+  Left = 0
+  Top = 129
   Width = 1024
   Height = 674
   Caption = 'MainForm'
@@ -17,7 +17,7 @@ object MainForm: TMainForm
   object DBGrid: TDBGrid
     Left = 0
     Top = 0
-    Width = 711
+    Width = 695
     Height = 591
     Align = alClient
     DataSource = DataSource
@@ -73,9 +73,9 @@ object MainForm: TMainForm
     end
   end
   object Panel1: TPanel
-    Left = 711
+    Left = 695
     Top = 0
-    Width = 305
+    Width = 321
     Height = 591
     Align = alRight
     BevelOuter = bvNone
@@ -274,6 +274,14 @@ object MainForm: TMainForm
       Height = 17
       Caption = '6.2. '#1047#1085#1072#1095#1077#1085#1080#1103' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074' '#1076#1083#1103' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1072
       TabOrder = 18
+    end
+    object cbSetNull_Id_Postgres: TCheckBox
+      Left = 15
+      Top = 504
+      Width = 292
+      Height = 17
+      Caption = #1044#1083#1103' '#1087#1077#1088#1074#1086#1075#1086' '#1088#1072#1079#1072' set Sybase.'#1042#1057#1045#1052'.Id_Postgres = null'
+      TabOrder = 19
     end
   end
   object DataSource: TDataSource
