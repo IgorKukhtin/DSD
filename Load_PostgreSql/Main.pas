@@ -5,7 +5,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, DB, DBTables, Grids, DBGrids, StdCtrls, ExtCtrls, Gauges, ADODB,
-  RXCtrls, Mask, ToolEdit;
+  Mask, ZStoredProcedure, ZAbstractRODataset, ZAbstractDataset, ZDataset,
+  ZAbstractConnection, ZConnection;
 
 type
   TMainForm = class(TForm)
@@ -20,15 +21,15 @@ type
     cbGoods: TCheckBox;
     fromADOConnection: TADOConnection;
     toADOConnection: TADOConnection;
-    toStoredProc: TADOStoredProc;
+    toStoredProc22: TADOStoredProc;
     fromQuery: TADOQuery;
     fromSqlQuery: TADOQuery;
-    toQuery: TADOQuery;
+    toQuery11: TADOQuery;
     StopButton: TButton;
     CloseButton: TButton;
     cbMeasure: TCheckBox;
     cbGoodsKind: TCheckBox;
-    toStoredProcTwo: TADOStoredProc;
+    toStoredProcTwo22: TADOStoredProc;
     cbPaidKind: TCheckBox;
     cbJuridicalGroup: TCheckBox;
     cbContractKind: TCheckBox;
@@ -49,10 +50,13 @@ type
     cbAllDocument: TCheckBox;
     cbIncome: TCheckBox;
     OKDocumentButton: TButton;
-    StartDateEdit: TDateEdit;
-    EndDateEdit: TDateEdit;
-    RxLabel1: TRxLabel;
-    RxLabel2: TRxLabel;
+    StartDateEdit: TEdit;
+    EndDateEdit: TEdit;
+    Label1: TLabel;
+    Label2: TLabel;
+    toZConnection: TZConnection;
+    toQuery: TZQuery;
+    toStoredProc: TZStoredProc;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -252,6 +256,7 @@ begin
      Gauge.Visible:=false;
      DBGrid.Enabled:=true;
      OKGuideButton.Enabled:=true;
+     OKDocumentButton.Enabled:=true;
      //
      toADOConnection.Connected:=false;
      //fromADOConnection.Connected:=false;
@@ -280,6 +285,7 @@ begin
      Gauge.Visible:=false;
      DBGrid.Enabled:=true;
      OKGuideButton.Enabled:=true;
+     OKDocumentButton.Enabled:=true;
      //
      toADOConnection.Connected:=false;
      //fromADOConnection.Connected:=false;
@@ -336,8 +342,8 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.ProcedureName:='gpinsertupdate_object_measure';
-        toStoredProc.Parameters.Refresh;
+        toStoredProc.StoredProcName:='gpinsertupdate_object_measure';
+        //toStoredProc.Parameters.Refresh;
         //
         //DisableControls;
         while not EOF do
@@ -345,14 +351,14 @@ begin
              //!!!
              if fStop then begin {EnableControls;}exit;end;
              //
-             toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             //toStoredProc.Parameters.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
-             toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             //toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.Measure set Id_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             then fExecSqFromQuery('update dba.Measure set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;
@@ -391,8 +397,8 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.ProcedureName:='gpinsertupdate_object_goodsgroup';
-        toStoredProc.Parameters.Refresh;
+        toStoredProc.StoredProcName:='gpinsertupdate_object_goodsgroup';
+        //toStoredProc.Parameters.Refresh;
         //
         //DisableControls;
         while not EOF do
@@ -400,16 +406,16 @@ begin
              //!!!
              if fStop then begin {EnableControls;}exit;end;
              //
-             toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             toStoredProc.Parameters.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
-             toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Parameters.ParamByName('inParentId').Value:=FieldByName('ParentId_Postgres').AsInteger;
-             //toStoredProc.Parameters.ParamByName('inGoodsGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
-             toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             //toStoredProc.Params.ParamByName('inGoodsGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.Goods set Id_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             then fExecSqFromQuery('update dba.Goods set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;
@@ -459,25 +465,25 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.ProcedureName:='gpinsertupdate_object_goods';
-        toStoredProc.Parameters.Refresh;
+        toStoredProc.StoredProcName:='gpinsertupdate_object_goods';
+        //toStoredProc.Parameters.Refresh;
         //
         while not EOF do
         begin
              //!!!
              if fStop then begin {EnableControls;}exit;end;
              //
-             toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             toStoredProc.Parameters.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
-             toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Parameters.ParamByName('inGoodsGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
-             toStoredProc.Parameters.ParamByName('inMeasureId').Value:=FieldByName('MeasureId_Postgres').AsInteger;
-             toStoredProc.Parameters.ParamByName('inWeight').Value:=FieldByName('MeasureId_Postgres').AsFloat;
-             toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inGoodsGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inMeasureId').Value:=FieldByName('MeasureId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inWeight').Value:=FieldByName('MeasureId_Postgres').AsFloat;
+             toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.GoodsProperty set Id_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             then fExecSqFromQuery('update dba.GoodsProperty set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;
@@ -514,8 +520,8 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.ProcedureName:='gpinsertupdate_object_goodskind';
-        toStoredProc.Parameters.Refresh;
+        toStoredProc.StoredProcName:='gpinsertupdate_object_goodskind';
+        //toStoredProc.Parameters.Refresh;
         //
         //DisableControls;
         while not EOF do
@@ -523,14 +529,14 @@ begin
              //!!!
              if fStop then begin {EnableControls;}exit;end;
              //
-             toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             toStoredProc.Parameters.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
-             toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.KindPackage set Id_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             then fExecSqFromQuery('update dba.KindPackage set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;
@@ -567,8 +573,8 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.ProcedureName:='gpinsertupdate_object_paidkind';
-        toStoredProc.Parameters.Refresh;
+        toStoredProc.StoredProcName:='gpinsertupdate_object_paidkind';
+        //toStoredProc.Parameters.Refresh;
         //
         //DisableControls;
         while not EOF do
@@ -576,14 +582,14 @@ begin
              //!!!
              if fStop then begin {EnableControls;}exit;end;
              //
-             toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             toStoredProc.Parameters.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
-             toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.MoneyKind set Id_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             then fExecSqFromQuery('update dba.MoneyKind set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;
@@ -619,8 +625,8 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.ProcedureName:='gpinsertupdate_object_contractkind';
-        toStoredProc.Parameters.Refresh;
+        toStoredProc.StoredProcName:='gpinsertupdate_object_contractkind';
+        //toStoredProc.Parameters.Refresh;
         //
         //DisableControls;
         while not EOF do
@@ -628,14 +634,14 @@ begin
              //!!!
              if fStop then begin {EnableControls;}exit;end;
              //
-             toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             toStoredProc.Parameters.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
-             toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.ContractKind set Id_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             then fExecSqFromQuery('update dba.ContractKind set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;
@@ -684,8 +690,8 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.ProcedureName:='gpinsertupdate_object_juridicalgroup';
-        toStoredProc.Parameters.Refresh;
+        toStoredProc.StoredProcName:='gpinsertupdate_object_juridicalgroup';
+        //toStoredProc.Parameters.Refresh;
         //
         //DisableControls;
         while not EOF do
@@ -693,16 +699,16 @@ begin
              //!!!
              if fStop then begin {EnableControls;}exit;end;
              //
-             toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             toStoredProc.Parameters.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
-             toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Parameters.ParamByName('inParentId').Value:=FieldByName('ParentId_Postgres').AsInteger;
-             //toStoredProc.Parameters.ParamByName('inJuridicalGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
-             toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             //toStoredProc.Params.ParamByName('inJuridicalGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.Unit set Id1_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             then fExecSqFromQuery('update dba.Unit set Id1_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;
@@ -795,8 +801,8 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.ProcedureName:='gpinsertupdate_object_juridical';
-        toStoredProc.Parameters.Refresh;
+        toStoredProc.StoredProcName:='gpinsertupdate_object_juridical';
+        //toStoredProc.Parameters.Refresh;
         //
         //DisableControls;
         while not EOF do
@@ -804,18 +810,18 @@ begin
              //!!!
              if fStop then begin {EnableControls;}exit;end;
              //
-             toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             toStoredProc.Parameters.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
-             toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Parameters.ParamByName('inGLNCode').Value:=FieldByName('GLNCode').AsString;
-             toStoredProc.Parameters.ParamByName('inIsCorporate').Value:=false;
-             toStoredProc.Parameters.ParamByName('inJuridicalGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
-             toStoredProc.Parameters.ParamByName('inJuridicalGroupId').Value:=FieldByName('GoodsPropertyId_PG').AsInteger;
-             toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inGLNCode').Value:=FieldByName('GLNCode').AsString;
+             toStoredProc.Params.ParamByName('inIsCorporate').Value:=false;
+             toStoredProc.Params.ParamByName('inJuridicalGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inJuridicalGroupId').Value:=FieldByName('GoodsPropertyId_PG').AsInteger;
+             toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.Unit set Id2_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             then fExecSqFromQuery('update dba.Unit set Id2_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;
@@ -864,8 +870,8 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.ProcedureName:='gpinsertupdate_object_partner';
-        toStoredProc.Parameters.Refresh;
+        toStoredProc.StoredProcName:='gpinsertupdate_object_partner';
+        //toStoredProc.Parameters.Refresh;
         //
         //DisableControls;
         while not EOF do
@@ -873,16 +879,16 @@ begin
              //!!!
              if fStop then begin {EnableControls;}exit;end;
              //
-             toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             toStoredProc.Parameters.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
-             toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Parameters.ParamByName('inGLNCode').Value:=FieldByName('GLNCode').AsString;
-             toStoredProc.Parameters.ParamByName('inJuridicalId').Value:=FieldByName('JuridicalId_Postgres').AsInteger;
-             toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inGLNCode').Value:=FieldByName('GLNCode').AsString;
+             toStoredProc.Params.ParamByName('inJuridicalId').Value:=FieldByName('JuridicalId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.Unit set Id3_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             then fExecSqFromQuery('update dba.Unit set Id3_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;
@@ -944,8 +950,8 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.ProcedureName:='gpinsertupdate_object_unitgroup';
-        toStoredProc.Parameters.Refresh;
+        toStoredProc.StoredProcName:='gpinsertupdate_object_unitgroup';
+        //toStoredProc.Parameters.Refresh;
         //
         //DisableControls;
         while not EOF do
@@ -953,18 +959,18 @@ begin
              //!!!
              if fStop then begin {EnableControls;}exit;end;
              //
-             toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             toStoredProc.Parameters.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
-             toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Parameters.ParamByName('inParentId').Value:=FieldByName('ParentId_Postgres').AsInteger;
-             //toStoredProc.Parameters.ParamByName('inUnitGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
-             toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             //toStoredProc.Params.ParamByName('inUnitGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then if FieldByName('ObjectId').AsInteger=151
-                  then fExecSqFromQuery('update dba.Unit set Id3_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString)
-                  else fExecSqFromQuery('update dba.Unit set Id1_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                  then fExecSqFromQuery('update dba.Unit set Id3_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString)
+                  else fExecSqFromQuery('update dba.Unit set Id1_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;
@@ -989,7 +995,7 @@ begin
         Add('select Unit.Id as ObjectId');
         Add('     , 0 as ObjectCode');
         Add('     , Unit.UnitName as ObjectName');
-        Add('     , Unit.Id2_Postgres as Id_Postgres');
+        Add('     , Unit.Id3_Postgres as Id_Postgres');
         Add('     , Unit_parent.Id1_Postgres as ParentId_Postgres');
         Add('     , 0 as BranchId_Postgres');
         Add('from dba.Unit');
@@ -1006,7 +1012,7 @@ begin
         Add('select Unit.Id as ObjectId');
         Add('     , Unit.UnitCode as ObjectCode');
         Add('     , Unit.UnitName as ObjectName');
-        Add('     , Unit.Id2_Postgres as Id_Postgres');
+        Add('     , Unit.Id3_Postgres as Id_Postgres');
         Add('     , Unit_parent.Id3_Postgres as ParentId_Postgres');
         Add('     , 0 as BranchId_Postgres');
         Add('from dba.Unit');
@@ -1028,8 +1034,8 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.ProcedureName:='gpinsertupdate_object_unit';
-        toStoredProc.Parameters.Refresh;
+        toStoredProc.StoredProcName:='gpinsertupdate_object_unit';
+        //toStoredProc.Parameters.Refresh;
         //
         //DisableControls;
         while not EOF do
@@ -1037,16 +1043,16 @@ begin
              //!!!
              if fStop then begin {EnableControls;}exit;end;
              //
-             toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             toStoredProc.Parameters.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
-             toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Parameters.ParamByName('inUnitGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
-             toStoredProc.Parameters.ParamByName('inBranchId').Value:=FieldByName('BranchId_Postgres').AsInteger;
-             toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inUnitGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inBranchId').Value:=FieldByName('BranchId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.Unit set Id2_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             then fExecSqFromQuery('update dba.Unit set Id3_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;
@@ -1082,8 +1088,8 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.ProcedureName:='gpinsertupdate_object_pricelist';
-        toStoredProc.Parameters.Refresh;
+        toStoredProc.StoredProcName:='gpinsertupdate_object_pricelist';
+        //toStoredProc.Parameters.Refresh;
         //
         //DisableControls;
         while not EOF do
@@ -1091,14 +1097,14 @@ begin
              //!!!
              if fStop then begin {EnableControls;}exit;end;
              //
-             toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             toStoredProc.Parameters.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
-             toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.PriceList_byHistory set Id_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             then fExecSqFromQuery('update dba.PriceList_byHistory set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;
@@ -1134,8 +1140,8 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.ProcedureName:='gpinsertupdate_object_goodsproperty';
-        toStoredProc.Parameters.Refresh;
+        toStoredProc.StoredProcName:='gpinsertupdate_object_goodsproperty';
+        //toStoredProc.Parameters.Refresh;
         //
         //DisableControls;
         while not EOF do
@@ -1143,14 +1149,14 @@ begin
              //!!!
              if fStop then begin {EnableControls;}exit;end;
              //
-             toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             toStoredProc.Parameters.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
-             toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.GoodsProperty_Postgres set Id_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             then fExecSqFromQuery('update dba.GoodsProperty_Postgres set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;
@@ -1297,6 +1303,7 @@ begin
              +' or is4=zc_rvYes()'
              +' or is5=zc_rvYes()'
              +' or is6=zc_rvYes()'
+             +' or is7=zc_rvYes()'
            );
         Add('order by is7, BarCode7, ObjectId');
         Open;
@@ -1307,8 +1314,8 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.ProcedureName:='gpinsertupdate_object_goodspropertyvalue';
-        toStoredProc.Parameters.Refresh;
+        toStoredProc.StoredProcName:='gpinsertupdate_object_goodspropertyvalue';
+        //toStoredProc.Parameters.Refresh;
         //
         //DisableControls;
         while not EOF do
@@ -1319,128 +1326,128 @@ begin
              // 1
              if FieldByName('is1').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
-                       toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres1').AsInteger;
-                       toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName1').AsString;
-                       toStoredProc.Parameters.ParamByName('inAmount').Value:=FieldByName('Amount1').AsFloat;
-                       toStoredProc.Parameters.ParamByName('inBarCode').Value:=FieldByName('BarCode1').AsString;
-                       toStoredProc.Parameters.ParamByName('inArticle').Value:=FieldByName('Article1').AsString;
-                       toStoredProc.Parameters.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN1').AsString;
-                       toStoredProc.Parameters.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId1').AsInteger;
-                       toStoredProc.Parameters.ParamByName('inGoodsId').Value:=FieldByName('GoodsId1').AsInteger;
-                       toStoredProc.Parameters.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId1').AsInteger;
-                       toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres1').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName1').AsString;
+                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount1').AsFloat;
+                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode1').AsString;
+                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article1').AsString;
+                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN1').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId1').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId1').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId1').AsInteger;
+                       toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
                        if not myExecToStoredProc then ;//exit;
                        //
                        if (1=0)or(FieldByName('Id_Postgres1').AsInteger=0)
-                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id1_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id1_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
                   end;
              // 2
              if FieldByName('is2').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
-                       toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres2').AsInteger;
-                       toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName2').AsString;
-                       toStoredProc.Parameters.ParamByName('inAmount').Value:=FieldByName('Amount2').AsFloat;
-                       toStoredProc.Parameters.ParamByName('inBarCode').Value:=FieldByName('BarCode2').AsString;
-                       toStoredProc.Parameters.ParamByName('inArticle').Value:=FieldByName('Article2').AsString;
-                       toStoredProc.Parameters.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN2').AsString;
-                       toStoredProc.Parameters.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId2').AsInteger;
-                       toStoredProc.Parameters.ParamByName('inGoodsId').Value:=FieldByName('GoodsId2').AsInteger;
-                       toStoredProc.Parameters.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId2').AsInteger;
-                       toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres2').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName2').AsString;
+                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount2').AsFloat;
+                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode2').AsString;
+                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article2').AsString;
+                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN2').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId2').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId2').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId2').AsInteger;
+                       toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
                        if not myExecToStoredProc then ;//exit;
                        //
                        if (1=0)or(FieldByName('Id_Postgres2').AsInteger=0)
-                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id2_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id2_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
                   end;
              // 3
              if FieldByName('is3').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
-                       toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres3').AsInteger;
-                       toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName3').AsString;
-                       toStoredProc.Parameters.ParamByName('inAmount').Value:=FieldByName('Amount3').AsFloat;
-                       toStoredProc.Parameters.ParamByName('inBarCode').Value:=FieldByName('BarCode3').AsString;
-                       toStoredProc.Parameters.ParamByName('inArticle').Value:=FieldByName('Article3').AsString;
-                       toStoredProc.Parameters.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN3').AsString;
-                       toStoredProc.Parameters.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId3').AsInteger;
-                       toStoredProc.Parameters.ParamByName('inGoodsId').Value:=FieldByName('GoodsId3').AsInteger;
-                       toStoredProc.Parameters.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId3').AsInteger;
-                       toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres3').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName3').AsString;
+                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount3').AsFloat;
+                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode3').AsString;
+                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article3').AsString;
+                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN3').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId3').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId3').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId3').AsInteger;
+                       toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
                        if not myExecToStoredProc then ;//exit;
                        //
                        if (1=0)or(FieldByName('Id_Postgres3').AsInteger=0)
-                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id3_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id3_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
                   end;
              // 4
              if FieldByName('is4').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
-                       toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres4').AsInteger;
-                       toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName4').AsString;
-                       toStoredProc.Parameters.ParamByName('inAmount').Value:=FieldByName('Amount4').AsFloat;
-                       toStoredProc.Parameters.ParamByName('inBarCode').Value:=FieldByName('BarCode4').AsString;
-                       toStoredProc.Parameters.ParamByName('inArticle').Value:=FieldByName('Article4').AsString;
-                       toStoredProc.Parameters.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN4').AsString;
-                       toStoredProc.Parameters.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId4').AsInteger;
-                       toStoredProc.Parameters.ParamByName('inGoodsId').Value:=FieldByName('GoodsId4').AsInteger;
-                       toStoredProc.Parameters.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId4').AsInteger;
-                       toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres4').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName4').AsString;
+                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount4').AsFloat;
+                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode4').AsString;
+                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article4').AsString;
+                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN4').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId4').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId4').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId4').AsInteger;
+                       toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
                        if not myExecToStoredProc then ;//exit;
                        //
                        if (1=0)or(FieldByName('Id_Postgres4').AsInteger=0)
-                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id4_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id4_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
                   end;
              // 5
              if FieldByName('is5').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
-                       toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres5').AsInteger;
-                       toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName5').AsString;
-                       toStoredProc.Parameters.ParamByName('inAmount').Value:=FieldByName('Amount5').AsFloat;
-                       toStoredProc.Parameters.ParamByName('inBarCode').Value:=FieldByName('BarCode5').AsString;
-                       toStoredProc.Parameters.ParamByName('inArticle').Value:=FieldByName('Article5').AsString;
-                       toStoredProc.Parameters.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN5').AsString;
-                       toStoredProc.Parameters.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId5').AsInteger;
-                       toStoredProc.Parameters.ParamByName('inGoodsId').Value:=FieldByName('GoodsId5').AsInteger;
-                       toStoredProc.Parameters.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId5').AsInteger;
-                       toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres5').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName5').AsString;
+                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount5').AsFloat;
+                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode5').AsString;
+                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article5').AsString;
+                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN5').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId5').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId5').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId5').AsInteger;
+                       toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
                        if not myExecToStoredProc then ;//exit;
                        //
                        if (1=0)or(FieldByName('Id_Postgres5').AsInteger=0)
-                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id5_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id5_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
                   end;
              // 6
              if FieldByName('is6').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
-                       toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres6').AsInteger;
-                       toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName6').AsString;
-                       toStoredProc.Parameters.ParamByName('inAmount').Value:=FieldByName('Amount6').AsFloat;
-                       toStoredProc.Parameters.ParamByName('inBarCode').Value:=FieldByName('BarCode6').AsString;
-                       toStoredProc.Parameters.ParamByName('inArticle').Value:=FieldByName('Article6').AsString;
-                       toStoredProc.Parameters.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN6').AsString;
-                       toStoredProc.Parameters.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId6').AsInteger;
-                       toStoredProc.Parameters.ParamByName('inGoodsId').Value:=FieldByName('GoodsId6').AsInteger;
-                       toStoredProc.Parameters.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId6').AsInteger;
-                       toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres6').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName6').AsString;
+                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount6').AsFloat;
+                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode6').AsString;
+                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article6').AsString;
+                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN6').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId6').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId6').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId6').AsInteger;
+                       toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
                        if not myExecToStoredProc then ;//exit;
                        //
                        if (1=0)or(FieldByName('Id_Postgres6').AsInteger=0)
-                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id6_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id6_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
                   end;
              // 7
              if FieldByName('is7').AsInteger=FieldByName('zc_rvYes').AsInteger
              then begin
-                       toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres7').AsInteger;
-                       toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName7').AsString;
-                       toStoredProc.Parameters.ParamByName('inAmount').Value:=FieldByName('Amount7').AsFloat;
-                       toStoredProc.Parameters.ParamByName('inBarCode').Value:=FieldByName('BarCode7').AsString;
-                       toStoredProc.Parameters.ParamByName('inArticle').Value:=FieldByName('Article7').AsString;
-                       toStoredProc.Parameters.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN7').AsString;
-                       toStoredProc.Parameters.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId7').AsInteger;
-                       toStoredProc.Parameters.ParamByName('inGoodsId').Value:=FieldByName('GoodsId7').AsInteger;
-                       toStoredProc.Parameters.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId7').AsInteger;
-                       toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres7').AsInteger;
+                       toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName7').AsString;
+                       toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount7').AsFloat;
+                       toStoredProc.Params.ParamByName('inBarCode').Value:=FieldByName('BarCode7').AsString;
+                       toStoredProc.Params.ParamByName('inArticle').Value:=FieldByName('Article7').AsString;
+                       toStoredProc.Params.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN7').AsString;
+                       toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId7').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId7').AsInteger;
+                       toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId7').AsInteger;
+                       toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
                        if not myExecToStoredProc then ;//exit;
                        //
                        if (1=0)or(FieldByName('Id_Postgres7').AsInteger=0)
-                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id7_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id7_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
                   end;
              //
              Next;
@@ -1465,11 +1472,30 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select GoodsProperty_Postgres.Id as ObjectId');
-        Add('     , 0 as ObjectCode');
-        Add('     , GoodsProperty_Postgres.Name_PG as ObjectName');
-        Add('     , GoodsProperty_Postgres.Id_Postgres as Id_Postgres');
-        Add('from dba.GoodsProperty_Postgres');
+        Add('select Bill.Id as ObjectId');
+        Add('     , Bill.BillNumber as InvNumber');
+        Add('     , Bill.BillDate as OperDate');
+        Add('     , UnitFrom.Id3_Postgres as FromId_Postgres');
+        Add('     , UnitTo.Id3_Postgres as ToId_Postgres');
+        Add('     , MoneyKind.Id_Postgres as PaidKindId_Postgres');
+        Add('     , null as ContractId');
+        Add('     , null as CarId');
+        Add('     , null as PersonalDriverId');
+        Add('     , null as PersonalPackerId');
+        Add('     , OperDate as OperDatePartner');
+        Add('     , null as InvNumberPartner');
+        Add('     , Bill.isNds as PriceWithVAT');
+        Add('     , Bill.Nds as VATPercent');
+        Add('     , Bill.DiscountTax as DiscountPercent');
+        Add('     , Bill.Id_Postgres as Id_Postgres');
+        Add('     , zc_rvYes() as zc_rvYes');
+        Add('from dba.Bill');
+        Add('     left outer join dba.Unit as UnitFrom on UnitFrom.Id = Bill.FromId');
+        Add('     left outer join dba.Unit as UnitTo on UnitTo.Id = Bill.ToId');
+        Add('     left outer join dba.MoneyKind on MoneyKind.Id = Bill.MoneyKindId');
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+           +'  and Bill.BillKind=zc_bkIncomeToUnit()'
+           );
         Add('order by ObjectId');
         Open;
         //
@@ -1479,8 +1505,8 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.ProcedureName:='gpinsertupdate_object_goodsproperty';
-        toStoredProc.Parameters.Refresh;
+        toStoredProc.StoredProcName:='gpinsertupdate_movement_income';
+        //toStoredProc.Parameters.Refresh;
         //
         //DisableControls;
         while not EOF do
@@ -1488,14 +1514,26 @@ begin
              //!!!
              if fStop then begin {EnableControls;}exit;end;
              //
-             toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             toStoredProc.Parameters.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
-             toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber').AsString;
+             toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
+             toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inPaidKindId').Value:=FieldByName('PaidKindId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inContractId').Value:=FieldByName('ContractId').AsInteger;
+             toStoredProc.Params.ParamByName('inCarId').Value:=FieldByName('CarId').AsInteger;
+             toStoredProc.Params.ParamByName('inPersonalDriverId').Value:=FieldByName('PersonalDriverId').AsInteger;
+             toStoredProc.Params.ParamByName('inPersonalPackerId').Value:=FieldByName('PersonalPackerId').AsInteger;
+             toStoredProc.Params.ParamByName('inOperDatePartner').Value:=FieldByName('OperDatePartner').AsDateTime;
+             toStoredProc.Params.ParamByName('inInvNumberPartner').Value:=FieldByName('InvNumberPartner').AsString;
+             //if FieldByName('PriceWithVAT').AsInteger=FieldByName('zc_rvYes').AsInteger then toStoredProc.Params.ParamByName('inPriceWithVAT').Value:=true else toStoredProc.Params.ParamByName('inPriceWithVAT').Value:=false;
+             toStoredProc.Params.ParamByName('inVATPercent').Value:=FieldByName('VATPercent').AsFloat;
+             toStoredProc.Params.ParamByName('inDiscountPercent').Value:=FieldByName('DiscountPercent').AsFloat;
+             toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.GoodsProperty_Postgres set Id_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             then fExecSqFromQuery('update dba.Bill set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;

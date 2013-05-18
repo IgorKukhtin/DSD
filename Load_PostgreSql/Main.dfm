@@ -1,9 +1,9 @@
 object MainForm: TMainForm
   Left = 202
   Top = 180
-  Width = 1315
-  Height = 674
   Caption = 'MainForm'
+  ClientHeight = 716
+  ClientWidth = 1150
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,8 +17,8 @@ object MainForm: TMainForm
   object DBGrid: TDBGrid
     Left = 0
     Top = 0
-    Width = 761
-    Height = 591
+    Width = 604
+    Height = 660
     Align = alClient
     DataSource = DataSource
     TabOrder = 0
@@ -30,19 +30,22 @@ object MainForm: TMainForm
   end
   object ButtonPanel: TPanel
     Left = 0
-    Top = 591
-    Width = 1307
+    Top = 660
+    Width = 1150
     Height = 56
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 591
+    ExplicitWidth = 1307
     object Gauge: TGauge
       Left = 0
       Top = 0
-      Width = 1307
+      Width = 1150
       Height = 19
       Align = alTop
       Progress = 50
+      ExplicitWidth = 1307
     end
     object OKGuideButton: TButton
       Left = 56
@@ -98,13 +101,15 @@ object MainForm: TMainForm
     end
   end
   object GuidePanel: TPanel
-    Left = 761
+    Left = 604
     Top = 0
     Width = 321
-    Height = 591
+    Height = 660
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitLeft = 761
+    ExplicitHeight = 591
     object cbGoodsGroup: TCheckBox
       Tag = 10
       Left = 15
@@ -302,38 +307,28 @@ object MainForm: TMainForm
     end
   end
   object DocumentPanel: TPanel
-    Left = 1082
+    Left = 925
     Top = 0
     Width = 225
-    Height = 591
+    Height = 660
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 3
-    object RxLabel1: TRxLabel
-      Left = 1
-      Top = 30
-      Width = 10
+    ExplicitLeft = 1082
+    ExplicitHeight = 591
+    object Label1: TLabel
+      Left = 32
+      Top = 32
+      Width = 6
       Height = 13
       Caption = #1089
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsBold]
-      ParentFont = False
     end
-    object RxLabel2: TRxLabel
-      Left = 104
-      Top = 30
-      Width = 17
+    object Label2: TLabel
+      Left = 128
+      Top = 32
+      Width = 12
       Height = 13
       Caption = #1087#1086
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsBold]
-      ParentFont = False
     end
     object cbAllDocument: TCheckBox
       Tag = 2
@@ -366,25 +361,21 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 1
     end
-    object StartDateEdit: TDateEdit
-      Left = 14
-      Top = 23
-      Width = 85
+    object StartDateEdit: TEdit
+      Left = 16
+      Top = 104
+      Width = 97
       Height = 21
-      DirectInput = False
-      NumGlyphs = 2
-      CalendarStyle = csDialog
       TabOrder = 2
+      Text = 'StartDateEdit'
     end
-    object EndDateEdit: TDateEdit
-      Left = 120
-      Top = 23
-      Width = 85
+    object EndDateEdit: TEdit
+      Left = 80
+      Top = 144
+      Width = 121
       Height = 21
-      DirectInput = False
-      NumGlyphs = 2
-      CalendarStyle = csDialog
       TabOrder = 3
+      Text = 'EndDateEdit'
     end
   end
   object DataSource: TDataSource
@@ -410,7 +401,7 @@ object MainForm: TMainForm
     Left = 192
     Top = 256
   end
-  object toStoredProc: TADOStoredProc
+  object toStoredProc22: TADOStoredProc
     Connection = toADOConnection
     Parameters = <>
     Prepared = True
@@ -432,7 +423,7 @@ object MainForm: TMainForm
     Left = 384
     Top = 304
   end
-  object toQuery: TADOQuery
+  object toQuery11: TADOQuery
     Connection = toADOConnection
     CursorType = ctStatic
     Parameters = <>
@@ -441,11 +432,44 @@ object MainForm: TMainForm
     Left = 184
     Top = 328
   end
-  object toStoredProcTwo: TADOStoredProc
+  object toStoredProcTwo22: TADOStoredProc
     Connection = toADOConnection
     Parameters = <>
     Prepared = True
     Left = 104
     Top = 378
+  end
+  object toZConnection: TZConnection
+    ControlsCodePage = cCP_UTF16
+    UTF8StringsAsWideField = True
+    ClientCodepage = 'WIN1251'
+    Properties.Strings = (
+      'User ID=postgres'
+      'codepage=WIN1251'
+      'AutoEncodeStrings=ON'
+      'controls_cp=CP_UTF16')
+    LoginPrompt = True
+    HostName = 'localhost'
+    Port = 5432
+    Database = 'dsd'
+    Protocol = 'postgresql-9'
+    Left = 136
+    Top = 464
+  end
+  object toQuery: TZQuery
+    Connection = toZConnection
+    SQL.Strings = (
+      'select  * from Object')
+    Params = <>
+    Properties.Strings = (
+      'select * from Object order by 1 desc')
+    Left = 184
+    Top = 544
+  end
+  object toStoredProc: TZStoredProc
+    Connection = toZConnection
+    Params = <>
+    Left = 112
+    Top = 544
   end
 end
