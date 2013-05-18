@@ -220,11 +220,13 @@ inherited IncomeForm: TIncomeForm
   end
   object dsdGuidesFrom: TdsdGuides
     LookupControl = edFrom
+    FormName = 'TJuridicalForm'
     Left = 304
     Top = 56
   end
   object dsdGuidesTo: TdsdGuides
     LookupControl = edTo
+    FormName = 'TUnitForm'
     Left = 448
     Top = 56
   end

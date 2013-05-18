@@ -10,12 +10,13 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, Datasnap.DBClient, cxPropertiesStore, dxBar,
   Vcl.ActnList, DataModul, cxTL, cxTLdxBarBuiltInMenu,
-  cxInplaceContainer, cxTLData, cxDBTL, cxMaskEdit, ParentForm, dsdDB, dsdAction;
+  cxInplaceContainer, cxTLData, cxDBTL, cxMaskEdit, ParentForm, dsdDB, dsdAction,
+  cxSplitter, dsdAddOn;
 
 type
   TUnitForm = class(TParentForm)
-    DataSource: TDataSource;
-    ClientDataSet: TClientDataSet;
+    TreeDS: TDataSource;
+    ClientTreeDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
@@ -24,7 +25,7 @@ type
     actRefresh: TdsdDataSetRefresh;
     actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
-    dsdStoredProc: TdsdStoredProc;
+    spTree: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     bbErased: TdxBarButton;
@@ -32,11 +33,22 @@ type
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     cxDBTreeList: TcxDBTreeList;
-    cxDBTreeListcxDBTreeListColumn1: TcxDBTreeListColumn;
     cxDBTreeListcxDBTreeListColumn2: TcxDBTreeListColumn;
-    cxDBTreeListcxDBTreeListColumn3: TcxDBTreeListColumn;
-    cxDBTreeListcxDBTreeListColumn4: TcxDBTreeListColumn;
-    cxDBTreeListcxDBTreeListColumn5: TcxDBTreeListColumn;
+    cxSplitter1: TcxSplitter;
+    cxGridDBTableView: TcxGridDBTableView;
+    cxGridLevel: TcxGridLevel;
+    cxGrid: TcxGrid;
+    GridDS: TDataSource;
+    ClientGridDataSet: TClientDataSet;
+    spGrid: TdsdStoredProc;
+    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    cxGridDBTableViewColumn2: TcxGridDBColumn;
+    cxGridDBTableViewColumn3: TcxGridDBColumn;
+    cxGridDBTableViewColumn4: TcxGridDBColumn;
+    dsdDBTreeAddOn: TdsdDBTreeAddOn;
+    dsdChoiceGuides: TdsdChoiceGuides;
+    dsdFormParams: TdsdFormParams;
+    bbChoice: TdxBarButton;
   private
     { Private declarations }
   public

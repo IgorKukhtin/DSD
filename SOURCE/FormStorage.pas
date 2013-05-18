@@ -26,7 +26,7 @@ type
 
 implementation
 
-uses Xml.XMLDoc, UtilConvert, DB;
+uses Xml.XMLDoc, UtilConvert, DB, SysUtils;
 
 { TdsdFormStorage }
 
@@ -57,6 +57,8 @@ begin
   LoadStoredProc.ParamByName('FormName').Value := FormName;
 
   Stream := TStringStream.Create(gfStrXmlToStr(LoadStoredProc.Execute));
+  if Stream.Size = 0 then
+     raise Exception.Create('‘орма "' + FormName + '" не загружена из базы данных');
   MemoryStream := TMemoryStream.Create;
   try
     // ѕреобразовать текст в бинарные данные

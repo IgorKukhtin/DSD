@@ -130,11 +130,31 @@ type
     function Execute: boolean; override;
   end;
 
+  // ƒействие выбора значени€ из справочника
+  // «аполн€ет параметры формы указанными параметрами. ѕараметры заполн€ютс€ по имени
+  // и закрывает форму
+  TdsdChoiceGuides = class(TCustomAction)
+  private
+    FParams: TdsdParams;
+    FFormParams: TdsdFormParams;
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+  public
+    function Execute: boolean; override;
+    constructor Create(AOwner: TComponent); override;
+  published
+    property Params: TdsdParams read FParams write FParams;
+    property FormParams: TdsdFormParams read FFormParams write FFormParams;
+    property Caption;
+    property Hint;
+    property ShortCut;
+  end;
+
   procedure Register;
 
 implementation
 
-uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage;
+uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage, Vcl.Controls;
 
 procedure Register;
 begin
@@ -144,6 +164,7 @@ begin
   RegisterActions('DSDLib', [TdsdFormClose], TdsdFormClose);
   RegisterActions('DSDLib', [TdsdInsertUpdateAction], TdsdInsertUpdateAction);
   RegisterActions('DSDLib', [TdsdUpdateErased], TdsdUpdateErased);
+  RegisterActions('DSDLib', [TdsdChoiceGuides], TdsdChoiceGuides);
 end;
 
 { TdsdCustomDataSetAction }
@@ -378,6 +399,30 @@ procedure TdsdStoredProcList.SetItem(Index: Integer;
   const Value: TdsdStoredProcItem);
 begin
   inherited SetItem(Index, Value);
+end;
+
+{ TdsdChoiceGuides }
+
+constructor TdsdChoiceGuides.Create(AOwner: TComponent);
+begin
+  inherited;
+  FParams := TdsdParams.Create(TdsdParam);
+  Caption := '¬ыбор из справочника';
+  Hint := '¬ыбор из справочника';
+  ShortCut := VK_RETURN;
+end;
+
+function TdsdChoiceGuides.Execute: boolean;
+begin
+  TForm(Owner).ModalResult := mrOk;
+end;
+
+procedure TdsdChoiceGuides.Notification(AComponent: TComponent;
+  Operation: TOperation);
+begin
+  inherited Notification(AComponent, Operation);
+  if (Operation = opRemove) and (AComponent = FormParams) then
+     FormParams := nil;
 end;
 
 end.

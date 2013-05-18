@@ -39,6 +39,7 @@ type
     function GetItem(Index: Integer): TdsdParam;
     procedure SetItem(Index: Integer; const Value: TdsdParam);
   public
+    procedure AssignParams(Source: TdsdParams);
     function ParamByName(const Value: string): TdsdParam;
     function Add: TdsdParam;
     function AddParam(AName: string; ADataType: TFieldType; AParamType: TParamType; AValue: Variant): TdsdParam;
@@ -291,6 +292,17 @@ begin
     ParamType := AParamType;
     Value := AValue;
   end;
+end;
+
+procedure TdsdParams.AssignParams(Source: TdsdParams);
+var i: integer;
+begin
+  // не удаляем, а добавляем параметры
+  for I := 0 to Source.Count - 1 do
+      if ParamByName(Source[i].Name) = nil then
+         Add.AssignParam(Source[i])
+      else
+         ParamByName(Source[i].Name).Value := Source[i].Value
 end;
 
 function TdsdParams.GetItem(Index: Integer): TdsdParam;

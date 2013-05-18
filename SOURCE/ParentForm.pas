@@ -23,7 +23,7 @@ uses cxPropertiesStore, cxControls, cxContainer, cxEdit, cxGroupBox,
   dxBar, Vcl.ActnList, dsdAction, cxTextEdit, cxLabel,
   StdActns, cxDBTL, cxCurrencyEdit, cxDropDownEdit, dsdGuides,
   cxDBLookupComboBox, DBGrids, cxCheckBox, cxCalendar, ExtCtrls, dsdAddOn,
-  cxButtonEdit;
+  cxButtonEdit, cxSplitter;
 
 {$R *.dfm}
 
@@ -35,7 +35,7 @@ begin
   for I := 0 to ComponentCount - 1 do
     if Components[i] is TdsdFormParams then begin
        FParams := (Components[i] as TdsdFormParams).Params;
-       FParams.Assign(Params);
+       FParams.AssignParams(Params);
   end;
 
   for I := 0 to ComponentCount - 1 do begin
@@ -71,20 +71,22 @@ initialization
   RegisterClass (TcxLookupComboBox);
   RegisterClass (TcxPopupEdit);
   RegisterClass (TcxPropertiesStore);
+  RegisterClass (TcxSplitter);
   RegisterClass (TcxTextEdit);
 
   RegisterClass (TdxBarManager);
   RegisterClass (TdxBevel);
   // Собственнтые компоненты
+  RegisterClass (TdsdChoiceGuides);
+  RegisterClass (TdsdDataSetRefresh);
+  RegisterClass (TdsdDBTreeAddOn);
+  RegisterClass (TdsdExecStoredProc);
+  RegisterClass (TdsdFormClose);
+  RegisterClass (TdsdFormParams);
+  RegisterClass (TdsdGuides);
+  RegisterClass (TdsdInsertUpdateAction);
   RegisterClass (TdsdOpenForm);
   RegisterClass (TdsdStoredProc);
-  RegisterClass (TdsdFormParams);
-  RegisterClass (TdsdFormClose);
   RegisterClass (TdsdUpdateErased);
-  RegisterClass (TdsdDataSetRefresh);
-  RegisterClass (TdsdExecStoredProc);
-  RegisterClass (TdsdInsertUpdateAction);
-  RegisterClass (TdsdGuides);
-  RegisterClass (TdsdDBTreeAddOn);
 
 end.

@@ -36,6 +36,8 @@ type
     cxDBTreeListcxDBTreeListColumn2: TcxDBTreeListColumn;
     cxDBTreeListcxDBTreeListColumn3: TcxDBTreeListColumn;
     cxDBTreeListcxDBTreeListColumn4: TcxDBTreeListColumn;
+    dsdChoiceGuides: TdsdChoiceGuides;
+    dsdFormParams: TdsdFormParams;
   private
     { Private declarations }
   public
