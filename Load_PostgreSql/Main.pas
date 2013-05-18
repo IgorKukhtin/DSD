@@ -4,7 +4,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, DB, DBTables, Grids, DBGrids, StdCtrls, ExtCtrls, Gauges, ADODB;
+  Dialogs, DB, DBTables, Grids, DBGrids, StdCtrls, ExtCtrls, Gauges, ADODB,
+  RXCtrls, Mask, ToolEdit;
 
 type
   TMainForm = class(TForm)
@@ -12,7 +13,7 @@ type
     DBGrid: TDBGrid;
     ButtonPanel: TPanel;
     OKGuideButton: TButton;
-    Panel1: TPanel;
+    GuidePanel: TPanel;
     cbGoodsGroup: TCheckBox;
     cbAllGuide: TCheckBox;
     Gauge: TGauge;
@@ -43,11 +44,22 @@ type
     cbGoodsProperty: TCheckBox;
     cbGoodsPropertyValue: TCheckBox;
     cbSetNull_Id_Postgres: TCheckBox;
+    cbOnlyOpen: TCheckBox;
+    DocumentPanel: TPanel;
+    cbAllDocument: TCheckBox;
+    cbIncome: TCheckBox;
+    OKDocumentButton: TButton;
+    StartDateEdit: TDateEdit;
+    EndDateEdit: TDateEdit;
+    RxLabel1: TRxLabel;
+    RxLabel2: TRxLabel;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure StopButtonClick(Sender: TObject);
     procedure CloseButtonClick(Sender: TObject);
+    procedure cbAllDocumentClick(Sender: TObject);
+    procedure OKDocumentButtonClick(Sender: TObject);
   private
     fStop:Boolean;
     procedure EADO_EngineErrorMsg(E:EADOError);
@@ -60,7 +72,10 @@ type
     function fGetSession:String;
     function fExecSqFromQuery (mySql:String):Boolean;
 
-    procedure pSetNull_Id_Postgres;
+    procedure pSetNullGuide_Id_Postgres;
+    procedure pSetNullDocument_Id_Postgres;
+
+    procedure pLoadDocument_Income;
 
     procedure pLoadGuide_Measure;
     procedure pLoadGuide_GoodsGroup;
@@ -117,17 +132,106 @@ begin
      Result:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.FormatToVarCharServer_notNULL(_Value:string):string;
+begin if trim(_Value)='' then Result:=chr(39)+''+chr(39) else Result:=chr(39)+trim(_Value)+chr(39);end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.FormatToDateServer_notNULL(_Date:TDateTime):string;
+var
+  Year, Month, Day: Word;
+begin
+     DecodeDate(_Date,Year,Month,Day);
+     result:=chr(39)+IntToStr(Year)+'-'+IntToStr(Month)+'-'+IntToStr(Day)+chr(39);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.myExecToStoredProc:Boolean;
+begin
+     result:=false;
+    toStoredProc.Prepared:=true;
+     try toStoredProc.ExecProc;
+     except
+           //on E:EDBEngineError do begin EDB_EngineErrorMsg(E);exit;end;
+           on E:EADOError do begin EADO_EngineErrorMsg(E);exit;end;
+
+     end;
+     result:=true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.EADO_EngineErrorMsg(E:EADOError);
+begin
+  MessageDlg(E.Message,mtError,[mbOK],0);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.EDB_EngineErrorMsg(E:EDBEngineError);
+var
+  DBError: TDBError;
+begin
+  DBError:=E.Errors[1];
+  MessageDlg(DBError.Message,mtError,[mbOK],0);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.myEnabledCB (cb:TCheckBox);
+begin
+     cb.Font.Style:=[fsBold];
+     cb.Font.Color:=clBlue;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.myDisabledCB (cb:TCheckBox);
+begin
+     cb.Font.Style:=[];
+     cb.Font.Color:=clWindowText;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.cbAllGuideClick(Sender: TObject);
+var i:Integer;
+begin
+     for i:=0 to ComponentCount-1 do
+        if (Components[i] is TCheckBox) then
+          if Components[i].Tag=10
+          then TCheckBox(Components[i]).Checked:=cbAllGuide.Checked;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.cbAllDocumentClick(Sender: TObject);
+var i:Integer;
+begin
+     for i:=0 to ComponentCount-1 do
+        if (Components[i] is TCheckBox) then
+          if Components[i].Tag=20
+          then TCheckBox(Components[i]).Checked:=cbAllDocument.Checked;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.FormCreate(Sender: TObject);
+var
+  Present: TDateTime;
+  Year, Month, Day, Hour, Min, Sec, MSec: Word;
+begin
+     Gauge.Visible:=false;
+     Gauge.Progress:=0;
+     //
+     //cbAllGuide.Checked:=true;
+     //
+     fStop:=true;
+     //
+     Present:= Now;
+     DecodeDate(Present, Year, Month, Day);
+     StartDateEdit.Text:=DateToStr(StrToDate('01.'+IntToStr(Month)+'.'+IntToStr(Year)));
+
+     if Month=12 then begin Month:=1;Year:=Year+1;end else Month:=Month+1;
+     EndDateEdit.Text:=DateToStr(StrToDate('01.'+IntToStr(Month)+'.'+IntToStr(Year))-1);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.OKGuideButtonClick(Sender: TObject);
 begin
      if MessageDlg('Действительно загрузить выбранные справочники?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
      fStop:=false;
      DBGrid.Enabled:=false;
      OKGuideButton.Enabled:=false;
+     OKDocumentButton.Enabled:=false;
      //
      Gauge.Visible:=true;
      //
-     if cbSetNull_Id_Postgres.Checked then begin if MessageDlg('Действительно set Sybase.ВСЕМ.Id_Postgres = null?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
-                                                 pSetNull_Id_Postgres;
+     if cbSetNull_Id_Postgres.Checked then begin if MessageDlg('Действительно set СПРАВОЧНИКИ+ДОКУМЕНТЫ.Sybase.ВСЕМ.Id_Postgres = null?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
+                                                 pSetNullGuide_Id_Postgres;
+                                                 pSetNullDocument_Id_Postgres;
                                            end;
      //
      if not fStop then pLoadGuide_Measure;
@@ -157,9 +261,37 @@ begin
      fStop:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.OKDocumentButtonClick(Sender: TObject);
+begin
+     if MessageDlg('Действительно загрузить выбранные документы?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
+     fStop:=false;
+     DBGrid.Enabled:=false;
+     OKGuideButton.Enabled:=false;
+     OKDocumentButton.Enabled:=false;
+     //
+     Gauge.Visible:=true;
+     //
+     if cbSetNull_Id_Postgres.Checked then begin if MessageDlg('Действительно set ДОКУМЕНТЫ.Sybase.ВСЕМ.Id_Postgres = null?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
+                                                 pSetNullDocument_Id_Postgres;
+                                           end;
+     //
+     if not fStop then pLoadDocument_Income;
+     //
+     Gauge.Visible:=false;
+     DBGrid.Enabled:=true;
+     OKGuideButton.Enabled:=true;
+     //
+     toADOConnection.Connected:=false;
+     //fromADOConnection.Connected:=false;
+     //
+     if fStop then ShowMessage('Документы НЕ загружены.') else ShowMessage('Документы загружены.');
+     //
+     fStop:=true;
+end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pSetNull_Id_Postgres;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pSetNullGuide_Id_Postgres;
 begin
      fExecSqFromQuery('update dba.Goods set Id_Postgres = null');
      fExecSqFromQuery('update dba.GoodsProperty set Id_Postgres = null');
@@ -172,6 +304,13 @@ begin
      fExecSqFromQuery('update dba.GoodsProperty_Postgres set Id_Postgres = null');
      fExecSqFromQuery('update dba.GoodsProperty_Detail set Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = null, Id4_Postgres = null, Id5_Postgres = null, Id6_Postgres = null, Id7_Postgres = null'
                                                        +', Id8_Postgres = null, Id9_Postgres = null, Id10_Postgres = null, Id11_Postgres = null, Id12_Postgres = null, Id13_Postgres = null, Id14_Postgres = null');
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pSetNullDocument_Id_Postgres;
+begin
+     fExecSqFromQuery('update dba.Bill set Id_Postgres = null where Id_Postgres is not null'); //
+     fExecSqFromQuery('update dba.BillItems set Id_Postgres = null where Id_Postgres is not null');
+     fExecSqFromQuery('update dba.BillItemsReceipt set Id_Postgres = null where Id_Postgres is not null');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Measure;
@@ -191,9 +330,12 @@ begin
         Add('order by ObjectId');
         Open;
         //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
-        //exit;
+        //
         toStoredProc.ProcedureName:='gpinsertupdate_object_measure';
         toStoredProc.Parameters.Refresh;
         //
@@ -243,9 +385,12 @@ begin
         Add('order by ObjectId');
         Open;
         //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
-        //exit;
+        //
         toStoredProc.ProcedureName:='gpinsertupdate_object_goodsgroup';
         toStoredProc.Parameters.Refresh;
         //
@@ -308,13 +453,15 @@ begin
         Add('order by ObjectId');
         Open;
         //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
-        //exit;
+        //
         toStoredProc.ProcedureName:='gpinsertupdate_object_goods';
         toStoredProc.Parameters.Refresh;
         //
-        //DisableControls;
         while not EOF do
         begin
              //!!!
@@ -361,9 +508,12 @@ begin
         Add('order by ObjectId');
         Open;
         //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
-        //exit;
+        //
         toStoredProc.ProcedureName:='gpinsertupdate_object_goodskind';
         toStoredProc.Parameters.Refresh;
         //
@@ -411,9 +561,12 @@ begin
         Add('order by ObjectId');
         Open;
         //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
-        //exit;
+        //
         toStoredProc.ProcedureName:='gpinsertupdate_object_paidkind';
         toStoredProc.Parameters.Refresh;
         //
@@ -460,9 +613,12 @@ begin
         Add('order by ObjectId');
         Open;
         //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
-        //exit;
+        //
         toStoredProc.ProcedureName:='gpinsertupdate_object_contractkind';
         toStoredProc.Parameters.Refresh;
         //
@@ -522,9 +678,12 @@ begin
         Add('order by ObjectId');
         Open;
         //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
-        //exit;
+        //
         toStoredProc.ProcedureName:='gpinsertupdate_object_juridicalgroup';
         toStoredProc.Parameters.Refresh;
         //
@@ -630,9 +789,12 @@ begin
         Add('order by ObjectId');
         Open;
         //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
-        //exit;
+        //
         toStoredProc.ProcedureName:='gpinsertupdate_object_juridical';
         toStoredProc.Parameters.Refresh;
         //
@@ -696,9 +858,12 @@ begin
         Add('order by ObjectId');
         Open;
         //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
-        //exit;
+        //
         toStoredProc.ProcedureName:='gpinsertupdate_object_partner';
         toStoredProc.Parameters.Refresh;
         //
@@ -773,9 +938,12 @@ begin
         Add('order by ObjectId');
         Open;
         //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
-        //exit;
+        //
         toStoredProc.ProcedureName:='gpinsertupdate_object_unitgroup';
         toStoredProc.Parameters.Refresh;
         //
@@ -854,9 +1022,12 @@ begin
 
         Open;
         //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
-        //exit;
+        //
         toStoredProc.ProcedureName:='gpinsertupdate_object_unit';
         toStoredProc.Parameters.Refresh;
         //
@@ -905,9 +1076,12 @@ begin
         Add('order by ObjectId');
         Open;
         //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
-        //exit;
+        //
         toStoredProc.ProcedureName:='gpinsertupdate_object_pricelist';
         toStoredProc.Parameters.Refresh;
         //
@@ -954,9 +1128,12 @@ begin
         Add('order by ObjectId');
         Open;
         //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
-        //exit;
+        //
         toStoredProc.ProcedureName:='gpinsertupdate_object_goodsproperty';
         toStoredProc.Parameters.Refresh;
         //
@@ -1013,8 +1190,8 @@ begin
         Add('     , case when trim (GoodsProperty_Detail.GoodsCodeScaner_byKievOK)<>'+FormatToVarCharServer_notNULL('')+' then zc_rvYes() else zc_rvNo() end as is2');
         Add('     , null as ObjectName2');
         Add('     , cast (null as TSumm) as Amount2');
-        Add('     , null as BarCode2');
-        Add('     , trim (GoodsProperty_Detail.GoodsCodeScaner_byKievOK) as Article2');
+        Add('     , CASE WHEN LENGTH(GoodsProperty_Detail.GoodsCodeScaner_byKievOK)=6 THEN '+FormatToVarCharServer_notNULL('28')+'+GoodsProperty_Detail.GoodsCodeScaner_byKievOK ELSE '+FormatToVarCharServer_notNULL('')+' END as BarCode2');
+        Add('     , CASE WHEN LENGTH(GoodsProperty_Detail.GoodsCodeScaner_byKievOK)=6 THEN '+FormatToVarCharServer_notNULL('')+' ELSE trim (GoodsProperty_Detail.GoodsCodeScaner_byKievOK) END as Article2');
         Add('     , null as BarCodeGLN2');
         Add('     , null as ArticleGLN2');
         Add('     , PG2.Id_Postgres as GoodsPropertyId2');
@@ -1022,7 +1199,7 @@ begin
         Add('     , KindPackage.Id_Postgres as GoodsKindId2');
         Add('     , GoodsProperty_Detail.Id2_Postgres as Id_Postgres2');
         //---------------------------3
-        Add('     , case when trim (GoodsProperty_Detail.GoodsCodeScaner_byMetro)<>'+FormatToVarCharServer_notNULL('')+' then zc_rvYes() else zc_rvNo() end as is3');
+        Add('     , case when LENGTH(GoodsProperty_Detail.GoodsCodeScaner_byMetro)>3 then zc_rvYes() else zc_rvNo() end as is3');
         Add('     , null as ObjectName3');
         Add('     , case when is3=zc_rvNo() then cast (null as TSumm) when GoodsProperty.MeasureId = zc_measure_Sht() and SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byMetro,20,2) <> '+FormatToVarCharServer_notNULL('')+' then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byMetro,20,2) else cast (null as TSumm) end as Amount3');
         Add('     , SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byMetro,6,13) as BarCode3');
@@ -1042,7 +1219,7 @@ begin
         Add('     , trim(GoodsProperty_Detail.GoodsName_Client) as ObjectName4');
         Add('     , cast (null as TSumm) as Amount4');
         Add('     , GoodsProperty_Detail.GoodsCodeScaner_byMain as BarCode4');
-        Add('     , BarCode4 as Article4');
+        Add('     , null as Article4');
         Add('     , null as BarCodeGLN4');
         Add('     , null as ArticleGLN4');
         Add('     , PG4.Id_Postgres as GoodsPropertyId4');
@@ -1056,7 +1233,7 @@ begin
         Add('     , case when is5=zc_rvNo() then null when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byFozzi,1,13) else SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byFozzi,1,7)+'+FormatToVarCharServer_notNULL('000000')+' end as BarCode5');
         Add('     , case when is5=zc_rvNo() then null when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byFozzi,18,6)'
                                                    +' when LENGTH (GoodsProperty_Detail.GoodsCodeScaner_byFozzi) = 24 then case when SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byFozzi,19,1)='+FormatToVarCharServer_notNULL('0')+' then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byFozzi,20,5) else SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byFozzi,19,6) end'
-                                                   +' when LENGTH (GoodsProperty_Detail.GoodsCodeScaner_byFozzi) = 23 then case when SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byFozzi,18,1)='+FormatToVarCharServer_notNULL('0')+' then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byFozzi,19,5) else SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byFozzi,18,6) end' 
+                                                   +' when LENGTH (GoodsProperty_Detail.GoodsCodeScaner_byFozzi) = 23 then case when SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byFozzi,18,1)='+FormatToVarCharServer_notNULL('0')+' then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byFozzi,19,5) else SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byFozzi,18,6) end'
                                                    +' when SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byFozzi,9,1)='+FormatToVarCharServer_notNULL('0')+' then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byFozzi,10,5)'
                                                    +' else SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byFozzi,9,6) end as Article5');
         Add('     , null as BarCodeGLN5');
@@ -1065,6 +1242,37 @@ begin
         Add('     , GoodsProperty.Id_Postgres as GoodsId5');
         Add('     , KindPackage.Id_Postgres as GoodsKindId5');
         Add('     , GoodsProperty_Detail.Id5_Postgres as Id_Postgres5');
+        //---------------------------6
+        Add('     , case when trim (GoodsProperty_Detail.GoodsCodeScaner_byKisheni)<>'+FormatToVarCharServer_notNULL('')+'  then zc_rvYes() else zc_rvNo() end as is6');
+        Add('     , null as ObjectName6');
+        Add('     , case when is6=zc_rvNo() then cast (null as TSumm) when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,15,2) else cast (null as TSumm) end as Amount6');
+        Add('     , case when is6=zc_rvNo() then null when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,1,13) else SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,1,13) end as BarCode6');
+        Add('     , case when is6=zc_rvNo() then null when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,18,7)'
+                                                   +' when LENGTH (GoodsProperty_Detail.GoodsCodeScaner_byKisheni) = 24 then case when SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,18,1)='+FormatToVarCharServer_notNULL('0')+' then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,19,6) else SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,18,7) end'
+                                                   +' when SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,15,2)='+FormatToVarCharServer_notNULL('00')+' then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,17,5)'
+                                                   +' when SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,15,1)='+FormatToVarCharServer_notNULL('0')+' then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,16,6)'
+                                                   +' else SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byKisheni,15,7) end as Article6');
+        Add('     , null as BarCodeGLN6');
+        Add('     , null as ArticleGLN6');
+        Add('     , PG6.Id_Postgres as GoodsPropertyId6');
+        Add('     , GoodsProperty.Id_Postgres as GoodsId6');
+        Add('     , KindPackage.Id_Postgres as GoodsKindId6');
+        Add('     , GoodsProperty_Detail.Id6_Postgres as Id_Postgres6');
+        //---------------------------7
+        Add('     , case when trim (GoodsProperty_Detail.GoodsCodeScaner_byVivat)<>'+FormatToVarCharServer_notNULL('')+'  then zc_rvYes() else zc_rvNo() end as is7');
+        Add('     , null as ObjectName7');
+        Add('     , case when is7=zc_rvNo() then cast (null as TSumm) when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byVivat,15,2) else cast (null as TSumm) end as Amount7');
+        Add('     , case when is7=zc_rvNo() then null when GoodsProperty.MeasureId = zc_measure_Sht() then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byVivat,1,13) else SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byVivat,1,13) end as BarCode7');
+        Add('     , case when is7=zc_rvNo() then null when GoodsProperty.MeasureId = zc_measure_Sht() and SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byVivat,18,7) <> '+FormatToVarCharServer_notNULL('0000000')+' then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byVivat,18,7)'
+                                                   +' when GoodsProperty.MeasureId = zc_measure_Sht() then '+FormatToVarCharServer_notNULL('')
+                                                   +' when SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byVivat,15,1)='+FormatToVarCharServer_notNULL('0')+' then SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byVivat,16,6)'
+                                                   +' else SUBSTR(GoodsProperty_Detail.GoodsCodeScaner_byVivat,15,7) end as Article7');
+        Add('     , null as BarCodeGLN7');
+        Add('     , null as ArticleGLN7');
+        Add('     , PG7.Id_Postgres as GoodsPropertyId7');
+        Add('     , GoodsProperty.Id_Postgres as GoodsId7');
+        Add('     , KindPackage.Id_Postgres as GoodsKindId7');
+        Add('     , GoodsProperty_Detail.Id7_Postgres as Id_Postgres7');
 
         Add('from dba.GoodsProperty_Detail');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id=GoodsProperty_Detail.GoodsPropertyId');
@@ -1088,13 +1296,17 @@ begin
              +' or is3=zc_rvYes()'
              +' or is4=zc_rvYes()'
              +' or is5=zc_rvYes()'
+             +' or is6=zc_rvYes()'
            );
-        Add('order by ObjectId');
+        Add('order by is7, BarCode7, ObjectId');
         Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
         //
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
-        //exit;
+        //
         toStoredProc.ProcedureName:='gpinsertupdate_object_goodspropertyvalue';
         toStoredProc.Parameters.Refresh;
         //
@@ -1194,6 +1406,42 @@ begin
                        if (1=0)or(FieldByName('Id_Postgres5').AsInteger=0)
                        then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id5_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
                   end;
+             // 6
+             if FieldByName('is6').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then begin
+                       toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres6').AsInteger;
+                       toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName6').AsString;
+                       toStoredProc.Parameters.ParamByName('inAmount').Value:=FieldByName('Amount6').AsFloat;
+                       toStoredProc.Parameters.ParamByName('inBarCode').Value:=FieldByName('BarCode6').AsString;
+                       toStoredProc.Parameters.ParamByName('inArticle').Value:=FieldByName('Article6').AsString;
+                       toStoredProc.Parameters.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN6').AsString;
+                       toStoredProc.Parameters.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId6').AsInteger;
+                       toStoredProc.Parameters.ParamByName('inGoodsId').Value:=FieldByName('GoodsId6').AsInteger;
+                       toStoredProc.Parameters.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId6').AsInteger;
+                       toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=0)or(FieldByName('Id_Postgres6').AsInteger=0)
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id6_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                  end;
+             // 7
+             if FieldByName('is7').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then begin
+                       toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres7').AsInteger;
+                       toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName7').AsString;
+                       toStoredProc.Parameters.ParamByName('inAmount').Value:=FieldByName('Amount7').AsFloat;
+                       toStoredProc.Parameters.ParamByName('inBarCode').Value:=FieldByName('BarCode7').AsString;
+                       toStoredProc.Parameters.ParamByName('inArticle').Value:=FieldByName('Article7').AsString;
+                       toStoredProc.Parameters.ParamByName('inBarCodeGLN').Value:=FieldByName('BarCodeGLN7').AsString;
+                       toStoredProc.Parameters.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId7').AsInteger;
+                       toStoredProc.Parameters.ParamByName('inGoodsId').Value:=FieldByName('GoodsId7').AsInteger;
+                       toStoredProc.Parameters.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId7').AsInteger;
+                       toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=0)or(FieldByName('Id_Postgres7').AsInteger=0)
+                       then fExecSqFromQuery('update dba.GoodsProperty_Detail set Id7_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+                  end;
              //
              Next;
              Application.ProcessMessages;
@@ -1208,72 +1456,56 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-function TMainForm.FormatToVarCharServer_notNULL(_Value:string):string;
-begin if trim(_Value)='' then Result:=chr(39)+''+chr(39) else Result:=chr(39)+trim(_Value)+chr(39);end;
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-function TMainForm.FormatToDateServer_notNULL(_Date:TDateTime):string;
-var
-  Year, Month, Day: Word;
+procedure TMainForm.pLoadDocument_Income;
 begin
-     DecodeDate(_Date,Year,Month,Day);
-     result:=chr(39)+IntToStr(Year)+'-'+IntToStr(Month)+'-'+IntToStr(Day)+chr(39);
-end;
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-function TMainForm.myExecToStoredProc:Boolean;
-begin
-     result:=false;
-    toStoredProc.Prepared:=true;
-     try toStoredProc.ExecProc;
-     except
-           //on E:EDBEngineError do begin EDB_EngineErrorMsg(E);exit;end;
-           on E:EADOError do begin EADO_EngineErrorMsg(E);exit;end;
-
+     if (not cbIncome.Checked)or(not cbIncome.Enabled) then exit;
+     //
+     myEnabledCB(cbIncome);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select GoodsProperty_Postgres.Id as ObjectId');
+        Add('     , 0 as ObjectCode');
+        Add('     , GoodsProperty_Postgres.Name_PG as ObjectName');
+        Add('     , GoodsProperty_Postgres.Id_Postgres as Id_Postgres');
+        Add('from dba.GoodsProperty_Postgres');
+        Add('order by ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.ProcedureName:='gpinsertupdate_object_goodsproperty';
+        toStoredProc.Parameters.Refresh;
+        //
+        //DisableControls;
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin {EnableControls;}exit;end;
+             //
+             toStoredProc.Parameters.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Parameters.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Parameters.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Parameters.ParamByName('inSession').Value:=fGetSession;
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.GoodsProperty_Postgres set Id_Postgres='+IntToStr(toStoredProc.Parameters.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        //EnableControls;
      end;
-     result:=true;
-end;
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.EADO_EngineErrorMsg(E:EADOError);
-begin
-  MessageDlg(E.Message,mtError,[mbOK],0);
-end;
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.EDB_EngineErrorMsg(E:EDBEngineError);
-var
-  DBError: TDBError;
-begin
-  DBError:=E.Errors[1];
-  MessageDlg(DBError.Message,mtError,[mbOK],0);
-end;
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.myEnabledCB (cb:TCheckBox);
-begin
-     cb.Font.Style:=[fsBold];
-     cb.Font.Color:=clBlue;
-end;
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.myDisabledCB (cb:TCheckBox);
-begin
-     cb.Font.Style:=[];
-     cb.Font.Color:=clWindowText;
-end;
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.cbAllGuideClick(Sender: TObject);
-var i:Integer;
-begin
-     for i:=0 to ComponentCount-1 do
-        if (Components[i] is TCheckBox) then
-          if Components[i].Tag=10
-          then TCheckBox(Components[i]).Checked:=cbAllGuide.Checked;
-end;
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.FormCreate(Sender: TObject);
-begin
-     Gauge.Visible:=false;
-     Gauge.Progress:=0;
      //
-     //cbAllGuide.Checked:=true;
-     //
-     fStop:=true;
+     myDisabledCB(cbIncome);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 end.
@@ -1331,22 +1563,9 @@ insert into dba.GoodsProperty_Postgres (Id, Name_PG)
                                   // fIsClient_Obgora
                                   // fIsClient_Tavriya
 
---
---!!!! при первой загрузке данных в постгрис, в сибасе надо обнулять ключи !!!
---
-update dba.Goods set Id_Postgres = null;
-update dba.GoodsProperty set Id_Postgres = null;
-update dba.Measure set Id_Postgres = null;
-update dba.KindPackage set Id_Postgres = null;
 
-update dba.MoneyKind set Id_Postgres = null;
-update dba.ContractKind set Id_Postgres = null;
-
-update dba.Unit set Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = null;
-
-update dba.PriceList_byHistory set Id_Postgres = null;
-
-update dba.GoodsProperty_Postgres set Id_Postgres = null;
-update dba.GoodsProperty_Detail set Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = null, Id4_Postgres = null, Id5_Postgres = null, Id6_Postgres = null, Id7_Postgres = null, Id8_Postgres = null, Id9_Postgres = null, Id10_Postgres = null, Id11_Postgres = null, Id12_Postgres = null, Id13_Postgres = null, Id14_Postgres = null;
+alter table dba.Bill add Id_Postgres integer null;
+alter table dba.BillItems add Id_Postgres integer null;
+alter table dba.BillItemsReceipt add Id_Postgres integer null;
 
 }

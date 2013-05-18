@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 0
-  Top = 129
-  Width = 1024
+  Left = 202
+  Top = 180
+  Width = 1315
   Height = 674
   Caption = 'MainForm'
   Color = clBtnFace
@@ -17,7 +17,7 @@ object MainForm: TMainForm
   object DBGrid: TDBGrid
     Left = 0
     Top = 0
-    Width = 695
+    Width = 761
     Height = 591
     Align = alClient
     DataSource = DataSource
@@ -31,7 +31,7 @@ object MainForm: TMainForm
   object ButtonPanel: TPanel
     Left = 0
     Top = 591
-    Width = 1016
+    Width = 1307
     Height = 56
     Align = alBottom
     BevelOuter = bvNone
@@ -39,7 +39,7 @@ object MainForm: TMainForm
     object Gauge: TGauge
       Left = 0
       Top = 0
-      Width = 1016
+      Width = 1307
       Height = 19
       Align = alTop
       Progress = 50
@@ -54,7 +54,7 @@ object MainForm: TMainForm
       OnClick = OKGuideButtonClick
     end
     object StopButton: TButton
-      Left = 296
+      Left = 510
       Top = 26
       Width = 137
       Height = 25
@@ -63,17 +63,42 @@ object MainForm: TMainForm
       OnClick = StopButtonClick
     end
     object CloseButton: TButton
-      Left = 512
+      Left = 683
       Top = 27
-      Width = 137
+      Width = 87
       Height = 25
       Caption = #1042#1099#1093#1086#1076
       TabOrder = 2
       OnClick = CloseButtonClick
     end
+    object cbSetNull_Id_Postgres: TCheckBox
+      Left = 859
+      Top = 20
+      Width = 292
+      Height = 17
+      Caption = #1044#1083#1103' '#1087#1077#1088#1074#1086#1075#1086' '#1088#1072#1079#1072' set Sybase.'#1042#1057#1045#1052'.Id_Postgres = null'
+      TabOrder = 3
+    end
+    object cbOnlyOpen: TCheckBox
+      Left = 859
+      Top = 39
+      Width = 292
+      Height = 17
+      Caption = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' ('#1090#1086#1083#1100#1082#1086' '#1087#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077')'
+      TabOrder = 4
+    end
+    object OKDocumentButton: TButton
+      Left = 273
+      Top = 25
+      Width = 171
+      Height = 25
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      TabOrder = 5
+      OnClick = OKDocumentButtonClick
+    end
   end
-  object Panel1: TPanel
-    Left = 695
+  object GuidePanel: TPanel
+    Left = 761
     Top = 0
     Width = 321
     Height = 591
@@ -275,13 +300,91 @@ object MainForm: TMainForm
       Caption = '6.2. '#1047#1085#1072#1095#1077#1085#1080#1103' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074' '#1076#1083#1103' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1072
       TabOrder = 18
     end
-    object cbSetNull_Id_Postgres: TCheckBox
+  end
+  object DocumentPanel: TPanel
+    Left = 1082
+    Top = 0
+    Width = 225
+    Height = 591
+    Align = alRight
+    BevelOuter = bvNone
+    TabOrder = 3
+    object RxLabel1: TRxLabel
+      Left = 1
+      Top = 30
+      Width = 10
+      Height = 13
+      Caption = #1089
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object RxLabel2: TRxLabel
+      Left = 104
+      Top = 30
+      Width = 17
+      Height = 13
+      Caption = #1087#1086
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object cbAllDocument: TCheckBox
+      Tag = 2
       Left = 15
-      Top = 504
-      Width = 292
+      Top = 1
+      Width = 194
       Height = 17
-      Caption = #1044#1083#1103' '#1087#1077#1088#1074#1086#1075#1086' '#1088#1072#1079#1072' set Sybase.'#1042#1057#1045#1052'.Id_Postgres = null'
-      TabOrder = 19
+      Caption = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 0
+      OnClick = cbAllDocumentClick
+    end
+    object cbIncome: TCheckBox
+      Tag = 20
+      Left = 15
+      Top = 57
+      Width = 194
+      Height = 17
+      Caption = '1. '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 1
+    end
+    object StartDateEdit: TDateEdit
+      Left = 14
+      Top = 23
+      Width = 85
+      Height = 21
+      DirectInput = False
+      NumGlyphs = 2
+      CalendarStyle = csDialog
+      TabOrder = 2
+    end
+    object EndDateEdit: TDateEdit
+      Left = 120
+      Top = 23
+      Width = 85
+      Height = 21
+      DirectInput = False
+      NumGlyphs = 2
+      CalendarStyle = csDialog
+      TabOrder = 3
     end
   end
   object DataSource: TDataSource
