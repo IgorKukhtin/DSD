@@ -6,7 +6,20 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, DB, DBTables, Grids, DBGrids, StdCtrls, ExtCtrls, Gauges, ADODB,
   Mask, ZStoredProcedure, ZAbstractRODataset, ZAbstractDataset, ZDataset,
-  ZAbstractConnection, ZConnection;
+  ZAbstractConnection, ZConnection, cxGraphics, cxControls, cxLookAndFeels,
+  cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
+  dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
+  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
+  dxSkinWhiteprint, dxSkinXmas2008Blue, cxTextEdit, cxMaskEdit, cxDropDownEdit,
+  cxCalendar;
 
 type
   TMainForm = class(TForm)
@@ -20,16 +33,12 @@ type
     Gauge: TGauge;
     cbGoods: TCheckBox;
     fromADOConnection: TADOConnection;
-    toADOConnection: TADOConnection;
-    toStoredProc22: TADOStoredProc;
     fromQuery: TADOQuery;
     fromSqlQuery: TADOQuery;
-    toQuery11: TADOQuery;
     StopButton: TButton;
     CloseButton: TButton;
     cbMeasure: TCheckBox;
     cbGoodsKind: TCheckBox;
-    toStoredProcTwo22: TADOStoredProc;
     cbPaidKind: TCheckBox;
     cbJuridicalGroup: TCheckBox;
     cbContractKind: TCheckBox;
@@ -50,13 +59,13 @@ type
     cbAllDocument: TCheckBox;
     cbIncome: TCheckBox;
     OKDocumentButton: TButton;
-    StartDateEdit: TEdit;
-    EndDateEdit: TEdit;
     Label1: TLabel;
     Label2: TLabel;
     toZConnection: TZConnection;
     toQuery: TZQuery;
     toStoredProc: TZStoredProc;
+    StartDateEdit: TcxDateEdit;
+    EndDateEdit: TcxDateEdit;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -258,7 +267,7 @@ begin
      OKGuideButton.Enabled:=true;
      OKDocumentButton.Enabled:=true;
      //
-     toADOConnection.Connected:=false;
+     toZConnection.Connected:=false;
      //fromADOConnection.Connected:=false;
      //
      if fStop then ShowMessage('Справочники НЕ загружены.') else ShowMessage('Справочники загружены.');
@@ -287,7 +296,7 @@ begin
      OKGuideButton.Enabled:=true;
      OKDocumentButton.Enabled:=true;
      //
-     toADOConnection.Connected:=false;
+     toZConnection.Connected:=false;
      //fromADOConnection.Connected:=false;
      //
      if fStop then ShowMessage('Документы НЕ загружены.') else ShowMessage('Документы загружены.');
