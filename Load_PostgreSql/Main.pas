@@ -6,7 +6,20 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, DB, DBTables, Grids, DBGrids, StdCtrls, ExtCtrls, Gauges, ADODB,
   Mask, ZStoredProcedure, ZAbstractRODataset, ZAbstractDataset, ZDataset,
-  ZAbstractConnection, ZConnection;
+  ZAbstractConnection, ZConnection, cxGraphics, cxControls, cxLookAndFeels,
+  cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
+  dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
+  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
+  dxSkinWhiteprint, dxSkinXmas2008Blue, cxTextEdit, cxMaskEdit, cxDropDownEdit,
+  cxCalendar;
 
 type
   TMainForm = class(TForm)
@@ -20,16 +33,12 @@ type
     Gauge: TGauge;
     cbGoods: TCheckBox;
     fromADOConnection: TADOConnection;
-    toADOConnection: TADOConnection;
-    toStoredProc22: TADOStoredProc;
     fromQuery: TADOQuery;
     fromSqlQuery: TADOQuery;
-    toQuery11: TADOQuery;
     StopButton: TButton;
     CloseButton: TButton;
     cbMeasure: TCheckBox;
     cbGoodsKind: TCheckBox;
-    toStoredProcTwo22: TADOStoredProc;
     cbPaidKind: TCheckBox;
     cbJuridicalGroup: TCheckBox;
     cbContractKind: TCheckBox;
@@ -50,13 +59,13 @@ type
     cbAllDocument: TCheckBox;
     cbIncome: TCheckBox;
     OKDocumentButton: TButton;
-    StartDateEdit: TEdit;
-    EndDateEdit: TEdit;
     Label1: TLabel;
     Label2: TLabel;
     toZConnection: TZConnection;
     toQuery: TZQuery;
     toStoredProc: TZStoredProc;
+    StartDateEdit: TcxDateEdit;
+    EndDateEdit: TcxDateEdit;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -80,6 +89,7 @@ type
     procedure pSetNullDocument_Id_Postgres;
 
     procedure pLoadDocument_Income;
+    procedure pLoadDocumentItem_Income;
 
     procedure pLoadGuide_Measure;
     procedure pLoadGuide_GoodsGroup;
@@ -258,7 +268,7 @@ begin
      OKGuideButton.Enabled:=true;
      OKDocumentButton.Enabled:=true;
      //
-     toADOConnection.Connected:=false;
+     toZConnection.Connected:=false;
      //fromADOConnection.Connected:=false;
      //
      if fStop then ShowMessage('Справочники НЕ загружены.') else ShowMessage('Справочники загружены.');
@@ -281,13 +291,14 @@ begin
                                            end;
      //
      if not fStop then pLoadDocument_Income;
+     if not fStop then pLoadDocumentItem_Income;
      //
      Gauge.Visible:=false;
      DBGrid.Enabled:=true;
      OKGuideButton.Enabled:=true;
      OKDocumentButton.Enabled:=true;
      //
-     toADOConnection.Connected:=false;
+     toZConnection.Connected:=false;
      //fromADOConnection.Connected:=false;
      //
      if fStop then ShowMessage('Документы НЕ загружены.') else ShowMessage('Документы загружены.');
@@ -1534,6 +1545,80 @@ begin
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.Bill set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        //EnableControls;
+     end;
+     //
+     myDisabledCB(cbIncome);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadDocumentItem_Income;
+begin
+     if (not cbIncome.Checked)or(not cbIncome.Enabled) then exit;
+     //
+     myEnabledCB(cbIncome);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select BillItems.Id as ObjectId');
+        Add('     , Bill.Id_Postgres as MovementId_Postgres');
+        Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
+        Add('     , BillItems.OperCount as Amount');
+        Add('     , Amount as AmountPartner');
+        Add('     , BillItems.OperPrice as Price');
+        Add('     , 1 as CountForPrice');
+        Add('     , BillItems.OperCount_Upakovka as LiveWeight');
+        Add('     , BillItems.OperCount_sh as HeadCount');
+        Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
+        Add('     , BillItems.Id_Postgres as Id_Postgres');
+        Add('     , zc_rvYes() as zc_rvYes');
+        Add('from dba.Bill');
+        Add('     left outer join dba.BillItems on BillItems.BillId = Bill.Id');
+        Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
+        Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+           +'  and Bill.BillKind=zc_bkIncomeToUnit()'
+           +'  and BillItems.Id is not null'
+           );
+        Add('order by ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_movementitem_income';
+        //toStoredProc.Parameters.Refresh;
+        //
+        //DisableControls;
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin {EnableControls;}exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId_Postgres').AsString;
+             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
+             toStoredProc.Params.ParamByName('inAmountPartner').Value:=FieldByName('AmountPartner').AsFloat;
+             toStoredProc.Params.ParamByName('inPrice').Value:=FieldByName('Price').AsFloat;
+             toStoredProc.Params.ParamByName('inCountForPrice').Value:=FieldByName('CountForPrice').AsFloat;
+             toStoredProc.Params.ParamByName('inLiveWeight').Value:=FieldByName('LiveWeight').AsFloat;
+             toStoredProc.Params.ParamByName('inHeadCount').Value:=FieldByName('HeadCount').AsFloat;
+             toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.BillItems set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;

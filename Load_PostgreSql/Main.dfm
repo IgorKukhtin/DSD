@@ -2,8 +2,8 @@ object MainForm: TMainForm
   Left = 202
   Top = 180
   Caption = 'MainForm'
-  ClientHeight = 510
-  ClientWidth = 1067
+  ClientHeight = 689
+  ClientWidth = 1069
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,8 +17,8 @@ object MainForm: TMainForm
   object DBGrid: TDBGrid
     Left = 0
     Top = 0
-    Width = 521
-    Height = 454
+    Width = 523
+    Height = 633
     Align = alClient
     DataSource = DataSource
     TabOrder = 0
@@ -30,18 +30,16 @@ object MainForm: TMainForm
   end
   object ButtonPanel: TPanel
     Left = 0
-    Top = 454
-    Width = 1067
+    Top = 633
+    Width = 1069
     Height = 56
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 660
-    ExplicitWidth = 1150
     object Gauge: TGauge
       Left = 0
       Top = 0
-      Width = 1067
+      Width = 1069
       Height = 19
       Align = alTop
       Progress = 50
@@ -57,7 +55,7 @@ object MainForm: TMainForm
       OnClick = OKGuideButtonClick
     end
     object StopButton: TButton
-      Left = 510
+      Left = 489
       Top = 26
       Width = 137
       Height = 25
@@ -66,7 +64,7 @@ object MainForm: TMainForm
       OnClick = StopButtonClick
     end
     object CloseButton: TButton
-      Left = 683
+      Left = 654
       Top = 27
       Width = 87
       Height = 25
@@ -75,7 +73,7 @@ object MainForm: TMainForm
       OnClick = CloseButtonClick
     end
     object cbSetNull_Id_Postgres: TCheckBox
-      Left = 859
+      Left = 775
       Top = 20
       Width = 292
       Height = 17
@@ -83,7 +81,7 @@ object MainForm: TMainForm
       TabOrder = 3
     end
     object cbOnlyOpen: TCheckBox
-      Left = 859
+      Left = 775
       Top = 39
       Width = 292
       Height = 17
@@ -101,15 +99,13 @@ object MainForm: TMainForm
     end
   end
   object GuidePanel: TPanel
-    Left = 521
+    Left = 523
     Top = 0
     Width = 321
-    Height = 454
+    Height = 633
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitLeft = 604
-    ExplicitHeight = 660
     object cbGoodsGroup: TCheckBox
       Tag = 10
       Left = 15
@@ -307,25 +303,23 @@ object MainForm: TMainForm
     end
   end
   object DocumentPanel: TPanel
-    Left = 842
+    Left = 844
     Top = 0
     Width = 225
-    Height = 454
+    Height = 633
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitLeft = 925
-    ExplicitHeight = 660
     object Label1: TLabel
-      Left = 32
-      Top = 32
+      Left = 6
+      Top = 24
       Width = 6
       Height = 13
       Caption = #1089
     end
     object Label2: TLabel
-      Left = 128
-      Top = 32
+      Left = 109
+      Top = 27
       Width = 12
       Height = 13
       Caption = #1087#1086
@@ -349,7 +343,7 @@ object MainForm: TMainForm
     object cbIncome: TCheckBox
       Tag = 20
       Left = 15
-      Top = 57
+      Top = 61
       Width = 194
       Height = 17
       Caption = '1. '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
@@ -361,21 +355,17 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 1
     end
-    object StartDateEdit: TEdit
-      Left = 16
-      Top = 104
-      Width = 97
-      Height = 21
+    object StartDateEdit: TcxDateEdit
+      Left = 14
+      Top = 22
       TabOrder = 2
-      Text = 'StartDateEdit'
+      Width = 90
     end
-    object EndDateEdit: TEdit
-      Left = 80
-      Top = 144
-      Width = 121
-      Height = 21
+    object EndDateEdit: TcxDateEdit
+      Left = 122
+      Top = 22
       TabOrder = 3
-      Text = 'EndDateEdit'
+      Width = 90
     end
   end
   object DataSource: TDataSource
@@ -385,28 +375,12 @@ object MainForm: TMainForm
   end
   object fromADOConnection: TADOConnection
     ConnectionString = 
-      'Provider=MSDASQL.1;Password=sql;Persist Security Info=True;User ' +
-      'ID=dba;Data Source=v9ProfiMeatingDS'
+      'Provider=MSDASQL.1;Password=qazqazint;Persist Security Info=True' +
+      ';User ID=dba;Data Source=v9ProfiMeatingDS'
     LoginPrompt = False
     Provider = 'MSDASQL.1'
     Left = 344
     Top = 248
-  end
-  object toADOConnection: TADOConnection
-    ConnectionString = 
-      'Provider=MSDASQL.1;Password=postgres;Persist Security Info=True;' +
-      'User ID=postgres;Data Source=PostgreSQLDS'
-    LoginPrompt = False
-    Provider = 'MSDASQL.1'
-    Left = 192
-    Top = 256
-  end
-  object toStoredProc22: TADOStoredProc
-    Connection = toADOConnection
-    Parameters = <>
-    Prepared = True
-    Left = 104
-    Top = 328
   end
   object fromQuery: TADOQuery
     Connection = fromADOConnection
@@ -423,28 +397,11 @@ object MainForm: TMainForm
     Left = 384
     Top = 304
   end
-  object toQuery11: TADOQuery
-    Connection = toADOConnection
-    CursorType = ctStatic
-    Parameters = <>
-    SQL.Strings = (
-      'select * from Object order by 1 desc')
-    Left = 184
-    Top = 328
-  end
-  object toStoredProcTwo22: TADOStoredProc
-    Connection = toADOConnection
-    Parameters = <>
-    Prepared = True
-    Left = 104
-    Top = 378
-  end
   object toZConnection: TZConnection
     ControlsCodePage = cCP_UTF16
     UTF8StringsAsWideField = True
     ClientCodepage = 'WIN1251'
     Properties.Strings = (
-      'User ID=postgres'
       'codepage=WIN1251'
       'AutoEncodeStrings=ON'
       'controls_cp=CP_UTF16')
@@ -454,8 +411,8 @@ object MainForm: TMainForm
     User = 'postgres'
     Password = 'postgres'
     Protocol = 'postgresql-9'
-    Left = 136
-    Top = 464
+    Left = 120
+    Top = 256
   end
   object toQuery: TZQuery
     Connection = toZConnection
@@ -464,13 +421,13 @@ object MainForm: TMainForm
     Params = <>
     Properties.Strings = (
       'select * from Object order by 1 desc')
-    Left = 184
-    Top = 544
+    Left = 168
+    Top = 336
   end
   object toStoredProc: TZStoredProc
     Connection = toZConnection
     Params = <>
-    Left = 112
-    Top = 544
+    Left = 96
+    Top = 336
   end
 end
