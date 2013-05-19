@@ -2,8 +2,8 @@ object MainForm: TMainForm
   Left = 202
   Top = 180
   Caption = 'MainForm'
-  ClientHeight = 716
-  ClientWidth = 1150
+  ClientHeight = 510
+  ClientWidth = 1067
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,8 +17,8 @@ object MainForm: TMainForm
   object DBGrid: TDBGrid
     Left = 0
     Top = 0
-    Width = 604
-    Height = 660
+    Width = 521
+    Height = 454
     Align = alClient
     DataSource = DataSource
     TabOrder = 0
@@ -30,16 +30,18 @@ object MainForm: TMainForm
   end
   object ButtonPanel: TPanel
     Left = 0
-    Top = 660
-    Width = 1150
+    Top = 454
+    Width = 1067
     Height = 56
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 660
+    ExplicitWidth = 1150
     object Gauge: TGauge
       Left = 0
       Top = 0
-      Width = 1150
+      Width = 1067
       Height = 19
       Align = alTop
       Progress = 50
@@ -99,13 +101,15 @@ object MainForm: TMainForm
     end
   end
   object GuidePanel: TPanel
-    Left = 604
+    Left = 521
     Top = 0
     Width = 321
-    Height = 660
+    Height = 454
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitLeft = 604
+    ExplicitHeight = 660
     object cbGoodsGroup: TCheckBox
       Tag = 10
       Left = 15
@@ -303,13 +307,15 @@ object MainForm: TMainForm
     end
   end
   object DocumentPanel: TPanel
-    Left = 925
+    Left = 842
     Top = 0
     Width = 225
-    Height = 660
+    Height = 454
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 3
+    ExplicitLeft = 925
+    ExplicitHeight = 660
     object Label1: TLabel
       Left = 32
       Top = 32
@@ -379,8 +385,8 @@ object MainForm: TMainForm
   end
   object fromADOConnection: TADOConnection
     ConnectionString = 
-      'Provider=MSDASQL.1;Password=qazqazint;Persist Security Info=True' +
-      ';User ID=dba;Data Source=v9ProfiMeatingDS'
+      'Provider=MSDASQL.1;Password=sql;Persist Security Info=True;User ' +
+      'ID=dba;Data Source=v9ProfiMeatingDS'
     LoginPrompt = False
     Provider = 'MSDASQL.1'
     Left = 344
@@ -442,10 +448,11 @@ object MainForm: TMainForm
       'codepage=WIN1251'
       'AutoEncodeStrings=ON'
       'controls_cp=CP_UTF16')
-    LoginPrompt = True
     HostName = 'localhost'
     Port = 5432
     Database = 'dsd'
+    User = 'postgres'
+    Password = 'postgres'
     Protocol = 'postgresql-9'
     Left = 136
     Top = 464

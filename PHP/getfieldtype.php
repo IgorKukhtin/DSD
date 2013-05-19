@@ -16,6 +16,9 @@ function GetFieldType($result, $i)
      case 'numeric':
         $type = 'r8';
         break;
+     case 'timestamptz':
+        $type = 'dateTime';
+        break;
    }
    return ' fieldtype="'.$type.'"';
  }
