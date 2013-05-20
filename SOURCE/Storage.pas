@@ -31,7 +31,7 @@ type
 
 implementation
 
-uses SysUtils, ZLibEx, idGlobal, UtilConst, DBClient, Variants, UtilConvert;
+uses SysUtils, ZLibEx, idGlobal, UtilConst, DBClient, Variants, UtilConvert, Dialogs;
 
 const
 
@@ -117,6 +117,8 @@ function TStorage.ExecuteProc(pData: String): Variant;
 var
   ResultType: String;
 begin
+  if gc_isDebugMode then
+     ShowMessage(pData);
   FSendList.Clear;
   FSendList.Add('XML=' + '<?xml version="1.0" encoding="windows-1251"?>' + pData);
   FReceiveStream.Clear;

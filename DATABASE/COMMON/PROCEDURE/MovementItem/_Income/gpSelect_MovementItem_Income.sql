@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Income(
 IN inMovementId          Integer,       
 IN inShowAll             Boolean,
 IN inSession             TVarChar       /* текущий пользователь */)
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Amount TFloat, isErased boolean) AS
 $BODY$BEGIN
 
    --PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
@@ -16,8 +16,8 @@ $BODY$BEGIN
      RETURN QUERY 
      SELECT 
        MovementItem.ObjectId,
-       Object_Goods.ObjectCode  AS GoodsCode,
-       Object_Goods.ValueData   AS GoodsName,
+       Object_Goods.ObjectCode  AS Code,
+       Object_Goods.ValueData   AS Name,
        MovementItem.Amount,
        MovementItem.isErased
      FROM Object AS Object_Goods
@@ -49,11 +49,11 @@ LEFT JOIN MovementItemFloat AS MovementItemFloat_HeadCount
   
      RETURN QUERY 
      SELECT 
-       ObjectId,
-       Goods.ObjectCode  AS GoodsCode,
-       Goods.ValueData   AS GoodsName,
-       Amount,
-       isErased
+       MovementItem.ObjectId,
+       Object_Goods.ObjectCode  AS GoodsCode,
+       Object_Goods.ValueData   AS GoodsName,
+       MovementItem.Amount,
+       MovementItem.isErased
      FROM MovementItem
 LEFT JOIN Object AS Object_Goods
        ON Object_Goods.Id = MovementItem.ObjectId
@@ -75,8 +75,8 @@ LEFT JOIN MovementItemFloat AS MovementItemFloat_LiveWeight
        ON MovementItemFloat_LiveWeight.MovementItemId = MovementItem.Id AND MovementItemFloat_LiveWeight.DescId = zc_MovementItemFloat_LiveWeight()
 LEFT JOIN MovementItemFloat AS MovementItemFloat_HeadCount
        ON MovementItemFloat_HeadCount.MovementItemId = MovementItem.Id AND MovementItemFloat_HeadCount.DescId = zc_MovementItemFloat_HeadCount()
-    WHERE MovementItem.MovementId = inMovementId
-      AND MovementItem.DescId =  zc_MovementItem_Goods();
+    WHERE MovementItem.MovementId = inMovementId;
+      --AND MovementItem.DescId =  zc_MovementItem_Goods();
  
   END IF;
 END;$BODY$

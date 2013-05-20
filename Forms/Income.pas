@@ -32,11 +32,6 @@ type
     cxGridDBTableViewColumn1: TcxGridDBColumn;
     cxGridDBTableViewColumn2: TcxGridDBColumn;
     cxGridDBTableViewColumn3: TcxGridDBColumn;
-    cxGridDBTableViewColumn4: TcxGridDBColumn;
-    cxGridDBTableViewColumn5: TcxGridDBColumn;
-    cxGridDBTableViewColumn6: TcxGridDBColumn;
-    cxGridDBTableViewColumn7: TcxGridDBColumn;
-    cxGridDBTableViewColumn8: TcxGridDBColumn;
     edInvNumber: TcxTextEdit;
     cxLabel1: TcxLabel;
     edOperDate: TcxDateEdit;

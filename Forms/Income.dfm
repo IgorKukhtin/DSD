@@ -2,6 +2,7 @@ inherited IncomeForm: TIncomeForm
   Caption = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
   ClientHeight = 382
   ClientWidth = 757
+  KeyPreview = True
   ExplicitWidth = 765
   ExplicitHeight = 409
   PixelsPerInch = 96
@@ -15,25 +16,25 @@ inherited IncomeForm: TIncomeForm
     TabOrder = 0
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = DataSource
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
       OptionsView.ColumnAutoWidth = True
       object cxGridDBTableViewColumn1: TcxGridDBColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'Code'
+        Width = 68
       end
       object cxGridDBTableViewColumn2: TcxGridDBColumn
+        Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'Name'
+        Width = 343
       end
       object cxGridDBTableViewColumn3: TcxGridDBColumn
-      end
-      object cxGridDBTableViewColumn4: TcxGridDBColumn
-      end
-      object cxGridDBTableViewColumn5: TcxGridDBColumn
-      end
-      object cxGridDBTableViewColumn6: TcxGridDBColumn
-      end
-      object cxGridDBTableViewColumn7: TcxGridDBColumn
-      end
-      object cxGridDBTableViewColumn8: TcxGridDBColumn
+        Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+        DataBinding.FieldName = 'Amount'
+        Width = 344
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -134,7 +135,7 @@ inherited IncomeForm: TIncomeForm
         Name = 'inShowAll'
         DataType = ftBoolean
         ParamType = ptInput
-        Value = 'True'
+        Value = 'False'
       end>
     Left = 96
     Top = 256
@@ -191,7 +192,36 @@ inherited IncomeForm: TIncomeForm
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
-    Components = <>
+    Components = <
+      item
+        Component = cxGridDBTableViewColumn1
+        Properties.Strings = (
+          'SortIndex'
+          'SortOrder'
+          'Width')
+      end
+      item
+        Component = cxGridDBTableViewColumn2
+        Properties.Strings = (
+          'SortIndex'
+          'SortOrder'
+          'Width')
+      end
+      item
+        Component = cxGridDBTableViewColumn3
+        Properties.Strings = (
+          'SortIndex'
+          'SortOrder'
+          'Width')
+      end
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
     StorageName = 'cxPropertiesStore'
     Left = 224
     Top = 200
@@ -201,7 +231,11 @@ inherited IncomeForm: TIncomeForm
     Top = 152
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
-      StoredProcList = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116

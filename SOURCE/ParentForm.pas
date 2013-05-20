@@ -10,6 +10,7 @@ type
   TParentForm = class(TForm)
   private
     FParams: TdsdParams;
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   public
     { Public declarations }
     property Params: TdsdParams read FParams;
@@ -18,7 +19,7 @@ type
 
 implementation
 
-uses cxPropertiesStore, cxControls, cxContainer, cxEdit, cxGroupBox,
+uses UtilConst, cxPropertiesStore, cxControls, cxContainer, cxEdit, cxGroupBox,
   dxBevel, cxButtons, cxGridDBTableView, cxGrid, DB, DBClient,
   dxBar, Vcl.ActnList, dsdAction, cxTextEdit, cxLabel,
   StdActns, cxDBTL, cxCurrencyEdit, cxDropDownEdit, dsdGuides,
@@ -31,6 +32,7 @@ procedure TParentForm.Execute(Params: TdsdParams);
 var
   i: integer;
 begin
+  onKeyDown := FormKeyDown;
   // Заполняет параметры формы переданными параметрами
   for I := 0 to ComponentCount - 1 do
     if Components[i] is TdsdFormParams then begin
@@ -45,6 +47,14 @@ begin
     if Components[i] is TcxPropertiesStore then
        (Components[i] as TcxPropertiesStore).RestoreFrom;
   end;
+end;
+
+procedure TParentForm.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (ssShift in Shift) and (ssCtrl in Shift)
+      and (Key in [byte('s'), byte('S')]) then
+      gc_isDebugMode := not gc_isDebugMode;
 end;
 
 initialization

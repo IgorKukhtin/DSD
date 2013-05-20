@@ -12,6 +12,8 @@ var FormatSettings: TFormatSettings;
     gc_DateEnd: TDateTime;
 
 const
+
+  gc_isDebugMode: boolean = false; {режим отладки}
   gc_Minute : real = (1/24)/60;
   gc_Test : boolean = false; {константа - тест ли это}
   gc_NewFormTest : boolean = false; {вставлять ли формы по новому}
