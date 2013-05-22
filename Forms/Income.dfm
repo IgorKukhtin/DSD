@@ -297,12 +297,14 @@ inherited IncomeForm: TIncomeForm
         Component = edInvNumber
         DataType = ftInteger
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'OperDate'
         Component = edOperDate
         DataType = ftInteger
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'FromId'
@@ -310,6 +312,7 @@ inherited IncomeForm: TIncomeForm
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'FromName'
@@ -317,6 +320,7 @@ inherited IncomeForm: TIncomeForm
         ComponentItem = 'TextValue'
         DataType = ftInteger
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'ToId'
@@ -324,6 +328,7 @@ inherited IncomeForm: TIncomeForm
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'ToName'
@@ -331,6 +336,7 @@ inherited IncomeForm: TIncomeForm
         ComponentItem = 'TextValue'
         DataType = ftInteger
         ParamType = ptOutput
+        Value = ''
       end>
     Left = 136
     Top = 72

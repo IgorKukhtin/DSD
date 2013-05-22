@@ -24,7 +24,7 @@ BEGIN
   -- Определили подразделение
   SELECT 
     MovementLink_To.ObjectId INTO UnitId
-  FROM MovementLink AS MovementLink_To 
+  FROM MovementLinkObject AS MovementLink_To 
  WHERE MovementLink_To.DescId = zc_MovementLink_To();
       
 

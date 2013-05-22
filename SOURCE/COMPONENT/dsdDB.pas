@@ -22,6 +22,7 @@ type
     function GetDisplayName: string; override;
     procedure AssignParam(Param: TdsdParam);
   public
+    function AsString: string;
     procedure Assign(Source: TPersistent); override;
     constructor Create(Collection: TCollection); override;
   published
@@ -198,7 +199,7 @@ begin
         if ParamType in [ptInput, ptInputOutput] then
         Result := Result + '<' + Name +
              '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
-             '  Value="' + Value + '" />';
+             '  Value="' + asString + '" />';
 
 end;
 
@@ -347,6 +348,11 @@ begin
     ParamType := Param.ParamType;
     DataType := Param.DataType;
   end;
+end;
+
+function TdsdParam.AsString: string;
+begin
+  result := Value
 end;
 
 constructor TdsdParam.Create(Collection: TCollection);

@@ -27,7 +27,7 @@ inherited UnitForm: TUnitForm
     OptionsView.GridLines = tlglBoth
     OptionsView.TreeLineStyle = tllsSolid
     RootValue = -1
-    TabOrder = 2
+    TabOrder = 1
     object cxDBTreeListcxDBTreeListColumn2: TcxDBTreeListColumn
       Caption.Text = #1043#1088#1091#1087#1087#1072
       DataBinding.FieldName = 'Name'
@@ -240,6 +240,7 @@ inherited UnitForm: TUnitForm
           Component = ClientGridDataSet
           DataType = ftInteger
           ParamType = ptInput
+          Value = ''
         end>
       isShowModal = True
       ActionType = acUpdate
@@ -323,6 +324,7 @@ inherited UnitForm: TUnitForm
         ComponentItem = 'Id'
         DataType = ftString
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'TextValue'
@@ -330,6 +332,7 @@ inherited UnitForm: TUnitForm
         ComponentItem = 'Name'
         DataType = ftString
         ParamType = ptOutput
+        Value = ''
       end>
     Left = 344
     Top = 232

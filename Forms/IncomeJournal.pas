@@ -46,6 +46,10 @@ type
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
     bbComplete: TdxBarButton;
+    actUnComplete: TdsdExecStoredProc;
+    spMovementUnComplete: TdsdStoredProc;
+    bbUnComplete: TdxBarButton;
+    N2: TMenuItem;
   private
     { Private declarations }
   public

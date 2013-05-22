@@ -207,6 +207,10 @@ inherited IncomeJournalForm: TIncomeJournalForm
           ItemName = 'bbComplete'
         end
         item
+          Visible = True
+          ItemName = 'bbUnComplete'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
@@ -233,6 +237,10 @@ inherited IncomeJournalForm: TIncomeJournalForm
     end
     object bbComplete: TdxBarButton
       Action = actComplete
+      Category = 0
+    end
+    object bbUnComplete: TdxBarButton
+      Action = actUnComplete
       Category = 0
     end
   end
@@ -280,11 +288,23 @@ inherited IncomeJournalForm: TIncomeJournalForm
           ComponentItem = 'Id'
           DataType = ftInteger
           ParamType = ptInput
+          Value = ''
         end>
       isShowModal = True
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
+    end
+    object actUnComplete: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = spMovementUnComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementUnComplete
+        end>
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 11
     end
     object actComplete: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -334,6 +354,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
         ComponentItem = 'Id'
         DataType = ftInteger
         ParamType = ptInput
+        Value = ''
       end>
     Left = 152
     Top = 208
@@ -345,5 +366,24 @@ inherited IncomeJournalForm: TIncomeJournalForm
     object N1: TMenuItem
       Action = actComplete
     end
+    object N2: TMenuItem
+      Action = actUnComplete
+    end
+  end
+  object spMovementUnComplete: TdsdStoredProc
+    StoredProcName = 'gpUnComplete_Movement'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = ''
+      end>
+    Left = 152
+    Top = 240
   end
 end
