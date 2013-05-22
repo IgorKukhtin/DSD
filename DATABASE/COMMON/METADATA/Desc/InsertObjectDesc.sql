@@ -92,13 +92,28 @@ insert into ObjectDesc(Id, Code, ItemName)
 SELECT zc_Object_GoodsPropertyValue(), 'GoodsPropertyValue', '' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_GoodsPropertyValue());
 
 insert into ObjectDesc(Id, Code, ItemName)
+SELECT zc_Object_Destination(), 'Destination', 'Направление' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_Destination());
+
+insert into ObjectDesc(Id, Code, ItemName)
 SELECT zc_Object_AccountGroup(), 'AccountGroup', 'Группы счетов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_AccountGroup());
 
 insert into ObjectDesc(Id, Code, ItemName)
-SELECT zc_Object_AccountPlace(), 'AccountPlace', 'Аналитика счета (место)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_AccountPlace());
-
-insert into ObjectDesc(Id, Code, ItemName)
-SELECT zc_Object_AccountReference(), 'AccountReference', 'Аналитика счета (назначение)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_AccountReference());
+SELECT zc_Object_AccountDirection(), 'AccountDirection', 'Аналитика счета (место)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_AccountDirection());
 
 insert into ObjectDesc(Id, Code, ItemName)
 SELECT zc_Object_Account(), 'Account', 'Счет' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_Account());
+
+insert into ObjectDesc(Id, Code, ItemName)
+SELECT zc_Object_InfoMoneyGroup(), 'InfoMoneyGroup', 'Группа управленческих статей' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_InfoMoneyGroup());
+
+insert into ObjectDesc(Id, Code, ItemName)
+SELECT zc_Object_InfoMoney(), 'InfoMoney', 'Управленческие статьи' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_InfoMoney());
+
+insert into ObjectDesc(Id, Code, ItemName)
+SELECT zc_Object_ProfitLossGroup(), 'ProfitLossGroup', 'Группы отчета по прибылям' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_ProfitLossGroup());
+
+insert into ObjectDesc(Id, Code, ItemName)
+SELECT zc_Object_ProfitLossDirection(), 'ProfitLossDirection', 'Группы отчета по прибылям' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_ProfitLossDirection());
+
+insert into ObjectDesc(Id, Code, ItemName)
+SELECT zc_Object_ProfitLoss(), 'ProfitLoss', 'Отчеты по прибылям' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_ProfitLoss());

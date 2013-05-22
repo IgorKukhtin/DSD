@@ -23,10 +23,10 @@ BEGIN
    PERFORM lpInsertUpdate_Object(zc_Object_AccountGroup_Inventory(), zc_Object_AccountGroup(), 1, 'Запасы');
    
    -- Вставляем аналитики счетов (место)
-   PERFORM lpInsertUpdate_Object(zc_Object_AccountPlace_Store(), zc_Object_AccountPlace(), 1, 'на складах');
+   PERFORM lpInsertUpdate_Object(zc_Object_AccountDirection_Store(), zc_Object_AccountDirection(), 1, 'на складах');
 
    -- Вставляем аналитики счетов (назначения)
-   PERFORM lpInsertUpdate_Object(zc_Object_AccountReference_MeatByProduct(), zc_Object_AccountReference(), 1, 'Мясное сырье');
+   PERFORM lpInsertUpdate_Object(zc_Object_Destination_MeatByProduct(), zc_Object_Destination(), 1, 'Мясное сырье');
 
    -- Увеличиваем последовательность
    PERFORM setval('object_id_seq', (select max( id ) + 1 from Object));
@@ -109,18 +109,18 @@ BEGIN
    PERFORM lpInsertUpdate_Object(zc_Object_AccountGroup_Inventory(), zc_Object_AccountGroup(), 1, 'Запасы');
    
    -- Вставляем аналитики счетов (место)
-   PERFORM lpInsertUpdate_Object(zc_Object_AccountPlace_Store(), zc_Object_AccountPlace(), 1, 'на складах');
+   PERFORM lpInsertUpdate_Object(zc_Object_AccountDirection_Store(), zc_Object_AccountDirection(), 1, 'на складах');
 
    -- Вставляем аналитики счетов (назначения)
-   PERFORM lpInsertUpdate_Object(zc_Object_AccountReference_MeatByProduct(), zc_Object_AccountReference(), 1, 'Мясное сырье');
+   PERFORM lpInsertUpdate_Object(zc_Object_Destination_MeatByProduct(), zc_Object_Destination(), 1, 'Мясное сырье');
 
 
    IF lpFind_Object_Account(zc_Object_AccountGroup_Inventory(),
-                            zc_Object_AccountPlace_Store(),
-                            zc_Object_AccountReference_MeatByProduct()) = 0 THEN
+                            zc_Object_AccountDirection_Store(),
+                            zc_Object_Destination_MeatByProduct()) = 0 THEN
 
       PERFORM gpInsertUpdate_Object_Account(0, 0, '', zc_Object_AccountGroup_Inventory(),
-                            zc_Object_AccountPlace_Store(), zc_Object_AccountReference_MeatByProduct(), '');
+                            zc_Object_AccountDirection_Store(), zc_Object_Destination_MeatByProduct(), '');
  
    END IF;
 

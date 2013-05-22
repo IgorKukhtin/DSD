@@ -184,19 +184,19 @@ $BODY$BEGIN
   RETURN 31;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_Object_AccountGroup()
+CREATE OR REPLACE FUNCTION zc_Object_Destination()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 32;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_Object_AccountPlace()
+CREATE OR REPLACE FUNCTION zc_Object_AccountGroup()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 33;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_Object_AccountReference()
+CREATE OR REPLACE FUNCTION zc_Object_AccountDirection()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 34;
@@ -208,3 +208,32 @@ $BODY$BEGIN
   RETURN 35;
 END;  $BODY$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION zc_Object_InfoMoneyGroup()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 36;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_Object_InfoMoney()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 37;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_Object_ProfitLossGroup()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 38;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_Object_ProfitLossDirection()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 39;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_Object_ProfitLoss()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 40;
+END;  $BODY$ LANGUAGE plpgsql;

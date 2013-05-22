@@ -199,7 +199,7 @@ begin
         if ParamType in [ptInput, ptInputOutput] then
         Result := Result + '<' + Name +
              '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
-             '  Value="' + gfStrToXmlStr(asString) + '" />';
+             '  Value="' + StringReplace(asString, '"', '&quot;', [rfReplaceAll]) + '" />';
 
 end;
 

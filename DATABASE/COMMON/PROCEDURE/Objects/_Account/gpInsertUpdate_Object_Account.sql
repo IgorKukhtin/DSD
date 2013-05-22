@@ -7,8 +7,8 @@ INOUT ioId	         Integer   ,   	/* ключ объекта <Счет> */
 IN inCode                Integer   ,    /* Код объекта <Счет> */
 IN inName                TVarChar  ,    /* Название объекта <Счет> */
 IN inAccountGroupId      Integer   ,    /* Группа счетов */
-IN inAccountPlaceId      Integer   ,    /* Аналитика счета (место) */
-IN inAccountReferenceId  Integer   ,    /* Аналитика счета (назначение) */
+IN inAccountDirectionId  Integer   ,    /* Аналитика счета (место) */
+IN inDestinationId       Integer   ,    /* Аналитика счета (назначение) */
 IN inSession             TVarChar       /* текущий пользователь */
 )
   RETURNS integer AS
@@ -18,8 +18,8 @@ $BODY$BEGIN
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Account(), inCode, inName);
 
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Account_AccountGroup(), ioId, inAccountGroupId);
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Account_AccountPlace(), ioId, inAccountPlaceId);
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Account_AccountReference(), ioId, inAccountReferenceId);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Account_AccountDirection(), ioId, inAccountDirectionId);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Account_Destination(), ioId, inDestinationId);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE

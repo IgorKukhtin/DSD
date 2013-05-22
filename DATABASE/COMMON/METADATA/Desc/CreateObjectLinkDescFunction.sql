@@ -172,13 +172,13 @@ $BODY$BEGIN
   RETURN 27;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Account_AccountPlace()
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Account_AccountDirection()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 28;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Account_AccountReference()
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Account_Destination()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 29;

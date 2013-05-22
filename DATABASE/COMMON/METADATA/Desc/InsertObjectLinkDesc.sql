@@ -74,7 +74,7 @@ insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
 SELECT zc_ObjectLink_Account_AccountGroup(), 'Account_AccountGroup', '', zc_Object_Account(), zc_Object_AccountGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_Account_AccountGroup());
 
 insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
-SELECT zc_ObjectLink_Account_AccountPlace(), 'Account_AccountPlace', '', zc_Object_Account(), zc_Object_AccountPlace() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_Account_AccountPlace());
+SELECT zc_ObjectLink_Account_AccountDirection(), 'Account_AccountDirection', '', zc_Object_Account(), zc_Object_AccountDirection() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_Account_AccountDirection());
 
 insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
-SELECT zc_ObjectLink_Account_AccountReference(), 'Account_AccountReference', '', zc_Object_Account(), zc_Object_AccountReference() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_Account_AccountReference());
+SELECT zc_ObjectLink_Account_Destination(), 'Account_Destination', '', zc_Object_Account(), zc_Object_Destination() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_Account_Destination());
