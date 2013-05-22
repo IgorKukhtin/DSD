@@ -90,3 +90,15 @@ SELECT zc_Object_Car(), 'Car', 'Автомобиль' WHERE NOT EXISTS (SELECT * FROM Obje
 
 insert into ObjectDesc(Id, Code, ItemName)
 SELECT zc_Object_GoodsPropertyValue(), 'GoodsPropertyValue', '' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_GoodsPropertyValue());
+
+insert into ObjectDesc(Id, Code, ItemName)
+SELECT zc_Object_AccountGroup(), 'AccountGroup', 'Группы счетов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_AccountGroup());
+
+insert into ObjectDesc(Id, Code, ItemName)
+SELECT zc_Object_AccountPlace(), 'AccountPlace', 'Аналитика счета (место)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_AccountPlace());
+
+insert into ObjectDesc(Id, Code, ItemName)
+SELECT zc_Object_AccountReference(), 'AccountReference', 'Аналитика счета (назначение)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_AccountReference());
+
+insert into ObjectDesc(Id, Code, ItemName)
+SELECT zc_Object_Account(), 'Account', 'Счет' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_Account());

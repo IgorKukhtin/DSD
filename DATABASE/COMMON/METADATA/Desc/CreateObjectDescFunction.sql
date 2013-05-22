@@ -183,3 +183,28 @@ CREATE OR REPLACE FUNCTION zc_Object_GoodsPropertyValue()
 $BODY$BEGIN
   RETURN 31;
 END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_Object_AccountGroup()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 32;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_Object_AccountPlace()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 33;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_Object_AccountReference()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 34;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_Object_Account()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 35;
+END;  $BODY$ LANGUAGE plpgsql;
+

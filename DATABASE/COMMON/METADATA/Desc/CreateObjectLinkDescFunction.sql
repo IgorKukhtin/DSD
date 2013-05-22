@@ -165,3 +165,22 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsPropertyValue_GoodsKind()
 $BODY$BEGIN
   RETURN 26;
 END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Account_AccountGroup()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 27;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Account_AccountPlace()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 28;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Account_AccountReference()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 29;
+END;  $BODY$ LANGUAGE plpgsql;
+

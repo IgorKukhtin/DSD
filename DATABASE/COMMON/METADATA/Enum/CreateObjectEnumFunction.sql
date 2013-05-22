@@ -51,3 +51,21 @@ CREATE OR REPLACE FUNCTION zc_Object_AccountPlan_Passive()
 $BODY$BEGIN
   RETURN 1002;
 END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_Object_AccountGroup_Inventory()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 2001;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_Object_AccountPlace_Store()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 3001;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_Object_AccountReference_MeatByProduct()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 4001;
+END;  $BODY$ LANGUAGE plpgsql;

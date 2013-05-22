@@ -12,7 +12,7 @@ uses
   Vcl.ActnList, DataModul, cxTL, cxTLdxBarBuiltInMenu,
   cxInplaceContainer, cxTLData, cxDBTL, cxMaskEdit, ParentForm, dsdDB, dsdAction,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxDropDownEdit,
-  cxCalendar, Vcl.ExtCtrls;
+  cxCalendar, Vcl.ExtCtrls, cxImageComboBox, Vcl.Menus;
 
 type
   TIncomeJournalForm = class(TParentForm)
@@ -32,15 +32,20 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
-    cxGridDBTableViewColumn2: TcxGridDBColumn;
-    cxGridDBTableViewColumn3: TcxGridDBColumn;
-    cxGridDBTableViewColumn4: TcxGridDBColumn;
-    cxGridDBTableViewColumn5: TcxGridDBColumn;
+    colStatus: TcxGridDBColumn;
+    colInvNumber: TcxGridDBColumn;
+    colOperDate: TcxGridDBColumn;
+    colFromName: TcxGridDBColumn;
+    colToName: TcxGridDBColumn;
     cxGridDBTableViewColumn6: TcxGridDBColumn;
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
+    actComplete: TdsdExecStoredProc;
+    spMovementComplete: TdsdStoredProc;
+    PopupMenu: TPopupMenu;
+    N1: TMenuItem;
+    bbComplete: TdxBarButton;
   private
     { Private declarations }
   public

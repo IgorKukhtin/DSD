@@ -232,6 +232,7 @@
 				<FormType>dfm</FormType>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdAddOn.pas"/>
+			<DCCReference Include="..\SOURCE\dbMovementCompleteTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

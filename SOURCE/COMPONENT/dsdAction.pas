@@ -37,6 +37,7 @@ type
     property StoredProcList: TdsdStoredProcList read FStoredProcList write FStoredProcList;
     property Caption;
     property Hint;
+    property ImageIndex;
     property ShortCut;
   end;
 

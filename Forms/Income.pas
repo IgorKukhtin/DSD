@@ -11,7 +11,7 @@ uses
   cxGridDBTableView, cxGrid, Datasnap.DBClient, Vcl.ActnList, dsdAction,
   cxPropertiesStore, dxBar, Vcl.ExtCtrls, cxContainer, cxLabel, cxTextEdit,
   Vcl.ComCtrls, dxCore, cxDateUtils, cxButtonEdit, cxMaskEdit, cxDropDownEdit,
-  cxCalendar, dsdGuides;
+  cxCalendar, dsdGuides, Vcl.Menus;
 
 type
   TIncomeForm = class(TParentForm)
@@ -29,9 +29,9 @@ type
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     DataPanel: TPanel;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
-    cxGridDBTableViewColumn2: TcxGridDBColumn;
-    cxGridDBTableViewColumn3: TcxGridDBColumn;
+    colCode: TcxGridDBColumn;
+    colName: TcxGridDBColumn;
+    colAmount: TcxGridDBColumn;
     edInvNumber: TcxTextEdit;
     cxLabel1: TcxLabel;
     edOperDate: TcxDateEdit;
@@ -42,6 +42,11 @@ type
     cxLabel4: TcxLabel;
     dsdGuidesFrom: TdsdGuides;
     dsdGuidesTo: TdsdGuides;
+    spGet: TdsdStoredProc;
+    PopupMenu: TPopupMenu;
+    N1: TMenuItem;
+    colPrice: TcxGridDBColumn;
+    colSumm: TcxGridDBColumn;
   private
     { Private declarations }
   public

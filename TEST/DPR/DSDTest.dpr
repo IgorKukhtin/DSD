@@ -79,7 +79,8 @@ uses
   dbMovementItemTest in '..\SOURCE\dbMovementItemTest.pas',
   Income in '..\..\Forms\Income.pas' {IncomeForm},
   IncomeJournal in '..\..\Forms\IncomeJournal.pas' {ParentForm2},
-  dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas';
+  dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas',
+  dbMovementCompleteTest in '..\SOURCE\dbMovementCompleteTest.pas';
 
 {$R *.RES}
 

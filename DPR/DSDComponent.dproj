@@ -40,7 +40,7 @@
 			<Base>true</Base>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base)'!=''">
-			<DCC_UsePackage>rtl;dsnap;dbrtl;IndyCore;IndySystem;IndyProtocols;$(DCC_UsePackage)</DCC_UsePackage>
+			<DCC_UsePackage>rtl;dsnap;dbrtl;IndyCore;IndySystem;IndyProtocols;soaprtl;inet;$(DCC_UsePackage)</DCC_UsePackage>
 			<DCC_CBuilderOutput>All</DCC_CBuilderOutput>
 			<DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
 			<GenPackage>true</GenPackage>
@@ -101,6 +101,8 @@
 			<DCCReference Include="cxPageControlRS16.dcp"/>
 			<DCCReference Include="cxGridRS16.dcp"/>
 			<DCCReference Include="cxTreeListRS16.dcp"/>
+			<DCCReference Include="soaprtl.dcp"/>
+			<DCCReference Include="inet.dcp"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
 			<DCCReference Include="..\SOURCE\UtilConst.pas"/>
 			<DCCReference Include="..\SOURCE\CommonData.pas"/>

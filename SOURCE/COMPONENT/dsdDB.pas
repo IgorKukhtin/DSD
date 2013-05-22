@@ -15,8 +15,8 @@ type
     FName: String;
     FComponentItem: String;
     FParamType: TParamType;
-    function GetValue: String;
-    procedure SetValue(const Value: string);
+    function GetValue: Variant;
+    procedure SetValue(const Value: Variant);
     procedure SetComponent(const Value: TComponent);
   protected
     function GetDisplayName: string; override;
@@ -31,7 +31,7 @@ type
     property ComponentItem: String read FComponentItem write FComponentItem;
     property DataType: TFieldType read FDataType write FDataType;
     property ParamType: TParamType read FParamType write FParamType;
-    property Value: string read GetValue write SetValue;
+    property Value: Variant read GetValue write SetValue;
   end;
 
   TdsdParams = class (TCollection)
@@ -109,7 +109,8 @@ type
 implementation
 
 uses Storage, CommonData, TypInfo, UtilConvert, SysUtils, cxTextEdit,
-     XMLDoc, XMLIntf, StrUtils, cxCurrencyEdit, dsdGuides, cxCheckBox, cxCalendar;
+     XMLDoc, XMLIntf, StrUtils, cxCurrencyEdit, dsdGuides, cxCheckBox, cxCalendar,
+     Variants, XSBuiltIns;
 
 procedure Register;
 begin
@@ -361,7 +362,7 @@ begin
   result := Name
 end;
 
-function TdsdParam.GetValue: String;
+function TdsdParam.GetValue: Variant;
 // Если указан Component, то параметры берутся из него
 // иначе из значения Value
 var
@@ -423,7 +424,7 @@ begin
   end
 end;
 
-procedure TdsdParam.SetValue(const Value: string);
+procedure TdsdParam.SetValue(const Value: Variant);
 begin
   FValue := Value;
   // передаем значение параметра дальше по цепочке
@@ -438,8 +439,16 @@ begin
         (Component as TcxCurrencyEdit).Value := StrToFloat(FValue);
      if Component is TcxCheckBox then
         (Component as TcxCheckBox).Checked := StrToBool(FValue);
+     if Component is TcxDateEdit then
+        with TXSDateTime.Create() do
+        try
+          XSToNative(FValue); // convert from WideString
+          (Component as TcxDateEdit).Date := AsDateTime; // convert to TDateTime
+        finally
+          Free;
+        end;
      if Component is TdsdGuides then
-        if LowerCase(ComponentItem) = 'name' then
+        if LowerCase(ComponentItem) = 'textvalue' then
            (Component as TdsdGuides).TextValue := FValue
         else
            (Component as TdsdGuides).Key := FValue;

@@ -1,9 +1,9 @@
-п»ї-- Function: gpInsertUpdate_Movement_Income()
+-- Function: gpInsertUpdate_Movement_Income()
 
 -- DROP FUNCTION gpInsertUpdate_Movement_Income();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
-INOUT ioId	         Integer,   	/* РєР»СЋС‡ РѕР±СЉРµРєС‚Р° <РџСЂРёС…РѕРґРЅР°СЏ РЅР°РєР»Р°РґРЅР°СЏ> */
+INOUT ioId	         Integer,   	/* ключ объекта <Приходная накладная> */
   IN inInvNumber         TVarChar, 
   IN inOperDate          TDateTime,
   IN inFromId            Integer,
@@ -18,7 +18,7 @@ INOUT ioId	         Integer,   	/* РєР»СЋС‡ РѕР±СЉРµРєС‚Р° <РџСЂРёС…РѕРґРЅР°СЏ Р
   IN inPriceWithVAT      Boolean,
   IN inVATPercent        TFloat,
   IN inDiscountPercent   TFloat,
-  IN inSession           TVarChar       /* С‚РµРєСѓС‰РёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ */
+  IN inSession           TVarChar       /* текущий пользователь */
 )                              
   RETURNS integer AS
 $BODY$BEGIN

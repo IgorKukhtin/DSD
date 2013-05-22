@@ -3,6 +3,7 @@ inherited IncomeForm: TIncomeForm
   ClientHeight = 382
   ClientWidth = 757
   KeyPreview = True
+  PopupMenu = PopupMenu
   ExplicitWidth = 765
   ExplicitHeight = 409
   PixelsPerInch = 96
@@ -21,20 +22,30 @@ inherited IncomeForm: TIncomeForm
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
       OptionsView.ColumnAutoWidth = True
-      object cxGridDBTableViewColumn1: TcxGridDBColumn
+      object colCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
-        Width = 68
+        Width = 58
       end
-      object cxGridDBTableViewColumn2: TcxGridDBColumn
+      object colName: TcxGridDBColumn
         Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
-        Width = 343
+        Width = 417
       end
-      object cxGridDBTableViewColumn3: TcxGridDBColumn
+      object colAmount: TcxGridDBColumn
         Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
         DataBinding.FieldName = 'Amount'
-        Width = 344
+        Width = 100
+      end
+      object colPrice: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072
+        DataBinding.FieldName = 'Price'
+        Width = 89
+      end
+      object colSumm: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072
+        DataBinding.FieldName = 'Summ'
+        Width = 91
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -188,27 +199,26 @@ inherited IncomeForm: TIncomeForm
     object bbRefresh: TdxBarButton
       Action = actRefresh
       Category = 0
-      ImageIndex = 4
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = cxGridDBTableViewColumn1
+        Component = colCode
         Properties.Strings = (
           'SortIndex'
           'SortOrder'
           'Width')
       end
       item
-        Component = cxGridDBTableViewColumn2
+        Component = colName
         Properties.Strings = (
           'SortIndex'
           'SortOrder'
           'Width')
       end
       item
-        Component = cxGridDBTableViewColumn3
+        Component = colAmount
         Properties.Strings = (
           'SortIndex'
           'SortOrder'
@@ -227,6 +237,7 @@ inherited IncomeForm: TIncomeForm
     Top = 200
   end
   object ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 216
     Top = 152
     object actRefresh: TdsdDataSetRefresh
@@ -235,9 +246,13 @@ inherited IncomeForm: TIncomeForm
       StoredProcList = <
         item
           StoredProc = spSelect
+        end
+        item
+          StoredProc = spGet
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
       ShortCut = 116
     end
   end
@@ -263,5 +278,69 @@ inherited IncomeForm: TIncomeForm
     FormName = 'TUnitForm'
     Left = 448
     Top = 56
+  end
+  object spGet: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Income'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Component = dsdFormParams
+        ComponentItem = 'Id'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = '0'
+      end
+      item
+        Name = 'InvNumber'
+        Component = edInvNumber
+        DataType = ftInteger
+        ParamType = ptOutput
+      end
+      item
+        Name = 'OperDate'
+        Component = edOperDate
+        DataType = ftInteger
+        ParamType = ptOutput
+      end
+      item
+        Name = 'FromId'
+        Component = dsdGuidesFrom
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+      end
+      item
+        Name = 'FromName'
+        Component = dsdGuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftInteger
+        ParamType = ptOutput
+      end
+      item
+        Name = 'ToId'
+        Component = dsdGuidesTo
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+      end
+      item
+        Name = 'ToName'
+        Component = dsdGuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftInteger
+        ParamType = ptOutput
+      end>
+    Left = 136
+    Top = 72
+  end
+  object PopupMenu: TPopupMenu
+    Images = dmMain.ImageList
+    Left = 288
+    Top = 216
+    object N1: TMenuItem
+      Action = actRefresh
+    end
   end
 end

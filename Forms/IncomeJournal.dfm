@@ -35,6 +35,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
     Width = 619
     Height = 309
     Align = alClient
+    PopupMenu = PopupMenu
     TabOrder = 0
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
@@ -42,26 +43,48 @@ inherited IncomeJournalForm: TIncomeJournalForm
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
-      object cxGridDBTableViewColumn1: TcxGridDBColumn
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
+      OptionsData.Inserting = False
+      object colStatus: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
-        DataBinding.FieldName = 'StatusName'
+        DataBinding.FieldName = 'StatusCode'
+        PropertiesClassName = 'TcxImageComboBoxProperties'
+        Properties.Images = dmMain.ImageList
+        Properties.Items = <
+          item
+            Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+            ImageIndex = 11
+            Value = '1'
+          end
+          item
+            Description = #1055#1088#1086#1074#1077#1076#1077#1085
+            ImageIndex = 12
+            Value = '2'
+          end
+          item
+            Description = #1059#1076#1072#1083#1077#1085
+            ImageIndex = 13
+            Value = '3'
+          end>
       end
-      object cxGridDBTableViewColumn2: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072
+      object colInvNumber: TcxGridDBColumn
+        Caption = #1053#1086#1084#1077#1088
         DataBinding.FieldName = 'InvNumber'
         Width = 41
       end
-      object cxGridDBTableViewColumn3: TcxGridDBColumn
-        Caption = #1053#1086#1084#1077#1088
+      object colOperDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
         Width = 47
       end
-      object cxGridDBTableViewColumn4: TcxGridDBColumn
+      object colFromName: TcxGridDBColumn
         Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
         DataBinding.FieldName = 'FromName'
         Width = 172
       end
-      object cxGridDBTableViewColumn5: TcxGridDBColumn
+      object colToName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'ToName'
         Width = 192
@@ -87,7 +110,50 @@ inherited IncomeJournalForm: TIncomeJournalForm
     Top = 144
   end
   object cxPropertiesStore: TcxPropertiesStore
-    Components = <>
+    Components = <
+      item
+        Component = colFromName
+        Properties.Strings = (
+          'SortIndex'
+          'SortOrder'
+          'Width')
+      end
+      item
+        Component = colInvNumber
+        Properties.Strings = (
+          'SortIndex'
+          'SortOrder'
+          'Width')
+      end
+      item
+        Component = colOperDate
+        Properties.Strings = (
+          'SortIndex'
+          'SortOrder'
+          'Width')
+      end
+      item
+        Component = colStatus
+        Properties.Strings = (
+          'SortIndex'
+          'SortOrder'
+          'Width')
+      end
+      item
+        Component = colToName
+        Properties.Strings = (
+          'SortIndex'
+          'SortOrder'
+          'Width')
+      end
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
     StorageName = 'cxPropertiesStore'
     Left = 232
     Top = 96
@@ -138,6 +204,11 @@ inherited IncomeJournalForm: TIncomeJournalForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'bbComplete'
+        end
+        item
+          BeginGroup = True
+          Visible = True
           ItemName = 'bbRefresh'
         end>
       OneOnRow = True
@@ -149,7 +220,6 @@ inherited IncomeJournalForm: TIncomeJournalForm
     object bbRefresh: TdxBarButton
       Action = actRefresh
       Category = 0
-      ImageIndex = 4
     end
     object bbInsert: TdxBarButton
       Action = actInsert
@@ -161,8 +231,13 @@ inherited IncomeJournalForm: TIncomeJournalForm
       Category = 0
       ImageIndex = 1
     end
+    object bbComplete: TdxBarButton
+      Action = actComplete
+      Category = 0
+    end
   end
   object ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 232
     Top = 144
     object actRefresh: TdsdDataSetRefresh
@@ -174,6 +249,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
       ShortCut = 116
     end
     object actInsert: TdsdInsertUpdateAction
@@ -210,6 +286,17 @@ inherited IncomeJournalForm: TIncomeJournalForm
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
+    object actComplete: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = spMovementComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementComplete
+        end>
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 12
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Income'
@@ -235,5 +322,28 @@ inherited IncomeJournalForm: TIncomeJournalForm
       end>
     Left = 152
     Top = 152
+  end
+  object spMovementComplete: TdsdStoredProc
+    StoredProcName = 'gpComplete_Movement_Income'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+    Left = 152
+    Top = 208
+  end
+  object PopupMenu: TPopupMenu
+    Images = dmMain.ImageList
+    Left = 288
+    Top = 160
+    object N1: TMenuItem
+      Action = actComplete
+    end
   end
 end

@@ -1,11 +1,12 @@
-п»ї-- Function: gpGet_Movement_Income()
+-- Function: gpGet_Movement_Income()
 
---DROP FUNCTION gpGet_Movement_Income();
+--DROP FUNCTION gpGet_Movement_Income(Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Income(
-IN inId          Integer,       /* Р•РґРёРЅРёС†Р° РёР·РјРµСЂРµРЅРёСЏ */
-IN inSession     TVarChar       /* С‚РµРєСѓС‰РёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ */)
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, FromId Integer, FromName TVarChar, 
+IN inId          Integer,       /* Единица измерения */
+IN inSession     TVarChar       /* текущий пользователь */)
+RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer,
+               StatusName TVarChar, FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, 
                PaidKindId Integer, PaidKindName TVarChar, ContractId Integer, ContractName TVarChar,
                CarId Integer, CarName TVarChar, PersonalDriverId Integer, PersonalDriverName TVarChar,
                PersonalPackerId Integer, PersonalPackerName TVarChar, OperDatePartner TDateTime,
@@ -20,12 +21,12 @@ $BODY$BEGIN
        Movement.Id,
        Movement.InvNumber,
        Movement.OperDate,
-       Movement.StatusId,
+       Status.ObjectCode          AS StatusCode,
        Status.ValueData           AS StatusName,
        ObjectFrom.Id              AS FromId,
-       ObjectFrom.ValueData       AS ObjectFromName,
+       ObjectFrom.ValueData       AS FromName,
        ObjectTo.Id                AS ToId,
-       ObjectTo.ValueData         AS ObjectToName,
+       ObjectTo.ValueData         AS ToName,
        PaidKind.Id                AS PaidKindId,
        PaidKind.ValueData         AS PaidKindName,
        Contract.Id                AS ContractId,
@@ -37,7 +38,7 @@ $BODY$BEGIN
        PersonalPacker.Id          AS PersonalPackerId,
        PersonalPacker.ValueData   AS PersonalPackerName,
        OperDatePartner.ValueData  AS OperDatePartner,
-       InvNumberPartner.ValueData AS InvNumberPartner ,
+       InvNumberPartner.ValueData AS InvNumberPartner,
        PriceWithVAT.ValueData     AS PriceWithVAT,
        VATPercent.ValueData       AS VATPercent,
        DiscountPercent.ValueData  AS DiscountPercent

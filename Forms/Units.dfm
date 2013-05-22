@@ -27,9 +27,7 @@ inherited UnitForm: TUnitForm
     OptionsView.GridLines = tlglBoth
     OptionsView.TreeLineStyle = tllsSolid
     RootValue = -1
-    TabOrder = 4
-    ExplicitLeft = 240
-    ExplicitTop = 8
+    TabOrder = 2
     object cxDBTreeListcxDBTreeListColumn2: TcxDBTreeListColumn
       Caption.Text = #1043#1088#1091#1087#1087#1072
       DataBinding.FieldName = 'Name'
@@ -46,9 +44,7 @@ inherited UnitForm: TUnitForm
     Top = 26
     Width = 8
     Height = 489
-    ExplicitLeft = 352
-    ExplicitTop = 120
-    ExplicitHeight = 100
+    Control = cxDBTreeList
   end
   object cxGrid: TcxGrid
     Left = 321
@@ -57,10 +53,6 @@ inherited UnitForm: TUnitForm
     Height = 489
     Align = alClient
     TabOrder = 6
-    ExplicitLeft = 408
-    ExplicitTop = 120
-    ExplicitWidth = 250
-    ExplicitHeight = 200
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GridDS

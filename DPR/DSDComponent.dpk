@@ -46,7 +46,9 @@ requires
   cxEditorsRS16,
   cxPageControlRS16,
   cxGridRS16,
-  cxTreeListRS16;
+  cxTreeListRS16,
+  soaprtl,
+  inet;
 
 contains
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',

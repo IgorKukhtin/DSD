@@ -35,9 +35,9 @@ const
 
 procedure TdbProcedureTest.CreateContainerProcedure;
 begin
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'Container\lpGet_Container1.sql');
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'Container\Get\lpGet_Container1.sql');
   ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'Container\lpGet_Container2.sql');
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'Container\Get\lpGet_Container2.sql');
   ZQuery.ExecSQL;
 end;
 
@@ -48,8 +48,21 @@ end;
 
 procedure TdbProcedureTest.CreateMovementItemContainerProcedure;
 begin
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'MovementItemContainer\lpInsertUpdate_MovementItemContainer.sql');
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'MovementItemContainer\InsertUpdate\lpInsertUpdate_MovementItemContainer.sql');
   ZQuery.ExecSQL;
+
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'MovementItemContainer\Delete\lpDelete_MovementItemContainer.sql');
+  ZQuery.ExecSQL;
+
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'MovementItemContainer\gpUnComplete_Movement.sql');
+  ZQuery.ExecSQL;
+
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'MovementItemContainer\gpSelect_MovementItemContainer_Movement.sql');
+  ZQuery.ExecSQL;
+
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'MovementItemContainer\_Income\gpComplete_Movement_Income.sql');
+  ZQuery.ExecSQL;
+
 end;
 
 procedure TdbProcedureTest.CreateMovementItemProcedure;
@@ -149,6 +162,11 @@ begin
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\lpCheckRight.sql');
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\gpCheckLogin.sql');
+  ZQuery.ExecSQL;
+
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Account\gpInsertUpdate_Object_Account.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Account\lpFind_Object_Account.sql');
   ZQuery.ExecSQL;
 
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Bank\gpInsertUpdate_Object_Bank.sql');

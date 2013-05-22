@@ -24,7 +24,7 @@ uses UtilConst, cxPropertiesStore, cxControls, cxContainer, cxEdit, cxGroupBox,
   dxBar, Vcl.ActnList, dsdAction, cxTextEdit, cxLabel,
   StdActns, cxDBTL, cxCurrencyEdit, cxDropDownEdit, dsdGuides,
   cxDBLookupComboBox, DBGrids, cxCheckBox, cxCalendar, ExtCtrls, dsdAddOn,
-  cxButtonEdit, cxSplitter;
+  cxButtonEdit, cxSplitter, Vcl.Menus;
 
 {$R *.dfm}
 
@@ -64,6 +64,7 @@ initialization
   RegisterClass (TDataSource);
   RegisterClass (TDBGrid);
   RegisterClass (TFileExit);
+  RegisterClass (TPopupMenu);
   RegisterClass (TPanel);
   // Библиотека DevExpress
 

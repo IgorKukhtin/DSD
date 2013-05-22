@@ -22,6 +22,8 @@ type
   TMovementItemIncomeTest = class(TObjectTest)
   private
     function InsertDefault: integer; override;
+  protected
+    procedure SetDataSetParam; override;
   public
     function InsertUpdateMovementItemIncome
       (Id, MovementId, GoodsId: Integer;
@@ -156,6 +158,13 @@ begin
   result := InsertUpdate(FParams);
 end;
 
+procedure TMovementItemIncomeTest.SetDataSetParam;
+begin
+  inherited;
+  FParams.AddParam('inMovementId', ftInteger, ptInput, TMovementIncomeTest.Create.GetDefault);
+  FParams.AddParam('inShowAll', ftBoolean, ptInput, true);
+end;
+
 { TMovementItemProductionUnionInTest }
 
 constructor TMovementItemProductionUnionInTest.Create;
@@ -256,13 +265,11 @@ end;
 procedure TMovementItemProductionUnionOutTest.SetDataSetParam;
 begin
   inherited;
-  FParams.AddParam('inMovementId', ftInteger, ptInput, TMovementIncomeTest.Create.GetDefault);
+  FParams.AddParam('inMovementId', ftInteger, ptInput, TMovementProductionUnionTest.Create.GetDefault);
   FParams.AddParam('inShowAll', ftBoolean, ptInput, true);
 end;
 
 initialization
   TestFramework.RegisterTest('Строки Документов', TdbMovementItemTest.Suite);
-
-end.
 
 end.

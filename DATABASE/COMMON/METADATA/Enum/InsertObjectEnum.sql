@@ -19,6 +19,15 @@ BEGIN
    PERFORM lpInsertUpdate_Object(zc_Object_AccountPlan_Active(), zc_Object_AccountPlan(), 0, 'Активы');
    PERFORM lpInsertUpdate_Object(zc_Object_AccountPlan_Passive(), zc_Object_AccountPlan(), 0, 'Пассивы');
 
+   -- Вставляем группы счетов
+   PERFORM lpInsertUpdate_Object(zc_Object_AccountGroup_Inventory(), zc_Object_AccountGroup(), 1, 'Запасы');
+   
+   -- Вставляем аналитики счетов (место)
+   PERFORM lpInsertUpdate_Object(zc_Object_AccountPlace_Store(), zc_Object_AccountPlace(), 1, 'на складах');
+
+   -- Вставляем аналитики счетов (назначения)
+   PERFORM lpInsertUpdate_Object(zc_Object_AccountReference_MeatByProduct(), zc_Object_AccountReference(), 1, 'Мясное сырье');
+
    -- Увеличиваем последовательность
    PERFORM setval('object_id_seq', (select max( id ) + 1 from Object));
 
@@ -88,4 +97,31 @@ BEGIN
 
      PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_UserRole_User(), ioId, UserId);
    END IF;
+END $$;
+
+
+DO $$
+DECLARE ioId integer;
+BEGIN
+
+-- Будем вставлять счета   
+   -- Вставляем группы счетов
+   PERFORM lpInsertUpdate_Object(zc_Object_AccountGroup_Inventory(), zc_Object_AccountGroup(), 1, 'Запасы');
+   
+   -- Вставляем аналитики счетов (место)
+   PERFORM lpInsertUpdate_Object(zc_Object_AccountPlace_Store(), zc_Object_AccountPlace(), 1, 'на складах');
+
+   -- Вставляем аналитики счетов (назначения)
+   PERFORM lpInsertUpdate_Object(zc_Object_AccountReference_MeatByProduct(), zc_Object_AccountReference(), 1, 'Мясное сырье');
+
+
+   IF lpFind_Object_Account(zc_Object_AccountGroup_Inventory(),
+                            zc_Object_AccountPlace_Store(),
+                            zc_Object_AccountReference_MeatByProduct()) = 0 THEN
+
+      PERFORM gpInsertUpdate_Object_Account(0, 0, '', zc_Object_AccountGroup_Inventory(),
+                            zc_Object_AccountPlace_Store(), zc_Object_AccountReference_MeatByProduct(), '');
+ 
+   END IF;
+
 END $$;

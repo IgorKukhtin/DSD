@@ -1,11 +1,11 @@
-п»ї-- Function: gpSelect_Movement_Income()
+-- Function: gpSelect_Movement_Income()
 
 --DROP FUNCTION gpSelect_Movement_Income(TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Income(
 IN inStartDate   TDateTime,
 IN inEndDate     TDateTime,
-IN inSession     TVarChar       /* С‚РµРєСѓС‰РёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ */)
+IN inSession     TVarChar       /* текущий пользователь */)
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar, 
                FromName TVarChar, ToName TVarChar, PaidKindName TVarChar, ContractName TVarChar, OperDatePartner TDateTime,
                InvNumberPartner TVarChar) AS
