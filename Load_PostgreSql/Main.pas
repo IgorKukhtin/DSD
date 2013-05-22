@@ -182,12 +182,13 @@ function TMainForm.myExecToStoredProc:Boolean;
 begin
     result:=false;
     // toStoredProc_two.Prepared:=true;
-     try toStoredProc.Execute;
-     except
+     //try
+     toStoredProc.Execute;
+     //except
            //on E:EDBEngineError do begin EDB_EngineErrorMsg(E);exit;end;
            //on E:EADOError do begin EADO_EngineErrorMsg(E);exit;end;
            exit;
-     end;
+     //end;
      result:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -377,6 +378,7 @@ begin
         //
         toStoredProc.StoredProcName:='gpinsertupdate_object_measure';
         toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
@@ -432,6 +434,7 @@ begin
         //
         toStoredProc.StoredProcName:='gpinsertupdate_object_goodsgroup';
         toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
@@ -501,6 +504,7 @@ begin
         //
         toStoredProc.StoredProcName:='gpinsertupdate_object_goods';
         toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
@@ -626,6 +630,8 @@ begin
         Gauge.MaxValue:=RecordCount;
         //
         toStoredProc.StoredProcName:='gpinsertupdate_object_goodskind';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
@@ -679,6 +685,8 @@ begin
         Gauge.MaxValue:=RecordCount;
         //
         toStoredProc.StoredProcName:='gpinsertupdate_object_paidkind';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
@@ -731,6 +739,8 @@ begin
         Gauge.MaxValue:=RecordCount;
         //
         toStoredProc.StoredProcName:='gpinsertupdate_object_contractkind';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
@@ -796,6 +806,8 @@ begin
         Gauge.MaxValue:=RecordCount;
         //
         toStoredProc.StoredProcName:='gpinsertupdate_object_juridicalgroup';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
@@ -907,6 +919,8 @@ begin
         Gauge.MaxValue:=RecordCount;
         //
         toStoredProc.StoredProcName:='gpinsertupdate_object_juridical';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
@@ -980,6 +994,8 @@ begin
         Gauge.MaxValue:=RecordCount;
         //
         toStoredProc.StoredProcName:='gpinsertupdate_object_partner';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
@@ -1063,6 +1079,8 @@ begin
         Gauge.MaxValue:=RecordCount;
         //
         toStoredProc.StoredProcName:='gpinsertupdate_object_unitgroup';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
@@ -1147,6 +1165,8 @@ begin
         Gauge.MaxValue:=RecordCount;
         //
         toStoredProc.StoredProcName:='gpinsertupdate_object_unit';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
@@ -1204,6 +1224,8 @@ begin
         Gauge.MaxValue:=RecordCount;
         //
         toStoredProc.StoredProcName:='gpinsertupdate_object_pricelist';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
@@ -1257,6 +1279,8 @@ begin
         Gauge.MaxValue:=RecordCount;
         //
         toStoredProc.StoredProcName:='gpinsertupdate_object_goodsproperty';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
@@ -1431,6 +1455,8 @@ begin
         Gauge.MaxValue:=RecordCount;
         //
         toStoredProc.StoredProcName:='gpinsertupdate_object_goodspropertyvalue';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
@@ -1637,6 +1663,8 @@ begin
         Gauge.MaxValue:=RecordCount;
         //
         toStoredProc.StoredProcName:='gpinsertupdate_movement_income';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
@@ -1729,6 +1757,8 @@ begin
         Gauge.MaxValue:=RecordCount;
         //
         toStoredProc.StoredProcName:='gpinsertupdate_movementitem_income';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, '');
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, '');
