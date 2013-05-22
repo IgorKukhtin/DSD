@@ -19,7 +19,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, cxTextEdit, cxMaskEdit, cxDropDownEdit,
-  cxCalendar, dsdDB;
+  cxCalendar, dsdDB,UtilConst;
 
 type
   TMainForm = class(TForm)
@@ -1657,6 +1657,7 @@ begin
         begin
              //!!!
              if fStop then begin exit;end;
+             // gc_isDebugMode:=true;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber').AsString;
