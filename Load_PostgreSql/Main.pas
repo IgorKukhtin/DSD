@@ -19,7 +19,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, cxTextEdit, cxMaskEdit, cxDropDownEdit,
-  cxCalendar;
+  cxCalendar, dsdDB;
 
 type
   TMainForm = class(TForm)
@@ -63,9 +63,10 @@ type
     Label2: TLabel;
     toZConnection: TZConnection;
     toQuery: TZQuery;
-    toStoredProc: TZStoredProc;
+    toStoredProc_ZConnection: TZStoredProc;
     StartDateEdit: TcxDateEdit;
     EndDateEdit: TcxDateEdit;
+    toStoredProc: TdsdStoredProc;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -77,6 +78,7 @@ type
     fStop:Boolean;
     procedure EADO_EngineErrorMsg(E:EADOError);
     procedure EDB_EngineErrorMsg(E:EDBEngineError);
+    function myExecToStoredProc_ZConnection:Boolean;
     function myExecToStoredProc:Boolean;
 
     function FormatToVarCharServer_notNULL(_Value:string):string;
@@ -116,7 +118,6 @@ var
   MainForm: TMainForm;
 
 implementation
-
 {$R *.dfm}
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.StopButtonClick(Sender: TObject);
@@ -157,15 +158,28 @@ begin
      result:=chr(39)+IntToStr(Year)+'-'+IntToStr(Month)+'-'+IntToStr(Day)+chr(39);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-function TMainForm.myExecToStoredProc:Boolean;
+function TMainForm.myExecToStoredProc_ZConnection:Boolean;
 begin
-     result:=false;
-    toStoredProc.Prepared:=true;
-     try toStoredProc.ExecProc;
+    result:=false;
+    toStoredProc_ZConnection.Prepared:=true;
+     try toStoredProc_ZConnection.ExecProc;
      except
            //on E:EDBEngineError do begin EDB_EngineErrorMsg(E);exit;end;
            on E:EADOError do begin EADO_EngineErrorMsg(E);exit;end;
 
+     end;
+     result:=true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.myExecToStoredProc:Boolean;
+begin
+    result:=false;
+    // toStoredProc_two.Prepared:=true;
+     try toStoredProc.Execute;
+     except
+           //on E:EDBEngineError do begin EDB_EngineErrorMsg(E);exit;end;
+           //on E:EADOError do begin EADO_EngineErrorMsg(E);exit;end;
+           exit;
      end;
      result:=true;
 end;
@@ -354,19 +368,20 @@ begin
         Gauge.MaxValue:=RecordCount;
         //
         toStoredProc.StoredProcName:='gpinsertupdate_object_measure';
-        //toStoredProc.Parameters.Refresh;
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
-        //DisableControls;
         while not EOF do
         begin
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin exit;end;
              //
-             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             //toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsString;
+             //toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsString;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
-             if not myExecToStoredProc then ;//exit;
+             // toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+             if not myExecToStoredProc then;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.Measure set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
@@ -376,7 +391,6 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        //EnableControls;
      end;
      //
      myDisabledCB(cbMeasure);
@@ -409,9 +423,12 @@ begin
         Gauge.MaxValue:=RecordCount;
         //
         toStoredProc.StoredProcName:='gpinsertupdate_object_goodsgroup';
-        //toStoredProc.Parameters.Refresh;
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
         //
-        //DisableControls;
         while not EOF do
         begin
              //!!!
@@ -421,8 +438,7 @@ begin
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
              toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('ParentId_Postgres').AsInteger;
-             //toStoredProc.Params.ParamByName('inGoodsGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+             //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
@@ -433,7 +449,6 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        //EnableControls;
      end;
      //
      myDisabledCB(cbGoodsGroup);
@@ -477,12 +492,18 @@ begin
         Gauge.MaxValue:=RecordCount;
         //
         toStoredProc.StoredProcName:='gpinsertupdate_object_goods';
-        //toStoredProc.Parameters.Refresh;
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inGoodsGroupId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inMeasureId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inWeight',ftFloat,ptInput, 0);
         //
         while not EOF do
         begin
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin exit;end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -490,7 +511,7 @@ begin
              toStoredProc.Params.ParamByName('inGoodsGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inMeasureId').Value:=FieldByName('MeasureId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inWeight').Value:=FieldByName('MeasureId_Postgres').AsFloat;
-             toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+             //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
@@ -501,7 +522,6 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        //EnableControls;
      end;
      //
      myDisabledCB(cbGoods);
@@ -532,18 +552,19 @@ begin
         Gauge.MaxValue:=RecordCount;
         //
         toStoredProc.StoredProcName:='gpinsertupdate_object_goodskind';
-        //toStoredProc.Parameters.Refresh;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
-        //DisableControls;
         while not EOF do
         begin
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin exit;end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+             //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
@@ -554,7 +575,6 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        //EnableControls;
      end;
      //
      myDisabledCB(cbGoodsKind);
@@ -585,18 +605,19 @@ begin
         Gauge.MaxValue:=RecordCount;
         //
         toStoredProc.StoredProcName:='gpinsertupdate_object_paidkind';
-        //toStoredProc.Parameters.Refresh;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
-        //DisableControls;
         while not EOF do
         begin
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin exit;end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+             //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
@@ -607,7 +628,6 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        //EnableControls;
      end;
      //
      myDisabledCB(cbPaidKind);
@@ -637,18 +657,19 @@ begin
         Gauge.MaxValue:=RecordCount;
         //
         toStoredProc.StoredProcName:='gpinsertupdate_object_contractkind';
-        //toStoredProc.Parameters.Refresh;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
-        //DisableControls;
         while not EOF do
         begin
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin exit;end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+             //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
@@ -659,7 +680,6 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        //EnableControls;
      end;
      //
      myDisabledCB(cbContractKind);
@@ -702,19 +722,20 @@ begin
         Gauge.MaxValue:=RecordCount;
         //
         toStoredProc.StoredProcName:='gpinsertupdate_object_juridicalgroup';
-        //toStoredProc.Parameters.Refresh;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
         //
-        //DisableControls;
         while not EOF do
         begin
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin exit;end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
              toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('ParentId_Postgres').AsInteger;
-             //toStoredProc.Params.ParamByName('inJuridicalGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
@@ -726,7 +747,6 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        //EnableControls;
      end;
      //
      myDisabledCB(cbJuridicalGroup);
@@ -813,13 +833,18 @@ begin
         Gauge.MaxValue:=RecordCount;
         //
         toStoredProc.StoredProcName:='gpinsertupdate_object_juridical';
-        //toStoredProc.Parameters.Refresh;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inGLNCode',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inIsCorporate',ftBoolean,ptInput, '');
+        toStoredProc.Params.AddParam ('inJuridicalGroupId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsPropertyId',ftInteger,ptInput, 0);
         //
-        //DisableControls;
         while not EOF do
         begin
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin exit;end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -827,8 +852,8 @@ begin
              toStoredProc.Params.ParamByName('inGLNCode').Value:=FieldByName('GLNCode').AsString;
              toStoredProc.Params.ParamByName('inIsCorporate').Value:=false;
              toStoredProc.Params.ParamByName('inJuridicalGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inJuridicalGroupId').Value:=FieldByName('GoodsPropertyId_PG').AsInteger;
-             toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+             toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId_PG').AsInteger;
+             //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
@@ -839,7 +864,6 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        //EnableControls;
      end;
      //
      myDisabledCB(cbJuridical);

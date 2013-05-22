@@ -375,8 +375,8 @@ object MainForm: TMainForm
   end
   object fromADOConnection: TADOConnection
     ConnectionString = 
-      'Provider=MSDASQL.1;Password=sql;Persist Security Info=True;User ' +
-      'ID=dba;Data Source=v9ProfiMeatingDS'
+      'Provider=MSDASQL.1;Password=qazqazint;Persist Security Info=True' +
+      ';User ID=dba;Data Source=v9ProfiMeatingDS'
     LoginPrompt = False
     Provider = 'MSDASQL.1'
     Left = 344
@@ -411,8 +411,8 @@ object MainForm: TMainForm
     User = 'postgres'
     Password = 'postgres'
     Protocol = 'postgresql-9'
-    Left = 120
-    Top = 256
+    Left = 128
+    Top = 280
   end
   object toQuery: TZQuery
     Connection = toZConnection
@@ -421,13 +421,19 @@ object MainForm: TMainForm
     Params = <>
     Properties.Strings = (
       'select * from Object order by 1 desc')
-    Left = 168
-    Top = 336
+    Left = 208
+    Top = 320
   end
-  object toStoredProc: TZStoredProc
+  object toStoredProc_ZConnection: TZStoredProc
     Connection = toZConnection
     Params = <>
     Left = 96
     Top = 336
+  end
+  object toStoredProc: TdsdStoredProc
+    DataSets = <>
+    Params = <>
+    Left = 120
+    Top = 416
   end
 end
