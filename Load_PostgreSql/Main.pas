@@ -371,21 +371,17 @@ begin
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
-    ;
-
-        //toStoredProc.Parameters.Refresh;
         //
-        //DisableControls;
         while not EOF do
         begin
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin exit;end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsString;
              //toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsString;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
              // toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
-             if not myExecToStoredProc then ;//exit;
+             if not myExecToStoredProc then;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.Measure set Id_Postgres='+toStoredProc.Params.ParamByName('ioId').Value+' where Id = '+FieldByName('ObjectId').AsString);
@@ -395,7 +391,6 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
-        //EnableControls;
      end;
      //
      myDisabledCB(cbMeasure);
@@ -428,9 +423,12 @@ begin
         Gauge.MaxValue:=RecordCount;
         //
         toStoredProc.StoredProcName:='gpinsertupdate_object_goodsgroup';
-        //toStoredProc.Parameters.Refresh;
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode')ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
         //
-        //DisableControls;
         while not EOF do
         begin
              //!!!
@@ -440,8 +438,7 @@ begin
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
              toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('ParentId_Postgres').AsInteger;
-             //toStoredProc.Params.ParamByName('inGoodsGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+             //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
@@ -496,7 +493,11 @@ begin
         Gauge.MaxValue:=RecordCount;
         //
         toStoredProc.StoredProcName:='gpinsertupdate_object_goods';
-        //toStoredProc.Parameters.Refresh;
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode')ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inGoodsGroupId',ftInteger,ptInput, 0);
         //
         while not EOF do
         begin
