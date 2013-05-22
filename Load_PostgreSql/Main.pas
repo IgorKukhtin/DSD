@@ -74,6 +74,7 @@ type
     procedure CloseButtonClick(Sender: TObject);
     procedure cbAllDocumentClick(Sender: TObject);
     procedure OKDocumentButtonClick(Sender: TObject);
+    procedure DocumentPanelClick(Sender: TObject);
   private
     fStop:Boolean;
     procedure EADO_EngineErrorMsg(E:EADOError);
@@ -96,6 +97,7 @@ type
     procedure pLoadGuide_Measure;
     procedure pLoadGuide_GoodsGroup;
     procedure pLoadGuide_Goods;
+    procedure pLoadGuide_Goods_toZConnection;
     procedure pLoadGuide_GoodsKind;
     procedure pLoadPaidKind;
     procedure pLoadContractKind;
@@ -133,6 +135,11 @@ begin
      //
      if fStop then Close;
 end;
+procedure TMainForm.DocumentPanelClick(Sender: TObject);
+begin
+
+end;
+
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fGetSession:String;
 begin Result:='1005'; end;
@@ -265,6 +272,7 @@ begin
      if not fStop then pLoadGuide_Measure;
      if not fStop then pLoadGuide_GoodsGroup;
      if not fStop then pLoadGuide_Goods;
+     //if not fStop then pLoadGuide_Goods_toZConnection;
      if not fStop then pLoadGuide_GoodsKind;
      if not fStop then pLoadPaidKind;
      if not fStop then pLoadContractKind;
@@ -516,6 +524,72 @@ begin
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.GoodsProperty set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbGoods);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadGuide_Goods_toZConnection;
+begin
+     if (not cbGoods.Checked)or(not cbGoods.Enabled) then exit;
+     //
+     myEnabledCB(cbGoods);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select GoodsProperty.Id as ObjectId');
+        Add('     , GoodsProperty.GoodsCode as ObjectCode');
+        Add('     , GoodsProperty.GoodsName as ObjectName');
+        Add('     , max (case when Goods.ParentId=686 then GoodsProperty.Tare_Weight else GoodsProperty_Detail.Ves_onMeasure end) as Ves_onMeasure');
+        Add('     , GoodsProperty.Id_Postgres as Id_Postgres');
+        Add('     , Measure.Id_Postgres as MeasureId_Postgres');
+        Add('     , Goods_parent.Id_Postgres as ParentId_Postgres');
+        Add('from dba.GoodsProperty');
+        Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
+        Add('     left outer join dba.Goods as Goods_parent on Goods_parent.Id = Goods.ParentId');
+        Add('     left outer join dba.Measure on Measure.Id = GoodsProperty.MeasureId');
+        Add('     left outer join dba.GoodsProperty_Detail on GoodsProperty_Detail.GoodsPropertyId = GoodsProperty.Id');
+        Add('where Goods.HasChildren = zc_hsLeaf() ');
+        Add('group by ObjectId');
+        Add('       , ObjectName');
+        Add('       , ObjectCode');
+        Add('       , Id_Postgres');
+        Add('       , MeasureId_Postgres');
+        Add('       , ParentId_Postgres');
+        Add('order by ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc_ZConnection.StoredProcName:='gpinsertupdate_object_goods';
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc_ZConnection.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc_ZConnection.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc_ZConnection.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc_ZConnection.Params.ParamByName('inGoodsGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             toStoredProc_ZConnection.Params.ParamByName('inMeasureId').Value:=FieldByName('MeasureId_Postgres').AsInteger;
+             toStoredProc_ZConnection.Params.ParamByName('inWeight').Value:=FieldByName('MeasureId_Postgres').AsFloat;
+             toStoredProc_ZConnection.Params.ParamByName('inSession').Value:=fGetSession;
+             if not myExecToStoredProc_ZConnection then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.GoodsProperty set Id_Postgres='+IntToStr(toStoredProc_ZConnection.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;
@@ -1565,7 +1639,7 @@ begin
         toStoredProc.StoredProcName:='gpinsertupdate_movement_income';
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
-        toStoredProc.Params.AddParam ('inOperDate',ftDate,ptInput, '');
+        toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
         toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, '');
         toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, '');
         toStoredProc.Params.AddParam ('inPaidKindId',ftInteger,ptInput, '');
@@ -1573,7 +1647,7 @@ begin
         toStoredProc.Params.AddParam ('inCarId',ftInteger,ptInput, '');
         toStoredProc.Params.AddParam ('inPersonalDriverId',ftInteger,ptInput, '');
         toStoredProc.Params.AddParam ('inPersonalPackerId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inOperDatePartner',ftDate,ptInput, '');
+        toStoredProc.Params.AddParam ('inOperDatePartner',ftDateTime,ptInput, '');
         toStoredProc.Params.AddParam ('inInvNumberPartner',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inPriceWithVAT',ftBoolean,ptInput, false);
         toStoredProc.Params.AddParam ('inVATPercent',ftFloat,ptInput, 0);
@@ -1603,7 +1677,7 @@ begin
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.Bill set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             then fExecSqFromQuery('update dba.Bill set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
              //
              Next;
              Application.ProcessMessages;
@@ -1685,7 +1759,7 @@ begin
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.BillItems set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             then fExecSqFromQuery('update dba.BillItems set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;
@@ -1756,5 +1830,4 @@ insert into dba.GoodsProperty_Postgres (Id, Name_PG)
 alter table dba.Bill add Id_Postgres integer null;
 alter table dba.BillItems add Id_Postgres integer null;
 alter table dba.BillItemsReceipt add Id_Postgres integer null;
-
 }

@@ -2,8 +2,8 @@ object MainForm: TMainForm
   Left = 202
   Top = 180
   Caption = 'MainForm'
-  ClientHeight = 689
-  ClientWidth = 1069
+  ClientHeight = 696
+  ClientWidth = 1067
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,8 +18,8 @@ object MainForm: TMainForm
   object DBGrid: TDBGrid
     Left = 0
     Top = 0
-    Width = 523
-    Height = 633
+    Width = 521
+    Height = 640
     Align = alClient
     DataSource = DataSource
     TabOrder = 0
@@ -31,8 +31,8 @@ object MainForm: TMainForm
   end
   object ButtonPanel: TPanel
     Left = 0
-    Top = 633
-    Width = 1069
+    Top = 640
+    Width = 1067
     Height = 56
     Align = alBottom
     BevelOuter = bvNone
@@ -40,7 +40,7 @@ object MainForm: TMainForm
     object Gauge: TGauge
       Left = 0
       Top = 0
-      Width = 1069
+      Width = 1067
       Height = 19
       Align = alTop
       Progress = 50
@@ -100,10 +100,10 @@ object MainForm: TMainForm
     end
   end
   object GuidePanel: TPanel
-    Left = 523
+    Left = 521
     Top = 0
     Width = 321
-    Height = 633
+    Height = 640
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
@@ -304,13 +304,14 @@ object MainForm: TMainForm
     end
   end
   object DocumentPanel: TPanel
-    Left = 844
+    Left = 842
     Top = 0
     Width = 225
-    Height = 633
+    Height = 640
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 3
+    OnClick = DocumentPanelClick
     object Label1: TLabel
       Left = 6
       Top = 24
