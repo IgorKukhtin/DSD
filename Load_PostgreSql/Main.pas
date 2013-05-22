@@ -19,7 +19,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, cxTextEdit, cxMaskEdit, cxDropDownEdit,
-  cxCalendar;
+  cxCalendar, dsdDB;
 
 type
   TMainForm = class(TForm)
@@ -63,9 +63,10 @@ type
     Label2: TLabel;
     toZConnection: TZConnection;
     toQuery: TZQuery;
-    toStoredProc: TZStoredProc;
+    toStoredProc_ZConnection: TZStoredProc;
     StartDateEdit: TcxDateEdit;
     EndDateEdit: TcxDateEdit;
+    toStoredProc: TdsdStoredProc;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -77,6 +78,7 @@ type
     fStop:Boolean;
     procedure EADO_EngineErrorMsg(E:EADOError);
     procedure EDB_EngineErrorMsg(E:EDBEngineError);
+    function myExecToStoredProc_ZConnection:Boolean;
     function myExecToStoredProc:Boolean;
 
     function FormatToVarCharServer_notNULL(_Value:string):string;
@@ -116,7 +118,6 @@ var
   MainForm: TMainForm;
 
 implementation
-
 {$R *.dfm}
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.StopButtonClick(Sender: TObject);
@@ -157,15 +158,28 @@ begin
      result:=chr(39)+IntToStr(Year)+'-'+IntToStr(Month)+'-'+IntToStr(Day)+chr(39);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-function TMainForm.myExecToStoredProc:Boolean;
+function TMainForm.myExecToStoredProc_ZConnection:Boolean;
 begin
-     result:=false;
-    toStoredProc.Prepared:=true;
-     try toStoredProc.ExecProc;
+    result:=false;
+    toStoredProc_ZConnection.Prepared:=true;
+     try toStoredProc_ZConnection.ExecProc;
      except
            //on E:EDBEngineError do begin EDB_EngineErrorMsg(E);exit;end;
            on E:EADOError do begin EADO_EngineErrorMsg(E);exit;end;
 
+     end;
+     result:=true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.myExecToStoredProc:Boolean;
+begin
+    result:=false;
+    // toStoredProc_two.Prepared:=true;
+     try toStoredProc.Execute;
+     except
+           //on E:EDBEngineError do begin EDB_EngineErrorMsg(E);exit;end;
+           //on E:EADOError do begin EADO_EngineErrorMsg(E);exit;end;
+           exit;
      end;
      result:=true;
 end;
@@ -354,6 +368,11 @@ begin
         Gauge.MaxValue:=RecordCount;
         //
         toStoredProc.StoredProcName:='gpinsertupdate_object_measure';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+    ;
+
         //toStoredProc.Parameters.Refresh;
         //
         //DisableControls;
@@ -362,14 +381,14 @@ begin
              //!!!
              if fStop then begin {EnableControls;}exit;end;
              //
-             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             //toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsString;
+             //toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsString;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+             // toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.Measure set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             then fExecSqFromQuery('update dba.Measure set Id_Postgres='+toStoredProc.Params.ParamByName('ioId').Value+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;
