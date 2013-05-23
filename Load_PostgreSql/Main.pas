@@ -292,6 +292,9 @@ begin
      if not fStop then pLoadPriceList;
      if not fStop then pLoadGoodsProperty;
      if not fStop then pLoadGoodsPropertyValue;
+     if not fStop then pLoadInfoMoneyGroup;
+     if not fStop then pLoadInfoMoneyDestination;
+     if not fStop then pLoadInfoMoney;
      //
      Gauge.Visible:=false;
      DBGrid.Enabled:=true;
