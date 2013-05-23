@@ -244,7 +244,8 @@ object MainForm: TMainForm
       Width = 225
       Height = 17
       Caption = '4.2. '#1060#1080#1083#1080#1072#1083#1099
-      Enabled = False
+      Color = clBtnFace
+      ParentColor = False
       TabOrder = 12
     end
     object cbUnitGroup: TCheckBox
@@ -301,6 +302,33 @@ object MainForm: TMainForm
       Height = 17
       Caption = '6.2. '#1047#1085#1072#1095#1077#1085#1080#1103' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074' '#1076#1083#1103' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1072
       TabOrder = 18
+    end
+    object cbInfoMoneyGroup: TCheckBox
+      Tag = 10
+      Left = 15
+      Top = 441
+      Width = 289
+      Height = 17
+      Caption = '7.1. '#1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1072#1085#1072#1083#1080#1090#1080#1082
+      TabOrder = 19
+    end
+    object cbInfoMoneyDestination: TCheckBox
+      Tag = 10
+      Left = 15
+      Top = 461
+      Width = 289
+      Height = 17
+      Caption = '7.2. '#1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1072#1085#1072#1083#1080#1090#1080#1082#1080' - '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+      TabOrder = 20
+    end
+    object cbInfoMoney: TCheckBox
+      Tag = 10
+      Left = 15
+      Top = 481
+      Width = 289
+      Height = 17
+      Caption = '7.3. '#1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
+      TabOrder = 21
     end
   end
   object DocumentPanel: TPanel
