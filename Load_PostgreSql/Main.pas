@@ -67,6 +67,9 @@ type
     StartDateEdit: TcxDateEdit;
     EndDateEdit: TcxDateEdit;
     toStoredProc: TdsdStoredProc;
+    cbInfoMoneyGroup: TCheckBox;
+    cbInfoMoneyDestination: TCheckBox;
+    cbInfoMoney: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -104,11 +107,15 @@ type
     procedure pLoadJuridicalGroup;
     procedure pLoadJuridical;
     procedure pLoadPartner;
+    procedure pLoadBranch;
     procedure pLoadUnitGroup;
     procedure pLoadUnit;
     procedure pLoadPriceList;
     procedure pLoadGoodsProperty;
     procedure pLoadGoodsPropertyValue;
+    procedure pLoadInfoMoneyGroup;
+    procedure pLoadInfoMoneyDestination;
+    procedure pLoadInfoMoney;
 
     procedure myEnabledCB (cb:TCheckBox);
     procedure myDisabledCB (cb:TCheckBox);
@@ -344,6 +351,7 @@ begin
      fExecSqFromQuery('update dba.GoodsProperty_Postgres set Id_Postgres = null');
      fExecSqFromQuery('update dba.GoodsProperty_Detail set Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = null, Id4_Postgres = null, Id5_Postgres = null, Id6_Postgres = null, Id7_Postgres = null'
                                                        +', Id8_Postgres = null, Id9_Postgres = null, Id10_Postgres = null, Id11_Postgres = null, Id12_Postgres = null, Id13_Postgres = null, Id14_Postgres = null');
+     fExecSqFromQuery('update dba._pgInfoMoney set Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = null');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pSetNullDocument_Id_Postgres;
@@ -481,11 +489,13 @@ begin
         Add('     , GoodsProperty.Id_Postgres as Id_Postgres');
         Add('     , Measure.Id_Postgres as MeasureId_Postgres');
         Add('     , Goods_parent.Id_Postgres as ParentId_Postgres');
+        Add('     , _pgInfoMoney.Id3_Postgres as InfoMoneyId_Postgres');
         Add('from dba.GoodsProperty');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.Goods as Goods_parent on Goods_parent.Id = Goods.ParentId');
         Add('     left outer join dba.Measure on Measure.Id = GoodsProperty.MeasureId');
         Add('     left outer join dba.GoodsProperty_Detail on GoodsProperty_Detail.GoodsPropertyId = GoodsProperty.Id');
+        Add('     left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = 0 ');
         Add('where Goods.HasChildren = zc_hsLeaf() ');
         Add('group by ObjectId');
         Add('       , ObjectName');
@@ -493,6 +503,7 @@ begin
         Add('       , Id_Postgres');
         Add('       , MeasureId_Postgres');
         Add('       , ParentId_Postgres');
+        Add('       , InfoMoneyId_Postgres');
         Add('order by ObjectId');
         Open;
         //
@@ -511,6 +522,7 @@ begin
         toStoredProc.Params.AddParam ('inGoodsGroupId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inMeasureId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inWeight',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inInfoMoneyId',ftInteger,ptInput, 0);
         //
         while not EOF do
         begin
@@ -523,6 +535,7 @@ begin
              toStoredProc.Params.ParamByName('inGoodsGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inMeasureId').Value:=FieldByName('MeasureId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inWeight').Value:=FieldByName('MeasureId_Postgres').AsFloat;
+             toStoredProc.Params.ParamByName('inInfoMoneyId').Value:=FieldByName('InfoMoneyId_Postgres').AsInteger;
              //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
@@ -555,11 +568,13 @@ begin
         Add('     , GoodsProperty.Id_Postgres as Id_Postgres');
         Add('     , Measure.Id_Postgres as MeasureId_Postgres');
         Add('     , Goods_parent.Id_Postgres as ParentId_Postgres');
+        Add('     , _pgInfoMoney.Id3_Postgres as InfoMoneyId_Postgres');
         Add('from dba.GoodsProperty');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.Goods as Goods_parent on Goods_parent.Id = Goods.ParentId');
         Add('     left outer join dba.Measure on Measure.Id = GoodsProperty.MeasureId');
         Add('     left outer join dba.GoodsProperty_Detail on GoodsProperty_Detail.GoodsPropertyId = GoodsProperty.Id');
+        Add('     left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = 1');
         Add('where Goods.HasChildren = zc_hsLeaf() ');
         Add('group by ObjectId');
         Add('       , ObjectName');
@@ -567,6 +582,7 @@ begin
         Add('       , Id_Postgres');
         Add('       , MeasureId_Postgres');
         Add('       , ParentId_Postgres');
+        Add('       , InfoMoneyId_Postgres');
         Add('order by ObjectId');
         Open;
         //
@@ -589,6 +605,7 @@ begin
              toStoredProc_ZConnection.Params.ParamByName('inGoodsGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
              toStoredProc_ZConnection.Params.ParamByName('inMeasureId').Value:=FieldByName('MeasureId_Postgres').AsInteger;
              toStoredProc_ZConnection.Params.ParamByName('inWeight').Value:=FieldByName('MeasureId_Postgres').AsFloat;
+             toStoredProc_ZConnection.Params.ParamByName('inInfoMoneyId').Value:=FieldByName('InfoMoneyId_Postgres').AsInteger;
              toStoredProc_ZConnection.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc_ZConnection then ;//exit;
              //
@@ -1029,6 +1046,64 @@ begin
      myDisabledCB(cbPartner);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadBranch;
+begin
+     if (not cbBranch.Checked)or(not cbBranch.Enabled) then exit;
+     //
+     myEnabledCB(cbBranch);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Unit.Id as ObjectId');
+        Add('     , 0 as ObjectCode');
+        Add('     , '+FormatToVarCharServer_notNULL('Днепропетровский Филиал')+' as ObjectName');
+        Add('     , Unit.Id3_Postgres as Id_Postgres');
+        Add('     , 0 as JuridicalId_pg');
+        Add('from dba.Unit');
+        Add('where Unit.Id = 3'); // АЛАН
+        Add('order by ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_branch';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inJuridicalId').Value:=FieldByName('JuridicalId_pg').AsInteger;
+             //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.Unit set Id3_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbBranch);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadUnitGroup;
 begin
      if (not cbUnitGroup.Checked)or(not cbUnitGroup.Enabled) then exit;
@@ -1127,10 +1202,11 @@ begin
         Add('     , Unit.UnitName as ObjectName');
         Add('     , Unit.Id3_Postgres as Id_Postgres');
         Add('     , Unit_parent.Id1_Postgres as ParentId_Postgres');
-        Add('     , 0 as BranchId_Postgres');
+        Add('     , Unit_Branch.Id3_Postgres as BranchId_Postgres');
         Add('from dba.Unit');
         Add('     left outer join dba.isUnit on isUnit.UnitId = Unit.Id');
         Add('     left outer join dba.Unit as Unit_parent on Unit_parent.Id = Unit.ParentId');
+        Add('     left outer join dba.Unit as Unit_Branch on Unit_Branch.Id = 3'); // АЛАН
         Add('where (fCheckUnitClientParentID(3,Unit.Id)=zc_rvYes()'    // АЛАН
            +'    or fCheckUnitClientParentID(3714,Unit.Id)=zc_rvYes()' // Алан-прочие
            +'      )');
@@ -1144,10 +1220,11 @@ begin
         Add('     , Unit.UnitName as ObjectName');
         Add('     , Unit.Id3_Postgres as Id_Postgres');
         Add('     , Unit_parent.Id3_Postgres as ParentId_Postgres');
-        Add('     , 0 as BranchId_Postgres');
+        Add('     , Unit_Branch.Id3_Postgres as BranchId_Postgres');
         Add('from dba.Unit');
         Add('     left outer join dba.isUnit on isUnit.UnitId = Unit.Id');
-        Add('     left outer join dba.Unit as Unit_parent on Unit_parent.Id = 151');
+        Add('     left outer join dba.Unit as Unit_parent on Unit_parent.Id = 151'); // ВСЕ
+        Add('     left outer join dba.Unit as Unit_Branch on Unit_Branch.Id = 3'); // АЛАН
         Add('where fCheckUnitClientParentID(3,Unit.Id)=zc_rvNo()'    // АЛАН
            +'  and fCheckUnitClientParentID(3714,Unit.Id)=zc_rvNo()' // Алан-прочие
             );
@@ -1616,6 +1693,179 @@ begin
      end;
      //
      myDisabledCB(cbGoodsPropertyValue);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadInfoMoneyGroup;
+begin
+     if (not cbInfoMoneyGroup.Checked)or(not cbInfoMoneyGroup.Enabled) then exit;
+     //
+     myEnabledCB(cbInfoMoneyGroup);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select max(Id) as ObjectId');
+        Add('     , 0 as ObjectCode');
+        Add('     , _pgInfoMoney.Name1 as ObjectName');
+        Add('     , _pgInfoMoney.Id1_Postgres as Id_Postgres');
+        Add('from dba._pgInfoMoney');
+        Add('group by ObjectName, Id_Postgres');
+        Add('order by ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_infomoneygroup';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba._pgInfoMoney set Id1_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Name1 in (select Name1 from dba._pgInfoMoney where Id = '+FieldByName('ObjectId').AsString+')');
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        //EnableControls;
+     end;
+     //
+     myDisabledCB(cbInfoMoneyGroup);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadInfoMoneyDestination;
+begin
+     if (not cbInfoMoneyDestination.Checked)or(not cbInfoMoneyDestination.Enabled) then exit;
+     //
+     myEnabledCB(cbInfoMoneyDestination);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select max(Id) as ObjectId');
+        Add('     , 0 as ObjectCode');
+        Add('     , _pgInfoMoney.Name2 as ObjectName');
+        Add('     , _pgInfoMoney.Id2_Postgres as Id_Postgres');
+        Add('from dba._pgInfoMoney');
+        Add('group by ObjectName, Id_Postgres');
+        Add('order by ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_infomoneydestination';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba._pgInfoMoney set Id2_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Name2 in (select Name2 from dba._pgInfoMoney where Id = '+FieldByName('ObjectId').AsString+')');
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        //EnableControls;
+     end;
+     //
+     myDisabledCB(cbInfoMoneyDestination);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadInfoMoney;
+begin
+     if (not cbInfoMoney.Checked)or(not cbInfoMoney.Enabled) then exit;
+     //
+     myEnabledCB(cbInfoMoney);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select _pgInfoMoney.Id as ObjectId');
+        Add('     , _pgInfoMoney.ObjectCode as ObjectCode');
+        Add('     , _pgInfoMoney.Name3 as ObjectName');
+        Add('     , _pgInfoMoney.Id1_Postgres as InfoMoneyGroupId_PG');
+        Add('     , _pgInfoMoney.Id2_Postgres as InfoMoneyDestinationId_PG');
+        Add('     , _pgInfoMoney.Id3_Postgres as Id_Postgres');
+        Add('from dba._pgInfoMoney');
+        Add('order by ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_infomoneydestination';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inInfoMoneyGroupId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inInfoMoneyDestinationId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inInfoMoneyGroupId').Value:=FieldByName('InfoMoneyGroupId_PG').AsInteger;
+             toStoredProc.Params.ParamByName('inInfoMoneyDestinationId').Value:=FieldByName('InfoMoneyDestinationId_PG').AsInteger;
+             //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba._pgInfoMoney set Id3_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        //EnableControls;
+     end;
+     //
+     myDisabledCB(cbInfoMoney);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------------
