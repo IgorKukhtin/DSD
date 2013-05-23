@@ -1708,7 +1708,7 @@ begin
         Close;
         Clear;
         Add('select max(Id) as ObjectId');
-        Add('     , 0 as ObjectCode');
+        Add('     , max(_pgInfoMoney.ObjectCode) as ObjectCode');
         Add('     , _pgInfoMoney.Name1 as ObjectName');
         Add('     , _pgInfoMoney.Id1_Postgres as Id_Postgres');
         Add('from dba._pgInfoMoney');
@@ -1764,7 +1764,7 @@ begin
         Close;
         Clear;
         Add('select max(Id) as ObjectId');
-        Add('     , 0 as ObjectCode');
+        Add('     , max(_pgInfoMoney.ObjectCode) as ObjectCode');
         Add('     , _pgInfoMoney.Name2 as ObjectName');
         Add('     , _pgInfoMoney.Id2_Postgres as Id_Postgres');
         Add('from dba._pgInfoMoney');
