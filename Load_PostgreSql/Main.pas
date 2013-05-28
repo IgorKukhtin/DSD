@@ -70,6 +70,9 @@ type
     cbInfoMoneyGroup: TCheckBox;
     cbInfoMoneyDestination: TCheckBox;
     cbInfoMoney: TCheckBox;
+    cbAccountGroup: TCheckBox;
+    cbAccountDirection: TCheckBox;
+    cbAccount: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -113,9 +116,13 @@ type
     procedure pLoadPriceList;
     procedure pLoadGoodsProperty;
     procedure pLoadGoodsPropertyValue;
+
     procedure pLoadInfoMoneyGroup;
     procedure pLoadInfoMoneyDestination;
     procedure pLoadInfoMoney;
+    procedure pLoadAccountGroup;
+    procedure pLoadAccountDirection;
+    procedure pLoadAccount;
 
     procedure myEnabledCB (cb:TCheckBox);
     procedure myDisabledCB (cb:TCheckBox);
@@ -292,9 +299,13 @@ begin
      if not fStop then pLoadPriceList;
      if not fStop then pLoadGoodsProperty;
      if not fStop then pLoadGoodsPropertyValue;
+
      if not fStop then pLoadInfoMoneyGroup;
      if not fStop then pLoadInfoMoneyDestination;
      if not fStop then pLoadInfoMoney;
+     if not fStop then pLoadAccountGroup;
+     if not fStop then pLoadAccountDirection;
+     if not fStop then pLoadAccount;
      //
      Gauge.Visible:=false;
      DBGrid.Enabled:=true;
@@ -1708,7 +1719,7 @@ begin
         Close;
         Clear;
         Add('select max(Id) as ObjectId');
-        Add('     , 0 as ObjectCode');
+        Add('     , max(_pgInfoMoney.ObjectCode) as ObjectCode');
         Add('     , _pgInfoMoney.Name1 as ObjectName');
         Add('     , _pgInfoMoney.Id1_Postgres as Id_Postgres');
         Add('from dba._pgInfoMoney');
@@ -1764,7 +1775,7 @@ begin
         Close;
         Clear;
         Add('select max(Id) as ObjectId');
-        Add('     , 0 as ObjectCode');
+        Add('     , max(_pgInfoMoney.ObjectCode) as ObjectCode');
         Add('     , _pgInfoMoney.Name2 as ObjectName');
         Add('     , _pgInfoMoney.Id2_Postgres as Id_Postgres');
         Add('from dba._pgInfoMoney');
@@ -1869,6 +1880,193 @@ begin
      end;
      //
      myDisabledCB(cbInfoMoney);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadAccountGroup;
+begin
+     if (not cbAccountGroup.Checked)or(not cbAccountGroup.Enabled) then exit;
+     //
+     myEnabledCB(cbAccountGroup);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select max(Id) as ObjectId');
+        Add('     , max(_pgAccount.ObjectCode) as ObjectCode');
+        Add('     , _pgAccount.Name1 as ObjectName');
+        Add('     , _pgAccount.Id1_Postgres as Id_Postgres');
+        Add('from dba._pgAccount');
+        Add('group by ObjectName, Id_Postgres');
+        Add('order by ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_accountgroup';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba._pgAccount set Id1_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Name1 in (select Name1 from dba._pgAccount where Id = '+FieldByName('ObjectId').AsString+')');
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        //EnableControls;
+     end;
+     //
+     myDisabledCB(cbAccountGroup);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadAccountDirection;
+begin
+     if (not cbAccountDirection.Checked)or(not cbAccountDirection.Enabled) then exit;
+     //
+     myEnabledCB(cbAccountDirection);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select max(Id) as ObjectId');
+        Add('     , max(_pgAccount.ObjectCode) as ObjectCode');
+        Add('     , _pgAccount.Name2 as ObjectName');
+        Add('     , _pgAccount.Id2_Postgres as Id_Postgres');
+        Add('from dba._pgAccount');
+        Add('group by ObjectName, Id_Postgres');
+        Add('order by ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_accountdirection';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba._pgAccount set Id2_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Name2 in (select Name2 from dba._pgAccount where Id = '+FieldByName('ObjectId').AsString+')');
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        //EnableControls;
+     end;
+     //
+     myDisabledCB(cbAccountDirection);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadAccount;
+begin
+     if (not cbAccount.Checked)or(not cbAccount.Enabled) then exit;
+     //
+     myEnabledCB(cbAccount);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select _pgAccount.Id as ObjectId');
+        Add('     , _pgAccount.ObjectCode as ObjectCode');
+        Add('     , _pgAccount.Name3 as ObjectName');
+        Add('     , _pgAccount.Id1_Postgres as AccountGroupId_PG');
+        Add('     , _pgAccount.Id2_Postgres as AccountDirectionId_PG');
+        Add('     , (select max (isnull (_pgInfoMoney.Id2_Postgres, 0)) from dba._pgInfoMoney where _pgInfoMoney.Name2 = _pgAccount.Name3) as InfoMoneyDestinationId_PG');
+        Add('     , case when InfoMoneyDestinationId_PG is not null then null else (select max (isnull (_pgInfoMoney.Id3_Postgres, 0)) from dba._pgInfoMoney where _pgInfoMoney.Name3 = _pgAccount.Name3) end as InfoMoneyId_PG');
+        Add('     , case when 1=1 then ObjectId else _pgAccount.Id3_Postgres end as Id_Postgres');
+        Add('from dba._pgAccount');
+        Add('order by ObjectId');
+        Open;
+{select _pgAccount.Id as ObjectId
+     , _pgAccount.ObjectCode as ObjectCode
+     , _pgAccount.Name3 as ObjectName
+     --, _pgAccount.Id1_Postgres as AccountGroupId_PG
+--     , _pgAccount.Id2_Postgres as AccountDirectionId_PG
+     , (select max (isnull (_pgInfoMoney.Id2_Postgres, 0)) from dba._pgInfoMoney where _pgInfoMoney.Name2 = _pgAccount.Name3) as InfoMoneyDestinationId_PG
+     , case when InfoMoneyDestinationId_PG is not null then null else (select max (isnull (_pgInfoMoney.Id3_Postgres, 0)) from dba._pgInfoMoney where _pgInfoMoney.Name3 = _pgAccount.Name3) end as InfoMoneyId_PG
+--      , _pgAccount.Id3_Postgres as Id_Postgres
+from dba._pgAccount
+-- where InfoMoneyDestinationId_PG is null  and InfoMoneyId_PG is null
+-- order by ObjectId
+}
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_account';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inInfoMoneyGroupId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inInfoMoneyDestinationId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inAccountGroupId').Value:=FieldByName('AccountGroupId_PG').AsInteger;
+             toStoredProc.Params.ParamByName('inAccountDirectionId').Value:=FieldByName('AccountDirectionId_PG').AsInteger;
+             toStoredProc.Params.ParamByName('inInfoMoneyDestinationId').Value:=FieldByName('InfoMoneyDestinationId_PG').AsInteger;
+             toStoredProc.Params.ParamByName('inInfoMoneyId').Value:=FieldByName('InfoMoneyId_PG').AsInteger;
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba._pgInfoMoney set Id3_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        //EnableControls;
+     end;
+     //
+     myDisabledCB(cbAccount);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------------
