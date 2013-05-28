@@ -2,7 +2,7 @@ unit dsdAction;
 
 interface
 
-uses VCL.ActnList, Forms, Classes, dsdDB, ParentForm, DB;
+uses VCL.ActnList, Forms, Classes, dsdDB, ParentForm, DB, DBClient, UtilConst;
 
 type
 
@@ -54,8 +54,6 @@ type
     procedure DataSetChanged;
   end;
 
-  TdsdUpdateErased = class;
-
   TDataSetDataLink = class(TDataLink)
   private
     FAction: IDataSetAction;
@@ -64,6 +62,26 @@ type
   public
     constructor Create(Action: IDataSetAction);
   end;
+
+  TdsdChangeMovementStatus = class (TdsdCustomDataSetAction, IDataSetAction)
+  private
+    FStatus: TdsdMovementStatus;
+    FActionDataLink: TDataSetDataLink;
+    FDataSource: TDataSource;
+    procedure SetDataSource(const Value: TDataSource);
+    function GetDataSource: TDataSource;
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    procedure DataSetChanged;
+  public
+    constructor Create(AOwner: TComponent); override;
+    function Execute: boolean; override;
+  published
+    property DataSource: TDataSource read GetDataSource write SetDataSource;
+    property Status: TdsdMovementStatus read FStatus write FStatus;
+  end;
+
+  TdsdUpdateErased = class;
 
   TdsdUpdateErased = class(TdsdCustomDataSetAction, IDataSetAction)
   private
@@ -159,6 +177,7 @@ uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage, Vcl.Contr
 
 procedure Register;
 begin
+  RegisterActions('DSDLib', [TdsdChangeMovementStatus], TdsdChangeMovementStatus);
   RegisterActions('DSDLib', [TdsdDataSetRefresh], TdsdDataSetRefresh);
   RegisterActions('DSDLib', [TdsdExecStoredProc], TdsdExecStoredProc);
   RegisterActions('DSDLib', [TdsdOpenForm], TdsdOpenForm);
@@ -424,6 +443,49 @@ begin
   inherited Notification(AComponent, Operation);
   if (Operation = opRemove) and (AComponent = FormParams) then
      FormParams := nil;
+end;
+
+{ TdsdChangeMovementStatus }
+
+constructor TdsdChangeMovementStatus.Create(AOwner: TComponent);
+begin
+  inherited;
+  FActionDataLink := TDataSetDataLink.Create(Self);
+  Status := mtUncomplete;
+end;
+
+procedure TdsdChangeMovementStatus.DataSetChanged;
+begin
+  Enabled := (DataSource.DataSet.RecordCount > 0)
+    and (DataSource.DataSet.FieldByName('StatusCode').AsInteger <> Integer(Status));
+end;
+
+function TdsdChangeMovementStatus.Execute: boolean;
+begin
+  result := inherited Execute;
+  if result and Assigned(DataSource) and Assigned(DataSource.DataSet) then begin
+     DataSource.DataSet.Edit;
+     DataSource.DataSet.FieldByName('StatusCode').AsInteger := Integer(Status);
+     DataSource.DataSet.Post;
+  end;
+end;
+
+function TdsdChangeMovementStatus.GetDataSource: TDataSource;
+begin
+  result := FActionDataLink.DataSource;
+end;
+
+procedure TdsdChangeMovementStatus.Notification(AComponent: TComponent;
+  Operation: TOperation);
+begin
+  inherited Notification(AComponent, Operation);
+  if (Operation = opRemove) and (AComponent = FDataSource) then
+     FDataSource := nil;
+end;
+
+procedure TdsdChangeMovementStatus.SetDataSource(const Value: TDataSource);
+begin
+  FActionDataLink.DataSource := Value;
 end;
 
 end.

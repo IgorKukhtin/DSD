@@ -84,7 +84,7 @@ end;
 {-----------------------------------------------------------------------------------------------}
 function gfFloatToStr(const inFloat: Extended): string;
 Begin
-    //result:=ReplaceStr(FloatToStr(inFloat),DecimalSeparator,cMainDecimalSeparator);
+  result:=StringReplace(FloatToStr(inFloat), DecimalSeparator, cMainDecimalSeparator, []);
 end;
 {-----------------------------------------------------------------------------------------------}
 function gfStrToFloat(const inStr: string): Extended;

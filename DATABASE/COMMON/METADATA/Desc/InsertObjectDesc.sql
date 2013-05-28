@@ -92,9 +92,6 @@ insert into ObjectDesc(Id, Code, ItemName)
 SELECT zc_Object_GoodsPropertyValue(), 'GoodsPropertyValue', '' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_GoodsPropertyValue());
 
 insert into ObjectDesc(Id, Code, ItemName)
-SELECT zc_Object_Destination(), 'Destination', 'Направление' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_Destination());
-
-insert into ObjectDesc(Id, Code, ItemName)
 SELECT zc_Object_AccountGroup(), 'AccountGroup', 'Группы счетов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_AccountGroup());
 
 insert into ObjectDesc(Id, Code, ItemName)
@@ -105,6 +102,9 @@ SELECT zc_Object_Account(), 'Account', 'Счет' WHERE NOT EXISTS (SELECT * FROM Ob
 
 insert into ObjectDesc(Id, Code, ItemName)
 SELECT zc_Object_InfoMoneyGroup(), 'InfoMoneyGroup', 'Группа управленческих статей' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_InfoMoneyGroup());
+
+insert into ObjectDesc(Id, Code, ItemName)
+SELECT zc_Object_InfoMoneyDestination(), 'InfoMoneyDestination', 'Направление' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_InfoMoneyDestination());
 
 insert into ObjectDesc(Id, Code, ItemName)
 SELECT zc_Object_InfoMoney(), 'InfoMoney', 'Управленческие статьи' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_InfoMoney());

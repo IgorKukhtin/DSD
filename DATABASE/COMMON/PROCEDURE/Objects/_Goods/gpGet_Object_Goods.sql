@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Goods(
 IN inId          Integer,       /* Товар */
 IN inSession     TVarChar       /* текущий пользователь */)
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, GoodsGroupId Integer, GoodsGroupName TVarChar, 
-               MeasureId Integer, MeasureName TVarChar, Weight TFloat) AS
+               MeasureId Integer, MeasureName TVarChar, Weight TFloat, InfoMoneyId Integer, InfoMoneyName TVarChar) AS
 $BODY$BEGIN
 
 --   PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
@@ -22,6 +22,8 @@ $BODY$BEGIN
      , Measure.Id AS MeasureId
      , Measure.ValueData AS MeasureName
      , Weight.ValueData AS Weight
+     , Object_InfoMoney.Id AS InfoMoneyId
+     , Object_InfoMoney.ValueData AS InfoMoneyName
      FROM Object
 LEFT JOIN ObjectLink AS Goods_GoodsGroup
        ON Goods_GoodsGroup.ObjectId = Object.Id
@@ -36,6 +38,11 @@ LEFT JOIN Object AS Measure
 LEFT JOIN ObjectFloat AS Weight 
        ON Weight.ObjectId = Object.Id 
       AND Weight.DescId = zc_ObjectFloat_Goods_Weight()
+LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+       ON ObjectLink_Goods_InfoMoney.ObjectId = Object.Id 
+      AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+LEFT JOIN Object AS Object_InfoMoney
+       ON Object_InfoMoney.Id = ObjectLink_Goods_InfoMoney.ChildObjectId
      WHERE Object.Id = inId;
   
 END;$BODY$

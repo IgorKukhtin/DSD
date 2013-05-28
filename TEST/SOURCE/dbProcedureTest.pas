@@ -39,6 +39,10 @@ begin
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'Container\Get\lpGet_Container2.sql');
   ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'Container\Get\lpGet_Container3.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'Container\Get\lpGet_Container4.sql');
+  ZQuery.ExecSQL;
 end;
 
 procedure TdbProcedureTest.CreateHistoryProcedure;
@@ -110,6 +114,8 @@ begin
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'Movement\InsertUpdate\lpInsertUpdate_MovementString.sql');
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'Movement\Delete\lpDelete_Movement.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'Movement\gpSetErased_Movement.sql');
   ZQuery.ExecSQL;
 
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'Movement\_Income\gpInsertUpdate_Movement_Income.sql');
@@ -272,6 +278,27 @@ begin
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_GoodsPropertyValue\gpSelect_Object_GoodsPropertyValue.sql');
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_GoodsPropertyValue\gpGet_Object_GoodsPropertyValue.sql');
+  ZQuery.ExecSQL;
+
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_InfoMoneyGroup\gpInsertUpdate_Object_InfoMoneyGroup.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_InfoMoneyGroup\gpSelect_Object_InfoMoneyGroup.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_InfoMoneyGroup\gpGet_Object_InfoMoneyGroup.sql');
+  ZQuery.ExecSQL;
+
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_InfoMoneyDestination\gpInsertUpdate_Object_InfoMoneyDestination.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_InfoMoneyDestination\gpSelect_Object_InfoMoneyDestination.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_InfoMoneyDestination\gpGet_Object_InfoMoneyDestination.sql');
+  ZQuery.ExecSQL;
+
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_InfoMoney\gpInsertUpdate_Object_InfoMoney.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_InfoMoney\gpSelect_Object_InfoMoney.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_InfoMoney\gpGet_Object_InfoMoney.sql');
   ZQuery.ExecSQL;
 
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Juridical\gpInsertUpdate_Object_Juridical.sql');

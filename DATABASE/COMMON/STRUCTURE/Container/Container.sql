@@ -10,9 +10,12 @@
 CREATE TABLE Container(
    Id                    SERIAL NOT NULL PRIMARY KEY, 
    DescId                INTEGER, 
+   AccountId             Integer, -- Ñ÷åò
    Amount                TFloat,
 
-   CONSTRAINT fk_Container_DescId_ContainerDesc FOREIGN KEY(DescId) REFERENCES ContainerDesc(Id));
+   CONSTRAINT fk_Container_DescId_ContainerDesc FOREIGN KEY(DescId) REFERENCES ContainerDesc(Id),
+   CONSTRAINT fk_Container_AccountId_Object FOREIGN KEY(AccountId) REFERENCES Object(Id)
+);
 
 
 /*-------------------------------------------------------------------------------*/
@@ -20,6 +23,7 @@ CREATE TABLE Container(
 
 
 CREATE INDEX idx_Container_DescId ON Container(DescId); 
+CREATE INDEX idx_Container_AccountId_DescId_Id ON Container(AccountId, DescId, Id); 
 
 /*
  ÏÐÈÌÅ×ÀÍÈß:

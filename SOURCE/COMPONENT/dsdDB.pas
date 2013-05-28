@@ -11,7 +11,7 @@ type
   private
     FComponent: TComponent;
     FDataType: TFieldType;
-    FValue: string;
+    FValue: Variant;
     FName: String;
     FComponentItem: String;
     FParamType: TParamType;
@@ -351,16 +351,72 @@ begin
 end;
 
 function TdsdParam.AsString: string;
+var i: Integer;
 begin
-  result := Value
+  if varType(Value) in [varSingle, varDouble, varCurrency] then
+     result := gfFloatToStr(Value)
+  else
+     result := Value;
+  case DataType of
+    ftSmallint, ftInteger, ftWord:
+           if not TryStrToInt(result, i)
+           then
+             result := '0';
+ {   ftFloat: ;
+    ftCurrency: ;
+    ftBCD: ;
+    ftDate: ;
+    ftTime: ;
+    ftDateTime: ;
+    ftBytes: ;
+    ftVarBytes: ;
+    ftAutoInc: ;
+    ftBlob: ;
+    ftMemo: ;
+    ftGraphic: ;
+    ftFmtMemo: ;
+    ftParadoxOle: ;
+    ftDBaseOle: ;
+    ftTypedBinary: ;
+    ftCursor: ;
+    ftFixedChar: ;
+    ftWideString: ;
+    ftLargeint: ;
+    ftADT: ;
+    ftArray: ;
+    ftReference: ;
+    ftDataSet: ;
+    ftOraBlob: ;
+    ftOraClob: ;
+    ftVariant: ;
+    ftInterface: ;
+    ftIDispatch: ;
+    ftGuid: ;
+    ftTimeStamp: ;
+    ftFMTBcd: ;
+    ftFixedWideChar: ;
+    ftWideMemo: ;
+    ftOraTimeStamp: ;
+    ftOraInterval: ;
+    ftLongWord: ;
+    ftShortint: ;
+    ftByte: ;
+    ftExtended: ;
+    ftConnection: ;
+    ftParams: ;
+    ftStream: ;
+    ftTimeStampOffset: ;
+    ftObject: ;
+    ftSingle: ;}
+  end;
 end;
 
 constructor TdsdParam.Create(Collection: TCollection);
 begin
   inherited;
-  Value := '';
-  FParamType := ptInput;
-  FDataType := ftInteger;
+  FValue := Null;
+  FParamType := ptUnknown;
+  FDataType := ftUnknown;
 end;
 
 function TdsdParam.GetDisplayName: string;
@@ -371,11 +427,8 @@ end;
 function TdsdParam.GetValue: Variant;
 // Если указан Component, то параметры берутся из него
 // иначе из значения Value
-var
-  i: integer;
-  ft: double;
+
 begin
-  Result := '';
   if Assigned(FComponent) then begin
      // В зависимости от типа компонента Value содержится в разных property
      if Component is TcxTextEdit then
@@ -398,27 +451,8 @@ begin
      if Component is TcxDateEdit then
         Result := (Component as TcxDateEdit).Text;
   end
-  else begin
-    case DataType of
-      ftInteger: begin
-                   if TryStrToInt(FValue, I) then
-                      Result := FValue
-                   else
-                      Result := '0';
-                 end;
-      ftFloat:   begin
-                   if TryStrToFloat(FValue, ft) then
-                      Result := ReplaceStr(FValue, ',', '.')
-                   else
-                      Result := '0';
-                 end;
-      ftDateTime:begin
-                   Result := FValue
-                 end;
-      ftString, ftBlob: Result := FValue;
-      ftBoolean: Result := FValue
-    end;
-  end;
+  else
+    Result := FValue
 end;
 
 procedure TdsdParam.SetComponent(const Value: TComponent);

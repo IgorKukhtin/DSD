@@ -74,7 +74,7 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdateGoods(Id, Code: Integer; Name: String;
-                               GoodsGroupId, MeasureId: Integer; Weight: Double): integer;
+                               GoodsGroupId, MeasureId: Integer; Weight: Double; ItemInfoMoneyId: Integer): integer;
     constructor Create; override;
   end;
 
@@ -110,6 +110,14 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdateJuridicalGroup(const Id, Code: Integer; Name: string; JuridicalGroupId: integer): integer;
+    constructor Create; override;
+  end;
+
+  TUnitTest = class(TObjectTest)
+    function InsertDefault: integer; override;
+  public
+    function InsertUpdateUnit(Id, Code: Integer; Name: String;
+                              UnitGroupId, BranchId: integer): integer;
     constructor Create; override;
   end;
 
@@ -616,11 +624,11 @@ end;
 
 function TGoodsTest.InsertDefault: integer;
 begin
-  result := InsertUpdateGoods(0, 1, 'Товар 1', 0, 0, 1.0)
+  result := InsertUpdateGoods(0, 1, 'Товар 1', 0, 0, 1.0, 0)
 end;
 
 function TGoodsTest.InsertUpdateGoods(Id, Code: Integer; Name: String;
-  GoodsGroupId, MeasureId: Integer; Weight: Double): integer;
+  GoodsGroupId, MeasureId: Integer; Weight: Double; ItemInfoMoneyId: Integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -629,6 +637,7 @@ begin
   FParams.AddParam('inGoodsGroupId', ftInteger, ptInput, GoodsGroupId);
   FParams.AddParam('inMeasureId', ftInteger, ptInput, MeasureId);
   FParams.AddParam('inWeight', ftFloat, ptInput, Weight);
+  FParams.AddParam('inItemInfoMoneyId', ftInteger, ptInput, ItemInfoMoneyId);
   result := InsertUpdate(FParams);
 end;
 
@@ -670,6 +679,34 @@ begin
   FParams.AddParam('inGoodsPropertyId', ftInteger, ptInput, GoodsPropertyId);
   FParams.AddParam('inGoodsId', ftInteger, ptInput, GoodsId);
   FParams.AddParam('inGoodsKindId', ftInteger, ptInput, GoodsKindId);
+
+  result := InsertUpdate(FParams);
+end;
+
+{ TUnitTest }
+
+constructor TUnitTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_Unit';
+  spSelect := 'gpSelect_Object_Unit';
+  spGet := 'gpGet_Object_Unit';
+end;
+
+function TUnitTest.InsertDefault: integer;
+begin
+  result := InsertUpdateUnit(0, 1, '', 0, 0);
+end;
+
+function TUnitTest.InsertUpdateUnit(Id, Code: Integer; Name: String;
+  UnitGroupId, BranchId: integer): integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  FParams.AddParam('inUnitGroupId', ftInteger, ptInput, UnitGroupId);
+  FParams.AddParam('inBranchId', ftInteger, ptInput, BranchId);
 
   result := InsertUpdate(FParams);
 end;

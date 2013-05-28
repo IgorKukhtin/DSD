@@ -40,18 +40,6 @@ $BODY$BEGIN
   RETURN 7;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_Object_AccountPlan_Active()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 1001;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_Object_AccountPlan_Passive()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 1002;
-END;  $BODY$ LANGUAGE plpgsql;
-
 CREATE OR REPLACE FUNCTION zc_Object_AccountGroup_Inventory()
   RETURNS integer AS
 $BODY$BEGIN
@@ -64,8 +52,9 @@ $BODY$BEGIN
   RETURN 3001;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_Object_Destination_MeatByProduct()
+CREATE OR REPLACE FUNCTION zc_Object_Account_InventoryStoreEmpties()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 4001;
 END;  $BODY$ LANGUAGE plpgsql;
+

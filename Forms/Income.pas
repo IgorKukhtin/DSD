@@ -11,15 +11,12 @@ uses
   cxGridDBTableView, cxGrid, Datasnap.DBClient, Vcl.ActnList, dsdAction,
   cxPropertiesStore, dxBar, Vcl.ExtCtrls, cxContainer, cxLabel, cxTextEdit,
   Vcl.ComCtrls, dxCore, cxDateUtils, cxButtonEdit, cxMaskEdit, cxDropDownEdit,
-  cxCalendar, dsdGuides, Vcl.Menus;
+  cxCalendar, dsdGuides, Vcl.Menus, cxPCdxBarPopupMenu, cxPC;
 
 type
   TIncomeForm = class(TParentForm)
-    cxGridDBTableView: TcxGridDBTableView;
-    cxGridLevel: TcxGridLevel;
-    cxGrid: TcxGrid;
     dsdFormParams: TdsdFormParams;
-    spSelect: TdsdStoredProc;
+    spSelectMovementItem: TdsdStoredProc;
     dxBarManager: TdxBarManager;
     dxBarManagerBar: TdxBar;
     bbRefresh: TdxBarButton;
@@ -29,9 +26,6 @@ type
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     DataPanel: TPanel;
-    colCode: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
     edInvNumber: TcxTextEdit;
     cxLabel1: TcxLabel;
     edOperDate: TcxDateEdit;
@@ -45,8 +39,25 @@ type
     spGet: TdsdStoredProc;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
+    cxPageControl1: TcxPageControl;
+    cxTabSheet1: TcxTabSheet;
+    cxTabSheet2: TcxTabSheet;
+    cxGrid: TcxGrid;
+    cxGridDBTableView: TcxGridDBTableView;
+    colCode: TcxGridDBColumn;
+    colName: TcxGridDBColumn;
+    colAmount: TcxGridDBColumn;
     colPrice: TcxGridDBColumn;
     colSumm: TcxGridDBColumn;
+    cxGridLevel: TcxGridLevel;
+    spSelectMovementContainerItem: TdsdStoredProc;
+    cxGridEntryDBTableView: TcxGridDBTableView;
+    cxGridEntryLevel: TcxGridLevel;
+    cxGridEntry: TcxGrid;
+    colDebetAccountName: TcxGridDBColumn;
+    colDebetAmount: TcxGridDBColumn;
+    EntryCDS: TClientDataSet;
+    EntryDS: TDataSource;
   private
     { Private declarations }
   public

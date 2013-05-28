@@ -12,7 +12,7 @@ uses
   Vcl.ActnList, DataModul, cxTL, cxTLdxBarBuiltInMenu,
   cxInplaceContainer, cxTLData, cxDBTL, cxMaskEdit, ParentForm, dsdDB, dsdAction,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxDropDownEdit,
-  cxCalendar, Vcl.ExtCtrls, cxImageComboBox, Vcl.Menus;
+  cxCalendar, Vcl.ExtCtrls, cxImageComboBox, Vcl.Menus, dsdAddOn;
 
 type
   TIncomeJournalForm = class(TParentForm)
@@ -41,15 +41,19 @@ type
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
-    actComplete: TdsdExecStoredProc;
+    actComplete: TdsdChangeMovementStatus;
     spMovementComplete: TdsdStoredProc;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
     bbComplete: TdxBarButton;
-    actUnComplete: TdsdExecStoredProc;
+    actUnComplete: TdsdChangeMovementStatus;
     spMovementUnComplete: TdsdStoredProc;
     bbUnComplete: TdxBarButton;
     N2: TMenuItem;
+    bbDelete: TdxBarButton;
+    actSetErased: TdsdChangeMovementStatus;
+    spMovementSetErased: TdsdStoredProc;
+    dsdDBFilterAddOn1: TdsdDBFilterAddOn;
   private
     { Private declarations }
   public

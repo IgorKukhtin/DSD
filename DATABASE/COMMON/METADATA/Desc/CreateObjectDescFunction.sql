@@ -184,12 +184,6 @@ $BODY$BEGIN
   RETURN 31;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_Object_Destination()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 32;
-END;  $BODY$ LANGUAGE plpgsql;
-
 CREATE OR REPLACE FUNCTION zc_Object_AccountGroup()
   RETURNS integer AS
 $BODY$BEGIN
@@ -212,6 +206,12 @@ CREATE OR REPLACE FUNCTION zc_Object_InfoMoneyGroup()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 36;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_Object_InfoMoneyDestination()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 32;
 END;  $BODY$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION zc_Object_InfoMoney()

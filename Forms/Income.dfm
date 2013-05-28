@@ -8,58 +8,14 @@ inherited IncomeForm: TIncomeForm
   ExplicitHeight = 409
   PixelsPerInch = 96
   TextHeight = 13
-  object cxGrid: TcxGrid
-    Left = 0
-    Top = 108
-    Width = 757
-    Height = 274
-    Align = alBottom
-    TabOrder = 0
-    object cxGridDBTableView: TcxGridDBTableView
-      Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = DataSource
-      DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
-      DataController.Summary.SummaryGroups = <>
-      OptionsView.ColumnAutoWidth = True
-      object colCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'Code'
-        Width = 58
-      end
-      object colName: TcxGridDBColumn
-        Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
-        DataBinding.FieldName = 'Name'
-        Width = 417
-      end
-      object colAmount: TcxGridDBColumn
-        Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
-        DataBinding.FieldName = 'Amount'
-        Width = 100
-      end
-      object colPrice: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072
-        DataBinding.FieldName = 'Price'
-        Width = 89
-      end
-      object colSumm: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072
-        DataBinding.FieldName = 'Summ'
-        Width = 91
-      end
-    end
-    object cxGridLevel: TcxGridLevel
-      GridView = cxGridDBTableView
-    end
-  end
   object DataPanel: TPanel
     Left = 0
     Top = 0
     Width = 757
-    Height = 113
+    Height = 84
     Align = alTop
     BevelOuter = bvNone
-    TabOrder = 5
+    TabOrder = 0
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 27
@@ -115,6 +71,101 @@ inherited IncomeForm: TIncomeForm
       Caption = #1050#1086#1084#1091
     end
   end
+  object cxPageControl1: TcxPageControl
+    Left = 0
+    Top = 110
+    Width = 757
+    Height = 272
+    Align = alClient
+    TabOrder = 5
+    Properties.ActivePage = cxTabSheet1
+    Properties.CustomButtons.Buttons = <>
+    ClientRectBottom = 272
+    ClientRectRight = 757
+    ClientRectTop = 24
+    object cxTabSheet1: TcxTabSheet
+      Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
+      ImageIndex = 0
+      object cxGrid: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 757
+        Height = 248
+        Align = alClient
+        TabOrder = 0
+        object cxGridDBTableView: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = DataSource
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          OptionsView.ColumnAutoWidth = True
+          object colCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'Code'
+            Width = 58
+          end
+          object colName: TcxGridDBColumn
+            Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'Name'
+            Width = 417
+          end
+          object colAmount: TcxGridDBColumn
+            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+            DataBinding.FieldName = 'Amount'
+            Width = 100
+          end
+          object colPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072
+            DataBinding.FieldName = 'Price'
+            Width = 89
+          end
+          object colSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'Summ'
+            Width = 91
+          end
+        end
+        object cxGridLevel: TcxGridLevel
+          GridView = cxGridDBTableView
+        end
+      end
+    end
+    object cxTabSheet2: TcxTabSheet
+      Caption = #1055#1088#1086#1074#1086#1076#1082#1080
+      ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
+      object cxGridEntry: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 757
+        Height = 248
+        Align = alClient
+        TabOrder = 0
+        object cxGridEntryDBTableView: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = EntryDS
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.SummaryGroups = <>
+          OptionsView.ColumnAutoWidth = True
+          object colDebetAccountName: TcxGridDBColumn
+            Caption = #1057#1095#1077#1090' '#1076#1077#1073#1077#1090
+            DataBinding.FieldName = 'ObjectName'
+          end
+          object colDebetAmount: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'Amount'
+          end
+        end
+        object cxGridEntryLevel: TcxGridLevel
+          GridView = cxGridEntryDBTableView
+        end
+      end
+    end
+  end
   object dsdFormParams: TdsdFormParams
     Params = <
       item
@@ -126,7 +177,7 @@ inherited IncomeForm: TIncomeForm
     Left = 176
     Top = 256
   end
-  object spSelect: TdsdStoredProc
+  object spSelectMovementItem: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Income'
     DataSet = ClientDataSet
     DataSets = <
@@ -167,8 +218,8 @@ inherited IncomeForm: TIncomeForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 152
-    Top = 152
+    Left = 136
+    Top = 224
     DockControlHeights = (
       0
       0
@@ -204,27 +255,6 @@ inherited IncomeForm: TIncomeForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = colCode
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Width')
-      end
-      item
-        Component = colName
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Width')
-      end
-      item
-        Component = colAmount
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Width')
-      end
-      item
         Component = Owner
         Properties.Strings = (
           'Height'
@@ -233,22 +263,25 @@ inherited IncomeForm: TIncomeForm
           'Width')
       end>
     StorageName = 'cxPropertiesStore'
-    Left = 224
-    Top = 200
+    Left = 280
+    Top = 304
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 216
-    Top = 152
+    Left = 376
+    Top = 216
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
-      StoredProc = spSelect
+      StoredProc = spGet
       StoredProcList = <
         item
-          StoredProc = spSelect
+          StoredProc = spGet
         end
         item
-          StoredProc = spGet
+          StoredProc = spSelectMovementItem
+        end
+        item
+          StoredProc = spSelectMovementContainerItem
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -258,13 +291,13 @@ inherited IncomeForm: TIncomeForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 144
-    Top = 192
+    Left = 32
+    Top = 208
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 96
+    Left = 32
     Top = 152
   end
   object dsdGuidesFrom: TdsdGuides
@@ -343,10 +376,40 @@ inherited IncomeForm: TIncomeForm
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
-    Left = 288
-    Top = 216
+    Left = 384
+    Top = 312
     object N1: TMenuItem
       Action = actRefresh
     end
+  end
+  object spSelectMovementContainerItem: TdsdStoredProc
+    StoredProcName = 'gpSelect_MovementItemContainer_Movement'
+    DataSet = EntryCDS
+    DataSets = <
+      item
+        DataSet = EntryCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = dsdFormParams
+        ComponentItem = 'Id'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = '0'
+      end>
+    Left = 312
+    Top = 232
+  end
+  object EntryCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 424
+    Top = 176
+  end
+  object EntryDS: TDataSource
+    DataSet = EntryCDS
+    Left = 440
+    Top = 224
   end
 end

@@ -3,8 +3,9 @@ unit UtilConst;
 interface
 uses Classes, SysUtils;
 Type
-  TrfFormState = (frmInsert, frmUpdate, frmMask);
-  TrfProcType  = (ptInsert, ptUpdate, ptMask, ptInsertUpdate);
+//  TrfFormState = (frmInsert, frmUpdate, frmMask);
+  //TrfProcType  = (ptInsert, ptUpdate, ptMask, ptInsertUpdate);
+  TdsdMovementStatus = (mtUncomplete, mtComplete, mtDelete);
 
 var FormatSettings: TFormatSettings;
     {константы времени}

@@ -11,22 +11,18 @@ BEGIN
    PERFORM lpInsertUpdate_Object(zc_Object_PaidKind_SecondForm(), zc_Object_PaidKind(), 2, 'Вторая форма');
 
    --  Добавляем статусы
-   PERFORM lpInsertUpdate_Object(zc_Object_Status_UnComplete(), zc_Object_Status(), 1, 'Не проведен');
-   PERFORM lpInsertUpdate_Object(zc_Object_Status_Complete(), zc_Object_Status(), 2, 'Проведен');
-   PERFORM lpInsertUpdate_Object(zc_Object_Status_Erased(), zc_Object_Status(), 3, 'Удален');
-
-   -- Формируем план счетов
-   PERFORM lpInsertUpdate_Object(zc_Object_AccountPlan_Active(), zc_Object_AccountPlan(), 0, 'Активы');
-   PERFORM lpInsertUpdate_Object(zc_Object_AccountPlan_Passive(), zc_Object_AccountPlan(), 0, 'Пассивы');
+   PERFORM lpInsertUpdate_Object(zc_Object_Status_UnComplete(), zc_Object_Status(), 0, 'Не проведен');
+   PERFORM lpInsertUpdate_Object(zc_Object_Status_Complete(), zc_Object_Status(), 1, 'Проведен');
+   PERFORM lpInsertUpdate_Object(zc_Object_Status_Erased(), zc_Object_Status(), 2, 'Удален');
 
    -- Вставляем группы счетов
    PERFORM lpInsertUpdate_Object(zc_Object_AccountGroup_Inventory(), zc_Object_AccountGroup(), 1, 'Запасы');
    
    -- Вставляем аналитики счетов (место)
    PERFORM lpInsertUpdate_Object(zc_Object_AccountDirection_Store(), zc_Object_AccountDirection(), 1, 'на складах');
-
-   -- Вставляем аналитики счетов (назначения)
-   PERFORM lpInsertUpdate_Object(zc_Object_Destination_MeatByProduct(), zc_Object_Destination(), 1, 'Мясное сырье');
+   
+   -- Будем вставлять счета   
+   PERFORM lpInsertUpdate_Object(zc_Object_Account_InventoryStoreEmpties(), zc_Object_Account(), 1, 'Запасы\на складахГП\Оборотная тара');
 
    -- Увеличиваем последовательность
    PERFORM setval('object_id_seq', (select max( id ) + 1 from Object));
@@ -99,29 +95,3 @@ BEGIN
    END IF;
 END $$;
 
-
-DO $$
-DECLARE ioId integer;
-BEGIN
-
--- Будем вставлять счета   
-   -- Вставляем группы счетов
-   PERFORM lpInsertUpdate_Object(zc_Object_AccountGroup_Inventory(), zc_Object_AccountGroup(), 1, 'Запасы');
-   
-   -- Вставляем аналитики счетов (место)
-   PERFORM lpInsertUpdate_Object(zc_Object_AccountDirection_Store(), zc_Object_AccountDirection(), 1, 'на складах');
-
-   -- Вставляем аналитики счетов (назначения)
-   PERFORM lpInsertUpdate_Object(zc_Object_Destination_MeatByProduct(), zc_Object_Destination(), 1, 'Мясное сырье');
-
-
-   IF lpFind_Object_Account(zc_Object_AccountGroup_Inventory(),
-                            zc_Object_AccountDirection_Store(),
-                            zc_Object_Destination_MeatByProduct()) = 0 THEN
-
-      PERFORM gpInsertUpdate_Object_Account(0, 0, '', zc_Object_AccountGroup_Inventory(),
-                            zc_Object_AccountDirection_Store(), zc_Object_Destination_MeatByProduct(), '');
- 
-   END IF;
-
-END $$;

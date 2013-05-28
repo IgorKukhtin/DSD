@@ -40,6 +40,10 @@ inherited IncomeJournalForm: TIncomeJournalForm
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
+      DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
+      DataController.Filter.TranslateBetween = True
+      DataController.Filter.TranslateIn = True
+      DataController.Filter.TranslateLike = True
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
@@ -56,17 +60,17 @@ inherited IncomeJournalForm: TIncomeJournalForm
           item
             Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
             ImageIndex = 11
-            Value = '1'
+            Value = 0
           end
           item
             Description = #1055#1088#1086#1074#1077#1076#1077#1085
             ImageIndex = 12
-            Value = '2'
+            Value = 1
           end
           item
             Description = #1059#1076#1072#1083#1077#1085
             ImageIndex = 13
-            Value = '3'
+            Value = 2
           end>
       end
       object colInvNumber: TcxGridDBColumn
@@ -211,6 +215,10 @@ inherited IncomeJournalForm: TIncomeJournalForm
           ItemName = 'bbUnComplete'
         end
         item
+          Visible = True
+          ItemName = 'bbDelete'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
@@ -241,6 +249,10 @@ inherited IncomeJournalForm: TIncomeJournalForm
     end
     object bbUnComplete: TdxBarButton
       Action = actUnComplete
+      Category = 0
+    end
+    object bbDelete: TdxBarButton
+      Action = actSetErased
       Category = 0
     end
   end
@@ -288,14 +300,13 @@ inherited IncomeJournalForm: TIncomeJournalForm
           ComponentItem = 'Id'
           DataType = ftInteger
           ParamType = ptInput
-          Value = ''
         end>
       isShowModal = True
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
-    object actUnComplete: TdsdExecStoredProc
+    object actUnComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
       StoredProc = spMovementUnComplete
       StoredProcList = <
@@ -305,8 +316,10 @@ inherited IncomeJournalForm: TIncomeJournalForm
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 11
+      DataSource = DataSource
+      Status = mtUncomplete
     end
-    object actComplete: TdsdExecStoredProc
+    object actComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
       StoredProc = spMovementComplete
       StoredProcList = <
@@ -316,6 +329,21 @@ inherited IncomeJournalForm: TIncomeJournalForm
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 12
+      DataSource = DataSource
+      Status = mtComplete
+    end
+    object actSetErased: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      StoredProc = spMovementSetErased
+      StoredProcList = <
+        item
+          StoredProc = spMovementSetErased
+        end>
+      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      ImageIndex = 13
+      DataSource = DataSource
+      Status = mtDelete
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -354,7 +382,6 @@ inherited IncomeJournalForm: TIncomeJournalForm
         ComponentItem = 'Id'
         DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end>
     Left = 152
     Top = 208
@@ -381,9 +408,32 @@ inherited IncomeJournalForm: TIncomeJournalForm
         ComponentItem = 'Id'
         DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end>
     Left = 152
     Top = 240
+  end
+  object spMovementSetErased: TdsdStoredProc
+    StoredProcName = 'gpSetErased_Movement'
+    DataSet = ClientDataSet
+    DataSets = <
+      item
+        DataSet = ClientDataSet
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+    Left = 264
+    Top = 224
+  end
+  object dsdDBFilterAddOn1: TdsdDBFilterAddOn
+    View = cxGridDBTableView
+    Left = 424
+    Top = 160
   end
 end

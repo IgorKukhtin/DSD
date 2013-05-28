@@ -178,9 +178,14 @@ $BODY$BEGIN
   RETURN 28;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Account_Destination()
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Account_InfoMoneyDestination()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 29;
 END;  $BODY$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_InfoMoney()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 30;
+END;  $BODY$ LANGUAGE plpgsql;

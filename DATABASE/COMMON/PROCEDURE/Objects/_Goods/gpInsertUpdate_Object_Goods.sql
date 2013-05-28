@@ -9,6 +9,7 @@ IN inName                TVarChar  ,    -- Название объекта <Товар>
 IN inGoodsGroupId        Integer   ,    -- ссылка на группу Товаров
 IN inMeasureId           Integer   ,    -- ссылка на единицу измерения
 IN inWeight              TFloat    ,    -- 
+IN inInfoMoneyId         Integer   , 
 IN inSession             TVarChar       -- текущий пользователь
 )
   RETURNS integer AS
@@ -24,13 +25,15 @@ $BODY$BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_GoodsGroup(), ioId, inGoodsGroupId);
    -- Вставляем ссылку
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Measure(), ioId, inMeasureId);
+   -- Вставляем Управленческие аналитики
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_InfoMoney(), ioId, inInfoMoneyId);
    -- Вставляем вес
    PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Goods_Weight(), ioId, inWeight);
 
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE
+  LANGUAGE plpgsql VOLATILE                                                                         
   COST 100;
-ALTER FUNCTION gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, Integer, Integer, TFloat, tvarchar)
+ALTER FUNCTION gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, Integer, Integer, TFloat, Integer, tvarchar)
   OWNER TO postgres;
 
   

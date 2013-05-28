@@ -7,23 +7,26 @@
 CREATE OR REPLACE FUNCTION gpSelect_MovementItemContainer_Movement(
 IN inMovementId          Integer,       /* Документ */
 IN inSession             TVarChar       /* текущий пользователь */)
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Login TVarChar, Password TVarChar, isErased boolean) AS
+RETURNS TABLE (Amount TFloat, AccountName TVarChar) 
+AS
 $BODY$BEGIN
 
 --   PERFORM lpCheckRight(inSession, zc_Object_Process_User());
 
 RETURN QUERY 
-      SELECT 
-             MovementItemContainer.Amount,
-             MovementItemContainer.ContainerId,
-             Object.ValueData                 AS ObjectName,
-             Object.ObjectCode                AS ObjectCode,
-             ContainerLinkObjectDesc.ItemName AS AnalyticName
+    SELECT 
+       CAST(AccountValue.Amount AS TFloat) AS Amount,
+       Object_Account.ValueData            AS AccountName
+     FROM 
+      (SELECT 
+             SUM(MovementItemContainer.Amount)  AS Amount,
+             Container.AccountId
         FROM MovementItemContainer
-        JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = MovementItemContainer.ContainerId
-        JOIN Object ON Object.Id = ContainerLinkObject.ObjectId
-        JOIN ContainerLinkObjectDesc ON ContainerLinkObject.DescId = ContainerLinkObjectDesc.Id
-       WHERE MovementItemContainer.MovementId = inMovementId;
+   LEFT JOIN Container ON Container.Id = MovementItemContainer.ContainerId
+         --AND Container.DescId = zc_ContainerLinkObject_Account()                
+      WHERE MovementItemContainer.MovementId = inMovementId
+      GROUP BY Container.AccountId) AS AccountValue  
+   LEFT JOIN Object AS Object_Account ON Object_Account.Id = AccountValue.AccountId;
      
 END;$BODY$
   LANGUAGE plpgsql VOLATILE

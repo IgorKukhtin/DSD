@@ -1,4 +1,4 @@
-﻿--DROP FUNCTION lpInsertUpdate_MovementItemContainer(INOUT ioId integer, IN inDescId integer, IN inObjectCode integer, IN inValueData tvarchar);
+﻿--DROP FUNCTION lpInsertUpdate_MovementItemContainer(Integer, Integer, Integer, Integer, TFloat, TDateTime);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemContainer(
 INOUT ioId integer, 

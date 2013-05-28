@@ -44,7 +44,7 @@ begin
     MovementId := MovementIncomeTest.GetDefault;
     TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [MovementId]));
     try
-      check(MovementIncomeTest.GetRecord(MovementId).FieldByName('StatusCode').AsInteger = 2, 'Статус не изменился');
+      check(MovementIncomeTest.GetRecord(MovementId).FieldByName('StatusCode').AsInteger = 1, 'Статус не изменился');
     finally
       UnCompleteMovement(MovementId);
     end;

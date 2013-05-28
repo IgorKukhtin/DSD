@@ -50,7 +50,10 @@ insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
 SELECT zc_ObjectLink_Goods_GoodsGroup(), 'Goods_GoodsGroup', 'Связь товаров с группой товаров', zc_Object_Goods(), zc_Object_GoodsGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_Goods_GoodsGroup());
 
 insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
-SELECT zc_ObjectLink_Goods_Measure(), 'Goods_Measure', 'Связь товаров с единицей измерения', zc_Object_GoodsGroup(), zc_Object_GoodsGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_Goods_Measure());
+SELECT zc_ObjectLink_Goods_Measure(), 'Goods_Measure', 'Связь товаров с единицей измерения', zc_Object_Goods(), zc_Object_Measure() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_Goods_Measure());
+
+insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
+SELECT zc_ObjectLink_Goods_InfoMoney(), 'Goods_InfoMoney', 'Связь товаров с управленческой статьей', zc_Object_Goods(), zc_Object_InfoMoney() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_Goods_InfoMoney());
 
 insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
 SELECT zc_ObjectLink_BankAccount_Juridical(), 'BankAccount_Juridical', 'Связь счета с юр. лицом', zc_Object_BankAccount(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_BankAccount_Juridical());
@@ -77,4 +80,5 @@ insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
 SELECT zc_ObjectLink_Account_AccountDirection(), 'Account_AccountDirection', '', zc_Object_Account(), zc_Object_AccountDirection() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_Account_AccountDirection());
 
 insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
-SELECT zc_ObjectLink_Account_Destination(), 'Account_Destination', '', zc_Object_Account(), zc_Object_Destination() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_Account_Destination());
+SELECT zc_ObjectLink_Account_InfoMoneyDestination(), 'Account_InfoMoneyDestination', '', zc_Object_Account(), zc_Object_InfoMoneyDestination() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_Account_InfoMoneyDestination());
+

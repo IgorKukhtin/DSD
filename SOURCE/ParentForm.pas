@@ -24,7 +24,7 @@ uses UtilConst, cxPropertiesStore, cxControls, cxContainer, cxEdit, cxGroupBox,
   dxBar, Vcl.ActnList, dsdAction, cxTextEdit, cxLabel,
   StdActns, cxDBTL, cxCurrencyEdit, cxDropDownEdit, dsdGuides,
   cxDBLookupComboBox, DBGrids, cxCheckBox, cxCalendar, ExtCtrls, dsdAddOn,
-  cxButtonEdit, cxSplitter, Vcl.Menus;
+  cxButtonEdit, cxSplitter, Vcl.Menus, cxPC;
 
 {$R *.dfm}
 
@@ -80,16 +80,20 @@ initialization
   RegisterClass (TcxGrid);
   RegisterClass (TcxLabel);
   RegisterClass (TcxLookupComboBox);
+  RegisterClass (TcxPageControl);
   RegisterClass (TcxPopupEdit);
   RegisterClass (TcxPropertiesStore);
   RegisterClass (TcxSplitter);
+  RegisterClass (TcxTabSheet);
   RegisterClass (TcxTextEdit);
 
   RegisterClass (TdxBarManager);
   RegisterClass (TdxBevel);
   // Собственнтые компоненты
+  RegisterClass (TdsdChangeMovementStatus);
   RegisterClass (TdsdChoiceGuides);
   RegisterClass (TdsdDataSetRefresh);
+  RegisterClass (TdsdDBFilterAddOn);
   RegisterClass (TdsdDBTreeAddOn);
   RegisterClass (TdsdExecStoredProc);
   RegisterClass (TdsdFormClose);
