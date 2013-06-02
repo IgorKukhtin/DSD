@@ -80,7 +80,8 @@ uses
   Income in '..\..\Forms\Income.pas' {IncomeForm},
   IncomeJournal in '..\..\Forms\IncomeJournal.pas' {ParentForm2},
   dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas',
-  dbMovementCompleteTest in '..\SOURCE\dbMovementCompleteTest.pas';
+  dbMovementCompleteTest in '..\SOURCE\dbMovementCompleteTest.pas',
+  Balance in '..\..\Forms\Report\Balance.pas' {ParentForm1};
 
 {$R *.RES}
 

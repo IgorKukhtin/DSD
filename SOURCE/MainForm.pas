@@ -53,6 +53,9 @@ type
     actCash: TdsdOpenForm;
     actCurrency: TdsdOpenForm;
     bbGoodsKind: TdxBarButton;
+    actBalance: TdsdOpenForm;
+    bbBalance: TdxBarButton;
+    bbReports: TdxBarSubItem;
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }

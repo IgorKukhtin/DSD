@@ -2,10 +2,10 @@ unit dsdAction;
 
 interface
 
-uses VCL.ActnList, Forms, Classes, dsdDB, ParentForm, DB, DBClient, UtilConst;
+uses VCL.ActnList, Forms, Classes, dsdDB, ParentForm, DB, DBClient, UtilConst,
+     cxGrid;
 
 type
-
   TDataSetAcionType = (acInsert, acUpdate);
 
   TdsdStoredProcItem = class(TCollectionItem)
@@ -24,11 +24,29 @@ type
     property Items[Index: Integer]: TdsdStoredProcItem read GetItem write SetItem; default;
   end;
 
-  TdsdCustomDataSetAction = class(TCustomAction)
+  IDataSetAction = interface
+    procedure DataSetChanged;
+    procedure UpdateData;
+  end;
+
+  TDataSetDataLink = class(TDataLink)
+  private
+    FAction: IDataSetAction;
+  protected
+    procedure DataSetChanged; override;
+    procedure UpdateData; override;
+  public
+    constructor Create(Action: IDataSetAction);
+  end;
+
+  TdsdCustomDataSetAction = class(TCustomAction, IDataSetAction)
   private
     FStoredProcList: TdsdStoredProcList;
     function GetStoredProc: TdsdStoredProc;
     procedure SetStoredProc(const Value: TdsdStoredProc);
+  protected
+    procedure DataSetChanged; virtual;
+    procedure UpdateData;     virtual;
   public
     function Execute: boolean; override;
     constructor Create(AOwner: TComponent); override;
@@ -50,29 +68,27 @@ type
 
   end;
 
-  IDataSetAction = interface
-    procedure DataSetChanged;
-  end;
-
-  TDataSetDataLink = class(TDataLink)
+  TdsdUpdateDataSet = class(TdsdCustomDataSetAction)
   private
-    FAction: IDataSetAction;
+    FDataSetDataLink: TDataSetDataLink;
+    function GetDataSource: TDataSource;
+    procedure SetDataSource(const Value: TDataSource);
   protected
-    procedure DataSetChanged; override;
+    procedure UpdateData; override;
   public
-    constructor Create(Action: IDataSetAction);
+    constructor Create(AOwner: TComponent); override;
+  published
+    property DataSource: TDataSource read GetDataSource write SetDataSource;
   end;
 
-  TdsdChangeMovementStatus = class (TdsdCustomDataSetAction, IDataSetAction)
+  TdsdChangeMovementStatus = class (TdsdCustomDataSetAction)
   private
     FStatus: TdsdMovementStatus;
     FActionDataLink: TDataSetDataLink;
-    FDataSource: TDataSource;
     procedure SetDataSource(const Value: TDataSource);
     function GetDataSource: TDataSource;
   protected
-    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
-    procedure DataSetChanged;
+    procedure DataSetChanged; override;
   public
     constructor Create(AOwner: TComponent); override;
     function Execute: boolean; override;
@@ -93,7 +109,7 @@ type
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
-    procedure DataSetChanged;
+    procedure DataSetChanged; override;
     function Execute: boolean; override;
     constructor Create(AOwner: TComponent); override;
   published
@@ -128,14 +144,16 @@ type
     FdsdDataSetRefresh: TdsdDataSetRefresh;
     FForm: TParentForm;
     FActionType: TDataSetAcionType;
+    FFormClose: TCloseEvent;
     procedure OnFormClose(Sender: TObject; var Action: TCloseAction);
     function GetDataSource: TDataSource;
     procedure SetDataSource(const Value: TDataSource);
   protected
     procedure BeforeExecute(Form: TParentForm); override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
-  public
     procedure DataSetChanged;
+    procedure UpdateData; virtual;
+  public
     constructor Create(AOwner: TComponent); override;
   published
     property ActionType: TDataSetAcionType read FActionType write FActionType default acInsert;
@@ -169,22 +187,41 @@ type
     property ShortCut;
   end;
 
+  TdsdGridToExcel = class (TCustomAction)
+  private
+    FGrid: TcxGrid;
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+  public
+    function Execute: boolean; override;
+    constructor Create(AOwner: TComponent); override;
+  published
+    property Grid: TcxGrid read FGrid write FGrid;
+    property Caption;
+    property Hint;
+    property ImageIndex;
+    property ShortCut;
+  end;
+
   procedure Register;
 
 implementation
 
-uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage, Vcl.Controls;
+uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
+     Vcl.Controls, Menus, cxGridExportLink, ShellApi;
 
 procedure Register;
 begin
   RegisterActions('DSDLib', [TdsdChangeMovementStatus], TdsdChangeMovementStatus);
+  RegisterActions('DSDLib', [TdsdChoiceGuides],   TdsdChoiceGuides);
   RegisterActions('DSDLib', [TdsdDataSetRefresh], TdsdDataSetRefresh);
   RegisterActions('DSDLib', [TdsdExecStoredProc], TdsdExecStoredProc);
-  RegisterActions('DSDLib', [TdsdOpenForm], TdsdOpenForm);
-  RegisterActions('DSDLib', [TdsdFormClose], TdsdFormClose);
+  RegisterActions('DSDLib', [TdsdFormClose],      TdsdFormClose);
+  RegisterActions('DSDLib', [TdsdGridToExcel],    TdsdGridToExcel);
   RegisterActions('DSDLib', [TdsdInsertUpdateAction], TdsdInsertUpdateAction);
+  RegisterActions('DSDLib', [TdsdOpenForm],       TdsdOpenForm);
   RegisterActions('DSDLib', [TdsdUpdateErased], TdsdUpdateErased);
-  RegisterActions('DSDLib', [TdsdChoiceGuides], TdsdChoiceGuides);
+  RegisterActions('DSDLib', [TdsdUpdateDataSet], TdsdUpdateDataSet);
 end;
 
 { TdsdCustomDataSetAction }
@@ -193,6 +230,11 @@ constructor TdsdCustomDataSetAction.Create(AOwner: TComponent);
 begin
   inherited;
   FStoredProcList := TdsdStoredProcList.Create(TdsdStoredProcItem);
+end;
+
+procedure TdsdCustomDataSetAction.DataSetChanged;
+begin
+
 end;
 
 function TdsdCustomDataSetAction.Execute: boolean;
@@ -227,6 +269,11 @@ begin
     if StoredProcList.Count > 0 then
        StoredProcList.Delete(0);
   end;
+end;
+
+procedure TdsdCustomDataSetAction.UpdateData;
+begin
+
 end;
 
 { TdsdDataSetRefresh }
@@ -277,8 +324,9 @@ end;
 
 procedure TdsdInsertUpdateAction.BeforeExecute;
 begin
+
   // Ставим у формы CallBack на событие закрытия формы
-  Form.OnClose := OnFormClose;
+ // Form.OnClose := OnFormClose;
   FForm := Form;
 end;
 
@@ -311,7 +359,6 @@ end;
 
 procedure TdsdInsertUpdateAction.OnFormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  Action := caFree;
   // Событие вызывается в момент закрытия формы добавления изменения справочника.
   // Необходимо в таком случае перечитать запрос и отпозиционироваться в нем
   DataSetRefresh.Execute;
@@ -324,6 +371,11 @@ end;
 procedure TdsdInsertUpdateAction.SetDataSource(const Value: TDataSource);
 begin
   FActionDataLink.DataSource := Value;
+end;
+
+procedure TdsdInsertUpdateAction.UpdateData;
+begin
+
 end;
 
 { TActionDataLink }
@@ -339,6 +391,13 @@ begin
   inherited;
   if Assigned(FAction) then
      FAction.DataSetChanged;
+end;
+
+procedure TDataSetDataLink.UpdateData;
+begin
+  inherited;
+  if Assigned(FAction) then
+     FAction.UpdateData;
 end;
 
 { TdsdUpdateErased }
@@ -475,17 +534,56 @@ begin
   result := FActionDataLink.DataSource;
 end;
 
-procedure TdsdChangeMovementStatus.Notification(AComponent: TComponent;
-  Operation: TOperation);
-begin
-  inherited Notification(AComponent, Operation);
-  if (Operation = opRemove) and (AComponent = FDataSource) then
-     FDataSource := nil;
-end;
-
 procedure TdsdChangeMovementStatus.SetDataSource(const Value: TDataSource);
 begin
   FActionDataLink.DataSource := Value;
+end;
+
+{ TdsdUpdateDataSet }
+
+constructor TdsdUpdateDataSet.Create(AOwner: TComponent);
+begin
+  inherited;
+  FDataSetDataLink := TDataSetDataLink.Create(Self);
+end;
+
+function TdsdUpdateDataSet.GetDataSource: TDataSource;
+begin
+  result := FDataSetDataLink.DataSource;
+end;
+
+procedure TdsdUpdateDataSet.SetDataSource(const Value: TDataSource);
+begin
+  FDataSetDataLink.DataSource := Value;
+end;
+
+procedure TdsdUpdateDataSet.UpdateData;
+begin
+  Execute;
+end;
+
+{ TdsdGridToExcel }
+
+constructor TdsdGridToExcel.Create(AOwner: TComponent);
+begin
+  inherited;
+  Caption := 'Выгрузка в Excel';
+  Hint := 'Выгрузка в Excel';
+  ShortCut := TextToShortCut('Ctrl+X');
+end;
+
+function TdsdGridToExcel.Execute: boolean;
+begin
+  ExportGridToExcel('#$#$#$.xls', FGrid);
+  ShellExecute(Application.Handle, 'open', PWideChar('#$#$#$.xls'), nil, nil, SW_SHOWNORMAL);
+end;
+
+procedure TdsdGridToExcel.Notification(AComponent: TComponent;
+  Operation: TOperation);
+begin
+  inherited Notification(AComponent, Operation);
+  if (Operation = opRemove) and (AComponent = FGrid) then
+     FGrid := nil;
 end;
 
 end.

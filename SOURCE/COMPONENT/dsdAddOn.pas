@@ -2,7 +2,7 @@ unit dsdAddOn;
 
 interface
 
-uses Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView, cxTextEdit;
+uses Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView, cxTextEdit, DB, dsdAction;
 
 type
 

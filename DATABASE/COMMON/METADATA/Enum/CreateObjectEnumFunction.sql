@@ -58,3 +58,9 @@ $BODY$BEGIN
   RETURN 4001;
 END;  $BODY$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION zc_Object_Account_CreditorsSupplierMeat()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 4002;
+END;  $BODY$ LANGUAGE plpgsql;
+

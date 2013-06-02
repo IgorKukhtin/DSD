@@ -10,7 +10,9 @@ CREATE OR REPLACE FUNCTION gpComplete_Movement_Income(
 $BODY$
   DECLARE AccountId Integer;
   DECLARE UnitId Integer;
+  DECLARE JuridicalId Integer;
   DECLARE OperDate TDateTime;
+  DECLARE MovementSumm TFloat;
 BEGIN
   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Measure());
   
@@ -33,8 +35,8 @@ BEGIN
   FROM Movement 
  WHERE Movement.Id = inMovementId;
 
-  PERFORM lpInsertUpdate_MovementItemContainer(0, zc_MovementItemContainer_Money(), inMovementId,
-                                               lpget_containerid(zc_Container_Money(), AccountId, 
+  PERFORM lpInsertUpdate_MovementItemContainer(0, zc_MovementItemContainer_Summ(), inMovementId,
+                                               lpget_containerid(zc_Container_Summ(), AccountId, 
                                                                  UnitId, zc_ContainerLinkObject_Unit(), 
                                                                  MovementItem.ObjectId, zc_ContainerLinkObject_Goods()),
                                                MovementItem.Amount * MovementItemFloat_Price.ValueData,
@@ -44,8 +46,45 @@ BEGIN
 LEFT JOIN MovementItemFloat AS MovementItemFloat_Price
        ON MovementItemFloat_Price.MovementItemId = MovementItem.Id AND MovementItemFloat_Price.DescId = zc_MovementItemFloat_Price()
     WHERE MovementId = inMovementId; 
-  
+
+  -- Делаем товарный проводки
+
+  PERFORM lpInsertUpdate_MovementItemContainer(0, zc_MovementItemContainer_Count(), inMovementId,
+                                               lpget_containerid(zc_Container_Count(), AccountId, 
+                                                                 UnitId, zc_ContainerLinkObject_Unit(), 
+                                                                 MovementItem.ObjectId, zc_ContainerLinkObject_Goods()),
+                                               MovementItem.Amount,
+                                               OperDate)
+     FROM 
+          MovementItem 
+    WHERE MovementId = inMovementId; 
+ 
   -- Делаем проводки по счету задолженности
+  -- Нашли счет 
+  AccountId := zc_Object_Account_CreditorsSupplierMeat();
+
+  -- Определили юр лицо
+  SELECT 
+    MovementLink_From.ObjectId INTO JuridicalId
+  FROM MovementLinkObject AS MovementLink_From 
+ WHERE MovementLink_From.DescId = zc_MovementLink_From()
+   AND MovementLink_From.MovementId = inMovementId;
+
+     SELECT
+       SUM(MovementItem.Amount * MovementItemFloat_Price.ValueData) INTO MovementSumm
+     FROM 
+          MovementItem 
+LEFT JOIN MovementItemFloat AS MovementItemFloat_Price
+       ON MovementItemFloat_Price.MovementItemId = MovementItem.Id AND MovementItemFloat_Price.DescId = zc_MovementItemFloat_Price()
+    WHERE MovementId = inMovementId; 
+
+
+  PERFORM lpInsertUpdate_MovementItemContainer(0, zc_MovementItemContainer_Summ(), inMovementId,
+                                               lpget_containerid(zc_Container_Summ(), AccountId, 
+                                                                 JuridicalId, zc_ContainerLinkObject_Juridical()),
+                                               - MovementSumm,
+                                               OperDate);
+
 
   -- Обязательно меняем статус документа
   UPDATE Movement SET StatusId = zc_Object_Status_Complete() WHERE Id = inMovementId;

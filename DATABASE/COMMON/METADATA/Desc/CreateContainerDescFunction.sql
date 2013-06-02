@@ -1,5 +1,11 @@
-CREATE OR REPLACE FUNCTION zc_Container_Money()
+CREATE OR REPLACE FUNCTION zc_Container_Count()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 1;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_Container_Summ()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 2;
 END;  $BODY$ LANGUAGE plpgsql;

@@ -21,6 +21,7 @@ type
     procedure CreateMovementItemContainerProcedure;
     procedure CreateObjectProcedure;
     procedure CreateProtocolProcedure;
+    procedure CreateReportProcedure;
   end;
 
 
@@ -30,6 +31,7 @@ uses zLibUtil;
 
 const
   ProcedurePath = '..\DATABASE\COMMON\PROCEDURE\';
+  ReportsPath = '..\DATABASE\COMMON\REPORTS\';
 
 { TdbProcedureTest }
 
@@ -356,7 +358,13 @@ procedure TdbProcedureTest.CreateProtocolProcedure;
 begin
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'Protocol\lpInsert_ObjectProtocol.sql');
   ZQuery.ExecSQL;
-           end;
+end;
+
+procedure TdbProcedureTest.CreateReportProcedure;
+begin
+  ZQuery.SQL.LoadFromFile(ReportsPath + 'gpReport_Balance.sql');
+  ZQuery.ExecSQL;
+end;
 
 procedure TdbProcedureTest.SetUp;
 begin

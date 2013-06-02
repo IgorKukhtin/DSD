@@ -58,6 +58,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbReports'
+        end
+        item
+          Visible = True
           ItemName = 'bbExit'
         end>
       MultiLine = True
@@ -228,6 +232,20 @@ object MainForm: TMainForm
       Action = actGoodsKind
       Category = 0
     end
+    object bbBalance: TdxBarButton
+      Action = actBalance
+      Category = 0
+    end
+    object bbReports: TdxBarSubItem
+      Caption = #1054#1090#1095#1077#1090#1099
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbBalance'
+        end>
+    end
   end
   object ActionList: TActionList
     Left = 192
@@ -387,6 +405,13 @@ object MainForm: TMainForm
       Caption = #1042#1072#1083#1102#1090#1099
       Hint = #1042#1072#1083#1102#1090#1099
       FormName = 'TCurrencyForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actBalance: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      Caption = #1041#1072#1083#1072#1085#1089
+      FormName = 'TBalanceForm'
       GuiParams = <>
       isShowModal = False
     end

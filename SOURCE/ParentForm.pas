@@ -11,8 +11,10 @@ type
   private
     FParams: TdsdParams;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   public
     { Public declarations }
+    constructor CreateNew(AOwner: TComponent; Dummy: Integer = 0); override;
     property Params: TdsdParams read FParams;
     procedure Execute(Params: TdsdParams);
   end;
@@ -28,11 +30,17 @@ uses UtilConst, cxPropertiesStore, cxControls, cxContainer, cxEdit, cxGroupBox,
 
 {$R *.dfm}
 
+constructor TParentForm.CreateNew(AOwner: TComponent; Dummy: Integer = 0);
+begin
+  inherited;
+  onKeyDown := FormKeyDown;
+  onClose := FormClose;
+end;
+
 procedure TParentForm.Execute(Params: TdsdParams);
 var
   i: integer;
 begin
-  onKeyDown := FormKeyDown;
   // Заполняет параметры формы переданными параметрами
   for I := 0 to ComponentCount - 1 do
     if Components[i] is TdsdFormParams then begin
@@ -47,6 +55,11 @@ begin
     if Components[i] is TcxPropertiesStore then
        (Components[i] as TcxPropertiesStore).RestoreFrom;
   end;
+end;
+
+procedure TParentForm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Action := caFree;
 end;
 
 procedure TParentForm.FormKeyDown(Sender: TObject; var Key: Word;
@@ -98,10 +111,12 @@ initialization
   RegisterClass (TdsdExecStoredProc);
   RegisterClass (TdsdFormClose);
   RegisterClass (TdsdFormParams);
+  RegisterClass (TdsdGridToExcel);
   RegisterClass (TdsdGuides);
   RegisterClass (TdsdInsertUpdateAction);
   RegisterClass (TdsdOpenForm);
   RegisterClass (TdsdStoredProc);
+  RegisterClass (TdsdUpdateDataSet);
   RegisterClass (TdsdUpdateErased);
 
 end.

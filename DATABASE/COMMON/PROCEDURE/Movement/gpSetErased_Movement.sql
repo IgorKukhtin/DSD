@@ -10,6 +10,9 @@ CREATE OR REPLACE FUNCTION gpSetErased_Movement(
 $BODY$BEGIN
 --   PERFORM lpCheckRight(inSession, zc_Enum_Process_Measure());
 
+  -- Удаляем все проводки
+  PERFORM lpDelete_MovementItemContainer(inMovementId);
+
   -- Обязательно меняем статус документа
   UPDATE Movement SET StatusId = zc_Object_Status_Erased() WHERE Id = inMovementId;
 

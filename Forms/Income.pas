@@ -58,6 +58,10 @@ type
     colDebetAmount: TcxGridDBColumn;
     EntryCDS: TClientDataSet;
     EntryDS: TDataSource;
+    colKreditAccountName: TcxGridDBColumn;
+    colKreditAmount: TcxGridDBColumn;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    spInsertUpdateMovementItem: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -23,6 +23,7 @@ BEGIN
    
    -- Будем вставлять счета   
    PERFORM lpInsertUpdate_Object(zc_Object_Account_InventoryStoreEmpties(), zc_Object_Account(), 1, 'Запасы\на складахГП\Оборотная тара');
+   PERFORM lpInsertUpdate_Object(zc_Object_Account_CreditorsSupplierMeat(), zc_Object_Account(), 1, 'Кредиторы\поставщики\Мясное сырье');
 
    -- Увеличиваем последовательность
    PERFORM setval('object_id_seq', (select max( id ) + 1 from Object));

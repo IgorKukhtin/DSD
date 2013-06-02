@@ -6,8 +6,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Income(
 IN inMovementId          Integer,       
 IN inShowAll             Boolean,
 IN inSession             TVarChar       /* текущий пользователь */)
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Amount TFloat, isErased boolean, 
-               Price TFloat, Summ TFloat) AS
+RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat, 
+               Price TFloat, Summ TFloat, isErased boolean) AS
 $BODY$BEGIN
 
    --PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
@@ -16,13 +16,14 @@ $BODY$BEGIN
 
      RETURN QUERY 
      SELECT 
-       MovementItem.ObjectId,
-       Object_Goods.ObjectCode  AS Code,
-       Object_Goods.ValueData   AS Name,
+       MovementItem.Id,
+       Object_Goods.Id          AS GoodsId,
+       Object_Goods.ObjectCode  AS GoodsCode,
+       Object_Goods.ValueData   AS GoodsName,
        MovementItem.Amount,
-       MovementItem.isErased,
        MovementItemFloat_Price.ValueData AS Price,
-       CAST (MovementItem.Amount * MovementItemFloat_Price.ValueData AS TFloat) AS AmountSumm
+       CAST (MovementItem.Amount * MovementItemFloat_Price.ValueData AS TFloat) AS AmountSumm,
+       MovementItem.isErased
      FROM Object AS Object_Goods
 LEFT JOIN MovementItem
        ON MovementItem.ObjectId = Object_Goods.Id 
@@ -52,13 +53,14 @@ LEFT JOIN MovementItemFloat AS MovementItemFloat_HeadCount
   
      RETURN QUERY 
      SELECT 
-       MovementItem.ObjectId,
+       MovementItem.Id,
+       Object_Goods.Id          AS GoodsId,
        Object_Goods.ObjectCode  AS GoodsCode,
        Object_Goods.ValueData   AS GoodsName,
        MovementItem.Amount,
-       MovementItem.isErased,
        MovementItemFloat_Price.ValueData AS Price,
-       CAST (MovementItem.Amount * MovementItemFloat_Price.ValueData AS TFloat) AS AmountSumm
+       CAST (MovementItem.Amount * MovementItemFloat_Price.ValueData AS TFloat) AS AmountSumm,
+       MovementItem.isErased
      FROM MovementItem
 LEFT JOIN Object AS Object_Goods
        ON Object_Goods.Id = MovementItem.ObjectId

@@ -5,10 +5,13 @@ IN inMovementId integer)
   RETURNS void AS
 $BODY$BEGIN
    /* изменить количество остатка */
-  UPDATE Container SET Amount = Container.Amount - MovementItemContainer.Amount 
-  FROM MovementItemContainer
-  WHERE Container.Id = MovementItemContainer.ContainerId
-    AND MovementItemContainer.MovementId = inMovementId;
+  UPDATE Container SET amount = Container.Amount - Oper.Amount
+  FROM (SELECT SUM(MovementItemContainer.Amount) AS Amount,
+               MovementItemContainer.ContainerId
+        FROM MovementItemContainer
+        WHERE MovementItemContainer.MovementId = inMovementId
+     GROUP BY MovementItemContainer.ContainerId) AS Oper
+   WHERE Oper.ContainerId = Container.id;
 
    /* Удалить все проводки */
    DELETE FROM MovementItemContainer WHERE MovementId = inMovementId;

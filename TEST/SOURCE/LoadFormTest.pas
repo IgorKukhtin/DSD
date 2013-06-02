@@ -38,6 +38,7 @@ type
     procedure LoadCashFormTest;
     procedure LoadCurrencyFormTest;
     procedure LoadIncomeFormTest;
+    procedure LoadReportFormTest;
   end;
 
 implementation
@@ -210,6 +211,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPriceListForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListEditForm');
+end;
+
+procedure TLoadFormTest.LoadReportFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBalanceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBalanceForm');
 end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
