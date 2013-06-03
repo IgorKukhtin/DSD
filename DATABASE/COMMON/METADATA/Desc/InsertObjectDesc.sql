@@ -117,3 +117,9 @@ SELECT zc_Object_ProfitLossDirection(), 'ProfitLossDirection', 'Группы отчета по
 
 insert into ObjectDesc(Id, Code, ItemName)
 SELECT zc_Object_ProfitLoss(), 'ProfitLoss', 'Отчеты по прибылям' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_ProfitLoss());
+
+insert into ObjectDesc(Id, Code, ItemName)
+SELECT zc_Object_Route(), 'Route', 'Маршруты' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_Route());
+
+insert into ObjectDesc(Id, Code, ItemName)
+SELECT zc_Object_RouteSorting(), 'RouteSorting', 'Сортировки маршрутов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_RouteSorting());
