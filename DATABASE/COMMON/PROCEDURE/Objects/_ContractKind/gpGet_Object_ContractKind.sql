@@ -3,8 +3,9 @@
 --DROP FUNCTION gpGet_Object_ContractKind();
 
 CREATE OR REPLACE FUNCTION gpGet_Object_ContractKind(
-IN inId          Integer,       /* Виды договоров */
-IN inSession     TVarChar       /* текущий пользователь */)
+    IN inId          Integer,       -- Виды договоров
+    IN inSession     TVarChar       -- текущий пользователь 
+)
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
 $BODY$BEGIN
 

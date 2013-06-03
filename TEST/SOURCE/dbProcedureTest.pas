@@ -352,6 +352,12 @@ begin
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_UnitGroup\gpGet_Object_UnitGroup.sql');
   ZQuery.ExecSQL;
 
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Route\gpInsertUpdate_Object_Route.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Route\gpSelect_Object_Route.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Route\gpGet_Object_Route.sql');
+  ZQuery.ExecSQL;
 end;
 
 procedure TdbProcedureTest.CreateProtocolProcedure;

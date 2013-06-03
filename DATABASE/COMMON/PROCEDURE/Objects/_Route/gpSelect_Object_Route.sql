@@ -1,0 +1,38 @@
+-- Function: gpSelect_Object_Route()
+
+-- DROP FUNCTION gpSelect_Object_Route (TVarChar);
+
+CREATE OR REPLACE FUNCTION gpSelect_Object_Route(
+    IN inSession        TVarChar       -- сессия пользователя
+)
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean) AS
+$BODY$BEGIN
+
+   -- проверка прав пользователя на вызов процедуры
+   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Route());
+
+   RETURN QUERY 
+   SELECT
+     Object.Id
+   , Object.ObjectCode
+   , Object.ValueData
+   , Object.isErased
+   FROM Object
+   WHERE Object.DescId = zc_Object_Route();
+  
+END;$BODY$
+
+LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpSelect_Object_Route (TVarChar) OWNER TO postgres;
+
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.06.13          *
+
+*/
+
+-- тест
+-- SELECT * FROM gpSelect_Object_Route('2')

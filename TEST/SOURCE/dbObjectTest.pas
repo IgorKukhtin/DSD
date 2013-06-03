@@ -46,6 +46,7 @@ type
     procedure JuridicalGroup_Test;
     procedure Juridical_Test;
     procedure User_Test;
+    procedure Route_Test;
   end;
 
   TCashTest = class(TObjectTest)
@@ -110,6 +111,14 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdateJuridicalGroup(const Id, Code: Integer; Name: string; JuridicalGroupId: integer): integer;
+    constructor Create; override;
+  end;
+
+  TRouteTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  public
+    function InsertUpdateRoute(const Id, Code: Integer; Name: string): integer;
     constructor Create; override;
   end;
 
@@ -455,6 +464,31 @@ begin
   result := InsertUpdate(FParams);
 end;
 
+  {TRouteTest }
+constructor TRouteTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_Route';
+  spSelect := 'gpSelect_Object_Route';
+  spGet := 'gpGet_Object_Route';
+end;
+
+function TRouteTest.InsertDefault: integer;
+begin
+  result := InsertUpdateRoute(0, 1, 'Маршрут');
+end;
+
+function TRouteTest.InsertUpdateRoute(const Id, Code: Integer;
+  Name: string): integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  result := InsertUpdate(FParams);
+end;
+
+
 { TJuridicalTest }
 
 constructor TJuridicalTest.Create;
@@ -580,6 +614,26 @@ begin
     // Получение данных о юр лице
     with ObjectTest.GetRecord(Id) do
       Check((FieldByName('InvNumber').AsString = '123456'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+
+  finally
+    DeleteObject(Id);
+  end;
+end;
+
+procedure TdbObjectTest.Route_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TRouteTest;
+begin
+  ObjectTest := TRouteTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка юр лица
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных о маршруте
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Маршрут'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
 
   finally
     DeleteObject(Id);
