@@ -47,6 +47,7 @@ type
     procedure Juridical_Test;
     procedure User_Test;
     procedure Route_Test;
+    procedure RouteSorting_Test;
   end;
 
   TCashTest = class(TObjectTest)
@@ -119,6 +120,14 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdateRoute(const Id, Code: Integer; Name: string): integer;
+    constructor Create; override;
+  end;
+
+  TRouteSortingTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  public
+    function InsertUpdateRouteSorting(const Id, Code: Integer; Name: string): integer;
     constructor Create; override;
   end;
 
@@ -488,6 +497,29 @@ begin
   result := InsertUpdate(FParams);
 end;
 
+  {TRouteSortingTest }
+constructor TRouteSortingTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_RouteSorting';
+  spSelect := 'gpSelect_Object_RouteSorting';
+  spGet := 'gpGet_Object_RouteSorting';
+end;
+
+function TRouteSortingTest.InsertDefault: integer;
+begin
+  result := InsertUpdateRouteSorting(0, 1, 'Сортировка маршрутов');
+end;
+
+function TRouteSortingTest.InsertUpdateRouteSorting(const Id, Code: Integer;
+  Name: string): integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  result := InsertUpdate(FParams);
+end;
 
 { TJuridicalTest }
 
@@ -634,6 +666,26 @@ begin
     // Получение данных о маршруте
     with ObjectTest.GetRecord(Id) do
       Check((FieldByName('Name').AsString = 'Маршрут'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+
+  finally
+    DeleteObject(Id);
+  end;
+end;
+
+procedure TdbObjectTest.RouteSorting_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TRouteSortingTest;
+begin
+  ObjectTest := TRouteSortingTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка юр лица
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных о сортировке маршрута
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Сортировка маршрутов'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
 
   finally
     DeleteObject(Id);
