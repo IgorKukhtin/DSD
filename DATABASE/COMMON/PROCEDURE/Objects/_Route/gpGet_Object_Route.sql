@@ -1,4 +1,4 @@
--- Function: gpGet_Object_Route()
+-- Function: gpGet_Object_Route (Integer, TVarChar)
 
 -- DROP FUNCTION gpGet_Object_Route (Integer, TVarChar);
 
@@ -15,7 +15,7 @@ $BODY$BEGIN
    RETURN QUERY
    SELECT
       Object.Id
-    , Object.ObjectCode
+    , Object.ObjectCode AS Code
     , Object.ValueData AS Name
     , Object.isErased
    FROM Object 

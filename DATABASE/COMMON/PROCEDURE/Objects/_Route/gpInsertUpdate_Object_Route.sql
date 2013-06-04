@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_Route()
 
--- DROP FUNCTION gpInsertUpdate_Object_Route (Integer, TVarChar, TVarChar, TVarChar);
+-- DROP FUNCTION gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Route(
  INOUT ioId             Integer,       -- Ключ объекта <маршрут>
@@ -13,13 +13,14 @@ $BODY$
    DECLARE UserId Integer;
 BEGIN
 
-
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Route());
    UserId := inSession;
 
-   -- проверка прав уникальности для свойства <Маршрут>
-   PERFORM lpCheckUnique_ObjectString_ValueData (ioId, zc_Object_Route(), inName);
+   -- проверка прав уникальности для свойства <Наименование Маршрута>
+   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Route(), inName);
+   -- проверка прав уникальности для свойства <Код маршрута>
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Route(), inCode);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Route(), inCode, inName);

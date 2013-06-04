@@ -1,4 +1,4 @@
--- Function: gpSelect_Object_Route()
+-- Function: gpSelect_Object_Route (TVarChar)
 
 -- DROP FUNCTION gpSelect_Object_Route (TVarChar);
 
@@ -14,8 +14,8 @@ $BODY$BEGIN
    RETURN QUERY 
    SELECT
      Object.Id
-   , Object.ObjectCode
-   , Object.ValueData
+   , Object.ObjectCode AS Code
+   , Object.ValueData AS Name
    , Object.isErased
    FROM Object
    WHERE Object.DescId = zc_Object_Route();
