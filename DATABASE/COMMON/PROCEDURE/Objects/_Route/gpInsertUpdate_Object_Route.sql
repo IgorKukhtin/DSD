@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Object_Route()
+-- Function: gpInsertUpdate_Object_Route(Integer, Integer, TVarChar, TVarChar)
 
 -- DROP FUNCTION gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, TVarChar);
 
@@ -25,7 +25,7 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Route(), inCode, inName);
    
-      -- сохранили протокол
+   -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, UserId);
 
 END;$BODY$
