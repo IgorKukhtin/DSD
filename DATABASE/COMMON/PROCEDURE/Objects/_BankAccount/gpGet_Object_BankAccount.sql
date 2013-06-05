@@ -1,17 +1,19 @@
-﻿-- Function: gpGet_Object_Account()
+﻿-- Function: gpGet_Object_Account(Integer,TVarChar)
 
---DROP FUNCTION gpGet_Object_BankAccount();
+--DROP FUNCTION gpGet_Object_BankAccount(Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_BankAccount(
-IN inId          Integer,       /* Банки */
-IN inSession     TVarChar       /* текущий пользователь */)
+    IN inId          Integer,       -- ключ объекта <Счета>
+    IN inSession     TVarChar       -- сессия пользователя
+)
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
                JuridicalId Integer, JuridicalName TVarChar,
                BankId Integer, BankName TVarChar,
                CurrencyId Integer, CurrencyName TVarChar) AS
 $BODY$BEGIN
 
---   PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
+   -- проверка прав пользователя на вызов процедуры
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
      RETURN QUERY 
      SELECT 
@@ -41,10 +43,21 @@ LEFT JOIN Object AS Currency
     WHERE Object.Id = inId;
   
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE
+
+LANGUAGE plpgsql VOLATILE
   COST 100
   ROWS 1000;
 ALTER FUNCTION gpGet_Object_BankAccount(integer, TVarChar)
   OWNER TO postgres;
 
--- SELECT * FROM gpSelect_User('2')
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.06.13          
+
+*/
+
+-- тест
+-- SELECT * FROM gpGet_Object_BankAccount(1,'2')
