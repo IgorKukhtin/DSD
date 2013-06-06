@@ -1,8 +1,7 @@
 unit dbObjectTest;
 
 interface
-uses TestFramework, Authentication, ZConnection, ZDataset, ZStoredProcedure,
-     Db, XMLIntf, dsdDB;
+uses TestFramework, Authentication, Db, XMLIntf, dsdDB;
 
 type
 
@@ -45,8 +44,9 @@ type
     procedure GoodsPropertyValue_Test;
     procedure JuridicalGroup_Test;
     procedure Juridical_Test;
-    procedure User_Test;
+    procedure PriceList_Test;
     procedure Route_Test;
+    procedure User_Test;
   end;
 
   TCashTest = class(TObjectTest)
@@ -111,6 +111,14 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdateJuridicalGroup(const Id, Code: Integer; Name: string; JuridicalGroupId: integer): integer;
+    constructor Create; override;
+  end;
+
+  TPriceListTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  public
+    function InsertUpdatePriceList(const Id, Code: Integer; Name: string): integer;
     constructor Create; override;
   end;
 
@@ -600,6 +608,11 @@ begin
   end;
 end;
 
+procedure TdbObjectTest.PriceList_Test;
+begin
+
+end;
+
 procedure TdbObjectTest.Contract_Test;
 var Id: integer;
     RecordCount: Integer;
@@ -762,6 +775,31 @@ begin
   FParams.AddParam('inUnitGroupId', ftInteger, ptInput, UnitGroupId);
   FParams.AddParam('inBranchId', ftInteger, ptInput, BranchId);
 
+  result := InsertUpdate(FParams);
+end;
+
+{ TPriceListTest }
+
+constructor TPriceListTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_PriceList';
+  spSelect := 'gpSelect_Object_PriceList';
+  spGet := 'gpGet_Object_PriceList';
+end;
+
+function TPriceListTest.InsertDefault: integer;
+begin
+  result := InsertUpdatePriceList(0, 1, 'Прайс-лист');
+end;
+
+function TPriceListTest.InsertUpdatePriceList(const Id, Code: Integer;
+  Name: string): integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
   result := InsertUpdate(FParams);
 end;
 

@@ -97,8 +97,81 @@ inherited BalanceForm: TBalanceForm
     Top = 144
   end
   object cxPropertiesStore: TcxPropertiesStore
-    Components = <>
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end
+      item
+        Component = cxGridDBTableViewColumn1
+        Properties.Strings = (
+          'SortIndex'
+          'SortOrder'
+          'Visible'
+          'Width')
+      end
+      item
+        Component = cxGridDBTableViewColumn2
+        Properties.Strings = (
+          'SortIndex'
+          'SortOrder'
+          'Visible'
+          'Width')
+      end
+      item
+        Component = cxGridDBTableViewColumn3
+        Properties.Strings = (
+          'SortIndex'
+          'SortOrder'
+          'Visible'
+          'Width')
+      end
+      item
+        Component = cxGridDBTableViewColumn4
+        Properties.Strings = (
+          'SortIndex'
+          'SortOrder'
+          'Visible'
+          'Width')
+      end
+      item
+        Component = cxGridDBTableViewColumn5
+        Properties.Strings = (
+          'SortIndex'
+          'SortOrder'
+          'Visible'
+          'Width')
+      end
+      item
+        Component = cxGridDBTableViewColumn6
+        Properties.Strings = (
+          'SortIndex'
+          'SortOrder'
+          'Visible'
+          'Width')
+      end
+      item
+        Component = cxGridDBTableViewColumn7
+        Properties.Strings = (
+          'SortIndex'
+          'SortOrder'
+          'Visible'
+          'Width')
+      end
+      item
+        Component = cxGridDBTableViewColumn8
+        Properties.Strings = (
+          'SortIndex'
+          'SortOrder'
+          'Visible'
+          'Width')
+      end>
     StorageName = 'cxPropertiesStore'
+    StorageType = stStream
     Left = 232
     Top = 96
   end

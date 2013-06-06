@@ -123,3 +123,6 @@ SELECT zc_Object_Route(), 'Route', 'Маршруты' WHERE NOT EXISTS (SELECT * FROM Ob
 
 insert into ObjectDesc(Id, Code, ItemName)
 SELECT zc_Object_RouteSorting(), 'RouteSorting', 'Сортировки маршрутов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_RouteSorting());
+
+insert into ObjectDesc(Id, Code, ItemName)
+SELECT zc_Object_UserFormSettings(), 'UserFormSettings', 'Пользовательские установки' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_UserFormSettings());

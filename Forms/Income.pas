@@ -11,7 +11,7 @@ uses
   cxGridDBTableView, cxGrid, Datasnap.DBClient, Vcl.ActnList, dsdAction,
   cxPropertiesStore, dxBar, Vcl.ExtCtrls, cxContainer, cxLabel, cxTextEdit,
   Vcl.ComCtrls, dxCore, cxDateUtils, cxButtonEdit, cxMaskEdit, cxDropDownEdit,
-  cxCalendar, dsdGuides, Vcl.Menus, cxPCdxBarPopupMenu, cxPC;
+  cxCalendar, dsdGuides, Vcl.Menus, cxPCdxBarPopupMenu, cxPC, frxClass, frxDBSet;
 
 type
   TIncomeForm = class(TParentForm)
@@ -62,6 +62,9 @@ type
     colKreditAmount: TcxGridDBColumn;
     actUpdateDataSet: TdsdUpdateDataSet;
     spInsertUpdateMovementItem: TdsdStoredProc;
+    actPrint: TdsdPrintAction;
+    bbPrint: TdxBarButton;
+    frxDBDataset: TfrxDBDataset;
   private
     { Private declarations }
   public

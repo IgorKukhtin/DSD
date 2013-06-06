@@ -28,8 +28,8 @@ type
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     cxDBTreeList1: TcxDBTreeList;
-    cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn;
-    cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn;
+    colCode: TcxDBTreeListColumn;
+    colName: TcxDBTreeListColumn;
   private
     { Private declarations }
   public

@@ -189,3 +189,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_InfoMoney()
 $BODY$BEGIN
   RETURN 30;
 END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_UserFormSettings_User()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 31;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_UserFormSettings_Form()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 32;
+END;  $BODY$ LANGUAGE plpgsql;

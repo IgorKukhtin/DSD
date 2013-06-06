@@ -20,7 +20,9 @@ BEGIN
 
    PERFORM lpCheckUnique_Object_ValueData(Id, zc_Object_Form(), inFormName);
 
-   Id := lpInsertUpdate_Object(Id, zc_Object_Form(), 0, inFormName);
+   IF COALESCE(Id, 0) = 0 THEN
+      Id := lpInsertUpdate_Object(Id, zc_Object_Form(), 0, inFormName);
+   END IF;
 
    PERFORM lpInsertUpdate_ObjectBLOB(zc_ObjectBlob_Form_Data(), Id, inFormData);
    

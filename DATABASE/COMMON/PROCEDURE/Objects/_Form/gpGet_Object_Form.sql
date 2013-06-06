@@ -16,9 +16,9 @@ BEGIN
    SELECT 
        ObjectBLOB_FormData.ValueData INTO Data
    FROM Object
-   LEFT JOIN ObjectBLOB AS ObjectBLOB_FormData 
-          ON ObjectBLOB_FormData.DescId = zc_ObjectBlob_Form_Data() 
-         AND ObjectBLOB_FormData.ObjectId = Object.Id
+   JOIN ObjectBLOB AS ObjectBLOB_FormData 
+     ON ObjectBLOB_FormData.DescId = zc_ObjectBlob_Form_Data() 
+    AND ObjectBLOB_FormData.ObjectId = Object.Id
    WHERE Object.ValueData = inFormName AND Object.DescId = zc_Object_Form();
     
    RETURN DATA; 

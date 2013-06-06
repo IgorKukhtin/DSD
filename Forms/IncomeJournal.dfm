@@ -104,14 +104,14 @@ inherited IncomeJournalForm: TIncomeJournalForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 96
-    Top = 96
+    Left = 24
+    Top = 136
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 96
-    Top = 144
+    Left = 64
+    Top = 136
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -159,8 +159,9 @@ inherited IncomeJournalForm: TIncomeJournalForm
           'Width')
       end>
     StorageName = 'cxPropertiesStore'
-    Left = 232
-    Top = 96
+    StorageType = stStream
+    Left = 8
+    Top = 32
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -178,8 +179,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 152
-    Top = 88
+    Left = 40
+    Top = 32
     DockControlHeights = (
       0
       0
@@ -258,8 +259,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 232
-    Top = 144
+    Left = 72
+    Top = 32
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -368,8 +369,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
         ParamType = ptInput
         Value = '01.05.2014'
       end>
-    Left = 152
-    Top = 152
+    Left = 24
+    Top = 176
   end
   object spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Income'
@@ -383,13 +384,13 @@ inherited IncomeJournalForm: TIncomeJournalForm
         DataType = ftInteger
         ParamType = ptInput
       end>
-    Left = 152
-    Top = 208
+    Left = 64
+    Top = 232
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
-    Left = 288
-    Top = 160
+    Left = 104
+    Top = 32
     object N1: TMenuItem
       Action = actComplete
     end
@@ -409,8 +410,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
         DataType = ftInteger
         ParamType = ptInput
       end>
-    Left = 152
-    Top = 240
+    Left = 72
+    Top = 272
   end
   object spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement'
@@ -428,12 +429,12 @@ inherited IncomeJournalForm: TIncomeJournalForm
         DataType = ftInteger
         ParamType = ptInput
       end>
-    Left = 264
-    Top = 224
+    Left = 72
+    Top = 320
   end
-  object dsdDBFilterAddOn1: TdsdDBFilterAddOn
+  object dsdDBFilterAddOn: TdsdDBFilterAddOn
     View = cxGridDBTableView
-    Left = 424
-    Top = 160
+    Left = 464
+    Top = 144
   end
 end

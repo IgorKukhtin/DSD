@@ -53,7 +53,7 @@ type
     bbDelete: TdxBarButton;
     actSetErased: TdsdChangeMovementStatus;
     spMovementSetErased: TdsdStoredProc;
-    dsdDBFilterAddOn1: TdsdDBFilterAddOn;
+    dsdDBFilterAddOn: TdsdDBFilterAddOn;
   private
     { Private declarations }
   public

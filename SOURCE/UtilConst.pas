@@ -12,6 +12,8 @@ var FormatSettings: TFormatSettings;
     gc_DateStart: TDateTime;
     gc_DateEnd: TDateTime;
 
+    function ShiftDown : Boolean;
+
 const
 
   gc_isDebugMode: boolean = false; {режим отладки}
@@ -377,6 +379,16 @@ const
   {в данном листе хранятся те праметры, которые определяют пользовательские настройки}
 
 implementation
+uses Windows;
+
+ function ShiftDown : Boolean;
+ var
+    State : TKeyboardState;
+ begin
+    GetKeyboardState(State) ;
+    Result := ((State[vk_Shift] and 128) <> 0) ;
+ end;
+
 
 initialization
   with FormatSettings do begin

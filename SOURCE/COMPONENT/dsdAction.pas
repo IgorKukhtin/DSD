@@ -203,12 +203,27 @@ type
     property ShortCut;
   end;
 
+  // Действие печати
+  TdsdPrintAction = class(TdsdCustomDataSetAction)
+  private
+    FReportName: String;
+  public
+    function Execute: boolean; override;
+    constructor Create(AOwner: TComponent); override;
+  published
+    property ReportName: String read FReportName write FReportName;
+    property Caption;
+    property Hint;
+    property ImageIndex;
+    property ShortCut;
+  end;
+
   procedure Register;
 
 implementation
 
 uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
-     Vcl.Controls, Menus, cxGridExportLink, ShellApi;
+     Vcl.Controls, Menus, cxGridExportLink, ShellApi, frxClass, frxDesgn;
 
 procedure Register;
 begin
@@ -220,6 +235,7 @@ begin
   RegisterActions('DSDLib', [TdsdGridToExcel],    TdsdGridToExcel);
   RegisterActions('DSDLib', [TdsdInsertUpdateAction], TdsdInsertUpdateAction);
   RegisterActions('DSDLib', [TdsdOpenForm],       TdsdOpenForm);
+  RegisterActions('DSDLib', [TdsdPrintAction],    TdsdPrintAction);
   RegisterActions('DSDLib', [TdsdUpdateErased], TdsdUpdateErased);
   RegisterActions('DSDLib', [TdsdUpdateDataSet], TdsdUpdateDataSet);
 end;
@@ -584,6 +600,29 @@ begin
   inherited Notification(AComponent, Operation);
   if (Operation = opRemove) and (AComponent = FGrid) then
      FGrid := nil;
+end;
+
+{ TdsdPrintAction }
+
+
+constructor TdsdPrintAction.Create(AOwner: TComponent);
+begin
+  inherited;
+
+end;
+
+function TdsdPrintAction.Execute: boolean;
+begin
+  inherited;
+  with TfrxReport.Create(nil) do begin
+    LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport('Приходная накладная'));
+    if ShiftDown then
+       DesignReport
+    else begin
+       PrepareReport;
+       ShowReport;
+    end;
+  end;
 end;
 
 end.

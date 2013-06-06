@@ -81,7 +81,9 @@ uses
   IncomeJournal in '..\..\Forms\IncomeJournal.pas' {ParentForm2},
   dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas',
   dbMovementCompleteTest in '..\SOURCE\dbMovementCompleteTest.pas',
-  Balance in '..\..\Forms\Report\Balance.pas' {ParentForm1};
+  Balance in '..\..\Forms\Report\Balance.pas' {ParentForm1},
+  LoadReportTest in '..\SOURCE\LoadReportTest.pas',
+  dbObjectHistoryTest in '..\SOURCE\dbObjectHistoryTest.pas';
 
 {$R *.RES}
 

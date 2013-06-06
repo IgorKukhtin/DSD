@@ -249,3 +249,9 @@ CREATE OR REPLACE FUNCTION zc_Object_RouteSorting()
 $BODY$BEGIN
   RETURN 42;
 END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_Object_UserFormSettings()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 43;
+END;  $BODY$ LANGUAGE plpgsql;

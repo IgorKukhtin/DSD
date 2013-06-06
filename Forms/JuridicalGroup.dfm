@@ -22,20 +22,20 @@ inherited JuridicalGroupForm: TJuridicalGroupForm
     OptionsView.ColumnAutoWidth = True
     RootValue = -1
     TabOrder = 4
-    object cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn
-      Caption.Text = #1050#1086#1076
-      DataBinding.FieldName = 'Code'
-      Width = 100
+    object colName: TcxDBTreeListColumn
+      Caption.Text = #1053#1072#1079#1074#1072#1085#1080#1077
+      DataBinding.FieldName = 'Name'
+      Width = 300
       Position.ColIndex = 0
       Position.RowIndex = 0
       Position.BandIndex = 0
       Summary.FooterSummaryItems = <>
       Summary.GroupFooterSummaryItems = <>
     end
-    object cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn
-      Caption.Text = #1053#1072#1079#1074#1072#1085#1080#1077
-      DataBinding.FieldName = 'Name'
-      Width = 226
+    object colCode: TcxDBTreeListColumn
+      Caption.Text = #1050#1086#1076
+      DataBinding.FieldName = 'Code'
+      Width = 88
       Position.ColIndex = 1
       Position.RowIndex = 0
       Position.BandIndex = 0
@@ -55,8 +55,25 @@ inherited JuridicalGroupForm: TJuridicalGroupForm
     Top = 144
   end
   object cxPropertiesStore: TcxPropertiesStore
-    Components = <>
+    Components = <
+      item
+        Component = colCode
+        Properties.Strings = (
+          'SortIndex'
+          'SortOrder'
+          'Visible'
+          'Width')
+      end
+      item
+        Component = colName
+        Properties.Strings = (
+          'SortIndex'
+          'SortOrder'
+          'Visible'
+          'Width')
+      end>
     StorageName = 'cxPropertiesStore'
+    StorageType = stStream
     Left = 232
     Top = 96
   end

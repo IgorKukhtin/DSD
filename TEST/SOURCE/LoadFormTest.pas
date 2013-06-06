@@ -16,6 +16,9 @@ type
     // возвращаем данные дл€ тестировани€
     procedure TearDown; override;
   published
+    procedure UserFormSettingsTest;
+    procedure LoadBankFormTest;
+    procedure LoadBankAccountFormTest;
     procedure LoadJuridicalGroupFormTest;
     procedure LoadJuridicalFormTest;
     procedure LoadPartnerFormTest;
@@ -33,8 +36,6 @@ type
     procedure LoadPriceListFormTest;
     procedure LoadGoodsPropertyFormTest;
     procedure LoadGoodsPropertyValueFormTest;
-    procedure LoadBankFormTest;
-    procedure LoadBankAccountFormTest;
     procedure LoadCashFormTest;
     procedure LoadCurrencyFormTest;
     procedure LoadIncomeFormTest;
@@ -44,7 +45,7 @@ type
 implementation
 
 uses CommonData, Storage, FormStorage, Classes,
-     Authentication, SysUtils;
+     Authentication, SysUtils, cxPropertiesStore, cxStorage;
 
 { TLoadFormTest }
 
@@ -61,6 +62,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankAccountEditForm');
+  TdsdFormStorageFactory.GetStorage.SaveUserFormSettings('TBankAccountForm', TStringStream.Create('Test'));
+  Check(FormStorage.StreamToString(TdsdFormStorageFactory.GetStorage.LoadUserFormSettings('TBankAccountForm')) = 'Test', ' Ќе правильно работает сохранение установок ' + FormStorage.StreamToString(TdsdFormStorageFactory.GetStorage.LoadUserFormSettings('TBankAccountForm')));
 end;
 
 procedure TLoadFormTest.LoadBankFormTest;
@@ -247,6 +250,33 @@ begin
 
 end;
 
+
+procedure TLoadFormTest.UserFormSettingsTest;
+var
+  TempStream : TMemoryStream;
+  AStoreComponent: TcxPropertiesStoreComponent;
+  cxPropertiesStore: TcxPropertiesStore;
+begin
+ // TdsdFormStorageFactory.GetStorage.SaveUserFormSettings('TBankAccountForm', TStringStream.Create(#6));
+
+  cxPropertiesStore:= TcxPropertiesStore.Create(nil);
+  cxPropertiesStore.StorageType := stStream;
+  AStoreComponent  := TcxPropertiesStoreComponent(cxPropertiesStore.Components.Add);
+  AStoreComponent.Component := TForm.Create(nil);
+  AStoreComponent.Properties.Add('Top');
+  TempStream := TMemoryStream.Create;
+  try
+    cxPropertiesStore.StorageStream := TempStream;
+    cxPropertiesStore.StoreTo(True);
+    TdsdFormStorageFactory.GetStorage.SaveUserFormSettings('TBankAccountForm', TempStream);
+    TempStream.Clear;
+    TempStream.LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadUserFormSettings('TBankAccountForm'));
+    TempStream.Position := 0; // Inserted line
+    cxPropertiesStore.RestoreFrom;
+  finally
+    TempStream.Free;
+  end;
+end;
 
 initialization
   TestFramework.RegisterTest('«агрузка форм', TLoadFormTest.Suite);

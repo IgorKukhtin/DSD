@@ -80,6 +80,7 @@ inherited JuridicalForm: TJuridicalForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <>
     StorageName = 'cxPropertiesStore'
+    StorageType = stStream
     Left = 232
     Top = 96
   end

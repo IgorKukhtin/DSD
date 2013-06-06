@@ -134,9 +134,6 @@ inherited IncomeForm: TIncomeForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -263,6 +260,10 @@ inherited IncomeForm: TIncomeForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
         end>
       OneOnRow = True
       Row = 0
@@ -272,6 +273,10 @@ inherited IncomeForm: TIncomeForm
     end
     object bbRefresh: TdxBarButton
       Action = actRefresh
+      Category = 0
+    end
+    object bbPrint: TdxBarButton
+      Action = actPrint
       Category = 0
     end
   end
@@ -368,6 +373,15 @@ inherited IncomeForm: TIncomeForm
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
+    end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+      ShortCut = 16464
+      ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
     end
   end
   object DataSource: TDataSource
@@ -566,5 +580,13 @@ inherited IncomeForm: TIncomeForm
       end>
     Left = 520
     Top = 152
+  end
+  object frxDBDataset: TfrxDBDataset
+    UserName = 'frxDBDataset'
+    CloseDataSource = False
+    DataSet = ClientDataSet
+    BCDToCurrency = False
+    Left = 232
+    Top = 216
   end
 end

@@ -8,7 +8,6 @@ DECLARE
   UserName TVarChar;
   ProcessName TVarChar;
 BEGIN
-
   IF NOT EXISTS (SELECT 1
 	  FROM ObjectLink Object_UserRole_User -- Связь пользователя с объектом роли пользователя
 	  JOIN ObjectLink Object_UserRole_Role -- Связь ролей с объектом роли пользователя

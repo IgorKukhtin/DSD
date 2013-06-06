@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, dsdDB;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, dsdDB, frxClass;
 
 type
   TParentForm = class(TForm)
@@ -21,12 +21,12 @@ type
 
 implementation
 
-uses UtilConst, cxPropertiesStore, cxControls, cxContainer, cxEdit, cxGroupBox,
-  dxBevel, cxButtons, cxGridDBTableView, cxGrid, DB, DBClient,
+uses FormStorage, UtilConst, cxPropertiesStore, cxControls, cxContainer, cxEdit,
+  cxGroupBox, dxBevel, cxButtons, cxGridDBTableView, cxGrid, DB, DBClient,
   dxBar, Vcl.ActnList, dsdAction, cxTextEdit, cxLabel,
   StdActns, cxDBTL, cxCurrencyEdit, cxDropDownEdit, dsdGuides,
   cxDBLookupComboBox, DBGrids, cxCheckBox, cxCalendar, ExtCtrls, dsdAddOn,
-  cxButtonEdit, cxSplitter, Vcl.Menus, cxPC;
+  cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, frxDBSet;
 
 {$R *.dfm}
 
@@ -52,13 +52,29 @@ begin
     // Перечитывает видимые компоненты
     if Components[i] is TdsdDataSetRefresh then
        (Components[i] as TdsdDataSetRefresh).Execute;
-    if Components[i] is TcxPropertiesStore then
+    if Components[i] is TcxPropertiesStore then begin
+       (Components[i] as TcxPropertiesStore).StorageStream := TdsdFormStorageFactory.GetStorage.LoadUserFormSettings(ClassName);
        (Components[i] as TcxPropertiesStore).RestoreFrom;
+    end;
   end;
 end;
 
 procedure TParentForm.FormClose(Sender: TObject; var Action: TCloseAction);
+var i: Integer;
+    TempStream: TStringStream;
 begin
+  TempStream:= TStringStream.Create;
+  try
+    for I := 0 to ComponentCount - 1 do
+      // Перечитывает видимые компоненты
+      if Components[i] is TcxPropertiesStore then begin
+         (Components[i] as TcxPropertiesStore).StorageStream := TempStream;
+         (Components[i] as TcxPropertiesStore).StoreTo;
+         TdsdFormStorageFactory.GetStorage.SaveUserFormSettings(ClassName, TempStream);
+      end;
+  finally
+    TempStream.Free;
+  end;
   Action := caFree;
 end;
 
@@ -102,6 +118,10 @@ initialization
 
   RegisterClass (TdxBarManager);
   RegisterClass (TdxBevel);
+
+  // FastReport
+  RegisterClass (TfrxDBDataset);
+
   // Собственнтые компоненты
   RegisterClass (TdsdChangeMovementStatus);
   RegisterClass (TdsdChoiceGuides);
@@ -115,6 +135,7 @@ initialization
   RegisterClass (TdsdGuides);
   RegisterClass (TdsdInsertUpdateAction);
   RegisterClass (TdsdOpenForm);
+  RegisterClass (TdsdPrintAction);
   RegisterClass (TdsdStoredProc);
   RegisterClass (TdsdUpdateDataSet);
   RegisterClass (TdsdUpdateErased);
