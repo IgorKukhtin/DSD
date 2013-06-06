@@ -12,14 +12,26 @@ $BODY$BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Route());
 
-   RETURN QUERY
-   SELECT
-      Object.Id
-    , Object.ObjectCode AS Code
-    , Object.ValueData AS Name
-    , Object.isErased
-   FROM Object 
-   WHERE Object.Id = inId;
+   IF COALESCE (inId, 0) = 0
+   THEN
+       RETURN QUERY 
+       SELECT
+             CAST (0 as Integer) AS Id
+           , MAX (Object.ObjectCode) + 1 AS Code
+           , CAST ('' as TVarChar) AS Name
+           , CAST (NULL AS Boolean) isErased
+       FROM Object 
+       WHERE Object.DescId = zc_Object_Route();
+   ELSE
+       RETURN QUERY 
+       SELECT
+             Object.Id
+           , Object.ObjectCode AS Code
+           , Object.ValueData AS Name
+           , Object.isErased
+       FROM Object 
+       WHERE Object.Id = inId;
+   END IF;
   
 END;$BODY$
 
