@@ -38,6 +38,7 @@ type
     // возвращаем данные для тестирования
     procedure TearDown; override;
   published
+    procedure Bank_Test;
     procedure Cash_Test;
     procedure Contract_Test;
     procedure Goods_Test;
@@ -46,6 +47,7 @@ type
     procedure Juridical_Test;
     procedure PriceList_Test;
     procedure Route_Test;
+    procedure RouteSorting_Test;
     procedure User_Test;
   end;
 
@@ -122,11 +124,27 @@ type
     constructor Create; override;
   end;
 
+  TBankTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  public
+    function InsertUpdateBank(const Id, Code: Integer; Name: string; MFO: string; JuridicalId: integer): integer;
+    constructor Create; override;
+  end;
+
   TRouteTest = class(TObjectTest)
   private
     function InsertDefault: integer; override;
   public
     function InsertUpdateRoute(const Id, Code: Integer; Name: string): integer;
+    constructor Create; override;
+  end;
+
+  TRouteSortingTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  public
+    function InsertUpdateRouteSorting(const Id, Code: Integer; Name: string): integer;
     constructor Create; override;
   end;
 
@@ -496,10 +514,60 @@ begin
   result := InsertUpdate(FParams);
 end;
 
+  {TRouteSortingTest }
+constructor TRouteSortingTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_RouteSorting';
+  spSelect := 'gpSelect_Object_RouteSorting';
+  spGet := 'gpGet_Object_RouteSorting';
+end;
 
-{ TJuridicalTest }
+function TRouteSortingTest.InsertDefault: integer;
+begin
+  result := InsertUpdateRouteSorting(0, 1, 'Сортировка маршрутов');
+end;
 
-constructor TJuridicalTest.Create;
+function TRouteSortingTest.InsertUpdateRouteSorting(const Id, Code: Integer;
+  Name: string): integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  result := InsertUpdate(FParams);
+end;
+
+    {TBankTest }
+ constructor TBankTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_Bank';
+  spSelect := 'gpSelect_Object_Bank';
+  spGet := 'gpGet_Object_Bank';
+end;
+
+function TBankTest.InsertDefault: integer;
+var
+  JuridicalId: Integer;
+begin
+  JuridicalId := TJuridicalTest.Create.GetDefault;
+  result := InsertUpdateBank(0, 1, 'Банк', 'МФО', JuridicalId)
+end;
+
+function TBankTest.InsertUpdateBank;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  FParams.AddParam('inMFO', ftString, ptInput, MFO);
+  FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
+  result := InsertUpdate(FParams);
+end;
+
+    { TJuridicalTest }
+ constructor TJuridicalTest.Create;
 begin
   inherited;
   spInsertUpdate := 'gpInsertUpdate_Object_Juridical';
@@ -613,6 +681,26 @@ begin
 
 end;
 
+procedure TdbObjectTest.Bank_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TBankTest;
+begin
+  ObjectTest := TBankTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка Банка
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных о банке
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Банк'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+
+  finally
+    DeleteObject(Id);
+    DeleteObject(TJuridicalTest.Create.GetDefault);
+  end;
+end;
 procedure TdbObjectTest.Contract_Test;
 var Id: integer;
     RecordCount: Integer;
@@ -653,9 +741,28 @@ begin
   end;
 end;
 
-{ TContractTest }
+procedure TdbObjectTest.RouteSorting_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TRouteSortingTest;
+begin
+  ObjectTest := TRouteSortingTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка юр лица
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных о сортировке маршрута
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Сортировка маршрутов'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
 
-constructor TContractTest.Create;
+  finally
+    DeleteObject(Id);
+  end;
+end;
+
+{ TContractTest }
+ constructor TContractTest.Create;
 begin
   inherited;
   spInsertUpdate := 'gpInsertUpdate_Object_Contract';
@@ -709,7 +816,6 @@ begin
 end;
 
 { TGoodsPropertyValueTest }
-
 constructor TGoodsPropertyValueTest.Create;
 begin
   inherited;

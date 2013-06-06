@@ -1,14 +1,16 @@
-﻿-- Function: gpSelect_Object_BankAccount()
+﻿-- Function: gpSelect_Object_BankAccount(TVarChar)
 
---DROP FUNCTION gpSelect_Object_BankAccount();
+--DROP FUNCTION gpSelect_Object_BankAccount(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_BankAccount(
-IN inSession     TVarChar       /* текущий пользователь */)
+    IN inSession     TVarChar       -- сессия пользователя
+)
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
                JuridicalName TVarChar, BankName TVarChar, CurrencyName TVarChar) AS
 $BODY$BEGIN
 
---   PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
+   -- проверка прав пользователя на вызов процедуры
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
      RETURN QUERY 
      SELECT 
@@ -35,10 +37,21 @@ LEFT JOIN Object AS Currency
     WHERE Object.DescId = zc_Object_BankAccount();
   
 END;$BODY$
+
   LANGUAGE plpgsql VOLATILE
   COST 100
   ROWS 100;
 ALTER FUNCTION gpSelect_Object_BankAccount(TVarChar)
   OWNER TO postgres;
 
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.06.13          
+
+*/
+
+-- тест
 -- SELECT * FROM gpSelect_Object_BankAccount('2')

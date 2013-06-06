@@ -1,14 +1,16 @@
-﻿-- Function: gpGet_Object_Branch()
+﻿-- Function: gpGet_Object_Branch(Integer,TVarChar)
 
---DROP FUNCTION gpGet_Object_Branch();
+--DROP FUNCTION gpGet_Object_Branch(Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Branch(
-IN inId          Integer,       /* Бизнесы */
-IN inSession     TVarChar       /* текущий пользователь */)
+    IN inId          Integer,       -- ключ объекта <Бизнесы>
+    IN inSession     TVarChar       -- сессия пользователя
+)
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, JuridicalId Integer, JuridicalName TVarChar) AS
 $BODY$BEGIN
 
---   PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
+   -- проверка прав пользователя на вызов процедуры
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
      RETURN QUERY 
      SELECT 
@@ -26,10 +28,21 @@ LEFT JOIN Object AS Juridical
     WHERE Object.Id = inId;
   
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE
+
+LANGUAGE plpgsql VOLATILE
   COST 100
   ROWS 1000;
-ALTER FUNCTION gpGet_Object_Branch(integer, TVarChar)
+ALTER FUNCTION gpGet_Object_Branch (integer, TVarChar)
   OWNER TO postgres;
 
--- SELECT * FROM gpSelect_User('2')
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.06.13          
+
+*/
+
+-- тест
+-- SELECT * FROM gpGet_Object_Branch(1,'2')

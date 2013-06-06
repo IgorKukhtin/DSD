@@ -3,15 +3,17 @@
 -- DROP FUNCTION lpFind_Object_Account();
 
 CREATE OR REPLACE FUNCTION lpFind_Object_Account(
-IN inAccountGroupId         Integer   ,    /* Группа счетов */
-IN inAccountDirectionId     Integer   ,    /* Аналитика счета (место) */
-IN inInfoMoneyDestinationId Integer           /* Аналитика счета (назначение) */
+    IN inAccountGroupId           Integer,       -- Группа счетов
+    IN inAccountDirectionId       Integer,       -- Аналитика счета (место)
+    IN inInfoMoneyDestinationId   Integer        -- Аналитика счета (назначение)
 )
   RETURNS integer AS
 $BODY$
 DECLARE lObjectId integer;
 BEGIN
---   PERFORM lpCheckRight(inSession, zc_Enum_Process_Account());
+
+   -- проверка прав пользователя на вызов процедуры
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Account());
 
    SELECT  
         ObjectLink_Account_AccountGroup.ObjectId INTO lObjectId 
@@ -34,4 +36,10 @@ END;$BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
   
-                            
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.06.13          
+
+*/
