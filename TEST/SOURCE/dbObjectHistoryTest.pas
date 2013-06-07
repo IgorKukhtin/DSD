@@ -31,13 +31,20 @@ type
 
 implementation
 
-uses SysUtils;
+uses SysUtils, Storage;
 
 { TdbObjectHistoryTest }
 
 procedure TdbObjectHistoryTest.DeleteHistoryObject(Id: integer);
+const
+   pXML =
+  '<xml Session = "">' +
+    '<lpDelete_ObjectHistory OutputType="otResult">' +
+       '<inId DataType="ftInteger" Value="%d"/>' +
+    '</lpDelete_ObjectHistory>' +
+  '</xml>';
 begin
-
+  TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Id]))
 end;
 
 function TdbObjectHistoryTest.GetRecordCount(ObjectTest: TObjectTest): integer;
@@ -49,21 +56,36 @@ procedure TdbObjectHistoryTest.PriceListItem_Test;
 var GoodsId, PriceListId: Integer;
     RecordCount: Integer;
     ObjectTest: TPriceListItemHistoryTest;
+    Id_2012, Id_2013, Id_2011, Id_2011_06_06: Integer;
 begin
   GoodsId := TGoodsTest.Create.GetDefault;
   PriceListId := TPriceListTest.Create.GetDefault;
 
   ObjectTest := TPriceListItemHistoryTest.Create;
-
-  ObjectTest.InsertUpdatePriceListItem(0, PriceListId, GoodsId, StrToDate('01.01.2012'), 10);
   // Добавляем историю с датой 01.01.2012
+  Id_2012 := ObjectTest.InsertUpdatePriceListItem(0, PriceListId, GoodsId, StrToDate('01.01.2012'), 2012);
   // Добавляем историю с датой 01.01.2013
+  Id_2013 := ObjectTest.InsertUpdatePriceListItem(0, PriceListId, GoodsId, StrToDate('01.01.2013'), 2013);
   // Добавляем историю с датой 01.01.2011
+  Id_2011 := ObjectTest.InsertUpdatePriceListItem(0, PriceListId, GoodsId, StrToDate('01.01.2011'), 2011);
   // Добавляем историю с датой 06.06.2011
+  Id_2011_06_06 := ObjectTest.InsertUpdatePriceListItem(0, PriceListId, GoodsId, StrToDate('06.06.2011'), 201106);
+
+  // Изменяем историю с датой 01.01.2012 на 01.01.2010
+  ObjectTest.InsertUpdatePriceListItem(Id_2012, PriceListId, GoodsId, StrToDate('01.01.2010'), 2012);
+  // Изменяем историю с датой 01.01.2010 на 01.01.2020
+  ObjectTest.InsertUpdatePriceListItem(Id_2012, PriceListId, GoodsId, StrToDate('01.01.2020'), 2012);
+  // Изменяем историю с датой 01.01.2020 на 01.01.2012
+  ObjectTest.InsertUpdatePriceListItem(Id_2012, PriceListId, GoodsId, StrToDate('01.01.2012'), 2012);
+
   // Удаляем историю с датой 06.06.2011
+(*  DeleteHistoryObject(Id_2011_06_06);
   // Удаляем историю с датой 01.01.2011
+  DeleteHistoryObject(Id_2011);
   // Удаляем историю с датой 01.01.2013
+  DeleteHistoryObject(Id_2013);
   // Удаляем историю с датой 01.01.2012
+  DeleteHistoryObject(Id_2012);   *)
 end;
 
 procedure TdbObjectHistoryTest.SetUp;

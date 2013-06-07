@@ -255,3 +255,9 @@ CREATE OR REPLACE FUNCTION zc_Object_UserFormSettings()
 $BODY$BEGIN
   RETURN 43;
 END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_Object_PriceListItem()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 44;
+END;  $BODY$ LANGUAGE plpgsql;

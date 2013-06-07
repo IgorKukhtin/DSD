@@ -19,6 +19,8 @@ type
     procedure InsertContainerDesc;
     procedure CreateObjectDescFunction;
     procedure InsertObjectDesc;
+    procedure CreateObjectHistoryDescFunction;
+    procedure InsertObjectHistoryDesc;
     procedure CreateMovementDescFunction;
     procedure InsertMovementDesc;
     procedure CreateMovementItemDescFunction;
@@ -49,6 +51,14 @@ begin
   ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertObjectBooleanDesc.sql');
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertObjectLinkDesc.sql');
+  ZQuery.ExecSQL;
+end;
+
+procedure TdbMetaDataTest.InsertObjectHistoryDesc;
+begin
+  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertObjectHistoryDesc.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertObjectHistoryFloatDesc.sql');
   ZQuery.ExecSQL;
 end;
 
@@ -153,6 +163,14 @@ begin
   ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateObjectFloatDescFunction.sql');
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateObjectBooleanDescFunction.sql');
+  ZQuery.ExecSQL;
+end;
+
+procedure TdbMetaDataTest.CreateObjectHistoryDescFunction;
+begin
+  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateObjectHistoryDescFunction.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateObjectHistoryFloatDescFunction.sql');
   ZQuery.ExecSQL;
 end;
 

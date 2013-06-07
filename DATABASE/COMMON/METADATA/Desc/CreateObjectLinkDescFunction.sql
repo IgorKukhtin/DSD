@@ -201,3 +201,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_UserFormSettings_Form()
 $BODY$BEGIN
   RETURN 32;
 END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_PriceListItem_PriceList()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 33;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_PriceListItem_Goods()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 34;
+END;  $BODY$ LANGUAGE plpgsql;

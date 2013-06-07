@@ -103,6 +103,9 @@
 			<DCCReference Include="cxTreeListRS16.dcp"/>
 			<DCCReference Include="soaprtl.dcp"/>
 			<DCCReference Include="inet.dcp"/>
+			<DCCReference Include="fs16.dcp"/>
+			<DCCReference Include="frx16.dcp"/>
+			<DCCReference Include="frxDB16.dcp"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
 			<DCCReference Include="..\SOURCE\UtilConst.pas"/>
 			<DCCReference Include="..\SOURCE\CommonData.pas"/>

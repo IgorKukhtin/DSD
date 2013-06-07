@@ -48,7 +48,10 @@ requires
   cxGridRS16,
   cxTreeListRS16,
   soaprtl,
-  inet;
+  inet,
+  fs16,
+  frx16,
+  frxDB16;
 
 contains
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',

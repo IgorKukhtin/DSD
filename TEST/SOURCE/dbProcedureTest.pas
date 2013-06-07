@@ -14,6 +14,7 @@ type
     // возвращаем данные для тестирования
     procedure TearDown; override;
   published
+    procedure CreateFunction;
     procedure CreateContainerProcedure;
     procedure CreateHistoryProcedure;
     procedure CreateMovementProcedure;
@@ -30,6 +31,7 @@ implementation
 uses zLibUtil;
 
 const
+  FunctionPath = '..\DATABASE\COMMON\FUNCTION\';
   ProcedurePath = '..\DATABASE\COMMON\PROCEDURE\';
   ReportsPath = '..\DATABASE\COMMON\REPORTS\';
 
@@ -47,8 +49,24 @@ begin
   ZQuery.ExecSQL;
 end;
 
+procedure TdbProcedureTest.CreateFunction;
+begin
+  ZQuery.SQL.LoadFromFile(FunctionPath + 'ConstantFunction.sql');
+  ZQuery.ExecSQL;
+end;
+
 procedure TdbProcedureTest.CreateHistoryProcedure;
 begin
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'ObjectHistory\InsertUpdate\lpInsertUpdate_ObjectHistory.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'ObjectHistory\InsertUpdate\lpInsertUpdate_ObjectHistoryFloat.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'ObjectHistory\Delete\lpDelete_ObjectHistory.sql');
+  ZQuery.ExecSQL;
+
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'ObjectHistory\_PriceListItem\gpInsertUpdate_ObjectHistory_PriceListItem.sql');
+  ZQuery.ExecSQL;
+
 
 end;
 
@@ -340,6 +358,9 @@ begin
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_PriceList\gpSelect_Object_PriceList.sql');
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_PriceList\gpGet_Object_PriceList.sql');
+  ZQuery.ExecSQL;
+
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_PriceListItem\lpGetInsert_Object_PriceListItem.sql');
   ZQuery.ExecSQL;
 
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Unit\gpInsertUpdate_Object_Unit.sql');
