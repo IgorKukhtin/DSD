@@ -49,6 +49,7 @@ type
     procedure Route_Test;
     procedure RouteSorting_Test;
     procedure User_Test;
+    procedure Partner_Test;
   end;
 
   TCashTest = class(TObjectTest)
@@ -96,6 +97,15 @@ type
     function InsertUpdateGoodsPropertyValue(const Id: Integer; Name: string;
         Amount: double; BarCode, Article, BarCodeGLN, ArticleGLN: string;
         GoodsPropertyId, GoodsId, GoodsKindId: Integer): integer;
+    constructor Create; override;
+  end;
+
+  TPartnerTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  public
+    function InsertUpdatePartner(const Id: integer; Code: Integer;
+        Name, GLNCode: string; JuridicalId, RouteId, RouteSortingId: integer): integer;
     constructor Create; override;
   end;
 
@@ -566,6 +576,38 @@ begin
   result := InsertUpdate(FParams);
 end;
 
+    { TPartnerTest }
+ constructor TPartnerTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_Partner';
+  spSelect := 'gpSelect_Object_Partner';
+  spGet := 'gpGet_Object_Partner';
+end;
+
+function TPartnerTest.InsertDefault: integer;
+var
+  JuridicalId, RouteId, RouteSortingId: Integer;
+begin
+  JuridicalId := TJuridicalTest.Create.GetDefault;
+  RouteId := TRouteTest.Create.GetDefault;
+  RouteSortingId := TRouteSortingTest.Create.GetDefault;
+  result := InsertUpdatePartner(0, 1, 'Контрагенты', 'GLNCode', JuridicalId, RouteId, RouteSortingId);
+end;
+
+function TPartnerTest.InsertUpdatePartner;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  FParams.AddParam('inGLNCode', ftString, ptInput, GLNCode);
+  FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
+  FParams.AddParam('inRouteId', ftInteger, ptInput, RouteId);
+  FParams.AddParam('inRouteSortingId', ftInteger, ptInput, RouteSortingId);
+  result := InsertUpdate(FParams);
+end;
+
     { TJuridicalTest }
  constructor TJuridicalTest.Create;
 begin
@@ -701,6 +743,7 @@ begin
     DeleteObject(TJuridicalTest.Create.GetDefault);
   end;
 end;
+
 procedure TdbObjectTest.Contract_Test;
 var Id: integer;
     RecordCount: Integer;
@@ -760,6 +803,30 @@ begin
     DeleteObject(Id);
   end;
 end;
+
+procedure TdbObjectTest.Partner_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TPartnerTest;
+begin
+  ObjectTest := TPartnerTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка контрагента
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных о контрагенте
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('GLNCode').AsString = 'GLNCode'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+
+  finally
+    DeleteObject(Id);
+    DeleteObject(TJuridicalTest.Create.GetDefault);
+    DeleteObject(TRouteTest.Create.GetDefault);
+    DeleteObject(TRouteSortingTest.Create.GetDefault);
+  end;
+end;
+
 
 { TContractTest }
  constructor TContractTest.Create;

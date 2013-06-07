@@ -3,12 +3,14 @@
 -- DROP FUNCTION gpInsertUpdate_Object_Partner();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
-INOUT ioId	         Integer   ,   	-- ключ объекта <Контрагент>
-IN inCode                Integer   ,
-IN inName                TVarChar  ,    -- Название объекта <Контрагент>
-IN inGLNCode             TVarChar  ,    --
-IN inJuridicalId         Integer   ,    -- Юридическое лицо
-IN inSession             TVarChar       -- текущий пользователь
+ INOUT ioId	                 Integer   ,   	-- ключ объекта <Контрагент> 
+    IN inCode                Integer   ,    -- код объекта <Контрагент> 
+    IN inName                TVarChar  ,    -- Название объекта <Контрагент>
+    IN inGLNCode             TVarChar  ,    -- Код GLN
+    IN inJuridicalId         Integer   ,    -- Юридическое лицо
+    IN inRouteId             Integer   ,    -- Маршрут
+    IN inRouteSortingId      Integer   ,    -- Сортировка маршрутов
+    IN inSession             TVarChar       -- текущий пользователь
 )
   RETURNS integer AS
 $BODY$BEGIN
@@ -24,7 +26,7 @@ $BODY$BEGIN
 END;$BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
-ALTER FUNCTION gpInsertUpdate_Object_Partner(Integer, Integer, TVarChar, TVarChar, Integer, TVarChar)
+ALTER FUNCTION gpInsertUpdate_Object_Partner(Integer, Integer, TVarChar, TVarChar, Integer, Integer,Integer, TVarChar)
   OWNER TO postgres;
 
 
