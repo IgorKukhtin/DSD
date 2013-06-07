@@ -19,7 +19,7 @@ $BODY$BEGIN
    -- проверка прав уникальности для свойства <Наименование Банка>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Bank(), inName);
    -- проверка прав уникальности для свойства <МФО>
-   PERFORM lpCheckUnique_ObjectString_ValueData(ioId, zc_ObjectString_Bank_MFO(), inMFO);
+   PERFORM lpCheckUnique_ObjectString_ValueData(ioId, zc_Object_Bank(), inMFO);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_ObjectString_Bank_MFO(), inCode, inName);
