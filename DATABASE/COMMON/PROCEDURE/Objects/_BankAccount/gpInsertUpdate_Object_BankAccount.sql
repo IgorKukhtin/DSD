@@ -44,4 +44,4 @@ ALTER FUNCTION gpInsertUpdate_Object_BankAccount (Integer,Integer,TVarChar,Integ
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_BankAccount(1,1,'',1,1,1,'')
+-- SELECT * FROM gpInsertUpdate_Object_BankAccount(1,1,'',1,1,1,'2')
