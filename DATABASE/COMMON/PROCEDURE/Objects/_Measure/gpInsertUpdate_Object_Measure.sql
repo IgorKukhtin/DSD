@@ -3,9 +3,10 @@
 -- DROP FUNCTION gpInsertUpdate_Object_Measure();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Measure(
-INOUT ioId	         Integer   ,   	/* ключ объекта <Единица измерения> */
-IN inName                TVarChar  ,    /* главное Название пользователя объекта <Пользователь> */
-IN inSession             TVarChar       /* текущий пользователь */
+ INOUT ioId	         Integer,   	-- ключ объекта <Единица измерения> 
+    IN inCode        Integer,       -- свойство <Код Единицы измерения> 
+    IN inName        TVarChar,      -- главное Название Единицы измерения
+    IN inSession     TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$BEGIN

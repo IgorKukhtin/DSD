@@ -3,7 +3,8 @@
 --DROP FUNCTION gpSelect_Object_Measure();
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Measure(
-IN inSession     TVarChar       /* текущий пользователь */)
+    IN inSession     TVarChar            -- сессия пользователя
+)
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
 $BODY$BEGIN
 

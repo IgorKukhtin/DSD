@@ -3,8 +3,9 @@
 --DROP FUNCTION gpGet_Object_Measure();
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Measure(
-IN inId          Integer,       /* Единица измерения */
-IN inSession     TVarChar       /* текущий пользователь */)
+    IN inId          Integer,       -- Единица измерения 
+    IN inSession     TVarChar       -- сессия пользователя
+)
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
 $BODY$BEGIN
 
