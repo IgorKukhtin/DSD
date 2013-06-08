@@ -50,6 +50,16 @@ type
     procedure RouteSorting_Test;
     procedure User_Test;
     procedure Partner_Test;
+    procedure PaidKind_Test;
+    procedure ContractKind_Test;
+    procedure Business_Test;
+    procedure Branch_Test;
+    procedure UnitGroup_Test;
+    procedure Unit_Test;
+    procedure GoodsGroup_Test;
+    procedure GoodsKind_Test;
+    procedure Measure_Test;
+    procedure GoodsProperty_Test;
   end;
 
   TCashTest = class(TObjectTest)
@@ -158,11 +168,79 @@ type
     constructor Create; override;
   end;
 
+  TPaidKindTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  public
+    function InsertUpdatePaidKind(const Id: integer; Code: Integer;
+        Name: string): integer;
+    constructor Create; override;
+  end;
+
+  TContractKindTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  public
+    function InsertUpdateContractKind(const Id: integer; Code: Integer;
+        Name: string): integer;
+    constructor Create; override;
+  end;
+
+  TBusinessTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  public
+    function InsertUpdateBusiness(const Id: integer; Code: Integer;
+        Name: string): integer;
+    constructor Create; override;
+  end;
+
+  TBranchTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  public
+    function InsertUpdateBranch(const Id: integer; Code: Integer;
+        Name: string; JuridicalId: integer): integer;
+    constructor Create; override;
+  end;
+
+  TUnitGroupTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  public
+    function InsertUpdateUnitGroup(const Id: integer; Code: Integer;
+        Name: string; ParentId: integer): integer;
+    constructor Create; override;
+  end;
+
+  TGoodsGroupTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  public
+    function InsertUpdateGoodsGroup(const Id: integer; Code: Integer;
+        Name: string; ParentId: integer): integer;
+    constructor Create; override;
+  end;
+
   TUnitTest = class(TObjectTest)
     function InsertDefault: integer; override;
   public
     function InsertUpdateUnit(Id, Code: Integer; Name: String;
                               UnitGroupId, BranchId: integer): integer;
+    constructor Create; override;
+  end;
+
+  TGoodsKindTest = class(TObjectTest)
+    function InsertDefault: integer; override;
+  public
+    function InsertUpdateGoodsKind(Id, Code: Integer; Name: String): integer;
+    constructor Create; override;
+  end;
+
+  TMeasureTest = class(TObjectTest)
+    function InsertDefault: integer; override;
+  public
+    function InsertUpdateMeasure(Id, Code: Integer; Name: String): integer;
     constructor Create; override;
   end;
 
@@ -303,6 +381,7 @@ begin
 
   finally
     DeleteObject(Id);
+    DeleteObject(TGoodsPropertyTest.Create.GetDefault);
   end;
 end;
 
@@ -450,7 +529,6 @@ end;
 
 
 { TJuridicalGroupTest }
-
 constructor TJuridicalGroupTest.Create;
 begin
   inherited;
@@ -715,6 +793,7 @@ begin
   finally
     DeleteObject(Id);
     DeleteObject(TJuridicalGroupTest.Create.GetDefault);
+    DeleteObject(TGoodsPropertyTest.Create.GetDefault);
   end;
 end;
 
@@ -934,8 +1013,12 @@ begin
 end;
 
 function TUnitTest.InsertDefault: integer;
+var
+  UnitGroupId,BranchId: Integer;
 begin
-  result := InsertUpdateUnit(0, 1, '', 0, 0);
+  BranchId := TBranchTest.Create.GetDefault;
+  UnitGroupId := TUnitGroupTest.Create.GetDefault;
+  result := InsertUpdateUnit(0, 1, 'Подразделение', BranchId, UnitGroupId);
 end;
 
 function TUnitTest.InsertUpdateUnit(Id, Code: Integer; Name: String;
@@ -975,6 +1058,474 @@ begin
   FParams.AddParam('inName', ftString, ptInput, Name);
   result := InsertUpdate(FParams);
 end;
+
+{TPaidKindTest}
+constructor TPaidKindTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_PaidKind';
+  spSelect := 'gpSelect_Object_PaidKind';
+  spGet := 'gpGet_Object_PaidKind';
+end;
+
+function TPaidKindTest.InsertDefault: integer;
+begin
+  result := InsertUpdatePaidKind(0, 3, 'Вид Формы оплаты');
+end;
+
+function TPaidKindTest.InsertUpdatePaidKind;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.PaidKind_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TPaidKindTest;
+begin
+  ObjectTest := TPaidKindTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка Вида Формы оплаты
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных о Виде Формы оплаты
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Вид Формы оплаты'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    DeleteObject(Id);
+  end;
+end;
+
+{TContractKindTest}
+constructor TContractKindTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_ContractKind';
+  spSelect := 'gpSelect_Object_ContractKind';
+  spGet := 'gpGet_Object_ContractKind';
+end;
+
+function TContractKindTest.InsertDefault: integer;
+begin
+  result := InsertUpdateContractKind(0, 1, 'Вид договора');
+end;
+
+function TContractKindTest.InsertUpdateContractKind;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.ContractKind_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TContractKindTest;
+begin
+  ObjectTest := TContractKindTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка Вида договора
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных о Вида договора
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Вид договора'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    DeleteObject(Id);
+  end;
+end;
+
+{TBusinessTest}
+constructor TBusinessTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_Business';
+  spSelect := 'gpSelect_Object_Business';
+  spGet := 'gpGet_Object_Business';
+end;
+
+function TBusinessTest.InsertDefault: integer;
+begin
+  result := InsertUpdateBusiness(0, 1, 'Бизнес');
+end;
+
+function TBusinessTest.InsertUpdateBusiness;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.Business_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TBusinessTest;
+begin
+  ObjectTest := TBusinessTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка Бизнеса
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных о Бизнесе
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Бизнес'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    DeleteObject(Id);
+  end;
+end;
+
+ {TBranchTest}
+ constructor TBranchTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_Branch';
+  spSelect := 'gpSelect_Object_Branch';
+  spGet := 'gpGet_Object_Branch';
+end;
+
+function TBranchTest.InsertDefault: integer;
+var
+  JuridicalId: Integer;
+begin
+  JuridicalId := TJuridicalTest.Create.GetDefault;
+  result := InsertUpdateBranch(0, 1, 'Филиал', JuridicalId);
+end;
+
+function TBranchTest.InsertUpdateBranch;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.Branch_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TBranchTest;
+begin
+  ObjectTest := TBranchTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка Филиала
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных о Филиале
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Филиал'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    DeleteObject(Id);
+    DeleteObject(TJuridicalTest.Create.GetDefault);
+  end;
+end;
+
+  {TUnitGroupTest}
+ constructor TUnitGroupTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_UnitGroup';
+  spSelect := 'gpSelect_Object_UnitGroup';
+  spGet := 'gpGet_Object_UnitGroup';
+end;
+
+function TUnitGroupTest.InsertDefault: integer;
+var
+  ParentId: Integer;
+begin
+  ParentId:=0;
+  result := InsertUpdateUnitGroup(0, 1, 'Группа подразделения', ParentId);
+end;
+
+function TUnitGroupTest.InsertUpdateUnitGroup;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  FParams.AddParam('inParentId', ftInteger, ptInput, ParentId);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.UnitGroup_Test;
+var Id, Id2, Id3: integer;
+    RecordCount: Integer;
+    ObjectTest: TUnitGroupTest;
+begin
+ // тут наша задача проверить правильность работы с деревом.
+ // а именно зацикливание.
+  ObjectTest := TUnitGroupTest.Create;
+  // Получим список объектов
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка объекта
+ // добавляем группу 1
+  Id := ObjectTest.InsertDefault;
+  try
+    // теперь делаем ссылку на себя и проверяем ошибку
+    try
+      ObjectTest.InsertUpdateUnitGroup(Id, 1, 'Группа 1', Id);
+      Check(false, 'Нет сообщение об ошибке');
+    except
+
+    end;
+    // добавляем еще группу 2
+    // делаем у группы 2 ссылку на группу 1
+    Id2 := ObjectTest.InsertUpdateUnitGroup(0, 2, 'Группа 2', Id);
+    try
+      // теперь ставим ссылку у группы 1 на группу 2 и проверяем ошибку
+      try
+        ObjectTest.InsertUpdateUnitGroup(Id, 1, 'Группа 1', Id2);
+        Check(false, 'Нет сообщение об ошибке');
+      except
+
+      end;
+      // добавляем еще группу 3
+      // делаем у группы 3 ссылку на группу 2
+      Id3 := ObjectTest.InsertUpdateUnitGroup(0, 3, 'Группа 3', Id2);
+      try
+        // группа 2 уже ссылка на группу 1
+        // делаем у группы 1 ссылку на группу 3 и проверяем ошибку
+        try
+          ObjectTest.InsertUpdateUnitGroup(Id, 1, 'Группа 1', Id3);
+          Check(false, 'Нет сообщение об ошибке');
+        except
+
+        end;
+        Check((GetRecordCount(ObjectTest) = RecordCount + 3), 'Количество записей не изменилось');
+      finally
+        DeleteObject(Id3);
+      end;
+    finally
+      DeleteObject(Id2);
+    end;
+  finally
+    DeleteObject(Id);
+  end;
+end;
+
+
+{Unit_Test}
+procedure TdbObjectTest.Unit_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TUnitTest;
+begin
+  ObjectTest := TUnitTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка Подразделения
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных о Подразделении
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Подразделение'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    DeleteObject(Id);
+    DeleteObject(TUnitGroupTest.Create.GetDefault);
+    DeleteObject(TBranchTest.Create.GetDefault);
+  end;
+end;
+
+ {TGoodsGroupTest}
+constructor TGoodsGroupTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_GoodsGroup';
+  spSelect := 'gpSelect_Object_GoodsGroup';
+  spGet := 'gpGet_Object_GoodsGroup';
+end;
+
+function TGoodsGroupTest.InsertDefault: integer;
+var
+  ParentId: Integer;
+begin
+  ParentId:=0;
+  result := InsertUpdateGoodsGroup(0, 1, 'Группа товара', ParentId);
+end;
+
+function TGoodsGroupTest.InsertUpdateGoodsGroup;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  FParams.AddParam('inParentId', ftInteger, ptInput, ParentId);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.GoodsGroup_Test;
+var Id, Id2, Id3: integer;
+    RecordCount: Integer;
+    ObjectTest: TGoodsGroupTest;
+begin
+ // тут наша задача проверить правильность работы с деревом.
+ // а именно зацикливание.
+  ObjectTest := TGoodsGroupTest.Create;
+  // Получим список объектов
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка объекта
+ // добавляем группу 1
+  Id := ObjectTest.InsertDefault;
+  try
+    // теперь делаем ссылку на себя и проверяем ошибку
+    try
+      ObjectTest.InsertUpdateGoodsGroup(Id, 1, 'Группа 1', Id);
+      Check(false, 'Нет сообщение об ошибке');
+    except
+
+    end;
+    // добавляем еще группу 2
+    // делаем у группы 2 ссылку на группу 1
+    Id2 := ObjectTest.InsertUpdateGoodsGroup(0, 2, 'Группа 2', Id);
+    try
+      // теперь ставим ссылку у группы 1 на группу 2 и проверяем ошибку
+      try
+        ObjectTest.InsertUpdateGoodsGroup(Id, 1, 'Группа 1', Id2);
+        Check(false, 'Нет сообщение об ошибке');
+      except
+
+      end;
+      // добавляем еще группу 3
+      // делаем у группы 3 ссылку на группу 2
+      Id3 := ObjectTest.InsertUpdateGoodsGroup(0, 3, 'Группа 3', Id2);
+      try
+        // группа 2 уже ссылка на группу 1
+        // делаем у группы 1 ссылку на группу 3 и проверяем ошибку
+        try
+          ObjectTest.InsertUpdateGoodsGroup(Id, 1, 'Группа 1', Id3);
+          Check(false, 'Нет сообщение об ошибке');
+        except
+
+        end;
+        Check((GetRecordCount(ObjectTest) = RecordCount + 3), 'Количество записей не изменилось');
+      finally
+        DeleteObject(Id3);
+      end;
+    finally
+      DeleteObject(Id2);
+    end;
+  finally
+    DeleteObject(Id);
+  end;
+end;
+
+{TGoodsKindTest}
+constructor TGoodsKindTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_GoodsKind';
+  spSelect := 'gpSelect_Object_GoodsKind';
+  spGet := 'gpGet_Object_GoodsKind';
+end;
+
+function TGoodsKindTest.InsertDefault: integer;
+begin
+  result := InsertUpdateGoodsKind(0, 1, 'Вид товара');
+end;
+
+function TGoodsKindTest.InsertUpdateGoodsKind;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.GoodsKind_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TGoodsKindTest;
+begin
+  ObjectTest := TGoodsKindTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка Вида товара
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных о Виде товара
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Вид товара'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    DeleteObject(Id);
+  end;
+end;
+
+{TMeasureTest}
+constructor TMeasureTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_Measure';
+  spSelect := 'gpSelect_Object_Measure';
+  spGet := 'gpGet_Object_Measure';
+end;
+
+function TMeasureTest.InsertDefault: integer;
+begin
+  result := InsertUpdateMeasure(0, 1, 'Единица измерения');
+end;
+
+function TMeasureTest.InsertUpdateMeasure;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.Measure_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TMeasureTest;
+begin
+  ObjectTest := TMeasureTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка Единицы измерения
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных о Единице измерения
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Единица измерения'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    DeleteObject(Id);
+  end;
+end;
+
+{TGoodsPropertyTest}
+procedure TdbObjectTest.GoodsProperty_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TGoodsPropertyTest;
+begin
+  ObjectTest := TGoodsPropertyTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка классификатора свойств товаров
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных о классификаторе свойств товаров
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Классификатор свойств товаров'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+
+  finally
+    DeleteObject(Id);
+  end;
+end;
+
 
 initialization
   TestFramework.RegisterTest('Справочники', TdbObjectTest.Suite);

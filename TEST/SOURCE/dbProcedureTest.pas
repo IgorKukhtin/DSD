@@ -394,6 +394,13 @@ begin
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_RouteSorting\gpGet_Object_RouteSorting.sql');
   ZQuery.ExecSQL;
 
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_PaidKind\gpInsertUpdate_Object_PaidKind.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_PaidKind\gpSelect_Object_PaidKind.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_PaidKind\gpGet_Object_PaidKind.sql');
+  ZQuery.ExecSQL;
+
 end;
 
 procedure TdbProcedureTest.CreateProtocolProcedure;
