@@ -79,13 +79,13 @@ begin
   ObjectTest.InsertUpdatePriceListItem(Id_2012, PriceListId, GoodsId, StrToDate('01.01.2012'), 2012);
 
   // Удаляем историю с датой 06.06.2011
-(*  DeleteHistoryObject(Id_2011_06_06);
+  DeleteHistoryObject(Id_2011_06_06);
   // Удаляем историю с датой 01.01.2011
   DeleteHistoryObject(Id_2011);
   // Удаляем историю с датой 01.01.2013
   DeleteHistoryObject(Id_2013);
   // Удаляем историю с датой 01.01.2012
-  DeleteHistoryObject(Id_2012);   *)
+  DeleteHistoryObject(Id_2012);
 end;
 
 procedure TdbObjectHistoryTest.SetUp;

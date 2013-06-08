@@ -23,14 +23,14 @@ type
     function GetDefault: integer;
     function GetDataSet: TDataSet; virtual;
     function GetRecord(Id: integer): TDataSet;
+    // Удаляется Объект и все подчиненные
+    procedure DeleteObject(Id: Integer); virtual;
     constructor Create; virtual;
     destructor Destoy;
   end;
 
   TdbObjectTest = class (TTestCase)
   protected
-    // Удаление объекта
-    procedure DeleteObject(Id: integer);
     // получение поличества записей
     function GetRecordCount(ObjectTest: TObjectTest): integer;
     // подготавливаем данные для тестирования
@@ -45,11 +45,21 @@ type
     procedure GoodsPropertyValue_Test;
     procedure JuridicalGroup_Test;
     procedure Juridical_Test;
+    procedure Partner_Test;
     procedure PriceList_Test;
     procedure Route_Test;
     procedure RouteSorting_Test;
     procedure User_Test;
-    procedure Partner_Test;
+  end;
+
+  TBankTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  public
+    // Удаляется Объект и все подчиненные
+    procedure DeleteObject(Id: Integer); override;
+    function InsertUpdateBank(const Id, Code: Integer; Name: string; MFO: string; JuridicalId: integer): integer;
+    constructor Create; override;
   end;
 
   TCashTest = class(TObjectTest)
@@ -94,6 +104,8 @@ type
   private
     function InsertDefault: integer; override;
   public
+      // Удаляется Объект и все подчиненные
+    procedure DeleteObject(Id: Integer); override;
     function InsertUpdateGoodsPropertyValue(const Id: Integer; Name: string;
         Amount: double; BarCode, Article, BarCodeGLN, ArticleGLN: string;
         GoodsPropertyId, GoodsId, GoodsKindId: Integer): integer;
@@ -104,6 +116,8 @@ type
   private
     function InsertDefault: integer; override;
   public
+    // Удаляется Объект и все подчиненные
+    procedure DeleteObject(Id: Integer); override;
     function InsertUpdatePartner(const Id: integer; Code: Integer;
         Name, GLNCode: string; JuridicalId, RouteId, RouteSortingId: integer): integer;
     constructor Create; override;
@@ -113,7 +127,9 @@ type
   private
     function InsertDefault: integer; override;
   public
-    function InsertUpdateJuridical(const Id: integer; Code: Integer;
+      // Удаляется Объект и все подчиненные
+   procedure DeleteObject(Id: Integer); override;
+   function InsertUpdateJuridical(const Id: integer; Code: Integer;
         Name, GLNCode: string; isCorporate: boolean; JuridicalGroupId, GoodsPropertyId: integer): integer;
     constructor Create; override;
   end;
@@ -131,14 +147,6 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdatePriceList(const Id, Code: Integer; Name: string): integer;
-    constructor Create; override;
-  end;
-
-  TBankTest = class(TObjectTest)
-  private
-    function InsertDefault: integer; override;
-  public
-    function InsertUpdateBank(const Id, Code: Integer; Name: string; MFO: string; JuridicalId: integer): integer;
     constructor Create; override;
   end;
 
@@ -186,6 +194,18 @@ constructor TObjectTest.Create;
 begin
   FdsdStoredProc := TdsdStoredProc.Create(nil);
   FParams := TdsdParams.Create(TdsdParam);
+end;
+
+procedure TObjectTest.DeleteObject(Id: Integer);
+const
+   pXML =
+  '<xml Session = "">' +
+    '<lpDelete_Object OutputType="otResult">' +
+       '<inId DataType="ftInteger" Value="%d"/>' +
+    '</lpDelete_Object>' +
+  '</xml>';
+begin
+  TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Id]))
 end;
 
 destructor TObjectTest.Destoy;
@@ -265,20 +285,8 @@ begin
     // Получим список касс
     Check((GetRecordCount(ObjectTest) = RecordCount + 1), 'Количество записей не изменилось');
   finally
-    DeleteObject(Id);
+    ObjectTest.DeleteObject(Id);
   end;
-end;
-
-procedure TdbObjectTest.DeleteObject(Id: integer);
-const
-   pXML =
-  '<xml Session = "">' +
-    '<lpDelete_Object OutputType="otResult">' +
-       '<inId DataType="ftInteger" Value="%d"/>' +
-    '</lpDelete_Object>' +
-  '</xml>';
-begin
-  TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Id]))
 end;
 {------------------------------------------------------------------------------}
 function TdbObjectTest.GetRecordCount(ObjectTest: TObjectTest): integer;
@@ -302,7 +310,7 @@ begin
       Check((FieldByName('Name').AsString = 'GoodsPropertyValue'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
 
   finally
-    DeleteObject(Id);
+    ObjectTest.DeleteObject(Id);
   end;
 end;
 
@@ -322,7 +330,7 @@ begin
       Check((FieldByName('Name').AsString = 'Товар 1'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
 
   finally
-    DeleteObject(Id);
+    ObjectTest.DeleteObject(Id);
   end;
 end;
 {------------------------------------------------------------------------------}
@@ -352,7 +360,7 @@ begin
     // Получим список пользователей
     Check((GetRecordCount(ObjectTest) = RecordCount + 1), 'Количество записей не изменилось');
   finally
-    DeleteObject(Id);
+    ObjectTest.DeleteObject(Id);
   end;
 end;
 {------------------------------------------------------------------------------}
@@ -557,6 +565,12 @@ begin
   spGet := 'gpGet_Object_Bank';
 end;
 
+procedure TBankTest.DeleteObject(Id: Integer);
+begin
+  inherited;
+  DeleteObject(TJuridicalTest.Create.GetDefault);
+end;
+
 function TBankTest.InsertDefault: integer;
 var
   JuridicalId: Integer;
@@ -583,6 +597,14 @@ begin
   spInsertUpdate := 'gpInsertUpdate_Object_Partner';
   spSelect := 'gpSelect_Object_Partner';
   spGet := 'gpGet_Object_Partner';
+end;
+
+procedure TPartnerTest.DeleteObject(Id: Integer);
+begin
+  inherited;
+  DeleteObject(TJuridicalTest.Create.GetDefault);
+  DeleteObject(TRouteTest.Create.GetDefault);
+  DeleteObject(TRouteSortingTest.Create.GetDefault);
 end;
 
 function TPartnerTest.InsertDefault: integer;
@@ -615,6 +637,13 @@ begin
   spInsertUpdate := 'gpInsertUpdate_Object_Juridical';
   spSelect := 'gpSelect_Object_Juridical';
   spGet := 'gpGet_Object_Juridical';
+end;
+
+procedure TJuridicalTest.DeleteObject(Id: Integer);
+begin
+  inherited;
+  DeleteObject(TJuridicalGroupTest.Create.GetDefault);
+  DeleteObject(TGoodsPropertyTest.Create.GetDefault);
 end;
 
 function TJuridicalTest.InsertDefault: integer;
@@ -687,13 +716,13 @@ begin
         end;
         Check((GetRecordCount(ObjectTest) = RecordCount + 3), 'Количество записей не изменилось');
       finally
-        DeleteObject(Id3);
+        ObjectTest.DeleteObject(Id3);
       end;
     finally
-      DeleteObject(Id2);
+      ObjectTest.DeleteObject(Id2);
     end;
   finally
-    DeleteObject(Id);
+    ObjectTest.DeleteObject(Id);
   end;
 end;
 
@@ -713,8 +742,7 @@ begin
       Check((FieldByName('GLNCode').AsString = 'GLNCode'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
 
   finally
-    DeleteObject(Id);
-    DeleteObject(TJuridicalGroupTest.Create.GetDefault);
+    ObjectTest.DeleteObject(Id);
   end;
 end;
 
@@ -739,8 +767,7 @@ begin
       Check((FieldByName('Name').AsString = 'Банк'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
 
   finally
-    DeleteObject(Id);
-    DeleteObject(TJuridicalTest.Create.GetDefault);
+    ObjectTest.DeleteObject(Id);
   end;
 end;
 
@@ -760,7 +787,7 @@ begin
       Check((FieldByName('InvNumber').AsString = '123456'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
 
   finally
-    DeleteObject(Id);
+    ObjectTest.DeleteObject(Id);
   end;
 end;
 
@@ -780,7 +807,7 @@ begin
       Check((FieldByName('Name').AsString = 'Маршрут'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
 
   finally
-    DeleteObject(Id);
+    ObjectTest.DeleteObject(Id);
   end;
 end;
 
@@ -800,7 +827,7 @@ begin
       Check((FieldByName('Name').AsString = 'Сортировка маршрутов'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
 
   finally
-    DeleteObject(Id);
+    ObjectTest.DeleteObject(Id);
   end;
 end;
 
@@ -820,13 +847,9 @@ begin
       Check((FieldByName('GLNCode').AsString = 'GLNCode'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
 
   finally
-    DeleteObject(Id);
-    DeleteObject(TJuridicalTest.Create.GetDefault);
-    DeleteObject(TRouteTest.Create.GetDefault);
-    DeleteObject(TRouteSortingTest.Create.GetDefault);
+    ObjectTest.DeleteObject(Id);
   end;
 end;
-
 
 { TContractTest }
  constructor TContractTest.Create;
@@ -889,6 +912,13 @@ begin
   spInsertUpdate := 'gpInsertUpdate_Object_GoodsPropertyValue';
   spSelect := 'gpSelect_Object_GoodsPropertyValue';
   spGet := 'gpGet_Object_GoodsPropertyValue';
+end;
+
+procedure TGoodsPropertyValueTest.DeleteObject(Id: Integer);
+begin
+  inherited;
+  DeleteObject(TGoodsTest.Create.GetDefault);
+  DeleteObject(TGoodsPropertyTest.Create.GetDefault);
 end;
 
 function TGoodsPropertyValueTest.InsertDefault: integer;
