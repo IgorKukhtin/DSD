@@ -19,12 +19,13 @@ type
     function InsertUpdate(dsdParams: TdsdParams): Integer;
     function InsertDefault: integer; virtual; abstract;
     procedure SetDataSetParam; virtual;
+    procedure DeleteObject(Id: Integer);
   public
     function GetDefault: integer;
     function GetDataSet: TDataSet; virtual;
     function GetRecord(Id: integer): TDataSet;
     // Удаляется Объект и все подчиненные
-    procedure DeleteObject(Id: Integer); virtual;
+    procedure Delete(Id: Integer); virtual;
     constructor Create; virtual;
     destructor Destoy;
   end;
@@ -67,7 +68,7 @@ type
     function InsertDefault: integer; override;
   public
     // Удаляется Объект и все подчиненные
-    procedure DeleteObject(Id: Integer); override;
+    procedure Delete(Id: Integer); override;
     function InsertUpdateBank(const Id, Code: Integer; Name: string; MFO: string; JuridicalId: integer): integer;
     constructor Create; override;
   end;
@@ -75,6 +76,8 @@ type
   TCashTest = class(TObjectTest)
     function InsertDefault: integer; override;
   public
+    // Удаляется Объект и все подчиненные
+    procedure Delete(Id: Integer); override;
     function InsertUpdateCash(const Id: integer; CashName: string; CurrencyId: Integer; BranchId: integer): integer;
     constructor Create; override;
   end;
@@ -115,7 +118,7 @@ type
     function InsertDefault: integer; override;
   public
       // Удаляется Объект и все подчиненные
-    procedure DeleteObject(Id: Integer); override;
+    procedure Delete(Id: Integer); override;
     function InsertUpdateGoodsPropertyValue(const Id: Integer; Name: string;
         Amount: double; BarCode, Article, BarCodeGLN, ArticleGLN: string;
         GoodsPropertyId, GoodsId, GoodsKindId: Integer): integer;
@@ -127,7 +130,7 @@ type
     function InsertDefault: integer; override;
   public
     // Удаляется Объект и все подчиненные
-    procedure DeleteObject(Id: Integer); override;
+    procedure Delete(Id: Integer); override;
     function InsertUpdatePartner(const Id: integer; Code: Integer;
         Name, GLNCode: string; JuridicalId, RouteId, RouteSortingId: integer): integer;
     constructor Create; override;
@@ -138,7 +141,7 @@ type
     function InsertDefault: integer; override;
   public
       // Удаляется Объект и все подчиненные
-   procedure DeleteObject(Id: Integer); override;
+   procedure Delete(Id: Integer); override;
    function InsertUpdateJuridical(const Id: integer; Code: Integer;
         Name, GLNCode: string; isCorporate: boolean; JuridicalGroupId, GoodsPropertyId: integer): integer;
     constructor Create; override;
@@ -207,7 +210,9 @@ type
   private
     function InsertDefault: integer; override;
   public
-    function InsertUpdateBranch(const Id: integer; Code: Integer;
+   // Удаляется Объект и все подчиненные
+   procedure Delete(Id: Integer); override;
+   function InsertUpdateBranch(const Id: integer; Code: Integer;
         Name: string; JuridicalId: integer): integer;
     constructor Create; override;
   end;
@@ -233,6 +238,8 @@ type
   TUnitTest = class(TObjectTest)
     function InsertDefault: integer; override;
   public
+    // Удаляется Объект и все подчиненные
+    procedure Delete(Id: Integer); override;
     function InsertUpdateUnit(Id, Code: Integer; Name: String;
                               UnitGroupId, BranchId: integer): integer;
     constructor Create; override;
@@ -284,6 +291,11 @@ const
   '</xml>';
 begin
   TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Id]))
+end;
+
+procedure TObjectTest.Delete(Id: Integer);
+begin
+  DeleteObject(Id);
 end;
 
 destructor TObjectTest.Destoy;
@@ -363,7 +375,7 @@ begin
     // Получим список касс
     Check((GetRecordCount(ObjectTest) = RecordCount + 1), 'Количество записей не изменилось');
   finally
-    ObjectTest.DeleteObject(Id);
+    ObjectTest.Delete(Id);
   end;
 end;
 {------------------------------------------------------------------------------}
@@ -388,12 +400,7 @@ begin
       Check((FieldByName('Name').AsString = 'GoodsPropertyValue'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
 
   finally
-<<<<<<< HEAD
-    ObjectTest.DeleteObject(Id);
-=======
-    DeleteObject(Id);
-    DeleteObject(TGoodsPropertyTest.Create.GetDefault);
->>>>>>> refs/remotes/origin/master
+    ObjectTest.Delete(Id);
   end;
 end;
 
@@ -413,7 +420,7 @@ begin
       Check((FieldByName('Name').AsString = 'Товар 1'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
 
   finally
-    ObjectTest.DeleteObject(Id);
+    ObjectTest.Delete(Id);
   end;
 end;
 {------------------------------------------------------------------------------}
@@ -443,7 +450,7 @@ begin
     // Получим список пользователей
     Check((GetRecordCount(ObjectTest) = RecordCount + 1), 'Количество записей не изменилось');
   finally
-    ObjectTest.DeleteObject(Id);
+    ObjectTest.Delete(Id);
   end;
 end;
 {------------------------------------------------------------------------------}
@@ -514,6 +521,17 @@ begin
   spGet := 'gpGet_Object_Cash';
 end;
 
+procedure TCashTest.Delete(Id: Integer);
+begin
+  inherited;
+  with TCurrencyTest.Create do
+  try
+    Delete(GetDefault)
+  finally
+    Free;
+  end;
+end;
+
 function TCashTest.InsertDefault: integer;
 var CurrencyId: Integer;
 begin
@@ -535,8 +553,6 @@ begin
   FParams.AddParam('inCurrencyId', ftInteger, ptInput, CurrencyId);
   FParams.AddParam('inCurrencyId', ftInteger, ptInput, BranchId);
   result := InsertUpdate(FParams);
-
-
 end;
 
 
@@ -647,10 +663,15 @@ begin
   spGet := 'gpGet_Object_Bank';
 end;
 
-procedure TBankTest.DeleteObject(Id: Integer);
+procedure TBankTest.Delete(Id: Integer);
 begin
   inherited;
-  DeleteObject(TJuridicalTest.Create.GetDefault);
+  with TJuridicalTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free;
+  end;
 end;
 
 function TBankTest.InsertDefault: integer;
@@ -681,12 +702,27 @@ begin
   spGet := 'gpGet_Object_Partner';
 end;
 
-procedure TPartnerTest.DeleteObject(Id: Integer);
+procedure TPartnerTest.Delete(Id: Integer);
 begin
   inherited;
-  DeleteObject(TJuridicalTest.Create.GetDefault);
-  DeleteObject(TRouteTest.Create.GetDefault);
-  DeleteObject(TRouteSortingTest.Create.GetDefault);
+  with TJuridicalTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free;
+  end;
+  with TRouteTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free;
+  end;
+  with TRouteSortingTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free;
+  end;
 end;
 
 function TPartnerTest.InsertDefault: integer;
@@ -721,11 +757,21 @@ begin
   spGet := 'gpGet_Object_Juridical';
 end;
 
-procedure TJuridicalTest.DeleteObject(Id: Integer);
+procedure TJuridicalTest.Delete(Id: Integer);
 begin
   inherited;
-  DeleteObject(TJuridicalGroupTest.Create.GetDefault);
-  DeleteObject(TGoodsPropertyTest.Create.GetDefault);
+  with TJuridicalGroupTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free;
+  end;
+  with TGoodsPropertyTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free;
+  end;
 end;
 
 function TJuridicalTest.InsertDefault: integer;
@@ -798,13 +844,13 @@ begin
         end;
         Check((GetRecordCount(ObjectTest) = RecordCount + 3), 'Количество записей не изменилось');
       finally
-        ObjectTest.DeleteObject(Id3);
+        ObjectTest.Delete(Id3);
       end;
     finally
-      ObjectTest.DeleteObject(Id2);
+      ObjectTest.Delete(Id2);
     end;
   finally
-    ObjectTest.DeleteObject(Id);
+    ObjectTest.Delete(Id);
   end;
 end;
 
@@ -824,7 +870,7 @@ begin
       Check((FieldByName('GLNCode').AsString = 'GLNCode'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
 
   finally
-    ObjectTest.DeleteObject(Id);
+    ObjectTest.Delete(Id);
   end;
 end;
 
@@ -849,7 +895,7 @@ begin
       Check((FieldByName('Name').AsString = 'Банк'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
 
   finally
-    ObjectTest.DeleteObject(Id);
+    ObjectTest.Delete(Id);
   end;
 end;
 
@@ -869,7 +915,7 @@ begin
       Check((FieldByName('InvNumber').AsString = '123456'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
 
   finally
-    ObjectTest.DeleteObject(Id);
+    ObjectTest.Delete(Id);
   end;
 end;
 
@@ -889,7 +935,7 @@ begin
       Check((FieldByName('Name').AsString = 'Маршрут'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
 
   finally
-    ObjectTest.DeleteObject(Id);
+    ObjectTest.Delete(Id);
   end;
 end;
 
@@ -909,7 +955,7 @@ begin
       Check((FieldByName('Name').AsString = 'Сортировка маршрутов'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
 
   finally
-    ObjectTest.DeleteObject(Id);
+    ObjectTest.Delete(Id);
   end;
 end;
 
@@ -929,7 +975,7 @@ begin
       Check((FieldByName('GLNCode').AsString = 'GLNCode'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
 
   finally
-    ObjectTest.DeleteObject(Id);
+    ObjectTest.Delete(Id);
   end;
 end;
 
@@ -996,11 +1042,21 @@ begin
   spGet := 'gpGet_Object_GoodsPropertyValue';
 end;
 
-procedure TGoodsPropertyValueTest.DeleteObject(Id: Integer);
+procedure TGoodsPropertyValueTest.Delete(Id: Integer);
 begin
   inherited;
-  DeleteObject(TGoodsTest.Create.GetDefault);
-  DeleteObject(TGoodsPropertyTest.Create.GetDefault);
+  with TGoodsTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free;
+  end;
+  with TGoodsPropertyTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free;
+  end;
 end;
 
 function TGoodsPropertyValueTest.InsertDefault: integer;
@@ -1043,6 +1099,23 @@ begin
   spInsertUpdate := 'gpInsertUpdate_Object_Unit';
   spSelect := 'gpSelect_Object_Unit';
   spGet := 'gpGet_Object_Unit';
+end;
+
+procedure TUnitTest.Delete(Id: Integer);
+begin
+  inherited;
+  with TUnitGroupTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free;
+  end;
+  with TBranchTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free;
+  end;
 end;
 
 function TUnitTest.InsertDefault: integer;
@@ -1130,7 +1203,7 @@ begin
     with ObjectTest.GetRecord(Id) do
       Check((FieldByName('Name').AsString = 'Вид Формы оплаты'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
   finally
-    DeleteObject(Id);
+    ObjectTest.Delete(Id);
   end;
 end;
 
@@ -1172,7 +1245,7 @@ begin
     with ObjectTest.GetRecord(Id) do
       Check((FieldByName('Name').AsString = 'Вид договора'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
   finally
-    DeleteObject(Id);
+    ObjectTest.Delete(Id);
   end;
 end;
 
@@ -1214,7 +1287,7 @@ begin
     with ObjectTest.GetRecord(Id) do
       Check((FieldByName('Name').AsString = 'Бизнес'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
   finally
-    DeleteObject(Id);
+    ObjectTest.Delete(Id);
   end;
 end;
 
@@ -1225,6 +1298,17 @@ begin
   spInsertUpdate := 'gpInsertUpdate_Object_Branch';
   spSelect := 'gpSelect_Object_Branch';
   spGet := 'gpGet_Object_Branch';
+end;
+
+procedure TBranchTest.Delete(Id: Integer);
+begin
+  inherited;
+  with TJuridicalTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free
+  end;
 end;
 
 function TBranchTest.InsertDefault: integer;
@@ -1260,8 +1344,7 @@ begin
     with ObjectTest.GetRecord(Id) do
       Check((FieldByName('Name').AsString = 'Филиал'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
   finally
-    DeleteObject(Id);
-    DeleteObject(TJuridicalTest.Create.GetDefault);
+    ObjectTest.Delete(Id);
   end;
 end;
 
@@ -1338,13 +1421,13 @@ begin
         end;
         Check((GetRecordCount(ObjectTest) = RecordCount + 3), 'Количество записей не изменилось');
       finally
-        DeleteObject(Id3);
+        ObjectTest.Delete(Id3);
       end;
     finally
-      DeleteObject(Id2);
+      ObjectTest.Delete(Id2);
     end;
   finally
-    DeleteObject(Id);
+    ObjectTest.Delete(Id);
   end;
 end;
 
@@ -1365,9 +1448,7 @@ begin
     with ObjectTest.GetRecord(Id) do
       Check((FieldByName('Name').AsString = 'Подразделение'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
   finally
-    DeleteObject(Id);
-    DeleteObject(TUnitGroupTest.Create.GetDefault);
-    DeleteObject(TBranchTest.Create.GetDefault);
+    ObjectTest.Delete(Id);
   end;
 end;
 
@@ -1444,13 +1525,13 @@ begin
         end;
         Check((GetRecordCount(ObjectTest) = RecordCount + 3), 'Количество записей не изменилось');
       finally
-        DeleteObject(Id3);
+        ObjectTest.Delete(Id3);
       end;
     finally
-      DeleteObject(Id2);
+      ObjectTest.Delete(Id2);
     end;
   finally
-    DeleteObject(Id);
+    ObjectTest.Delete(Id);
   end;
 end;
 
@@ -1492,7 +1573,7 @@ begin
     with ObjectTest.GetRecord(Id) do
       Check((FieldByName('Name').AsString = 'Вид товара'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
   finally
-    DeleteObject(Id);
+    ObjectTest.Delete(Id);
   end;
 end;
 
@@ -1534,7 +1615,7 @@ begin
     with ObjectTest.GetRecord(Id) do
       Check((FieldByName('Name').AsString = 'Единица измерения'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
   finally
-    DeleteObject(Id);
+    ObjectTest.Delete(Id);
   end;
 end;
 
@@ -1555,7 +1636,7 @@ begin
       Check((FieldByName('Name').AsString = 'Классификатор свойств товаров'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
 
   finally
-    DeleteObject(Id);
+    ObjectTest.Delete(Id);
   end;
 end;
 
