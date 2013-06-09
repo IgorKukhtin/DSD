@@ -213,3 +213,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_PriceListItem_Goods()
 $BODY$BEGIN
   RETURN 34;
 END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Car_CarModel()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 35;
+END;  $BODY$ LANGUAGE plpgsql;

@@ -3,8 +3,9 @@
 --DROP FUNCTION gpGet_Object_Car();
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Car(
-IN inId          Integer,       /* Банки */
-IN inSession     TVarChar       /* текущий пользователь */)
+    IN inId          Integer,       -- Банки
+    IN inSession     TVarChar       -- текущий пользователь
+)
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
                CarModelId Integer, CarModelName TVarChar, RegistrationCertificate TVarChar) AS
 $BODY$BEGIN
@@ -25,8 +26,8 @@ LEFT JOIN ObjectLink AS Car_CarModel
        ON Car_CarModel.ObjectId = Object.Id AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
 LEFT JOIN Object AS CarModel
        ON CarModel.Id = Car_CarModel.ChildObjectId
-LEFT JOIN ObjectSring AS RegistrationCertificate 
-       ON RegistrationCertificate.ObjectId = Object.Id AND RegistrationCertificate.DescId = zc_ObjectString_Car_RegistrationCertificate()
+LEFT JOIN ObjectString AS RegistrationCertificate 
+       ON RegistrationCertificate.ObjectId = Object.Id AND RegistrationCertificate.DescId = zc_ObjectString_RegistrationCertificate()
     WHERE Object.Id = inId;
   
 END;$BODY$

@@ -118,4 +118,14 @@ END;$BODY$
   COST 1;
 ALTER FUNCTION zc_ObjectString_GoodsPropertyValue_ArticleGLN()
   OWNER TO postgres;
+  
+CREATE OR REPLACE FUNCTION zc_ObjectString_RegistrationCertificate()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 17;
+END;$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 1;
+ALTER FUNCTION zc_ObjectString_RegistrationCertificate()
+  OWNER TO postgres;
 

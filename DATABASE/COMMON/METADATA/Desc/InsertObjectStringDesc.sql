@@ -33,3 +33,6 @@ SELECT zc_ObjectString_GoodsPropertyValue_BarCodeGLN(), zc_Object_GoodsPropertyV
 
 INSERT INTO ObjectStringDesc (id, DescId, Code, itemname)
 SELECT zc_ObjectString_GoodsPropertyValue_ArticleGLN(), zc_Object_GoodsPropertyValue(), 'GoodsPropertyValue_ArticleGLN', 'Комментарий' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Id = zc_ObjectString_GoodsPropertyValue_ArticleGLN());
+
+INSERT INTO ObjectStringDesc (id, DescId, Code, itemname)
+SELECT zc_ObjectString_RegistrationCertificate(), zc_object_Car(), 'RegistrationCertificate', 'Техпаспорт Автомобиля' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Id = zc_ObjectString_RegistrationCertificate());

@@ -62,6 +62,8 @@ type
     procedure UnitGroup_Test;
     procedure User_Test;
     procedure BankAccount_Test;
+    procedure CarModel_Test;
+    procedure Car_Test;
   end;
 
   TBankTest = class(TObjectTest)
@@ -268,6 +270,22 @@ type
     procedure Delete(Id: Integer); override;
     function InsertUpdateBankAccount(Id, Code: Integer; Name: String;
                             JuridicalId, BankId, CurrencyId: Integer): integer;
+    constructor Create; override;
+  end;
+
+  TCarModelTest = class(TObjectTest)
+  function InsertDefault: integer; override;
+  public
+    function InsertUpdateCarModel(Id, Code: Integer; Name: String): integer;
+    constructor Create; override;
+  end;
+
+  TCarTest = class(TObjectTest)
+  function InsertDefault: integer; override;
+  public
+    // Удаляется Объект и все подчиненные
+    procedure Delete(Id: Integer); override;
+    function InsertUpdateCar(const Id, Code : integer; Name, RegistrationCertificateId: string; CarModelId: Integer): integer;
     constructor Create; override;
   end;
 
@@ -1748,6 +1766,106 @@ begin
     // Получение данных о Филиале
     with ObjectTest.GetRecord(Id) do
       Check((FieldByName('Name').AsString = 'Расчетный счет'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    ObjectTest.Delete(Id);
+  end;
+end;
+
+{TCarModelTest}
+constructor TCarModelTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_CarModel';
+  spSelect := 'gpSelect_Object_CarModel';
+  spGet := 'gpGet_Object_CarModel';
+end;
+
+function TCarModelTest.InsertDefault: integer;
+begin
+  result := InsertUpdateCarModel(0, 1, 'Марка автомобиля');
+end;
+
+function TCarModelTest.InsertUpdateCarModel;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.CarModel_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TCarModelTest;
+begin
+  ObjectTest := TCarModelTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка Марки автомобиля
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных о Единице измерения
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Марка автомобиля'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    ObjectTest.Delete(Id);
+  end;
+end;
+
+ {TCarTest}
+ constructor TCarTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_Car';
+  spSelect := 'gpSelect_Object_Car';
+  spGet := 'gpGet_Object_Car';
+end;
+
+procedure TCarTest.Delete(Id: Integer);
+begin
+  inherited;
+  with TCarModelTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free
+  end;
+ end;
+
+function TCarTest.InsertDefault: integer;
+var
+  CarModelId: Integer;
+begin
+  CarModelId := TCarModelTest.Create.GetDefault;
+  result := InsertUpdateCar(0, 1, 'Автомобиль', 'АЕ НЕ', CarModelId);
+end;
+
+function TCarTest.InsertUpdateCar;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  FParams.AddParam('RegistrationCertificateId', ftString, ptInput, RegistrationCertificateId);
+  FParams.AddParam('inCarModelId', ftInteger, ptInput, CarModelId);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.Car_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TCarTest;
+begin
+  ObjectTest := TCarTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка Автомобиля
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных о Филиале
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Автомобиль'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
   finally
     ObjectTest.Delete(Id);
   end;
