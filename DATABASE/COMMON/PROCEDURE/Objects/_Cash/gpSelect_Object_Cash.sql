@@ -3,7 +3,8 @@
 --DROP FUNCTION gpSelect_Object_Cash();
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Cash(
-IN inSession     TVarChar       /* текущий пользователь */)
+    IN inSession     TVarChar       -- текущий пользователь
+)
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
                CurrencyName TVarChar) AS
 $BODY$BEGIN

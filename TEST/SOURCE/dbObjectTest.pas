@@ -61,6 +61,7 @@ type
     procedure Unit_Test;
     procedure UnitGroup_Test;
     procedure User_Test;
+    procedure BankAccount_Test;
   end;
 
   TBankTest = class(TObjectTest)
@@ -78,7 +79,8 @@ type
   public
     // Удаляется Объект и все подчиненные
     procedure Delete(Id: Integer); override;
-    function InsertUpdateCash(const Id: integer; CashName: string; CurrencyId: Integer; BranchId: integer): integer;
+    function InsertUpdateCash(const Id, Code : integer; CashName: string; CurrencyId: Integer;
+                                     BranchId, PaidKindId: integer): integer;
     constructor Create; override;
   end;
 
@@ -256,6 +258,16 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdateMeasure(Id, Code: Integer; Name: String): integer;
+    constructor Create; override;
+  end;
+
+  TBankAccountTest = class(TObjectTest)
+  function InsertDefault: integer; override;
+  public
+     // Удаляется Объект и все подчиненные
+    procedure Delete(Id: Integer); override;
+    function InsertUpdateBankAccount(Id, Code: Integer; Name: String;
+                            JuridicalId, BankId, CurrencyId: Integer): integer;
     constructor Create; override;
   end;
 
@@ -530,10 +542,22 @@ begin
   finally
     Free;
   end;
+  with TBranchTest.Create do
+  try
+    Delete(GetDefault)
+  finally
+    Free;
+  end;
+  with TPaidKindTest.Create do
+  try
+    Delete(GetDefault)
+  finally
+    Free;
+  end;
 end;
 
 function TCashTest.InsertDefault: integer;
-var CurrencyId: Integer;
+var CurrencyId, BranchId, PaidKindId: Integer;
 begin
   with TCurrencyTest.Create do
   try
@@ -541,17 +565,31 @@ begin
   finally
     Free;
   end;
-  result := InsertUpdateCash(0, 'Главная касса', CurrencyId, 0);
+  with TBranchTest.Create do
+  try
+    BranchId := GetDefault
+  finally
+    Free;
+  end;
+  with TPaidKindTest.Create do
+  try
+    PaidKindId := GetDefault
+  finally
+    Free;
+  end;
+  result := InsertUpdateCash(0, 1, 'Главная касса', CurrencyId, BranchId, PaidKindId);
 end;
 
-function TCashTest.InsertUpdateCash(const Id: integer; CashName: string;
-  CurrencyId, BranchId: Integer): integer;
+function TCashTest.InsertUpdateCash(const Id, Code: integer; CashName: string;
+  CurrencyId, BranchId, PaidKindId: Integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
   FParams.AddParam('inCashName', ftString, ptInput, CashName);
   FParams.AddParam('inCurrencyId', ftInteger, ptInput, CurrencyId);
-  FParams.AddParam('inCurrencyId', ftInteger, ptInput, BranchId);
+  FParams.AddParam('inBranchId', ftInteger, ptInput, BranchId);
+  FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
   result := InsertUpdate(FParams);
 end;
 
@@ -1640,6 +1678,80 @@ begin
   end;
 end;
 
+
+ {TBankAccountTest}
+ constructor TBankAccountTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_BankAccount';
+  spSelect := 'gpSelect_Object_BankAccount';
+  spGet := 'gpGet_Object_BankAccount';
+end;
+
+procedure TBankAccountTest.Delete(Id: Integer);
+begin
+  inherited;
+  with TJuridicalTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free
+  end;
+  with TBankTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free
+  end;
+  with TCurrencyTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free
+  end;
+end;
+
+function TBankAccountTest.InsertDefault: integer;
+var
+  JuridicalId, BankId, CurrencyId: Integer;
+begin
+  JuridicalId := TJuridicalTest.Create.GetDefault;
+  BankId:= TBankTest.Create.GetDefault;
+  CurrencyId:= TCurrencyTest.Create.GetDefault;
+
+  result := InsertUpdateBankAccount(0, 1, 'Расчетный счет', JuridicalId, BankId, CurrencyId);
+end;
+
+function TBankAccountTest.InsertUpdateBankAccount;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
+  FParams.AddParam('inBankId', ftInteger, ptInput, BankId);
+  FParams.AddParam('inCurrencyId', ftInteger, ptInput, CurrencyId);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.BankAccount_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TBankAccountTest;
+begin
+  ObjectTest := TBankAccountTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка Филиала
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных о Филиале
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Расчетный счет'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    ObjectTest.Delete(Id);
+  end;
+end;
 
 initialization
   TestFramework.RegisterTest('Справочники', TdbObjectTest.Suite);

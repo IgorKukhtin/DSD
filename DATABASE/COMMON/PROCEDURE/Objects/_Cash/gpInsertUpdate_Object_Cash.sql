@@ -3,11 +3,13 @@
 -- DROP FUNCTION gpInsertUpdate_Object_Cash();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Cash(
-INOUT ioId	 Integer   ,   	/* ключ объекта <Касса> */
-IN inCashName    TVarChar  ,    /* Название объекта <Касса> */
-IN inCurrencyId  Integer   ,    /* Валюта данной кассы */
-IN inBranchId    Integer   ,    /* Какому филиалу принадлежит касса */
-IN inSession     TVarChar       /* текущий пользователь */
+ INOUT ioId	         Integer   ,   	-- ключ объекта <Касса> 
+    IN inCode        Integer   ,    -- код объекта <Касса> 
+    IN inCashName    TVarChar  ,    -- Название объекта <Касса> 
+    IN inCurrencyId  Integer   ,    -- Валюта данной кассы 
+    IN inBranchId    Integer   ,    -- Какому филиалу принадлежит касса 
+    IN inPaidKindhId Integer   ,    -- Вид формы оплаты кассы 
+    IN inSession     TVarChar       -- текущий пользователь
 )
   RETURNS integer AS
 $BODY$BEGIN
@@ -23,7 +25,7 @@ $BODY$BEGIN
 END;$BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
-ALTER FUNCTION gpInsertUpdate_Object_Cash(Integer, TVarChar, Integer, Integer, tvarchar)
+ALTER FUNCTION gpInsertUpdate_Object_Cash(Integer, Integer, TVarChar, Integer, Integer, Integer, tvarchar)
   OWNER TO postgres;
 
   
