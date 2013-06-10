@@ -13,15 +13,16 @@ $BODY$BEGIN
 
    RETURN QUERY 
    SELECT 
-     Object.Id
-   , Object.ObjectCode
-   , Object.ValueData
-   , Object.isErased
+         Object.Id         AS Id 
+       , Object.ObjectCode AS Code
+       , Object.ValueData  AS Name
+       , Object.isErased   AS isErased
    FROM Object
    WHERE Object.DescId = zc_Object_Business();
   
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE
+
+LANGUAGE plpgsql VOLATILE
   COST 100
   ROWS 100;
 ALTER FUNCTION gpSelect_Object_Business(TVarChar)
@@ -31,8 +32,8 @@ ALTER FUNCTION gpSelect_Object_Business(TVarChar)
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 05.06.13          
-
+ 10.06.13         * 
+ 05.06.13
 */
 
 -- тест

@@ -14,10 +14,10 @@ $BODY$BEGIN
 
      RETURN QUERY 
      SELECT 
-       Object.Id
-     , Object.ObjectCode
-     , Object.ValueData
-     , Object.isErased
+       Object.Id           AS Id
+     , Object.ObjectCode   AS Code
+     , Object.ValueData    AS Name
+     , Object.isErased     AS isErased
      , Juridical.ValueData AS JuridicalName
      , Bank.ValueData      AS BankName
      , Currency.ValueData  AS CurrencyName
@@ -49,6 +49,7 @@ ALTER FUNCTION gpSelect_Object_BankAccount(TVarChar)
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.06.13          *
  05.06.13          
 
 */

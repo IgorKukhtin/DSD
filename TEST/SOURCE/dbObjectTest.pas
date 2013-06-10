@@ -40,9 +40,12 @@ type
     procedure TearDown; override;
   published
     procedure Bank_Test;
+    procedure BankAccount_Test;
     procedure Branch_Test;
     procedure Business_Test;
     procedure Cash_Test;
+    procedure CarModel_Test;
+    procedure Car_Test;
     procedure Contract_Test;
     procedure ContractKind_Test;
     procedure Goods_Test;
@@ -61,9 +64,6 @@ type
     procedure Unit_Test;
     procedure UnitGroup_Test;
     procedure User_Test;
-    procedure BankAccount_Test;
-    procedure CarModel_Test;
-    procedure Car_Test;
   end;
 
   TBankTest = class(TObjectTest)

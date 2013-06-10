@@ -3,7 +3,8 @@
 --DROP FUNCTION gpSelect_Object_Car();
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Car(
-IN inSession     TVarChar       /* текущий пользователь */)
+    IN inSession     TVarChar       -- сессия пользователя
+)
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
 $BODY$BEGIN
 
@@ -11,12 +12,12 @@ $BODY$BEGIN
 
      RETURN QUERY 
      SELECT 
-       Object.Id
-     , Object.ObjectCode
-     , Object.ValueData
-     , Object.isErased
+       Object.Id         AS Id 
+     , Object.ObjectCode AS Code
+     , Object.ValueData  AS Name
+     , Object.isErased   AS isErased
      FROM Object
-    WHERE Object.DescId = zc_Object_Car();
+     WHERE Object.DescId = zc_Object_Car();
   
 END;$BODY$
   LANGUAGE plpgsql VOLATILE
@@ -25,4 +26,15 @@ END;$BODY$
 ALTER FUNCTION gpSelect_Object_Car(TVarChar)
   OWNER TO postgres;
 
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.06.13          * 
+ 03.06.13          
+
+*/
+
+-- тест
 -- SELECT * FROM gpSelect_Object_Car('2')
