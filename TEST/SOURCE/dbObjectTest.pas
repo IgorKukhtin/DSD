@@ -241,7 +241,8 @@ type
     // Удаляется Объект и все подчиненные
     procedure Delete(Id: Integer); override;
     function InsertUpdateUnit(Id, Code: Integer; Name: String;
-                              UnitGroupId, BranchId: integer): integer;
+                              ParentId, BranchId, BusinessId, JuridicalId,
+                              AccountDirectionId, ProfitLossDirectionId: integer): integer;
     constructor Create; override;
   end;
 
@@ -1128,7 +1129,8 @@ begin
 end;
 
 function TUnitTest.InsertUpdateUnit(Id, Code: Integer; Name: String;
-  UnitGroupId, BranchId: integer): integer;
+  ParentId, BranchId, BusinessId, JuridicalId,
+  AccountDirectionId, ProfitLossDirectionId: integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);

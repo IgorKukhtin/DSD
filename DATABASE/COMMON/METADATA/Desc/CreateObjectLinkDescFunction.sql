@@ -82,7 +82,7 @@ $BODY$BEGIN
   RETURN 12;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_UnitGroup()
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_Parent()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 13;
@@ -212,4 +212,28 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_PriceListItem_Goods()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 34;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_Business()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 35;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_Juridical()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 36;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_AccountDirection()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 37;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_ProfitLossDirection()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 38;
 END;  $BODY$ LANGUAGE plpgsql;
