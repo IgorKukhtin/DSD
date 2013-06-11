@@ -595,7 +595,7 @@ begin
   finally
     Free;
   end;
-  result := InsertUpdateCash(0, 1, 'Главная касса', CurrencyId, BranchId, PaidKindId);
+  result := InsertUpdateCash(0, 3, 'Главная касса', CurrencyId, BranchId, PaidKindId);
 end;
 
 function TCashTest.InsertUpdateCash(const Id, Code: integer; CashName: string;

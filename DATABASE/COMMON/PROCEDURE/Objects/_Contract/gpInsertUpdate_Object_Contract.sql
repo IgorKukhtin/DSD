@@ -11,8 +11,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
 RETURNS Integer AS
 $BODY$
    DECLARE UserId Integer;
-BEGIN
 
+BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Contract());

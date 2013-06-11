@@ -3,9 +3,9 @@
 -- DROP FUNCTION gpInsertUpdate_Object_Form();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Form(
-IN inFormName    TVarChar  ,    /* главное Название объекта <Форма> */
-IN inFormData    TBLOB     ,    /* Данные формы */
-IN inSession     TVarChar       /* текущий пользователь */
+    IN inFormName    TVarChar  ,    -- главное Название объекта <Форма> 
+    IN inFormData    TBLOB     ,    -- Данные формы 
+    IN inSession     TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
