@@ -18,8 +18,8 @@ $BODY$BEGIN
        SELECT
              CAST (0 as Integer) AS Id
            , MAX (Object.ObjectCode) + 1 AS Code
-           , CAST ('' as TVarChar) AS Name
-           , CAST (NULL AS Boolean) isErased
+           , CAST ('' as TVarChar)  AS Name
+           , CAST (NULL AS Boolean) AS isErased
        FROM Object 
        WHERE Object.DescId = zc_Object_Route();
    ELSE

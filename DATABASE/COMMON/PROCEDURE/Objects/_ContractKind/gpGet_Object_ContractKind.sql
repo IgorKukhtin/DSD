@@ -4,27 +4,48 @@
 
 CREATE OR REPLACE FUNCTION gpGet_Object_ContractKind(
     IN inId          Integer,       -- Виды договоров
-    IN inSession     TVarChar       -- текущий пользователь 
+    IN inSession     TVarChar       -- сессия пользователя 
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
 $BODY$BEGIN
 
---   PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
+--   PERFORM lpCheckRight(inSession, zc_Enum_Process_ContractKind());
 
-   RETURN QUERY 
-   SELECT 
-     Object.Id
-   , Object.ObjectCode
-   , Object.ValueData
-   , Object.isErased
-   FROM Object
-   WHERE Object.Id = inId;
+   IF COALESCE (inId, 0) = 0
+   THEN
+       RETURN QUERY 
+       SELECT
+             CAST (0 as Integer)    AS Id
+           , MAX (Object.ObjectCode) + 1 AS Code
+           , CAST ('' as TVarChar)  AS Name
+           , CAST (NULL AS Boolean) AS isErased
+       FROM Object 
+       WHERE Object.DescId = zc_Object_ContractKind();
+   ELSE
+       RETURN QUERY 
+       SELECT 
+             Object.Id          AS Id
+           , Object.ObjectCode  AS Code
+           , Object.ValueData   AS Name
+           , Object.isErased    AS isErased
+       FROM Object
+       WHERE Object.Id = inId;
+  END IF;
   
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 1000;
-ALTER FUNCTION gpGet_Object_ContractKind(integer, TVarChar)
-  OWNER TO postgres;
+  
+LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpGet_Object_ContractKind(integer, TVarChar) OWNER TO postgres;
 
--- SELECT * FROM gpSelect_User('2')
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.06.13          *
+ 03.06.13          
+
+*/
+
+-- тест
+-- SELECT * FROM gpSelect_ContractKind('2')

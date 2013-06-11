@@ -10,20 +10,36 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Branch(
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS integer AS
-$BODY$BEGIN
+$BODY$
+   DECLARE UserId Integer;
+   DECLARE Code_max Integer;   
+   
+BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Branch());
+   UserId := inSession;
+
+   -- Если код не установлен, определяем его каи последний+1
+   IF COALESCE (inCode, 0) = 0
+   THEN 
+       SELECT MAX (ObjectCode) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_Branch();
+   ELSE
+       Code_max := inCode;
+   END IF; 
    
    -- проверка прав уникальности для свойства <Наименование Филиала>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Branch(), inName);
    -- проверка прав уникальности для свойства <Код Филиала>
-   PERFORM lpCheckUnique_Object_ObjectCode(ioId, zc_Object_Branch(), inCode);
+   PERFORM lpCheckUnique_Object_ObjectCode(ioId, zc_Object_Branch(), Code_max);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_Branch(), inCode, inName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_Branch(), Code_max, inName);
 
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Branch_Juridical(), ioId, inJuridicalId);
+
+   -- сохранили протокол
+   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE
@@ -36,8 +52,8 @@ ALTER FUNCTION gpInsertUpdate_Object_Branch (Integer, Integer, TVarChar, Integer
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.05.13          *
  05.06.13          
-
 */
 
 -- тест

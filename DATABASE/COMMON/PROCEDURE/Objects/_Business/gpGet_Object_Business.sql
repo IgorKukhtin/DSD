@@ -11,16 +11,27 @@ $BODY$BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
-
-   RETURN QUERY 
-   SELECT 
-     Object.Id
-   , Object.ObjectCode
-   , Object.ValueData
-   , Object.isErased
-   FROM Object
-   WHERE Object.Id = inId;
-  
+  IF COALESCE (inId, 0) = 0
+   THEN
+       RETURN QUERY 
+       SELECT
+             CAST (0 as Integer)    AS Id
+           , MAX (Object.ObjectCode) + 1 AS Code
+           , CAST ('' as TVarChar)  AS Name
+           , CAST (NULL AS Boolean) AS isErased
+       FROM Object 
+       WHERE Object.DescId = zc_Object_Business();
+   ELSE
+       RETURN QUERY 
+       SELECT 
+             Object.Id
+           , Object.ObjectCode
+           , Object.ValueData
+           , Object.isErased
+       FROM Object
+       WHERE Object.Id = inId;
+   END IF;
+     
 END;$BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100
@@ -33,6 +44,7 @@ ALTER FUNCTION gpGet_Object_Business(integer, TVarChar)
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.05.13          *
  05.06.13          
 
 */

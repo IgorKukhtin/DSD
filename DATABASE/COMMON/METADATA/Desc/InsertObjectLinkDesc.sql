@@ -102,3 +102,6 @@ SELECT zc_ObjectLink_Unit_AccountDirection(), 'Unit_AccountDirection', 'Связь по
 
 insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
 SELECT zc_ObjectLink_Unit_ProfitLossDirection(), 'Unit_ProfitLossDirection', 'Связь подразделения с аналитикой управленческих счетов - направление', zc_Object_Unit(), zc_Object_ProfitLossDirection() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_Unit_ProfitLossDirection());
+
+insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
+SELECT zc_ObjectLink_Car_CarModel(), 'Car_CarModel', '', zc_Object_Car(), zc_Object_CarModel() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_Car_CarModel());

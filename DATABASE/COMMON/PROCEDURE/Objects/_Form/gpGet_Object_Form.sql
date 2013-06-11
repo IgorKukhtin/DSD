@@ -3,8 +3,9 @@
 --DROP FUNCTION gpGet_Object_Form();
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Form(
-IN inFormName    TVarChar,       /* Форма */
-IN inSession     TVarChar       /* текущий пользователь */)
+    IN inFormName    TVarChar,      -- Форма 
+    IN inSession     TVarChar       -- текущий пользователь
+)
 RETURNS TBlob AS
 $BODY$
 DECLARE

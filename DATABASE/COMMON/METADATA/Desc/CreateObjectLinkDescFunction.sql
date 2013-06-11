@@ -237,3 +237,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_ProfitLossDirection()
 $BODY$BEGIN
   RETURN 38;
 END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Car_CarModel()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 39;
+END;  $BODY$ LANGUAGE plpgsql;
