@@ -10,6 +10,8 @@ $BODY$
 DECLARE
   lEndDate TDateTime;
   lStartDate TDateTime;
+  lDescId Integer;
+  lObjectId Integer;
 BEGIN
    DELETE FROM ObjectHistoryLink WHERE ObjectHistoryId = inId;
    DELETE FROM ObjectHistoryString WHERE ObjectHistoryId = inId;
@@ -18,11 +20,14 @@ BEGIN
    -- Изменили перед удалением диапазон
    -- Для этого у раннего элемента поставили EndDate = EndDate удаляемого элемента
 
-   SELECT EndDate, StartDate INTO lEndDate, lStartDate FROM ObjectHistory WHERE Id = inId;
+   SELECT EndDate, StartDate, DescId, ObjectId 
+          INTO lEndDate, lStartDate, lDescId, lObjectId
+   FROM ObjectHistory WHERE Id = inId;
+
    UPDATE ObjectHistory SET EndDate = lEndDate 
    WHERE Id = (SELECT Id FROM ObjectHistory 
-                WHERE ObjectHistory.DescId = inDescId 
-                  AND ObjectHistory.ObjectId = inObjectId
+                WHERE ObjectHistory.DescId = lDescId 
+                  AND ObjectHistory.ObjectId = lObjectId
                   AND ObjectHistory.StartDate < lStartDate
              ORDER BY ObjectHistory.StartDate DESC
                 LIMIT 1);

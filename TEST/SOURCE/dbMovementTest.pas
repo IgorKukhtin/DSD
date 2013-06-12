@@ -113,11 +113,12 @@ begin
 end;
 
 function TMovementIncomeTest.InsertDefault: integer;
-var UnitId: Integer;
+var UnitId, JuridicalId: Integer;
 begin
   UnitId := TUnitTest.Create.GetDefault;
+  JuridicalId := TJuridicalTest.Create.GetDefault;
   result := InsertUpdateMovementIncome(0, 'Номер 1',
-            Date, 0, UnitId, 0, 0, 0, 0, 0, Date, '', false, 20, 0);
+            Date, JuridicalId, UnitId, 0, 0, 0, 0, 0, Date, '', false, 20, 0);
 end;
 
 function TMovementIncomeTest.InsertUpdateMovementIncome(Id: Integer; InvNumber: String;

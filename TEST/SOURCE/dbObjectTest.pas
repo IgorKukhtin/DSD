@@ -1177,11 +1177,10 @@ end;
 
 function TUnitTest.InsertDefault: integer;
 var
-  UnitGroupId,BranchId: Integer;
+  BranchId: Integer;
 begin
   BranchId := TBranchTest.Create.GetDefault;
-  UnitGroupId := TUnitGroupTest.Create.GetDefault;
-  result := InsertUpdateUnit(0, 1, 'Подразделение', BranchId, UnitGroupId);
+  result := InsertUpdateUnit(0, 1, 'Подразделение', 0, BranchId, 0, 0, 0, 0);
 end;
 
 function TUnitTest.InsertUpdateUnit(Id, Code: Integer; Name: String;
@@ -1192,8 +1191,13 @@ begin
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inCode', ftInteger, ptInput, Code);
   FParams.AddParam('inName', ftString, ptInput, Name);
-  FParams.AddParam('inUnitGroupId', ftInteger, ptInput, UnitGroupId);
+  FParams.AddParam('inParentId', ftInteger, ptInput, ParentId);
   FParams.AddParam('inBranchId', ftInteger, ptInput, BranchId);
+
+  FParams.AddParam('inBusinessId', ftInteger, ptInput, BusinessId);
+  FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
+  FParams.AddParam('inAccountDirectionId', ftInteger, ptInput, AccountDirectionId);
+  FParams.AddParam('inProfitLossDirectionId', ftInteger, ptInput, ProfitLossDirectionId);
 
   result := InsertUpdate(FParams);
 end;
@@ -1877,4 +1881,3 @@ initialization
   TestFramework.RegisterTest('Справочники', TdbObjectTest.Suite);
 
 end.
-ё
