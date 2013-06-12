@@ -3,28 +3,49 @@
 -- DROP FUNCTION gpInsertUpdate_Object_Juridical();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
-INOUT ioId	         Integer   ,   	-- ключ объекта <Юридическое лицо>
-IN inCode                Integer   ,
-IN inName                TVarChar  ,    -- Название объекта <Юридическое лицо>
-IN inGLNCode             TVarChar  ,    --
-IN inisCorporate         Boolean   ,    --
-IN inJuridicalGroupId    Integer   ,    --
-IN inGoodsPropertyId     Integer   ,    --
-IN inSession             TVarChar       -- текущий пользователь
+ INOUT ioId	                 Integer   ,   	-- ключ объекта <Юридическое лицо>
+    IN inCode                Integer   ,    -- свойство <Код Юридического лица>
+    IN inName                TVarChar  ,    -- Название объекта <Юридическое лицо>
+    IN inGLNCode             TVarChar  ,    -- Код GLN
+    IN inisCorporate         Boolean   ,    -- Признак наша ли собственность это юридическое лицо
+    IN inJuridicalGroupId    Integer   ,    -- Группы юридических лиц
+    IN inGoodsPropertyId     Integer   ,    -- Классификаторы свойств товаров
+    IN inSession             TVarChar       -- текущий пользователь
 )
   RETURNS integer AS
-$BODY$BEGIN
---   PERFORM lpCheckRight(inSession, zc_Enum_Process_Juridical());
+$BODY$
+   DECLARE UserId Integer;
+   DECLARE Code_max Integer;  
+   
+BEGIN
+   
+   -- проверка прав пользователя на вызов процедуры
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Juridical());
+   UserId := inSession;
 
+   -- Если код не установлен, определяем его каи последний+1
+   IF COALESCE (inCode, 0) = 0
+   THEN 
+       SELECT MAX (ObjectCode) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_Juridical();
+   ELSE
+       Code_max := inCode;
+   END IF; 
+   
    -- !!! Проверем уникальность имени
-   -- !!! PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Juridical(), inName);
+   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Juridical(), inName);
+   -- проверка уникальности для свойства <Код>
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Juridical(), Code_max);
 
+   -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Juridical(), inCode, inName);
    PERFORM lpInsertUpdate_ObjectString(zc_objectString_Juridical_GLNCode(), ioId, inGLNCode);
    PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Juridical_isCorporate(), ioId, inisCorporate);
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Juridical_JuridicalGroup(), ioId, inJuridicalGroupId);
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Juridical_GoodsProperty(), ioId, inGoodsPropertyId);
 
+   -- сохранили протокол
+   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   
 END;$BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
@@ -36,6 +57,7 @@ ALTER FUNCTION gpInsertUpdate_Object_Juridical(Integer, Integer, TVarChar, TVarC
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.06.13          *    
  12.05.13                                        * rem lpCheckUnique_Object_ValueData
 
 */

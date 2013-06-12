@@ -16,7 +16,7 @@ $BODY$BEGIN
    THEN
        RETURN QUERY 
        SELECT
-             CAST (0 as Integer) AS Id
+             CAST (0 as Integer)    AS Id
            , MAX (Object.ObjectCode) + 1 AS Code
            , CAST ('' as TVarChar)  AS Name
            , CAST (NULL AS Boolean) AS isErased

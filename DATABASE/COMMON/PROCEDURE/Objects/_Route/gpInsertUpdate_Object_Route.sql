@@ -12,7 +12,7 @@ RETURNS Integer AS
 $BODY$
    DECLARE UserId Integer;
    DECLARE Code_max Integer;   
-   
+ 
 BEGIN
  
    -- проверка прав пользователя на вызов процедуры

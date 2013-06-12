@@ -13,11 +13,11 @@ $BODY$BEGIN
 
    RETURN QUERY 
    SELECT 
-         Object_JuridicalGroup.Id
-       , Object_JuridicalGroup.ObjectCode
-       , Object_JuridicalGroup.ValueData AS JuridicalGroupName
-       , CAST ('' AS TVarChar)           AS Name
-       , Object_JuridicalGroup.isErased
+         Object_JuridicalGroup.Id         AS Id 
+       , Object_JuridicalGroup.ObjectCode AS Code
+       , Object_JuridicalGroup.ValueData  AS JuridicalGroupName
+       , CAST ('' AS TVarChar)            AS Name
+       , Object_JuridicalGroup.isErased   AS isErased
        , ObjectLink_JuridicalGroup_Parent.ChildObjectId AS JuridicalGroupId
    FROM Object AS Object_JuridicalGroup
         LEFT JOIN ObjectLink AS ObjectLink_JuridicalGroup_Parent
@@ -26,11 +26,11 @@ $BODY$BEGIN
    WHERE Object_JuridicalGroup.DescId = zc_Object_JuridicalGroup()
   UNION
    SELECT 
-         Object_Juridical.Id
-       , Object_Juridical.ObjectCode
-       , CAST ('' AS TVarChar)     AS JuridicalGroupName
-       , Object_Juridical.ValueData         AS Name
-       , Object_Juridical.isErased
+         Object_Juridical.Id             AS Id 
+       , Object_Juridical.ObjectCode     AS Code
+       , CAST ('' AS TVarChar)           AS JuridicalGroupName
+       , Object_Juridical.ValueData      AS Name
+       , Object_Juridical.isErased       AS isErased
        , ObjectLink_Juridical_JuridicalGroup.ChildObjectId AS JuridicalGroupId
    FROM Object AS Object_Juridical
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
