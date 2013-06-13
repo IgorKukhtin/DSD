@@ -3,34 +3,60 @@
 --DROP FUNCTION gpGet_Object_JuridicalGroup();
 
 CREATE OR REPLACE FUNCTION gpGet_Object_JuridicalGroup(
-IN inId          Integer,       /* Касса */
-IN inSession     TVarChar       /* текущий пользователь */)
+    IN inId          Integer,       -- Касса
+    IN inSession     TVarChar       -- сессия пользователя 
+)
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, ParentId Integer, ParentName TVarChar) AS
 $BODY$BEGIN
 
---   PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
+   -- проверка прав пользователя на вызов процедуры
+   --   PERFORM lpCheckRight(inSession, zc_Enum_Process_JuridicalGroup());
 
-     RETURN QUERY 
-     SELECT 
-       Object.Id
-     , Object.ObjectCode
-     , Object.ValueData
-     , Object.isErased
-     , JuridicalGroup.Id AS ParentId
-     , JuridicalGroup.ValueData AS ParentName
-     FROM Object
-LEFT JOIN ObjectLink 
-       ON ObjectLink.ObjectId = Object.Id
-      AND ObjectLink.DescId = zc_ObjectLink_JuridicalGroup_Parent()
-LEFT JOIN Object AS JuridicalGroup
-       ON JuridicalGroup.Id = ObjectLink.ChildObjectId
-    WHERE Object.Id = inId;
+   IF COALESCE (inId, 0) = 0
+   THEN
+       RETURN QUERY 
+       SELECT
+             CAST (0 as Integer)    AS Id
+           , MAX (Object.ObjectCode) + 1 AS Code
+           , CAST ('' as TVarChar)  AS Name
+           , CAST (NULL AS Boolean) AS isErased
+           , CAST (0 as Integer)    AS ParentId
+           , CAST ('' as TVarChar)  AS ParentName
+       FROM Object 
+       WHERE Object.DescId = zc_Object_JuridicalGroup();
+   ELSE
+       RETURN QUERY 
+       SELECT 
+             Object.Id         AS Id
+           , Object.ObjectCode AS Code
+           , Object.ValueData  AS Name
+           , Object.isErased   AS isErased
+           , JuridicalGroup.Id AS ParentId
+           , JuridicalGroup.ValueData AS ParentName
+       FROM Object
+  LEFT JOIN ObjectLink 
+         ON ObjectLink.ObjectId = Object.Id
+        AND ObjectLink.DescId = zc_ObjectLink_JuridicalGroup_Parent()
+  LEFT JOIN Object AS JuridicalGroup
+         ON JuridicalGroup.Id = ObjectLink.ChildObjectId
+       WHERE Object.Id = inId;
+   END IF;
   
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 1000;
+
+LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Object_JuridicalGroup(integer, TVarChar)
   OWNER TO postgres;
 
--- SELECT * FROM gpSelect_User('2')
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.06.13          *
+ 00.06.13
+
+*/
+
+-- тест
+-- SELECT * FROM gpSelect_JuridicalGroup('2')

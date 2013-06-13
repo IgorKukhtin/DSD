@@ -19,7 +19,7 @@ BEGIN
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Route());
    UserId := inSession;
 
-   -- Если код не установлен, определяем его каи последний+1
+   -- Если код не установлен, определяем его как последний+1
    IF COALESCE (inCode, 0) = 0
    THEN 
        SELECT MAX (ObjectCode) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_Route();

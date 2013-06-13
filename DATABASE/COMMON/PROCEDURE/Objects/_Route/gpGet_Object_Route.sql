@@ -25,10 +25,10 @@ $BODY$BEGIN
    ELSE
        RETURN QUERY 
        SELECT
-             Object.Id
+             Object.Id         AS Id
            , Object.ObjectCode AS Code
-           , Object.ValueData AS Name
-           , Object.isErased
+           , Object.ValueData  AS Name
+           , Object.isErased   AS isErased
        FROM Object 
        WHERE Object.Id = inId;
    END IF;
