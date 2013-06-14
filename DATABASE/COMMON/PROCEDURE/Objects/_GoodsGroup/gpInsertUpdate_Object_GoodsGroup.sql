@@ -28,8 +28,8 @@ BEGIN
        Code_max := inCode;
    END IF; 
    
-   -- проверка прав уникальности для свойства <Наименование Группы товаров>
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_GoodsGroup(), inName);
+   -- !!! проверка прав уникальности для свойства <Наименование Группы товаров>
+   -- !!! PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_GoodsGroup(), inName);
    -- проверка прав уникальности для свойства <Код Группы товаров>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_GoodsGroup(), Code_max);
 

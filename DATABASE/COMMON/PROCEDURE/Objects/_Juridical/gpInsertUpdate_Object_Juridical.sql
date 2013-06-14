@@ -32,7 +32,7 @@ BEGIN
    END IF; 
    
    -- !!! Проверем уникальность имени
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Juridical(), inName);
+   -- !!! PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Juridical(), inName);
    -- проверка уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Juridical(), Code_max);
 

@@ -20,9 +20,6 @@ $BODY$
 BEGIN
 
    --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
-
-   -- !!! Проверем уникальность имени
-   -- !!! PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Goods(), inName);
    UserId := inSession;
 
    -- Если код не установлен, определяем его каи последний+1
@@ -33,8 +30,9 @@ BEGIN
        Code_max := inCode;
    END IF; 
 
-   -- проверка прав уникальности для свойства <Наименование Товара>
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Goods(), inName);
+   -- !!! проверка прав уникальности для свойства <Наименование Товара>
+   -- !!! PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Goods(), inName);
+
    -- проверка прав уникальности для свойства <Код Товара>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), Code_max);
 

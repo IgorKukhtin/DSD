@@ -31,11 +31,8 @@ BEGIN
        Code_max := inCode;
    END IF; 
    
-   -- !!! Проверем уникальность имени
+   -- !!! проверка уникальности для свойства <Наименование Контрагента>
    -- !!! PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Partner(), inName);
-
-   -- проверка уникальности для свойства <Наименование Контрагента>
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Partner(), inName);
    -- проверка уникальности для свойства <Код Контрагента>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Partner(), Code_max);
 

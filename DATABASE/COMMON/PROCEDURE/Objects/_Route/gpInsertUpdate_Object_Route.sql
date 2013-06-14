@@ -27,9 +27,9 @@ BEGIN
        Code_max := inCode;
    END IF; 
    
-   -- проверка прав уникальности для свойства <Наименование Маршрута>
+   -- проверка уникальности для свойства <Наименование Маршрута>
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Route(), inName);
-   -- проверка прав уникальности для свойства <Код маршрута>
+   -- проверка уникальности для свойства <Код маршрута>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Route(), Code_max);
 
    -- сохранили <Объект>

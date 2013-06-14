@@ -3,8 +3,9 @@
 --DROP FUNCTION gpGet_Object_Unit(integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Unit(
-IN inId          Integer,       /* Подразделение */
-IN inSession     TVarChar       /* текущий пользователь */)
+    IN inId          Integer,       -- Подразделение 
+    IN inSession     TVarChar       -- сессия пользователя 
+)
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
                ParentId Integer, ParentName TVarChar, 
                BranchId Integer, BranchName TVarChar,
@@ -13,24 +14,25 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean,
                ProfitLossDirectionId Integer, ProfitLossDirectionName TVarChar) AS
 $BODY$BEGIN
 
---   PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
+   -- проверка прав пользователя на вызов процедуры
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Unit());
 
      RETURN QUERY 
      SELECT 
-       Object.Id
-     , Object.ObjectCode
-     , Object.ValueData
-     , Object.isErased
-     , Parent.Id AS ParentId
-     , Parent.ValueData AS ParentName 
-     , Branch.Id AS BranchId
-     , Branch.ValueData AS BranchName
-     , Juridical.Id AS JuridicalId
-     , Juridical.ValueData AS JuridicalName
-     , AccountDirection.Id AS AccountDirectionId
-     , AccountDirection.ValueData AS AccountDirectionName
-     , ProfitLossDirection.Id ASProfitLossDirectionId
-     , ProfitLossDirection.ValueData AS ProfitLossDirectionName
+           Object.Id                  AS Id
+         , Object.ObjectCode          AS Code
+         , Object.ValueData           AS Name
+         , Object.isErased            AS isErased
+         , Parent.Id                  AS ParentId
+         , Parent.ValueData           AS ParentName 
+         , Branch.Id                  AS BranchId
+         , Branch.ValueData           AS BranchName
+         , Juridical.Id               AS JuridicalId
+         , Juridical.ValueData        AS JuridicalName
+         , AccountDirection.Id        AS AccountDirectionId
+         , AccountDirection.ValueData AS AccountDirectionName
+         , ProfitLossDirection.Id     AS ProfitLossDirectionId
+         , ProfitLossDirection.ValueData AS ProfitLossDirectionName
      FROM Object
 LEFT JOIN ObjectLink AS Unit_Parent
        ON Unit_Parent.ObjectId = Object.Id
@@ -60,10 +62,19 @@ LEFT JOIN Object AS ProfitLossDirection
     WHERE Object.Id = inId;
   
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 1000;
+
+LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Object_Unit(integer, TVarChar)
   OWNER TO postgres;
 
--- SELECT * FROM gpSelect_User('2')
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.06.13                        *
+
+*/
+
+-- тест
+-- SELECT * FROM gpSelect_Unit('2')
