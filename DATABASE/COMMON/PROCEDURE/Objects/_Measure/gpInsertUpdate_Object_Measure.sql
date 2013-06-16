@@ -22,7 +22,7 @@ BEGIN
    -- Если код не установлен, определяем его как последний+1
    IF COALESCE (inCode, 0) = 0
    THEN 
-       SELECT MAX (ObjectCode) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_Measure();
+       SELECT COALESCE( MAX (ObjectCode), 0) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_Measure();
    ELSE
        Code_max := inCode;
    END IF; 
@@ -49,7 +49,8 @@ ALTER FUNCTION gpInsertUpdate_Object_Measure (Integer, Integer, TVarChar, TVarCh
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  13.06.13          *
- 00.06.13
+ 16.06.13                                        * COALESCE( MAX (ObjectCode), 0)
+
 */
 
 -- тест

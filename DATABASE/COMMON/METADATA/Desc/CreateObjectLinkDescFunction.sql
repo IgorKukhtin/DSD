@@ -243,3 +243,15 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Car_CarModel()
 $BODY$BEGIN
   RETURN 39;
 END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_InfoMoney_InfoMoneyGroup()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 40;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_InfoMoney_InfoMoneyDestination()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 41;
+END;  $BODY$ LANGUAGE plpgsql;

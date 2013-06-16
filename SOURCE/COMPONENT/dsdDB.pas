@@ -235,7 +235,7 @@ begin
   if Assigned(gc_User) then
      Session := gc_User.Session
   else
-     Session := '';
+     Session := '2';
   Result :=
            '<xml Session = "' + Session + '" >' +
                 '<' + StoredProcName + ' OutputType = "' + GetEnumName(TypeInfo(TOutputType), ord(OutputType)) + '">' +

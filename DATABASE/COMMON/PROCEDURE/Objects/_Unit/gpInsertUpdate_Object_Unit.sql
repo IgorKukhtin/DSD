@@ -3,7 +3,7 @@
 -- DROP FUNCTION gpInsertUpdate_Object_Unit();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
- INOUT ioId	                     Integer   ,   	-- ключ объекта <Подразделение>
+ INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
     IN inCode                    Integer   ,    -- Код объекта <Подразделение>
     IN inName                    TVarChar  ,    -- Название объекта <Подразделение>
     IN inParentId                Integer   ,    -- ссылка на подразделение
@@ -11,50 +11,49 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
     IN inBusinessId              Integer   ,    -- ссылка на бизнес
     IN inJuridicalId             Integer   ,    -- ссылка на Юридические лицо
     IN inAccountDirectionId      Integer   ,    -- ссылка на Аналитики управленческих счетов
-    IN inProfitLossDirectionId   Integer ,      -- ссылка на Аналитики статей отчета ПиУ
+    IN inProfitLossDirectionId   Integer   ,    -- ссылка на Аналитики статей отчета ПиУ
     IN inSession                 TVarChar       -- сессия пользователя
 )
-  RETURNS integer AS
+  RETURNS Integer AS
 $BODY$
    DECLARE UserId Integer;
    DECLARE Code_max Integer;  
-   
 BEGIN
    
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Unit());
    UserId := inSession;
 
-   -- Если код не установлен, определяем его как последний+1
+   -- Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
    IF COALESCE (inCode, 0) = 0
    THEN 
-       SELECT MAX (ObjectCode) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_Unit();
+       SELECT COALESCE (MAX (ObjectCode), 0) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_Unit();
    ELSE
        Code_max := inCode;
    END IF; 
+   -- !!! IF COALESCE (inCode, 0) = 0  THEN Code_max := NULL; ELSE Code_max := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
    
-   -- !!! проверка уникальности для свойства <Наименования Подразделения>
-   -- !!! PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Unit(), inName);
-  
-   -- проверка уникальности для свойства <Код Подразделения>
+   -- проверка уникальности <Наименование>
+   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Unit(), inName);
+   -- проверка уникальности <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Unit(), Code_max);
 
-   -- Проверем цикл у дерева
+   -- проверка цикл у дерева
    PERFORM lpCheck_Object_CycleLink(ioId, zc_ObjectLink_Unit_Parent(), inParentId);
 
-   -- Вставляем объект
+   -- сохранили объект
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Unit(), Code_max, inName);
-   -- Вставляем ссылку
+   -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Parent(), ioId, inParentId);
-   -- Вставляем ссылку
+   -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Branch(), ioId, inBranchId);
-   -- Вставляем ссылку
+   -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Business(), ioId, inBusinessId);
-   -- Вставляем ссылку
+   -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Juridical(), ioId, inJuridicalId);
-   -- Вставляем ссылку
+   -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_AccountDirection(), ioId, inAccountDirectionId);
-   -- Вставляем ссылку
+   -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_ProfitLossDirection(), ioId, inProfitLossDirectionId);
 
    -- сохранили протокол
@@ -62,18 +61,17 @@ BEGIN
 
 END;$BODY$
 
-LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, tvarchar)
-      OWNER TO postgres;
+LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, tvarchar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 14.06.13          *              
  13.05.13                                        * rem lpCheckUnique_Object_ValueData
+ 14.06.13          *              
+ 16.06.13                                        * COALESCE (MAX (ObjectCode), 0)
 
 */
 

@@ -73,6 +73,9 @@ type
     cbAccountGroup: TCheckBox;
     cbAccountDirection: TCheckBox;
     cbAccount: TCheckBox;
+    cbProfitLoss: TCheckBox;
+    cbProfitLossDirection: TCheckBox;
+    cbProfitLossGroup: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -113,6 +116,7 @@ type
     procedure pLoadBranch;
     procedure pLoadUnitGroup;
     procedure pLoadUnit;
+    procedure pLoadUnitTwo;
     procedure pLoadPriceList;
     procedure pLoadGoodsProperty;
     procedure pLoadGoodsPropertyValue;
@@ -123,6 +127,9 @@ type
     procedure pLoadAccountGroup;
     procedure pLoadAccountDirection;
     procedure pLoadAccount;
+    procedure pLoadProfitLossGroup;
+    procedure pLoadProfitLossDirection;
+    procedure pLoadProfitLoss;
 
     procedure myEnabledCB (cb:TCheckBox);
     procedure myDisabledCB (cb:TCheckBox);
@@ -140,6 +147,8 @@ procedure TMainForm.StopButtonClick(Sender: TObject);
 begin
      if MessageDlg('Действительно остановить загрузку?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
      fStop:=true;
+     OKGuideButton.Enabled:=true;
+     OKDocumentButton.Enabled:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.CloseButtonClick(Sender: TObject);
@@ -295,7 +304,7 @@ begin
      if not fStop then pLoadJuridical;
      if not fStop then pLoadPartner;
      if not fStop then pLoadUnitGroup;
-     if not fStop then pLoadUnit;
+     if not fStop then pLoadUnitTwo;
      if not fStop then pLoadPriceList;
      if not fStop then pLoadGoodsProperty;
      if not fStop then pLoadGoodsPropertyValue;
@@ -306,6 +315,9 @@ begin
      if not fStop then pLoadAccountGroup;
      if not fStop then pLoadAccountDirection;
      if not fStop then pLoadAccount;
+     if not fStop then pLoadProfitLossGroup;
+     if not fStop then pLoadProfitLossDirection;
+     if not fStop then pLoadProfitLoss;
      //
      Gauge.Visible:=false;
      DBGrid.Enabled:=true;
@@ -402,6 +414,7 @@ begin
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
         while not EOF do
@@ -410,7 +423,7 @@ begin
              if fStop then begin exit;end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsString;
-             //toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsString;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsString;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
              // toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then;
@@ -489,6 +502,8 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Goods;
 begin
+//update Object set ObjectCode = null where DescId = zc_Object_Goods()
+//select * from Object where DescId = zc_Object_Goods()
      if (not cbGoods.Checked)or(not cbGoods.Enabled) then exit;
      //
      myEnabledCB(cbGoods);
@@ -1002,6 +1017,8 @@ begin
         Add('     , Unit.UnitName as ObjectName');
         Add('     , Unit.Id3_Postgres as Id_Postgres');
         Add('     , Unit_Juridical.Id2_Postgres as JuridicalId_Postgres');
+        Add('     , 0 as RouteId_Postgres');
+        Add('     , 0 as RouteSortingId_Postgres');
         Add('     , ClientInformation.GLN as GLNCode');
         Add('from dba.Unit');
         Add('     left outer join dba.Unit as Unit_Juridical on Unit_Juridical.Id = isnull(zf_ChangeIntToNull( Unit.DolgByUnitID), isnull(zf_ChangeIntToNull( Unit.InformationFromUnitID), Unit.Id))');
@@ -1032,6 +1049,8 @@ begin
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inGLNCode',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inRouteId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inRouteSortingId',ftInteger,ptInput, 0);
         //
         while not EOF do
         begin
@@ -1043,7 +1062,8 @@ begin
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
              toStoredProc.Params.ParamByName('inGLNCode').Value:=FieldByName('GLNCode').AsString;
              toStoredProc.Params.ParamByName('inJuridicalId').Value:=FieldByName('JuridicalId_Postgres').AsInteger;
-             //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+             toStoredProc.Params.ParamByName('inRouteId').Value:=FieldByName('RouteId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inRouteSortingId').Value:=FieldByName('RouteSortingId_Postgres').AsInteger;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
@@ -1074,7 +1094,9 @@ begin
         Add('     , '+FormatToVarCharServer_notNULL('Днепропетровский Филиал')+' as ObjectName');
         Add('     , Unit.Id3_Postgres as Id_Postgres');
         Add('     , 0 as JuridicalId_pg');
-        Add('from dba.Unit');
+        Add('from dba._pgUnit');
+        Add('     dba._pgUnit as _pgUnit_parent on _pgUnit_parent.Id = _pgUnit.ParentId and ');
+        Add('     left outer join dba.Unit as Unit_Branch on Unit_Branch.Id = 3'); // АЛАН
         Add('where Unit.Id = 3'); // АЛАН
         Add('order by ObjectId');
         Open;
@@ -1120,6 +1142,9 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadUnitGroup;
 begin
+     exit;
+     //
+     //
      if (not cbUnitGroup.Checked)or(not cbUnitGroup.Enabled) then exit;
      //
      myEnabledCB(cbUnitGroup);
@@ -1245,6 +1270,75 @@ begin
         Add('  and isnull(Unit.findGoodsCard,zc_rvNo()) = zc_rvYes()');
         Add('  and isUnit.UnitId is null');
 //        Add('  and Unit.Erased=zc_ErasedVis()');
+        Add('order by ObjectId');
+
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_unit';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inUnitGroupId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inBranchId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inUnitGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inBranchId').Value:=FieldByName('BranchId_Postgres').AsInteger;
+             //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.Unit set Id3_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        //EnableControls;
+     end;
+     //
+     myDisabledCB(cbUnit);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadUnitTwo;
+begin
+     if (not cbUnit.Checked)or(not cbUnit.Enabled) then exit;
+     //
+     myEnabledCB(cbUnit);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select _pgUnit.Id as ObjectId');
+        Add('     , 0 as ObjectCode');
+        Add('     , _pgUnit.Name3 as ObjectName');
+        Add('     , _pgUnit.Id_Postgres as Id_Postgres');
+        Add('     , _pgUnit_parent.Id_Postgres as ParentId_Postgres');
+        Add('     , Unit_Branch.Id3_Postgres as BranchId_Postgres');
+        Add('from dba._pgUnit');
+        Add('     left outer join dba._pgUnit as _pgUnit_parent on _pgUnit_parent.Id = _pgUnit.ParentId');
+        Add('     left outer join dba.Unit as Unit_Branch on Unit_Branch.Id = 3'); // АЛАН
+        Add('where (fCheckUnitClientParentID(3,Unit.Id)=zc_rvYes()'    // АЛАН
+           +'    or fCheckUnitClientParentID(3714,Unit.Id)=zc_rvYes()' // Алан-прочие
+           +'      )');
+        Add('  and (isUnit.UnitId is not null or Unit.Id in (3487))'); // Склад разделки мяса
+
         Add('order by ObjectId');
 
         Open;
@@ -1846,7 +1940,7 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpinsertupdate_object_infomoneydestination';
+        toStoredProc.StoredProcName:='gpinsertupdate_object_infomoney';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
@@ -2067,6 +2161,18 @@ from dba._pgAccount
      end;
      //
      myDisabledCB(cbAccount);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadProfitLossGroup;
+begin
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadProfitLossDirection;
+begin
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadProfitLoss;
+begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------------

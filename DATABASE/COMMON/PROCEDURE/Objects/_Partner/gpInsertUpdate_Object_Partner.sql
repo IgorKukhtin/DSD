@@ -22,23 +22,26 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Partner());
    UserId := inSession;
-
-   -- Если код не установлен, определяем его как последний+1
-   IF COALESCE (inCode, 0) = 0
-   THEN 
-       SELECT MAX (ObjectCode) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_Route();
-   ELSE
-       Code_max := inCode;
-   END IF; 
    
-   -- !!! проверка уникальности для свойства <Наименование Контрагента>
+   -- !!! Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
+   -- !!! IF COALESCE (inCode, 0) = 0
+   -- !!! THEN 
+   -- !!!     SELECT COALESCE (MAX (ObjectCode), 0) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_Route();
+   -- !!! ELSE
+   -- !!!     Code_max := inCode;
+   -- !!! END IF; 
+   IF COALESCE (inCode, 0) = 0  THEN Code_max := NULL; ELSE Code_max := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
+   
+   -- !!! проверка уникальности <Наименование>
    -- !!! PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Partner(), inName);
-   -- проверка уникальности для свойства <Код Контрагента>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Partner(), Code_max);
+   -- !!! проверка уникальности <Код>
+   -- !!! PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Partner(), Code_max);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Partner(), Code_max, inName);
+   -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Partner_GLNCode(), ioId, inGLNCode);
+   -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Partner_Juridical(), ioId, inJuridicalId);
 
    -- сохранили протокол
@@ -47,17 +50,17 @@ BEGIN
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Partner(Integer, Integer, TVarChar, TVarChar, Integer, Integer,Integer, TVarChar)
-  OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Partner(Integer, Integer, TVarChar, TVarChar, Integer, Integer,Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 13.06.13          *
  14.05.13                                        * rem lpCheckUnique_Object_ValueData
-
+ 13.06.13          *
+ 16.06.13                                        * rem lpCheckUnique_Object_ObjectCode
+ 
 */
 
 -- тест
