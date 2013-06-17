@@ -126,7 +126,7 @@ initialization
   RegisterClass (TdsdChangeMovementStatus);
   RegisterClass (TdsdChoiceGuides);
   RegisterClass (TdsdDataSetRefresh);
-  RegisterClass (TdsdDBFilterAddOn);
+  RegisterClass (TdsdDBViewAddOn);
   RegisterClass (TdsdDBTreeAddOn);
   RegisterClass (TdsdExecStoredProc);
   RegisterClass (TdsdFormClose);

@@ -107,6 +107,8 @@ object MainForm: TMainForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitLeft = 529
+    ExplicitTop = 33
     object cbGoodsGroup: TCheckBox
       Tag = 10
       Left = 15
@@ -427,8 +429,8 @@ object MainForm: TMainForm
   end
   object DataSource: TDataSource
     DataSet = fromQuery
-    Left = 248
-    Top = 192
+    Left = 256
+    Top = 225
   end
   object fromADOConnection: TADOConnection
     ConnectionString = 
@@ -436,8 +438,8 @@ object MainForm: TMainForm
       ';User ID=dba;Data Source=v9ProfiMeatingDS'
     LoginPrompt = False
     Provider = 'MSDASQL.1'
-    Left = 344
-    Top = 248
+    Left = 352
+    Top = 281
   end
   object fromQuery: TADOQuery
     Connection = fromADOConnection
@@ -451,8 +453,8 @@ object MainForm: TMainForm
   object fromSqlQuery: TADOQuery
     Connection = fromADOConnection
     Parameters = <>
-    Left = 384
-    Top = 304
+    Left = 392
+    Top = 337
   end
   object toZConnection: TZConnection
     ControlsCodePage = cCP_UTF16

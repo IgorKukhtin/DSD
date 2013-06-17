@@ -7,12 +7,17 @@ Type
   //TrfProcType  = (ptInsert, ptUpdate, ptMask, ptInsertUpdate);
   TdsdMovementStatus = (mtUncomplete, mtComplete, mtDelete);
 
-var FormatSettings: TFormatSettings;
-    {константы времени}
-    gc_DateStart: TDateTime;
-    gc_DateEnd: TDateTime;
 
-    function ShiftDown : Boolean;
+var
+
+  ConnectionPath: string = '..\init\init.php';
+
+  FormatSettings: TFormatSettings;
+  {константы времени}
+  gc_DateStart: TDateTime;
+  gc_DateEnd: TDateTime;
+
+  function ShiftDown : Boolean;
 
 const
 

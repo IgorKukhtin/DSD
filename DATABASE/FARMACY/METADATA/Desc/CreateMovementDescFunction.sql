@@ -1,0 +1,12 @@
+CREATE OR REPLACE FUNCTION zc_Movement_Income()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 1;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_Movement_ProductionUnion()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 2;
+END;  $BODY$ LANGUAGE plpgsql;
+

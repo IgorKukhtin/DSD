@@ -1,0 +1,6 @@
+CREATE OR REPLACE FUNCTION zc_MovementBoolean_PriceWithVAT()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 1;
+END;  $BODY$ LANGUAGE plpgsql;
+

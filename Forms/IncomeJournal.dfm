@@ -432,9 +432,4 @@ inherited IncomeJournalForm: TIncomeJournalForm
     Left = 72
     Top = 320
   end
-  object dsdDBFilterAddOn: TdsdDBFilterAddOn
-    View = cxGridDBTableView
-    Left = 464
-    Top = 144
-  end
 end

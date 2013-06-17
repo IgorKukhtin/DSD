@@ -12,7 +12,7 @@ type
 
 implementation
 
-uses StrUtils, Classes, SysUtils;
+uses StrUtils, Classes, SysUtils, UtilConst;
 { TConnectionFactory }
 
 class function TConnectionFactory.GetConnection: TZConnection;
@@ -21,7 +21,7 @@ var
   ConnectionString: string;
   List: TStringList;
 begin
-  AssignFile(F, '..\php\init.php');
+  AssignFile(F, ConnectionPath);
   Reset(f);
   readln(f, ConnectionString);
   readln(f, ConnectionString);

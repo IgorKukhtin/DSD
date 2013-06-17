@@ -13,6 +13,8 @@ inherited MeasureForm: TMeasureForm
     Height = 350
     Align = alClient
     TabOrder = 0
+    LookAndFeel.NativeStyle = True
+    LookAndFeel.SkinName = 'UserSkin'
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -20,6 +22,7 @@ inherited MeasureForm: TMeasureForm
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
+      Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
       OptionsBehavior.IncSearchItem = clName
       OptionsData.Deleting = False
@@ -27,14 +30,22 @@ inherited MeasureForm: TMeasureForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
+      OptionsView.HeaderHeight = 40
+      OptionsView.Indicator = True
+      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object clName: TcxGridDBColumn
         Caption = #1045#1076#1080#1085#1080#1094#1072' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taRightJustify
+        HeaderGlyphAlignmentVert = vaTop
         Width = 252
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -227,5 +238,10 @@ inherited MeasureForm: TMeasureForm
     Params = <>
     Left = 152
     Top = 152
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    View = cxGridDBTableView
+    Left = 208
+    Top = 200
   end
 end

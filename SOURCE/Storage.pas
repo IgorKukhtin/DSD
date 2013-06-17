@@ -31,7 +31,8 @@ type
 
 implementation
 
-uses SysUtils, ZLibEx, idGlobal, UtilConst, DBClient, Variants, UtilConvert, Dialogs;
+uses SysUtils, ZLibEx, idGlobal, UtilConst, DBClient, Variants, UtilConvert,
+     Dialogs, StrUtils;
 
 const
 
@@ -61,10 +62,23 @@ type
   end;
 
 class function TStorage.NewInstance: TObject;
+var
+  f: text;
+  ConnectionString: string;
 begin
   if not Assigned(Instance) then begin
     Instance := TStorage(inherited NewInstance);
-    Instance.FConnection := 'http://localhost/dsd/index.php';
+    AssignFile(F, ConnectionPath);
+    Reset(f);
+    readln(f, ConnectionString);
+    readln(f, ConnectionString);
+    readln(f, ConnectionString);
+    CloseFile(f);
+    // Вырезаем строку подключения
+    ConnectionString := Copy(ConnectionString, Pos('=', ConnectionString) + 3, maxint);
+    ConnectionString := Copy(ConnectionString, 1, length(ConnectionString) - 2);
+    ConnectionString := ReplaceStr(ConnectionString, ' ', #13#10);
+    Instance.FConnection := ConnectionString;
     Instance.IdHTTP := TIdHTTP.Create(nil);
     Instance.IdHTTP.Response.CharSet := 'windows-1251';// 'Content-Type: text/xml; charset=utf-8'
     Instance.FSendList := TStringList.Create;

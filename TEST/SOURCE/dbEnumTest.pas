@@ -18,20 +18,21 @@ type
     procedure InsertObjectEnum;
   end;
 
+ var
+
+   EnumPath: string = '..\DATABASE\COMMON\METADATA\Enum\';
+
 implementation
 
 { TdbEnumTest }
 
 uses zLibUtil;
 
-const
-  MetadataPath = '..\DATABASE\COMMON\METADATA\Enum\';
-
 procedure TdbEnumTest.InsertObjectEnum;
 begin
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateObjectEnumFunction.sql');
+  ZQuery.SQL.LoadFromFile(EnumPath + 'CreateObjectEnumFunction.sql');
   ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertObjectEnum.sql');
+  ZQuery.SQL.LoadFromFile(EnumPath + 'InsertObjectEnum.sql');
   ZQuery.ExecSQL;
 end;
 

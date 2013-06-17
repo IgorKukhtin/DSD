@@ -3,7 +3,8 @@ unit DataModul;
 interface
 
 uses
-  SysUtils, Classes, ImgList, Controls, frxClass;
+  SysUtils, Classes, ImgList, Controls, frxClass, cxClasses, cxStyles,
+  cxGridBandedTableView, cxGridTableView;
 
 type
 
@@ -13,6 +14,11 @@ type
     MainImageList: TImageList;
     TreeImageList: TImageList;
     frxReport: TfrxReport;
+    cxStyleRepository: TcxStyleRepository;
+    cxGridBandedTableViewStyleSheet: TcxGridBandedTableViewStyleSheet;
+    cxHeaderStyle: TcxStyle;
+    cxGridTableViewStyleSheet: TcxGridTableViewStyleSheet;
+    SortImageList: TImageList;
   end;
 
 var dmMain: TdmMain;

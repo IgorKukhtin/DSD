@@ -2,7 +2,8 @@ unit dsdAddOn;
 
 interface
 
-uses Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView, cxTextEdit, DB, dsdAction;
+uses Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView,
+     cxTextEdit, DB, dsdAction, cxGridTableView, cxGraphics;
 
 type
 
@@ -18,8 +19,10 @@ type
     property DBTreeList: TcxDBTreeList read FDBTreeList write SetDBTreeList;
   end;
 
-  // Добавляет функционал быстрой установки фильтров
-  TdsdDBFilterAddOn = class(TComponent)
+  // Добавляет ряд функционала на GridView
+  // 1. Быстрая установка фильтров
+  // 2. Рисование иконок сортировки
+  TdsdDBViewAddOn = class(TComponent)
   private
     FView: TcxGridDBTableView;
     // контрол для ввода условия фильтра
@@ -33,6 +36,10 @@ type
     procedure lpSetEdFilterPos(inKey: Char);
     //процедура устанавливает фильтр и убирает видимость у контрола
     procedure lpSetFilter;
+    // При изменении сортировки
+    procedure OnCustomDrawColumnHeader(Sender: TcxGridTableView;
+     ACanvas: TcxCanvas; AViewInfo: TcxGridColumnHeaderViewInfo;
+     var ADone: Boolean);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
@@ -45,12 +52,17 @@ type
 
 implementation
 
-uses Windows, SysUtils, VCL.Controls, cxFilter;
+uses Windows, SysUtils, VCL.Controls, cxFilter, cxClasses, cxLookAndFeelPainters,
+     cxCustomData, VCL.Graphics, cxGridCommon, math;
+
+type
+
+  TcxGridColumnHeaderViewInfoAccess = class(TcxGridColumnHeaderViewInfo);
 
 procedure Register;
 begin
    RegisterComponents('DSDComponent', [TdsdDBTreeAddOn]);
-   RegisterComponents('DSDComponent', [TdsdDBFilterAddOn]);
+   RegisterComponents('DSDComponent', [TdsdDBViewAddOn]);
 end;
 
 { TdsdDBTreeAddOn }
@@ -82,7 +94,7 @@ end;
 
 { TdsdDBFilterAddOn }
 
-constructor TdsdDBFilterAddOn.Create(AOwner: TComponent);
+constructor TdsdDBViewAddOn.Create(AOwner: TComponent);
 begin
   inherited;
   edFilter := TcxTextEdit.Create(Self);
@@ -91,13 +103,60 @@ begin
   edFilter.OnExit := edFilterExit
 end;
 
-procedure TdsdDBFilterAddOn.edFilterExit(Sender: TObject);
+procedure TdsdDBViewAddOn.OnCustomDrawColumnHeader(
+  Sender: TcxGridTableView; ACanvas: TcxCanvas;
+  AViewInfo: TcxGridColumnHeaderViewInfo; var ADone: Boolean);
+var
+  I: Integer;
+  R: TRect;
+  ASortingImageSize: Integer;
+  ASortingImageIndex: Integer;
+begin
+  ASortingImageSize := Sender.Images.Width;
+  with AViewInfo do
+  begin
+
+    Sender.Painter.LookAndFeelPainter.DrawHeader(ACanvas, Bounds, TextAreaBounds, Neighbors,
+      Borders, ButtonState, AlignmentHorz, AlignmentVert, MultiLinePainting, TcxGridColumnHeaderViewInfoAccess(AViewinfo).ShowEndEllipsis,
+      Text, Params.Font, Params.TextColor, Params.Color,
+      nil, Column.IsMostRight,
+      Container.Kind = ckGroupByBox);
+    R := AViewInfo.ContentBounds;
+    R.Left := R.Right - ASortingImageSize - 3;
+    InflateRect(R, -1, -1);
+    with TcxGridColumnHeaderViewInfoAccess(AViewinfo) do
+      for I := 0 to AreaViewInfoCount - 1 do
+        if AreaViewInfos[I] is TcxGridColumnHeaderFilterButtonViewInfo then
+        begin
+          if AViewInfo.ButtonState = cxbsHot then
+          begin
+            Sender.Painter.LookAndFeelPainter.DrawFilterDropDownButton(Canvas, AreaViewInfos[I].Bounds,
+              GridCellStateToButtonState(AreaViewInfos[I].State), TcxGridColumnHeaderFilterButtonViewInfo(AreaViewInfos[I]).Active);
+            R.Right := AreaViewInfos[I].Bounds.Left - 3;
+            R.Left := R.Right - ASortingImageSize;
+          end;
+        end;
+    if AViewInfo.Column.SortOrder <> soNone then
+    begin
+      ACanvas.Brush.Color := AViewInfo.Params.Color;
+      ACanvas.Brush.Style := bsClear;
+      if AViewInfo.Column.SortOrder = soAscending then
+         ASortingImageIndex := min(AViewInfo.Column.SortIndex, 9)
+      else
+         ASortingImageIndex := 9 + min(AViewInfo.Column.SortIndex, 9);
+      ACanvas.DrawImage(Sender.Images, R.Left, R.Top, ASortingImageIndex);
+    end;
+    ADone := True;
+  end;
+end;
+
+procedure TdsdDBViewAddOn.edFilterExit(Sender: TObject);
 begin
   edFilter.Visible:=false;
   FView.Focused := true;
 end;
 
-procedure TdsdDBFilterAddOn.edFilterKeyDown(Sender: TObject; var Key: Word;
+procedure TdsdDBViewAddOn.edFilterKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   case Key of
@@ -105,7 +164,7 @@ begin
   end;
 end;
 
-procedure TdsdDBFilterAddOn.lpSetEdFilterPos(inKey: Char);
+procedure TdsdDBViewAddOn.lpSetEdFilterPos(inKey: Char);
 // процедура устанавливает контрол для внесения значения фильтра и позиционируется на заголовке колонки
 var pRect:TRect;
 begin
@@ -128,7 +187,7 @@ begin
    edFilter.Text := edFilter.Text+inKey;
 end;
 
-procedure TdsdDBFilterAddOn.lpSetFilter;
+procedure TdsdDBViewAddOn.lpSetFilter;
    function GetFilterItem(ItemLink: TObject): TcxFilterCriteriaItem;
    var i: integer;
    begin
@@ -157,7 +216,7 @@ begin
   FView.DataController.Filter.Active := True;
 end;
 
-procedure TdsdDBFilterAddOn.Notification(AComponent: TComponent;
+procedure TdsdDBViewAddOn.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited Notification(AComponent, Operation);
@@ -165,7 +224,7 @@ begin
      FView := nil;
 end;
 
-procedure TdsdDBFilterAddOn.OnKeyDown(Sender: TObject; var Key: Word;
+procedure TdsdDBViewAddOn.OnKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   case Key of
@@ -179,18 +238,19 @@ begin
   end
 end;
 
-procedure TdsdDBFilterAddOn.OnKeyPress(Sender: TObject; var Key: Char);
+procedure TdsdDBViewAddOn.OnKeyPress(Sender: TObject; var Key: Char);
 begin
   // если колонка не редактируема и введена буква или BackSpace то обрабатываем установку фильтра
   if {TcxGridDBColumn(FView.Controller.FocusedColumn).Properties.ReadOnly and} ((Key>#31) or (Key=char(VK_BACK))) then
      lpSetEdFilterPos(Key);
 end;
 
-procedure TdsdDBFilterAddOn.SetView(const Value: TcxGridDBTableView);
+procedure TdsdDBViewAddOn.SetView(const Value: TcxGridDBTableView);
 begin
   FView := Value;
   FView.OnKeyPress := OnKeyPress;
   FView.OnKeyDown := OnKeyDown;
+  FView.OnCustomDrawColumnHeader := OnCustomDrawColumnHeader
 end;
 
 end.

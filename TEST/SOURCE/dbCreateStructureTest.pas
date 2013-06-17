@@ -26,6 +26,9 @@ type
     procedure CreateProtocol;
   end;
 
+var
+  CreateStructurePath: string = '..\DATABASE\COMMON\STRUCTURE\';
+
 implementation
 
 { TdbCreateStructureTest }
@@ -53,14 +56,14 @@ begin
   ZConnection.Connected := true;
   try
     // ≈сли база существует, то сначала надо ее удалить
-    ZQuery.SQL.LoadFromFile(StructurePath + 'KIllSession.sql');
+    ZQuery.SQL.LoadFromFile(CreateStructurePath + 'KIllSession.sql');
     ZQuery.ExecSQL;
-    ZQuery.SQL.LoadFromFile(StructurePath + 'DropDataBase.sql');
+    ZQuery.SQL.LoadFromFile(CreateStructurePath + 'DropDataBase.sql');
     ZQuery.ExecSQL;
   except
 
   end;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'CreateDataBase.sql');
+  ZQuery.SQL.LoadFromFile(CreateStructurePath + 'CreateDataBase.sql');
   ZQuery.ExecSQL;
 end;
 

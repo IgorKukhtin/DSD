@@ -29,14 +29,14 @@ type
     procedure InsertMovementItemContainerDesc;
   end;
 
+var
+  MetadataPath: string = '..\DATABASE\COMMON\METADATA\Desc\';
+
 implementation
 
 uses zLibUtil;
 
 { TdbMetaDataTest }
-
-const
-  MetadataPath = '..\DATABASE\COMMON\METADATA\Desc\';
 
 procedure TdbMetaDataTest.InsertObjectDesc;
 begin

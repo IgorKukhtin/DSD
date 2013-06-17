@@ -1,0 +1,40 @@
+program FarmacyTest;
+
+uses
+  Forms,
+  DUnitTestRunner,
+  dbCreateStructureTest in '..\SOURCE\dbCreateStructureTest.pas',
+  dbMetadataTest in '..\SOURCE\dbMetadataTest.pas',
+  zLibUtil in '..\SOURCE\zLibUtil.pas',
+  dbFarmacyProcedureTest in '..\SOURCE\dbFarmacyProcedureTest.pas',
+  UtilConst in '..\..\SOURCE\UtilConst.pas',
+  dbEnumTest in '..\SOURCE\dbEnumTest.pas',
+  LoadFarmacyFormTest in '..\SOURCE\LoadFarmacyFormTest.pas',
+  Measure in '..\..\Forms\Measure.pas' {MeasureForm},
+  MeasureEdit in '..\..\Forms\MeasureEdit.pas' {MeasureEditForm},
+  CommonData in '..\..\SOURCE\CommonData.pas',
+  Authentication in '..\..\SOURCE\Authentication.pas',
+  FormStorage in '..\..\SOURCE\FormStorage.pas',
+  ParentForm in '..\..\SOURCE\ParentForm.pas' {ParentForm},
+  Storage in '..\..\SOURCE\Storage.pas',
+  UtilConvert in '..\..\SOURCE\UtilConvert.pas',
+  dsdAction in '..\..\SOURCE\COMPONENT\dsdAction.pas',
+  dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas',
+  dsdDB in '..\..\SOURCE\COMPONENT\dsdDB.pas',
+  dsdGuides in '..\..\SOURCE\COMPONENT\dsdGuides.pas',
+  DataModul in '..\..\SOURCE\DataModul.pas' {dmMain: TDataModule};
+
+{$R *.res}
+
+begin
+  ConnectionPath := '..\INIT\farmacy_init.php';
+  CreateStructurePath := '..\DATABASE\FARMACY\STRUCTURE\';
+  MetadataPath := '..\DATABASE\FARMACY\METADATA\Desc\';
+  EnumPath := '..\DATABASE\FARMACY\METADATA\Enum\';
+
+  Application.Initialize;
+  Application.CreateForm(TdmMain, dmMain);
+  Application.Run;
+
+  DUnitTestRunner.RunRegisteredTests;
+end.
