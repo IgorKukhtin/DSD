@@ -12,14 +12,14 @@ RETURNS Integer AS
 $BODY$
    DECLARE UserId Integer;
    DECLARE Code_max Integer;   
-   
+ 
 BEGIN
  
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Route());
    UserId := inSession;
 
-   -- Если код не установлен, определяем его каи последний+1
+   -- Если код не установлен, определяем его как последний+1
    IF COALESCE (inCode, 0) = 0
    THEN 
        SELECT MAX (ObjectCode) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_Route();
@@ -27,9 +27,9 @@ BEGIN
        Code_max := inCode;
    END IF; 
    
-   -- проверка прав уникальности для свойства <Наименование Маршрута>
+   -- проверка уникальности для свойства <Наименование Маршрута>
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Route(), inName);
-   -- проверка прав уникальности для свойства <Код маршрута>
+   -- проверка уникальности для свойства <Код маршрута>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Route(), Code_max);
 
    -- сохранили <Объект>

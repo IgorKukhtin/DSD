@@ -16,19 +16,19 @@ $BODY$BEGIN
    THEN
        RETURN QUERY 
        SELECT
-             CAST (0 as Integer) AS Id
+             CAST (0 as Integer)    AS Id
            , MAX (Object.ObjectCode) + 1 AS Code
-           , CAST ('' as TVarChar) AS Name
-           , CAST (NULL AS Boolean) isErased
+           , CAST ('' as TVarChar)  AS Name
+           , CAST (NULL AS Boolean) AS isErased
        FROM Object 
        WHERE Object.DescId = zc_Object_PaidKind();
    ELSE
        RETURN QUERY 
        SELECT
-             Object.Id
+             Object.Id         AS Id
            , Object.ObjectCode AS Code
-           , Object.ValueData AS Name
-           , Object.isErased
+           , Object.ValueData  AS Name
+           , Object.isErased   AS isErased
        FROM Object 
        WHERE Object.Id = inId;
    END IF;

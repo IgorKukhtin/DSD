@@ -3,21 +3,23 @@
 --DROP FUNCTION gpSelect_Object_Partner(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Partner(
-IN inSession     TVarChar       /* текущий пользователь */)
+    IN inSession           TVarChar            -- сессия пользователя
+)
 RETURNS TABLE (Id Integer, Code Integer, JuridicalGroupName TVarChar, JuridicalName TVarChar, Name TVarChar, isErased BOOLEAN, JuridicalGroupId Integer) AS
 $BODY$BEGIN
 
-   --PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
+   -- проверка прав пользователя на вызов процедуры
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Partner());
 
      RETURN QUERY 
       SELECT 
-       Object.Id
-     , Object.ObjectCode
-     , Object.ValueData         AS JuridicalGroupName
-     , CAST('' AS TVarChar)     AS JuridicalName
-     , CAST('' AS TVarChar)     AS Name
-     , Object.isErased
-     , ObjectLink.ChildObjectId AS JuridicalGroupId
+           Object.Id                AS Id 
+         , Object.ObjectCode        AS Code
+         , Object.ValueData         AS JuridicalGroupName
+         , CAST('' AS TVarChar)     AS JuridicalName
+         , CAST('' AS TVarChar)     AS Name
+         , Object.isErased          AS isErased
+         , ObjectLink.ChildObjectId AS JuridicalGroupId
      FROM Object
 LEFT JOIN ObjectLink 
        ON ObjectLink.ObjectId = Object.Id
@@ -44,10 +46,19 @@ LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
     WHERE Object_Partner.DescId = zc_Object_Partner();
   
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 100;
+
+LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_Partner(TVarChar)
   OWNER TO postgres;
 
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+
+
+*/
+
+-- тест
 -- SELECT * FROM gpSelect_Object_Partner('2')

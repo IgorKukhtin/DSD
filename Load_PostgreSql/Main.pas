@@ -73,6 +73,9 @@ type
     cbAccountGroup: TCheckBox;
     cbAccountDirection: TCheckBox;
     cbAccount: TCheckBox;
+    cbProfitLoss: TCheckBox;
+    cbProfitLossDirection: TCheckBox;
+    cbProfitLossGroup: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -111,8 +114,10 @@ type
     procedure pLoadJuridical;
     procedure pLoadPartner;
     procedure pLoadBranch;
+    procedure pLoadBusiness;
     procedure pLoadUnitGroup;
     procedure pLoadUnit;
+    procedure pLoadUnitTwo;
     procedure pLoadPriceList;
     procedure pLoadGoodsProperty;
     procedure pLoadGoodsPropertyValue;
@@ -123,6 +128,9 @@ type
     procedure pLoadAccountGroup;
     procedure pLoadAccountDirection;
     procedure pLoadAccount;
+    procedure pLoadProfitLossGroup;
+    procedure pLoadProfitLossDirection;
+    procedure pLoadProfitLoss;
 
     procedure myEnabledCB (cb:TCheckBox);
     procedure myDisabledCB (cb:TCheckBox);
@@ -140,6 +148,8 @@ procedure TMainForm.StopButtonClick(Sender: TObject);
 begin
      if MessageDlg('Действительно остановить загрузку?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
      fStop:=true;
+     OKGuideButton.Enabled:=true;
+     OKDocumentButton.Enabled:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.CloseButtonClick(Sender: TObject);
@@ -294,8 +304,11 @@ begin
      if not fStop then pLoadJuridicalGroup;
      if not fStop then pLoadJuridical;
      if not fStop then pLoadPartner;
-     if not fStop then pLoadUnitGroup;
-     if not fStop then pLoadUnit;
+
+     if not fStop then pLoadBusiness;
+     if not fStop then pLoadBranch;
+     //if not fStop then pLoadUnitGroup;
+     if not fStop then pLoadUnitTwo;
      if not fStop then pLoadPriceList;
      if not fStop then pLoadGoodsProperty;
      if not fStop then pLoadGoodsPropertyValue;
@@ -306,6 +319,9 @@ begin
      if not fStop then pLoadAccountGroup;
      if not fStop then pLoadAccountDirection;
      if not fStop then pLoadAccount;
+     if not fStop then pLoadProfitLossGroup;
+     if not fStop then pLoadProfitLossDirection;
+     if not fStop then pLoadProfitLoss;
      //
      Gauge.Visible:=false;
      DBGrid.Enabled:=true;
@@ -360,12 +376,15 @@ begin
      fExecSqFromQuery('update dba.KindPackage set Id_Postgres = null');
      fExecSqFromQuery('update dba.MoneyKind set Id_Postgres = null');
      fExecSqFromQuery('update dba.ContractKind set Id_Postgres = null');
-     fExecSqFromQuery('update dba.Unit set Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = null');
+     fExecSqFromQuery('update dba.Unit set Id_Postgres_Business = null, Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = null');
      fExecSqFromQuery('update dba.PriceList_byHistory set Id_Postgres = null');
      fExecSqFromQuery('update dba.GoodsProperty_Postgres set Id_Postgres = null');
      fExecSqFromQuery('update dba.GoodsProperty_Detail set Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = null, Id4_Postgres = null, Id5_Postgres = null, Id6_Postgres = null, Id7_Postgres = null'
                                                        +', Id8_Postgres = null, Id9_Postgres = null, Id10_Postgres = null, Id11_Postgres = null, Id12_Postgres = null, Id13_Postgres = null, Id14_Postgres = null');
      fExecSqFromQuery('update dba._pgInfoMoney set Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = null');
+     fExecSqFromQuery('update dba._pgAccount set Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = null');
+     fExecSqFromQuery('update dba._pgProfitLoss set Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = null');
+     fExecSqFromQuery('update dba._pgUnit set Id_Postgres = null, Id_Postgres_Branch = null');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pSetNullDocument_Id_Postgres;
@@ -402,6 +421,7 @@ begin
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         //
         while not EOF do
@@ -410,7 +430,7 @@ begin
              if fStop then begin exit;end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsString;
-             //toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsString;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsString;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
              // toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then;
@@ -489,6 +509,8 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Goods;
 begin
+//update Object set ObjectCode = null where DescId = zc_Object_Goods()
+//select * from Object where DescId = zc_Object_Goods()
      if (not cbGoods.Checked)or(not cbGoods.Enabled) then exit;
      //
      myEnabledCB(cbGoods);
@@ -1002,6 +1024,8 @@ begin
         Add('     , Unit.UnitName as ObjectName');
         Add('     , Unit.Id3_Postgres as Id_Postgres');
         Add('     , Unit_Juridical.Id2_Postgres as JuridicalId_Postgres');
+        Add('     , 0 as RouteId_Postgres');
+        Add('     , 0 as RouteSortingId_Postgres');
         Add('     , ClientInformation.GLN as GLNCode');
         Add('from dba.Unit');
         Add('     left outer join dba.Unit as Unit_Juridical on Unit_Juridical.Id = isnull(zf_ChangeIntToNull( Unit.DolgByUnitID), isnull(zf_ChangeIntToNull( Unit.InformationFromUnitID), Unit.Id))');
@@ -1032,6 +1056,8 @@ begin
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inGLNCode',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inRouteId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inRouteSortingId',ftInteger,ptInput, 0);
         //
         while not EOF do
         begin
@@ -1043,7 +1069,8 @@ begin
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
              toStoredProc.Params.ParamByName('inGLNCode').Value:=FieldByName('GLNCode').AsString;
              toStoredProc.Params.ParamByName('inJuridicalId').Value:=FieldByName('JuridicalId_Postgres').AsInteger;
-             //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+             toStoredProc.Params.ParamByName('inRouteId').Value:=FieldByName('RouteId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inRouteSortingId').Value:=FieldByName('RouteSortingId_Postgres').AsInteger;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
@@ -1060,6 +1087,60 @@ begin
      myDisabledCB(cbPartner);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadBusiness;
+begin
+     if (not cbBusiness.Checked)or(not cbBusiness.Enabled) then exit;
+     //
+     myEnabledCB(cbBusiness);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Unit.Id as ObjectId');
+        Add('     , 0 as ObjectCode');
+        Add('     , Unit.UnitName as ObjectName');
+        Add('     , Unit.Id_Postgres_Business as Id_Postgres');
+        Add('from dba.Unit');
+        Add('where Id = 3');
+        Add('order by ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_business';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.Unit set Id_Postgres_Business='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbBusiness);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadBranch;
 begin
      if (not cbBranch.Checked)or(not cbBranch.Enabled) then exit;
@@ -1069,13 +1150,13 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select Unit.Id as ObjectId');
+        Add('select _pgUnit.Id as ObjectId');
         Add('     , 0 as ObjectCode');
-        Add('     , '+FormatToVarCharServer_notNULL('Днепропетровский Филиал')+' as ObjectName');
-        Add('     , Unit.Id3_Postgres as Id_Postgres');
+        Add('     , _pgUnit.Name3 as ObjectName');
+        Add('     , _pgUnit.Id_Postgres_Branch as Id_Postgres');
         Add('     , 0 as JuridicalId_pg');
-        Add('from dba.Unit');
-        Add('where Unit.Id = 3'); // АЛАН
+        Add('from dba._pgUnit');
+        Add('     join dba._pgUnit as _pgUnit_parent on _pgUnit_parent.Id = _pgUnit.ParentId and _pgUnit_parent.ObjectCode in (1102)');
         Add('order by ObjectId');
         Open;
         //
@@ -1102,11 +1183,10 @@ begin
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
              toStoredProc.Params.ParamByName('inJuridicalId').Value:=FieldByName('JuridicalId_pg').AsInteger;
-             //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.Unit set Id3_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             then fExecSqFromQuery('update dba._pgUnit set Id_Postgres_Branch='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;
@@ -1120,6 +1200,10 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadUnitGroup;
 begin
+     ShowMessage ('!!! ERROR !!! pLoadUnitGroup');
+     exit;
+     //
+     //
      if (not cbUnitGroup.Checked)or(not cbUnitGroup.Enabled) then exit;
      //
      myEnabledCB(cbUnitGroup);
@@ -1279,6 +1363,113 @@ begin
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.Unit set Id3_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        //EnableControls;
+     end;
+     //
+     myDisabledCB(cbUnit);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadUnitTwo;
+begin
+     if (not cbUnit.Checked)or(not cbUnit.Enabled) then exit;
+     //
+     myEnabledCB(cbUnit);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select _pgUnit.Id as ObjectId');
+        Add('     , 0 as ObjectCode');
+        Add('     , _pgUnit.Name3 as ObjectName');
+        Add('     , _pgUnit.Id_Postgres as Id_Postgres');
+        Add('     , _pgUnit_parent.Id_Postgres as ParentId_Postgres');
+        Add('     , isnull(_pgUnit_Branch_byCode.Id_Postgres_Branch, _pgUnit_Branch.Id_Postgres_Branch) as BranchId_Postgres');
+        Add('     , Unit.Id_Postgres_Business as BusinessId_Postgres');
+        Add('     , Unit.Id2_Postgres as JuridicalId_Postgres');
+        Add('     , _pgAccount.Id2_Postgres as AccountDirectionId');
+        Add('     , _pgProfitLoss.Id2_Postgres as ProfitLossDirectionId');
+        Add('from dba._pgUnit');
+        Add('     left outer join dba._pgUnit as _pgUnit_parent on _pgUnit_parent.Id = _pgUnit.ParentId');
+        Add('     left outer join dba._pgUnit as _pgUnit_parent2 on _pgUnit_parent2.Id = _pgUnit_parent.ParentId');
+        Add('     left outer join dba._pgUnit as _pgUnit_Branch on _pgUnit_Branch.Id = case when _pgUnit_parent.ObjectCode in (1102) then _pgUnit.Id when _pgUnit_parent2.ObjectCode in (1102) then _pgUnit.ParentId end');
+        Add('     left outer join dba._pgUnit as _pgUnit_Branch_byCode on _pgUnit_Branch_byCode.ObjectCode = case when _pgUnit.ObjectCode in (81) then 102');
+        Add('                                                                                                     WHEN _pgUnit.ObjectCode in (82) THEN 103');
+        Add('                                                                                                     WHEN _pgUnit.ObjectCode in (83) THEN 104');
+        Add('                                                                                                     WHEN _pgUnit.ObjectCode in (84) THEN 105');
+        Add('                                                                                                     WHEN _pgUnit.ObjectCode in (85) THEN 106');
+        Add('                                                                                                     WHEN _pgUnit.ObjectCode in (86) THEN 107');
+        Add('                                                                                                     WHEN _pgUnit.ObjectCode in (87) THEN 108');
+        Add('                                                                                                     WHEN _pgUnit.ObjectCode in (88) THEN 109');
+        Add('                                                                                                     WHEN _pgUnit.ObjectCode in (89) THEN 110');
+        Add('                                                                                                     WHEN _pgUnit.ObjectCode in (90) THEN 111');
+        Add('                                                                                                END');
+        Add('     left outer join dba.Unit on Unit.Id = 3');// АЛАН
+        Add('     left outer join dba._pgAccount on _pgAccount.ObjectCode = CASE WHEN _pgUnit_parent.ObjectCode in (1102) or _pgUnit_parent2.ObjectCode in (1102) THEN 40'); // Запасы + на филиалах
+        Add('                                                                    WHEN _pgUnit.ObjectCode in (1201, 2, 1204, 1205, 21) THEN 18'); // Запасы + на складах
+        Add('                                                                    WHEN _pgUnit.ObjectCode in (22, 23, 1303, 1304) THEN 13'); // Запасы + на складах ГП
+        Add('                                                                    WHEN _pgUnit.ObjectCode in (7) THEN 45'); // Запасы + на упаковке
+        Add('                                                                    WHEN _pgUnit_parent.ObjectCode in (1305) THEN 26'); // Запасы + на производстве
+        Add('                                                                END');
+        Add('     left outer join dba._pgProfitLoss on _pgProfitLoss.ObjectCode = CASE WHEN _pgUnit.ObjectCode in (51) THEN 65'); // Содержание админ
+        Add('                                                                          WHEN _pgUnit.ObjectCode in (52) THEN 69'); // админ + Содержание транспорта
+        Add('                                                                          WHEN _pgUnit.ObjectCode in (1101) THEN 73'); // Содержание охраны
+        Add('                                                                          WHEN _pgUnit.ObjectCode in (71) THEN 77'); // Сбыт  + Содержание транспорта
+        Add('                                                                          WHEN _pgUnit.ObjectCode in (1102) THEN 81'); // Содержание филиалов
+        Add('                                                                          WHEN _pgUnit.ObjectCode in (131) THEN 89'); // Общефирменные
+        Add('                                                                          WHEN _pgUnit.ObjectCode in (1103) THEN 35'); // Содержание производства
+        Add('                                                                          WHEN _pgUnit.ObjectCode in (1104) THEN 40'); // Содержание складов
+        Add('                                                                          WHEN _pgUnit.ObjectCode in (31) THEN 45'); // Производство + Содержание транспорта
+        Add('                                                                          WHEN _pgUnit.ObjectCode in (33) THEN 49'); // Содержание Кухни
+        Add('                                                                      END');
+        Add('where _pgUnit.Id<>0');
+        Add('order by ObjectId');
+
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_unit';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inBranchId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inBusinessId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAccountDirectionId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inProfitLossDirectionId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inBranchId').Value:=FieldByName('BranchId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inBusinessId').Value:=FieldByName('BusinessId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inJuridicalId').Value:=FieldByName('JuridicalId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inAccountDirectionId').Value:=FieldByName('AccountDirectionId').AsInteger;
+             toStoredProc.Params.ParamByName('inProfitLossDirectionId').Value:=FieldByName('ProfitLossDirectionId').AsInteger;
+             //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba._pgUnit set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;
@@ -1846,7 +2037,7 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpinsertupdate_object_infomoneydestination';
+        toStoredProc.StoredProcName:='gpinsertupdate_object_infomoney';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
@@ -2067,6 +2258,18 @@ from dba._pgAccount
      end;
      //
      myDisabledCB(cbAccount);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadProfitLossGroup;
+begin
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadProfitLossDirection;
+begin
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadProfitLoss;
+begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------------

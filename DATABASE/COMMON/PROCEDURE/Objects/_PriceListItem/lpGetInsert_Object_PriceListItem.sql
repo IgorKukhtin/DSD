@@ -3,7 +3,7 @@
 -- DROP FUNCTION lpGetInsert_Object_PriceListItem(Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpGetInsert_Object_PriceListItem(
-    IN inPriceListId         Integer,       -- Прайс-лист
+    IN inPriceListId         Integer,      -- Прайс-лист
     IN inGoodsId             Integer       -- Товар
 )
 RETURNS integer AS

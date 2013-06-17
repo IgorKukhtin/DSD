@@ -3,19 +3,21 @@
 --DROP FUNCTION gpSelect_Object_UnitGroup();
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_UnitGroup(
-IN inSession     TVarChar       /* текущий пользователь */)
+    IN inSession     TVarChar       -- сессия пользователя
+)
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, ParentId Integer) AS
 $BODY$BEGIN
 
-   --PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
+   -- проверка прав пользователя на вызов процедуры
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
    RETURN QUERY 
    SELECT 
-     Object.Id
-   , Object.ObjectCode
-   , Object.ValueData
-   , Object.isErased
-   , ObjectLink.ChildObjectId AS ParentId
+         Object.Id         AS Id 
+       , Object.ObjectCode AS Code
+       , Object.ValueData  AS Name
+       , Object.isErased   AS isErased
+       , ObjectLink.ChildObjectId AS ParentId
    FROM Object
    JOIN ObjectLink 
      ON ObjectLink.ObjectId = Object.Id
@@ -29,4 +31,14 @@ END;$BODY$
 ALTER FUNCTION gpSelect_Object_UnitGroup(TVarChar)
   OWNER TO postgres;
 
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.06.13          
+
+*/
+
+-- тест
 -- SELECT * FROM gpSelect_Object_UnitGroup('2')

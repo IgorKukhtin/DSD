@@ -8,21 +8,21 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PaidKind(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
 $BODY$BEGIN
 
-   --PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
+   -- проверка прав пользователя на вызов процедуры
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_PaidKind());
 
    RETURN QUERY 
    SELECT 
-     Object.Id
-   , Object.ObjectCode AS Code
-   , Object.ValueData AS Name
-   , Object.isErased
+         Object.Id         AS Id 
+       , Object.ObjectCode AS Code
+       , Object.ValueData  AS Name
+       , Object.isErased   AS isErased
    FROM Object
    WHERE Object.DescId = zc_Object_PaidKind();
   
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 100;
+
+LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_PaidKind(TVarChar)
   OWNER TO postgres;
 
