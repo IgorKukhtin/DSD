@@ -401,6 +401,20 @@ begin
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_PaidKind\gpGet_Object_PaidKind.sql');
   ZQuery.ExecSQL;
 
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_AccountGroup\gpInsertUpdate_Object_AccountGroup.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_AccountGroup\gpSelect_Object_AccountGroup.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_AccountGroup\gpGet_Object_AccountGroup.sql');
+  ZQuery.ExecSQL;
+
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_AccountDirection\gpInsertUpdate_Object_AccountDirection.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_AccountDirection\gpSelect_Object_AccountDirection.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_AccountDirection\gpGet_Object_AccountDirection.sql');
+  ZQuery.ExecSQL;
+
 end;
 
 procedure TdbProcedureTest.CreateProtocolProcedure;

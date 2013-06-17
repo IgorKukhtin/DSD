@@ -26,7 +26,7 @@ BEGIN
    -- !!! Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
    -- !!! IF COALESCE (inCode, 0) = 0
    -- !!! THEN 
-   -- !!!     SELECT COALESCE (MAX (ObjectCode), 0) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_Route();
+   -- !!!     SELECT COALESCE (MAX (ObjectCode), 0) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_Partner();
    -- !!! ELSE
    -- !!!     Code_max := inCode;
    -- !!! END IF; 
@@ -40,9 +40,9 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Partner(), Code_max, inName);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Partner_GLNCode(), ioId, inGLNCode);
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_GLNCode(), ioId, inGLNCode);
    -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Partner_Juridical(), ioId, inJuridicalId);
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Juridical(), ioId, inJuridicalId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, UserId);
@@ -57,9 +57,9 @@ ALTER FUNCTION gpInsertUpdate_Object_Partner(Integer, Integer, TVarChar, TVarCha
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 14.05.13                                        * rem lpCheckUnique_Object_ValueData
- 13.06.13          *
  16.06.13                                        * rem lpCheckUnique_Object_ObjectCode
+ 13.06.13          *
+ 14.05.13                                        * rem lpCheckUnique_Object_ValueData
  
 */
 

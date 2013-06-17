@@ -64,6 +64,8 @@ type
     procedure Unit_Test;
     procedure UnitGroup_Test;
     procedure User_Test;
+    procedure AccountGroup_Test;
+  //  procedure AccountDirection_Test;
   end;
 
   TBankTest = class(TObjectTest)
@@ -295,6 +297,13 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdateUser(const Id: integer; UserName, Login, Password: string): integer;
+    constructor Create; override;
+  end;
+
+  TAccountGroupTest = class(TObjectTest)
+  function InsertDefault: integer; override;
+  public
+    function InsertUpdateAccountGroup(const Id, Code: Integer; Name: string): integer;
     constructor Create; override;
   end;
 
@@ -1876,6 +1885,50 @@ begin
     ObjectTest.Delete(Id);
   end;
 end;
+
+{ TAccountGroupTest }
+constructor TAccountGroupTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_AccountGroup';
+  spSelect := 'gpSelect_Object_AccountGroup';
+  spGet := 'gpGet_Object_AccountGroup';
+end;
+
+function TAccountGroupTest.InsertDefault: integer;
+begin
+  result := InsertUpdateAccountGroup(0, 4, 'Группа управленческих счетов 1');
+end;
+
+function TAccountGroupTest.InsertUpdateAccountGroup(const Id, Code: Integer;
+  Name: string): integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.AccountGroup_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TAccountGroupTest;
+begin
+  ObjectTest := TAccountGroupTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка группы урп.счетов
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Группа управленческих счетов 1'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    ObjectTest.Delete(Id);
+  end;
+end;
+
 
 initialization
   TestFramework.RegisterTest('Справочники', TdbObjectTest.Suite);
