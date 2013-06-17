@@ -240,7 +240,6 @@ inherited UnitForm: TUnitForm
           Component = ClientGridDataSet
           DataType = ftInteger
           ParamType = ptInput
-          Value = ''
         end>
       isShowModal = True
       ActionType = acUpdate
@@ -275,7 +274,7 @@ inherited UnitForm: TUnitForm
     end
   end
   object spTree: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_UnitGroup'
+    StoredProcName = 'gpSelect_Object_Unit'
     DataSet = ClientTreeDataSet
     DataSets = <
       item
@@ -292,7 +291,7 @@ inherited UnitForm: TUnitForm
   end
   object ClientGridDataSet: TClientDataSet
     Aggregates = <>
-    IndexFieldNames = 'UnitGroupId'
+    IndexFieldNames = 'ParentId'
     MasterFields = 'Id'
     MasterSource = TreeDS
     PacketRecords = 0
@@ -324,7 +323,6 @@ inherited UnitForm: TUnitForm
         ComponentItem = 'Id'
         DataType = ftString
         ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'TextValue'
@@ -332,7 +330,6 @@ inherited UnitForm: TUnitForm
         ComponentItem = 'Name'
         DataType = ftString
         ParamType = ptOutput
-        Value = ''
       end>
     Left = 344
     Top = 232

@@ -2,8 +2,8 @@ object MainForm: TMainForm
   Left = 202
   Top = 180
   Caption = 'MainForm'
-  ClientHeight = 696
-  ClientWidth = 1067
+  ClientHeight = 715
+  ClientWidth = 1102
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,8 +18,8 @@ object MainForm: TMainForm
   object DBGrid: TDBGrid
     Left = 0
     Top = 0
-    Width = 521
-    Height = 640
+    Width = 556
+    Height = 659
     Align = alClient
     DataSource = DataSource
     TabOrder = 0
@@ -31,16 +31,18 @@ object MainForm: TMainForm
   end
   object ButtonPanel: TPanel
     Left = 0
-    Top = 640
-    Width = 1067
+    Top = 659
+    Width = 1102
     Height = 56
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 640
+    ExplicitWidth = 1067
     object Gauge: TGauge
       Left = 0
       Top = 0
-      Width = 1067
+      Width = 1102
       Height = 19
       Align = alTop
       Progress = 50
@@ -100,13 +102,15 @@ object MainForm: TMainForm
     end
   end
   object GuidePanel: TPanel
-    Left = 521
+    Left = 556
     Top = 0
     Width = 321
-    Height = 640
+    Height = 659
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitLeft = 521
+    ExplicitHeight = 640
     object cbGoodsGroup: TCheckBox
       Tag = 10
       Left = 15
@@ -234,7 +238,6 @@ object MainForm: TMainForm
       Width = 225
       Height = 17
       Caption = '4.1. '#1041#1080#1079#1085#1077#1089#1099
-      Enabled = False
       TabOrder = 11
     end
     object cbBranch: TCheckBox
@@ -387,14 +390,16 @@ object MainForm: TMainForm
     end
   end
   object DocumentPanel: TPanel
-    Left = 842
+    Left = 877
     Top = 0
     Width = 225
-    Height = 640
+    Height = 659
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 3
     OnClick = DocumentPanelClick
+    ExplicitLeft = 842
+    ExplicitHeight = 640
     object Label1: TLabel
       Left = 6
       Top = 24
