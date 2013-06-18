@@ -420,6 +420,27 @@ begin
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_AccountDirection\gpGet_Object_AccountDirection.sql');
   ZQuery.ExecSQL;
 
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_ProfitLossGroup\gpInsertUpdate_Object_ProfitLossGroup.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_ProfitLossGroup\gpSelect_Object_ProfitLossGroup.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_ProfitLossGroup\gpGet_Object_ProfitLossGroup.sql');
+  ZQuery.ExecSQL;
+
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_ProfitLossDirection\gpInsertUpdate_Object_ProfitLossDirection.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_ProfitLossDirection\gpSelect_Object_ProfitLossDirection.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_ProfitLossDirection\gpGet_Object_ProfitLossDirection.sql');
+  ZQuery.ExecSQL;
+
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_ProfitLoss\gpInsertUpdate_Object_ProfitLoss.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_ProfitLoss\gpSelect_Object_ProfitLoss.sql');
+  ZQuery.ExecSQL;
+  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_ProfitLoss\gpGet_Object_ProfitLoss.sql');
+  ZQuery.ExecSQL;
+
 end;
 
 procedure TdbProcedureTest.CreateProtocolProcedure;

@@ -117,3 +117,15 @@ SELECT zc_ObjectLink_InfoMoney_InfoMoneyDestination(), 'zc_ObjectLink_InfoMoney_
 
 insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
 SELECT zc_ObjectLink_Account_InfoMoney(), 'Account_InfoMoney', 'Связь счета с Управленческой аналитикой', zc_Object_Account(), zc_Object_InfoMoney() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_Account_InfoMoney());
+
+insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
+SELECT zc_ObjectLink_ProfitLoss_InfoMoney(), 'ProfitLoss_InfoMoney', 'Связь Статьи отчета о прибылях и убытках с Управленческой аналитикой', zc_Object_ProfitLoss(), zc_Object_InfoMoney() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_ProfitLoss_InfoMoney());
+
+insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
+SELECT zc_ObjectLink_ProfitLoss_ProfitLossGroup(), 'ProfitLoss_ProfitLossGroup', '', zc_Object_ProfitLoss(), zc_Object_ProfitLossGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_ProfitLoss_ProfitLossGroup());
+
+insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
+SELECT zc_ObjectLink_ProfitLoss_ProfitLossDirection(), 'ProfitLoss_ProfitLossDirection', '', zc_Object_ProfitLoss(), zc_Object_ProfitLossDirection() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_ProfitLoss_ProfitLossDirection());
+
+insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
+SELECT zc_ObjectLink_ProfitLoss_InfoMoneyDestination(), 'ProfitLoss_InfoMoneyDestination', '', zc_Object_ProfitLoss(), zc_Object_InfoMoneyDestination() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_ProfitLoss_InfoMoneyDestination());

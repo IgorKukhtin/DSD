@@ -261,3 +261,27 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Account_InfoMoney()
 $BODY$BEGIN
   RETURN 42;
 END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ProfitLoss_InfoMoney()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 43;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ProfitLoss_ProfitLossGroup()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 44;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ProfitLoss_ProfitLossDirection()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 45;
+END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ProfitLoss_InfoMoneyDestination()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 46;
+END;  $BODY$ LANGUAGE plpgsql;
