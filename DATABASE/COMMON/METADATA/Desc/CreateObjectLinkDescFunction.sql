@@ -255,3 +255,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_InfoMoney_InfoMoneyDestination()
 $BODY$BEGIN
   RETURN 41;
 END;  $BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Account_InfoMoney()
+  RETURNS integer AS
+$BODY$BEGIN
+  RETURN 42;
+END;  $BODY$ LANGUAGE plpgsql;

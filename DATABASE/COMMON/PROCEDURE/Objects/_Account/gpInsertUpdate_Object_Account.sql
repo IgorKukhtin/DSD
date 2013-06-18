@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Account(
     IN inAccountGroupId         Integer,    -- Группа счетов
     IN inAccountDirectionId     Integer,    -- Аналитика счета (место)
     IN inInfoMoneyDestinationId Integer,    -- Аналитика счета (назначение)
-    IN inInfoMoney              Integer,    -- Управленческие аналитики
+    IN inInfoMoneyId            Integer,    -- Управленческие аналитики
     IN inSession                TVarChar    -- сессия пользователя
 )
   RETURNS integer AS
@@ -52,6 +52,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.06.13          *
  05.06.13          
 
 */

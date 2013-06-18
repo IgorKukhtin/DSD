@@ -52,7 +52,6 @@ $BODY$BEGIN
            , Object_InfoMoney.ValueData      AS InfoMoneyName
            , Object_InfoMoney.Id             AS InfoMoneyId
 
-           Object_AccountDirection
        FROM Object AS Object_Account
             LEFT JOIN ObjectLink AS ObjectLink_Account_AccountGroup
                      ON ObjectLink_Account_AccountGroup.ObjectId = Object_Account.Id
@@ -74,7 +73,7 @@ $BODY$BEGIN
                     AND ObjectLink_Account_InfoMoney.DescId = zc_ObjectLink_Account_InfoMoney()
             LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Account_InfoMoney.ChildObjectId
          
-       WHERE Object.Id = inId;
+       WHERE Object_Account.Id = inId;
    END IF;      
   
 END;$BODY$

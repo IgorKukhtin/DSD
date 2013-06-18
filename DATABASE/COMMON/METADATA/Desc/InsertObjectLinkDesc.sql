@@ -114,3 +114,6 @@ SELECT zc_ObjectLink_InfoMoney_InfoMoneyGroup(), 'zc_ObjectLink_InfoMoney_InfoMo
 
 insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
 SELECT zc_ObjectLink_InfoMoney_InfoMoneyDestination(), 'zc_ObjectLink_InfoMoney_InfoMoneyDestination', '', zc_Object_InfoMoney(), zc_Object_InfoMoneyDestination() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_InfoMoney_InfoMoneyDestination());
+
+insert into ObjectLinkDesc(Id, Code, ItemName, DescId, ChildObjectDescId)
+SELECT zc_ObjectLink_Account_InfoMoney(), 'Account_InfoMoney', 'Связь счета с Управленческой аналитикой', zc_Object_Account(), zc_Object_InfoMoney() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Id = zc_ObjectLink_Account_InfoMoney());

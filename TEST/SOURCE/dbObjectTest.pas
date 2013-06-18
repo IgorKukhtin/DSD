@@ -2027,7 +2027,7 @@ var
 begin
   AccountGroupId := TAccountGroupTest.Create.GetDefault;
   AccountDirectionId:= TAccountDirectionTest.Create.GetDefault;;
-  result := InsertUpdateAccount(0, 1, '”правленческие счет 1', AccountGroupId, AccountDirectionId, 1, 1);
+  result := InsertUpdateAccount(0, 3, '”правленческие счет 1', AccountGroupId, AccountDirectionId, 1, 1);
 end;
 
 function TAccountTest.InsertUpdateAccount;
