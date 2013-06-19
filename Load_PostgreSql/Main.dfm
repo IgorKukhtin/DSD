@@ -2,8 +2,8 @@ object MainForm: TMainForm
   Left = 202
   Top = 180
   Caption = 'MainForm'
-  ClientHeight = 696
-  ClientWidth = 1067
+  ClientHeight = 715
+  ClientWidth = 1102
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,8 +18,8 @@ object MainForm: TMainForm
   object DBGrid: TDBGrid
     Left = 0
     Top = 0
-    Width = 521
-    Height = 640
+    Width = 556
+    Height = 659
     Align = alClient
     DataSource = DataSource
     TabOrder = 0
@@ -31,16 +31,18 @@ object MainForm: TMainForm
   end
   object ButtonPanel: TPanel
     Left = 0
-    Top = 640
-    Width = 1067
+    Top = 659
+    Width = 1102
     Height = 56
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 640
+    ExplicitWidth = 1067
     object Gauge: TGauge
       Left = 0
       Top = 0
-      Width = 1067
+      Width = 1102
       Height = 19
       Align = alTop
       Progress = 50
@@ -100,15 +102,15 @@ object MainForm: TMainForm
     end
   end
   object GuidePanel: TPanel
-    Left = 521
+    Left = 556
     Top = 0
     Width = 321
-    Height = 640
+    Height = 659
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitLeft = 529
-    ExplicitTop = 33
+    ExplicitLeft = 521
+    ExplicitHeight = 640
     object cbGoodsGroup: TCheckBox
       Tag = 10
       Left = 15
@@ -236,7 +238,6 @@ object MainForm: TMainForm
       Width = 225
       Height = 17
       Caption = '4.1. '#1041#1080#1079#1085#1077#1089#1099
-      Enabled = False
       TabOrder = 11
     end
     object cbBranch: TCheckBox
@@ -256,7 +257,8 @@ object MainForm: TMainForm
       Top = 291
       Width = 225
       Height = 17
-      Caption = '4.3. '#1043#1088#1091#1087#1087#1099' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
+      Caption = '4.3. '#1043#1088#1091#1087#1087#1099' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081' !!! '#1053#1045#1058' !!!'
+      Enabled = False
       TabOrder = 13
     end
     object cbUnit: TCheckBox
@@ -359,16 +361,45 @@ object MainForm: TMainForm
       Caption = '8.3. '#1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1089#1095#1077#1090#1072
       TabOrder = 24
     end
+    object cbProfitLoss: TCheckBox
+      Tag = 10
+      Left = 15
+      Top = 621
+      Width = 289
+      Height = 17
+      Caption = '9.3. '#1057#1090#1072#1090#1100#1080' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093' '
+      TabOrder = 25
+    end
+    object cbProfitLossDirection: TCheckBox
+      Tag = 10
+      Left = 15
+      Top = 601
+      Width = 289
+      Height = 17
+      Caption = '9.2. '#1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1090#1072#1090#1077#1081' '#1054#1055#1048#1059' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077' '
+      TabOrder = 26
+    end
+    object cbProfitLossGroup: TCheckBox
+      Tag = 10
+      Left = 15
+      Top = 581
+      Width = 289
+      Height = 17
+      Caption = '9.1. '#1043#1088#1091#1087#1087#1099' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093
+      TabOrder = 27
+    end
   end
   object DocumentPanel: TPanel
-    Left = 842
+    Left = 877
     Top = 0
     Width = 225
-    Height = 640
+    Height = 659
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 3
     OnClick = DocumentPanelClick
+    ExplicitLeft = 842
+    ExplicitHeight = 640
     object Label1: TLabel
       Left = 6
       Top = 24
@@ -429,8 +460,8 @@ object MainForm: TMainForm
   end
   object DataSource: TDataSource
     DataSet = fromQuery
-    Left = 256
-    Top = 225
+    Left = 248
+    Top = 192
   end
   object fromADOConnection: TADOConnection
     ConnectionString = 
@@ -438,8 +469,8 @@ object MainForm: TMainForm
       ';User ID=dba;Data Source=v9ProfiMeatingDS'
     LoginPrompt = False
     Provider = 'MSDASQL.1'
-    Left = 352
-    Top = 281
+    Left = 344
+    Top = 248
   end
   object fromQuery: TADOQuery
     Connection = fromADOConnection
@@ -453,8 +484,8 @@ object MainForm: TMainForm
   object fromSqlQuery: TADOQuery
     Connection = fromADOConnection
     Parameters = <>
-    Left = 392
-    Top = 337
+    Left = 384
+    Top = 304
   end
   object toZConnection: TZConnection
     ControlsCodePage = cCP_UTF16
