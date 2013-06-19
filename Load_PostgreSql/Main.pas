@@ -531,7 +531,48 @@ begin
         Add('     left outer join dba.Goods as Goods_parent on Goods_parent.Id = Goods.ParentId');
         Add('     left outer join dba.Measure on Measure.Id = GoodsProperty.MeasureId');
         Add('     left outer join dba.GoodsProperty_Detail on GoodsProperty_Detail.GoodsPropertyId = GoodsProperty.Id');
-        Add('     left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = 0 ');
+        Add('     left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = case when fCheckGoodsParentID(1491,Goods.ParentId) =zc_rvYes() then 20701'); // АГРОСЕЛЬПРОМ  - 20701	Общефирменные Товары	Прочие товары
+        Add('                                                                        when fCheckGoodsParentID(5,   Goods.ParentId) =zc_rvYes()then 30101'); // ГП            - 30101	Доходы	Продукция	Готовая продукция
+        Add('                                                                        when fCheckGoodsParentID(5306,Goods.ParentId) =zc_rvYes() then 30101'); // ПЕРЕПАК       - 30101	Доходы	Продукция	Готовая продукция
+        Add('                                                                        when fCheckGoodsParentID(5874,Goods.ParentId) =zc_rvYes() then 30102'); // ТУШЕНКА       - 30102	Доходы	Продукция	Тушенка
+        Add('                                                                        when fCheckGoodsParentID(2387,Goods.ParentId) =zc_rvYes() then 30103'); // ХЛЕБ          - 30103	Доходы  Продукция	Хлеб
+        Add('                                                                        when fCheckGoodsParentID(5306,Goods.ParentId) =zc_rvYes() then 30301'); // С-ПЕРЕРАБОТКА - 30301	Доходы  Переработка	Переработка
+
+        Add('                                                                        when fCheckGoodsParentID(6682,Goods.ParentId) =zc_rvYes() then 20204'); // КАНЦТОВАРЫ - 20204	Общефирменные  Прочие ТМЦ Канц товары
+        Add('                                                                        when fCheckGoodsParentID(6677,Goods.ParentId) =zc_rvYes() then 20601'); // КУЛЬКИ - 20601	Общефирменные  Прочие материалы	Прочие материалы
+        Add('                                                                        when fCheckGoodsParentID(2954,Goods.ParentId) =zc_rvYes() then 20203'); // МОЮЩЕЕ - 20203	Общефирменные  Прочие ТМЦ Моющие средства, кислоты
+        Add('                                                                        when fCheckGoodsParentID(6678,Goods.ParentId) =zc_rvYes() then 20601'); // ПЛЕНКА И СКОТЧ - 20601	Общефирменные  Прочие материалы	Прочие материалы
+        Add('                                                                        when fCheckGoodsParentID(2949,Goods.ParentId) =zc_rvYes() then 20205'); // РАЗНОЕ - 20205	Общефирменные  Прочие ТМЦ Прочие ТМЦ
+        Add('                                                                        when fCheckGoodsParentID(2641,Goods.ParentId) =zc_rvYes() then 20202'); // СПЕЦОДЕЖДА - 20202	Общефирменные  Прочие ТМЦ Спецодежда
+        Add('                                                                        when fCheckGoodsParentID(6681,Goods.ParentId) =zc_rvYes() then 20601'); // ЦЕННИКИ, ЯРЛЫКИ, ЭТ. ДАТА - 20601	Общефирменные  Прочие материалы	Прочие материалы
+        Add('                                                                        when fCheckGoodsParentID(6676,Goods.ParentId) =zc_rvYes() then 20601'); // ЩЕПА - 20601	Общефирменные  Прочие материалы	Прочие материалы
+        Add('                                                                        when fCheckGoodsParentID(2787,Goods.ParentId) =zc_rvYes() then 20205'); // СД-КУХНЯ - 20205	Общефирменные  Прочие ТМЦ Прочие ТМЦ
+
+        Add('                                                                        when fCheckGoodsParentID(2642,Goods.ParentId) =zc_rvYes() then 20101'); // СД-ЗАПЧАСТИ оборуд-е - 20101	Общефирменные  Запчасти и Ремонты	Запчасти и Ремонты
+
+        Add('                                                                        when fCheckGoodsParentID(2647,Goods.ParentId) =zc_rvYes() then 10201'); // СД-ПЕКАРНЯ - 10201		Прочее сырье	Специи
+        Add('                                                                        when Goods.Id in (6041, 7013) then 10201'); // СД-ТУШЕНКА - 10201		Прочее сырье	Специи
+        Add('                                                                        when Goods.ParentId in (5857) then 10203'); // СД-ТУШЕНКА - 10203		Прочее сырье	Упаковка
+
+        Add('                                                                        when fCheckGoodsParentID(4213,Goods.ParentId) =zc_rvYes() then 20601'); // ГОФРОТАРА - 20601	Общефирменные  Прочие материалы	Прочие материалы
+        Add('                                                                        when fCheckGoodsParentID(3521,Goods.ParentId) =zc_rvYes() then 10201'); // для проработок-новые специи - 10201		Прочее сырье	Специи
+        Add('                                                                        when fCheckGoodsParentID(3221,Goods.ParentId) =zc_rvYes() then 10201'); // ДОБАВКИ - 10201		Прочее сырье	Специи
+        Add('                                                                        when fCheckGoodsParentID(2643,Goods.ParentId) =zc_rvYes() then 10201'); // СПЕЦИИ - 10201		Прочее сырье	Специи
+        Add('                                                                        when fCheckGoodsParentID(2644,Goods.ParentId) =zc_rvYes() then 10201'); // СПЕЦИИ ДЕЛИКАТ. - 10201		Прочее сырье	Специи
+        Add('                                                                        when fCheckGoodsParentID(2645,Goods.ParentId) =zc_rvYes() then 10202'); // ОБОЛОЧКА - 10202		Прочее сырье	Оболочка
+        Add('                                                                        when fCheckGoodsParentID(2631,Goods.ParentId) =zc_rvYes() then 10203'); // !!!СД-СЫРЬЕ!!! - 10203		Прочее сырье	Упаковка
+
+        Add('                                                                        when fCheckGoodsParentID(2648,Goods.ParentId) =zc_rvYes() then 10204'); // СО-СЫРЬЕ СЫР - 10204		Основное сырье Прочее сырье Прочее сырье
+        Add('                                                                        when Goods.Id in (2792, 7001, 6710) then 10103'); // !!!СО- ГОВ. И СВ. Н\К + СЫР!!! - 10103		Основное сырье Мясное сырье Говядина
+        Add('                                                                        when fCheckGoodsParentID(6435,Goods.ParentId) =zc_rvYes() then 10102'); // !!!СО- ГОВ. И СВ. Н\К + СЫР!!! - 10102		Основное сырье Мясное сырье Свинина
+        Add('                                                                        when fCheckGoodsParentID(3859,Goods.ParentId) =zc_rvYes() then 10105'); // СО-БАРАНИНА - 10105		Основное сырье Мясное сырье Прочее мясное сырье
+        Add('                                                                        when fCheckGoodsParentID(5676,Goods.ParentId) =zc_rvYes() then 10105'); // СО-КАБАН и др. - 10105		Основное сырье Мясное сырье Прочее мясное сырье
+
+        Add('                                                                        when fCheckGoodsParentID(5489,Goods.ParentId) =zc_rvYes() then 10103'); // СО-ГОВ.  ДЕЛ-СЫ* - 10103		Основное сырье Мясное сырье Говядина
+        Add('                                                                        when fCheckGoodsParentID(5491,Goods.ParentId) =zc_rvYes() then 10103'); // СО-ГОВ. ВЫС+ОДН.* - 10103		Основное сырье Мясное сырье Говядина
+        Add('                                                                        when fCheckGoodsParentID(2633,Goods.ParentId) =zc_rvYes() then 10103'); // СО-ГОВЯДИНА ПФ* - 10103		Основное сырье Мясное сырье Говядина
+
+        Add('                                                                   end');
         Add('where Goods.HasChildren = zc_hsLeaf() ');
         Add('group by ObjectId');
         Add('       , ObjectName');
@@ -2380,7 +2421,7 @@ begin
         Clear;
         Add('select _pgProfitLoss.Id as ObjectId');
         Add('     , _pgProfitLoss.ObjectCode as ObjectCode');
-        Add('     , null as ObjectName');
+        Add('     , _pgProfitLoss.Name3 as ObjectName');
         Add('     , _pgProfitLoss.Id1_Postgres as ProfitLossGroupId_PG');
         Add('     , _pgProfitLoss.Id2_Postgres as ProfitLossDirectionId_PG');
         Add('     , case when _pgProfitLoss.ObjectCode < 20000 then null ' + ' else isnull(_pgInfoMoney_30201.Id2_Postgres, (select max (isnull (_pgInfoMoney.Id2_Postgres, 0)) from dba._pgInfoMoney where _pgInfoMoney.ObjectCode <> 30201 and _pgInfoMoney.Name2 = _pgProfitLoss.Name3)) end as InfoMoneyDestinationId_PG');
