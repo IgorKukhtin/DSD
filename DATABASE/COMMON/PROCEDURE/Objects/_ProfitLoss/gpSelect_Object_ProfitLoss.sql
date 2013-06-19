@@ -62,4 +62,4 @@ ALTER FUNCTION gpSelect_Object_ProfitLoss(TVarChar)
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Branch('2')
+-- SELECT * FROM gpSelect_Object_ProfitLoss('2')

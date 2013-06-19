@@ -27,8 +27,9 @@ BEGIN
        Code_max := inCode;
    END IF; 
    
-   -- проверка уникальности для свойства <Наименование>
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_AccountDirection(), inName);
+   -- !!! проверка уникальности для свойства <Наименование>
+   -- !!! PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_AccountDirection(), inName);
+
    -- проверка уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_AccountDirection(), Code_max);
 
@@ -48,6 +49,7 @@ ALTER FUNCTION gpInsertUpdate_Object_AccountDirection (Integer, Integer, TVarCha
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.06.13                                        * rem lpCheckUnique_Object_ValueData
  17.06.13          *
 
 */

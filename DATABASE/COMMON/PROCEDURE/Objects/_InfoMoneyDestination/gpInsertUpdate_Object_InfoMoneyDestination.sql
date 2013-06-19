@@ -12,12 +12,24 @@ IN inSession             TVarChar       /* текущий пользовател
 $BODY$BEGIN
 --   PERFORM lpCheckRight(inSession, zc_Enum_Process_InfoMoneyDestination());
 
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_InfoMoneyDestination(), inName);
+   -- !!! проверка прав уникальности <Наименование>
+   -- !!! PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_InfoMoneyDestination(), inName);
 
    ioId := lpInsertUpdate_Object(ioId, zc_Object_InfoMoneyDestination(), inCode, inName);
 
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-  
-                            
+
+LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpInsertUpdate_Object_InfoMoneyDestination (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
+
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.06.13                                        * rem lpCheckUnique_Object_ValueData
+
+*/
+
+-- тест
+-- SELECT * FROM gpInsertUpdate_Object_Contract()

@@ -62,4 +62,4 @@ ALTER FUNCTION gpSelect_Object_Account(TVarChar)
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Branch('2')
+-- SELECT * FROM gpSelect_Object_Account('2')
