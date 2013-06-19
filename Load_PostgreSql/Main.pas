@@ -2384,7 +2384,7 @@ begin
         Add('     , _pgProfitLoss.Id1_Postgres as ProfitLossGroupId_PG');
         Add('     , _pgProfitLoss.Id2_Postgres as ProfitLosstDirectionId_PG');
         Add('     , isnull(_pgInfoMoney_30201.Id2_Postgres, (select max (isnull (_pgInfoMoney.Id2_Postgres, 0)) from dba._pgInfoMoney where _pgInfoMoney.ObjectCode <> 30201 and _pgInfoMoney.Name2 = _pgProfitLoss.Name3)) as InfoMoneyDestinationId_PG');
-        Add('     , case when InfoMoneyDestinationId_PG is not null then null else (select max (isnull (_pgInfoMoney.Id3_Postgres, 0)) from dba._pgInfoMoney where _pgInfoMoney.Name3 = _pgProfitLoss.Name3) end as InfoMoneyId_PG');
+         Add('     , case when InfoMoneyDestinationId_PG is not null then null else (select max (isnull (_pgInfoMoney.Id3_Postgres, 0)) from dba._pgInfoMoney where _pgInfoMoney.Name3 = _pgProfitLoss.Name3) end as InfoMoneyId_PG');
         Add('     , case when 1=1 then _pgProfitLoss.Id3_Postgres else ObjectId end as Id_Postgres');
         Add('from dba._pgProfitLoss');
         Add('     left outer join dba._pgInfoMoney as _pgInfoMoney_30201 on _pgInfoMoney_30201.ObjectCode = 30201 and _pgProfitLoss.ObjectCode = 70304');
