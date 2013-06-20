@@ -109,6 +109,14 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbMeasure'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExtraChargeCategories'
         end>
     end
     object bbMeasure: TdxBarButton
@@ -132,7 +140,7 @@ object MainForm: TMainForm
       Category = 0
     end
     object bbBranch: TdxBarButton
-      Action = actBranch
+      Action = actExtraChargeCategories
       Category = 0
     end
     object bbIncome: TdxBarButton
@@ -190,6 +198,10 @@ object MainForm: TMainForm
           ItemName = 'bbBalance'
         end>
     end
+    object bbExtraChargeCategories: TdxBarButton
+      Action = actExtraChargeCategories
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Left = 192
@@ -209,11 +221,11 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actBranch: TdsdOpenForm
+    object actExtraChargeCategories: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      Caption = #1060#1080#1083#1080#1072#1083#1099
-      Hint = #1060#1080#1083#1080#1072#1083#1099
-      FormName = 'TBranchForm'
+      Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1086#1082
+      Hint = #1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1086#1082
+      FormName = 'TExtraChargeCategoriesForm'
       GuiParams = <>
       isShowModal = False
     end

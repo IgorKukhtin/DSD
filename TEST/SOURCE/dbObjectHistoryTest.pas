@@ -60,32 +60,46 @@ var GoodsId, PriceListId: Integer;
 begin
   GoodsId := TGoodsTest.Create.GetDefault;
   PriceListId := TPriceListTest.Create.GetDefault;
+  try
+    ObjectTest := TPriceListItemHistoryTest.Create;
+    // Добавляем историю с датой 01.01.2012
+    Id_2012 := ObjectTest.InsertUpdatePriceListItem(0, PriceListId, GoodsId, StrToDate('01.01.2012'), 2012);
+    // Добавляем историю с датой 01.01.2013
+    Id_2013 := ObjectTest.InsertUpdatePriceListItem(0, PriceListId, GoodsId, StrToDate('01.01.2013'), 2013);
+    // Добавляем историю с датой 01.01.2011
+    Id_2011 := ObjectTest.InsertUpdatePriceListItem(0, PriceListId, GoodsId, StrToDate('01.01.2011'), 2011);
+    // Добавляем историю с датой 06.06.2011
+    Id_2011_06_06 := ObjectTest.InsertUpdatePriceListItem(0, PriceListId, GoodsId, StrToDate('06.06.2011'), 201106);
 
-  ObjectTest := TPriceListItemHistoryTest.Create;
-  // Добавляем историю с датой 01.01.2012
-  Id_2012 := ObjectTest.InsertUpdatePriceListItem(0, PriceListId, GoodsId, StrToDate('01.01.2012'), 2012);
-  // Добавляем историю с датой 01.01.2013
-  Id_2013 := ObjectTest.InsertUpdatePriceListItem(0, PriceListId, GoodsId, StrToDate('01.01.2013'), 2013);
-  // Добавляем историю с датой 01.01.2011
-  Id_2011 := ObjectTest.InsertUpdatePriceListItem(0, PriceListId, GoodsId, StrToDate('01.01.2011'), 2011);
-  // Добавляем историю с датой 06.06.2011
-  Id_2011_06_06 := ObjectTest.InsertUpdatePriceListItem(0, PriceListId, GoodsId, StrToDate('06.06.2011'), 201106);
+    // Изменяем историю с датой 01.01.2012 на 01.01.2010
+    ObjectTest.InsertUpdatePriceListItem(Id_2012, PriceListId, GoodsId, StrToDate('01.01.2010'), 2012);
+    // Изменяем историю с датой 01.01.2010 на 01.01.2020
+    ObjectTest.InsertUpdatePriceListItem(Id_2012, PriceListId, GoodsId, StrToDate('01.01.2020'), 2012);
+    // Изменяем историю с датой 01.01.2020 на 01.01.2012
+    ObjectTest.InsertUpdatePriceListItem(Id_2012, PriceListId, GoodsId, StrToDate('01.01.2012'), 2012);
 
-  // Изменяем историю с датой 01.01.2012 на 01.01.2010
-  ObjectTest.InsertUpdatePriceListItem(Id_2012, PriceListId, GoodsId, StrToDate('01.01.2010'), 2012);
-  // Изменяем историю с датой 01.01.2010 на 01.01.2020
-  ObjectTest.InsertUpdatePriceListItem(Id_2012, PriceListId, GoodsId, StrToDate('01.01.2020'), 2012);
-  // Изменяем историю с датой 01.01.2020 на 01.01.2012
-  ObjectTest.InsertUpdatePriceListItem(Id_2012, PriceListId, GoodsId, StrToDate('01.01.2012'), 2012);
-
-  // Удаляем историю с датой 06.06.2011
-  DeleteHistoryObject(Id_2011_06_06);
-  // Удаляем историю с датой 01.01.2011
-  DeleteHistoryObject(Id_2011);
-  // Удаляем историю с датой 01.01.2013
-  DeleteHistoryObject(Id_2013);
-  // Удаляем историю с датой 01.01.2012
-  DeleteHistoryObject(Id_2012);
+    // Удаляем историю с датой 06.06.2011
+    DeleteHistoryObject(Id_2011_06_06);
+    // Удаляем историю с датой 01.01.2011
+    DeleteHistoryObject(Id_2011);
+    // Удаляем историю с датой 01.01.2013
+    DeleteHistoryObject(Id_2013);
+    // Удаляем историю с датой 01.01.2012
+    DeleteHistoryObject(Id_2012);
+  finally
+    with TGoodsTest.Create do
+      try
+        Delete(GetDefault);
+      finally
+        Free
+      end;
+    with TPriceListTest.Create do
+      try
+        Delete(GetDefault);
+      finally
+        Free
+      end;
+  end;
 end;
 
 procedure TdbObjectHistoryTest.SetUp;

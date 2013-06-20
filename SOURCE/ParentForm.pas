@@ -4,29 +4,32 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, dsdDB, frxClass;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, dsdDB, cxPropertiesStore, frxClass;
 
 type
   TParentForm = class(TForm)
   private
+    FPropertiesStore: TcxPropertiesStore;
     FParams: TdsdParams;
+    // Класс, который вызвал данную форму
+    FSender: TComponent;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
   public
     { Public declarations }
     constructor CreateNew(AOwner: TComponent; Dummy: Integer = 0); override;
     property Params: TdsdParams read FParams;
-    procedure Execute(Params: TdsdParams);
+    procedure Execute(Sender: TComponent; Params: TdsdParams);
   end;
 
 implementation
 
-uses FormStorage, UtilConst, cxPropertiesStore, cxControls, cxContainer, cxEdit,
+uses FormStorage, UtilConst, cxControls, cxContainer, cxEdit,
   cxGroupBox, dxBevel, cxButtons, cxGridDBTableView, cxGrid, DB, DBClient,
   dxBar, Vcl.ActnList, dsdAction, cxTextEdit, cxLabel,
   StdActns, cxDBTL, cxCurrencyEdit, cxDropDownEdit, dsdGuides,
   cxDBLookupComboBox, DBGrids, cxCheckBox, cxCalendar, ExtCtrls, dsdAddOn,
-  cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, frxDBSet;
+  cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, frxDBSet, dxBarExtItems;
 
 {$R *.dfm}
 
@@ -37,44 +40,50 @@ begin
   onClose := FormClose;
 end;
 
-procedure TParentForm.Execute(Params: TdsdParams);
+procedure TParentForm.Execute(Sender: TComponent; Params: TdsdParams);
 var
   i: integer;
 begin
+  FSender := Sender;
   // Заполняет параметры формы переданными параметрами
-  for I := 0 to ComponentCount - 1 do
+  for I := 0 to ComponentCount - 1 do begin
     if Components[i] is TdsdFormParams then begin
        FParams := (Components[i] as TdsdFormParams).Params;
        FParams.AssignParams(Params);
+    end;
+    if Components[i] is TcxPropertiesStore  then
+       FPropertiesStore := Components[i] as TcxPropertiesStore;
   end;
 
   for I := 0 to ComponentCount - 1 do begin
     // Перечитывает видимые компоненты
     if Components[i] is TdsdDataSetRefresh then
        (Components[i] as TdsdDataSetRefresh).Execute;
-    if Components[i] is TcxPropertiesStore then begin
-       (Components[i] as TcxPropertiesStore).StorageStream := TdsdFormStorageFactory.GetStorage.LoadUserFormSettings(ClassName);
-       (Components[i] as TcxPropertiesStore).RestoreFrom;
-    end;
+  end;
+  if Assigned(FPropertiesStore) then begin
+     FPropertiesStore.StorageStream := TdsdFormStorageFactory.GetStorage.LoadUserFormSettings(Name);
+     FPropertiesStore.RestoreFrom;
   end;
 end;
 
 procedure TParentForm.FormClose(Sender: TObject; var Action: TCloseAction);
 var i: Integer;
     TempStream: TStringStream;
+    FormAction: IFormAction;
 begin
-  TempStream:= TStringStream.Create;
-  try
-    for I := 0 to ComponentCount - 1 do
-      // Перечитывает видимые компоненты
-      if Components[i] is TcxPropertiesStore then begin
-         (Components[i] as TcxPropertiesStore).StorageStream := TempStream;
-         (Components[i] as TcxPropertiesStore).StoreTo;
-         TdsdFormStorageFactory.GetStorage.SaveUserFormSettings(ClassName, TempStream);
-      end;
-  finally
-    TempStream.Free;
+  if Assigned(FPropertiesStore) then begin
+    TempStream:= TStringStream.Create;
+    try
+      FPropertiesStore.StorageStream := TempStream;
+      FPropertiesStore.StoreTo;
+      TdsdFormStorageFactory.GetStorage.SaveUserFormSettings(Name, TempStream);
+    finally
+      TempStream.Free;
+    end;
   end;
+  if (ModalResult = mrOk) and Assigned(FSender) then
+     if FSender.GetInterface(IFormAction, FormAction) then
+        FormAction.OnFormClose(Params);
   Action := caFree;
 end;
 
@@ -117,6 +126,7 @@ initialization
   RegisterClass (TcxTextEdit);
 
   RegisterClass (TdxBarManager);
+  RegisterClass (TdxBarStatic);
   RegisterClass (TdxBevel);
 
   // FastReport

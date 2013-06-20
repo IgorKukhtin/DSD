@@ -1,4 +1,4 @@
-unit MeasureEdit;
+unit ExtraChargeCategoriesEdit;
 
 interface
 
@@ -10,7 +10,7 @@ uses
   Vcl.StdActns, ParentForm, dsdDB, dsdAction, cxCurrencyEdit;
 
 type
-  TMeasureEditForm = class(TParentForm)
+  TExtraChargeCategoriesEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -36,6 +36,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TMeasureEditForm);
+  RegisterClass(TExtraChargeCategoriesEditForm);
 
 end.

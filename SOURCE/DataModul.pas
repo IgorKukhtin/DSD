@@ -19,6 +19,7 @@ type
     cxHeaderStyle: TcxStyle;
     cxGridTableViewStyleSheet: TcxGridTableViewStyleSheet;
     SortImageList: TImageList;
+    cxStyle1: TcxStyle;
   end;
 
 var dmMain: TdmMain;

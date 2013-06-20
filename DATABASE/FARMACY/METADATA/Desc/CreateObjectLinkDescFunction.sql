@@ -112,7 +112,7 @@ $BODY$BEGIN
   RETURN 17;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_GoodsGroup()
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_ExtraChargeCategories()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 18;

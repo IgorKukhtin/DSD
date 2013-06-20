@@ -3,7 +3,7 @@ unit dsdAddOn;
 interface
 
 uses Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView,
-     cxTextEdit, DB, dsdAction, cxGridTableView, cxGraphics;
+     cxTextEdit, DB, dsdAction, cxGridTableView, cxGraphics, cxStyles;
 
 type
 
@@ -24,11 +24,11 @@ type
   // 2. Рисование иконок сортировки
   TdsdDBViewAddOn = class(TComponent)
   private
+    FBackGroundStyle: TcxStyle;
     FView: TcxGridDBTableView;
     // контрол для ввода условия фильтра
     edFilter: TcxTextEdit;
     procedure OnKeyPress(Sender: TObject; var Key: Char);
-    procedure OnKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure SetView(const Value: TcxGridDBTableView);
     procedure edFilterExit(Sender: TObject);
     procedure edFilterKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -40,6 +40,8 @@ type
     procedure OnCustomDrawColumnHeader(Sender: TcxGridTableView;
      ACanvas: TcxCanvas; AViewInfo: TcxGridColumnHeaderViewInfo;
      var ADone: Boolean);
+    // поменять цвет грида в случае установки фильтра
+    procedure onFilterChanged(Sender: TObject);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
@@ -100,7 +102,9 @@ begin
   edFilter := TcxTextEdit.Create(Self);
   edFilter.Visible := false;
   edFilter.OnKeyDown := edFilterKeyDown;
-  edFilter.OnExit := edFilterExit
+  edFilter.OnExit := edFilterExit;
+  FBackGroundStyle := TcxStyle.Create(nil);
+  FBackGroundStyle.Color := $00E4E4E4;
 end;
 
 procedure TdsdDBViewAddOn.OnCustomDrawColumnHeader(
@@ -112,10 +116,10 @@ var
   ASortingImageSize: Integer;
   ASortingImageIndex: Integer;
 begin
-  ASortingImageSize := Sender.Images.Width;
+  if Assigned(Sender.Images) then
+     ASortingImageSize := Sender.Images.Width;
   with AViewInfo do
   begin
-
     Sender.Painter.LookAndFeelPainter.DrawHeader(ACanvas, Bounds, TextAreaBounds, Neighbors,
       Borders, ButtonState, AlignmentHorz, AlignmentVert, MultiLinePainting, TcxGridColumnHeaderViewInfoAccess(AViewinfo).ShowEndEllipsis,
       Text, Params.Font, Params.TextColor, Params.Color,
@@ -141,18 +145,28 @@ begin
       ACanvas.Brush.Color := AViewInfo.Params.Color;
       ACanvas.Brush.Style := bsClear;
       if AViewInfo.Column.SortOrder = soAscending then
-         ASortingImageIndex := min(AViewInfo.Column.SortIndex, 9)
+         ASortingImageIndex := min(AViewInfo.Column.SortIndex, 11)
       else
-         ASortingImageIndex := 9 + min(AViewInfo.Column.SortIndex, 9);
-      ACanvas.DrawImage(Sender.Images, R.Left, R.Top, ASortingImageIndex);
+         ASortingImageIndex := 11 + min(AViewInfo.Column.SortIndex, 11);
+      if Assigned(Sender.Images) then
+         ACanvas.DrawImage(Sender.Images, R.Left, R.Top, ASortingImageIndex);
     end;
     ADone := True;
   end;
 end;
 
+procedure TdsdDBViewAddOn.onFilterChanged(Sender: TObject);
+begin
+  if FView.DataController.Filter.Root.Count > 0 then
+     FView.Styles.Background := FBackGroundStyle
+  else
+     FView.Styles.Background := nil
+end;
+
 procedure TdsdDBViewAddOn.edFilterExit(Sender: TObject);
 begin
   edFilter.Visible:=false;
+  TWinControl(FView.GetParentComponent).SetFocus;
   FView.Focused := true;
 end;
 
@@ -161,6 +175,7 @@ procedure TdsdDBViewAddOn.edFilterKeyDown(Sender: TObject; var Key: Word;
 begin
   case Key of
     VK_RETURN: lpSetFilter;
+    VK_ESCAPE: edFilterExit(Sender);
   end;
 end;
 
@@ -168,8 +183,7 @@ procedure TdsdDBViewAddOn.lpSetEdFilterPos(inKey: Char);
 // процедура устанавливает контрол для внесения значения фильтра и позиционируется на заголовке колонки
 var pRect:TRect;
 begin
-
- if (not edFilter.Visible)  and (inKey<>char(VK_BACK)) then
+ if (not edFilter.Visible) then
    with FView.Controller do begin
      // позиционируем контрол на место заголовка
      edFilter.Visible := true;
@@ -179,12 +193,11 @@ begin
      edFilter.Top := pRect.Top;
      edFilter.Width := pRect.Right - pRect.Left + 1;
      edFilter.Height := pRect.Bottom - pRect.Top;
-     edFilter.Text := '';
+     edFilter.SetFocus;
+     edFilter.Text := inKey;
+     edFilter.SelStart := 1;
+     edFilter.SelLength := 0;
    end;
- if inKey=char(VK_BACK) then
-   edFilter.Text := copy(edFilter.Text, 1, length(edFilter.Text) - 1)
- else
-   edFilter.Text := edFilter.Text+inKey;
 end;
 
 procedure TdsdDBViewAddOn.lpSetFilter;
@@ -224,33 +237,21 @@ begin
      FView := nil;
 end;
 
-procedure TdsdDBViewAddOn.OnKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-  case Key of
-    VK_RETURN: begin
-               // Если нажат Ввод и фильтр введен то установить его}
-                  if (edFilter.Visible) then begin
-                      lpSetFilter;
-                      Key := 0;
-                  end;{if}
-    end;
-  end
-end;
-
 procedure TdsdDBViewAddOn.OnKeyPress(Sender: TObject; var Key: Char);
 begin
   // если колонка не редактируема и введена буква или BackSpace то обрабатываем установку фильтра
-  if {TcxGridDBColumn(FView.Controller.FocusedColumn).Properties.ReadOnly and} ((Key>#31) or (Key=char(VK_BACK))) then
+  if {TcxGridDBColumn(FView.Controller.FocusedColumn).Properties.ReadOnly and} (Key > #31) then begin
      lpSetEdFilterPos(Key);
+     Key := #0;
+  end;
 end;
 
 procedure TdsdDBViewAddOn.SetView(const Value: TcxGridDBTableView);
 begin
   FView := Value;
   FView.OnKeyPress := OnKeyPress;
-  FView.OnKeyDown := OnKeyDown;
-  FView.OnCustomDrawColumnHeader := OnCustomDrawColumnHeader
+  FView.OnCustomDrawColumnHeader := OnCustomDrawColumnHeader;
+  FView.DataController.Filter.OnChanged := onFilterChanged;
 end;
 
 end.

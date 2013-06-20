@@ -24,9 +24,16 @@ type
     property Items[Index: Integer]: TdsdStoredProcItem read GetItem write SetItem; default;
   end;
 
+  // Вызываем события при изменении каких параметров датасета
   IDataSetAction = interface
     procedure DataSetChanged;
     procedure UpdateData;
+  end;
+
+  // Вызываем события у формы
+  IFormAction = interface
+    ['{9647E6F2-B61C-46FC-83E7-F3E1C69B8699}']
+    procedure OnFormClose(Params: TdsdParams);
   end;
 
   TDataSetDataLink = class(TDataLink)
@@ -57,6 +64,7 @@ type
     property Hint;
     property ImageIndex;
     property ShortCut;
+    property SecondaryShortCuts;
   end;
 
   TdsdDataSetRefresh = class(TdsdCustomDataSetAction)
@@ -117,13 +125,14 @@ type
     property DataSource: TDataSource read GetDataSource write SetDataSource;
   end;
 
-  TdsdOpenForm = class(TCustomAction)
+  TdsdOpenForm = class(TCustomAction, IFormAction)
   private
     FParams: TdsdParams;
     FFormName: string;
     FisShowModal: boolean;
   protected
     procedure BeforeExecute(Form: TParentForm); virtual;
+    procedure OnFormClose(Params: TdsdParams); virtual;
   public
     function Execute: boolean; override;
     constructor Create(AOwner: TComponent); override;
@@ -131,6 +140,8 @@ type
     property Caption;
     property Hint;
     property ShortCut;
+    property ImageIndex;
+    property SecondaryShortCuts;
     property FormName: string read FFormName write FFormName;
     property GuiParams: TdsdParams read FParams write FParams;
     property isShowModal: boolean read FisShowModal write FisShowModal;
@@ -145,7 +156,6 @@ type
     FForm: TParentForm;
     FActionType: TDataSetAcionType;
     FFormClose: TCloseEvent;
-    procedure OnFormClose(Sender: TObject; var Action: TCloseAction);
     function GetDataSource: TDataSource;
     procedure SetDataSource(const Value: TDataSource);
   protected
@@ -153,6 +163,7 @@ type
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure DataSetChanged;
     procedure UpdateData; virtual;
+    procedure OnFormClose(Params: TdsdParams); override;
   public
     constructor Create(AOwner: TComponent); override;
   published
@@ -321,11 +332,16 @@ var
 begin
   Form := TdsdFormStorageFactory.GetStorage.Load(FormName);
   BeforeExecute(Form);
-  Form.Execute(FParams);
+  Form.Execute(Self, FParams);
   if isShowModal then
      Form.ShowModal
   else
      Form.Show
+end;
+
+procedure TdsdOpenForm.OnFormClose(Params: TdsdParams);
+begin
+
 end;
 
 { TdsdFormClose }
@@ -340,9 +356,6 @@ end;
 
 procedure TdsdInsertUpdateAction.BeforeExecute;
 begin
-
-  // Ставим у формы CallBack на событие закрытия формы
- // Form.OnClose := OnFormClose;
   FForm := Form;
 end;
 
@@ -373,10 +386,12 @@ begin
      DataSource := nil;
 end;
 
-procedure TdsdInsertUpdateAction.OnFormClose(Sender: TObject; var Action: TCloseAction);
+procedure TdsdInsertUpdateAction.OnFormClose(Params: TdsdParams);
 begin
+  inherited;
   // Событие вызывается в момент закрытия формы добавления изменения справочника.
   // Необходимо в таком случае перечитать запрос и отпозиционироваться в нем
+  // тут перечитаем запрос и спозиционируемся на нем
   DataSetRefresh.Execute;
   if Assigned(DataSource) then
      if Assigned(DataSource.DataSet) then
@@ -434,14 +449,19 @@ begin
            Enabled := false
         else
            if FisSetErased then
-              Enabled := true
+              Enabled := not DataSource.DataSet.FieldByName('isErased').AsBoolean
            else
-              Enabled := false
+              Enabled := DataSource.DataSet.FieldByName('isErased').AsBoolean
 end;
 
 function TdsdUpdateErased.Execute: boolean;
 begin
-
+  result := inherited Execute;
+  if result and Assigned(DataSource) and Assigned(DataSource.DataSet) then begin
+     DataSource.DataSet.Edit;
+     DataSource.DataSet.FieldByName('isErased').AsBoolean := not DataSource.DataSet.FieldByName('isErased').AsBoolean;
+     DataSource.DataSet.Post;
+  end;
 end;
 
 function TdsdUpdateErased.GetDataSource: TDataSource;

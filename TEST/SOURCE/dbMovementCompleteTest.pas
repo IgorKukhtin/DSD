@@ -10,6 +10,8 @@ type
   private
     // Распроведение документа
     procedure UnCompleteMovement(Id: integer);
+        // Удаление документа
+    procedure DeleteMovementItem(Id: integer);
   protected
     // подготавливаем данные для тестирования
     procedure SetUp; override;
@@ -36,11 +38,11 @@ const
   '</xml>';
 var
   MovementIncomeTest: TMovementIncomeTest;
-  MovementId: Integer;
+  MovementId, MovementItemId: Integer;
 begin
   MovementIncomeTest := TMovementIncomeTest.Create;
   try
-    TMovementItemIncomeTest.Create.GetDefault;
+    MovementItemId := TMovementItemIncomeTest.Create.GetDefault;
     MovementId := MovementIncomeTest.GetDefault;
     TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [MovementId]));
     try
@@ -49,8 +51,24 @@ begin
       UnCompleteMovement(MovementId);
     end;
   finally
+    DeleteMovementItem(MovementItemId);
+    with TMovementItemIncomeTest.Create do
+         Delete(MovementItemId);
+
     MovementIncomeTest.Free
   end;
+end;
+
+procedure TdbMovementCompleteTest.DeleteMovementItem(Id: integer);
+const
+   pXML =
+  '<xml Session = "">' +
+    '<lpDelete_MovementItem OutputType="otResult">' +
+       '<inId DataType="ftInteger" Value="%d"/>' +
+    '</lpDelete_MovementItem>' +
+  '</xml>';
+begin
+  TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Id]))
 end;
 
 procedure TdbMovementCompleteTest.SetUp;

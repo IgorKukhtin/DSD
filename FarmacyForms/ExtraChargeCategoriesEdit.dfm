@@ -1,5 +1,5 @@
-inherited MeasureEditForm: TMeasureEditForm
-  Caption = #1045#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
+inherited ExtraChargeCategoriesEditForm: TExtraChargeCategoriesEditForm
+  Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1080' '#1085#1072#1094#1077#1085#1086#1082
   ClientHeight = 145
   ClientWidth = 343
   ExplicitWidth = 351
@@ -14,8 +14,8 @@ inherited MeasureEditForm: TMeasureEditForm
   end
   object cxLabel1: TcxLabel
     Left = 40
-    Top = 49
-    Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1077#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
+    Top = 51
+    Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 71
@@ -78,7 +78,7 @@ inherited MeasureEditForm: TMeasureEditForm
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Measure'
+    StoredProcName = 'gpInsertUpdate_Object_ExtraChargeCategories'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -119,7 +119,7 @@ inherited MeasureEditForm: TMeasureEditForm
     Top = 8
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_Measure'
+    StoredProcName = 'gpGet_Object_ExtraChargeCategories'
     DataSets = <>
     OutputType = otResult
     Params = <

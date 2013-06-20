@@ -1,5 +1,5 @@
-inherited MeasureForm: TMeasureForm
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1077#1076#1080#1085#1080#1094' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
+inherited ExtraChargeCategoriesForm: TExtraChargeCategoriesForm
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1082#1072#1090#1077#1075#1086#1088#1080#1081' '#1085#1072#1094#1077#1085#1086#1082
   ClientHeight = 376
   ClientWidth = 390
   ExplicitWidth = 398
@@ -40,7 +40,7 @@ inherited MeasureForm: TMeasureForm
         HeaderAlignmentVert = vaCenter
       end
       object clName: TcxGridDBColumn
-        Caption = #1045#1076#1080#1085#1080#1094#1072' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
+        Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taRightJustify
@@ -228,7 +228,7 @@ inherited MeasureForm: TMeasureForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TMeasureEditForm'
+      FormName = 'TExtraChargeCategoriesEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -246,7 +246,7 @@ inherited MeasureForm: TMeasureForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TMeasureEditForm'
+      FormName = 'TExtraChargeCategoriesEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -297,7 +297,7 @@ inherited MeasureForm: TMeasureForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Measure'
+    StoredProcName = 'gpSelect_Object_ExtraChargeCategories'
     DataSet = ClientDataSet
     DataSets = <
       item

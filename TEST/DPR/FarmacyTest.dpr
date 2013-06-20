@@ -22,7 +22,11 @@ uses
   dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas',
   dsdDB in '..\..\SOURCE\COMPONENT\dsdDB.pas',
   dsdGuides in '..\..\SOURCE\COMPONENT\dsdGuides.pas',
-  DataModul in '..\..\SOURCE\DataModul.pas' {dmMain: TDataModule};
+  DataModul in '..\..\SOURCE\DataModul.pas' {dmMain: TDataModule},
+  ExtraChargeCategories in '..\..\FarmacyForms\ExtraChargeCategories.pas' {ExtraChargeCategoriesForm},
+  ExtraChargeCategoriesEdit in '..\..\FarmacyForms\ExtraChargeCategoriesEdit.pas' {ExtraChargeCategoriesEditForm},
+  Goods in '..\..\FarmacyForms\Goods.pas' {GoodsForm},
+  GoodsEdit in '..\..\FarmacyForms\GoodsEdit.pas' {GoodsEditForm};
 
 {$R *.res}
 

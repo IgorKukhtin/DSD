@@ -41,7 +41,7 @@ insert into ObjectDesc(Id, Code, ItemName)
 SELECT zc_Object_PaidKind(), 'PaidKind', 'Формы оплат' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_PaidKind());
 
 insert into ObjectDesc(Id, Code, ItemName)
-SELECT zc_Object_Branch(), 'Branch', 'Филиалы' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_Branch());
+SELECT zc_Object_ExtraChargeCategories(), 'ExtraChargeCategories', 'Категории наценок' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_ExtraChargeCategories());
 
 insert into ObjectDesc(Id, Code, ItemName)
 SELECT zc_Object_JuridicalGroup(), 'JuridicalGroup', 'Группы юр. лиц' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_JuridicalGroup());

@@ -1,4 +1,4 @@
-unit Measure;
+unit ExtraChargeCategories;
 
 interface
 
@@ -12,7 +12,7 @@ uses
   Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dsdAddOn, dxBarExtItems;
 
 type
-  TMeasureForm = class(TParentForm)
+  TExtraChargeCategoriesForm = class(TParentForm)
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
@@ -52,6 +52,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TMeasureForm);
+  RegisterClass(TExtraChargeCategoriesForm);
 
 end.

@@ -51,7 +51,8 @@ requires
   inet,
   fs16,
   frx16,
-  frxDB16;
+  frxDB16,
+  dxBarExtItemsRS16;
 
 contains
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',

@@ -109,9 +109,9 @@ type
 
 implementation
 
-uses Storage, CommonData, TypInfo, UtilConvert, SysUtils, cxTextEdit,
+uses Storage, CommonData, TypInfo, UtilConvert, SysUtils, cxTextEdit, VCL.Forms,
      XMLDoc, XMLIntf, StrUtils, cxCurrencyEdit, dsdGuides, cxCheckBox, cxCalendar,
-     Variants, XSBuiltIns;
+     Variants, XSBuiltIns, UITypes;
 
 procedure Register;
 begin
@@ -168,12 +168,17 @@ end;
 function TdsdStoredProc.Execute;
 begin
   result := '';
-  if (OutputType = otDataSet) then DataSetRefresh;
-  if (OutputType = otMultiDataSet) then MultiDataSetRefresh;
-  if (OutputType = otResult) then
-     FillOutputParams(TStorageFactory.GetStorage.ExecuteProc(GetXML));
-  if (OutputType = otBlob) then
-      result := TStorageFactory.GetStorage.ExecuteProc(GetXML)
+  Screen.Cursor := crHourGlass;
+  try
+    if (OutputType = otDataSet) then DataSetRefresh;
+    if (OutputType = otMultiDataSet) then MultiDataSetRefresh;
+    if (OutputType = otResult) then
+       FillOutputParams(TStorageFactory.GetStorage.ExecuteProc(GetXML));
+    if (OutputType = otBlob) then
+        result := TStorageFactory.GetStorage.ExecuteProc(GetXML)
+  finally
+    Screen.Cursor := crDefault;
+  end;
 end;
 
 procedure TdsdStoredProc.FillOutputParams(XML: String);
@@ -197,9 +202,14 @@ begin
   for I := 0 to Params.Count - 1 do
       with Params[i] do
         if ParamType in [ptInput, ptInputOutput] then
-        Result := Result + '<' + Name +
-             '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
-             '  Value="' + StringReplace(asString, '"', '&quot;', [rfReplaceAll]) + '" />';
+           if DataType = ftBlob then
+              Result := Result + '<' + Name +
+                   '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
+                   '  Value="' + (asString) + '" />'
+           else
+              Result := Result + '<' + Name +
+                   '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
+                   '  Value="' + gfStrToXmlStr(asString) + '" />';
 
 end;
 
@@ -415,8 +425,8 @@ constructor TdsdParam.Create(Collection: TCollection);
 begin
   inherited;
   FValue := Null;
-  FParamType := ptUnknown;
-  FDataType := ftUnknown;
+  FParamType := ptOutput;
+  FDataType := ftInteger;
 end;
 
 function TdsdParam.GetDisplayName: string;

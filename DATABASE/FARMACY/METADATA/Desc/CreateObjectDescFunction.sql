@@ -82,7 +82,7 @@ $BODY$BEGIN
   RETURN 14;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_Object_Branch()
+CREATE OR REPLACE FUNCTION zc_Object_ExtraChargeCategories()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 15;

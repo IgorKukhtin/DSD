@@ -14,6 +14,7 @@ $BODY$BEGIN
   DELETE FROM ObjectFloat WHERE ObjectId = inId;
   DELETE FROM ObjectProtocol WHERE ObjectId = inId;
   DELETE FROM ObjectBoolean WHERE ObjectId = inId;
+  DELETE FROM ContainerLinkObject WHERE ObjectId = inId;
   DELETE FROM Object WHERE Id = inId;
 
 END;$BODY$

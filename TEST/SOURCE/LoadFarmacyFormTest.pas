@@ -19,26 +19,26 @@ type
     procedure UserFormSettingsTest;
     procedure LoadBankFormTest;
     procedure LoadBankAccountFormTest;
-    procedure LoadJuridicalGroupFormTest;
-    procedure LoadJuridicalFormTest;
-    procedure LoadPartnerFormTest;
-    procedure LoadPaidKindFormTest;
-    procedure LoadContractKindFormTest;
-    procedure LoadContractFormTest;
     procedure LoadBusinessFormTest;
-    procedure LoadBranchFormTest;
-    procedure LoadUnitGroupFormTest;
-    procedure LoadUnitFormTest;
+    procedure LoadCashFormTest;
+    procedure LoadContractFormTest;
+    procedure LoadContractKindFormTest;
+    procedure LoadCurrencyFormTest;
+    procedure LoadExtraChargeCategoriesFormTest;
     procedure LoadGoodsGroupFormTest;
     procedure LoadGoodsFormTest;
-    procedure LoadGoodsKindFormTest;
-    procedure LoadMeasureFormTest;
-    procedure LoadPriceListFormTest;
     procedure LoadGoodsPropertyFormTest;
     procedure LoadGoodsPropertyValueFormTest;
-    procedure LoadCashFormTest;
-    procedure LoadCurrencyFormTest;
+    procedure LoadGoodsKindFormTest;
+    procedure LoadJuridicalGroupFormTest;
+    procedure LoadJuridicalFormTest;
+    procedure LoadMeasureFormTest;
+    procedure LoadPartnerFormTest;
+    procedure LoadPaidKindFormTest;
+    procedure LoadPriceListFormTest;
     procedure LoadIncomeFormTest;
+    procedure LoadUnitGroupFormTest;
+    procedure LoadUnitFormTest;
     procedure LoadReportFormTest;
   end;
 
@@ -74,12 +74,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TBankEditForm');
 end;
 
-procedure TLoadFormTest.LoadBranchFormTest;
+procedure TLoadFormTest.LoadExtraChargeCategoriesFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBranchForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TBranchForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBranchEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TBranchEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TExtraChargeCategoriesForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TExtraChargeCategoriesForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TExtraChargeCategoriesEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TExtraChargeCategoriesEditForm');
 end;
 
 procedure TLoadFormTest.LoadBusinessFormTest;

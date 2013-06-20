@@ -93,7 +93,7 @@ begin
   try
     Form := TdsdFormStorageFactory.GetStorage.Load(FormName);
     Params.AddParam('Id', ftString, ptInputOutput, Key);
-    Form.Execute(Params);
+    Form.Execute(Self, Params);
     if Form.ShowModal = mrOk then begin
        Key := Form.Params.ParamByName('Key').Value;
        TextValue := Form.Params.ParamByName('TextValue').Value;

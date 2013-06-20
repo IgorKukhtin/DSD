@@ -28,7 +28,7 @@ type
     actJuridical: TdsdOpenForm;
     actBusiness: TdsdOpenForm;
     bbBusiness: TdxBarButton;
-    actBranch: TdsdOpenForm;
+    actExtraChargeCategories: TdsdOpenForm;
     bbBranch: TdxBarButton;
     actPartner: TdsdOpenForm;
     actIncome: TdsdOpenForm;
@@ -56,6 +56,7 @@ type
     actBalance: TdsdOpenForm;
     bbBalance: TdxBarButton;
     bbReports: TdxBarSubItem;
+    bbExtraChargeCategories: TdxBarButton;
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }

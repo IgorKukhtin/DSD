@@ -23,16 +23,7 @@ INSERT INTO ObjectStringDesc (id, DescId, Code, itemname)
 SELECT zc_ObjectString_Contract_Comment(), zc_Object_Contract(), 'Contract_Comment', 'Комментарий' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Id = zc_ObjectString_Contract_Comment());
 
 INSERT INTO ObjectStringDesc (id, DescId, Code, itemname)
-SELECT zc_ObjectString_GoodsPropertyValue_BarCode(), zc_Object_GoodsPropertyValue(), 'GoodsPropertyValue_BarCode', 'Штрихкод' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Id = zc_ObjectString_GoodsPropertyValue_BarCode());
-
-INSERT INTO ObjectStringDesc (id, DescId, Code, itemname)
-SELECT zc_ObjectString_GoodsPropertyValue_Article(), zc_Object_GoodsPropertyValue(), 'GoodsPropertyValue_Article', 'Комментарий' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Id = zc_ObjectString_GoodsPropertyValue_Article());
-
-INSERT INTO ObjectStringDesc (id, DescId, Code, itemname)
-SELECT zc_ObjectString_GoodsPropertyValue_BarCodeGLN(), zc_Object_GoodsPropertyValue(), 'GoodsPropertyValue_BarCodeGLN', 'Комментарий' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Id = zc_ObjectString_GoodsPropertyValue_BarCodeGLN());
-
-INSERT INTO ObjectStringDesc (id, DescId, Code, itemname)
-SELECT zc_ObjectString_GoodsPropertyValue_ArticleGLN(), zc_Object_GoodsPropertyValue(), 'GoodsPropertyValue_ArticleGLN', 'Комментарий' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Id = zc_ObjectString_GoodsPropertyValue_ArticleGLN());
+SELECT zc_ObjectString_Goods_CashName(), zc_Object_Goods(), 'Goods_CashName', 'Название в кассе' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Id = zc_ObjectString_Goods_CashName());
 
 INSERT INTO ObjectStringDesc (id, DescId, Code, itemname)
 SELECT zc_ObjectString_RegistrationCertificate(), zc_object_Car(), 'RegistrationCertificate', 'Техпаспорт Автомобиля' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Id = zc_ObjectString_RegistrationCertificate());

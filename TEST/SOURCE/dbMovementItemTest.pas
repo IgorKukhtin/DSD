@@ -24,6 +24,7 @@ type
     function InsertDefault: integer; override;
   protected
     procedure SetDataSetParam; override;
+    procedure Delete(Id: Integer); override;
   public
     function InsertUpdateMovementItemIncome
       (Id, MovementId, GoodsId: Integer;
@@ -35,6 +36,7 @@ type
   TMovementItemProductionUnionInTest = class(TObjectTest)
   private
     function InsertDefault: integer; override;
+    procedure Delete(Id: Integer); override;
   public
     function GetDataSet: TDataSet; override;
     function InsertUpdateMovementProductionUnionIn
@@ -47,9 +49,11 @@ type
 
   TMovementItemProductionUnionOutTest = class(TObjectTest)
   private
+    MovementItem_InId: INTEGER;
     function InsertDefault: integer; override;
   protected
     procedure SetDataSetParam; override;
+    procedure Delete(Id: Integer); override;
   public
     function GetDataSet: TDataSet; override;
     function InsertUpdateMovementProductionUnionOut
@@ -94,6 +98,7 @@ begin
   finally
     // удаление
     DeleteMovementItem(Id);
+    MovementItemIncome.Delete(Id);
   end;
 end;
 
@@ -111,6 +116,8 @@ begin
   finally
     // удаление
     DeleteMovementItem(Id);
+    DeleteMovementItem(MovementItemProductionUnionOut.MovementItem_InId);
+    MovementItemProductionUnionOut.Delete(Id);
   end;
 end;
 
@@ -127,6 +134,16 @@ begin
   spInsertUpdate := 'gpInsertUpdate_MovementItem_Income';
   spSelect := 'gpSelect_MovementItem_Income';
   spGet := 'gpGet_MovementItem_Income';
+end;
+
+procedure TMovementItemIncomeTest.Delete(Id: Integer);
+begin
+  with TGoodsTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free;
+  end;
 end;
 
 function TMovementItemIncomeTest.InsertDefault: integer;
@@ -175,6 +192,16 @@ begin
   spGet := '';
 end;
 
+procedure TMovementItemProductionUnionInTest.Delete(Id: Integer);
+begin
+  with TGoodsTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free;
+  end;
+end;
+
 function TMovementItemProductionUnionInTest.GetDataSet: TDataSet;
 begin
 
@@ -219,6 +246,16 @@ begin
   spGet := '';
 end;
 
+procedure TMovementItemProductionUnionOutTest.Delete(Id: Integer);
+begin
+  with TGoodsTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free;
+  end;
+end;
+
 function TMovementItemProductionUnionOutTest.GetDataSet: TDataSet;
 begin
   with FdsdStoredProc do begin
@@ -237,7 +274,7 @@ begin
 end;
 
 function TMovementItemProductionUnionOutTest.InsertDefault: integer;
-var MovementId, GoodsId, MovementItem_InId: Integer;
+var MovementId, GoodsId: Integer;
 begin
   MovementId := TMovementIncomeTest.Create.GetDefault;
   GoodsId := TGoodsTest.Create.GetDefault;

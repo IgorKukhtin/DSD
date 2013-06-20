@@ -1,4 +1,4 @@
-unit Measure;
+unit Goods;
 
 interface
 
@@ -8,15 +8,14 @@ uses
   cxLookAndFeelPainters, cxStyles, cxCustomData, cxFilter, cxData,
   cxDataStorage, cxEdit, Data.DB, cxDBData, cxGridLevel, cxClasses,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, Datasnap.DBClient, cxPropertiesStore, dxBar,
-  Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dsdAddOn, dxBarExtItems;
+  cxGrid, Datasnap.DBClient, dsdDB, cxPropertiesStore, dxBar,
+  Vcl.ActnList, dsdAction, DataModul, cxTL, cxTLdxBarBuiltInMenu,
+  cxInplaceContainer, cxTLData, cxDBTL, cxMaskEdit, ParentForm, dsdAddOn,
+  cxCheckBox, cxCurrencyEdit, ZAbstractRODataset, ZAbstractDataset, ZDataset,
+  ZAbstractConnection, ZConnection;
 
 type
-  TMeasureForm = class(TParentForm)
-    cxGridDBTableView: TcxGridDBTableView;
-    cxGridLevel: TcxGridLevel;
-    cxGrid: TcxGrid;
-    clName: TcxGridDBColumn;
+  TGoodsForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -30,17 +29,24 @@ type
     dsdStoredProc: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    clErased: TcxGridDBColumn;
+    bbErased: TdxBarButton;
+    bbUnErased: TdxBarButton;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
-    bbSetErased: TdxBarButton;
-    bbSetUnErased: TdxBarButton;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    dsdGridToExcel: TdsdGridToExcel;
-    bbToExcel: TdxBarButton;
-    dxBarStatic: TdxBarStatic;
-    spErasedUnErased: TdsdStoredProc;
+    cxGridDBTableView: TcxGridDBTableView;
+    cxGridLevel: TcxGridLevel;
+    cxGrid: TcxGrid;
     clCode: TcxGridDBColumn;
+    clName: TcxGridDBColumn;
+    clNDS: TcxGridDBColumn;
+    clPartyCount: TcxGridDBColumn;
+    clMeasureName: TcxGridDBColumn;
+    clisReceiptNeed: TcxGridDBColumn;
+    clPercentReprice: TcxGridDBColumn;
+    clExtraChargeCategoriesName: TcxGridDBColumn;
+    clPrice: TcxGridDBColumn;
+    clisErased: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -52,6 +58,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TMeasureForm);
+  RegisterClass(TGoodsForm);
 
 end.
