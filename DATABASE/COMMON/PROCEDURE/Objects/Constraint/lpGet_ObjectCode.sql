@@ -2,7 +2,7 @@
 
 -- DROP FUNCTION lfGet_ObjectCode(integer, integer);
 
-CREATE OR REPLACE FUNCTION lfGet_ObjectCode(
+CREATE OR REPLACE FUNCTION lpGet_ObjectCode(
     IN inObjectCode Integer, 
     IN inDescId Integer
 )
@@ -22,7 +22,7 @@ BEGIN
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lfGet_ObjectCode(integer, integer, integer) OWNER TO postgres;
+ALTER FUNCTION lfGet_ObjectCode(integer, integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
