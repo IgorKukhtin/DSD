@@ -64,6 +64,12 @@ type
     procedure Unit_Test;
     procedure UnitGroup_Test;
     procedure User_Test;
+    procedure AccountGroup_Test;
+    procedure AccountDirection_Test;
+    procedure Account_Test;
+    procedure ProfitLossGroup_Test;
+    procedure ProfitLossDirection_Test;
+    procedure ProfitLoss_Test;
   end;
 
   TBankTest = class(TObjectTest)
@@ -295,6 +301,54 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdateUser(const Id: integer; UserName, Login, Password: string): integer;
+    constructor Create; override;
+  end;
+
+  TAccountGroupTest = class(TObjectTest)
+  function InsertDefault: integer; override;
+  public
+    function InsertUpdateAccountGroup(const Id, Code: Integer; Name: string): integer;
+    constructor Create; override;
+  end;
+
+  TAccountDirectionTest = class(TObjectTest)
+  function InsertDefault: integer; override;
+  public
+    function InsertUpdateAccountDirection(const Id, Code: Integer; Name: string): integer;
+    constructor Create; override;
+  end;
+
+  TAccountTest = class(TObjectTest)
+  function InsertDefault: integer; override;
+  public
+    // Удаляется Объект и все подчиненные
+    procedure Delete(Id: Integer); override;
+    function InsertUpdateAccount(const Id, Code : integer; Name: string; AccountGroupId: Integer;
+                                     AccountDirectionId, InfoMoneyDestinationId, InfoMoneyId: integer): integer;
+    constructor Create; override;
+  end;
+
+  TProfitLossGroupTest = class(TObjectTest)
+  function InsertDefault: integer; override;
+  public
+    function InsertUpdateProfitLossGroup(const Id, Code: Integer; Name: string): integer;
+    constructor Create; override;
+  end;
+
+  TProfitLossDirectionTest = class(TObjectTest)
+  function InsertDefault: integer; override;
+  public
+    function InsertUpdateProfitLossDirection(const Id, Code: Integer; Name: string): integer;
+    constructor Create; override;
+  end;
+
+  TProfitLossTest = class(TObjectTest)
+  function InsertDefault: integer; override;
+  public
+    // Удаляется Объект и все подчиненные
+    procedure Delete(Id: Integer); override;
+    function InsertUpdateProfitLoss(const Id, Code : integer; Name: string; ProfitLossGroupId: Integer;
+                                     ProfitLossDirectionId, InfoMoneyDestinationId, InfoMoneyId: integer): integer;
     constructor Create; override;
   end;
 
@@ -1876,6 +1930,324 @@ begin
     ObjectTest.Delete(Id);
   end;
 end;
+
+{ TAccountGroupTest }
+constructor TAccountGroupTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_AccountGroup';
+  spSelect := 'gpSelect_Object_AccountGroup';
+  spGet := 'gpGet_Object_AccountGroup';
+end;
+
+function TAccountGroupTest.InsertDefault: integer;
+begin
+  result := InsertUpdateAccountGroup(0, 4, 'Группа управленческих счетов 1');
+end;
+
+function TAccountGroupTest.InsertUpdateAccountGroup(const Id, Code: Integer;
+  Name: string): integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.AccountGroup_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TAccountGroupTest;
+begin
+  ObjectTest := TAccountGroupTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка группы урп.счетов
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Группа управленческих счетов 1'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    ObjectTest.Delete(Id);
+  end;
+end;
+
+
+{ TAccountDirectionTest }
+constructor TAccountDirectionTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_AccountDirection';
+  spSelect := 'gpSelect_Object_AccountDirection';
+  spGet := 'gpGet_Object_AccountDirection';
+end;
+
+function TAccountDirectionTest.InsertDefault: integer;
+begin
+  result := InsertUpdateAccountDirection(0, 4, 'Аналитики управленческих счетов 1');
+end;
+
+function TAccountDirectionTest.InsertUpdateAccountDirection(const Id, Code: Integer;
+  Name: string): integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.AccountDirection_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TAccountDirectionTest;
+begin
+  ObjectTest := TAccountDirectionTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка группы урп.счетов
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Аналитики управленческих счетов 1'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    ObjectTest.Delete(Id);
+  end;
+end;
+
+{TAccountTest}
+ constructor TAccountTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_Account';
+  spSelect := 'gpSelect_Object_Account';
+  spGet := 'gpGet_Object_Account';
+end;
+
+procedure TAccountTest.Delete(Id: Integer);
+begin
+  inherited;
+  with TAccountGroupTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free
+  end;
+  with TAccountDirectionTest.Create do
+  try
+    Delete(GetDefault)
+  finally
+    Free;
+  end;
+
+ end;
+
+function TAccountTest.InsertDefault: integer;
+var
+  AccountGroupId: Integer;
+  AccountDirectionId: Integer;
+ // InfoMoneyDestinationId: Integer;
+ // InfoMoneyId: Integer;
+begin
+  AccountGroupId := TAccountGroupTest.Create.GetDefault;
+  AccountDirectionId:= TAccountDirectionTest.Create.GetDefault;;
+  result := InsertUpdateAccount(0, 3, 'Управленческие счет 1', AccountGroupId, AccountDirectionId, 1, 1);
+end;
+
+function TAccountTest.InsertUpdateAccount;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  FParams.AddParam('inAccountGroupId', ftInteger, ptInput, AccountGroupId);
+  FParams.AddParam('inAccountDirectionId', ftInteger, ptInput, AccountDirectionId);
+  FParams.AddParam('inInfoMoneyDestinationId', ftInteger, ptInput, InfoMoneyDestinationId);
+  FParams.AddParam('inInfoMoneyId', ftInteger, ptInput, InfoMoneyId);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.Account_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TAccountTest;
+begin
+  ObjectTest := TAccountTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка Управленческого счета
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных о Упр.счете
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Управленческие счет 1'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    ObjectTest.Delete(Id);
+  end;
+end;
+
+{ TProfitLossGroupTest }
+constructor TProfitLossGroupTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_ProfitLossGroup';
+  spSelect := 'gpSelect_Object_ProfitLossGroup';
+  spGet := 'gpGet_Object_ProfitLossGroup';
+end;
+
+function TProfitLossGroupTest.InsertDefault: integer;
+begin
+  result := InsertUpdateProfitLossGroup(0, 4, 'Группы статей отчета о прибылях и убытках 1');
+end;
+
+function TProfitLossGroupTest.InsertUpdateProfitLossGroup(const Id, Code: Integer;
+  Name: string): integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.ProfitLossGroup_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TProfitLossGroupTest;
+begin
+  ObjectTest := TProfitLossGroupTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Группы статей отчета о прибылях и убытках 1'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    ObjectTest.Delete(Id);
+  end;
+end;
+
+
+{ TProfitLossDirectionTest }
+constructor TProfitLossDirectionTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_ProfitLossDirection';
+  spSelect := 'gpSelect_Object_ProfitLossDirection';
+  spGet := 'gpGet_Object_ProfitLossDirection';
+end;
+
+function TProfitLossDirectionTest.InsertDefault: integer;
+begin
+  result := InsertUpdateProfitLossDirection(0, 1, 'Аналитики статей отчета о прибылях и убытках - направление 1');
+end;
+
+function TProfitLossDirectionTest.InsertUpdateProfitLossDirection(const Id, Code: Integer;
+  Name: string): integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.ProfitLossDirection_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TProfitLossDirectionTest;
+begin
+  ObjectTest := TProfitLossDirectionTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка группы урп.счетов
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Аналитики статей отчета о прибылях и убытках - направление 1'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    ObjectTest.Delete(Id);
+  end;
+end;
+
+
+{TProfitLossTest}
+ constructor TProfitLossTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_ProfitLoss';
+  spSelect := 'gpSelect_Object_ProfitLoss';
+  spGet := 'gpGet_Object_ProfitLoss';
+end;
+
+procedure TProfitLossTest.Delete(Id: Integer);
+begin
+  inherited;
+  with TProfitLossGroupTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free
+  end;
+  with TProfitLossDirectionTest.Create do
+  try
+    Delete(GetDefault)
+  finally
+    Free;
+  end;
+
+ end;
+
+function TProfitLossTest.InsertDefault: integer;
+var
+  ProfitLossGroupId: Integer;
+  ProfitLossDirectionId: Integer;
+ // InfoMoneyDestinationId: Integer;
+ // InfoMoneyId: Integer;
+begin
+  ProfitLossGroupId := TProfitLossGroupTest.Create.GetDefault;
+  ProfitLossDirectionId:= TProfitLossDirectionTest.Create.GetDefault;;
+  result := InsertUpdateProfitLoss(0, 3, 'Управленческие счет 1', ProfitLossGroupId, ProfitLossDirectionId, 1, 1);
+end;
+
+function TProfitLossTest.InsertUpdateProfitLoss;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  FParams.AddParam('inProfitLossGroupId', ftInteger, ptInput, ProfitLossGroupId);
+  FParams.AddParam('inProfitLossDirectionId', ftInteger, ptInput, ProfitLossDirectionId);
+  FParams.AddParam('inInfoMoneyDestinationId', ftInteger, ptInput, InfoMoneyDestinationId);
+  FParams.AddParam('inInfoMoneyId', ftInteger, ptInput, InfoMoneyId);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.ProfitLoss_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TProfitLossTest;
+begin
+  ObjectTest := TProfitLossTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Управленческие счет 1'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    ObjectTest.Delete(Id);
+  end;
+end;
+
 
 initialization
   TestFramework.RegisterTest('Справочники', TdbObjectTest.Suite);

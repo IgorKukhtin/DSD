@@ -3,7 +3,7 @@
 --DROP FUNCTION gpGet_Object_Juridical();
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Juridical(
-    IN inId          Integer,       -- Касса 
+    IN inId          Integer,       --  
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, GLNCode TVarChar,

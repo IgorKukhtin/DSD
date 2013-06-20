@@ -531,7 +531,48 @@ begin
         Add('     left outer join dba.Goods as Goods_parent on Goods_parent.Id = Goods.ParentId');
         Add('     left outer join dba.Measure on Measure.Id = GoodsProperty.MeasureId');
         Add('     left outer join dba.GoodsProperty_Detail on GoodsProperty_Detail.GoodsPropertyId = GoodsProperty.Id');
-        Add('     left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = 0 ');
+        Add('     left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = case when fCheckGoodsParentID(1491,Goods.ParentId) =zc_rvYes() then 20701'); // АГРОСЕЛЬПРОМ  - 20701	Общефирменные Товары	Прочие товары
+        Add('                                                                        when fCheckGoodsParentID(5,   Goods.ParentId) =zc_rvYes()then 30101'); // ГП            - 30101	Доходы	Продукция	Готовая продукция
+        Add('                                                                        when fCheckGoodsParentID(5306,Goods.ParentId) =zc_rvYes() then 30101'); // ПЕРЕПАК       - 30101	Доходы	Продукция	Готовая продукция
+        Add('                                                                        when fCheckGoodsParentID(5874,Goods.ParentId) =zc_rvYes() then 30102'); // ТУШЕНКА       - 30102	Доходы	Продукция	Тушенка
+        Add('                                                                        when fCheckGoodsParentID(2387,Goods.ParentId) =zc_rvYes() then 30103'); // ХЛЕБ          - 30103	Доходы  Продукция	Хлеб
+        Add('                                                                        when fCheckGoodsParentID(5306,Goods.ParentId) =zc_rvYes() then 30301'); // С-ПЕРЕРАБОТКА - 30301	Доходы  Переработка	Переработка
+
+        Add('                                                                        when fCheckGoodsParentID(6682,Goods.ParentId) =zc_rvYes() then 20204'); // КАНЦТОВАРЫ - 20204	Общефирменные  Прочие ТМЦ Канц товары
+        Add('                                                                        when fCheckGoodsParentID(6677,Goods.ParentId) =zc_rvYes() then 20601'); // КУЛЬКИ - 20601	Общефирменные  Прочие материалы	Прочие материалы
+        Add('                                                                        when fCheckGoodsParentID(2954,Goods.ParentId) =zc_rvYes() then 20203'); // МОЮЩЕЕ - 20203	Общефирменные  Прочие ТМЦ Моющие средства, кислоты
+        Add('                                                                        when fCheckGoodsParentID(6678,Goods.ParentId) =zc_rvYes() then 20601'); // ПЛЕНКА И СКОТЧ - 20601	Общефирменные  Прочие материалы	Прочие материалы
+        Add('                                                                        when fCheckGoodsParentID(2949,Goods.ParentId) =zc_rvYes() then 20205'); // РАЗНОЕ - 20205	Общефирменные  Прочие ТМЦ Прочие ТМЦ
+        Add('                                                                        when fCheckGoodsParentID(2641,Goods.ParentId) =zc_rvYes() then 20202'); // СПЕЦОДЕЖДА - 20202	Общефирменные  Прочие ТМЦ Спецодежда
+        Add('                                                                        when fCheckGoodsParentID(6681,Goods.ParentId) =zc_rvYes() then 20601'); // ЦЕННИКИ, ЯРЛЫКИ, ЭТ. ДАТА - 20601	Общефирменные  Прочие материалы	Прочие материалы
+        Add('                                                                        when fCheckGoodsParentID(6676,Goods.ParentId) =zc_rvYes() then 20601'); // ЩЕПА - 20601	Общефирменные  Прочие материалы	Прочие материалы
+        Add('                                                                        when fCheckGoodsParentID(2787,Goods.ParentId) =zc_rvYes() then 20205'); // СД-КУХНЯ - 20205	Общефирменные  Прочие ТМЦ Прочие ТМЦ
+
+        Add('                                                                        when fCheckGoodsParentID(2642,Goods.ParentId) =zc_rvYes() then 20101'); // СД-ЗАПЧАСТИ оборуд-е - 20101	Общефирменные  Запчасти и Ремонты	Запчасти и Ремонты
+
+        Add('                                                                        when fCheckGoodsParentID(2647,Goods.ParentId) =zc_rvYes() then 10201'); // СД-ПЕКАРНЯ - 10201		Прочее сырье	Специи
+        Add('                                                                        when Goods.Id in (6041, 7013) then 10201'); // СД-ТУШЕНКА - 10201		Прочее сырье	Специи
+        Add('                                                                        when Goods.ParentId in (5857) then 10203'); // СД-ТУШЕНКА - 10203		Прочее сырье	Упаковка
+
+        Add('                                                                        when fCheckGoodsParentID(4213,Goods.ParentId) =zc_rvYes() then 20601'); // ГОФРОТАРА - 20601	Общефирменные  Прочие материалы	Прочие материалы
+        Add('                                                                        when fCheckGoodsParentID(3521,Goods.ParentId) =zc_rvYes() then 10201'); // для проработок-новые специи - 10201		Прочее сырье	Специи
+        Add('                                                                        when fCheckGoodsParentID(3221,Goods.ParentId) =zc_rvYes() then 10201'); // ДОБАВКИ - 10201		Прочее сырье	Специи
+        Add('                                                                        when fCheckGoodsParentID(2643,Goods.ParentId) =zc_rvYes() then 10201'); // СПЕЦИИ - 10201		Прочее сырье	Специи
+        Add('                                                                        when fCheckGoodsParentID(2644,Goods.ParentId) =zc_rvYes() then 10201'); // СПЕЦИИ ДЕЛИКАТ. - 10201		Прочее сырье	Специи
+        Add('                                                                        when fCheckGoodsParentID(2645,Goods.ParentId) =zc_rvYes() then 10202'); // ОБОЛОЧКА - 10202		Прочее сырье	Оболочка
+        Add('                                                                        when fCheckGoodsParentID(2631,Goods.ParentId) =zc_rvYes() then 10203'); // !!!СД-СЫРЬЕ!!! - 10203		Прочее сырье	Упаковка
+
+        Add('                                                                        when fCheckGoodsParentID(2648,Goods.ParentId) =zc_rvYes() then 10204'); // СО-СЫРЬЕ СЫР - 10204		Основное сырье Прочее сырье Прочее сырье
+        Add('                                                                        when Goods.Id in (2792, 7001, 6710) then 10103'); // !!!СО- ГОВ. И СВ. Н\К + СЫР!!! - 10103		Основное сырье Мясное сырье Говядина
+        Add('                                                                        when fCheckGoodsParentID(6435,Goods.ParentId) =zc_rvYes() then 10102'); // !!!СО- ГОВ. И СВ. Н\К + СЫР!!! - 10102		Основное сырье Мясное сырье Свинина
+        Add('                                                                        when fCheckGoodsParentID(3859,Goods.ParentId) =zc_rvYes() then 10105'); // СО-БАРАНИНА - 10105		Основное сырье Мясное сырье Прочее мясное сырье
+        Add('                                                                        when fCheckGoodsParentID(5676,Goods.ParentId) =zc_rvYes() then 10105'); // СО-КАБАН и др. - 10105		Основное сырье Мясное сырье Прочее мясное сырье
+
+        Add('                                                                        when fCheckGoodsParentID(5489,Goods.ParentId) =zc_rvYes() then 10103'); // СО-ГОВ.  ДЕЛ-СЫ* - 10103		Основное сырье Мясное сырье Говядина
+        Add('                                                                        when fCheckGoodsParentID(5491,Goods.ParentId) =zc_rvYes() then 10103'); // СО-ГОВ. ВЫС+ОДН.* - 10103		Основное сырье Мясное сырье Говядина
+        Add('                                                                        when fCheckGoodsParentID(2633,Goods.ParentId) =zc_rvYes() then 10103'); // СО-ГОВЯДИНА ПФ* - 10103		Основное сырье Мясное сырье Говядина
+
+        Add('                                                                   end');
         Add('where Goods.HasChildren = zc_hsLeaf() ');
         Add('group by ObjectId');
         Add('       , ObjectName');
@@ -570,7 +611,7 @@ begin
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
              toStoredProc.Params.ParamByName('inGoodsGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inMeasureId').Value:=FieldByName('MeasureId_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inWeight').Value:=FieldByName('MeasureId_Postgres').AsFloat;
+             toStoredProc.Params.ParamByName('inWeight').Value:=FieldByName('Ves_onMeasure').AsFloat;
              toStoredProc.Params.ParamByName('inInfoMoneyId').Value:=FieldByName('InfoMoneyId_Postgres').AsInteger;
              //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
@@ -1410,25 +1451,25 @@ begin
         Add('                                                                                                     WHEN _pgUnit.ObjectCode in (90) THEN 111');
         Add('                                                                                                END');
         Add('     left outer join dba.Unit on Unit.Id = 3');// АЛАН
-        Add('     left outer join dba._pgAccount on _pgAccount.ObjectCode = CASE WHEN _pgUnit_parent.ObjectCode in (1102) or _pgUnit_parent2.ObjectCode in (1102) THEN 40'); // Запасы + на филиалах
-        Add('                                                                    WHEN _pgUnit.ObjectCode in (1201, 2, 1204, 1205, 21) THEN 18'); // Запасы + на складах
-        Add('                                                                    WHEN _pgUnit.ObjectCode in (22, 23, 1303, 1304) THEN 13'); // Запасы + на складах ГП
-        Add('                                                                    WHEN _pgUnit.ObjectCode in (7) THEN 45'); // Запасы + на упаковке
-        Add('                                                                    WHEN _pgUnit_parent.ObjectCode in (1305) THEN 26'); // Запасы + на производстве
+        Add('     left outer join dba._pgAccount on _pgAccount.ObjectCode = CASE WHEN _pgUnit_parent.ObjectCode in (1102) or _pgUnit_parent2.ObjectCode in (1102) THEN 20701'); // Запасы + на филиалах
+        Add('                                                                    WHEN _pgUnit.ObjectCode in (1201, 2, 1204, 1205, 21) THEN 20201'); // Запасы + на складах
+        Add('                                                                    WHEN _pgUnit.ObjectCode in (22, 23, 1303, 1304) THEN 20101'); // Запасы + на складах ГП
+        Add('                                                                    WHEN _pgUnit.ObjectCode in (7) THEN 20801'); // Запасы + на упаковке
+        Add('                                                                    WHEN _pgUnit_parent.ObjectCode in (1305) THEN 20401'); // Запасы + на производстве
         Add('                                                                END');
-        Add('     left outer join dba._pgProfitLoss on _pgProfitLoss.ObjectCode = CASE WHEN _pgUnit.ObjectCode in (51) THEN 65'); // Содержание админ
-        Add('                                                                          WHEN _pgUnit.ObjectCode in (52) THEN 69'); // админ + Содержание транспорта
-        Add('                                                                          WHEN _pgUnit.ObjectCode in (1101) THEN 73'); // Содержание охраны
-        Add('                                                                          WHEN _pgUnit.ObjectCode in (71) THEN 77'); // Сбыт  + Содержание транспорта
-        Add('                                                                          WHEN _pgUnit.ObjectCode in (1102) THEN 81'); // Содержание филиалов
-        Add('                                                                          WHEN _pgUnit.ObjectCode in (131) THEN 89'); // Общефирменные
-        Add('                                                                          WHEN _pgUnit.ObjectCode in (1103) THEN 35'); // Содержание производства
-        Add('                                                                          WHEN _pgUnit.ObjectCode in (1104) THEN 40'); // Содержание складов
-        Add('                                                                          WHEN _pgUnit.ObjectCode in (31) THEN 45'); // Производство + Содержание транспорта
-        Add('                                                                          WHEN _pgUnit.ObjectCode in (33) THEN 49'); // Содержание Кухни
+        Add('     left outer join dba._pgProfitLoss on _pgProfitLoss.ObjectCode = CASE WHEN _pgUnit.ObjectCode in (51) THEN 30101'); // Содержание админ
+        Add('                                                                          WHEN _pgUnit.ObjectCode in (52) THEN 30201'); // админ + Содержание транспорта
+        Add('                                                                          WHEN _pgUnit.ObjectCode in (1101) THEN 30301'); // Содержание охраны
+        Add('                                                                          WHEN _pgUnit.ObjectCode in (71) THEN 40101'); // Сбыт  + Содержание транспорта
+        Add('                                                                          WHEN _pgUnit.ObjectCode in (1102) THEN 40201'); // Содержание филиалов
+        Add('                                                                          WHEN _pgUnit.ObjectCode in (131) THEN 40301'); // Общефирменные
+        Add('                                                                          WHEN _pgUnit.ObjectCode in (1103) THEN 20101'); // Содержание производства
+        Add('                                                                          WHEN _pgUnit.ObjectCode in (1104) THEN 20201'); // Содержание складов
+        Add('                                                                          WHEN _pgUnit.ObjectCode in (31) THEN 20301'); // Производство + Содержание транспорта
+        Add('                                                                          WHEN _pgUnit.ObjectCode in (33) THEN 20401'); // Содержание Кухни
         Add('                                                                      END');
         Add('where _pgUnit.Id<>0');
-        Add('order by ObjectId');
+        Add('order by ObjectCode');
 
         Open;
         //
@@ -1909,13 +1950,13 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select max(Id) as ObjectId');
-        Add('     , max(_pgInfoMoney.ObjectCode) as ObjectCode');
+        Add('select min(Id) as ObjectId');
+        Add('     , min(_pgInfoMoney.ObjectCode) - 101 as ObjectCode');
         Add('     , _pgInfoMoney.Name1 as ObjectName');
         Add('     , _pgInfoMoney.Id1_Postgres as Id_Postgres');
         Add('from dba._pgInfoMoney');
         Add('group by ObjectName, Id_Postgres');
-        Add('order by ObjectId');
+        Add('order by ObjectCode');
         Open;
         //
         fStop:=cbOnlyOpen.Checked;
@@ -1965,13 +2006,13 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select max(Id) as ObjectId');
-        Add('     , max(_pgInfoMoney.ObjectCode) as ObjectCode');
+        Add('select min(Id) as ObjectId');
+        Add('     , min(_pgInfoMoney.ObjectCode) - 1 as ObjectCode');
         Add('     , _pgInfoMoney.Name2 as ObjectName');
         Add('     , _pgInfoMoney.Id2_Postgres as Id_Postgres');
         Add('from dba._pgInfoMoney');
-        Add('group by ObjectName, Id_Postgres');
-        Add('order by ObjectId');
+        Add('group by ObjectName, Id_Postgres, _pgInfoMoney.Name1');
+        Add('order by ObjectCode');
         Open;
         //
         fStop:=cbOnlyOpen.Checked;
@@ -1999,7 +2040,9 @@ begin
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba._pgInfoMoney set Id2_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Name2 in (select Name2 from dba._pgInfoMoney where Id = '+FieldByName('ObjectId').AsString+')');
+             then fExecSqFromQuery('update dba._pgInfoMoney set Id2_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Name1 in (select Name1 from dba._pgInfoMoney where Id = '+FieldByName('ObjectId').AsString+')'
+                                                                                                                                      +'   and Name2 in (select Name2 from dba._pgInfoMoney where Id = '+FieldByName('ObjectId').AsString+')'
+                                  );
              //
              Next;
              Application.ProcessMessages;
@@ -2028,7 +2071,7 @@ begin
         Add('     , _pgInfoMoney.Id2_Postgres as InfoMoneyDestinationId_PG');
         Add('     , _pgInfoMoney.Id3_Postgres as Id_Postgres');
         Add('from dba._pgInfoMoney');
-        Add('order by ObjectId');
+        Add('order by ObjectCode');
         Open;
         //
         fStop:=cbOnlyOpen.Checked;
@@ -2082,13 +2125,13 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select max(Id) as ObjectId');
-        Add('     , max(_pgAccount.ObjectCode) as ObjectCode');
+        Add('select min(Id) as ObjectId');
+        Add('     , min(_pgAccount.ObjectCode) - 101 as ObjectCode');
         Add('     , _pgAccount.Name1 as ObjectName');
         Add('     , _pgAccount.Id1_Postgres as Id_Postgres');
         Add('from dba._pgAccount');
         Add('group by ObjectName, Id_Postgres');
-        Add('order by ObjectId');
+        Add('order by ObjectCode');
         Open;
         //
         fStop:=cbOnlyOpen.Checked;
@@ -2137,13 +2180,13 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select max(Id) as ObjectId');
-        Add('     , max(_pgAccount.ObjectCode) as ObjectCode');
+        Add('select min(Id) as ObjectId');
+        Add('     , min(_pgAccount.ObjectCode) - 1 as ObjectCode');
         Add('     , _pgAccount.Name2 as ObjectName');
         Add('     , _pgAccount.Id2_Postgres as Id_Postgres');
         Add('from dba._pgAccount');
-        Add('group by ObjectName, Id_Postgres');
-        Add('order by ObjectId');
+        Add('group by ObjectName, Id_Postgres, _pgAccount.Name1');
+        Add('order by ObjectCode');
         Open;
         //
         fStop:=cbOnlyOpen.Checked;
@@ -2171,7 +2214,9 @@ begin
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba._pgAccount set Id2_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Name2 in (select Name2 from dba._pgAccount where Id = '+FieldByName('ObjectId').AsString+')');
+             then fExecSqFromQuery('update dba._pgAccount set Id2_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Name1 in (select Name1 from dba._pgAccount where Id = '+FieldByName('ObjectId').AsString+')'
+                                                                                                                                    +'   and Name2 in (select Name2 from dba._pgAccount where Id = '+FieldByName('ObjectId').AsString+')'
+                                  );
              //
              Next;
              Application.ProcessMessages;
@@ -2198,24 +2243,13 @@ begin
         Add('     , _pgAccount.Name3 as ObjectName');
         Add('     , _pgAccount.Id1_Postgres as AccountGroupId_PG');
         Add('     , _pgAccount.Id2_Postgres as AccountDirectionId_PG');
-        Add('     , (select max (isnull (_pgInfoMoney.Id2_Postgres, 0)) from dba._pgInfoMoney where _pgInfoMoney.Name2 = _pgAccount.Name3) as InfoMoneyDestinationId_PG');
-        Add('     , case when InfoMoneyDestinationId_PG is not null then null else (select max (isnull (_pgInfoMoney.Id3_Postgres, 0)) from dba._pgInfoMoney where _pgInfoMoney.Name3 = _pgAccount.Name3) end as InfoMoneyId_PG');
-        Add('     , case when 1=1 then ObjectId else _pgAccount.Id3_Postgres end as Id_Postgres');
+        Add('     , isnull(_pgInfoMoney_30201.Id2_Postgres, (select max (isnull (_pgInfoMoney.Id2_Postgres, 0)) from dba._pgInfoMoney where _pgInfoMoney.ObjectCode <> 30201 and _pgInfoMoney.Name2 = _pgAccount.Name3)) as InfoMoneyDestinationId_PG');
+        Add('     , case when 1=1 then null when InfoMoneyDestinationId_PG is not null then null else (select max (isnull (_pgInfoMoney.Id3_Postgres, 0)) from dba._pgInfoMoney where _pgInfoMoney.Name3 = _pgAccount.Name3) end as InfoMoneyId_PG');
+        Add('     , case when 1=1 then _pgAccount.Id3_Postgres else ObjectId end as Id_Postgres');
         Add('from dba._pgAccount');
-        Add('order by ObjectId');
+        Add('     left outer join dba._pgInfoMoney as _pgInfoMoney_30201 on _pgInfoMoney_30201.ObjectCode = 30201 and _pgAccount.ObjectCode = 30101');
+        Add('order by ObjectCode');
         Open;
-{select _pgAccount.Id as ObjectId
-     , _pgAccount.ObjectCode as ObjectCode
-     , _pgAccount.Name3 as ObjectName
-     --, _pgAccount.Id1_Postgres as AccountGroupId_PG
---     , _pgAccount.Id2_Postgres as AccountDirectionId_PG
-     , (select max (isnull (_pgInfoMoney.Id2_Postgres, 0)) from dba._pgInfoMoney where _pgInfoMoney.Name2 = _pgAccount.Name3) as InfoMoneyDestinationId_PG
-     , case when InfoMoneyDestinationId_PG is not null then null else (select max (isnull (_pgInfoMoney.Id3_Postgres, 0)) from dba._pgInfoMoney where _pgInfoMoney.Name3 = _pgAccount.Name3) end as InfoMoneyId_PG
---      , _pgAccount.Id3_Postgres as Id_Postgres
-from dba._pgAccount
--- where InfoMoneyDestinationId_PG is null  and InfoMoneyId_PG is null
--- order by ObjectId
-}
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -2229,8 +2263,10 @@ from dba._pgAccount
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
-        toStoredProc.Params.AddParam ('inInfoMoneyGroupId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAccountGroupId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAccountDirectionId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inInfoMoneyDestinationId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inInfoMoneyId',ftInteger,ptInput, 0);
         //
         while not EOF do
         begin
@@ -2247,7 +2283,7 @@ from dba._pgAccount
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba._pgInfoMoney set Id3_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             then fExecSqFromQuery('update dba._pgAccount set Id3_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;
@@ -2262,14 +2298,183 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadProfitLossGroup;
 begin
+     if (not cbProfitLossGroup.Checked)or(not cbProfitLossGroup.Enabled) then exit;
+     //
+     myEnabledCB(cbProfitLossGroup);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select min(Id) as ObjectId');
+        Add('     , min(_pgProfitLoss.ObjectCode) - 101 as ObjectCode');
+        Add('     , _pgProfitLoss.Name1 as ObjectName');
+        Add('     , _pgProfitLoss.Id1_Postgres as Id_Postgres');
+        Add('from dba._pgProfitLoss');
+        Add('group by ObjectName, Id_Postgres');
+        Add('order by ObjectCode');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_profitlossgroup';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba._pgProfitLoss set Id1_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Name1 in (select Name1 from dba._pgProfitLoss where Id = '+FieldByName('ObjectId').AsString+')');
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        //EnableControls;
+     end;
+     //
+     myDisabledCB(cbProfitLossGroup);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadProfitLossDirection;
 begin
+     if (not cbProfitLossDirection.Checked)or(not cbProfitLossDirection.Enabled) then exit;
+     //
+     myEnabledCB(cbProfitLossDirection);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select min(Id) as ObjectId');
+        Add('     , min(_pgProfitLoss.ObjectCode) - 1 as ObjectCode');
+        Add('     , _pgProfitLoss.Name2 as ObjectName');
+        Add('     , _pgProfitLoss.Id2_Postgres as Id_Postgres');
+        Add('from dba._pgProfitLoss');
+        Add('group by ObjectName, Id_Postgres, _pgProfitLoss.Name1');
+        Add('order by ObjectCode');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_profitlossdirection';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba._pgProfitLoss set Id2_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Name1 in (select Name1 from dba._pgProfitLoss where Id = '+FieldByName('ObjectId').AsString+')'
+                                                                                                                                       +'   and Name2 in (select Name2 from dba._pgProfitLoss where Id = '+FieldByName('ObjectId').AsString+')'
+                                  );
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        //EnableControls;
+     end;
+     //
+     myDisabledCB(cbProfitLossDirection);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadProfitLoss;
 begin
+     if (not cbProfitLoss.Checked)or(not cbProfitLoss.Enabled) then exit;
+     //
+     myEnabledCB(cbProfitLoss);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select _pgProfitLoss.Id as ObjectId');
+        Add('     , _pgProfitLoss.ObjectCode as ObjectCode');
+        Add('     , _pgProfitLoss.Name3 as ObjectName');
+        Add('     , _pgProfitLoss.Id1_Postgres as ProfitLossGroupId_PG');
+        Add('     , _pgProfitLoss.Id2_Postgres as ProfitLossDirectionId_PG');
+        Add('     , case when _pgProfitLoss.ObjectCode < 20000 then null ' + ' else isnull(_pgInfoMoney_30201.Id2_Postgres, (select max (isnull (_pgInfoMoney.Id2_Postgres, 0)) from dba._pgInfoMoney where _pgInfoMoney.ObjectCode <> 30201 and _pgInfoMoney.Name2 = _pgProfitLoss.Name3)) end as InfoMoneyDestinationId_PG');
+        Add('     , case when _pgProfitLoss.ObjectCode < 20000 then null ' + ' else case when InfoMoneyDestinationId_PG is not null then null else (select max (isnull (_pgInfoMoney.Id3_Postgres, 0)) from dba._pgInfoMoney where _pgInfoMoney.Name3 = _pgProfitLoss.Name3) end end as InfoMoneyId_PG');
+        Add('     , case when 1=1 then _pgProfitLoss.Id3_Postgres else ObjectId end as Id_Postgres');
+        Add('from dba._pgProfitLoss');
+        Add('     left outer join dba._pgInfoMoney as _pgInfoMoney_30201 on _pgInfoMoney_30201.ObjectCode = 30201 and _pgProfitLoss.ObjectCode = 70304');
+        Add('order by ObjectCode');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_profitloss';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inProfitLossGroupId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inProfitLossDirectionId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inInfoMoneyDestinationId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inInfoMoneyId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inProfitLossGroupId').Value:=FieldByName('ProfitLossGroupId_PG').AsInteger;
+             toStoredProc.Params.ParamByName('inProfitLossDirectionId').Value:=FieldByName('ProfitLossDirectionId_PG').AsInteger;
+             toStoredProc.Params.ParamByName('inInfoMoneyDestinationId').Value:=FieldByName('InfoMoneyDestinationId_PG').AsInteger;
+             toStoredProc.Params.ParamByName('inInfoMoneyId').Value:=FieldByName('InfoMoneyId_PG').AsInteger;
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba._pgProfitLoss set Id3_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        //EnableControls;
+     end;
+     //
+     myDisabledCB(cbProfitLoss);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------------
