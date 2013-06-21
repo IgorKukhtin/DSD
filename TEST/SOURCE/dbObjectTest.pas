@@ -70,7 +70,11 @@ type
     procedure ProfitLossGroup_Test;
     procedure ProfitLossDirection_Test;
     procedure ProfitLoss_Test;
-  end;
+    procedure InfoMoneyGroup_Test;
+    procedure InfoMoneyDestination_Test;
+    procedure InfoMoney_Test;
+
+   end;
 
   TBankTest = class(TObjectTest)
   private
@@ -352,7 +356,31 @@ type
     constructor Create; override;
   end;
 
-implementation
+  TInfoMoneyGroupTest = class(TObjectTest)
+  function InsertDefault: integer; override;
+  public
+    function InsertUpdateInfoMoneyGroup(const Id, Code: Integer; Name: string): integer;
+    constructor Create; override;
+  end;
+
+  TInfoMoneyDestinationTest = class(TObjectTest)
+  function InsertDefault: integer; override;
+  public
+    function InsertUpdateInfoMoneyDestination(const Id, Code: Integer; Name: string): integer;
+    constructor Create; override;
+  end;
+
+  TInfoMoneyTest = class(TObjectTest)
+  function InsertDefault: integer; override;
+  public
+    // Удаляется Объект и все подчиненные
+    procedure Delete(Id: Integer); override;
+    function InsertUpdateInfoMoney(const Id, Code : integer; Name: string; InfoMoneyGroupId: Integer;
+                                     InfoMoneyDestinationId: integer): integer;
+    constructor Create; override;
+  end;
+
+ implementation
 
 uses ZDbcIntfs, SysUtils, Storage, DBClient, XMLDoc, CommonData, Forms,
      Classes, UtilConvert, ZLibEx;
@@ -2243,6 +2271,161 @@ begin
     // Получение данных
     with ObjectTest.GetRecord(Id) do
       Check((FieldByName('Name').AsString = 'Управленческие счет 1'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    ObjectTest.Delete(Id);
+  end;
+end;
+
+{ TInfoMoneyGroupTest }
+constructor TInfoMoneyGroupTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_InfoMoneyGroup';
+  spSelect := 'gpSelect_Object_InfoMoneyGroup';
+  spGet := 'gpGet_Object_InfoMoneyGroup';
+end;
+
+function TInfoMoneyGroupTest.InsertDefault: integer;
+begin
+  result := InsertUpdateInfoMoneyGroup(0, 4, 'Группы управленческих аналитик 1');
+end;
+
+function TInfoMoneyGroupTest.InsertUpdateInfoMoneyGroup(const Id, Code: Integer;
+  Name: string): integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.InfoMoneyGroup_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TInfoMoneyGroupTest;
+begin
+  ObjectTest := TInfoMoneyGroupTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Группы управленческих аналитик 1'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    ObjectTest.Delete(Id);
+  end;
+end;
+
+
+{ TInfoMoneyDestinationTest }
+constructor TInfoMoneyDestinationTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_InfoMoneyDestination';
+  spSelect := 'gpSelect_Object_InfoMoneyDestination';
+  spGet := 'gpGet_Object_InfoMoneyDestination';
+end;
+
+function TInfoMoneyDestinationTest.InsertDefault: integer;
+begin
+  result := InsertUpdateInfoMoneyDestination(0, 1, 'Управленческие аналитики - назначение');
+end;
+
+function TInfoMoneyDestinationTest.InsertUpdateInfoMoneyDestination(const Id, Code: Integer;
+  Name: string): integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.InfoMoneyDestination_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TInfoMoneyDestinationTest;
+begin
+  ObjectTest := TInfoMoneyDestinationTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка группы урп.счетов
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Управленческие аналитики - назначение'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    ObjectTest.Delete(Id);
+  end;
+end;
+
+  {TInfoMoneyTest}
+ constructor TInfoMoneyTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_InfoMoney';
+  spSelect := 'gpSelect_Object_InfoMoney';
+  spGet := 'gpGet_Object_InfoMoney';
+end;
+
+procedure TInfoMoneyTest.Delete(Id: Integer);
+begin
+  inherited;
+  with TInfoMoneyGroupTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free
+  end;
+  with TInfoMoneyDestinationTest.Create do
+  try
+    Delete(GetDefault)
+  finally
+    Free;
+  end;
+
+ end;
+
+function TInfoMoneyTest.InsertDefault: integer;
+var
+  InfoMoneyGroupId: Integer;
+  InfoMoneyDestinationId: Integer;
+begin
+  InfoMoneyGroupId := TInfoMoneyGroupTest.Create.GetDefault;
+  InfoMoneyDestinationId:= TInfoMoneyDestinationTest.Create.GetDefault;;
+  result := InsertUpdateInfoMoney(0, 3, 'Управленческие аналитики 1', InfoMoneyGroupId, InfoMoneyDestinationId);
+end;
+
+function TInfoMoneyTest.InsertUpdateInfoMoney;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  FParams.AddParam('inInfoMoneyGroupId', ftInteger, ptInput, InfoMoneyGroupId);
+  FParams.AddParam('inInfoMoneyDestinationId', ftInteger, ptInput, InfoMoneyDestinationId);
+
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.InfoMoney_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TInfoMoneyTest;
+begin
+  ObjectTest := TInfoMoneyTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Управленческие аналитики 1'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
   finally
     ObjectTest.Delete(Id);
   end;

@@ -13,33 +13,32 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_InfoMoney(
   RETURNS integer AS
 $BODY$
    DECLARE UserId Integer;
-   DECLARE Code_max Integer; 
+   DECLARE Code_calc Integer; 
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InfoMoney());
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_InfoMoney());
    UserId := inSession;
 
    -- Если код не установлен, определяем его каи последний+1
-   IF COALESCE (inCode, 0) = 0
-   THEN 
-       SELECT COALESCE (MAX (ObjectCode), 0) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_InfoMoney();
-   ELSE
-       Code_max := inCode;
-   END IF; 
-
+   Code_calc:=lfGet_ObjectCode (inCode, zc_Object_InfoMoney());
+   
    -- !!! проверка прав уникальности <Наименование>
    -- !!! PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_InfoMoney(), inName);
 
    -- проверка уникальности <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_InfoMoney(), Code_max);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_InfoMoney(), Code_calc);
 
    -- сохранили объект
-   ioId := lpInsertUpdate_Object( ioId, zc_Object_InfoMoney(), inCode, inName);
+   ioId := lpInsertUpdate_Object( ioId, zc_Object_InfoMoney(), Code_calc, inName);
    -- сохранили связь с <Группы управленческих назначений>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_InfoMoney_InfoMoneyGroup(), ioId, inInfoMoneyGroupId);
    -- сохранили связь с <Управленческие назначения>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_InfoMoney_InfoMoneyDestination(), ioId, inInfoMoneyDestinationId);
+   
+   -- сохранили протокол
+   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+
 
 END;$BODY$
 
@@ -51,6 +50,7 @@ ALTER FUNCTION gpInsertUpdate_Object_InfoMoney (Integer, Integer, TVarChar, Inte
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.06.13          *  Code_calc:=lfGet_ObjectCode (inCode, zc_Object_InfoMoney());               
  16.06.13                                        * rem lpCheckUnique_Object_ValueData
 
 */
