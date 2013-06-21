@@ -23,7 +23,7 @@ BEGIN
    UserId := inSession;
    
    -- !!! Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
-   -- !!! Code_calc:=lpGet_ObjectCode (inCode, zc_Object_Goods());
+   -- !!! Code_calc:=lfGet_ObjectCode (inCode, zc_Object_Goods());
    IF COALESCE (inCode, 0) = 0  THEN Code_calc := NULL; ELSE Code_calc := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
    
    -- !!! проверка уникальности <Наименование>

@@ -20,7 +20,7 @@ BEGIN
    UserId := inSession;
 
    -- Если код не установлен, определяем его как последний+1
-   Code_calc:=lpGet_ObjectCode (inCode, zc_Object_AccountGroup()); 
+   Code_calc:=lfGet_ObjectCode (inCode, zc_Object_AccountGroup()); 
    
    -- проверка уникальности для свойства <Наименование Группы управленческих счетов>
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_AccountGroup(), inName);

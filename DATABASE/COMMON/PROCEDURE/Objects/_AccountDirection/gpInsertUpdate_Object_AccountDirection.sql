@@ -20,7 +20,7 @@ BEGIN
    UserId := inSession;
 
    -- ≈сли код не установлен, определ€ем его как последний+1
-   Code_calc:=lpGet_ObjectCode (inCode, zc_Object_AccountDirection()); 
+   Code_calc:=lfGet_ObjectCode (inCode, zc_Object_AccountDirection()); 
    
    -- !!! проверка уникальности дл€ свойства <Ќаименование>
    -- !!! PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_AccountDirection(), inName);

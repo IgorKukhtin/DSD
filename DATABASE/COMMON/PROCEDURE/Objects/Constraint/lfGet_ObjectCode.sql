@@ -1,8 +1,8 @@
 ﻿-- Function: lfGet_ObjectCode(integer, integer)
 
--- DROP FUNCTION lfGet_ObjectCode(integer, integer);
+-- DROP FUNCTION lfGet_ObjectCode (integer, integer);
 
-CREATE OR REPLACE FUNCTION lpGet_ObjectCode(
+CREATE OR REPLACE FUNCTION lfGet_ObjectCode(
     IN inObjectCode Integer, 
     IN inDescId Integer
 )
