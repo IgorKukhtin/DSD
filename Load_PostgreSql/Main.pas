@@ -534,6 +534,7 @@ begin
         Add('     left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = case when fCheckGoodsParentID(1491,Goods.ParentId) =zc_rvYes() then 20701'); // АГРОСЕЛЬПРОМ  - 20701	Общефирменные Товары	Прочие товары
         Add('                                                                        when fCheckGoodsParentID(5,   Goods.ParentId) =zc_rvYes()then 30101'); // ГП            - 30101	Доходы	Продукция	Готовая продукция
         Add('                                                                        when fCheckGoodsParentID(5306,Goods.ParentId) =zc_rvYes() then 30101'); // ПЕРЕПАК       - 30101	Доходы	Продукция	Готовая продукция
+        Add('                                                                        when fCheckGoodsParentID(3482,Goods.ParentId) =zc_rvYes() then 30101'); // эксперименты       - 30101	Доходы	Продукция	Готовая продукция
         Add('                                                                        when fCheckGoodsParentID(5874,Goods.ParentId) =zc_rvYes() then 30102'); // ТУШЕНКА       - 30102	Доходы	Продукция	Тушенка
         Add('                                                                        when fCheckGoodsParentID(2387,Goods.ParentId) =zc_rvYes() then 30103'); // ХЛЕБ          - 30103	Доходы  Продукция	Хлеб
         Add('                                                                        when fCheckGoodsParentID(5306,Goods.ParentId) =zc_rvYes() then 30301'); // С-ПЕРЕРАБОТКА - 30301	Доходы  Переработка	Переработка
@@ -550,27 +551,41 @@ begin
 
         Add('                                                                        when fCheckGoodsParentID(2642,Goods.ParentId) =zc_rvYes() then 20101'); // СД-ЗАПЧАСТИ оборуд-е - 20101	Общефирменные  Запчасти и Ремонты	Запчасти и Ремонты
 
-        Add('                                                                        when fCheckGoodsParentID(2647,Goods.ParentId) =zc_rvYes() then 10201'); // СД-ПЕКАРНЯ - 10201		Прочее сырье	Специи
-        Add('                                                                        when Goods.Id in (6041, 7013) then 10201'); // СД-ТУШЕНКА - 10201		Прочее сырье	Специи
-        Add('                                                                        when Goods.ParentId in (5857) then 10203'); // СД-ТУШЕНКА - 10203		Прочее сырье	Упаковка
+        Add('                                                                        when fCheckGoodsParentID(2647,Goods.ParentId) =zc_rvYes() then 10201'); // СД-ПЕКАРНЯ - 10201		Основное сырье Прочее сырье	Специи
+        Add('                                                                        when Goods.Id in (6041, 7013) then 10201'); // СД-ТУШЕНКА - 10201		Основное сырье Прочее сырье	Специи
+        Add('                                                                        when Goods.ParentId in (5857) then 10203'); // СД-ТУШЕНКА - 10203		Основное сырье Прочее сырье	Упаковка
 
         Add('                                                                        when fCheckGoodsParentID(4213,Goods.ParentId) =zc_rvYes() then 20601'); // ГОФРОТАРА - 20601	Общефирменные  Прочие материалы	Прочие материалы
-        Add('                                                                        when fCheckGoodsParentID(3521,Goods.ParentId) =zc_rvYes() then 10201'); // для проработок-новые специи - 10201		Прочее сырье	Специи
-        Add('                                                                        when fCheckGoodsParentID(3221,Goods.ParentId) =zc_rvYes() then 10201'); // ДОБАВКИ - 10201		Прочее сырье	Специи
-        Add('                                                                        when fCheckGoodsParentID(2643,Goods.ParentId) =zc_rvYes() then 10201'); // СПЕЦИИ - 10201		Прочее сырье	Специи
-        Add('                                                                        when fCheckGoodsParentID(2644,Goods.ParentId) =zc_rvYes() then 10201'); // СПЕЦИИ ДЕЛИКАТ. - 10201		Прочее сырье	Специи
-        Add('                                                                        when fCheckGoodsParentID(2645,Goods.ParentId) =zc_rvYes() then 10202'); // ОБОЛОЧКА - 10202		Прочее сырье	Оболочка
-        Add('                                                                        when fCheckGoodsParentID(2631,Goods.ParentId) =zc_rvYes() then 10203'); // !!!СД-СЫРЬЕ!!! - 10203		Прочее сырье	Упаковка
+        Add('                                                                        when fCheckGoodsParentID(3521,Goods.ParentId) =zc_rvYes() then 10201'); // для проработок-новые специи - 10201		Основное сырье Прочее сырье	Специи
+        Add('                                                                        when fCheckGoodsParentID(3221,Goods.ParentId) =zc_rvYes() then 10201'); // ДОБАВКИ - 10201		Основное сырье Прочее сырье	Специи
+        Add('                                                                        when fCheckGoodsParentID(2643,Goods.ParentId) =zc_rvYes() then 10201'); // СПЕЦИИ - 10201		Основное сырье Прочее сырье	Специи
+        Add('                                                                        when fCheckGoodsParentID(2644,Goods.ParentId) =zc_rvYes() then 10201'); // СПЕЦИИ ДЕЛИКАТ. - 10201		Основное сырье Прочее сырье	Специи
+        Add('                                                                        when fCheckGoodsParentID(2645,Goods.ParentId) =zc_rvYes() then 10202'); // ОБОЛОЧКА - 10202		Основное сырье Прочее сырье	Оболочка
+        Add('                                                                        when fCheckGoodsParentID(2631,Goods.ParentId) =zc_rvYes() then 10203'); // !!!СД-СЫРЬЕ!!! - 10203		Основное сырье Прочее сырье	Упаковка
 
         Add('                                                                        when fCheckGoodsParentID(2648,Goods.ParentId) =zc_rvYes() then 10204'); // СО-СЫРЬЕ СЫР - 10204		Основное сырье Прочее сырье Прочее сырье
         Add('                                                                        when Goods.Id in (2792, 7001, 6710) then 10103'); // !!!СО- ГОВ. И СВ. Н\К + СЫР!!! - 10103		Основное сырье Мясное сырье Говядина
         Add('                                                                        when fCheckGoodsParentID(6435,Goods.ParentId) =zc_rvYes() then 10102'); // !!!СО- ГОВ. И СВ. Н\К + СЫР!!! - 10102		Основное сырье Мясное сырье Свинина
         Add('                                                                        when fCheckGoodsParentID(3859,Goods.ParentId) =zc_rvYes() then 10105'); // СО-БАРАНИНА - 10105		Основное сырье Мясное сырье Прочее мясное сырье
         Add('                                                                        when fCheckGoodsParentID(5676,Goods.ParentId) =zc_rvYes() then 10105'); // СО-КАБАН и др. - 10105		Основное сырье Мясное сырье Прочее мясное сырье
+        Add('                                                                        when fCheckGoodsParentID(5503,Goods.ParentId) =zc_rvYes() then 10105'); // СО-ПТИЦА РАЗНАЯ - 10105		Основное сырье Мясное сырье Прочее мясное сырье
 
         Add('                                                                        when fCheckGoodsParentID(5489,Goods.ParentId) =zc_rvYes() then 10103'); // СО-ГОВ.  ДЕЛ-СЫ* - 10103		Основное сырье Мясное сырье Говядина
         Add('                                                                        when fCheckGoodsParentID(5491,Goods.ParentId) =zc_rvYes() then 10103'); // СО-ГОВ. ВЫС+ОДН.* - 10103		Основное сырье Мясное сырье Говядина
         Add('                                                                        when fCheckGoodsParentID(2633,Goods.ParentId) =zc_rvYes() then 10103'); // СО-ГОВЯДИНА ПФ* - 10103		Основное сырье Мясное сырье Говядина
+        Add('                                                                        when fCheckGoodsParentID(2662,Goods.ParentId) =zc_rvYes() then 10103'); // СО-СЫРЬЕ УБОЙ ГОВ.* - 10103		Основное сырье Мясное сырье Говядина
+
+        Add('                                                                        when fCheckGoodsParentID(2635,Goods.ParentId) =zc_rvYes() then 10104'); // СО-КУРИЦА* - 10104		Основное сырье Мясное сырье Курица
+
+        Add('                                                                        when fCheckGoodsParentID(2632,Goods.ParentId) =zc_rvYes() then 10102'); // !!!СО!!! - 10102		Основное сырье Мясное сырье Свинина
+        Add('                                                                        when fCheckGoodsParentID(2691,Goods.ParentId) =zc_rvYes() then 10103'); // СО-ГОВЯДИНА ПРОДАЖА маг - 10103		Основное сырье Мясное сырье Говядина
+        Add('                                                                        when Goods.Id in (2800) then 10104'); // КУРЫ-ГРИЛЬ* - 10104		Основное сырье Мясное сырье Курица
+        Add('                                                                        when Goods.Id in (3039) then 10103'); // КУРЫ-ГРИЛЬ* - 10103		Основное сырье Мясное сырье Говядина
+        Add('                                                                        when fCheckGoodsParentID(3447,Goods.ParentId) =zc_rvYes() then 10102'); // !!!СО-НА ПРОДАЖУ!!! - 10102		Основное сырье Мясное сырье Свинина
+
+        Add('                                                                        when fCheckGoodsParentID(3217,Goods.ParentId) =zc_rvYes() then 21301'); // СО-ЭМУЛЬСИИ - 10102		Общефирменные Незавершенное производство Незавершенное производство
+        Add('                                                                        when fCheckGoodsParentID(1670,Goods.ParentId) =zc_rvYes() then 10201'); // СЫР - 10201		Основное сырье Прочее сырье	Прочее сырье
+        Add('                                                                        when fCheckGoodsParentID(686,Goods.ParentId) =zc_rvYes() then 20501'); // Тара - 20501		Общефирменные Оборотная тара	Оборотная тара
 
         Add('                                                                   end');
         Add('where Goods.HasChildren = zc_hsLeaf() ');
