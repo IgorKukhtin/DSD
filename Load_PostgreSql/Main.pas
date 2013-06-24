@@ -108,29 +108,29 @@ type
     procedure pLoadGuide_Goods;
     procedure pLoadGuide_Goods_toZConnection;
     procedure pLoadGuide_GoodsKind;
-    procedure pLoadPaidKind;
-    procedure pLoadContractKind;
-    procedure pLoadJuridicalGroup;
-    procedure pLoadJuridical;
-    procedure pLoadPartner;
-    procedure pLoadBranch;
-    procedure pLoadBusiness;
-    procedure pLoadUnitGroup;
-    procedure pLoadUnit;
-    procedure pLoadUnitTwo;
-    procedure pLoadPriceList;
-    procedure pLoadGoodsProperty;
-    procedure pLoadGoodsPropertyValue;
+    procedure pLoadGuide_PaidKind;
+    procedure pLoadGuide_ContractKind;
+    procedure pLoadGuide_JuridicalGroup;
+    procedure pLoadGuide_Juridical (isBill:Boolean);
+    procedure pLoadGuide_Partner (isBill:Boolean);
+    procedure pLoadGuide_Branch;
+    procedure pLoadGuide_Business;
+    procedure pLoadGuide_UnitGroup;
+    procedure pLoadGuide_UnitOld;
+    procedure pLoadGuide_Unit;
+    procedure pLoadGuide_PriceList;
+    procedure pLoadGuide_GoodsProperty;
+    procedure pLoadGuide_GoodsPropertyValue;
 
-    procedure pLoadInfoMoneyGroup;
-    procedure pLoadInfoMoneyDestination;
-    procedure pLoadInfoMoney;
-    procedure pLoadAccountGroup;
-    procedure pLoadAccountDirection;
-    procedure pLoadAccount;
-    procedure pLoadProfitLossGroup;
-    procedure pLoadProfitLossDirection;
-    procedure pLoadProfitLoss;
+    procedure pLoadGuide_InfoMoneyGroup;
+    procedure pLoadGuide_InfoMoneyDestination;
+    procedure pLoadGuide_InfoMoney;
+    procedure pLoadGuide_AccountGroup;
+    procedure pLoadGuide_AccountDirection;
+    procedure pLoadGuide_Account;
+    procedure pLoadGuide_ProfitLossGroup;
+    procedure pLoadGuide_ProfitLossDirection;
+    procedure pLoadGuide_ProfitLoss;
 
     procedure myEnabledCB (cb:TCheckBox);
     procedure myDisabledCB (cb:TCheckBox);
@@ -299,29 +299,31 @@ begin
      if not fStop then pLoadGuide_Goods;
      //if not fStop then pLoadGuide_Goods_toZConnection;
      if not fStop then pLoadGuide_GoodsKind;
-     if not fStop then pLoadPaidKind;
-     if not fStop then pLoadContractKind;
-     if not fStop then pLoadJuridicalGroup;
-     if not fStop then pLoadJuridical;
-     if not fStop then pLoadPartner;
+     if not fStop then pLoadGuide_PaidKind;
+     if not fStop then pLoadGuide_ContractKind;
+     if not fStop then pLoadGuide_JuridicalGroup;
+     if not fStop then pLoadGuide_Juridical(false);
+     if not fStop then pLoadGuide_Juridical(true);
+     if not fStop then pLoadGuide_Partner(false);
+     if not fStop then pLoadGuide_Partner(true);
 
-     if not fStop then pLoadBusiness;
-     if not fStop then pLoadBranch;
-     //if not fStop then pLoadUnitGroup;
-     if not fStop then pLoadUnitTwo;
-     if not fStop then pLoadPriceList;
-     if not fStop then pLoadGoodsProperty;
-     if not fStop then pLoadGoodsPropertyValue;
+     if not fStop then pLoadGuide_Business;
+     if not fStop then pLoadGuide_Branch;
+     //if not fStop then pLoadGuide_UnitGroup;
+     if not fStop then pLoadGuide_Unit;
+     if not fStop then pLoadGuide_PriceList;
+     if not fStop then pLoadGuide_GoodsProperty;
+     if not fStop then pLoadGuide_GoodsPropertyValue;
 
-     if not fStop then pLoadInfoMoneyGroup;
-     if not fStop then pLoadInfoMoneyDestination;
-     if not fStop then pLoadInfoMoney;
-     if not fStop then pLoadAccountGroup;
-     if not fStop then pLoadAccountDirection;
-     if not fStop then pLoadAccount;
-     if not fStop then pLoadProfitLossGroup;
-     if not fStop then pLoadProfitLossDirection;
-     if not fStop then pLoadProfitLoss;
+     if not fStop then pLoadGuide_InfoMoneyGroup;
+     if not fStop then pLoadGuide_InfoMoneyDestination;
+     if not fStop then pLoadGuide_InfoMoney;
+     if not fStop then pLoadGuide_AccountGroup;
+     if not fStop then pLoadGuide_AccountDirection;
+     if not fStop then pLoadGuide_Account;
+     if not fStop then pLoadGuide_ProfitLossGroup;
+     if not fStop then pLoadGuide_ProfitLossDirection;
+     if not fStop then pLoadGuide_ProfitLoss;
      //
      Gauge.Visible:=false;
      DBGrid.Enabled:=true;
@@ -769,7 +771,7 @@ begin
      myDisabledCB(cbGoodsKind);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadPaidKind;
+procedure TMainForm.pLoadGuide_PaidKind;
 begin
      if (not cbPaidKind.Checked)or(not cbPaidKind.Enabled) then exit;
      //
@@ -781,7 +783,7 @@ begin
         Add('select MoneyKind.Id as ObjectId');
         Add('     , 0 as ObjectCode');
         Add('     , MoneyKind.MoneyKindName as ObjectName');
-        Add('     , MoneyKind.Id_Postgres as Id_Postgres');
+        Add('     , case when ObjectId =zc_mkBN() then 6 when ObjectId =zc_mkNal() then 7 else MoneyKind.Id_Postgres end as Id_Postgres');
         Add('from dba.MoneyKind');
         Add('where MoneyKind.Id<=2');
         Add('order by ObjectId');
@@ -811,7 +813,7 @@ begin
              //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
-             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.MoneyKind set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
@@ -824,7 +826,7 @@ begin
      myDisabledCB(cbPaidKind);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadContractKind;
+procedure TMainForm.pLoadGuide_ContractKind;
 begin
      if (not cbContractKind.Checked)or(not cbContractKind.Enabled) then exit;
      //
@@ -878,7 +880,7 @@ begin
      myDisabledCB(cbContractKind);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadJuridicalGroup;
+procedure TMainForm.pLoadGuide_JuridicalGroup;
 begin
      if (not cbJuridicalGroup.Checked)or(not cbJuridicalGroup.Enabled) then exit;
      //
@@ -947,7 +949,7 @@ begin
      myDisabledCB(cbJuridicalGroup);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadJuridical;
+procedure TMainForm.pLoadGuide_Juridical (isBill:Boolean);
 begin
      if (not cbJuridical.Checked)or(not cbJuridical.Enabled) then exit;
      //
@@ -956,69 +958,90 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select Unit.Id as ObjectId');
-        Add('     , Unit.UnitCode as ObjectCode');
-        Add('     , Unit.UnitName as ObjectName');
-        Add('     , Unit.Id2_Postgres as Id_Postgres');
-        Add('     , case when Unit_parent1.Id1_Postgres is not null then Unit_parent1.Id1_Postgres');
-        Add('            when Unit_parent2.Id1_Postgres is not null then Unit_parent2.Id1_Postgres');
-        Add('            when Unit_parent3.Id1_Postgres is not null then Unit_parent3.Id1_Postgres');
-        Add('            when Unit_parent4.Id1_Postgres is not null then Unit_parent4.Id1_Postgres');
-        Add('            when Unit_parent5.Id1_Postgres is not null then Unit_parent5.Id1_Postgres');
-        Add('            when Unit_parent6.Id1_Postgres is not null then Unit_parent6.Id1_Postgres');
-        Add('            when Unit_parent7.Id1_Postgres is not null then Unit_parent7.Id1_Postgres');
-        Add('            when Unit_parent8.Id1_Postgres is not null then Unit_parent8.Id1_Postgres');
-        Add('            when Unit_parent9.Id1_Postgres is not null then Unit_parent9.Id1_Postgres');
-        Add('            else Unit_parentAll.Id1_Postgres');
-        Add('       end as ParentId_Postgres');
-        Add('     , GoodsProperty_PG.Id_Postgres as GoodsPropertyId_PG');
-        Add('     , isnull(zf_ChangeTVarCharMediumToNull(ClientInformation.GLNMain),ClientInformation.GLN) as GLNCode');
-        Add('from dba.Unit as Unit_all');
-        Add('     join dba.Unit on Unit.Id = isnull(zf_ChangeIntToNull(Unit_all.DolgByUnitID), isnull(zf_ChangeIntToNull(Unit_all.InformationFromUnitID), Unit_all.Id))');
-        Add('     left outer join dba.GoodsProperty_Postgres as GoodsProperty_PG on GoodsProperty_PG.Id= case when fIsClient_ATB(Unit.Id)=zc_rvYes() then 1'
-                                                                                                       +'    when fIsClient_OK(Unit.Id)=zc_rvYes() then 2'
-                                                                                                       +'    when fIsClient_Metro(Unit.Id)=zc_rvYes() then 3'
-                                                                                                       +'    when fIsClient_Fozzi(Unit.Id)=zc_rvYes() or fIsClient_FozziM(Unit.Id)=zc_rvYes() then 5'
-                                                                                                       +'    when fIsClient_Kisheni(Unit.Id)=zc_rvYes() then 6'
-                                                                                                       +'    when fIsClient_Vivat(Unit.Id)=zc_rvYes() then 7'
-                                                                                                       +'    when fIsClient_Billa(Unit.Id)=zc_rvYes() then 8'
-                                                                                                       +'    when fIsClient_Amstor(Unit.Id)=zc_rvYes() then 9'
-                                                                                                       +'    when fIsClient_Omega(Unit.Id)=zc_rvYes() then 10'
-                                                                                                       +'    when fIsClient_Vostorg(Unit.Id)=zc_rvYes() then 11'
-                                                                                                       +'    when fIsClient_Ashan(Unit.Id)=zc_rvYes() then 12'
-                                                                                                       +'    when fIsClient_Real(Unit.Id)=zc_rvYes() then 13'
-                                                                                                       +'    when fIsClient_GD(Unit.Id)=zc_rvYes() then 14'
-                                                                                                       +'    else null'
-                                                                                                       +' end'
-            );
-        Add('     left outer join dba.Unit as Unit_parentAll on Unit_parentAll.Id = 151'); // ÂÑÅ
-        Add('     left outer join dba.Unit as Unit_parent1 on Unit_parent1.Id = Unit.ParentId');
-        Add('     left outer join dba.Unit as Unit_parent2 on Unit_parent2.Id = Unit_parent1.ParentId');
-        Add('     left outer join dba.Unit as Unit_parent3 on Unit_parent3.Id = Unit_parent2.ParentId');
-        Add('     left outer join dba.Unit as Unit_parent4 on Unit_parent4.Id = Unit_parent3.ParentId');
-        Add('     left outer join dba.Unit as Unit_parent5 on Unit_parent5.Id = Unit_parent4.ParentId');
-        Add('     left outer join dba.Unit as Unit_parent6 on Unit_parent6.Id = Unit_parent5.ParentId');
-        Add('     left outer join dba.Unit as Unit_parent7 on Unit_parent7.Id = Unit_parent6.ParentId');
-        Add('     left outer join dba.Unit as Unit_parent8 on Unit_parent8.Id = Unit_parent7.ParentId');
-        Add('     left outer join dba.Unit as Unit_parent9 on Unit_parent9.Id = Unit_parent8.ParentId');
-        Add('     left outer join dba.ClientInformation on ClientInformation.ClientId = isnull( zf_ChangeIntToNull( Unit_all.InformationFromUnitID), Unit_all.Id)');
-        Add('where Unit.Id1_Postgres is null'
-           +'  and isnull(Unit.findGoodsCard,zc_rvNo()) = zc_rvNo()'
-           +'  and fCheckUnitClientParentID(3,Unit.Id)=zc_rvNo()'    // ÀËÀÍ
-           +'  and fCheckUnitClientParentID(3714,Unit.Id)=zc_rvNo()' // Àëàí-ïðî÷èå
-           +'  and fCheckUnitClientParentID(3531,Unit.Id)=zc_rvNo()' // ê áí*
-           +'  and fCheckUnitClientParentID(3349,Unit.Id)=zc_rvNo()' // êêê
-           +'  and fCheckUnitClientParentID(600,Unit.Id)=zc_rvNo()'  // ÏÅÐÅÓ×ÅÒ
-           +'  and fCheckUnitClientParentID(149,Unit.Id)=zc_rvNo()'  // ÐÀÑÕÎÄÛ ÏÐÎÈÇÂÎÄÑÒÂÀ
-           );
-        Add('group by ObjectId');
-        Add('       , ObjectName');
-        Add('       , ObjectCode');
-        Add('       , Id_Postgres');
-        Add('       , ParentId_Postgres');
-        Add('       , GoodsPropertyId_PG');
-        Add('       , GLNCode');
-        Add('order by ObjectId');
+        if not isBill
+        then begin
+                  Add('select Unit.Id as ObjectId');
+                  Add('     , Unit.UnitCode as ObjectCode');
+                  Add('     , Unit.UnitName as ObjectName');
+                  Add('     , Unit.Id2_Postgres as Id_Postgres');
+                  Add('     , case when Unit_parent1.Id1_Postgres is not null then Unit_parent1.Id1_Postgres');
+                  Add('            when Unit_parent2.Id1_Postgres is not null then Unit_parent2.Id1_Postgres');
+                  Add('            when Unit_parent3.Id1_Postgres is not null then Unit_parent3.Id1_Postgres');
+                  Add('            when Unit_parent4.Id1_Postgres is not null then Unit_parent4.Id1_Postgres');
+                  Add('            when Unit_parent5.Id1_Postgres is not null then Unit_parent5.Id1_Postgres');
+                  Add('            when Unit_parent6.Id1_Postgres is not null then Unit_parent6.Id1_Postgres');
+                  Add('            when Unit_parent7.Id1_Postgres is not null then Unit_parent7.Id1_Postgres');
+                  Add('            when Unit_parent8.Id1_Postgres is not null then Unit_parent8.Id1_Postgres');
+                  Add('            when Unit_parent9.Id1_Postgres is not null then Unit_parent9.Id1_Postgres');
+                  Add('            else Unit_parentAll.Id1_Postgres');
+                  Add('       end as ParentId_Postgres');
+                  Add('     , GoodsProperty_PG.Id_Postgres as GoodsPropertyId_PG');
+                  Add('     , isnull(zf_ChangeTVarCharMediumToNull(ClientInformation.GLNMain),ClientInformation.GLN) as GLNCode');
+                  Add('from dba.Unit as Unit_all');
+                  Add('     join dba.Unit on Unit.Id = isnull(zf_ChangeIntToNull(Unit_all.DolgByUnitID), isnull(zf_ChangeIntToNull(Unit_all.InformationFromUnitID), Unit_all.Id))');
+                  Add('     left outer join dba.GoodsProperty_Postgres as GoodsProperty_PG on GoodsProperty_PG.Id= case when fIsClient_ATB(Unit.Id)=zc_rvYes() then 1'
+                                                                                                                 +'    when fIsClient_OK(Unit.Id)=zc_rvYes() then 2'
+                                                                                                                 +'    when fIsClient_Metro(Unit.Id)=zc_rvYes() then 3'
+                                                                                                                 +'    when fIsClient_Fozzi(Unit.Id)=zc_rvYes() or fIsClient_FozziM(Unit.Id)=zc_rvYes() then 5'
+                                                                                                                 +'    when fIsClient_Kisheni(Unit.Id)=zc_rvYes() then 6'
+                                                                                                                 +'    when fIsClient_Vivat(Unit.Id)=zc_rvYes() then 7'
+                                                                                                                 +'    when fIsClient_Billa(Unit.Id)=zc_rvYes() then 8'
+                                                                                                                 +'    when fIsClient_Amstor(Unit.Id)=zc_rvYes() then 9'
+                                                                                                                 +'    when fIsClient_Omega(Unit.Id)=zc_rvYes() then 10'
+                                                                                                                 +'    when fIsClient_Vostorg(Unit.Id)=zc_rvYes() then 11'
+                                                                                                                 +'    when fIsClient_Ashan(Unit.Id)=zc_rvYes() then 12'
+                                                                                                                 +'    when fIsClient_Real(Unit.Id)=zc_rvYes() then 13'
+                                                                                                                 +'    when fIsClient_GD(Unit.Id)=zc_rvYes() then 14'
+                                                                                                                 +'    else null'
+                                                                                                                 +' end'
+                      );
+                  Add('     left outer join dba.Unit as Unit_parentAll on Unit_parentAll.Id = 151'); // ÂÑÅ
+                  Add('     left outer join dba.Unit as Unit_parent1 on Unit_parent1.Id = Unit.ParentId');
+                  Add('     left outer join dba.Unit as Unit_parent2 on Unit_parent2.Id = Unit_parent1.ParentId');
+                  Add('     left outer join dba.Unit as Unit_parent3 on Unit_parent3.Id = Unit_parent2.ParentId');
+                  Add('     left outer join dba.Unit as Unit_parent4 on Unit_parent4.Id = Unit_parent3.ParentId');
+                  Add('     left outer join dba.Unit as Unit_parent5 on Unit_parent5.Id = Unit_parent4.ParentId');
+                  Add('     left outer join dba.Unit as Unit_parent6 on Unit_parent6.Id = Unit_parent5.ParentId');
+                  Add('     left outer join dba.Unit as Unit_parent7 on Unit_parent7.Id = Unit_parent6.ParentId');
+                  Add('     left outer join dba.Unit as Unit_parent8 on Unit_parent8.Id = Unit_parent7.ParentId');
+                  Add('     left outer join dba.Unit as Unit_parent9 on Unit_parent9.Id = Unit_parent8.ParentId');
+                  Add('     left outer join dba.ClientInformation on ClientInformation.ClientId = isnull( zf_ChangeIntToNull( Unit_all.InformationFromUnitID), Unit_all.Id)');
+                  Add('where Unit.Id1_Postgres is null'
+                     +'  and isnull(Unit.findGoodsCard,zc_rvNo()) = zc_rvNo()'
+                     +'  and fCheckUnitClientParentID(3,Unit.Id)=zc_rvNo()'    // ÀËÀÍ
+                     +'  and fCheckUnitClientParentID(3714,Unit.Id)=zc_rvNo()' // Àëàí-ïðî÷èå
+                     +'  and fCheckUnitClientParentID(3531,Unit.Id)=zc_rvNo()' // ê áí*
+                     +'  and fCheckUnitClientParentID(3349,Unit.Id)=zc_rvNo()' // êêê
+                     +'  and fCheckUnitClientParentID(600,Unit.Id)=zc_rvNo()'  // ÏÅÐÅÓ×ÅÒ
+                     +'  and fCheckUnitClientParentID(149,Unit.Id)=zc_rvNo()'  // ÐÀÑÕÎÄÛ ÏÐÎÈÇÂÎÄÑÒÂÀ
+                     );
+                  Add('group by ObjectId');
+                  Add('       , ObjectName');
+                  Add('       , ObjectCode');
+                  Add('       , Id_Postgres');
+                  Add('       , ParentId_Postgres');
+                  Add('       , GoodsPropertyId_PG');
+                  Add('       , GLNCode');
+                  Add('order by ObjectId')
+             end
+        else begin
+                  Add('select Unit.Id as ObjectId');
+                  Add('     , Unit.UnitCode as ObjectCode');
+                  Add('     , Unit.UnitName as ObjectName');
+                  Add('     , Unit.Id2_Postgres as Id_Postgres');
+                  Add('     , null as ParentId_Postgres');
+                  Add('     , null as GoodsPropertyId_PG');
+                  Add('     , isnull(zf_ChangeTVarCharMediumToNull(ClientInformation.GLNMain),ClientInformation.GLN) as GLNCode');
+                  Add('from dba.Bill');
+                  Add('     join dba.Unit as Unit_all on Unit_all.Id = Bill.FromId and Unit_all.Id2_Postgres is null');
+                  Add('     join dba.Unit on Unit.Id = isnull(zf_ChangeIntToNull(Unit_all.DolgByUnitID), isnull(zf_ChangeIntToNull(Unit_all.InformationFromUnitID), Unit_all.Id))');
+                  Add('     left outer join dba.ClientInformation on ClientInformation.ClientId = isnull( zf_ChangeIntToNull( Unit_all.InformationFromUnitID), Unit_all.Id)');
+                  //Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+                  Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate('01.01.2011'))+' and '+FormatToDateServer_notNULL(StrToDate('01.01.2014'))
+                     +'  and Bill.BillKind=zc_bkIncomeToUnit()');
+                  Add('group by ObjectId, ObjectCode, ObjectName, Id_Postgres, GLNCode');
+                  Add('order by ObjectId');
+             end; // if not isBill
         Open;
         //
         fStop:=cbOnlyOpen.Checked;
@@ -1066,7 +1089,7 @@ begin
      myDisabledCB(cbJuridical);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadPartner;
+procedure TMainForm.pLoadGuide_Partner (isBill:Boolean);
 begin
      if (not cbPartner.Checked)or(not cbPartner.Enabled) then exit;
      //
@@ -1075,27 +1098,49 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select Unit.Id as ObjectId');
-        Add('     , Unit.UnitCode as ObjectCode');
-        Add('     , Unit.UnitName as ObjectName');
-        Add('     , Unit.Id3_Postgres as Id_Postgres');
-        Add('     , Unit_Juridical.Id2_Postgres as JuridicalId_Postgres');
-        Add('     , 0 as RouteId_Postgres');
-        Add('     , 0 as RouteSortingId_Postgres');
-        Add('     , ClientInformation.GLN as GLNCode');
-        Add('from dba.Unit');
-        Add('     left outer join dba.Unit as Unit_Juridical on Unit_Juridical.Id = isnull(zf_ChangeIntToNull( Unit.DolgByUnitID), isnull(zf_ChangeIntToNull( Unit.InformationFromUnitID), Unit.Id))');
-        Add('     left outer join dba.ClientInformation on ClientInformation.ClientId = Unit.Id');
-        Add('where Unit.Id1_Postgres is null'
-           +'  and isnull(Unit.findGoodsCard,zc_rvNo()) = zc_rvNo()'
-           +'  and fCheckUnitClientParentID(3,Unit.Id)=zc_rvNo()'    // ÀËÀÍ
-           +'  and fCheckUnitClientParentID(3714,Unit.Id)=zc_rvNo()' // Àëàí-ïðî÷èå
-           +'  and fCheckUnitClientParentID(3531,Unit.Id)=zc_rvNo()' // ê áí*
-           +'  and fCheckUnitClientParentID(3349,Unit.Id)=zc_rvNo()' // êêê
-           +'  and fCheckUnitClientParentID(600,Unit.Id)=zc_rvNo()'  // ÏÅÐÅÓ×ÅÒ
-           +'  and fCheckUnitClientParentID(149,Unit.Id)=zc_rvNo()'  // ÐÀÑÕÎÄÛ ÏÐÎÈÇÂÎÄÑÒÂÀ
-           );
-        Add('order by ObjectId');
+        if not isBill
+        then begin
+                  Add('select Unit.Id as ObjectId');
+                  Add('     , Unit.UnitCode as ObjectCode');
+                  Add('     , Unit.UnitName as ObjectName');
+                  Add('     , Unit.Id3_Postgres as Id_Postgres');
+                  Add('     , Unit_Juridical.Id2_Postgres as JuridicalId_Postgres');
+                  Add('     , 0 as RouteId_Postgres');
+                  Add('     , 0 as RouteSortingId_Postgres');
+                  Add('     , ClientInformation.GLN as GLNCode');
+                  Add('from dba.Unit');
+                  Add('     left outer join dba.Unit as Unit_Juridical on Unit_Juridical.Id = isnull(zf_ChangeIntToNull( Unit.DolgByUnitID), isnull(zf_ChangeIntToNull( Unit.InformationFromUnitID), Unit.Id))');
+                  Add('     left outer join dba.ClientInformation on ClientInformation.ClientId = Unit.Id');
+                  Add('where Unit.Id1_Postgres is null'
+                     +'  and isnull(Unit.findGoodsCard,zc_rvNo()) = zc_rvNo()'
+                     +'  and fCheckUnitClientParentID(3,Unit.Id)=zc_rvNo()'    // ÀËÀÍ
+                     +'  and fCheckUnitClientParentID(3714,Unit.Id)=zc_rvNo()' // Àëàí-ïðî÷èå
+                     +'  and fCheckUnitClientParentID(3531,Unit.Id)=zc_rvNo()' // ê áí*
+                     +'  and fCheckUnitClientParentID(3349,Unit.Id)=zc_rvNo()' // êêê
+                     +'  and fCheckUnitClientParentID(600,Unit.Id)=zc_rvNo()'  // ÏÅÐÅÓ×ÅÒ
+                     +'  and fCheckUnitClientParentID(149,Unit.Id)=zc_rvNo()'  // ÐÀÑÕÎÄÛ ÏÐÎÈÇÂÎÄÑÒÂÀ
+                     );
+                  Add('order by ObjectId');
+             end // if not isBill
+        else begin
+                  Add('select Unit.Id as ObjectId');
+                  Add('     , Unit.UnitCode as ObjectCode');
+                  Add('     , Unit.UnitName as ObjectName');
+                  Add('     , Unit.Id3_Postgres as Id_Postgres');
+                  Add('     , Unit_Juridical.Id2_Postgres as JuridicalId_Postgres');
+                  Add('     , 0 as RouteId_Postgres');
+                  Add('     , 0 as RouteSortingId_Postgres');
+                  Add('     , ClientInformation.GLN as GLNCode');
+                  Add('from dba.Bill');
+                  Add('     join dba.Unit on Unit.Id = Bill.FromId and Unit.Id3_Postgres is null');
+                  Add('     left outer join dba.Unit as Unit_Juridical on Unit_Juridical.Id = isnull(zf_ChangeIntToNull( Unit.DolgByUnitID), isnull(zf_ChangeIntToNull( Unit.InformationFromUnitID), Unit.Id))');
+                  Add('     left outer join dba.ClientInformation on ClientInformation.ClientId = Unit.Id');
+                  //Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+                  Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate('01.01.2011'))+' and '+FormatToDateServer_notNULL(StrToDate('01.01.2014'))
+                     +'  and Bill.BillKind=zc_bkIncomeToUnit()');
+                  Add('group by ObjectId, ObjectCode, ObjectName, Id_Postgres, JuridicalId_Postgres, GLNCode');
+                  Add('order by ObjectId');
+             end; // if not isBill
         Open;
         //
         fStop:=cbOnlyOpen.Checked;
@@ -1143,7 +1188,7 @@ begin
      myDisabledCB(cbPartner);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadBusiness;
+procedure TMainForm.pLoadGuide_Business;
 begin
      if (not cbBusiness.Checked)or(not cbBusiness.Enabled) then exit;
      //
@@ -1197,7 +1242,7 @@ begin
      myDisabledCB(cbBusiness);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadBranch;
+procedure TMainForm.pLoadGuide_Branch;
 begin
      if (not cbBranch.Checked)or(not cbBranch.Enabled) then exit;
      //
@@ -1254,9 +1299,9 @@ begin
      myDisabledCB(cbBranch);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadUnitGroup;
+procedure TMainForm.pLoadGuide_UnitGroup;
 begin
-     ShowMessage ('!!! ERROR !!! pLoadUnitGroup');
+     ShowMessage ('!!! ERROR !!! pLoadGuide_UnitGroup');
      exit;
      //
      //
@@ -1342,7 +1387,7 @@ begin
      myDisabledCB(cbUnitGroup);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadUnit;
+procedure TMainForm.pLoadGuide_UnitOld;
 begin
      if (not cbUnit.Checked)or(not cbUnit.Enabled) then exit;
      //
@@ -1431,7 +1476,7 @@ begin
      myDisabledCB(cbUnit);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadUnitTwo;
+procedure TMainForm.pLoadGuide_Unit;
 begin
      if (not cbUnit.Checked)or(not cbUnit.Enabled) then exit;
      //
@@ -1538,7 +1583,7 @@ begin
      myDisabledCB(cbUnit);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadPriceList;
+procedure TMainForm.pLoadGuide_PriceList;
 begin
      if (not cbPriceList.Checked)or(not cbPriceList.Enabled) then exit;
      //
@@ -1593,7 +1638,7 @@ begin
      myDisabledCB(cbPriceList);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadGoodsProperty;
+procedure TMainForm.pLoadGuide_GoodsProperty;
 begin
      if (not cbGoodsProperty.Checked)or(not cbGoodsProperty.Enabled) then exit;
      //
@@ -1647,7 +1692,7 @@ begin
      myDisabledCB(cbGoodsProperty);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadGoodsPropertyValue;
+procedure TMainForm.pLoadGuide_GoodsPropertyValue;
 begin
      if (not cbGoodsPropertyValue.Checked)or(not cbGoodsPropertyValue.Enabled) then exit;
      //
@@ -1956,7 +2001,7 @@ begin
      myDisabledCB(cbGoodsPropertyValue);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadInfoMoneyGroup;
+procedure TMainForm.pLoadGuide_InfoMoneyGroup;
 begin
      if (not cbInfoMoneyGroup.Checked)or(not cbInfoMoneyGroup.Enabled) then exit;
      //
@@ -2012,7 +2057,7 @@ begin
      myDisabledCB(cbInfoMoneyGroup);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadInfoMoneyDestination;
+procedure TMainForm.pLoadGuide_InfoMoneyDestination;
 begin
      if (not cbInfoMoneyDestination.Checked)or(not cbInfoMoneyDestination.Enabled) then exit;
      //
@@ -2070,7 +2115,7 @@ begin
      myDisabledCB(cbInfoMoneyDestination);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadInfoMoney;
+procedure TMainForm.pLoadGuide_InfoMoney;
 begin
      if (not cbInfoMoney.Checked)or(not cbInfoMoney.Enabled) then exit;
      //
@@ -2131,7 +2176,7 @@ begin
      myDisabledCB(cbInfoMoney);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadAccountGroup;
+procedure TMainForm.pLoadGuide_AccountGroup;
 begin
      if (not cbAccountGroup.Checked)or(not cbAccountGroup.Enabled) then exit;
      //
@@ -2186,7 +2231,7 @@ begin
      myDisabledCB(cbAccountGroup);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadAccountDirection;
+procedure TMainForm.pLoadGuide_AccountDirection;
 begin
      if (not cbAccountDirection.Checked)or(not cbAccountDirection.Enabled) then exit;
      //
@@ -2244,7 +2289,7 @@ begin
      myDisabledCB(cbAccountDirection);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadAccount;
+procedure TMainForm.pLoadGuide_Account;
 begin
      if (not cbAccount.Checked)or(not cbAccount.Enabled) then exit;
      //
@@ -2311,7 +2356,7 @@ begin
      myDisabledCB(cbAccount);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadProfitLossGroup;
+procedure TMainForm.pLoadGuide_ProfitLossGroup;
 begin
      if (not cbProfitLossGroup.Checked)or(not cbProfitLossGroup.Enabled) then exit;
      //
@@ -2367,7 +2412,7 @@ begin
      myDisabledCB(cbProfitLossGroup);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadProfitLossDirection;
+procedure TMainForm.pLoadGuide_ProfitLossDirection;
 begin
      if (not cbProfitLossDirection.Checked)or(not cbProfitLossDirection.Enabled) then exit;
      //
@@ -2425,7 +2470,7 @@ begin
      myDisabledCB(cbProfitLossDirection);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadProfitLoss;
+procedure TMainForm.pLoadGuide_ProfitLoss;
 begin
      if (not cbProfitLoss.Checked)or(not cbProfitLoss.Enabled) then exit;
      //
@@ -2507,7 +2552,7 @@ begin
         Add('     , Bill.BillNumber as InvNumber');
         Add('     , Bill.BillDate as OperDate');
         Add('     , UnitFrom.Id3_Postgres as FromId_Postgres');
-        Add('     , UnitTo.Id3_Postgres as ToId_Postgres');
+        Add('     , _pgUnit.Id_Postgres as ToId_Postgres');
         Add('     , MoneyKind.Id_Postgres as PaidKindId_Postgres');
         Add('     , null as ContractId');
         Add('     , null as CarId');
@@ -2522,7 +2567,8 @@ begin
         Add('     , zc_rvYes() as zc_rvYes');
         Add('from dba.Bill');
         Add('     left outer join dba.Unit as UnitFrom on UnitFrom.Id = Bill.FromId');
-        Add('     left outer join dba.Unit as UnitTo on UnitTo.Id = Bill.ToId');
+//        Add('     left outer join dba.Unit as UnitTo on UnitTo.Id = Bill.ToId');
+        Add('     left outer join dba._pgUnit on _pgUnit.UnitId=case when Bill.ToId=zc_UnitId_CompositionZ()then zc_UnitId_Composition() else Bill.ToId end');
         Add('     left outer join dba.MoneyKind on MoneyKind.Id = Bill.MoneyKindId');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind=zc_bkIncomeToUnit()'

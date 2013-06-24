@@ -1,6 +1,6 @@
 ﻿-- Function: gpSelect_Object_Account(TVarChar)
 
---DROP FUNCTION gpSelect_Object_Account(TVarChar);
+-- DROP FUNCTION gpSelect_Object_Account(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Account(
     IN inSession     TVarChar       -- сессия пользователя
@@ -31,16 +31,16 @@ $BODY$BEGIN
                              InfoMoneyDestinationId, InfoMoneyDestinationCode, InfoMoneyDestinationName, 
                              InfoMoneyId, InfoMoneyCode, InfoMoneyName)
      SELECT 
-           Object_InfoMoneyGroup.ObjectCode 
-          ,Object_InfoMoneyGroup.Id
+           Object_InfoMoneyGroup.Id
+          ,Object_InfoMoneyGroup.ObjectCode 
           ,Object_InfoMoneyGroup.ValueData
           
-          ,Object_InfoMoneyDestination.ObjectCode
           ,Object_InfoMoneyDestination.Id
+          ,Object_InfoMoneyDestination.ObjectCode
           ,Object_InfoMoneyDestination.ValueData
           
-          ,Object_InfoMoney.ObjectCode
           ,Object_InfoMoney.Id
+          ,Object_InfoMoney.ObjectCode
           ,Object_InfoMoney.ValueData
           
      FROM Object AS Object_InfoMoney
@@ -127,6 +127,7 @@ ALTER FUNCTION gpSelect_Object_Account (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.06.13                                         *  errors
  21.06.13          *                              *  создание врем.таблиц
  17.06.13          *
  

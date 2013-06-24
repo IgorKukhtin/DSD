@@ -31,16 +31,16 @@ $BODY$BEGIN
                              InfoMoneyDestinationId, InfoMoneyDestinationCode, InfoMoneyDestinationName, 
                              InfoMoneyId, InfoMoneyCode, InfoMoneyName)
      SELECT 
-           Object_InfoMoneyGroup.ObjectCode 
-          ,Object_InfoMoneyGroup.Id
+           Object_InfoMoneyGroup.Id
+          ,Object_InfoMoneyGroup.ObjectCode 
           ,Object_InfoMoneyGroup.ValueData
           
-          ,Object_InfoMoneyDestination.ObjectCode
           ,Object_InfoMoneyDestination.Id
+          ,Object_InfoMoneyDestination.ObjectCode
           ,Object_InfoMoneyDestination.ValueData
           
-          ,Object_InfoMoney.ObjectCode
           ,Object_InfoMoney.Id
+          ,Object_InfoMoney.ObjectCode
           ,Object_InfoMoney.ValueData
           
      FROM Object AS Object_InfoMoney
@@ -125,6 +125,7 @@ ALTER FUNCTION gpSelect_Object_ProfitLoss (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.06.13                                         *  errors
  21.06.13          * плюс все поля 
  18.06.13          *
  

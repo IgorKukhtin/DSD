@@ -123,4 +123,4 @@ ALTER FUNCTION gpGet_Object_Goods(integer, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_Goods('2')
+-- SELECT * FROM gpGet_Object_Goods (100, '2')

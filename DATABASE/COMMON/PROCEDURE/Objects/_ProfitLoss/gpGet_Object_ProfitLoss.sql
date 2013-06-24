@@ -1,6 +1,6 @@
 ﻿-- Function: gpGet_Object_ProfitLoss()
 
---DROP FUNCTION gpGet_Object_ProfitLoss();
+-- DROP FUNCTION gpGet_Object_ProfitLoss (integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_ProfitLoss(
     IN inId          Integer,       -- Счет 
@@ -32,16 +32,16 @@ $BODY$BEGIN
                              InfoMoneyDestinationId, InfoMoneyDestinationCode, InfoMoneyDestinationName, 
                              InfoMoneyId, InfoMoneyCode, InfoMoneyName)
      SELECT 
-           Object_InfoMoneyGroup.ObjectCode 
-          ,Object_InfoMoneyGroup.Id
+           Object_InfoMoneyGroup.Id
+          ,Object_InfoMoneyGroup.ObjectCode 
           ,Object_InfoMoneyGroup.ValueData
           
-          ,Object_InfoMoneyDestination.ObjectCode
           ,Object_InfoMoneyDestination.Id
+          ,Object_InfoMoneyDestination.ObjectCode
           ,Object_InfoMoneyDestination.ValueData
           
-          ,Object_InfoMoney.ObjectCode
           ,Object_InfoMoney.Id
+          ,Object_InfoMoney.ObjectCode
           ,Object_InfoMoney.ValueData
           
      FROM Object AS Object_InfoMoney
@@ -163,10 +163,11 @@ ALTER FUNCTION gpGet_Object_ProfitLoss(integer, TVarChar)
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.06.13                                         *  errors
  21.06.13          *  временные таблицы , + все поля
  18.06.13          *
 
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_ProfitLoss('2')
+-- SELECT * FROM gpGet_Object_ProfitLoss (100, '2')
