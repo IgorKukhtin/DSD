@@ -303,9 +303,7 @@ begin
      if not fStop then pLoadGuide_ContractKind;
      if not fStop then pLoadGuide_JuridicalGroup;
      if not fStop then pLoadGuide_Juridical(false);
-     if not fStop then pLoadGuide_Juridical(true);
      if not fStop then pLoadGuide_Partner(false);
-     if not fStop then pLoadGuide_Partner(true);
 
      if not fStop then pLoadGuide_Business;
      if not fStop then pLoadGuide_Branch;
@@ -351,6 +349,9 @@ begin
      if cbSetNull_Id_Postgres.Checked then begin if MessageDlg('ƒÂÈÒÚ‚ËÚÂÎ¸ÌÓ set ƒŒ ”Ã≈Õ“€.Sybase.¬—≈Ã.Id_Postgres = null?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
                                                  pSetNullDocument_Id_Postgres;
                                            end;
+     //
+     if not fStop then pLoadGuide_Juridical(true);
+     if not fStop then pLoadGuide_Partner(true);
      //
      if not fStop then pLoadDocument_Income;
      if not fStop then pLoadDocumentItem_Income;
@@ -830,7 +831,7 @@ procedure TMainForm.pLoadGuide_ContractKind;
 begin
      if (not cbContractKind.Checked)or(not cbContractKind.Enabled) then exit;
      //
-     myEnabledCB(cbPaidKind);
+     myEnabledCB(cbContractKind);
      //
      with fromQuery,Sql do begin
         Close;
@@ -1007,7 +1008,7 @@ begin
                   Add('     left outer join dba.Unit as Unit_parent9 on Unit_parent9.Id = Unit_parent8.ParentId');
                   Add('     left outer join dba.ClientInformation on ClientInformation.ClientId = isnull( zf_ChangeIntToNull( Unit_all.InformationFromUnitID), Unit_all.Id)');
                   Add('where Unit.Id1_Postgres is null'
-                     +'  and isnull(Unit.findGoodsCard,zc_rvNo()) = zc_rvNo()'
+                     +'  and isnull(Unit_all.findGoodsCard,zc_rvNo()) = zc_rvNo()'
                      +'  and fCheckUnitClientParentID(3,Unit.Id)=zc_rvNo()'    // ¿À¿Õ
                      +'  and fCheckUnitClientParentID(3714,Unit.Id)=zc_rvNo()' // ¿Î‡Ì-ÔÓ˜ËÂ
                      +'  and fCheckUnitClientParentID(3531,Unit.Id)=zc_rvNo()' // Í ·Ì*
@@ -1036,8 +1037,8 @@ begin
                   Add('     join dba.Unit as Unit_all on Unit_all.Id = Bill.FromId and Unit_all.Id2_Postgres is null');
                   Add('     join dba.Unit on Unit.Id = isnull(zf_ChangeIntToNull(Unit_all.DolgByUnitID), isnull(zf_ChangeIntToNull(Unit_all.InformationFromUnitID), Unit_all.Id))');
                   Add('     left outer join dba.ClientInformation on ClientInformation.ClientId = isnull( zf_ChangeIntToNull( Unit_all.InformationFromUnitID), Unit_all.Id)');
-                  //Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
-                  Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate('01.01.2011'))+' and '+FormatToDateServer_notNULL(StrToDate('01.01.2014'))
+                  Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+                  //Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate('01.01.2011'))+' and '+FormatToDateServer_notNULL(StrToDate('01.01.2014'))
                      +'  and Bill.BillKind=zc_bkIncomeToUnit()');
                   Add('group by ObjectId, ObjectCode, ObjectName, Id_Postgres, GLNCode');
                   Add('order by ObjectId');
@@ -1135,8 +1136,8 @@ begin
                   Add('     join dba.Unit on Unit.Id = Bill.FromId and Unit.Id3_Postgres is null');
                   Add('     left outer join dba.Unit as Unit_Juridical on Unit_Juridical.Id = isnull(zf_ChangeIntToNull( Unit.DolgByUnitID), isnull(zf_ChangeIntToNull( Unit.InformationFromUnitID), Unit.Id))');
                   Add('     left outer join dba.ClientInformation on ClientInformation.ClientId = Unit.Id');
-                  //Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
-                  Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate('01.01.2011'))+' and '+FormatToDateServer_notNULL(StrToDate('01.01.2014'))
+                  Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+                  //Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate('01.01.2011'))+' and '+FormatToDateServer_notNULL(StrToDate('01.01.2014'))
                      +'  and Bill.BillKind=zc_bkIncomeToUnit()');
                   Add('group by ObjectId, ObjectCode, ObjectName, Id_Postgres, JuridicalId_Postgres, GLNCode');
                   Add('order by ObjectId');
