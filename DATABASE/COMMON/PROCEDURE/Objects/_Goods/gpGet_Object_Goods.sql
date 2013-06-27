@@ -52,47 +52,55 @@ $BODY$BEGIN
          , Object_Goods.ObjectCode     AS Code
          , Object_Goods.ValueData      AS Name
          , Object_Goods.isErased       AS isErased
-         , GoodsGroup.Id         AS GoodsGroupId
-         , GoodsGroup.ValueData  AS GoodsGroupName  
-         , GoodsGroup.ObjectCode AS GoodsGroupCode
+         , Object_GoodsGroup.Id         AS GoodsGroupId
+         , Object_GoodsGroup.ValueData  AS GoodsGroupName  
+         , Object_GoodsGroup.ObjectCode AS GoodsGroupCode
           
-         , Measure.Id            AS MeasureId
-         , Measure.ValueData     AS MeasureName
-         , Measure.ObjectCode    AS MeasureCode
-         , Weight.ValueData      AS Weight
+         , Object_Measure.Id            AS MeasureId
+         , Object_Measure.ValueData     AS MeasureName
+         , Object_Measure.ObjectCode    AS MeasureCode
+         , ObjectFloat_Weight.ValueData AS Weight
          
          , Object_InfoMoney.Id         AS InfoMoneyId
          , Object_InfoMoney.ValueData  AS InfoMoneyName
          , Object_InfoMoney.ObjectCode AS InfoMoneyCode
          
-         , CAST (0 as Integer)   AS InfoMoneyGroupId
-         , CAST ('' as TVarChar) AS InfoMoneyGroupName
-         , CAST (0 as Integer)   AS InfoMoneyGroupCode
-         , CAST (0 as Integer)   AS InfoMoneyDestinationId
-         , CAST ('' as TVarChar) AS InfoMoneyDestinationName
-         , CAST (0 as Integer)   AS InfoMoneyDestinationCode
-        
-        
+         , Object_InfoMoneyGroup.Id         AS InfoMoneyGroupId
+         , Object_InfoMoneyGroup.ValueData  AS InfoMoneyGroupName
+         , Object_InfoMoneyGroup.ObjectCode AS InfoMoneyGroupCode
+         , Object_InfoMoneyDestination.Id         AS InfoMoneyDestinationId
+         , Object_InfoMoneyDestination.ValueData  AS InfoMoneyDestinationName
+         , Object_InfoMoneyDestination.ObjectCode AS InfoMoneyDestinationCode
         
      FROM OBJECT AS Object_Goods
-LEFT JOIN ObjectLink AS Goods_GoodsGroup
-       ON Goods_GoodsGroup.ObjectId = Object_Goods.Id
-      AND Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-LEFT JOIN Object AS GoodsGroup
-       ON GoodsGroup.Id = Goods_GoodsGroup.ChildObjectId
-LEFT JOIN ObjectLink AS Goods_Measure
-       ON Goods_Measure.ObjectId = Object_Goods.Id 
-      AND Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-LEFT JOIN Object AS Measure
-       ON Measure.Id = Goods_Measure.ChildObjectId
-LEFT JOIN ObjectFloat AS Weight 
-       ON Weight.ObjectId = Object_Goods.Id 
-      AND Weight.DescId = zc_ObjectFloat_Goods_Weight()
-LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-       ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
-      AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-LEFT JOIN Object AS Object_InfoMoney
-       ON Object_InfoMoney.Id = ObjectLink_Goods_InfoMoney.ChildObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                 ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+          LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+                 
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
+                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+          LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+                 
+          LEFT JOIN ObjectFloat AS ObjectFloat_Weight ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
+                AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+          LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Goods_InfoMoney.ChildObjectId
+          
+          LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyGroup
+                 ON ObjectLink_InfoMoney_InfoMoneyGroup.ObjectId = Object_InfoMoney.Id 
+                AND ObjectLink_InfoMoney_InfoMoneyGroup.DescId = zc_ObjectLink_InfoMoney_InfoMoneyGroup()
+          LEFT JOIN Object AS Object_InfoMoneyGroup ON Object_InfoMoneyGroup.Id = ObjectLink_InfoMoney_InfoMoneyGroup.ChildObjectId    
+          
+          LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyDestination
+                 ON ObjectLink_InfoMoney_InfoMoneyDestination.ObjectId = Object_InfoMoney.Id 
+                AND ObjectLink_InfoMoney_InfoMoneyDestination.DescId = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
+          LEFT JOIN Object AS Object_InfoMoneyDestination ON Object_InfoMoneyDestination.Id = ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId              
+          
      WHERE Object_Goods.Id = inId;
   END IF;
   
@@ -108,10 +116,11 @@ ALTER FUNCTION gpGet_Object_Goods(integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.06.13          *              
  11.06.13          *
  11.05.13                                        
 
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_Goods('2')
+-- SELECT * FROM gpGet_Object_Goods (100, '2')

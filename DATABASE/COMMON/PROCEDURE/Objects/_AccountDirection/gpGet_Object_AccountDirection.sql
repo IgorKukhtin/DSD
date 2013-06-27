@@ -10,27 +10,27 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean) AS
 $BODY$BEGIN
 
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_AccountDirection());
+   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Object_AccountDirection());
 
    IF COALESCE (inId, 0) = 0
    THEN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , COALESCE (MAX (ObjectCode), 0) + 1  AS Code
+           , COALESCE (MAX (Object_AccountDirection.ObjectCode), 0) + 1  AS Code
            , CAST ('' as TVarChar)  AS Name
            , CAST (NULL AS Boolean) AS isErased
-       FROM Object 
-       WHERE Object.DescId = zc_Object_AccountDirection();
+       FROM Object AS Object_AccountDirection
+       WHERE Object_AccountDirection.DescId = zc_Object_AccountDirection();
    ELSE
        RETURN QUERY 
        SELECT
-             Object.Id         AS Id
-           , Object.ObjectCode AS Code
-           , Object.ValueData  AS Name
-           , Object.isErased   AS isErased
-       FROM Object 
-       WHERE Object.Id = inId;
+             Object_AccountDirection.Id         AS Id
+           , Object_AccountDirection.ObjectCode AS Code
+           , Object_AccountDirection.ValueData  AS Name
+           , Object_AccountDirection.isErased   AS isErased
+       FROM Object AS Object_AccountDirection
+       WHERE Object_AccountDirection.Id = inId;
    END IF;
   
 END;$BODY$
@@ -43,6 +43,7 @@ ALTER FUNCTION gpGet_Object_AccountDirection (Integer, TVarChar) OWNER TO postgr
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.06.13          * zc_Enum_Process_Get_Object_AccountDirection()              
  17.06.13          *
 
 */

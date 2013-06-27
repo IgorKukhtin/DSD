@@ -104,6 +104,7 @@ end;
 
 procedure TdbProcedureTest.CreateObjectProcedure;
 begin
+<<<<<<< HEAD
   ExecFile(ProcedurePath + 'OBJECTS\Constraint\lpCheckUnique_Object_ValueData.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\Constraint\lpCheckUnique_ObjectString_ValueData.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\Constraint\lpCheck_Object_CycleLink.sql', ZQuery);
@@ -264,7 +265,6 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_ProfitLoss\gpInsertUpdate_Object_ProfitLoss.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_ProfitLoss\gpSelect_Object_ProfitLoss.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_ProfitLoss\gpGet_Object_ProfitLoss.sql', ZQuery);
-
 end;
 
 procedure TdbProcedureTest.CreateProtocolProcedure;

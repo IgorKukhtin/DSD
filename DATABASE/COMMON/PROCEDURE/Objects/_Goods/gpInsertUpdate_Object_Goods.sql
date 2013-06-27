@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inMeasureId           Integer   ,    -- ссылка на единицу измерения
     IN inWeight              TFloat    ,    -- Вес
     IN inInfoMoneyId         Integer   ,    -- Управленческие аналитики
-    IN inSession             TVarChar       -- текущий пользователь
+    IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS integer AS
 $BODY$
@@ -18,11 +18,12 @@ $BODY$
    DECLARE Code_calc Integer;   
 BEGIN
 
-   --  PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Goods()());
+   -- проверка прав пользователя на вызов процедуры
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Goods()());
    UserId := inSession;
    
    -- !!! Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
-   -- !!! Code_calc:=lpGet_ObjectCode (inCode, zc_Object_Goods());
+   -- !!! Code_calc:=lfGet_ObjectCode (inCode, zc_Object_Goods());
    IF COALESCE (inCode, 0) = 0  THEN Code_calc := NULL; ELSE Code_calc := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
    
    -- !!! проверка уникальности <Наименование>
@@ -33,9 +34,9 @@ BEGIN
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Goods(), Code_calc, inName);
-   -- сохранили связь с <>
+   -- сохранили связь с <Группой товара>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_GoodsGroup(), ioId, inGoodsGroupId);
-   -- сохранили связь с <>
+   -- сохранили связь с <Единицей измерения>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Measure(), ioId, inMeasureId);
    -- сохранили связь с <Управленческие аналитики>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_InfoMoney(), ioId, inInfoMoneyId);

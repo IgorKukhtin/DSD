@@ -1,6 +1,6 @@
-﻿-- Function: gpInsertUpdate_Object_Account()
+﻿-- Function: gpInsertUpdate_Object_Account(Integer, TVarChar)
 
--- DROP FUNCTION gpInsertUpdate_Object_Account();
+--DROP FUNCTION gpInsertUpdate_Object_Account(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Account(
  INOUT ioId                     Integer,    -- ключ объекта <Счет>
@@ -19,7 +19,7 @@ $BODY$
 
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Account());
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Account());
     UserId := inSession;
 
    -- Если код не установлен, определяем его как последний+1
@@ -45,8 +45,10 @@ BEGIN
    PERFORM lpInsert_ObjectProtocol (ioId, UserId);
 
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
+
+LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpInsertUpdate_Object_Account (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar)  OWNER TO postgres;
+
   
 /*-------------------------------------------------------------------------------*/
 /*

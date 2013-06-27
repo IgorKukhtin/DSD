@@ -1,6 +1,6 @@
 ﻿-- Function: lfGet_ObjectCode(integer, integer)
 
--- DROP FUNCTION lfGet_ObjectCode(integer, integer);
+-- DROP FUNCTION lfGet_ObjectCode (integer, integer);
 
 CREATE OR REPLACE FUNCTION lfGet_ObjectCode(
     IN inObjectCode Integer, 

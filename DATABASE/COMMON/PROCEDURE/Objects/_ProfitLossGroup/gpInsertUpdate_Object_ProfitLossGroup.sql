@@ -11,29 +11,24 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProfitLossGroup(
 RETURNS Integer AS
 $BODY$
    DECLARE UserId Integer;
-   DECLARE Code_max Integer;   
+   DECLARE Code_calc Integer;   
  
 BEGIN
  
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_ProfitLossGroup());
+   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ProfitLossGroup());
    UserId := inSession;
 
    -- Если код не установлен, определяем его как последний+1
-   IF COALESCE (inCode, 0) = 0
-   THEN 
-       SELECT COALESCE (MAX (ObjectCode), 0) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_ProfitLossGroup();
-   ELSE
-       Code_max := inCode;
-   END IF; 
+    Code_calc:=lfGet_ObjectCode (inCode, zc_Object_AccountGroup()); 
    
    -- проверка уникальности для свойства <Наименование>
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_ProfitLossGroup(), inName);
    -- проверка уникальности для свойства <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_ProfitLossGroup(), Code_max);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_ProfitLossGroup(), Code_calc);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_ProfitLossGroup(), Code_max, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_ProfitLossGroup(), Code_calc, inName);
    
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, UserId);
@@ -48,6 +43,7 @@ ALTER FUNCTION gpInsertUpdate_Object_ProfitLossGroup (Integer, Integer, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.06.13          * zc_Enum_Process_InsertUpdate_Object_ProfitLossGroup(); Code_calc....  
  18.06.13          *
 
 */

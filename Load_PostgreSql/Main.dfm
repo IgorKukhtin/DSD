@@ -182,7 +182,6 @@ object MainForm: TMainForm
       Width = 225
       Height = 17
       Caption = '2.1. '#1042#1080#1076#1099' '#1092#1086#1088#1084' '#1086#1087#1083#1072#1090#1099
-      Enabled = False
       TabOrder = 5
     end
     object cbJuridicalGroup: TCheckBox
