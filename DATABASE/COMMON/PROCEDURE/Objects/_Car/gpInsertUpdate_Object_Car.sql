@@ -1,14 +1,14 @@
-п»ї-- Function: gpInsertUpdate_Object_Car()
+-- Function: gpInsertUpdate_Object_Car()
 
 -- DROP FUNCTION gpInsertUpdate_Object_Car();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Car(
- INOUT ioId	                      Integer   ,    -- РєР»СЋС‡ РѕР±СЉРµРєС‚Р° <РђРІС‚РѕРјРѕР±РёР»СЊ> 
-    IN inCode                     Integer   ,    -- РљРѕРґ РѕР±СЉРµРєС‚Р° <РђРІС‚РѕРјРѕР±РёР»СЊ>
-    IN inName                     TVarChar  ,    -- РќР°Р·РІР°РЅРёРµ РѕР±СЉРµРєС‚Р° <РђРІС‚РѕРјРѕР±РёР»СЊ>
-    IN inRegistrationCertificate  TVarChar  ,    -- РўРµС…РїР°СЃРїРѕСЂС‚ РѕР±СЉРµРєС‚Р° <РђРІС‚РѕРјРѕР±РёР»СЊ>
-    IN inCarModelId               Integer   ,    -- РњРѕРґРµР»СЊ Р°РІС‚Рѕ          
-    IN inSession                  TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+ INOUT ioId	                      Integer   ,    -- ключ объекта <Автомобиль> 
+    IN inCode                     Integer   ,    -- Код объекта <Автомобиль>
+    IN inName                     TVarChar  ,    -- Название объекта <Автомобиль>
+    IN inRegistrationCertificate  TVarChar  ,    -- Техпаспорт объекта <Автомобиль>
+    IN inCarModelId               Integer   ,    -- Модель авто          
+    IN inSession                  TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
@@ -17,11 +17,11 @@ $BODY$
 
 BEGIN
    
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Car());
    UserId := inSession;
 
-   -- Р•СЃР»Рё РєРѕРґ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ, РѕРїСЂРµРґРµР»СЏРµРј РµРіРѕ РєР°Рё РїРѕСЃР»РµРґРЅРёР№+1
+   -- Если код не установлен, определяем его каи последний+1
    IF COALESCE (inCode, 0) = 0
    THEN 
        SELECT MAX (ObjectCode) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_Car();
@@ -29,20 +29,20 @@ BEGIN
        Code_max := inCode;
    END IF; 
    
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё РґР»СЏ СЃРІРѕР№СЃС‚РІР° <РќР°РёРјРµРЅРѕРІР°РЅРёРµ РђРІС‚РѕРјРѕР±РёР»СЏ>
+   -- проверка прав уникальности для свойства <Наименование Автомобиля>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Car(), inName);
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё РґР»СЏ СЃРІРѕР№СЃС‚РІР° <РљРѕРґ РђРІС‚РѕРјРѕР±РёР»СЏ>
+   -- проверка прав уникальности для свойства <Код Автомобиля>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Car(), Code_max);
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё РґР»СЏ СЃРІРѕР№СЃС‚РІР° <РўРµС…РїР°СЃРїРѕСЂС‚> 
-   PERFORM lpCheckUnique_ObjectString_ValueData(ioId, zc_ObjectString_RegistrationCertificate(), inRegistrationCertificate);
+   -- проверка прав уникальности для свойства <Техпаспорт> 
+   PERFORM lpCheckUnique_ObjectString_ValueData(ioId, zc_ObjectString_Car_RegistrationCertificate(), inRegistrationCertificate);
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё <РћР±СЉРµРєС‚>
+   -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Car(), Code_max, inName);
 
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_RegistrationCertificate(), ioId, inRegistrationCertificate);
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Car_RegistrationCertificate(), ioId, inRegistrationCertificate);
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Car_CarModel(), ioId, inCarModelId);
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё РїСЂРѕС‚РѕРєРѕР»
+   -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, UserId);
 
 END;$BODY$
@@ -53,13 +53,13 @@ ALTER FUNCTION gpInsertUpdate_Object_Car(Integer, Integer, TVarChar, TVarChar, I
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  10.06.13          *
  05.06.13          
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpInsertUpdate_Object_Car()
                             

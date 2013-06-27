@@ -1,61 +1,7 @@
-CREATE OR REPLACE FUNCTION zc_Object_Process()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 1;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_Object_Role()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 2;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_Object_User()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 3;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_Object_RoleRight()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 4;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_Object_UserRole()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 5;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_Object_Form()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 8;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_Object_Measure()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 9;
-END;  $BODY$ LANGUAGE plpgsql;
-
 CREATE OR REPLACE FUNCTION zc_Object_Cash()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 10;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_Object_AccountPlan()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 11;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_Object_Status()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 12;
 END;  $BODY$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION zc_Object_Currency()
@@ -118,21 +64,19 @@ $BODY$BEGIN
   RETURN 30;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_Object_UserFormSettings()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 43;
-END;  $BODY$ LANGUAGE plpgsql;
 
 --------------------------- !!!!!!!!!!!!!!!!!!!
 --------------------------- !!! ÕŒ¬¿ﬂ —’≈Ã¿ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!
+
+CREATE OR REPLACE FUNCTION zc_Object_Status() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Status'); END;$BODY$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION zc_Object_GoodsGroup() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_GoodsGroup'); END;$BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Object_Goods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Goods'); END;$BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Object_GoodsKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_GoodsKind'); END;$BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Object_GoodsProperty() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_GoodsProperty'); END;$BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Object_GoodsPropertyValue() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_GoodsPropertyValue'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Object_Measure() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Measure'); END;$BODY$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION zc_Object_InfoMoneyGroup() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_InfoMoneyGroup'); END;$BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Object_InfoMoneyDestination() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_InfoMoneyDestination'); END;$BODY$ LANGUAGE plpgsql;
@@ -158,3 +102,12 @@ CREATE OR REPLACE FUNCTION zc_Object_RouteSorting() RETURNS Integer AS $BODY$BEG
 CREATE OR REPLACE FUNCTION zc_Object_PriceList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_PriceList'); END;$BODY$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION zc_Object_PriceListItem() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_PriceListItem'); END;$BODY$ LANGUAGE plpgsql;
 
+-- CREATE OR REPLACE FUNCTION zc_Object_AccountPlan() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_AccountPlan'); END;$BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_Object_Process() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Process'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Object_Role() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Role'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_object_User() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_object_User'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Object_RoleRight() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_RoleRight'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Object_UserRole() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_UserRole'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Object_Form() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Form'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Object_UserFormSettings() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_UserFormSettings'); END;$BODY$ LANGUAGE plpgsql;

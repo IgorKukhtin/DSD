@@ -2014,9 +2014,9 @@ begin
         Add('select min(Id) as ObjectId');
         Add('     , min(_pgInfoMoney.ObjectCode) - 101 as ObjectCode');
         Add('     , _pgInfoMoney.Name1 as ObjectName');
-        Add('     , _pgInfoMoney.Id1_Postgres as Id_Postgres');
+        Add('     , max (isnull (_pgInfoMoney.Id1_Postgres, 0)) as Id_Postgres');
         Add('from dba._pgInfoMoney');
-        Add('group by ObjectName, Id_Postgres');
+        Add('group by ObjectName');
         Add('order by ObjectCode');
         Open;
         //
@@ -2044,7 +2044,7 @@ begin
              //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
-             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba._pgInfoMoney set Id1_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Name1 in (select Name1 from dba._pgInfoMoney where Id = '+FieldByName('ObjectId').AsString+')');
              //
              Next;
@@ -2070,9 +2070,9 @@ begin
         Add('select min(Id) as ObjectId');
         Add('     , min(_pgInfoMoney.ObjectCode) - 1 as ObjectCode');
         Add('     , _pgInfoMoney.Name2 as ObjectName');
-        Add('     , _pgInfoMoney.Id2_Postgres as Id_Postgres');
+        Add('     , max (isnull (_pgInfoMoney.Id2_Postgres, 0)) as Id_Postgres');
         Add('from dba._pgInfoMoney');
-        Add('group by ObjectName, Id_Postgres, _pgInfoMoney.Name1');
+        Add('group by ObjectName, _pgInfoMoney.Name1');
         Add('order by ObjectCode');
         Open;
         //
@@ -2100,7 +2100,7 @@ begin
              //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
-             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba._pgInfoMoney set Id2_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Name1 in (select Name1 from dba._pgInfoMoney where Id = '+FieldByName('ObjectId').AsString+')'
                                                                                                                                       +'   and Name2 in (select Name2 from dba._pgInfoMoney where Id = '+FieldByName('ObjectId').AsString+')'
                                   );
@@ -2189,9 +2189,9 @@ begin
         Add('select min(Id) as ObjectId');
         Add('     , min(_pgAccount.ObjectCode) - 101 as ObjectCode');
         Add('     , _pgAccount.Name1 as ObjectName');
-        Add('     , _pgAccount.Id1_Postgres as Id_Postgres');
+        Add('     , max (isnull (_pgAccount.Id1_Postgres, 0)) as Id_Postgres');
         Add('from dba._pgAccount');
-        Add('group by ObjectName, Id_Postgres');
+        Add('group by ObjectName');
         Add('order by ObjectCode');
         Open;
         //
@@ -2244,9 +2244,9 @@ begin
         Add('select min(Id) as ObjectId');
         Add('     , min(_pgAccount.ObjectCode) - 1 as ObjectCode');
         Add('     , _pgAccount.Name2 as ObjectName');
-        Add('     , _pgAccount.Id2_Postgres as Id_Postgres');
+        Add('     , max (isnull (_pgAccount.Id2_Postgres, 0)) as Id_Postgres');
         Add('from dba._pgAccount');
-        Add('group by ObjectName, Id_Postgres, _pgAccount.Name1');
+        Add('group by ObjectName, _pgAccount.Name1');
         Add('order by ObjectCode');
         Open;
         //
@@ -2369,9 +2369,9 @@ begin
         Add('select min(Id) as ObjectId');
         Add('     , min(_pgProfitLoss.ObjectCode) - 101 as ObjectCode');
         Add('     , _pgProfitLoss.Name1 as ObjectName');
-        Add('     , _pgProfitLoss.Id1_Postgres as Id_Postgres');
+        Add('     , max (isnull (_pgProfitLoss.Id1_Postgres, 0)) as Id_Postgres');
         Add('from dba._pgProfitLoss');
-        Add('group by ObjectName, Id_Postgres');
+        Add('group by ObjectName');
         Add('order by ObjectCode');
         Open;
         //
@@ -2425,9 +2425,9 @@ begin
         Add('select min(Id) as ObjectId');
         Add('     , min(_pgProfitLoss.ObjectCode) - 1 as ObjectCode');
         Add('     , _pgProfitLoss.Name2 as ObjectName');
-        Add('     , _pgProfitLoss.Id2_Postgres as Id_Postgres');
+        Add('     , max (isnull (_pgProfitLoss.Id2_Postgres, 0)) as Id_Postgres');
         Add('from dba._pgProfitLoss');
-        Add('group by ObjectName, Id_Postgres, _pgProfitLoss.Name1');
+        Add('group by ObjectName, _pgProfitLoss.Name1');
         Add('order by ObjectCode');
         Open;
         //

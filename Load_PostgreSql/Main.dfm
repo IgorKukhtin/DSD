@@ -37,8 +37,6 @@ object MainForm: TMainForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitTop = 640
-    ExplicitWidth = 1067
     object Gauge: TGauge
       Left = 0
       Top = 0
@@ -109,8 +107,6 @@ object MainForm: TMainForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitLeft = 521
-    ExplicitHeight = 640
     object cbGoodsGroup: TCheckBox
       Tag = 10
       Left = 15
@@ -397,8 +393,6 @@ object MainForm: TMainForm
     BevelOuter = bvNone
     TabOrder = 3
     OnClick = DocumentPanelClick
-    ExplicitLeft = 842
-    ExplicitHeight = 640
     object Label1: TLabel
       Left = 6
       Top = 24

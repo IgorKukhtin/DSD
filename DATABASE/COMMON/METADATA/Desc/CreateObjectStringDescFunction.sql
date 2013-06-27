@@ -1,23 +1,3 @@
-CREATE OR REPLACE FUNCTION zc_ObjectString_user_password()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 1;
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION zc_ObjectString_User_password()
-  OWNER TO postgres;
-
-CREATE OR REPLACE FUNCTION zc_ObjectString_user_login()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 2;
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION zc_ObjectString_User_login()
-  OWNER TO postgres;
-
 CREATE OR REPLACE FUNCTION zc_ObjectString_Currency_InternalName()
   RETURNS integer AS
 $BODY$BEGIN
@@ -119,13 +99,15 @@ END;$BODY$
 ALTER FUNCTION zc_ObjectString_GoodsPropertyValue_ArticleGLN()
   OWNER TO postgres;
   
-CREATE OR REPLACE FUNCTION zc_ObjectString_RegistrationCertificate()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 17;
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 1;
-ALTER FUNCTION zc_ObjectString_RegistrationCertificate()
-  OWNER TO postgres;
+--------------------------- !!!!!!!!!!!!!!!!!!!
+--------------------------- !!! НОВАЯ СХЕМА !!!
+--------------------------- !!!!!!!!!!!!!!!!!!!
 
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_User_Password() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_User_Password'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_ObjectString_User_Login() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_User_Login'); END;$BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Car_RegistrationCertificate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Car_RegistrationCertificate'); END;$BODY$ LANGUAGE plpgsql;
+
+-- Это универсальное свойство, может использоваться у всех объектов
+CREATE OR REPLACE FUNCTION  zc_ObjectString_Enum() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = ' zc_ObjectString_Enum'); END;$BODY$ LANGUAGE plpgsql;
