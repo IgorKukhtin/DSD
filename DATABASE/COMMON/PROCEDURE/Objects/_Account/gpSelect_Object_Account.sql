@@ -63,10 +63,8 @@ $BODY$BEGIN
                    ON ObjectLink_Account_InfoMoney.ObjectId = Object_Account.Id
                   AND ObjectLink_Account_InfoMoney.DescId = zc_ObjectLink_Account_InfoMoney()
          
-        
             LEFT JOIN lfSelect_Object_InfoMoneyDestination() AS lfObject_InfoMoneyDestination ON lfObject_InfoMoneyDestination.InfoMoneyDestinationId = ObjectLink_Account_InfoMoneyDestination.ChildObjectId
             LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ObjectLink_Account_InfoMoneyDestination.ChildObjectId
-
 
        WHERE Object_Account.DescId = zc_Object_Account();
 
