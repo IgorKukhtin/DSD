@@ -237,6 +237,8 @@ begin
 
   ExecFile(ProcedurePath + 'OBJECTS\Constraint\lpCheckUnique_Object_ObjectCode.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\Constraint\lfGet_ObjectCode.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\Constraint\lfSelect_Object_InfoMoney.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\Constraint\lfSelect_Object_InfoMoneyDestination.sql', ZQuery);
 
   ExecFile(ProcedurePath + 'OBJECTS\_RouteSorting\gpInsertUpdate_Object_RouteSorting.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_RouteSorting\gpSelect_Object_RouteSorting.sql', ZQuery);
