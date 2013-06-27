@@ -21,3 +21,8 @@ SELECT zc_MovementLink_PersonalDriver(), 'PersonalDriver', 'Сотрудник (водитель)
 
 insert into MovementLinkObjectDesc(Id, Code, ItemName)
 SELECT zc_MovementLink_PersonalPacker(), 'PersonalPacker', 'Сотрудник (заготовитель)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Id = zc_MovementLink_PersonalPacker());
+
+
+--------------------------- !!!!!!!!!!!!!!!!!!!
+--------------------------- !!! НОВАЯ СХЕМА !!!
+--------------------------- !!!!!!!!!!!!!!!!!!!

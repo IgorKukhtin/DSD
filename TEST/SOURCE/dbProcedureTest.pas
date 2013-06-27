@@ -104,7 +104,6 @@ end;
 
 procedure TdbProcedureTest.CreateObjectProcedure;
 begin
-<<<<<<< HEAD
   ExecFile(ProcedurePath + 'OBJECTS\Constraint\lpCheckUnique_Object_ValueData.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\Constraint\lpCheckUnique_ObjectString_ValueData.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\Constraint\lpCheck_Object_CycleLink.sql', ZQuery);
@@ -237,6 +236,7 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_Route\gpGet_Object_Route.sql', ZQuery);
 
   ExecFile(ProcedurePath + 'OBJECTS\Constraint\lpCheckUnique_Object_ObjectCode.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\Constraint\lfGet_ObjectCode.sql', ZQuery);
 
   ExecFile(ProcedurePath + 'OBJECTS\_RouteSorting\gpInsertUpdate_Object_RouteSorting.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_RouteSorting\gpSelect_Object_RouteSorting.sql', ZQuery);

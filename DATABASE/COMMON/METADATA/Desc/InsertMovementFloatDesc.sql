@@ -41,3 +41,8 @@ SELECT zc_MovementFloat_TotalSummPVAT(), 'TotalSummPVAT', 'Итого сумма по наклад
 INSERT INTO MovementFloatDesc(Id, Code, ItemName)
 SELECT zc_MovementFloat_TotalSpending(), 'TotalSpending', 'Итого сумма затрат по накладной (с учетом НДС)' 
        WHERE NOT EXISTS (SELECT * FROM MovementFloatDesc WHERE Id = zc_MovementFloat_TotalSpending()); 
+
+
+--------------------------- !!!!!!!!!!!!!!!!!!!
+--------------------------- !!! НОВАЯ СХЕМА !!!
+--------------------------- !!!!!!!!!!!!!!!!!!!

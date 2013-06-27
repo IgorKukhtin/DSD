@@ -8,3 +8,6 @@ END;$BODY$
 ALTER FUNCTION zc_ObjectBoolean_Juridical_isCorporate()
   OWNER TO postgres;
 
+--------------------------- !!!!!!!!!!!!!!!!!!!
+--------------------------- !!! мнбюъ яуелю !!!
+--------------------------- !!!!!!!!!!!!!!!!!!!

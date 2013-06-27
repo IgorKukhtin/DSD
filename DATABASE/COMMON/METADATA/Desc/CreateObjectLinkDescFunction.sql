@@ -94,12 +94,6 @@ $BODY$BEGIN
   RETURN 14;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_ObjectLink_UnitGroup_Parent()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 15;
-END;  $BODY$ LANGUAGE plpgsql;
-
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Bank_Juridical()
   RETURNS integer AS
 $BODY$BEGIN
@@ -110,12 +104,6 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsGroup_Parent()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 17;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_GoodsGroup()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 18;
 END;  $BODY$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_Measure()
@@ -184,12 +172,6 @@ $BODY$BEGIN
   RETURN 29;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_InfoMoney()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 30;
-END;  $BODY$ LANGUAGE plpgsql;
-
 CREATE OR REPLACE FUNCTION zc_ObjectLink_UserFormSettings_User()
   RETURNS integer AS
 $BODY$BEGIN
@@ -244,44 +226,27 @@ $BODY$BEGIN
   RETURN 39;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_ObjectLink_InfoMoney_InfoMoneyGroup()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 40;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_InfoMoney_InfoMoneyDestination()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 41;
-END;  $BODY$ LANGUAGE plpgsql;
-
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Account_InfoMoney()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 42;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_ObjectLink_ProfitLoss_InfoMoney()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 43;
-END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_ObjectLink_ProfitLoss_ProfitLossGroup()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 44;
-END;  $BODY$ LANGUAGE plpgsql;
+--------------------------- !!!!!!!!!!!!!!!!!!!
+--------------------------- !!! ÕŒ¬¿ﬂ —’≈Ã¿ !!!
+--------------------------- !!!!!!!!!!!!!!!!!!!
 
-CREATE OR REPLACE FUNCTION zc_ObjectLink_ProfitLoss_ProfitLossDirection()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 45;
-END;  $BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_GoodsGroup() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_GoodsGroup'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_InfoMoney() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Goods_InfoMoney'); END;$BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_ObjectLink_ProfitLoss_InfoMoneyDestination()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 46;
-END;  $BODY$ LANGUAGE plpgsql;
+-- CREATE OR REPLACE FUNCTION zc_ObjectLink_UnitGroup_Parent() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_UnitGroup_Parent'); END;$BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_InfoMoney_InfoMoneyGroup() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_InfoMoney_InfoMoneyGroup'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_ObjectLink_InfoMoney_InfoMoneyDestination() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_InfoMoney_InfoMoneyDestination'); END;$BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ProfitLoss_ProfitLossGroup() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProfitLoss_ProfitLossGroup'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ProfitLoss_ProfitLossDirection() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProfitLoss_ProfitLossDirection'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ProfitLoss_InfoMoneyDestination() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProfitLoss_InfoMoneyDestination'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ProfitLoss_InfoMoney() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ProfitLoss_InfoMoney'); END;$BODY$ LANGUAGE plpgsql;
+

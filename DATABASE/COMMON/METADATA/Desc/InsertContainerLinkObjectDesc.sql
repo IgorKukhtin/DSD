@@ -69,3 +69,7 @@ SELECT zc_ContainerLinkObject_PartionGoods(), 'PartionGoods', 'Аналитика "Партии
 
 insert into ContainerLinkObjectDesc(Id, Code, ItemName)
 SELECT zc_ContainerLinkObject_PartionMovement(), 'PartionMovement', 'Аналитика "Партии накладной"' WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Id = zc_ContainerLinkObject_PartionMovement());
+
+--------------------------- !!!!!!!!!!!!!!!!!!!
+--------------------------- !!! НОВАЯ СХЕМА !!!
+--------------------------- !!!!!!!!!!!!!!!!!!!

@@ -9,3 +9,8 @@ SELECT zc_MovementItemLink_Partion(), 'Partion', 'Сущность c которой идет приход
 insert into MovementItemLinkObjectDesc(Id, Code, ItemName)
 SELECT zc_MovementItemLink_Receipt(), 'Receipt', 'Рецептуры' 
        WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Id = zc_MovementItemLink_Receipt());
+
+--------------------------- !!!!!!!!!!!!!!!!!!!
+--------------------------- !!! НОВАЯ СХЕМА !!!
+--------------------------- !!!!!!!!!!!!!!!!!!!
+

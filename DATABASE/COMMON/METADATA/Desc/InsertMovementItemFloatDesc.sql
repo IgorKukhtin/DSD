@@ -33,3 +33,8 @@ SELECT zc_MovementItemFloat_CuterCount(), 'CuterCount', 'Количество кутеров'
 INSERT INTO MovementItemFloatDesc(Id, Code, ItemName)
 SELECT zc_MovementItemFloat_AmountReceipt(), 'AmountReceipt', 'Количество кутеров' 
        WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Id = zc_MovementItemFloat_AmountReceipt()); 
+
+
+--------------------------- !!!!!!!!!!!!!!!!!!!
+--------------------------- !!! НОВАЯ СХЕМА !!!
+--------------------------- !!!!!!!!!!!!!!!!!!!

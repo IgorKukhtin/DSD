@@ -8,7 +8,8 @@
 /*-------------------------------------------------------------------------------*/
 
 CREATE TABLE ObjectStringDesc(
-   Id                    INTEGER NOT NULL PRIMARY KEY,
+   -- Id                    INTEGER NOT NULL PRIMARY KEY,
+   Id                    SERIAL NOT NULL PRIMARY KEY, 
    DescId                INTEGER NOT NULL,
    Code                  TVarChar,
    ItemName              TVarChar,
@@ -26,5 +27,6 @@ CREATE TABLE ObjectStringDesc(
  ДАТА         АВТОР
  ----------------
                  Климентьев К.И.   Кухтин И.В.   
-14.06.02                                         
+ 27.06.13             * SERIAL
+
 */

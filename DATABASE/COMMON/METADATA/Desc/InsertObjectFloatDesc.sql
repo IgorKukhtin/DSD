@@ -1,5 +1,10 @@
-ÔªøINSERT INTO ObjectFloatDesc (id, DescId, Code ,itemname)
-SELECT zc_ObjectFloat_Goods_Weight(), zc_Object_Goods(), 'Goods_Weight','–í–µ—Å —Ç–æ–≤–∞—Ä–∞' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Id = zc_ObjectFloat_Goods_Weight());
+--------------------------- !!!!!!!!!!!!!!!!!!!
+--------------------------- !!! ÕŒ¬¿ﬂ —’≈Ã¿ !!!
+--------------------------- !!!!!!!!!!!!!!!!!!!
 
-INSERT INTO ObjectFloatDesc (id, DescId, Code ,itemname)
-SELECT zc_ObjectFloat_GoodsPropertyValue_Amount(), zc_Object_GoodsPropertyValue(), 'GoodsPropertyValue_Amount','–í–µ—Å —Ç–æ–≤–∞—Ä–∞' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Id = zc_ObjectFloat_GoodsPropertyValue_Amount());
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Goods(), 'zc_ObjectFloat_Goods_Weight', '¬ÂÒ ÚÓ‚‡‡' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Goods_Weight');
+
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_GoodsPropertyValue(), 'zc_ObjectFloat_GoodsPropertyValue_Amount', '¬ÂÒ ÚÓ‚‡‡' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsPropertyValue_Amount');
+

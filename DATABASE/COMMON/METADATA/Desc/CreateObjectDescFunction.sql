@@ -28,18 +28,6 @@ $BODY$BEGIN
   RETURN 5;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_Object_Goods()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 6;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_Object_Unit()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 7;
-END;  $BODY$ LANGUAGE plpgsql;
-
 CREATE OR REPLACE FUNCTION zc_Object_Form()
   RETURNS integer AS
 $BODY$BEGIN
@@ -88,30 +76,6 @@ $BODY$BEGIN
   RETURN 15;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_Object_Juridical()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 16;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_Object_JuridicalGroup()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 17;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_Object_GoodsProperty()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 18;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_Object_Partner()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 19;
-END;  $BODY$ LANGUAGE plpgsql;
-
 CREATE OR REPLACE FUNCTION zc_Object_ContractKind()
   RETURNS integer AS
 $BODY$BEGIN
@@ -124,40 +88,16 @@ $BODY$BEGIN
   RETURN 21;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_Object_UnitGroup()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 22;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_Object_GoodsGroup()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 23;
-END;  $BODY$ LANGUAGE plpgsql;
-
 CREATE OR REPLACE FUNCTION zc_Object_Bank()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 24;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_Object_GoodsKind()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 25;
-END;  $BODY$ LANGUAGE plpgsql;
-
 CREATE OR REPLACE FUNCTION zc_Object_BankAccount()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 26;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_Object_PriceList()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 27;
 END;  $BODY$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION zc_Object_Contract()
@@ -178,86 +118,43 @@ $BODY$BEGIN
   RETURN 30;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_Object_GoodsPropertyValue()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 31;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_Object_AccountGroup()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 33;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_Object_AccountDirection()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 34;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_Object_Account()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 35;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_Object_InfoMoneyGroup()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 36;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_Object_InfoMoneyDestination()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 32;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_Object_InfoMoney()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 37;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_Object_ProfitLossGroup()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 38;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_Object_ProfitLossDirection()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 39;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_Object_ProfitLoss()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 40;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_Object_Route()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 41;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_Object_RouteSorting()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 42;
-END;  $BODY$ LANGUAGE plpgsql;
-
 CREATE OR REPLACE FUNCTION zc_Object_UserFormSettings()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 43;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_Object_PriceListItem()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 44;
-END;  $BODY$ LANGUAGE plpgsql;
+--------------------------- !!!!!!!!!!!!!!!!!!!
+--------------------------- !!! ÕŒ¬¿ﬂ —’≈Ã¿ !!!
+--------------------------- !!!!!!!!!!!!!!!!!!!
+
+CREATE OR REPLACE FUNCTION zc_Object_GoodsGroup() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_GoodsGroup'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Object_Goods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Goods'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Object_GoodsKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_GoodsKind'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Object_GoodsProperty() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_GoodsProperty'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Object_GoodsPropertyValue() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_GoodsPropertyValue'); END;$BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_Object_InfoMoneyGroup() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_InfoMoneyGroup'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Object_InfoMoneyDestination() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_InfoMoneyDestination'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Object_InfoMoney() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_InfoMoney'); END;$BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_Object_AccountGroup() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_AccountGroup'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Object_AccountDirection() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_AccountDirection'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Object_Account() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Account'); END;$BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_Object_ProfitLossGroup() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ProfitLossGroup'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Object_ProfitLossDirection() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ProfitLossDirection'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Object_ProfitLoss() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ProfitLoss'); END;$BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_Object_JuridicalGroup() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_JuridicalGroup'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Object_Juridical() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Juridical'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Object_Partner() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Partner'); END;$BODY$ LANGUAGE plpgsql;
+-- CREATE OR REPLACE FUNCTION zc_Object_UnitGroup() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_UnitGroup'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Object_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Unit'); END;$BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_Object_Route() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Route'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Object_RouteSorting() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_RouteSorting'); END;$BODY$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION zc_Object_PriceList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_PriceList'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Object_PriceListItem() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_PriceListItem'); END;$BODY$ LANGUAGE plpgsql;
+
