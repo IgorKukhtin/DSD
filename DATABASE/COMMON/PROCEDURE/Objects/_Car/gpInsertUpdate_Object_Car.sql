@@ -3,7 +3,7 @@
 -- DROP FUNCTION gpInsertUpdate_Object_Car();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Car(
- INOUT ioId	                      Integer   ,    -- ключ объекта <Автомобиль> 
+ INOUT ioId                       Integer   ,    -- ключ объекта <Автомобиль> 
     IN inCode                     Integer   ,    -- Код объекта <Автомобиль>
     IN inName                     TVarChar  ,    -- Название объекта <Автомобиль>
     IN inRegistrationCertificate  TVarChar  ,    -- Техпаспорт объекта <Автомобиль>
