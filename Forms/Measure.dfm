@@ -18,18 +18,18 @@ inherited MeasureForm: TMeasureForm
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
-      DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
-      OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsCustomize.ColumnHiding = True
+      OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
+      OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -38,20 +38,21 @@ inherited MeasureForm: TMeasureForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
+        Width = 55
       end
       object clName: TcxGridDBColumn
         Caption = #1045#1076#1080#1085#1080#1094#1072' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taRightJustify
-        HeaderGlyphAlignmentVert = vaTop
-        Width = 252
+        Width = 243
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
+        PropertiesClassName = 'TcxCheckBoxProperties'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 78
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -60,14 +61,14 @@ inherited MeasureForm: TMeasureForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 96
-    Top = 96
+    Left = 32
+    Top = 72
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 96
-    Top = 144
+    Left = 40
+    Top = 88
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -76,6 +77,7 @@ inherited MeasureForm: TMeasureForm
         Properties.Strings = (
           'SortIndex'
           'SortOrder'
+          'Visible'
           'Width')
       end
       item
@@ -83,6 +85,7 @@ inherited MeasureForm: TMeasureForm
         Properties.Strings = (
           'SortIndex'
           'SortOrder'
+          'Visible'
           'Width')
       end
       item
@@ -90,6 +93,7 @@ inherited MeasureForm: TMeasureForm
         Properties.Strings = (
           'SortIndex'
           'SortOrder'
+          'Visible'
           'Width')
       end
       item
@@ -102,8 +106,8 @@ inherited MeasureForm: TMeasureForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 232
-    Top = 96
+    Left = 328
+    Top = 48
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -121,8 +125,8 @@ inherited MeasureForm: TMeasureForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 152
-    Top = 88
+    Left = 264
+    Top = 48
     DockControlHeights = (
       0
       0
@@ -168,6 +172,15 @@ inherited MeasureForm: TMeasureForm
         item
           Visible = True
           ItemName = 'bbToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbChoice'
         end>
       OneOnRow = True
       Row = 0
@@ -205,11 +218,15 @@ inherited MeasureForm: TMeasureForm
       Hint = '       '
       Visible = ivAlways
     end
+    object bbChoice: TdxBarButton
+      Action = dsdChoiceGuides
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 232
-    Top = 144
+    Left = 296
+    Top = 48
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -236,7 +253,7 @@ inherited MeasureForm: TMeasureForm
           ParamType = ptOutput
           Value = '0'
         end>
-      isShowModal = True
+      isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
@@ -255,7 +272,7 @@ inherited MeasureForm: TMeasureForm
           DataType = ftInteger
           ParamType = ptInput
         end>
-      isShowModal = True
+      isShowModal = False
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
@@ -295,6 +312,28 @@ inherited MeasureForm: TMeasureForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object dsdChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      Params = <
+        item
+          Name = 'Key'
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end
+        item
+          Name = 'TextValue'
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ShortCut = 13
+      ImageIndex = 7
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Measure'
@@ -304,13 +343,13 @@ inherited MeasureForm: TMeasureForm
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 152
-    Top = 152
+    Left = 56
+    Top = 104
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     View = cxGridDBTableView
-    Left = 208
-    Top = 200
+    Left = 328
+    Top = 264
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -324,7 +363,7 @@ inherited MeasureForm: TMeasureForm
         DataType = ftInteger
         ParamType = ptInput
       end>
-    Left = 80
-    Top = 232
+    Left = 72
+    Top = 120
   end
 end

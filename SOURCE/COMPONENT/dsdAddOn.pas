@@ -36,7 +36,9 @@ type
     procedure lpSetEdFilterPos(inKey: Char);
     //процедура устанавливает фильтр и убирает видимость у контрола
     procedure lpSetFilter;
-    // При изменении сортировки
+    // сотируем при нажатых Ctrl, Shift или Alt
+    procedure OnColumnHeaderClick(Sender: TcxGridTableView; AColumn: TcxGridColumn);
+    // рисуем свои иконки
     procedure OnCustomDrawColumnHeader(Sender: TcxGridTableView;
      ACanvas: TcxCanvas; AViewInfo: TcxGridColumnHeaderViewInfo;
      var ADone: Boolean);
@@ -55,7 +57,7 @@ type
 implementation
 
 uses Windows, SysUtils, VCL.Controls, cxFilter, cxClasses, cxLookAndFeelPainters,
-     cxCustomData, VCL.Graphics, cxGridCommon, math;
+     cxCustomData, VCL.Graphics, cxGridCommon, math, UtilConst;
 
 type
 
@@ -105,6 +107,14 @@ begin
   edFilter.OnExit := edFilterExit;
   FBackGroundStyle := TcxStyle.Create(nil);
   FBackGroundStyle.Color := $00E4E4E4;
+end;
+
+procedure TdsdDBViewAddOn.OnColumnHeaderClick(Sender: TcxGridTableView;
+  AColumn: TcxGridColumn);
+begin
+  // сотируем при нажатых Ctrl, Shift или Alt
+  if not (ShiftDown or CtrlDown or AltDown) then
+     Abort;
 end;
 
 procedure TdsdDBViewAddOn.OnCustomDrawColumnHeader(
@@ -252,6 +262,7 @@ begin
   FView.OnKeyPress := OnKeyPress;
   FView.OnCustomDrawColumnHeader := OnCustomDrawColumnHeader;
   FView.DataController.Filter.OnChanged := onFilterChanged;
+  FView.OnColumnHeaderClick := OnColumnHeaderClick;
 end;
 
 end.

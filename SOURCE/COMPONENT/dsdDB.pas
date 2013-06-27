@@ -486,7 +486,7 @@ begin
           ParamByName(FComponentItem).Value := FValue
         end;
      if Component is TcxCurrencyEdit then
-        (Component as TcxCurrencyEdit).Value := StrToFloat(FValue);
+        (Component as TcxCurrencyEdit).Value := gfStrToFloat(FValue);
      if Component is TcxCheckBox then
         (Component as TcxCheckBox).Checked := StrToBool(FValue);
      if Component is TcxDateEdit then

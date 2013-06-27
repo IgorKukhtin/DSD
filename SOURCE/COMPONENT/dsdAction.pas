@@ -2,8 +2,8 @@ unit dsdAction;
 
 interface
 
-uses VCL.ActnList, Forms, Classes, dsdDB, ParentForm, DB, DBClient, UtilConst,
-     cxGrid;
+uses VCL.ActnList, Forms, Classes, ParentForm, dsdDB, DB, DBClient, UtilConst,
+     cxGrid, dsdGuides;
 
 type
   TDataSetAcionType = (acInsert, acUpdate);
@@ -70,6 +70,14 @@ type
   TdsdDataSetRefresh = class(TdsdCustomDataSetAction)
   public
     constructor Create(AOwner: TComponent); override;
+  end;
+
+  TdsdInsertUpdateGuides = class (TdsdCustomDataSetAction)
+  private
+    FInsertUpdateAction: TCustomAction;
+  public
+    function Execute: boolean; override;
+    property InsertUpdateAction: TCustomAction read FInsertUpdateAction write FInsertUpdateAction;
   end;
 
   TdsdExecStoredProc = class(TdsdCustomDataSetAction)
@@ -149,7 +157,7 @@ type
 
   // Данный класс дополняет поведение класса TdsdOpenForm по работе со справочниками
   // К сожалению наследование самое удобное пока
-  TdsdInsertUpdateAction = class (TdsdOpenForm, IDataSetAction)
+  TdsdInsertUpdateAction = class (TdsdOpenForm, IDataSetAction, IFormAction)
   private
     FActionDataLink: TDataSetDataLink;
     FdsdDataSetRefresh: TdsdDataSetRefresh;
@@ -159,7 +167,6 @@ type
     function GetDataSource: TDataSource;
     procedure SetDataSource(const Value: TDataSource);
   protected
-    procedure BeforeExecute(Form: TParentForm); override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure DataSetChanged;
     procedure UpdateData; virtual;
@@ -184,18 +191,20 @@ type
   TdsdChoiceGuides = class(TCustomAction)
   private
     FParams: TdsdParams;
-    FFormParams: TdsdFormParams;
+    FGuides: TdsdGuides;
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
     function Execute: boolean; override;
     constructor Create(AOwner: TComponent); override;
+    property Guides: TdsdGuides read FGuides write FGuides;
   published
     property Params: TdsdParams read FParams write FParams;
-    property FormParams: TdsdFormParams read FFormParams write FFormParams;
     property Caption;
     property Hint;
     property ShortCut;
+    property ImageIndex;
+    property SecondaryShortCuts;
   end;
 
   TdsdGridToExcel = class (TCustomAction)
@@ -245,6 +254,7 @@ begin
   RegisterActions('DSDLib', [TdsdFormClose],      TdsdFormClose);
   RegisterActions('DSDLib', [TdsdGridToExcel],    TdsdGridToExcel);
   RegisterActions('DSDLib', [TdsdInsertUpdateAction], TdsdInsertUpdateAction);
+  RegisterActions('DSDLib', [TdsdInsertUpdateGuides], TdsdInsertUpdateGuides);
   RegisterActions('DSDLib', [TdsdOpenForm],       TdsdOpenForm);
   RegisterActions('DSDLib', [TdsdPrintAction],    TdsdPrintAction);
   RegisterActions('DSDLib', [TdsdUpdateErased], TdsdUpdateErased);
@@ -354,11 +364,6 @@ end;
 
 { TdsdInsertUpdateAction }
 
-procedure TdsdInsertUpdateAction.BeforeExecute;
-begin
-  FForm := Form;
-end;
-
 constructor TdsdInsertUpdateAction.Create(AOwner: TComponent);
 begin
   inherited;
@@ -395,8 +400,8 @@ begin
   DataSetRefresh.Execute;
   if Assigned(DataSource) then
      if Assigned(DataSource.DataSet) then
-        if Assigned(FForm.Params) then
-           DataSource.DataSet.Locate('Id', FForm.Params.ParamByName('Id').Value, []);
+        if Assigned(Params) then
+           DataSource.DataSet.Locate('Id', Params.ParamByName('Id').Value, []);
 end;
 
 procedure TdsdInsertUpdateAction.SetDataSource(const Value: TDataSource);
@@ -529,15 +534,16 @@ end;
 
 function TdsdChoiceGuides.Execute: boolean;
 begin
-  TForm(Owner).ModalResult := mrOk;
+  Guides.AfterChoice(FParams.ParamByName('Key').AsString, FParams.ParamByName('TextValue').AsString);
+  TForm(Owner).Close;
 end;
 
 procedure TdsdChoiceGuides.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited Notification(AComponent, Operation);
-  if (Operation = opRemove) and (AComponent = FormParams) then
-     FormParams := nil;
+ // if (Operation = opRemove) and (AComponent = FormParams) then
+   //  FormParams := nil;
 end;
 
 { TdsdChangeMovementStatus }
@@ -643,6 +649,14 @@ begin
        ShowReport;
     end;
   end;
+end;
+
+{ TdsdInsertUpdateGuides }
+
+function TdsdInsertUpdateGuides.Execute: boolean;
+begin
+  inherited;
+  TForm(Owner).Close;
 end;
 
 end.

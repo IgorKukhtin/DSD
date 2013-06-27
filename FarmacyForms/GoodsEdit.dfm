@@ -34,7 +34,6 @@
     Height = 25
     Action = dsdFormClose1
     Cancel = True
-    Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 8
     TabOrder = 11
   end
@@ -46,6 +45,8 @@
   object ceCode: TcxCurrencyEdit
     Left = 38
     Top = 55
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 1
@@ -93,8 +94,10 @@
   object cePrice: TcxCurrencyEdit
     Left = 130
     Top = 186
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
     TabOrder = 8
     Width = 65
   end
@@ -117,6 +120,8 @@
   object ceNDS: TcxCurrencyEdit
     Left = 38
     Top = 82
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 3
@@ -130,8 +135,10 @@
   object cePercentReprice: TcxCurrencyEdit
     Left = 266
     Top = 186
-    Properties.DecimalPlaces = 4
-    Properties.DisplayFormat = ',0.####'
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
     TabOrder = 9
     Width = 80
   end
@@ -143,6 +150,8 @@
   object cePartyCount: TcxCurrencyEdit
     Left = 130
     Top = 117
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
@@ -215,13 +224,6 @@
         Value = ''
       end
       item
-        Name = 'inGoodsGroupId'
-        Component = dsdExtraChargeCategoriesGuides
-        DataType = ftInteger
-        ParamType = ptInput
-        Value = '0'
-      end
-      item
         Name = 'inMeasureId'
         Component = dsdMeasureGuides
         DataType = ftInteger
@@ -229,8 +231,50 @@
         Value = '0'
       end
       item
-        Name = 'inWeight'
+        Name = 'inExtraChargeCategoriesId'
+        Component = dsdExtraChargeCategoriesGuides
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = '0'
+      end
+      item
+        Name = 'inNDS'
+        Component = ceNDS
+        DataType = ftFloat
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'inCashName'
+        Component = edCashName
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'inPartyCount'
+        Component = cePartyCount
+        DataType = ftFloat
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'inisReceiptNeed'
+        Component = cbisReceiptNeed
+        DataType = ftBoolean
+        ParamType = ptInput
+        Value = 'False'
+      end
+      item
+        Name = 'inPrice'
         Component = cePrice
+        DataType = ftFloat
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'inPercentReprice'
+        Component = cePercentReprice
         DataType = ftFloat
         ParamType = ptInput
         Value = ''
@@ -279,7 +323,7 @@
       item
         Name = 'ExtraChargeCategoriesId'
         Component = dsdExtraChargeCategoriesGuides
-        ComponentItem = 'Id'
+        ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
         Value = '0'
@@ -287,7 +331,7 @@
       item
         Name = 'ExtraChargeCategoriesName'
         Component = dsdExtraChargeCategoriesGuides
-        ComponentItem = 'Name'
+        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptOutput
         Value = '0'
@@ -295,7 +339,7 @@
       item
         Name = 'MeasureId'
         Component = dsdMeasureGuides
-        ComponentItem = 'Id'
+        ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
         Value = '0'
@@ -303,7 +347,7 @@
       item
         Name = 'MeasureName'
         Component = dsdMeasureGuides
-        ComponentItem = 'Name'
+        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptOutput
         Value = '0'
@@ -323,18 +367,29 @@
         Value = ''
       end
       item
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
-      end
-      item
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
-      end
-      item
         Name = 'Price'
         Component = cePrice
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'PercentReprice'
+        Component = cePercentReprice
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'isReceiptNeed'
+        Component = cbisReceiptNeed
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = 'False'
+      end
+      item
+        Name = 'CashName'
+        Component = edCashName
         DataType = ftInteger
         ParamType = ptOutput
         Value = ''
@@ -365,6 +420,8 @@
   object dsdExtraChargeCategoriesGuides: TdsdGuides
     Key = '0'
     LookupControl = ceExtraChargeCategories
+    FormName = 'TExtraChargeCategories'
+    PositionDataSet = 'ClientDataSet'
     Left = 65528
     Top = 152
   end
@@ -393,6 +450,8 @@
   object dsdMeasureGuides: TdsdGuides
     Key = '0'
     LookupControl = ceMeasure
+    FormName = 'TMeasureForm'
+    PositionDataSet = 'ClientDataSet'
     Left = 288
     Top = 112
   end

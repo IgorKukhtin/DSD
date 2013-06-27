@@ -1,6 +1,6 @@
 ﻿-- Function: gpGet_Object_Goods()
 
---DROP FUNCTION gpGet_Object_Goods();
+--DROP FUNCTION gpGet_Object_Goods(Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Goods(
     IN inId          Integer,       -- Товар 
@@ -77,7 +77,7 @@ LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PercentReprice
 LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_isReceiptNeed
        ON ObjectBoolean_Goods_isReceiptNeed.ObjectId = Object.Id
       AND ObjectBoolean_Goods_isReceiptNeed.DescId = zc_ObjectBoolean_Goods_isReceiptNeed()
-LEFT JOIN ObjectBoolean AS ObjectString_Goods_CashName
+LEFT JOIN ObjectString AS ObjectString_Goods_CashName
        ON ObjectString_Goods_CashName.ObjectId = Object.Id
       AND ObjectString_Goods_CashName.DescId = zc_ObjectString_Goods_CashName()
     WHERE Object.Id = inId;

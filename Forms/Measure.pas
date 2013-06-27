@@ -9,14 +9,13 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, cxGridLevel, cxClasses,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, Datasnap.DBClient, cxPropertiesStore, dxBar,
-  Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dsdAddOn, dxBarExtItems;
+  Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dsdAddOn, dxBarExtItems,
+  cxGridBandedTableView, cxGridDBBandedTableView, cxCheckBox;
 
 type
   TMeasureForm = class(TParentForm)
-    cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
-    clName: TcxGridDBColumn;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -30,7 +29,6 @@ type
     dsdStoredProc: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    clErased: TcxGridDBColumn;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     bbSetErased: TdxBarButton;
@@ -40,7 +38,12 @@ type
     bbToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     spErasedUnErased: TdsdStoredProc;
+    dsdChoiceGuides: TdsdChoiceGuides;
+    bbChoice: TdxBarButton;
+    cxGridDBTableView: TcxGridDBTableView;
     clCode: TcxGridDBColumn;
+    clName: TcxGridDBColumn;
+    clErased: TcxGridDBColumn;
   private
     { Private declarations }
   public

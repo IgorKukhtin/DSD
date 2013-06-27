@@ -2,7 +2,7 @@ unit zLibUtil;
 
 interface
 
-uses ZConnection;
+uses ZConnection, ZDataset;
 
 type
 
@@ -10,10 +10,23 @@ type
     class function GetConnection: TZConnection;
   end;
 
+  procedure ExecFile(FileName: string; Query: TZQuery);
+
 implementation
 
 uses StrUtils, Classes, SysUtils, UtilConst;
 { TConnectionFactory }
+
+procedure ExecFile(FileName: string; Query: TZQuery);
+begin
+  Query.SQL.LoadFromFile(FileName);
+  try
+    Query.ExecSQL;
+  except
+    on E: Exception do
+       raise Exception.Create(FileName + #10#13 + E.Message);
+  end;
+end;
 
 class function TConnectionFactory.GetConnection: TZConnection;
 var

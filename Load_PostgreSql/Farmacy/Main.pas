@@ -63,6 +63,7 @@ type
     procedure myDisabledCB(cb: TCheckBox);
     function GetStringValue(aSQL: string): string;
     procedure pLoadGuide_Goods;
+    procedure pLoadUnit;
   public
     { Public declarations }
   end;
@@ -280,6 +281,65 @@ begin
      myDisabledCB(cbMeasure);
 end;
 
+procedure TMainForm.pLoadUnit;
+begin
+     if (not cbUnit.Checked)or(not cbUnit.Enabled) then exit;
+     //
+     myEnabledCB(cbUnit);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Unit.Id as ObjectId');
+        Add('     , 0 as ObjectCode');
+        Add('     , Unit.UnitName as ObjectName');
+        Add('     , Unit.Id_Postgres as Id_Postgres');
+        Add('     , Unit_parent.Id_Postgres as ParentId_Postgres');
+        Add('from dba.Unit');
+        Add('     left outer join dba.Unit as Unit_parent on Unit_parent.Id = Unit.ParentId');
+        Add('order by ObjectId');
+
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_unit';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inParentId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.Unit set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        //EnableControls;
+     end;
+     //
+     myDisabledCB(cbUnit);
+end;
 
 procedure TMainForm.OKGuideButtonClick(Sender: TObject);
 begin
@@ -299,6 +359,7 @@ begin
   if not fStop then pLoadGuide_Measure;
   if not fStop then pLoadGuide_ExtraChargeCategories;
   if not fStop then pLoadGuide_Goods;
+  if not fStop then pLoadUnit;
 (*  if not fStop then pLoadGuide_GoodsGroup;
   //if not fStop then pLoadGuide_Goods_toZConnection;
   if not fStop then pLoadGuide_GoodsKind;
@@ -308,7 +369,6 @@ begin
   if not fStop then pLoadJuridical;
   if not fStop then pLoadPartner;
   if not fStop then pLoadUnitGroup;
-  if not fStop then pLoadUnit;
   if not fStop then pLoadPriceList;
   if not fStop then pLoadGoodsProperty;
   if not fStop then pLoadGoodsPropertyValue;
@@ -363,6 +423,8 @@ begin
      fExecSqFromQuery('ALTER TABLE ExtraChargeCategories ADD id_Postgres integer');
   if GetStringValue('select COL_LENGTH( ''GoodsProperty'', ''id_Postgres'')') = '' then
      fExecSqFromQuery('ALTER TABLE GoodsProperty ADD id_Postgres integer');
+  if GetStringValue('select COL_LENGTH( ''Unit'', ''id_Postgres'')') = '' then
+     fExecSqFromQuery('ALTER TABLE Unit ADD id_Postgres integer');
 
 
 //  fExecSqFromQuery('update dba.Goods set Id_Postgres = null');
@@ -370,6 +432,7 @@ begin
   fExecSqFromQuery('update dba.Measure set Id_Postgres = null');
   fExecSqFromQuery('update dba.ExtraChargeCategories set Id_Postgres = null');
   fExecSqFromQuery('update dba.GoodsProperty set Id_Postgres = null');
+  fExecSqFromQuery('update dba.Unit set Id_Postgres = null');
 (*  fExecSqFromQuery('update dba.MoneyKind set Id_Postgres = null');
   fExecSqFromQuery('update dba.ContractKind set Id_Postgres = null');
   fExecSqFromQuery('update dba.Unit set Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = null');

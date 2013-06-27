@@ -39,14 +39,10 @@ const
 
 procedure TdbCreateStructureTest.CreateContainer;
 begin
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Container\ContainerDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Container\Container.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Container\ContainerLinkObjectDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Container\ContainerLinkObject.sql');
-  ZQuery.ExecSQL;
+  ExecFile(StructurePath + 'Container\ContainerDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'Container\Container.sql', ZQuery);
+  ExecFile(StructurePath + 'Container\ContainerLinkObjectDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'Container\ContainerLinkObject.sql', ZQuery);
 end;
 
 procedure TdbCreateStructureTest.CreateDataBase;
@@ -56,147 +52,92 @@ begin
   ZConnection.Connected := true;
   try
     // ≈сли база существует, то сначала надо ее удалить
-    ZQuery.SQL.LoadFromFile(CreateStructurePath + 'KIllSession.sql');
-    ZQuery.ExecSQL;
-    ZQuery.SQL.LoadFromFile(CreateStructurePath + 'DropDataBase.sql');
-    ZQuery.ExecSQL;
+    ExecFile(CreateStructurePath + 'KIllSession.sql', ZQuery);
+    ExecFile(CreateStructurePath + 'DropDataBase.sql', ZQuery);
   except
 
   end;
-  ZQuery.SQL.LoadFromFile(CreateStructurePath + 'CreateDataBase.sql');
-  ZQuery.ExecSQL;
+  ExecFile(CreateStructurePath + 'CreateDataBase.sql', ZQuery);
 end;
 
 procedure TdbCreateStructureTest.CreateHistory;
 begin
-  ZQuery.SQL.LoadFromFile(StructurePath + 'ObjectHistory\ObjectHistoryDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'ObjectHistory\ObjectHistory.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'ObjectHistory\ObjectHistoryStringDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'ObjectHistory\ObjectHistoryString.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'ObjectHistory\ObjectHistoryFloatDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'ObjectHistory\ObjectHistoryFloat.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'ObjectHistory\ObjectHistoryDateDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'ObjectHistory\ObjectHistoryDate.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'ObjectHistory\ObjectHistoryLinkDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'ObjectHistory\ObjectHistoryLink.sql');
-  ZQuery.ExecSQL;
+  ExecFile(StructurePath + 'ObjectHistory\ObjectHistoryDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'ObjectHistory\ObjectHistory.sql', ZQuery);
+  ExecFile(StructurePath + 'ObjectHistory\ObjectHistoryStringDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'ObjectHistory\ObjectHistoryString.sql', ZQuery);
+  ExecFile(StructurePath + 'ObjectHistory\ObjectHistoryFloatDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'ObjectHistory\ObjectHistoryFloat.sql', ZQuery);
+  ExecFile(StructurePath + 'ObjectHistory\ObjectHistoryDateDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'ObjectHistory\ObjectHistoryDate.sql', ZQuery);
+  ExecFile(StructurePath + 'ObjectHistory\ObjectHistoryLinkDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'ObjectHistory\ObjectHistoryLink.sql', ZQuery);
 end;
 
 procedure TdbCreateStructureTest.CreateMovement;
 begin
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Movement\MovementDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Movement\Movement.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Movement\MovementLinkObjectDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Movement\MovementLinkObject.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Movement\MovementFloatDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Movement\MovementFloat.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Movement\MovementBooleanDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Movement\MovementBoolean.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Movement\MovementDateDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Movement\MovementDate.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Movement\MovementStringDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Movement\MovementString.sql');
-  ZQuery.ExecSQL;
+  ExecFile(StructurePath + 'Movement\MovementDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'Movement\Movement.sql', ZQuery);
+  ExecFile(StructurePath + 'Movement\MovementLinkObjectDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'Movement\MovementLinkObject.sql', ZQuery);
+  ExecFile(StructurePath + 'Movement\MovementFloatDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'Movement\MovementFloat.sql', ZQuery);
+  ExecFile(StructurePath + 'Movement\MovementBooleanDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'Movement\MovementBoolean.sql', ZQuery);
+  ExecFile(StructurePath + 'Movement\MovementDateDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'Movement\MovementDate.sql', ZQuery);
+  ExecFile(StructurePath + 'Movement\MovementStringDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'Movement\MovementString.sql', ZQuery);
 end;
 
 procedure TdbCreateStructureTest.CreateMovementItem;
 begin
-  ZQuery.SQL.LoadFromFile(StructurePath + 'MovementItem\MovementItemDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'MovementItem\MovementItem.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'MovementItem\MovementItemLinkObjectDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'MovementItem\MovementItemLinkObject.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'MovementItem\MovementItemFloatDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'MovementItem\MovementItemFloat.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'MovementItem\MovementItemBooleanDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'MovementItem\MovementItemBoolean.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'MovementItem\MovementItemDateDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'MovementItem\MovementItemDate.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'MovementItem\MovementItemStringDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'MovementItem\MovementItemString.sql');
-  ZQuery.ExecSQL;
+  ExecFile(StructurePath + 'MovementItem\MovementItemDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'MovementItem\MovementItem.sql', ZQuery);
+  ExecFile(StructurePath + 'MovementItem\MovementItemLinkObjectDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'MovementItem\MovementItemLinkObject.sql', ZQuery);
+  ExecFile(StructurePath + 'MovementItem\MovementItemFloatDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'MovementItem\MovementItemFloat.sql', ZQuery);
+  ExecFile(StructurePath + 'MovementItem\MovementItemBooleanDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'MovementItem\MovementItemBoolean.sql', ZQuery);
+  ExecFile(StructurePath + 'MovementItem\MovementItemDateDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'MovementItem\MovementItemDate.sql', ZQuery);
+  ExecFile(StructurePath + 'MovementItem\MovementItemStringDesc.sql',ZQuery);
+  ExecFile(StructurePath + 'MovementItem\MovementItemString.sql', ZQuery);
 end;
 
 procedure TdbCreateStructureTest.CreateMovementItemContainer;
 begin
-  ZQuery.SQL.LoadFromFile(StructurePath + 'MovementItemContainer\MovementItemContainerDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'MovementItemContainer\MovementItemContainer.sql');
-  ZQuery.ExecSQL;
+  ExecFile(StructurePath + 'MovementItemContainer\MovementItemContainerDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'MovementItemContainer\MovementItemContainer.sql', ZQuery);
 end;
 
 procedure TdbCreateStructureTest.CreateObject;
 begin
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Object\Object.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectStringDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectString.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectFloatDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectFloat.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectDateDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectDate.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectBLOBDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectBLOB.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectBooleanDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectBoolean.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectLinkDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Object\ObjectLink.sql');
-  ZQuery.ExecSQL;
+  ExecFile(StructurePath + 'Object\ObjectDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'Object\Object.sql', ZQuery);
+  ExecFile(StructurePath + 'Object\ObjectStringDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'Object\ObjectString.sql', ZQuery);
+  ExecFile(StructurePath + 'Object\ObjectFloatDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'Object\ObjectFloat.sql', ZQuery);
+  ExecFile(StructurePath + 'Object\ObjectDateDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'Object\ObjectDate.sql', ZQuery);
+  ExecFile(StructurePath + 'Object\ObjectBLOBDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'Object\ObjectBLOB.sql', ZQuery);
+  ExecFile(StructurePath + 'Object\ObjectBooleanDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'Object\ObjectBoolean.sql', ZQuery);
+  ExecFile(StructurePath + 'Object\ObjectLinkDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'Object\ObjectLink.sql', ZQuery);
 end;
 
 procedure TdbCreateStructureTest.CreateProtocol;
 begin
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Protocol\ObjectProtocol.sql');
-  ZQuery.ExecSQL;
+  ExecFile(StructurePath + 'Protocol\ObjectProtocol.sql', ZQuery);
 end;
 
 procedure TdbCreateStructureTest.CreateType;
 begin
-  ZQuery.SQL.LoadFromFile(StructurePath + 'Type\CreateType.sql');
-  ZQuery.ExecSQL;
+  ExecFile(StructurePath + 'Type\CreateType.sql', ZQuery);
 end;
 
 procedure TdbCreateStructureTest.SetUp;

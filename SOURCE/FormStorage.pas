@@ -26,8 +26,8 @@ type
     function Load(FormName: String): TParentForm;
     procedure SaveReport(Stream: TStream; ReportName: string);
     function LoadReport(ReportName: String): TStream;
-    procedure SaveUserFormSettings(FormName: String; Stream: TStream);
-    function LoadUserFormSettings(FormName: String): TStream;
+    procedure SaveUserFormSettings(FormName: String; Data: String);
+    function LoadUserFormSettings(FormName: String): String;
     class function NewInstance: TObject; override;
     destructor Destroy;
   end;
@@ -48,10 +48,10 @@ var i: integer;
 begin
   result := '';
   for I := 1 to Length(S) do
-    if s[i] < #31 then
+    if (s[i] < #31) then
       result := result + '&amp;#' + FormatFloat('00', byte(s[i])) + ';'
     else
-      result := result + s[i];
+      result := result + gfStrToXmlStr(s[i]);
 end;
 
 function XMLToAnsi(S: String): String;
@@ -158,10 +158,10 @@ begin
   result := StringStream
 end;
 
-function TdsdFormStorage.LoadUserFormSettings(FormName: String): TStream;
+function TdsdFormStorage.LoadUserFormSettings(FormName: String): String;
 begin
   LoadUserFormSettingsStoredProc.ParamByName('inFormName').Value := FormName;
-  Result := TStringStream.Create(XMLToAnsi(LoadUserFormSettingsStoredProc.Execute));
+  Result := LoadUserFormSettingsStoredProc.Execute;
 end;
 
 function TdsdFormStorage.StringToXML(S: String): String;
@@ -200,11 +200,10 @@ begin
   SaveStoredProc.Execute;
 end;
 
-procedure TdsdFormStorage.SaveUserFormSettings(FormName: String; Stream: TStream);
+procedure TdsdFormStorage.SaveUserFormSettings(FormName: String; Data: String);
 begin
-  StringStream.LoadFromStream(Stream);
   SaveUserFormSettingsStoredProc.ParamByName('inFormName').Value := FormName;
-  SaveUserFormSettingsStoredProc.ParamByName('inUserFormSettingsData').Value := ANSIToXML(StringStream.DataString);
+  SaveUserFormSettingsStoredProc.ParamByName('inUserFormSettingsData').Value := ANSIToXML(Data);
   SaveUserFormSettingsStoredProc.Execute;
 end;
 

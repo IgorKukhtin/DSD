@@ -22,9 +22,8 @@ inherited MeasureEditForm: TMeasureEditForm
     Top = 100
     Width = 75
     Height = 25
-    Action = dsdExecStoredProc
+    Action = dsdInsertUpdateGuides
     Default = True
-    ModalResult = 1
     TabOrder = 2
   end
   object cxButton2: TcxButton
@@ -35,7 +34,6 @@ inherited MeasureEditForm: TMeasureEditForm
     Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
-    ModalResult = 8
     TabOrder = 3
   end
   object cxLabel2: TcxLabel
@@ -65,7 +63,7 @@ inherited MeasureEditForm: TMeasureEditForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
     end
-    object dsdExecStoredProc: TdsdExecStoredProc
+    object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       StoredProc = spInsertUpdate
       StoredProcList = <

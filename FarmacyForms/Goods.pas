@@ -12,7 +12,7 @@ uses
   Vcl.ActnList, dsdAction, DataModul, cxTL, cxTLdxBarBuiltInMenu,
   cxInplaceContainer, cxTLData, cxDBTL, cxMaskEdit, ParentForm, dsdAddOn,
   cxCheckBox, cxCurrencyEdit, ZAbstractRODataset, ZAbstractDataset, ZDataset,
-  ZAbstractConnection, ZConnection;
+  ZAbstractConnection, ZConnection, dxBarExtItems;
 
 type
   TGoodsForm = class(TParentForm)
@@ -47,6 +47,10 @@ type
     clExtraChargeCategoriesName: TcxGridDBColumn;
     clPrice: TcxGridDBColumn;
     clisErased: TcxGridDBColumn;
+    spErasedUnErased: TdsdStoredProc;
+    dxBarStatic1: TdxBarStatic;
+    dsdGridToExcel: TdsdGridToExcel;
+    bbGridToExcel: TdxBarButton;
   private
     { Private declarations }
   public

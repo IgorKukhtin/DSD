@@ -46,7 +46,7 @@ uses DB;
    function gfStringToDataType(inType: String): TFieldType;  //tested
 
 implementation
-uses SysUtils, UtilConst, variants;
+uses SysUtils, UtilConst, variants, StrUtils;
 {-----------------------------------------------------------------------------------------------}
 const
   cMainDecimalSeparator = '.';
@@ -92,7 +92,7 @@ const cProcName = 'gfStrToFloat';
 Begin
   result:=0;
   try
-    //result:=StrToFloat(ReplaceStr(Trim(inStr),cMainDecimalSeparator,DecimalSeparator));
+    result:=StrToFloat(ReplaceStr(ReplaceStr(inStr, '.', DecimalSeparator), ',', DecimalSeparator));
   except
     on E: Exception do
       // gpRaiseError(gc_ecConvertStrToFloat,[inStr], cProcName,E.Message);

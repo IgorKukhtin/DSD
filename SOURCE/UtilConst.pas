@@ -18,6 +18,8 @@ var
   gc_DateEnd: TDateTime;
 
   function ShiftDown : Boolean;
+  function CtrlDown : Boolean;
+  function AltDown : Boolean;
 
 const
 
@@ -392,6 +394,22 @@ uses Windows;
  begin
     GetKeyboardState(State) ;
     Result := ((State[vk_Shift] and 128) <> 0) ;
+ end;
+
+ function AltDown : Boolean;
+ var
+    State : TKeyboardState;
+ begin
+    GetKeyboardState(State) ;
+    Result := ((State[vk_Menu] and 128) <> 0) ;
+ end;
+
+ function CtrlDown : Boolean;
+ var
+    State : TKeyboardState;
+ begin
+    GetKeyboardState(State) ;
+    Result := ((State[vk_Control] and 128) <> 0) ;
  end;
 
 

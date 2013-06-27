@@ -22,7 +22,7 @@ BEGIN
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lfGet_ObjectCode(integer, integer, integer) OWNER TO postgres;
+ALTER FUNCTION lfGet_ObjectCode(integer, integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

@@ -40,138 +40,94 @@ uses zLibUtil;
 
 procedure TdbMetaDataTest.InsertObjectDesc;
 begin
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertObjectDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertObjectStringDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertObjectBLOBDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertObjectFloatDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertObjectBooleanDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertObjectLinkDesc.sql');
-  ZQuery.ExecSQL;
+  ExecFile(MetadataPath + 'InsertObjectDesc.sql', ZQuery);
+  ExecFile(MetadataPath + 'InsertObjectStringDesc.sql', ZQuery);
+  ExecFile(MetadataPath + 'InsertObjectBLOBDesc.sql', ZQuery);
+  ExecFile(MetadataPath + 'InsertObjectFloatDesc.sql', ZQuery);
+  ExecFile(MetadataPath + 'InsertObjectBooleanDesc.sql', ZQuery);
+  ExecFile(MetadataPath + 'InsertObjectLinkDesc.sql', ZQuery);
 end;
 
 procedure TdbMetaDataTest.InsertObjectHistoryDesc;
 begin
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertObjectHistoryDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertObjectHistoryFloatDesc.sql');
-  ZQuery.ExecSQL;
+  ExecFile(MetadataPath + 'InsertObjectHistoryDesc.sql', ZQuery);
+  ExecFile(MetadataPath + 'InsertObjectHistoryFloatDesc.sql', ZQuery);
 end;
 
 procedure TdbMetaDataTest.InsertContainerDesc;
 begin
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertContainerDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertContainerLinkObjectDesc.sql');
-  ZQuery.ExecSQL;
+  ExecFile(MetadataPath + 'InsertContainerDesc.sql', ZQuery);
+  ExecFile(MetadataPath + 'InsertContainerLinkObjectDesc.sql', ZQuery);
 end;
 
 procedure TdbMetaDataTest.CreateContainerDescFunction;
 begin
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateContainerDescFunction.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateContainerLinkObjectDescFunction.sql');
-  ZQuery.ExecSQL;
+  ExecFile(MetadataPath + 'CreateContainerDescFunction.sql', ZQuery);
+  ExecFile(MetadataPath + 'CreateContainerLinkObjectDescFunction.sql', ZQuery);
 end;
 
 procedure TdbMetaDataTest.InsertMovementDesc;
 begin
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertMovementDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertMovementLinkObjectDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertMovementFloatDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertMovementDateDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertMovementBooleanDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertMovementStringDesc.sql');
-  ZQuery.ExecSQL;
+  ExecFile(MetadataPath + 'InsertMovementDesc.sql', ZQuery);
+  ExecFile(MetadataPath + 'InsertMovementLinkObjectDesc.sql', ZQuery);
+  ExecFile(MetadataPath + 'InsertMovementFloatDesc.sql', ZQuery);
+  ExecFile(MetadataPath + 'InsertMovementDateDesc.sql', ZQuery);
+  ExecFile(MetadataPath + 'InsertMovementBooleanDesc.sql', ZQuery);
+  ExecFile(MetadataPath + 'InsertMovementStringDesc.sql', ZQuery);
 end;
 
 procedure TdbMetaDataTest.CreateMovementDescFunction;
 begin
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateMovementDescFunction.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateMovementLinkObjectDescFunction.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateMovementFloatDescFunction.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateMovementDateDescFunction.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateMovementBooleanDescFunction.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateMovementStringDescFunction.sql');
-  ZQuery.ExecSQL;
+  ExecFile(MetadataPath + 'CreateMovementDescFunction.sql', ZQuery);
+  ExecFile(MetadataPath + 'CreateMovementLinkObjectDescFunction.sql', ZQuery);
+  ExecFile(MetadataPath + 'CreateMovementFloatDescFunction.sql', ZQuery);
+  ExecFile(MetadataPath + 'CreateMovementDateDescFunction.sql', ZQuery);
+  ExecFile(MetadataPath + 'CreateMovementBooleanDescFunction.sql', ZQuery);
+  ExecFile(MetadataPath + 'CreateMovementStringDescFunction.sql', ZQuery);
 end;
 
 procedure TdbMetaDataTest.CreateMovementItemContainerFunction;
 begin
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateMovementItemContainerDescFunction.sql');
-  ZQuery.ExecSQL;
+  ExecFile(MetadataPath + 'CreateMovementItemContainerDescFunction.sql', ZQuery);
 end;
 
 procedure TdbMetaDataTest.CreateMovementItemDescFunction;
 begin
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateMovementItemDescFunction.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateMovementItemLinkObjectDescFunction.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateMovementItemFloatDescFunction.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateMovementItemBooleanDescFunction.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateMovementItemStringDescFunction.sql');
-  ZQuery.ExecSQL;
+  ExecFile(MetadataPath + 'CreateMovementItemDescFunction.sql', ZQuery);
+  ExecFile(MetadataPath + 'CreateMovementItemLinkObjectDescFunction.sql', ZQuery);
+  ExecFile(MetadataPath + 'CreateMovementItemFloatDescFunction.sql', ZQuery);
+  ExecFile(MetadataPath + 'CreateMovementItemBooleanDescFunction.sql', ZQuery);
+  ExecFile(MetadataPath + 'CreateMovementItemStringDescFunction.sql', ZQuery);
 end;
 
 procedure TdbMetaDataTest.InsertMovementItemContainerDesc;
 begin
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertMovementItemContainerDesc.sql');
-  ZQuery.ExecSQL;
+  ExecFile(MetadataPath + 'InsertMovementItemContainerDesc.sql', ZQuery);
 end;
 
 procedure TdbMetaDataTest.InsertMovementItemDesc;
 begin
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertMovementItemDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertMovementItemLinkObjectDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertMovementItemFloatDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertMovementItemBooleanDesc.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'InsertMovementItemStringDesc.sql');
-  ZQuery.ExecSQL;
+  ExecFile(MetadataPath + 'InsertMovementItemDesc.sql', ZQuery);
+  ExecFile(MetadataPath + 'InsertMovementItemLinkObjectDesc.sql', ZQuery);
+  ExecFile(MetadataPath + 'InsertMovementItemFloatDesc.sql', ZQuery);
+  ExecFile(MetadataPath + 'InsertMovementItemBooleanDesc.sql', ZQuery);
+  ExecFile(MetadataPath + 'InsertMovementItemStringDesc.sql', ZQuery);
 end;
 
 procedure TdbMetaDataTest.CreateObjectDescFunction;
 begin
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateObjectDescFunction.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateObjectStringDescFunction.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateObjectLinkDescFunction.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateObjectBLOBDescFunction.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateObjectFloatDescFunction.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateObjectBooleanDescFunction.sql');
-  ZQuery.ExecSQL;
+  ExecFile(MetadataPath + 'CreateObjectDescFunction.sql', ZQuery);
+  ExecFile(MetadataPath + 'CreateObjectStringDescFunction.sql', ZQuery);
+  ExecFile(MetadataPath + 'CreateObjectLinkDescFunction.sql', ZQuery);
+  ExecFile(MetadataPath + 'CreateObjectBLOBDescFunction.sql', ZQuery);
+  ExecFile(MetadataPath + 'CreateObjectFloatDescFunction.sql', ZQuery);
+  ExecFile(MetadataPath + 'CreateObjectBooleanDescFunction.sql', ZQuery);
 end;
 
 procedure TdbMetaDataTest.CreateObjectHistoryDescFunction;
 begin
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateObjectHistoryDescFunction.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(MetadataPath + 'CreateObjectHistoryFloatDescFunction.sql');
-  ZQuery.ExecSQL;
+  ExecFile(MetadataPath + 'CreateObjectHistoryDescFunction.sql', ZQuery);
+  ExecFile(MetadataPath + 'CreateObjectHistoryFloatDescFunction.sql', ZQuery);
 end;
 
 procedure TdbMetaDataTest.SetUp;

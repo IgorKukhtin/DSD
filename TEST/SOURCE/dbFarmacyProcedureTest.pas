@@ -164,8 +164,10 @@ begin
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\Constraint\lpCheckUnique_ObjectString_ValueData.sql');
   ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\Constraint\lpCheck_Object_CycleLink.sql');
-  ZQuery.ExecSQL;
+
+  ExecFile(CommonProcedurePath + 'OBJECTS\Constraint\lpCheck_Object_CycleLink.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\Constraint\lfGet_ObjectCode.sql', ZQuery);
+
   ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_Object.sql');
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_ObjectString.sql');
@@ -182,24 +184,19 @@ begin
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\gpUpdateObjectIsErased.sql');
   ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\_User\gpInsertUpdate_Object_User.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\_User\gpSelect_Object_User.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\_User\gpGet_Object_User.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\_Form\gpInsertUpdate_Object_Form.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\_Form\gpGet_Object_Form.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\_UserFormSettings\gpInsertUpdate_Object_UserFormSettings.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\_UserFormSettings\gpGet_Object_UserFormSettings.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\lpCheckRight.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\gpCheckLogin.sql');
-  ZQuery.ExecSQL;
+
+  ExecFile(CommonProcedurePath + 'OBJECTS\_User\gpInsertUpdate_Object_User.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\_User\gpSelect_Object_User.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\_User\gpGet_Object_User.sql', ZQuery);
+
+  ExecFile(CommonProcedurePath + 'OBJECTS\_Form\gpInsertUpdate_Object_Form.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\_Form\gpGet_Object_Form.sql', ZQuery);
+
+  ExecFile(CommonProcedurePath + 'OBJECTS\_UserFormSettings\gpInsertUpdate_Object_UserFormSettings.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\_UserFormSettings\gpGet_Object_UserFormSettings.sql', ZQuery);
+
+  ExecFile(CommonProcedurePath + 'OBJECTS\lpCheckRight.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\gpCheckLogin.sql', ZQuery);
 
   {
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Account\gpInsertUpdate_Object_Account.sql');
@@ -378,16 +375,13 @@ begin
   ZQuery.ExecSQL;
 
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_PriceListItem\lpGetInsert_Object_PriceListItem.sql');
-  ZQuery.ExecSQL;
+  ZQuery.ExecSQL;}
 
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Unit\gpInsertUpdate_Object_Unit.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Unit\gpSelect_Object_Unit.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Unit\gpGet_Object_Unit.sql');
-  ZQuery.ExecSQL;
+  ExecFile(FarmacyProcedurePath + 'OBJECTS\_Unit\gpInsertUpdate_Object_Unit.sql', ZQuery);
+  ExecFile(FarmacyProcedurePath + 'OBJECTS\_Unit\gpSelect_Object_Unit.sql', ZQuery);
+  ExecFile(FarmacyProcedurePath + 'OBJECTS\_Unit\gpGet_Object_Unit.sql', ZQuery);
 
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_UnitGroup\gpInsertUpdate_Object_UnitGroup.sql');
+  {ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_UnitGroup\gpInsertUpdate_Object_UnitGroup.sql');
   ZQuery.ExecSQL;
   ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_UnitGroup\gpSelect_Object_UnitGroup.sql');
   ZQuery.ExecSQL;

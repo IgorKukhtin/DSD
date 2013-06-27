@@ -30,10 +30,8 @@ uses zLibUtil;
 
 procedure TdbEnumTest.InsertObjectEnum;
 begin
-  ZQuery.SQL.LoadFromFile(EnumPath + 'CreateObjectEnumFunction.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(EnumPath + 'InsertObjectEnum.sql');
-  ZQuery.ExecSQL;
+  ExecFile(EnumPath + 'CreateObjectEnumFunction.sql', ZQuery);
+  ExecFile(EnumPath + 'InsertObjectEnum.sql', ZQuery);
 end;
 
 procedure TdbEnumTest.SetUp;

@@ -11,13 +11,14 @@ type
     property OnDblClick;
   end;
 
-  // Компонент работает со справочниками. Выбирает значение из эжлементов управления или форм
+  // Компонент работает со справочниками. Выбирает значение из элементов управления или форм
   TdsdGuides = class(TComponent)
   private
     FFormName: string;
     FLookupControl: TWinControl;
     FKey: String;
     FTextValue: String;
+    FPositionDataSet: string;
     function GetKey: String;
     function GetTextValue: String;
     procedure SetKey(const Value: String);
@@ -28,18 +29,24 @@ type
     procedure OnButtonClick(Sender: TObject; AButtonIndex: Integer);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    // Вызыввем процедуру после выбора элемента из справочника
+    procedure AfterChoice(AKey, ATextValue: string);
   published
     property Key: String read GetKey write SetKey;
     property TextValue: String read GetTextValue write SetTextValue;
     property LookupControl: TWinControl read FLookupControl write SetLookupControl;
     property FormName: string read FFormName write FFormName;
+    property PositionDataSet: string read FPositionDataSet write FPositionDataSet;
   end;
 
   procedure Register;
 
 implementation
 
-uses cxDBLookupComboBox, cxButtonEdit, Variants, ParentForm, FormStorage, DB, dsdDB;
+uses cxDBLookupComboBox, cxButtonEdit, Variants, ParentForm, FormStorage, DB, dsdDB,
+     SysUtils;
 
 procedure Register;
 begin
@@ -47,6 +54,19 @@ begin
 end;
 
 { TdsdGuides }
+
+procedure TdsdGuides.AfterChoice(AKey, ATextValue: string);
+begin
+  // Вычитали параметры из дата сета. ВСЕ
+  Key := AKey;
+  TextValue := ATextValue;
+end;
+
+constructor TdsdGuides.Create(AOwner: TComponent);
+begin
+  inherited;
+  PositionDataSet := 'ClientDataSet';
+end;
 
 function TdsdGuides.GetKey: String;
 begin
@@ -87,20 +107,17 @@ end;
 procedure TdsdGuides.OpenGuides;
 var
   Form: TParentForm;
-  Params: TdsdParams;
+  DataSet: TDataSet;
 begin
-  Params := TdsdParams.Create(TdsdParam);
-  try
-    Form := TdsdFormStorageFactory.GetStorage.Load(FormName);
-    Params.AddParam('Id', ftString, ptInputOutput, Key);
-    Form.Execute(Self, Params);
-    if Form.ShowModal = mrOk then begin
-       Key := Form.Params.ParamByName('Key').Value;
-       TextValue := Form.Params.ParamByName('TextValue').Value;
-    end;
-  finally
-    Params.Free
-  end;
+  Form := TdsdFormStorageFactory.GetStorage.Load(FormName);
+  // Открыли форму
+  Form.Execute(Self, nil);
+  // Спозиционировались на дата сете
+  DataSet := Form.FindComponent(PositionDataSet) as TDataSet;
+  if not Assigned(DataSet) then
+     raise Exception.Create('Не правильно установлено свойство PositionDataSet для формы ' + FormName);
+  DataSet.Locate('Id', Key, []);
+  Form.Show;
 end;
 
 procedure TdsdGuides.SetKey(const Value: String);

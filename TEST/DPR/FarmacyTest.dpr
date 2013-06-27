@@ -26,7 +26,9 @@ uses
   ExtraChargeCategories in '..\..\FarmacyForms\ExtraChargeCategories.pas' {ExtraChargeCategoriesForm},
   ExtraChargeCategoriesEdit in '..\..\FarmacyForms\ExtraChargeCategoriesEdit.pas' {ExtraChargeCategoriesEditForm},
   Goods in '..\..\FarmacyForms\Goods.pas' {GoodsForm},
-  GoodsEdit in '..\..\FarmacyForms\GoodsEdit.pas' {GoodsEditForm};
+  GoodsEdit in '..\..\FarmacyForms\GoodsEdit.pas' {GoodsEditForm},
+  Units in '..\..\FarmacyForms\Units.pas' {UnitForm},
+  UnitEdit in '..\..\FarmacyForms\UnitEdit.pas' {UnitEditForm};
 
 {$R *.res}
 

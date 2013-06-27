@@ -267,7 +267,6 @@ inherited UnitForm: TUnitForm
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       Params = <>
-      FormParams = dsdFormParams
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ShortCut = 13
