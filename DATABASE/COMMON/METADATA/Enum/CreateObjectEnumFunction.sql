@@ -75,9 +75,9 @@ END;  $BODY$ LANGUAGE plpgsql;
 --------------------------- !!! ÕŒ¬¿ﬂ —’≈Ã¿ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!
 
-CREATE OR REPLACE FUNCTION zc_Enum_Status_UnComplete() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE Code = 'zc_Enum_Status_UnComplete' AND DescId = zc_ObjectString_Status()); END;$BODY$ LANGUAGE plpgsql;
-CREATE OR REPLACE FUNCTION zc_Enum_Status_Complete() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE Code = 'zc_Enum_Status_Complete' AND DescId = zc_ObjectString_Status()); END;$BODY$ LANGUAGE plpgsql;
-CREATE OR REPLACE FUNCTION zc_Enum_Status_Erased() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE Code = 'zc_Enum_Status_Erased' AND DescId = zc_ObjectString_Status()); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Enum_Status_UnComplete() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE Code = 'zc_Enum_Status_UnComplete' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Enum_Status_Complete() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE Code = 'zc_Enum_Status_Complete' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Enum_Status_Erased() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE Code = 'zc_Enum_Status_Erased' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
 
 
 /*-------------------------------------------------------------------------------*/

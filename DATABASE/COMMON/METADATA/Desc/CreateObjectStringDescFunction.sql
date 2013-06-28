@@ -2,7 +2,7 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Currency_InternalName()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 3;
-END;$BODY$
+END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 1;
 ALTER FUNCTION zc_ObjectString_Currency_InternalName()
@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Juridical_GLNCode()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 8;
-END;$BODY$
+END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 1;
 ALTER FUNCTION zc_ObjectString_Juridical_GLNCode()
@@ -22,7 +22,7 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Partner_GLNCode()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 9;
-END;$BODY$
+END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 1;
 ALTER FUNCTION zc_ObjectString_Partner_GLNCode()
@@ -32,7 +32,7 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Bank_MFO()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 10;
-END;$BODY$
+END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 1;
 ALTER FUNCTION zc_ObjectString_Bank_MFO()
@@ -43,7 +43,7 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Contract_InvNumber()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 11;
-END;$BODY$
+END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 1;
 ALTER FUNCTION zc_ObjectString_Contract_InvNumber()
@@ -53,7 +53,7 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_Contract_Comment()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 12;
-END;$BODY$
+END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 1;
 ALTER FUNCTION zc_ObjectString_Contract_Comment()
@@ -63,7 +63,7 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsPropertyValue_BarCode()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 13;
-END;$BODY$
+END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 1;
 ALTER FUNCTION zc_ObjectString_GoodsPropertyValue_BarCode()
@@ -73,7 +73,7 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsPropertyValue_Article()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 14;
-END;$BODY$
+END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 1;
 ALTER FUNCTION zc_ObjectString_GoodsPropertyValue_Article()
@@ -83,7 +83,7 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsPropertyValue_BarCodeGLN()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 15;
-END;$BODY$
+END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 1;
 ALTER FUNCTION zc_ObjectString_GoodsPropertyValue_BarCodeGLN()
@@ -93,7 +93,7 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsPropertyValue_ArticleGLN()
   RETURNS integer AS
 $BODY$BEGIN
   RETURN 16;
-END;$BODY$
+END; $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 1;
 ALTER FUNCTION zc_ObjectString_GoodsPropertyValue_ArticleGLN()
@@ -104,10 +104,10 @@ ALTER FUNCTION zc_ObjectString_GoodsPropertyValue_ArticleGLN()
 --------------------------- !!!!!!!!!!!!!!!!!!!
 
 
-CREATE OR REPLACE FUNCTION zc_ObjectString_User_Password() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_User_Password'); END;$BODY$ LANGUAGE plpgsql;
-CREATE OR REPLACE FUNCTION zc_ObjectString_User_Login() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_User_Login'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_ObjectString_User_Password() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_User_Password'); END; $BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_ObjectString_User_Login() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_User_Login'); END; $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_ObjectString_Car_RegistrationCertificate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Car_RegistrationCertificate'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_ObjectString_Car_RegistrationCertificate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Car_RegistrationCertificate'); END; $BODY$ LANGUAGE plpgsql;
 
 -- Это универсальное свойство, может использоваться у всех объектов
-CREATE OR REPLACE FUNCTION  zc_ObjectString_Enum() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Enum'); END;$BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION  zc_ObjectString_Enum() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Enum'); END; $BODY$ LANGUAGE plpgsql;
