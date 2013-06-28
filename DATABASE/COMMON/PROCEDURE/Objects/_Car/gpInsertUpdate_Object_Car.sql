@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Car(
     IN inCarModelId               Integer   ,    -- ћодель авто          
     IN inSession                  TVarChar       -- сесси€ пользовател€
 )
-  RETURNS integer AS
+ RETURNS Integer AS
 $BODY$
    DECLARE UserId Integer;
    DECLARE Code_max Integer;   
@@ -18,7 +18,7 @@ $BODY$
 BEGIN
    
    -- проверка прав пользовател€ на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Car());
+   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Car());
    UserId := inSession;
 
    -- ≈сли код не установлен, определ€ем его каи последний+1
@@ -45,11 +45,8 @@ BEGIN
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, UserId);
 
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION gpInsertUpdate_Object_Car(Integer, Integer, TVarChar, TVarChar, Integer, TVarChar)
-  OWNER TO postgres;
+END;$BODY$ LANGUAGE plpgsql;
+ALTER FUNCTION gpInsertUpdate_Object_Car(Integer, Integer, TVarChar, TVarChar, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -62,4 +59,3 @@ ALTER FUNCTION gpInsertUpdate_Object_Car(Integer, Integer, TVarChar, TVarChar, I
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Object_Car()
-                            

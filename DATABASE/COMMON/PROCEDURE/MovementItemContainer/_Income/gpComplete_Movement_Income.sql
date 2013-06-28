@@ -1,10 +1,10 @@
 -- Function: gpComplete_Movement_Income()
 
--- DROP FUNCTION gpComplete_Movement_Income(Integer, TVarChar);
+-- DROP FUNCTION gpComplete_Movement_Income (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Income(
-   IN inMovementId        Integer,   	/* ключ объекта <Приходная накладная> */
-   IN inSession           TVarChar       /* текущий пользователь */
+    IN inMovementId        Integer,   	-- ключ Документа <Приходная накладная> */
+    IN inSession           TVarChar       -- сессия пользователя
 )                              
   RETURNS void AS
 $BODY$
@@ -14,8 +14,25 @@ $BODY$
   DECLARE OperDate TDateTime;
   DECLARE MovementSumm TFloat;
 BEGIN
-  -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Measure());
+
+   -- проверка прав пользователя на вызов процедуры
+   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Complete_Movement_Income());
   
+   -- таблица 
+   CREATE TEMP TABLE tmpItem (MovementItemId Integer, UnitId Integer, GoodsId Integer, GoodsKindId Integer, OperCount TFloat, OperPrice TFloat, OperSumm_Client TFloat
+                            , AccountDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer);
+
+
+   INSERT INTO tmpItem (MovementItemId, UnitId, GoodsId, GoodsKindId, OperCount, OperPrice, OperSumm_Client, AccountDirectionId, InfoMoneyDestinationId, InfoMoneyId)
+      SELECT
+      FROM MovementItem
+           LEFT JOIN MovementItemFloat AS MovementItemFloat_Price
+                    ON MovementItemFloat_Price.MovementItemId = MovementItem.Id
+                   AND MovementItemFloat_Price.DescId = zc_MovementItemFloat_Price()
+      WHERE MovementItem.MovementId = inMovementId;
+        AND MovementItem.StatusId = zc_Object_Status_UnComplete();
+
+
   -- Делаем товарные проводки
 
   -- Делаем проводки по счету учета товаров
@@ -89,8 +106,6 @@ LEFT JOIN MovementItemFloat AS MovementItemFloat_Price
   -- Обязательно меняем статус документа
   UPDATE Movement SET StatusId = zc_Object_Status_Complete() WHERE Id = inMovementId;
 
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
+END;$BODY$ LANGUAGE plpgsql;
   
                             
