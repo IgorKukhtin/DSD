@@ -105,9 +105,9 @@ END $$;
 DO $$
 BEGIN
      -- !!! ОБЯЗАТЕЛЬНО НАДО ЗАМЕНИТЬ zc_Object_Status_UnComplete -> zc_Enum_Status_UnComplete
-     PERFORM lpInsertUpdate_Object_Enum (zc_Object_Status_UnComplete(), zc_Object_Status(), 1, 'Не проведен', 'zc_Enum_Status_UnComplete');
-     PERFORM lpInsertUpdate_Object_Enum (zc_Object_Status_Complete(), zc_Object_Status(), 1, 'Проведен', 'zc_Object_Status_Complete');
-     PERFORM lpInsertUpdate_Object_Enum (zc_Object_Status_Erased(), zc_Object_Status(), 1, 'Удален', 'zc_Object_Status_Erased');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Object_Status_UnComplete(), inDescId:= zc_Object_Status(), inCode:= 1, inName:= 'Не проведен', inEnumName:= 'zc_Enum_Status_UnComplete');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Object_Status_Complete(), inDescId:= zc_Object_Status(), inCode:= 1, inName:= 'Проведен', inEnumName:= 'zc_Object_Status_Complete');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Object_Status_Erased(), inDescId:= zc_Object_Status(), inCode:= 1, inName:= 'Удален', inEnumName:= 'zc_Object_Status_Erased');
 END $$;
 
 /*-------------------------------------------------------------------------------*/
