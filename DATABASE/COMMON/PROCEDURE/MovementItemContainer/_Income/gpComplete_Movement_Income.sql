@@ -19,30 +19,60 @@ BEGIN
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Complete_Movement_Income());
   return;
    -- таблица 
-   CREATE TEMP TABLE tmpItem (MovementItemId Integer, JuridicalId Integer, UnitId Integer, GoodsId Integer, GoodsKindId Integer
-                            , OperCount TFloat, OperCount_Partner TFloat, OperCount_Packer TFloat, OperSumm TFloat, OperSumm_Client TFloat, OperSumm_Packer TFloat
+   CREATE TEMP TABLE tmpItem (MovementItemId Integer, MovementId Integer, JuridicalId_From Integer, MemberId_From Integer, UnitId Integer, PersonalId_Packer Integer, AssetId Integer, GoodsId Integer, GoodsKindId Integer, PartionGoods TVarChar
+                            , OperCount TFloat, tmpOperSumm_Client TFloat, OperSumm_Client TFloat, tmpOperSumm_Packer TFloat, OperSumm_Packer TFloat
                             , AccountDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer);
-   INSERT INTO tmpItem (MovementItemId, JuridicalId, UnitId, GoodsId, GoodsKindId
-                      , OperCount, OperCount_Partner, OperCount_Packer, OperSumm, OperSumm_Client, OperSumm_Packer
-                      , AccountDirectionId, InfoMoneyDestinationId, InfoMoneyId)
+                            , JuridicalId_main Integer, BusinessId Integer);
+   INSERT INTO tmpItem (MovementItemId, MovementId, JuridicalId_From, MemberId_From, UnitId, PersonalId_Packer, AssetId, GoodsId, GoodsKindId, PartionGoods
+                      , OperCount, tmpOperSumm_Client, OperSumm_Client, tmpOperSumm_Packer, OperSumm_Packer
+                      , AccountDirectionId, InfoMoneyDestinationId, InfoMoneyId
+                      , JuridicalId_main, BusinessId)
       SELECT
             MovementItem.Id
-          , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
-          , MovementLinkObject_To.ObjectId AS UnitId
+          , MovementItem.MovementId
+          , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Partner() THEN ObjectLink_Partner_Juridical.ChildObjectId ELSE 0 END, 0) AS JuridicalId_From
+          , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Member() THEN Object_From.Id ELSE 0 END, 0) AS MemberId_From
+          , COALESCE (MovementLinkObject_To.ObjectId, 0) AS UnitId
+          , COALESCE (MovementLinkObject_PersonalPacker.ObjectId, 0) AS PersonalId_Packer
+          , COALESCE (MovementItemLink_Asset.ObjectId, 0) AS AssetId
+
           , MovementItem.ObjectId AS GoodsId
-          , MovementItemLink_GoodsKind.ObjectId AS GoodsKindId
+          , COALESCE (MovementItemLink_GoodsKind.ObjectId, 0) AS GoodsKindId
+          , CASE WHEN COALESCE (MovementItemString_PartionGoods.ValueData, '') <> '' THEN MovementItemString_PartionGoods.ValueData ELSE '' END AS PartionGoods
+
           , MovementItem.Amount AS OperCount
-          , MovementItemFloat_AmountPartner.ValueData AS OperCount_Partner
-          , MovementItemFloat_AmountPacker.ValueData AS OperCount_Packer
-          , CASE WHEN MovementItemFloat_CountForPrice.ValueData <> 0 THEN CAST (MovementItemFloat_AmountPartner.ValueData * MovementItemFloat_Price.ValueData / MovementItemFloat_CountForPrice.ValueData  AS NUMERIC (16, 2))
-                                                                     ELSE CAST (MovementItemFloat_AmountPartner.ValueData * MovementItemFloat_Price.ValueData  AS NUMERIC (16, 2))
-            END AS OperSumm
+            -- промежуточная сумма по клиенту - с округлением до 2-х знаков
+          , CASE WHEN COALESCE (MovementItemFloat_CountForPrice.ValueData, 0) <> 0 THEN COALESCE (CAST (MovementItemFloat_AmountPartner.ValueData * MovementItemFloat_Price.ValueData / MovementItemFloat_CountForPrice.ValueData AS NUMERIC (16, 2)), 0)
+                                                                                   ELSE COALESCE (CAST (MovementItemFloat_AmountPartner.ValueData * MovementItemFloat_Price.ValueData AS NUMERIC (16, 2)), 0)
+            END AS tmpOperSumm_Client
+            -- конечная сумма по клиенту, расчитаем позже
+          , 0 AS OperSumm_Client
+            -- промежуточная сумма по заготовителю - с округлением до 2-х знаков
+          , CASE WHEN COALESCE (MovementItemFloat_CountForPrice.ValueData, 0) <> 0 THEN COALESCE (CAST (MovementItemFloat_AmountPacker.ValueData * MovementItemFloat_Price.ValueData / MovementItemFloat_CountForPrice.ValueData AS NUMERIC (16, 2)), 0)
+                                                                                   ELSE COALESCE (CAST (MovementItemFloat_AmountPacker.ValueData * MovementItemFloat_Price.ValueData AS NUMERIC (16, 2)), 0)
+            END AS tmpOperSumm_Packer
+            -- конечная сумма по клиенту, расчитаем позже
+          , 0 AS OperSumm_Packer
+
+            -- Аналитики счетов - направления
+          , COALESCE (ObjectLink_Unit_AccountDirection.ChildObjectId, 0) AS AccountDirectionId
+            -- Управленческие назначения
+          , COALESCE (lfObject_InfoMoney.InfoMoneyDestinationId, 0) AS InfoMoneyDestinationId
+            -- Статьи назначения
+          , COALESCE (lfObject_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
+
+          , COALESCE (ObjectLink_Unit_Juridical.ChildObjectId, 0) AS JuridicalId_main
+          , COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0) AS BusinessId
+
       FROM Movement
            JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.isErased = FALSE
 
            LEFT JOIN MovementItemLinkObject AS MovementItemLink_GoodsKind
                     ON MovementItemLink_GoodsKind.MovementItemId = MovementItem.Id
                    AND MovementItemLink_GoodsKind.DescId = zc_MovementItemLink_GoodsKind()
+           LEFT JOIN MovementItemLinkObject AS MovementItemLink_Asset
+                    ON MovementItemLink_Asset.MovementItemId = MovementItem.Id
+                   AND MovementItemLink_Asset.DescId = zc_MovementItemLink_Asset()
 
            LEFT JOIN MovementItemFloat AS MovementItemFloat_AmountPartner
                     ON MovementItemFloat_AmountPartner.MovementItemId = MovementItem.Id
@@ -58,16 +88,42 @@ BEGIN
                     ON MovementItemFloat_CountForPrice.MovementItemId = MovementItem.Id
                    AND MovementItemFloat_CountForPrice.DescId = zc_MovementItemFloat_CountForPrice()
 
+           LEFT JOIN MovementItemString AS MovementItemString_PartionGoods
+                    ON MovementItemString_PartionGoods.MovementItemId = MovementItem.Id
+                   AND MovementItemString_PartionGoods.DescId = zc_MovementItemString_PartionGoods()
+
            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                     ON MovementLinkObject_From.MovementId = MovementItem.MovementId
                    AND MovementLinkObject_From.DescId = zc_MovementLink_From()
+           LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                     ON MovementLinkObject_To.MovementId = MovementItem.MovementId
                    AND MovementLinkObject_To.DescId = zc_MovementLink_To()
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalPacker
+                    ON MovementLinkObject_PersonalPacker.MovementId = MovementItem.MovementId
+                   AND MovementLinkObject_PersonalPacker.DescId = zc_MovementLink_PersonalPacker()
 
            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                     ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+
+           LEFT JOIN ObjectLink AS ObjectLink_Unit_AccountDirection
+                    ON ObjectLink_Unit_AccountDirection.ObjectId = MovementLinkObject_To.ObjectId
+                   AND ObjectLink_Unit_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()
+           LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                    ON ObjectLink_Unit_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                   AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+           LEFT JOIN ObjectLink AS ObjectLink_Unit_Business
+                    ON ObjectLink_Unit_Business.ObjectId = MovementLinkObject_To.ObjectId
+                   AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Juridical()
+
+
+           LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                    ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
+                   AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+
+           LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON ObjectLink_Unit_AccountDirection.ObjectId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
       WHERE Movement.Id = inMovementId
         AND Movement.StatusId = zc_Enum_Status_UnComplete();

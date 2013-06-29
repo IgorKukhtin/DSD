@@ -23,6 +23,7 @@ CREATE OR REPLACE FUNCTION zc_MovementItemFloat_AmountReceipt() RETURNS Integer 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+
  29.06.13                                        * НОВАЯ СХЕМА
  29.06.13                                        * zc_MovementItemFloat_AmountPacker
 */
