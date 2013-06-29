@@ -196,10 +196,12 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_InfoMoneyDestination\gpInsertUpdate_Object_InfoMoneyDestination.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_InfoMoneyDestination\gpSelect_Object_InfoMoneyDestination.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_InfoMoneyDestination\gpGet_Object_InfoMoneyDestination.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_InfoMoneyDestination\lfSelect_Object_InfoMoneyDestination.sql', ZQuery);
 
   ExecFile(ProcedurePath + 'OBJECTS\_InfoMoney\gpInsertUpdate_Object_InfoMoney.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_InfoMoney\gpSelect_Object_InfoMoney.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_InfoMoney\gpGet_Object_InfoMoney.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_InfoMoney\lfSelect_Object_InfoMoney.sql', ZQuery);
 
   ExecFile(ProcedurePath + 'OBJECTS\_Juridical\gpInsertUpdate_Object_Juridical.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Juridical\gpSelect_Object_Juridical.sql', ZQuery);
@@ -237,8 +239,6 @@ begin
 
   ExecFile(ProcedurePath + 'OBJECTS\Constraint\lpCheckUnique_Object_ObjectCode.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\Constraint\lfGet_ObjectCode.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\Constraint\lfSelect_Object_InfoMoney.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\Constraint\lfSelect_Object_InfoMoneyDestination.sql', ZQuery);
 
   ExecFile(ProcedurePath + 'OBJECTS\_RouteSorting\gpInsertUpdate_Object_RouteSorting.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_RouteSorting\gpSelect_Object_RouteSorting.sql', ZQuery);
@@ -267,6 +267,9 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_ProfitLoss\gpInsertUpdate_Object_ProfitLoss.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_ProfitLoss\gpSelect_Object_ProfitLoss.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_ProfitLoss\gpGet_Object_ProfitLoss.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_Object_Enum.sql', ZQuery);
+
 end;
 
 procedure TdbProcedureTest.CreateProtocolProcedure;

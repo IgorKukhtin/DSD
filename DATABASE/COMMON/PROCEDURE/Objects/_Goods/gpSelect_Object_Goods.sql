@@ -5,12 +5,13 @@
 CREATE OR REPLACE FUNCTION gpSelect_Object_Goods(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean,
-               GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupCode Integer, 
-               MeasureId Integer, MeasureName TVarChar, MeasureCode Integer, Weight TFloat,
-               InfoMoneyId Integer, InfoMoneyName TVarChar, InfoMoneyCode Integer,
-               InfoMoneyGroupId Integer, InfoMoneyGroupName TVarChar, InfoMoneyGroupCode Integer, 
-               InfoMoneyDestinationId Integer, InfoMoneyDestinationName TVarChar, InfoMoneyDestinationCode Integer) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
+               GoodsGroupId Integer, GoodsGroupCode Integer, GoodsGroupName TVarChar,
+               MeasureId Integer, MeasureCode Integer, MeasureName TVarChar,
+               InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar,
+               InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar,
+               InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar,
+               Weight TFloat, isErased boolean) AS
 $BODY$BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -21,27 +22,30 @@ $BODY$BEGIN
            Object_Goods.Id             AS Id
          , Object_Goods.ObjectCode     AS Code
          , Object_Goods.ValueData      AS Name
-         , Object_Goods.isErased       AS isErased
+         
          , Object_GoodsGroup.Id         AS GoodsGroupId
-         , Object_GoodsGroup.ValueData  AS GoodsGroupName  
          , Object_GoodsGroup.ObjectCode AS GoodsGroupCode
-          
+         , Object_GoodsGroup.ValueData  AS GoodsGroupName 
+
          , Object_Measure.Id            AS MeasureId
-         , Object_Measure.ValueData     AS MeasureName
          , Object_Measure.ObjectCode    AS MeasureCode
-         , ObjectFloat_Weight.ValueData AS Weight
+         , Object_Measure.ValueData     AS MeasureName
          
          , Object_InfoMoney.Id         AS InfoMoneyId
-         , Object_InfoMoney.ValueData  AS InfoMoneyName
          , Object_InfoMoney.ObjectCode AS InfoMoneyCode
+         , Object_InfoMoney.ValueData  AS InfoMoneyName
          
          , Object_InfoMoneyGroup.Id         AS InfoMoneyGroupId
-         , Object_InfoMoneyGroup.ValueData  AS InfoMoneyGroupName
          , Object_InfoMoneyGroup.ObjectCode AS InfoMoneyGroupCode
+         , Object_InfoMoneyGroup.ValueData  AS InfoMoneyGroupName
+
          , Object_InfoMoneyDestination.Id         AS InfoMoneyDestinationId
-         , Object_InfoMoneyDestination.ValueData  AS InfoMoneyDestinationName
          , Object_InfoMoneyDestination.ObjectCode AS InfoMoneyDestinationCode
-        
+         , Object_InfoMoneyDestination.ValueData  AS InfoMoneyDestinationName
+         
+         , ObjectFloat_Weight.ValueData AS Weight
+         , Object_Goods.isErased       AS isErased
+         
      FROM OBJECT AS Object_Goods
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                  ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id

@@ -17,52 +17,6 @@ $BODY$BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_ProfitLoss());
    
-   -- таблица для справочника уп-назначения (на самом деле это три спраочника)
-   CREATE TEMP TABLE tmpInfoMoney2 (InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar, 
-                                   InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar);
-
-   -- таблица для 
-   CREATE TEMP TABLE tmpInfoMoney (InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar, 
-                                   InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar, 
-                                   InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar);
-   
-   -- Выбираем данные для справочника уп-назначения (на самом деле это три спраочника)
-   INSERT INTO tmpInfoMoney (InfoMoneyGroupId, InfoMoneyGroupCode, InfoMoneyGroupName, 
-                             InfoMoneyDestinationId, InfoMoneyDestinationCode, InfoMoneyDestinationName, 
-                             InfoMoneyId, InfoMoneyCode, InfoMoneyName)
-     SELECT 
-           Object_InfoMoneyGroup.Id
-          ,Object_InfoMoneyGroup.ObjectCode 
-          ,Object_InfoMoneyGroup.ValueData
-          
-          ,Object_InfoMoneyDestination.Id
-          ,Object_InfoMoneyDestination.ObjectCode
-          ,Object_InfoMoneyDestination.ValueData
-          
-          ,Object_InfoMoney.Id
-          ,Object_InfoMoney.ObjectCode
-          ,Object_InfoMoney.ValueData
-          
-     FROM Object AS Object_InfoMoney
-         
-            LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyGroup
-                   ON ObjectLink_InfoMoney_InfoMoneyGroup.ObjectId = Object_InfoMoney.Id 
-                  AND ObjectLink_InfoMoney_InfoMoneyGroup.DescId = zc_ObjectLink_InfoMoney_InfoMoneyGroup()
-            LEFT JOIN Object AS Object_InfoMoneyGroup ON Object_InfoMoneyGroup.Id = ObjectLink_InfoMoney_InfoMoneyGroup.ChildObjectId
-
-            LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyDestination
-                   ON ObjectLink_InfoMoney_InfoMoneyDestination.ObjectId = Object_InfoMoney.Id 
-                  AND ObjectLink_InfoMoney_InfoMoneyDestination.DescId = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
-            LEFT JOIN Object AS Object_InfoMoneyDestination ON Object_InfoMoneyDestination.Id = ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId
-
-     WHERE Object_InfoMoney.DescId = zc_Object_InfoMoney();
-
-   -- группируем данные из справочника уп-назначения (по двум справоникам)
-   INSERT INTO tmpInfoMoney2 (InfoMoneyGroupId, InfoMoneyGroupCode, InfoMoneyGroupName, InfoMoneyDestinationId, InfoMoneyDestinationCode, InfoMoneyDestinationName)
-      SELECT tmpInfoMoney.InfoMoneyGroupId, tmpInfoMoney.InfoMoneyGroupCode, tmpInfoMoney.InfoMoneyGroupName, tmpInfoMoney.InfoMoneyDestinationId, tmpInfoMoney.InfoMoneyDestinationCode, tmpInfoMoney.InfoMoneyDestinationName
-      FROM tmpInfoMoney
-      GROUP BY tmpInfoMoney.InfoMoneyGroupId, tmpInfoMoney.InfoMoneyGroupCode, tmpInfoMoney.InfoMoneyGroupName, tmpInfoMoney.InfoMoneyDestinationId, tmpInfoMoney.InfoMoneyDestinationCode, tmpInfoMoney.InfoMoneyDestinationName;
-
      RETURN QUERY 
         SELECT 
              Object_ProfitLoss.Id               AS Id
@@ -77,17 +31,17 @@ $BODY$BEGIN
            , Object_ProfitLossDirection.ObjectCode  AS ProfitLossDirectionCode
            , Object_ProfitLossDirection.ValueData   AS ProfitLossDirectionName
 
-           , COALESCE (tmpInfoMoney2.InfoMoneyGroupId, tmpInfoMoney.InfoMoneyGroupId)     AS InfoMoneyGroupId
-           , COALESCE (tmpInfoMoney2.InfoMoneyGroupCode, tmpInfoMoney.InfoMoneyGroupCode) AS InfoMoneyGroupCode
-           , COALESCE (tmpInfoMoney2.InfoMoneyGroupName, tmpInfoMoney.InfoMoneyGroupName) AS InfoMoneyGroupName
+           , COALESCE (lfObject_InfoMoneyDestination.InfoMoneyGroupId, lfObject_InfoMoney.InfoMoneyGroupId)     AS InfoMoneyGroupId
+           , COALESCE (lfObject_InfoMoneyDestination.InfoMoneyGroupCode, lfObject_InfoMoney.InfoMoneyGroupCode) AS InfoMoneyGroupCode
+           , COALESCE (lfObject_InfoMoneyDestination.InfoMoneyGroupName, lfObject_InfoMoney.InfoMoneyGroupName) AS InfoMoneyGroupName
 
-           , COALESCE (tmpInfoMoney2.InfoMoneyDestinationId, tmpInfoMoney.InfoMoneyDestinationId)     AS InfoMoneyDestinationId
-           , COALESCE (tmpInfoMoney2.InfoMoneyDestinationCode, tmpInfoMoney.InfoMoneyDestinationCode) AS InfoMoneyDestinationCode
-           , COALESCE (tmpInfoMoney2.InfoMoneyDestinationName, tmpInfoMoney.InfoMoneyDestinationName) AS InfoMoneyDestinationName
+           , COALESCE (lfObject_InfoMoneyDestination.InfoMoneyDestinationId, lfObject_InfoMoney.InfoMoneyDestinationId)     AS InfoMoneyDestinationId
+           , COALESCE (lfObject_InfoMoneyDestination.InfoMoneyDestinationCode, lfObject_InfoMoney.InfoMoneyDestinationCode) AS InfoMoneyDestinationCode
+           , COALESCE (lfObject_InfoMoneyDestination.InfoMoneyDestinationName, lfObject_InfoMoney.InfoMoneyDestinationName) AS InfoMoneyDestinationName
 
-           , tmpInfoMoney.InfoMoneyId     AS InfoMoneyId
-           , tmpInfoMoney.InfoMoneyCode   AS InfoMoneyCode
-           , tmpInfoMoney.InfoMoneyName   AS InfoMoneyName
+           , lfObject_InfoMoney.InfoMoneyId     AS InfoMoneyId
+           , lfObject_InfoMoney.InfoMoneyCode   AS InfoMoneyCode
+           , lfObject_InfoMoney.InfoMoneyName   AS InfoMoneyName
            
            , Object_ProfitLoss.isErased         AS isErased
        FROM Object AS Object_ProfitLoss
@@ -108,12 +62,10 @@ $BODY$BEGIN
                      ON ObjectLink_ProfitLoss_InfoMoney.ObjectId = Object_ProfitLoss.Id
                     AND ObjectLink_ProfitLoss_InfoMoney.DescId = zc_ObjectLink_ProfitLoss_InfoMoney()
             
-            LEFT JOIN tmpInfoMoney2 ON tmpInfoMoney2.InfoMoneyDestinationId = ObjectLink_ProfitLoss_InfoMoneyDestination.ChildObjectId
-            LEFT JOIN tmpInfoMoney ON tmpInfoMoney.InfoMoneyId = ObjectLink_ProfitLoss_InfoMoneyDestination.ChildObjectId
+            LEFT JOIN lfSelect_Object_InfoMoneyDestination() AS lfObject_InfoMoneyDestination ON lfObject_InfoMoneyDestination.InfoMoneyDestinationId = ObjectLink_ProfitLoss_InfoMoneyDestination.ChildObjectId
+            LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ObjectLink_ProfitLoss_InfoMoneyDestination.ChildObjectId
+            
        WHERE Object_ProfitLoss.DescId = zc_Object_ProfitLoss();
-  
-   DROP TABLE tmpInfoMoney;
-   DROP TABLE tmpInfoMoney2;
   
 END;$BODY$
 
