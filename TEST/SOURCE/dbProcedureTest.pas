@@ -107,6 +107,10 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\Constraint\lpCheckUnique_Object_ValueData.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\Constraint\lpCheckUnique_ObjectString_ValueData.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\Constraint\lpCheck_Object_CycleLink.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\Constraint\lpCheckUnique_Object_ObjectCode.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\Constraint\lfGet_ObjectCode.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\Constraint\lfGet_ObjectCode_byEnum.sql', ZQuery);
+
   ExecFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_Object.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_ObjectString.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_ObjectBLOB.sql', ZQuery);
@@ -128,6 +132,8 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_Account\lpFind_Object_Account.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Account\gpSelect_Object_Account.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Account\gpGet_Object_Account.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_Object_Enum.sql', ZQuery);
 
   ExecFile(ProcedurePath + 'OBJECTS\_Bank\gpInsertUpdate_Object_Bank.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Bank\gpSelect_Object_Bank.sql', ZQuery);
@@ -172,6 +178,7 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_Goods\gpInsertUpdate_Object_Goods.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Goods\gpSelect_Object_Goods.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Goods\gpGet_Object_Goods.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_Goods\lpInsertUpdate_Object_Process_Goods.sql', ZQuery);
 
   ExecFile(ProcedurePath + 'OBJECTS\_GoodsGroup\gpInsertUpdate_Object_GoodsGroup.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_GoodsGroup\gpSelect_Object_GoodsGroup.sql', ZQuery);
@@ -237,9 +244,6 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_Route\gpSelect_Object_Route.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Route\gpGet_Object_Route.sql', ZQuery);
 
-  ExecFile(ProcedurePath + 'OBJECTS\Constraint\lpCheckUnique_Object_ObjectCode.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\Constraint\lfGet_ObjectCode.sql', ZQuery);
-
   ExecFile(ProcedurePath + 'OBJECTS\_RouteSorting\gpInsertUpdate_Object_RouteSorting.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_RouteSorting\gpSelect_Object_RouteSorting.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_RouteSorting\gpGet_Object_RouteSorting.sql', ZQuery);
@@ -267,8 +271,6 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_ProfitLoss\gpInsertUpdate_Object_ProfitLoss.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_ProfitLoss\gpSelect_Object_ProfitLoss.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_ProfitLoss\gpGet_Object_ProfitLoss.sql', ZQuery);
-
-  ExecFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_Object_Enum.sql', ZQuery);
 
 end;
 
