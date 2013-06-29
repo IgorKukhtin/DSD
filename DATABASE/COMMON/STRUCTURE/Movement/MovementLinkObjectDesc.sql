@@ -12,9 +12,9 @@
 
 CREATE TABLE MovementLinkObjectDesc
 (
-  Id                     Integer NOT NULL PRIMARY KEY,
-  Code                   TVarChar NOT NULL UNIQUE,
-  ItemName               TVarChar
+   Id                    SERIAL NOT NULL PRIMARY KEY, 
+   Code                  TVarChar NOT NULL UNIQUE,
+   ItemName              TVarChar
 )
 WITH (
   OIDS=FALSE
@@ -26,11 +26,13 @@ ALTER TABLE MovementLinkObjectDesc
 
 /*                                  Индексы                                      */
 
-/*
+
+
+/*-------------------------------------------------------------------------------
  ПРИМЕЧАНИЯ:
  ИСТОРИЯ РАЗРАБОТКИ:
  ДАТА         АВТОР
  ----------------
                  Климентьев К.И.   Кухтин И.В.   
-18.06.02                                         
+ 29.06.13             * SERIAL
 */

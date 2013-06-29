@@ -7,7 +7,6 @@
 
 /*-------------------------------------------------------------------------------*/
 CREATE TABLE ObjectLinkDesc(
-   -- Id                    INTEGER NOT NULL PRIMARY KEY,
    Id                    SERIAL NOT NULL PRIMARY KEY, 
    Code                  TVarChar NOT NULL UNIQUE,
    ItemName              TVarChar,
@@ -21,12 +20,13 @@ CREATE TABLE ObjectLinkDesc(
 
 /*                                  Индексы                                      */
 
-/*
+
+
+/*-------------------------------------------------------------------------------
  ПРИМЕЧАНИЯ:
  ИСТОРИЯ РАЗРАБОТКИ:
  ДАТА         АВТОР
  ----------------
-                 Климентьев К.И.   Кухтин И.В.
+                 Климентьев К.И.   Кухтин И.В.   
  27.06.13             * SERIAL
-
 */

@@ -17,20 +17,60 @@ BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Complete_Movement_Income());
-  
+  return;
    -- таблица 
-   CREATE TEMP TABLE tmpItem (MovementItemId Integer, UnitId Integer, GoodsId Integer, GoodsKindId Integer, OperCount TFloat, OperPrice TFloat, OperSumm_Client TFloat
+   CREATE TEMP TABLE tmpItem (MovementItemId Integer, JuridicalId Integer, UnitId Integer, GoodsId Integer, GoodsKindId Integer
+                            , OperCount TFloat, OperCount_Partner TFloat, OperCount_Packer TFloat, OperSumm TFloat, OperSumm_Client TFloat, OperSumm_Packer TFloat
                             , AccountDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer);
-
-
-   INSERT INTO tmpItem (MovementItemId, UnitId, GoodsId, GoodsKindId, OperCount, OperPrice, OperSumm_Client, AccountDirectionId, InfoMoneyDestinationId, InfoMoneyId)
+   INSERT INTO tmpItem (MovementItemId, JuridicalId, UnitId, GoodsId, GoodsKindId
+                      , OperCount, OperCount_Partner, OperCount_Packer, OperSumm, OperSumm_Client, OperSumm_Packer
+                      , AccountDirectionId, InfoMoneyDestinationId, InfoMoneyId)
       SELECT
-      FROM MovementItem
+            MovementItem.Id
+          , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+          , MovementLinkObject_To.ObjectId AS UnitId
+          , MovementItem.ObjectId AS GoodsId
+          , MovementItemLink_GoodsKind.ObjectId AS GoodsKindId
+          , MovementItem.Amount AS OperCount
+          , MovementItemFloat_AmountPartner.ValueData AS OperCount_Partner
+          , MovementItemFloat_AmountPacker.ValueData AS OperCount_Packer
+          , CASE WHEN MovementItemFloat_CountForPrice.ValueData <> 0 THEN CAST (MovementItemFloat_AmountPartner.ValueData * MovementItemFloat_Price.ValueData / MovementItemFloat_CountForPrice.ValueData  AS NUMERIC (16, 2))
+                                                                     ELSE CAST (MovementItemFloat_AmountPartner.ValueData * MovementItemFloat_Price.ValueData  AS NUMERIC (16, 2))
+            END AS OperSumm
+      FROM Movement
+           JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.isErased = FALSE
+
+           LEFT JOIN MovementItemLinkObject AS MovementItemLink_GoodsKind
+                    ON MovementItemLink_GoodsKind.MovementItemId = MovementItem.Id
+                   AND MovementItemLink_GoodsKind.DescId = zc_MovementItemLink_GoodsKind()
+
+           LEFT JOIN MovementItemFloat AS MovementItemFloat_AmountPartner
+                    ON MovementItemFloat_AmountPartner.MovementItemId = MovementItem.Id
+                   AND MovementItemFloat_AmountPartner.DescId = zc_MovementItemFloat_AmountPartner()
+           LEFT JOIN MovementItemFloat AS MovementItemFloat_AmountPacker
+                    ON MovementItemFloat_AmountPacker.MovementItemId = MovementItem.Id
+                   AND MovementItemFloat_AmountPacker.DescId = zc_MovementItemFloat_AmountPacker()
+
            LEFT JOIN MovementItemFloat AS MovementItemFloat_Price
                     ON MovementItemFloat_Price.MovementItemId = MovementItem.Id
                    AND MovementItemFloat_Price.DescId = zc_MovementItemFloat_Price()
-      WHERE MovementItem.MovementId = inMovementId;
-        AND MovementItem.StatusId = zc_Object_Status_UnComplete();
+           LEFT JOIN MovementItemFloat AS MovementItemFloat_CountForPrice
+                    ON MovementItemFloat_CountForPrice.MovementItemId = MovementItem.Id
+                   AND MovementItemFloat_CountForPrice.DescId = zc_MovementItemFloat_CountForPrice()
+
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                    ON MovementLinkObject_From.MovementId = MovementItem.MovementId
+                   AND MovementLinkObject_From.DescId = zc_MovementLink_From()
+           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                    ON MovementLinkObject_To.MovementId = MovementItem.MovementId
+                   AND MovementLinkObject_To.DescId = zc_MovementLink_To()
+
+           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                    ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                   AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+
+      WHERE Movement.Id = inMovementId
+        AND Movement.StatusId = zc_Enum_Status_UnComplete();
 
 
   -- Делаем товарные проводки
