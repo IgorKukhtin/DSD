@@ -4,30 +4,30 @@
 
 
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
-  SELECT 'zc_MovementItemFloat_AmountPartner', 'Количество у контрагента'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MovementItemFloat_AmountPartner'); 
+  SELECT 'zc_MIFloat_AmountPartner', 'Количество у контрагента'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountPartner'); 
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
-  SELECT 'zc_MovementItemFloat_AmountPacker', 'Количество у заготовителя'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MovementItemFloat_AmountPacker');
+  SELECT 'zc_MIFloat_AmountPacker', 'Количество у заготовителя'  WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountPacker');
 
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
-  SELECT 'zc_MovementItemFloat_Price', 'Цена' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MovementItemFloat_Price'); 
+  SELECT 'zc_MIFloat_Price', 'Цена' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Price'); 
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
-  SELECT 'zc_MovementItemFloat_CountForPrice', 'Цена за количество' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MovementItemFloat_CountForPrice'); 
+  SELECT 'zc_MIFloat_CountForPrice', 'Цена за количество' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_CountForPrice'); 
 
 
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
-  SELECT 'zc_MovementItemFloat_LiveWeight', 'Живой вес' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MovementItemFloat_LiveWeight');
+  SELECT 'zc_MIFloat_LiveWeight', 'Живой вес' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_LiveWeight');
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
-  SELECT 'zc_MovementItemFloat_HeadCount', 'Количество голов' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MovementItemFloat_HeadCount');
+  SELECT 'zc_MIFloat_HeadCount', 'Количество голов' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_HeadCount');
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
-  SELECT 'zc_MovementItemFloat_RealWeight', 'Реальный вес' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MovementItemFloat_RealWeight');
+  SELECT 'zc_MIFloat_RealWeight', 'Реальный вес' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_RealWeight');
 
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
-  SELECT 'zc_MovementItemFloat_Count', 'Количество батонов или упаковок' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MovementItemFloat_Count');
+  SELECT 'zc_MIFloat_Count', 'Количество батонов или упаковок' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_Count');
 
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
-  SELECT 'zc_MovementItemFloat_CuterCount', 'Количество кутеров' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MovementItemFloat_CuterCount');
+  SELECT 'zc_MIFloat_CuterCount', 'Количество кутеров' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_CuterCount');
 INSERT INTO MovementItemFloatDesc (Code, ItemName)
-  SELECT 'zc_MovementItemFloat_AmountReceipt', 'Количество по рецептуре на 1 кутер' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MovementItemFloat_AmountReceipt');
+  SELECT 'zc_MIFloat_AmountReceipt', 'Количество по рецептуре на 1 кутер' WHERE NOT EXISTS (SELECT * FROM MovementItemFloatDesc WHERE Code = 'zc_MIFloat_AmountReceipt');
 
 
 
@@ -35,6 +35,7 @@ INSERT INTO MovementItemFloatDesc (Code, ItemName)
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
 
+ 30.06.13                                        * rename zc_MI...
  29.06.13                                        * НОВАЯ СХЕМА
- 29.06.13                                        * zc_MovementItemFloat_AmountPacker
+ 29.06.13                                        * zc_MIFloat_AmountPacker
 */

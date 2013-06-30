@@ -1,17 +1,15 @@
-CREATE OR REPLACE FUNCTION zc_MovementItem_Goods()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 1;
-END;  $BODY$ LANGUAGE plpgsql;
+--------------------------- !!!!!!!!!!!!!!!!!!!
+--------------------------- !!! ÕŒ¬¿ﬂ —’≈Ã¿ !!!
+--------------------------- !!!!!!!!!!!!!!!!!!!
 
-CREATE OR REPLACE FUNCTION zc_MovementItem_In()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 2;
-END;  $BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_MI_Master() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDesc WHERE Code = 'zc_MI_Master'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_MI_Child() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemDesc WHERE Code = 'zc_MI_Child'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
-CREATE OR REPLACE FUNCTION zc_MovementItem_Out()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 3;
-END;  $BODY$ LANGUAGE plpgsql;
+
+/*-------------------------------------------------------------------------------
+ »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
+               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+
+ 30.06.13                                        * rename zc_MI...
+ 30.06.13                                        * ÕŒ¬¿ﬂ —’≈Ã¿
+*/

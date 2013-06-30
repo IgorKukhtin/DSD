@@ -1,7 +1,14 @@
-п»їINSERT INTO MovementStringDesc (id, Code, itemname)
-SELECT zc_MovementString_InvNumberPartner(), 'InvNumberPartner', 'РќРѕРјРµСЂ РЅР°РєР»Р°РґРЅРѕР№ Сѓ РєРѕРЅС‚СЂР°РіРµРЅС‚Р°' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Id = zc_MovementString_InvNumberPartner());
-	
+--------------------------- !!!!!!!!!!!!!!!!!!!
+--------------------------- !!! НОВАЯ СХЕМА !!!
+--------------------------- !!!!!!!!!!!!!!!!!!!
 
---------------------------- !!!!!!!!!!!!!!!!!!!
---------------------------- !!! РќРћР’РђРЇ РЎРҐР•РњРђ !!!
---------------------------- !!!!!!!!!!!!!!!!!!!
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_InvNumberPartner', 'Документ Приход' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_InvNumberPartner');
+
+
+/*-------------------------------------------------------------------------------
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+
+ 30.06.13                                        * НОВАЯ СХЕМА
+*/

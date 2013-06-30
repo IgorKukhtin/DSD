@@ -1,7 +1,7 @@
-ÔªøINSERT INTO MovementBooleanDesc (id, Code ,itemname)
-SELECT zc_MovementBoolean_PriceWithVAT(), 'PriceWithVAT','—Ü–µ–Ω–∞ —Å –ù–î–° (–¥–∞/–Ω–µ—Ç)'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Id = zc_MovementBoolean_PriceWithVAT());
+INSERT INTO MovementBooleanDesc (id, Code ,itemname)
+SELECT zc_MovementBoolean_PriceWithVAT(), 'PriceWithVAT','ˆÂÌ‡ Ò Õƒ— (‰‡/ÌÂÚ)'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Id = zc_MovementBoolean_PriceWithVAT());
 
 	
 --------------------------- !!!!!!!!!!!!!!!!!!!
---------------------------- !!! –ù–û–í–ê–Ø –°–•–ï–ú–ê !!!
+--------------------------- !!! ÕŒ¬¿ﬂ —’≈Ã¿ !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!

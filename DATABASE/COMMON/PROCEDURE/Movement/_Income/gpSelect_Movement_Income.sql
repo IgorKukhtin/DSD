@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
                InvNumberPartner TVarChar) AS
 $BODY$BEGIN
 
-   --PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
+   --PERFORM lpCheckRight (inSession, zc_Enum_Process_User());
 
    RETURN QUERY 
    SELECT
@@ -29,26 +29,26 @@ $BODY$BEGIN
      FROM Movement
 LEFT JOIN Object AS Status 
        ON Status.id = Movement.StatusId    
-LEFT JOIN MovementLinkObject AS MovementLink_From 
-       ON MovementLink_From.DescId = zc_MovementLink_From()
-      AND MovementLink_From.MovementId = Movement.Id
+LEFT JOIN MovementLinkObject AS MovementLinkObject_From 
+       ON MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+      AND MovementLinkObject_From.MovementId = Movement.Id
 LEFT JOIN Object AS ObjectFrom 
-       ON ObjectFrom.Id =  MovementLink_From.ObjectId
-LEFT JOIN MovementLinkObject AS MovementLink_To
-       ON MovementLink_To.DescId = zc_MovementLink_To()
-      AND MovementLink_To.MovementId = Movement.Id
+       ON ObjectFrom.Id =  MovementLinkObject_From.ObjectId
+LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+       ON MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+      AND MovementLinkObject_To.MovementId = Movement.Id
 LEFT JOIN Object AS ObjectTo 
-       ON ObjectTo.Id =  MovementLink_To.ObjectId
-LEFT JOIN MovementLinkObject AS MovementLink_PaidKind
-       ON MovementLink_PaidKind.DescId = zc_MovementLink_PaidKind()
-      AND MovementLink_PaidKind.MovementId = Movement.Id
+       ON ObjectTo.Id =  MovementLinkObject_To.ObjectId
+LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+       ON MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+      AND MovementLinkObject_PaidKind.MovementId = Movement.Id
 LEFT JOIN Object AS PaidKind
-       ON PaidKind.Id =  MovementLink_PaidKind.ObjectId
-LEFT JOIN MovementLinkObject AS MovementLink_Contract
-       ON MovementLink_Contract.DescId = zc_MovementLink_Contract()
-      AND MovementLink_Contract.MovementId = Movement.Id
+       ON PaidKind.Id =  MovementLinkObject_PaidKind.ObjectId
+LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+       ON MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+      AND MovementLinkObject_Contract.MovementId = Movement.Id
 LEFT JOIN Object AS Contract 
-       ON Contract.Id =  MovementLink_Contract.ObjectId
+       ON Contract.Id =  MovementLinkObject_Contract.ObjectId
 LEFT JOIN MovementDate AS OperDatePartner 
        ON OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
       AND OperDatePartner.MovementId =  Movement.Id
@@ -57,11 +57,18 @@ LEFT JOIN MovementString AS InvNumberPartner
       AND InvNumberPartner.MovementId =  Movement.Id
    WHERE Movement.DescId = zc_Movement_Income();
   
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 100;
-ALTER FUNCTION gpSelect_Movement_Income(TDateTime, TDateTime, TVarChar)
-  OWNER TO postgres;
+END;
+$BODY$
+LANGUAGE PLPGSQL VOLATILE;
 
--- SELECT * FROM gpSelect_Movement_Income('2')
+
+/*
+ »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
+               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+               
+ 30.06.13                                        *
+
+*/
+
+-- ÚÂÒÚ
+-- SELECT * FROM gpSelect_Movement_Income (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= '2')

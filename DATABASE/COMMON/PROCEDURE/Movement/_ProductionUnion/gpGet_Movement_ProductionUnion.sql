@@ -1,10 +1,10 @@
-п»ї-- Function: gpGet_Movement_ProductionUnion()
+-- Function: gpGet_Movement_ProductionUnion()
 
 --DROP FUNCTION gpGet_Movement_ProductionUnion();
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_ProductionUnion(
-IN inId          Integer,       /* Р•РґРёРЅРёС†Р° РёР·РјРµСЂРµРЅРёСЏ */
-IN inSession     TVarChar       /* С‚РµРєСѓС‰РёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ */)
+IN inId          Integer,       /* Единица измерения */
+IN inSession     TVarChar       /* текущий пользователь */)
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusId Integer, StatusName TVarChar,
                FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar) 
 AS
@@ -26,19 +26,30 @@ $BODY$BEGIN
      FROM Movement
 LEFT JOIN Object AS Status 
        ON Status.id = Movement.StatusId    
-LEFT JOIN MovementLinkObject AS MovementLink_From 
-       ON MovementLink_From.DescId = zc_MovementLink_From()
-      AND MovementLink_From.MovementId = Movement.Id
+LEFT JOIN MovementLinkObject AS MovementLinkObject_From 
+       ON MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+      AND MovementLinkObject_From.MovementId = Movement.Id
 LEFT JOIN Object AS ObjectFrom 
-       ON ObjectFrom.Id =  MovementLink_From.ObjectId
-LEFT JOIN MovementLinkObject AS MovementLink_To
-       ON MovementLink_To.DescId = zc_MovementLink_To()
-      AND MovementLink_To.MovementId = Movement.Id
+       ON ObjectFrom.Id =  MovementLinkObject_From.ObjectId
+LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+       ON MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+      AND MovementLinkObject_To.MovementId = Movement.Id
 LEFT JOIN Object AS ObjectTo 
-       ON ObjectTo.Id =  MovementLink_To.ObjectId
+       ON ObjectTo.Id =  MovementLinkObject_To.ObjectId
     WHERE Movement.Id = inId;
   
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 1000;
+END;
+$BODY$
+LANGUAGE PLPGSQL VOLATILE;
+
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               
+ 30.06.13                                        *
+
+*/
+
+-- тест
+-- SELECT * FROM gpGet_Movement_ProductionUnion (inId:= 1, inSession:= '2')

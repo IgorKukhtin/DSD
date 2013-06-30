@@ -1,10 +1,17 @@
-insert into MovementDesc(Id, Code, ItemName)
-SELECT zc_Movement_Income(), 'Income', 'Приходная накладная' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Id = zc_Movement_Income());
-
-insert into MovementDesc(Id, Code, ItemName)
-SELECT zc_Movement_ProductionUnion(), 'ProductionUnion', 'Накладная перемещения' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Id = zc_Movement_ProductionUnion());
-
-
 --------------------------- !!!!!!!!!!!!!!!!!!!
 --------------------------- !!! НОВАЯ СХЕМА !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!
+
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_Income', 'Документ Приход' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_Income');
+
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_ProductionUnion', 'Документ Производство - смешивание' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_ProductionUnion');
+
+
+/*-------------------------------------------------------------------------------
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+
+ 30.06.13                                        * НОВАЯ СХЕМА
+*/

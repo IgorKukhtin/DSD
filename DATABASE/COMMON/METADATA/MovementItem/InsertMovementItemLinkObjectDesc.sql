@@ -7,19 +7,20 @@
 --------------------------- !!!!!!!!!!!!!!!!!!!
 
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
-  SELECT 'zc_MovementItemLink_GoodsKind', 'Виды товаров' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MovementItemLink_GoodsKind');
+  SELECT 'zc_MILinkObject_GoodsKind', 'Виды товаров' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_GoodsKind');
 
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
-  SELECT 'MovementItemLink_Asset', 'Основные средства (для которых закупается ТМЦ)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'MovementItemLink_Asset');
+  SELECT 'zc_MILinkObject_Asset', 'Основные средства (для которых закупается ТМЦ)' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Asset');
 
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
-  SELECT 'zc_MovementItemLink_Receipt', 'Рецептуры' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MovementItemLink_Receipt');
+  SELECT 'zc_MILinkObject_Receipt', 'Рецептуры' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Receipt');
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
 
+ 30.06.13                                        * rename zc_MI...
  29.06.13                                        * НОВАЯ СХЕМА
- 29.06.13                                        * MovementItemLink_Asset
+ 29.06.13                                        * zc_MILinkObject_Asset
 */

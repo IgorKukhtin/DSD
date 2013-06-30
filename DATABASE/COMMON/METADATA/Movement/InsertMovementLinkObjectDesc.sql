@@ -1,28 +1,33 @@
-insert into MovementLinkObjectDesc(Id, Code, ItemName)
-SELECT zc_MovementLink_To(), 'To', 'Сущность на которую идет приход товара' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Id = zc_MovementLink_To());
-
-insert into MovementLinkObjectDesc(Id, Code, ItemName)
-SELECT zc_MovementLink_From(), 'From', 'Сущность c которой идет приход товара' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Id = zc_MovementLink_From());
-
-insert into MovementLinkObjectDesc(Id, Code, ItemName)
-SELECT zc_MovementLink_DocumentKind(), 'DocumentKind', 'Вид хозяйственной операции' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Id = zc_MovementLink_DocumentKind());
-
-insert into MovementLinkObjectDesc(Id, Code, ItemName)
-SELECT zc_MovementLink_PaidKind(), 'PaidKind', 'Виды форм оплаты' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Id = zc_MovementLink_PaidKind());
-
-insert into MovementLinkObjectDesc(Id, Code, ItemName)
-SELECT zc_MovementLink_Contract(), 'Contract', 'Договор' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Id = zc_MovementLink_Contract());
-
-insert into MovementLinkObjectDesc(Id, Code, ItemName)
-SELECT zc_MovementLink_Car(), 'Car', 'Автомобиль' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Id = zc_MovementLink_Car());
-
-insert into MovementLinkObjectDesc(Id, Code, ItemName)
-SELECT zc_MovementLink_PersonalDriver(), 'PersonalDriver', 'Сотрудник (водитель)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Id = zc_MovementLink_PersonalDriver());
-
-insert into MovementLinkObjectDesc(Id, Code, ItemName)
-SELECT zc_MovementLink_PersonalPacker(), 'PersonalPacker', 'Сотрудник (заготовитель)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Id = zc_MovementLink_PersonalPacker());
-
-
 --------------------------- !!!!!!!!!!!!!!!!!!!
 --------------------------- !!! НОВАЯ СХЕМА !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!
+
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_From', 'От кого (в документе)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_From');
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_To', 'Кому (в документе)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_To');
+
+-- INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+--  SELECT 'zc_MovementLinkObject_DocumentKind', 'Виды хозяйственных операций' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_DocumentKind');
+
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_PaidKind', 'Виды форм оплаты' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PaidKind');
+
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_Contract', 'Договора' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Contract');
+
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_Car', 'Автомобили' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Car');
+
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_PersonalDriver', 'Сотрудник (водитель)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PersonalDriver');
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_PersonalPacker', 'Сотрудник (заготовитель)' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PersonalPacker');
+
+
+/*-------------------------------------------------------------------------------
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+
+ 30.06.13                                        * НОВАЯ СХЕМА
+*/

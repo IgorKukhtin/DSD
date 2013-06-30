@@ -1,48 +1,25 @@
-CREATE OR REPLACE FUNCTION zc_MovementLink_From()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 1;
-END;  $BODY$ LANGUAGE plpgsql;
+--------------------------- !!!!!!!!!!!!!!!!!!!
+--------------------------- !!! ÕŒ¬¿ﬂ —’≈Ã¿ !!!
+--------------------------- !!!!!!!!!!!!!!!!!!!
 
-CREATE OR REPLACE FUNCTION zc_MovementLink_To()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 2;
-END;  $BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_From() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_From'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_To() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_To'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
-CREATE OR REPLACE FUNCTION zc_MovementLink_DocumentKind()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 3;
-END;  $BODY$ LANGUAGE plpgsql;
+-- CREATE OR REPLACE FUNCTION zc_MovementLinkObject_DocumentKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_DocumentKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
-CREATE OR REPLACE FUNCTION zc_MovementLink_PaidKind()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 4;
-END;  $BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_PaidKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PaidKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
-CREATE OR REPLACE FUNCTION zc_MovementLink_Contract()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 5;
-END;  $BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_Contract() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Contract'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
-CREATE OR REPLACE FUNCTION zc_MovementLink_Car()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 6;
-END;  $BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_Car() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Car'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
-CREATE OR REPLACE FUNCTION zc_MovementLink_PersonalDriver()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 7;
-END;  $BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_PersonalDriver() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PersonalDriver'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_PersonalPacker() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PersonalPacker'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
-CREATE OR REPLACE FUNCTION zc_MovementLink_PersonalPacker()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 8;
-END;  $BODY$ LANGUAGE plpgsql;
 
+/*-------------------------------------------------------------------------------
+ »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
+               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+
+ 30.06.13                                        * ÕŒ¬¿ﬂ —’≈Ã¿
+*/

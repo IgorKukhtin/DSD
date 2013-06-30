@@ -1,26 +1,47 @@
-п»ї-- Function: gpInsertUpdate_Movement_ProductionUnion()
+-- Function: gpInsertUpdate_Movement_ProductionUnion()
 
 -- DROP FUNCTION gpInsertUpdate_Movement_ProductionUnion();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProductionUnion(
-INOUT ioId	         Integer,   	/* РєР»СЋС‡ РѕР±СЉРµРєС‚Р° <Р”РѕРєСѓРјРµРЅС‚ РїСЂРѕРёР·РІРѕРґСЃС‚РІР°> */
-  IN inInvNumber         TVarChar, 
-  IN inOperDate          TDateTime,
-  IN inFromId            Integer,
-  IN inToId              Integer,
-  IN inSession           TVarChar       /* С‚РµРєСѓС‰РёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ */
+ INOUT ioId                  Integer   , -- Ключ объекта <Документ>
+    IN inInvNumber           TVarChar  , -- Номер документа
+    IN inOperDate            TDateTime , -- Дата документа
+    IN inFromId              Integer   , -- От кого (в документе)
+    IN inToId                Integer   , -- Кому (в документе)
+    IN inSession             TVarChar    -- сессия пользователя
 )                              
-  RETURNS integer AS
-$BODY$BEGIN
---   PERFORM lpCheckRight(inSession, zc_Enum_Process_Measure());
+RETURNS Integer AS
+$BODY$
+   DECLARE vbUserId Integer;
+BEGIN
 
-   ioId := lpInsertUpdate_Movement(ioId, zc_Movement_ProductionUnion(), inInvNumber, inOperDate, NULL);
+   -- проверка прав пользователя на вызов процедуры
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Movement_ProductionUnion()());
+   vbUserId := inSession;
+
+   -- сохранили <Документ>
+   ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ProductionUnion(), inInvNumber, inOperDate, NULL);
    
-   PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLink_From(), ioId, inFromId);
-   PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLink_To(), ioId, inToId);
+   -- сохранили связь с <От кого (в документе)>
+   PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
+   -- сохранили связь с <Кому (в документе)>
+   PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
 
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-  
-                            
+   -- сохранили протокол
+   -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+
+END;
+$BODY$
+LANGUAGE PLPGSQL VOLATILE;
+
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               
+ 30.06.13                                        *
+
+*/
+
+-- тест
+-- SELECT * FROM gpInsertUpdate_Movement_ProductionUnion (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inFromId:= 1, inToId:= 2, inSession:= '2')

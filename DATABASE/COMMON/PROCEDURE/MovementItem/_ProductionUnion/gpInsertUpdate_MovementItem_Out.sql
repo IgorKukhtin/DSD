@@ -1,29 +1,45 @@
-п»ї-- Function: gpInsertUpdate_MovementItem_Out()
+-- Function: gpInsertUpdate_MovementItem_Out()
 
 -- DROP FUNCTION gpInsertUpdate_MovementItem_Out();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Out(
-INOUT ioId	         Integer,   	/* РєР»СЋС‡ РѕР±СЉРµРєС‚Р° <Р­Р»РµРјРµРЅС‚ СЂР°СЃС…РѕРґР° РґРѕРєСѓРјРµРЅС‚Р° РїСЂРѕРёР·РІРѕРґСЃС‚РІР°> */
-  IN inMovementId        Integer,
-  IN inGoodsId           Integer,
-  IN inAmount            TFloat, 
-  IN inParentId          Integer,
-  IN inAmountReceipt     TFloat,        /* РљРѕР»РёС‡РµСЃС‚РІРѕ РїРѕ СЂРµС†РµРїС‚СѓСЂРµ РЅР° 1 РєСѓС‚РµСЂ */
-  IN inComment	         TVarChar,      /* РљРѕРјРјРµРЅС‚Р°СЂРёР№	                   */
-  IN inSession           TVarChar       /* С‚РµРєСѓС‰РёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ            */
+ INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId          Integer   , -- Ключ объекта <Документ>
+    IN inGoodsId             Integer   , -- Товары
+    IN inAmount              TFloat    , -- Количество
+    IN inParentId          Integer,
+    IN inAmountReceipt     TFloat,        /* Количество по рецептуре на 1 кутер */
+    IN inComment	         TVarChar,      /* Комментарий	                   */
+    IN inSession             TVarChar    -- сессия пользователя
 )                              
-  RETURNS integer AS
-$BODY$BEGIN
---   PERFORM lpCheckRight(inSession, zc_Enum_Process_Measure());
+RETURNS Integer AS
+$BODY$
+   DECLARE vbUserId Integer;
+BEGIN
 
-   ioId := lpInsertUpdate_MovementItem(ioId, zc_MovementItem_Out(), inGoodsId, inMovementId, inAmount, inParentId);
+   -- проверка прав пользователя на вызов процедуры
+   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
+   vbUserId := inSession;
+
+   -- сохранили <Элемент документа>
+   ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inGoodsId, inMovementId, inAmount, inParentId);
    
-   PERFORM lpInsertUpdate_MovementItemString(zc_MovementItemString_Comment(), ioId, inComment);
+   PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
 
-   PERFORM lpInsertUpdate_MovementItemFloat(zc_MovementItemFloat_AmountReceipt(), ioId, inAmountReceipt);
+   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountReceipt(), ioId, inAmountReceipt);
 
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-  
-                            
+END;
+$BODY$
+LANGUAGE PLPGSQL VOLATILE;
+
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               
+ 30.06.13                                        *
+
+*/
+
+-- тест
+-- SELECT * FROM gpInsertUpdate_MovementItem_Out (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inParentId:= NULL, inAmountReceipt:= 1, inComment:= '', inSession:= '2')

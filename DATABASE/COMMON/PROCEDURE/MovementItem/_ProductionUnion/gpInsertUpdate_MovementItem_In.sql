@@ -1,38 +1,54 @@
-п»ї-- Function: gpInsertUpdate_MovementItem_In()
+-- Function: gpInsertUpdate_MovementItem_In()
 
 -- DROP FUNCTION gpInsertUpdate_MovementItem_In();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_In(
-INOUT ioId	         Integer,   	/* РєР»СЋС‡ РѕР±СЉРµРєС‚Р° <Р­Р»РµРјРµРЅС‚ РїСЂРёС…РѕРґР° РґРѕРєСѓРјРµРЅС‚Р° РїСЂРѕРёР·РІРѕРґСЃС‚РІР°> */
-  IN inMovementId        Integer,
-  IN inGoodsId           Integer,
-  IN inAmount            TFloat, 
-  IN inPartionClose	 Boolean,       /* РїР°СЂС‚РёСЏ Р·Р°РєСЂС‹С‚Р° (РґР°/РЅРµС‚)         */	
-  IN inComment	         TVarChar,      /* РљРѕРјРјРµРЅС‚Р°СЂРёР№	                   */
-  IN inCount	         TFloat,        /* РљРѕР»РёС‡РµСЃС‚РІРѕ Р±Р°С‚РѕРЅРѕРІ РёР»Рё СѓРїР°РєРѕРІРѕРє */
-  IN inRealWeight	 TFloat,        /* Р¤Р°РєС‚РёС‡РµСЃРєРёР№ РІРµСЃ(РёРЅС„РѕСЂРјР°С‚РёРІРЅРѕ)   */	
-  IN inCuterCount        TFloat,        /* РљРѕР»РёС‡РµСЃС‚РІРѕ РєСѓС‚РµСЂРѕРІ	           */
-  IN inReceiptId         Integer,       /* Р РµС†РµРїС‚СѓСЂС‹	                   */
-  IN inSession           TVarChar       /* С‚РµРєСѓС‰РёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ            */
+ INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
+    IN inMovementId          Integer   , -- Ключ объекта <Документ>
+    IN inGoodsId             Integer   , -- Товары
+    IN inAmount              TFloat    , -- Количество
+    IN inPartionClose	 Boolean,       /* партия закрыта (да/нет)         */	
+    IN inComment	         TVarChar,      /* Комментарий	                   */
+    IN inCount	         TFloat,        /* Количество батонов или упаковок */
+    IN inRealWeight	 TFloat,        /* Фактический вес(информативно)   */	
+    IN inCuterCount        TFloat,        /* Количество кутеров	           */
+    IN inReceiptId         Integer,       /* Рецептуры	                   */
+    IN inSession             TVarChar    -- сессия пользователя
 )                              
-  RETURNS integer AS
-$BODY$BEGIN
---   PERFORM lpCheckRight(inSession, zc_Enum_Process_Measure());
+RETURNS Integer AS
+$BODY$
+   DECLARE vbUserId Integer;
+BEGIN
 
-   ioId := lpInsertUpdate_MovementItem(ioId, zc_MovementItem_In(), inGoodsId, inMovementId, inAmount, NULL);
+   -- проверка прав пользователя на вызов процедуры
+   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
+   vbUserId := inSession;
+
+   -- сохранили <Элемент документа>
+   ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
    
-   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MovementItemLink_Receipt(), ioId, inReceiptId);
+   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_Receipt(), ioId, inReceiptId);
 
-   PERFORM lpInsertUpdate_MovementItemBoolean(zc_MovementItemBoolean_PartionClose(), ioId, inPartionClose);
+   PERFORM lpInsertUpdate_MovementItemBoolean(zc_MIBoolean_PartionClose(), ioId, inPartionClose);
 
-   PERFORM lpInsertUpdate_MovementItemString(zc_MovementItemString_Comment(), ioId, inComment);
+   PERFORM lpInsertUpdate_MovementItemString(zc_MIString_Comment(), ioId, inComment);
 
-   PERFORM lpInsertUpdate_MovementItemFloat(zc_MovementItemFloat_Count(), ioId, inCount);
-   PERFORM lpInsertUpdate_MovementItemFloat(zc_MovementItemFloat_RealWeight(), ioId, inRealWeight);
-   PERFORM lpInsertUpdate_MovementItemFloat(zc_MovementItemFloat_CuterCount(), ioId, inCuterCount);
+   PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_Count(), ioId, inCount);
+   PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_RealWeight(), ioId, inRealWeight);
+   PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_CuterCount(), ioId, inCuterCount);
 
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-  
-                            
+END;
+$BODY$
+LANGUAGE PLPGSQL VOLATILE;
+
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               
+ 30.06.13                                        *
+
+*/
+
+-- тест
+-- SELECT * FROM gpInsertUpdate_MovementItem_In (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inPartionClose:= FALSE, inComment:= '', inCount:= 1, inRealWeight:= 1, inCuterCount:= 0, inReceiptId:= 0, inSession:= '2')

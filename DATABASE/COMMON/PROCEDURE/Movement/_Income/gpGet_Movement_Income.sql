@@ -12,9 +12,10 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
                PersonalPackerId Integer, PersonalPackerName TVarChar, OperDatePartner TDateTime,
                InvNumberPartner TVarChar, PriceWithVAT Boolean, VATPercent TFloat, DiscountPercent TFloat) 
 AS
-$BODY$BEGIN
+$BODY$
+BEGIN
 
---   PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
+--   PERFORM lpCheckRight (inSession, zc_Enum_Process_User());
 
      RETURN QUERY
      SELECT 
@@ -45,41 +46,41 @@ $BODY$BEGIN
      FROM Movement
 LEFT JOIN Object AS Status 
        ON Status.id = Movement.StatusId    
-LEFT JOIN MovementLinkObject AS MovementLink_From 
-       ON MovementLink_From.DescId = zc_MovementLink_From()
-      AND MovementLink_From.MovementId = Movement.Id
+LEFT JOIN MovementLinkObject AS MovementLinkObject_From 
+       ON MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+      AND MovementLinkObject_From.MovementId = Movement.Id
 LEFT JOIN Object AS ObjectFrom 
-       ON ObjectFrom.Id =  MovementLink_From.ObjectId
-LEFT JOIN MovementLinkObject AS MovementLink_To
-       ON MovementLink_To.DescId = zc_MovementLink_To()
-      AND MovementLink_To.MovementId = Movement.Id
+       ON ObjectFrom.Id =  MovementLinkObject_From.ObjectId
+LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+       ON MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+      AND MovementLinkObject_To.MovementId = Movement.Id
 LEFT JOIN Object AS ObjectTo 
-       ON ObjectTo.Id =  MovementLink_To.ObjectId
-LEFT JOIN MovementLinkObject AS MovementLink_PaidKind
-       ON MovementLink_PaidKind.DescId = zc_MovementLink_PaidKind()
-      AND MovementLink_PaidKind.MovementId = Movement.Id
+       ON ObjectTo.Id =  MovementLinkObject_To.ObjectId
+LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+       ON MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+      AND MovementLinkObject_PaidKind.MovementId = Movement.Id
 LEFT JOIN Object AS PaidKind
-       ON PaidKind.Id =  MovementLink_PaidKind.ObjectId
-LEFT JOIN MovementLinkObject AS MovementLink_Contract
-       ON MovementLink_Contract.DescId = zc_MovementLink_Contract()
-      AND MovementLink_Contract.MovementId = Movement.Id
+       ON PaidKind.Id =  MovementLinkObject_PaidKind.ObjectId
+LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+       ON MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+      AND MovementLinkObject_Contract.MovementId = Movement.Id
 LEFT JOIN Object AS Contract 
-       ON Contract.Id =  MovementLink_Contract.ObjectId
-LEFT JOIN MovementLinkObject AS MovementLink_Car
-       ON MovementLink_Car.DescId = zc_MovementLink_Car()
-      AND MovementLink_Car.MovementId = Movement.Id
+       ON Contract.Id =  MovementLinkObject_Contract.ObjectId
+LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
+       ON MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
+      AND MovementLinkObject_Car.MovementId = Movement.Id
 LEFT JOIN Object AS Car 
-       ON Car.Id =  MovementLink_Car.ObjectId
-LEFT JOIN MovementLinkObject AS MovementLink_PersonalDriver
-       ON MovementLink_PersonalDriver.DescId = zc_MovementLink_PersonalDriver()
-      AND MovementLink_PersonalDriver.MovementId = Movement.Id
+       ON Car.Id =  MovementLinkObject_Car.ObjectId
+LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
+       ON MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
+      AND MovementLinkObject_PersonalDriver.MovementId = Movement.Id
 LEFT JOIN Object AS PersonalDriver 
-       ON PersonalDriver.Id =  MovementLink_PersonalDriver.ObjectId
-LEFT JOIN MovementLinkObject AS MovementLink_PersonalPacker
-       ON MovementLink_PersonalPacker.DescId = zc_MovementLink_PersonalPacker()
-      AND MovementLink_PersonalPacker.MovementId = Movement.Id
+       ON PersonalDriver.Id =  MovementLinkObject_PersonalDriver.ObjectId
+LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalPacker
+       ON MovementLinkObject_PersonalPacker.DescId = zc_MovementLinkObject_PersonalPacker()
+      AND MovementLinkObject_PersonalPacker.MovementId = Movement.Id
 LEFT JOIN Object AS PersonalPacker 
-       ON PersonalPacker.Id =  MovementLink_PersonalPacker.ObjectId
+       ON PersonalPacker.Id =  MovementLinkObject_PersonalPacker.ObjectId
 LEFT JOIN MovementDate AS OperDatePartner 
        ON OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
       AND OperDatePartner.MovementId =  Movement.Id
@@ -97,7 +98,18 @@ LEFT JOIN MovementFloat AS DiscountPercent
       AND DiscountPercent.MovementId =  Movement.Id
     WHERE Movement.Id = inId;
   
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 1000;
+END;
+$BODY$
+LANGUAGE PLPGSQL VOLATILE;
+
+
+/*
+ »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
+               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+               
+ 30.06.13                                        *
+
+*/
+
+-- ÚÂÒÚ
+-- SELECT * FROM gpGet_Movement_Income (inId:= 1, inSession:= '2')
