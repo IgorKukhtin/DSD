@@ -94,15 +94,15 @@ BEGIN
 
            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                     ON MovementLinkObject_From.MovementId = MovementItem.MovementId
-                   AND MovementLinkObject_From.DescId = zc_MovementLink_From()
+                   AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                     ON MovementLinkObject_To.MovementId = MovementItem.MovementId
-                   AND MovementLinkObject_To.DescId = zc_MovementLink_To()
+                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalPacker
                     ON MovementLinkObject_PersonalPacker.MovementId = MovementItem.MovementId
-                   AND MovementLinkObject_PersonalPacker.DescId = zc_MovementLink_PersonalPacker()
+                   AND MovementLinkObject_PersonalPacker.DescId = zc_MovementLinkObject_PersonalPacker()
 
            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                     ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
@@ -203,5 +203,3 @@ LEFT JOIN MovementItemFloat AS MIFloat_Price
   UPDATE Movement SET StatusId = zc_Object_Status_Complete() WHERE Id = inMovementId;
 
 END;$BODY$ LANGUAGE plpgsql;
-  
-                            
