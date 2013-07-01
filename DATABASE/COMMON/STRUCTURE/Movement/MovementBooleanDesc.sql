@@ -8,7 +8,7 @@
 /*-------------------------------------------------------------------------------*/
 
 CREATE TABLE MovementBooleanDesc(
-   Id                    INTEGER NOT NULL PRIMARY KEY,
+   Id                    SERIAL NOT NULL PRIMARY KEY, 
    Code                  TVarChar,
    ItemName              TVarChar
 
@@ -16,6 +16,7 @@ CREATE TABLE MovementBooleanDesc(
 
 /*-------------------------------------------------------------------------------*/
 /*                                  Индексы                                      */
+
 
 
 /*

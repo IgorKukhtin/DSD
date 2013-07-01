@@ -3,47 +3,85 @@
 -- DROP FUNCTION gpInsertUpdate_Movement_Income();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
-INOUT ioId	         Integer,   	/* ключ объекта <Приходная накладная> */
-  IN inInvNumber         TVarChar, 
-  IN inOperDate          TDateTime,
-  IN inFromId            Integer,
-  IN inToId              Integer,
-  IN inPaidKindId        Integer,
-  IN inContractId        Integer,
-  IN inCarId             Integer,
-  IN inPersonalDriverId  Integer,
-  IN inPersonalPackerId  Integer,
-  IN inOperDatePartner   TDateTime,
-  IN inInvNumberPartner  TVarChar,
-  IN inPriceWithVAT      Boolean,
-  IN inVATPercent        TFloat,
-  IN inDiscountPercent   TFloat,
-  IN inSession           TVarChar       /* текущий пользователь */
+ INOUT ioId                  Integer   , -- Ключ объекта <Документ>
+    IN inInvNumber           TVarChar  , -- Номер документа
+    IN inOperDate            TDateTime , -- Дата документа
+
+    IN inOperDatePartner     TDateTime , -- Дата накладной у контрагента
+    IN inInvNumberPartner    TVarChar  , -- Номер накладной у контрагента
+
+    IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
+    IN inVATPercent          TFloat    , -- % НДС
+    IN inDiscountPercent     TFloat    , -- % Скидки
+    IN inExtraChargesPercent TFloat    , -- % Наценки
+
+    IN inFromId              Integer   , -- От кого (в документе)
+    IN inToId                Integer   , -- Кому (в документе)
+    IN inPaidKindId          Integer   , -- Виды форм оплаты 
+    IN inContractId          Integer   , -- Договора
+    IN inCarId               Integer   , -- Автомобили
+    IN inPersonalDriverId    Integer   , -- Сотрудник (водитель)
+    IN inPersonalPackerId    Integer   , -- Сотрудник (заготовитель)
+    IN inSession             TVarChar    -- сессия пользователя
 )                              
-  RETURNS integer AS
-$BODY$BEGIN
---   PERFORM lpCheckRight(inSession, zc_Enum_Process_Measure());
+RETURNS Integer AS
+$BODY$
+   DECLARE vbUserId Integer;
+BEGIN
 
-   ioId := lpInsertUpdate_Movement(ioId, zc_Movement_Income(), inInvNumber, inOperDate, NULL);
+   -- проверка прав пользователя на вызов процедуры
+   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Income());
+   vbUserId := inSession;
+
+   -- сохранили <Документ>
+   ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Income(), inInvNumber, inOperDate, NULL);
    
-   PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLink_From(), ioId, inFromId);
-   PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLink_To(), ioId, inToId);
-   PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLink_PaidKind(), ioId, inPaidKindId);
-   PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLink_Contract(), ioId, inContractId);
-   PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLink_Car(), ioId, inCarId);
-   PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLink_PersonalDriver(), ioId, inPersonalDriverId);
-   PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLink_PersonalPacker(), ioId, inPersonalPackerId);
+   -- сохранили свойство <Дата накладной у контрагента>
+   PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDatePartner);
+   -- сохранили свойство <Номер накладной у контрагента>
+   PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);
 
-   PERFORM lpInsertUpdate_MovementDate(zc_MovementDate_OperDatePartner(), ioId, inOperDatePartner);
+   -- сохранили свойство <Цена с НДС (да/нет)>
+   PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), ioId, inPriceWithVAT);
+   -- сохранили свойство <% НДС>
+   PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, inVATPercent);
+   -- сохранили свойство <% Скидки>
+   PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_DiscountPercent(), ioId, inDiscountPercent);
+   -- сохранили свойство <% Наценки>
+   PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ExtraChargesPercent(), ioId, inExtraChargesPercent);
 
-   PERFORM lpInsertUpdate_MovementString(zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);
+   -- сохранили связь с <От кого (в документе)>
+   PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
+   -- сохранили связь с <Кому (в документе)>
+   PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
 
-   PERFORM lpInsertUpdate_MovementBoolean(zc_MovementBoolean_PriceWithVAT(), ioId, inPriceWithVAT);
+   -- сохранили связь с <Виды форм оплаты >
+   PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
+   -- сохранили связь с <Договора>
+   PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
+   -- сохранили связь с <Автомобили>
+   PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Car(), ioId, inCarId);
 
-   PERFORM lpInsertUpdate_MovementFloat(zc_MovementFloat_VATPercent(), ioId, inVATPercent);
-   PERFORM lpInsertUpdate_MovementFloat(zc_MovementFloat_DiscountPercent(), ioId, inDiscountPercent);
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-  
-                            
+   -- сохранили связь с <Сотрудник (водитель)>
+   PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalDriver(), ioId, inPersonalDriverId);
+   -- сохранили связь с <Сотрудник (заготовитель)>
+   PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalPacker(), ioId, inPersonalPackerId);
+
+   -- сохранили протокол
+   -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+
+END;
+$BODY$
+LANGUAGE PLPGSQL VOLATILE;
+
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               
+ 30.06.13                                        *
+
+*/
+
+-- тест
+-- SELECT * FROM gpInsertUpdate_Movement_Income (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inDiscountPercent:= 0, inExtraChargesPercent:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')

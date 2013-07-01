@@ -1,6 +1,6 @@
-Ôªø-- Function: lfGet_ObjectCode(integer, integer)
+-- Function: lfGet_ObjectCode (Integer, Integer)
 
--- DROP FUNCTION lfGet_ObjectCode (integer, integer);
+-- DROP FUNCTION lfGet_ObjectCode (Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lfGet_ObjectCode(
     IN inObjectCode Integer, 
@@ -8,29 +8,29 @@ CREATE OR REPLACE FUNCTION lfGet_ObjectCode(
 )
 RETURNS Integer AS
 $BODY$
-  DECLARE ObjectCode_ret Integer;
+  DECLARE vbObjectCode Integer;
 BEGIN
      IF COALESCE (inObjectCode, 0) = 0
      THEN 
-         SELECT COALESCE (MAX (ObjectCode), 0) + 1 INTO ObjectCode_ret FROM Object WHERE DescId = inDescId;
+         SELECT COALESCE (MAX (ObjectCode), 0) + 1 INTO vbObjectCode FROM Object WHERE DescId = inDescId;
      ELSE
-         ObjectCode_ret:=inObjectCode;
+         vbObjectCode:=inObjectCode;
      END IF;
      
-     RETURN ObjectCode_ret;
+     RETURN (vbObjectCode);
 
-END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lfGet_ObjectCode(integer, integer) OWNER TO postgres;
+END;
+$BODY$ LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION lfGet_ObjectCode (Integer, Integer) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
- –ò–°–¢–û–†–ò–Ø –†–ê–ó–†–ê–ë–û–¢–ö–ò: –î–ê–¢–ê, –ê–í–¢–û–†
-               –§–µ–ª–æ–Ω—é–∫ –ò.–í.   –ö—É—Ö—Ç–∏–Ω –ò.–í.   –ö–ª–∏–º–µ–Ω—Ç—å–µ–≤ –ö.–ò.
+ »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
+               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 28.06.13                                        * rename vbObjectCode
  20.06.13          *                             *
 
 */
 
--- —Ç–µ—Å—Ç
--- SELECT * FROM lfGet_ObjectCode( 0, zc_Object_Goods())
+-- ÚÂÒÚ
+-- SELECT * FROM lfGet_ObjectCode (0, zc_Object_Goods())

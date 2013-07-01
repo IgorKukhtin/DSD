@@ -7,7 +7,7 @@
 
 /*-------------------------------------------------------------------------------*/
 CREATE TABLE ContainerDesc(
-   Id                    INTEGER NOT NULL PRIMARY KEY, 
+   Id                    SERIAL NOT NULL PRIMARY KEY, 
    Code                  TVarChar NOT NULL UNIQUE,
    ItemName              TVarChar);
 
@@ -16,12 +16,12 @@ CREATE TABLE ContainerDesc(
 /*                                  Индексы                                      */
 
 
-/*
+
+/*-------------------------------------------------------------------------------
  ПРИМЕЧАНИЯ:
  ИСТОРИЯ РАЗРАБОТКИ:
  ДАТА         АВТОР
  ----------------
                  Климентьев К.И.   Кухтин И.В.   
-18.06.02                                         
-01.07.02                                         
+ 29.06.13             * SERIAL
 */

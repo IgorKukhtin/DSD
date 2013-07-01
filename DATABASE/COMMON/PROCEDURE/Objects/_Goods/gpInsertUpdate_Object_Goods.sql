@@ -3,60 +3,62 @@
 -- DROP FUNCTION gpInsertUpdate_Object_Goods();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
- INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
-    IN inCode                Integer   ,    -- Код объекта <Товар>
-    IN inName                TVarChar  ,    -- Название объекта <Товар>
-    IN inGoodsGroupId        Integer   ,    -- ссылка на группу Товаров
-    IN inMeasureId           Integer   ,    -- ссылка на единицу измерения
-    IN inWeight              TFloat    ,    -- Вес
-    IN inInfoMoneyId         Integer   ,    -- Управленческие аналитики
-    IN inSession             TVarChar       -- сессия пользователя
+ INOUT ioId                  Integer   , -- ключ объекта <Товар>
+    IN inCode                Integer   , -- Код объекта <Товар>
+    IN inName                TVarChar  , -- Название объекта <Товар>
+    IN inGoodsGroupId        Integer   , -- ссылка на группу Товаров
+    IN inMeasureId           Integer   , -- ссылка на единицу измерения
+    IN inWeight              TFloat    , -- Вес
+    IN inInfoMoneyId         Integer   , -- Управленческие аналитики
+    IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS integer AS
+RETURNS Integer AS
 $BODY$
-   DECLARE UserId Integer;
-   DECLARE Code_calc Integer;   
+   DECLARE vbUserId Integer;
+   DECLARE vbCode Integer;   
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Goods()());
-   UserId := inSession;
+   vbUserId := inSession;
    
    -- !!! Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
-   -- !!! Code_calc:=lfGet_ObjectCode (inCode, zc_Object_Goods());
-   IF COALESCE (inCode, 0) = 0  THEN Code_calc := NULL; ELSE Code_calc := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
+   -- !!! vbCode:=lfGet_ObjectCode (inCode, zc_Object_Goods());
+   IF COALESCE (inCode, 0) = 0  THEN vbCode := NULL; ELSE vbCode := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
    
    -- !!! проверка уникальности <Наименование>
-   -- !!! PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Goods(), inName);
+   -- !!! PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Goods(), inName);
 
    -- проверка уникальности <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), Code_calc);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), vbCode);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_Goods(), Code_calc, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Goods(), vbCode, inName);
    -- сохранили связь с <Группой товара>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_GoodsGroup(), ioId, inGoodsGroupId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroup(), ioId, inGoodsGroupId);
    -- сохранили связь с <Единицей измерения>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Measure(), ioId, inMeasureId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Measure(), ioId, inMeasureId);
    -- сохранили связь с <Управленческие аналитики>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_InfoMoney(), ioId, inInfoMoneyId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_InfoMoney(), ioId, inInfoMoneyId);
    -- сохранили свойство <Вес>
-   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Goods_Weight(), ioId, inWeight);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_Weight(), ioId, inWeight);
 
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
-END;$BODY$
+END;
+$BODY$
 
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, Integer, Integer, TFloat, Integer, tvarchar) OWNER TO postgres;
+LANGUAGE PLPGSQL VOLATILE;
+ALTER FUNCTION gpInsertUpdate_Object_Goods (Integer, Integer, TVarChar, Integer, Integer, TFloat, Integer, TVarChar) OWNER TO postgres;
 
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
                
- 20.06.13          *  Code_calc:=lpGet_ObjectCode (inCode, zc_Object_Goods());
+ 30.06.13                                        * add vb
+ 20.06.13          * vbCode:=lpGet_ObjectCode (inCode, zc_Object_Goods());
  16.06.13                                        * IF COALESCE (inCode, 0) = 0  THEN Code_max := NULL ...
  11.06.13          *
  11.05.13                                        * rem lpCheckUnique_Object_ValueData
@@ -64,4 +66,4 @@ ALTER FUNCTION gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, Integer, 
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_Goods()
+-- SELECT * FROM gpInsertUpdate_Object_Goods (ioId:=0, inCode:=-1, inName:= 'TEST-GOODS', ... , inSession:= '2')

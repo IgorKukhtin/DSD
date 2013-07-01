@@ -8,7 +8,7 @@
 /*-------------------------------------------------------------------------------*/
 
 CREATE TABLE MovementStringDesc(
-   Id                    INTEGER NOT NULL PRIMARY KEY,
+   Id                    SERIAL NOT NULL PRIMARY KEY, 
    Code                  TVarChar,
    ItemName              TVarChar
 );
@@ -17,11 +17,12 @@ CREATE TABLE MovementStringDesc(
 /*                                  Индексы                                      */
 
 
-/*
+
+/*-------------------------------------------------------------------------------
  ПРИМЕЧАНИЯ:
  ИСТОРИЯ РАЗРАБОТКИ:
  ДАТА         АВТОР
  ----------------
                  Климентьев К.И.   Кухтин И.В.   
-14.06.02                                         
+ 29.06.13             * SERIAL
 */

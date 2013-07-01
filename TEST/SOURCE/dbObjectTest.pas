@@ -231,21 +231,23 @@ type
     constructor Create; override;
   end;
 
-  TUnitGroupTest = class(TObjectTest)
-  private
-    function InsertDefault: integer; override;
-  public
-    function InsertUpdateUnitGroup(const Id: integer; Code: Integer;
-        Name: string; ParentId: integer): integer;
-    constructor Create; override;
-  end;
-
   TGoodsGroupTest = class(TObjectTest)
   private
     function InsertDefault: integer; override;
   public
     function InsertUpdateGoodsGroup(const Id: integer; Code: Integer;
         Name: string; ParentId: integer): integer;
+    constructor Create; override;
+  end;
+
+  TUnitGroupTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  public
+    // function InsertUpdateUnitGroup(const Id: integer; Code: Integer; Name: string; ParentId: integer): integer;
+    function InsertUpdateUnitGroup(Id, Code: Integer; Name: String;
+                                   ParentId, BranchId, BusinessId, JuridicalId,
+                                   AccountDirectionId, ProfitLossDirectionId: integer): Integer;
     constructor Create; override;
   end;
 
@@ -1268,8 +1270,8 @@ begin
 end;
 
 function TUnitTest.InsertUpdateUnit(Id, Code: Integer; Name: String;
-  ParentId, BranchId, BusinessId, JuridicalId,
-  AccountDirectionId, ProfitLossDirectionId: integer): integer;
+                                    ParentId, BranchId, BusinessId, JuridicalId,
+                                    AccountDirectionId, ProfitLossDirectionId: integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -1498,9 +1500,9 @@ end;
  constructor TUnitGroupTest.Create;
 begin
   inherited;
-  spInsertUpdate := 'gpInsertUpdate_Object_UnitGroup';
-  spSelect := 'gpSelect_Object_UnitGroup';
-  spGet := 'gpGet_Object_UnitGroup';
+  spInsertUpdate := 'gpInsertUpdate_Object_Unit';
+  spSelect := 'gpSelect_Object_Unit';
+  spGet := 'gpGet_Object_Unit';
 end;
 
 function TUnitGroupTest.InsertDefault: integer;
@@ -1508,16 +1510,24 @@ var
   ParentId: Integer;
 begin
   ParentId:=0;
-  result := InsertUpdateUnitGroup(0, 1, 'Группа подразделения', ParentId);
+  result := InsertUpdateUnitGroup(0, -1, 'Группа подразделения - тест', ParentId, 0, 0, 0, 0, 0);
 end;
 
-function TUnitGroupTest.InsertUpdateUnitGroup;
+function TUnitGroupTest.InsertUpdateUnitGroup(Id, Code: Integer; Name: String;
+                                              ParentId, BranchId, BusinessId, JuridicalId,
+                                              AccountDirectionId, ProfitLossDirectionId: Integer): Integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inCode', ftInteger, ptInput, Code);
   FParams.AddParam('inName', ftString, ptInput, Name);
   FParams.AddParam('inParentId', ftInteger, ptInput, ParentId);
+  FParams.AddParam('inBranchId', ftInteger, ptInput, BranchId);
+
+  FParams.AddParam('inBusinessId', ftInteger, ptInput, BusinessId);
+  FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
+  FParams.AddParam('inAccountDirectionId', ftInteger, ptInput, AccountDirectionId);
+  FParams.AddParam('inProfitLossDirectionId', ftInteger, ptInput, ProfitLossDirectionId);
   result := InsertUpdate(FParams);
 end;
 
@@ -1537,30 +1547,30 @@ begin
   try
     // теперь делаем ссылку на себя и проверяем ошибку
     try
-      ObjectTest.InsertUpdateUnitGroup(Id, 1, 'Группа 1', Id);
+      ObjectTest.InsertUpdateUnitGroup(Id, -1, 'Группа 1 - тест', Id, 0, 0, 0, 0, 0);
       Check(false, 'Нет сообщение об ошибке');
     except
 
     end;
     // добавляем еще группу 2
     // делаем у группы 2 ссылку на группу 1
-    Id2 := ObjectTest.InsertUpdateUnitGroup(0, 2, 'Группа 2', Id);
+    Id2 := ObjectTest.InsertUpdateUnitGroup(0, -2, 'Группа 2 - тест', Id, 0, 0, 0, 0, 0);
     try
       // теперь ставим ссылку у группы 1 на группу 2 и проверяем ошибку
       try
-        ObjectTest.InsertUpdateUnitGroup(Id, 1, 'Группа 1', Id2);
+        ObjectTest.InsertUpdateUnitGroup(Id, -1, 'Группа 1 - тест', Id2, 0, 0, 0, 0, 0);
         Check(false, 'Нет сообщение об ошибке');
       except
 
       end;
       // добавляем еще группу 3
       // делаем у группы 3 ссылку на группу 2
-      Id3 := ObjectTest.InsertUpdateUnitGroup(0, 3, 'Группа 3', Id2);
+      Id3 := ObjectTest.InsertUpdateUnitGroup(0, -3, 'Группа 3 - тест', Id2, 0, 0, 0, 0, 0);
       try
         // группа 2 уже ссылка на группу 1
         // делаем у группы 1 ссылку на группу 3 и проверяем ошибку
         try
-          ObjectTest.InsertUpdateUnitGroup(Id, 1, 'Группа 1', Id3);
+          ObjectTest.InsertUpdateUnitGroup(Id, -1, 'Группа 1 - тест', Id3, 0, 0, 0, 0, 0);
           Check(false, 'Нет сообщение об ошибке');
         except
 

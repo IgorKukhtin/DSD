@@ -10,7 +10,7 @@ BEGIN
    PERFORM lpInsertUpdate_Object(zc_Object_PaidKind_FirstForm(),  zc_Object_PaidKind(), 1, 'Первая форма');
    PERFORM lpInsertUpdate_Object(zc_Object_PaidKind_SecondForm(), zc_Object_PaidKind(), 2, 'Вторая форма');
 
-   --  Добавляем статусы
+   -- Добавляем статусы !!! уже есть в НОВОЙ СХЕМЕ, надо будет потом удалить !!!
    PERFORM lpInsertUpdate_Object(zc_Object_Status_UnComplete(), zc_Object_Status(), 0, 'Не проведен');
    PERFORM lpInsertUpdate_Object(zc_Object_Status_Complete(), zc_Object_Status(), 1, 'Проведен');
    PERFORM lpInsertUpdate_Object(zc_Object_Status_Erased(), zc_Object_Status(), 2, 'Удален');
@@ -22,8 +22,8 @@ BEGIN
    PERFORM lpInsertUpdate_Object(zc_Object_AccountDirection_Store(), zc_Object_AccountDirection(), 1, 'на складах');
    
    -- Будем вставлять счета   
-   PERFORM lpInsertUpdate_Object(zc_Object_Account_InventoryStoreEmpties(), zc_Object_Account(), 1, 'Запасы\на складахГП\Оборотная тара');
-   PERFORM lpInsertUpdate_Object(zc_Object_Account_CreditorsSupplierMeat(), zc_Object_Account(), 1, 'Кредиторы\поставщики\Мясное сырье');
+   PERFORM lpInsertUpdate_Object(zc_Object_Account_InventoryStoreEmpties(), zc_Object_Account(), 1, 'Запасы - на складахГП - Оборотная тара');
+   PERFORM lpInsertUpdate_Object(zc_Object_Account_CreditorsSupplierMeat(), zc_Object_Account(), 1, 'Кредиторы - поставщики - Мясное сырье');
 
    -- Увеличиваем последовательность
    PERFORM setval('object_id_seq', (select max( id ) + 1 from Object));
@@ -35,7 +35,6 @@ DECLARE ioId integer;
 BEGIN
    
    IF NOT EXISTS(SELECT * FROM OBJECT 
-
    JOIN ObjectLink AS RoleRight_Role 
      ON RoleRight_Role.descid = zc_ObjectLink_RoleRight_Role() 
     AND RoleRight_Role.childobjectid = zc_Object_Role_Admin()
@@ -45,14 +44,10 @@ BEGIN
      ON RoleRight_Process.descid = zc_ObjectLink_RoleRight_Process() 
     AND RoleRight_Process.childobjectid = zc_Object_Process_User()
     AND RoleRight_Process.objectid = OBJECT.id 
-
   WHERE OBJECT.descid = zc_Object_RoleRight()) THEN
-
      -- Создаем права роли администратора
      ioId := lpInsertUpdate_Object(ioId, zc_Object_RoleRight(), 0, '');
-
      PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_RoleRight_Role(), ioId, zc_Object_Role_Admin());
-
      PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_RoleRight_Process(), ioId, zc_Object_Process_User());
    END IF;
 END $$;
@@ -96,3 +91,29 @@ BEGIN
    END IF;
 END $$;
 
+
+--------------------------- !!!!!!!!!!!!!!!!!!!
+--------------------------- !!! НОВАЯ СХЕМА !!!
+--------------------------- !!!!!!!!!!!!!!!!!!!
+
+-- !!! Меняем автоинкрементное поле !!!
+DO $$
+BEGIN
+PERFORM setval('object_id_seq', (select max (id) + 1 from Object));
+END $$;
+
+DO $$
+BEGIN
+     -- !!! ОБЯЗАТЕЛЬНО НАДО ЗАМЕНИТЬ zc_Object_Status_UnComplete -> zc_Enum_Status_UnComplete
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Object_Status_UnComplete(), inDescId:= zc_Object_Status(), inCode:= 1, inName:= 'Не проведен', inEnumName:= 'zc_Enum_Status_UnComplete');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Object_Status_Complete(), inDescId:= zc_Object_Status(), inCode:= 2, inName:= 'Проведен', inEnumName:= 'zc_Enum_Status_Complete');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Object_Status_Erased(), inDescId:= zc_Object_Status(), inCode:= 3, inName:= 'Удален', inEnumName:= 'zc_Enum_Status_Erased');
+END $$;
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.06.13                                        *
+
+*/

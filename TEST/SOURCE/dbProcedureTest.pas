@@ -108,7 +108,13 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\Constraint\lpCheckUnique_Object_ObjectCode.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\Constraint\lpCheckUnique_ObjectString_ValueData.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\Constraint\lpCheck_Object_CycleLink.sql', ZQuery);
+<<<<<<< HEAD
   ExecFile(ProcedurePath + 'OBJECTS\Constraint\lfGet_ObjectCode.sql', ZQuery);
+=======
+  ExecFile(ProcedurePath + 'OBJECTS\Constraint\lpCheckUnique_Object_ObjectCode.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\Constraint\lfGet_ObjectCode.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\Constraint\lfGet_ObjectCode_byEnum.sql', ZQuery);
+>>>>>>> refs/remotes/origin/master
 
   ExecFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_Object.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_ObjectString.sql', ZQuery);
@@ -135,9 +141,11 @@ begin
 
   ExecFile(ProcedurePath + 'OBJECTS\_Account\gpInsertUpdate_Object_Account.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Account\lpFind_Object_Account.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_Account\lfSelect_Object_Account.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Account\gpSelect_Object_Account.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Account\gpGet_Object_Account.sql', ZQuery);
 
+<<<<<<< HEAD
   ExecFile(ProcedurePath + 'OBJECTS\_AccountDirection\gpInsertUpdate_Object_AccountDirection.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_AccountDirection\gpSelect_Object_AccountDirection.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_AccountDirection\gpGet_Object_AccountDirection.sql', ZQuery);
@@ -145,6 +153,9 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_AccountGroup\gpInsertUpdate_Object_AccountGroup.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_AccountGroup\gpSelect_Object_AccountGroup.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_AccountGroup\gpGet_Object_AccountGroup.sql', ZQuery);
+=======
+  ExecFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_Object_Enum.sql', ZQuery);
+>>>>>>> refs/remotes/origin/master
 
   ExecFile(ProcedurePath + 'OBJECTS\_Bank\gpInsertUpdate_Object_Bank.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Bank\gpSelect_Object_Bank.sql', ZQuery);
@@ -213,10 +224,18 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_InfoMoneyDestination\gpInsertUpdate_Object_InfoMoneyDestination.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_InfoMoneyDestination\gpSelect_Object_InfoMoneyDestination.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_InfoMoneyDestination\gpGet_Object_InfoMoneyDestination.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_InfoMoneyDestination\lfSelect_Object_InfoMoneyDestination.sql', ZQuery);
 
+<<<<<<< HEAD
   ExecFile(ProcedurePath + 'OBJECTS\_InfoMoneyGroup\gpInsertUpdate_Object_InfoMoneyGroup.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_InfoMoneyGroup\gpSelect_Object_InfoMoneyGroup.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_InfoMoneyGroup\gpGet_Object_InfoMoneyGroup.sql', ZQuery);
+=======
+  ExecFile(ProcedurePath + 'OBJECTS\_InfoMoney\gpInsertUpdate_Object_InfoMoney.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_InfoMoney\gpSelect_Object_InfoMoney.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_InfoMoney\gpGet_Object_InfoMoney.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_InfoMoney\lfSelect_Object_InfoMoney.sql', ZQuery);
+>>>>>>> refs/remotes/origin/master
 
   ExecFile(ProcedurePath + 'OBJECTS\_Juridical\gpInsertUpdate_Object_Juridical.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Juridical\gpSelect_Object_Juridical.sql', ZQuery);
@@ -256,14 +275,22 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_ProfitLoss\gpSelect_Object_ProfitLoss.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_ProfitLoss\gpGet_Object_ProfitLoss.sql', ZQuery);
 
+<<<<<<< HEAD
   ExecFile(ProcedurePath + 'OBJECTS\_ProfitLossDirection\gpInsertUpdate_Object_ProfitLossDirection.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_ProfitLossDirection\gpSelect_Object_ProfitLossDirection.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_ProfitLossDirection\gpGet_Object_ProfitLossDirection.sql', ZQuery);
+=======
+  ExecFile(ProcedurePath + 'OBJECTS\_AccountDirection\lfSelect_Object_AccountDirection.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_AccountDirection\gpInsertUpdate_Object_AccountDirection.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_AccountDirection\gpSelect_Object_AccountDirection.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_AccountDirection\gpGet_Object_AccountDirection.sql', ZQuery);
+>>>>>>> refs/remotes/origin/master
 
   ExecFile(ProcedurePath + 'OBJECTS\_ProfitLossGroup\gpInsertUpdate_Object_ProfitLossGroup.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_ProfitLossGroup\gpSelect_Object_ProfitLossGroup.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_ProfitLossGroup\gpGet_Object_ProfitLossGroup.sql', ZQuery);
 
+<<<<<<< HEAD
   ExecFile(ProcedurePath + 'OBJECTS\_Unit\gpInsertUpdate_Object_Unit.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Unit\gpSelect_Object_Unit.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Unit\gpGet_Object_Unit.sql', ZQuery);
@@ -271,6 +298,21 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_UnitGroup\gpInsertUpdate_Object_UnitGroup.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_UnitGroup\gpSelect_Object_UnitGroup.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_UnitGroup\gpGet_Object_UnitGroup.sql', ZQuery);
+=======
+  ExecFile(ProcedurePath + 'OBJECTS\_ProfitLoss\lfSelect_Object_ProfitLoss.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_ProfitLossDirection\lfSelect_Object_ProfitLossDirection.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'OBJECTS\_ProfitLossDirection\gpInsertUpdate_Object_ProfitLossDirection.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_ProfitLossDirection\gpSelect_Object_ProfitLossDirection.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_ProfitLossDirection\gpGet_Object_ProfitLossDirection.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'OBJECTS\_ProfitLoss\gpInsertUpdate_Object_ProfitLoss.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_ProfitLoss\gpSelect_Object_ProfitLoss.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_ProfitLoss\gpGet_Object_ProfitLoss.sql', ZQuery);
+
+
+
+>>>>>>> refs/remotes/origin/master
 end;
 
 procedure TdbProcedureTest.CreateProtocolProcedure;

@@ -1,28 +1,44 @@
-п»ї--DROP FUNCTION lpInsertUpdate_Object(INOUT ioId integer, IN inDescId integer, IN inObjectCode integer, IN inValueData tvarchar);
+-- Function: lpInsertUpdate_Object() - делает то то ....
+
+-- DROP FUNCTION lpInsertUpdate_Object (INOUT ioId Integer, IN inDescId Integer, IN inObjectCode Integer, IN inValueData TVarChar);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Object(
-INOUT ioId integer, 
-IN inDescId integer, 
-IN inObjectCode integer, 
-IN inValueData tvarchar)
- AS
-$BODY$BEGIN
-  IF COALESCE(ioId, 0) = 0 THEN
-     /* РІСЃС‚Р°РІРёС‚СЊ <РєР»СЋС‡ РєР»Р°СЃСЃР° РѕР±СЉРµРєС‚Р°> , <РєРѕРґ РѕР±СЉРµРєС‚Р°> , <РґР°РЅРЅС‹Рµ>
-        Рё РІРµСЂРЅСѓС‚СЊ Р·РЅР°С‡РµРЅРёРµ <РєР»СЋС‡Р°> */
-     INSERT INTO Object (DescId, ObjectCode, ValueData)
-            VALUES (inDescId, inObjectCode, inValueData) RETURNING Id INTO ioId;
-  ELSE
-     /* РёР·РјРµРЅРёС‚СЊ <РєРѕРґ РѕР±СЉРµРєС‚Р°> Рё <РґР°РЅРЅС‹Рµ> РїРѕ Р·РЅР°С‡РµРЅРёСЋ <РєР»СЋС‡Р°> */
-     UPDATE Object SET ObjectCode = inObjectCode, ValueData = inValueData WHERE Id = ioId;
-     IF NOT found THEN
-       /* РІСЃС‚Р°РІРёС‚СЊ <РєР»СЋС‡ РєР»Р°СЃСЃР° РѕР±СЉРµРєС‚Р°> , <РєРѕРґ РѕР±СЉРµРєС‚Р°> , <РґР°РЅРЅС‹Рµ> СЃРѕ Р·РЅР°С‡РµРЅРёРµРј <РєР»СЋС‡Р°> */
-       INSERT INTO Object (Id, DescId, ObjectCode, ValueData)
-                    VALUES (ioId, inDescId, inObjectCode, inValueData);
-     END IF;
-  END IF;
-END;           $BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION lpInsertUpdate_Object(integer, integer, integer, tvarchar)
-  OWNER TO postgres; 
+ INOUT ioId           Integer   ,    -- <Ключ объекта>
+    IN inDescId       Integer   , 
+    IN inObjectCode   Integer   , 
+    IN inValueData    TVarChar
+)
+AS
+$BODY$
+BEGIN
+   IF COALESCE (ioId, 0) = 0 THEN
+      -- добавили новый элемент справочника и вернули значение <Ключ объекта>
+      INSERT INTO Object (DescId, ObjectCode, ValueData)
+                  VALUES (inDescId, inObjectCode, inValueData) RETURNING Id INTO ioId;
+   ELSE
+       -- изменили элемент справочника по значению <Ключ объекта>
+       UPDATE Object SET ObjectCode = inObjectCode, ValueData = inValueData WHERE Id = ioId AND DescId = inDescId;
+
+       -- если такой элемент не был найден
+       IF NOT FOUND THEN
+          -- добавили новый элемент справочника со значением <Ключ объекта>
+          INSERT INTO Object (Id, DescId, ObjectCode, ValueData)
+                     VALUES (ioId, inDescId, inObjectCode, inValueData);
+       END IF; -- if NOT FOUND
+
+   END IF; -- if COALESCE (ioId, 0) = 0
+
+END;$BODY$ LANGUAGE plpgsql;
+ALTER FUNCTION lpInsertUpdate_Object (Integer, Integer, Integer, TVarChar) OWNER TO postgres; 
+
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.06.13                                        * add AND DescId = inDescId
+
+*/
+
+-- тест
+-- SELECT * FROM lpInsertUpdate_Object (0, zc_Object_Goods(), -1, 'test-goods');

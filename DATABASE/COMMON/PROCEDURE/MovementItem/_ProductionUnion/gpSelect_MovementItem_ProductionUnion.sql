@@ -24,35 +24,36 @@ BEGIN
           MovementItem.Amount,
           MovementItem.isErased,
           Object_Receipt.ValueData AS ReceiptName,
-          Object_Partion.ValueData AS PartionName,
-          MovementItemFloat_Count.ValueData AS Count,
-          MovementItemFloat_RealWeight.ValueData AS RealWeight,
-          MovementItemFloat_CuterCount.ValueData AS CuterCount,
-          MovementItemBoolean_PartionClose.ValueData AS PartionClose,
-          MovementItemString_Comment.ValueData AS Comment
+          MIString_PartionGoods.ValueData AS PartionName,
+          MIFloat_Count.ValueData AS Count,
+          MIFloat_RealWeight.ValueData AS RealWeight,
+          MIFloat_CuterCount.ValueData AS CuterCount,
+          MIBoolean_PartionClose.ValueData AS PartionClose,
+          MIString_Comment.ValueData AS Comment
         FROM MovementItem 
    LEFT JOIN Object AS Object_Goods
           ON Object_Goods.Id = MovementItem.ObjectId
-   LEFT JOIN MovementItemLinkObject AS MovementItemLink_Receipt
-          ON MovementItemLink_Receipt.MovementItemId = MovementItem.Id 
-         AND MovementItemLink_Receipt.DescId = zc_MovementItemLink_Receipt()
+   LEFT JOIN MovementItemLinkObject AS MILinkObject_Receipt
+          ON MILinkObject_Receipt.MovementItemId = MovementItem.Id 
+         AND MILinkObject_Receipt.DescId = zc_MILinkObject_Receipt()
    LEFT JOIN Object AS Object_Receipt
-          ON Object_Receipt.Id = MovementItemLink_Receipt.ObjectId
-   LEFT JOIN MovementItemLinkObject AS MovementItemLink_Partion
-          ON MovementItemLink_Partion.MovementItemId = MovementItem.Id AND MovementItemLink_Partion.DescId = zc_MovementItemLink_Partion()
-   LEFT JOIN Object AS Object_Partion
-          ON Object_Partion.Id = MovementItemLink_Partion.ObjectId
-   LEFT JOIN MovementItemFloat AS MovementItemFloat_Count
-          ON MovementItemFloat_Count.MovementItemId = MovementItem.Id AND MovementItemFloat_Count.DescId = zc_MovementItemFloat_Count()
-   LEFT JOIN MovementItemFloat AS MovementItemFloat_RealWeight
-          ON MovementItemFloat_RealWeight.MovementItemId = MovementItem.Id AND MovementItemFloat_RealWeight.DescId = zc_MovementItemFloat_RealWeight()
-   LEFT JOIN MovementItemFloat AS MovementItemFloat_CuterCount
-          ON MovementItemFloat_CuterCount.MovementItemId = MovementItem.Id AND MovementItemFloat_CuterCount.DescId = zc_MovementItemFloat_CuterCount()
-   LEFT JOIN MovementItemBoolean AS MovementItemBoolean_PartionClose
-          ON MovementItemBoolean_PartionClose.MovementItemId = MovementItem.Id AND MovementItemBoolean_PartionClose.DescId = zc_MovementItemBoolean_PartionClose()
-   LEFT JOIN MovementItemString AS MovementItemString_Comment
-          ON MovementItemString_Comment.MovementItemId = MovementItem.Id AND MovementItemString_Comment.DescId = zc_MovementItemString_Comment()
-       WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MovementItem_In();
+          ON Object_Receipt.Id = MILinkObject_Receipt.ObjectId
+
+LEFT JOIN MovementItemString AS MIString_PartionGoods
+       ON MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+      AND MIString_PartionGoods.MovementItemId =  MovementItem.Id
+
+   LEFT JOIN MovementItemFloat AS MIFloat_Count
+          ON MIFloat_Count.MovementItemId = MovementItem.Id AND MIFloat_Count.DescId = zc_MIFloat_Count()
+   LEFT JOIN MovementItemFloat AS MIFloat_RealWeight
+          ON MIFloat_RealWeight.MovementItemId = MovementItem.Id AND MIFloat_RealWeight.DescId = zc_MIFloat_RealWeight()
+   LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
+          ON MIFloat_CuterCount.MovementItemId = MovementItem.Id AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
+   LEFT JOIN MovementItemBoolean AS MIBoolean_PartionClose
+          ON MIBoolean_PartionClose.MovementItemId = MovementItem.Id AND MIBoolean_PartionClose.DescId = zc_MIBoolean_PartionClose()
+   LEFT JOIN MovementItemString AS MIString_Comment
+          ON MIString_Comment.MovementItemId = MovementItem.Id AND MIString_Comment.DescId = zc_MIString_Comment()
+       WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master();
     RETURN NEXT Cursor1;
 
     OPEN Cursor2 FOR 
@@ -64,28 +65,36 @@ BEGIN
           MovementItem.Amount,
           MovementItem.isErased,
           MovementItem.ParentId,
-          Object_Partion.ValueData AS PartionName,
-          MovementItemFloat_AmountReceipt.ValueData AS AmountReceipt,
-          MovementItemString_Comment.ValueData AS Comment
+          MIString_PartionGoods.ValueData AS PartionName,
+          MIFloat_AmountReceipt.ValueData AS AmountReceipt,
+          MIString_Comment.ValueData AS Comment
         FROM MovementItem 
    LEFT JOIN Object AS Object_Goods
           ON Object_Goods.Id = MovementItem.ObjectId
-   LEFT JOIN MovementItemLinkObject AS MovementItemLink_Partion
-          ON MovementItemLink_Partion.MovementItemId = MovementItem.Id AND MovementItemLink_Partion.DescId = zc_MovementItemLink_Partion()
-   LEFT JOIN Object AS Object_Partion
-          ON Object_Partion.Id = MovementItemLink_Partion.ObjectId
-   LEFT JOIN MovementItemFloat AS MovementItemFloat_AmountReceipt
-          ON MovementItemFloat_AmountReceipt.MovementItemId = MovementItem.Id AND MovementItemFloat_AmountReceipt.DescId = zc_MovementItemFloat_AmountReceipt()
-   LEFT JOIN MovementItemString AS MovementItemString_Comment
-          ON MovementItemString_Comment.MovementItemId = MovementItem.Id AND MovementItemString_Comment.DescId = zc_MovementItemString_Comment()
-       WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MovementItem_Out();
+
+LEFT JOIN MovementItemString AS MIString_PartionGoods
+       ON MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+      AND MIString_PartionGoods.MovementItemId =  MovementItem.Id
+
+   LEFT JOIN MovementItemFloat AS MIFloat_AmountReceipt
+          ON MIFloat_AmountReceipt.MovementItemId = MovementItem.Id AND MIFloat_AmountReceipt.DescId = zc_MIFloat_AmountReceipt()
+   LEFT JOIN MovementItemString AS MIString_Comment
+          ON MIString_Comment.MovementItemId = MovementItem.Id AND MIString_Comment.DescId = zc_MIString_Comment()
+       WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Child();
     RETURN NEXT Cursor2;
  
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 100;
-ALTER FUNCTION gpSelect_MovementItem_ProductionUnion(Integer, Boolean, TVarChar)
-  OWNER TO postgres;
+END;
+$BODY$
+LANGUAGE PLPGSQL VOLATILE;
 
--- SELECT * FROM gpSelect_MovementItem_ProductionUnion('2')
+
+/*
+ »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
+               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+               
+ 30.06.13                                        *
+
+*/
+
+-- ÚÂÒÚ
+-- SELECT * FROM gpSelect_MovementItem_ProductionUnion (inMovementId:= 1, inShowAll:= TRUE, inSession:= '2')
