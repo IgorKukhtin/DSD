@@ -296,6 +296,11 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_UnitGroup\gpInsertUpdate_Object_UnitGroup.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_UnitGroup\gpSelect_Object_UnitGroup.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_UnitGroup\gpGet_Object_UnitGroup.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'OBJECTS\_AssetGroup\gpInsertUpdate_Object_AssetGroup.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_AssetGroup\gpSelect_Object_AssetGroup.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_AssetGroup\gpGet_Object_AssetGroup.sql', ZQuery);
+
 end;
 
 procedure TdbProcedureTest.CreateProtocolProcedure;
