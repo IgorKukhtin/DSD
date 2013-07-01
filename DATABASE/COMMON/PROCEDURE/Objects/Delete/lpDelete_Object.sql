@@ -6,7 +6,8 @@ CREATE OR REPLACE FUNCTION lpDelete_Object(
 IN inId integer, 
 IN Session tvarchar)
   RETURNS void AS
-$BODY$BEGIN
+$BODY$
+BEGIN
 
   DELETE FROM ObjectLink WHERE ObjectId = inId;
   DELETE FROM ObjectLink WHERE ChildObjectId = inId;
@@ -14,11 +15,12 @@ $BODY$BEGIN
   DELETE FROM ObjectFloat WHERE ObjectId = inId;
   DELETE FROM ObjectProtocol WHERE ObjectId = inId;
   DELETE FROM ObjectBoolean WHERE ObjectId = inId;
+  DELETE FROM ObjectDate WHERE ObjectId = inId;
   DELETE FROM ContainerLinkObject WHERE ObjectId = inId;
   DELETE FROM Object WHERE Id = inId;
 
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION lpDelete_Object(integer, tvarchar)
-  OWNER TO postgres;
+END;
+$BODY$
+
+LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION lpDelete_Object(integer, tvarchar) OWNER TO postgres;

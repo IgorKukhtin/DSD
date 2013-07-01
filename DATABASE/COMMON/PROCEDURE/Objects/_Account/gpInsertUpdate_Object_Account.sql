@@ -14,27 +14,22 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Account(
 )
   RETURNS integer AS
 $BODY$
-   DECLARE UserId Integer;
-   DECLARE Code_max Integer;   
+   DECLARE vbUserId Integer;
+   DECLARE vbCode_calc Integer;   
 
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Account());
-    UserId := inSession;
+    vbUserId := inSession;
 
    -- Если код не установлен, определяем его как последний+1
-   IF COALESCE (inCode, 0) = 0
-   THEN 
-       SELECT COALESCE (MAX (ObjectCode), 0) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_Account();
-   ELSE
-       Code_max := inCode;
-   END IF; 
-  
+   vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Account()); 
+
    -- проверка уникальности для свойства <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Account(), Code_max);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Account(), vbCode_calc);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_Account(), Code_max, inName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_Account(), vbCode_calc, inName);
 
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Account_AccountGroup(), ioId, inAccountGroupId);
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Account_AccountDirection(), ioId, inAccountDirectionId);
@@ -42,7 +37,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Account_InfoMoney(), ioId, inInfoMoneyId);
 
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
 
