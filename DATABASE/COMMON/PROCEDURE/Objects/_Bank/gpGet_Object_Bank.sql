@@ -17,14 +17,12 @@ $BODY$BEGIN
    RETURN QUERY 
        SELECT
              CAST (0 as Integer)              AS Id
-           , MAX (Object_Bank.ObjectCode) + 1 AS Code
+           , lfGet_ObjectCode(0, zc_Object_Bank()) AS Code
            , CAST ('' as TVarChar)            AS Name
            , CAST (NULL AS Boolean)           AS isErased
-           , CAST ('' as TVarChar)            AS JuridicalId
+           , CAST (0  as Integer)             AS JuridicalId
            , CAST ('' as TVarChar)            AS JuridicalName
-           , CAST ('' as TVarChar)            AS MFO
-       FROM Object AS Object_Bank
-       WHERE Object_Bank.Id = inId;
+           , CAST ('' as TVarChar)            AS MFO;
    ELSE
        RETURN QUERY 
        SELECT

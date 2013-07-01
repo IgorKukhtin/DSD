@@ -1024,6 +1024,8 @@ var Id: integer;
     ObjectTest: TBankTest;
 begin
   ObjectTest := TBankTest.Create;
+  // Проверили выполнение Get для 0 записи
+  ObjectTest.GetRecord(0);
   // Получим список
   RecordCount := GetRecordCount(ObjectTest);
   // Вставка Банка

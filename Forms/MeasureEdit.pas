@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxPropertiesStore,
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
   cxEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit, Vcl.ActnList,
-  Vcl.StdActns, ParentForm, dsdDB, dsdAction, cxCurrencyEdit;
+  Vcl.StdActns, ParentForm, dsdDB, dsdAction, cxCurrencyEdit, dsdAddOn;
 
 type
   TMeasureEditForm = class(TParentForm)
@@ -25,6 +25,7 @@ type
     cxLabel2: TcxLabel;
     edCode: TcxCurrencyEdit;
     cxPropertiesStore: TcxPropertiesStore;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
   private
     { Private declarations }
   public

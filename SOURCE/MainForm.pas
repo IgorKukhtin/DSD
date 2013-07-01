@@ -56,6 +56,7 @@ type
     actBalance: TdsdOpenForm;
     bbBalance: TdxBarButton;
     bbReports: TdxBarSubItem;
+    bbBank: TdxBarButton;
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }

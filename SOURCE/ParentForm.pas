@@ -16,8 +16,6 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure SetSender(const Value: TComponent);
-    procedure LoadUserSettings;
-    procedure SaveUserSettings;
     property FormSender: TComponent read FSender write SetSender;
   public
     { Public declarations }
@@ -29,7 +27,7 @@ type
 implementation
 
 uses
-  Xml.XMLDoc, XMLIntf, utilConvert, FormStorage, UtilConst, cxControls, cxContainer, cxEdit,
+  cxControls, cxContainer, cxEdit, UtilConst,
   cxGroupBox, dxBevel, cxButtons, cxGridDBTableView, cxGrid, DB, DBClient,
   dxBar, cxTextEdit, cxLabel,
   StdActns, cxDBTL, cxCurrencyEdit, cxDropDownEdit, dsdGuides,
@@ -64,9 +62,6 @@ begin
     if Components[i] is TdsdDataSetRefresh then
        (Components[i] as TdsdDataSetRefresh).Execute;
   end;
-  // Вычитываем пользовательсике настройки
-//  LoadUserSettings;
-
   FormSender := Sender;
 end;
 
@@ -74,7 +69,6 @@ procedure TParentForm.FormClose(Sender: TObject; var Action: TCloseAction);
 var i: Integer;
     FormAction: IFormAction;
 begin
-//  SaveUserSettings;
   // Вызывается событие на закрытие формы, например для справочников для перечитывания
   if Assigned(FSender) then
      if FSender.GetInterface(IFormAction, FormAction) then
@@ -90,83 +84,6 @@ begin
       gc_isDebugMode := not gc_isDebugMode;
 end;
 
-procedure TParentForm.LoadUserSettings;
-var
-  Data: String;
-  XMLDocument: TXMLDocument;
-  i: integer;
-  PropertiesStore: TcxPropertiesStore;
-begin
-  Data := TdsdFormStorageFactory.GetStorage.LoadUserFormSettings(Name);
-  if Data <> '' then begin
-    XMLDocument := TXMLDocument.Create(nil);
-    try
-      XMLDocument.LoadFromXML(Data);
-      with XMLDocument.DocumentElement do begin
-        for I := 0 to ChildNodes.Count - 1 do begin
-          if ChildNodes[i].NodeName = 'cxGrid' then begin
-
- //         ChildNodes[i].GetAttribute('length'));
-
-          end;
-          if ChildNodes[i].NodeName = 'cxPropertiesStore' then begin
-             PropertiesStore := FindComponent(ChildNodes[i].GetAttribute('name')) as TcxPropertiesStore;
-             if Assigned(PropertiesStore) then begin
-                PropertiesStore.StorageStream := TStringStream.Create(XMLToAnsi(ChildNodes[i].GetAttribute('data')));
-                PropertiesStore.RestoreFrom;
-                PropertiesStore.StorageStream.Free;
-             end;
-          end;
-        end;
-      end;
-    finally
-      XMLDocument.Free;
-    end;
-  end;
-
-{  if Assigned(FPropertiesStore) then begin
-     FPropertiesStore.StorageStream := TdsdFormStorageFactory.GetStorage.LoadUserFormSettings(Name);
-     FPropertiesStore.RestoreFrom;
-  end;}
-end;
-
-procedure TParentForm.SaveUserSettings;
-var
-  TempStream: TStringStream;
-  i, j: integer;
-  xml: string;
-begin
-  TempStream :=  TStringStream.Create;
-  try
-    xml := '<root>';
-    // Сохраняем установки гридов
-    for i := 0 to ComponentCount - 1 do begin
-      if Components[i] is TcxGrid then
-         with TcxGrid(Components[i]) do begin
-           xml := xml + '<cxGrid name = "' + Name + '" >';
-           for j := 0 to ViewCount -1 do begin
-               Views[j].StoreToStream(TempStream);
-               xml := xml + '<cxGridView name = "' + Views[j].Name + '" data = "' + gfStrToXmlStr(TempStream.DataString) + '" />';
-               TempStream.Clear;
-           end;
-           xml := xml + '</cxGrid>';
-         end;
-      // сохраняем остальные установки
-   {   if Components[i] is TcxPropertiesStore then
-         with Components[i] as TcxPropertiesStore do begin
-            StorageStream := TempStream;
-            StoreTo;
-            xml := xml + '<cxPropertiesStore name = "' + Name + '" data = "' + gfStrToXmlStr(TempStream.DataString) + '"/>';
-            TempStream.Clear;
-         end;}
-    end;
-    xml := xml + '</root>';
-    TdsdFormStorageFactory.GetStorage.SaveUserFormSettings(Name, xml);
-  finally
-    TempStream.Free;
-  end;
-end;
-
 procedure TParentForm.SetSender(const Value: TComponent);
 begin
   FSender := Value;
@@ -180,6 +97,8 @@ begin
         // объединили вызывающий справочник и кнопку выбора!!!
         TdsdChoiceGuides(FChoiceAction).Guides := TdsdGuides(FSender);
   end;
+
+
 end;
 
 initialization
@@ -237,5 +156,6 @@ initialization
   RegisterClass (TdsdStoredProc);
   RegisterClass (TdsdUpdateDataSet);
   RegisterClass (TdsdUpdateErased);
+  RegisterClass (TdsdUserSettingsStorageAddOn);
 
 end.

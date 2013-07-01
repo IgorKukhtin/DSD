@@ -73,30 +73,6 @@ inherited MeasureForm: TMeasureForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = clCode
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
-      item
-        Component = clErased
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
-      item
-        Component = clName
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
-      item
         Component = Owner
         Properties.Strings = (
           'Height'
@@ -365,5 +341,9 @@ inherited MeasureForm: TMeasureForm
       end>
     Left = 72
     Top = 120
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 328
+    Top = 216
   end
 end

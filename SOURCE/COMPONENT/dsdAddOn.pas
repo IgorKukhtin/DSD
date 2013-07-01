@@ -3,7 +3,7 @@ unit dsdAddOn;
 interface
 
 uses Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView,
-     cxTextEdit, DB, dsdAction, cxGridTableView, cxGraphics, cxStyles;
+     cxTextEdit, DB, dsdAction, cxGridTableView, cxGraphics, cxStyles, Forms;
 
 type
 
@@ -52,12 +52,26 @@ type
     property View: TcxGridDBTableView read FView write SetView;
   end;
 
+  TdsdUserSettingsStorageAddOn = class(TComponent)
+  private
+    FOnClose: TCloseEvent;
+    FOnShow: TNotifyEvent;
+    FForm: TForm;
+    procedure OnClose(Sender: TObject; var Action: TCloseAction);
+    procedure OnShow(Sender: TObject);
+    procedure LoadUserSettings;
+    procedure SaveUserSettings;
+  public
+    constructor Create(AOwner: TComponent); override;
+  end;
+
   procedure Register;
 
 implementation
 
-uses Windows, SysUtils, VCL.Controls, cxFilter, cxClasses, cxLookAndFeelPainters,
-     cxCustomData, VCL.Graphics, cxGridCommon, math, UtilConst;
+uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf, Windows, SysUtils, VCL.Controls,
+     cxFilter, cxClasses, cxLookAndFeelPainters, cxCustomData, VCL.Graphics,
+     cxGridCommon, math, cxPropertiesStore, cxGridCustomView, UtilConst, cxStorage;
 
 type
 
@@ -67,6 +81,7 @@ procedure Register;
 begin
    RegisterComponents('DSDComponent', [TdsdDBTreeAddOn]);
    RegisterComponents('DSDComponent', [TdsdDBViewAddOn]);
+   RegisterComponents('DSDComponent', [TdsdUserSettingsStorageAddOn]);
 end;
 
 { TdsdDBTreeAddOn }
@@ -264,5 +279,104 @@ begin
   FView.DataController.Filter.OnChanged := onFilterChanged;
   FView.OnColumnHeaderClick := OnColumnHeaderClick;
 end;
+
+{ TdsdUserSettingsStorageAddOn }
+
+constructor TdsdUserSettingsStorageAddOn.Create(AOwner: TComponent);
+begin
+  inherited;
+  if AOwner is TCustomForm then begin
+     FForm := AOwner as TForm;
+     FOnClose := FForm.OnClose;
+     FOnShow := FForm.OnShow;
+     FForm.OnClose := Self.OnClose;
+     FForm.OnShow := Self.OnShow;
+  end;
+end;
+
+procedure TdsdUserSettingsStorageAddOn.OnShow(Sender: TObject);
+begin
+  LoadUserSettings;
+  if Assigned(FOnShow) then
+     OnShow(Sender)
+end;
+
+procedure TdsdUserSettingsStorageAddOn.OnClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  SaveUserSettings;
+  if Assigned(FOnClose) then
+     FOnClose(Sender, Action);
+end;
+
+procedure TdsdUserSettingsStorageAddOn.LoadUserSettings;
+var
+  Data: WideString;
+  XMLDocument: IXMLDocument;
+  i: integer;
+  PropertiesStore: TcxPropertiesStore;
+  GridView: TcxCustomGridView;
+begin
+  Data := StringReplace(TdsdFormStorageFactory.GetStorage.LoadUserFormSettings(FForm.Name), '&', '&amp;', [rfReplaceAll]);
+  if Data <> '' then begin
+    XMLDocument := TXMLDocument.Create(nil);
+    XMLDocument.LoadFromXML(Data);
+    with XMLDocument.DocumentElement do begin
+      for I := 0 to ChildNodes.Count - 1 do begin
+        if ChildNodes[i].NodeName = 'cxGridView' then begin
+           GridView := FForm.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxCustomGridView;
+           if Assigned(GridView) then begin
+              GridView.RestoreFromStream(TStringStream.Create(gfStrXmlToStr(XMLToAnsi(ChildNodes[i].GetAttribute('data')))));
+           end;
+        end;
+        if ChildNodes[i].NodeName = 'cxPropertiesStore' then begin
+           PropertiesStore := FForm.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxPropertiesStore;
+           if Assigned(PropertiesStore) then begin
+              PropertiesStore.StorageType := stStream;
+              PropertiesStore.StorageStream := TStringStream.Create(XMLToAnsi(ChildNodes[i].GetAttribute('data')));
+              PropertiesStore.RestoreFrom;
+              PropertiesStore.StorageStream.Free;
+           end;
+        end;
+      end;
+    end;
+  end;
+end;
+
+procedure TdsdUserSettingsStorageAddOn.SaveUserSettings;
+var
+  TempStream: TStringStream;
+  i, j: integer;
+  xml: string;
+  fff, bbb: string;
+begin
+  TempStream :=  TStringStream.Create;
+  try
+    xml := '<root>';
+    // Сохраняем установки гридов
+    for i := 0 to FForm.ComponentCount - 1 do begin
+      if FForm.Components[i] is TcxCustomGridView then
+         with TcxCustomGridView(FForm.Components[i]) do begin
+           StoreToStream(TempStream);
+           xml := xml + '<cxGridView name = "' + Name + '" data = "' + gfStrToXmlStr(TempStream.DataString) + '" />';
+           TempStream.Clear;
+         end;
+      // сохраняем остальные установки
+      if FForm.Components[i] is TcxPropertiesStore then
+         with FForm.Components[i] as TcxPropertiesStore do begin
+            StorageType := stStream;
+            StorageStream := TempStream;
+            StoreTo;
+            xml := xml + '<cxPropertiesStore name = "' + Name + '" data = "' + gfStrToXmlStr(TempStream.DataString) + '"/>';
+            TempStream.Clear;
+         end;
+    end;
+    xml := xml + '</root>';
+    TdsdFormStorageFactory.GetStorage.SaveUserFormSettings(FForm.Name, xml);
+  finally
+    TempStream.Free;
+  end;
+end;
+
 
 end.

@@ -259,7 +259,7 @@ var
 begin
  // TdsdFormStorageFactory.GetStorage.SaveUserFormSettings('TBankAccountForm', TStringStream.Create(#6));
 
-(*  cxPropertiesStore:= TcxPropertiesStore.Create(nil);
+  cxPropertiesStore:= TcxPropertiesStore.Create(nil);
   cxPropertiesStore.StorageType := stStream;
   AStoreComponent  := TcxPropertiesStoreComponent(cxPropertiesStore.Components.Add);
   AStoreComponent.Component := TForm.Create(nil);
@@ -275,7 +275,7 @@ begin
     cxPropertiesStore.RestoreFrom;
   finally
     TempStream.Free;
-  end;*)
+  end;
 end;
 
 initialization

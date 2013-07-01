@@ -154,8 +154,6 @@ begin
   pS := StringReplace(pS, '''', '&apos;', [rfReplaceAll]);
   pS := StringReplace(pS, '"', '&quot;', [rfReplaceAll]);
   pS := StringReplace(pS, '<', '&lt;', [rfReplaceAll]);
-//  pS := StringReplace(pS, #13#10, '&#xA;', [rfReplaceAll]);
-//  pS := StringReplace(pS, , 'xA', [rfReplaceAll]);
   result := StringReplace(pS, '>', '&gt;', [rfReplaceAll]);
 end;
 {-----------------------------------------------------------------------------------------------}

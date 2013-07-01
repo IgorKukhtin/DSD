@@ -48,7 +48,7 @@ var i: integer;
 begin
   result := '';
   for I := 1 to Length(S) do
-    if (s[i] < #31) then
+    if (s[i] < #32) then
       result := result + '&amp;#' + FormatFloat('00', byte(s[i])) + ';'
     else
       result := result + gfStrToXmlStr(s[i]);

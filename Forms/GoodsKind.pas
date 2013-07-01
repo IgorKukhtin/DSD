@@ -9,7 +9,7 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, cxGridLevel, cxClasses,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, Datasnap.DBClient, dsdDB, cxPropertiesStore, dxBar,
-  Vcl.ActnList, dsdAction, ParentForm, DataModul;
+  Vcl.ActnList, dsdAction, ParentForm, DataModul, dsdAddOn, dxBarExtItems;
 
 type
   TGoodsKindForm = class(TParentForm)
@@ -36,6 +36,14 @@ type
     bbUnErased: TdxBarButton;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    dxBarStatic: TdxBarStatic;
+    dsdGridToExcel: TdsdGridToExcel;
+    bbGridToExcel: TdxBarButton;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
+    spErasedUnErased: TdsdStoredProc;
+    dsdChoiceGuides: TdsdChoiceGuides;
+    bbChoiceGuide: TdxBarButton;
   private
     { Private declarations }
   public

@@ -10,7 +10,7 @@ uses
   Vcl.StdActns, cxCurrencyEdit, cxCheckBox,
   Data.DB, Datasnap.DBClient, cxMaskEdit, cxDropDownEdit,
   cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox, ParentForm, dsdGuides,
-  dsdDB, dsdAction;
+  dsdDB, dsdAction, cxButtonEdit, dsdAddOn;
 
 type
   TBankEditForm = class(TParentForm)
@@ -23,12 +23,15 @@ type
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     dsdDataSetRefresh: TdsdDataSetRefresh;
-    dsdExecStoredProc: TdsdExecStoredProc;
-    dsdFormClose1: TdsdFormClose;
+    dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
+    dsdFormClose: TdsdFormClose;
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
     cxLabel2: TcxLabel;
     edMFO: TcxTextEdit;
+    edJuridicalName: TcxButtonEdit;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    cxPropertiesStore: TcxPropertiesStore;
   private
     { Private declarations }
   public

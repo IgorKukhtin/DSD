@@ -116,7 +116,8 @@ begin
   DataSet := Form.FindComponent(PositionDataSet) as TDataSet;
   if not Assigned(DataSet) then
      raise Exception.Create('Ќе правильно установлено свойство PositionDataSet дл€ формы ' + FormName);
-  DataSet.Locate('Id', Key, []);
+  if Key <> '' then
+     DataSet.Locate('Id', Key, []);
   Form.Show;
 end;
 

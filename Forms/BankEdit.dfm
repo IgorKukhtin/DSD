@@ -1,5 +1,5 @@
 ﻿inherited BankEditForm: TBankEditForm
-  Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1074#1072#1083#1102#1090#1099
+  Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1073#1072#1085#1082#1072
   ClientHeight = 256
   ClientWidth = 346
   ExplicitWidth = 354
@@ -22,7 +22,7 @@
     Top = 219
     Width = 75
     Height = 25
-    Action = dsdExecStoredProc
+    Action = dsdInsertUpdateGuides
     Default = True
     ModalResult = 8
     TabOrder = 2
@@ -32,7 +32,7 @@
     Top = 219
     Width = 75
     Height = 25
-    Action = dsdFormClose1
+    Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 8
@@ -56,18 +56,6 @@
     Top = 151
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
-  object ceJuridical: TcxLookupComboBox
-    Left = 40
-    Top = 174
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
-      item
-        FieldName = 'Name'
-      end>
-    Properties.ListSource = JuridicalDS
-    TabOrder = 7
-    Width = 273
-  end
   object cxLabel2: TcxLabel
     Left = 40
     Top = 101
@@ -76,6 +64,17 @@
   object edMFO: TcxTextEdit
     Left = 40
     Top = 124
+    TabOrder = 8
+    Width = 273
+  end
+  object edJuridicalName: TcxButtonEdit
+    Left = 40
+    Top = 174
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
     TabOrder = 9
     Width = 273
   end
@@ -88,15 +87,12 @@
       StoredProcList = <
         item
           StoredProc = spGet
-        end
-        item
-          StoredProc = spGetJuridical
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
     end
-    object dsdExecStoredProc: TdsdExecStoredProc
+    object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       StoredProc = spInsertUpdate
       StoredProcList = <
@@ -105,7 +101,7 @@
         end>
       Caption = 'Ok'
     end
-    object dsdFormClose1: TdsdFormClose
+    object dsdFormClose: TdsdFormClose
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -125,25 +121,28 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inName'
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inMFO'
         Component = edMFO
         DataType = ftString
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inJuridicalId'
         Component = dsdJuridicalGuides
         DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
+        Value = ''
       end>
     Left = 240
     Top = 48
@@ -177,12 +176,14 @@
         Component = edName
         DataType = ftString
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'Code'
         Component = ceCode
         DataType = ftInteger
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'JuridicalId'
@@ -190,7 +191,7 @@
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = '0'
+        Value = ''
       end
       item
         Name = 'JuridicalName'
@@ -198,42 +199,34 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptOutput
-        Value = '0'
+        Value = ''
       end
       item
         Name = 'MFO'
         Component = edMFO
         DataType = ftInteger
         ParamType = ptOutput
+        Value = ''
       end>
     Left = 192
     Top = 136
   end
-  object JuridicalDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 176
-    Top = 165
-  end
-  object spGetJuridical: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Juridical'
-    DataSet = JuridicalDataSet
-    DataSets = <
-      item
-        DataSet = JuridicalDataSet
-      end>
-    Params = <>
-    Left = 216
-    Top = 165
-  end
-  object JuridicalDS: TDataSource
-    DataSet = JuridicalDataSet
-    Left = 256
-    Top = 165
-  end
   object dsdJuridicalGuides: TdsdGuides
-    LookupControl = ceJuridical
+    LookupControl = edJuridicalName
+    FormName = 'TJuridicalForm'
+    PositionDataSet = 'ClientDataSet'
     Left = 312
-    Top = 173
+    Top = 141
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 264
+    Top = 176
+  end
+  object cxPropertiesStore: TcxPropertiesStore
+    Components = <>
+    StorageName = 'cxPropertiesStore'
+    StorageType = stStream
+    Left = 304
+    Top = 200
   end
 end

@@ -161,4 +161,8 @@ inherited MeasureEditForm: TMeasureEditForm
     Left = 304
     Top = 104
   end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 248
+    Top = 104
+  end
 end

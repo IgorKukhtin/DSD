@@ -154,12 +154,15 @@ begin
       Assigned(DataSets[0]) and
       Assigned(DataSets[0].DataSet) then
    begin
-     if DataSets[0].DataSet.Active then
+     if DataSets[0].DataSet.Active and (DataSets[0].DataSet.RecordCount > 0) then
         B := DataSets[0].DataSet.GetBookmark;
      DataSets[0].DataSet.XMLData := TStorageFactory.GetStorage.ExecuteProc(GetXML);
      if Assigned(B) then
      begin
-        DataSets[0].DataSet.GotoBookmark(B);
+        try
+          DataSets[0].DataSet.GotoBookmark(B);
+        except
+        end;
         DataSets[0].DataSet.FreeBookmark(B);
      end;
    end;
@@ -309,12 +312,13 @@ end;
 procedure TdsdParams.AssignParams(Source: TdsdParams);
 var i: integer;
 begin
-  // не удаляем, а добавляем параметры
-  for I := 0 to Source.Count - 1 do
-      if ParamByName(Source[i].Name) = nil then
-         Add.AssignParam(Source[i])
-      else
-         ParamByName(Source[i].Name).Value := Source[i].Value
+  if Assigned(Source) then
+    // не удаляем, а добавляем параметры
+    for I := 0 to Source.Count - 1 do
+        if ParamByName(Source[i].Name) = nil then
+           Add.AssignParam(Source[i])
+        else
+           ParamByName(Source[i].Name).Value := Source[i].Value
 end;
 
 function TdsdParams.GetItem(Index: Integer): TdsdParam;

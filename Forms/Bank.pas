@@ -8,15 +8,14 @@ uses
   cxLookAndFeelPainters, cxStyles, cxCustomData, cxFilter, cxData,
   cxDataStorage, cxEdit, Data.DB, cxDBData, cxGridLevel, cxClasses,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, Datasnap.DBClient, dsdDB, cxPropertiesStore, dxBar,
-  Vcl.ActnList, dsdAction, ParentForm, DataModul;
+  cxGrid, Datasnap.DBClient, cxPropertiesStore, dxBar,
+  Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dsdAddOn, dxBarExtItems,
+  cxGridBandedTableView, cxGridDBBandedTableView, cxCheckBox;
 
 type
   TBankForm = class(TParentForm)
-    cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
-    clName: TcxGridDBColumn;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -30,13 +29,22 @@ type
     dsdStoredProc: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    clErased: TcxGridDBColumn;
-    clCode: TcxGridDBColumn;
-    bbErased: TdxBarButton;
-    bbUnErased: TdxBarButton;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
-    clJuridicalName: TcxGridDBColumn;
+    bbSetErased: TdxBarButton;
+    bbSetUnErased: TdxBarButton;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
+    dsdGridToExcel: TdsdGridToExcel;
+    bbToExcel: TdxBarButton;
+    dxBarStatic: TdxBarStatic;
+    spErasedUnErased: TdsdStoredProc;
+    dsdChoiceGuides: TdsdChoiceGuides;
+    bbChoice: TdxBarButton;
+    cxGridDBTableView: TcxGridDBTableView;
+    clCode: TcxGridDBColumn;
+    clName: TcxGridDBColumn;
+    clErased: TcxGridDBColumn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
   private
     { Private declarations }
   public
