@@ -732,6 +732,9 @@ begin
         Add('     , KindPackage.Id_Postgres as Id_Postgres');
         Add('from dba.KindPackage');
         Add('where KindPackage.HasChildren = zc_hsLeaf()');
+        Add('  and (KindPackage.ParentId not in (23,30)'
+           +'     or KindPackage.Id in (24)'
+           +'      )');
         Add('order by ObjectId');
         Open;
         //
@@ -1007,14 +1010,16 @@ begin
                   Add('     left outer join dba.Unit as Unit_parent8 on Unit_parent8.Id = Unit_parent7.ParentId');
                   Add('     left outer join dba.Unit as Unit_parent9 on Unit_parent9.Id = Unit_parent8.ParentId');
                   Add('     left outer join dba.ClientInformation on ClientInformation.ClientId = isnull( zf_ChangeIntToNull( Unit_all.InformationFromUnitID), Unit_all.Id)');
-                  Add('where Unit.Id1_Postgres is null'
-                     +'  and isnull(Unit_all.findGoodsCard,zc_rvNo()) = zc_rvNo()'
-                     +'  and fCheckUnitClientParentID(3,Unit.Id)=zc_rvNo()'    // ¿À¿Õ
-                     +'  and fCheckUnitClientParentID(3714,Unit.Id)=zc_rvNo()' // ¿Î‡Ì-ÔÓ˜ËÂ
-                     +'  and fCheckUnitClientParentID(3531,Unit.Id)=zc_rvNo()' // Í ·Ì*
-                     +'  and fCheckUnitClientParentID(3349,Unit.Id)=zc_rvNo()' // ÍÍÍ
-                     +'  and fCheckUnitClientParentID(600,Unit.Id)=zc_rvNo()'  // œ≈–≈”◊≈“
-                     +'  and fCheckUnitClientParentID(149,Unit.Id)=zc_rvNo()'  // –¿—’Œƒ€ œ–Œ»«¬Œƒ—“¬¿
+                  Add('where (Unit.Id1_Postgres is null'
+                     +'   and isnull(Unit_all.findGoodsCard,zc_rvNo()) = zc_rvNo()'
+                     +'   and fCheckUnitClientParentID(3,Unit.Id)=zc_rvNo()'    // ¿À¿Õ
+                     +'   and fCheckUnitClientParentID(3714,Unit.Id)=zc_rvNo()' // ¿Î‡Ì-ÔÓ˜ËÂ
+                     +'   and fCheckUnitClientParentID(3531,Unit.Id)=zc_rvNo()' // Í ·Ì*
+                     +'   and fCheckUnitClientParentID(3349,Unit.Id)=zc_rvNo()' // ÍÍÍ
+                     +'   and fCheckUnitClientParentID(600,Unit.Id)=zc_rvNo()'  // œ≈–≈”◊≈“
+                     +'   and fCheckUnitClientParentID(149,Unit.Id)=zc_rvNo()'  // –¿—’Œƒ€ œ–Œ»«¬Œƒ—“¬¿
+                     +'      )'
+                     +'  or Unit.Id=3'    // ¿À¿Õ
                      );
                   Add('group by ObjectId');
                   Add('       , ObjectName');
@@ -2666,7 +2671,7 @@ begin
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , BillItems.OperCount as Amount');
         Add('     , Amount as AmountPartner');
-        Add('     , Amount as AmountPacker');
+        Add('     , 0 as AmountPacker');
         Add('     , BillItems.OperPrice as Price');
         Add('     , 1 as CountForPrice');
         Add('     , BillItems.OperCount_Upakovka as LiveWeight');

@@ -108,12 +108,31 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Object_Status_UnComplete(), inDescId:= zc_Object_Status(), inCode:= 1, inName:= 'Не проведен', inEnumName:= 'zc_Enum_Status_UnComplete');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Object_Status_Complete(), inDescId:= zc_Object_Status(), inCode:= 2, inName:= 'Проведен', inEnumName:= 'zc_Enum_Status_Complete');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Object_Status_Erased(), inDescId:= zc_Object_Status(), inCode:= 3, inName:= 'Удален', inEnumName:= 'zc_Enum_Status_Erased');
+
+
+     -- !!! 
+     -- !!! 2-уровень Управленческих назначений
+     -- !!! 
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10100, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_10100');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10200, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_10200');
+
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20100, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_20100');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20200, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_20200');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20300, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_20300');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20400, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_20400');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20500, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_20500');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20600, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_20600');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20700, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_20700');
+
+
+
 END $$;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 28.06.13                                        *
 
+ 01.07.13                                        * add 2-уровень Управленческих назначений
+ 28.06.13                                        *
 */
