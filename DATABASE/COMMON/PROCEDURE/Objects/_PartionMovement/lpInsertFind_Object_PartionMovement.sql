@@ -21,7 +21,7 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertFind_Object_PartionMovement (Integer, Integer, TVarChar, TDateTime, Integer, Integer) OWNER TO postgres;
+ALTER FUNCTION lpInsertFind_Object_PartionMovement (Integer, Integer, TVarChar, Integer) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
