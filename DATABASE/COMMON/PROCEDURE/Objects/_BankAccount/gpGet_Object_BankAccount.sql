@@ -10,7 +10,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean,
                JuridicalId Integer, JuridicalName TVarChar,
                BankId Integer, BankName TVarChar,
                CurrencyId Integer, CurrencyName TVarChar) AS
-$BODY$BEGIN
+$BODY$
+BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
@@ -20,7 +21,7 @@ $BODY$BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)   AS Id
-           , MAX (Object.ObjectCode) + 1 AS Code
+           , COALESCE (MAX (ObjectCode), 0) + 1 AS Code
            , CAST ('' as TVarChar) AS Name
            , CAST (NULL AS Boolean)AS isErased
            , CAST (0 as Integer)   AS JuridicalId
@@ -45,32 +46,29 @@ $BODY$BEGIN
            , Currency.Id         AS CurrencyId
            , Currency.ValueData  AS CurrencyName
        FROM Object
-  LEFT JOIN ObjectLink AS BankAccount_Juridical
-         ON BankAccount_Juridical.ObjectId = Object.Id AND BankAccount_Juridical.DescId = zc_ObjectLink_BankAccount_Juridical()
-  LEFT JOIN Object AS Juridical
-         ON Juridical.Id = BankAccount_Juridical.ChildObjectId
-  LEFT JOIN ObjectLink AS BankAccount_Bank
-         ON BankAccount_Bank.ObjectId = Object.Id AND BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
-  LEFT JOIN Object AS Bank
-         ON Bank.Id = BankAccount_Bank.ChildObjectId
-  LEFT JOIN ObjectLink AS BankAccount_Currency
-         ON BankAccount_Currency.ObjectId = Object.Id AND BankAccount_Currency.DescId = zc_ObjectLink_BankAccount_Currency()
-  LEFT JOIN Object AS Currency
-         ON Currency.Id = BankAccount_Currency.ChildObjectId
+           LEFT JOIN ObjectLink AS BankAccount_Juridical
+                                ON BankAccount_Juridical.ObjectId = Object.Id 
+                               AND BankAccount_Juridical.DescId = zc_ObjectLink_BankAccount_Juridical()
+           LEFT JOIN Object AS Juridical ON Juridical.Id = BankAccount_Juridical.ChildObjectId
+           LEFT JOIN ObjectLink AS BankAccount_Bank
+                                ON BankAccount_Bank.ObjectId = Object.Id 
+                               AND BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
+           LEFT JOIN Object AS Bank ON Bank.Id = BankAccount_Bank.ChildObjectId
+           LEFT JOIN ObjectLink AS BankAccount_Currency
+                                ON BankAccount_Currency.ObjectId = Object.Id 
+                               AND BankAccount_Currency.DescId = zc_ObjectLink_BankAccount_Currency()
+           LEFT JOIN Object AS Currency ON Currency.Id = BankAccount_Currency.ChildObjectId
        WHERE Object.Id = inId;
   END IF;
   
-END;$BODY$
+END;
+$BODY$
 
-LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 1000;
-ALTER FUNCTION gpGet_Object_BankAccount(integer, TVarChar)
-  OWNER TO postgres;
+LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpGet_Object_BankAccount(integer, TVarChar) OWNER TO postgres;
 
 
-/*-------------------------------------------------------------------------------*/
-/*
+/*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  10.06.13          *

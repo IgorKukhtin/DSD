@@ -28,13 +28,13 @@ BEGIN
          , Object_Asset.isErased            AS isErased
      FROM OBJECT AS Object_Asset
           LEFT JOIN ObjectLink AS ObjectLink_Asset_AssetGroup
-                 ON ObjectLink_Asset_AssetGroup.ObjectId = Object_Asset.Id
-                AND ObjectLink_Asset_AssetGroup.DescId = zc_ObjectLink_Asset_AssetGroup()
+                               ON ObjectLink_Asset_AssetGroup.ObjectId = Object_Asset.Id
+                              AND ObjectLink_Asset_AssetGroup.DescId = zc_ObjectLink_Asset_AssetGroup()
           LEFT JOIN Object AS Asset_AssetGroup ON Asset_AssetGroup.Id = ObjectLink_Asset_AssetGroup.ChildObjectId
 
           LEFT JOIN ObjectString AS ObjectString_InvNumber
-                 ON ObjectString_InvNumber.ObjectId = Object_Asset.Id
-                AND ObjectString_InvNumber.DescId = zc_ObjectString_Asset_InvNumber()
+                                 ON ObjectString_InvNumber.ObjectId = Object_Asset.Id
+                                AND ObjectString_InvNumber.DescId = zc_ObjectString_Asset_InvNumber()
      WHERE Object_Asset.DescId = zc_Object_Asset();
   
 END;
