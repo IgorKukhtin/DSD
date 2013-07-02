@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Car(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
                CarModelId Integer, CarModelName TVarChar, RegistrationCertificate TVarChar) AS
-$BODY$BEGIN
+$BODY$
+BEGIN
 
   -- проверка прав пользователя на вызов процедуры
   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_Car());
@@ -18,7 +19,7 @@ $BODY$BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , COALESCE (MAX (ObjectCode), 0) + 1 AS Code
+           , COALESCE (MAX (Object.ObjectCode), 0) + 1 AS Code
            , CAST ('' as TVarChar)  AS Name
            , CAST (NULL AS Boolean) AS isErased
            , CAST (0 as Integer)    AS CarModelId
@@ -52,8 +53,7 @@ $BODY$
 LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Object_Car(integer, TVarChar) OWNER TO postgres;
 
-/*-------------------------------------------------------------------------------*/
-/*
+/*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  10.06.13          *

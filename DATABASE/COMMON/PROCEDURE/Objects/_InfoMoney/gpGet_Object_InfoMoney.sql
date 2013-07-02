@@ -4,13 +4,14 @@
 
 CREATE OR REPLACE FUNCTION gpGet_Object_InfoMoney(
     IN inId          Integer,       -- Группы управленческих аналитик
-    IN inSession     TVarChar       -- текущий пользователь
+    IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar,
                InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar,
                isErased boolean) AS
-$BODY$BEGIN
+$BODY$
+BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_InfoMoney());
       
@@ -50,26 +51,26 @@ $BODY$BEGIN
          
          , Object_InfoMoney.isErased             AS isErased
       FROM Object AS Object_InfoMoney
- LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyDestination
-        ON ObjectLink_InfoMoney_InfoMoneyDestination.ObjectId = Object_InfoMoney.Id
-       AND ObjectLink_InfoMoney_InfoMoneyDestination.DescId = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
- LEFT JOIN Object AS Object_InfoMoneyDestination ON Object_InfoMoneyDestination.Id = ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyDestination
+                               ON ObjectLink_InfoMoney_InfoMoneyDestination.ObjectId = Object_InfoMoney.Id
+                              AND ObjectLink_InfoMoney_InfoMoneyDestination.DescId = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
+          LEFT JOIN Object AS Object_InfoMoneyDestination ON Object_InfoMoneyDestination.Id = ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId
  
- LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyGroup
-        ON ObjectLink_InfoMoney_InfoMoneyGroup.ObjectId = Object_InfoMoney.Id
-       AND ObjectLink_InfoMoney_InfoMoneyGroup.DescId = zc_ObjectLink_InfoMoney_InfoMoneyGroup()
- LEFT JOIN Object AS Object_InfoMoneyGroup ON Object_InfoMoneyGroup.Id = ObjectLink_InfoMoney_InfoMoneyGroup.ChildObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyGroup
+                               ON ObjectLink_InfoMoney_InfoMoneyGroup.ObjectId = Object_InfoMoney.Id
+                              AND ObjectLink_InfoMoney_InfoMoneyGroup.DescId = zc_ObjectLink_InfoMoney_InfoMoneyGroup()
+          LEFT JOIN Object AS Object_InfoMoneyGroup ON Object_InfoMoneyGroup.Id = ObjectLink_InfoMoney_InfoMoneyGroup.ChildObjectId
      WHERE Object_InfoMoney.Id = inId;
    END IF;
   
-END;$BODY$
+END;
+$BODY$
 
 LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Object_InfoMoney (integer, TVarChar) OWNER TO postgres;
 
 
-/*-------------------------------------------------------------------------------*/
-/*
+/*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  21.06.13          * + все поля ; IF COALESCE (inId, 0) = 0....             

@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_GoodsGroup(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, ParentId Integer, ParentName TVarChar) AS
-$BODY$BEGIN
+$BODY$
+BEGIN
    
    -- проверка прав пользователя на вызов процедуры
    --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
@@ -17,7 +18,7 @@ $BODY$BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , MAX (Object.ObjectCode) + 1 AS Code
+           , COALESCE (MAX (Object.ObjectCode), 0) + 1 AS Code
            , CAST ('' as TVarChar)  AS Name
            , CAST (NULL AS Boolean) AS isErased
            , CAST (0 as Integer)    AS ParentId
@@ -27,30 +28,28 @@ $BODY$BEGIN
    ELSE
        RETURN QUERY 
        SELECT 
-             Object.Id            AS Id
-           , Object.ObjectCode    AS Code
-           , Object.ValueData     AS Name
-           , Object.isErased      AS isErased
+             Object_GoodsGroup.Id            AS Id
+           , Object_GoodsGroup.ObjectCode    AS Code
+           , Object_GoodsGroup.ValueData     AS Name
+           , Object_GoodsGroup.isErased      AS isErased
            , GoodsGroup.Id        AS ParentId
            , GoodsGroup.ValueData AS ParentName
-       FROM Object
-       JOIN ObjectLink 
-         ON ObjectLink.ObjectId = Object.Id
-        AND ObjectLink.DescId = zc_ObjectLink_GoodsGroup_Parent()
-       JOIN Object AS GoodsGroup
-         ON GoodsGroup.Id = ObjectLink.ChildObjectId
-       WHERE Object.Id = inId;
+       FROM OBJECT AS Object_GoodsGroup
+           JOIN ObjectLink AS ObjectLink_GoodsGroup
+                           ON ObjectLink_GoodsGroup.ObjectId = Object_GoodsGroup.Id
+                          AND ObjectLink_GoodsGroup.DescId = zc_ObjectLink_GoodsGroup_Parent()
+           JOIN Object AS GoodsGroup ON GoodsGroup.Id = ObjectLink_GoodsGroup.ChildObjectId
+       WHERE Object_GoodsGroup.Id = inId;
    END IF;
    
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 1000;
+END;
+$BODY$
+
+LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Object_GoodsGroup(integer, TVarChar) OWNER TO postgres;
 
 
-/*-------------------------------------------------------------------------------*/
-/*
+/*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  12.06.13          *

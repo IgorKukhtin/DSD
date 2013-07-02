@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_GoodsPropertyValue(
 RETURNS TABLE (Id Integer, Name TVarChar, isErased Boolean, Amount TFloat, BarCode TVarChar, Article TVarChar, 
                BarCodeGLN TVarChar, ArticleGLN TVarChar, GoodsPropertyId Integer, GoodsPropertyName TVarChar, 
                GoodsId Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar) AS
-$BODY$BEGIN
+$BODY$
+BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsPropertyValue());
@@ -62,7 +63,6 @@ $BODY$BEGIN
          ON BarCodeGLN.ObjectId = Object.Id AND BarCodeGLN.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeGLN()
   LEFT JOIN ObjectString AS ArticleGLN 
          ON ArticleGLN.ObjectId = Object.Id AND ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
-
   LEFT JOIN ObjectLink AS GoodsPropertyValue_GoodsProperty
          ON GoodsPropertyValue_GoodsProperty.ObjectId = Object.Id
         AND GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
@@ -81,16 +81,14 @@ $BODY$BEGIN
        WHERE Object.Id = inId;
    END IF;
    
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 1000;
-ALTER FUNCTION gpGet_Object_GoodsPropertyValue(integer, TVarChar)
-  OWNER TO postgres;
+END;
+$BODY$
+
+LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpGet_Object_GoodsPropertyValue(integer, TVarChar) OWNER TO postgres;
 
 
-/*-------------------------------------------------------------------------------*/
-/*
+/*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  12.06.13          *

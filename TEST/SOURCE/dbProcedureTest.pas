@@ -142,6 +142,7 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_Account\lfSelect_Object_Account.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Account\gpSelect_Object_Account.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Account\gpGet_Object_Account.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_Account\lpInsertFind_Account.sql', ZQuery);
 
   ExecFile(ProcedurePath + 'OBJECTS\_AccountDirection\lfSelect_Object_AccountDirection.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_AccountDirection\gpInsertUpdate_Object_AccountDirection.sql', ZQuery);
@@ -305,6 +306,8 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_Asset\gpInsertUpdate_Object_Asset.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Asset\gpSelect_Object_Asset.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Asset\gpGet_Object_Asset.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'OBJECTS\_PartionGoods\lpInsert_Object_PartionGoods.sql', ZQuery);
 
 end;
 

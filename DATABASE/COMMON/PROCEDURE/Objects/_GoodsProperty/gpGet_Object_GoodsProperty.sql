@@ -17,7 +17,7 @@ $BODY$BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , MAX (Object.ObjectCode) + 1 AS Code
+           , COALESCE (MAX (Object.ObjectCode), 0) + 1 AS Code
            , CAST ('' as TVarChar)  AS Name
            , CAST (NULL AS Boolean) AS isErased
        FROM Object 
@@ -33,12 +33,11 @@ $BODY$BEGIN
        WHERE Object.Id = inId;
    END IF;
     
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 1000;
-ALTER FUNCTION gpGet_Object_GoodsProperty(integer, TVarChar)
-  OWNER TO postgres;
+END;
+$BODY$
+
+LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpGet_Object_GoodsProperty(integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
