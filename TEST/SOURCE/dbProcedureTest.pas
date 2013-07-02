@@ -307,7 +307,8 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_Asset\gpSelect_Object_Asset.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Asset\gpGet_Object_Asset.sql', ZQuery);
 
-  ExecFile(ProcedurePath + 'OBJECTS\_PartionGoods\lpInsert_Object_PartionGoods.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_PartionGoods\lpInsertFind_Object_PartionGoods.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_PartionGoods\lpInsertFind_Object_PartionMovement.sql', ZQuery);
 
 end;
 

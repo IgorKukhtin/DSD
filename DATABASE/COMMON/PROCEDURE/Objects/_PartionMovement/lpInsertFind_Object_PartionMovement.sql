@@ -15,7 +15,7 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_PartionMovement(), 0, inName);
 
-   PERFORM lpInsertUpdate_ObjectInteger(zc_ObjectInteger_PartionMovement_MovementId(), ioId, inMovementId);
+   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_PartionMovement_MovementId(), ioId, inMovementId);
 
 END;
 $BODY$

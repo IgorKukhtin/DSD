@@ -47,8 +47,7 @@ begin
   ExecFile(MetadataPath + 'Object\InsertObjectBooleanDesc.sql', ZQuery);
   ExecFile(MetadataPath + 'Object\InsertObjectLinkDesc.sql', ZQuery);
   ExecFile(MetadataPath + 'Object\InsertObjectDateDesc.sql', ZQuery);
-  ExecFile(MetadataPath + 'Object\InsertObjectIntegerDesc.sql', ZQuery);
-end;
+ end;
 
 procedure TdbMetaDataTest.InsertObjectHistoryDesc;
 begin
@@ -125,7 +124,6 @@ begin
   ExecFile(MetadataPath + 'Object\CreateObjectFloatDescFunction.sql', ZQuery);
   ExecFile(MetadataPath + 'Object\CreateObjectBooleanDescFunction.sql', ZQuery);
   ExecFile(MetadataPath + 'Object\CreateObjectDateDescFunction.sql', ZQuery);
-  ExecFile(MetadataPath + 'Object\CreateObjectStringDescFunction.sql', ZQuery);
 end;
 
 procedure TdbMetaDataTest.CreateObjectHistoryDescFunction;
