@@ -9,6 +9,8 @@ CREATE OR REPLACE FUNCTION gpComplete_Movement_Income(
 --  RETURNS VOID AS
   RETURNS TABLE (a1 TFloat, a2 TFloat, b1 TFloat, b2 TFloat) AS
 $BODY$
+  DECLARE vbUserId Integer;
+
   DECLARE vbOperSumm_Client_byItem TFloat;
   DECLARE vbOperSumm_Packer_byItem TFloat;
 
@@ -23,6 +25,7 @@ BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Complete_Movement_Income());
+   vbUserId:= inSession;
 
 
    -- Эти параметры нужны для расчета конечных сумм по Клиенту и Заготовителю
@@ -56,21 +59,25 @@ if inMovementId = 0 then
 end if;
 
 
+   -- таблица - Аналитики остатка
+   CREATE TEMP TABLE _tmpContainer (DescId Integer, ObjectId Integer) ON COMMIT DROP;
+
    -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-   CREATE TEMP TABLE tmpItem (MovementItemId Integer, MovementId Integer, JuridicalId_From Integer, MemberId_From Integer, UnitId Integer, PersonalId_Packer Integer, PaidKindId Integer, ContractId Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar
+   CREATE TEMP TABLE _tmpItem (MovementItemId Integer, MovementId Integer, OperDate TDateTime, JuridicalId_From Integer, MemberId_From Integer, UnitId Integer, PersonalId_Packer Integer, PaidKindId Integer, ContractId Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar
                             , OperCount TFloat, tmpOperSumm_Client TFloat, OperSumm_Client TFloat, tmpOperSumm_Packer TFloat, OperSumm_Packer TFloat
                             , AccountDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                            , JuridicalId_main Integer, BusinessId Integer
+                            , JuridicalId_basis Integer, BusinessId Integer
                             , PartionMovementId Integer, PartionGoodsId Integer) ON COMMIT DROP;
    -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-   INSERT INTO tmpItem (MovementItemId, MovementId, JuridicalId_From, MemberId_From, UnitId, PersonalId_Packer, PaidKindId, ContractId, GoodsId, GoodsKindId, AssetId, PartionGoods
+   INSERT INTO _tmpItem (MovementItemId, MovementId, OperDate, JuridicalId_From, MemberId_From, UnitId, PersonalId_Packer, PaidKindId, ContractId, GoodsId, GoodsKindId, AssetId, PartionGoods
                       , OperCount, tmpOperSumm_Client, OperSumm_Client, tmpOperSumm_Packer, OperSumm_Packer
                       , AccountDirectionId, InfoMoneyDestinationId, InfoMoneyId
-                      , JuridicalId_main, BusinessId
+                      , JuridicalId_basis, BusinessId
                       , PartionMovementId, PartionGoodsId)
       SELECT
             MovementItemId
           , MovementId
+          , OperDate
           , JuridicalId_From
           , MemberId_From
           , UnitId
@@ -138,17 +145,18 @@ end if;
             -- Статьи назначения
           , InfoMoneyId
 
-          , JuridicalId_main
+          , JuridicalId_basis
           , BusinessId
 
             -- Партии накладной, сформируем позже
-          , PartionMovementId
+          , 0 AS PartionMovementId
             -- Партии товара, сформируем позже
-          , PartionGoodsId
+          , 0 AS PartionGoodsId
       FROM (
       SELECT
             MovementItem.Id AS MovementItemId
           , MovementItem.MovementId
+          , Movement.OperDate
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Partner() THEN ObjectLink_Partner_Juridical.ChildObjectId ELSE 0 END, 0) AS JuridicalId_From
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Member() THEN Object_From.Id ELSE 0 END, 0) AS MemberId_From
           , COALESCE (MovementLinkObject_To.ObjectId, 0) AS UnitId
@@ -182,7 +190,7 @@ end if;
             -- Статьи назначения
           , COALESCE (lfObject_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
 
-          , COALESCE (ObjectLink_Unit_Juridical.ChildObjectId, 0) AS JuridicalId_main
+          , COALESCE (ObjectLink_Unit_Juridical.ChildObjectId, 0) AS JuridicalId_basis
           , COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0) AS BusinessId
 
       FROM Movement
@@ -252,7 +260,7 @@ end if;
 
       WHERE (Movement.Id = inMovementId OR inMovementId = 0)
         AND Movement.StatusId = zc_Enum_Status_UnComplete()
-      ) AS tmp;
+      ) AS _tmp;
 
 
    -- Расчет Итоговой суммы по Клиенту
@@ -276,7 +284,7 @@ end if;
                        END
           END
           INTO vbOperSumm_Client
-   FROM tmpItem;
+   FROM _tmpItem;
 
    -- Расчет Итоговой суммы по Заготовителю (точно так же как и для Клиента)
    SELECT CASE WHEN vbPriceWithVAT OR vbVATPercent <= 0
@@ -299,20 +307,20 @@ end if;
                        END
           END
           INTO vbOperSumm_Packer
-   FROM tmpItem;
+   FROM _tmpItem;
 
    -- Расчет Итоговой суммы по Клиенту (по элементам)
-   SELECT SUM (OperSumm_Client) INTO vbOperSumm_Client_byItem FROM tmpItem;
+   SELECT SUM (OperSumm_Client) INTO vbOperSumm_Client_byItem FROM _tmpItem;
    -- Расчет Итоговой суммы по Заготовителю (по элементам)
-   SELECT SUM (OperSumm_Packer) INTO vbOperSumm_Packer_byItem FROM tmpItem;
+   SELECT SUM (OperSumm_Packer) INTO vbOperSumm_Packer_byItem FROM _tmpItem;
 
 
    -- если не равны ДВЕ Итоговые суммы по Клиенту
    IF COALESCE (vbOperSumm_Client, 0) <> COALESCE (vbOperSumm_Client_byItem, 0)
    THEN
        -- на разницу корректируем самую большую сумму (теоретически может получиться Значение < 0, но эту ошибку не обрабатываем)
-       UPDATE tmpItem SET OperSumm_Client = OperSumm_Client - (vbOperSumm_Client_byItem - vbOperSumm_Client)
-       WHERE MovementItemId IN (SELECT MAX (MovementItemId) FROM tmpItem WHERE OperSumm_Client IN (SELECT MAX (OperSumm_Client) FROM tmpItem)
+       UPDATE _tmpItem SET OperSumm_Client = OperSumm_Client - (vbOperSumm_Client_byItem - vbOperSumm_Client)
+       WHERE MovementItemId IN (SELECT MAX (MovementItemId) FROM _tmpItem WHERE OperSumm_Client IN (SELECT MAX (OperSumm_Client) FROM _tmpItem)
                                );
    END IF;
 
@@ -320,8 +328,8 @@ end if;
    IF COALESCE (vbOperSumm_Packer, 0) <> COALESCE (vbOperSumm_Packer_byItem, 0)
    THEN
        -- на разницу корректируем самую большую сумму (теоретически может получиться Значение < 0, но эту ошибку не обрабатываем)
-       UPDATE tmpItem SET OperSumm_Packer = OperSumm_Packer - (vbOperSumm_Packer_byItem - vbOperSumm_Packer)
-       WHERE MovementItemId IN (SELECT MAX (MovementItemId) FROM tmpItem WHERE OperSumm_Packer IN (SELECT MAX (OperSumm_Packer) FROM tmpItem)
+       UPDATE _tmpItem SET OperSumm_Packer = OperSumm_Packer - (vbOperSumm_Packer_byItem - vbOperSumm_Packer)
+       WHERE MovementItemId IN (SELECT MAX (MovementItemId) FROM _tmpItem WHERE OperSumm_Packer IN (SELECT MAX (OperSumm_Packer) FROM _tmpItem)
                                );
    END IF;
 
@@ -330,35 +338,96 @@ end if;
 
 --  return;
 
-/*
-   -- формируются Партии накладной, если Управленческие назначения = 10100; "Мясное сырье"
-   UPDATE tmpItem SET PartionMovementId = lpInsertUpdate_PartionMovement (MovementId)
-   WHERE InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
+   -- формируются Партии накладной, если Управленческие назначения = 10100; "Мясное сырье" -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
+   UPDATE _tmpItem SET PartionMovementId = lpInsertFind_Object_PartionMovement (MovementId)
+   WHERE InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100(); 
 
    -- формируются Партии накладной, если PartionGoods <> ''
-   UPDATE tmpItem SET PartionGoods = lpInsertUpdate_PartionGoods (PartionGoods, NULL, NULL, NULL) WHERE PartionGoods <> '';
+   UPDATE _tmpItem SET PartionGoodsId = lpInsertFind_Object_PartionGoods (PartionGoods, NULL) WHERE PartionGoods <> '';
 
 
    -- формируются Проводки для товарного учета в количестве 
-   PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
-                                               , inDescId:= zc_MovementItemContainer_Count()
-                                               , inMovementId:= MovementId
-                                               , inContainerId:= CASE WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
-                                                                              -- если Управленческие назначения = 10100; "Мясное сырье"
-                                                                         THEN lpInsert_Container (inContainerDescId:= zc_Container_Count()
-                                                                                                , AccountId:= lpInsert_Account
 
-                                                                     UnitId, zc_ContainerLinkObject_Unit(),   
-                                                                     MovementItem.ObjectId, zc_ContainerLinkObject_Goods()),  
-                                               , inAmount:= OperCount
+   -- формируются Проводки для товарного учета в сумме
+   PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
+                                               , inDescId:= zc_MovementItemContainer_Summ()
+                                               , inMovementId:= MovementId
+                                               , inContainerId:= CASE WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- 10100; "Мясное сырье" -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
+                                                                         THEN lpInsertFind_Container (inContainerDescId:= zc_Container_Summ()
+                                                                                                    , inObjectId:= lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- 20000; "Запасы" -- select * from gpSelect_Object_AccountGroup ('2') where Id = zc_Enum_AccountGroup_20000()
+                                                                                                                                              , inAccountDirectionId     := AccountDirectionId
+                                                                                                                                              , inInfoMoneyDestinationId := InfoMoneyDestinationId
+                                                                                                                                              , inInfoMoneyId            := NULL
+                                                                                                                                              , inUserId                 := vbUserId
+                                                                                                                                               )
+                                                                                                    , inJuridicalId_basis:= JuridicalId_basis
+                                                                                                    , inBusinessId       := BusinessId
+                                                                                                    , inDescId_1   := zc_ContainerLinkObject_Unit()
+                                                                                                    , inObjectId_1 := UnitId
+                                                                                                    , inDescId_2   := zc_ContainerLinkObject_Goods()
+                                                                                                    , inObjectId_2 := GoodsId
+                                                                                                    , inDescId_3   := zc_ContainerLinkObject_PartionGoods()
+                                                                                                    , inObjectId_3 := PartionGoodsId
+                                                                                                    , inDescId_4   := zc_ContainerLinkObject_InfoMoney()
+                                                                                                    , inObjectId_4 := InfoMoneyId
+                                                                                                    , inDescId_5   := zc_ContainerLinkObject_InfoMoneyDetail()
+                                                                                                    , inObjectId_5 := InfoMoneyId
+                                                                                                    , inDescId_6:= NULL, inObjectId_6:=NULL, inDescId_7:= NULL, inObjectId_7:=NULL, inDescId_8:= NULL, inObjectId_8:=NULL, inDescId_9:= NULL, inObjectId_9:=NULL, inDescId_10:= NULL, inObjectId_10:=NULL
+                                                                                                     )
+                                                                      WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- 10200; "Прочее сырье" -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200()
+                                                                         THEN lpInsertFind_Container (inContainerDescId:= zc_Container_Summ()
+                                                                                                    , inObjectId:= lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- 20000; "Запасы" -- select * from gpSelect_Object_AccountGroup ('2') where Id = zc_Enum_AccountGroup_20000()
+                                                                                                                                              , inAccountDirectionId     := AccountDirectionId
+                                                                                                                                              , inInfoMoneyDestinationId := InfoMoneyDestinationId
+                                                                                                                                              , inInfoMoneyId            := NULL
+                                                                                                                                              , inUserId                 := vbUserId
+                                                                                                                                               )
+                                                                                                    , inJuridicalId_basis:= JuridicalId_basis
+                                                                                                    , inBusinessId       := BusinessId
+                                                                                                    , inDescId_1   := zc_ContainerLinkObject_Unit()
+                                                                                                    , inObjectId_1 := UnitId
+                                                                                                    , inDescId_2   := zc_ContainerLinkObject_Goods()
+                                                                                                    , inObjectId_2 := GoodsId
+                                                                                                    , inDescId_3   := NULL
+                                                                                                    , inObjectId_3 := NULL
+                                                                                                    , inDescId_4   := zc_ContainerLinkObject_InfoMoney()
+                                                                                                    , inObjectId_4 := InfoMoneyId
+                                                                                                    , inDescId_5   := zc_ContainerLinkObject_InfoMoneyDetail()
+                                                                                                    , inObjectId_5 := InfoMoneyId
+                                                                                                    , inDescId_6:= NULL, inObjectId_6:=NULL, inDescId_7:= NULL, inObjectId_7:=NULL, inDescId_8:= NULL, inObjectId_8:=NULL, inDescId_9:= NULL, inObjectId_9:=NULL, inDescId_10:= NULL, inObjectId_10:=NULL
+                                                                                                     )
+                                                                         ELSE lpInsertFind_Container (inContainerDescId:= zc_Container_Summ()
+                                                                                                    , inObjectId:= lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- 20000; "Запасы" -- select * from gpSelect_Object_AccountGroup ('2') where Id = zc_Enum_AccountGroup_20000()
+                                                                                                                                              , inAccountDirectionId     := AccountDirectionId
+                                                                                                                                              , inInfoMoneyDestinationId := InfoMoneyDestinationId
+                                                                                                                                              , inInfoMoneyId            := NULL
+                                                                                                                                              , inUserId                 := vbUserId
+                                                                                                                                               )
+                                                                                                    , inJuridicalId_basis:= JuridicalId_basis
+                                                                                                    , inBusinessId       := BusinessId
+                                                                                                    , inDescId_1   := zc_ContainerLinkObject_Unit()
+                                                                                                    , inObjectId_1 := UnitId
+                                                                                                    , inDescId_2   := zc_ContainerLinkObject_Goods()
+                                                                                                    , inObjectId_2 := GoodsId
+                                                                                                    , inDescId_3   := NULL
+                                                                                                    , inObjectId_3 := NULL
+                                                                                                    , inDescId_4   := zc_ContainerLinkObject_InfoMoney()
+                                                                                                    , inObjectId_4 := InfoMoneyId
+                                                                                                    , inDescId_5   := zc_ContainerLinkObject_InfoMoneyDetail()
+                                                                                                    , inObjectId_5 := InfoMoneyId
+                                                                                                    , inDescId_6:= NULL, inObjectId_6:=NULL, inDescId_7:= NULL, inObjectId_7:=NULL, inDescId_8:= NULL, inObjectId_8:=NULL, inDescId_9:= NULL, inObjectId_9:=NULL, inDescId_10:= NULL, inObjectId_10:=NULL
+                                                                                                     )
+                                                                 END
+                                               , inAmount:= OperSumm_Client + OperSumm_Packer
                                                , inOperDate:= OperDate
-    FROM tmpItem
-*/   
+                                                )
+    FROM _tmpItem;
+
 
 
 
   -- Обязательно меняем статус документа
---  UPDATE Movement SET StatusId = zc_Object_Status_Complete() WHERE Id = inMovementId;
+  UPDATE Movement SET StatusId = zc_Object_Status_Complete() WHERE Id = inMovementId;
 
 
 END;
@@ -370,9 +439,9 @@ LANGUAGE PLPGSQL VOLATILE;
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
                
- 01.07.13                                        *
+ 02.07.13                                        *
 
 */
 
 -- тест
--- SELECT * FROM gpComplete_Movement_Income (inMovementId:= 10, inSession:= '2')
+-- SELECT * FROM gpComplete_Movement_Income (inMovementId:= 5241, inSession:= '2')

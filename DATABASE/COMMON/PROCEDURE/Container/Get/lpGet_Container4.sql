@@ -1,4 +1,4 @@
-﻿-- Function: lpget_containerid(integer, integer, integer, integer, integer)
+-- Function: lpget_containerid(integer, integer, integer, integer, integer)
 
 -- DROP FUNCTION lpget_containerid(integer, integer, integer, integer, integer, integer, integer, Integer);
 

@@ -1,34 +1,43 @@
--- Function: lpInsertFind_Object_PartionMovement()
+-- Function: lpInsertFind_Object_PartionMovement (Integer)
 
--- DROP FUNCTION lpInsertFind_Object_PartionMovement();
+-- DROP FUNCTION lpInsertFind_Object_PartionMovement (Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertFind_Object_PartionMovement(
- INOUT ioId                  Integer   , -- ключ объекта <Партии накладных>
-    IN inCode                Integer   , -- Код объекта 
-    IN inName                TVarChar  , -- Полное значение партии
-    IN inMovementId          Integer     -- ссылка на документ Приход от постащика
+    IN inMovementId  Integer     -- ссылка на документ Приход от постащика
 )
   RETURNS Integer AS
 $BODY$
+   DECLARE vbPartionMovementId Integer;
 BEGIN
    
-   -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_PartionMovement(), 0, inName);
+   -- Находим 
+   SELECT ObjectId INTO vbPartionMovementId FROM ObjectFloat WHERE ValueData = inMovementId AND DescId = zc_ObjectFloat_PartionMovement_MovementId();
 
-   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_PartionMovement_MovementId(), ioId, inMovementId);
+   IF COALESCE (vbPartionMovementId, 0) = 0
+   THEN
+           -- сохранили <Объект>
+           vbPartionMovementId := lpInsertUpdate_Object (vbPartionMovementId, zc_Object_PartionMovement(), 0, CAST (inMovementId AS TVarChar));
+           -- сохранили
+           PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionMovement_MovementId(), vbPartionMovementId, inMovementId);
+
+   END IF;
+
+   -- Возвращаем значение
+   RETURN (vbPartionMovementId);
 
 END;
 $BODY$
 
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertFind_Object_PartionMovement (Integer, Integer, TVarChar, Integer) OWNER TO postgres;
+LANGUAGE PLPGSQL VOLATILE;
+ALTER FUNCTION lpInsertFind_Object_PartionMovement (Integer) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.07.13                                        * сначала Find, потом если надо Insert
  02.07.13          *
 */
 
 -- тест
--- SELECT * FROM lpInsertFind_Object_PartionMovement (ioId:= -4, inCode:=6 , inName:= 'Test_PartionMovement', inMovementId:= 4)
+-- SELECT * FROM lpInsertFind_Object_PartionMovement (inMovementId:= 123)
