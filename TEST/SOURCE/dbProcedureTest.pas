@@ -118,6 +118,7 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_ObjectBoolean.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_ObjectLink.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_Object_Enum.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpUpdate_Object_Enum_byCode.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_ObjectDate.sql', ZQuery);
 
   ExecFile(ProcedurePath + 'OBJECTS\Delete\lpDelete_Object.sql', ZQuery);
@@ -300,6 +301,10 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_AssetGroup\gpInsertUpdate_Object_AssetGroup.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_AssetGroup\gpSelect_Object_AssetGroup.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_AssetGroup\gpGet_Object_AssetGroup.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'OBJECTS\_Asset\gpInsertUpdate_Object_Asset.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_Asset\gpSelect_Object_Asset.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_Asset\gpGet_Object_Asset.sql', ZQuery);
 
 end;
 

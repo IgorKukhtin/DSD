@@ -77,6 +77,7 @@ type
     procedure Position_Test;
     procedure Personal_Test;
     procedure AssetGroup_Test;
+    procedure Asset_Test;
    end;
 
   TBankTest = class(TObjectTest)
@@ -418,6 +419,16 @@ type
         Name: string; ParentId: integer): integer;
     constructor Create; override;
   end;
+
+  TAssetTest = class(TObjectTest)
+  function InsertDefault: integer; override;
+  public
+    // Удаляется Объект и все подчиненные
+    procedure Delete(Id: Integer); override;
+    function InsertUpdateAsset(const Id, Code : integer; Name, InvNumber: string; AssetGroupId: Integer): integer;
+    constructor Create; override;
+  end;
+
 
  implementation
 
@@ -2746,6 +2757,65 @@ begin
     ObjectTest.Delete(Id);
   end;
 end;
+
+{TAssetTest}
+constructor TAssetTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_Asset';
+  spSelect := 'gpSelect_Object_Asset';
+  spGet := 'gpGet_Object_Asset';
+end;
+
+procedure TAssetTest.Delete(Id: Integer);
+begin
+  inherited;
+  with TAssetGroupTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free
+  end;
+ end;
+
+function TAssetTest.InsertDefault: integer;
+var
+  AssetGroupId: Integer;
+begin
+  AssetGroupId := TAssetGroupTest.Create.GetDefault;
+  result := InsertUpdateAsset(0, -1, 'Основные средства', 'АЕ2323', AssetGroupId);
+end;
+
+function TAssetTest.InsertUpdateAsset;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
+  FParams.AddParam('inAssetGroupId', ftInteger, ptInput, AssetGroupId);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.Asset_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TAssetTest;
+begin
+  ObjectTest := TAssetTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка объекта
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Основные средства'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    ObjectTest.Delete(Id);
+  end;
+end;
+
 
 initialization
   TestFramework.RegisterTest('Справочники', TdbObjectTest.Suite);

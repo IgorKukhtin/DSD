@@ -123,8 +123,9 @@ INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_Personal', 'Сотрудники' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Personal');
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_AssetGroup', 'Группы основных средств' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_AssetGroup');
-
-
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_Asset', 'Основные средства' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Asset');
+  
 -- INSERT INTO ObjectDesc (Code, ItemName)
 --  SELECT 'zc_Object_AccountPlan', 'План счетов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_AccountPlan');
 

@@ -7,8 +7,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Car(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
 $BODY$BEGIN
-
-   --PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
+   -- проверка прав пользователя на вызов процедуры
+   --PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Car());
 
      RETURN QUERY 
      SELECT 
@@ -19,16 +19,14 @@ $BODY$BEGIN
      FROM Object
      WHERE Object.DescId = zc_Object_Car();
   
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 100;
-ALTER FUNCTION gpSelect_Object_Car(TVarChar)
-  OWNER TO postgres;
+END;
+$BODY$
+
+LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpSelect_Object_Car(TVarChar) OWNER TO postgres;
 
 
-/*-------------------------------------------------------------------------------*/
-/*
+/*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  10.06.13          * 

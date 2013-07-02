@@ -22,6 +22,7 @@ BEGIN
 
    IF COALESCE (vbId, 0) = 0
    THEN
+       return;
        SELECT Code INTO vbCodeDesc FROM ObjectDesc WHERE Id = inDescId;
        RAISE EXCEPTION 'Не найден Id в lpUpdate_Object_Enum_byCode inCode = "%" для inEnumName = "%" в справочнике "%" inDescId = "%"', inCode, inEnumName, vbCodeDesc, inDescId;
    END IF;

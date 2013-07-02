@@ -19,7 +19,7 @@ $BODY$BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , MAX (Object.ObjectCode) + 1 AS Code
+           , COALESCE (MAX (ObjectCode), 0) + 1 AS Code
            , CAST ('' as TVarChar)  AS Name
           
            , CAST (0 as Integer)   AS InfoMoneyGroupId

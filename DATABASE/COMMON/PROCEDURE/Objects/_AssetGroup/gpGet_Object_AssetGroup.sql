@@ -17,7 +17,7 @@ $BODY$BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , MAX (Object.ObjectCode) + 1 AS Code
+           , COALESCE (MAX (ObjectCode), 0) + 1 AS Code
            , CAST ('' as TVarChar)  AS Name
            , CAST (0 as Integer)    AS ParentId
            , CAST (0 as Integer)    AS ParentCode
@@ -41,7 +41,7 @@ $BODY$BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_AssetGroup_Parent
                  ON ObjectLink_AssetGroup_Parent.ObjectId = Object_AssetGroup.Id
                 AND ObjectLink_AssetGroup_Parent.DescId = zc_ObjectLink_AssetGroup_Parent()
-               JOIN Object AS AssetGroup_Parent ON AssetGroup_Parent.Id = ObjectLink_AssetGroup_Parent.ChildObjectId
+          LEFT JOIN Object AS AssetGroup_Parent ON AssetGroup_Parent.Id = ObjectLink_AssetGroup_Parent.ChildObjectId
        WHERE Object_AssetGroup.Id = inId;
    END IF;
    
