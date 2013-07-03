@@ -1,60 +1,51 @@
-п»ї-- Function: gpInsertUpdate_Object_Branch(Integer, Integer, TVarChar, Integer, TVarChar)
+-- Function: gpInsertUpdate_Object_Branch(Integer, Integer, TVarChar, Integer, TVarChar)
 
 -- DROP FUNCTION gpInsertUpdate_Object_Branch(Integer, Integer, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Branch(
- INOUT ioId	                 Integer,       -- РєР»СЋС‡ РѕР±СЉРµРєС‚Р° < Р¤РёР»РёР°Р»>
-    IN inCode                Integer,       -- РљРѕРґ РѕР±СЉРµРєС‚Р° <Р¤РёР»РёР°Р»> 
-    IN inName                TVarChar,      -- РќР°Р·РІР°РЅРёРµ РѕР±СЉРµРєС‚Р° <Р¤РёР»РёР°Р»>
-    IN inJuridicalId         Integer,       -- Р®СЂ. Р»РёС†Рѕ
-    IN inSession             TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+ INOUT ioId	                 Integer,       -- ключ объекта < Филиал>
+    IN inCode                Integer,       -- Код объекта <Филиал> 
+    IN inName                TVarChar,      -- Название объекта <Филиал>
+    IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS integer AS
 $BODY$
    DECLARE UserId Integer;
-   DECLARE Code_max Integer;   
-   
 BEGIN
 
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Branch());
    UserId := inSession;
 
-   -- Р•СЃР»Рё РєРѕРґ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ, РѕРїСЂРµРґРµР»СЏРµРј РµРіРѕ РєР°Рё РїРѕСЃР»РµРґРЅРёР№+1
-   IF COALESCE (inCode, 0) = 0
-   THEN 
-       SELECT MAX (ObjectCode) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_Branch();
-   ELSE
-       Code_max := inCode;
-   END IF; 
-   
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё РґР»СЏ СЃРІРѕР№СЃС‚РІР° <РќР°РёРјРµРЅРѕРІР°РЅРёРµ Р¤РёР»РёР°Р»Р°>
+   -- Если код не установлен, определяем его как последний+1
+   inCode := lfGet_ObjectCode(inCode, zc_Object_Branch());
+
+   -- проверка прав уникальности для свойства <Наименование Филиала>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Branch(), inName);
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё РґР»СЏ СЃРІРѕР№СЃС‚РІР° <РљРѕРґ Р¤РёР»РёР°Р»Р°>
-   PERFORM lpCheckUnique_Object_ObjectCode(ioId, zc_Object_Branch(), Code_max);
+   -- проверка прав уникальности для свойства <Код Филиала>
+   PERFORM lpCheckUnique_Object_ObjectCode(ioId, zc_Object_Branch(), inCode);
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё <РћР±СЉРµРєС‚>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_Branch(), Code_max, inName);
+   -- сохранили <Объект>
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_Branch(), inCode, inName);
 
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Branch_Juridical(), ioId, inJuridicalId);
-
-   -- СЃРѕС…СЂР°РЅРёР»Рё РїСЂРѕС‚РѕРєРѕР»
+   -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, UserId);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
-ALTER FUNCTION gpInsertUpdate_Object_Branch (Integer, Integer, TVarChar, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Branch (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
 
 
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  10.05.13          *
  05.06.13          
+ 02.07.13                        * Убрал JuridicalId     
 */
 
--- С‚РµСЃС‚
--- SELECT * FROM gpInsertUpdate_Object_Branch(1,1,'',1,'')
+-- тест
+-- SELECT * FROM gpInsertUpdate_Object_Branch(1,1,'','')

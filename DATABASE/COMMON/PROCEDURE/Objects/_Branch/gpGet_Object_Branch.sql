@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Branch(
     IN inId          Integer,       -- ключ объекта <Бизнесы>
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, JuridicalId Integer, JuridicalName TVarChar) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
 $BODY$BEGIN
 
    -- проверка прав пользователя на вызов процедуры
@@ -17,13 +17,9 @@ $BODY$BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , MAX (Object.ObjectCode) + 1 AS Code
+           , lfGet_ObjectCode(0, zc_Object_Branch()) AS Code
            , CAST ('' as TVarChar)  AS Name
-           , CAST (NULL AS Boolean) AS isErased
-           , CAST (0 as Integer)    AS JuridicalId
-           , CAST ('' as TVarChar)  AS JuridicalName
-       FROM Object 
-       WHERE Object.DescId = zc_Object_Branch();
+           , CAST (NULL AS Boolean) AS isErased;
    ELSE
        RETURN QUERY 
        SELECT 
@@ -31,13 +27,7 @@ $BODY$BEGIN
            , Object.ObjectCode
            , Object.ValueData
            , Object.isErased
-           , Juridical.Id        AS JuridicalId
-           , Juridical.ValueData AS JuridicalName
        FROM Object
-  LEFT JOIN ObjectLink AS Branch_Juridical
-         ON Branch_Juridical.ObjectId = Object.Id AND Branch_Juridical.DescId = zc_ObjectLink_Branch_Juridical()
-  LEFT JOIN Object AS Juridical
-         ON Juridical.Id = Branch_Juridical.ChildObjectId
       WHERE Object.Id = inId;
    END IF;
      

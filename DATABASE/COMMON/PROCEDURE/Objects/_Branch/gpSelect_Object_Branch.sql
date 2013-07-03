@@ -5,7 +5,7 @@
 CREATE OR REPLACE FUNCTION gpSelect_Object_Branch(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, JuridicalName TVarChar) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
 $BODY$BEGIN
 
    -- проверка прав пользователя на вызов процедуры
@@ -17,12 +17,7 @@ $BODY$BEGIN
      , Object.ObjectCode   AS Code
      , Object.ValueData    AS Name
      , Object.isErased     AS isErased
-     , Juridical.ValueData AS JuridicalName
      FROM Object
-LEFT JOIN ObjectLink AS Branch_Juridical
-       ON Branch_Juridical.ObjectId = Object.Id AND Branch_Juridical.DescId = zc_ObjectLink_Branch_Juridical()
-LEFT JOIN Object AS Juridical
-       ON Juridical.Id = Branch_Juridical.ChildObjectId
     WHERE Object.DescId = zc_Object_Branch();
   
 END;$BODY$

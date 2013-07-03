@@ -102,6 +102,7 @@
       Caption = 'Ok'
     end
     object dsdFormClose: TdsdFormClose
+      Category = 'DSDLib'
     end
   end
   object spInsertUpdate: TdsdStoredProc

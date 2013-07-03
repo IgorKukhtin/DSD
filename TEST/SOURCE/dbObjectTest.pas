@@ -227,7 +227,7 @@ type
    // Удаляется Объект и все подчиненные
    procedure Delete(Id: Integer); override;
    function InsertUpdateBranch(const Id: integer; Code: Integer;
-        Name: string; JuridicalId: integer): integer;
+        Name: string): integer;
     constructor Create; override;
   end;
 
@@ -1460,11 +1460,8 @@ begin
 end;
 
 function TBranchTest.InsertDefault: integer;
-var
-  JuridicalId: Integer;
 begin
-  JuridicalId := TJuridicalTest.Create.GetDefault;
-  result := InsertUpdateBranch(0, 1, 'Филиал', JuridicalId);
+  result := InsertUpdateBranch(0, 1, 'Филиал');
 end;
 
 function TBranchTest.InsertUpdateBranch;
@@ -1473,7 +1470,6 @@ begin
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inCode', ftInteger, ptInput, Code);
   FParams.AddParam('inName', ftString, ptInput, Name);
-  FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
   result := InsertUpdate(FParams);
 end;
 
