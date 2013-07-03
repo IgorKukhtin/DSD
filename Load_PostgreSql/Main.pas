@@ -76,6 +76,16 @@ type
     cbProfitLoss: TCheckBox;
     cbProfitLossDirection: TCheckBox;
     cbProfitLossGroup: TCheckBox;
+    CompleteDocumentPanel: TPanel;
+    Label3: TLabel;
+    Label4: TLabel;
+    cbAllCompleteDocument: TCheckBox;
+    cbCompleteIncome: TCheckBox;
+    cxDateEdit1: TcxDateEdit;
+    cxDateEdit2: TcxDateEdit;
+    cbComplete: TCheckBox;
+    cbUnComplete: TCheckBox;
+    OKCompleteDocumentButton: TButton;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -84,6 +94,10 @@ type
     procedure cbAllDocumentClick(Sender: TObject);
     procedure OKDocumentButtonClick(Sender: TObject);
     procedure DocumentPanelClick(Sender: TObject);
+    procedure cbAllCompleteDocumentClick(Sender: TObject);
+    procedure cbCompleteClick(Sender: TObject);
+    procedure cbUnCompleteClick(Sender: TObject);
+    procedure cbCompleteIncomeClick(Sender: TObject);
   private
     fStop:Boolean;
     procedure EADO_EngineErrorMsg(E:EADOError);
@@ -250,6 +264,15 @@ begin
           then TCheckBox(Components[i]).Checked:=cbAllGuide.Checked;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.cbAllCompleteDocumentClick(Sender: TObject);
+var i:Integer;
+begin
+     for i:=0 to ComponentCount-1 do
+        if (Components[i] is TCheckBox) then
+          if Components[i].Tag=30
+          then TCheckBox(Components[i]).Checked:=cbAllCompleteDocument.Checked;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.cbAllDocumentClick(Sender: TObject);
 var i:Integer;
 begin
@@ -257,6 +280,21 @@ begin
         if (Components[i] is TCheckBox) then
           if Components[i].Tag=20
           then TCheckBox(Components[i]).Checked:=cbAllDocument.Checked;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.cbCompleteClick(Sender: TObject);
+begin
+      cbUnComplete.Checked:=not cbComplete.Checked;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.cbUnCompleteClick(Sender: TObject);
+begin
+      cbComplete.Checked:=not cbUnComplete.Checked;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.cbCompleteIncomeClick(Sender: TObject);
+begin
+     if (not cbComplete.Checked)and(not cbUnComplete.Checked)then cbComplete.Checked:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);

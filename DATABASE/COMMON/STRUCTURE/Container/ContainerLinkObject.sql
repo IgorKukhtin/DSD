@@ -10,7 +10,7 @@
 CREATE TABLE ContainerLinkObject(
    DescId                INTEGER NOT NULL,
    ContainerId           INTEGER NOT NULL,
-   ObjectId              INTEGER NOT NULL,
+   ObjectId              INTEGER NULL,
 
    CONSTRAINT fk_ContainerLinkObject_PK PRIMARY KEY (ObjectId, DescId, ContainerId),
    CONSTRAINT fk_ContainerLinkObject_Container FOREIGN KEY (ContainerId)  REFERENCES Container (Id),
@@ -29,6 +29,6 @@ CREATE INDEX idx_ContainerLinkObject_ContainerId_DescId_ObjectId ON ContainerLin
  ДАТА         АВТОР
  ----------------
                  Климентьев К.И.   Кухтин И.В.   
-18.06.02                                         
-11.07.02                                         
+
+ 03.07.13             * change ObjectId NULL
 */

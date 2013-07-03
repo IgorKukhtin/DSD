@@ -3,7 +3,7 @@ object MainForm: TMainForm
   Top = 180
   Caption = 'MainForm'
   ClientHeight = 715
-  ClientWidth = 1102
+  ClientWidth = 1240
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,7 +18,7 @@ object MainForm: TMainForm
   object DBGrid: TDBGrid
     Left = 0
     Top = 0
-    Width = 556
+    Width = 469
     Height = 659
     Align = alClient
     DataSource = DataSource
@@ -32,35 +32,36 @@ object MainForm: TMainForm
   object ButtonPanel: TPanel
     Left = 0
     Top = 659
-    Width = 1102
+    Width = 1240
     Height = 56
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitWidth = 1102
     object Gauge: TGauge
       Left = 0
       Top = 0
-      Width = 1102
+      Width = 1240
       Height = 19
       Align = alTop
       Progress = 50
       ExplicitWidth = 1307
     end
     object OKGuideButton: TButton
-      Left = 56
+      Left = 37
       Top = 25
-      Width = 171
+      Width = 135
       Height = 25
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       TabOrder = 0
       OnClick = OKGuideButtonClick
     end
     object StopButton: TButton
-      Left = 489
+      Left = 502
       Top = 26
       Width = 137
       Height = 25
-      Caption = #1054#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091
+      Caption = #1054#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1077#1081#1089#1090#1074#1080#1077
       TabOrder = 1
       OnClick = StopButtonClick
     end
@@ -86,27 +87,36 @@ object MainForm: TMainForm
       Top = 39
       Width = 292
       Height = 17
-      Caption = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1079#1072#1075#1088#1091#1079#1082#1091' ('#1090#1086#1083#1100#1082#1086' '#1087#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077')'
+      Caption = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1076#1077#1081#1089#1090#1074#1080#1077' ('#1090#1086#1083#1100#1082#1086' '#1087#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077')'
       TabOrder = 4
     end
     object OKDocumentButton: TButton
-      Left = 273
+      Left = 178
       Top = 25
-      Width = 171
+      Width = 135
       Height = 25
       Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       TabOrder = 5
       OnClick = OKDocumentButtonClick
     end
+    object OKCompleteDocumentButton: TButton
+      Left = 326
+      Top = 25
+      Width = 151
+      Height = 25
+      Caption = #1055#1088#1086#1074#1086#1076#1082#1080' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
+      TabOrder = 6
+    end
   end
   object GuidePanel: TPanel
-    Left = 556
+    Left = 469
     Top = 0
     Width = 321
     Height = 659
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitLeft = 556
     object cbGoodsGroup: TCheckBox
       Tag = 10
       Left = 15
@@ -385,7 +395,7 @@ object MainForm: TMainForm
     end
   end
   object DocumentPanel: TPanel
-    Left = 877
+    Left = 790
     Top = 0
     Width = 225
     Height = 659
@@ -393,16 +403,18 @@ object MainForm: TMainForm
     BevelOuter = bvNone
     TabOrder = 3
     OnClick = DocumentPanelClick
+    ExplicitLeft = 774
+    ExplicitTop = 33
     object Label1: TLabel
       Left = 6
-      Top = 24
+      Top = 22
       Width = 6
       Height = 13
       Caption = #1089
     end
     object Label2: TLabel
       Left = 109
-      Top = 27
+      Top = 22
       Width = 12
       Height = 13
       Caption = #1087#1086
@@ -440,15 +452,114 @@ object MainForm: TMainForm
     end
     object StartDateEdit: TcxDateEdit
       Left = 14
-      Top = 22
+      Top = 18
       TabOrder = 2
       Width = 90
     end
     object EndDateEdit: TcxDateEdit
       Left = 122
-      Top = 22
+      Top = 18
       TabOrder = 3
       Width = 90
+    end
+  end
+  object CompleteDocumentPanel: TPanel
+    Left = 1015
+    Top = 0
+    Width = 225
+    Height = 659
+    Align = alRight
+    BevelOuter = bvNone
+    TabOrder = 4
+    OnClick = DocumentPanelClick
+    ExplicitTop = 8
+    object Label3: TLabel
+      Left = 6
+      Top = 22
+      Width = 6
+      Height = 13
+      Caption = #1089
+    end
+    object Label4: TLabel
+      Left = 109
+      Top = 22
+      Width = 12
+      Height = 13
+      Caption = #1087#1086
+    end
+    object cbAllCompleteDocument: TCheckBox
+      Tag = 3
+      Left = 15
+      Top = 1
+      Width = 194
+      Height = 17
+      Caption = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 0
+      OnClick = cbAllCompleteDocumentClick
+    end
+    object cbCompleteIncome: TCheckBox
+      Tag = 30
+      Left = 15
+      Top = 61
+      Width = 194
+      Height = 17
+      Caption = '1. '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 1
+      OnClick = cbCompleteIncomeClick
+    end
+    object cxDateEdit1: TcxDateEdit
+      Left = 14
+      Top = 18
+      TabOrder = 2
+      Width = 90
+    end
+    object cxDateEdit2: TcxDateEdit
+      Left = 122
+      Top = 18
+      TabOrder = 3
+      Width = 90
+    end
+    object cbComplete: TCheckBox
+      Left = 14
+      Top = 39
+      Width = 102
+      Height = 17
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 4
+      OnClick = cbCompleteClick
+    end
+    object cbUnComplete: TCheckBox
+      Left = 122
+      Top = 39
+      Width = 102
+      Height = 17
+      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 5
+      OnClick = cbUnCompleteClick
     end
   end
   object DataSource: TDataSource

@@ -7,26 +7,26 @@ CREATE OR REPLACE FUNCTION lpInsertFind_Container(
     IN inObjectId                Integer  , -- Счета 
     IN inJuridicalId_basis       Integer  , -- Главное юридическое лицо
     IN inBusinessId              Integer  , -- Бизнесы
-    IN inDescId_1                Integer  , -- DescId для 1-ой Аналитики
-    IN inObjectId_1              Integer  , -- ObjectId для 1-ой Аналитики
-    IN inDescId_2                Integer  , -- DescId для 2-ой Аналитики
-    IN inObjectId_2              Integer  , -- ObjectId для 2-ой Аналитики
-    IN inDescId_3                Integer  , -- DescId для 3-ей Аналитики
-    IN inObjectId_3              Integer  , -- ObjectId для 3-ей Аналитики
-    IN inDescId_4                Integer  , -- DescId для 4-ой Аналитики
-    IN inObjectId_4              Integer  , -- ObjectId для 4-ой Аналитики
-    IN inDescId_5                Integer  , -- DescId для 5-ой Аналитики
-    IN inObjectId_5              Integer  , -- ObjectId для 5-ой Аналитики
-    IN inDescId_6                Integer  , -- DescId для 6-ой Аналитики
-    IN inObjectId_6              Integer  , -- ObjectId для 6-ой Аналитики
-    IN inDescId_7                Integer  , -- DescId для 7-ой Аналитики
-    IN inObjectId_7              Integer  , -- ObjectId для 7-ой Аналитики
-    IN inDescId_8                Integer  , -- DescId для 8-ой Аналитики
-    IN inObjectId_8              Integer  , -- ObjectId для 8-ой Аналитики
-    IN inDescId_9                Integer  , -- DescId для 9-ой Аналитики
-    IN inObjectId_9              Integer  , -- ObjectId для 9-ой Аналитики
-    IN inDescId_10               Integer  , -- DescId для 10-ой Аналитики
-    IN inObjectId_10             Integer    -- ObjectId для 10-ой Аналитики
+    IN inDescId_1                Integer  DEFAULT NULL , -- DescId для 1-ой Аналитики
+    IN inObjectId_1              Integer  DEFAULT NULL , -- ObjectId для 1-ой Аналитики
+    IN inDescId_2                Integer  DEFAULT NULL , -- DescId для 2-ой Аналитики
+    IN inObjectId_2              Integer  DEFAULT NULL , -- ObjectId для 2-ой Аналитики
+    IN inDescId_3                Integer  DEFAULT NULL , -- DescId для 3-ей Аналитики
+    IN inObjectId_3              Integer  DEFAULT NULL , -- ObjectId для 3-ей Аналитики
+    IN inDescId_4                Integer  DEFAULT NULL , -- DescId для 4-ой Аналитики
+    IN inObjectId_4              Integer  DEFAULT NULL , -- ObjectId для 4-ой Аналитики
+    IN inDescId_5                Integer  DEFAULT NULL , -- DescId для 5-ой Аналитики
+    IN inObjectId_5              Integer  DEFAULT NULL , -- ObjectId для 5-ой Аналитики
+    IN inDescId_6                Integer  DEFAULT NULL , -- DescId для 6-ой Аналитики
+    IN inObjectId_6              Integer  DEFAULT NULL , -- ObjectId для 6-ой Аналитики
+    IN inDescId_7                Integer  DEFAULT NULL , -- DescId для 7-ой Аналитики
+    IN inObjectId_7              Integer  DEFAULT NULL , -- ObjectId для 7-ой Аналитики
+    IN inDescId_8                Integer  DEFAULT NULL , -- DescId для 8-ой Аналитики
+    IN inObjectId_8              Integer  DEFAULT NULL , -- ObjectId для 8-ой Аналитики
+    IN inDescId_9                Integer  DEFAULT NULL , -- DescId для 9-ой Аналитики
+    IN inObjectId_9              Integer  DEFAULT NULL , -- ObjectId для 9-ой Аналитики
+    IN inDescId_10               Integer  DEFAULT NULL , -- DescId для 10-ой Аналитики
+    IN inObjectId_10             Integer  DEFAULT NULL   -- ObjectId для 10-ой Аналитики
 )
   RETURNS Integer AS
 $BODY$
@@ -71,7 +71,7 @@ BEGIN
    SELECT Container.Id INTO vbContainerId
    FROM Container
         JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
-        JOIN _tmpContainer ON _tmpContainer.ObjectId = ContainerLinkObject.ObjectId
+        JOIN _tmpContainer ON _tmpContainer.ObjectId = COALESCE (ContainerLinkObject.ObjectId, 0)
                           AND _tmpContainer.DescId = ContainerLinkObject.DescId
    WHERE Container.AccountId = inObjectId
      AND Container.DescId = inContainerDescId;
@@ -85,7 +85,7 @@ BEGIN
 
        -- добавили Аналитики
        INSERT INTO ContainerLinkObject (DescId, ContainerId, ObjectId)
-          SELECT DescId, vbContainerId, ObjectId FROM _tmpContainer;
+          SELECT DescId, vbContainerId, CASE WHEN ObjectId = 0 THEN NULL ELSE ObjectId END FROM _tmpContainer;
 
    END IF;  
 
