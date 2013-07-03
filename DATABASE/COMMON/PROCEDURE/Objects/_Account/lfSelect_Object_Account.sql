@@ -1,4 +1,4 @@
-п»ї-- Function: lfSelect_Object_Account ()
+-- Function: lfSelect_Object_Account ()
 
 -- DROP FUNCTION lfSelect_Object_Account ();
 
@@ -9,12 +9,12 @@ RETURNS TABLE (AccountGroupId Integer, AccountGroupCode Integer, AccountGroupNam
                AccountId Integer, AccountCode Integer, AccountName TVarChar,
                InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar,
                InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar, 
-               InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar) AS
-   
+               InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar)
+AS
 $BODY$
 BEGIN
 
-     -- Р’С‹Р±РёСЂР°РµРј РґР°РЅРЅС‹Рµ РґР»СЏ СЃРїСЂР°РІРѕС‡РЅРёРєР° СЃС‡РµС‚РѕРІ (РЅР° СЃР°РјРѕРј РґРµР»Рµ СЌС‚Рѕ С‚СЂРё СЃРїСЂР°РІРѕС‡РЅРёРєР°)
+     -- Выбираем данные для справочника счетов (на самом деле это три справочника)
      RETURN QUERY 
        SELECT 
              Object_AccountGroup.Id            AS AccountGroupId
@@ -67,16 +67,17 @@ BEGIN
 END;
 $BODY$
 
-LANGUAGE plpgsql VOLATILE;
+LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION lfSelect_Object_Account () OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
 
- 29.06.13          *                            
+ 03.07.13                                        * 1251Cyr
+ 29.06.13          *
 */
 
--- С‚РµСЃС‚
--- SELECT * FROM lfSelect_Object_Account ('2')
+-- тест
+-- SELECT * FROM lfSelect_Object_Account ()
