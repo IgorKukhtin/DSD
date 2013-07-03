@@ -347,9 +347,66 @@ end if;
 
 
    -- формируются Проводки для товарного учета в количестве 
-
-   -- формируются Проводки для товарного учета в сумме
    PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
+                                               , inDescId:= zc_MovementItemContainer_Count()
+                                               , inMovementId:= MovementId
+                                               , inContainerId:= CASE WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- 10100; "Мясное сырье" -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
+                                                                         THEN lpInsertFind_Container (inContainerDescId:= zc_Container_Count()
+                                                                                                    , inObjectId:= GoodsId
+                                                                                                    , inJuridicalId_basis:= NULL
+                                                                                                    , inBusinessId       := NULL
+                                                                                                    , inDescId_1   := zc_ContainerLinkObject_Unit()
+                                                                                                    , inObjectId_1 := UnitId
+                                                                                                    , inDescId_2   := NULL
+                                                                                                    , inObjectId_2 := NULL
+                                                                                                    , inDescId_3   := zc_ContainerLinkObject_PartionGoods()
+                                                                                                    , inObjectId_3 := PartionGoodsId
+                                                                                                    , inDescId_4   := NULL, inObjectId_4 := NULL, inDescId_5   := NULL, inObjectId_5 := NULL, inDescId_6:= NULL, inObjectId_6:=NULL, inDescId_7:= NULL, inObjectId_7:=NULL, inDescId_8:= NULL, inObjectId_8:=NULL, inDescId_9:= NULL, inObjectId_9:=NULL, inDescId_10:= NULL, inObjectId_10:=NULL
+                                                                                                     )
+                                                                      WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- 20100; "Запчасти и Ремонты" -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100()
+                                                                         THEN lpInsertFind_Container (inContainerDescId:= zc_Container_Count()
+                                                                                                    , inObjectId:= GoodsId
+                                                                                                    , inJuridicalId_basis:= NULL
+                                                                                                    , inBusinessId       := NULL
+                                                                                                    , inDescId_1   := zc_ContainerLinkObject_Unit()
+                                                                                                    , inObjectId_1 := UnitId
+                                                                                                    , inDescId_2   := NULL
+                                                                                                    , inObjectId_2 := NULL
+                                                                                                    , inDescId_3   := zc_ContainerLinkObject_AssetTo()
+                                                                                                    , inObjectId_3 := AssetId
+                                                                                                    , inDescId_4   := NULL, inObjectId_4 := NULL, inDescId_5   := NULL, inObjectId_5 := NULL, inDescId_6:= NULL, inObjectId_6:=NULL, inDescId_7:= NULL, inObjectId_7:=NULL, inDescId_8:= NULL, inObjectId_8:=NULL, inDescId_9:= NULL, inObjectId_9:=NULL, inDescId_10:= NULL, inObjectId_10:=NULL
+                                                                                                     )
+                                                                      WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- 30100; "Продукция" -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()
+                                                                         THEN lpInsertFind_Container (inContainerDescId:= zc_Container_Count()
+                                                                                                    , inObjectId:= GoodsId
+                                                                                                    , inJuridicalId_basis:= NULL
+                                                                                                    , inBusinessId       := NULL
+                                                                                                    , inDescId_1   := zc_ContainerLinkObject_Unit()
+                                                                                                    , inObjectId_1 := UnitId
+                                                                                                    , inDescId_2   := NULL
+                                                                                                    , inObjectId_2 := NULL
+                                                                                                    , inDescId_3   := zc_ContainerLinkObject_GoodsKind()
+                                                                                                    , inObjectId_3 := GoodsKindId
+                                                                                                    , inDescId_4   := NULL, inObjectId_4 := NULL, inDescId_5   := NULL, inObjectId_5 := NULL, inDescId_6:= NULL, inObjectId_6:=NULL, inDescId_7:= NULL, inObjectId_7:=NULL, inDescId_8:= NULL, inObjectId_8:=NULL, inDescId_9:= NULL, inObjectId_9:=NULL, inDescId_10:= NULL, inObjectId_10:=NULL
+                                                                                                     )
+                                                                         ELSE lpInsertFind_Container (inContainerDescId:= zc_Container_Count()
+                                                                                                    , inObjectId:= GoodsId
+                                                                                                    , inJuridicalId_basis:= NULL
+                                                                                                    , inBusinessId       := NULL
+                                                                                                    , inDescId_1   := zc_ContainerLinkObject_Unit()
+                                                                                                    , inObjectId_1 := UnitId
+                                                                                                    , inDescId_2   := NULL
+                                                                                                    , inObjectId_2 := NULL
+                                                                                                    , inDescId_3   := NULL
+                                                                                                    , inObjectId_3 := NULL
+                                                                                                    , inDescId_4   := NULL, inObjectId_4 := NULL, inDescId_5   := NULL, inObjectId_5 := NULL, inDescId_6:= NULL, inObjectId_6:=NULL, inDescId_7:= NULL, inObjectId_7:=NULL, inDescId_8:= NULL, inObjectId_8:=NULL, inDescId_9:= NULL, inObjectId_9:=NULL, inDescId_10:= NULL, inObjectId_10:=NULL
+                                                                                                     )
+                                                                 END
+                                               , inAmount:= OperCount
+                                               , inOperDate:= OperDate
+                                                )
+   -- формируются Проводки для товарного учета в сумме
+ , PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
                                                , inDescId:= zc_MovementItemContainer_Summ()
                                                , inMovementId:= MovementId
                                                , inContainerId:= CASE WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- 10100; "Мясное сырье" -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
@@ -374,7 +431,7 @@ end if;
                                                                                                     , inObjectId_5 := InfoMoneyId
                                                                                                     , inDescId_6:= NULL, inObjectId_6:=NULL, inDescId_7:= NULL, inObjectId_7:=NULL, inDescId_8:= NULL, inObjectId_8:=NULL, inDescId_9:= NULL, inObjectId_9:=NULL, inDescId_10:= NULL, inObjectId_10:=NULL
                                                                                                      )
-                                                                      WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200() -- 10200; "Прочее сырье" -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200()
+                                                                      WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- 20100; "Запчасти и Ремонты" -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100()
                                                                          THEN lpInsertFind_Container (inContainerDescId:= zc_Container_Summ()
                                                                                                     , inObjectId:= lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- 20000; "Запасы" -- select * from gpSelect_Object_AccountGroup ('2') where Id = zc_Enum_AccountGroup_20000()
                                                                                                                                               , inAccountDirectionId     := AccountDirectionId
@@ -388,8 +445,30 @@ end if;
                                                                                                     , inObjectId_1 := UnitId
                                                                                                     , inDescId_2   := zc_ContainerLinkObject_Goods()
                                                                                                     , inObjectId_2 := GoodsId
-                                                                                                    , inDescId_3   := NULL
-                                                                                                    , inObjectId_3 := NULL
+                                                                                                    , inDescId_3   := zc_ContainerLinkObject_AssetTo()
+                                                                                                    , inObjectId_3 := AssetId
+                                                                                                    , inDescId_4   := zc_ContainerLinkObject_InfoMoney()
+                                                                                                    , inObjectId_4 := InfoMoneyId
+                                                                                                    , inDescId_5   := zc_ContainerLinkObject_InfoMoneyDetail()
+                                                                                                    , inObjectId_5 := InfoMoneyId
+                                                                                                    , inDescId_6:= NULL, inObjectId_6:=NULL, inDescId_7:= NULL, inObjectId_7:=NULL, inDescId_8:= NULL, inObjectId_8:=NULL, inDescId_9:= NULL, inObjectId_9:=NULL, inDescId_10:= NULL, inObjectId_10:=NULL
+                                                                                                     )
+                                                                      WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- 30100; "Продукция" -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()
+                                                                         THEN lpInsertFind_Container (inContainerDescId:= zc_Container_Summ()
+                                                                                                    , inObjectId:= lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- 20000; "Запасы" -- select * from gpSelect_Object_AccountGroup ('2') where Id = zc_Enum_AccountGroup_20000()
+                                                                                                                                              , inAccountDirectionId     := AccountDirectionId
+                                                                                                                                              , inInfoMoneyDestinationId := InfoMoneyDestinationId
+                                                                                                                                              , inInfoMoneyId            := NULL
+                                                                                                                                              , inUserId                 := vbUserId
+                                                                                                                                               )
+                                                                                                    , inJuridicalId_basis:= JuridicalId_basis
+                                                                                                    , inBusinessId       := BusinessId
+                                                                                                    , inDescId_1   := zc_ContainerLinkObject_Unit()
+                                                                                                    , inObjectId_1 := UnitId
+                                                                                                    , inDescId_2   := zc_ContainerLinkObject_Goods()
+                                                                                                    , inObjectId_2 := GoodsId
+                                                                                                    , inDescId_3   := zc_ContainerLinkObject_GoodsKind()
+                                                                                                    , inObjectId_3 := GoodsKindId
                                                                                                     , inDescId_4   := zc_ContainerLinkObject_InfoMoney()
                                                                                                     , inObjectId_4 := InfoMoneyId
                                                                                                     , inDescId_5   := zc_ContainerLinkObject_InfoMoneyDetail()
