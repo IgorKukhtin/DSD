@@ -106,6 +106,7 @@ object MainForm: TMainForm
       Height = 25
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1084
       TabOrder = 6
+      OnClick = OKCompleteDocumentButtonClick
     end
   end
   object GuidePanel: TPanel
@@ -519,13 +520,13 @@ object MainForm: TMainForm
       TabOrder = 1
       OnClick = cbCompleteIncomeClick
     end
-    object cxDateEdit1: TcxDateEdit
+    object StartDateCompleteEdit: TcxDateEdit
       Left = 14
       Top = 18
       TabOrder = 2
       Width = 90
     end
-    object cxDateEdit2: TcxDateEdit
+    object EndDateCompleteEdit: TcxDateEdit
       Left = 122
       Top = 18
       TabOrder = 3
@@ -628,6 +629,12 @@ object MainForm: TMainForm
     DataSets = <>
     Params = <>
     Left = 120
+    Top = 416
+  end
+  object toStoredProc_two: TdsdStoredProc
+    DataSets = <>
+    Params = <>
+    Left = 205
     Top = 416
   end
 end

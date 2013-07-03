@@ -81,11 +81,12 @@ type
     Label4: TLabel;
     cbAllCompleteDocument: TCheckBox;
     cbCompleteIncome: TCheckBox;
-    cxDateEdit1: TcxDateEdit;
-    cxDateEdit2: TcxDateEdit;
+    StartDateCompleteEdit: TcxDateEdit;
+    EndDateCompleteEdit: TcxDateEdit;
     cbComplete: TCheckBox;
     cbUnComplete: TCheckBox;
     OKCompleteDocumentButton: TButton;
+    toStoredProc_two: TdsdStoredProc;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -98,12 +99,14 @@ type
     procedure cbCompleteClick(Sender: TObject);
     procedure cbUnCompleteClick(Sender: TObject);
     procedure cbCompleteIncomeClick(Sender: TObject);
+    procedure OKCompleteDocumentButtonClick(Sender: TObject);
   private
     fStop:Boolean;
     procedure EADO_EngineErrorMsg(E:EADOError);
     procedure EDB_EngineErrorMsg(E:EDBEngineError);
     function myExecToStoredProc_ZConnection:Boolean;
     function myExecToStoredProc:Boolean;
+    function myExecToStoredProc_two:Boolean;
 
     function FormatToVarCharServer_notNULL(_Value:string):string;
     function FormatToDateServer_notNULL(_Date:TDateTime):string;
@@ -114,6 +117,7 @@ type
     procedure pSetNullGuide_Id_Postgres;
     procedure pSetNullDocument_Id_Postgres;
 
+    procedure pCompleteDocument_Income;
     procedure pLoadDocument_Income;
     procedure pLoadDocumentItem_Income;
 
@@ -162,8 +166,10 @@ procedure TMainForm.StopButtonClick(Sender: TObject);
 begin
      if MessageDlg('Действительно остановить загрузку?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
      fStop:=true;
+     DBGrid.Enabled:=true;
      OKGuideButton.Enabled:=true;
      OKDocumentButton.Enabled:=true;
+     OKCompleteDocumentButton.Enabled:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.CloseButtonClick(Sender: TObject);
@@ -219,9 +225,23 @@ end;
 function TMainForm.myExecToStoredProc:Boolean;
 begin
     result:=false;
-    // toStoredProc_two.Prepared:=true;
+     // toStoredProc_two.Prepared:=true;
      //try
      toStoredProc.Execute;
+     //except
+           //on E:EDBEngineError do begin EDB_EngineErrorMsg(E);exit;end;
+           //on E:EADOError do begin EADO_EngineErrorMsg(E);exit;end;
+           exit;
+     //end;
+     result:=true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.myExecToStoredProc_two:Boolean;
+begin
+    result:=false;
+     // toStoredProc_two.Prepared:=true;
+     // try
+     toStoredProc_two.Execute;
      //except
            //on E:EDBEngineError do begin EDB_EngineErrorMsg(E);exit;end;
            //on E:EADOError do begin EADO_EngineErrorMsg(E);exit;end;
@@ -284,12 +304,12 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.cbCompleteClick(Sender: TObject);
 begin
-      cbUnComplete.Checked:=not cbComplete.Checked;
+      //cbUnComplete.Checked:=not cbComplete.Checked;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.cbUnCompleteClick(Sender: TObject);
 begin
-      cbComplete.Checked:=not cbUnComplete.Checked;
+      //cbComplete.Checked:=not cbUnComplete.Checked;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.cbCompleteIncomeClick(Sender: TObject);
@@ -312,9 +332,11 @@ begin
      Present:= Now;
      DecodeDate(Present, Year, Month, Day);
      StartDateEdit.Text:=DateToStr(StrToDate('01.'+IntToStr(Month)+'.'+IntToStr(Year)));
+     StartDateCompleteEdit.Text:=StartDateEdit.Text;
 
      if Month=12 then begin Month:=1;Year:=Year+1;end else Month:=Month+1;
      EndDateEdit.Text:=DateToStr(StrToDate('01.'+IntToStr(Month)+'.'+IntToStr(Year))-1);
+     EndDateCompleteEdit.Text:=EndDateEdit.Text;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.OKGuideButtonClick(Sender: TObject);
@@ -324,6 +346,7 @@ begin
      DBGrid.Enabled:=false;
      OKGuideButton.Enabled:=false;
      OKDocumentButton.Enabled:=false;
+     OKCompleteDocumentButton.Enabled:=false;
      //
      Gauge.Visible:=true;
      //
@@ -365,6 +388,7 @@ begin
      DBGrid.Enabled:=true;
      OKGuideButton.Enabled:=true;
      OKDocumentButton.Enabled:=true;
+     OKCompleteDocumentButton.Enabled:=true;
      //
      toZConnection.Connected:=false;
      //fromADOConnection.Connected:=false;
@@ -381,6 +405,7 @@ begin
      DBGrid.Enabled:=false;
      OKGuideButton.Enabled:=false;
      OKDocumentButton.Enabled:=false;
+     OKCompleteDocumentButton.Enabled:=false;
      //
      Gauge.Visible:=true;
      //
@@ -398,11 +423,48 @@ begin
      DBGrid.Enabled:=true;
      OKGuideButton.Enabled:=true;
      OKDocumentButton.Enabled:=true;
+     OKCompleteDocumentButton.Enabled:=true;
      //
      toZConnection.Connected:=false;
      //fromADOConnection.Connected:=false;
      //
      if fStop then ShowMessage('Документы НЕ загружены.') else ShowMessage('Документы загружены.');
+     //
+     fStop:=true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.OKCompleteDocumentButtonClick(Sender: TObject);
+begin
+     if (cbComplete.Checked)and(cbUnComplete.Checked)
+     then if MessageDlg('Действительно Распровести/Провести выбранные документы?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit else
+     else
+         if cbUnComplete.Checked
+         then if MessageDlg('Действительно только Распровести выбранные документы?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit else
+         else
+             if cbComplete.Checked then if MessageDlg('Действительно только Провести выбранные документы?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit else
+             else begin ShowMessage('Ошибка.Не выбрано Распровести или Провести.'); end;
+     //
+     fStop:=false;
+     DBGrid.Enabled:=false;
+     OKGuideButton.Enabled:=false;
+     OKDocumentButton.Enabled:=false;
+     OKCompleteDocumentButton.Enabled:=false;
+     //
+     Gauge.Visible:=true;
+     //
+     //
+     if not fStop then pCompleteDocument_Income;
+     //
+     Gauge.Visible:=false;
+     DBGrid.Enabled:=true;
+     OKGuideButton.Enabled:=true;
+     OKDocumentButton.Enabled:=true;
+     OKCompleteDocumentButton.Enabled:=true;
+     //
+     toZConnection.Connected:=false;
+     //fromADOConnection.Connected:=false;
+     //
+     if fStop then ShowMessage('Документы НЕ Распроведены и(или) НЕ Проведены.') else ShowMessage('Документы Распроведены и(или) Проведены.');
      //
      fStop:=true;
 end;
@@ -1557,7 +1619,7 @@ begin
         Add('     left outer join dba.Unit on Unit.Id = 3');// АЛАН
         Add('     left outer join dba._pgAccount on _pgAccount.ObjectCode = CASE WHEN _pgUnit_parent.ObjectCode in (1102) or _pgUnit_parent2.ObjectCode in (1102) THEN 20701'); // Запасы + на филиалах
         Add('                                                                    WHEN _pgUnit.ObjectCode in (1201, 2, 1204, 1205, 21) THEN 20201'); // Запасы + на складах
-        Add('                                                                    WHEN _pgUnit.ObjectCode in (22, 23, 1303, 1304) THEN 20101'); // Запасы + на складах ГП
+        Add('                                                                    WHEN _pgUnit.ObjectCode in (22, 23, 1303, 1304, 1501) THEN 20101'); // Запасы + на складах ГП
         Add('                                                                    WHEN _pgUnit.ObjectCode in (7) THEN 20801'); // Запасы + на упаковке
         Add('                                                                    WHEN _pgUnit_parent.ObjectCode in (1305) THEN 20401'); // Запасы + на производстве
         Add('                                                                END');
@@ -2582,6 +2644,69 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pCompleteDocument_Income;
+begin
+     if (not cbCompleteIncome.Checked)or(not cbCompleteIncome.Enabled) then exit;
+     //
+     myEnabledCB(cbCompleteIncome);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Bill.Id as ObjectId');
+        Add('     , Bill.BillNumber as InvNumber');
+        Add('     , Bill.BillDate as OperDate');
+        Add('     , Bill.Id_Postgres as Id_Postgres');
+        Add('from dba.Bill');
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
+           +'  and Id_Postgres is not null'
+           +'  and Bill.BillKind=zc_bkIncomeToUnit()'
+           );
+        Add('order by ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpUnComplete_Movement';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        //
+        toStoredProc_two.StoredProcName:='gpComplete_Movement_Income';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             if cbUnComplete.Checked then
+             begin
+                  toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  if not myExecToStoredProc then ;//exit;
+             end;
+             if cbComplete.Checked then
+             begin
+                  toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  if not myExecToStoredProc_two then ;//exit;
+             end;
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbCompleteIncome);
+end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadDocument_Income;
 begin
