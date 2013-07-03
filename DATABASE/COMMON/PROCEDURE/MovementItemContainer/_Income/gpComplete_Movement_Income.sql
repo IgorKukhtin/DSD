@@ -405,8 +405,9 @@ end if;
                                                , inAmount:= OperCount
                                                , inOperDate:= OperDate
                                                 )
+    FROM _tmpItem;
    -- формируются Проводки для товарного учета в сумме
- , PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
+   PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
                                                , inDescId:= zc_MovementItemContainer_Summ()
                                                , inMovementId:= MovementId
                                                , inContainerId:= CASE WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- 10100; "Мясное сырье" -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
@@ -506,7 +507,7 @@ end if;
 
 
   -- Обязательно меняем статус документа
-  UPDATE Movement SET StatusId = zc_Object_Status_Complete() WHERE Id = inMovementId;
+  UPDATE Movement SET StatusId = zc_Object_Status_Complete() WHERE Id = inMovementId AND StatusId = zc_Enum_Status_UnComplete();
 
 
 END;
