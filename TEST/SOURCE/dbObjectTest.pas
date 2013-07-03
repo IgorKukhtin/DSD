@@ -161,7 +161,7 @@ type
       // Удаляется Объект и все подчиненные
    procedure Delete(Id: Integer); override;
    function InsertUpdateJuridical(const Id: integer; Code: Integer;
-        Name, GLNCode: string; isCorporate: boolean; JuridicalGroupId, GoodsPropertyId: integer): integer;
+        Name, GLNCode: string; isCorporate: boolean; JuridicalGroupId, GoodsPropertyId, InfoMoneyId: integer): integer;
     constructor Create; override;
   end;
 
@@ -961,15 +961,22 @@ begin
   finally
     Free;
   end;
+  with TInfoMoneyTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free;
+  end;
 end;
 
 function TJuridicalTest.InsertDefault: integer;
 var
-  JuridicalGroupId, GoodsPropertyId: Integer;
+  JuridicalGroupId, GoodsPropertyId, InfoMoneyId: Integer;
 begin
   JuridicalGroupId := TJuridicalGroupTest.Create.GetDefault;
   GoodsPropertyId := TGoodsPropertyTest.Create.GetDefault;
-  result := InsertUpdateJuridical(0, 1, 'Юр. лицо', 'GLNCode', true, JuridicalGroupId, GoodsPropertyId)
+  InfoMoneyId:= TInfoMoneyTest.Create.GetDefault;;
+  result := InsertUpdateJuridical(0, 1, 'Юр. лицо', 'GLNCode', true, JuridicalGroupId, GoodsPropertyId, InfoMoneyId)
 end;
 
 function TJuridicalTest.InsertUpdateJuridical;
@@ -982,6 +989,7 @@ begin
   FParams.AddParam('isCorporate', ftBoolean, ptInput, isCorporate);
   FParams.AddParam('inJuridicalGroupId', ftInteger, ptInput, JuridicalGroupId);
   FParams.AddParam('inGoodsPropertyId', ftInteger, ptInput, GoodsPropertyId);
+  FParams.AddParam('inInfoMoneyId', ftInteger, ptInput, InfoMoneyId);
   result := InsertUpdate(FParams);
 end;
 
