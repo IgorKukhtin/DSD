@@ -31,21 +31,19 @@ $BODY$BEGIN
       WHERE Object.Id = inId;
    END IF;
      
-END;$BODY$
+END;
+$BODY$
 
-LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 1000;
-ALTER FUNCTION gpGet_Object_Branch (integer, TVarChar)
-  OWNER TO postgres;
+LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpGet_Object_Branch (integer, TVarChar) OWNER TO postgres;
 
 
-/*-------------------------------------------------------------------------------*/
-/*
+/*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  10.06.13          *
  05.06.13           
+ 01.07.13                        * remove Juridical 
 */
 
 -- тест

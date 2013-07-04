@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Contract(
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, Comment TVarChar, isErased Boolean) AS
-$BODY$BEGIN
+$BODY$
+BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Contract());
@@ -30,23 +31,23 @@ $BODY$BEGIN
            , ObjectString_Comment.ValueData   AS Comment
            , Object_Contract.isErased         AS isErased
        FROM Object AS Object_Contract
-  LEFT JOIN ObjectString AS ObjectString_InvNumber
-         ON ObjectString_InvNumber.ObjectId = Object_Contract.Id
-        AND ObjectString_InvNumber.DescId = zc_objectString_Contract_InvNumber()
-  LEFT JOIN ObjectString AS ObjectString_Comment
-         ON ObjectString_Comment.ObjectId = Object_Contract.Id
-        AND ObjectString_Comment.DescId = zc_objectString_Contract_Comment()
+           LEFT JOIN ObjectString AS ObjectString_InvNumber
+                                  ON ObjectString_InvNumber.ObjectId = Object_Contract.Id
+                                 AND ObjectString_InvNumber.DescId = zc_objectString_Contract_InvNumber()
+           LEFT JOIN ObjectString AS ObjectString_Comment
+                                  ON ObjectString_Comment.ObjectId = Object_Contract.Id
+                                 AND ObjectString_Comment.DescId = zc_objectString_Contract_Comment()
        WHERE Object_Contract.Id = inId;
    END IF;
      
-END;$BODY$
+END;
+$BODY$
 
 LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Object_Contract (Integer, TVarChar) OWNER TO postgres;
 
 
-/*-------------------------------------------------------------------------------*/
-/*
+/*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  11.06.13          *

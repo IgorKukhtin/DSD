@@ -118,6 +118,8 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_ObjectBoolean.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_ObjectLink.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_Object_Enum.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpUpdate_Object_Enum_byCode.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_ObjectDate.sql', ZQuery);
 
   ExecFile(ProcedurePath + 'OBJECTS\Delete\lpDelete_Object.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\gpUpdateObjectIsErased.sql', ZQuery);
@@ -140,6 +142,7 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_Account\lfSelect_Object_Account.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Account\gpSelect_Object_Account.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Account\gpGet_Object_Account.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_Account\lpInsertFind_Account.sql', ZQuery);
 
   ExecFile(ProcedurePath + 'OBJECTS\_AccountDirection\lfSelect_Object_AccountDirection.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_AccountDirection\gpInsertUpdate_Object_AccountDirection.sql', ZQuery);
@@ -276,9 +279,37 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_Unit\gpSelect_Object_Unit.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Unit\gpGet_Object_Unit.sql', ZQuery);
 
+  ExecFile(ProcedurePath + 'OBJECTS\_ProfitLoss\gpInsertUpdate_Object_ProfitLoss.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_ProfitLoss\gpSelect_Object_ProfitLoss.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_ProfitLoss\gpGet_Object_ProfitLoss.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'OBJECTS\_Member\gpInsertUpdate_Object_Member.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_Member\gpSelect_Object_Member.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_Member\gpGet_Object_Member.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'OBJECTS\_Position\gpInsertUpdate_Object_Position.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_Position\gpSelect_Object_Position.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_Position\gpGet_Object_Position.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'OBJECTS\_Personal\gpInsertUpdate_Object_Personal.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_Personal\gpSelect_Object_Personal.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_Personal\gpGet_Object_Personal.sql', ZQuery);
+
   ExecFile(ProcedurePath + 'OBJECTS\_UnitGroup\gpInsertUpdate_Object_UnitGroup.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_UnitGroup\gpSelect_Object_UnitGroup.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_UnitGroup\gpGet_Object_UnitGroup.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'OBJECTS\_AssetGroup\gpInsertUpdate_Object_AssetGroup.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_AssetGroup\gpSelect_Object_AssetGroup.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_AssetGroup\gpGet_Object_AssetGroup.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'OBJECTS\_Asset\gpInsertUpdate_Object_Asset.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_Asset\gpSelect_Object_Asset.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_Asset\gpGet_Object_Asset.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'OBJECTS\_PartionGoods\lpInsertFind_Object_PartionGoods.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_PartionMovement\lpInsertFind_Object_PartionMovement.sql', ZQuery);
+
 end;
 
 procedure TdbProcedureTest.CreateProtocolProcedure;

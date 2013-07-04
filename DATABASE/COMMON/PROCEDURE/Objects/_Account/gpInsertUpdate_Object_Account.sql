@@ -1,60 +1,56 @@
-п»ї-- Function: gpInsertUpdate_Object_Account(Integer, TVarChar)
+-- Function: gpInsertUpdate_Object_Account (Integer, TVarChar)
 
---DROP FUNCTION gpInsertUpdate_Object_Account(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+-- DROP FUNCTION gpInsertUpdate_Object_Account (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Account(
- INOUT ioId                     Integer,    -- РєР»СЋС‡ РѕР±СЉРµРєС‚Р° <РЎС‡РµС‚>
-    IN inCode                   Integer,    -- РљРѕРґ РѕР±СЉРµРєС‚Р° <РЎС‡РµС‚>
-    IN inName                   TVarChar,   -- РќР°Р·РІР°РЅРёРµ РѕР±СЉРµРєС‚Р° <РЎС‡РµС‚>
-    IN inAccountGroupId         Integer,    -- Р“СЂСѓРїРїР° СЃС‡РµС‚РѕРІ
-    IN inAccountDirectionId     Integer,    -- РђРЅР°Р»РёС‚РёРєР° СЃС‡РµС‚Р° (РјРµСЃС‚Рѕ)
-    IN inInfoMoneyDestinationId Integer,    -- РђРЅР°Р»РёС‚РёРєР° СЃС‡РµС‚Р° (РЅР°Р·РЅР°С‡РµРЅРёРµ)
-    IN inInfoMoneyId            Integer,    -- РЈРїСЂР°РІР»РµРЅС‡РµСЃРєРёРµ Р°РЅР°Р»РёС‚РёРєРё
-    IN inSession                TVarChar    -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+ INOUT ioId                     Integer,    -- ключ объекта <Счет>
+    IN inCode                   Integer,    -- Код объекта <Счет>
+    IN inName                   TVarChar,   -- Название объекта <Счет>
+    IN inAccountGroupId         Integer,    -- Группа счетов
+    IN inAccountDirectionId     Integer,    -- Аналитика счета (место)
+    IN inInfoMoneyDestinationId Integer,    -- Аналитика счета (назначение)
+    IN inInfoMoneyId            Integer,    -- Управленческие аналитики
+    IN inSession                TVarChar    -- сессия пользователя
 )
-  RETURNS integer AS
+  RETURNS Integer AS
 $BODY$
-   DECLARE UserId Integer;
-   DECLARE Code_max Integer;   
-
+   DECLARE vbUserId Integer;
+   DECLARE vbCode_calc Integer;   
 BEGIN
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Account());
-    UserId := inSession;
 
-   -- Р•СЃР»Рё РєРѕРґ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ, РѕРїСЂРµРґРµР»СЏРµРј РµРіРѕ РєР°Рє РїРѕСЃР»РµРґРЅРёР№+1
-   IF COALESCE (inCode, 0) = 0
-   THEN 
-       SELECT COALESCE (MAX (ObjectCode), 0) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_Account();
-   ELSE
-       Code_max := inCode;
-   END IF; 
-  
-   -- РїСЂРѕРІРµСЂРєР° СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё РґР»СЏ СЃРІРѕР№СЃС‚РІР° <РљРѕРґ>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Account(), Code_max);
+   -- проверка прав пользователя на вызов процедуры
+   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Account());
+    vbUserId := inSession;
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё <РћР±СЉРµРєС‚>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_Account(), Code_max, inName);
+   -- Если код не установлен, определяем его как последний + 1
+   vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Account()); 
 
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Account_AccountGroup(), ioId, inAccountGroupId);
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Account_AccountDirection(), ioId, inAccountDirectionId);
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Account_InfoMoneyDestination(), ioId, inInfoMoneyDestinationId);
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Account_InfoMoney(), ioId, inInfoMoneyId);
+   -- проверка уникальности для свойства <Код>
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Account(), vbCode_calc);
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё РїСЂРѕС‚РѕРєРѕР»
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   -- сохранили <Объект>
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Account(), vbCode_calc, inName);
 
-END;$BODY$
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Account_AccountGroup(), ioId, inAccountGroupId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Account_AccountDirection(), ioId, inAccountDirectionId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Account_InfoMoneyDestination(), ioId, inInfoMoneyDestinationId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Account_InfoMoney(), ioId, inInfoMoneyId);
 
-LANGUAGE plpgsql VOLATILE;
+   -- сохранили протокол
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+
+END;
+$BODY$
+
+LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpInsertUpdate_Object_Account (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar)  OWNER TO postgres;
 
   
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
- 17.06.13          *
- 05.06.13          
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
 
+ 02.07.13                                        * change CodePage
+ 17.06.13          *
 */

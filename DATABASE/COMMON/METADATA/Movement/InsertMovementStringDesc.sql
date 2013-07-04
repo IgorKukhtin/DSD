@@ -3,7 +3,7 @@
 --------------------------- !!!!!!!!!!!!!!!!!!!
 
 INSERT INTO MovementStringDesc (Code, ItemName)
-  SELECT 'zc_MovementString_InvNumberPartner', 'Документ Приход' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_InvNumberPartner');
+  SELECT 'zc_MovementString_InvNumberPartner', 'Номер накладной у контрагента' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_InvNumberPartner');
 
 
 /*-------------------------------------------------------------------------------

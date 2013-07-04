@@ -19,7 +19,7 @@ BEGIN
      RETURN (vbObjectCode);
 
 END;
-$BODY$ LANGUAGE plpgsql VOLATILE;
+$BODY$ LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION lfGet_ObjectCode_byEnum (TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/

@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_InfoMoneyDestination(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
-$BODY$BEGIN
+$BODY$
+BEGIN
     
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_InfoMoneyDestination());
@@ -33,7 +34,8 @@ $BODY$BEGIN
        WHERE Object_InfoMoneyDestination.Id = inId;
    END IF;
   
-END;$BODY$
+END;
+$BODY$
 
 LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Object_InfoMoneyDestination (integer, TVarChar) OWNER TO postgres;

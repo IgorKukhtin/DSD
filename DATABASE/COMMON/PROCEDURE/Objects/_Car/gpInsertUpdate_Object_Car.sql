@@ -12,38 +12,33 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Car(
 )
  RETURNS Integer AS
 $BODY$
-   DECLARE UserId Integer;
-   DECLARE Code_max Integer;   
+   DECLARE vbUserId Integer;
+   DECLARE vbCode_calc Integer;   
 
 BEGIN
    
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Car());
-   UserId := inSession;
+   vbUserId := inSession;
 
    -- Если код не установлен, определяем его каи последний+1
-   IF COALESCE (inCode, 0) = 0
-   THEN 
-       SELECT MAX (ObjectCode) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_Car();
-   ELSE
-       Code_max := inCode;
-   END IF; 
+   vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Car()); 
    
    -- проверка прав уникальности для свойства <Наименование Автомобиля>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Car(), inName);
    -- проверка прав уникальности для свойства <Код Автомобиля>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Car(), Code_max);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Car(), vbCode_calc);
    -- проверка прав уникальности для свойства <Техпаспорт> 
    PERFORM lpCheckUnique_ObjectString_ValueData(ioId, zc_ObjectString_Car_RegistrationCertificate(), inRegistrationCertificate);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_Car(), Code_max, inName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_Car(), vbCode_calc, inName);
 
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Car_RegistrationCertificate(), ioId, inRegistrationCertificate);
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Car_CarModel(), ioId, inCarModelId);
 
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$ LANGUAGE plpgsql;
 ALTER FUNCTION gpInsertUpdate_Object_Car(Integer, Integer, TVarChar, TVarChar, Integer, TVarChar) OWNER TO postgres;

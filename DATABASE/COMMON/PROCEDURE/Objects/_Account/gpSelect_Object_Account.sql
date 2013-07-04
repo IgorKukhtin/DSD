@@ -12,13 +12,14 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar, 
                InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, 
                isErased boolean) AS
-$BODY$BEGIN
+$BODY$
+BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Account());
    
      RETURN QUERY 
-       SELECT 
+       SELECT
              Object_Account.Id               AS Id
            , Object_Account.ObjectCode       AS Code
            , Object_Account.ValueData        AS Name
@@ -47,42 +48,42 @@ $BODY$BEGIN
 
        FROM Object AS Object_Account
             LEFT JOIN ObjectLink AS ObjectLink_Account_AccountGroup
-                   ON ObjectLink_Account_AccountGroup.ObjectId = Object_Account.Id
-                  AND ObjectLink_Account_AccountGroup.DescId = zc_ObjectLink_Account_AccountGroup()
+                                 ON ObjectLink_Account_AccountGroup.ObjectId = Object_Account.Id
+                                AND ObjectLink_Account_AccountGroup.DescId = zc_ObjectLink_Account_AccountGroup()
             LEFT JOIN Object AS Object_AccountGroup ON Object_AccountGroup.Id = ObjectLink_Account_AccountGroup.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Account_AccountDirection
-                   ON ObjectLink_Account_AccountDirection.ObjectId = Object_Account.Id
-                  AND ObjectLink_Account_AccountDirection.DescId = zc_ObjectLink_Account_AccountDirection()
+                                 ON ObjectLink_Account_AccountDirection.ObjectId = Object_Account.Id
+                                AND ObjectLink_Account_AccountDirection.DescId = zc_ObjectLink_Account_AccountDirection()
             LEFT JOIN Object AS Object_AccountDirection ON Object_AccountDirection.Id = ObjectLink_Account_AccountDirection.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Account_InfoMoneyDestination
-                   ON ObjectLink_Account_InfoMoneyDestination.ObjectId = Object_Account.Id
-                  AND ObjectLink_Account_InfoMoneyDestination.DescId = zc_ObjectLink_Account_InfoMoneyDestination()
+                                 ON ObjectLink_Account_InfoMoneyDestination.ObjectId = Object_Account.Id
+                                AND ObjectLink_Account_InfoMoneyDestination.DescId = zc_ObjectLink_Account_InfoMoneyDestination()
             LEFT JOIN ObjectLink AS ObjectLink_Account_InfoMoney
-                   ON ObjectLink_Account_InfoMoney.ObjectId = Object_Account.Id
-                  AND ObjectLink_Account_InfoMoney.DescId = zc_ObjectLink_Account_InfoMoney()
+                                 ON ObjectLink_Account_InfoMoney.ObjectId = Object_Account.Id
+                                AND ObjectLink_Account_InfoMoney.DescId = zc_ObjectLink_Account_InfoMoney()
          
             LEFT JOIN lfSelect_Object_InfoMoneyDestination() AS lfObject_InfoMoneyDestination ON lfObject_InfoMoneyDestination.InfoMoneyDestinationId = ObjectLink_Account_InfoMoneyDestination.ChildObjectId
             LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ObjectLink_Account_InfoMoneyDestination.ChildObjectId
 
        WHERE Object_Account.DescId = zc_Object_Account();
 
-END;$BODY$
+END;
+$BODY$
 
 LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_Account (TVarChar) OWNER TO postgres;
 
 
-/*-------------------------------------------------------------------------------*/
-/*
+/*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+
  24.06.13                                         *  errors
  21.06.13          *                              *  создание врем.таблиц
  17.06.13          *
- 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Account('2')
+-- SELECT * FROM gpSelect_Object_Account ('2')

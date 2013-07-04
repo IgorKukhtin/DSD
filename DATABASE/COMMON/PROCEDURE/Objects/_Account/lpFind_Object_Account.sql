@@ -17,24 +17,23 @@ BEGIN
 
    SELECT  
         ObjectLink_Account_AccountGroup.ObjectId INTO lObjectId 
-   FROM 
-        ObjectLink AS ObjectLink_Account_AccountGroup
-   JOIN ObjectLink AS ObjectLink_Account_AccountDirection
-     ON ObjectLink_Account_AccountDirection.DescId = zc_ObjectLink_Account_AccountDirection()
-    AND ObjectLink_Account_AccountDirection.ChildObjectId = inAccountDirectionId
-    AND ObjectLink_Account_AccountDirection.ObjectId = ObjectLink_Account_AccountGroup.ObjectId
-   JOIN ObjectLink AS ObjectLink_Account_InfoMoneyDestination
-     ON ObjectLink_Account_InfoMoneyDestination.DescId = zc_ObjectLink_Account_InfoMoneyDestination()
-    AND ObjectLink_Account_InfoMoneyDestination.ChildObjectId = inInfoMoneyDestinationId
-    AND ObjectLink_Account_InfoMoneyDestination.ObjectId = ObjectLink_Account_AccountGroup.ObjectId
-  WHERE ObjectLink_Account_AccountGroup.DescId = zc_ObjectLink_Account_AccountGroup()
-    AND ObjectLink_Account_AccountGroup.ChildObjectId = inAccountGroupId;
+   FROM ObjectLink AS ObjectLink_Account_AccountGroup
+        JOIN ObjectLink AS ObjectLink_Account_AccountDirection
+            ON ObjectLink_Account_AccountDirection.DescId = zc_ObjectLink_Account_AccountDirection()
+           AND ObjectLink_Account_AccountDirection.ChildObjectId = inAccountDirectionId
+           AND ObjectLink_Account_AccountDirection.ObjectId = ObjectLink_Account_AccountGroup.ObjectId
+        JOIN ObjectLink AS ObjectLink_Account_InfoMoneyDestination
+            ON ObjectLink_Account_InfoMoneyDestination.DescId = zc_ObjectLink_Account_InfoMoneyDestination()
+           AND ObjectLink_Account_InfoMoneyDestination.ChildObjectId = inInfoMoneyDestinationId
+           AND ObjectLink_Account_InfoMoneyDestination.ObjectId = ObjectLink_Account_AccountGroup.ObjectId
+   WHERE ObjectLink_Account_AccountGroup.DescId = zc_ObjectLink_Account_AccountGroup()
+     AND ObjectLink_Account_AccountGroup.ChildObjectId = inAccountGroupId;
 
   RETURN COALESCE(lObjectId, 0);
 
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
+END;
+$BODY$
+LANGUAGE plpgsql VOLATILE;
   
 /*-------------------------------------------------------------------------------*/
 /*

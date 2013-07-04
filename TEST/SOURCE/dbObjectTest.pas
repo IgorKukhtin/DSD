@@ -73,7 +73,11 @@ type
     procedure InfoMoneyGroup_Test;
     procedure InfoMoneyDestination_Test;
     procedure InfoMoney_Test;
-
+    procedure Member_Test;
+    procedure Position_Test;
+    procedure Personal_Test;
+    procedure AssetGroup_Test;
+    procedure Asset_Test;
    end;
 
   TBankTest = class(TObjectTest)
@@ -381,6 +385,50 @@ type
                                      InfoMoneyDestinationId: integer): integer;
     constructor Create; override;
   end;
+
+  TMemberTest = class(TObjectTest)
+  function InsertDefault: integer; override;
+  public
+    function InsertUpdateMember(const Id, Code : integer; Name, INN: string): integer;
+    constructor Create; override;
+  end;
+
+  TPositionTest = class(TObjectTest)
+  function InsertDefault: integer; override;
+  public
+    function InsertUpdatePosition(const Id, Code : integer; Name: string): integer;
+    constructor Create; override;
+  end;
+
+  TPersonalTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  public
+      // Удаляется Объект и все подчиненные
+   procedure Delete(Id: Integer); override;
+   function InsertUpdatePersonal(const Id: integer; Code: Integer; Name: string;
+    MemberId, PositionId, UnitId, JuridicalId, BusinessId: integer; DateIn,DateOut: TDateTime): integer;
+    constructor Create; override;
+  end;
+
+  TAssetGroupTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  public
+    function InsertUpdateAssetGroup(const Id: integer; Code: Integer;
+        Name: string; ParentId: integer): integer;
+    constructor Create; override;
+  end;
+
+  TAssetTest = class(TObjectTest)
+  function InsertDefault: integer; override;
+  public
+    // Удаляется Объект и все подчиненные
+    procedure Delete(Id: Integer); override;
+    function InsertUpdateAsset(const Id, Code : integer; Name, InvNumber: string; AssetGroupId: Integer): integer;
+    constructor Create; override;
+  end;
+
 
  implementation
 
@@ -2371,7 +2419,7 @@ begin
   end;
 end;
 
-  {TInfoMoneyTest}
+{TInfoMoneyTest}
  constructor TInfoMoneyTest.Create;
 begin
   inherited;
@@ -2434,6 +2482,331 @@ begin
     // Получение данных
     with ObjectTest.GetRecord(Id) do
       Check((FieldByName('Name').AsString = 'Управленческие аналитики 1'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    ObjectTest.Delete(Id);
+  end;
+end;
+
+
+{ TMemberTest }
+constructor TMemberTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_Member';
+  spSelect := 'gpSelect_Object_Member';
+  spGet := 'gpGet_Object_Member';
+end;
+
+function TMemberTest.InsertDefault: integer;
+begin
+  result := InsertUpdateMember(0, 1, 'Физические лица','123');
+end;
+
+function TMemberTest.InsertUpdateMember(const Id, Code: Integer;
+  Name, INN : string): integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  FParams.AddParam('inINN', ftString, ptInput, INN);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.Member_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TMemberTest;
+begin
+  ObjectTest := TMemberTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка группы
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Физические лица'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    ObjectTest.Delete(Id);
+  end;
+end;
+
+ { TPositionTest }
+constructor TPositionTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_Position';
+  spSelect := 'gpSelect_Object_Position';
+  spGet := 'gpGet_Object_Position';
+end;
+
+function TPositionTest.InsertDefault: integer;
+begin
+  result := InsertUpdatePosition(0, 1, 'Должности');
+end;
+
+function TPositionTest.InsertUpdatePosition(const Id, Code: Integer;
+  Name: string): integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.Position_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TPositionTest;
+begin
+  ObjectTest := TPositionTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка группы
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Должности'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    ObjectTest.Delete(Id);
+  end;
+end;
+
+{TPersonalTest}
+ constructor TPersonalTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_Personal';
+  spSelect := 'gpSelect_Object_Personal';
+  spGet := 'gpGet_Object_Personal';
+end;
+
+procedure TPersonalTest.Delete(Id: Integer);
+begin
+  inherited;
+  with TMemberTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free
+  end;
+  with TPositionTest.Create do
+  try
+    Delete(GetDefault)
+  finally
+    Free;
+  end;
+    with TUnitTest.Create do
+  try
+    Delete(GetDefault)
+  finally
+    Free;
+  end;
+    with TJuridicalTest.Create do
+  try
+    Delete(GetDefault)
+  finally
+    Free;
+  end;
+    with TBusinessTest.Create do
+  try
+    Delete(GetDefault)
+  finally
+    Free;
+  end;
+
+ end;
+
+function TPersonalTest.InsertDefault: integer;
+var
+  MemberId: Integer;
+  PositionId: Integer;
+  UnitId: Integer;
+  JuridicalId: Integer;
+  BusinessId: Integer;
+begin
+  MemberId := TMemberTest.Create.GetDefault;
+  PositionId := TPositionTest.Create.GetDefault;
+  UnitId := TUnitTest.Create.GetDefault;
+  JuridicalId := TJuridicalTest.Create.GetDefault;
+  BusinessId := TBusinessTest.Create.GetDefault;
+  result := InsertUpdatePersonal(0, 3, 'Сотрудник', MemberId, PositionId, UnitId, JuridicalId, BusinessId, Date,Date);
+end;
+
+function TPersonalTest.InsertUpdatePersonal;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  FParams.AddParam('inMemberId', ftInteger, ptInput, MemberId);
+  FParams.AddParam('inPositionId', ftInteger, ptInput, PositionId);
+  FParams.AddParam('inUnitId', ftInteger, ptInput, UnitId);
+  FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
+  FParams.AddParam('inBusinessId', ftInteger, ptInput, BusinessId);
+  FParams.AddParam('inDateIn', ftDateTime, ptInput, DateIn);
+  FParams.AddParam('inDateOut', ftDateTime, ptInput, DateOut);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.Personal_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TPersonalTest;
+begin
+  ObjectTest := TPersonalTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Сотрудник'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    ObjectTest.Delete(Id);
+  end;
+end;
+
+{TAssetGroupTest}
+constructor TAssetGroupTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_AssetGroup';
+  spSelect := 'gpSelect_Object_AssetGroup';
+  spGet := 'gpGet_Object_AssetGroup';
+end;
+
+function TAssetGroupTest.InsertDefault: integer;
+var
+  ParentId: Integer;
+begin
+  ParentId:=0;
+  result := InsertUpdateAssetGroup(0, 1, 'Группа основных средств', ParentId);
+end;
+
+function TAssetGroupTest.InsertUpdateAssetGroup;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  FParams.AddParam('inParentId', ftInteger, ptInput, ParentId);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.AssetGroup_Test;
+var Id, Id2, Id3: integer;
+    RecordCount: Integer;
+    ObjectTest: TAssetGroupTest;
+begin
+ // тут наша задача проверить правильность работы с деревом.
+ // а именно зацикливание.
+  ObjectTest := TAssetGroupTest.Create;
+  // Получим список объектов
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка объекта
+ // добавляем группу 1
+  Id := ObjectTest.InsertDefault;
+  try
+    // теперь делаем ссылку на себя и проверяем ошибку
+    try
+      ObjectTest.InsertUpdateAssetGroup(Id, 1, 'Группа 1', Id);
+      Check(false, 'Нет сообщение об ошибке');
+    except
+
+    end;
+    // добавляем еще группу 2
+    // делаем у группы 2 ссылку на группу 1
+    Id2 := ObjectTest.InsertUpdateAssetGroup(0, 2, 'Группа 2', Id);
+    try
+      // теперь ставим ссылку у группы 1 на группу 2 и проверяем ошибку
+      try
+        ObjectTest.InsertUpdateAssetGroup(Id, 1, 'Группа 1', Id2);
+        Check(false, 'Нет сообщение об ошибке');
+      except
+
+      end;
+      // добавляем еще группу 3
+      // делаем у группы 3 ссылку на группу 2
+      Id3 := ObjectTest.InsertUpdateAssetGroup(0, 3, 'Группа 3', Id2);
+      try
+        // группа 2 уже ссылка на группу 1
+        // делаем у группы 1 ссылку на группу 3 и проверяем ошибку
+        try
+          ObjectTest.InsertUpdateAssetGroup(Id, 1, 'Группа 1', Id3);
+          Check(false, 'Нет сообщение об ошибке');
+        except
+
+        end;
+        Check((GetRecordCount(ObjectTest) = RecordCount + 3), 'Количество записей не изменилось');
+      finally
+        ObjectTest.Delete(Id3);
+      end;
+    finally
+      ObjectTest.Delete(Id2);
+    end;
+  finally
+    ObjectTest.Delete(Id);
+  end;
+end;
+
+{TAssetTest}
+constructor TAssetTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_Asset';
+  spSelect := 'gpSelect_Object_Asset';
+  spGet := 'gpGet_Object_Asset';
+end;
+
+procedure TAssetTest.Delete(Id: Integer);
+begin
+  inherited;
+  with TAssetGroupTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free
+  end;
+ end;
+
+function TAssetTest.InsertDefault: integer;
+var
+  AssetGroupId: Integer;
+begin
+  AssetGroupId := TAssetGroupTest.Create.GetDefault;
+  result := InsertUpdateAsset(0, -1, 'Основные средства', 'АЕ2323', AssetGroupId);
+end;
+
+function TAssetTest.InsertUpdateAsset;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
+  FParams.AddParam('inAssetGroupId', ftInteger, ptInput, AssetGroupId);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.Asset_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TAssetTest;
+begin
+  ObjectTest := TAssetTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка объекта
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Основные средства'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
   finally
     ObjectTest.Delete(Id);
   end;
