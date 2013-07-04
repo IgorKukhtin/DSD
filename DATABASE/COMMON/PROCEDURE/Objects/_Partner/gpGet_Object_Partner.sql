@@ -3,7 +3,7 @@
 --DROP FUNCTION gpGet_Object_Partner();
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Partner(
-    IN inId          Integer,        -- Касса 
+    IN inId          Integer,        -- Контрагенты 
     IN inSession     TVarChar        -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
@@ -23,7 +23,7 @@ BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , MAX (Object.ObjectCode) + 1 AS Code
+           , COALESCE (MAX (Object.ObjectCode), 0) + 1 AS Code
            , CAST ('' as TVarChar)  AS Name
            , CAST ('' as TVarChar)  AS GLNCode
            
@@ -96,6 +96,7 @@ ALTER FUNCTION gpGet_Object_Partner(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.07.13          * +Route, RouteSorting             
  13.06.13          *
  00.06.13          
 

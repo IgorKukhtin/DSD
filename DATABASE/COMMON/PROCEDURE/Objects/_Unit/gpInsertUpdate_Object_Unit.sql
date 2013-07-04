@@ -16,50 +16,46 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
 )
   RETURNS Integer AS
 $BODY$
-   DECLARE UserId Integer;
-   DECLARE Code_max Integer;  
+   DECLARE vbUserId Integer;
+   DECLARE vbCode_calc Integer;  
 BEGIN
    
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Unit());
-   UserId := inSession;
+   vbUserId := inSession;
 
    -- Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
-   IF COALESCE (inCode, 0) = 0
-   THEN 
-       SELECT COALESCE (MAX (ObjectCode), 0) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_Unit();
-   ELSE
-       Code_max := inCode;
-   END IF; 
-   -- !!! IF COALESCE (inCode, 0) = 0  THEN Code_max := NULL; ELSE Code_max := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
+   vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Unit());
+   -- !!! IF COALESCE (inCode, 0) = 0  THEN vbCode_calc := NULL; ELSE vbCode_calc := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
    
    -- проверка уникальности <Наименование>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Unit(), inName);
    -- проверка уникальности <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Unit(), Code_max);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Unit(), vbCode_calc);
 
    -- проверка цикл у дерева
    PERFORM lpCheck_Object_CycleLink(ioId, zc_ObjectLink_Unit_Parent(), inParentId);
 
    -- сохранили объект
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_Unit(), Code_max, inName);
-   -- сохранили связь с <>
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_Unit(), vbCode_calc, inName);
+   -- сохранили связь с <Подразделения>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Parent(), ioId, inParentId);
-   -- сохранили связь с <>
+   -- сохранили связь с <Филиалы>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Branch(), ioId, inBranchId);
-   -- сохранили связь с <>
+   -- сохранили связь с <Бизнесы>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Business(), ioId, inBusinessId);
-   -- сохранили связь с <>
+   -- сохранили связь с <Юридические лица>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Juridical(), ioId, inJuridicalId);
-   -- сохранили связь с <>
+   -- сохранили связь с <Аналитики управленческих счетов - направление>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_AccountDirection(), ioId, inAccountDirectionId);
-   -- сохранили связь с <>
+   -- сохранили связь с <Аналитики статей отчета о прибылях и убытках - направление>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_ProfitLossDirection(), ioId, inProfitLossDirectionId);
 
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
-END;$BODY$
+END;
+$BODY$
 
 LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, tvarchar) OWNER TO postgres;
@@ -69,6 +65,7 @@ ALTER FUNCTION gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, Integer, I
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.03.13          * vbCode_calc              
  13.05.13                                        * rem lpCheckUnique_Object_ValueData
  14.06.13          *              
  16.06.13                                        * COALESCE (MAX (ObjectCode), 0)
