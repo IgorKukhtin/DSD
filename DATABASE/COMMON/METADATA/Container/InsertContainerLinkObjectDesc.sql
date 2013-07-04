@@ -5,12 +5,6 @@ insert into ContainerLinkObjectDesc(Id, Code, ItemName)
 SELECT zc_ContainerLinkObject_ProfitLoss(), 'ProfitLoss', 'Аналитика "Статьи отчета о прибылях и убытках"' WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Id = zc_ContainerLinkObject_ProfitLoss());
 
 insert into ContainerLinkObjectDesc(Id, Code, ItemName)
-SELECT zc_ContainerLinkObject_Business(), 'Business', 'Аналитика "Бизнесы"' WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Id = zc_ContainerLinkObject_Business());
-
-insert into ContainerLinkObjectDesc(Id, Code, ItemName)
-SELECT zc_ContainerLinkObject_JuridicalBasis(), 'JuridicalBasis', 'Аналитика "Главное юридическое лицо"' WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Id = zc_ContainerLinkObject_JuridicalBasis());
-
-insert into ContainerLinkObjectDesc(Id, Code, ItemName)
 SELECT zc_ContainerLinkObject_InfoMoney(), 'InfoMoney', 'Аналитика "Управленческие аналитики"' WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Id = zc_ContainerLinkObject_InfoMoney());
 
 insert into ContainerLinkObjectDesc(Id, Code, ItemName)
@@ -73,3 +67,27 @@ SELECT zc_ContainerLinkObject_PartionMovement(), 'PartionMovement', 'Аналитика "
 --------------------------- !!!!!!!!!!!!!!!!!!!
 --------------------------- !!! НОВАЯ СХЕМА !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!
+
+-- !!! Меняем автоинкрементное поле !!!
+DO $$
+BEGIN
+PERFORM setval ('containerlinkobjectdesc_id_seq', (select max (id) + 1 from ContainerLinkObjectDesc));
+END $$;
+
+INSERT INTO ContainerLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_ContainerLinkObject_Business', 'Аналитика <Бизнесы>' WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_Business');
+
+INSERT INTO ContainerLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_ContainerLinkObject_JuridicalBasis', 'Аналитика <Главное юридическое лицо>' WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_JuridicalBasis');
+
+INSERT INTO ContainerLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_ContainerLinkObject_PersonalSupplier', 'Аналитика <Сотрудники(поставщики)>' WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_PersonalSupplier');
+
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+
+ 03.07.13                                        * НОВАЯ СХЕМА
+*/

@@ -10,11 +10,11 @@
 CREATE TABLE ContainerLinkObject(
    DescId                INTEGER NOT NULL,
    ContainerId           INTEGER NOT NULL,
-   ObjectId              INTEGER NOT NULL,
+   ObjectId              INTEGER NULL,
 
    CONSTRAINT fk_ContainerLinkObject_PK PRIMARY KEY (ObjectId, DescId, ContainerId),
    CONSTRAINT fk_ContainerLinkObject_Container FOREIGN KEY (ContainerId)  REFERENCES Container (Id),
-   CONSTRAINT fk_ContainerLinkObject_Object FOREIGN KEY (ObjectId) REFERENCES Object (Id),
+--   CONSTRAINT fk_ContainerLinkObject_Object FOREIGN KEY (ObjectId) REFERENCES Object (Id),
    CONSTRAINT fk_ContainerLinkObject_Desc FOREIGN KEY (DescId) REFERENCES ContainerLinkObjectDesc (Id)
 );
 
@@ -29,6 +29,6 @@ CREATE INDEX idx_ContainerLinkObject_ContainerId_DescId_ObjectId ON ContainerLin
  ДАТА         АВТОР
  ----------------
                  Климентьев К.И.   Кухтин И.В.   
-18.06.02                                         
-11.07.02                                         
+
+ 03.07.13             * del CONSTRAINT fk_ContainerLinkObject_Object
 */

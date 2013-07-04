@@ -56,7 +56,7 @@ ALTER FUNCTION gpInsertUpdate_Object_UnitGroup(Integer, Integer, TVarChar, Integ
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  14.06.13              
- 14.05.13                                        * Code Pages
+ 14.05.13                                        * 1251Cyr
 
 */
 

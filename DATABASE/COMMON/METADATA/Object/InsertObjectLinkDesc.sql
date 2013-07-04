@@ -153,6 +153,12 @@ INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_PartionGoods_Goods', 'Связь партий с товаром', zc_Object_PartionGoods(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_PartionGoods_Goods');
 
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Partner_Route', 'Связь Контрагента с маршрутом', zc_Object_Partner(), zc_Object_Route() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Partner_Route');
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Partner_RouteSorting', 'Связь Контрагента с Сотрировкой маршрута', zc_Object_Partner(), zc_Object_RouteSorting() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Partner_RouteSorting');
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Juridical_InfoMoney', 'Связь Контрагента с Управленческими аналитиками', zc_Object_Juridical(), zc_Object_InfoMoney() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Juridical_InfoMoney');
 
 
 /*-------------------------------------------------------------------------------

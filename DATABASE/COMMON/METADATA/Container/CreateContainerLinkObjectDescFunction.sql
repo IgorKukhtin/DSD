@@ -12,18 +12,6 @@ $BODY$BEGIN
   RETURN 2;
 END;  $BODY$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_Business()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 3;
-END;  $BODY$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_JuridicalBasis()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 4;
-END;  $BODY$ LANGUAGE plpgsql;
-
 CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_InfoMoney()
   RETURNS integer AS
 $BODY$BEGIN
@@ -131,3 +119,22 @@ CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_PartionMovement()
 $BODY$BEGIN
   RETURN 22;
 END;  $BODY$ LANGUAGE plpgsql;
+
+
+--------------------------- !!!!!!!!!!!!!!!!!!!
+--------------------------- !!! ÕŒ¬¿ﬂ —’≈Ã¿ !!!
+--------------------------- !!!!!!!!!!!!!!!!!!!
+
+CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_Business() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_Business'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_JuridicalBasis() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_JuridicalBasis'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
+CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_PersonalSupplier() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_PersonalSupplier'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
+
+/*-------------------------------------------------------------------------------*/
+/*
+ »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
+               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+
+ 03.07.13                                        * ÕŒ¬¿ﬂ —’≈Ã¿
+*/

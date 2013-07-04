@@ -55,7 +55,7 @@ ALTER FUNCTION gpInsertUpdate_Object_JuridicalGroup(Integer, Integer, TVarChar, 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  13.06.13          *
- 14.05.13                                        * Code Pages
+ 14.05.13                                        * 1251Cyr
 
 */
 

@@ -11,7 +11,18 @@ uses
   cxGridDBTableView, cxGrid, Datasnap.DBClient, Vcl.ActnList, dsdAction,
   cxPropertiesStore, dxBar, Vcl.ExtCtrls, cxContainer, cxLabel, cxTextEdit,
   Vcl.ComCtrls, dxCore, cxDateUtils, cxButtonEdit, cxMaskEdit, cxDropDownEdit,
-  cxCalendar, dsdGuides, Vcl.Menus, cxPCdxBarPopupMenu, cxPC, frxClass, frxDBSet;
+  cxCalendar, dsdGuides, Vcl.Menus, cxPCdxBarPopupMenu, cxPC, frxClass, frxDBSet,
+  dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
+  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
+  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TIncomeForm = class(TParentForm)
@@ -65,6 +76,20 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     frxDBDataset: TfrxDBDataset;
+    colDebetAccountGroupCode: TcxGridDBColumn;
+    colDebetAccountGroupName: TcxGridDBColumn;
+    colDebetAccountDirectionCode: TcxGridDBColumn;
+    colDebetAccountDirectionName: TcxGridDBColumn;
+    colDebetAccountCode: TcxGridDBColumn;
+    colKreditAccountGroupCode: TcxGridDBColumn;
+    colKreditAccountGroupName: TcxGridDBColumn;
+    colKreditAccountDirectionCode: TcxGridDBColumn;
+    colKreditAccountDirectionName: TcxGridDBColumn;
+    colKreditAccountCode: TcxGridDBColumn;
+    colGoodsGroupName: TcxGridDBColumn;
+    colByObjectCode: TcxGridDBColumn;
+    colByObjectName: TcxGridDBColumn;
+    colGoodsName: TcxGridDBColumn;
   private
     { Private declarations }
   public
