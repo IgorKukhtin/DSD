@@ -564,7 +564,7 @@ end if;
                                                                                                     , inDescId_3   := CASE WHEN MemberId_From <> 0 THEN NULL ELSE zc_ContainerLinkObject_Contract() END
                                                                                                     , inObjectId_3 := ContractId
                                                                                                     , inDescId_4   := zc_ContainerLinkObject_InfoMoney()
-                                                                                                    , inObjectId_4 := InfoMoneyId
+                                                                                                    , inObjectId_4 := CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
                                                                                                      )
                                                                  END
                                                , inAmount:= - SUM (OperSumm_Client)
