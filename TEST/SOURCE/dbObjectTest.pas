@@ -868,7 +868,7 @@ var
   JuridicalId: Integer;
 begin
   JuridicalId := TJuridicalTest.Create.GetDefault;
-  result := InsertUpdateBank(0, 1, 'Банк', 'МФО', JuridicalId)
+  result := InsertUpdateBank(0, -1, 'Банк', 'МФО', JuridicalId)
 end;
 
 function TBankTest.InsertUpdateBank;
@@ -921,7 +921,7 @@ begin
   JuridicalId := TJuridicalTest.Create.GetDefault;
   RouteId := TRouteTest.Create.GetDefault;
   RouteSortingId := TRouteSortingTest.Create.GetDefault;
-  result := InsertUpdatePartner(0, 1, 'Контрагенты', 'GLNCode', JuridicalId, RouteId, RouteSortingId);
+  result := InsertUpdatePartner(0, -1, 'Контрагенты', 'GLNCode', JuridicalId, RouteId, RouteSortingId);
 end;
 
 function TPartnerTest.InsertUpdatePartner;
@@ -976,7 +976,7 @@ begin
   JuridicalGroupId := TJuridicalGroupTest.Create.GetDefault;
   GoodsPropertyId := TGoodsPropertyTest.Create.GetDefault;
   InfoMoneyId:= TInfoMoneyTest.Create.GetDefault;;
-  result := InsertUpdateJuridical(0, 1, 'Юр. лицо', 'GLNCode', true, JuridicalGroupId, GoodsPropertyId, InfoMoneyId)
+  result := InsertUpdateJuridical(0, -1, 'Юр. лицо', 'GLNCode', true, JuridicalGroupId, GoodsPropertyId, InfoMoneyId)
 end;
 
 function TJuridicalTest.InsertUpdateJuridical;
@@ -1890,7 +1890,7 @@ begin
   BankId:= TBankTest.Create.GetDefault;
   CurrencyId:= TCurrencyTest.Create.GetDefault;
 
-  result := InsertUpdateBankAccount(0, 1, 'Расчетный счет', JuridicalId, BankId, CurrencyId);
+  result := InsertUpdateBankAccount(0, -1, 'Расчетный счет', JuridicalId, BankId, CurrencyId);
 end;
 
 function TBankAccountTest.InsertUpdateBankAccount;
