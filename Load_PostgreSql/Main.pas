@@ -1080,7 +1080,10 @@ begin
                   Add('            else Unit_parentAll.Id1_Postgres');
                   Add('       end as ParentId_Postgres');
                   Add('     , GoodsProperty_PG.Id_Postgres as GoodsPropertyId_PG');
-                  Add('     , isnull(zf_ChangeTVarCharMediumToNull(ClientInformation.GLNMain),ClientInformation.GLN) as GLNCode');
+                  Add('     , isnull(isnull(zf_ChangeTVarCharMediumToNull(ClientInformation.GLNMain),ClientInformation.GLN),'+FormatToVarCharServer_notNULL('')+') as GLNCode');
+                  Add('     , zc_rvYes() as zc_rvYes');
+                  Add('     , case when Unit.Id in (3, 165) then zc_rvYes() else zc_rvNo() end isCorporate'); // АЛАН + ИРНА-1
+                  Add('     , case when Unit.Id = 3 then _pgInfoMoney_Alan.Id3_Postgres when Unit.Id = 165 then _pgInfoMoney_Irna.Id3_Postgres else null end InfoMoneyId_PG'); // АЛАН + ИРНА-1
                   Add('from dba.Unit as Unit_all');
                   Add('     join dba.Unit on Unit.Id = isnull(zf_ChangeIntToNull(Unit_all.DolgByUnitID), isnull(zf_ChangeIntToNull(Unit_all.InformationFromUnitID), Unit_all.Id))');
                   Add('     left outer join dba.GoodsProperty_Postgres as GoodsProperty_PG on GoodsProperty_PG.Id= case when fIsClient_ATB(Unit.Id)=zc_rvYes() then 1'
@@ -1110,6 +1113,8 @@ begin
                   Add('     left outer join dba.Unit as Unit_parent8 on Unit_parent8.Id = Unit_parent7.ParentId');
                   Add('     left outer join dba.Unit as Unit_parent9 on Unit_parent9.Id = Unit_parent8.ParentId');
                   Add('     left outer join dba.ClientInformation on ClientInformation.ClientId = isnull( zf_ChangeIntToNull( Unit_all.InformationFromUnitID), Unit_all.Id)');
+                  Add('     left outer join dba._pgInfoMoney as _pgInfoMoney_Alan on _pgInfoMoney_Alan.ObjectCode = 20801'); // Общефирменные + Алан + Алан
+                  Add('     left outer join dba._pgInfoMoney as _pgInfoMoney_Irna on _pgInfoMoney_Irna.ObjectCode = 20901'); // Общефирменные + Ирна + Ирна
                   Add('where (Unit.Id1_Postgres is null'
                      +'   and isnull(Unit_all.findGoodsCard,zc_rvNo()) = zc_rvNo()'
                      +'   and fCheckUnitClientParentID(3,Unit.Id)=zc_rvNo()'    // АЛАН
@@ -1128,6 +1133,8 @@ begin
                   Add('       , ParentId_Postgres');
                   Add('       , GoodsPropertyId_PG');
                   Add('       , GLNCode');
+                  Add('       , isCorporate');
+                  Add('       , InfoMoneyId_PG');
                   Add('order by ObjectId')
              end
         else begin
@@ -1138,14 +1145,19 @@ begin
                   Add('     , null as ParentId_Postgres');
                   Add('     , null as GoodsPropertyId_PG');
                   Add('     , isnull(zf_ChangeTVarCharMediumToNull(ClientInformation.GLNMain),ClientInformation.GLN) as GLNCode');
+                  Add('     , zc_rvYes() as zc_rvYes');
+                  Add('     , case when Unit.Id in (3, 165) then zc_rvYes() else zc_rvNo() end isCorporate'); // АЛАН + ИРНА-1
+                  Add('     , case when Unit.Id = 3 then _pgInfoMoney_Alan.Id3_Postgres when Unit.Id = 165 then _pgInfoMoney_Irna.Id3_Postgres else null end InfoMoneyId_PG'); // АЛАН + ИРНА-1
                   Add('from dba.Bill');
                   Add('     join dba.Unit as Unit_all on Unit_all.Id = Bill.FromId and Unit_all.Id2_Postgres is null');
                   Add('     join dba.Unit on Unit.Id = isnull(zf_ChangeIntToNull(Unit_all.DolgByUnitID), isnull(zf_ChangeIntToNull(Unit_all.InformationFromUnitID), Unit_all.Id))');
                   Add('     left outer join dba.ClientInformation on ClientInformation.ClientId = isnull( zf_ChangeIntToNull( Unit_all.InformationFromUnitID), Unit_all.Id)');
+                  Add('     left outer join dba._pgInfoMoney as _pgInfoMoney_Alan on _pgInfoMoney_Alan.ObjectCode = 30201'); // Дебиторы + наши компании + Алан
+                  Add('     left outer join dba._pgInfoMoney as _pgInfoMoney_Irna on _pgInfoMoney_Irna.ObjectCode = 30202'); // Дебиторы + наши компании + Ирна
                   Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
                   //Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate('01.01.2011'))+' and '+FormatToDateServer_notNULL(StrToDate('01.01.2014'))
                      +'  and Bill.BillKind=zc_bkIncomeToUnit()');
-                  Add('group by ObjectId, ObjectCode, ObjectName, Id_Postgres, GLNCode');
+                  Add('group by ObjectId, ObjectCode, ObjectName, Id_Postgres, GLNCode, isCorporate, InfoMoneyId_PG');
                   Add('order by ObjectId');
              end; // if not isBill
         Open;
@@ -1166,6 +1178,7 @@ begin
         toStoredProc.Params.AddParam ('inIsCorporate',ftBoolean,ptInput, false);
         toStoredProc.Params.AddParam ('inJuridicalGroupId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsPropertyId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inInfoMoneyId',ftInteger,ptInput, 0);
         //
         while not EOF do
         begin
@@ -1176,10 +1189,11 @@ begin
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
              toStoredProc.Params.ParamByName('inGLNCode').Value:=FieldByName('GLNCode').AsString;
-             toStoredProc.Params.ParamByName('inIsCorporate').Value:=false;
+             if FieldByName('isCorporate').AsInteger=FieldByName('zc_rvYes').AsInteger then toStoredProc.Params.ParamByName('inIsCorporate').Value:=true else toStoredProc.Params.ParamByName('inIsCorporate').Value:=false;
              toStoredProc.Params.ParamByName('inJuridicalGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId_PG').AsInteger;
-             //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+             toStoredProc.Params.ParamByName('inInfoMoneyId').Value:=FieldByName('InfoMoneyId_PG').AsInteger;
+
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
