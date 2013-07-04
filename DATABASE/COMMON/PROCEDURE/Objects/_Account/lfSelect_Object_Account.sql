@@ -9,7 +9,8 @@ RETURNS TABLE (AccountGroupId Integer, AccountGroupCode Integer, AccountGroupNam
                AccountId Integer, AccountCode Integer, AccountName TVarChar,
                InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar,
                InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar, 
-               InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar)
+               InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar,
+               onComplete boolean)
 AS
 $BODY$
 BEGIN
@@ -40,7 +41,9 @@ BEGIN
            , lfObject_InfoMoney.InfoMoneyId     AS InfoMoneyId
            , lfObject_InfoMoney.InfoMoneyCode   AS InfoMoneyCode
            , lfObject_InfoMoney.InfoMoneyName   AS InfoMoneyName
-
+           
+           ,ObjectBoolean_onComplete.ValueData  AS onComplete
+           
        FROM Object AS Object_Account
             LEFT JOIN ObjectLink AS ObjectLink_Account_AccountGroup
                                  ON ObjectLink_Account_AccountGroup.ObjectId = Object_Account.Id 
@@ -61,9 +64,12 @@ BEGIN
 
             LEFT JOIN lfSelect_Object_InfoMoneyDestination() AS lfObject_InfoMoneyDestination ON lfObject_InfoMoneyDestination.InfoMoneyDestinationId = ObjectLink_Account_InfoMoneyDestination.ChildObjectId
             LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ObjectLink_Account_InfoMoneyDestination.ChildObjectId
-
+            
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_onComplete
+                                    ON ObjectBoolean_onComplete.ObjectId = Object_Account.Id 
+                                   AND ObjectBoolean_onComplete.DescId = zc_ObjectBoolean_Account_onComplete()
        WHERE Object_Account.DescId = zc_Object_Account();
-          
+
 END;
 $BODY$
 
@@ -74,7 +80,7 @@ ALTER FUNCTION lfSelect_Object_Account () OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
-
+ 04.07.13          * + onComplete
  03.07.13                                        * 1251Cyr
  29.06.13          *
 */
