@@ -8,12 +8,13 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                GoodsGroupId Integer, GoodsGroupCode Integer, GoodsGroupName TVarChar,
                MeasureId Integer, MeasureCode Integer, MeasureName TVarChar,
+               TradeMarkId Integer,  TradeMarkCode Integer, TradeMarkName TVarChar, 
                InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar,
                InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar,
                InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar,
                Weight TFloat, isErased boolean) AS
-$BODY$BEGIN
-
+$BODY$
+BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Goods());
 
@@ -30,6 +31,10 @@ $BODY$BEGIN
          , Object_Measure.Id            AS MeasureId
          , Object_Measure.ObjectCode    AS MeasureCode
          , Object_Measure.ValueData     AS MeasureName
+
+         , Object_TradeMark.Id         AS TradeMarkId
+         , Object_TradeMark.ObjectCode AS TradeMarkCode
+         , Object_TradeMark.ValueData  AS TradeMarkName
          
          , Object_InfoMoney.Id         AS InfoMoneyId
          , Object_InfoMoney.ObjectCode AS InfoMoneyCode
@@ -56,7 +61,12 @@ $BODY$BEGIN
                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-                 
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                               ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id 
+                              AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+          LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+          
           LEFT JOIN ObjectFloat AS ObjectFloat_Weight ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
                 AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
                 
@@ -77,10 +87,10 @@ $BODY$BEGIN
       
   WHERE Object_Goods.DescId = zc_Object_Goods();
   
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 100;
+END;
+$BODY$
+
+LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_Goods(TVarChar) OWNER TO postgres;
 
 
@@ -88,6 +98,7 @@ ALTER FUNCTION gpSelect_Object_Goods(TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.07.13          * + TradeMark             
  21.06.13          *              
  11.06.13          *
  03.06.13          

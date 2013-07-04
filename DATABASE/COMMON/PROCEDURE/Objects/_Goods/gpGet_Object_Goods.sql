@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Goods(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                GoodsGroupId Integer, GoodsGroupCode Integer, GoodsGroupName TVarChar, 
-               MeasureId Integer,  MeasureCode Integer, MeasureName TVarChar, 
+               MeasureId Integer,  MeasureCode Integer, MeasureName TVarChar,
+               TradeMarkId Integer,  TradeMarkCode Integer, TradeMarkName TVarChar, 
                InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar,
                InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar, 
                InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar,
@@ -29,52 +30,65 @@ BEGIN
            , CAST (0 as Integer)   AS GoodsGroupId
            , CAST (0 as Integer)   AS GoodsGroupCode
            , CAST ('' as TVarChar) AS GoodsGroupName 
+           
            , CAST (0 as Integer)   AS MeasureId
            , CAST (0 as Integer)   AS MeasureCode
            , CAST ('' as TVarChar) AS MeasureName
+           
+           , CAST (0 as Integer)   AS TradeMarkId
+           , CAST (0 as Integer)   AS TradeMarkCode
+           , CAST ('' as TVarChar) AS TradeMarkName
+           
            , CAST (0 as Integer)   AS InfoMoneyId
            , CAST (0 as Integer)   AS InfoMoneyCode
            , CAST ('' as TVarChar) AS InfoMoneyName
+           
            , CAST (0 as Integer)   AS InfoMoneyGroupId
            , CAST (0 as Integer)   AS InfoMoneyGroupCode
            , CAST ('' as TVarChar) AS InfoMoneyGroupName
+           
            , CAST (0 as Integer)   AS InfoMoneyDestinationId
            , CAST (0 as Integer)   AS InfoMoneyDestinationCode
            , CAST ('' as TVarChar) AS InfoMoneyDestinationName
+           
            , CAST ('' as TVarChar) AS Weight
            , CAST (NULL AS Boolean) AS isErased
        FROM Object 
        WHERE Object.DescId = zc_Object_Goods();
    ELSE
-     RETURN QUERY 
-     SELECT 
-           Object_Goods.Id             AS Id
-         , Object_Goods.ObjectCode     AS Code
-         , Object_Goods.ValueData      AS Name
+       RETURN QUERY 
+       SELECT 
+             Object_Goods.Id             AS Id
+           , Object_Goods.ObjectCode     AS Code
+           , Object_Goods.ValueData      AS Name
          
-         , Object_GoodsGroup.Id         AS GoodsGroupId
-         , Object_GoodsGroup.ObjectCode AS GoodsGroupCode
-         , Object_GoodsGroup.ValueData  AS GoodsGroupName 
+           , Object_GoodsGroup.Id         AS GoodsGroupId
+           , Object_GoodsGroup.ObjectCode AS GoodsGroupCode
+           , Object_GoodsGroup.ValueData  AS GoodsGroupName 
           
-         , Object_Measure.Id            AS MeasureId
-         , Object_Measure.ObjectCode    AS MeasureCode
-         , Object_Measure.ValueData     AS MeasureName
+           , Object_Measure.Id            AS MeasureId
+           , Object_Measure.ObjectCode    AS MeasureCode
+           , Object_Measure.ValueData     AS MeasureName
+
+           , Object_TradeMark.Id         AS TradeMarkId
+           , Object_TradeMark.ObjectCode AS TradeMarkCode
+           , Object_TradeMark.ValueData  AS TradeMarkName
          
-         , Object_InfoMoney.Id         AS InfoMoneyId
-         , Object_InfoMoney.ObjectCode AS InfoMoneyCode
-         , Object_InfoMoney.ValueData  AS InfoMoneyName
+           , Object_InfoMoney.Id         AS InfoMoneyId
+           , Object_InfoMoney.ObjectCode AS InfoMoneyCode
+           , Object_InfoMoney.ValueData  AS InfoMoneyName
          
-         , Object_InfoMoneyGroup.Id         AS InfoMoneyGroupId
-         , Object_InfoMoneyGroup.ObjectCode AS InfoMoneyGroupCode
-         , Object_InfoMoneyGroup.ValueData  AS InfoMoneyGroupName
+           , Object_InfoMoneyGroup.Id         AS InfoMoneyGroupId
+           , Object_InfoMoneyGroup.ObjectCode AS InfoMoneyGroupCode
+           , Object_InfoMoneyGroup.ValueData  AS InfoMoneyGroupName
          
-         , Object_InfoMoneyDestination.Id         AS InfoMoneyDestinationId
-         , Object_InfoMoneyDestination.ObjectCode AS InfoMoneyDestinationCode
-         , Object_InfoMoneyDestination.ValueData  AS InfoMoneyDestinationName
+           , Object_InfoMoneyDestination.Id         AS InfoMoneyDestinationId
+           , Object_InfoMoneyDestination.ObjectCode AS InfoMoneyDestinationCode
+           , Object_InfoMoneyDestination.ValueData  AS InfoMoneyDestinationName
          
-         , ObjectFloat_Weight.ValueData AS Weight
-         , Object_Goods.isErased       AS isErased
-     FROM OBJECT AS Object_Goods
+           , ObjectFloat_Weight.ValueData AS Weight
+           , Object_Goods.isErased       AS isErased
+       FROM OBJECT AS Object_Goods
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                               AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
@@ -84,7 +98,12 @@ BEGIN
                                ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
                               AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-                 
+          
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                               ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id 
+                              AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+          LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+
           LEFT JOIN ObjectFloat AS ObjectFloat_Weight 
                                 ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
                                AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
@@ -104,9 +123,9 @@ BEGIN
                               AND ObjectLink_InfoMoney_InfoMoneyDestination.DescId = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
           LEFT JOIN Object AS Object_InfoMoneyDestination ON Object_InfoMoneyDestination.Id = ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId              
           
-     WHERE Object_Goods.Id = inId;
+       WHERE Object_Goods.Id = inId;
 
-  END IF;
+   END IF;
   
 END;
 $BODY$
@@ -119,6 +138,7 @@ ALTER FUNCTION gpGet_Object_Goods (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 02.07.13          * + TradeMark             
  02.07.13                                        * 1251Cyr
  21.06.13          *              
  11.06.13          *

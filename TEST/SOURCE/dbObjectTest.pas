@@ -119,7 +119,7 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdateGoods(Id, Code: Integer; Name: String;
-                               GoodsGroupId, MeasureId: Integer; Weight: Double; ItemInfoMoneyId: Integer): integer;
+                               GoodsGroupId, MeasureId, TradeMarkId,ItemInfoMoneyId: Integer; Weight: Double): integer;
     constructor Create; override;
   end;
 
@@ -1215,11 +1215,11 @@ end;
 
 function TGoodsTest.InsertDefault: integer;
 begin
-  result := InsertUpdateGoods(0, 1, 'Товар 1', 0, 0, 1.0, 0)
+  result := InsertUpdateGoods(0, -1, 'Товар 1', 0, 0, 0, 0, 1.0)
 end;
 
 function TGoodsTest.InsertUpdateGoods(Id, Code: Integer; Name: String;
-  GoodsGroupId, MeasureId: Integer; Weight: Double; ItemInfoMoneyId: Integer): integer;
+  GoodsGroupId, MeasureId, TradeMarkId, ItemInfoMoneyId: Integer; Weight: Double): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -1227,8 +1227,9 @@ begin
   FParams.AddParam('inName', ftString, ptInput, Name);
   FParams.AddParam('inGoodsGroupId', ftInteger, ptInput, GoodsGroupId);
   FParams.AddParam('inMeasureId', ftInteger, ptInput, MeasureId);
-  FParams.AddParam('inWeight', ftFloat, ptInput, Weight);
+  FParams.AddParam('inTradeMarkId', ftInteger, ptInput, TradeMarkId);
   FParams.AddParam('inItemInfoMoneyId', ftInteger, ptInput, ItemInfoMoneyId);
+  FParams.AddParam('inWeight', ftFloat, ptInput, Weight);
   result := InsertUpdate(FParams);
 end;
 
