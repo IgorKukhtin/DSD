@@ -9,7 +9,18 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, cxGridLevel, cxClasses,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, Datasnap.DBClient, dsdDB, cxPropertiesStore, dxBar,
-  Vcl.ActnList, dsdAction, ParentForm, DataModul;
+  Vcl.ActnList, dsdAction, ParentForm, DataModul, dxSkinsCore, dxSkinBlack,
+  dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom,
+  dxSkinDarkSide, dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TBalanceForm = class(TParentForm)
@@ -35,6 +46,13 @@ type
     cxGridDBTableViewColumn8: TcxGridDBColumn;
     actExportToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
+    cxGridDBTableViewColumn9: TcxGridDBColumn;
+    cxGridDBTableViewColumn10: TcxGridDBColumn;
+    cxGridDBTableViewColumn11: TcxGridDBColumn;
+    cxGridDBTableViewColumn12: TcxGridDBColumn;
+    cxGridDBTableViewColumn13: TcxGridDBColumn;
+    cxGridDBTableViewColumn14: TcxGridDBColumn;
+    cxGridDBTableViewColumn15: TcxGridDBColumn;
   private
     { Private declarations }
   public

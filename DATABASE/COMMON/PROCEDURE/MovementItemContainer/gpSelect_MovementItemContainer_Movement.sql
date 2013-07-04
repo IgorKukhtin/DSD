@@ -45,7 +45,7 @@ BEGIN
        FROM 
            (SELECT 
                   SUM (MovementItemContainer.Amount)  AS Amount
-                , Container.AccountId
+                , Container.ObjectId
                 , Object_by.ObjectCode         AS ByObjectCode
                 , Object_by.ValueData          AS ByObjectName
                 , Object_GoodsGroup.ObjectCode AS GoodsGroupCode
@@ -79,7 +79,7 @@ BEGIN
 
             WHERE MovementItemContainer.MovementId = inMovementId
               AND MovementItemContainer.Amount > 0
-            GROUP BY Container.AccountId
+            GROUP BY Container.ObjectId
                    , Object_by.ObjectCode
                    , Object_by.ValueData
                    , Object_GoodsGroup.ObjectCode
@@ -87,7 +87,7 @@ BEGIN
                    , Object_Goods.ObjectCode
                    , Object_Goods.ValueData
            ) AS tmpMovementItemContainer
-           LEFT JOIN lfSelect_Object_Account() AS lfObject_Account ON lfObject_Account.AccountId = tmpMovementItemContainer.AccountId
+           LEFT JOIN lfSelect_Object_Account() AS lfObject_Account ON lfObject_Account.AccountId = tmpMovementItemContainer.ObjectId
 
       UNION ALL
        SELECT
@@ -116,7 +116,7 @@ BEGIN
        FROM 
            (SELECT 
                   -SUM (MovementItemContainer.Amount)  AS Amount
-                , Container.AccountId
+                , Container.ObjectId
                 , Object_by.ObjectCode         AS ByObjectCode
                 , Object_by.ValueData          AS ByObjectName
                 , Object_GoodsGroup.ObjectCode AS GoodsGroupCode
@@ -150,7 +150,7 @@ BEGIN
 
             WHERE MovementItemContainer.MovementId = inMovementId
               AND MovementItemContainer.Amount < 0
-            GROUP BY Container.AccountId
+            GROUP BY Container.ObjectId
                    , Object_by.ObjectCode
                    , Object_by.ValueData
                    , Object_GoodsGroup.ObjectCode
@@ -158,8 +158,7 @@ BEGIN
                    , Object_Goods.ObjectCode
                    , Object_Goods.ValueData
            ) AS tmpMovementItemContainer
-           LEFT JOIN lfSelect_Object_Account() AS lfObject_Account ON lfObject_Account.AccountId = tmpMovementItemContainer.AccountId
-      ;
+           LEFT JOIN lfSelect_Object_Account() AS lfObject_Account ON lfObject_Account.AccountId = tmpMovementItemContainer.ObjectId;
      
 END;
 $BODY$
@@ -172,6 +171,7 @@ ALTER FUNCTION gpSelect_MovementItemContainer_Movement (Integer, TVarChar) OWNER
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
 
+ 04.07.13                                        * rename AccountId to ObjectId
  03.07.13                                        *
 */
 

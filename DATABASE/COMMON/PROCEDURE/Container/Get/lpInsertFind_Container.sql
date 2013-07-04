@@ -74,7 +74,7 @@ BEGIN
         JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
         JOIN _tmpContainer ON _tmpContainer.ObjectId = COALESCE (ContainerLinkObject.ObjectId, 0)
                           AND _tmpContainer.DescId = ContainerLinkObject.DescId
-   WHERE Container.AccountId = inObjectId
+   WHERE Container.ObjectId = inObjectId
      AND Container.DescId = inContainerDescId;*/
 
 
@@ -129,7 +129,7 @@ BEGIN
                                       ON ContainerLinkObject_10.ObjectId = inObjectId_10
                                      AND ContainerLinkObject_10.DescId = inDescId_10
                                      AND ContainerLinkObject_10.ContainerId = Container.Id
-   WHERE Container.AccountId = inObjectId
+   WHERE Container.ObjectId = inObjectId
      AND Container.DescId = inContainerDescId
      AND (ContainerLinkObject_01.ObjectId IS NOT NULL OR inContainerDescId = zc_Container_Count())
      AND (ContainerLinkObject_02.ObjectId IS NOT NULL OR inContainerDescId = zc_Container_Count())
@@ -156,8 +156,8 @@ BEGIN
    IF NOT FOUND
    THEN
        -- добавили Остаток
-       INSERT INTO Container (DescId, AccountId)
-           VALUES (inContainerDescId, inObjectId) RETURNING Id INTO  vbContainerId;
+       INSERT INTO Container (DescId, ObjectId, Amount)
+           VALUES (inContainerDescId, inObjectId, 0) RETURNING Id INTO  vbContainerId;
 
        -- добавили Аналитики
        INSERT INTO ContainerLinkObject (DescId, ContainerId, ObjectId)
@@ -181,6 +181,9 @@ ALTER FUNCTION lpInsertFind_Container (Integer, Integer, Integer, Integer, Integ
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
 
+
+ 04.07.13                                        * rename AccountId to ObjectId
+ 04.07.13                                        * Amount
  03.07.13                                        * то что здорово, работает не правильно :)))
  02.07.13                                        * А здорово получилось
 */

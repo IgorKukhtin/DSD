@@ -1,54 +1,101 @@
 -- Function: gpReport_Balance()
 
---DROP FUNCTION gpReport_Balance(TDateTime, TDateTime, TVarChar);
+-- DROP FUNCTION gpReport_Balance (TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Balance(
-IN inStartDate   TDateTime,
-IN inEndDate     TDateTime,
-IN inSession     TVarChar       /* текущий пользователь */)
-RETURNS TABLE (RootName TVarChar, AccountGroup TVarChar, 
-               AccountDirectionName TVarChar, InfoMoneyDestinationName TVarChar, AccountName TVarChar, 
-               StartRemains TFloat, MovementSumm TFloat, EndRemains TFloat) AS
+    IN inStartDate   TDateTime , -- 
+    IN inEndDate     TDateTime , --
+    IN inSession     TVarChar    -- сессия пользователя
+)
+RETURNS TABLE (RootName TVarChar, AccountGroupCode Integer, AccountGroupName TVarChar, AccountDirectionCode Integer, AccountDirectionName TVarChar, AccountCode Integer, AccountName  TVarChar
+             , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyCode_Detail Integer, InfoMoneyName_Detail  TVarChar
+             , AmountDebetStart TFloat, AmountKreditStart TFloat, AmountDebet TFloat, AmountKredit TFloat, AmountDebetEnd TFloat, AmountKreditEnd TFloat
+              )
+AS
 $BODY$BEGIN
 
-   --PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
+     -- проверка прав пользователя на вызов процедуры
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Balance());
 
-   RETURN QUERY 
-SELECT
-   CAST(AccountPlan.RootName AS TVarChar) AS RootName,
-   CAST(AccountPlan.AccountGroup AS TVarChar) AS AccountGroup, 
-   CAST(AccountPlan.AccountDirectionName AS TVarChar) AS AccountDirectionName,
-   CAST(AccountPlan.InfoMoneyDestinationName AS TVarChar) AS InfoMoneyDestinationName, 
-   OBJECT.ValueData AS AccountName,
-   CAST(Report.StartRemains AS TFloat) AS StartRemains,
-   CAST(Report.OperSumm AS TFloat) AS OperSumm,
-   CAST(Report.EndRemains AS TFloat) AS EndRemains
-FROM 
-(SELECT SUM(Report.Remains) AS EndRemains, SUM(Report.OperSumm) AS OperSumm, SUM(Report.Remains - Report.OperSumm) AS StartRemains, Report.AccountId
-FROM (SELECT Container.Amount - COALESCE(SUM(movementitemcontainer.Amount), 0) AS Remains,
-            COALESCE(SUM(Oper.amount), 0) AS OperSumm,
-            Container.AccountId
-      FROM Container 
-LEFT JOIN movementitemcontainer ON movementitemcontainer.Containerid = container.id
-   AND movementitemcontainer.operdate > inEndDate
-LEFT JOIN movementitemcontainer AS Oper ON Oper.Containerid = container.id
-   AND Oper.operdate BETWEEN inStartDate AND inEndDate
-WHERE Container.DescId = zc_Container_Summ()
-     GROUP BY Container.AccountId, Container.Id
-     HAVING (Container.Amount - COALESCE(SUM(movementitemcontainer.Amount), 0) <> 0) OR (COALESCE(SUM(Oper.amount), 0) <> 0)) AS Report
+     RETURN QUERY 
+       SELECT
+             CAST (CASE WHEN lfObject_Account.AccountCode >= 70000 THEN 'ПАССИВЫ' ELSE 'АКТИВЫ' END AS TVarChar) AS RootName
 
-GROUP BY Report.AccountId) AS Report
-JOIN OBJECT 
- ON OBJECT.Id = Report.AccountId,
- (SELECT 'Активы' RootName, 'Запасы' AccountGroup, 'на складахГП' AccountDirectionName, 'Мясное сырье' InfoMoneyDestinationName, 4001 AS ID
-UNION SELECT 'Пассивы' RootName, 'Кредиторы' AccountGroup, 'поставщики' AccountDirectionName, 'Мясное сырье' InfoMoneyDestinationName, 4002 AS ID) AS AccountPlan
-WHERE AccountPlan.Id = Report.AccountID;
+           , lfObject_Account.AccountGroupCode                AS AccountGroupCode
+           , lfObject_Account.AccountGroupName                AS AccountGroupName
+           , lfObject_Account.AccountDirectionCode            AS AccountDirectionCode
+           , lfObject_Account.AccountDirectionName            AS AccountDirectionName
+           , lfObject_Account.AccountCode                     AS AccountCode
+           , lfObject_Account.AccountName                     AS AccountName
+
+           , lfObject_InfoMoney.InfoMoneyCode
+           , lfObject_InfoMoney.InfoMoneyName
+           , lfObject_InfoMoney_Detail.InfoMoneyCode AS InfoMoneyCode_Detail
+           , lfObject_InfoMoney_Detail.InfoMoneyName AS InfoMoneyName_Detail
+
+           , CAST (CASE WHEN tmpReportOperation.AmountRemainsStart > 0 THEN tmpReportOperation.AmountRemainsStart ELSE 0 END AS TFloat) AS AmountDebetStart
+           , CAST (CASE WHEN tmpReportOperation.AmountRemainsStart < 0 THEN -tmpReportOperation.AmountRemainsStart ELSE 0 END AS TFloat) AS AmountKreditStart
+           , CAST (tmpReportOperation.AmountDebet AS TFloat) AS AmountDebet
+           , CAST (tmpReportOperation.AmountKredit AS TFloat) AS AmountKredit
+           , CAST (CASE WHEN tmpReportOperation.AmountRemainsEnd > 0 THEN tmpReportOperation.AmountRemainsEnd ELSE 0 END AS TFloat) AS AmountDebetEnd
+           , CAST (CASE WHEN tmpReportOperation.AmountRemainsEnd < 0 THEN -tmpReportOperation.AmountRemainsEnd ELSE 0 END AS TFloat) AS AmountKreditEnd
+       FROM 
+           lfSelect_Object_Account() AS lfObject_Account
+           LEFT JOIN
+           (SELECT tmpMIContainer_Remains.AccountId
+                 , ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId
+                 , ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail
+                 , SUM (tmpMIContainer_Remains.AmountRemainsEnd - tmpMIContainer_Remains.AmountDebet + tmpMIContainer_Remains.AmountKredit) AS AmountRemainsStart
+                 , SUM (tmpMIContainer_Remains.AmountDebet) AS AmountDebet
+                 , SUM (tmpMIContainer_Remains.AmountKredit) AS AmountKredit
+                 , SUM (tmpMIContainer_Remains.AmountRemainsEnd) AS AmountRemainsEnd
+            FROM
+                (SELECT Container.ObjectId AS AccountId
+                      , Container.Id AS ContainerId
+                      , COALESCE (SUM (CASE WHEN MIContainer_byPeriod.Amount > 0 THEN MIContainer_byPeriod.Amount ELSE 0 END), 0) AS AmountDebet
+                      , COALESCE (SUM (CASE WHEN MIContainer_byPeriod.Amount < 0 THEN -MIContainer_byPeriod.Amount ELSE 0 END), 0) AS AmountKredit
+                      , Container.Amount - COALESCE (SUM (MIContainer_byEndDate.Amount), 0) AS AmountRemainsEnd
+                 FROM Container
+                      LEFT JOIN MovementItemContainer AS MIContainer_byEndDate
+                                                      ON MIContainer_byEndDate.Containerid = Container.id
+                                                     AND MIContainer_byEndDate.OperDate > inEndDate
+                      LEFT JOIN MovementItemContainer AS MIContainer_byPeriod
+                                                      ON MIContainer_byPeriod.Containerid = Container.id
+                                                     AND MIContainer_byPeriod.OperDate BETWEEN inStartDate AND inEndDate
+                 WHERE Container.DescId = zc_Container_Summ()
+                 GROUP BY Container.ObjectId
+                        , Container.Amount
+                        , Container.Id
+                 HAVING (Container.Amount - COALESCE (SUM (MIContainer_byEndDate.Amount), 0) <> 0) -- AmountRemainsEnd <> 0
+                     OR (COALESCE (SUM (CASE WHEN MIContainer_byPeriod.Amount > 0 THEN MIContainer_byPeriod.Amount ELSE 0 END), 0) <> 0) -- AmountDebet <> 0
+                     OR (COALESCE (SUM (CASE WHEN MIContainer_byPeriod.Amount < 0 THEN -MIContainer_byPeriod.Amount ELSE 0 END), 0) <> 0) -- AmountKredit <> 0
+                ) AS tmpMIContainer_Remains
+                LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
+                                              ON ContainerLinkObject_InfoMoney.ContainerId = tmpMIContainer_Remains.ContainerId
+                                             AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+                LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
+                                              ON ContainerLinkObject_InfoMoneyDetail.ContainerId = tmpMIContainer_Remains.ContainerId
+                                             AND ContainerLinkObject_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
+            GROUP BY tmpMIContainer_Remains.AccountId
+                   , ContainerLinkObject_InfoMoney.ObjectId
+                   , ContainerLinkObject_InfoMoneyDetail.ObjectId
+           ) AS tmpReportOperation ON tmpReportOperation.AccountId = lfObject_Account.AccountId
+           LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = tmpReportOperation.InfoMoneyId
+           LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney_Detail ON lfObject_InfoMoney_Detail.InfoMoneyId = CASE WHEN COALESCE (tmpReportOperation.InfoMoneyId_Detail, 0) = 0 THEN tmpReportOperation.InfoMoneyId ELSE tmpReportOperation.InfoMoneyId_Detail END;
   
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 100;
-ALTER FUNCTION gpReport_Balance(TDateTime, TDateTime, TVarChar)
-  OWNER TO postgres;
+END;
+$BODY$
 
--- SELECT * FROM gpReport_Balance('2')
+LANGUAGE PLPGSQL VOLATILE;
+ALTER FUNCTION gpReport_Balance (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+
+
+/*-------------------------------------------------------------------------------
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+
+ 04.07.13                                        *
+*/
+
+-- тест
+-- SELECT * FROM gpReport_Balance (inStartDate:= '01.01.2013', inEndDate:= '01.01.2013', inSession:= '2')
