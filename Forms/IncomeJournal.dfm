@@ -60,17 +60,17 @@ inherited IncomeJournalForm: TIncomeJournalForm
           item
             Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
             ImageIndex = 11
-            Value = 0
+            Value = 1
           end
           item
             Description = #1055#1088#1086#1074#1077#1076#1077#1085
             ImageIndex = 12
-            Value = 1
+            Value = 2
           end
           item
             Description = #1059#1076#1072#1083#1077#1085
             ImageIndex = 13
-            Value = 2
+            Value = 3
           end>
       end
       object colInvNumber: TcxGridDBColumn

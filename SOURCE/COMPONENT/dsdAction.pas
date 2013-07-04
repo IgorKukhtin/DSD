@@ -558,7 +558,7 @@ end;
 procedure TdsdChangeMovementStatus.DataSetChanged;
 begin
   Enabled := (DataSource.DataSet.RecordCount > 0)
-    and (DataSource.DataSet.FieldByName('StatusCode').AsInteger <> Integer(Status));
+    and (DataSource.DataSet.FieldByName('StatusCode').AsInteger <> (Integer(Status) + 1));
 end;
 
 function TdsdChangeMovementStatus.Execute: boolean;
@@ -566,7 +566,7 @@ begin
   result := inherited Execute;
   if result and Assigned(DataSource) and Assigned(DataSource.DataSet) then begin
      DataSource.DataSet.Edit;
-     DataSource.DataSet.FieldByName('StatusCode').AsInteger := Integer(Status);
+     DataSource.DataSet.FieldByName('StatusCode').AsInteger := Integer(Status) + 1;
      DataSource.DataSet.Post;
   end;
 end;

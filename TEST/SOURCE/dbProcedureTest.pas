@@ -43,6 +43,7 @@ begin
   ExecFile(ProcedurePath + 'Container\Get\lpGet_Container2.sql', ZQuery);
   ExecFile(ProcedurePath + 'Container\Get\lpGet_Container3.sql', ZQuery);
   ExecFile(ProcedurePath + 'Container\Get\lpGet_Container4.sql', ZQuery);
+  ExecFile(ProcedurePath + 'Container\Get\lpInsertFind_Container.sql', ZQuery);
 end;
 
 procedure TdbProcedureTest.CreateFunction;
@@ -142,7 +143,7 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_Account\lfSelect_Object_Account.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Account\gpSelect_Object_Account.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Account\gpGet_Object_Account.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\_Account\lpInsertFind_Account.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_Account\lpInsertFind_Object_Account.sql', ZQuery);
 
   ExecFile(ProcedurePath + 'OBJECTS\_AccountDirection\lfSelect_Object_AccountDirection.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_AccountDirection\gpInsertUpdate_Object_AccountDirection.sql', ZQuery);
