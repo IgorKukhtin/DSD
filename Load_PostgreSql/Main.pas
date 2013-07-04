@@ -2983,6 +2983,7 @@ insert into dba.GoodsProperty_Postgres (Id, Name_PG)
                                   // fIsClient_Obgora
                                   // fIsClient_Tavriya
 
+
 alter table dba.Bill add Id_Postgres integer null;
 alter table dba.BillItems add Id_Postgres integer null;
 alter table dba.BillItemsReceipt add Id_Postgres integer null;

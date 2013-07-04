@@ -110,7 +110,7 @@ inherited BalanceForm: TBalanceForm
         Width = 100
       end
       object cxGridDBTableViewColumn12: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        Caption = #1050#1086#1076' '#1089#1090'. '#1085#1072#1079#1085#1072#1095'.'
         DataBinding.FieldName = 'InfoMoneyCode'
         Width = 60
       end
@@ -120,7 +120,7 @@ inherited BalanceForm: TBalanceForm
         Width = 80
       end
       object cxGridDBTableViewColumn14: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1085#1072#1079#1085'-'#1076#1077#1090#1072#1083
+        Caption = #1050#1086#1076' '#1089#1090'. '#1085#1072#1079#1085#1072#1095'.'#1076#1077#1090'.'
         DataBinding.FieldName = 'InfoMoneyCode_Detail'
         Width = 60
       end
