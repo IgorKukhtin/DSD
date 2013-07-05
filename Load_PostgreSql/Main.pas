@@ -629,6 +629,7 @@ begin
         Add('     , Measure.Id_Postgres as MeasureId_Postgres');
         Add('     , Goods_parent.Id_Postgres as ParentId_Postgres');
         Add('     , _pgInfoMoney.Id3_Postgres as InfoMoneyId_Postgres');
+        Add('     , 0 AS TradeMarkId_PG');
         Add('from dba.GoodsProperty');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.Goods as Goods_parent on Goods_parent.Id = Goods.ParentId');
@@ -716,8 +717,9 @@ begin
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inGoodsGroupId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inMeasureId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inWeight',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inTradeMarkId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inInfoMoneyId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inWeight',ftFloat,ptInput, 0);
         //
         while not EOF do
         begin
@@ -727,11 +729,12 @@ begin
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inWeight').Value:=FieldByName('Ves_onMeasure').AsFloat;
              toStoredProc.Params.ParamByName('inGoodsGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inMeasureId').Value:=FieldByName('MeasureId_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inWeight').Value:=FieldByName('Ves_onMeasure').AsFloat;
              toStoredProc.Params.ParamByName('inInfoMoneyId').Value:=FieldByName('InfoMoneyId_Postgres').AsInteger;
-             //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
+             toStoredProc.Params.ParamByName('inTradeMarkId').Value:=FieldByName('TradeMarkId_PG').AsInteger;
+
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
