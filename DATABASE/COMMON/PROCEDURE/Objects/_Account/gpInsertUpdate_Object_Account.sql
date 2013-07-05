@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Account(
     IN inAccountDirectionId     Integer,    -- Аналитика счета (место)
     IN inInfoMoneyDestinationId Integer,    -- Аналитика счета (назначение)
     IN inInfoMoneyId            Integer,    -- Управленческие аналитики
+    IN inIAccountKindId         Integer,    -- Виды счетов
     IN inSession                TVarChar    -- сессия пользователя
 )
   RETURNS Integer AS
@@ -35,6 +36,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Account_AccountDirection(), ioId, inAccountDirectionId);
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Account_InfoMoneyDestination(), ioId, inInfoMoneyDestinationId);
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Account_InfoMoney(), ioId, inInfoMoneyId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Account_AccountKind(), ioId, inIAccountKindId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -43,14 +45,13 @@ END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Account (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar)  OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Account (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar)  OWNER TO postgres;
 
   
-/*-------------------------------------------------------------------------------*/
-/*
+/*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-
+ 05.07.13          * + AccountKind
  02.07.13                                        * change CodePage
  17.06.13          *
 */

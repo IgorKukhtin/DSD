@@ -131,7 +131,8 @@ INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_PartionMovement', 'Партии накладных' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PartionMovement');
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_TradeMark', 'Торговые марки' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_TradeMark');
-
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_AccountKind', 'Виды счетов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_AccountKind');
   
 -- INSERT INTO ObjectDesc (Code, ItemName)
 --  SELECT 'zc_Object_AccountPlan', 'План счетов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_AccountPlan');

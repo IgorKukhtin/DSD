@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar, 
                InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar, 
                InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, 
+               AccountKindId Integer, AccountKindCode Integer, AccountKindName TVarChar,
                onComplete boolean, isErased boolean)
 AS
 $BODY$
@@ -44,6 +45,10 @@ BEGIN
            , lfObject_InfoMoney.InfoMoneyCode   AS InfoMoneyCode
            , lfObject_InfoMoney.InfoMoneyName   AS InfoMoneyName
            
+           , Object_AccountKind.Id          AS AccountKindId
+           , Object_AccountKind.ObjectCode  AS AccountKindCode
+           , Object_AccountKind.ValueData   AS AccountKindName
+
            , ObjectBoolean_onComplete.ValueData AS onComplete
            , Object_Account.isErased      AS isErased
 
@@ -71,6 +76,12 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_onComplete
                                     ON ObjectBoolean_onComplete.ObjectId = Object_Account.Id 
                                    AND ObjectBoolean_onComplete.DescId = zc_ObjectBoolean_Account_onComplete()
+            
+            LEFT JOIN ObjectLink AS ObjectLink_Account_AccountKind
+                                 ON ObjectLink_Account_AccountKind.ObjectId = Object_Account.Id
+                                AND ObjectLink_Account_AccountKind.DescId = zc_ObjectLink_Account_AccountKind()
+            LEFT JOIN Object AS Object_AccountKind ON Object_AccountKind.Id = ObjectLink_Account_AccountKind.ChildObjectId
+
        WHERE Object_Account.DescId = zc_Object_Account();
 
 END;
@@ -83,7 +94,7 @@ ALTER FUNCTION gpSelect_Object_Account (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 04.07.13          * + onComplete
+ 04.07.13          * + onComplete... +AccountKind...
  03.07.13                                         *  1251Cyr
  24.06.13                                         *  errors
  21.06.13          *                              *  создание врем.таблиц

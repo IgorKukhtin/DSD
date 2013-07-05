@@ -10,6 +10,7 @@ RETURNS TABLE (AccountGroupId Integer, AccountGroupCode Integer, AccountGroupNam
                InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar,
                InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar, 
                InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar,
+               AccountKindId Integer, AccountKindCode Integer, AccountKindName TVarChar,
                onComplete boolean)
 AS
 $BODY$
@@ -41,6 +42,10 @@ BEGIN
            , lfObject_InfoMoney.InfoMoneyId     AS InfoMoneyId
            , lfObject_InfoMoney.InfoMoneyCode   AS InfoMoneyCode
            , lfObject_InfoMoney.InfoMoneyName   AS InfoMoneyName
+
+           , Object_AccountKind.Id          AS AccountKindId
+           , Object_AccountKind.ObjectCode  AS AccountKindCode
+           , Object_AccountKind.ValueData   AS AccountKindName
            
            ,ObjectBoolean_onComplete.ValueData  AS onComplete
            
@@ -68,6 +73,12 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_onComplete
                                     ON ObjectBoolean_onComplete.ObjectId = Object_Account.Id 
                                    AND ObjectBoolean_onComplete.DescId = zc_ObjectBoolean_Account_onComplete()
+                                   
+            LEFT JOIN ObjectLink AS ObjectLink_Account_AccountKind
+                                 ON ObjectLink_Account_AccountKind.ObjectId = Object_Account.Id
+                                AND ObjectLink_Account_AccountKind.DescId = zc_ObjectLink_Account_AccountKind()
+            LEFT JOIN Object AS Object_AccountKind ON Object_AccountKind.Id = ObjectLink_Account_AccountKind.ChildObjectId
+                                   
        WHERE Object_Account.DescId = zc_Object_Account();
 
 END;

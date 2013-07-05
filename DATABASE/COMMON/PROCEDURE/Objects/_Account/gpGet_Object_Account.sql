@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar, 
                InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar, 
                InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, 
+               AccountKindId Integer, AccountKindCode Integer, AccountKindName TVarChar,
                isErased boolean) AS
 $BODY$
 BEGIN
@@ -47,6 +48,10 @@ BEGIN
            , CAST (0 as Integer)    AS InfoMoneyCode
            , CAST ('' as TVarChar)  AS InfoMoneyName
 
+           , CAST (0 as Integer)    AS AccountKindId
+           , CAST (0 as Integer)    AS AccountKindCode
+           , CAST ('' as TVarChar)  AS AccountKindName
+
            , CAST (NULL AS Boolean) AS isErased
 
        FROM Object 
@@ -78,6 +83,10 @@ BEGIN
            , lfObject_InfoMoney.InfoMoneyCode   AS InfoMoneyCode
            , lfObject_InfoMoney.InfoMoneyName   AS InfoMoneyName
            
+           , Object_AccountKind.Id          AS AccountKindId
+           , Object_AccountKind.ObjectCode  AS AccountKindCode
+           , Object_AccountKind.ValueData   AS AccountKindName
+           
            , Object_Account.isErased      AS isErased
 
        FROM Object AS Object_Account
@@ -100,6 +109,12 @@ BEGIN
          
             LEFT JOIN lfSelect_Object_InfoMoneyDestination() AS lfObject_InfoMoneyDestination ON lfObject_InfoMoneyDestination.InfoMoneyDestinationId = ObjectLink_Account_InfoMoneyDestination.ChildObjectId
             LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ObjectLink_Account_InfoMoneyDestination.ChildObjectId
+            
+            LEFT JOIN ObjectLink AS ObjectLink_Account_AccountKind
+                                 ON ObjectLink_Account_AccountKind.ObjectId = Object_Account.Id
+                                AND ObjectLink_Account_AccountKind.DescId = zc_ObjectLink_Account_AccountKind()
+            LEFT JOIN Object AS Object_AccountKind ON Object_AccountKind.Id = ObjectLink_Account_AccountKind.ChildObjectId
+            
        WHERE Object_Account.Id = inId;
    END IF;      
 
@@ -110,11 +125,10 @@ LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Object_Account (Integer, TVarChar)  OWNER TO postgres;
 
 
-/*-------------------------------------------------------------------------------*/
-/*
+/*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 04.07.13          * + lfSelect...              
+ 04.07.13          * + lfSelect...  + AccountKind           
  24.06.13                                         *  errors
  21.06.13          *                              *  создание врем.таблиц
  17.06.13          *
