@@ -181,6 +181,34 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbGoodsProperty'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInfoMoneyGroup'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInfoMoneyDestination'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInfoMoney'
+        end
+        item
+          Visible = True
+          ItemName = 'bbAccountGroup'
+        end
+        item
+          Visible = True
+          ItemName = 'bbAccountDirection'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProfitLossGroup'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProfitLossDirection'
         end>
     end
     object bbMeasure: TdxBarButton
@@ -276,6 +304,34 @@ object MainForm: TMainForm
     end
     object bbCurrency: TdxBarButton
       Action = actCurrency
+      Category = 0
+    end
+    object bbInfoMoneyGroup: TdxBarButton
+      Action = actInfoMoneyGroup
+      Category = 0
+    end
+    object bbInfoMoneyDestination: TdxBarButton
+      Action = actInfoMoneyDestination
+      Category = 0
+    end
+    object bbInfoMoney: TdxBarButton
+      Action = actInfoMoney
+      Category = 0
+    end
+    object bbAccountGroup: TdxBarButton
+      Action = actAccountGroup
+      Category = 0
+    end
+    object bbAccountDirection: TdxBarButton
+      Action = actAccountDirection
+      Category = 0
+    end
+    object bbProfitLossGroup: TdxBarButton
+      Action = actProfitLossGroup
+      Category = 0
+    end
+    object bbProfitLossDirection: TdxBarButton
+      Action = actProfitLossDirection
       Category = 0
     end
   end
@@ -452,6 +508,62 @@ object MainForm: TMainForm
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090#1099
       Hint = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090#1099
       FormName = 'TPriceListForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actInfoMoneyGroup: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1081
+      Hint = #1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1081
+      FormName = 'TInfoMoneyGroupForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actInfoMoneyDestination: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+      Hint = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+      FormName = 'TInfoMoneyDestinationForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actInfoMoney: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+      Hint = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+      FormName = 'TInfoMoneyForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actAccountGroup: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1043#1088#1091#1087#1087#1099' '#1089#1095#1077#1090#1086#1074
+      Hint = #1043#1088#1091#1087#1087#1099' '#1089#1095#1077#1090#1086#1074
+      FormName = 'TAccountGroupForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actAccountDirection: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1095#1077#1090#1086#1074' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
+      Hint = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1095#1077#1090#1086#1074' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
+      FormName = 'TAccountDirectionForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actProfitLossGroup: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1043#1088#1091#1087#1087#1099' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093
+      Hint = #1043#1088#1091#1087#1087#1099' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093
+      FormName = 'TProfitLossGroupForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actProfitLossDirection: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
+      Hint = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
+      FormName = 'TProfitLossDirectionForm'
       GuiParams = <>
       isShowModal = False
     end

@@ -1,4 +1,4 @@
-inherited AccountGroupForm: TAccountGroupForm
+inherited TAccountGroupForm: TTAccountGroupForm
   Caption = #1043#1088#1091#1087#1087#1099' '#1089#1095#1077#1090#1086#1074
   ClientHeight = 408
   ClientWidth = 368
@@ -13,9 +13,6 @@ inherited AccountGroupForm: TAccountGroupForm
     Height = 380
     Align = alClient
     TabOrder = 0
-    ExplicitTop = -135
-    ExplicitWidth = 390
-    ExplicitHeight = 348
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource

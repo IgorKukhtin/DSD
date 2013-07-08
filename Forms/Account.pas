@@ -1,4 +1,4 @@
-unit InfoMoney;
+unit Account;
 
 interface
 
@@ -23,7 +23,7 @@ uses
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid;
 
 type
-  TTInfoMoneyForm = class(TParentForm)
+  TAccountForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     clCode: TcxGridDBColumn;
@@ -37,10 +37,10 @@ type
     bbRefresh: TdxBarButton;
     bbInsert: TdxBarButton;
     bbEdit: TdxBarButton;
-    bbSetErased: TdxBarButton;
-    bbSetUnErased: TdxBarButton;
+    bbErased: TdxBarButton;
+    bbUnErased: TdxBarButton;
     bbGridToExcel: TdxBarButton;
-    dxBarStatic1: TdxBarStatic;
+    dxBarStatic: TdxBarStatic;
     bbChoiceGuides: TdxBarButton;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
@@ -48,25 +48,25 @@ type
     actUpdate: TdsdInsertUpdateAction;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
-    dsdGridToExcel1: TdsdGridToExcel;
-    dsdChoiceGuides1: TdsdChoiceGuides;
+    dsdGridToExcel: TdsdGridToExcel;
+    dsdChoiceGuides: TdsdChoiceGuides;
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clInfoMoneyGroup: TcxGridDBColumn;
-    clInfoMoney_Destination: TcxGridDBColumn;
+    clAccountGroup: TcxGridDBColumn;
+    clAccountDirection: TcxGridDBColumn;
+    clInfoMoneyDestination: TcxGridDBColumn;
+    clInfoMoney: TcxGridDBColumn;
   private
     { Private declarations }
   public
     { Public declarations }
   end;
 
-var
-  TInfoMoneyForm: TTInfoMoneyForm;
 
 implementation
 
 {$R *.dfm}
-
+initialization
+  RegisterClass(TAccountForm);
 end.

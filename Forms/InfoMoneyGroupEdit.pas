@@ -21,7 +21,7 @@ uses
   cxLabel, cxTextEdit;
 
 type
-  TInfoMoneyGroupEditForm = class(TParentForm)
+  TTInfoMoneyGroupEditForm = class(TParentForm)
     edMeasureName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -44,7 +44,7 @@ type
   end;
 
 var
-  InfoMoneyGroupEditForm: TInfoMoneyGroupEditForm;
+  TInfoMoneyGroupEditForm: TTInfoMoneyGroupEditForm;
 
 implementation
 

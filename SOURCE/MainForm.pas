@@ -72,6 +72,20 @@ type
     bbPriceList: TdxBarButton;
     bbCash: TdxBarButton;
     bbCurrency: TdxBarButton;
+    actInfoMoneyGroup: TdsdOpenForm;
+    actInfoMoneyDestination: TdsdOpenForm;
+    actInfoMoney: TdsdOpenForm;
+    actAccountGroup: TdsdOpenForm;
+    actAccountDirection: TdsdOpenForm;
+    actProfitLossGroup: TdsdOpenForm;
+    actProfitLossDirection: TdsdOpenForm;
+    bbInfoMoneyGroup: TdxBarButton;
+    bbInfoMoneyDestination: TdxBarButton;
+    bbInfoMoney: TdxBarButton;
+    bbAccountGroup: TdxBarButton;
+    bbAccountDirection: TdxBarButton;
+    bbProfitLossGroup: TdxBarButton;
+    bbProfitLossDirection: TdxBarButton;
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }

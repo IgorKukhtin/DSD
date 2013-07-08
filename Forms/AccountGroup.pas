@@ -23,7 +23,7 @@ uses
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid;
 
 type
-  TAccountGroupForm = class(TParentForm)
+  TTAccountGroupForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     clCode: TcxGridDBColumn;
@@ -61,7 +61,7 @@ type
   end;
 
 var
-  AccountGroupForm: TAccountGroupForm;
+  TAccountGroupForm: TTAccountGroupForm;
 
 implementation
 

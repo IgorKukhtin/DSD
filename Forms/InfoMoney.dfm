@@ -1,4 +1,4 @@
-inherited InfoMoneyForm: TInfoMoneyForm
+inherited TInfoMoneyForm: TTInfoMoneyForm
   Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' '
   ClientHeight = 376
   ClientWidth = 597
@@ -14,8 +14,6 @@ inherited InfoMoneyForm: TInfoMoneyForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = 16
-    ExplicitTop = 20
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource

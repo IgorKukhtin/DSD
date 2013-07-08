@@ -1,4 +1,4 @@
-inherited AccountDirectionForm: TAccountDirectionForm
+inherited TAccountDirectionForm: TTAccountDirectionForm
   Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1095#1077#1090#1086#1074' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
   ClientHeight = 450
   ClientWidth = 354
@@ -16,7 +16,6 @@ inherited AccountDirectionForm: TAccountDirectionForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = -8
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource

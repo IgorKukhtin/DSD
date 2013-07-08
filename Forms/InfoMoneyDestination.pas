@@ -60,11 +60,11 @@ type
     { Public declarations }
   end;
 
-var
-  InfoMoneyDestinationForm: TInfoMoneyDestinationForm;
-
 implementation
 
 {$R *.dfm}
+
+initialization
+  RegisterClass(TInfoMoneyDestinationForm);
 
 end.

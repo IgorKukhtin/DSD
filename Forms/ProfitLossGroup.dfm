@@ -1,4 +1,4 @@
-inherited ProfitLossGroupForm: TProfitLossGroupForm
+inherited TProfitLossGroupForm: TTProfitLossGroupForm
   Caption = #1043#1088#1091#1087#1087#1099' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093
   ClientHeight = 361
   ClientWidth = 337
@@ -16,8 +16,6 @@ inherited ProfitLossGroupForm: TProfitLossGroupForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = 16
-    ExplicitHeight = 345
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource

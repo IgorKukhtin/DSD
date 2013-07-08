@@ -1,4 +1,4 @@
-unit InfoMoneyDestinationEdit;
+unit AccountEdit;
 
 interface
 
@@ -17,17 +17,21 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus, dsdAddOn, cxPropertiesStore,
-  dsdDB, dsdAction, Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons,
-  cxLabel, cxTextEdit;
+  dsdGuides, Data.DB, Datasnap.DBClient, dsdDB, dsdAction, Vcl.ActnList,
+  cxMaskEdit, cxDropDownEdit, cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox,
+  cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit;
 
 type
-  TInfoMoneyDestinationEditForm = class(TParentForm)
-    edMeasureName: TcxTextEdit;
+  TTAccountEditForm = class(TParentForm)
+    edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
+    cxLabel3: TcxLabel;
+    ceAccountGroup: TcxLookupComboBox;
+    cxLabel2: TcxLabel;
     ActionList: TActionList;
     dsdDataSetRefresh: TdsdDataSetRefresh;
     dsdExecStoredProc: TdsdExecStoredProc;
@@ -35,17 +39,41 @@ type
     spInsertUpdate: TdsdStoredProc;
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
+    AccountGroupDataSet: TClientDataSet;
+    spGetAccountGroup: TdsdStoredProc;
+    AccountGroupDS: TDataSource;
+    dsdAccountGroup: TdsdGuides;
+    AccountDirectionDataSet: TClientDataSet;
+    spGetAccountDirection: TdsdStoredProc;
+    AccountDirectionDS: TDataSource;
+    dsdAccountDirectionnGuides: TdsdGuides;
     cxPropertiesStore: TcxPropertiesStore;
-    dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    ceAccountDirection: TcxLookupComboBox;
+    cxLabel4: TcxLabel;
+    ceInfoMoneyDestination: TcxLookupComboBox;
+    InfoMoneyDestinationDataSet: TClientDataSet;
+    spGetInfoMoneyDestination: TdsdStoredProc;
+    InfoMoneyDestinationDS: TDataSource;
+    dsdInfoMoneyDestinationGuides: TdsdGuides;
+    cxLabel5: TcxLabel;
+    ceInfoMoney: TcxLookupComboBox;
+    InfoMoneyDataSet: TClientDataSet;
+    spGetInfoMoney: TdsdStoredProc;
+    InfoMoneyDS: TDataSource;
+    dsdInfoMoney: TdsdGuides;
   private
     { Private declarations }
   public
     { Public declarations }
   end;
 
+
+
 implementation
 
 {$R *.dfm}
-initialization
-  RegisterClass(TInfoMoneyDestinationEditForm);
+ initialization
+  RegisterClass(TAccountForm);
+
 end.

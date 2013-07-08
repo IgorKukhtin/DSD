@@ -22,7 +22,7 @@ uses
   cxDropDownEdit, cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox;
 
 type
-  TInfoMoneyEditForm = class(TParentForm)
+  TTInfoMoneyEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -57,7 +57,7 @@ type
   end;
 
 var
-  InfoMoneyEditForm: TInfoMoneyEditForm;
+  TInfoMoneyEditForm: TTInfoMoneyEditForm;
 
 implementation
 

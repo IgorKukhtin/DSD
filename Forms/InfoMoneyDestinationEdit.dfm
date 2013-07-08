@@ -161,7 +161,7 @@
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 40
-    Top = 136
+    Top = 80
   end
   object dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn
     Left = 184

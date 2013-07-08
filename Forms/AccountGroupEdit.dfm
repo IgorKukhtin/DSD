@@ -1,4 +1,4 @@
-﻿inherited AccountGroupEditForm: TAccountGroupEditForm
+﻿inherited TAccountGroupEditForm: TTAccountGroupEditForm
   Caption = #1053#1086#1074#1099#1081' '#1089#1095#1077#1090
   ClientHeight = 141
   ClientWidth = 375

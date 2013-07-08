@@ -1,4 +1,4 @@
-inherited ProfitLossDirectionForm: TProfitLossDirectionForm
+inherited TProfitLossDirectionForm: TTProfitLossDirectionForm
   Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
   ClientHeight = 391
   ClientWidth = 451
@@ -16,9 +16,6 @@ inherited ProfitLossDirectionForm: TProfitLossDirectionForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = 16
-    ExplicitWidth = 337
-    ExplicitHeight = 345
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource

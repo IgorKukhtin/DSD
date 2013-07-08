@@ -23,7 +23,7 @@ uses
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid;
 
 type
-  TProfitLossGroupForm = class(TParentForm)
+  TTProfitLossGroupForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     clCode: TcxGridDBColumn;
@@ -60,7 +60,7 @@ type
   end;
 
 var
-  ProfitLossGroupForm: TProfitLossGroupForm;
+  TProfitLossGroupForm: TTProfitLossGroupForm;
 
 implementation
 

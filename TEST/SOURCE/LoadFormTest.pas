@@ -40,6 +40,13 @@ type
     procedure LoadCurrencyFormTest;
     procedure LoadIncomeFormTest;
     procedure LoadReportFormTest;
+    procedure LoadInfoMoneyGroupFormTest;
+    procedure LoadInfoMoneyDestinationFormTest;
+    procedure LoadInfoMoneyFormTest;
+    procedure LoadAccountGroupFormTest;
+    procedure LoadAccountDirectionFormTest;
+    procedure LoadProfitLossGroupFormTest;
+    procedure LoadProfitLossDirectionFormTest;
   end;
 
 implementation
@@ -234,6 +241,65 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TUnitGroupForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitGroupEditForm');
+end;
+
+
+procedure TLoadFormTest.LoadInfoMoneyGroupFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyGroupEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyGroupEditForm');
+end;
+
+
+procedure TLoadFormTest.LoadInfoMoneyDestinationFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyDestinationForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyDestinationForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyDestinationEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyDestinationEditForm');
+end;
+
+   procedure TLoadFormTest.LoadInfoMoneyFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyEditForm');
+end;
+
+procedure TLoadFormTest.LoadAccountGroupFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAccountGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountGroupEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAccountGroupEditForm');
+end;
+
+
+procedure TLoadFormTest.LoadAccountDirectionFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountDirectionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAccountDirectionForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountDirectionEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAccountDirectionEditForm');
+end;
+
+procedure TLoadFormTest.LoadProfitLossGroupFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProfitLossGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossGroupEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProfitLossGroupEditForm');
+end;
+
+procedure TLoadFormTest.LoadProfitLossDirectionFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossDirectionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProfitLossDirectionForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossDirectionEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProfitLossDirectionEditForm');
 end;
 
 procedure TLoadFormTest.SetUp;

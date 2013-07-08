@@ -8,9 +8,9 @@ inherited PartnerForm: TPartnerForm
   TextHeight = 13
   object cxDBTreeList: TcxDBTreeList
     Left = 0
-    Top = 26
+    Top = 28
     Width = 750
-    Height = 447
+    Height = 445
     Align = alClient
     Bands = <
       item
@@ -25,7 +25,9 @@ inherited PartnerForm: TPartnerForm
     OptionsView.ColumnAutoWidth = True
     RootValue = -1
     TabOrder = 4
+    ExplicitTop = 26
     ExplicitWidth = 637
+    ExplicitHeight = 447
     object cxDBTreeListcxDBTreeListColumn1: TcxDBTreeListColumn
       Caption.Text = #1050#1086#1076
       DataBinding.FieldName = 'Code'
@@ -97,8 +99,8 @@ inherited PartnerForm: TPartnerForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -115,7 +117,7 @@ inherited PartnerForm: TPartnerForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
