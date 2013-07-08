@@ -1,7 +1,7 @@
 DO $$
 BEGIN
    -- Добавляем процессы
-   PERFORM lpInsertUpdate_Object(zc_Object_Process_User(), zc_Object_Process(), 0, 'Изменение пользователей');
+   PERFORM lpInsertUpdate_Object (zc_Object_Process_User(), zc_Object_Process(), 0, 'Изменение пользователей');
 
    -- Добавляем роли
    PERFORM lpInsertUpdate_Object(zc_Object_Role_Admin(), zc_Object_Role(), 0, 'Роль администратора');
@@ -10,20 +10,18 @@ BEGIN
    PERFORM lpInsertUpdate_Object(zc_Object_PaidKind_FirstForm(),  zc_Object_PaidKind(), 1, 'Первая форма');
    PERFORM lpInsertUpdate_Object(zc_Object_PaidKind_SecondForm(), zc_Object_PaidKind(), 2, 'Вторая форма');
 
-   -- Добавляем статусы !!! уже есть в НОВОЙ СХЕМЕ, надо будет потом удалить !!!
+   /*-- Добавляем статусы !!! уже есть в НОВОЙ СХЕМЕ, надо будет потом удалить !!!
    PERFORM lpInsertUpdate_Object(zc_Object_Status_UnComplete(), zc_Object_Status(), 0, 'Не проведен');
    PERFORM lpInsertUpdate_Object(zc_Object_Status_Complete(), zc_Object_Status(), 1, 'Проведен');
-   PERFORM lpInsertUpdate_Object(zc_Object_Status_Erased(), zc_Object_Status(), 2, 'Удален');
+   PERFORM lpInsertUpdate_Object(zc_Object_Status_Erased(), zc_Object_Status(), 2, 'Удален');*/
 
-   -- Вставляем группы счетов
+   /*-- Вставляем группы счетов
    PERFORM lpInsertUpdate_Object(zc_Object_AccountGroup_Inventory(), zc_Object_AccountGroup(), 1, 'Запасы');
-   
    -- Вставляем аналитики счетов (место)
    PERFORM lpInsertUpdate_Object(zc_Object_AccountDirection_Store(), zc_Object_AccountDirection(), 1, 'на складах');
-   
    -- Будем вставлять счета   
    PERFORM lpInsertUpdate_Object(zc_Object_Account_InventoryStoreEmpties(), zc_Object_Account(), 1, 'Запасы - на складахГП - Оборотная тара');
-   PERFORM lpInsertUpdate_Object(zc_Object_Account_CreditorsSupplierMeat(), zc_Object_Account(), 1, 'Кредиторы - поставщики - Мясное сырье');
+   PERFORM lpInsertUpdate_Object(zc_Object_Account_CreditorsSupplierMeat(), zc_Object_Account(), 1, 'Кредиторы - поставщики - Мясное сырье');*/
 
    -- Увеличиваем последовательность
    PERFORM setval('object_id_seq', (select max( id ) + 1 from Object));
@@ -57,11 +55,10 @@ DECLARE ioId integer;
 DECLARE UserId integer;
 BEGIN
    -- Нельзя вставить штатными средствами потому что не сработает проверка прав!!!
-
    SELECT Id INTO UserId FROM Object WHERE DescId = zc_Object_User() AND ValueData = 'Админ';
 
    IF COALESCE(UserId, 0) = 0 THEN
-   -- Создаем администратора
+     -- Создаем администратора
      UserId := lpInsertUpdate_Object(0, zc_Object_User(), 0, 'Админ');
 
      PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_Login(), UserId, 'Админ');
@@ -105,9 +102,9 @@ END $$;
 DO $$
 BEGIN
      -- !!! ОБЯЗАТЕЛЬНО НАДО ЗАМЕНИТЬ zc_Object_Status_UnComplete -> zc_Enum_Status_UnComplete
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Object_Status_UnComplete(), inDescId:= zc_Object_Status(), inCode:= 1, inName:= 'Не проведен', inEnumName:= 'zc_Enum_Status_UnComplete');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Object_Status_Complete(), inDescId:= zc_Object_Status(), inCode:= 2, inName:= 'Проведен', inEnumName:= 'zc_Enum_Status_Complete');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Object_Status_Erased(), inDescId:= zc_Object_Status(), inCode:= 3, inName:= 'Удален', inEnumName:= 'zc_Enum_Status_Erased');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Status_UnComplete(), inDescId:= zc_Object_Status(), inCode:= 1, inName:= 'Не проведен', inEnumName:= 'zc_Enum_Status_UnComplete');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Status_Complete(), inDescId:= zc_Object_Status(), inCode:= 2, inName:= 'Проведен', inEnumName:= 'zc_Enum_Status_Complete');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Status_Erased(), inDescId:= zc_Object_Status(), inCode:= 3, inName:= 'Удален', inEnumName:= 'zc_Enum_Status_Erased');
 
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountKind_Active(), inDescId:= zc_Object_AccountKind(), inCode:= 1, inName:= 'Активный', inEnumName:= 'zc_Enum_AccountKind_Active');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountKind_Passive(), inDescId:= zc_Object_AccountKind(), inCode:= 1, inName:= 'Пассивный', inEnumName:= 'zc_Enum_AccountKind_Passive');

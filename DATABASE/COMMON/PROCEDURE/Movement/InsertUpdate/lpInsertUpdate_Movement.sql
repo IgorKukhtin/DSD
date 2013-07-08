@@ -8,12 +8,12 @@ IN inParentId Integer)
 $BODY$BEGIN
   IF COALESCE(ioId, 0) = 0 THEN
      INSERT INTO Movement (DescId, InvNumber, OperDate, StatusId, ParentId)
-            VALUES (inDescId, inInvNumber, inOperDate, zc_Object_Status_UnComplete(), inParentId) RETURNING Id INTO ioId;
+            VALUES (inDescId, inInvNumber, inOperDate, zc_Enum_Status_UnComplete(), inParentId) RETURNING Id INTO ioId;
   ELSE
      UPDATE Movement SET InvNumber = inInvNumber, OperDate = inOperDate WHERE Id = ioId;
      IF NOT found THEN
      INSERT INTO Movement (Id, DescId, InvNumber, OperDate, StatusId, ParentId)
-            VALUES (ioId, inDescId, inInvNumber, inOperDate, zc_Object_Status_UnComplete(), inParentId) RETURNING Id INTO ioId;
+            VALUES (ioId, inDescId, inInvNumber, inOperDate, zc_Enum_Status_UnComplete(), inParentId) RETURNING Id INTO ioId;
      END IF;
   END IF;
 END;           $BODY$

@@ -11,7 +11,7 @@ RETURNS TABLE (AccountGroupId Integer, AccountGroupCode Integer, AccountGroupNam
                InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar, 
                InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar,
                AccountKindId Integer, AccountKindCode Integer, AccountKindName TVarChar,
-               onComplete boolean)
+               onComplete Boolean)
 AS
 $BODY$
 BEGIN
@@ -47,7 +47,7 @@ BEGIN
            , Object_AccountKind.ObjectCode  AS AccountKindCode
            , Object_AccountKind.ValueData   AS AccountKindName
            
-           ,ObjectBoolean_onComplete.ValueData  AS onComplete
+           , COALESCE (ObjectBoolean_onComplete.ValueData, FALSE)  AS onComplete
            
        FROM Object AS Object_Account
             LEFT JOIN ObjectLink AS ObjectLink_Account_AccountGroup
@@ -91,7 +91,8 @@ ALTER FUNCTION lfSelect_Object_Account () OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 04.07.13          * + onComplete
+ 08.07.13                                        * ISNULL (ObjectBoolean_onComplete.ValueData, FALSE)
+ 04.07.13          * add onComplete
  03.07.13                                        * 1251Cyr
  29.06.13          *
 */
