@@ -1,6 +1,6 @@
 ﻿-- Function: gpGet_Object_Partner()
 
---DROP FUNCTION gpGet_Object_Partner();
+--DROP FUNCTION gpGet_Object_Partner(Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Partner(
     IN inId          Integer,        -- Контрагенты 

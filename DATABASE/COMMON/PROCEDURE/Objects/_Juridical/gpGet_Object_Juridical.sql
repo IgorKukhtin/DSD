@@ -1,6 +1,6 @@
 ﻿-- Function: gpGet_Object_Juridical()
 
---DROP FUNCTION gpGet_Object_Juridical();
+--DROP FUNCTION gpGet_Object_Juridical(Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Juridical(
     IN inId          Integer,       -- Юридические лица 

@@ -241,67 +241,45 @@
 			<DCCReference Include="..\SOURCE\dbObjectHistoryTest.pas"/>
 			<DCCReference Include="..\..\Forms\InfoMoneyGroup.pas">
 				<Form>InfoMoneyGroupForm</Form>
-				<FormType>dfm</FormType>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\InfoMoneyGroupEdit.pas">
 				<Form>InfoMoneyGroupEditForm</Form>
-				<FormType>dfm</FormType>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\InfoMoneyDestination.pas">
 				<Form>InfoMoneyDestinationForm</Form>
-				<FormType>dfm</FormType>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\InfoMoneyDestinationEdit.pas">
 				<Form>InfoMoneyDestinationEditForm</Form>
-				<FormType>dfm</FormType>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\InfoMoney.pas">
 				<Form>InfoMoneyForm</Form>
-				<FormType>dfm</FormType>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\InfoMoneyEdit.pas">
 				<Form>InfoMoneyEditForm</Form>
-				<FormType>dfm</FormType>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Unit3.pas">
-				<Form>ParentForm3</Form>
-				<FormType>dfm</FormType>
-			</DCCReference>
-			<DCCReference Include="C:\Users\Аркадий\Documents\Unit4.pas">
-				<Form>ParentForm4</Form>
-				<FormType>dfm</FormType>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\AccountGroup.pas">
 				<Form>AccountGroupForm</Form>
-				<FormType>dfm</FormType>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\AccountGroupEdit.pas">
 				<Form>AccountGroupEditForm</Form>
-				<FormType>dfm</FormType>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\AccountDirection.pas">
 				<Form>AccountDirectionForm</Form>
-				<FormType>dfm</FormType>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\AccountDirectionEdit.pas">
 				<Form>AccountDirectionEditForm</Form>
-				<FormType>dfm</FormType>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\ProfitLossGroup.pas">
 				<Form>ProfitLossGroupForm</Form>
-				<FormType>dfm</FormType>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\ProfitLossGroupEdit.pas">
 				<Form>ProfitLossGroupEditForm</Form>
-				<FormType>dfm</FormType>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\ProfitLossDirection.pas">
 				<Form>ProfitLossDirectionForm</Form>
-				<FormType>dfm</FormType>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\ProfitLossDirectionEdit.pas">
 				<Form>ProfitLossDirectionEditForm</Form>
-				<FormType>dfm</FormType>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

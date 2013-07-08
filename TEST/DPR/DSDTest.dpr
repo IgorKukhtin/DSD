@@ -90,8 +90,6 @@ uses
   InfoMoneyDestinationEdit in '..\..\Forms\InfoMoneyDestinationEdit.pas' {InfoMoneyDestinationEditForm},
   InfoMoney in '..\..\Forms\InfoMoney.pas' {InfoMoneyForm},
   InfoMoneyEdit in '..\..\Forms\InfoMoneyEdit.pas' {InfoMoneyEditForm},
-  Unit3 in '..\..\Forms\Unit3.pas' {ParentForm3},
-  Unit4 in 'C:\Users\Аркадий\Documents\Unit4.pas' {ParentForm4},
   AccountGroup in '..\..\Forms\AccountGroup.pas' {AccountGroupForm},
   AccountGroupEdit in '..\..\Forms\AccountGroupEdit.pas' {AccountGroupEditForm},
   AccountDirection in '..\..\Forms\AccountDirection.pas' {AccountDirectionForm},
@@ -106,22 +104,6 @@ uses
 begin
   Application.Initialize;
   Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TInfoMoneyGroupForm, InfoMoneyGroupForm);
-  Application.CreateForm(TInfoMoneyGroupEditForm, InfoMoneyGroupEditForm);
-  Application.CreateForm(TInfoMoneyDestinationForm, InfoMoneyDestinationForm);
-  Application.CreateForm(TInfoMoneyDestinationEditForm, InfoMoneyDestinationEditForm);
-  Application.CreateForm(TInfoMoneyForm, InfoMoneyForm);
-  Application.CreateForm(TInfoMoneyEditForm, InfoMoneyEditForm);
-  Application.CreateForm(TParentForm3, ParentForm3);
-  Application.CreateForm(TParentForm4, ParentForm4);
-  Application.CreateForm(TAccountGroupForm, AccountGroupForm);
-  Application.CreateForm(TAccountGroupEditForm, AccountGroupEditForm);
-  Application.CreateForm(TAccountDirectionForm, AccountDirectionForm);
-  Application.CreateForm(TAccountDirectionEditForm, AccountDirectionEditForm);
-  Application.CreateForm(TProfitLossGroupForm, ProfitLossGroupForm);
-  Application.CreateForm(TProfitLossGroupEditForm, ProfitLossGroupEditForm);
-  Application.CreateForm(TProfitLossDirectionForm, ProfitLossDirectionForm);
-  Application.CreateForm(TProfitLossDirectionEditForm, ProfitLossDirectionEditForm);
   Application.Run;
   DUnitTestRunner.RunRegisteredTests;
 end.

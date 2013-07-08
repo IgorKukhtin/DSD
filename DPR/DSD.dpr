@@ -30,7 +30,7 @@ begin
    // if ShowModal = mrOk then
   TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
 
-  Application.CreateForm(TMainFormInstance, MainFormInstance);
+  Application.CreateForm(TMainForm, MainFormInstance);
   Application.CreateForm(TdmMain, dmMain);
   Application.Run;
 end.
