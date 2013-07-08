@@ -1,4 +1,4 @@
-inherited TInfoMoneyGroupForm: TTInfoMoneyGroupForm
+inherited InfoMoneyGroupForm: TInfoMoneyGroupForm
   Caption = #1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1081
   ClientHeight = 381
   ClientWidth = 432
@@ -235,7 +235,7 @@ inherited TInfoMoneyGroupForm: TTInfoMoneyGroupForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TPriceListEditForm'
+      FormName = 'TInfoMoneyGroupEditForm'
       GuiParams = <
         item
           Name = 'Id'

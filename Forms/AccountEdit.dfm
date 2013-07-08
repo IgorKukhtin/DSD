@@ -1,4 +1,4 @@
-﻿inherited TAccountEditForm: TTAccountEditForm
+﻿inherited AccountEditForm: TAccountEditForm
   Caption = #1053#1086#1074#1099#1081' '#1089#1095#1077#1090
   ClientHeight = 396
   ClientWidth = 507
@@ -186,7 +186,7 @@
         Component = dsdAccountDirectionnGuides
         DataType = ftInteger
         ParamType = ptInput
-        Value = ''
+        Value = '0'
       end
       item
         Name = 'inCurrencyId'
@@ -257,7 +257,7 @@
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = '0'
       end
       item
         Name = 'PaidKindName'
@@ -265,7 +265,7 @@
         ComponentItem = 'TextValue'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = '0'
       end
       item
         Name = 'CurrencyId'
@@ -318,7 +318,7 @@
     Aggregates = <>
     Params = <>
     Left = 160
-    Top = 173
+    Top = 165
   end
   object spGetAccountDirection: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_AccountDirection'
@@ -337,6 +337,8 @@
     Top = 165
   end
   object dsdAccountDirectionnGuides: TdsdGuides
+    Key = '0'
+    LookupControl = ceAccountDirection
     FormName = 'TAccountDirectionForm'
     PositionDataSet = 'ClientDataSet'
     Left = 328

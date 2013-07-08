@@ -23,7 +23,7 @@ uses
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid;
 
 type
-  TTProfitLossDirectionForm = class(TParentForm)
+  TProfitLossDirectionForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     clCode: TcxGridDBColumn;
@@ -59,11 +59,11 @@ type
     { Public declarations }
   end;
 
-var
-  TProfitLossDirectionForm: TTProfitLossDirectionForm;
+
 
 implementation
 
 {$R *.dfm}
-
+ initialization
+  RegisterClass(TProfitLossDirectionForm);
 end.

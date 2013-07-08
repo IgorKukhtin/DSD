@@ -23,7 +23,7 @@ uses
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid;
 
 type
-  TTInfoMoneyGroupForm = class(TParentForm)
+  TInfoMoneyGroupForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     clCode: TcxGridDBColumn;
@@ -60,11 +60,11 @@ type
     { Public declarations }
   end;
 
-var
-  TInfoMoneyGroupForm: TTInfoMoneyGroupForm;
+
 
 implementation
 
 {$R *.dfm}
-
+ initialization
+  RegisterClass(TInfoMoneyGroupForm);
 end.

@@ -1,4 +1,4 @@
-unit InfoMoney;
+unit ProfitLoss;
 
 interface
 
@@ -23,11 +23,15 @@ uses
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid;
 
 type
-  TInfoMoneyForm = class(TParentForm)
+  TProfitLossForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     clCode: TcxGridDBColumn;
     clName: TcxGridDBColumn;
+    clProfitLossGroup: TcxGridDBColumn;
+    clProfitLossDirection: TcxGridDBColumn;
+    clInfoMoneyDestination: TcxGridDBColumn;
+    clInfoMoney: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -37,10 +41,10 @@ type
     bbRefresh: TdxBarButton;
     bbInsert: TdxBarButton;
     bbEdit: TdxBarButton;
-    bbSetErased: TdxBarButton;
-    bbSetUnErased: TdxBarButton;
+    bbErased: TdxBarButton;
+    bbUnErased: TdxBarButton;
     bbGridToExcel: TdxBarButton;
-    dxBarStatic1: TdxBarStatic;
+    dxBarStatic: TdxBarStatic;
     bbChoiceGuides: TdxBarButton;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
@@ -48,14 +52,11 @@ type
     actUpdate: TdsdInsertUpdateAction;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
-    dsdGridToExcel1: TdsdGridToExcel;
-    dsdChoiceGuides1: TdsdChoiceGuides;
+    dsdGridToExcel: TdsdGridToExcel;
+    dsdChoiceGuides: TdsdChoiceGuides;
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clInfoMoneyGroup: TcxGridDBColumn;
-    clInfoMoney_Destination: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -63,9 +64,10 @@ type
   end;
 
 
+
 implementation
 
 {$R *.dfm}
  initialization
-  RegisterClass(TInfoMoneyForm);
+  RegisterClass(TProfitLossForm);
 end.

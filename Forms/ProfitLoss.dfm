@@ -1,21 +1,25 @@
-inherited AccountForm: TAccountForm
-  Caption = #1057#1095#1077#1090#1072
-  ClientHeight = 382
-  ClientWidth = 671
-  ExplicitWidth = 687
-  ExplicitHeight = 420
+inherited ProfitLossForm: TProfitLossForm
+  Caption = #1057#1090#1072#1090#1100#1080' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093' '
+  ClientHeight = 397
+  ClientWidth = 675
+  ExplicitWidth = 691
+  ExplicitHeight = 435
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 28
-    Width = 671
-    Height = 354
+    Width = 675
+    Height = 369
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitLeft = -207
+    ExplicitTop = -14
+    ExplicitWidth = 671
+    ExplicitHeight = 354
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -47,27 +51,27 @@ inherited AccountForm: TAccountForm
         Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 168
+        Width = 119
       end
-      object clAccountGroup: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1099' '#1089#1095#1077#1090#1086#1074
+      object clProfitLossGroup: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1099' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093
         HeaderAlignmentVert = vaCenter
-        Width = 68
+        Width = 155
       end
-      object clAccountDirection: TcxGridDBColumn
-        Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1095#1077#1090#1086#1074' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103' '#9
+      object clProfitLossDirection: TcxGridDBColumn
+        Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103#9
         HeaderAlignmentVert = vaCenter
-        Width = 145
+        Width = 167
       end
       object clInfoMoneyDestination: TcxGridDBColumn
         Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         HeaderAlignmentVert = vaCenter
-        Width = 139
+        Width = 97
       end
       object clInfoMoney: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         HeaderAlignmentVert = vaCenter
-        Width = 78
+        Width = 64
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -234,7 +238,7 @@ inherited AccountForm: TAccountForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TAccountEditForm'
+      FormName = 'TProfitLossEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -251,7 +255,7 @@ inherited AccountForm: TAccountForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TAccountEditForm'
+      FormName = 'TProfitLossEditForm'
       GuiParams = <
         item
           Name = 'Id'

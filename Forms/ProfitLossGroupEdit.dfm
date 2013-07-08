@@ -1,4 +1,4 @@
-﻿inherited TProfitLossGroupEditForm: TTProfitLossGroupEditForm
+﻿inherited ProfitLossGroupEditForm: TProfitLossGroupEditForm
   Caption = #1053#1086#1074#1072#1103' '#1075#1088#1091#1087#1087#1072
   ClientHeight = 155
   ClientWidth = 399

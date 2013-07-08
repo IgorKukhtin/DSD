@@ -184,31 +184,7 @@ object MainForm: TMainForm
         end
         item
           Visible = True
-          ItemName = 'bbInfoMoneyGroup'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInfoMoneyDestination'
-        end
-        item
-          Visible = True
-          ItemName = 'bbInfoMoney'
-        end
-        item
-          Visible = True
-          ItemName = 'bbAccountGroup'
-        end
-        item
-          Visible = True
-          ItemName = 'bbAccountDirection'
-        end
-        item
-          Visible = True
-          ItemName = 'bbProfitLossGroup'
-        end
-        item
-          Visible = True
-          ItemName = 'bbProfitLossDirection'
+          ItemName = 'dxBarSubItem'
         end>
     end
     object bbMeasure: TdxBarButton
@@ -332,6 +308,58 @@ object MainForm: TMainForm
     end
     object bbProfitLossDirection: TdxBarButton
       Action = actProfitLossDirection
+      Category = 0
+    end
+    object dxBarSubItem: TdxBarSubItem
+      Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInfoMoneyGroup'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInfoMoneyDestination'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInfoMoney'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbAccountGroup'
+        end
+        item
+          Visible = True
+          ItemName = 'bbAccountDirection'
+        end
+        item
+          Visible = True
+          ItemName = 'bbAccount'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbProfitLossGroup'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProfitLossDirection'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProfitLoss'
+        end>
+    end
+    object bbAccount: TdxBarButton
+      Action = actAccount
+      Category = 0
+    end
+    object bbProfitLoss: TdxBarButton
+      Action = actProfitLoss
       Category = 0
     end
   end
@@ -564,6 +592,22 @@ object MainForm: TMainForm
       Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
       Hint = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
       FormName = 'TProfitLossDirectionForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actAccount: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1057#1095#1077#1090#1072
+      Hint = #1057#1095#1077#1090#1072
+      FormName = 'TAccountForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actProfitLoss: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1057#1090#1072#1090#1100#1080' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093
+      Hint = #1057#1090#1072#1090#1100#1080' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093
+      FormName = 'TProfitLossForm'
       GuiParams = <>
       isShowModal = False
     end

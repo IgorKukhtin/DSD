@@ -1,4 +1,4 @@
-﻿inherited TUnitGroupEditForm: TTUnitGroupEditForm
+﻿inherited UnitGroupEditForm: TUnitGroupEditForm
   Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
   ClientHeight = 202
   ClientWidth = 371

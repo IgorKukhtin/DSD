@@ -1,4 +1,4 @@
-﻿inherited TAccountDirectionEditForm: TTAccountDirectionEditForm
+﻿inherited AccountDirectionEditForm: TAccountDirectionEditForm
   Caption = #1053#1086#1074#1086#1077' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
   ClientHeight = 145
   ClientWidth = 396

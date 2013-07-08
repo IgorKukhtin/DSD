@@ -86,6 +86,11 @@ type
     bbAccountDirection: TdxBarButton;
     bbProfitLossGroup: TdxBarButton;
     bbProfitLossDirection: TdxBarButton;
+    dxBarSubItem: TdxBarSubItem;
+    actAccount: TdsdOpenForm;
+    actProfitLoss: TdsdOpenForm;
+    bbAccount: TdxBarButton;
+    bbProfitLoss: TdxBarButton;
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }

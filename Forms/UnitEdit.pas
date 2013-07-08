@@ -24,7 +24,7 @@ uses
   dxSkinXmas2008Blue;
 
 type
-  TTUnitEditForm = class(TParentForm)
+  TUnitEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -62,6 +62,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TTUnitEditForm);
+  RegisterClass(TUnitEditForm);
 
 end.
