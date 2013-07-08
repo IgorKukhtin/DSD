@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItemContainer_Movement(
 )
 RETURNS TABLE (DebetAmount TFloat, DebetAccountGroupCode Integer, DebetAccountGroupName TVarChar, DebetAccountDirectionCode Integer, DebetAccountDirectionName TVarChar, DebetAccountCode Integer, DebetAccountName  TVarChar
              , KreditAmount TFloat, KreditAccountGroupCode Integer, KreditAccountGroupName TVarChar, KreditAccountDirectionCode Integer, KreditAccountDirectionName TVarChar, KreditAccountCode Integer, KreditAccountName  TVarChar
-             , ByObjectCode Integer, ByObjectName TVarChar, GoodsGroupCode Integer, GoodsGroupName TVarChar, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
+             , AccountOnComplete Boolean, ByObjectCode Integer, ByObjectName TVarChar, GoodsGroupCode Integer, GoodsGroupName TVarChar, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
               )
 AS
 $BODY$
@@ -36,6 +36,7 @@ BEGIN
            , CAST (NULL AS Integer)         AS KreditAccountCode
            , CAST ('' AS TVarChar)          AS KreditAccountName
 
+           , lfObject_Account.onComplete AS AccountOnComplete
            , tmpMovementItemContainer.ByObjectCode
            , tmpMovementItemContainer.ByObjectName
            , tmpMovementItemContainer.GoodsGroupCode
@@ -116,6 +117,7 @@ BEGIN
            , lfObject_Account.AccountCode                     AS KreditAccountCode
            , lfObject_Account.AccountName                     AS KreditAccountName
 
+           , lfObject_Account.onComplete AS AccountOnComplete
            , tmpMovementItemContainer.ByObjectCode
            , tmpMovementItemContainer.ByObjectName
            , tmpMovementItemContainer.GoodsGroupCode
@@ -188,6 +190,7 @@ ALTER FUNCTION gpSelect_MovementItemContainer_Movement (Integer, TVarChar) OWNER
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
 
+ 08.07.13                                        * add AccountOnComplete
  04.07.13                                        * rename AccountId to ObjectId
  03.07.13                                        *
 */

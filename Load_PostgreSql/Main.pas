@@ -1427,7 +1427,7 @@ begin
         Add('     , 0 as ObjectCode');
         Add('     , _pgUnit.Name3 as ObjectName');
         Add('     , _pgUnit.Id_Postgres_Branch as Id_Postgres');
-        Add('     , 0 as JuridicalId_pg');
+//        Add('     , 0 as JuridicalId_pg');
         Add('from dba._pgUnit');
         Add('     join dba._pgUnit as _pgUnit_parent on _pgUnit_parent.Id = _pgUnit.ParentId and _pgUnit_parent.ObjectCode in (1102)');
         Add('order by ObjectId');
@@ -1445,7 +1445,7 @@ begin
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
-        toStoredProc.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
+//        toStoredProc.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
         //
         while not EOF do
         begin
@@ -1455,7 +1455,7 @@ begin
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Params.ParamByName('inJuridicalId').Value:=FieldByName('JuridicalId_pg').AsInteger;
+//             toStoredProc.Params.ParamByName('inJuridicalId').Value:=FieldByName('JuridicalId_pg').AsInteger;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)

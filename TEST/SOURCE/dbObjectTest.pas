@@ -334,7 +334,7 @@ type
     // Удаляется Объект и все подчиненные
     procedure Delete(Id: Integer); override;
     function InsertUpdateAccount(const Id, Code : integer; Name: string; AccountGroupId: Integer;
-                                     AccountDirectionId, InfoMoneyDestinationId, InfoMoneyId, AccountKindId: integer): integer;
+                                     AccountDirectionId, InfoMoneyDestinationId, InfoMoneyId: integer): integer;
     constructor Create; override;
   end;
 
@@ -2147,7 +2147,7 @@ var
 begin
   AccountGroupId := TAccountGroupTest.Create.GetDefault;
   AccountDirectionId:= TAccountDirectionTest.Create.GetDefault;;
-  result := InsertUpdateAccount(0, 3, 'Управленческие счет 1', AccountGroupId, AccountDirectionId, 1,1,1);
+  result := InsertUpdateAccount(0, -3, 'ТЕСТ-Управленческие счет 1', AccountGroupId, AccountDirectionId, 1,1);
 end;
 
 function TAccountTest.InsertUpdateAccount;
@@ -2159,7 +2159,7 @@ begin
   FParams.AddParam('inAccountGroupId', ftInteger, ptInput, AccountGroupId);
   FParams.AddParam('inAccountDirectionId', ftInteger, ptInput, AccountDirectionId);
   FParams.AddParam('inInfoMoneyDestinationId', ftInteger, ptInput, InfoMoneyDestinationId);
-  FParams.AddParam('inAccountKindId', ftInteger, ptInput, AccountKindId);
+  //FParams.AddParam('inAccountKindId', ftInteger, ptInput, AccountKindId);
   FParams.AddParam('inInfoMoneyId', ftInteger, ptInput, InfoMoneyId);
   result := InsertUpdate(FParams);
 end;

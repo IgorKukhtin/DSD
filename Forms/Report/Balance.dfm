@@ -2,6 +2,7 @@ inherited BalanceForm: TBalanceForm
   Caption = #1041#1072#1083#1072#1085#1089
   ClientHeight = 395
   ClientWidth = 1329
+  ExplicitLeft = 0
   ExplicitWidth = 1337
   ExplicitHeight = 422
   PixelsPerInch = 96
@@ -138,6 +139,12 @@ inherited BalanceForm: TBalanceForm
         DataBinding.FieldName = 'InfoMoneyName_Detail'
         HeaderAlignmentHorz = taCenter
         Width = 100
+      end
+      object cxGridDBTableViewColumn16: TcxGridDBColumn
+        Caption = '***'
+        DataBinding.FieldName = 'AccountOnComplete'
+        HeaderAlignmentHorz = taCenter
+        Width = 25
       end
       object cxGridDBTableViewColumn6: TcxGridDBColumn
         Caption = #1044#1077#1073#1077#1090' '#1085#1072#1095#1072#1083#1100#1085#1099#1081

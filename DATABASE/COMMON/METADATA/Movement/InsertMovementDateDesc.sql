@@ -2,8 +2,7 @@
 --------------------------- !!! НОВАЯ СХЕМА !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!
 
-INSERT INTO MovementDateDesc (Code, ItemName)
-  SELECT 'zc_MovementDate_OperDatePartner', 'Дата накладной у контрагента' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_OperDatePartner');
+все пишем в CreateMovementDateDescFunction
 
 
 /*-------------------------------------------------------------------------------

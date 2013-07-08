@@ -17,6 +17,7 @@ $BODY$
    DECLARE vbAccountId Integer;
    DECLARE vbAccountCode Integer;
    DECLARE vbAccountName TVarChar;
+   DECLARE vbAccountKindId Integer;
 BEGIN
 
    -- Проверки
@@ -83,6 +84,18 @@ BEGIN
                                             ELSE SELECT InfoMoneyName INTO vbAccountName FROM lfSelect_Object_InfoMoney() WHERE InfoMoneyId = inInfoMoneyId;
            END IF;
 
+           -- определяем свойство <Виды счетов>
+           IF EXISTS (SELECT Object_AccountGroup.Id
+                      FROM Object AS Object_AccountGroup
+                           LEFT JOIN Object AS Object_AccountGroup_70000 ON Object_AccountGroup_70000.Id = zc_Enum_AccountGroup_70000()
+                      WHERE Object_AccountGroup.Id = inAccountGroupId
+                        AND Object_AccountGroup.ObjectCode < Object_AccountGroup_70000.ObjectCode)
+           THEN
+               vbAccountKindId:= zc_Enum_AccountKind_Active();
+           ELSE
+               vbAccountKindId:= zc_Enum_AccountKind_Passive();
+           END IF ;
+
            -- Определяем будущий код
            SELECT COALESCE (MAX (AccountCode), 0) + 1 INTO vbAccountCode FROM lfSelect_Object_Account() WHERE AccountGroupId = inAccountGroupId AND AccountDirectionId = vbAccountDirectionId;
 
@@ -94,10 +107,12 @@ BEGIN
            -- созаем 3-ий уровень
            vbAccountId := lpInsertUpdate_Object (vbAccountId, zc_Object_Account(), vbAccountCode, vbAccountName);
            -- все свойства для 3-ий уровень
+           PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Account_onComplete(), vbAccountId, TRUE);
            PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Account_AccountGroup(), vbAccountId, inAccountGroupId);
            PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Account_AccountDirection(), vbAccountId, vbAccountDirectionId);
            PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Account_InfoMoneyDestination(), vbAccountId, inInfoMoneyDestinationId);
            PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Account_InfoMoney(), vbAccountId, inInfoMoneyId);
+           PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Account_AccountKind(), vbAccountId, vbAccountKindId);
        
            -- сохранили протокол
            PERFORM lpInsert_ObjectProtocol (vbAccountId, inUserId);
@@ -122,6 +137,7 @@ ALTER FUNCTION lpInsertFind_Object_Account (Integer, Integer, Integer, Integer, 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
 
+ 08.07.13                                        * add vbAccountKindId and zc_ObjectBoolean_Account_onComplete
  02.07.13                                        *
 */
 

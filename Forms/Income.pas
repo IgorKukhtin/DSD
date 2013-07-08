@@ -99,6 +99,7 @@ type
     colGoodsKindName: TcxGridDBColumn;
     colAssetName: TcxGridDBColumn;
     colGoodsKindName_comlete: TcxGridDBColumn;
+    colAccountOnComplete: TcxGridDBColumn;
   private
   public
   end;

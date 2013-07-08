@@ -27,7 +27,7 @@ type
   public
     function InsertUpdateMovementIncome(Id: Integer; InvNumber: String; OperDate: TDateTime;
              OperDatePartner: TDateTime; InvNumberPartner: String; PriceWithVAT: Boolean;
-             VATPercent, DiscountPercent, ExtraChargesPercent: double;
+             VATPercent, ChangePercent: double;
              FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId, PersonalPackerId: Integer
              ): integer;
     constructor Create; override;
@@ -120,7 +120,7 @@ var Id: Integer;
     OperDatePartner: TDateTime;
     InvNumberPartner: String;
     PriceWithVAT: Boolean;
-    VATPercent, DiscountPercent, ExtraChargesPercent: double;
+    VATPercent, ChangePercent: double;
     FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId, PersonalPackerId: Integer;
 begin
   Id:=0;
@@ -132,8 +132,7 @@ begin
 
   PriceWithVAT:=true;
   VATPercent:=20;
-  DiscountPercent:=0;
-  ExtraChargesPercent:=0;
+  ChangePercent:=-10;
 
   FromId := TPartnerTest.Create.GetDefault;
   ToId := TUnitTest.Create.GetDefault;
@@ -145,13 +144,13 @@ begin
   //
   result := InsertUpdateMovementIncome(Id, InvNumber, OperDate,
              OperDatePartner, InvNumberPartner, PriceWithVAT,
-             VATPercent, DiscountPercent, ExtraChargesPercent,
+             VATPercent, ChangePercent,
              FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId, PersonalPackerId);
 end;
 
 function TMovementIncomeTest.InsertUpdateMovementIncome(Id: Integer; InvNumber: String; OperDate: TDateTime;
              OperDatePartner: TDateTime; InvNumberPartner: String; PriceWithVAT: Boolean;
-             VATPercent, DiscountPercent, ExtraChargesPercent: double;
+             VATPercent, ChangePercent: double;
              FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId, PersonalPackerId: Integer):Integer;
 begin
   FParams.Clear;
@@ -164,8 +163,7 @@ begin
 
   FParams.AddParam('inPriceWithVAT', ftBoolean, ptInput, PriceWithVAT);
   FParams.AddParam('inVATPercent', ftFloat, ptInput, VATPercent);
-  FParams.AddParam('inDiscountPercent', ftFloat, ptInput, DiscountPercent);
-  FParams.AddParam('inExtraChargesPercent', ftFloat, ptInput, ExtraChargesPercent);
+  FParams.AddParam('inChangePercent', ftFloat, ptInput, ChangePercent);
 
   FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
   FParams.AddParam('inToId', ftInteger, ptInput, ToId);

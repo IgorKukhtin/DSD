@@ -71,8 +71,8 @@ procedure TdbMetaDataTest.InsertMovementDesc;
 begin
   ExecFile(MetadataPath + 'Movement\InsertMovementDesc.sql', ZQuery);
   ExecFile(MetadataPath + 'Movement\InsertMovementLinkObjectDesc.sql', ZQuery);
-  ExecFile(MetadataPath + 'Movement\InsertMovementFloatDesc.sql', ZQuery);
-  ExecFile(MetadataPath + 'Movement\InsertMovementDateDesc.sql', ZQuery);
+//  ExecFile(MetadataPath + 'Movement\InsertMovementFloatDesc.sql', ZQuery);
+//  ExecFile(MetadataPath + 'Movement\InsertMovementDateDesc.sql', ZQuery);
   ExecFile(MetadataPath + 'Movement\InsertMovementBooleanDesc.sql', ZQuery);
   ExecFile(MetadataPath + 'Movement\InsertMovementStringDesc.sql', ZQuery);
 end;

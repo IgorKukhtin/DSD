@@ -10,7 +10,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
                PaidKindId Integer, PaidKindName TVarChar, ContractId Integer, ContractName TVarChar,
                CarId Integer, CarName TVarChar, PersonalDriverId Integer, PersonalDriverName TVarChar,
                PersonalPackerId Integer, PersonalPackerName TVarChar, OperDatePartner TDateTime,
-               InvNumberPartner TVarChar, PriceWithVAT Boolean, VATPercent TFloat, DiscountPercent TFloat) 
+               InvNumberPartner TVarChar, PriceWithVAT Boolean, ChangePercent TFloat) 
 AS
 $BODY$
 BEGIN
@@ -41,8 +41,7 @@ BEGIN
        OperDatePartner.ValueData  AS OperDatePartner,
        InvNumberPartner.ValueData AS InvNumberPartner,
        PriceWithVAT.ValueData     AS PriceWithVAT,
-       VATPercent.ValueData       AS VATPercent,
-       DiscountPercent.ValueData  AS DiscountPercent
+            MovementFloat_ChangePercent.ValueData       AS ChangePercent
      FROM Movement
 LEFT JOIN Object AS Status 
        ON Status.id = Movement.StatusId    
@@ -90,12 +89,10 @@ LEFT JOIN MovementString AS InvNumberPartner
 LEFT JOIN MovementBoolean AS PriceWithVAT
        ON PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
       AND PriceWithVAT.MovementId =  Movement.Id
-LEFT JOIN MovementFloat AS VATPercent
-       ON VATPercent.DescId = zc_MovementFloat_VATPercent()
-      AND VATPercent.MovementId =  Movement.Id
-LEFT JOIN MovementFloat AS DiscountPercent
-       ON DiscountPercent.DescId = zc_MovementFloat_DiscountPercent()
-      AND DiscountPercent.MovementId =  Movement.Id
+
+            LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                    ON MovementFloat_ChangePercent.MovementId =  Movement.Id
+                                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
     WHERE Movement.Id = inId;
   
 END;
@@ -107,6 +104,7 @@ LANGUAGE PLPGSQL VOLATILE;
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
                
+ 08.07.13                                        * zc_MovementFloat_ChangePercent
  30.06.13                                        *
 
 */

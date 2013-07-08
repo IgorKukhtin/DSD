@@ -53,6 +53,7 @@ type
     cxGridDBTableViewColumn13: TcxGridDBColumn;
     cxGridDBTableViewColumn14: TcxGridDBColumn;
     cxGridDBTableViewColumn15: TcxGridDBColumn;
+    cxGridDBTableViewColumn16: TcxGridDBColumn;
   private
   public
   end;

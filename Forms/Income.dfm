@@ -387,6 +387,12 @@ inherited IncomeForm: TIncomeForm
             HeaderAlignmentHorz = taCenter
             Width = 60
           end
+          object colAccountOnComplete: TcxGridDBColumn
+            Caption = '***'
+            DataBinding.FieldName = 'AccountOnComplete'
+            HeaderAlignmentHorz = taCenter
+            Width = 25
+          end
           object colDebetAmount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1076#1077#1073#1077#1090
             DataBinding.FieldName = 'DebetAmount'

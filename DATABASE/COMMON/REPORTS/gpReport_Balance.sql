@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpReport_Balance(
     IN inEndDate     TDateTime , --
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (RootName TVarChar, AccountGroupCode Integer, AccountGroupName TVarChar, AccountDirectionCode Integer, AccountDirectionName TVarChar, AccountCode Integer, AccountName  TVarChar
+RETURNS TABLE (RootName TVarChar, AccountGroupCode Integer, AccountGroupName TVarChar, AccountDirectionCode Integer, AccountDirectionName TVarChar, AccountCode Integer, AccountName  TVarChar, AccountOnComplete Boolean
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyCode_Detail Integer, InfoMoneyName_Detail  TVarChar
              , AmountDebetStart TFloat, AmountKreditStart TFloat, AmountDebet TFloat, AmountKredit TFloat, AmountDebetEnd TFloat, AmountKreditEnd TFloat
               )
@@ -27,6 +27,7 @@ $BODY$BEGIN
            , lfObject_Account.AccountDirectionName            AS AccountDirectionName
            , lfObject_Account.AccountCode                     AS AccountCode
            , lfObject_Account.AccountName                     AS AccountName
+           , lfObject_Account.onComplete                      AS AccountOnComplete
 
            , lfObject_InfoMoney.InfoMoneyCode
            , lfObject_InfoMoney.InfoMoneyName
@@ -94,6 +95,7 @@ ALTER FUNCTION gpReport_Balance (TDateTime, TDateTime, TVarChar) OWNER TO postgr
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
 
+ 08.07.13                                        * add AccountOnComplete
  04.07.13                                        *
 */
 
