@@ -37,7 +37,6 @@ object MainForm: TMainForm
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 1102
     object Gauge: TGauge
       Left = 0
       Top = 0
@@ -117,7 +116,6 @@ object MainForm: TMainForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitLeft = 556
     object cbGoodsGroup: TCheckBox
       Tag = 10
       Left = 15
@@ -279,7 +277,7 @@ object MainForm: TMainForm
     object cbPriceList: TCheckBox
       Tag = 10
       Left = 15
-      Top = 341
+      Top = 361
       Width = 225
       Height = 17
       Caption = '5.1. '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099
@@ -288,7 +286,7 @@ object MainForm: TMainForm
     object cbPriceListItems: TCheckBox
       Tag = 10
       Left = 15
-      Top = 361
+      Top = 381
       Width = 225
       Height = 17
       Caption = '5.2. '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' - '#1094#1077#1085#1099
@@ -298,7 +296,7 @@ object MainForm: TMainForm
     object cbGoodsProperty: TCheckBox
       Tag = 10
       Left = 15
-      Top = 391
+      Top = 411
       Width = 289
       Height = 17
       Caption = '6.1. '#1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1099' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074
@@ -307,7 +305,7 @@ object MainForm: TMainForm
     object cbGoodsPropertyValue: TCheckBox
       Tag = 10
       Left = 15
-      Top = 411
+      Top = 431
       Width = 289
       Height = 17
       Caption = '6.2. '#1047#1085#1072#1095#1077#1085#1080#1103' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074' '#1076#1083#1103' '#1082#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1072
@@ -316,7 +314,7 @@ object MainForm: TMainForm
     object cbInfoMoneyGroup: TCheckBox
       Tag = 10
       Left = 15
-      Top = 441
+      Top = 461
       Width = 289
       Height = 17
       Caption = '7.1. '#1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1072#1085#1072#1083#1080#1090#1080#1082
@@ -325,7 +323,7 @@ object MainForm: TMainForm
     object cbInfoMoneyDestination: TCheckBox
       Tag = 10
       Left = 15
-      Top = 461
+      Top = 481
       Width = 289
       Height = 17
       Caption = '7.2. '#1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1072#1085#1072#1083#1080#1090#1080#1082#1080' - '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
@@ -334,7 +332,7 @@ object MainForm: TMainForm
     object cbInfoMoney: TCheckBox
       Tag = 10
       Left = 15
-      Top = 481
+      Top = 501
       Width = 289
       Height = 17
       Caption = '7.3. '#1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
@@ -343,7 +341,7 @@ object MainForm: TMainForm
     object cbAccountGroup: TCheckBox
       Tag = 10
       Left = 15
-      Top = 511
+      Top = 531
       Width = 289
       Height = 17
       Caption = '8.1. '#1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1089#1095#1077#1090#1086#1074
@@ -352,7 +350,7 @@ object MainForm: TMainForm
     object cbAccountDirection: TCheckBox
       Tag = 10
       Left = 15
-      Top = 531
+      Top = 551
       Width = 289
       Height = 17
       Caption = '8.2. '#1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1089#1095#1077#1090#1086#1074' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
@@ -361,7 +359,7 @@ object MainForm: TMainForm
     object cbAccount: TCheckBox
       Tag = 10
       Left = 15
-      Top = 551
+      Top = 571
       Width = 289
       Height = 17
       Caption = '8.3. '#1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1089#1095#1077#1090#1072
@@ -370,7 +368,7 @@ object MainForm: TMainForm
     object cbProfitLoss: TCheckBox
       Tag = 10
       Left = 15
-      Top = 621
+      Top = 641
       Width = 289
       Height = 17
       Caption = '9.3. '#1057#1090#1072#1090#1100#1080' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093' '
@@ -379,7 +377,7 @@ object MainForm: TMainForm
     object cbProfitLossDirection: TCheckBox
       Tag = 10
       Left = 15
-      Top = 601
+      Top = 621
       Width = 289
       Height = 17
       Caption = '9.2. '#1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1090#1072#1090#1077#1081' '#1054#1055#1048#1059' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077' '
@@ -388,11 +386,20 @@ object MainForm: TMainForm
     object cbProfitLossGroup: TCheckBox
       Tag = 10
       Left = 15
-      Top = 581
+      Top = 601
       Width = 289
       Height = 17
       Caption = '9.1. '#1043#1088#1091#1087#1087#1099' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093
       TabOrder = 27
+    end
+    object cbMember_andPersonal: TCheckBox
+      Tag = 10
+      Left = 15
+      Top = 331
+      Width = 221
+      Height = 17
+      Caption = '4.5. '#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072' '#1080' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080
+      TabOrder = 28
     end
   end
   object DocumentPanel: TPanel
@@ -404,8 +411,6 @@ object MainForm: TMainForm
     BevelOuter = bvNone
     TabOrder = 3
     OnClick = DocumentPanelClick
-    ExplicitLeft = 774
-    ExplicitTop = 33
     object Label1: TLabel
       Left = 6
       Top = 22
@@ -424,7 +429,7 @@ object MainForm: TMainForm
       Tag = 2
       Left = 15
       Top = 1
-      Width = 194
+      Width = 186
       Height = 17
       Caption = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       Font.Charset = DEFAULT_CHARSET
@@ -442,7 +447,7 @@ object MainForm: TMainForm
       Top = 61
       Width = 194
       Height = 17
-      Caption = '1. '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      Caption = '1.1. '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -463,6 +468,21 @@ object MainForm: TMainForm
       TabOrder = 3
       Width = 90
     end
+    object cbIncomePacker: TCheckBox
+      Tag = 20
+      Left = 14
+      Top = 81
+      Width = 194
+      Height = 17
+      Caption = '1.2. '#1055#1088#1080#1093#1086#1076' '#1086#1090' '#1079#1072#1075#1086#1090#1086#1074#1080#1090#1077#1083#1103
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 4
+    end
   end
   object CompleteDocumentPanel: TPanel
     Left = 1015
@@ -473,7 +493,6 @@ object MainForm: TMainForm
     BevelOuter = bvNone
     TabOrder = 4
     OnClick = DocumentPanelClick
-    ExplicitTop = 8
     object Label3: TLabel
       Left = 6
       Top = 22

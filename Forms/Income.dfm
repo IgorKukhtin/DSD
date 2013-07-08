@@ -78,7 +78,7 @@ inherited IncomeForm: TIncomeForm
     Height = 272
     Align = alClient
     TabOrder = 5
-    Properties.ActivePage = cxTabSheet2
+    Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 272
     ClientRectRight = 990
@@ -96,34 +96,138 @@ inherited IncomeForm: TIncomeForm
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource
-          DataController.Summary.DefaultGroupSummaryItems = <>
-          DataController.Summary.FooterSummaryItems = <>
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Kind = skSum
+              Position = spFooter
+              Column = colAmountSumm
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+              Column = colLiveWeight
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+              Column = colHeadCount
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+              Column = colAmount
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+              Column = colAmountPartner
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+              Column = colAmountPacker
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Kind = skSum
+              Column = colAmountSumm
+            end
+            item
+              Kind = skSum
+              Column = colLiveWeight
+            end
+            item
+              Kind = skSum
+              Column = colHeadCount
+            end
+            item
+              Kind = skSum
+              Column = colAmount
+            end
+            item
+              Kind = skSum
+              Column = colAmountPartner
+            end
+            item
+              Kind = skSum
+              Column = colAmountPacker
+            end>
           DataController.Summary.SummaryGroups = <>
           OptionsView.ColumnAutoWidth = True
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentHorz = taCenter
             Width = 58
           end
           object colName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsName'
-            Width = 417
+            HeaderAlignmentHorz = taCenter
+            Width = 200
+          end
+          object colGoodsKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsKindName'
+            HeaderAlignmentHorz = taCenter
+            Width = 100
+          end
+          object colPartionGoods: TcxGridDBColumn
+            Caption = #1055#1072#1088#1090#1080#1103
+            DataBinding.FieldName = 'PartionGoods'
+            HeaderAlignmentHorz = taCenter
+            Width = 120
           end
           object colAmount: TcxGridDBColumn
-            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
+            Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
-            Width = 100
+            HeaderAlignmentHorz = taCenter
+            Width = 80
+          end
+          object colAmountPartner: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1082#1086#1085#1090#1088'.'
+            DataBinding.FieldName = 'AmountPartner'
+            HeaderAlignmentHorz = taCenter
+            Width = 80
+          end
+          object colAmountPacker: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1079#1072#1075#1086#1090#1086#1074'.'
+            DataBinding.FieldName = 'AmountPacker'
+            HeaderAlignmentHorz = taCenter
+            Width = 80
           end
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
-            Width = 89
+            HeaderAlignmentHorz = taCenter
+            Width = 80
           end
-          object colSumm: TcxGridDBColumn
+          object colCountForPrice: TcxGridDBColumn
+            Caption = #1050#1086#1083' '#1074' '#1094#1077#1085#1077
+            DataBinding.FieldName = 'CountForPrice'
+            HeaderAlignmentHorz = taCenter
+          end
+          object colAmountSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
-            DataBinding.FieldName = 'Summ'
+            DataBinding.FieldName = 'AmountSumm'
+            HeaderAlignmentHorz = taCenter
             Width = 91
+          end
+          object colLiveWeight: TcxGridDBColumn
+            Caption = #1046#1080#1074#1086#1081' '#1074#1077#1089' '
+            DataBinding.FieldName = 'LiveWeight'
+            HeaderAlignmentHorz = taCenter
+          end
+          object colHeadCount: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
+            DataBinding.FieldName = 'HeadCount'
+            HeaderAlignmentHorz = taCenter
+          end
+          object colAssetName: TcxGridDBColumn
+            Caption = #1076#1083#1103' '#1054#1089#1085#1086#1074#1085#1086#1075#1086' '#1089#1088#1077#1076#1089#1090#1074#1072
+            DataBinding.FieldName = 'AssetName'
+            HeaderAlignmentHorz = taCenter
+            Width = 80
           end
         end
         object cxGridLevel: TcxGridLevel
@@ -163,101 +267,125 @@ inherited IncomeForm: TIncomeForm
             Caption = #1057#1095#1077#1090' '#1044' '#1043#1088#1091#1087#1087#1072' '#1082#1086#1076
             DataBinding.FieldName = 'DebetAccountGroupCode'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             Width = 40
           end
           object colDebetAccountGroupName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1044' '#1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'DebetAccountGroupName'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             Width = 90
           end
           object colDebetAccountDirectionCode: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1044' '#1053#1072#1087#1088#1072#1074#1083' '#1082#1086#1076
             DataBinding.FieldName = 'DebetAccountDirectionCode'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             Width = 40
           end
           object colDebetAccountDirectionName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1044' '#1053#1072#1087#1088#1072#1074#1083
             DataBinding.FieldName = 'DebetAccountDirectionName'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             Width = 90
           end
           object colDebetAccountCode: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1044' '#1082#1086#1076
             DataBinding.FieldName = 'DebetAccountCode'
+            HeaderAlignmentHorz = taCenter
             Width = 40
           end
           object colDebetAccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1044
             DataBinding.FieldName = 'DebetAccountName'
+            HeaderAlignmentHorz = taCenter
             Width = 120
           end
           object colKreditAccountGroupCode: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1050' '#1043#1088#1091#1087#1087#1072' '#1082#1086#1076
             DataBinding.FieldName = 'KreditAccountGroupCode'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             Width = 40
           end
           object colKreditAccountGroupName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1050' '#1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'KreditAccountGroupName'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             Width = 80
           end
           object colKreditAccountDirectionCode: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1050' '#1053#1072#1087#1088#1072#1074#1083' '#1082#1086#1076
             DataBinding.FieldName = 'KreditAccountDirectionCode'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             Width = 40
           end
           object colKreditAccountDirectionName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1050' '#1053#1072#1087#1088#1072#1074#1083
             DataBinding.FieldName = 'KreditAccountDirectionName'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             Width = 80
           end
           object colKreditAccountCode: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1050' '#1082#1086#1076
             DataBinding.FieldName = 'KreditAccountCode'
+            HeaderAlignmentHorz = taCenter
             Width = 40
           end
           object colKreditAccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1050
             DataBinding.FieldName = 'KreditAccountName'
+            HeaderAlignmentHorz = taCenter
             Width = 120
           end
           object colByObjectCode: TcxGridDBColumn
             Caption = #1054#1073'.'#1082#1086#1076
             DataBinding.FieldName = 'ByObjectCode'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             Width = 40
           end
           object colByObjectName: TcxGridDBColumn
             Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'ByObjectName'
+            HeaderAlignmentHorz = taCenter
             Width = 80
           end
           object colGoodsGroupName: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074
+            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsGroupName'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             Width = 80
           end
           object colGoodsName: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088#1099
+            Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             Width = 80
+          end
+          object colGoodsKindName_comlete: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsKindName'
+            HeaderAlignmentHorz = taCenter
+            Width = 70
           end
           object colDebetAmount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1076#1077#1073#1077#1090
             DataBinding.FieldName = 'DebetAmount'
+            HeaderAlignmentHorz = taCenter
             Width = 70
           end
           object colKreditAmount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1082#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'KreditAmount'
+            HeaderAlignmentHorz = taCenter
             Width = 70
           end
         end
@@ -404,7 +532,7 @@ inherited IncomeForm: TIncomeForm
           'Width')
       end
       item
-        Component = colSumm
+        Component = colAmountSumm
         Properties.Strings = (
           'SortIndex'
           'SortOrder'
@@ -473,8 +601,8 @@ inherited IncomeForm: TIncomeForm
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 32
-    Top = 88
+    Left = 72
+    Top = 56
   end
   object dsdGuidesFrom: TdsdGuides
     LookupControl = edFrom
@@ -662,7 +790,7 @@ inherited IncomeForm: TIncomeForm
         Value = '0'
       end>
     Left = 520
-    Top = 152
+    Top = 120
   end
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'

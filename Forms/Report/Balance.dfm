@@ -2,6 +2,7 @@ inherited BalanceForm: TBalanceForm
   Caption = #1041#1072#1083#1072#1085#1089
   ClientHeight = 376
   ClientWidth = 1329
+  ExplicitLeft = 0
   ExplicitWidth = 1337
   ExplicitHeight = 403
   PixelsPerInch = 96
@@ -87,76 +88,91 @@ inherited BalanceForm: TBalanceForm
       object cxGridDBTableViewColumn1: TcxGridDBColumn
         Caption = #1040'-'#1055
         DataBinding.FieldName = 'RootName'
+        HeaderAlignmentHorz = taCenter
         Width = 50
       end
       object cxGridDBTableViewColumn2: TcxGridDBColumn
         Caption = #1057#1095#1077#1090' - '#1075#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'AccountGroupName'
+        HeaderAlignmentHorz = taCenter
         Width = 100
       end
       object cxGridDBTableViewColumn3: TcxGridDBColumn
         Caption = #1057#1095#1077#1090' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'AccountDirectionName'
+        HeaderAlignmentHorz = taCenter
         Width = 100
       end
       object cxGridDBTableViewColumn4: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1057#1095#1077#1090#1072
         DataBinding.FieldName = 'AccountCode'
+        HeaderAlignmentHorz = taCenter
         Width = 50
       end
       object cxGridDBTableViewColumn5: TcxGridDBColumn
         Caption = #1057#1095#1077#1090' - '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'AccountName'
+        HeaderAlignmentHorz = taCenter
         Width = 100
       end
       object cxGridDBTableViewColumn12: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1089#1090'. '#1085#1072#1079#1085#1072#1095'.'
         DataBinding.FieldName = 'InfoMoneyCode'
+        HeaderAlignmentHorz = taCenter
         Width = 60
       end
       object cxGridDBTableViewColumn13: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
+        HeaderAlignmentHorz = taCenter
         Width = 80
       end
       object cxGridDBTableViewColumn14: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1089#1090'. '#1085#1072#1079#1085#1072#1095'.'#1076#1077#1090'.'
         DataBinding.FieldName = 'InfoMoneyCode_Detail'
+        HeaderAlignmentHorz = taCenter
         Width = 60
       end
       object cxGridDBTableViewColumn15: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' '#1076#1077#1090#1072#1083#1100#1085#1086
         DataBinding.FieldName = 'InfoMoneyName_Detail'
+        HeaderAlignmentHorz = taCenter
         Width = 100
       end
       object cxGridDBTableViewColumn6: TcxGridDBColumn
         Caption = #1044#1077#1073#1077#1090' '#1085#1072#1095#1072#1083#1100#1085#1099#1081
         DataBinding.FieldName = 'AmountDebetStart'
+        HeaderAlignmentHorz = taCenter
         Width = 75
       end
       object cxGridDBTableViewColumn7: TcxGridDBColumn
         Caption = #1050#1088#1077#1076#1080#1090' '#1085#1072#1095#1072#1083#1100#1085#1099#1081
         DataBinding.FieldName = 'AmountKreditStart'
+        HeaderAlignmentHorz = taCenter
         Width = 75
       end
       object cxGridDBTableViewColumn8: TcxGridDBColumn
         Caption = #1044#1077#1073#1077#1090' '#1086#1073#1086#1088#1086#1090
         DataBinding.FieldName = 'AmountDebet'
+        HeaderAlignmentHorz = taCenter
         Width = 75
       end
       object cxGridDBTableViewColumn9: TcxGridDBColumn
         Caption = #1050#1088#1077#1076#1080#1090' '#1086#1073#1086#1088#1086#1090
         DataBinding.FieldName = 'AmountKredit'
+        HeaderAlignmentHorz = taCenter
         Width = 75
       end
       object cxGridDBTableViewColumn10: TcxGridDBColumn
         Caption = #1044#1077#1073#1077#1090' '#1082#1086#1085#1077#1095#1085#1099#1081
         DataBinding.FieldName = 'AmountDebetEnd'
+        HeaderAlignmentHorz = taCenter
         Width = 75
       end
       object cxGridDBTableViewColumn11: TcxGridDBColumn
         Caption = #1050#1088#1077#1076#1080#1090' '#1082#1086#1085#1077#1095#1085#1099#1081
         DataBinding.FieldName = 'AmountKreditEnd'
+        HeaderAlignmentHorz = taCenter
         Width = 75
       end
     end

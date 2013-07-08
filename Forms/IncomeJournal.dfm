@@ -1,19 +1,20 @@
 inherited IncomeJournalForm: TIncomeJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
   ClientHeight = 376
-  ClientWidth = 619
-  ExplicitWidth = 627
+  ClientWidth = 1240
+  ExplicitWidth = 1248
   ExplicitHeight = 403
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
     Top = 26
-    Width = 619
+    Width = 1240
     Height = 41
     Align = alTop
     Caption = 'Panel1'
     TabOrder = 1
+    ExplicitWidth = 619
     object deStart: TcxDateEdit
       Left = 208
       Top = 8
@@ -32,11 +33,12 @@ inherited IncomeJournalForm: TIncomeJournalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 67
-    Width = 619
+    Width = 1240
     Height = 309
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
+    ExplicitWidth = 619
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -84,18 +86,86 @@ inherited IncomeJournalForm: TIncomeJournalForm
         Width = 47
       end
       object colFromName: TcxGridDBColumn
-        Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+        Caption = #1054#1090' '#1082#1086#1075#1086
         DataBinding.FieldName = 'FromName'
-        Width = 172
+        Width = 140
       end
       object colToName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        Caption = #1050#1086#1084#1091
         DataBinding.FieldName = 'ToName'
-        Width = 192
+        Width = 140
       end
-      object cxGridDBTableViewColumn6: TcxGridDBColumn
+      object colPaidKindName: TcxGridDBColumn
+        Caption = #1042#1080#1076
+        DataBinding.FieldName = 'PaidKindName'
+        Width = 30
+      end
+      object colTotalCount: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086
+        DataBinding.FieldName = 'TotalCount'
+      end
+      object colTotalSumm: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1087#1086#1089#1090#1072#1074#1097'.'
+        DataBinding.FieldName = 'TotalSumm'
+        Width = 80
+      end
+      object colTotalSummPacker: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1079#1072#1075#1086#1090#1086#1074'.'
+        DataBinding.FieldName = 'TotalSummPacker'
+        Width = 80
+      end
+      object colTotalSummSpending: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1079#1072#1090#1088#1072#1090
+        DataBinding.FieldName = 'TotalSummSpending'
+        Width = 75
+      end
+      object colChangePercent: TcxGridDBColumn
+        Caption = '(-)% '#1057#1082', (+)% '#1053#1072#1094
+        DataBinding.FieldName = 'ChangePercent'
+        Width = 90
+      end
+      object colPersonalPackerName: TcxGridDBColumn
+        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1079#1072#1075#1086#1090#1086#1074#1080#1090#1077#1083#1100')'
+        DataBinding.FieldName = 'PersonalPackerName'
+        Width = 145
+      end
+      object colPriceWithVAT: TcxGridDBColumn
+        Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' '
+        DataBinding.FieldName = 'PriceWithVAT'
+      end
+      object colVATPercent: TcxGridDBColumn
+        Caption = '% '#1053#1044#1057
+        DataBinding.FieldName = 'VATPercent'
+        Width = 45
+      end
+      object colTotalSummVAT: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
+        DataBinding.FieldName = 'TotalSummVAT'
+        Width = 60
+      end
+      object colTotalSummMVAT: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
+        DataBinding.FieldName = 'TotalSummMVAT'
+        Visible = False
+        Width = 80
+      end
+      object colTotalSummPVAT: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
-        Width = 94
+        DataBinding.FieldName = 'TotalSummPVAT'
+        Width = 70
+      end
+      object colContractName: TcxGridDBColumn
+        Caption = #1044#1086#1075#1086#1074#1086#1088
+        DataBinding.FieldName = 'ContractName'
+        Width = 55
+      end
+      object colCarName: TcxGridDBColumn
+        Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
+        DataBinding.FieldName = 'CarName'
+      end
+      object colPersonalDriverName: TcxGridDBColumn
+        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1074#1086#1076#1080#1090#1077#1083#1100')'
+        DataBinding.FieldName = 'PersonalDriverName'
       end
     end
     object cxGridLevel: TcxGridLevel

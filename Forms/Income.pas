@@ -59,7 +59,7 @@ type
     colName: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
     colPrice: TcxGridDBColumn;
-    colSumm: TcxGridDBColumn;
+    colAmountSumm: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     spSelectMovementContainerItem: TdsdStoredProc;
     cxGridEntryDBTableView: TcxGridDBTableView;
@@ -90,6 +90,15 @@ type
     colByObjectCode: TcxGridDBColumn;
     colByObjectName: TcxGridDBColumn;
     colGoodsName: TcxGridDBColumn;
+    colAmountPartner: TcxGridDBColumn;
+    colAmountPacker: TcxGridDBColumn;
+    colCountForPrice: TcxGridDBColumn;
+    colHeadCount: TcxGridDBColumn;
+    colPartionGoods: TcxGridDBColumn;
+    colLiveWeight: TcxGridDBColumn;
+    colGoodsKindName: TcxGridDBColumn;
+    colAssetName: TcxGridDBColumn;
+    colGoodsKindName_comlete: TcxGridDBColumn;
   private
     { Private declarations }
   public

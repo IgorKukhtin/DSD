@@ -67,4 +67,5 @@ ALTER FUNCTION gpInsertUpdate_Object_Personal (Integer, Integer, TVarChar, Integ
 */
 
 -- עוסע
--- SELECT * FROM gpInsertUpdate_Object_Personal ()
+-- SELECT * FROM gpInsertUpdate_Object_Personal (ioId:=0, inCode:=0, inName:='×ÓÌÀÊ חאדמעמגטעוכü', inMemberId:=26622, inPositionId:=0, inUnitId:=21778, inJuridicalId:=23966, inBusinessId:=0, inDateIn:=null, inDateOut:=null, inSession:='2')
+    

@@ -1,6 +1,6 @@
 ﻿-- Function: gpSelect_Object_Personal()
 
---DROP FUNCTION gpSelect_Object_Personal();
+-- DROP FUNCTION gpSelect_Object_Personal();
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Personal(
     IN inSession     TVarChar       -- сессия пользователя
@@ -66,7 +66,7 @@ BEGIN
 
           LEFT JOIN ObjectLink AS ObjectLink_Personal_Juridical
                  ON ObjectLink_Personal_Juridical.ObjectId = Object_Personal.Id
-                AND ObjectLink_Personal_Juridical.DescId = zc_ObjectLink_Personal_Position()
+                AND ObjectLink_Personal_Juridical.DescId = zc_ObjectLink_Personal_Juridical()
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Personal_Juridical.ChildObjectId
            
           LEFT JOIN ObjectLink AS ObjectLink_Personal_Business
@@ -85,17 +85,18 @@ BEGIN
 END;
 $BODY$
 
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Personal(TVarChar) OWNER TO postgres;
+LANGUAGE PLPGSQL VOLATILE;
+ALTER FUNCTION gpSelect_Object_Personal (TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.07.13                                        * error zc_ObjectLink_Personal_Juridical
  01.07.13          *              
 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Personal('2')
+-- SELECT * FROM gpSelect_Object_Personal ('2')

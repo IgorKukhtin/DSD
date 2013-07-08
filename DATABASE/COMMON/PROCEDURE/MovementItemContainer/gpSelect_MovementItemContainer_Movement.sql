@@ -9,8 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItemContainer_Movement(
 )
 RETURNS TABLE (DebetAmount TFloat, DebetAccountGroupCode Integer, DebetAccountGroupName TVarChar, DebetAccountDirectionCode Integer, DebetAccountDirectionName TVarChar, DebetAccountCode Integer, DebetAccountName  TVarChar
              , KreditAmount TFloat, KreditAccountGroupCode Integer, KreditAccountGroupName TVarChar, KreditAccountDirectionCode Integer, KreditAccountDirectionName TVarChar, KreditAccountCode Integer, KreditAccountName  TVarChar
-             , ByObjectCode Integer, ByObjectName TVarChar, GoodsGroupCode Integer, GoodsGroupName TVarChar, GoodsCode Integer, GoodsName TVarChar
-               )
+             , ByObjectCode Integer, ByObjectName TVarChar, GoodsGroupCode Integer, GoodsGroupName TVarChar, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
+              )
 AS
 $BODY$
 BEGIN
@@ -42,6 +42,7 @@ BEGIN
            , tmpMovementItemContainer.GoodsGroupName
            , tmpMovementItemContainer.GoodsCode
            , tmpMovementItemContainer.GoodsName
+           , tmpMovementItemContainer.GoodsKindName
        FROM 
            (SELECT 
                   SUM (MovementItemContainer.Amount)  AS Amount
@@ -52,6 +53,7 @@ BEGIN
                 , Object_GoodsGroup.ValueData  AS GoodsGroupName
                 , Object_Goods.ObjectCode      AS GoodsCode
                 , Object_Goods.ValueData       AS GoodsName
+                , Object_GoodsKind.ValueData   AS GoodsKindName
             FROM MovementItemContainer
                  JOIN Container ON Container.Id = MovementItemContainer.ContainerId
                                AND Container.DescId = zc_Container_Summ()
@@ -77,6 +79,12 @@ BEGIN
                                      AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
                  LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
+                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_GoodsKind
+                                               ON ContainerLinkObject_GoodsKind.ContainerId = MovementItemContainer.ContainerId
+                                              AND ContainerLinkObject_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                                              -- AND 1=0
+                 LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ContainerLinkObject_GoodsKind.ObjectId
+
             WHERE MovementItemContainer.MovementId = inMovementId
               AND MovementItemContainer.Amount > 0
             GROUP BY Container.ObjectId
@@ -86,6 +94,7 @@ BEGIN
                    , Object_GoodsGroup.ValueData
                    , Object_Goods.ObjectCode
                    , Object_Goods.ValueData
+                   , Object_GoodsKind.ValueData
            ) AS tmpMovementItemContainer
            LEFT JOIN lfSelect_Object_Account() AS lfObject_Account ON lfObject_Account.AccountId = tmpMovementItemContainer.ObjectId
 
@@ -113,6 +122,7 @@ BEGIN
            , tmpMovementItemContainer.GoodsGroupName
            , tmpMovementItemContainer.GoodsCode
            , tmpMovementItemContainer.GoodsName
+           , tmpMovementItemContainer.GoodsKindName
        FROM 
            (SELECT 
                   -SUM (MovementItemContainer.Amount)  AS Amount
@@ -123,6 +133,7 @@ BEGIN
                 , Object_GoodsGroup.ValueData  AS GoodsGroupName
                 , Object_Goods.ObjectCode      AS GoodsCode
                 , Object_Goods.ValueData       AS GoodsName
+                , Object_GoodsKind.ValueData   AS GoodsKindName
             FROM MovementItemContainer
                  JOIN Container ON Container.Id = MovementItemContainer.ContainerId
                                AND Container.DescId = zc_Container_Summ()
@@ -148,6 +159,12 @@ BEGIN
                                      AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
                  LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
+                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_GoodsKind
+                                               ON ContainerLinkObject_GoodsKind.ContainerId = MovementItemContainer.ContainerId
+                                              AND ContainerLinkObject_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
+                                              -- AND 1=0
+                 LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ContainerLinkObject_GoodsKind.ObjectId
+
             WHERE MovementItemContainer.MovementId = inMovementId
               AND MovementItemContainer.Amount < 0
             GROUP BY Container.ObjectId
@@ -157,12 +174,12 @@ BEGIN
                    , Object_GoodsGroup.ValueData
                    , Object_Goods.ObjectCode
                    , Object_Goods.ValueData
+                   , Object_GoodsKind.ValueData
            ) AS tmpMovementItemContainer
            LEFT JOIN lfSelect_Object_Account() AS lfObject_Account ON lfObject_Account.AccountId = tmpMovementItemContainer.ObjectId;
      
 END;
 $BODY$
-
 LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_MovementItemContainer_Movement (Integer, TVarChar) OWNER TO postgres;
 
