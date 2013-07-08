@@ -1,9 +1,9 @@
 inherited IncomeJournalForm: TIncomeJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
-  ClientHeight = 376
+  ClientHeight = 425
   ClientWidth = 1240
   ExplicitWidth = 1248
-  ExplicitHeight = 403
+  ExplicitHeight = 452
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -34,11 +34,12 @@ inherited IncomeJournalForm: TIncomeJournalForm
     Left = 0
     Top = 67
     Width = 1240
-    Height = 309
+    Height = 358
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
     ExplicitWidth = 619
+    ExplicitHeight = 309
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -162,10 +163,12 @@ inherited IncomeJournalForm: TIncomeJournalForm
       object colCarName: TcxGridDBColumn
         Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
         DataBinding.FieldName = 'CarName'
+        Width = 55
       end
       object colPersonalDriverName: TcxGridDBColumn
         Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1074#1086#1076#1080#1090#1077#1083#1100')'
         DataBinding.FieldName = 'PersonalDriverName'
+        Width = 55
       end
     end
     object cxGridLevel: TcxGridLevel

@@ -54,9 +54,7 @@ type
     cxGridDBTableViewColumn14: TcxGridDBColumn;
     cxGridDBTableViewColumn15: TcxGridDBColumn;
   private
-    { Private declarations }
   public
-    { Public declarations }
   end;
 
 implementation

@@ -79,9 +79,7 @@ type
     colTotalSummPacker: TcxGridDBColumn;
     colTotalSummSpending: TcxGridDBColumn;
   private
-    { Private declarations }
   public
-    { Public declarations }
   end;
 
 implementation

@@ -1,20 +1,20 @@
 inherited BalanceForm: TBalanceForm
   Caption = #1041#1072#1083#1072#1085#1089
-  ClientHeight = 376
+  ClientHeight = 395
   ClientWidth = 1329
-  ExplicitLeft = 0
   ExplicitWidth = 1337
-  ExplicitHeight = 403
+  ExplicitHeight = 422
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
     Width = 1329
-    Height = 350
+    Height = 369
     Align = alClient
     TabOrder = 0
     ExplicitWidth = 754
+    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -89,7 +89,7 @@ inherited BalanceForm: TBalanceForm
         Caption = #1040'-'#1055
         DataBinding.FieldName = 'RootName'
         HeaderAlignmentHorz = taCenter
-        Width = 50
+        Width = 55
       end
       object cxGridDBTableViewColumn2: TcxGridDBColumn
         Caption = #1057#1095#1077#1090' - '#1075#1088#1091#1087#1087#1072
