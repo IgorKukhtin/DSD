@@ -17,8 +17,8 @@ object MainForm: TMainForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -33,7 +33,7 @@ object MainForm: TMainForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManager1Bar1: TdxBar
       Caption = 'MainMenu'
@@ -144,6 +144,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbCash'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarSeparator1'
         end
         item
@@ -160,7 +164,15 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbPriceList'
+        end
+        item
+          Visible = True
           ItemName = 'bbMeasure'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCurrency'
         end
         item
           Visible = True
@@ -254,6 +266,18 @@ object MainForm: TMainForm
       Action = actBank
       Category = 0
     end
+    object bbPriceList: TdxBarButton
+      Action = actPrisceList
+      Category = 0
+    end
+    object bbCash: TdxBarButton
+      Action = actCash
+      Category = 0
+    end
+    object bbCurrency: TdxBarButton
+      Action = actCurrency
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Left = 192
@@ -299,8 +323,8 @@ object MainForm: TMainForm
     end
     object actCash: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      Caption = #1050#1072#1089#1089#1099
-      Hint = #1050#1072#1089#1089#1099
+      Caption = #1050#1072#1089#1089#1072
+      Hint = #1050#1072#1089#1089#1072
       FormName = 'TCashForm'
       GuiParams = <>
       isShowModal = False
@@ -420,6 +444,14 @@ object MainForm: TMainForm
       Category = #1054#1090#1095#1077#1090#1099
       Caption = #1041#1072#1083#1072#1085#1089
       FormName = 'TBalanceForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actPrisceList: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090#1099
+      Hint = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090#1099
+      FormName = 'TPriceListForm'
       GuiParams = <>
       isShowModal = False
     end

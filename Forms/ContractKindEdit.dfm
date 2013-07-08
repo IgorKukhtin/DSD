@@ -2,8 +2,8 @@
   Caption = #1042#1080#1076' '#1082#1086#1085#1090#1088#1072#1082#1090#1086#1074
   ClientHeight = 142
   ClientWidth = 349
-  ExplicitWidth = 357
-  ExplicitHeight = 169
+  ExplicitWidth = 365
+  ExplicitHeight = 180
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -95,12 +95,14 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inName'
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        Value = ''
       end>
     Left = 240
     Top = 48
@@ -134,14 +136,31 @@
         Component = edName
         DataType = ftString
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'Code'
         Component = ceCode
         DataType = ftInteger
         ParamType = ptOutput
+        Value = ''
       end>
     Left = 192
     Top = 88
+  end
+  object cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
+    StorageName = 'cxPropertiesStore'
+    StorageType = stStream
+    Left = 8
+    Top = 24
   end
 end

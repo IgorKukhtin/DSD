@@ -1,21 +1,21 @@
-inherited GoodsPropertyForm: TGoodsPropertyForm
-  Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
-  ClientHeight = 376
-  ClientWidth = 390
-  ExplicitWidth = 406
-  ExplicitHeight = 414
+inherited AccountGroupForm: TAccountGroupForm
+  Caption = #1043#1088#1091#1087#1087#1099' '#1089#1095#1077#1090#1086#1074
+  ClientHeight = 408
+  ClientWidth = 368
+  ExplicitWidth = 384
+  ExplicitHeight = 446
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 28
-    Width = 390
-    Height = 348
+    Width = 368
+    Height = 380
     Align = alClient
     TabOrder = 0
-    LookAndFeel.Kind = lfStandard
-    LookAndFeel.NativeStyle = False
-    LookAndFeel.SkinName = ''
+    ExplicitTop = -135
+    ExplicitWidth = 390
+    ExplicitHeight = 348
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -26,7 +26,6 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
       OptionsBehavior.IncSearchItem = clName
-      OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
@@ -41,17 +40,13 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
+        Width = 75
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 252
-      end
-      object clErased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'isErased'
-        HeaderAlignmentVert = vaCenter
+        Width = 458
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -60,14 +55,14 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 48
-    Top = 96
+    Left = 32
+    Top = 112
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 48
-    Top = 176
+    Left = 136
+    Top = 88
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -81,7 +76,7 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 240
+    Left = 376
     Top = 88
   end
   object dxBarManager: TdxBarManager
@@ -100,8 +95,8 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 160
-    Top = 96
+    Left = 168
+    Top = 192
     DockControlHeights = (
       0
       0
@@ -136,11 +131,11 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
           ItemName = 'bbUnErased'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
         end
@@ -153,8 +148,9 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
           ItemName = 'dxBarStatic'
         end
         item
+          BeginGroup = True
           Visible = True
-          ItemName = 'bbChoiceGuides'
+          ItemName = 'bbChoiceGuide'
         end>
       OneOnRow = True
       Row = 0
@@ -182,25 +178,25 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
       Action = dsdSetUnErased
       Category = 0
     end
+    object dxBarStatic: TdxBarStatic
+      Caption = '      '
+      Category = 0
+      Hint = '      '
+      Visible = ivAlways
+    end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
       Category = 0
     end
-    object bbChoiceGuides: TdxBarButton
+    object bbChoiceGuide: TdxBarButton
       Action = dsdChoiceGuides
       Category = 0
-    end
-    object dxBarStatic: TdxBarStatic
-      Caption = '     '
-      Category = 0
-      Hint = '     '
-      Visible = ivAlways
     end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 328
-    Top = 224
+    Left = 264
+    Top = 120
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -218,7 +214,7 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'GoodsPropertyEditForm'
+      FormName = 'TAccountGroupEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -226,7 +222,7 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
           ParamType = ptOutput
           Value = '0'
         end>
-      isShowModal = True
+      isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
@@ -235,7 +231,7 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'GoodsPropertyEditForm'
+      FormName = 'TGoodsKindEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -244,28 +240,36 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
           DataType = ftInteger
           ParamType = ptInput
         end>
-      isShowModal = True
+      isShowModal = False
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
-    object dsdSetErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      StoredProcList = <>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 2
-      ShortCut = 46
-      DataSource = DataSource
-    end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
-      StoredProcList = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 32776
       isSetErased = False
+      DataSource = DataSource
+    end
+    object dsdSetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ShortCut = 46
       DataSource = DataSource
     end
     object dsdGridToExcel: TdsdGridToExcel
@@ -286,23 +290,42 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_GoodsProperty'
+    StoredProcName = 'gpSelect_Object_GoodsKind'
     DataSet = ClientDataSet
     DataSets = <
       item
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 136
-    Top = 224
+    Left = 112
+    Top = 152
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 168
-    Top = 152
+    Left = 416
+    Top = 184
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     View = cxGridDBTableView
-    Left = 224
-    Top = 232
+    Left = 272
+    Top = 224
+  end
+  object spErasedUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSet = ClientDataSet
+    DataSets = <
+      item
+        DataSet = ClientDataSet
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+    Left = 48
+    Top = 192
   end
 end

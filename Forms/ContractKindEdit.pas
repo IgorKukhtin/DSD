@@ -24,6 +24,7 @@ type
     dsdFormClose1: TdsdFormClose;
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
+    cxPropertiesStore: TcxPropertiesStore;
   private
     { Private declarations }
   public

@@ -2,8 +2,8 @@
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1074#1072#1083#1102#1090#1099
   ClientHeight = 201
   ClientWidth = 338
-  ExplicitWidth = 346
-  ExplicitHeight = 228
+  ExplicitWidth = 354
+  ExplicitHeight = 239
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -107,18 +107,21 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inName'
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inInternalName'
         Component = edMFO
         DataType = ftString
         ParamType = ptInput
+        Value = ''
       end>
     Left = 240
     Top = 48
@@ -152,20 +155,46 @@
         Component = edName
         DataType = ftString
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'Code'
         Component = ceCode
         DataType = ftInteger
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'InternalName'
         Component = edMFO
         DataType = ftInteger
         ParamType = ptOutput
+        Value = ''
       end>
     Left = 168
     Top = 96
+  end
+  object cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Properties.Strings = (
+          'Width')
+      end
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
+    StorageName = 'cxPropertiesStore'
+    StorageType = stStream
+    Left = 128
+    Top = 40
+  end
+  object dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn
+    Left = 48
+    Top = 88
   end
 end

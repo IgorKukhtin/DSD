@@ -2,8 +2,8 @@
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1092#1080#1083#1080#1072#1083#1072
   ClientHeight = 210
   ClientWidth = 346
-  ExplicitWidth = 354
-  ExplicitHeight = 237
+  ExplicitWidth = 362
+  ExplicitHeight = 248
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -115,12 +115,14 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inName'
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inJuridicalId'
@@ -161,12 +163,14 @@
         Component = edName
         DataType = ftString
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'Code'
         Component = ceCode
         DataType = ftInteger
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'JuridicalId'
@@ -210,8 +214,33 @@
     Top = 117
   end
   object dsdJuridicalGuides: TdsdGuides
+    Key = '0'
     LookupControl = ceJuridical
+    PositionDataSet = 'ClientDataSet'
     Left = 312
     Top = 125
+  end
+  object cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end
+      item
+        Properties.Strings = (
+          'Width')
+      end>
+    StorageName = 'cxPropertiesStore'
+    StorageType = stStream
+    Left = 232
+    Top = 96
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 24
+    Top = 40
   end
 end

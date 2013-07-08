@@ -1,21 +1,24 @@
-inherited GoodsPropertyForm: TGoodsPropertyForm
-  Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
-  ClientHeight = 376
-  ClientWidth = 390
-  ExplicitWidth = 406
-  ExplicitHeight = 414
+inherited ProfitLossDirectionForm: TProfitLossDirectionForm
+  Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
+  ClientHeight = 391
+  ClientWidth = 451
+  ExplicitWidth = 467
+  ExplicitHeight = 429
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 28
-    Width = 390
-    Height = 348
+    Width = 451
+    Height = 363
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitTop = 16
+    ExplicitWidth = 337
+    ExplicitHeight = 345
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -41,17 +44,13 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
+        Width = 52
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 252
-      end
-      object clErased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'isErased'
-        HeaderAlignmentVert = vaCenter
+        Width = 286
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -66,8 +65,8 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 48
-    Top = 176
+    Left = 40
+    Top = 152
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -81,8 +80,8 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 240
-    Top = 88
+    Left = 280
+    Top = 96
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -136,11 +135,11 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
           ItemName = 'bbUnErased'
         end
         item
-          BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
         end
@@ -186,21 +185,21 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
       Action = dsdGridToExcel
       Category = 0
     end
-    object bbChoiceGuides: TdxBarButton
-      Action = dsdChoiceGuides
-      Category = 0
-    end
     object dxBarStatic: TdxBarStatic
       Caption = '     '
       Category = 0
       Hint = '     '
       Visible = ivAlways
     end
+    object bbChoiceGuides: TdxBarButton
+      Action = dsdChoiceGuides
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 328
-    Top = 224
+    Left = 280
+    Top = 152
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -218,7 +217,7 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'GoodsPropertyEditForm'
+      FormName = 'ProfitLossDirectionEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -293,16 +292,16 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 136
-    Top = 224
+    Left = 40
+    Top = 208
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 168
+    Left = 160
     Top = 152
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     View = cxGridDBTableView
-    Left = 224
-    Top = 232
+    Left = 160
+    Top = 208
   end
 end

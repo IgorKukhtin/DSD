@@ -2,17 +2,19 @@ inherited GoodsKindForm: TGoodsKindForm
   Caption = #1042#1080#1076#1099' '#1090#1086#1074#1072#1088#1086#1074
   ClientHeight = 376
   ClientWidth = 390
-  ExplicitWidth = 398
-  ExplicitHeight = 403
+  ExplicitWidth = 406
+  ExplicitHeight = 414
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 28
     Width = 390
-    Height = 350
+    Height = 348
     Align = alClient
     TabOrder = 0
+    ExplicitLeft = -8
+    ExplicitTop = 44
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -59,13 +61,13 @@ inherited GoodsKindForm: TGoodsKindForm
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 24
-    Top = 80
+    Top = 88
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 32
-    Top = 96
+    Top = 104
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -80,13 +82,13 @@ inherited GoodsKindForm: TGoodsKindForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 272
-    Top = 88
+    Top = 96
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -98,11 +100,12 @@ inherited GoodsKindForm: TGoodsKindForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 256
+    Left = 176
+    Top = 120
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -202,7 +205,8 @@ inherited GoodsKindForm: TGoodsKindForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 288
+    Left = 104
+    Top = 200
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -299,16 +303,16 @@ inherited GoodsKindForm: TGoodsKindForm
       end>
     Params = <>
     Left = 64
-    Top = 112
+    Top = 120
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 296
-    Top = 96
+    Top = 104
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     View = cxGridDBTableView
     Left = 296
-    Top = 160
+    Top = 168
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -327,6 +331,6 @@ inherited GoodsKindForm: TGoodsKindForm
         ParamType = ptInput
       end>
     Left = 48
-    Top = 104
+    Top = 112
   end
 end

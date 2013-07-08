@@ -20,10 +20,10 @@ $BODY$BEGIN
    , Object.isErased    AS isErased
    , Currency.ValueData AS CurrencyName
    FROM Object
-   JOIN ObjectLink 
+LEFT JOIN ObjectLink 
      ON ObjectLink.ObjectId = Object.Id
     AND ObjectLink.DescId = zc_ObjectLink_Cash_Currency()
-   JOIN Object AS Currency
+LEFT JOIN Object AS Currency
      ON Currency.Id = ObjectLink.ChildObjectId
    WHERE Object.DescId = zc_Object_Cash();
   

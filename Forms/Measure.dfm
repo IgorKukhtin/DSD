@@ -2,15 +2,15 @@ inherited MeasureForm: TMeasureForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1077#1076#1080#1085#1080#1094' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
   ClientHeight = 376
   ClientWidth = 390
-  ExplicitWidth = 398
-  ExplicitHeight = 403
+  ExplicitWidth = 406
+  ExplicitHeight = 414
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 28
     Width = 390
-    Height = 350
+    Height = 348
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
@@ -61,14 +61,14 @@ inherited MeasureForm: TMeasureForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 32
-    Top = 72
+    Left = 40
+    Top = 104
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 40
-    Top = 88
+    Left = 24
+    Top = 144
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -82,14 +82,14 @@ inherited MeasureForm: TMeasureForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 328
-    Top = 48
+    Left = 344
+    Top = 128
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -102,11 +102,11 @@ inherited MeasureForm: TMeasureForm
     ShowShortCutInHint = True
     UseSystemFont = True
     Left = 264
-    Top = 48
+    Top = 80
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -201,8 +201,8 @@ inherited MeasureForm: TMeasureForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 296
-    Top = 48
+    Left = 304
+    Top = 112
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -319,13 +319,13 @@ inherited MeasureForm: TMeasureForm
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 56
+    Left = 144
     Top = 104
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     View = cxGridDBTableView
-    Left = 328
-    Top = 264
+    Left = 184
+    Top = 240
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -339,11 +339,11 @@ inherited MeasureForm: TMeasureForm
         DataType = ftInteger
         ParamType = ptInput
       end>
-    Left = 72
-    Top = 120
+    Left = 96
+    Top = 176
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 328
-    Top = 216
+    Left = 288
+    Top = 200
   end
 end
