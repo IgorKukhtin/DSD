@@ -32,7 +32,7 @@ ALTER FUNCTION gpSelect_Object_ReceiptCost (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 08.07.13          *
+ 09.07.13          *
 
 */
 

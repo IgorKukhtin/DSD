@@ -1,77 +1,3 @@
-/*CREATE OR REPLACE FUNCTION zc_ObjectLink_RoleRight_Role() RETURNS integer AS $BODY$BEGIN RETURN 1;END; $BODY$ LANGUAGE plpgsql VOLATILE;ALTER FUNCTION zc_ObjectLink_RoleRight_Role() OWNER TO postgres;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_RoleRight_Process() RETURNS integer AS$BODY$BEGIN  RETURN 2;END; $BODY$  LANGUAGE plpgsql VOLATILE  COST 100;ALTER FUNCTION zc_ObjectLink_RoleRight_Process() OWNER TO postgres;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_UserRole_Role() RETURNS integer AS$BODY$BEGIN RETURN 3;END; $BODY$ LANGUAGE plpgsql VOLATILE  COST 100;
-ALTER FUNCTION zc_ObjectLink_UserRole_Role() OWNER TO postgres;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_UserRole_User() RETURNS integer AS$BODY$BEGIN RETURN 4;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Cash_Currency() RETURNS integer AS$BODY$BEGIN  RETURN 5;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Cash_PaidKind() RETURNS integer AS$BODY$BEGIN RETURN 6;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Cash_Branch() RETURNS integer AS$BODY$BEGIN RETURN 7;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_JuridicalGroup_Parent() RETURNS integer AS$BODY$BEGIN RETURN 8;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Juridical_JuridicalGroup() RETURNS integer AS$BODY$BEGIN RETURN 9;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Juridical_GoodsProperty() RETURNS integer AS$BODY$BEGIN RETURN 10;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Partner_Juridical() RETURNS integer AS$BODY$BEGIN RETURN 11;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_Parent() RETURNS integer AS$BODY$BEGIN RETURN 13;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_Branch() RETURNS integer AS$BODY$BEGIN RETURN 14;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Bank_Juridical() RETURNS integer AS$BODY$BEGIN RETURN 16;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsGroup_Parent() RETURNS integer AS$BODY$BEGIN RETURN 17;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Goods_Measure() RETURNS integer AS$BODY$BEGIN RETURN 19;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_BankAccount_Juridical() RETURNS integer AS$BODY$BEGIN RETURN 20;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_BankAccount_Bank() RETURNS integer AS$BODY$BEGIN RETURN 21;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_BankAccount_Currency() RETURNS integer AS$BODY$BEGIN RETURN 22;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Cash_Branch() RETURNS integer AS$BODY$BEGIN RETURN 23;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsPropertyValue_GoodsProperty() RETURNS integer AS$BODY$BEGIN RETURN 24;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsPropertyValue_Goods() RETURNS integer AS$BODY$BEGIN RETURN 25;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsPropertyValue_GoodsKind() RETURNS integer AS$BODY$BEGIN RETURN 26;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Account_AccountGroup() RETURNS integer AS$BODY$BEGIN RETURN 27;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Account_AccountDirection() RETURNS integer AS$BODY$BEGIN RETURN 28;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Account_InfoMoneyDestination() RETURNS integer AS$BODY$BEGIN RETURN 29;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_UserFormSettings_User() RETURNS integer AS$BODY$BEGIN RETURN 31;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_UserFormSettings_Form() RETURNS integer AS $BODY$BEGIN RETURN 32; END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_PriceListItem_PriceList() RETURNS integer AS$BODY$BEGIN RETURN 33;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_PriceListItem_Goods()  RETURNS integer AS$BODY$BEGIN  RETURN 34;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_Business()  RETURNS integer AS $BODY$BEGIN  RETURN 35;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_Juridical()  RETURNS integer AS$BODY$BEGIN  RETURN 36;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_AccountDirection() RETURNS integer AS$BODY$BEGIN  RETURN 37;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Unit_ProfitLossDirection() RETURNS integer AS$BODY$BEGIN  RETURN 38;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Car_CarModel() RETURNS integer AS $BODY$BEGIN  RETURN 39;END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Account_InfoMoney() RETURNS integer AS $BODY$BEGIN RETURN 42; END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-*/
-
 --------------------------- !!!!!!!!!!!!!!!!!!!
 --------------------------- !!! НОВАЯ СХЕМА !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!
@@ -186,6 +112,18 @@ INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
 CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsByGoodsKind_GoodsKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsByGoodsKind_GoodsKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_GoodsByGoodsKind_GoodsKind', 'Виды товаров', zc_Object_GoodsByGoodsKind(), zc_Object_GoodsKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsByGoodsKind_GoodsKind');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptChild_Receipt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptChild_Receipt'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ReceiptChild_Receipt', 'Рецептуры', zc_Object_ReceiptChild(), zc_Object_Receipt() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptChild_Receipt');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptChild_Goods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptChild_Goods'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ReceiptChild_Goods', 'Товары', zc_Object_ReceiptChild(), zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptChild_Goods');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ReceiptChild_GoodsKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptChild_GoodsKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ReceiptChild_GoodsKind', 'Виды товаров', zc_Object_ReceiptChild(), zc_Object_GoodsKind() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ReceiptChild_GoodsKind');
 
 
 /*-------------------------------------------------------------------------------

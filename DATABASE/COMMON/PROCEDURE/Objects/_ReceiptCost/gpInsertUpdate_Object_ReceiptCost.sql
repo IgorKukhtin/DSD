@@ -42,7 +42,7 @@ ALTER FUNCTION gpInsertUpdate_Object_ReceiptCost (Integer, Integer, TVarChar, TV
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 08.07.13          * 
+ 09.07.13          * 
 */
 -- тест
 -- SELECT * FROM gpInsertUpdate_Object_ReceiptCost()

@@ -45,7 +45,7 @@ ALTER FUNCTION gpGet_Object_ReceiptCost (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 08.07.13          *                
+ 09.07.13          *                
 
 */
 
