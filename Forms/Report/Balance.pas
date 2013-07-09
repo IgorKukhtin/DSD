@@ -20,7 +20,9 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxContainer,
+  Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit, cxDropDownEdit,
+  cxCalendar, Vcl.ExtCtrls;
 
 type
   TBalanceForm = class(TParentForm)
@@ -41,19 +43,24 @@ type
     cxGridDBTableViewColumn3: TcxGridDBColumn;
     cxGridDBTableViewColumn4: TcxGridDBColumn;
     cxGridDBTableViewColumn5: TcxGridDBColumn;
-    cxGridDBTableViewColumn6: TcxGridDBColumn;
-    cxGridDBTableViewColumn7: TcxGridDBColumn;
-    cxGridDBTableViewColumn8: TcxGridDBColumn;
+    AmountDebetStart: TcxGridDBColumn;
+    AmountKreditStart: TcxGridDBColumn;
+    AmountDebet: TcxGridDBColumn;
     actExportToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
-    cxGridDBTableViewColumn9: TcxGridDBColumn;
-    cxGridDBTableViewColumn10: TcxGridDBColumn;
-    cxGridDBTableViewColumn11: TcxGridDBColumn;
+    AmountKredit: TcxGridDBColumn;
+    AmountDebetEnd: TcxGridDBColumn;
+    AmountKreditEnd: TcxGridDBColumn;
     cxGridDBTableViewColumn12: TcxGridDBColumn;
     cxGridDBTableViewColumn13: TcxGridDBColumn;
     cxGridDBTableViewColumn14: TcxGridDBColumn;
     cxGridDBTableViewColumn15: TcxGridDBColumn;
-    cxGridDBTableViewColumn16: TcxGridDBColumn;
+    AccountOnComplete: TcxGridDBColumn;
+    ByObjectCode: TcxGridDBColumn;
+    ByObjectName: TcxGridDBColumn;
+    Panel1: TPanel;
+    deStart: TcxDateEdit;
+    deEnd: TcxDateEdit;
   private
   public
   end;

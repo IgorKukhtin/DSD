@@ -2,20 +2,19 @@ inherited BalanceForm: TBalanceForm
   Caption = #1041#1072#1083#1072#1085#1089
   ClientHeight = 395
   ClientWidth = 1329
-  ExplicitLeft = 0
   ExplicitWidth = 1337
   ExplicitHeight = 422
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 67
     Width = 1329
-    Height = 369
+    Height = 328
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 754
-    ExplicitHeight = 350
+    ExplicitTop = 26
+    ExplicitHeight = 369
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -24,57 +23,57 @@ inherited BalanceForm: TBalanceForm
         item
           Kind = skSum
           Position = spFooter
-          Column = cxGridDBTableViewColumn6
+          Column = AmountDebetStart
         end
         item
           Kind = skSum
           Position = spFooter
-          Column = cxGridDBTableViewColumn7
+          Column = AmountKreditStart
         end
         item
           Kind = skSum
           Position = spFooter
-          Column = cxGridDBTableViewColumn8
+          Column = AmountDebet
         end
         item
           Kind = skSum
           Position = spFooter
-          Column = cxGridDBTableViewColumn9
+          Column = AmountKredit
         end
         item
           Kind = skSum
           Position = spFooter
-          Column = cxGridDBTableViewColumn10
+          Column = AmountDebetEnd
         end
         item
           Kind = skSum
           Position = spFooter
-          Column = cxGridDBTableViewColumn11
+          Column = AmountKreditEnd
         end>
       DataController.Summary.FooterSummaryItems = <
         item
           Kind = skSum
-          Column = cxGridDBTableViewColumn6
+          Column = AmountDebetStart
         end
         item
           Kind = skSum
-          Column = cxGridDBTableViewColumn7
+          Column = AmountKreditStart
         end
         item
           Kind = skSum
-          Column = cxGridDBTableViewColumn8
+          Column = AmountDebet
         end
         item
           Kind = skSum
-          Column = cxGridDBTableViewColumn9
+          Column = AmountKredit
         end
         item
           Kind = skSum
-          Column = cxGridDBTableViewColumn10
+          Column = AmountDebetEnd
         end
         item
           Kind = skSum
-          Column = cxGridDBTableViewColumn11
+          Column = AmountKreditEnd
         end>
       DataController.Summary.SummaryGroups = <>
       OptionsBehavior.IncSearch = True
@@ -140,43 +139,53 @@ inherited BalanceForm: TBalanceForm
         HeaderAlignmentHorz = taCenter
         Width = 100
       end
-      object cxGridDBTableViewColumn16: TcxGridDBColumn
+      object ByObjectCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1086#1073'.'
+        DataBinding.FieldName = 'ByObjectCode'
+        Width = 30
+      end
+      object ByObjectName: TcxGridDBColumn
+        Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'ByObjectName'
+        Width = 70
+      end
+      object AccountOnComplete: TcxGridDBColumn
         Caption = '***'
         DataBinding.FieldName = 'AccountOnComplete'
         HeaderAlignmentHorz = taCenter
         Width = 25
       end
-      object cxGridDBTableViewColumn6: TcxGridDBColumn
+      object AmountDebetStart: TcxGridDBColumn
         Caption = #1044#1077#1073#1077#1090' '#1085#1072#1095#1072#1083#1100#1085#1099#1081
         DataBinding.FieldName = 'AmountDebetStart'
         HeaderAlignmentHorz = taCenter
         Width = 75
       end
-      object cxGridDBTableViewColumn7: TcxGridDBColumn
+      object AmountKreditStart: TcxGridDBColumn
         Caption = #1050#1088#1077#1076#1080#1090' '#1085#1072#1095#1072#1083#1100#1085#1099#1081
         DataBinding.FieldName = 'AmountKreditStart'
         HeaderAlignmentHorz = taCenter
         Width = 75
       end
-      object cxGridDBTableViewColumn8: TcxGridDBColumn
+      object AmountDebet: TcxGridDBColumn
         Caption = #1044#1077#1073#1077#1090' '#1086#1073#1086#1088#1086#1090
         DataBinding.FieldName = 'AmountDebet'
         HeaderAlignmentHorz = taCenter
         Width = 75
       end
-      object cxGridDBTableViewColumn9: TcxGridDBColumn
+      object AmountKredit: TcxGridDBColumn
         Caption = #1050#1088#1077#1076#1080#1090' '#1086#1073#1086#1088#1086#1090
         DataBinding.FieldName = 'AmountKredit'
         HeaderAlignmentHorz = taCenter
         Width = 75
       end
-      object cxGridDBTableViewColumn10: TcxGridDBColumn
+      object AmountDebetEnd: TcxGridDBColumn
         Caption = #1044#1077#1073#1077#1090' '#1082#1086#1085#1077#1095#1085#1099#1081
         DataBinding.FieldName = 'AmountDebetEnd'
         HeaderAlignmentHorz = taCenter
         Width = 75
       end
-      object cxGridDBTableViewColumn11: TcxGridDBColumn
+      object AmountKreditEnd: TcxGridDBColumn
         Caption = #1050#1088#1077#1076#1080#1090' '#1082#1086#1085#1077#1095#1085#1099#1081
         DataBinding.FieldName = 'AmountKreditEnd'
         HeaderAlignmentHorz = taCenter
@@ -185,6 +194,31 @@ inherited BalanceForm: TBalanceForm
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
+    end
+  end
+  object Panel1: TPanel
+    Left = 0
+    Top = 26
+    Width = 1329
+    Height = 41
+    Align = alTop
+    TabOrder = 5
+    ExplicitLeft = 8
+    ExplicitTop = 34
+    ExplicitWidth = 1240
+    object deStart: TcxDateEdit
+      Left = 208
+      Top = 8
+      EditValue = 41395d
+      TabOrder = 0
+      Width = 121
+    end
+    object deEnd: TcxDateEdit
+      Left = 352
+      Top = 8
+      EditValue = 41760d
+      TabOrder = 1
+      Width = 121
     end
   end
   object DataSource: TDataSource
@@ -200,6 +234,30 @@ inherited BalanceForm: TBalanceForm
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = AmountDebet
+        Properties.Strings = (
+          'SortIndex'
+          'SortOrder'
+          'Visible'
+          'Width')
+      end
+      item
+        Component = AmountDebetStart
+        Properties.Strings = (
+          'SortIndex'
+          'SortOrder'
+          'Visible'
+          'Width')
+      end
+      item
+        Component = AmountKreditStart
+        Properties.Strings = (
+          'SortIndex'
+          'SortOrder'
+          'Visible'
+          'Width')
+      end
       item
         Component = Owner
         Properties.Strings = (
@@ -249,28 +307,14 @@ inherited BalanceForm: TBalanceForm
           'Width')
       end
       item
-        Component = cxGridDBTableViewColumn6
+        Component = deEnd
         Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
+          'EditValue')
       end
       item
-        Component = cxGridDBTableViewColumn7
+        Component = deStart
         Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
-      item
-        Component = cxGridDBTableViewColumn8
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
+          'EditValue')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -371,15 +415,17 @@ inherited BalanceForm: TBalanceForm
     Params = <
       item
         Name = 'inStartDate'
+        Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41275d
+        Value = '01.05.2013'
       end
       item
         Name = 'inEndDate'
+        Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41640d
+        Value = '01.05.2014'
       end>
     Left = 152
     Top = 152

@@ -31,6 +31,7 @@ CREATE OR REPLACE FUNCTION lpInsertFind_Container(
   RETURNS Integer AS
 $BODY$
    DECLARE vbContainerId Integer;
+   DECLARE vbRecordCount Integer;
 BEGIN
 
    -- таблица - Аналитики остатка
@@ -65,20 +66,23 @@ BEGIN
      UNION ALL
       SELECT inDescId_10, COALESCE (inObjectId_10, 0) WHERE inDescId_10 <> 0
       ;
+   -- 
+   SELECT COUNT(*) INTO vbRecordCount FROM _tmpContainer;
 
-   /* думал что будет совсем просто, а оказалось что этот запрос совсем не правильный...
+   -- думал что будет совсем просто, а оказалось что этот запрос совсем не правильный...
+   -- находим
    SELECT Container.Id INTO vbContainerId
    FROM Container
-        JOIN _tmpContainer ON _tmpContainer.ObjectId = COALESCE (ContainerLinkObject.ObjectId, 0)
-                          AND _tmpContainer.DescId = ContainerLinkObject.DescId
         JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
-        JOIN _tmpContainer ON _tmpContainer.ObjectId = COALESCE (ContainerLinkObject.ObjectId, 0)
+        JOIN _tmpContainer ON _tmpContainer.ObjectId = ContainerLinkObject.ObjectId
                           AND _tmpContainer.DescId = ContainerLinkObject.DescId
    WHERE Container.ObjectId = inObjectId
-     AND Container.DescId = inContainerDescId;*/
+     AND Container.DescId = inContainerDescId
+   GROUP BY Container.Id
+   HAVING COUNT(*) = vbRecordCount;
 
 
-   -- находим
+   /* -- находим
    SELECT Container.Id INTO vbContainerId
    FROM Container
         LEFT JOIN ContainerLinkObject AS ContainerLinkObject_01
@@ -143,7 +147,7 @@ BEGIN
      AND (ContainerLinkObject_8.ObjectId IS NOT NULL OR COALESCE (inDescId_8, 0) = 0)
      AND (ContainerLinkObject_9.ObjectId IS NOT NULL OR COALESCE (inDescId_9, 0) = 0)
      AND (ContainerLinkObject_10.ObjectId IS NOT NULL OR COALESCE (inDescId_10, 0) = 0)
-   ;
+   ;*/
 
 
    -- просто тест
@@ -182,6 +186,7 @@ ALTER FUNCTION lpInsertFind_Container (Integer, Integer, Integer, Integer, Integ
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
 
 
+ 08.07.13                                        * optimize
  04.07.13                                        * rename AccountId to ObjectId
  04.07.13                                        * Amount
  03.07.13                                        * то что здорово, работает не правильно :)))

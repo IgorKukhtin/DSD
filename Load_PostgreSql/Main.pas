@@ -89,6 +89,7 @@ type
     toStoredProc_two: TdsdStoredProc;
     cbMember_andPersonal: TCheckBox;
     cbIncomePacker: TCheckBox;
+    CheckBox1: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -3360,5 +3361,4 @@ alter table dba.PriceList_byHistory add Id_Postgres integer null;
 alter table dba.Bill add Id_Postgres integer null;
 alter table dba.BillItems add Id_Postgres integer null;
 alter table dba.BillItemsReceipt add Id_Postgres integer null;
-
 }
