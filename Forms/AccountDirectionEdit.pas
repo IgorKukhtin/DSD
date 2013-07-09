@@ -21,7 +21,7 @@ uses
   cxLabel, cxTextEdit;
 
 type
-  TTAccountDirectionEditForm = class(TParentForm)
+  TAccountDirectionEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -43,11 +43,10 @@ type
     { Public declarations }
   end;
 
-var
-  TAccountDirectionEditForm: TTAccountDirectionEditForm;
 
 implementation
 
 {$R *.dfm}
-
+  initialization
+  RegisterClass(TAccountDirectionEditForm);
 end.

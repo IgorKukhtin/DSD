@@ -25,7 +25,7 @@ uses
   dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TTUnitGroupEditForm = class(TParentForm)
+  TUnitGroupEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -56,6 +56,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TTUnitGroupEditForm);
+  RegisterClass(TUnitGroupEditForm);
 
 end.

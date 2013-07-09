@@ -1,4 +1,4 @@
-inherited TAccountGroupForm: TTAccountGroupForm
+inherited AccountGroupForm: TAccountGroupForm
   Caption = #1043#1088#1091#1087#1087#1099' '#1089#1095#1077#1090#1086#1074
   ClientHeight = 408
   ClientWidth = 368
@@ -228,7 +228,7 @@ inherited TAccountGroupForm: TTAccountGroupForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TGoodsKindEditForm'
+      FormName = 'TAccountGroupEditForm'
       GuiParams = <
         item
           Name = 'Id'

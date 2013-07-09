@@ -27,7 +27,7 @@ BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Complete_Movement_Income());
-   vbUserId:= inSession;
+   vbUserId:=2; -- CAST (inSession AS Integer);
 
 
    -- Эти параметры нужны для расчета конечных сумм по Контрагенту и Заготовителю
@@ -601,7 +601,7 @@ end if;
 
 
   -- Обязательно меняем статус документа
-  UPDATE Movement SET StatusId = zc_Object_Status_Complete() WHERE Id = inMovementId AND StatusId = zc_Enum_Status_UnComplete();
+  UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND StatusId = zc_Enum_Status_UnComplete();
 
 
 END;

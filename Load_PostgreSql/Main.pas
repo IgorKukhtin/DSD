@@ -3353,12 +3353,12 @@ alter table dba.Unit add Id2_Postgres integer null;
 alter table dba.Unit add Id3_Postgres integer null;
 alter table dba.Unit add PersonalId_Postgres integer null;
 alter table dba.Unit add Id_Postgres_Business integer null;
+alter table dba._pgUnit add Id_Postgres_Branch integer null;
 
 alter table dba.PriceList_byHistory add Id_Postgres integer null;
 
 alter table dba.Bill add Id_Postgres integer null;
 alter table dba.BillItems add Id_Postgres integer null;
 alter table dba.BillItemsReceipt add Id_Postgres integer null;
-
 
 }

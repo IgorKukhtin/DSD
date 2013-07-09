@@ -1,4 +1,4 @@
-unit InfoMoneyEdit;
+unit ProfitLossEdit;
 
 interface
 
@@ -17,12 +17,12 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus, dsdAddOn, cxPropertiesStore,
-  dsdDB, dsdAction, Vcl.ActnList, cxCurrencyEdit, cxLabel, Vcl.StdCtrls,
-  cxButtons, cxTextEdit, dsdGuides, Data.DB, Datasnap.DBClient, cxMaskEdit,
-  cxDropDownEdit, cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox;
+  dsdGuides, Data.DB, Datasnap.DBClient, dsdDB, dsdAction, Vcl.ActnList,
+  cxMaskEdit, cxDropDownEdit, cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox,
+  cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit;
 
 type
-  TInfoMoneyEditForm = class(TParentForm)
+  TProfitLossEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -30,9 +30,13 @@ type
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
-    ceInfoMoneyGroup: TcxLookupComboBox;
+    ceProfitLossGroup: TcxLookupComboBox;
     cxLabel2: TcxLabel;
+    ceProfitLossDirection: TcxLookupComboBox;
+    cxLabel4: TcxLabel;
     ceInfoMoneyDestination: TcxLookupComboBox;
+    cxLabel5: TcxLabel;
+    ceInfoMoney: TcxLookupComboBox;
     ActionList: TActionList;
     dsdDataSetRefresh: TdsdDataSetRefresh;
     dsdExecStoredProc: TdsdExecStoredProc;
@@ -40,16 +44,24 @@ type
     spInsertUpdate: TdsdStoredProc;
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
-    InfoMoneyGroupDataSet: TClientDataSet;
-    spGetInfoMoneyGroup: TdsdStoredProc;
-    InfoMoneyGroupDS: TDataSource;
-    dsdInfoMoneyGroupGuides: TdsdGuides;
+    ProfitLossGroupDataSet: TClientDataSet;
+    spGetProfitLossGroup: TdsdStoredProc;
+    ProfitLossGroupDS: TDataSource;
+    dsdProfitLossGroup: TdsdGuides;
+    ProfitLossDirectionDataSet: TClientDataSet;
+    spGetProfitLossDirection: TdsdStoredProc;
+    ProfitLossDirectionDS: TDataSource;
+    dsdProfitLossDirectionGuides: TdsdGuides;
+    cxPropertiesStore: TcxPropertiesStore;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     InfoMoneyDestinationDataSet: TClientDataSet;
     spGetInfoMoneyDestination: TdsdStoredProc;
     InfoMoneyDestinationDS: TDataSource;
     dsdInfoMoneyDestinationGuides: TdsdGuides;
-    cxPropertiesStore: TcxPropertiesStore;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    InfoMoneyDataSet: TClientDataSet;
+    spGetInfoMoney: TdsdStoredProc;
+    InfoMoneyDS: TDataSource;
+    dsdInfoMoney: TdsdGuides;
   private
     { Private declarations }
   public
@@ -57,9 +69,10 @@ type
   end;
 
 
+
 implementation
 
 {$R *.dfm}
   initialization
-  RegisterClass(TInfoMoneyEditForm);
+  RegisterClass(TProfitLossEditForm);
 end.

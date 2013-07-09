@@ -22,7 +22,7 @@ uses
   cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit;
 
 type
-  TTAccountEditForm = class(TParentForm)
+  TAccountEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -73,7 +73,8 @@ type
 implementation
 
 {$R *.dfm}
- initialization
-  RegisterClass(TTAccountEditForm);
+initialization
+
+  RegisterClass(TAccountEditForm);
 
 end.

@@ -21,7 +21,7 @@ uses
   cxLabel, cxTextEdit;
 
 type
-  TTProfitLossDirectionEditForm = class(TParentForm)
+  TProfitLossDirectionEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -43,11 +43,11 @@ type
     { Public declarations }
   end;
 
-var
-  TProfitLossDirectionEditForm: TTProfitLossDirectionEditForm;
+
 
 implementation
 
 {$R *.dfm}
-
+ initialization
+  RegisterClass(TProfitLossDirectionEditForm);
 end.

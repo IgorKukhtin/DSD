@@ -25,7 +25,7 @@ uses
   dxSkinXmas2008Blue, dxSkinsdxBarPainter;
 
 type
-  TTUnitGroupForm = class(TParentForm)
+  TUnitGroupForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -54,6 +54,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TTUnitGroupForm);
+  RegisterClass(TUnitGroupForm);
 
 end.

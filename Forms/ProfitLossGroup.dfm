@@ -1,4 +1,4 @@
-inherited TProfitLossGroupForm: TTProfitLossGroupForm
+inherited ProfitLossGroupForm: TProfitLossGroupForm
   Caption = #1043#1088#1091#1087#1087#1099' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093
   ClientHeight = 361
   ClientWidth = 337
@@ -214,7 +214,7 @@ inherited TProfitLossGroupForm: TTProfitLossGroupForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'ProfitLossGroupEditForm'
+      FormName = 'TProfitLossGroupEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -231,7 +231,7 @@ inherited TProfitLossGroupForm: TTProfitLossGroupForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'GoodsPropertyEditForm'
+      FormName = 'TProfitLossGroupEditForm'
       GuiParams = <
         item
           Name = 'Id'

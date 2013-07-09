@@ -2147,7 +2147,7 @@ var
 begin
   AccountGroupId := TAccountGroupTest.Create.GetDefault;
   AccountDirectionId:= TAccountDirectionTest.Create.GetDefault;;
-  result := InsertUpdateAccount(0, -3, 'ТЕСТ-Управленческие счет 1', AccountGroupId, AccountDirectionId, 1,1);
+  result := InsertUpdateAccount(0, -3, 'Test - Управленческие счет 1', AccountGroupId, AccountDirectionId, 1,1);
 end;
 
 function TAccountTest.InsertUpdateAccount;
@@ -2177,7 +2177,7 @@ begin
   try
     // Получение данных о Упр.счете
     with ObjectTest.GetRecord(Id) do
-      Check((FieldByName('Name').AsString = 'Управленческие счет 1'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+      Check((FieldByName('Name').AsString = 'Test - Управленческие счет 1'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
   finally
     ObjectTest.Delete(Id);
   end;
