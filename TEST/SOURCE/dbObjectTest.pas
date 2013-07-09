@@ -78,6 +78,7 @@ type
     procedure Personal_Test;
     procedure AssetGroup_Test;
     procedure Asset_Test;
+    procedure ReceiptCost_Test;
    end;
 
   TBankTest = class(TObjectTest)
@@ -429,6 +430,12 @@ type
     constructor Create; override;
   end;
 
+  TReceiptCostTest = class(TObjectTest)
+  function InsertDefault: integer; override;
+  public
+    function InsertUpdateReceiptCost(const Id, Code : integer; Name: string): integer;
+    constructor Create; override;
+  end;
 
  implementation
 
@@ -2822,6 +2829,47 @@ begin
   end;
 end;
 
+{TReceiptCostTest}
+constructor TReceiptCostTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_ReceiptCost';
+  spSelect := 'gpSelect_Object_ReceiptCost';
+  spGet := 'gpGet_Object_ReceiptCost';
+end;
+
+function TReceiptCostTest.InsertDefault: integer;
+begin
+   result := InsertUpdateReceiptCost(0, -1, 'Затраты в рецептурах');
+end;
+
+function TReceiptCostTest.InsertUpdateReceiptCost;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.ReceiptCost_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TReceiptCostTest;
+begin
+  ObjectTest := TReceiptCostTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка объекта
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Затраты в рецептурах'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    ObjectTest.Delete(Id);
+  end;
+end;
 
 initialization
   TestFramework.RegisterTest('Справочники', TdbObjectTest.Suite);

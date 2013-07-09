@@ -1,48 +1,46 @@
-INSERT INTO ObjectDesc(Id, Code, ItemName)
-SELECT zc_Object_Cash(), 'Cash', 'Кассы' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_Cash());
-
-INSERT INTO ObjectDesc(Id, Code, ItemName)
-SELECT zc_Object_Currency(), 'Currency', 'Валюты' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_Currency());
-
-INSERT INTO ObjectDesc(Id, Code, ItemName)
-SELECT zc_Object_PaidKind(), 'PaidKind', 'Формы оплат' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_PaidKind());
-
-INSERT INTO ObjectDesc(Id, Code, ItemName)
-SELECT zc_Object_Branch(), 'Branch', 'Филиалы' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_Branch());
-
-INSERT INTO ObjectDesc(Id, Code, ItemName)
-SELECT zc_Object_ContractKind(), 'ContractKind', 'Виды договоров' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_ContractKind());
-
-INSERT INTO ObjectDesc(Id, Code, ItemName)
-SELECT zc_Object_Business(), 'Business', 'Бизнесы' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_Business());
-
-INSERT INTO ObjectDesc(Id, Code, ItemName)
-SELECT zc_Object_Bank(), 'Bank', 'Банки' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_Bank());
-
-INSERT INTO ObjectDesc(Id, Code, ItemName)
-SELECT zc_Object_BankAccount(), 'BankAccount', 'Расчетный счет' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_BankAccount());
-
-INSERT INTO ObjectDesc(Id, Code, ItemName)
-SELECT zc_Object_Contract(), 'Contract', 'Договора' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_Contract());
-
-INSERT INTO ObjectDesc(Id, Code, ItemName)
-SELECT zc_Object_CarModel(), 'CarModel', 'Модели автомобиля' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_CarModel());
-
-INSERT INTO ObjectDesc(Id, Code, ItemName)
-SELECT zc_Object_Car(), 'Car', 'Автомобиль' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Id = zc_Object_Car());
-
-
 --------------------------- !!!!!!!!!!!!!!!!!!!
 --------------------------- !!! НОВАЯ СХЕМА !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!
-
+/*
 -- !!! Меняем автоинкрементное поле !!!
 DO $$
 BEGIN
 PERFORM setval('objectdesc_id_seq', (select max (id) + 1 from ObjectDesc));
 END $$;
+*/
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_Cash', 'Кассы' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Cash');
 
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_Currency', 'Валюты' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Currency');
 
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_PaidKind', 'Формы оплат' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_PaidKind');
+
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_Branch', 'Филиалы' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Branch');
+
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_ContractKind', 'Виды договоров' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ContractKind');
+
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_Business', 'Бизнесы' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Business');
+
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_Bank', 'Банки' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Bank');
+
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_BankAccount', 'Расчетный счет' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_BankAccount');
+
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_Contract', 'Договора' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Contract');
+
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_CarModel', 'Модели автомобиля' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_CarModel');
+
+INSERT INTO ObjectDesc(Code, ItemName)
+SELECT 'zc_Object_Car', 'Автомобиль' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Car');
+-----------------------------------------
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_Status', 'Статусы документов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Status');
 
@@ -55,7 +53,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_GoodsProperty', 'Классификаторы свойств товаров' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_GoodsProperty');
 INSERT INTO ObjectDesc (Code, ItemName)
-  SELECT 'zc_Object_GoodsPropertyValue', '???' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_GoodsPropertyValue');
+  SELECT 'zc_Object_GoodsPropertyValue', 'Значения свойств товаров для классификатора' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_GoodsPropertyValue');
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_Measure', 'Единицы измерения' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Measure');
   
@@ -141,5 +139,6 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.07.13         * переход всего на НОВУЮ СХЕМУ               
  28.06.13                                        * НОВАЯ СХЕМА
 */

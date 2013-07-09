@@ -315,6 +315,10 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_GoodsByGoodsKind\lfSelect_Object_GoodsByGoodsKind.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_GoodsByGoodsKind\lpInsert_Object_GoodsByGoodsKind.sql', ZQuery);
 
+  ExecFile(ProcedurePath + 'OBJECTS\_ReceiptCost\gpInsertUpdate_Object_ReceiptCost.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_ReceiptCost\gpSelect_Object_ReceiptCost.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_ReceiptCost\gpGet_Object_ReceiptCost.sql', ZQuery);
+
 end;
 
 procedure TdbProcedureTest.CreateProtocolProcedure;
