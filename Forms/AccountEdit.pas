@@ -74,6 +74,6 @@ implementation
 
 {$R *.dfm}
  initialization
-  RegisterClass(TAccountForm);
+  RegisterClass(TTAccountEditForm);
 
 end.

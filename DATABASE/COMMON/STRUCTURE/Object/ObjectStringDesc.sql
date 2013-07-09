@@ -9,7 +9,7 @@
 
 CREATE TABLE ObjectStringDesc(
    Id                    SERIAL NOT NULL PRIMARY KEY, 
-   DescId                INTEGER NOT NULL,
+   DescId                INTEGER NULL,
    Code                  TVarChar,
    ItemName              TVarChar,
 

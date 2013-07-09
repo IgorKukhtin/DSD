@@ -149,12 +149,14 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inName'
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inJuridicalId'
@@ -209,12 +211,14 @@
         Component = edName
         DataType = ftString
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'Code'
         Component = ceCode
         DataType = ftInteger
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'JuridicalId'
@@ -290,7 +294,9 @@
     Top = 117
   end
   object dsdJuridicalGuides: TdsdGuides
+    Key = '0'
     LookupControl = ceJuridical
+    PositionDataSet = 'ClientDataSet'
     Left = 312
     Top = 125
   end
@@ -317,7 +323,9 @@
     Top = 165
   end
   object dsdBankGuides: TdsdGuides
+    Key = '0'
     LookupControl = ceBank
+    PositionDataSet = 'ClientDataSet'
     Left = 312
     Top = 173
   end
@@ -344,7 +352,9 @@
     Top = 221
   end
   object dsdCurrencyGuides: TdsdGuides
+    Key = '0'
     LookupControl = ceCurrency
+    PositionDataSet = 'ClientDataSet'
     Left = 312
     Top = 229
   end

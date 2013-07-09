@@ -1,16 +1,16 @@
 inherited UnitForm: TUnitForm
   Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
-  ClientHeight = 515
-  ClientWidth = 710
-  ExplicitWidth = 718
-  ExplicitHeight = 542
+  ClientHeight = 403
+  ClientWidth = 768
+  ExplicitWidth = 776
+  ExplicitHeight = 430
   PixelsPerInch = 96
   TextHeight = 13
   object cxDBTreeList: TcxDBTreeList
     Left = 0
     Top = 26
     Width = 313
-    Height = 489
+    Height = 377
     Align = alLeft
     Bands = <
       item
@@ -21,14 +21,19 @@ inherited UnitForm: TUnitForm
     Images = dmMain.TreeImageList
     Navigator.Buttons.CustomButtons = <>
     OptionsBehavior.IncSearch = True
+    OptionsCustomizing.ColumnHiding = True
+    OptionsCustomizing.ColumnsQuickCustomization = True
     OptionsData.Editing = False
     OptionsData.Deleting = False
     OptionsView.ColumnAutoWidth = True
     OptionsView.GridLines = tlglBoth
+    OptionsView.Indicator = True
     OptionsView.TreeLineStyle = tllsSolid
     RootValue = -1
+    Styles.StyleSheet = dmMain.cxTreeListStyleSheet
     TabOrder = 1
-    object cxDBTreeListcxDBTreeListColumn2: TcxDBTreeListColumn
+    object ceParentName: TcxDBTreeListColumn
+      Caption.AlignVert = vaCenter
       Caption.Text = #1043#1088#1091#1087#1087#1072
       DataBinding.FieldName = 'Name'
       Width = 110
@@ -43,15 +48,16 @@ inherited UnitForm: TUnitForm
     Left = 313
     Top = 26
     Width = 8
-    Height = 489
+    Height = 377
     Control = cxDBTreeList
   end
   object cxGrid: TcxGrid
     Left = 321
     Top = 26
-    Width = 389
-    Height = 489
+    Width = 447
+    Height = 377
     Align = alClient
+    Images = dmMain.SortImageList
     TabOrder = 6
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
@@ -59,22 +65,49 @@ inherited UnitForm: TUnitForm
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
+      Images = dmMain.SortImageList
+      OptionsCustomize.ColumnHiding = True
+      OptionsCustomize.ColumnsQuickCustomization = True
       OptionsView.ColumnAutoWidth = True
-      object cxGridDBTableViewColumn1: TcxGridDBColumn
+      OptionsView.GroupByBox = False
+      OptionsView.HeaderHeight = 40
+      OptionsView.Indicator = True
+      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object ceTreeState: TcxGridDBColumn
+        PropertiesClassName = 'TcxImageComboBoxProperties'
+        Properties.Items = <>
+        SortIndex = 0
+        SortOrder = soAscending
+        Width = 20
+      end
+      object ceCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentVert = vaCenter
+        Width = 64
       end
-      object cxGridDBTableViewColumn2: TcxGridDBColumn
+      object ceName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentVert = vaCenter
+        SortIndex = 1
+        SortOrder = soAscending
+        Width = 163
       end
-      object cxGridDBTableViewColumn3: TcxGridDBColumn
+      object ceBranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
+        HeaderAlignmentVert = vaCenter
+        Width = 92
       end
-      object cxGridDBTableViewColumn4: TcxGridDBColumn
+      object ceisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 94
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -93,8 +126,22 @@ inherited UnitForm: TUnitForm
     Top = 144
   end
   object cxPropertiesStore: TcxPropertiesStore
-    Components = <>
+    Components = <
+      item
+        Component = cxDBTreeList
+        Properties.Strings = (
+          'Width')
+      end
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
     StorageName = 'cxPropertiesStore'
+    StorageType = stStream
     Left = 232
     Top = 96
   end
@@ -152,10 +199,18 @@ inherited UnitForm: TUnitForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoice'
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
           Visible = True
           ItemName = 'bbRefresh'
         end>
@@ -194,6 +249,12 @@ inherited UnitForm: TUnitForm
       Action = dsdChoiceGuides
       Category = 0
       ImageIndex = 7
+    end
+    object dxBarStatic: TdxBarStatic
+      Caption = '     '
+      Category = 0
+      Hint = '     '
+      Visible = ivAlways
     end
   end
   object ActionList: TActionList
@@ -332,5 +393,14 @@ inherited UnitForm: TUnitForm
       end>
     Left = 344
     Top = 232
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 336
+    Top = 280
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    View = cxGridDBTableView
+    Left = 424
+    Top = 240
   end
 end

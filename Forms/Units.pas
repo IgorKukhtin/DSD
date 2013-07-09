@@ -22,7 +22,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox,
+  dxBarExtItems, cxImageComboBox;
 
 type
   TUnitForm = class(TParentForm)
@@ -44,7 +45,7 @@ type
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     cxDBTreeList: TcxDBTreeList;
-    cxDBTreeListcxDBTreeListColumn2: TcxDBTreeListColumn;
+    ceParentName: TcxDBTreeListColumn;
     cxSplitter1: TcxSplitter;
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
@@ -52,14 +53,18 @@ type
     GridDS: TDataSource;
     ClientGridDataSet: TClientDataSet;
     spGrid: TdsdStoredProc;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
-    cxGridDBTableViewColumn2: TcxGridDBColumn;
-    cxGridDBTableViewColumn3: TcxGridDBColumn;
-    cxGridDBTableViewColumn4: TcxGridDBColumn;
+    ceCode: TcxGridDBColumn;
+    ceName: TcxGridDBColumn;
+    ceBranchName: TcxGridDBColumn;
+    ceisErased: TcxGridDBColumn;
     dsdDBTreeAddOn: TdsdDBTreeAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdFormParams: TdsdFormParams;
     bbChoice: TdxBarButton;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
+    dxBarStatic: TdxBarStatic;
+    ceTreeState: TcxGridDBColumn;
   private
     { Private declarations }
   public

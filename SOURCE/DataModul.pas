@@ -4,7 +4,7 @@ interface
 
 uses
   SysUtils, Classes, ImgList, Controls, frxClass, cxClasses, cxStyles,
-  cxGridBandedTableView, cxGridTableView;
+  cxGridBandedTableView, cxGridTableView, cxTL;
 
 type
 
@@ -19,7 +19,7 @@ type
     cxHeaderStyle: TcxStyle;
     cxGridTableViewStyleSheet: TcxGridTableViewStyleSheet;
     SortImageList: TImageList;
-    cxStyle1: TcxStyle;
+    cxTreeListStyleSheet: TcxTreeListStyleSheet;
   end;
 
 var dmMain: TdmMain;

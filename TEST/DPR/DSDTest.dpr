@@ -53,7 +53,7 @@ uses
   UnitGroupEdit in '..\..\Forms\UnitGroupEdit.pas' {TUnitGroupEditForm},
   UnitGroup in '..\..\Forms\UnitGroup.pas' {TUnitGroupForm},
   Goods in '..\..\Forms\Goods.pas' {GoodsForm},
-  UnitEdit in '..\..\Forms\UnitEdit.pas' {TUnitEditForm},
+  UnitEdit in '..\..\Forms\UnitEdit.pas' {UnitEditForm},
   MeasureEdit in '..\..\Forms\MeasureEdit.pas' {MeasureEditForm},
   PaidKind in '..\..\Forms\PaidKind.pas' {PaidKindForm},
   Partner in '..\..\Forms\Partner.pas' {PartnerForm},

@@ -156,7 +156,7 @@
 				<Form>GoodsForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\UnitEdit.pas">
-				<Form>TUnitEditForm</Form>
+				<Form>UnitEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\MeasureEdit.pas">
 				<Form>MeasureEditForm</Form>

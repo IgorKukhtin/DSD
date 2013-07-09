@@ -25,7 +25,7 @@ BEGIN
    vbUserId := inSession;
 
    -- Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
-   vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Unit());
+   vbCode_calc := lfGet_ObjectCode (inCode, zc_Object_Unit());
    -- !!! IF COALESCE (inCode, 0) = 0  THEN vbCode_calc := NULL; ELSE vbCode_calc := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
    
    -- проверка уникальности <Наименование>
@@ -50,6 +50,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_AccountDirection(), ioId, inAccountDirectionId);
    -- сохранили связь с <Аналитики статей отчета о прибылях и убытках - направление>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_ProfitLossDirection(), ioId, inProfitLossDirectionId);
+
+   -- Установить свойство лист\папка у родителя
+   
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
