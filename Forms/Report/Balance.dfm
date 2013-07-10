@@ -1,16 +1,16 @@
 inherited BalanceForm: TBalanceForm
   Caption = #1041#1072#1083#1072#1085#1089
-  ClientHeight = 395
+  ClientHeight = 398
   ClientWidth = 1329
   ExplicitWidth = 1337
-  ExplicitHeight = 422
+  ExplicitHeight = 425
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 67
     Width = 1329
-    Height = 328
+    Height = 331
     Align = alClient
     TabOrder = 0
     ExplicitTop = 26

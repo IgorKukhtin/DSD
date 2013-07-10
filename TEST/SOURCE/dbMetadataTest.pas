@@ -87,11 +87,6 @@ begin
   ExecFile(MetadataPath + 'Movement\CreateMovementStringDescFunction.sql', ZQuery);
 end;
 
-procedure TdbMetaDataTest.CreateMovementItemContainerFunction;
-begin
-  ExecFile(MetadataPath + 'MovementItemContainer\CreateMovementItemContainerDescFunction.sql', ZQuery);
-end;
-
 procedure TdbMetaDataTest.CreateMovementItemDescFunction;
 begin
   ExecFile(MetadataPath + 'MovementItem\CreateMovementItemDescFunction.sql', ZQuery);
@@ -101,9 +96,14 @@ begin
   ExecFile(MetadataPath + 'MovementItem\CreateMovementItemStringDescFunction.sql', ZQuery);
 end;
 
+procedure TdbMetaDataTest.CreateMovementItemContainerFunction;
+begin
+  ExecFile(MetadataPath + 'MovementItemContainer\CreateMovementItemContainerDescFunction.sql', ZQuery);
+end;
+
 procedure TdbMetaDataTest.InsertMovementItemContainerDesc;
 begin
-  ExecFile(MetadataPath + 'MovementItemContainer\InsertMovementItemContainerDesc.sql', ZQuery);
+//  ExecFile(MetadataPath + 'MovementItemContainer\InsertMovementItemContainerDesc.sql', ZQuery);
 end;
 
 procedure TdbMetaDataTest.InsertMovementItemDesc;

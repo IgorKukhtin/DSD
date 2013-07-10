@@ -1,11 +1,11 @@
 inherited IncomeForm: TIncomeForm
   Caption = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-  ClientHeight = 385
+  ClientHeight = 396
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
   ExplicitWidth = 1036
-  ExplicitHeight = 412
+  ExplicitHeight = 423
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -16,7 +16,6 @@ inherited IncomeForm: TIncomeForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 990
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 27
@@ -76,19 +75,19 @@ inherited IncomeForm: TIncomeForm
     Left = 0
     Top = 110
     Width = 1028
-    Height = 275
+    Height = 286
     Align = alClient
     TabOrder = 5
     Properties.ActivePage = cxTabSheet2
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 990
-    ExplicitHeight = 272
-    ClientRectBottom = 275
+    ExplicitHeight = 275
+    ClientRectBottom = 286
     ClientRectRight = 1028
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitTop = 0
       ExplicitWidth = 990
       ExplicitHeight = 248
       object cxGrid: TcxGrid
@@ -245,17 +244,15 @@ inherited IncomeForm: TIncomeForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitWidth = 990
-      ExplicitHeight = 248
+      ExplicitHeight = 251
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
         Width = 1028
-        Height = 251
+        Height = 262
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 990
-        ExplicitHeight = 248
+        ExplicitHeight = 251
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
