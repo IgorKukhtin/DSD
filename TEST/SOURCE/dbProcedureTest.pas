@@ -319,6 +319,14 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_ReceiptCost\gpSelect_Object_ReceiptCost.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_ReceiptCost\gpGet_Object_ReceiptCost.sql', ZQuery);
 
+  ExecFile(ProcedurePath + 'OBJECTS\_ReceiptChild\gpInsertUpdate_Object_ReceiptChild.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_ReceiptChild\gpSelect_Object_ReceiptChild.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_ReceiptChild\gpGet_Object_ReceiptChild.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'OBJECTS\_Receipt\gpInsertUpdate_Object_Receipt.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_Receipt\gpSelect_Object_Receipt.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_Receipt\gpGet_Object_Receipt.sql', ZQuery);
+
 end;
 
 procedure TdbProcedureTest.CreateProtocolProcedure;

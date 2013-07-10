@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ReceiptChild(
 RETURNS TABLE (Id Integer, Value   TFloat,Weight boolean, TaxExit boolean,
                StartDate TDateTime, EndDate TDateTime, Comment TVarChar,
                ReceiptId Integer, ReceiptName TVarChar, 
-               PGoodsId Integer, GoodsCode Integer, GoodsName TVarChar,
+               GoodsId Integer, GoodsCode Integer, GoodsName TVarChar,
                GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar,
                isErased boolean) AS
 $BODY$
@@ -22,7 +22,7 @@ BEGIN
            Object_ReceiptChild.Id      AS Id
          , ObjectFloat_Value.ValueData AS Value  
          
-         , ObjectBoolean_Weigh.ValueData   AS Weight
+         , ObjectBoolean_Weight.ValueData   AS Weight
          , ObjectBoolean_TaxExit.ValueData AS TaxExit
          , ObjectDate_StartDate.ValueData  AS StartDate
          , ObjectDate_EndDate.ValueData    AS EndDate
@@ -44,7 +44,7 @@ BEGIN
      FROM OBJECT AS Object_ReceiptChild
           LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Receipt
                                ON ObjectLink_ReceiptChild_Receipt.ObjectId = Object_ReceiptChild.Id
-                              AND ObjectLink_ReceiptChild_Receipt.DescId = zc_ObjectLink_ReceiptChild_Receiptr()
+                              AND ObjectLink_ReceiptChild_Receipt.DescId = zc_ObjectLink_ReceiptChild_Receipt()
           LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = ObjectLink_ReceiptChild_Receipt.ChildObjectId
            
           LEFT JOIN ObjectLink AS ObjectLink_ReceiptChild_Goods
@@ -65,7 +65,7 @@ BEGIN
                                ON ObjectDate_EndDate.ObjectId = Object_ReceiptChild.Id 
                               AND ObjectDate_EndDate.DescId = zc_ObjectDate_ReceiptChild_EndDate()
             
-          LEFT JOIN ObjectBoolean AS ObjectBoolean_Weigh
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_Weight
                                   ON ObjectBoolean_Weight.ObjectId = Object_ReceiptChild.Id 
                                  AND ObjectBoolean_Weight.DescId = zc_ObjectBoolean_ReceiptChild_Weight()
           LEFT JOIN ObjectBoolean AS ObjectBoolean_TaxExit

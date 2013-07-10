@@ -30,21 +30,22 @@ BEGIN
    -- сохранили связь с <Рецептурой>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptChild_Receipt(), ioId, inReceiptId);
    -- сохранили связь с <Товаром>
-   PERFORM lpInsertUpdate_ObjectLink (c_ObjectLink_ReceiptChild_Goods(), ioId, inGoodsId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptChild_Goods(), ioId, inGoodsId);
    -- сохранили связь с <Видом товаров>
-   PERFORM lpInsertUpdate_ObjectLink (c_ObjectLink_ReceiptChild_GoodsKind(), ioId, inGoodsKindId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ReceiptChild_GoodsKind(), ioId, inGoodsKindId);
    
    -- сохранили свойство <Значение>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ReceiptChild_Value(), ioId, inValue);
    -- сохранили свойство <Входит в общий вес выхода>
-   PERFORM lpInsertUpdate_ObjectBoolean (c_ObjectBoolean_ReceiptChild_Weight(), ioId, inWeight);
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReceiptChild_Weight(), ioId, inWeight);
    -- сохранили свойство <Зависит от % выхода>
-   PERFORM lpInsertUpdate_ObjectBoolean (c_ObjectBoolean_ReceiptChild_TaxExit(), ioId, inTaxExit);
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReceiptChild_TaxExit(), ioId, inTaxExit);
    -- сохранили свойство <Начальная дата>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReceiptChild_StartDate(), ioId, inStartDate);
    -- сохранили свойство <Конечная дата>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReceiptChild_EndDate(), ioId, inEndDate);
-
+   -- сохранили свойство <Комментарий>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ReceiptChild_Comment(), ioId, inComment);
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
