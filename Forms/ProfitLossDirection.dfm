@@ -282,7 +282,7 @@ inherited ProfitLossDirectionForm: TProfitLossDirectionForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_GoodsProperty'
+    StoredProcName = 'gpSelect_Object_ProfitLossDirection'
     DataSet = ClientDataSet
     DataSets = <
       item

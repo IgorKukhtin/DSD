@@ -282,7 +282,7 @@ inherited AccountDirectionForm: TAccountDirectionForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_GoodsProperty'
+    StoredProcName = 'gpSelect_Object_AccountDirection'
     DataSet = ClientDataSet
     DataSets = <
       item

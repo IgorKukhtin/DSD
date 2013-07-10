@@ -16,10 +16,6 @@ inherited ProfitLossForm: TProfitLossForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = -207
-    ExplicitTop = -14
-    ExplicitWidth = 671
-    ExplicitHeight = 354
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -306,7 +302,7 @@ inherited ProfitLossForm: TProfitLossForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_GoodsProperty'
+    StoredProcName = 'gpSelect_Object_ProfitLoss'
     DataSet = ClientDataSet
     DataSets = <
       item

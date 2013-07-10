@@ -1,20 +1,21 @@
 inherited BankForm: TBankForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1073#1072#1085#1082#1086#1074
   ClientHeight = 376
-  ClientWidth = 390
-  ExplicitWidth = 398
-  ExplicitHeight = 403
+  ClientWidth = 438
+  ExplicitWidth = 454
+  ExplicitHeight = 414
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
-    Width = 390
-    Height = 350
+    Top = 28
+    Width = 438
+    Height = 348
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitWidth = 390
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -38,13 +39,13 @@ inherited BankForm: TBankForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 72
       end
       object clName: TcxGridDBColumn
         Caption = #1041#1072#1085#1082
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 243
+        Width = 266
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -52,7 +53,7 @@ inherited BankForm: TBankForm
         PropertiesClassName = 'TcxCheckBoxProperties'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 78
+        Width = 86
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -88,8 +89,8 @@ inherited BankForm: TBankForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -106,7 +107,7 @@ inherited BankForm: TBankForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'

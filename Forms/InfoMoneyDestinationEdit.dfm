@@ -15,7 +15,7 @@
   object cxLabel1: TcxLabel
     Left = 48
     Top = 63
-    Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1077#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
+    Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 80
@@ -78,7 +78,7 @@
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_PriceList'
+    StoredProcName = 'gpInsertUpdate_Object_InfoMoneyDestination'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -119,7 +119,7 @@
     Top = 120
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_PriceList'
+    StoredProcName = 'gpGet_Object_InfoMoneyDestination'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -145,8 +145,8 @@
         ParamType = ptOutput
         Value = ''
       end>
-    Left = 192
-    Top = 144
+    Left = 200
+    Top = 80
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <

@@ -303,7 +303,7 @@ inherited InfoMoneyForm: TInfoMoneyForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_PriceList'
+    StoredProcName = 'gpSelect_Object_InfoMoney'
     DataSet = ClientDataSet
     DataSets = <
       item

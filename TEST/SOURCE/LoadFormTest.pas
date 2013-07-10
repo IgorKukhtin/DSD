@@ -49,6 +49,15 @@ type
     procedure LoadProfitLossFormTest;
     procedure LoadProfitLossGroupFormTest;
     procedure LoadProfitLossDirectionFormTest;
+    procedure LoadTradeMarkFormTest;
+    procedure LoadAssetFormTest;
+    procedure LoadRouteFormTest;
+    procedure LoadRouteSortingFormTest;
+    procedure LoadMemberFormTest;
+    procedure LoadPositionFormTest;
+    procedure LoadPersonalFormTest;
+    procedure LoadCarFormTest;
+    procedure LoadCarModelFormTest;
   end;
 
 implementation
@@ -319,6 +328,77 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossEditForm');
 end;
+procedure TLoadFormTest.LoadTradeMarkFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTradeMarkForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTradeMarkForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTradeMarkEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTradeMarkEditForm');
+end;
+procedure TLoadFormTest.LoadAssetFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAssetForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAssetEditForm');
+end;
+
+procedure TLoadFormTest.LoadRouteFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRouteForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRouteEditForm');
+end;
+
+procedure TLoadFormTest.LoadRouteSortingFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteSortingForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRouteSortingForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteSortingEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRouteSortingEditForm');
+end;
+
+procedure TLoadFormTest.LoadMemberFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMemberEditForm');
+end;
+
+procedure TLoadFormTest.LoadPositionFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPositionForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPositionEditForm');
+end;
+
+procedure TLoadFormTest.LoadPersonalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalEditForm');
+end;
+procedure TLoadFormTest.LoadCarFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCarForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCarEditForm');
+end;
+
+procedure TLoadFormTest.LoadCarModelFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarModelForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCarModelForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarModelEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCarModelEditForm');
+end;
+
+
 procedure TLoadFormTest.SetUp;
 begin
   inherited;

@@ -38,12 +38,6 @@ type
     dsdFormClose1: TdsdFormClose;
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
-    cxLabel3: TcxLabel;
-    ceJuridical: TcxLookupComboBox;
-    JuridicalDataSet: TClientDataSet;
-    spGetJuridical: TdsdStoredProc;
-    JuridicalDS: TDataSource;
-    dsdJuridicalGuides: TdsdGuides;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
   private

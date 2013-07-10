@@ -105,7 +105,28 @@ uses
   ProfitLossDirection in '..\..\Forms\ProfitLossDirection.pas' {ProfitLossDirectionForm},
   ProfitLossDirectionEdit in '..\..\Forms\ProfitLossDirectionEdit.pas' {ProfitLossDirectionEditForm},
   ProfitLossEdit in '..\..\Forms\ProfitLossEdit.pas' {ProfitLossEditForm},
+<<<<<<< 6fdbfe3118a55e13b165a105057c1bd864733390
   dbTest in '..\SOURCE\dbTest.pas';
+=======
+  TradeMark in '..\..\Forms\TradeMark.pas' {TradeMarkForm},
+  TradeMarkEdit in '..\..\Forms\TradeMarkEdit.pas' {TradeMarkEditForm},
+  Asset in '..\..\Forms\Asset.pas' {AssetForm},
+  Route in '..\..\Forms\Route.pas' {RouteForm},
+  RouteEdit in '..\..\Forms\RouteEdit.pas' {RouteEditForm},
+  RouteSorting in '..\..\Forms\RouteSorting.pas' {RouteSortingForm},
+  RouteSortingEdit in '..\..\Forms\RouteSortingEdit.pas' {RouteSortingEditForm},
+  Member in '..\..\Forms\Member.pas' {MemberForm},
+  MemberEdit in '..\..\Forms\MemberEdit.pas' {MemberEditForm},
+  Personal in '..\..\Forms\Personal.pas' {PersonalForm},
+  CarModel in '..\..\Forms\CarModel.pas' {CarModelForm},
+  CarModelEdit in '..\..\Forms\CarModelEdit.pas' {CarModelEditForm},
+  Car in '..\..\Forms\Car.pas' {CarForm},
+  CarEdit in '..\..\Forms\CarEdit.pas' {CarEditForm},
+  PersonalEdit in '..\..\Forms\PersonalEdit.pas' {PersonalEditForm},
+  Position in '..\..\Forms\Position.pas' {PositionForm},
+  PositionEdit in '..\..\Forms\PositionEdit.pas' {PositionEditForm},
+  AssetEdit in '..\..\Forms\AssetEdit.pas' {AssetEditForm};
+>>>>>>> 8cbc3707a08fd3d0467f98c8ccd0c02e2f7f26e1
 
 {$R *.RES}
 

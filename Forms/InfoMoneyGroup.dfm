@@ -293,15 +293,15 @@ inherited InfoMoneyGroupForm: TInfoMoneyGroupForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_PriceList'
+    StoredProcName = 'gpSelect_Object_InfoMoneyGroup'
     DataSet = ClientDataSet
     DataSets = <
       item
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 232
-    Top = 256
+    Left = 240
+    Top = 232
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 96

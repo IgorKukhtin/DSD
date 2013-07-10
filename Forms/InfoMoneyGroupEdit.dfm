@@ -78,7 +78,7 @@
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_PriceList'
+    StoredProcName = 'gpInsertUpdate_Object_InfoMoneyGroup'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -119,7 +119,7 @@
     Top = 8
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_PriceList'
+    StoredProcName = 'gpGet_Object_InfoMoneyGroup'
     DataSets = <>
     OutputType = otResult
     Params = <

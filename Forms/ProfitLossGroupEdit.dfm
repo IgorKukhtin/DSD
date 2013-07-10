@@ -79,7 +79,7 @@
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_GoodsKind'
+    StoredProcName = 'gpInsertUpdate_Object_ProfitLossGroup'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -105,7 +105,7 @@
         ParamType = ptInput
         Value = ''
       end>
-    Left = 304
+    Left = 312
     Top = 56
   end
   object dsdFormParams: TdsdFormParams
@@ -120,7 +120,7 @@
     Top = 56
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_GoodsKind'
+    StoredProcName = 'gpGet_Object_ProfitLossGroup'
     DataSets = <>
     OutputType = otResult
     Params = <

@@ -293,7 +293,82 @@
 			<DCCReference Include="..\..\Forms\ProfitLossEdit.pas">
 				<Form>ProfitLossEditForm</Form>
 			</DCCReference>
+<<<<<<< 6fdbfe3118a55e13b165a105057c1bd864733390
 			<DCCReference Include="..\SOURCE\dbTest.pas"/>
+=======
+			<DCCReference Include="..\..\Forms\TradeMark.pas">
+				<Form>TradeMarkForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\TradeMarkEdit.pas">
+				<Form>TradeMarkEditForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Asset.pas">
+				<Form>AssetForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Route.pas">
+				<Form>RouteForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\RouteEdit.pas">
+				<Form>RouteEditForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\RouteSorting.pas">
+				<Form>RouteSortingForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\RouteSortingEdit.pas">
+				<Form>RouteSortingEditForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Member.pas">
+				<Form>MemberForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\MemberEdit.pas">
+				<Form>MemberEditForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Personal.pas">
+				<Form>PersonalForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\CarModel.pas">
+				<Form>CarModelForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\CarModelEdit.pas">
+				<Form>CarModelEditForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Car.pas">
+				<Form>CarForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\CarEdit.pas">
+				<Form>CarEditForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\PersonalEdit.pas">
+				<Form>PersonalEditForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Position.pas">
+				<Form>PositionForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\PositionEdit.pas">
+				<Form>PositionEditForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\AssetEdit.pas">
+				<Form>AssetEditForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+>>>>>>> 8cbc3707a08fd3d0467f98c8ccd0c02e2f7f26e1
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

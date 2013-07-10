@@ -1,19 +1,21 @@
 inherited InfoMoneyDestinationForm: TInfoMoneyDestinationForm
   Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   ClientHeight = 363
-  ClientWidth = 300
-  ExplicitWidth = 316
+  ClientWidth = 418
+  ExplicitWidth = 434
   ExplicitHeight = 401
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 28
-    Width = 300
+    Width = 418
     Height = 335
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 36
+    ExplicitWidth = 369
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -300,8 +302,8 @@ inherited InfoMoneyDestinationForm: TInfoMoneyDestinationForm
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 232
-    Top = 208
+    Left = 216
+    Top = 224
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 104
@@ -324,7 +326,7 @@ inherited InfoMoneyDestinationForm: TInfoMoneyDestinationForm
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     View = cxGridDBTableView
-    Left = 264
-    Top = 200
+    Left = 272
+    Top = 184
   end
 end

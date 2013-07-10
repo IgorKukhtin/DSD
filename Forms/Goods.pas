@@ -10,31 +10,57 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, Datasnap.DBClient, dsdDB, cxPropertiesStore, dxBar,
   Vcl.ActnList, dsdAction, DataModul, cxTL, cxTLdxBarBuiltInMenu,
-  cxInplaceContainer, cxTLData, cxDBTL, cxMaskEdit, ParentForm;
+  cxInplaceContainer, cxTLData, cxDBTL, cxMaskEdit, ParentForm, dxSkinsCore,
+  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
+  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
+  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
+  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
+  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
+  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
+  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
+  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
+  dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
+  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  dsdAddOn, dxBarExtItems;
 
 type
   TGoodsForm = class(TParentForm)
+    cxGrid: TcxGrid;
+    cxGridDBTableView: TcxGridDBTableView;
+    clCode: TcxGridDBColumn;
+    clName: TcxGridDBColumn;
+    cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
-    ActionList: TActionList;
     bbRefresh: TdxBarButton;
+    bbInsert: TdxBarButton;
+    bbEdit: TdxBarButton;
+    bbSetErased: TdxBarButton;
+    bbSetUnErased: TdxBarButton;
+    bbGridToExcel: TdxBarButton;
+    dxBarStatic1: TdxBarStatic;
+    bbChoiceGuides: TdxBarButton;
+    ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
     actInsert: TdsdInsertUpdateAction;
-    bbInsert: TdxBarButton;
-    dsdStoredProc: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
-    bbEdit: TdxBarButton;
-    bbErased: TdxBarButton;
-    bbUnErased: TdxBarButton;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
-    cxDBTreeList: TcxDBTreeList;
-    cxDBTreeListcxDBTreeListColumn1: TcxDBTreeListColumn;
-    cxDBTreeListcxDBTreeListColumn3: TcxDBTreeListColumn;
-    cxDBTreeListcxDBTreeListColumn4: TcxDBTreeListColumn;
+    dsdGridToExcel1: TdsdGridToExcel;
+    dsdChoiceGuides1: TdsdChoiceGuides;
+    dsdStoredProc: TdsdStoredProc;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    spErasedUnErased: TdsdStoredProc;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
+    clWeight: TcxGridDBColumn;
+    clGoodsGroup: TcxGridDBColumn;
+    clMeasure: TcxGridDBColumn;
+    clTradeMark: TcxGridDBColumn;
+    clInfoMoney: TcxGridDBColumn;
   private
     { Private declarations }
   public

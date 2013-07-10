@@ -91,6 +91,25 @@ type
     actProfitLoss: TdsdOpenForm;
     bbAccount: TdxBarButton;
     bbProfitLoss: TdxBarButton;
+    actTradeMark: TdsdOpenForm;
+    actAsset: TdsdOpenForm;
+    actRoute: TdsdOpenForm;
+    actRouteSorting: TdsdOpenForm;
+    actMember: TdsdOpenForm;
+    actPosition: TdsdOpenForm;
+    actPersonal: TdsdOpenForm;
+    actCar: TdsdOpenForm;
+    actCarModel: TdsdOpenForm;
+    dxBarSubItem1: TdxBarSubItem;
+    bbCar: TdxBarButton;
+    bbCarModel: TdxBarButton;
+    bbPersonal: TdxBarButton;
+    bbRoute: TdxBarButton;
+    bbRouteSorting: TdxBarButton;
+    bbTradeMark: TdxBarButton;
+    bbAsset: TdxBarButton;
+    bbPosition: TdxBarButton;
+    bbMember: TdxBarButton;
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }

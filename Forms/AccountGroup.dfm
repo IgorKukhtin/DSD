@@ -13,6 +13,7 @@ inherited AccountGroupForm: TAccountGroupForm
     Height = 380
     Align = alClient
     TabOrder = 0
+    ExplicitTop = 20
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -287,7 +288,7 @@ inherited AccountGroupForm: TAccountGroupForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_GoodsKind'
+    StoredProcName = 'gpSelect_Object_AccountGroup'
     DataSet = ClientDataSet
     DataSets = <
       item

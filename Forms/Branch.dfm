@@ -14,8 +14,7 @@ inherited BranchForm: TBranchForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = -240
-    ExplicitTop = -108
+    ExplicitLeft = 8
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -47,12 +46,6 @@ inherited BranchForm: TBranchForm
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Width = 246
-      end
-      object clJuridicalName: TcxGridDBColumn
-        Caption = #1070#1088'. '#1083#1080#1094#1086
-        DataBinding.FieldName = 'JuridicalName'
-        HeaderAlignmentVert = vaCenter
-        Width = 199
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
