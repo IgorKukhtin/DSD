@@ -18,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;  
+   DECLARE vbOldId Integer;
 BEGIN
    
    -- проверка прав пользователя на вызов процедуры
@@ -36,6 +37,7 @@ BEGIN
    -- проверка цикл у дерева
    PERFORM lpCheck_Object_CycleLink(ioId, zc_ObjectLink_Unit_Parent(), inParentId);
 
+   vbOldId := ioId;
    -- сохранили объект
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Unit(), vbCode_calc, inName);
    -- сохранили связь с <Подразделения>
@@ -51,8 +53,11 @@ BEGIN
    -- сохранили связь с <Аналитики статей отчета о прибылях и убытках - направление>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_ProfitLossDirection(), ioId, inProfitLossDirectionId);
 
-   -- Установить свойство лист\папка у родителя
-   
+   -- Если добавляли подразделение
+   IF vbOldId <> ioId THEN
+      -- Установить свойство лист\папка у себя
+      PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_isLeaf(), ioId, true);
+   END IF;
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);

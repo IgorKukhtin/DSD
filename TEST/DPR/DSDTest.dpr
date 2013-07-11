@@ -105,9 +105,7 @@ uses
   ProfitLossDirection in '..\..\Forms\ProfitLossDirection.pas' {ProfitLossDirectionForm},
   ProfitLossDirectionEdit in '..\..\Forms\ProfitLossDirectionEdit.pas' {ProfitLossDirectionEditForm},
   ProfitLossEdit in '..\..\Forms\ProfitLossEdit.pas' {ProfitLossEditForm},
-<<<<<<< 6fdbfe3118a55e13b165a105057c1bd864733390
-  dbTest in '..\SOURCE\dbTest.pas';
-=======
+  dbTest in '..\SOURCE\dbTest.pas',
   TradeMark in '..\..\Forms\TradeMark.pas' {TradeMarkForm},
   TradeMarkEdit in '..\..\Forms\TradeMarkEdit.pas' {TradeMarkEditForm},
   Asset in '..\..\Forms\Asset.pas' {AssetForm},
@@ -126,7 +124,6 @@ uses
   Position in '..\..\Forms\Position.pas' {PositionForm},
   PositionEdit in '..\..\Forms\PositionEdit.pas' {PositionEditForm},
   AssetEdit in '..\..\Forms\AssetEdit.pas' {AssetEditForm};
->>>>>>> 8cbc3707a08fd3d0467f98c8ccd0c02e2f7f26e1
 
 {$R *.RES}
 
