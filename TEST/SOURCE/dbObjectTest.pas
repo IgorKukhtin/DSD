@@ -2488,7 +2488,7 @@ var
 begin
   MemberId := TMemberTest.Create.GetDefault;
   PositionId := TPositionTest.Create.GetDefault;
-  UnitId := TUnitTest.Create.GetDefault;
+  UnitId := TUnit.Create.GetDefault;
   JuridicalId := TJuridicalTest.Create.GetDefault;
   BusinessId := TBusinessTest.Create.GetDefault;
   result := InsertUpdatePersonal(0, 3, 'Сотрудник', MemberId, PositionId, UnitId, JuridicalId, BusinessId, Date,Date);

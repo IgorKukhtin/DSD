@@ -5,23 +5,23 @@ uses dbTest;
 
 type
 
-  РасчетСебестоимости = class (TdbTest)
+  TPrimeCostTest = class (TdbTest)
   published
-    procedure ЗагрузкаПроцедур; override;
-    procedure Тестирование; override;
+    procedure ProcedureLoad; override;
+    procedure Test; override;
   end;
 
 implementation
 
 { РасчетСебестоимости }
 
-procedure РасчетСебестоимости.ЗагрузкаПроцедур;
+procedure TPrimeCostTest.ProcedureLoad;
 begin
   inherited;
 
 end;
 
-procedure РасчетСебестоимости.Тестирование;
+procedure TPrimeCostTest.Test;
 begin
   inherited;
 

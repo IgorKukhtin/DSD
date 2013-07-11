@@ -6,13 +6,13 @@ uses dbTest, dbObjectTest;
 
 type
 
-  Подразделения = class (TdbTest)
+  TUnitTest = class (TdbTest)
   published
-    procedure ЗагрузкаПроцедур; override;
-    procedure Тестирование; override;
+    procedure ProcedureLoad; override;
+    procedure Test; override;
   end;
 
-  TUnitTest = class(TObjectTest)
+  TUnit = class(TObjectTest)
     function InsertDefault: integer; override;
   public
     // Удаляется Объект и все подчиненные
@@ -30,20 +30,20 @@ uses DB, UtilConst, TestFramework, SysUtils;
 
 { TdbUnitTest }
 
-procedure Подразделения.ЗагрузкаПроцедур;
+procedure TUnitTest.ProcedureLoad;
 begin
   ScriptDirectory := ProcedurePath + 'OBJECTS\_Unit\';
   inherited;
 end;
 
-procedure Подразделения.Тестирование;
+procedure TUnitTest.Test;
 var Id, Id2, Id3: integer;
     RecordCount: Integer;
-    ObjectTest: TUnitTest;
+    ObjectTest: TUnit;
 begin
  // тут наша задача проверить правильность работы с деревом.
  // а именно зацикливание.
-  ObjectTest := TUnitTest.Create;
+  ObjectTest := TUnit.Create;
   // Получим список объектов
   RecordCount := ObjectTest.GetDataSet.RecordCount;
   // Вставка объекта
@@ -117,7 +117,7 @@ end;
 
 { TUnitTest }
 
-constructor TUnitTest.Create;
+constructor TUnit.Create;
 begin
   inherited;
   spInsertUpdate := 'gpInsertUpdate_Object_Unit';
@@ -125,7 +125,7 @@ begin
   spGet := 'gpGet_Object_Unit';
 end;
 
-procedure TUnitTest.Delete(Id: Integer);
+procedure TUnit.Delete(Id: Integer);
 begin
   inherited;
   with TBranchTest.Create do
@@ -136,7 +136,7 @@ begin
   end;
 end;
 
-function TUnitTest.InsertDefault: integer;
+function TUnit.InsertDefault: integer;
 var
   BranchId: Integer;
 begin
@@ -144,7 +144,7 @@ begin
   result := InsertUpdateUnit(0, 1, 'Подразделение', 0, BranchId, 0, 0, 0, 0);
 end;
 
-function TUnitTest.InsertUpdateUnit(Id, Code: Integer; Name: String;
+function TUnit.InsertUpdateUnit(Id, Code: Integer; Name: String;
                                     ParentId, BranchId, BusinessId, JuridicalId,
                                     AccountDirectionId, ProfitLossDirectionId: integer): integer;
 begin
@@ -165,6 +165,6 @@ end;
 
 
 initialization
-  TestFramework.RegisterTest('Объекты', Подразделения.Suite);
+  TestFramework.RegisterTest('Объекты', TUnitTest.Suite);
 
 end.

@@ -135,7 +135,7 @@ begin
   ChangePercent:=-10;
 
   FromId := TPartnerTest.Create.GetDefault;
-  ToId := TUnitTest.Create.GetDefault;
+  ToId := TUnit.Create.GetDefault;
   PaidKindId:=0;
   ContractId:=0;
   CarId:=0;

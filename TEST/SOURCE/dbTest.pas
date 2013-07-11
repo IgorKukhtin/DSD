@@ -18,8 +18,8 @@ type
     // получение поличества записей
   public
     // загрузка процедура из определенной директории
-    procedure ЗагрузкаПроцедур; virtual;
-    procedure Тестирование; virtual;
+    procedure ProcedureLoad; virtual;
+    procedure Test; virtual;
   end;
 
 implementation
@@ -80,7 +80,7 @@ begin
   ZQuery.Free;
 end;
 
-procedure TdbTest.ЗагрузкаПроцедур;
+procedure TdbTest.ProcedureLoad;
 var iFilesCount: Integer;
     saFound: TStrings;
     i: integer;
@@ -95,7 +95,7 @@ begin
   end;
 end;
 
-procedure TdbTest.Тестирование;
+procedure TdbTest.Test;
 begin
 
 end;

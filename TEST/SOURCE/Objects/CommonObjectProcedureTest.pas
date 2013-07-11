@@ -6,9 +6,9 @@ uses dbTest;
 
 type
 
-  ОбщиеПроцедурыОбъектов = class (TdbTest)
+  TCommonObjectProcedure = class (TdbTest)
   published
-    procedure ЗагрузкаПроцедур; override;
+    procedure ProcedureLoad; override;
   end;
 
 implementation
@@ -17,14 +17,14 @@ uses UtilConst, TestFramework;
 
 { ОбщиеПроцедурыОбъектов }
 
-procedure ОбщиеПроцедурыОбъектов.ЗагрузкаПроцедур;
+procedure TCommonObjectProcedure.ProcedureLoad;
 begin
   ScriptDirectory := ProcedurePath + 'OBJECTS\Common';
   inherited;
 end;
 
 initialization
-  TestFramework.RegisterTest('Объекты', ОбщиеПроцедурыОбъектов.Suite);
-  TestFramework.RegisterTest('Процедуры', ОбщиеПроцедурыОбъектов.Suite);
+  TestFramework.RegisterTest('Объекты', TCommonObjectProcedure.Suite);
+  TestFramework.RegisterTest('Процедуры', TCommonObjectProcedure.Suite);
 
 end.

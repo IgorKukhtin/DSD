@@ -98,7 +98,7 @@ end;
 procedure TdbProcedureTest.CreateObjectProcedure;
 begin
   ScriptDirectory := ProcedurePath + 'OBJECTS\Common\';
-  ЗагрузкаПроцедур;
+  ProcedureLoad;
 
   ExecFile(ProcedurePath + 'OBJECTS\_User\gpInsertUpdate_Object_User.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_User\gpSelect_Object_User.sql', ZQuery);
