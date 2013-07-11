@@ -16,12 +16,15 @@ program DSDTest;
 
 uses
   DUnitTestRunner,
-  dbCreateStructureTest in '..\SOURCE\dbCreateStructureTest.pas',
-  dbMetadataTest in '..\SOURCE\dbMetadataTest.pas',
+  dbCreateStructureTest in '..\SOURCE\STRUCTURE\dbCreateStructureTest.pas',
+  dbMetadataTest in '..\SOURCE\Metadata\dbMetadataTest.pas',
   dbProcedureTest in '..\SOURCE\dbProcedureTest.pas',
   dbEnumTest in '..\SOURCE\dbEnumTest.pas',
   AuthenticationTest in '..\SOURCE\AuthenticationTest.pas',
+  CommonObjectProcedureTest in '..\SOURCE\Objects\CommonObjectProcedureTest.pas',
   dbObjectTest in '..\SOURCE\dbObjectTest.pas',
+  UnitsTest in '..\SOURCE\Objects\All\UnitsTest.pas',
+  dbObjectCostTest in '..\SOURCE\ObjectCost\dbObjectCostTest.pas',
   dbMovementTest in '..\SOURCE\dbMovementTest.pas',
   LoadFormTest in '..\SOURCE\LoadFormTest.pas',
   Forms,
@@ -101,11 +104,14 @@ uses
   ProfitLoss in '..\..\Forms\ProfitLoss.pas' {ProfitLossForm},
   ProfitLossDirection in '..\..\Forms\ProfitLossDirection.pas' {ProfitLossDirectionForm},
   ProfitLossDirectionEdit in '..\..\Forms\ProfitLossDirectionEdit.pas' {ProfitLossDirectionEditForm},
-  ProfitLossEdit in '..\..\Forms\ProfitLossEdit.pas' {ProfitLossEditForm};
+  ProfitLossEdit in '..\..\Forms\ProfitLossEdit.pas' {ProfitLossEditForm},
+  dbTest in '..\SOURCE\dbTest.pas';
 
 {$R *.RES}
 
 begin
+  // Регистрируем тесты здесь, так как важна очередность
+
   Application.Initialize;
   Application.CreateForm(TdmMain, dmMain);
   Application.Run;

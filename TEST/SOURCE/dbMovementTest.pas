@@ -46,7 +46,7 @@ type
 
 implementation
 
-uses DB, Storage, SysUtils;
+uses DB, Storage, SysUtils, UnitsTest;
 { TDataBaseObjectTest }
 {------------------------------------------------------------------------------}
 procedure TdbMovementTest.TearDown;

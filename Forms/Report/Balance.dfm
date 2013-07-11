@@ -2,7 +2,6 @@ inherited BalanceForm: TBalanceForm
   Caption = #1041#1072#1083#1072#1085#1089
   ClientHeight = 395
   ClientWidth = 1329
-  ExplicitLeft = 0
   ExplicitWidth = 1337
   ExplicitHeight = 422
   PixelsPerInch = 96
@@ -14,77 +13,90 @@ inherited BalanceForm: TBalanceForm
     Height = 369
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 754
-    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <
         item
+          Format = ',0.00'
           Kind = skSum
           Position = spFooter
           Column = cxGridDBTableViewColumn6
         end
         item
+          Format = ',0.00'
           Kind = skSum
           Position = spFooter
           Column = cxGridDBTableViewColumn7
         end
         item
+          Format = ',0.00'
           Kind = skSum
           Position = spFooter
           Column = cxGridDBTableViewColumn8
         end
         item
+          Format = ',0.00'
           Kind = skSum
           Position = spFooter
           Column = cxGridDBTableViewColumn9
         end
         item
+          Format = ',0.00'
           Kind = skSum
           Position = spFooter
           Column = cxGridDBTableViewColumn10
         end
         item
+          Format = ',0.00'
           Kind = skSum
           Position = spFooter
           Column = cxGridDBTableViewColumn11
         end>
       DataController.Summary.FooterSummaryItems = <
         item
+          Format = ',0.00'
           Kind = skSum
           Column = cxGridDBTableViewColumn6
         end
         item
+          Format = ',0.00'
           Kind = skSum
           Column = cxGridDBTableViewColumn7
         end
         item
+          Format = ',0.00'
           Kind = skSum
           Column = cxGridDBTableViewColumn8
         end
         item
+          Format = ',0.00'
           Kind = skSum
           Column = cxGridDBTableViewColumn9
         end
         item
+          Format = ',0.00'
           Kind = skSum
           Column = cxGridDBTableViewColumn10
         end
         item
+          Format = ',0.00'
           Kind = skSum
           Column = cxGridDBTableViewColumn11
         end>
       DataController.Summary.SummaryGroups = <>
+      Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
+      OptionsCustomize.ColumnHiding = True
+      OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
-      OptionsView.GroupFooters = gfVisibleWhenExpanded
+      OptionsView.GroupFooters = gfAlwaysVisible
       OptionsView.HeaderAutoHeight = True
       object cxGridDBTableViewColumn1: TcxGridDBColumn
         Caption = #1040'-'#1055
@@ -207,70 +219,6 @@ inherited BalanceForm: TBalanceForm
           'Left'
           'Top'
           'Width')
-      end
-      item
-        Component = cxGridDBTableViewColumn1
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
-      item
-        Component = cxGridDBTableViewColumn2
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
-      item
-        Component = cxGridDBTableViewColumn3
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
-      item
-        Component = cxGridDBTableViewColumn4
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
-      item
-        Component = cxGridDBTableViewColumn5
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
-      item
-        Component = cxGridDBTableViewColumn6
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
-      item
-        Component = cxGridDBTableViewColumn7
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
-      item
-        Component = cxGridDBTableViewColumn8
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -383,5 +331,14 @@ inherited BalanceForm: TBalanceForm
       end>
     Left = 152
     Top = 152
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    View = cxGridDBTableView
+    Left = 232
+    Top = 192
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 232
+    Top = 232
   end
 end

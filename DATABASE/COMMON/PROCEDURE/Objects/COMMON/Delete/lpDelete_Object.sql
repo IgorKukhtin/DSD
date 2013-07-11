@@ -9,6 +9,7 @@ IN Session tvarchar)
 $BODY$
 BEGIN
 
+  DELETE FROM MovementLinkObject WHERE ObjectId = inId;
   DELETE FROM ObjectLink WHERE ObjectId = inId;
   DELETE FROM ObjectLink WHERE ChildObjectId = inId;
   DELETE FROM ObjectString WHERE ObjectId = inId;

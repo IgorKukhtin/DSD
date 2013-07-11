@@ -1,33 +1,22 @@
 /*
   Создание 
-    - таблицы ContainerLinkObjectDesc ()
-    - связей
+    - таблицы ObjectCostDesc (элемент с\с)
+    - связи
     - индексов
 */
 
 /*-------------------------------------------------------------------------------*/
 
--- Table: ContainerLinkObjectDesc
-
--- DROP TABLE ContainerLinkObjectDesc;
-
-CREATE TABLE ContainerLinkObjectDesc
-(
+CREATE TABLE ObjectCostDesc(
    Id                    SERIAL NOT NULL PRIMARY KEY, 
-   Code                  TVarChar NOT NULL UNIQUE,
-   ItemName              TVarChar,
-   ObjectDescId          Integer,
-
-   CONSTRAINT fk_ContainerLinkObjectDesc_ObjectDescId FOREIGN KEY(ObjectDescId) REFERENCES ObjectDesc(Id)
-
-)
-WITH (
-  OIDS=FALSE
+   Code                  TVarChar,
+   ItemName              TVarChar
 );
-ALTER TABLE ContainerLinkObjectDesc
-  OWNER TO postgres;
+
+
 
 /*-------------------------------------------------------------------------------*/
+
 /*                                  Индексы                                      */
 
 
@@ -38,5 +27,5 @@ ALTER TABLE ContainerLinkObjectDesc
  ДАТА         АВТОР
  ----------------
                  Климентьев К.И.   Кухтин И.В.   
- 29.06.13             * SERIAL
+ 11.07.13                             *
 */

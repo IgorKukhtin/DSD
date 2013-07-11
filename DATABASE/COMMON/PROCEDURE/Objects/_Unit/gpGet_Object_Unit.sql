@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar,
                AccountDirectionId Integer, AccountDirectionCode Integer, AccountDirectionName TVarChar,
                ProfitLossDirectionId Integer, ProfitLossDirectionICode Integer, ProfitLossDirectionName TVarChar,
-               isErased boolean) AS
+               isErased boolean, isLeaf boolean) AS
 $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
@@ -23,7 +23,7 @@ BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)   AS Id
-           , COALESCE (MAX (Object.ObjectCode), 0) + 1 AS Code
+           , lfGet_ObjectCode(0, zcObject_Unit()) AS Code
            , CAST ('' as TVarChar) AS Name
            , CAST ('' as TVarChar) AS GLNCode
            
@@ -52,8 +52,7 @@ BEGIN
            , CAST ('' as TVarChar) AS ProfitLossDirectionName
          
            , CAST (NULL AS Boolean) AS isErased
-       FROM Object 
-       WHERE Object.DescId = zc_Object_Unit();
+           , CAST (NULL AS Boolean) AS isLeaf;
    ELSE
        RETURN QUERY 
        SELECT 
@@ -86,6 +85,7 @@ BEGIN
            , Object_ProfitLossDirection.ValueData  AS ProfitLossDirectionName
          
            , Object_Unit.isErased AS isErased
+           , ObjectBoolean_isLeaf.ValueData AS isLeaf
        FROM Object AS Object_Unit
            LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
                                 ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
@@ -116,6 +116,9 @@ BEGIN
                                 ON ObjectLink_Unit_ProfitLossDirection.ObjectId = Object_Unit.Id
                                AND ObjectLink_Unit_ProfitLossDirection.DescId = zc_ObjectLink_Unit_ProfitLossDirection()
            LEFT JOIN Object AS Object_ProfitLossDirection ON Object_ProfitLossDirection.Id = ObjectLink_Unit_ProfitLossDirection.ChildObjectId
+           LEFT JOIN ObjectBoolean AS ObjectBoolean_isLeaf 
+                                   ON ObjectBoolean_isLeaf.ObjectId = Object_Unit.Id
+                                  AND ObjectBoolean_isLeaf.DescId = zc_ObjectBoolean_isLeaf()
       WHERE Object_Unit.Id = inId;
    END IF;
   

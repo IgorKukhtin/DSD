@@ -20,7 +20,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn;
 
 type
   TBalanceForm = class(TParentForm)
@@ -54,6 +54,8 @@ type
     cxGridDBTableViewColumn14: TcxGridDBColumn;
     cxGridDBTableViewColumn15: TcxGridDBColumn;
     cxGridDBTableViewColumn16: TcxGridDBColumn;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
   private
   public
   end;

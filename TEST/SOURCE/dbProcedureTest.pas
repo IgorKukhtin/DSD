@@ -1,18 +1,10 @@
 unit dbProcedureTest;
 
 interface
-uses TestFramework, ZConnection, ZDataset;
+uses TestFramework, dbTest;
 
 type
-  TdbProcedureTest = class (TTestCase)
-  private
-    ZConnection: TZConnection;
-    ZQuery: TZQuery;
-  protected
-    // подготавливаем данные для тестирования
-    procedure SetUp; override;
-    // возвращаем данные для тестирования
-    procedure TearDown; override;
+  TdbProcedureTest = class (TdbTest)
   published
     procedure CreateFunction;
     procedure CreateContainerProcedure;
@@ -28,11 +20,10 @@ type
 
 implementation
 
-uses zLibUtil;
+uses zLibUtil, utilConst;
 
 const
   FunctionPath = '..\DATABASE\COMMON\FUNCTION\';
-  ProcedurePath = '..\DATABASE\COMMON\PROCEDURE\';
   ReportsPath = '..\DATABASE\COMMON\REPORTS\';
 
 { TdbProcedureTest }
@@ -106,25 +97,8 @@ end;
 
 procedure TdbProcedureTest.CreateObjectProcedure;
 begin
-  ExecFile(ProcedurePath + 'OBJECTS\Constraint\lpCheckUnique_Object_ValueData.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\Constraint\lpCheckUnique_Object_ObjectCode.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\Constraint\lpCheckUnique_ObjectString_ValueData.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\Constraint\lpCheck_Object_CycleLink.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\Constraint\lfGet_ObjectCode.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\Constraint\lfGet_ObjectCode_byEnum.sql', ZQuery);
-
-  ExecFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_Object.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_ObjectString.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_ObjectBLOB.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_ObjectFloat.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_ObjectBoolean.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_ObjectLink.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_Object_Enum.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpUpdate_Object_Enum_byCode.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_ObjectDate.sql', ZQuery);
-
-  ExecFile(ProcedurePath + 'OBJECTS\Delete\lpDelete_Object.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\gpUpdateObjectIsErased.sql', ZQuery);
+  ScriptDirectory := ProcedurePath + 'OBJECTS\Common\';
+  ЗагрузкаПроцедур;
 
   ExecFile(ProcedurePath + 'OBJECTS\_User\gpInsertUpdate_Object_User.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_User\gpSelect_Object_User.sql', ZQuery);
@@ -135,9 +109,6 @@ begin
 
   ExecFile(ProcedurePath + 'OBJECTS\_UserFormSettings\gpInsertUpdate_Object_UserFormSettings.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_UserFormSettings\gpGet_Object_UserFormSettings.sql', ZQuery);
-
-  ExecFile(ProcedurePath + 'OBJECTS\lpCheckRight.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\gpCheckLogin.sql', ZQuery);
 
   ExecFile(ProcedurePath + 'OBJECTS\_Account\gpInsertUpdate_Object_Account.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Account\lpFind_Object_Account.sql', ZQuery);
@@ -277,10 +248,6 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_ProfitLossGroup\gpSelect_Object_ProfitLossGroup.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_ProfitLossGroup\gpGet_Object_ProfitLossGroup.sql', ZQuery);
 
-  ExecFile(ProcedurePath + 'OBJECTS\_Unit\gpInsertUpdate_Object_Unit.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\_Unit\gpSelect_Object_Unit.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\_Unit\gpGet_Object_Unit.sql', ZQuery);
-
   ExecFile(ProcedurePath + 'OBJECTS\_ProfitLoss\gpInsertUpdate_Object_ProfitLoss.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_ProfitLoss\gpSelect_Object_ProfitLoss.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_ProfitLoss\gpGet_Object_ProfitLoss.sql', ZQuery);
@@ -325,22 +292,6 @@ end;
 procedure TdbProcedureTest.CreateReportProcedure;
 begin
   ExecFile(ReportsPath + 'gpReport_Balance.sql', ZQuery);
-end;
-
-procedure TdbProcedureTest.SetUp;
-begin
-  inherited;
-  ZConnection := TConnectionFactory.GetConnection;
-  ZConnection.Connected := true;
-  ZQuery := TZQuery.Create(nil);
-  ZQuery.Connection := ZConnection;
-end;
-
-procedure TdbProcedureTest.TearDown;
-begin
-  inherited;
-  ZConnection.Free;
-  ZQuery.Free;
 end;
 
 initialization

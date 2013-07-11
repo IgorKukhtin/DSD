@@ -1,7 +1,7 @@
 unit dbObjectTest;
 
 interface
-uses TestFramework, Authentication, Db, XMLIntf, dsdDB;
+uses Classes, TestFramework, Authentication, Db, XMLIntf, dsdDB, dbTest;
 
 type
 
@@ -30,14 +30,15 @@ type
     destructor Destoy;
   end;
 
-  TdbObjectTest = class (TTestCase)
+  TdbObjectTest = class (TdbTest)
   protected
-    // получение поличества записей
-    function GetRecordCount(ObjectTest: TObjectTest): integer;
     // подготавливаем данные для тестирования
     procedure SetUp; override;
     // возвращаем данные для тестирования
     procedure TearDown; override;
+
+    function GetRecordCount(ObjectTest: TObjectTest): integer;
+
   published
     procedure Bank_Test;
     procedure BankAccount_Test;
@@ -61,8 +62,6 @@ type
     procedure PriceList_Test;
     procedure Route_Test;
     procedure RouteSorting_Test;
-    procedure Unit_Test;
-    procedure UnitGroup_Test;
     procedure User_Test;
     procedure AccountGroup_Test;
     procedure AccountDirection_Test;
@@ -78,7 +77,7 @@ type
     procedure Personal_Test;
     procedure AssetGroup_Test;
     procedure Asset_Test;
-   end;
+  end;
 
   TBankTest = class(TObjectTest)
   private
@@ -241,28 +240,6 @@ type
   public
     function InsertUpdateGoodsGroup(const Id: integer; Code: Integer;
         Name: string; ParentId: integer): integer;
-    constructor Create; override;
-  end;
-
-  TUnitGroupTest = class(TObjectTest)
-  private
-    function InsertDefault: integer; override;
-  public
-    // function InsertUpdateUnitGroup(const Id: integer; Code: Integer; Name: string; ParentId: integer): integer;
-    function InsertUpdateUnitGroup(Id, Code: Integer; Name: String;
-                                   ParentId, BranchId, BusinessId, JuridicalId,
-                                   AccountDirectionId, ProfitLossDirectionId: integer): Integer;
-    constructor Create; override;
-  end;
-
-  TUnitTest = class(TObjectTest)
-    function InsertDefault: integer; override;
-  public
-    // Удаляется Объект и все подчиненные
-    procedure Delete(Id: Integer); override;
-    function InsertUpdateUnit(Id, Code: Integer; Name: String;
-                              ParentId, BranchId, BusinessId, JuridicalId,
-                              AccountDirectionId, ProfitLossDirectionId: integer): integer;
     constructor Create; override;
   end;
 
@@ -429,11 +406,12 @@ type
     constructor Create; override;
   end;
 
-
- implementation
+implementation
 
 uses ZDbcIntfs, SysUtils, Storage, DBClient, XMLDoc, CommonData, Forms,
-     Classes, UtilConvert, ZLibEx;
+     UtilConvert, ZLibEx, zLibUtil,
+
+     UnitsTest;
 
 
 { TObjectTest }
@@ -1291,60 +1269,6 @@ begin
   result := InsertUpdate(FParams);
 end;
 
-{ TUnitTest }
-
-constructor TUnitTest.Create;
-begin
-  inherited;
-  spInsertUpdate := 'gpInsertUpdate_Object_Unit';
-  spSelect := 'gpSelect_Object_Unit';
-  spGet := 'gpGet_Object_Unit';
-end;
-
-procedure TUnitTest.Delete(Id: Integer);
-begin
-  inherited;
-  with TUnitGroupTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free;
-  end;
-  with TBranchTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free;
-  end;
-end;
-
-function TUnitTest.InsertDefault: integer;
-var
-  BranchId: Integer;
-begin
-  BranchId := TBranchTest.Create.GetDefault;
-  result := InsertUpdateUnit(0, 1, 'Подразделение', 0, BranchId, 0, 0, 0, 0);
-end;
-
-function TUnitTest.InsertUpdateUnit(Id, Code: Integer; Name: String;
-                                    ParentId, BranchId, BusinessId, JuridicalId,
-                                    AccountDirectionId, ProfitLossDirectionId: integer): integer;
-begin
-  FParams.Clear;
-  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
-  FParams.AddParam('inCode', ftInteger, ptInput, Code);
-  FParams.AddParam('inName', ftString, ptInput, Name);
-  FParams.AddParam('inParentId', ftInteger, ptInput, ParentId);
-  FParams.AddParam('inBranchId', ftInteger, ptInput, BranchId);
-
-  FParams.AddParam('inBusinessId', ftInteger, ptInput, BusinessId);
-  FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
-  FParams.AddParam('inAccountDirectionId', ftInteger, ptInput, AccountDirectionId);
-  FParams.AddParam('inProfitLossDirectionId', ftInteger, ptInput, ProfitLossDirectionId);
-
-  result := InsertUpdate(FParams);
-end;
-
 { TPriceListTest }
 
 constructor TPriceListTest.Create;
@@ -1544,118 +1468,6 @@ begin
     // Получение данных о Филиале
     with ObjectTest.GetRecord(Id) do
       Check((FieldByName('Name').AsString = 'Филиал'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
-  finally
-    ObjectTest.Delete(Id);
-  end;
-end;
-
-  {TUnitGroupTest}
- constructor TUnitGroupTest.Create;
-begin
-  inherited;
-  spInsertUpdate := 'gpInsertUpdate_Object_Unit';
-  spSelect := 'gpSelect_Object_Unit';
-  spGet := 'gpGet_Object_Unit';
-end;
-
-function TUnitGroupTest.InsertDefault: integer;
-var
-  ParentId: Integer;
-begin
-  ParentId:=0;
-  result := InsertUpdateUnitGroup(0, -1, 'Группа подразделения - тест', ParentId, 0, 0, 0, 0, 0);
-end;
-
-function TUnitGroupTest.InsertUpdateUnitGroup(Id, Code: Integer; Name: String;
-                                              ParentId, BranchId, BusinessId, JuridicalId,
-                                              AccountDirectionId, ProfitLossDirectionId: Integer): Integer;
-begin
-  FParams.Clear;
-  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
-  FParams.AddParam('inCode', ftInteger, ptInput, Code);
-  FParams.AddParam('inName', ftString, ptInput, Name);
-  FParams.AddParam('inParentId', ftInteger, ptInput, ParentId);
-  FParams.AddParam('inBranchId', ftInteger, ptInput, BranchId);
-
-  FParams.AddParam('inBusinessId', ftInteger, ptInput, BusinessId);
-  FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
-  FParams.AddParam('inAccountDirectionId', ftInteger, ptInput, AccountDirectionId);
-  FParams.AddParam('inProfitLossDirectionId', ftInteger, ptInput, ProfitLossDirectionId);
-  result := InsertUpdate(FParams);
-end;
-
-procedure TdbObjectTest.UnitGroup_Test;
-var Id, Id2, Id3: integer;
-    RecordCount: Integer;
-    ObjectTest: TUnitGroupTest;
-begin
- // тут наша задача проверить правильность работы с деревом.
- // а именно зацикливание.
-  ObjectTest := TUnitGroupTest.Create;
-  // Получим список объектов
-  RecordCount := GetRecordCount(ObjectTest);
-  // Вставка объекта
- // добавляем группу 1
-  Id := ObjectTest.InsertDefault;
-  try
-    // теперь делаем ссылку на себя и проверяем ошибку
-    try
-      ObjectTest.InsertUpdateUnitGroup(Id, -1, 'Группа 1 - тест', Id, 0, 0, 0, 0, 0);
-      Check(false, 'Нет сообщение об ошибке');
-    except
-
-    end;
-    // добавляем еще группу 2
-    // делаем у группы 2 ссылку на группу 1
-    Id2 := ObjectTest.InsertUpdateUnitGroup(0, -2, 'Группа 2 - тест', Id, 0, 0, 0, 0, 0);
-    try
-      // теперь ставим ссылку у группы 1 на группу 2 и проверяем ошибку
-      try
-        ObjectTest.InsertUpdateUnitGroup(Id, -1, 'Группа 1 - тест', Id2, 0, 0, 0, 0, 0);
-        Check(false, 'Нет сообщение об ошибке');
-      except
-
-      end;
-      // добавляем еще группу 3
-      // делаем у группы 3 ссылку на группу 2
-      Id3 := ObjectTest.InsertUpdateUnitGroup(0, -3, 'Группа 3 - тест', Id2, 0, 0, 0, 0, 0);
-      try
-        // группа 2 уже ссылка на группу 1
-        // делаем у группы 1 ссылку на группу 3 и проверяем ошибку
-        try
-          ObjectTest.InsertUpdateUnitGroup(Id, -1, 'Группа 1 - тест', Id3, 0, 0, 0, 0, 0);
-          Check(false, 'Нет сообщение об ошибке');
-        except
-
-        end;
-        Check((GetRecordCount(ObjectTest) = RecordCount + 3), 'Количество записей не изменилось');
-      finally
-        ObjectTest.Delete(Id3);
-      end;
-    finally
-      ObjectTest.Delete(Id2);
-    end;
-  finally
-    ObjectTest.Delete(Id);
-  end;
-end;
-
-
-{Unit_Test}
-procedure TdbObjectTest.Unit_Test;
-var Id: integer;
-    RecordCount: Integer;
-    ObjectTest: TUnitTest;
-begin
-  ObjectTest := TUnitTest.Create;
-  // Получим список
-  RecordCount := GetRecordCount(ObjectTest);
-  // Вставка Подразделения
-  Id := ObjectTest.InsertDefault;
-  try
-    // Получение данных о Подразделении
-    with ObjectTest.GetRecord(Id) do
-      Check((FieldByName('Name').AsString = 'Подразделение'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
   finally
     ObjectTest.Delete(Id);
   end;
@@ -2609,12 +2421,12 @@ begin
   finally
     Free;
   end;
-    with TUnitTest.Create do
+    {with TUnitTest.Create do
   try
     Delete(GetDefault)
   finally
     Free;
-  end;
+  end;}
     with TJuridicalTest.Create do
   try
     Delete(GetDefault)
@@ -2822,8 +2634,7 @@ begin
   end;
 end;
 
-
 initialization
-  TestFramework.RegisterTest('Справочники', TdbObjectTest.Suite);
+  TestFramework.RegisterTest('Объекты', TdbObjectTest.Suite);
 
 end.

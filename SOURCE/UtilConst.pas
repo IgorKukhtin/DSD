@@ -12,6 +12,9 @@ var
 
   ConnectionPath: string = '..\init\init.php';
 
+  EnumPath: string = '..\DATABASE\COMMON\METADATA\Enum\';
+  ProcedurePath: string = '..\DATABASE\COMMON\PROCEDURE\';
+
   FormatSettings: TFormatSettings;
   {константы времени}
   gc_DateStart: TDateTime;

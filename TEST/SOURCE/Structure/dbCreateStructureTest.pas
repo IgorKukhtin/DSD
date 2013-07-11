@@ -2,23 +2,19 @@ unit dbCreateStructureTest;
 
 interface
 
-uses TestFramework, ZConnection, ZDataset;
+uses TestFramework, ZConnection, ZDataset, dbTest;
 
 type
-  TdbCreateStructureTest = class (TTestCase)
-  private
-    ZConnection: TZConnection;
-    ZQuery: TZQuery;
+  TdbCreateStructureTest = class (TdbTest)
   protected
     // подготавливаем данные для тестирования
     procedure SetUp; override;
-    // возвращаем данные для тестирования
-    procedure TearDown; override;
   published
     procedure CreateDataBase;
     procedure CreateType;
     procedure CreateObject;
     procedure CreateContainer;
+    procedure CreateObjectCost;
     procedure CreateMovement;
     procedure CreateMovementItem;
     procedure CreateMovementItemContainer;
@@ -36,6 +32,7 @@ uses zLibUtil;
 
 const
   StructurePath = '..\DATABASE\COMMON\STRUCTURE\';
+
 
 procedure TdbCreateStructureTest.CreateContainer;
 begin
@@ -130,6 +127,16 @@ begin
   ExecFile(StructurePath + 'Object\ObjectLink.sql', ZQuery);
 end;
 
+procedure TdbCreateStructureTest.CreateObjectCost;
+begin
+  ExecFile(StructurePath + 'ObjectCost\ObjectCostDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'ObjectCost\ObjectCostLinkDesc.sql', ZQuery);
+  ExecFile(StructurePath + 'ObjectCost\ObjectCostLink.sql', ZQuery);
+  ExecFile(StructurePath + 'ObjectCost\ContainerObjectCost.sql', ZQuery);
+  ExecFile(StructurePath + 'ObjectCost\HistoryCost.sql', ZQuery);
+  ExecFile(StructurePath + 'ObjectCost\ObjectCostSEQUENCE.sql', ZQuery);
+end;
+
 procedure TdbCreateStructureTest.CreateProtocol;
 begin
   ExecFile(StructurePath + 'Protocol\ObjectProtocol.sql', ZQuery);
@@ -142,7 +149,6 @@ end;
 
 procedure TdbCreateStructureTest.SetUp;
 begin
-  inherited;
   ZConnection := TConnectionFactory.GetConnection;
   try
     ZConnection.Connected := true;
@@ -151,13 +157,6 @@ begin
   end;
   ZQuery := TZQuery.Create(nil);
   ZQuery.Connection := ZConnection;
-end;
-
-procedure TdbCreateStructureTest.TearDown;
-begin
-  inherited;
-  ZConnection.Free;
-  ZQuery.Free;
 end;
 
 initialization
