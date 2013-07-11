@@ -58,6 +58,9 @@ BEGIN
             FROM MovementItemContainer
                  JOIN Container ON Container.Id = MovementItemContainer.ContainerId
                                AND Container.DescId = zc_Container_Summ()
+                 LEFT JOIN ObjectLink AS ObjectLink_AccountKind
+                                      ON ObjectLink_AccountKind.ObjectId = Container.ObjectId
+                                     AND ObjectLink_AccountKind.DescId = zc_ObjectLink_Account_AccountKind()
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Juridical
                                                ON ContainerLinkObject_Juridical.ContainerId = MovementItemContainer.ContainerId
                                               AND ContainerLinkObject_Juridical.DescId = zc_ContainerLinkObject_Juridical()
@@ -87,7 +90,8 @@ BEGIN
                  LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ContainerLinkObject_GoodsKind.ObjectId
 
             WHERE MovementItemContainer.MovementId = inMovementId
-              AND MovementItemContainer.Amount > 0
+              AND COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Passive()
+              -- AND MovementItemContainer.Amount > 0
             GROUP BY Container.ObjectId
                    , Object_by.ObjectCode
                    , Object_by.ValueData
@@ -139,6 +143,9 @@ BEGIN
             FROM MovementItemContainer
                  JOIN Container ON Container.Id = MovementItemContainer.ContainerId
                                AND Container.DescId = zc_Container_Summ()
+                 LEFT JOIN ObjectLink AS ObjectLink_AccountKind
+                                      ON ObjectLink_AccountKind.ObjectId = Container.ObjectId
+                                     AND ObjectLink_AccountKind.DescId = zc_ObjectLink_Account_AccountKind()
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Juridical
                                                ON ContainerLinkObject_Juridical.ContainerId = MovementItemContainer.ContainerId
                                               AND ContainerLinkObject_Juridical.DescId = zc_ContainerLinkObject_Juridical()
@@ -168,7 +175,8 @@ BEGIN
                  LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ContainerLinkObject_GoodsKind.ObjectId
 
             WHERE MovementItemContainer.MovementId = inMovementId
-              AND MovementItemContainer.Amount < 0
+              AND ObjectLink_AccountKind.ChildObjectId = zc_Enum_AccountKind_Passive()
+              -- AND MovementItemContainer.Amount < 0
             GROUP BY Container.ObjectId
                    , Object_by.ObjectCode
                    , Object_by.ValueData
@@ -189,7 +197,7 @@ ALTER FUNCTION gpSelect_MovementItemContainer_Movement (Integer, TVarChar) OWNER
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
-
+ 11.07.13                                        * add zc_ObjectLink_Account_AccountKind
  08.07.13                                        * add AccountOnComplete
  04.07.13                                        * rename AccountId to ObjectId
  03.07.13                                        *
