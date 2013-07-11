@@ -321,9 +321,6 @@
 			<DCCReference Include="..\..\Forms\MemberEdit.pas">
 				<Form>MemberEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Personal.pas">
-				<Form>PersonalForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\CarModel.pas">
 				<Form>CarModelForm</Form>
 			</DCCReference>
@@ -336,9 +333,6 @@
 			<DCCReference Include="..\..\Forms\CarEdit.pas">
 				<Form>CarEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\PersonalEdit.pas">
-				<Form>PersonalEditForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Position.pas">
 				<Form>PositionForm</Form>
 			</DCCReference>
@@ -347,6 +341,12 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\AssetEdit.pas">
 				<Form>AssetEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Personal.pas">
+				<Form>PersonalForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\PersonalEdit.pas">
+				<Form>PersonalEditForm</Form>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

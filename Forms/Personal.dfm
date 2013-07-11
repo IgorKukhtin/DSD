@@ -2,24 +2,20 @@ inherited PersonalForm: TPersonalForm
   Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082#1080
   ClientHeight = 358
   ClientWidth = 864
-  ExplicitWidth = 880
-  ExplicitHeight = 396
+  ExplicitWidth = 872
+  ExplicitHeight = 385
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
+    Top = 26
     Width = 864
-    Height = 330
+    Height = 332
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = -14
-    ExplicitTop = -24
-    ExplicitWidth = 500
-    ExplicitHeight = 382
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -122,8 +118,8 @@ inherited PersonalForm: TPersonalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -140,7 +136,7 @@ inherited PersonalForm: TPersonalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -253,7 +249,7 @@ inherited PersonalForm: TPersonalForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TPersonaEditForm'
+      FormName = 'TPersonalEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -270,7 +266,7 @@ inherited PersonalForm: TPersonalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TPersonaEditForm'
+      FormName = 'TPersonalEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -321,7 +317,7 @@ inherited PersonalForm: TPersonalForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Persona'
+    StoredProcName = 'gpSelect_Object_Personal'
     DataSet = ClientDataSet
     DataSets = <
       item

@@ -115,15 +115,15 @@ uses
   RouteSortingEdit in '..\..\Forms\RouteSortingEdit.pas' {RouteSortingEditForm},
   Member in '..\..\Forms\Member.pas' {MemberForm},
   MemberEdit in '..\..\Forms\MemberEdit.pas' {MemberEditForm},
-  Personal in '..\..\Forms\Personal.pas' {PersonalForm},
   CarModel in '..\..\Forms\CarModel.pas' {CarModelForm},
   CarModelEdit in '..\..\Forms\CarModelEdit.pas' {CarModelEditForm},
   Car in '..\..\Forms\Car.pas' {CarForm},
   CarEdit in '..\..\Forms\CarEdit.pas' {CarEditForm},
-  PersonalEdit in '..\..\Forms\PersonalEdit.pas' {PersonalEditForm},
   Position in '..\..\Forms\Position.pas' {PositionForm},
   PositionEdit in '..\..\Forms\PositionEdit.pas' {PositionEditForm},
-  AssetEdit in '..\..\Forms\AssetEdit.pas' {AssetEditForm};
+  AssetEdit in '..\..\Forms\AssetEdit.pas' {AssetEditForm},
+  Personal in '..\..\Forms\Personal.pas' {PersonalForm},
+  PersonalEdit in '..\..\Forms\PersonalEdit.pas' {PersonalEditForm};
 
 {$R *.RES}
 
