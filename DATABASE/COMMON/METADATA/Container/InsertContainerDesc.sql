@@ -1,14 +1,12 @@
---------------------------- !!!!!!!!!!!!!!!!!!!
---------------------------- !!! НОВАЯ СХЕМА !!!
---------------------------- !!!!!!!!!!!!!!!!!!!
-insert into ContainerDesc(Code, ItemName)
-  SELECT 'zc_Container_Count', 'Счета товарного учета количества' WHERE NOT EXISTS (SELECT * FROM ContainerDesc WHERE Code = 'zc_Container_Count');
+--------------------------- !!!!!!!!!!!!!!!!!!!!
+--------------------------- !!! НОВАЯ СХЕМА2 !!!
+--------------------------- !!!!!!!!!!!!!!!!!!!!
 
-insert into ContainerDesc(Code, ItemName)
-  SELECT 'zc_Container_Summ', 'Счета денежнного учета сумм' WHERE NOT EXISTS (SELECT * FROM ContainerDesc WHERE Code = 'zc_Container_Summ');
+все пишем в CreateContainerDescFunction
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.07.13                                        * НОВАЯ СХЕМА2 - move to CreateContainerDescFunction.sql 
  05.07.13         * НОВАЯ СХЕМА
 */

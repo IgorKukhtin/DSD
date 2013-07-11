@@ -1,6 +1,6 @@
 -- Function: lpInsertFind_Container 
 
--- DROP FUNCTION lpInsertFind_Container (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+-- DROP FUNCTION lpInsertFind_Container (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertFind_Container(
     IN inContainerDescId         Integer  , -- DescId Остатка
@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION lpInsertFind_Container(
     IN inObjectId                Integer  , -- Объект (Счет или Товар или ...)
     IN inJuridicalId_basis       Integer  , -- Главное юридическое лицо
     IN inBusinessId              Integer  , -- Бизнесы
-    IN inObjectCostId            Integer  , -- Аналитика <элемент с/с>
+    IN inObjectCostDescId        Integer  , -- DescId для <элемент с/с>
+    IN inObjectCostId            Integer  , -- <элемент с/с> - необычная аналитика счета 
     IN inDescId_1                Integer  DEFAULT NULL , -- DescId для 1-ой Аналитики
     IN inObjectId_1              Integer  DEFAULT NULL , -- ObjectId для 1-ой Аналитики
     IN inDescId_2                Integer  DEFAULT NULL , -- DescId для 2-ой Аналитики
@@ -157,7 +158,7 @@ BEGIN
      -- select DescId, ObjectId, inObjectId, vbContainerId from _tmpContainer;
 
      -- Если не нашли, добавляем
-     IF NOT FOUND
+     IF COALESCE (vbContainerId, 0) = 0
      THEN
          -- добавили Остаток
          INSERT INTO Container (DescId, ObjectId, ParentId, Amount)
@@ -171,15 +172,15 @@ BEGIN
      END IF;  
 
      -- если есть Аналитики <элемент с/с.>
-     IF COALESCE (inObjectCostId, 0) <> 0
+     IF COALESCE (inObjectCostDescId, 0) <> 0
      THEN
-         -- Устанавливаем новой значение
-         UPDATE ContainerObjectCost SET ObjectCostId = inObjectCostId WHERE ContanerId = vbContainerId;
+         -- Устанавливаем новое значение
+         UPDATE ContainerObjectCost SET ObjectCostId = inObjectCostId WHERE ContainerId = vbContainerId AND ObjectCostDescId = inObjectCostDescId;
          -- Если не нашли, добавляем
          IF NOT FOUND
          THEN
-             INSERT INTO ContainerObjectCost (ContanerId, ObjectCostId)
-                                      VALUES (vbContainerId, inObjectCostId);
+             INSERT INTO ContainerObjectCost (ObjectCostDescId, ContainerId, ObjectCostId)
+                                      VALUES (inObjectCostDescId, vbContainerId, inObjectCostId);
          END IF;  
      END IF;  
 
@@ -191,7 +192,7 @@ BEGIN
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION lpInsertFind_Container (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer)  OWNER TO postgres;
+ALTER FUNCTION lpInsertFind_Container (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer) OWNER TO postgres;
 
   
 /*-------------------------------------------------------------------------------*/
@@ -199,8 +200,8 @@ ALTER FUNCTION lpInsertFind_Container (Integer, Integer, Integer, Integer, Integ
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
 
- 10.07.13                                        * add inObjectCostId
- 10.07.13                                        * add inParentId
+ 11.07.13                                        * add inObjectCostDescId and inObjectCostId
+ 11.07.13                                        * add inParentId
  09.07.13                                        * !!! finich !!!
  08.07.13                                        * optimize
  04.07.13                                        * rename AccountId to ObjectId
@@ -211,6 +212,7 @@ ALTER FUNCTION lpInsertFind_Container (Integer, Integer, Integer, Integer, Integ
 
 -- тест
 /*
+CREATE TEMP TABLE _tmpContainer (DescId Integer, ObjectId Integer) ON COMMIT DROP;
 SELECT * FROM lpInsertFind_Container (inContainerDescId:= zc_Container_Summ()
                                     , inParentId:= 0
                                     , inObjectId:= lpInsertFind_Object_Account (inAccountGroupId:= zc_Enum_AccountGroup_20000() -- 20000; "Запасы" -- select * from gpSelect_Object_AccountGroup ('2') where Id = zc_Enum_AccountGroup_20000()
@@ -221,6 +223,8 @@ SELECT * FROM lpInsertFind_Container (inContainerDescId:= zc_Container_Summ()
                                                                                )
                                     , inJuridicalId_basis:= 23966
                                     , inBusinessId       := 21709
+                                    , inObjectCostDescId := NULL
+                                    , inObjectCostId     := NULL
                                     , inDescId_1   := zc_ContainerLinkObject_Unit()
                                     , inObjectId_1 := 21720
                                     , inDescId_2   := zc_ContainerLinkObject_Goods()

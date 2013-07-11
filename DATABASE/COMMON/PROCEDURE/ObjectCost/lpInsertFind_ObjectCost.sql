@@ -1,8 +1,9 @@
 -- Function: lpInsertFind_ObjectCost
 
--- DROP FUNCTION lpInsertFind_ObjectCost (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+-- DROP FUNCTION lpInsertFind_ObjectCost (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertFind_ObjectCost(
+    IN inObjectCostDescId        Integer               , -- DescId для <элемент с/с>
     IN inDescId_1                Integer  DEFAULT NULL , -- DescId для 1-ой Аналитики
     IN inObjectId_1              Integer  DEFAULT NULL , -- ObjectId для 1-ой Аналитики
     IN inDescId_2                Integer  DEFAULT NULL , -- DescId для 2-ой Аналитики
@@ -60,22 +61,23 @@ BEGIN
      SELECT COUNT(*) INTO vbRecordCount FROM _tmpObjectCost;
 
      -- находим
-     vbObjectCostId:=(SELECT ObjectCost.ObjectCostId
+     vbObjectCostId:=(SELECT ObjectCostLink.ObjectCostId
                       FROM _tmpObjectCost
-                           JOIN ObjectCost ON ObjectCost.ObjectId = _tmpObjectCost.ObjectId
-                                          AND ObjectCost.DescId = _tmpObjectCost.DescId
-                      GROUP BY ObjectCost.ObjectCostId
+                           JOIN ObjectCostLink ON ObjectCostLink.ObjectId = _tmpObjectCost.ObjectId
+                                              AND ObjectCostLink.DescId = _tmpObjectCost.DescId
+                                              AND ObjectCostLink.ObjectCostDescId = inObjectCostDescId
+                      GROUP BY ObjectCostLink.ObjectCostId
                       HAVING COUNT(*) = vbRecordCount);
 
      -- Если не нашли, добавляем
-     IF NOT FOUND
+     IF COALESCE (vbObjectCostId, 0) = 0
      THEN
          -- определяем новый ObjectCostId
          SELECT NEXTVAL ('objectcost_id_seq') INTO vbObjectCostId;
 
          -- добавили Аналитики
-         INSERT INTO ObjectCost (DescId, ObjectCostId, ObjectId)
-            SELECT DescId, vbObjectCostId, ObjectId FROM _tmpObjectCost;
+         INSERT INTO ObjectCostLink (DescId, ObjectCostDescId, ObjectCostId, ObjectId)
+            SELECT DescId, inObjectCostDescId, vbObjectCostId, ObjectId FROM _tmpObjectCost;
 
      END IF;  
 
@@ -86,7 +88,7 @@ BEGIN
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION lpInsertFind_ObjectCost (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer)  OWNER TO postgres;
+ALTER FUNCTION lpInsertFind_ObjectCost (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer) OWNER TO postgres;
 
   
 /*-------------------------------------------------------------------------------*/
@@ -99,27 +101,18 @@ ALTER FUNCTION lpInsertFind_ObjectCost (Integer, Integer, Integer, Integer, Inte
 
 -- тест
 /*
-SELECT * FROM lpInsertFind_ObjectCost (inObjectCostDescId:= zc_ObjectCost_Summ()
-                                    , inParentId:= 0
-                                    , inObjectId:= lpInsertFind_Object_Account (inAccountGroupId:= zc_Enum_AccountGroup_20000() -- 20000; "Запасы" -- select * from gpSelect_Object_AccountGroup ('2') where Id = zc_Enum_AccountGroup_20000()
-                                                                              , inAccountDirectionId:= 23581
-                                                                              , inInfoMoneyDestinationId:= zc_Enum_InfoMoneyDestination_10100()
-                                                                              , inInfoMoneyId:= NULL
-                                                                              , inUserId:= 2
-                                                                               )
-                                    , inJuridicalId_basis:= 23966
-                                    , inBusinessId       := 21709
-                                    , inDescId_1   := zc_ObjectCostLinkObject_Unit()
-                                    , inObjectId_1 := 21720
-                                    , inDescId_2   := zc_ObjectCostLinkObject_Goods()
-                                    , inObjectId_2 := 4341
-                                    , inDescId_3   := NULL
-                                    , inObjectId_3 := NULL
-                                    , inDescId_4   := zc_ObjectCostLinkObject_InfoMoney()
-                                    , inObjectId_4 := 23463
-                                    , inDescId_5   := zc_ObjectCostLinkObject_InfoMoneyDetail()
-                                    , inObjectId_5 := 23463
-                                    , inDescId_6:= NULL, inObjectId_6:=NULL, inDescId_7:= NULL, inObjectId_7:=NULL, inDescId_8:= NULL, inObjectId_8:=NULL, inDescId_9:= NULL, inObjectId_9:=NULL, inDescId_10:= NULL, inObjectId_10:=NULL
+CREATE TEMP TABLE _tmpObjectCost (DescId Integer, ObjectId Integer) ON COMMIT DROP;
+SELECT * FROM lpInsertFind_ObjectCost (inObjectCostDescId:= zc_ObjectCost_Basis()
+                                     , inDescId_1   := zc_ObjectCostLink_Unit()
+                                     , inObjectId_1 := 21720
+                                     , inDescId_2   := zc_ObjectCostLink_Goods()
+                                     , inObjectId_2 := 4341
+                                     , inDescId_3   := NULL
+                                     , inObjectId_3 := NULL
+                                     , inDescId_4   := zc_ObjectCostLink_InfoMoney()
+                                     , inObjectId_4 := 23463
+                                     , inDescId_5   := zc_ObjectCostLink_InfoMoneyDetail()
+                                     , inObjectId_5 := 23463
+                                     , inDescId_6:= NULL, inObjectId_6:=NULL, inDescId_7:= NULL, inObjectId_7:=NULL, inDescId_8:= NULL, inObjectId_8:=NULL, inDescId_9:= NULL, inObjectId_9:=NULL, inDescId_10:= NULL, inObjectId_10:=NULL
                                      )
-
 */

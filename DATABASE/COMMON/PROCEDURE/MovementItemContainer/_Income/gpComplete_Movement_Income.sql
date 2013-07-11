@@ -53,6 +53,8 @@ BEGIN
 
    -- таблица - Аналитики остатка
    CREATE TEMP TABLE _tmpContainer (DescId Integer, ObjectId Integer) ON COMMIT DROP;
+   -- таблица - Аналитики <элемент с/с>
+   CREATE TEMP TABLE _tmpObjectCost (DescId Integer, ObjectId Integer) ON COMMIT DROP;
 
    -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
    CREATE TEMP TABLE _tmpItem (MovementItemId Integer, MovementId Integer, OperDate TDateTime, JuridicalId_From Integer, isCorporate Boolean, PersonalId_From Integer, UnitId Integer, BranchId_Unit Integer, PersonalId_Packer Integer, PaidKindId Integer, ContractId Integer, ContainerId_Goods Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar
@@ -374,6 +376,7 @@ BEGIN
                                                                               , inObjectId:= GoodsId
                                                                               , inJuridicalId_basis:= NULL
                                                                               , inBusinessId       := NULL
+                                                                              , inObjectCostDescId := NULL
                                                                               , inObjectCostId     := NULL
                                                                               , inDescId_1   := zc_ContainerLinkObject_Unit()
                                                                               , inObjectId_1 := UnitId
@@ -387,6 +390,7 @@ BEGIN
                                                                               , inObjectId:= GoodsId
                                                                               , inJuridicalId_basis:= NULL
                                                                               , inBusinessId       := NULL
+                                                                              , inObjectCostDescId := NULL
                                                                               , inObjectCostId     := NULL
                                                                               , inDescId_1   := zc_ContainerLinkObject_Unit()
                                                                               , inObjectId_1 := UnitId
@@ -401,6 +405,7 @@ BEGIN
                                                                               , inObjectId:= GoodsId
                                                                               , inJuridicalId_basis:= NULL
                                                                               , inBusinessId       := NULL
+                                                                              , inObjectCostDescId := NULL
                                                                               , inObjectCostId     := NULL
                                                                               , inDescId_1   := zc_ContainerLinkObject_Unit()
                                                                               , inObjectId_1 := UnitId
@@ -413,6 +418,7 @@ BEGIN
                                                                               , inObjectId:= GoodsId
                                                                               , inJuridicalId_basis:= NULL
                                                                               , inBusinessId       := NULL
+                                                                              , inObjectCostDescId := NULL
                                                                               , inObjectCostId     := NULL
                                                                               , inDescId_1   := zc_ContainerLinkObject_Unit()
                                                                               , inObjectId_1 := UnitId
@@ -444,18 +450,20 @@ BEGIN
                                                                                                                                                )
                                                                                                     , inJuridicalId_basis:= JuridicalId_basis
                                                                                                     , inBusinessId       := BusinessId
+                                                                                                    , inObjectCostDescId := zc_ObjectCost_Basis()
                                                                                                                             -- <элемент с/с>: 1.)Главное Юр лицо 2.)Бизнес 3)Товар 4)!Партии товара! 5)Статьи назначения 6)Статьи назначения(детализация с/с)
-                                                                                                    , inObjectCostId     := lpInsertFind_ObjectCost (inDescId_1   := zc_ObjectCost_JuridicalBasis()
+                                                                                                    , inObjectCostId     := lpInsertFind_ObjectCost (inObjectCostDescId:= zc_ObjectCost_Basis()
+                                                                                                                                                   , inDescId_1   := zc_ObjectCostLink_JuridicalBasis()
                                                                                                                                                    , inObjectId_1 := JuridicalId_basis
-                                                                                                                                                   , inDescId_2   := zc_ObjectCost_Business()
+                                                                                                                                                   , inDescId_2   := zc_ObjectCostLink_Business()
                                                                                                                                                    , inObjectId_2 := BusinessId
-                                                                                                                                                   , inDescId_3   := zc_ObjectCost_Goods()
+                                                                                                                                                   , inDescId_3   := zc_ObjectCostLink_Goods()
                                                                                                                                                    , inObjectId_3 := GoodsId
-                                                                                                                                                   , inDescId_4   := CASE WHEN GoodsId IN (580, 419, 755, 1321, 2407, 2621, 2622, 2627, 2637, 2610, 3464, 3600, 3620, 3621, 4234, 5005, 5459, 5517, 5681, 5960, 2303) THEN zc_ObjectCost_PartionGoods() ELSE NULL END
+                                                                                                                                                   , inDescId_4   := CASE WHEN GoodsId IN (580, 419, 755, 1321, 2407, 2621, 2622, 2627, 2637, 2610, 3464, 3600, 3620, 3621, 4234, 5005, 5459, 5517, 5681, 5960, 2303) THEN zc_ObjectCostLink_PartionGoods() ELSE NULL END
                                                                                                                                                    , inObjectId_4 := CASE WHEN GoodsId IN (580, 419, 755, 1321, 2407, 2621, 2622, 2627, 2637, 2610, 3464, 3600, 3620, 3621, 4234, 5005, 5459, 5517, 5681, 5960, 2303) THEN PartionGoodsId ELSE NULL END
-                                                                                                                                                   , inDescId_5   := zc_ObjectCost_InfoMoney()
+                                                                                                                                                   , inDescId_5   := zc_ObjectCostLink_InfoMoney()
                                                                                                                                                    , inObjectId_5 := InfoMoneyId
-                                                                                                                                                   , inDescId_6   := zc_ObjectCost_InfoMoneyDetail()
+                                                                                                                                                   , inDescId_6   := zc_ObjectCostLink_InfoMoneyDetail()
                                                                                                                                                    , inObjectId_6 := CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
                                                                                                                                                     )
                                                                                                     , inDescId_1   := zc_ContainerLinkObject_Unit()
@@ -481,18 +489,20 @@ BEGIN
                                                                                                                                                )
                                                                                                     , inJuridicalId_basis:= JuridicalId_basis
                                                                                                     , inBusinessId       := BusinessId
+                                                                                                    , inObjectCostDescId := zc_ObjectCost_Basis()
                                                                                                                             -- <элемент с/с>: 1.)Главное Юр лицо 2.)Бизнес 3)Филиал 4)Товар 5)Статьи назначения 6)Статьи назначения(детализация с/с)
-                                                                                                    , inObjectCostId     := lpInsertFind_ObjectCost (inDescId_1   := zc_ObjectCost_JuridicalBasis()
+                                                                                                    , inObjectCostId     := lpInsertFind_ObjectCost (inObjectCostDescId:= zc_ObjectCost_Basis()
+                                                                                                                                                   , inDescId_1   := zc_ObjectCostLink_JuridicalBasis()
                                                                                                                                                    , inObjectId_1 := JuridicalId_basis
-                                                                                                                                                   , inDescId_2   := zc_ObjectCost_Business()
+                                                                                                                                                   , inDescId_2   := zc_ObjectCostLink_Business()
                                                                                                                                                    , inObjectId_2 := BusinessId
-                                                                                                                                                   , inDescId_3   := zc_ObjectCost_Branch()
+                                                                                                                                                   , inDescId_3   := zc_ObjectCostLink_Branch()
                                                                                                                                                    , inObjectId_3 := BranchId_Unit
-                                                                                                                                                   , inDescId_4   := zc_ObjectCost_Goods()
+                                                                                                                                                   , inDescId_4   := zc_ObjectCostLink_Goods()
                                                                                                                                                    , inObjectId_4 := GoodsId
-                                                                                                                                                   , inDescId_5   := zc_ObjectCost_InfoMoney()
+                                                                                                                                                   , inDescId_5   := zc_ObjectCostLink_InfoMoney()
                                                                                                                                                    , inObjectId_5 := InfoMoneyId
-                                                                                                                                                   , inDescId_6   := zc_ObjectCost_InfoMoneyDetail()
+                                                                                                                                                   , inDescId_6   := zc_ObjectCostLink_InfoMoneyDetail()
                                                                                                                                                    , inObjectId_6 := CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
                                                                                                                                                     )
                                                                                                     , inDescId_1   := zc_ContainerLinkObject_Unit()
@@ -519,20 +529,22 @@ BEGIN
                                                                                                                                                )
                                                                                                     , inJuridicalId_basis:= JuridicalId_basis
                                                                                                     , inBusinessId       := BusinessId
+                                                                                                    , inObjectCostDescId := zc_ObjectCost_Basis()
                                                                                                                             -- <элемент с/с>: 1.)Главное Юр лицо 2.)Бизнес 3)Подразделения 4)Товар 5)Виды товаров 6)Статьи назначения 7)Статьи назначения(детализация с/с)
-                                                                                                    , inObjectCostId     := lpInsertFind_ObjectCost (inDescId_1   := zc_ObjectCost_JuridicalBasis()
+                                                                                                    , inObjectCostId     := lpInsertFind_ObjectCost (inObjectCostDescId:= zc_ObjectCost_Basis()
+                                                                                                                                                   , inDescId_1   := zc_ObjectCostLink_JuridicalBasis()
                                                                                                                                                    , inObjectId_1 := JuridicalId_basis
-                                                                                                                                                   , inDescId_2   := zc_ObjectCost_Business()
+                                                                                                                                                   , inDescId_2   := zc_ObjectCostLink_Business()
                                                                                                                                                    , inObjectId_2 := BusinessId
-                                                                                                                                                   , inDescId_3   := zc_ObjectCost_Unit()
+                                                                                                                                                   , inDescId_3   := zc_ObjectCostLink_Unit()
                                                                                                                                                    , inObjectId_3 := UnitId
-                                                                                                                                                   , inDescId_4   := zc_ObjectCost_Goods()
+                                                                                                                                                   , inDescId_4   := zc_ObjectCostLink_Goods()
                                                                                                                                                    , inObjectId_4 := GoodsId
-                                                                                                                                                   , inDescId_5   := zc_ObjectCost_GoodsKind()
+                                                                                                                                                   , inDescId_5   := zc_ObjectCostLink_GoodsKind()
                                                                                                                                                    , inObjectId_5 := GoodsKindId
-                                                                                                                                                   , inDescId_6   := zc_ObjectCost_InfoMoney()
+                                                                                                                                                   , inDescId_6   := zc_ObjectCostLink_InfoMoney()
                                                                                                                                                    , inObjectId_6 := InfoMoneyId
-                                                                                                                                                   , inDescId_7   := zc_ObjectCost_InfoMoneyDetail()
+                                                                                                                                                   , inDescId_7   := zc_ObjectCostLink_InfoMoneyDetail()
                                                                                                                                                    , inObjectId_7 := CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
                                                                                                                                                     )
                                                                                                     , inDescId_1   := zc_ContainerLinkObject_Unit()
@@ -557,18 +569,20 @@ BEGIN
                                                                                                                                                )
                                                                                                     , inJuridicalId_basis:= JuridicalId_basis
                                                                                                     , inBusinessId       := BusinessId
+                                                                                                    , inObjectCostDescId := zc_ObjectCost_Basis()
                                                                                                                             -- <элемент с/с>: 1.)Главное Юр лицо 2.)Бизнес 3)Филиал 4)Товар 5)Статьи назначения 6)Статьи назначения(детализация с/с)
-                                                                                                    , inObjectCostId     := lpInsertFind_ObjectCost (inDescId_1   := zc_ObjectCost_JuridicalBasis()
+                                                                                                    , inObjectCostId     := lpInsertFind_ObjectCost (inObjectCostDescId:= zc_ObjectCost_Basis()
+                                                                                                                                                   , inDescId_1   := zc_ObjectCostLink_JuridicalBasis()
                                                                                                                                                    , inObjectId_1 := JuridicalId_basis
-                                                                                                                                                   , inDescId_2   := zc_ObjectCost_Business()
+                                                                                                                                                   , inDescId_2   := zc_ObjectCostLink_Business()
                                                                                                                                                    , inObjectId_2 := BusinessId
-                                                                                                                                                   , inDescId_3   := zc_ObjectCost_Branch()
+                                                                                                                                                   , inDescId_3   := zc_ObjectCostLink_Branch()
                                                                                                                                                    , inObjectId_3 := BranchId_Unit
-                                                                                                                                                   , inDescId_4   := zc_ObjectCost_Goods()
+                                                                                                                                                   , inDescId_4   := zc_ObjectCostLink_Goods()
                                                                                                                                                    , inObjectId_4 := GoodsId
-                                                                                                                                                   , inDescId_5   := zc_ObjectCost_InfoMoney()
+                                                                                                                                                   , inDescId_5   := zc_ObjectCostLink_InfoMoney()
                                                                                                                                                    , inObjectId_5 := InfoMoneyId
-                                                                                                                                                   , inDescId_6   := zc_ObjectCost_InfoMoneyDetail()
+                                                                                                                                                   , inDescId_6   := zc_ObjectCostLink_InfoMoneyDetail()
                                                                                                                                                    , inObjectId_6 := CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
                                                                                                                                                     )
                                                                                                     , inDescId_1   := zc_ContainerLinkObject_Unit()
@@ -604,6 +618,7 @@ BEGIN
                                                                                                                                                )
                                                                                                     , inJuridicalId_basis:= JuridicalId_basis
                                                                                                     , inBusinessId       := BusinessId
+                                                                                                    , inObjectCostDescId := NULL
                                                                                                     , inObjectCostId     := NULL
                                                                                                     , inDescId_1   := zc_ContainerLinkObject_Juridical()
                                                                                                     , inObjectId_1 := JuridicalId_From
@@ -628,6 +643,7 @@ BEGIN
                                                                                                                                                )
                                                                                                     , inJuridicalId_basis:= JuridicalId_basis
                                                                                                     , inBusinessId       := BusinessId
+                                                                                                    , inObjectCostDescId := NULL
                                                                                                     , inObjectCostId     := NULL
                                                                                                     , inDescId_1   := CASE WHEN PersonalId_From <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Juridical() END
                                                                                                     , inObjectId_1 := CASE WHEN PersonalId_From <> 0 THEN PersonalId_From ELSE JuridicalId_From END
@@ -661,6 +677,7 @@ BEGIN
                                                                                                                                                )
                                                                                                     , inJuridicalId_basis:= JuridicalId_basis
                                                                                                     , inBusinessId       := BusinessId
+                                                                                                    , inObjectCostDescId := NULL
                                                                                                     , inObjectCostId     := NULL
                                                                                                     , inDescId_1   := zc_ContainerLinkObject_Personal()
                                                                                                     , inObjectId_1 := PersonalId_Packer
