@@ -1,74 +1,18 @@
-CREATE OR REPLACE FUNCTION zc_Object_Cash()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 10;
-END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_Object_Currency()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 13;
-END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_Object_PaidKind()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 14;
-END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_Object_Branch()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 15;
-END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_Object_ContractKind()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 20;
-END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_Object_Business()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 21;
-END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_Object_Bank()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 24;
-END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_Object_BankAccount()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 26;
-END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_Object_Contract()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 28;
-END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_Object_Car()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 29;
-END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_Object_CarModel()
-  RETURNS integer AS
-$BODY$BEGIN
-  RETURN 30;
-END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-
 --------------------------- !!!!!!!!!!!!!!!!!!!
 --------------------------- !!! НОВАЯ СХЕМА !!!
 --------------------------- !!!!!!!!!!!!!!!!!!!
-
+CREATE OR REPLACE FUNCTION zc_Object_Cash() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Cash'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Object_Currency() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Currency'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Object_PaidKind() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_PaidKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Object_Branch() RETURNS integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Branch'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Object_ContractKind() RETURNS integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ContractKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Object_Business() RETURNS integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Business'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Object_Bank() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Bank'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Object_BankAccount() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_BankAccount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Object_Contract() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Contract'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Object_Car() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Car'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Object_CarModel() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_CarModel'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+-------------------------
 CREATE OR REPLACE FUNCTION zc_Object_Status() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_Status'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 CREATE OR REPLACE FUNCTION zc_Object_GoodsGroup() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_GoodsGroup'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
@@ -124,11 +68,31 @@ CREATE OR REPLACE FUNCTION zc_Object_AccountKind() RETURNS Integer AS $BODY$BEGI
 CREATE OR REPLACE FUNCTION zc_Object_GoodsByGoodsKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_GoodsByGoodsKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_GoodsByGoodsKind', 'Связи Товары и Виды товаров' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_GoodsByGoodsKind');
+CREATE OR REPLACE FUNCTION zc_object_receipt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_object_receipt'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_object_receipt', 'Рецептуры' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_object_receipt');
+
+CREATE OR REPLACE FUNCTION zc_Object_ReceiptCost() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ReceiptCost'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_ReceiptCost', 'Затраты в рецептурах' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ReceiptCost');
+
+CREATE OR REPLACE FUNCTION zc_Object_ReceiptChild() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ReceiptChild'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_ReceiptChild', 'Составляющие рецептур' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ReceiptChild');
 
 
+CREATE OR REPLACE FUNCTION zc_object_goodskindcomplete() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_object_goodskindcomplete'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_object_goodskindcomplete', 'Виды товаров (готовая продукция)' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_object_goodskindcomplete');
+
+ 
+CREATE OR REPLACE FUNCTION zc_object_receiptkind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_object_receiptkind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_object_receiptkind', 'Виды рецептур' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_object_receiptkind');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.07.13         * переход всего на НОВУЮ СХЕМУ
  28.06.13                                        * НОВАЯ СХЕМА
 */

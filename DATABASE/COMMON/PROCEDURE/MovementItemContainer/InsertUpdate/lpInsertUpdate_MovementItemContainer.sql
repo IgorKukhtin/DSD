@@ -1,21 +1,35 @@
-п»ї--DROP FUNCTION lpInsertUpdate_MovementItemContainer(Integer, Integer, Integer, Integer, TFloat, TDateTime);
+-- Function: lpInsertUpdate_MovementItemContainer
+
+-- DROP FUNCTION lpInsertUpdate_MovementItemContainer (Integer, Integer, Integer, Integer, TFloat, TDateTime);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemContainer(
-INOUT ioId integer, 
-IN inDescId integer, 
-IN inMovementId integer, 
-IN inContainerId integer,
-IN inAmount TFloat,
-IN inOperDate TDateTime)
- AS
-$BODY$BEGIN
-    /* РёР·РјРµРЅРёС‚СЊ <РєРѕРґ РѕР±СЉРµРєС‚Р°> Рё <РґР°РЅРЅС‹Рµ> РїРѕ Р·РЅР°С‡РµРЅРёСЋ <РєР»СЋС‡Р°> */
-   UPDATE Container SET Amount = Amount + inAmount WHERE Id = inContainerId;
-   /* РІСЃС‚Р°РІРёС‚СЊ <РєР»СЋС‡ РєР»Р°СЃСЃР° РѕР±СЉРµРєС‚Р°> , <РєРѕРґ РѕР±СЉРµРєС‚Р°> , <РґР°РЅРЅС‹Рµ> СЃРѕ Р·РЅР°С‡РµРЅРёРµРј <РєР»СЋС‡Р°> */
-   INSERT INTO MovementItemContainer (DescId, MovementId, ContainerId, Amount, OperDate)
-               VALUES (inDescId, inMovementId, inContainerId, inAmount, inOperDate) RETURNING Id INTO ioId;
-END;           $BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION lpInsertUpdate_MovementItemContainer(integer, integer, integer, integer, TFloat, TDateTime)
-  OWNER TO postgres; 
+ INOUT ioId Integer          , --
+    IN inDescId Integer      , --
+    IN inMovementId Integer  , -- 
+    IN inContainerId Integer , --
+    IN inAmount TFloat       , --
+    IN inOperDate TDateTime    --
+)
+AS
+$BODY$
+BEGIN
+     --  изменить значение остатка
+     UPDATE Container SET Amount = Amount + COALESCE (inAmount, 0) WHERE Id = inContainerId;
+     -- сохранили проводку
+     INSERT INTO MovementItemContainer (DescId, MovementId, ContainerId, Amount, OperDate)
+                                VALUES (inDescId, inMovementId, inContainerId, COALESCE (inAmount, 0), inOperDate) RETURNING Id INTO ioId;
+END;
+$BODY$
+LANGUAGE PLPGSQL VOLATILE;
+ALTER FUNCTION lpInsertUpdate_MovementItemContainer (Integer, Integer, Integer, Integer, TFloat, TDateTime) OWNER TO postgres;
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+
+ 11.07.13                                        * !!! finich !!!
+*/
+
+-- тест
+-- SELECT * FROM lpInsertUpdate_MovementItemContainer (ioId:=0, inDescId:= zc_MIContainer_Count(), )

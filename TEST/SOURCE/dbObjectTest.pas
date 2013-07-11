@@ -77,7 +77,10 @@ type
     procedure Personal_Test;
     procedure AssetGroup_Test;
     procedure Asset_Test;
-  end;
+    procedure ReceiptCost_Test;
+    procedure ReceiptChild_Test;
+    procedure Receipt_Test;
+   end;
 
   TBankTest = class(TObjectTest)
   private
@@ -406,7 +409,40 @@ type
     constructor Create; override;
   end;
 
-implementation
+  TReceiptCostTest = class(TObjectTest)
+  function InsertDefault: integer; override;
+  public
+    function InsertUpdateReceiptCost(const Id, Code : integer; Name: string): integer;
+    constructor Create; override;
+  end;
+
+  TReceiptChildTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  public
+      // Удаляется Объект и все подчиненные
+   procedure Delete(Id: Integer); override;
+   function InsertUpdateReceiptChild(const Id: integer; Value: Double; Weight, TaxExit: boolean;
+                                     StartDate, EndDate: TDateTime; Comment: string;
+                                     ReceiptId, GoodsId, GoodsKindId: integer): integer;
+    constructor Create; override;
+  end;
+
+  TReceiptTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  public
+      // Удаляется Объект и все подчиненные
+   procedure Delete(Id: Integer); override;
+   function InsertUpdateReceipt(const Id: integer; Name, Code, Comment: string;
+                                Value, ValueCost, TaxExit, PartionValue, PartionCount, WeightPackage: Double;
+                                StartDate, EndDate: TDateTime;
+                                Main: boolean;
+                                GoodsId, GoodsKindId, GoodsKindCompleteId, ReceiptCostId, ReceiptKindId: integer): integer;
+    constructor Create; override;
+  end;
+
+ implementation
 
 uses ZDbcIntfs, SysUtils, Storage, DBClient, XMLDoc, CommonData, Forms,
      UtilConvert, ZLibEx, zLibUtil,
@@ -2629,6 +2665,227 @@ begin
     // Получение данных
     with ObjectTest.GetRecord(Id) do
       Check((FieldByName('Name').AsString = 'Основные средства'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    ObjectTest.Delete(Id);
+  end;
+end;
+
+{TReceiptCostTest}
+constructor TReceiptCostTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_ReceiptCost';
+  spSelect := 'gpSelect_Object_ReceiptCost';
+  spGet := 'gpGet_Object_ReceiptCost';
+end;
+
+function TReceiptCostTest.InsertDefault: integer;
+begin
+   result := InsertUpdateReceiptCost(0, -1, 'Затраты в рецептурах');
+end;
+
+function TReceiptCostTest.InsertUpdateReceiptCost;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.ReceiptCost_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TReceiptCostTest;
+begin
+  ObjectTest := TReceiptCostTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка объекта
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Затраты в рецептурах'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    ObjectTest.Delete(Id);
+  end;
+end;
+
+ {TReceiptChildTest}
+ constructor TReceiptChildTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_ReceiptChild';
+  spSelect := 'gpSelect_Object_ReceiptChild';
+  spGet := 'gpGet_Object_ReceiptChild';
+end;
+
+procedure TReceiptChildTest.Delete(Id: Integer);
+begin
+  inherited;
+ { with TReceiptTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free
+  end;  }
+  with TGoodsTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free
+  end;
+  with TGoodsKindTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free
+  end;
+end;
+
+function TReceiptChildTest.InsertDefault: integer;
+var
+  //ReceipId: Integer;
+  GoodsId, GoodsKindId: Integer;
+begin
+  //ReceipId := TReceipTest.Create.GetDefault;
+  GoodsId:= TGoodsTest.Create.GetDefault;
+  GoodsKindId:= TGoodsKindTest.Create.GetDefault;
+
+  result := InsertUpdateReceiptChild(0, 123,true, true, date, date, 'Составляющие рецептур - Значение', 2, GoodsId, GoodsKindId);
+end;
+
+function TReceiptChildTest.InsertUpdateReceiptChild;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('Value', ftFloat, ptInput, Value);
+  FParams.AddParam('Weight', ftBoolean, ptInput, Weight);
+  FParams.AddParam('TaxExit', ftBoolean, ptInput, TaxExit);
+  FParams.AddParam('StartDate', ftDateTime, ptInput, StartDate);
+  FParams.AddParam('EndDate', ftDateTime, ptInput, EndDate);
+  FParams.AddParam('Comment', ftString, ptInput, Comment);
+  FParams.AddParam('inReceiptId', ftInteger, ptInput, ReceiptId);
+  FParams.AddParam('inGoodsId', ftInteger, ptInput, GoodsId);
+  FParams.AddParam('inGoodsKindId', ftInteger, ptInput, GoodsKindId);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.ReceiptChild_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TReceiptChildTest;
+begin
+  ObjectTest := TReceiptChildTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных о Составляющие рецептур
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Comment').AsString = 'Составляющие рецептур - Значение'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    ObjectTest.Delete(Id);
+  end;
+end;
+
+
+ {TReceiptTest}
+ constructor TReceiptTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_Receipt';
+  spSelect := 'gpSelect_Object_Receipt';
+  spGet := 'gpGet_Object_Receipt';
+end;
+
+procedure TReceiptTest.Delete(Id: Integer);
+begin
+  inherited;
+  with TGoodsTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free
+  end;
+  with TGoodsKindTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free
+  end;
+  {with TGoodsKindCompleteTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free
+  end;}
+  with TReceiptCostTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free
+  end;
+  {with TReceiptKindTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free
+  end;}
+end;
+
+function TReceiptTest.InsertDefault: integer;
+var
+  //ReceipId: Integer;
+  GoodsId, GoodsKindId, ReceiptCostId: Integer;
+begin
+  ReceiptCostId := TReceiptCostTest.Create.GetDefault;
+  GoodsId:= TGoodsTest.Create.GetDefault;
+  GoodsKindId:= TGoodsKindTest.Create.GetDefault;
+
+  result := InsertUpdateReceipt(0, 'Рецептура 1', '123', 'Рецептуры', 1, 2, 80, 2, 1,1 , date, date, true, GoodsId, GoodsKindId, 1, ReceiptCostId, 1);
+end;
+
+function TReceiptTest.InsertUpdateReceipt;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('Name', ftString, ptInput, Name);
+  FParams.AddParam('Code', ftString, ptInput, Code);
+  FParams.AddParam('Comment', ftString, ptInput, Comment);
+  FParams.AddParam('Value', ftFloat, ptInput, Value);
+  FParams.AddParam('ValueCost', ftFloat, ptInput, ValueCost);
+  FParams.AddParam('TaxExit', ftFloat, ptInput, TaxExit);
+  FParams.AddParam('PartionValue', ftFloat, ptInput, PartionValue);
+  FParams.AddParam('PartionCount', ftFloat, ptInput, PartionCount);
+  FParams.AddParam('WeightPackage', ftFloat, ptInput, WeightPackage);
+  FParams.AddParam('StartDate', ftDateTime, ptInput, StartDate);
+  FParams.AddParam('EndDate', ftDateTime, ptInput, EndDate);
+  FParams.AddParam('Main', ftBoolean, ptInput, Main);
+  FParams.AddParam('inGoodsId', ftInteger, ptInput, GoodsId);
+  FParams.AddParam('inGoodsKindId', ftInteger, ptInput, GoodsKindId);
+  FParams.AddParam('inGoodsKindCompleteId', ftInteger, ptInput, GoodsKindCompleteId);
+  FParams.AddParam('inReceiptCostId', ftInteger, ptInput, ReceiptCostId);
+  FParams.AddParam('inReceiptKindId', ftInteger, ptInput, ReceiptKindId);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.Receipt_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TReceiptTest;
+begin
+  ObjectTest := TReceiptTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных о Рецептуре
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Рецептура 1'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
   finally
     ObjectTest.Delete(Id);
   end;

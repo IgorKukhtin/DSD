@@ -3,8 +3,8 @@ program FarmacyTest;
 uses
   Forms,
   DUnitTestRunner,
-  dbCreateStructureTest in '..\SOURCE\dbCreateStructureTest.pas',
-  dbMetadataTest in '..\SOURCE\dbMetadataTest.pas',
+  dbCreateStructureTest in '..\SOURCE\STRUCTURE\dbCreateStructureTest.pas',
+  dbMetadataTest in '..\SOURCE\METADATA\dbMetadataTest.pas',
   zLibUtil in '..\SOURCE\zLibUtil.pas',
   dbFarmacyProcedureTest in '..\SOURCE\dbFarmacyProcedureTest.pas',
   UtilConst in '..\..\SOURCE\UtilConst.pas',
@@ -28,7 +28,8 @@ uses
   Goods in '..\..\FarmacyForms\Goods.pas' {GoodsForm},
   GoodsEdit in '..\..\FarmacyForms\GoodsEdit.pas' {GoodsEditForm},
   Units in '..\..\FarmacyForms\Units.pas' {UnitForm},
-  UnitEdit in '..\..\FarmacyForms\UnitEdit.pas' {UnitEditForm};
+  UnitEdit in '..\..\FarmacyForms\UnitEdit.pas' {UnitEditForm},
+  dbTest in '..\SOURCE\dbTest.pas';
 
 {$R *.res}
 

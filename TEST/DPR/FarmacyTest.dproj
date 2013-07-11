@@ -81,8 +81,8 @@
 			<DelphiCompile Include="$(MainSource)">
 				<MainSource>MainSource</MainSource>
 			</DelphiCompile>
-			<DCCReference Include="..\SOURCE\dbCreateStructureTest.pas"/>
-			<DCCReference Include="..\SOURCE\dbMetadataTest.pas"/>
+			<DCCReference Include="..\SOURCE\STRUCTURE\dbCreateStructureTest.pas"/>
+			<DCCReference Include="..\SOURCE\METADATA\dbMetadataTest.pas"/>
 			<DCCReference Include="..\SOURCE\zLibUtil.pas"/>
 			<DCCReference Include="..\SOURCE\dbFarmacyProcedureTest.pas"/>
 			<DCCReference Include="..\..\SOURCE\UtilConst.pas"/>
@@ -128,6 +128,7 @@
 			<DCCReference Include="..\..\FarmacyForms\UnitEdit.pas">
 				<Form>UnitEditForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\dbTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
