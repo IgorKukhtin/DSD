@@ -53,30 +53,39 @@ $BODY$BEGIN
                  , ContainerLinkObject_Personal.ObjectId AS PersonalId
                  , ContainerLinkObject_Juridical.ObjectId AS JuridicalId
                  , ContainerLinkObject_Unit.ObjectId AS UnitId
-                 , SUM (tmpMIContainer_Remains.AmountRemainsEnd - tmpMIContainer_Remains.AmountDebet + tmpMIContainer_Remains.AmountKredit) AS AmountRemainsStart
+                 , SUM (tmpMIContainer_Remains.AmountRemainsStart) AS AmountRemainsStart
                  , SUM (tmpMIContainer_Remains.AmountDebet) AS AmountDebet
                  , SUM (tmpMIContainer_Remains.AmountKredit) AS AmountKredit
-                 , SUM (tmpMIContainer_Remains.AmountRemainsEnd) AS AmountRemainsEnd
+                 , SUM (tmpMIContainer_Remains.AmountRemainsStart + tmpMIContainer_Remains.AmountDebet - tmpMIContainer_Remains.AmountKredit) AS AmountRemainsEnd
             FROM
                 (SELECT Container.ObjectId AS AccountId
                       , Container.Id AS ContainerId
-                      , COALESCE (SUM (CASE WHEN MIContainer_byPeriod.Amount > 0 THEN MIContainer_byPeriod.Amount ELSE 0 END), 0) AS AmountDebet
-                      , COALESCE (SUM (CASE WHEN MIContainer_byPeriod.Amount < 0 THEN -MIContainer_byPeriod.Amount ELSE 0 END), 0) AS AmountKredit
-                      , Container.Amount - COALESCE (SUM (MIContainer_byEndDate.Amount), 0) AS AmountRemainsEnd
+                      , COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
+                      , COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
+                      , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS AmountRemainsStart
+                      /*, COALESCE (SUM (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Passive() THEN MIContainer_byPeriod.Amount ELSE 0 END), 0) AS AmountDebet
+                      , COALESCE (SUM (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Passive() THEN -MIContainer_byPeriod.Amount ELSE 0 END), 0) AS AmountKredit
+                      , Container.Amount - COALESCE (SUM (MIContainer_byEndDate.Amount), 0) AS AmountRemainsEnd*/
                  FROM Container
-                      LEFT JOIN MovementItemContainer AS MIContainer_byEndDate
+                      LEFT JOIN MovementItemContainer AS MIContainer
+                                                      ON MIContainer.Containerid = Container.id
+                                                     AND MIContainer.OperDate >= inStartDate
+                      /*LEFT JOIN MovementItemContainer AS MIContainer_byEndDate
                                                       ON MIContainer_byEndDate.Containerid = Container.id
                                                      AND MIContainer_byEndDate.OperDate > inEndDate
                       LEFT JOIN MovementItemContainer AS MIContainer_byPeriod
                                                       ON MIContainer_byPeriod.Containerid = Container.id
-                                                     AND MIContainer_byPeriod.OperDate BETWEEN inStartDate AND inEndDate
+                                                     AND MIContainer_byPeriod.OperDate BETWEEN inStartDate AND inEndDate*/
                  WHERE Container.DescId = zc_Container_Summ()
                  GROUP BY Container.ObjectId
                         , Container.Amount
                         , Container.Id
-                 HAVING (Container.Amount - COALESCE (SUM (MIContainer_byEndDate.Amount), 0) <> 0) -- AmountRemainsEnd <> 0
+                 HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0) -- AmountRemainsStart <> 0
+                     OR (COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) <> 0) -- AmountDebet <> 0
+                     OR (COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -MIContainer.Amount ELSE 0 END), 0) <> 0) -- AmountKredit <> 0
+                 /*HAVING (Container.Amount - COALESCE (SUM (MIContainer_byEndDate.Amount), 0) <> 0) -- AmountRemainsEnd <> 0
                      OR (COALESCE (SUM (CASE WHEN MIContainer_byPeriod.Amount > 0 THEN MIContainer_byPeriod.Amount ELSE 0 END), 0) <> 0) -- AmountDebet <> 0
-                     OR (COALESCE (SUM (CASE WHEN MIContainer_byPeriod.Amount < 0 THEN -MIContainer_byPeriod.Amount ELSE 0 END), 0) <> 0) -- AmountKredit <> 0
+                     OR (COALESCE (SUM (CASE WHEN MIContainer_byPeriod.Amount < 0 THEN -MIContainer_byPeriod.Amount ELSE 0 END), 0) <> 0) -- AmountKredit <> 0*/
                 ) AS tmpMIContainer_Remains
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
                                               ON ContainerLinkObject_InfoMoney.ContainerId = tmpMIContainer_Remains.ContainerId
@@ -118,7 +127,8 @@ ALTER FUNCTION gpReport_Balance (TDateTime, TDateTime, TVarChar) OWNER TO postgr
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 08.07.13                                        * Ù‚‚ ByObjectName
+ 11.07.13                                        * add optimize
+ 08.07.13                                        * add ByObjectName
  08.07.13                                        * add AccountOnComplete
  04.07.13                                        *
 */
