@@ -73,6 +73,10 @@ begin
   ExecFile(ProcedurePath + 'MovementItem\_ProductionUnion\gpInsertUpdate_MovementItem_In.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItem\_ProductionUnion\gpInsertUpdate_MovementItem_Out.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItem\_ProductionUnion\gpSelect_MovementItem_ProductionUnion.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'MovementItem\_Send\gpInsertUpdate_MovementItem_Send.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\_Send\gpSelect_MovementItem_Send.sql', ZQuery);
+
 end;
 
 procedure TdbProcedureTest.CreateMovementProcedure;
