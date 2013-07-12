@@ -51,6 +51,28 @@ BEGIN
      AND Movement.StatusId = zc_Enum_Status_UnComplete();
 
 
+           -- формируются Паритии для Сырья
+/*   PERFORM lpInsertUpdate_MIString_PartionGoodsCalc (inMovementItemId:= MovementItem.Id
+                                                   , inDescId:= zc_MIContainer_Count()
+                                                   , inMovementId:= MovementId
+                                                   , inContainerId:= ContainerId_Goods -- был опеределен выше
+                                                    )
+   FROM MovementItem
+   WHERE MovementItem.MovementId = inMovementId;
+           (SELECT
+                  MovementItem.Id AS MovementItemId
+                , MovementItem.MovementId
+                , Movement.OperDate
+                   , CASE WHEN lfObject_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
+                          THEN CASE WHEN Movement.DescId = zc_Movement_Income() AND Movement.OperDate >= zc_DateStart_PartionPrimary()
+                                       THEN CASE WHEN COALESCE (MIString_PartionGoods.ValueData, '') <> '' THEN MIString_PartionGoods.ValueData
+                                                 ELSE zfPartionGoods_byPartner (Movement.OperDate, Object_From.ObjectCode, Object_Goods.ObjectCode)
+                                            END
+                                    ELSE ''
+                               END
+                       ELSE ''
+                  END AS PartionGoods*/
+
    -- таблица - Аналитики остатка
    CREATE TEMP TABLE _tmpContainer (DescId Integer, ObjectId Integer) ON COMMIT DROP;
    -- таблица - Аналитики <элемент с/с>
@@ -170,27 +192,21 @@ BEGIN
                 , MovementItem.ObjectId AS GoodsId
                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                 , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
-                , CASE WHEN Movement.DescId = zc_Movement_Income() AND Movement.OperDate >= zc_DateStart_PartionPrimary()
-                          THEN CASE WHEN COALESCE (MIString_PartionGoods.ValueData, '') <> '' THEN MIString_PartionGoods.ValueData
-                                    ELSE ''
--- isnull (zf_ChangeTVarCharMediumToNull (BillItems.PartionStr_MB), zf_Calc_PartionIncome_byObvalka (Bill.BillDate, Unit.UnitCode, GoodsProperty.GoodsCode))
-                               END
-                       WHEN COALESCE (MIString_PartionGoods.ValueData, '') <> ''
-                          THEN MIString_PartionGoods.ValueData
-                       ELSE ''
+                , CASE WHEN COALESCE (MIString_PartionGoods.ValueData, '') <> '' THEN MIString_PartionGoods.ValueData
+                       WHEN COALESCE (MIString_PartionGoodsCalc.ValueData, '') <> '' THEN MIString_PartionGoodsCalc.ValueData
                   END AS PartionGoods
 
                 , MovementItem.Amount AS OperCount
 
                   -- промежуточная сумма по Контрагенту - с округлением до 2-х знаков
                 , CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) <> 0 THEN COALESCE (CAST (MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)), 0)
-                                                                              ELSE COALESCE (CAST (MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData AS NUMERIC (16, 2)), 0)
+                                                                               ELSE COALESCE (CAST (MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData AS NUMERIC (16, 2)), 0)
                   END AS tmpOperSumm_Partner
                 -- , 0 AS OperSumm_Partner
 
                   -- промежуточная сумма по Заготовителю - с округлением до 2-х знаков
                 , CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) <> 0 THEN COALESCE (CAST (MIFloat_AmountPacker.ValueData * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)), 0)
-                                                                              ELSE COALESCE (CAST (MIFloat_AmountPacker.ValueData * MIFloat_Price.ValueData AS NUMERIC (16, 2)), 0)
+                                                                               ELSE COALESCE (CAST (MIFloat_AmountPacker.ValueData * MIFloat_Price.ValueData AS NUMERIC (16, 2)), 0)
                   END AS tmpOperSumm_Packer
                 -- , 0 AS OperSumm_Packer
 
@@ -235,6 +251,9 @@ BEGIN
                  LEFT JOIN MovementItemString AS MIString_PartionGoods
                                               ON MIString_PartionGoods.MovementItemId = MovementItem.Id
                                              AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                 LEFT JOIN MovementItemString AS MIString_PartionGoodsCalc
+                                              ON MIString_PartionGoodsCalc.MovementItemId = MovementItem.Id
+                                             AND MIString_PartionGoodsCalc.DescId = zc_MIString_PartionGoodsCalc()
 
                  LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                               ON MovementLinkObject_From.MovementId = MovementItem.MovementId
@@ -358,11 +377,10 @@ BEGIN
    END IF;
 
    -- формируются Партии накладной, если Управленческие назначения = 10100; "Мясное сырье" -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
-   UPDATE _tmpItem SET PartionMovementId = lpInsertFind_Object_PartionMovement (MovementId)
-   WHERE InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100(); 
+   UPDATE _tmpItem SET PartionMovementId = lpInsertFind_Object_PartionMovement (MovementId) WHERE InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100();
 
    -- формируются Партии товара, если PartionGoods <> ''
-   UPDATE _tmpItem SET PartionGoodsId = lpInsertFind_Object_PartionGoods (PartionGoods, NULL) WHERE PartionGoods <> '';
+   UPDATE _tmpItem SET PartionGoodsId = lpInsertFind_Object_PartionGoods (PartionGoods) WHERE PartionGoods <> '';
 
 
 --  RETURN QUERY SELECT vbOperSumm_Partner as a1, vbOperSumm_Partner_byItem as a2, vbOperSumm_Packer as b1, vbOperSumm_Packer_byItem as b2; 
@@ -715,7 +733,8 @@ LANGUAGE PLPGSQL VOLATILE;
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
                
- 04.07.13                                        * add inParentId
+ 12.07.13                                        * add zfPartionGoods_byPartner
+ 11.07.13                                        * add ObjectCost
  04.07.13                                        * !!! finich !!!
  02.07.13                                        *
 

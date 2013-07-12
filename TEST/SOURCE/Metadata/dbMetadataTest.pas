@@ -117,11 +117,11 @@ end;
 
 procedure TdbMetaDataTest.InsertMovementItemDesc;
 begin
-  ExecFile(MetadataPath + 'MovementItem\InsertMovementItemDesc.sql', ZQuery);
+  // ExecFile(MetadataPath + 'MovementItem\InsertMovementItemDesc.sql', ZQuery); НОВАЯ СХЕМА2
   ExecFile(MetadataPath + 'MovementItem\InsertMovementItemLinkObjectDesc.sql', ZQuery);
-  ExecFile(MetadataPath + 'MovementItem\InsertMovementItemFloatDesc.sql', ZQuery);
+  //ExecFile(MetadataPath + 'MovementItem\InsertMovementItemFloatDesc.sql', ZQuery); НОВАЯ СХЕМА2
   ExecFile(MetadataPath + 'MovementItem\InsertMovementItemBooleanDesc.sql', ZQuery);
-  ExecFile(MetadataPath + 'MovementItem\InsertMovementItemStringDesc.sql', ZQuery);
+  //ExecFile(MetadataPath + 'MovementItem\InsertMovementItemStringDesc.sql', ZQuery); НОВАЯ СХЕМА2
 end;
 
 procedure TdbMetaDataTest.CreateObjectDescFunction;
