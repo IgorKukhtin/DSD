@@ -21,7 +21,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dsdAddOn;
+  dxSkinXmas2008Blue, dsdAddOn, cxButtonEdit;
 
 type
   TCashEditForm = class(TParentForm)
@@ -39,24 +39,16 @@ type
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
-    ceBranch: TcxLookupComboBox;
-    BranchDataSet: TClientDataSet;
-    spGetBranch: TdsdStoredProc;
     dsdBranchGuides: TdsdGuides;
     cxLabel2: TcxLabel;
-    cePaidKind: TcxLookupComboBox;
     cxLabel4: TcxLabel;
-    ceCurrency: TcxLookupComboBox;
-    PaidKindDataSet: TClientDataSet;
-    spGetPaidKind: TdsdStoredProc;
-    PaidKindDS: TDataSource;
     dsdPaidKindGuides: TdsdGuides;
-    CurrencyDataSet: TClientDataSet;
-    spGetCurrency: TdsdStoredProc;
-    CurrencyDS: TDataSource;
     dsdCurrencyGuides: TdsdGuides;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    ceBranch: TcxButtonEdit;
+    cePaidKind: TcxButtonEdit;
+    ceCurrency: TcxButtonEdit;
   private
     { Private declarations }
   public

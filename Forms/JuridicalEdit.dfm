@@ -2,8 +2,8 @@
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1075#1086' '#1083#1080#1094#1072
   ClientHeight = 332
   ClientWidth = 367
-  ExplicitWidth = 375
-  ExplicitHeight = 359
+  ExplicitWidth = 383
+  ExplicitHeight = 370
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -74,32 +74,30 @@
     Top = 162
     Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088'. '#1083#1080#1094
   end
-  object ceParentGroup: TcxLookupComboBox
-    Left = 40
-    Top = 185
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
-      item
-        FieldName = 'Name'
-      end>
-    Properties.ListSource = JuridicalGroupDS
-    TabOrder = 10
-    Width = 273
-  end
   object cxLabel4: TcxLabel
     Left = 40
     Top = 218
     Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
   end
-  object ceGoodsProperty: TcxLookupComboBox
+  object ceJuridicalGroup: TcxButtonEdit
     Left = 40
-    Top = 241
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
+    Top = 192
+    Properties.Buttons = <
       item
-        FieldName = 'Name'
+        Default = True
+        Kind = bkEllipsis
       end>
-    Properties.ListSource = GoodsPropertyDS
+    TabOrder = 11
+    Width = 273
+  end
+  object ceGoodsProperty: TcxButtonEdit
+    Left = 40
+    Top = 256
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
     TabOrder = 12
     Width = 273
   end
@@ -114,10 +112,8 @@
           StoredProc = spGet
         end
         item
-          StoredProc = spGetGoodsProperty
         end
         item
-          StoredProc = spGetJuridicalGroup
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -153,18 +149,21 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inName'
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inGLNCode'
         Component = edGLNCode
         DataType = ftString
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inisCorporate'
@@ -175,17 +174,17 @@
       end
       item
         Name = 'inJuridicalGroupId'
-        Component = dsdJuridicalGroupGuides
+        Component = JuridicalGroupGuides
         DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
+        Value = ''
       end
       item
         Name = 'inGoodsPropertyId'
-        Component = dsdGoodsPropertyGuides
+        Component = GoodsPropertyGuides
         DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
+        Value = ''
       end>
     Left = 240
     Top = 48
@@ -219,18 +218,21 @@
         Component = edName
         DataType = ftString
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'Code'
         Component = ceCode
         DataType = ftInteger
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'GLNCode'
         Component = edGLNCode
         DataType = ftString
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'isCorporate'
@@ -241,91 +243,51 @@
       end
       item
         Name = 'JuridicalGroupId'
-        Component = dsdJuridicalGroupGuides
+        Component = JuridicalGroupGuides
         ComponentItem = 'Id'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = '0'
+        Value = ''
       end
       item
         Name = 'JuridicalGroupName'
-        Component = dsdJuridicalGroupGuides
+        Component = JuridicalGroupGuides
         ComponentItem = 'Name'
         DataType = ftString
         ParamType = ptOutput
-        Value = '0'
+        Value = ''
       end
       item
         Name = 'GoodsPropertyId'
-        Component = dsdGoodsPropertyGuides
+        Component = GoodsPropertyGuides
         ComponentItem = 'Id'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = '0'
+        Value = ''
       end
       item
         Name = 'GoodsPropertyName'
-        Component = dsdGoodsPropertyGuides
+        Component = GoodsPropertyGuides
         ComponentItem = 'Name'
         DataType = ftString
         ParamType = ptOutput
-        Value = '0'
+        Value = ''
       end>
     Left = 192
     Top = 88
   end
-  object JuridicalGroupDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 176
-    Top = 176
-  end
-  object spGetJuridicalGroup: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_JuridicalGroup'
-    DataSet = JuridicalGroupDataSet
-    DataSets = <
-      item
-        DataSet = JuridicalGroupDataSet
-      end>
-    Params = <>
-    Left = 216
-    Top = 176
-  end
-  object JuridicalGroupDS: TDataSource
-    DataSet = JuridicalGroupDataSet
-    Left = 256
-    Top = 176
-  end
-  object dsdJuridicalGroupGuides: TdsdGuides
-    LookupControl = ceParentGroup
+  object JuridicalGroupGuides: TdsdGuides
+    LookupControl = ceJuridicalGroup
+    FormName = 'TJuridicalGroupForm'
+    PositionDataSet = 'ClientDataSet'
     Left = 312
     Top = 184
   end
-  object GoodsPropertyDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 168
-    Top = 224
-  end
-  object spGetGoodsProperty: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_GoodsProperty'
-    DataSet = GoodsPropertyDataSet
-    DataSets = <
-      item
-        DataSet = GoodsPropertyDataSet
-      end>
-    Params = <>
-    Left = 208
-    Top = 224
-  end
-  object GoodsPropertyDS: TDataSource
-    DataSet = GoodsPropertyDataSet
-    Left = 248
-    Top = 224
-  end
-  object dsdGoodsPropertyGuides: TdsdGuides
+  object GoodsPropertyGuides: TdsdGuides
     LookupControl = ceGoodsProperty
-    Left = 304
-    Top = 232
+    FormName = 'TGoodsPropertyForm'
+    PositionDataSet = 'ClientDataSet'
+    Left = 320
+    Top = 224
   end
 end

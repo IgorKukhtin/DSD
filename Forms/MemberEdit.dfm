@@ -1,9 +1,9 @@
 ﻿inherited MemberEditForm: TMemberEditForm
   Caption = #1053#1086#1074#1086#1077' '#1083#1080#1094#1086
-  ClientHeight = 177
-  ClientWidth = 355
-  ExplicitWidth = 371
-  ExplicitHeight = 215
+  ClientHeight = 215
+  ClientWidth = 443
+  ExplicitWidth = 459
+  ExplicitHeight = 253
   PixelsPerInch = 96
   TextHeight = 13
   object edMeasureName: TcxTextEdit
@@ -19,7 +19,7 @@
   end
   object cxButton1: TcxButton
     Left = 64
-    Top = 120
+    Top = 163
     Width = 75
     Height = 25
     Action = dsdExecStoredProc
@@ -28,8 +28,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 208
-    Top = 120
+    Left = 216
+    Top = 163
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -50,6 +50,18 @@
     Properties.DisplayFormat = '0'
     TabOrder = 5
     Width = 273
+  end
+  object ceINN: TcxTextEdit
+    Left = 32
+    Top = 136
+    TabOrder = 6
+    Text = 'ceINN'
+    Width = 273
+  end
+  object cxLabel2: TcxLabel
+    Left = 32
+    Top = 113
+    Caption = #1048#1053#1053
   end
   object ActionList: TActionList
     Left = 304
@@ -103,6 +115,13 @@
         DataType = ftString
         ParamType = ptInput
         Value = ''
+      end
+      item
+        Name = 'inINN'
+        Component = ceINN
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = 'ceINN'
       end>
     Left = 320
     Top = 40
@@ -115,8 +134,8 @@
         ParamType = ptInputOutput
         Value = '0'
       end>
-    Left = 136
-    Top = 120
+    Left = 384
+    Top = 152
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Member'
@@ -144,9 +163,16 @@
         DataType = ftString
         ParamType = ptOutput
         Value = ''
+      end
+      item
+        Name = 'INN'
+        Component = ceINN
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = 'ceINN'
       end>
-    Left = 176
-    Top = 144
+    Left = 192
+    Top = 104
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -160,8 +186,8 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 24
-    Top = 80
+    Left = 392
+    Top = 112
   end
   object dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn
     Left = 168

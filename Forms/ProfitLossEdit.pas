@@ -19,7 +19,7 @@ uses
   dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus, dsdAddOn, cxPropertiesStore,
   dsdGuides, Data.DB, Datasnap.DBClient, dsdDB, dsdAction, Vcl.ActnList,
   cxMaskEdit, cxDropDownEdit, cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox,
-  cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit;
+  cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit, cxButtonEdit;
 
 type
   TProfitLossEditForm = class(TParentForm)
@@ -30,13 +30,9 @@ type
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
-    ceProfitLossGroup: TcxLookupComboBox;
     cxLabel2: TcxLabel;
-    ceProfitLossDirection: TcxLookupComboBox;
     cxLabel4: TcxLabel;
-    ceInfoMoneyDestination: TcxLookupComboBox;
     cxLabel5: TcxLabel;
-    ceInfoMoney: TcxLookupComboBox;
     ActionList: TActionList;
     dsdDataSetRefresh: TdsdDataSetRefresh;
     dsdExecStoredProc: TdsdExecStoredProc;
@@ -44,24 +40,16 @@ type
     spInsertUpdate: TdsdStoredProc;
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
-    ProfitLossGroupDataSet: TClientDataSet;
-    spGetProfitLossGroup: TdsdStoredProc;
-    ProfitLossGroupDS: TDataSource;
-    dsdProfitLossGroup: TdsdGuides;
-    ProfitLossDirectionDataSet: TClientDataSet;
-    spGetProfitLossDirection: TdsdStoredProc;
-    ProfitLossDirectionDS: TDataSource;
-    dsdProfitLossDirectionGuides: TdsdGuides;
+    ProfitLossGroupGuides: TdsdGuides;
+    ProfitLossDirectionGuides: TdsdGuides;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    InfoMoneyDestinationDataSet: TClientDataSet;
-    spGetInfoMoneyDestination: TdsdStoredProc;
-    InfoMoneyDestinationDS: TDataSource;
-    dsdInfoMoneyDestinationGuides: TdsdGuides;
-    InfoMoneyDataSet: TClientDataSet;
-    spGetInfoMoney: TdsdStoredProc;
-    InfoMoneyDS: TDataSource;
-    dsdInfoMoney: TdsdGuides;
+    InfoMoneyDestinationGuides: TdsdGuides;
+    InfoMoneyGuides: TdsdGuides;
+    ceProfitLossGroup: TcxButtonEdit;
+    ceProfitLossDirection: TcxButtonEdit;
+    ceInfoMoneyDestination: TcxButtonEdit;
+    ceInfoMoney: TcxButtonEdit;
   private
     { Private declarations }
   public

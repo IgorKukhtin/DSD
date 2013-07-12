@@ -16,9 +16,7 @@ inherited TradeMarkForm: TTradeMarkForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = -9
-    ExplicitWidth = 451
-    ExplicitHeight = 363
+    ExplicitLeft = 16
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -59,7 +57,7 @@ inherited TradeMarkForm: TTradeMarkForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 48
+    Left = 56
     Top = 96
   end
   object ClientDataSet: TClientDataSet

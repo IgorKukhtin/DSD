@@ -19,7 +19,7 @@ uses
   dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus, dsdAddOn, cxPropertiesStore,
   dsdGuides, Data.DB, Datasnap.DBClient, dsdDB, dsdAction, Vcl.ActnList,
   cxMaskEdit, cxDropDownEdit, cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox,
-  cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit;
+  cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit, cxButtonEdit;
 
 type
   TAccountEditForm = class(TParentForm)
@@ -30,7 +30,6 @@ type
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
-    ceAccountGroup: TcxLookupComboBox;
     cxLabel2: TcxLabel;
     ActionList: TActionList;
     dsdDataSetRefresh: TdsdDataSetRefresh;
@@ -39,29 +38,18 @@ type
     spInsertUpdate: TdsdStoredProc;
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
-    AccountGroupDataSet: TClientDataSet;
-    spGetAccountGroup: TdsdStoredProc;
-    AccountGroupDS: TDataSource;
-    dsdAccountGroup: TdsdGuides;
-    AccountDirectionDataSet: TClientDataSet;
-    spGetAccountDirection: TdsdStoredProc;
-    AccountDirectionDS: TDataSource;
-    dsdAccountDirectionnGuides: TdsdGuides;
+    AccountGroupGuides: TdsdGuides;
+    AccountDirectionnGuides: TdsdGuides;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    ceAccountDirection: TcxLookupComboBox;
     cxLabel4: TcxLabel;
-    ceInfoMoneyDestination: TcxLookupComboBox;
-    InfoMoneyDestinationDataSet: TClientDataSet;
-    spGetInfoMoneyDestination: TdsdStoredProc;
-    InfoMoneyDestinationDS: TDataSource;
-    dsdInfoMoneyDestinationGuides: TdsdGuides;
+    InfoMoneyDestinationGuides: TdsdGuides;
     cxLabel5: TcxLabel;
-    ceInfoMoney: TcxLookupComboBox;
-    InfoMoneyDataSet: TClientDataSet;
-    spGetInfoMoney: TdsdStoredProc;
-    InfoMoneyDS: TDataSource;
-    dsdInfoMoney: TdsdGuides;
+    InfoMoneyGuides: TdsdGuides;
+    ceAccountGroup: TcxButtonEdit;
+    ceAccountDirection: TcxButtonEdit;
+    ceInfoMoneyDestination: TcxButtonEdit;
+    ceInfoMoney: TcxButtonEdit;
   private
     { Private declarations }
   public
