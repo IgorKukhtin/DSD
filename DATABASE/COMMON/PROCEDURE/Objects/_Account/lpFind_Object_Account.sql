@@ -1,18 +1,18 @@
-п»ї-- Function: lpFind_Object_Account()
+-- Function: lpFind_Object_Account()
 
 -- DROP FUNCTION lpFind_Object_Account();
 
 CREATE OR REPLACE FUNCTION lpFind_Object_Account(
-    IN inAccountGroupId           Integer,       -- Р“СЂСѓРїРїР° СЃС‡РµС‚РѕРІ
-    IN inAccountDirectionId       Integer,       -- РђРЅР°Р»РёС‚РёРєР° СЃС‡РµС‚Р° (РјРµСЃС‚Рѕ)
-    IN inInfoMoneyDestinationId   Integer        -- РђРЅР°Р»РёС‚РёРєР° СЃС‡РµС‚Р° (РЅР°Р·РЅР°С‡РµРЅРёРµ)
+    IN inAccountGroupId           Integer,       -- Группа счетов
+    IN inAccountDirectionId       Integer,       -- Аналитика счета (место)
+    IN inInfoMoneyDestinationId   Integer        -- Аналитика счета (назначение)
 )
   RETURNS integer AS
 $BODY$
 DECLARE lObjectId integer;
 BEGIN
 
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Account());
 
    SELECT  
@@ -37,8 +37,8 @@ LANGUAGE plpgsql VOLATILE;
   
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  05.06.13          
 
 */

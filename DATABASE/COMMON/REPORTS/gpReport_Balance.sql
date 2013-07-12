@@ -68,13 +68,13 @@ $BODY$BEGIN
                       , Container.Amount - COALESCE (SUM (MIContainer_byEndDate.Amount), 0) AS AmountRemainsEnd*/
                  FROM Container
                       LEFT JOIN MovementItemContainer AS MIContainer
-                                                      ON MIContainer.Containerid = Container.id
+                                                      ON MIContainer.Containerid = Container.Id
                                                      AND MIContainer.OperDate >= inStartDate
                       /*LEFT JOIN MovementItemContainer AS MIContainer_byEndDate
-                                                      ON MIContainer_byEndDate.Containerid = Container.id
+                                                      ON MIContainer_byEndDate.Containerid = Container.Id
                                                      AND MIContainer_byEndDate.OperDate > inEndDate
                       LEFT JOIN MovementItemContainer AS MIContainer_byPeriod
-                                                      ON MIContainer_byPeriod.Containerid = Container.id
+                                                      ON MIContainer_byPeriod.Containerid = Container.Id
                                                      AND MIContainer_byPeriod.OperDate BETWEEN inStartDate AND inEndDate*/
                  WHERE Container.DescId = zc_Container_Summ()
                  GROUP BY Container.ObjectId

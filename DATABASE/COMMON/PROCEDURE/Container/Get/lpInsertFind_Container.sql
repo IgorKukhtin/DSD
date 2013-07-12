@@ -168,7 +168,9 @@ BEGIN
          -- добавили Аналитики
          INSERT INTO ContainerLinkObject (DescId, ContainerId, ObjectId)
             SELECT DescId, vbContainerId, ObjectId FROM _tmpContainer;
-
+     ELSE
+         UPDATE Container SET ParentId = CASE WHEN COALESCE (inParentId, 0) = 0 THEN NULL ELSE inParentId END
+         WHERE Id = vbContainerId AND COALESCE (ParentId, 0) <> COALESCE (inParentId, 0);
      END IF;  
 
      -- если есть Аналитики <элемент с/с.>
