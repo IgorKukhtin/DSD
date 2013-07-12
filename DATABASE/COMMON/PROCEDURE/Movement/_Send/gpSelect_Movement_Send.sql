@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Send(
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , OperDatePartner TDateTime,
+             , OperDatePartner TDateTime
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCountTare TFloat, TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
@@ -62,7 +62,8 @@ BEGIN
            , Object_Route.Id               AS RouteId
            , Object_Route.ValueData        AS RouteName
            , Object_RouteSorting.Id        AS RouteSortingId
-           , Object_RouteSorting.ValueData AS RouteSortingName           
+           , Object_RouteSorting.ValueData AS RouteSortingName       
+               
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -136,11 +137,12 @@ BEGIN
                                         AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
             LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
 
-       WHERE Movement.DescId = zc_Movement_Income()
+       WHERE Movement.DescId = zc_Movement_Send()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
   
 END;
 $BODY$
+
 LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_Movement_Send (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
