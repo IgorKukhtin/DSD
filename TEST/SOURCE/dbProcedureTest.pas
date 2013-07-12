@@ -88,11 +88,16 @@ begin
   ExecFile(ProcedurePath + 'Movement\_Income\gpInsertUpdate_Movement_Income.sql', ZQuery);
   ExecFile(ProcedurePath + 'Movement\_Income\gpGet_Movement_Income.sql', ZQuery);
   ExecFile(ProcedurePath + 'Movement\_Income\gpSelect_Movement_Income.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\_Income\lpInsertUpdate_MovementFloat_Income_TotalSumm.sql', ZQuery);
+  ExecFile(ProcedurePath + 'Movement\_Income\lpInsertUpdate_MovementFloat_TotalSumm.sql', ZQuery);
 
   ExecFile(ProcedurePath + 'Movement\_ProductionUnion\gpInsertUpdate_Movement_ProductionUnion.sql', ZQuery);
   ExecFile(ProcedurePath + 'Movement\_ProductionUnion\gpGet_Movement_ProductionUnion.sql', ZQuery);
   ExecFile(ProcedurePath + 'Movement\_ProductionUnion\gpSelect_Movement_ProductionUnion.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'Movement\_Send\gpInsertUpdate_Movement_Send.sql', ZQuery);
+  ExecFile(ProcedurePath + 'Movement\_Send\gpGet_Movement_Send.sql', ZQuery);
+  ExecFile(ProcedurePath + 'Movement\_Send\gpSelect_Movement_Send.sql', ZQuery);
+
 end;
 
 procedure TdbProcedureTest.CreateObjectProcedure;
@@ -276,7 +281,8 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_Asset\gpSelect_Object_Asset.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Asset\gpGet_Object_Asset.sql', ZQuery);
 
-  ExecFile(ProcedurePath + 'OBJECTS\_PartionGoods\lpInsertFind_Object_PartionGoods.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_PartionGoods\lpInsertFind_Object_PartionGoods - Date.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_PartionGoods\lpInsertFind_Object_PartionGoods - String.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_PartionMovement\lpInsertFind_Object_PartionMovement.sql', ZQuery);
 
   ExecFile(ProcedurePath + 'OBJECTS\_GoodsByGoodsKind\lfSelect_Object_GoodsByGoodsKind.sql', ZQuery);

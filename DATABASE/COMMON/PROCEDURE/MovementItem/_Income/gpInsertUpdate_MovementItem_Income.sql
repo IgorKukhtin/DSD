@@ -57,7 +57,7 @@ BEGIN
      PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, vbUserId);
 
      -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_Income_TotalSumm (inMovementId);
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
 
      -- сохранили протокол
@@ -71,7 +71,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-               
+ 12.07.13          * lpInsertUpdate_MovementFloat_TotalSumm было lpInsertUpdate_MovementFloat_Income_TotalSumm    
  07.07.13                                        * add lpInsertUpdate_MovementFloat_Income_TotalSumm
  07.07.13                                        * add lpInsert_Object_GoodsByGoodsKind
  30.06.13                                        *

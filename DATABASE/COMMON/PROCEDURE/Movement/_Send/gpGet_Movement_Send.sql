@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Send(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , OperDatePartner TDateTime,
+             , OperDatePartner TDateTime
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCountTare TFloat, TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
@@ -26,7 +26,7 @@ BEGIN
        SELECT
              CAST (0 as Integer)    AS Id
            , CAST (0 as Integer)    AS InvNumber
-           , cast(GETDATE() as TDateTime)) AS OperDate
+           , cast(GETDATE() as TDateTime) AS OperDate
            , CAST (0 as Integer)    AS StatusCode
            , CAST ('' as TVarChar)  AS StatusName
 
