@@ -6,10 +6,8 @@ CREATE OR REPLACE FUNCTION gpComplete_Movement_Income(
     IN inMovementId        Integer  , -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )                              
-  RETURNS VOID AS
---  RETURNS TABLE (a1 TFloat, a2 TFloat, b1 TFloat, b2 TFloat) AS
---  RETURNS TABLE (MovementItemId Integer, MovementId Integer, OperDate TDateTime, JuridicalId_From Integer, isCorporate Boolean, PersonalId_From Integer, UnitId Integer, PersonalId_Packer Integer, PaidKindId Integer, ContractId Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, OperCount TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, tmpOperSumm_Packer TFloat, OperSumm_Packer TFloat, AccountDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, InfoMoneyDestinationId_isCorporate Integer, InfoMoneyId_isCorporate Integer, JuridicalId_basis Integer, BusinessId Integer, PartionMovementId Integer, PartionGoodsId Integer) AS
-
+RETURNS VOID AS
+--  RETURNS TABLE (MovementItemId Integer, MovementId Integer, OperDate TDateTime, JuridicalId_From Integer, isCorporate Boolean, PersonalId_From Integer, UnitId Integer, BranchId_Unit Integer, PersonalId_Packer Integer, PaidKindId Integer, ContractId Integer, ContainerId_Goods Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, OperCount TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, tmpOperSumm_Packer TFloat, OperSumm_Packer TFloat, AccountDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, InfoMoneyDestinationId_isCorporate Integer, InfoMoneyId_isCorporate Integer, JuridicalId_basis Integer, BusinessId Integer, isPartionCount Boolean, isPartionSumm Boolean, PartionMovementId Integer, PartionGoodsId Integer) AS
 $BODY$
   DECLARE vbUserId Integer;
 
@@ -25,158 +23,163 @@ $BODY$
   DECLARE vbExtraChargesPercent TFloat;
 BEGIN
 
-   -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Complete_Movement_Income());
-   vbUserId:=2; -- CAST (inSession AS Integer);
+     -- проверка прав пользователя на вызов процедуры
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Complete_Movement_Income());
+     vbUserId:=2; -- CAST (inSession AS Integer);
 
 
-   -- Эти параметры нужны для расчета конечных сумм по Контрагенту и Заготовителю
-   SELECT
-         COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE)
-       , COALESCE (MovementFloat_VATPercent.ValueData, 0)
-       , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END
-       , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END
-         INTO vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
-   FROM Movement
-        LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                 ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
-                AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
-        LEFT JOIN MovementFloat AS MovementFloat_VATPercent
-                 ON MovementFloat_VATPercent.MovementId = Movement.Id
-                AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
-        LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+     -- формируются Партии для Сырья
+     PERFORM lpInsertUpdate_MovementItemString (inDescId:= zc_MIString_PartionGoodsCalc()
+                                              , inMovementItemId:= MovementItem.Id
+                                              , inValueData:= CAST (COALESCE (Object_Goods.ObjectCode, 0) AS TVarChar)
+                                                    || '-' || CAST (COALESCE (Object_Partner.ObjectCode, 0) AS TVarChar)
+                                                    || '-' || TO_CHAR (Movement.OperDate, 'DD.MM.YYYY')
+                                               )
+     FROM MovementItem
+          LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+          LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                       ON MovementLinkObject_To.MovementId = MovementItem.MovementId
+                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+          LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_To.ObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                               ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
+                              AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+          LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+     WHERE MovementItem.MovementId = inMovementId
+       AND lfObject_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
+     ;
+
+     -- Эти параметры нужны для расчета конечных сумм по Контрагенту и Заготовителю
+     SELECT
+           COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE)
+         , COALESCE (MovementFloat_VATPercent.ValueData, 0)
+         , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END
+         , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END
+           INTO vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
+     FROM Movement
+          LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                   ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
+                  AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+          LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                   ON MovementFloat_VATPercent.MovementId = Movement.Id
+                  AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+          LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                  ON MovementFloat_ChangePercent.MovementId = Movement.Id
                 AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
-   WHERE Movement.Id = inMovementId
-     AND Movement.StatusId = zc_Enum_Status_UnComplete();
+     WHERE Movement.Id = inMovementId
+       AND Movement.StatusId = zc_Enum_Status_UnComplete();
 
 
-           -- формируются Паритии для Сырья
-/*   PERFORM lpInsertUpdate_MIString_PartionGoodsCalc (inMovementItemId:= MovementItem.Id
-                                                   , inDescId:= zc_MIContainer_Count()
-                                                   , inMovementId:= MovementId
-                                                   , inContainerId:= ContainerId_Goods -- был опеределен выше
-                                                    )
-   FROM MovementItem
-   WHERE MovementItem.MovementId = inMovementId;
-           (SELECT
-                  MovementItem.Id AS MovementItemId
-                , MovementItem.MovementId
-                , Movement.OperDate
-                   , CASE WHEN lfObject_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
-                          THEN CASE WHEN Movement.DescId = zc_Movement_Income() AND Movement.OperDate >= zc_DateStart_PartionPrimary()
-                                       THEN CASE WHEN COALESCE (MIString_PartionGoods.ValueData, '') <> '' THEN MIString_PartionGoods.ValueData
-                                                 ELSE zfPartionGoods_byPartner (Movement.OperDate, Object_From.ObjectCode, Object_Goods.ObjectCode)
-                                            END
-                                    ELSE ''
-                               END
-                       ELSE ''
-                  END AS PartionGoods*/
+     -- таблица - Аналитики остатка
+     CREATE TEMP TABLE _tmpContainer (DescId Integer, ObjectId Integer) ON COMMIT DROP;
+     -- таблица - Аналитики <элемент с/с>
+     CREATE TEMP TABLE _tmpObjectCost (DescId Integer, ObjectId Integer) ON COMMIT DROP;
 
-   -- таблица - Аналитики остатка
-   CREATE TEMP TABLE _tmpContainer (DescId Integer, ObjectId Integer) ON COMMIT DROP;
-   -- таблица - Аналитики <элемент с/с>
-   CREATE TEMP TABLE _tmpObjectCost (DescId Integer, ObjectId Integer) ON COMMIT DROP;
+     -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     CREATE TEMP TABLE _tmpItem (MovementItemId Integer, MovementId Integer, OperDate TDateTime, JuridicalId_From Integer, isCorporate Boolean, PersonalId_From Integer, UnitId Integer, BranchId_Unit Integer, PersonalId_Packer Integer, PaidKindId Integer, ContractId Integer, ContainerId_Goods Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar
+                               , OperCount TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, tmpOperSumm_Packer TFloat, OperSumm_Packer TFloat
+                               , AccountDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, InfoMoneyDestinationId_isCorporate Integer, InfoMoneyId_isCorporate Integer
+                               , JuridicalId_basis Integer, BusinessId Integer
+                               , isPartionCount Boolean, isPartionSumm Boolean
+                               , PartionMovementId Integer, PartionGoodsId Integer) ON COMMIT DROP;
+     -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     INSERT INTO _tmpItem (MovementItemId, MovementId, OperDate, JuridicalId_From, isCorporate, PersonalId_From, UnitId, BranchId_Unit, PersonalId_Packer, PaidKindId, ContractId, ContainerId_Goods, GoodsId, GoodsKindId, AssetId, PartionGoods
+                         , OperCount, tmpOperSumm_Partner, OperSumm_Partner, tmpOperSumm_Packer, OperSumm_Packer
+                         , AccountDirectionId, InfoMoneyDestinationId, InfoMoneyId, InfoMoneyDestinationId_isCorporate, InfoMoneyId_isCorporate
+                         , JuridicalId_basis, BusinessId
+                         , isPartionCount, isPartionSumm
+                         , PartionMovementId, PartionGoodsId)
+        SELECT
+              _tmp.MovementItemId
+            , _tmp.MovementId
+            , _tmp.OperDate
+            , _tmp.JuridicalId_From
+            , _tmp.isCorporate
+            , _tmp.PersonalId_From
+            , _tmp.UnitId
+            , _tmp.BranchId_Unit
+            , _tmp.PersonalId_Packer
+            , _tmp.PaidKindId
+            , _tmp.ContractId
 
-   -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-   CREATE TEMP TABLE _tmpItem (MovementItemId Integer, MovementId Integer, OperDate TDateTime, JuridicalId_From Integer, isCorporate Boolean, PersonalId_From Integer, UnitId Integer, BranchId_Unit Integer, PersonalId_Packer Integer, PaidKindId Integer, ContractId Integer, ContainerId_Goods Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar
-                             , OperCount TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, tmpOperSumm_Packer TFloat, OperSumm_Packer TFloat
-                             , AccountDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, InfoMoneyDestinationId_isCorporate Integer, InfoMoneyId_isCorporate Integer
-                             , JuridicalId_basis Integer, BusinessId Integer
-                             , PartionMovementId Integer, PartionGoodsId Integer) ON COMMIT DROP;
-   -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-   INSERT INTO _tmpItem (MovementItemId, MovementId, OperDate, JuridicalId_From, isCorporate, PersonalId_From, UnitId, BranchId_Unit, PersonalId_Packer, PaidKindId, ContractId, ContainerId_Goods, GoodsId, GoodsKindId, AssetId, PartionGoods
-                       , OperCount, tmpOperSumm_Partner, OperSumm_Partner, tmpOperSumm_Packer, OperSumm_Packer
-                       , AccountDirectionId, InfoMoneyDestinationId, InfoMoneyId, InfoMoneyDestinationId_isCorporate, InfoMoneyId_isCorporate
-                       , JuridicalId_basis, BusinessId
-                       , PartionMovementId, PartionGoodsId)
-      SELECT
-            _tmp.MovementItemId
-          , _tmp.MovementId
-          , _tmp.OperDate
-          , _tmp.JuridicalId_From
-          , _tmp.isCorporate
-          , _tmp.PersonalId_From
-          , _tmp.UnitId
-          , _tmp.BranchId_Unit
-          , _tmp.PersonalId_Packer
-          , _tmp.PaidKindId
-          , _tmp.ContractId
+            , 0 AS ContainerId_Goods
+            , _tmp.GoodsId
+            , _tmp.GoodsKindId
+            , _tmp.AssetId
+            , CASE WHEN _tmp.isPartionCount OR _tmp.isPartionSumm THEN _tmp.PartionGoods ELSE '' END AS PartionGoods
 
-          , 0 AS ContainerId_Goods
-          , _tmp.GoodsId
-          , _tmp.GoodsKindId
-          , _tmp.AssetId
-          , _tmp.PartionGoods
+            , _tmp.OperCount
 
-          , _tmp.OperCount
+              -- промежуточная сумма по Контрагенту - с округлением до 2-х знаков
+            , _tmp.tmpOperSumm_Partner
+              -- конечная сумма по Контрагенту
+            , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
+                      -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки
+                      THEN CASE WHEN vbDiscountPercent > 0 THEN CAST ( (1 - vbDiscountPercent / 100) * (tmpOperSumm_Partner) AS NUMERIC (16, 2))
+                                WHEN vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (tmpOperSumm_Partner) AS NUMERIC (16, 2))
+                                ELSE (tmpOperSumm_Partner)
+                           END
+                   WHEN vbVATPercent > 0
+                      -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН)
+                      THEN CASE WHEN vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * (1 - vbDiscountPercent/100) * (tmpOperSumm_Partner) AS NUMERIC (16, 2))
+                                WHEN vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * (1 + vbExtraChargesPercent/100) * (tmpOperSumm_Partner) AS NUMERIC (16, 2))
+                                ELSE CAST ( (1 + vbVATPercent / 100) * (tmpOperSumm_Partner) AS NUMERIC (16, 2))
+                           END
+                   WHEN vbVATPercent > 0
+                      -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН)
+                      THEN CASE WHEN vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 - vbDiscountPercent/100) * (tmpOperSumm_Partner) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                WHEN vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 + vbExtraChargesPercent/100) * (tmpOperSumm_Partner) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                ELSE CAST ( (1 + vbVATPercent / 100) * (tmpOperSumm_Partner) AS NUMERIC (16, 2))
+                           END
+              END AS OperSumm_Partner
 
-            -- промежуточная сумма по Контрагенту - с округлением до 2-х знаков
-          , _tmp.tmpOperSumm_Partner
-            -- конечная сумма по Контрагенту
-          , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
-                    -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки
-                    THEN CASE WHEN vbDiscountPercent > 0 THEN CAST ( (1 - vbDiscountPercent / 100) * (tmpOperSumm_Partner) AS NUMERIC (16, 2))
-                              WHEN vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (tmpOperSumm_Partner) AS NUMERIC (16, 2))
-                              ELSE (tmpOperSumm_Partner)
-                         END
-                 WHEN vbVATPercent > 0
-                    -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН)
-                    THEN CASE WHEN vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * (1 - vbDiscountPercent/100) * (tmpOperSumm_Partner) AS NUMERIC (16, 2))
-                              WHEN vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * (1 + vbExtraChargesPercent/100) * (tmpOperSumm_Partner) AS NUMERIC (16, 2))
-                              ELSE CAST ( (1 + vbVATPercent / 100) * (tmpOperSumm_Partner) AS NUMERIC (16, 2))
-                         END
-                 WHEN vbVATPercent > 0
-                    -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН)
-                    THEN CASE WHEN vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 - vbDiscountPercent/100) * (tmpOperSumm_Partner) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
-                              WHEN vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 + vbExtraChargesPercent/100) * (tmpOperSumm_Partner) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
-                              ELSE CAST ( (1 + vbVATPercent / 100) * (tmpOperSumm_Partner) AS NUMERIC (16, 2))
-                         END
-            END AS OperSumm_Partner
+              -- промежуточная сумма по Заготовителю - с округлением до 2-х знаков
+            , _tmp.tmpOperSumm_Packer
+              -- конечная сумма по Заготовителю
+            , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
+                      -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки
+                      THEN CASE WHEN vbDiscountPercent > 0 THEN CAST ( (1 - vbDiscountPercent / 100) * (tmpOperSumm_Packer) AS NUMERIC (16, 2))
+                                WHEN vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (tmpOperSumm_Packer) AS NUMERIC (16, 2))
+                                ELSE (tmpOperSumm_Packer)
+                           END
+                   WHEN vbVATPercent > 0
+                      -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН)
+                      THEN CASE WHEN vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * (1 - vbDiscountPercent/100) * (tmpOperSumm_Packer) AS NUMERIC (16, 2))
+                                WHEN vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * (1 + vbExtraChargesPercent/100) * (tmpOperSumm_Packer) AS NUMERIC (16, 2))
+                                ELSE CAST ( (1 + vbVATPercent / 100) * (tmpOperSumm_Packer) AS NUMERIC (16, 2))
+                           END
+                   WHEN vbVATPercent > 0
+                      -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН)
+                      THEN CASE WHEN vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 - vbDiscountPercent/100) * (tmpOperSumm_Packer) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                WHEN vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 + vbExtraChargesPercent/100) * (tmpOperSumm_Packer) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                ELSE CAST ( (1 + vbVATPercent / 100) * (tmpOperSumm_Packer) AS NUMERIC (16, 2))
+                           END
+              END AS OperSumm_Packer
 
-            -- промежуточная сумма по Заготовителю - с округлением до 2-х знаков
-          , _tmp.tmpOperSumm_Packer
-            -- конечная сумма по Заготовителю
-          , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
-                    -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки
-                    THEN CASE WHEN vbDiscountPercent > 0 THEN CAST ( (1 - vbDiscountPercent / 100) * (tmpOperSumm_Packer) AS NUMERIC (16, 2))
-                              WHEN vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (tmpOperSumm_Packer) AS NUMERIC (16, 2))
-                              ELSE (tmpOperSumm_Packer)
-                         END
-                 WHEN vbVATPercent > 0
-                    -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН)
-                    THEN CASE WHEN vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * (1 - vbDiscountPercent/100) * (tmpOperSumm_Packer) AS NUMERIC (16, 2))
-                              WHEN vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * (1 + vbExtraChargesPercent/100) * (tmpOperSumm_Packer) AS NUMERIC (16, 2))
-                              ELSE CAST ( (1 + vbVATPercent / 100) * (tmpOperSumm_Packer) AS NUMERIC (16, 2))
-                         END
-                 WHEN vbVATPercent > 0
-                    -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН)
-                    THEN CASE WHEN vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 - vbDiscountPercent/100) * (tmpOperSumm_Packer) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
-                              WHEN vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 + vbExtraChargesPercent/100) * (tmpOperSumm_Packer) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
-                              ELSE CAST ( (1 + vbVATPercent / 100) * (tmpOperSumm_Packer) AS NUMERIC (16, 2))
-                         END
-            END AS OperSumm_Packer
+              -- Аналитики счетов - направления
+            , _tmp.AccountDirectionId
+              -- Управленческие назначения
+            , _tmp.InfoMoneyDestinationId
+              -- Статьи назначения
+            , _tmp.InfoMoneyId
+              -- Управленческие назначения (если наши компании)
+            , _tmp.InfoMoneyDestinationId_isCorporate
+              -- Статьи назначения (если наши компании)
+            , _tmp.InfoMoneyId_isCorporate
 
-            -- Аналитики счетов - направления
-          , _tmp.AccountDirectionId
-            -- Управленческие назначения
-          , _tmp.InfoMoneyDestinationId
-            -- Статьи назначения
-          , _tmp.InfoMoneyId
-            -- Управленческие назначения (если наши компании)
-          , _tmp.InfoMoneyDestinationId_isCorporate
-            -- Статьи назначения (если наши компании)
-          , _tmp.InfoMoneyId_isCorporate
+            , _tmp.JuridicalId_basis
+            , _tmp.BusinessId
 
-          , _tmp.JuridicalId_basis
-          , _tmp.BusinessId
-
-            -- Партии накладной, сформируем позже
-          , 0 AS PartionMovementId
-            -- Партии товара, сформируем позже
-          , 0 AS PartionGoodsId
-      FROM 
-           (SELECT
+            , _tmp.isPartionCount
+            , _tmp.isPartionSumm 
+              -- Партии накладной, сформируем позже
+            , 0 AS PartionMovementId
+              -- Партии товара, сформируем позже
+            , 0 AS PartionGoodsId
+        FROM 
+             (SELECT
                   MovementItem.Id AS MovementItemId
                 , MovementItem.MovementId
                 , Movement.OperDate
@@ -192,10 +195,12 @@ BEGIN
                 , MovementItem.ObjectId AS GoodsId
                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                 , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
-                , CASE WHEN COALESCE (MIString_PartionGoods.ValueData, '') <> '' THEN MIString_PartionGoods.ValueData
+                , CASE WHEN Movement.OperDate <= zc_DateStart_PartionGoods() THEN ''
+                       WHEN COALESCE (MIString_PartionGoods.ValueData, '') <> '' THEN MIString_PartionGoods.ValueData
                        WHEN COALESCE (MIString_PartionGoodsCalc.ValueData, '') <> '' THEN MIString_PartionGoodsCalc.ValueData
+                       ELSE ''
                   END AS PartionGoods
-
+ 
                 , MovementItem.Amount AS OperCount
 
                   -- промежуточная сумма по Контрагенту - с округлением до 2-х знаков
@@ -223,6 +228,9 @@ BEGIN
 
                 , COALESCE (ObjectLink_Unit_Juridical.ChildObjectId, 0) AS JuridicalId_basis
                 , COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0) AS BusinessId
+
+                , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE) AS isPartionCount
+                , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)  AS isPartionSumm
 
             FROM Movement
                  JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.isErased = FALSE
@@ -296,6 +304,12 @@ BEGIN
                                       ON ObjectLink_Unit_Business.ObjectId = MovementLinkObject_To.ObjectId
                                      AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
 
+                 LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionCount
+                                         ON ObjectBoolean_PartionCount.ObjectId = MovementItem.ObjectId
+                                        AND ObjectBoolean_PartionCount.DescId = zc_ObjectBoolean_Goods_PartionCount()
+                 LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionSumm
+                                         ON ObjectBoolean_PartionSumm.ObjectId = MovementItem.ObjectId
+                                        AND ObjectBoolean_PartionSumm.DescId = zc_ObjectBoolean_Goods_PartionSumm()
                  LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                       ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
                                      AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
@@ -380,19 +394,13 @@ BEGIN
    UPDATE _tmpItem SET PartionMovementId = lpInsertFind_Object_PartionMovement (MovementId) WHERE InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100();
 
    -- формируются Партии товара, если PartionGoods <> ''
-   UPDATE _tmpItem SET PartionGoodsId = lpInsertFind_Object_PartionGoods (PartionGoods) WHERE PartionGoods <> '';
+   UPDATE _tmpItem SET PartionGoodsId = lpInsertFind_Object_PartionGoods (PartionGoods) WHERE isPartionCount OR isPartionSumm;
 
-
---  RETURN QUERY SELECT vbOperSumm_Partner as a1, vbOperSumm_Partner_byItem as a2, vbOperSumm_Packer as b1, vbOperSumm_Packer_byItem as b2; 
---  RETURN QUERY SELECT _tmpItem.MovementItemId, _tmpItem.MovementId, _tmpItem.OperDate, _tmpItem.JuridicalId_From, _tmpItem.isCorporate, _tmpItem.PersonalId_From, _tmpItem.UnitId, _tmpItem.PersonalId_Packer, _tmpItem.PaidKindId, _tmpItem.ContractId, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.AssetId, _tmpItem.PartionGoods, _tmpItem.OperCount, _tmpItem.tmpOperSumm_Partner, _tmpItem.OperSumm_Partner, _tmpItem.tmpOperSumm_Packer, _tmpItem.OperSumm_Packer, _tmpItem.AccountDirectionId, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId, _tmpItem.InfoMoneyDestinationId_isCorporate, _tmpItem.InfoMoneyId_isCorporate, _tmpItem.JuridicalId_basis, _tmpItem.BusinessId, _tmpItem.PartionMovementId, _tmpItem.PartionGoodsId FROM _tmpItem;
-          
-          
---  return;
+   -- RETURN QUERY SELECT _tmpItem.MovementItemId, _tmpItem.MovementId, _tmpItem.OperDate, _tmpItem.JuridicalId_From, _tmpItem.isCorporate, _tmpItem.PersonalId_From, _tmpItem.UnitId, _tmpItem.BranchId_Unit, _tmpItem.PersonalId_Packer, _tmpItem.PaidKindId, _tmpItem.ContractId, _tmpItem.ContainerId_Goods, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.AssetId, _tmpItem.PartionGoods, _tmpItem.OperCount, _tmpItem.tmpOperSumm_Partner, _tmpItem.OperSumm_Partner, _tmpItem.tmpOperSumm_Packer, _tmpItem.OperSumm_Packer, _tmpItem.AccountDirectionId, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId, _tmpItem.InfoMoneyDestinationId_isCorporate, _tmpItem.InfoMoneyId_isCorporate, _tmpItem.JuridicalId_basis, _tmpItem.BusinessId                         , _tmpItem.isPartionCount, _tmpItem.isPartionSumm, _tmpItem.PartionMovementId, _tmpItem.PartionGoodsId FROM _tmpItem;
 
    -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
    -- !!! Ну а теперь - ПРОВОДКИ !!!
    -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 
    -- определяется ContainerId для количественного учета
    UPDATE _tmpItem SET ContainerId_Goods = CASE WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
@@ -406,8 +414,8 @@ BEGIN
                                                                               , inObjectCostId     := NULL
                                                                               , inDescId_1   := zc_ContainerLinkObject_Unit()
                                                                               , inObjectId_1 := UnitId
-                                                                              , inDescId_2   := zc_ContainerLinkObject_PartionGoods()
-                                                                              , inObjectId_2 := PartionGoodsId
+                                                                              , inDescId_2   := CASE WHEN isPartionCount THEN zc_ContainerLinkObject_PartionGoods() ELSE NULL END
+                                                                              , inObjectId_2 := CASE WHEN isPartionCount THEN PartionGoodsId ELSE NULL END
                                                                                )
                                                 WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100()
                                                         -- 0)Товар 1)Подразделения 2)Основные средства(для которого закуплено ТМЦ)
@@ -451,7 +459,6 @@ BEGIN
                                                                                )
                                            END;
 
-
            -- формируются Проводки для количественного учета
    PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
                                                , inDescId:= zc_MIContainer_Count()
@@ -485,8 +492,8 @@ BEGIN
                                                                                                                                                    , inObjectId_2 := BusinessId
                                                                                                                                                    , inDescId_3   := zc_ObjectCostLink_Goods()
                                                                                                                                                    , inObjectId_3 := GoodsId
-                                                                                                                                                   , inDescId_4   := CASE WHEN GoodsId IN (580, 419, 755, 1321, 2407, 2621, 2622, 2627, 2637, 2610, 3464, 3600, 3620, 3621, 4234, 5005, 5459, 5517, 5681, 5960, 2303) THEN zc_ObjectCostLink_PartionGoods() ELSE NULL END
-                                                                                                                                                   , inObjectId_4 := CASE WHEN GoodsId IN (580, 419, 755, 1321, 2407, 2621, 2622, 2627, 2637, 2610, 3464, 3600, 3620, 3621, 4234, 5005, 5459, 5517, 5681, 5960, 2303) THEN PartionGoodsId ELSE NULL END
+                                                                                                                                                   , inDescId_4   := CASE WHEN isPartionSumm THEN zc_ObjectCostLink_PartionGoods() ELSE NULL END
+                                                                                                                                                   , inObjectId_4 := CASE WHEN isPartionSumm THEN PartionGoodsId ELSE NULL END
                                                                                                                                                    , inDescId_5   := zc_ObjectCostLink_InfoMoney()
                                                                                                                                                    , inObjectId_5 := InfoMoneyId
                                                                                                                                                    , inDescId_6   := zc_ObjectCostLink_InfoMoneyDetail()
@@ -496,8 +503,8 @@ BEGIN
                                                                                                     , inObjectId_1 := UnitId
                                                                                                     , inDescId_2   := zc_ContainerLinkObject_Goods()
                                                                                                     , inObjectId_2 := GoodsId
-                                                                                                    , inDescId_3   := zc_ContainerLinkObject_PartionGoods()
-                                                                                                    , inObjectId_3 := PartionGoodsId
+                                                                                                    , inDescId_3   := CASE WHEN isPartionSumm THEN zc_ContainerLinkObject_PartionGoods() ELSE NULL END
+                                                                                                    , inObjectId_3 := CASE WHEN isPartionSumm THEN PartionGoodsId ELSE NULL END
                                                                                                     , inDescId_4   := zc_ContainerLinkObject_InfoMoney()
                                                                                                     , inObjectId_4 := InfoMoneyId
                                                                                                     , inDescId_5   := zc_ContainerLinkObject_InfoMoneyDetail()
@@ -626,7 +633,7 @@ BEGIN
                                                 )
     FROM _tmpItem;
 
-   -- формируются Проводки - долг Поставщику или Сотрудники (подотчетные лица)
+   -- формируются Проводки - долг Поставщику или Сотруднику (подотчетные лица)
    PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
                                                , inDescId:= zc_MIContainer_Summ()
                                                , inMovementId:= MovementId
@@ -723,17 +730,15 @@ BEGIN
   -- Обязательно меняем статус документа
   UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND StatusId = zc_Enum_Status_UnComplete();
 
-
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
                
- 12.07.13                                        * add zfPartionGoods_byPartner
+ 12.07.13                                        * add PartionGoods
  11.07.13                                        * add ObjectCost
  04.07.13                                        * !!! finich !!!
  02.07.13                                        *

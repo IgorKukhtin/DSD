@@ -178,6 +178,7 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_Goods\gpInsertUpdate_Object_Goods.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Goods\gpSelect_Object_Goods.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Goods\gpGet_Object_Goods.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_Goods\gpInsertUpdate_ObjectBoolean_Goods_Partion.sql', ZQuery);
 
   ExecFile(ProcedurePath + 'OBJECTS\_GoodsGroup\gpInsertUpdate_Object_GoodsGroup.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_GoodsGroup\gpSelect_Object_GoodsGroup.sql', ZQuery);

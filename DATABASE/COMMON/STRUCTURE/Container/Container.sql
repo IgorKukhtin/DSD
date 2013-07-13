@@ -11,6 +11,7 @@ CREATE TABLE Container(
    Id                    SERIAL NOT NULL PRIMARY KEY, 
    DescId                INTEGER NOT NULL, 
    ObjectId              Integer NOT NULL, -- —чет
+   ParentId              Integer  NULL, -- —чет
    Amount                TFloat  NOT NULL DEFAULT 0,
 
    CONSTRAINT fk_Container_DescId_ContainerDesc FOREIGN KEY(DescId) REFERENCES ContainerDesc(Id),

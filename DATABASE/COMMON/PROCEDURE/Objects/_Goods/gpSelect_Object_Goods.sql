@@ -1,9 +1,9 @@
-п»ї-- Function: gpSelect_Object_Goods()
+-- Function: gpSelect_Object_Goods()
 
---DROP FUNCTION gpSelect_Object_Goods();
+-- DROP FUNCTION gpSelect_Object_Goods (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Goods(
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                GoodsGroupId Integer, GoodsGroupCode Integer, GoodsGroupName TVarChar,
@@ -12,10 +12,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar,
                InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar,
                InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar,
-               Weight TFloat, isErased boolean) AS
+               Weight TFloat, isPartionCount Boolean, isPartionSumm Boolean, isErased Boolean) AS
 $BODY$
 BEGIN
-     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+     -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Goods());
 
    RETURN QUERY 
@@ -49,6 +49,8 @@ BEGIN
          , Object_InfoMoneyDestination.ValueData  AS InfoMoneyDestinationName
          
          , ObjectFloat_Weight.ValueData AS Weight
+         , ObjectBoolean_PartionCount.ValueData AS isPartionCount
+         , ObjectBoolean_PartionSumm.ValueData  AS isPartionSumm
          , Object_Goods.isErased       AS isErased
          
      FROM OBJECT AS Object_Goods
@@ -67,9 +69,17 @@ BEGIN
                               AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
           LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
           
-          LEFT JOIN ObjectFloat AS ObjectFloat_Weight ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
-                AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+          LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
+                               AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
                 
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionCount
+                                  ON ObjectBoolean_PartionCount.ObjectId = Object_Goods.Id 
+                                 AND ObjectBoolean_PartionCount.DescId = zc_ObjectBoolean_Goods_PartionCount()
+          LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionSumm
+                                  ON ObjectBoolean_PartionSumm.ObjectId = Object_Goods.Id 
+                                 AND ObjectBoolean_PartionSumm.DescId = zc_ObjectBoolean_Goods_PartionSumm()
+
           LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                  ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
@@ -85,19 +95,22 @@ BEGIN
                 AND ObjectLink_InfoMoney_InfoMoneyDestination.DescId = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
           LEFT JOIN Object AS Object_InfoMoneyDestination ON Object_InfoMoneyDestination.Id = ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId              
       
-  WHERE Object_Goods.DescId = zc_Object_Goods();
+  WHERE Object_Goods.DescId = zc_Object_Goods()
+-- and (ObjectBoolean_PartionCount.ValueData = true or ObjectBoolean_PartionSumm.ValueData = true)
+  ;
   
 END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Goods(TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_Goods (TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.07.13                                        * add zc_ObjectBoolean_Goods_Partion...
  04.07.13          * + TradeMark             
  21.06.13          *              
  11.06.13          *
@@ -105,5 +118,5 @@ ALTER FUNCTION gpSelect_Object_Goods(TVarChar) OWNER TO postgres;
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpSelect_Object_Goods('2')

@@ -629,6 +629,26 @@ begin
      if (not cbGoods.Checked)or(not cbGoods.Enabled) then exit;
      //
      myEnabledCB(cbGoods);
+
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('delete from dba.tmpReport_RecalcOperation_ListNo_isPartionStr_MB');
+        ExecSql;
+        Clear;
+        Add('insert into dba.tmpReport_RecalcOperation_ListNo_isPartionStr_MB (GoodsPropertyId)');
+        Add('select BillItems.GoodsPropertyId');
+        Add('from dba.Bill');
+        Add('     left outer join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount <> 0');
+        Add('     left outer join _toolsView_GoodsProperty_Obvalka_isPartionStr_MB_TWO AS _tmpList_GoodsProperty_isPartion_myRecalc on _tmpList_GoodsProperty_isPartion_myRecalc.GoodsPropertyId = BillItems.GoodsPropertyId');
+        Add('where Bill.BillDate between MONTHS (ToDay(), -2) and MONTHS (ToDay(), 1)');
+        Add('  and Bill.BillKind not in (zc_bkProductionInZakaz())');
+        Add('  and (Bill.FromId in (zc_UnitId_Cex(), zc_UnitId_CexDelikatesy())');
+        Add('    or Bill.ToId in (zc_UnitId_Cex(), zc_UnitId_CexDelikatesy()))');
+        Add('  and _tmpList_GoodsProperty_isPartion_myRecalc.GoodsPropertyId > 0');
+        Add('group by BillItems.GoodsPropertyId;');
+        ExecSql;
+     end;
      //
      with fromQuery,Sql do begin
         Close;
@@ -641,8 +661,13 @@ begin
         Add('     , Measure.Id_Postgres as MeasureId_Postgres');
         Add('     , Goods_parent.Id_Postgres as ParentId_Postgres');
         Add('     , _pgInfoMoney.Id3_Postgres as InfoMoneyId_Postgres');
+        Add('     , case when isPartionCount.GoodsPropertyId is not null then zc_rvYes() else zc_rvNo() end as isPartionCount');
+        Add('     , case when isPartionSumm.GoodsPropertyId is not null then zc_rvYes() else zc_rvNo() end as isPartionSumm');
+        Add('     , zc_rvYes() as zc_rvYes');
         Add('     , 0 AS TradeMarkId_PG');
         Add('from dba.GoodsProperty');
+        Add('     left outer join dba._toolsView_GoodsProperty_Obvalka_isPartionStr_MB_TWO AS isPartionCount on isPartionCount.GoodsPropertyId = GoodsProperty.Id');
+        Add('     left outer join dba._toolsView_GoodsProperty_Obvalka_isPartionStr_MB AS isPartionSumm on isPartionSumm.GoodsPropertyId = GoodsProperty.Id');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.Goods as Goods_parent on Goods_parent.Id = Goods.ParentId');
         Add('     left outer join dba.Measure on Measure.Id = GoodsProperty.MeasureId');
@@ -713,6 +738,8 @@ begin
         Add('       , MeasureId_Postgres');
         Add('       , ParentId_Postgres');
         Add('       , InfoMoneyId_Postgres');
+        Add('       , isPartionCount');
+        Add('       , isPartionSumm');
         Add('order by ObjectId');
         Open;
         //
@@ -734,6 +761,13 @@ begin
         toStoredProc.Params.AddParam ('inInfoMoneyId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inWeight',ftFloat,ptInput, 0);
         //
+        toStoredProc_two.StoredProcName:='gpInsertUpdate_ObjectBoolean_Goods_Partion';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inId',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inPartionCount',ftBoolean,ptInput, false);
+        toStoredProc_two.Params.AddParam ('inPartionSumm',ftBoolean,ptInput, false);
+        //
         while not EOF do
         begin
              //!!!
@@ -749,6 +783,22 @@ begin
              toStoredProc.Params.ParamByName('inTradeMarkId').Value:=FieldByName('TradeMarkId_PG').AsInteger;
 
              if not myExecToStoredProc then ;//exit;
+
+             if (FieldByName('isPartionCount').AsInteger=FieldByName('zc_rvYes').AsInteger)
+              or(FieldByName('isPartionSumm').AsInteger=FieldByName('zc_rvYes').AsInteger)
+             then begin
+                       toStoredProc_two.Params.ParamByName('inId').Value:=toStoredProc.Params.ParamByName('ioId').Value;
+
+                       if FieldByName('isPartionCount').AsInteger=FieldByName('zc_rvYes').AsInteger
+                       then toStoredProc_two.Params.ParamByName('inPartionCount').Value:=true
+                       else toStoredProc_two.Params.ParamByName('inPartionCount').Value:=false;
+
+                       if FieldByName('isPartionSumm').AsInteger=FieldByName('zc_rvYes').AsInteger
+                       then toStoredProc_two.Params.ParamByName('inPartionSumm').Value:=true
+                       else toStoredProc_two.Params.ParamByName('inPartionSumm').Value:=false;
+                       if not myExecToStoredProc_two then ;
+             end;
+
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.GoodsProperty set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
@@ -758,6 +808,13 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+     end;
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('delete from dba.tmpReport_RecalcOperation_ListNo_isPartionStr_MB');
+        ExecSql;
      end;
      //
      myDisabledCB(cbGoods);
