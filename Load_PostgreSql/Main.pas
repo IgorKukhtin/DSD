@@ -494,7 +494,7 @@ begin
      fExecSqFromQuery('update dba.KindPackage set Id_Postgres = null');
      fExecSqFromQuery('update dba.MoneyKind set Id_Postgres = null');
      fExecSqFromQuery('update dba.ContractKind set Id_Postgres = null');
-     // !!! Unit.PersonalId_Postgres and Unit.pgUnitId - is by User !!!
+     //  !!! Unit.PersonalId_Postgres and Unit.pgUnitId - is by User !!!
      fExecSqFromQuery('update dba.Unit set Id_Postgres_Business = null, Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = null');
      fExecSqFromQuery('update dba._pgPersonal set Id1_Postgres = null, Id2_Postgres = null');
      fExecSqFromQuery('update dba.PriceList_byHistory set Id_Postgres = null');
