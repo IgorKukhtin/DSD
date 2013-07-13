@@ -403,9 +403,9 @@ object MainForm: TMainForm
     end
     object CheckBox1: TCheckBox
       Tag = 10
-      Left = 157
+      Left = 174
       Top = 80
-      Width = 110
+      Width = 130
       Height = 17
       Caption = '1.5. '#1058#1086#1088#1075#1086#1074#1099#1077' '#1084#1072#1088#1082#1080
       TabOrder = 29
@@ -479,7 +479,7 @@ object MainForm: TMainForm
     end
     object cbIncomePacker: TCheckBox
       Tag = 20
-      Left = 14
+      Left = 15
       Top = 81
       Width = 194
       Height = 17
@@ -491,6 +491,51 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 4
+    end
+    object CheckBox2: TCheckBox
+      Tag = 20
+      Left = 15
+      Top = 111
+      Width = 194
+      Height = 17
+      Caption = '2.1 '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1074#1085#1091#1090#1088
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 5
+    end
+    object CheckBox3: TCheckBox
+      Tag = 20
+      Left = 15
+      Top = 131
+      Width = 194
+      Height = 17
+      Caption = '2.1 '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088#1091
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 6
+    end
+    object CheckBox4: TCheckBox
+      Tag = 20
+      Left = 15
+      Top = 151
+      Width = 194
+      Height = 17
+      Caption = '2.1 '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1089' '#1092#1080#1083#1080#1072#1083#1072#1084
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 7
     end
   end
   object CompleteDocumentPanel: TPanel

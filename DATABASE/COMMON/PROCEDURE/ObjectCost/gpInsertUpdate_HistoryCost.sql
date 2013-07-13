@@ -43,8 +43,8 @@ BEGIN
              , 0 AS OutSumm
         FROM (SELECT Container.Id AS ContainerId
                    , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS StartCount
-                   , COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) AS IncomeCount
-                   , COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -MIContainer.Amount ELSE 0 END), 0) AS OutCount
+                   , COALESCE (SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) AS IncomeCount
+                   , COALESCE (SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount < 0 THEN -MIContainer.Amount ELSE 0 END), 0) AS OutCount
               FROM Container
                    LEFT JOIN MovementItemContainer AS MIContainer
                                                    ON MIContainer.Containerid = Container.Id
@@ -53,8 +53,8 @@ BEGIN
               GROUP BY Container.Id
                      , Container.Amount
               HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
-                  OR (COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END), 0) <> 0)
-                  OR (COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 THEN -MIContainer.Amount ELSE 0 END), 0) <> 0)
+                  OR (COALESCE (SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END), 0) <> 0)
+                  OR (COALESCE (SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount < 0 THEN -MIContainer.Amount ELSE 0 END), 0) <> 0)
              ) AS tmpContainer
              LEFT JOIN Container AS Container_Summ
                                  ON Container_Summ.ParentId = tmpContainer.ContainerId
@@ -68,22 +68,24 @@ BEGIN
              , 0 AS StartCount
              , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS StartSumm
              , 0 AS IncomeCount
-             , COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) AS IncomeSumm
+             , COALESCE (SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) AS IncomeSumm
              , 0 AS OutCount
-             , COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -MIContainer.Amount ELSE 0 END), 0) AS OutSumm
-        FROM Container
+             , COALESCE (SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount < 0 THEN -MIContainer.Amount ELSE 0 END), 0) AS OutSumm
+        FROM Container AS Container_Count
+             JOIN Container ON Container.ParentId = Container_Count.Id
+                           AND Container.DescId = zc_Container_Summ()
              LEFT JOIN MovementItemContainer AS MIContainer
                                              ON MIContainer.Containerid = Container.Id
                                             AND MIContainer.OperDate >= inStartDate
              LEFT JOIN ContainerObjectCost ON ContainerObjectCost.Containerid = Container.Id
                                           AND ContainerObjectCost.ObjectCostDescId = zc_ObjectCost_Basis()
-        WHERE Container.DescId = zc_Container_Summ()
+        WHERE Container_Count.DescId = zc_Container_Count()
 -- and 1=0
         GROUP BY ContainerObjectCost.ObjectCostId
                , Container.Amount
         HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
-            OR (COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END), 0) <> 0)
-            OR (COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 THEN -MIContainer.Amount ELSE 0 END), 0) <> 0)
+            OR (COALESCE (SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END), 0) <> 0)
+            OR (COALESCE (SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount < 0 THEN -MIContainer.Amount ELSE 0 END), 0) <> 0)
         ;
 
      INSERT INTO _tmpMaster (ObjectCostId, StartCount, StartSumm, IncomeCount, IncomeSumm , CalcCount, CalcSumm)
@@ -208,10 +210,10 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
-               
+ 13.07.13                                        * add JOIN Container
  10.07.13                                        *
-
 */
+
 /*
      INSERT INTO _tmpMaster (ObjectCostId, StartCount, StartSumm, IncomeCount, IncomeSumm , CalcCount, CalcSumm)
         SELECT CAST (1 AS Integer) AS ObjectCostId, CAST (30 AS TFloat) AS StartCount, CAST (280 AS TFloat) AS StartSumm, CAST (0 AS TFloat) AS IncomeCount, CAST (0 AS TFloat) AS IncomeSumm, CAST (0 AS TFloat) AS CalcCount, CAST (0 AS TFloat) AS CalcSumm
@@ -245,4 +247,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2012', inEndDate:= '01.01.2013', inSession:= '2')

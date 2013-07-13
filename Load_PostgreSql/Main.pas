@@ -90,6 +90,9 @@ type
     cbMember_andPersonal: TCheckBox;
     cbIncomePacker: TCheckBox;
     CheckBox1: TCheckBox;
+    CheckBox2: TCheckBox;
+    CheckBox3: TCheckBox;
+    CheckBox4: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -491,7 +494,9 @@ begin
      fExecSqFromQuery('update dba.KindPackage set Id_Postgres = null');
      fExecSqFromQuery('update dba.MoneyKind set Id_Postgres = null');
      fExecSqFromQuery('update dba.ContractKind set Id_Postgres = null');
-     fExecSqFromQuery('update dba.Unit set Id_Postgres_Business = null, PersonalId_Postgres=null, Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = null');
+     // !!! Unit.PersonalId_Postgres and Unit.pgUnitId - is by User !!!
+     fExecSqFromQuery('update dba.Unit set Id_Postgres_Business = null, Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = null');
+     fExecSqFromQuery('update dba._pgPersonal set Id1_Postgres = null, Id2_Postgres = null');
      fExecSqFromQuery('update dba.PriceList_byHistory set Id_Postgres = null');
      fExecSqFromQuery('update dba.GoodsProperty_Postgres set Id_Postgres = null');
      fExecSqFromQuery('update dba.GoodsProperty_Detail set Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = null, Id4_Postgres = null, Id5_Postgres = null, Id6_Postgres = null, Id7_Postgres = null'
@@ -1197,14 +1202,8 @@ begin
                      +'   and fCheckUnitClientParentID(3349,Unit.Id)=zc_rvNo()' // ккк
                      +'   and fCheckUnitClientParentID(600,Unit.Id)=zc_rvNo()'  // ПЕРЕУЧЕТ
                      +'   and fCheckUnitClientParentID(149,Unit.Id)=zc_rvNo()'  // РАСХОДЫ ПРОИЗВОДСТВА
-                     +'   and Unit_all.Id not  in (4739' // 7910 АНДРЕЙЧЕНКО заготовитель
-                     +'                           ,5162' // 8534 Баклажук В. ФЛП заготовитель
-                     +'                           ,4742' // 7912	ДУБОВСКОЙ заготовитель
-                     +'                           ,4920' // 8104	ДЬЯЧЕНКО заготов.
-                     +'                           ,4740' // 7911	ОСИПОВ заготовитель
-                     +'                           ,5087' // 8459	Чернявский заготов.
-                     +'                           ,4695' // 7869	ЧУМАК заготовитель
-                     +'                           )'
+                     +'   and Unit_all.PersonalId_Postgres IS NULL'
+                     +'   and Unit_all.pgUnitId IS NULL'
                      +'      )'
                      +'  or Unit.Id=3'    // АЛАН
                      );
@@ -1332,14 +1331,8 @@ begin
                      +'  and fCheckUnitClientParentID(3349,Unit.Id)=zc_rvNo()' // ккк
                      +'  and fCheckUnitClientParentID(600,Unit.Id)=zc_rvNo()'  // ПЕРЕУЧЕТ
                      +'  and fCheckUnitClientParentID(149,Unit.Id)=zc_rvNo()'  // РАСХОДЫ ПРОИЗВОДСТВА
-                     +'  and Unit.Id not  in (4739' // 7910 АНДРЕЙЧЕНКО заготовитель
-                     +'                      ,5162' // 8534 Баклажук В. ФЛП заготовитель
-                     +'                      ,4742' // 7912	ДУБОВСКОЙ заготовитель
-                     +'                      ,4920' // 8104	ДЬЯЧЕНКО заготов.
-                     +'                      ,4740' // 7911	ОСИПОВ заготовитель
-                     +'                      ,5087' // 8459	Чернявский заготов.
-                     +'                      ,4695' // 7869	ЧУМАК заготовитель
-                     +'                      )'
+                     +'  and Unit.PersonalId_Postgres IS NULL'
+                     +'  and Unit.pgUnitId IS NULL'
                      );
                   Add('order by ObjectId');
              end // if not isBill
@@ -1822,31 +1815,23 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select Unit.Id as ObjectId');
+        Add('select _pgPersonal.Id as ObjectId');
         Add('     , 0 as ObjectCode');
         Add('     , Unit.UnitName as ObjectName');
         Add('     , 0 as PositionId_PG');
-        Add('     , _pgUnit_Zagatov.Id_Postgres as UnitId_PG');
+        Add('     , _pgUnit.Id_Postgres as UnitId_PG');
         Add('     , Unit_Alan.Id2_Postgres as JuridicalId_PG');
         Add('     , Unit_Alan.Id_Postgres_Business as BusinessId_PG');
         Add('     , cast (null as TVarCharMedium) as INN');
         Add('     , cast (null as date) as DateIn');
         Add('     , cast (null as date) as DateOut');
 
-        Add('     , Unit.Id1_Postgres as Id_Postgres');
-        Add('     , Unit.PersonalId_Postgres as Id_Postgres_two');
-        Add('from dba.Unit');
-        Add('     left outer join dba._pgUnit as _pgUnit_Zagatov on _pgUnit_Zagatov.ObjectCode = 11'); // Отдел Заготовителей
+        Add('     , _pgPersonal.Id1_Postgres as Id_Postgres');
+        Add('     , _pgPersonal.Id2_Postgres as Id_Postgres_two');
+        Add('from dba._pgPersonal');
+        Add('     left outer join dba.Unit on Unit.Id = _pgPersonal.UnitId');
+        Add('     left outer join dba._pgUnit on _pgUnit.Id=_pgPersonal.pgUnitId');
         Add('     left outer join dba.Unit as Unit_Alan on Unit_Alan.Id = 3');// АЛАН
-        Add('where Unit.Id in (4739' // 7910 АНДРЕЙЧЕНКО заготовитель
-           +'                 ,5162' // 8534 Баклажук В. ФЛП заготовитель
-           +'                 ,4742' // 7912	ДУБОВСКОЙ заготовитель
-           +'                 ,4920' // 8104	ДЬЯЧЕНКО заготов.
-           +'                 ,4740' // 7911	ОСИПОВ заготовитель
-           +'                 ,5087' // 8459	Чернявский заготов.
-           +'                 ,4695' // 7869	ЧУМАК заготовитель
-           +'                 )'
-           );
         Add('order by ObjectId');
         Open;
         //
@@ -1904,8 +1889,8 @@ begin
              //toStoredProc_two.Params.ParamByName('inDateOut').Value:=FieldByName('DateOut').AsDateTime;
              if not myExecToStoredProc_two then ;//exit;
              //
-             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)or(FieldByName('Id_Postgres_two').AsInteger=0)
-             then fExecSqFromQuery('update dba.Unit set Id1_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+', PersonalId_Postgres='+IntToStr(toStoredProc_two.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)or(FieldByName('Id_Postgres_two').AsInteger=0)
+             then fExecSqFromQuery('update dba._pgPersonal set Id1_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+', Id2_Postgres='+IntToStr(toStoredProc_two.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;
@@ -2968,8 +2953,10 @@ begin
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('     , zc_rvYes() as zc_rvYes');
         Add('from dba.Bill');
-        Add('     left outer join dba.Unit as UnitFrom on UnitFrom.Id = Bill.FromId');
-        Add('     left outer join dba._pgUnit on _pgUnit.UnitId=case when Bill.ToId in(4417,zc_UnitId_CompositionZ())then zc_UnitId_Composition() else Bill.ToId end');
+        Add('     left outer join dba.Unit as UnitFrom on UnitFrom.Id = Bill.FromId'
+           +'                                         and UnitFrom.pgUnitId is null');
+        Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id=Bill.ToId');
+        Add('     left outer join dba._pgUnit on _pgUnit.Id=UnitTo.pgUnitId');
         Add('     left outer join dba.MoneyKind on MoneyKind.Id = Bill.MoneyKindId');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind=zc_bkIncomeToUnit()'
@@ -3164,21 +3151,23 @@ begin
         Add('     , Bill.Nds as VATPercent');
         Add('     , case when Bill.isByMinusDiscountTax=zc_rvYes() then -Bill.DiscountTax else Bill.DiscountTax end as ChangePercent');
 
-        Add('     , isnull(UnitFrom_PartionStr_MB.Id3_Postgres,UnitFrom.PersonalId_Postgres) as FromId_Postgres');
+        Add('     , isnull(UnitFrom_PartionStr_MB.Id3_Postgres,_pgPersonal.Id2_Postgres) as FromId_Postgres');
         Add('     , _pgUnit.Id_Postgres as ToId_Postgres');
         Add('     , MoneyKind.Id_Postgres as PaidKindId_Postgres');
         Add('     , null as ContractId');
         Add('     , null as CarId');
         Add('     , null as PersonalDriverId');
-        Add('     , case when Bill_PartionStr_MB.Id is not null then UnitFrom.PersonalId_Postgres else null end as PersonalPackerId');
+        Add('     , case when Bill_PartionStr_MB.Id is not null then _pgPersonal.Id2_Postgres else null end as PersonalPackerId');
 
         Add('     , isnull(Bill_PartionStr_MB.Id_Postgres,Bill.Id_Postgres) as Id_Postgres');
         Add('     , zc_rvYes() as zc_rvYes');
         Add('from dba.Bill');
         Add('     left outer join dba.Unit as UnitFrom on UnitFrom.Id = Bill.FromId');
+        Add('     left outer join dba._pgPersonal on _pgPersonal.Id = UnitFrom.PersonalId_Postgres');
         Add('     left outer join dba.Bill as Bill_PartionStr_MB on Bill_PartionStr_MB.Id = lfGet_BillId_byPartionStr_MB_isPG(Bill.Id)');
         Add('     left outer join dba.Unit as UnitFrom_PartionStr_MB on UnitFrom_PartionStr_MB.Id=Bill_PartionStr_MB.FromId');
-        Add('     left outer join dba._pgUnit on _pgUnit.UnitId=case when Bill.ToId in(4417,zc_UnitId_CompositionZ())then zc_UnitId_Composition() else Bill.ToId end');
+        Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id=Bill.ToId');
+        Add('     left outer join dba._pgUnit on _pgUnit.Id=UnitTo.pgUnitId');
         Add('     left outer join dba.MoneyKind on MoneyKind.Id = Bill.MoneyKindId');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind=zc_bkIncomeToUnit()'
@@ -3409,8 +3398,10 @@ alter table dba.ContractKind add Id_Postgres integer null;
 alter table dba.Unit add Id1_Postgres integer null;
 alter table dba.Unit add Id2_Postgres integer null;
 alter table dba.Unit add Id3_Postgres integer null;
-alter table dba.Unit add PersonalId_Postgres integer null;
 alter table dba.Unit add Id_Postgres_Business integer null;
+alter table dba.Unit add PersonalId_Postgres integer null;
+alter table dba.Unit add pgUnitId integer null;
+
 alter table dba._pgUnit add Id_Postgres_Branch integer null;
 
 alter table dba.PriceList_byHistory add Id_Postgres integer null;
