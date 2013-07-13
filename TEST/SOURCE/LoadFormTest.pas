@@ -39,6 +39,7 @@ type
     procedure LoadCashFormTest;
     procedure LoadCurrencyFormTest;
     procedure LoadIncomeFormTest;
+    procedure LoadSendFormTest;
     procedure LoadReportFormTest;
     procedure LoadInfoMoneyGroupFormTest;
     procedure LoadInfoMoneyDestinationFormTest;
@@ -184,6 +185,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
+end;
+procedure TLoadFormTest.LoadSendFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
 end;
 
 procedure TLoadFormTest.LoadJuridicalFormTest;

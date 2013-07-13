@@ -123,7 +123,9 @@ uses
   PositionEdit in '..\..\Forms\PositionEdit.pas' {PositionEditForm},
   AssetEdit in '..\..\Forms\AssetEdit.pas' {AssetEditForm},
   Personal in '..\..\Forms\Personal.pas' {PersonalForm},
-  PersonalEdit in '..\..\Forms\PersonalEdit.pas' {PersonalEditForm};
+  PersonalEdit in '..\..\Forms\PersonalEdit.pas' {PersonalEditForm},
+  SendJournal in '..\..\Forms\SendJournal.pas' {SendJournalForm},
+  Send in '..\..\Forms\Send.pas' {SendForm};
 
 {$R *.RES}
 

@@ -17,6 +17,7 @@ type
   published
     procedure MovementIncomeTest;
     procedure MovementProductionUnionTest;
+    procedure MovementSendTest;
   end;
 
   TMovementIncomeTest = class(TObjectTest)
@@ -41,6 +42,21 @@ type
   public
     function InsertUpdateMovementProductionUnion(Id: Integer; InvNumber: String;
              OperDate: TDateTime; FromId, ToId: Integer): integer;
+    constructor Create; override;
+  end;
+
+
+  TMovementSendTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  protected
+    procedure SetDataSetParam; override;
+  public
+    function InsertUpdateMovementSend(Id: Integer; InvNumber: String; OperDate: TDateTime;
+             OperDatePartner: TDateTime; PriceWithVAT: Boolean;
+             VATPercent, ChangePercent: double;
+             FromId, ToId, CarId, PersonalDriverId, RouteId, RouteSortingId: Integer
+             ): integer;
     constructor Create; override;
   end;
 
@@ -89,6 +105,22 @@ var
 begin
   MovementProductionUnion := TMovementProductionUnionTest.Create;
   Id := MovementProductionUnion.InsertDefault;
+  // создание документа
+  try
+  // редактирование
+  finally
+    // удаление
+    DeleteMovement(Id);
+  end;
+end;
+
+procedure TdbMovementTest.MovementSendTest;
+var
+  MovementSend: TMovementSendTest;
+  Id: Integer;
+begin
+  MovementSend := TMovementSendTest.Create;
+  Id := MovementSend.InsertDefault;
   // создание документа
   try
   // редактирование
@@ -218,11 +250,91 @@ begin
   FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
 end;
 
+
+{
+{ TMovementSend }
+
+constructor TMovementSendTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Movement_Send';
+  spSelect := 'gpSelect_Movement_Send';
+  spGet := 'gpGet_Movement_Send';
+end;
+
+function TMovementSendTest.InsertDefault: integer;
+var Id: Integer;
+    InvNumber: String;
+    OperDate: TDateTime;
+    OperDatePartner: TDateTime;
+    PriceWithVAT: Boolean;
+    VATPercent, ChangePercent: double;
+    FromId, ToId, CarId, PersonalDriverId, RouteId, RouteSortingId: Integer;
+begin
+  Id:=0;
+  InvNumber:='1';
+  OperDate:= Date;
+  OperDatePartner:= Date;
+
+  PriceWithVAT:=true;
+  VATPercent:=20;
+  ChangePercent:=-10;
+
+  FromId := TPartnerTest.Create.GetDefault;
+  ToId := TUnit.Create.GetDefault;
+  CarId:=0;
+  PersonalDriverId:=0;
+  RouteId:=0;
+  RouteSortingId:=0;
+  //
+  result := InsertUpdateMovementSend(Id, InvNumber, OperDate,
+             OperDatePartner, PriceWithVAT,
+             VATPercent, ChangePercent,
+             FromId, ToId, CarId, PersonalDriverId, RouteId, RouteSortingId);
+
+end;
+
+function TMovementSendTest.InsertUpdateMovementSend(Id: Integer; InvNumber: String; OperDate: TDateTime;
+             OperDatePartner: TDateTime; PriceWithVAT: Boolean;
+             VATPercent, ChangePercent: double;
+             FromId, ToId, CarId, PersonalDriverId, RouteId, RouteSortingId: Integer):Integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
+  FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
+
+  FParams.AddParam('inOperDatePartner', ftDateTime, ptInput, OperDatePartner);
+
+  FParams.AddParam('inPriceWithVAT', ftBoolean, ptInput, PriceWithVAT);
+  FParams.AddParam('inVATPercent', ftFloat, ptInput, VATPercent);
+  FParams.AddParam('inChangePercent', ftFloat, ptInput, ChangePercent);
+
+  FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
+  FParams.AddParam('inToId', ftInteger, ptInput, ToId);
+
+  FParams.AddParam('inCarId', ftInteger, ptInput, CarId);
+  FParams.AddParam('inPersonalDriverId', ftInteger, ptInput, PersonalDriverId);
+  FParams.AddParam('inRouteId', ftInteger, ptInput, RouteId);
+  FParams.AddParam('inRouteSortingId', ftInteger, ptInput, RouteSortingId);
+
+  result := InsertUpdate(FParams);
+end;
+
+procedure TMovementSendTest.SetDataSetParam;
+begin
+  inherited;
+  FParams.AddParam('inStartDate', ftDateTime, ptInput, Date);
+  FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
+end;
+
+
+
 initialization
   TestFramework.RegisterTest('Документы', TdbMovementTest.Suite);
 
 end.
 
-implementation
+//implementation
 
-end.
+//end.

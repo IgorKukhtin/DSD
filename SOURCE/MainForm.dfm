@@ -17,8 +17,8 @@ object MainForm: TMainForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -33,7 +33,7 @@ object MainForm: TMainForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManager1Bar1: TdxBar
       Caption = 'MainMenu'
@@ -83,6 +83,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbIncome'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSend'
         end>
     end
     object bbGuides: TdxBarSubItem
@@ -237,6 +241,10 @@ object MainForm: TMainForm
     end
     object bbIncome: TdxBarButton
       Action = actIncome
+      Category = 0
+    end
+    object bbSend: TdxBarButton
+      Action = actSend
       Category = 0
     end
     object bbPartner: TdxBarButton
@@ -762,6 +770,13 @@ object MainForm: TMainForm
       Caption = #1052#1072#1088#1082#1080' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1077#1081
       Hint = #1052#1072#1088#1082#1080' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1077#1081
       FormName = 'TCarModelForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actSend: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+      FormName = 'TSendJournalForm'
       GuiParams = <>
       isShowModal = False
     end

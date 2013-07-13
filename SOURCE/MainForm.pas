@@ -110,6 +110,8 @@ type
     bbAsset: TdxBarButton;
     bbPosition: TdxBarButton;
     bbMember: TdxBarButton;
+    actSend: TdsdOpenForm;
+    bbSend: TdxBarButton;
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
