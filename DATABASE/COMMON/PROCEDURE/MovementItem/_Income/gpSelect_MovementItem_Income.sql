@@ -19,7 +19,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Income());
 
-     inShowAll:= TRUE;
+     -- inShowAll:= TRUE;
 
      IF inShowAll THEN 
 
