@@ -1,4 +1,4 @@
-unit SendJournal;
+unit SaleJournal;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
-  TSendJournalForm = class(TParentForm)
+  TSaleJournalForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -71,10 +71,12 @@ type
     colTotalSummMVAT: TcxGridDBColumn;
     colTotalSumm: TcxGridDBColumn;
     colTotalSummVAT: TcxGridDBColumn;
+    colPaidKindName: TcxGridDBColumn;
     colCarName: TcxGridDBColumn;
     colPersonalDriverName: TcxGridDBColumn;
     colRouteName: TcxGridDBColumn;
     colRouteSortingName: TcxGridDBColumn;
+    colContractName: TcxGridDBColumn;
   private
   public
   end;
@@ -84,6 +86,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TSendJournalForm);
+  RegisterClass(TSaleJournalForm);
 
 end.

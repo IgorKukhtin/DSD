@@ -18,6 +18,7 @@ type
     procedure MovementIncomeTest;
     procedure MovementProductionUnionTest;
     procedure MovementSendTest;
+    procedure MovementSaleTest;
   end;
 
   TMovementIncomeTest = class(TObjectTest)
@@ -56,6 +57,20 @@ type
              OperDatePartner: TDateTime; PriceWithVAT: Boolean;
              VATPercent, ChangePercent: double;
              FromId, ToId, CarId, PersonalDriverId, RouteId, RouteSortingId: Integer
+             ): integer;
+    constructor Create; override;
+  end;
+
+  TMovementSaleTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  protected
+    procedure SetDataSetParam; override;
+  public
+    function InsertUpdateMovementSale(Id: Integer; InvNumber: String; OperDate: TDateTime;
+             OperDatePartner: TDateTime; PriceWithVAT: Boolean;
+             VATPercent, ChangePercent: double;
+             FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId, RouteId, RouteSortingId: Integer
              ): integer;
     constructor Create; override;
   end;
@@ -121,6 +136,22 @@ var
 begin
   MovementSend := TMovementSendTest.Create;
   Id := MovementSend.InsertDefault;
+  // создание документа
+  try
+  // редактирование
+  finally
+    // удаление
+    DeleteMovement(Id);
+  end;
+end;
+
+procedure TdbMovementTest.MovementSaleTest;
+var
+  MovementSale: TMovementSaleTest;
+  Id: Integer;
+begin
+  MovementSale := TMovementSaleTest.Create;
+  Id := MovementSale.InsertDefault;
   // создание документа
   try
   // редактирование
@@ -251,7 +282,7 @@ begin
 end;
 
 
-{
+
 { TMovementSend }
 
 constructor TMovementSendTest.Create;
@@ -328,6 +359,85 @@ begin
   FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
 end;
 
+{ TMovementSale }
+constructor TMovementSaleTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Movement_Sale';
+  spSelect := 'gpSelect_Movement_Sale';
+  spGet := 'gpGet_Movement_Sale';
+end;
+
+function TMovementSaleTest.InsertDefault: integer;
+var Id: Integer;
+    InvNumber: String;
+    OperDate: TDateTime;
+    OperDatePartner: TDateTime;
+    PriceWithVAT: Boolean;
+    VATPercent, ChangePercent: double;
+    FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId, RouteId, RouteSortingId: Integer;
+begin
+  Id:=0;
+  InvNumber:='1';
+  OperDate:= Date;
+  OperDatePartner:= Date;
+
+  PriceWithVAT:=true;
+  VATPercent:=20;
+  ChangePercent:=-10;
+
+  FromId := TPartnerTest.Create.GetDefault;
+  ToId := TUnit.Create.GetDefault;
+  PaidKindId:=1;
+  ContractId:=TContractTest.Create.GetDefault;
+  CarId:=0;
+  PersonalDriverId:=0;
+  RouteId:=0;
+  RouteSortingId:=0;
+  //
+  result := InsertUpdateMovementSale(Id, InvNumber, OperDate,
+             OperDatePartner, PriceWithVAT,
+             VATPercent, ChangePercent,
+             FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId, RouteId, RouteSortingId);
+
+end;
+
+function TMovementSaleTest.InsertUpdateMovementSale(Id: Integer; InvNumber: String; OperDate: TDateTime;
+             OperDatePartner: TDateTime; PriceWithVAT: Boolean;
+             VATPercent, ChangePercent: double;
+             FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId, RouteId, RouteSortingId: Integer):Integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
+  FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
+
+  FParams.AddParam('inOperDatePartner', ftDateTime, ptInput, OperDatePartner);
+
+  FParams.AddParam('inPriceWithVAT', ftBoolean, ptInput, PriceWithVAT);
+  FParams.AddParam('inVATPercent', ftFloat, ptInput, VATPercent);
+  FParams.AddParam('inChangePercent', ftFloat, ptInput, ChangePercent);
+
+  FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
+  FParams.AddParam('inToId', ftInteger, ptInput, ToId);
+
+  FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
+  FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
+
+  FParams.AddParam('inCarId', ftInteger, ptInput, CarId);
+  FParams.AddParam('inPersonalDriverId', ftInteger, ptInput, PersonalDriverId);
+  FParams.AddParam('inRouteId', ftInteger, ptInput, RouteId);
+  FParams.AddParam('inRouteSortingId', ftInteger, ptInput, RouteSortingId);
+
+  result := InsertUpdate(FParams);
+end;
+
+procedure TMovementSaleTest.SetDataSetParam;
+begin
+  inherited;
+  FParams.AddParam('inStartDate', ftDateTime, ptInput, Date);
+  FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
+end;
 
 
 initialization

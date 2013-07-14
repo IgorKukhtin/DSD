@@ -112,6 +112,8 @@ type
     bbMember: TdxBarButton;
     actSend: TdsdOpenForm;
     bbSend: TdxBarButton;
+    actSale: TdsdOpenForm;
+    bbSale: TdxBarButton;
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }

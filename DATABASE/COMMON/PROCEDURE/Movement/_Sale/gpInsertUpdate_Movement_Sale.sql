@@ -14,9 +14,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
     IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки 
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
-    IN inCarId               Integer   , -- Автомобили
     IN inPaidKindId          Integer   , -- Виды форм оплаты 
     IN inContractId          Integer   , -- Договора
+    IN inCarId               Integer   , -- Автомобили
     IN inPersonalDriverId    Integer   , -- Сотрудник (водитель)
     IN inRouteId             Integer   , -- Маршрут
     IN inRouteSortingId      Integer   , -- Сортировки маршрутов

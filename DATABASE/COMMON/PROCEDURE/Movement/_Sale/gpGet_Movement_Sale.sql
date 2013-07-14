@@ -12,10 +12,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
-             , CarId Integer, CarName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar
-             , PersonalDriverId Integer, PersonalDriverName TVarChar
+             , CarId Integer, CarName TVarChar, PersonalDriverId Integer, PersonalDriverName TVarChar
              , RouteId Integer, RouteName TVarChar, RouteSortingId Integer, RouteSortingName TVarChar
              ) 
 AS
@@ -50,14 +49,14 @@ BEGIN
            , CAST (0 as Integer)    AS ToId
            , CAST ('' as TVarChar)  AS ToName
 
-           , CAST (0 as Integer)    AS CarId
-           , CAST ('' as TVarChar)  AS CarName
-       
            , CAST (0 as Integer)    AS PaidKindId
            , CAST ('' as TVarChar)  AS PaidKindName
 
            , CAST (0 as Integer)    AS ContractId
            , CAST ('' as TVarChar)  AS ContractName
+
+           , CAST (0 as Integer)    AS CarId
+           , CAST ('' as TVarChar)  AS CarName
             
            , CAST (0 as Integer)    AS PersonalDriverId
            , CAST ('' as TVarChar)  AS PersonalDriverName
@@ -95,15 +94,15 @@ BEGIN
            , Object_To.Id                      AS ToId
            , Object_To.ValueData               AS ToName
 
-           , Object_Car.Id                     AS CarId
-           , Object_Car.ValueData              AS CarName
-
            , Object_PaidKind.Id                AS PaidKindId
            , Object_PaidKind.ValueData         AS PaidKindName
 
            , Object_Contract.Id                AS ContractId
            , Object_Contract.ValueData         AS ContractName
 
+           , Object_Car.Id                     AS CarId
+           , Object_Car.ValueData              AS CarName
+           
            , Object_PersonalDriver.Id          AS PersonalDriverId
            , Object_PersonalDriver.ValueData   AS PersonalDriverName
            

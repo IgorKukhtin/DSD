@@ -1,5 +1,5 @@
-inherited SendForm: TSendForm
-  Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+inherited SaleForm: TSaleForm
+  Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103
   ClientHeight = 396
   ClientWidth = 1028
   KeyPreview = True
@@ -392,7 +392,7 @@ inherited SendForm: TSendForm
     Top = 256
   end
   object spSelectMovementItem: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_Send'
+    StoredProcName = 'gpSelect_MovementItem_Sale'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -604,7 +604,7 @@ inherited SendForm: TSendForm
     Top = 56
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Send'
+    StoredProcName = 'gpGet_Movement_Sale'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -662,8 +662,8 @@ inherited SendForm: TSendForm
         ParamType = ptOutput
         Value = ''
       end>
-    Left = 136
-    Top = 72
+    Left = 144
+    Top = 64
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -704,7 +704,7 @@ inherited SendForm: TSendForm
     Top = 224
   end
   object spInsertUpdateMovementItem: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Send'
+    StoredProcName = 'gpInsertUpdate_MovementItem_Sale'
     DataSets = <>
     OutputType = otResult
     Params = <

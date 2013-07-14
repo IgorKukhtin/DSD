@@ -125,7 +125,9 @@ uses
   Personal in '..\..\Forms\Personal.pas' {PersonalForm},
   PersonalEdit in '..\..\Forms\PersonalEdit.pas' {PersonalEditForm},
   SendJournal in '..\..\Forms\SendJournal.pas' {SendJournalForm},
-  Send in '..\..\Forms\Send.pas' {SendForm};
+  Send in '..\..\Forms\Send.pas' {SendForm},
+  SaleJournal in '..\..\Forms\SaleJournal.pas' {SaleJournalForm},
+  Sale in '..\..\Forms\Sale.pas' {SaleForm};
 
 {$R *.RES}
 

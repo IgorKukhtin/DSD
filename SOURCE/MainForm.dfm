@@ -87,6 +87,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbSend'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSale'
         end>
     end
     object bbGuides: TdxBarSubItem
@@ -245,6 +249,10 @@ object MainForm: TMainForm
     end
     object bbSend: TdxBarButton
       Action = actSend
+      Category = 0
+    end
+    object bbSale: TdxBarButton
+      Action = actSale
       Category = 0
     end
     object bbPartner: TdxBarButton
@@ -777,6 +785,13 @@ object MainForm: TMainForm
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
       FormName = 'TSendJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actSale: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103
+      FormName = 'TSaleJournalForm'
       GuiParams = <>
       isShowModal = False
     end

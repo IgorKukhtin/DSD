@@ -26,11 +26,11 @@ BEGIN
        SELECT
              CAST (0 as Integer)    AS Id
            , CAST (0 as Integer)    AS InvNumber
-           , cast(GETDATE() as TDateTime) AS OperDate
+           , CAST (' ' as TDateTime) AS OperDate
            , CAST (0 as Integer)    AS StatusCode
-           , CAST ('' as TVarChar)  AS StatusName
+           , CAST (' ' as TVarChar)  AS StatusName
 
-           , CAST ('' as TDateTime) AS OperDatePartner
+           , CAST (' ' as TDateTime) AS OperDatePartner
 
            , CAST (NULL AS Boolean) AS PriceWithVAT
            , CAST ('' as TVarChar)  AS VATPercent

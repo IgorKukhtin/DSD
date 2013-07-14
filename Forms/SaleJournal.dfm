@@ -1,4 +1,4 @@
-inherited SendJournalForm: TSendJournalForm
+inherited SaleJournalForm: TSaleJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
   ClientHeight = 427
   ClientWidth = 1240
@@ -131,6 +131,15 @@ inherited SendJournalForm: TSendJournalForm
         Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSummPVAT'
         Width = 70
+      end
+      object colPaidKindName: TcxGridDBColumn
+        Caption = #1042#1080#1076
+        DataBinding.FieldName = 'PaidKindName'
+        Width = 30
+      end
+      object colContractName: TcxGridDBColumn
+        Caption = #1044#1086#1075#1086#1074#1086#1088
+        DataBinding.FieldName = 'ContractName'
       end
       object colCarName: TcxGridDBColumn
         Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
@@ -330,7 +339,7 @@ inherited SendJournalForm: TSendJournalForm
       Category = 'DSDLib'
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
-      FormName = 'TSendForm'
+      FormName = 'TSaleForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -346,7 +355,7 @@ inherited SendJournalForm: TSendJournalForm
       Category = 'DSDLib'
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      FormName = 'TSendForm'
+      FormName = 'TSaleForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -401,7 +410,7 @@ inherited SendJournalForm: TSendJournalForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Send'
+    StoredProcName = 'gpSelect_Movement_Sale'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -422,11 +431,11 @@ inherited SendJournalForm: TSendJournalForm
         ParamType = ptInput
         Value = '01.05.2014'
       end>
-    Left = 24
+    Left = 128
     Top = 176
   end
   object spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_Send'
+    StoredProcName = 'gpComplete_Movement_Sale'
     DataSets = <>
     OutputType = otResult
     Params = <
