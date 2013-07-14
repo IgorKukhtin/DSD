@@ -19,6 +19,7 @@ type
     procedure MovementProductionUnionTest;
     procedure MovementSendTest;
     procedure MovementSaleTest;
+    procedure MovementReturnOutTest;
   end;
 
   TMovementIncomeTest = class(TObjectTest)
@@ -71,6 +72,20 @@ type
              OperDatePartner: TDateTime; PriceWithVAT: Boolean;
              VATPercent, ChangePercent: double;
              FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId, RouteId, RouteSortingId: Integer
+             ): integer;
+    constructor Create; override;
+  end;
+
+  TMovementReturnOutTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  protected
+    procedure SetDataSetParam; override;
+  public
+    function InsertUpdateMovementReturnOut(Id: Integer; InvNumber: String; OperDate: TDateTime;
+             OperDatePartner: TDateTime; PriceWithVAT: Boolean;
+             VATPercent, ChangePercent: double;
+             FromId, ToId, PaidKindId, ContractId: Integer
              ): integer;
     constructor Create; override;
   end;
@@ -152,6 +167,22 @@ var
 begin
   MovementSale := TMovementSaleTest.Create;
   Id := MovementSale.InsertDefault;
+  // создание документа
+  try
+  // редактирование
+  finally
+    // удаление
+    DeleteMovement(Id);
+  end;
+end;
+
+procedure TdbMovementTest.MovementReturnOutTest;
+var
+  MovementReturnOut: TMovementReturnOutTest;
+  Id: Integer;
+begin
+  MovementReturnOut := TMovementReturnOutTest.Create;
+  Id := MovementReturnOut.InsertDefault;
   // создание документа
   try
   // редактирование
@@ -438,6 +469,78 @@ begin
   FParams.AddParam('inStartDate', ftDateTime, ptInput, Date);
   FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
 end;
+
+{ TMovementReturnOut }
+
+constructor TMovementReturnOutTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Movement_ReturnOut';
+  spSelect := 'gpSelect_Movement_ReturnOut';
+  spGet := 'gpGet_Movement_ReturnOut';
+end;
+
+function TMovementReturnOutTest.InsertDefault: integer;
+var Id: Integer;
+    InvNumber: String;
+    OperDate: TDateTime;
+    OperDatePartner: TDateTime;
+    PriceWithVAT: Boolean;
+    VATPercent, ChangePercent: double;
+    FromId, ToId, PaidKindId, ContractId: Integer;
+begin
+  Id:=0;
+  InvNumber:='1';
+  OperDate:= Date;
+
+  OperDatePartner:= Date;
+
+  PriceWithVAT:=true;
+  VATPercent:=20;
+  ChangePercent:=-10;
+
+  FromId := TPartnerTest.Create.GetDefault;
+  ToId := TUnit.Create.GetDefault;
+  PaidKindId:=0;
+  ContractId:=0;
+  //
+  result := InsertUpdateMovementReturnOut(Id, InvNumber, OperDate,
+             OperDatePartner, PriceWithVAT,
+             VATPercent, ChangePercent,
+             FromId, ToId, PaidKindId, ContractId);
+end;
+
+function TMovementReturnOutTest.InsertUpdateMovementReturnOut(Id: Integer; InvNumber: String; OperDate: TDateTime;
+             OperDatePartner: TDateTime; PriceWithVAT: Boolean;
+             VATPercent, ChangePercent: double;
+             FromId, ToId, PaidKindId, ContractId: Integer):Integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
+  FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
+
+  FParams.AddParam('inOperDatePartner', ftDateTime, ptInput, OperDatePartner);
+
+  FParams.AddParam('inPriceWithVAT', ftBoolean, ptInput, PriceWithVAT);
+  FParams.AddParam('inVATPercent', ftFloat, ptInput, VATPercent);
+  FParams.AddParam('inChangePercent', ftFloat, ptInput, ChangePercent);
+
+  FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
+  FParams.AddParam('inToId', ftInteger, ptInput, ToId);
+  FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
+  FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
+
+  result := InsertUpdate(FParams);
+end;
+
+procedure TMovementReturnOutTest.SetDataSetParam;
+begin
+  inherited;
+  FParams.AddParam('inStartDate', ftDateTime, ptInput, Date);
+  FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
+end;
+
 
 
 initialization

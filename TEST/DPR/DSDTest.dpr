@@ -127,7 +127,9 @@ uses
   SendJournal in '..\..\Forms\SendJournal.pas' {SendJournalForm},
   Send in '..\..\Forms\Send.pas' {SendForm},
   SaleJournal in '..\..\Forms\SaleJournal.pas' {SaleJournalForm},
-  Sale in '..\..\Forms\Sale.pas' {SaleForm};
+  Sale in '..\..\Forms\Sale.pas' {SaleForm},
+  ReturnOutJournal in '..\..\Forms\ReturnOutJournal.pas' {ReturnOutJournalForm},
+  ReturnOut in '..\..\Forms\ReturnOut.pas' {ReturnOutForm};
 
 {$R *.RES}
 

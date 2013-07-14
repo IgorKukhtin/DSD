@@ -80,6 +80,10 @@ begin
   ExecFile(ProcedurePath + 'MovementItem\_Sale\gpInsertUpdate_MovementItem_Sale.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItem\_Sale\gpSelect_MovementItem_Sale.sql', ZQuery);
 
+  ExecFile(ProcedurePath + 'MovementItem\_ReturnOut\gpInsertUpdate_MovementItem_ReturnOut.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\_ReturnOut\gpSelect_MovementItem_ReturnOut.sql', ZQuery);
+
+
 end;
 
 procedure TdbProcedureTest.CreateMovementProcedure;
@@ -108,6 +112,10 @@ begin
   ExecFile(ProcedurePath + 'Movement\_Sale\gpInsertUpdate_Movement_Sale.sql', ZQuery);
   ExecFile(ProcedurePath + 'Movement\_Sale\gpGet_Movement_Sale.sql', ZQuery);
   ExecFile(ProcedurePath + 'Movement\_Sale\gpSelect_Movement_Sale.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'Movement\_ReturnOut\gpInsertUpdate_Movement_ReturnOut.sql', ZQuery);
+  ExecFile(ProcedurePath + 'Movement\_ReturnOut\gpGet_Movement_ReturnOut.sql', ZQuery);
+  ExecFile(ProcedurePath + 'Movement\_ReturnOut\gpSelect_Movement_ReturnOut.sql', ZQuery);
 end;
 
 procedure TdbProcedureTest.CreateObjectProcedure;

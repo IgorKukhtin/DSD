@@ -1,10 +1,10 @@
-п»ї-- Function: gpGet_Movement_Income()
+-- Function: gpGet_Movement_Send()
 
---DROP FUNCTION gpGet_Movement_Income();
+-- DROP FUNCTION gpGet_Movement_Send (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Send(
-    IN inId          Integer,       -- РєР»СЋС‡ РѕР±СЉРµРєС‚Р° <Р”РѕРєСѓРјРµРЅС‚ РџРµСЂРµРјРµС‰РµРЅРёРµ>
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inMovementId        Integer  , -- ключ Документа
+    IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime
@@ -14,56 +14,15 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , CarId Integer, CarName TVarChar, PersonalDriverId Integer, PersonalDriverName TVarChar
              , RouteId Integer, RouteName TVarChar, RouteSortingId Integer, RouteSortingName TVarChar
-             ) 
+              )
 AS
 $BODY$
 BEGIN
 
---   PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Movement_Send());
-   IF COALESCE (inId, 0) = 0
-   THEN
-      RETURN QUERY
-       SELECT
-             CAST (0 as Integer)    AS Id
-           , CAST (0 as Integer)    AS InvNumber
-           , CAST (' ' as TDateTime) AS OperDate
-           , CAST (0 as Integer)    AS StatusCode
-           , CAST (' ' as TVarChar)  AS StatusName
+     -- проверка прав пользователя на вызов процедуры
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Send());
 
-           , CAST (' ' as TDateTime) AS OperDatePartner
-
-           , CAST (NULL AS Boolean) AS PriceWithVAT
-           , CAST ('' as TVarChar)  AS VATPercent
-           , CAST ('' as TVarChar)  AS ChangePercent
-
-           , CAST ('' as TVarChar)  AS TotalCountKg
-           , CAST ('' as TVarChar)  AS TotalCountSh
-           , CAST ('' as TVarChar)  AS TotalCountTare
-           , CAST ('' as TVarChar)  AS TotalCount
-          
-           , CAST ('' as TVarChar)  AS TotalSummMVAT
-           , CAST ('' as TVarChar)  AS TotalSummPVAT
-           , CAST ('' as TVarChar)  AS TotalSumm
-
-           , CAST (0 as Integer)    AS FromId
-           , CAST ('' as TVarChar)  AS FromName
-           , CAST (0 as Integer)    AS ToId
-           , CAST ('' as TVarChar)  AS ToName
-
-           , CAST (0 as Integer)    AS CarId
-           , CAST ('' as TVarChar)  AS CarName
-           , CAST (0 as Integer)    AS PersonalDriverId
-           , CAST ('' as TVarChar)  AS PersonalDriverName
-           
-           , CAST (0 as Integer)    AS RouteId
-           , CAST ('' as TVarChar)  AS RouteName
-           , CAST (0 as Integer)    AS RouteSortingId
-           , CAST ('' as TVarChar)  AS RouteSortingName   
-                   
-       FROM Movement
-       WHERE Movement.DescId = zc_Movement_Send();
-   ELSE
-     RETURN QUERY
+     RETURN QUERY 
        SELECT
              Movement.Id
            , Movement.InvNumber
@@ -173,26 +132,24 @@ BEGIN
                                          ON MovementLinkObject_RouteSorting.MovementId = Movement.Id
                                         AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
             LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
-
-        WHERE Movement.Id =  inMovementId
-          AND Movement.DescId = zc_Movement_Send();
-   END IF;      
-   
-   
+       WHERE Movement.Id =  inMovementId
+         AND Movement.DescId = zc_Movement_Send();
+  
 END;
 $BODY$
-
 LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpGet_Movement_Send (Integer, TVarChar) OWNER TO postgres;
 
 
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
                
- 12.07.13         *
+ 09.07.13                                        * Красота
+ 08.07.13                                        * zc_MovementFloat_ChangePercent
+ 30.06.13                                        *
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpGet_Movement_Send (inMovementId:= 1, inSession:= '2')

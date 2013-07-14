@@ -114,6 +114,12 @@ type
     bbSend: TdxBarButton;
     actSale: TdsdOpenForm;
     bbSale: TdxBarButton;
+    actReturnOut: TdsdOpenForm;
+    actReturnIn: TdsdOpenForm;
+    actLoss: TdsdOpenForm;
+    bbLoss: TdxBarButton;
+    bbReturnIn: TdxBarButton;
+    bbReturnOut: TdxBarButton;
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }

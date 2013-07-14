@@ -86,11 +86,23 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbReturnOut'
+        end
+        item
+          Visible = True
           ItemName = 'bbSend'
         end
         item
           Visible = True
           ItemName = 'bbSale'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReturnIn'
+        end
+        item
+          Visible = True
+          ItemName = 'bbLoss'
         end>
     end
     object bbGuides: TdxBarSubItem
@@ -254,6 +266,24 @@ object MainForm: TMainForm
     object bbSale: TdxBarButton
       Action = actSale
       Category = 0
+    end
+    object bbReturnOut: TdxBarButton
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+      Category = 0
+      Hint = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+      Visible = ivAlways
+    end
+    object bbReturnIn: TdxBarButton
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+      Category = 0
+      Hint = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+      Visible = ivAlways
+    end
+    object bbLoss: TdxBarButton
+      Caption = #1057#1087#1080#1089#1072#1085#1080#1077
+      Category = 0
+      Hint = #1057#1087#1080#1089#1072#1085#1080#1077
+      Visible = ivAlways
     end
     object bbPartner: TdxBarButton
       Action = actPartner
@@ -791,6 +821,27 @@ object MainForm: TMainForm
     object actSale: TdsdOpenForm
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103
+      FormName = 'TSaleJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReturnOut: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+      FormName = 'TSaleJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReturnIn: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+      FormName = 'TSaleJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actLoss: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      Caption = #1057#1087#1080#1089#1072#1085#1080#1077
       FormName = 'TSaleJournalForm'
       GuiParams = <>
       isShowModal = False

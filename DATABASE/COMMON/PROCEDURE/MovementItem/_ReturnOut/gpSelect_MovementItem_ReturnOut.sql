@@ -1,9 +1,9 @@
--- Function: gpSelect_MovementItem_Sale()
+-- Function: gpSelect_MovementItem_ReturnOut()
 
--- DROP FUNCTION gpSelect_MovementItem_Sale (Integer, Boolean, TVarChar);
+-- DROP FUNCTION gpSelect_MovementItem_ReturnOut (Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Sale(
-    IN inMovementId  Integer      , -- ключ Документа Продажа
+CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ReturnOut(
+    IN inMovementId  Integer      , -- ключ Документа
     IN inShowAll     Boolean      , -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
@@ -11,15 +11,15 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , Price TFloat, CountForPrice TFloat, HeadCount TFloat
              , PartionGoods TVarChar, GoodsKindName  TVarChar
              , AmountSumm TFloat, isErased Boolean
-              )
+             )
 AS
 $BODY$
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Sale());
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_ReturnOut());
 
-     inShowAll:= TRUE;
+     -- inShowAll:= TRUE;
 
      IF inShowAll THEN 
 
@@ -29,7 +29,6 @@ BEGIN
            , Object_Goods.Id          AS GoodsId
            , Object_Goods.ObjectCode  AS GoodsCode
            , Object_Goods.ValueData   AS GoodsName
-
            , CAST (NULL AS TFloat) AS Amount
            , CAST (NULL AS TFloat) AS AmountPartner
 
@@ -72,6 +71,7 @@ BEGIN
            , MIFloat_Price.ValueData AS Price
            , MIFloat_CountForPrice.ValueData AS CountForPrice
 
+           , MIFloat_LiveWeight.ValueData AS LiveWeight
            , MIFloat_HeadCount.ValueData AS HeadCount
 
            , MIString_PartionGoods.ValueData AS PartionGoods
@@ -79,7 +79,7 @@ BEGIN
            , Object_GoodsKind.ValueData AS GoodsKindName
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                           THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
+                           THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0) ) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
                         ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat) AS AmountSumm
            , MovementItem.isErased
@@ -111,6 +111,7 @@ BEGIN
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
 
+
        WHERE MovementItem.MovementId = inMovementId
          AND MovementItem.DescId =  zc_MI_Master();
 
@@ -133,6 +134,7 @@ BEGIN
            , MIString_PartionGoods.ValueData AS PartionGoods
 
            , Object_GoodsKind.ValueData AS GoodsKindName
+           , Object_Asset.ValueData AS AssetKindName
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                            THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
@@ -150,7 +152,6 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
-         
             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
@@ -176,17 +177,17 @@ BEGIN
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_Sale (Integer, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_MovementItem_ReturnOut (Integer, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
                
- 13.07.13         *
+ 14.07.13         *
 
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_Sale (inMovementId:= 25173, inShowAll:= TRUE, inSession:= '2')
--- SELECT * FROM gpSelect_MovementItem_Sale (inMovementId:= 25173, inShowAll:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_ReturnOut (inMovementId:= 25173, inShowAll:= TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_ReturnOut (inMovementId:= 25173, inShowAll:= FALSE, inSession:= '2')
