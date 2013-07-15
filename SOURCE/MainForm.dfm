@@ -268,22 +268,16 @@ object MainForm: TMainForm
       Category = 0
     end
     object bbReturnOut: TdxBarButton
-      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+      Action = actReturnOut
       Category = 0
-      Hint = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
-      Visible = ivAlways
     end
     object bbReturnIn: TdxBarButton
-      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+      Action = actReturnIn
       Category = 0
-      Hint = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
-      Visible = ivAlways
     end
     object bbLoss: TdxBarButton
-      Caption = #1057#1087#1080#1089#1072#1085#1080#1077
+      Action = actLoss
       Category = 0
-      Hint = #1057#1087#1080#1089#1072#1085#1080#1077
-      Visible = ivAlways
     end
     object bbPartner: TdxBarButton
       Action = actPartner
@@ -828,21 +822,21 @@ object MainForm: TMainForm
     object actReturnOut: TdsdOpenForm
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
-      FormName = 'TSaleJournalForm'
+      FormName = 'TReturnOutJournalForm'
       GuiParams = <>
       isShowModal = False
     end
     object actReturnIn: TdsdOpenForm
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
-      FormName = 'TSaleJournalForm'
+      FormName = 'TReturnInJournalForm'
       GuiParams = <>
       isShowModal = False
     end
     object actLoss: TdsdOpenForm
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       Caption = #1057#1087#1080#1089#1072#1085#1080#1077
-      FormName = 'TSaleJournalForm'
+      FormName = 'TLossJournalForm'
       GuiParams = <>
       isShowModal = False
     end
