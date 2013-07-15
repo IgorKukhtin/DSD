@@ -20,7 +20,7 @@ CREATE TABLE ObjectBoolean(
 /*                                  »Ì‰ÂÍÒ˚                                      */
 
 
-CREATE INDEX idx_ObjectBoolean_ObjectId_DescId_ValueData ON ObjectBoolean (ObjectId, DescId, ValueData);
+CREATE UNIQUE INDEX idx_ObjectBoolean_ObjectId_DescId_ValueData ON ObjectBoolean (ObjectId, DescId, ValueData);
 
 /*
  œ–»Ã≈◊¿Õ»ﬂ:

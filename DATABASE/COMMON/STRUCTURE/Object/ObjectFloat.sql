@@ -19,7 +19,7 @@ CREATE TABLE ObjectFloat(
 /*                                  »Ì‰ÂÍÒ˚                                      */
 
 
-CREATE INDEX idx_ObjectFloat_ObjectId_DescId_ValueData ON ObjectFloat(ObjectId, DescId, ValueData); 
+CREATE UNIQUE INDEX idx_ObjectFloat_ObjectId_DescId_ValueData ON ObjectFloat(ObjectId, DescId, ValueData); 
 
 /*
  œ–»Ã≈◊¿Õ»ﬂ:

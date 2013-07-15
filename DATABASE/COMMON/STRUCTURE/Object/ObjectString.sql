@@ -20,7 +20,7 @@ CREATE TABLE ObjectString(
 /*                                  »Ì‰ÂÍÒ˚                                      */
 
 
-CREATE INDEX idx_ObjectString_ObjectId_DescId_ValueData ON ObjectString (ObjectId, DescId, ValueData);
+CREATE UNIQUE INDEX idx_ObjectString_ObjectId_DescId ON ObjectString (ObjectId, DescId);
 
 /*
  œ–»Ã≈◊¿Õ»ﬂ:

@@ -24,7 +24,7 @@ uses
   CommonObjectProcedureTest in '..\SOURCE\Objects\CommonObjectProcedureTest.pas',
   dbObjectTest in '..\SOURCE\dbObjectTest.pas',
   UnitsTest in '..\SOURCE\Objects\All\UnitsTest.pas',
-  dbObjectCostTest in '..\SOURCE\ObjectCost\dbObjectCostTest.pas',
+  CommonMovementProcedureTest in '..\SOURCE\Movement\CommonMovementProcedureTest.pas',
   dbMovementTest in '..\SOURCE\dbMovementTest.pas',
   LoadFormTest in '..\SOURCE\LoadFormTest.pas',
   Forms,
@@ -123,7 +123,15 @@ uses
   PositionEdit in '..\..\Forms\PositionEdit.pas' {PositionEditForm},
   AssetEdit in '..\..\Forms\AssetEdit.pas' {AssetEditForm},
   Personal in '..\..\Forms\Personal.pas' {PersonalForm},
-  PersonalEdit in '..\..\Forms\PersonalEdit.pas' {PersonalEditForm};
+  PersonalEdit in '..\..\Forms\PersonalEdit.pas' {PersonalEditForm},
+  CommonContainerProcedureTest in '..\SOURCE\Container\CommonContainerProcedureTest.pas',
+  CommonMovementItemProcedureTest in '..\SOURCE\MovementItem\CommonMovementItemProcedureTest.pas',
+  CommonMovementItemContainerProcedureTest in '..\SOURCE\MovementItemContainer\CommonMovementItemContainerProcedureTest.pas',
+  CommonObjectCostProcedureTest in '..\SOURCE\ObjectCost\CommonObjectCostProcedureTest.pas',
+  CommonObjectHistoryProcedureTest in '..\SOURCE\ObjectHistory\CommonObjectHistoryProcedureTest.pas',
+  CommonProtocolProcedureTest in '..\SOURCE\Protocol\CommonProtocolProcedureTest.pas',
+  CommonFunctionTest in '..\SOURCE\Function\CommonFunctionTest.pas',
+  CommonReportsProcedureTest in '..\SOURCE\Reports\CommonReportsProcedureTest.pas';
 
 {$R *.RES}
 

@@ -37,7 +37,7 @@ ALTER TABLE MovementItemLinkObject
 
 -- DROP INDEX "idx_MovementItemLinkObject_MovementItemId_DescId_ObjectId";
 
-CREATE INDEX idx_MovementItemLinkObject_MovementItemId_DescId_ObjectId ON MovementItemLinkObject(MovementItemId, DescId, ObjectId);
+CREATE UNIQUE INDEX idx_MovementItemLinkObject_MovementItemId_DescId_ObjectId ON MovementItemLinkObject(MovementItemId, DescId, ObjectId);
 
 /*
  ПРИМЕЧАНИЯ:

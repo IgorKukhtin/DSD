@@ -19,7 +19,7 @@ CREATE TABLE ObjectHistoryDate(
 /*                                  »Ì‰ÂÍÒ˚                                      */
 
 
-CREATE INDEX idx_ObjectHistoryDate_ObjectHistoryId_DescId_ValueData ON ObjectHistoryDate(ObjectHistoryId, DescId, ValueData); 
+CREATE UNIQUE INDEX idx_ObjectHistoryDate_ObjectHistoryId_DescId_ValueData ON ObjectHistoryDate(ObjectHistoryId, DescId, ValueData); 
 
 /*
  œ–»Ã≈◊¿Õ»ﬂ:

@@ -20,7 +20,7 @@ CREATE TABLE ContainerLinkObject(
 /*-------------------------------------------------------------------------------*/
 /*                                  »Ì‰ÂÍÒ˚                                      */
 
-CREATE INDEX idx_ContainerLinkObject_ContainerId_DescId_ObjectId ON ContainerLinkObject(ContainerId, DescId, ObjectId);
+CREATE UNIQUE INDEX idx_ContainerLinkObject_ContainerId_DescId_ObjectId ON ContainerLinkObject(ContainerId, DescId, ObjectId);
 
 /*
  œ–»Ã≈◊¿Õ»ﬂ:

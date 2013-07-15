@@ -20,7 +20,7 @@ CREATE TABLE MovementString(
 /*                                  »Ì‰ÂÍÒ˚                                      */
 
 
-CREATE INDEX idx_MovementString_MovementId_DescId_ValueData ON MovementString (MovementId, DescId, ValueData);
+CREATE UNIQUE INDEX idx_MovementString_MovementId_DescId ON MovementString (MovementId, DescId);
 
 /*
  œ–»Ã≈◊¿Õ»ﬂ:

@@ -19,7 +19,7 @@ CREATE TABLE MovementDate(
 /*                                  »Ì‰ÂÍÒ˚                                      */
 
 
-CREATE INDEX idx_MovementDate_MovementId_DescId_ValueData ON MovementDate(MovementId, DescId, ValueData); 
+CREATE UNIQUE INDEX idx_MovementDate_MovementId_DescId_ValueData ON MovementDate(MovementId, DescId, ValueData); 
 
 /*
  œ–»Ã≈◊¿Õ»ﬂ:

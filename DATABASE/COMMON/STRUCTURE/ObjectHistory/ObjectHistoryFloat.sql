@@ -19,7 +19,7 @@ CREATE TABLE ObjectHistoryFloat(
 /*                                  »Ì‰ÂÍÒ˚                                      */
 
 
-CREATE INDEX idx_ObjectHistoryFloat_ObjectHistoryId_DescId_ValueData ON ObjectHistoryFloat(ObjectHistoryId, DescId, ValueData); 
+CREATE UNIQUE INDEX idx_ObjectHistoryFloat_ObjectHistoryId_DescId_ValueData ON ObjectHistoryFloat(ObjectHistoryId, DescId, ValueData); 
 
 /*
  œ–»Ã≈◊¿Õ»ﬂ:

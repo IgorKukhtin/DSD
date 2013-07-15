@@ -25,7 +25,7 @@ CREATE TABLE ObjectHistory(
 /*                                  Индексы                                      */
 
 
-CREATE INDEX idx_ObjectHistory_ObjectId_DescId_StartDate_EndDate ON ObjectHistory(ObjectId, DescId, StartDate, EndDate);
+CREATE UNIQUE INDEX idx_ObjectHistory_ObjectId_DescId_StartDate_EndDate ON ObjectHistory(ObjectId, DescId, StartDate, EndDate);
 
 /*-------------------------------------------------------------------------------*/
 

@@ -19,7 +19,7 @@ uses UtilConst, TestFramework;
 
 procedure TCommonObjectProcedure.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'OBJECTS\Common';
+  ScriptDirectory := ProcedurePath + 'OBJECTS\Common\';
   inherited;
 end;
 

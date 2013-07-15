@@ -5,15 +5,13 @@ uses TestFramework, dbTest;
 
 type
   TdbProcedureTest = class (TdbTest)
-  published
-    procedure CreateFunction;
-    procedure CreateContainerProcedure;
+  private
     procedure CreateHistoryProcedure;
+  published
     procedure CreateMovementProcedure;
     procedure CreateMovementItemProcedure;
     procedure CreateMovementItemContainerProcedure;
     procedure CreateObjectProcedure;
-    procedure CreateProtocolProcedure;
     procedure CreateReportProcedure;
   end;
 
@@ -28,46 +26,18 @@ const
 
 { TdbProcedureTest }
 
-procedure TdbProcedureTest.CreateContainerProcedure;
-begin
-  ExecFile(ProcedurePath + 'Container\Get\lpGet_Container1.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Container\Get\lpGet_Container2.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Container\Get\lpGet_Container3.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Container\Get\lpGet_Container4.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Container\Get\lpInsertFind_Container.sql', ZQuery);
-end;
-
-procedure TdbProcedureTest.CreateFunction;
-begin
-  ExecFile(FunctionPath + 'ConstantFunction.sql', ZQuery);
-end;
-
 procedure TdbProcedureTest.CreateHistoryProcedure;
 begin
-  ExecFile(ProcedurePath + 'ObjectHistory\InsertUpdate\lpInsertUpdate_ObjectHistory.sql', ZQuery);
-  ExecFile(ProcedurePath + 'ObjectHistory\InsertUpdate\lpInsertUpdate_ObjectHistoryFloat.sql', ZQuery);
-  ExecFile(ProcedurePath + 'ObjectHistory\Delete\lpDelete_ObjectHistory.sql', ZQuery);
   ExecFile(ProcedurePath + 'ObjectHistory\_PriceListItem\gpInsertUpdate_ObjectHistory_PriceListItem.sql', ZQuery);
 end;
 
 procedure TdbProcedureTest.CreateMovementItemContainerProcedure;
 begin
-  ExecFile(ProcedurePath + 'MovementItemContainer\InsertUpdate\lpInsertUpdate_MovementItemContainer.sql', ZQuery);
-  ExecFile(ProcedurePath + 'MovementItemContainer\Delete\lpDelete_MovementItemContainer.sql', ZQuery);
-  ExecFile(ProcedurePath + 'MovementItemContainer\gpUnComplete_Movement.sql', ZQuery);
-  ExecFile(ProcedurePath + 'MovementItemContainer\gpSelect_MovementItemContainer_Movement.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItemContainer\_Income\gpComplete_Movement_Income.sql', ZQuery);
 end;
 
 procedure TdbProcedureTest.CreateMovementItemProcedure;
 begin
-  ExecFile(ProcedurePath + 'MovementItem\InsertUpdate\lpInsertUpdate_MovementItem.sql', ZQuery);
-  ExecFile(ProcedurePath + 'MovementItem\InsertUpdate\lpInsertUpdate_MovementItemLinkObject.sql', ZQuery);
-  ExecFile(ProcedurePath + 'MovementItem\InsertUpdate\lpInsertUpdate_MovementItemFloat.sql', ZQuery);
-  ExecFile(ProcedurePath + 'MovementItem\InsertUpdate\lpInsertUpdate_MovementItemDate.sql', ZQuery);
-  ExecFile(ProcedurePath + 'MovementItem\InsertUpdate\lpInsertUpdate_MovementItemBoolean.sql', ZQuery);
-  ExecFile(ProcedurePath + 'MovementItem\InsertUpdate\lpInsertUpdate_MovementItemString.sql', ZQuery);
-  ExecFile(ProcedurePath + 'MovementItem\Delete\lpDelete_MovementItem.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItem\_Income\gpInsertUpdate_MovementItem_Income.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItem\_Income\gpSelect_MovementItem_Income.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItem\_ProductionUnion\gpInsertUpdate_MovementItem_In.sql', ZQuery);
@@ -77,14 +47,6 @@ end;
 
 procedure TdbProcedureTest.CreateMovementProcedure;
 begin
-  ExecFile(ProcedurePath + 'Movement\InsertUpdate\lpInsertUpdate_Movement.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\InsertUpdate\lpInsertUpdate_MovementLinkObject.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\InsertUpdate\lpInsertUpdate_MovementFloat.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\InsertUpdate\lpInsertUpdate_MovementDate.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\InsertUpdate\lpInsertUpdate_MovementBoolean.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\InsertUpdate\lpInsertUpdate_MovementString.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\Delete\lpDelete_Movement.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\gpSetErased_Movement.sql', ZQuery);
   ExecFile(ProcedurePath + 'Movement\_Income\gpInsertUpdate_Movement_Income.sql', ZQuery);
   ExecFile(ProcedurePath + 'Movement\_Income\gpGet_Movement_Income.sql', ZQuery);
   ExecFile(ProcedurePath + 'Movement\_Income\gpSelect_Movement_Income.sql', ZQuery);
@@ -296,14 +258,9 @@ begin
 
 end;
 
-procedure TdbProcedureTest.CreateProtocolProcedure;
-begin
-  ExecFile(ProcedurePath + 'Protocol\lpInsert_ObjectProtocol.sql', ZQuery);
-end;
-
 procedure TdbProcedureTest.CreateReportProcedure;
 begin
-  ExecFile(ReportsPath + 'gpReport_Balance.sql', ZQuery);
+  ExecFile(ReportsPath + '_Balance\gpReport_Balance.sql', ZQuery);
 end;
 
 initialization

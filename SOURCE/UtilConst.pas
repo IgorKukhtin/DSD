@@ -14,6 +14,8 @@ var
 
   EnumPath: string = '..\DATABASE\COMMON\METADATA\Enum\';
   ProcedurePath: string = '..\DATABASE\COMMON\PROCEDURE\';
+  FunctionPath: string = '..\DATABASE\COMMON\Function\';
+  ReportsPath: string = '..\DATABASE\COMMON\Reports\';
 
   FormatSettings: TFormatSettings;
   {константы времени}

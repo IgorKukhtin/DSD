@@ -12,9 +12,11 @@ CREATE TABLE Container(
    DescId                INTEGER NOT NULL, 
    ObjectId              Integer NOT NULL, -- —чет
    Amount                TFloat  NOT NULL DEFAULT 0,
+   ParentId              Integer NULL,  
 
    CONSTRAINT fk_Container_DescId_ContainerDesc FOREIGN KEY(DescId) REFERENCES ContainerDesc(Id),
-   CONSTRAINT fk_Container_ObjectId_Object FOREIGN KEY(ObjectId) REFERENCES Object(Id)
+   CONSTRAINT fk_Container_ObjectId_Object FOREIGN KEY(ObjectId) REFERENCES Object(Id),
+   CONSTRAINT fk_Container_ParentId_Container FOREIGN KEY(ParentId) REFERENCES Container(Id)
 );
 
 
@@ -23,6 +25,7 @@ CREATE TABLE Container(
 
 
 CREATE INDEX idx_Container_DescId ON Container(DescId); 
+CREATE INDEX idx_Container_ParentId ON Container(ParentId); 
 CREATE INDEX idx_Container_ObjectId_DescId_Id ON Container(ObjectId, DescId, Id); 
 
 /*

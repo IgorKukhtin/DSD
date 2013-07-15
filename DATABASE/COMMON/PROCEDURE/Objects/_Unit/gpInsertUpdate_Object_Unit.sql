@@ -19,6 +19,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;  
    DECLARE vbOldId Integer;
+   DECLARE vbOldParentId integer;
 BEGIN
    
    -- проверка прав пользователя на вызов процедуры
@@ -38,6 +39,9 @@ BEGIN
    PERFORM lpCheck_Object_CycleLink(ioId, zc_ObjectLink_Unit_Parent(), inParentId);
 
    vbOldId := ioId;
+   
+   vbOldParentId := (SELECT ChildObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Unit_Parent() AND ObjectId = ioId);
+
    -- сохранили объект
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Unit(), vbCode_calc, inName);
    -- сохранили связь с <Подразделения>
@@ -57,6 +61,15 @@ BEGIN
    IF vbOldId <> ioId THEN
       -- Установить свойство лист\папка у себя
       PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_isLeaf(), ioId, true);
+   END IF;
+
+   -- Точно теперь inParentId стал папкой 
+   IF COALESCE(inParentId, 0) <> 0 THEN
+      PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_isLeaf(), inParentId, false);
+   END IF;
+
+   IF COALESCE(vbOldParentId, 0) <> 0 THEN
+      PERFORM lpUpdate_isLeaf(vbOldParentId, zc_ObjectLink_Unit_Parent());
    END IF;
 
    -- сохранили протокол

@@ -14,8 +14,8 @@ CREATE TABLE ObjectCostLink(
 
    CONSTRAINT pk_ObjectCostLink                    PRIMARY KEY (ObjectCostId, ObjectId, DescId, ObjectCostDescId),
    CONSTRAINT fk_ObjectCostLink_DescId             FOREIGN KEY(DescId) REFERENCES ObjectCostLinkDesc(Id),
-   CONSTRAINT fk_ObjectCostLink_ObjectCostDescId   FOREIGN KEY(ObjectCostDescId) REFERENCES ObjectCostDesc(Id),
-   CONSTRAINT fk_ObjectCostLink_ObjectId           FOREIGN KEY(ObjectId) REFERENCES Object(Id));
+   CONSTRAINT fk_ObjectCostLink_ObjectCostDescId   FOREIGN KEY(ObjectCostDescId) REFERENCES ObjectCostDesc(Id)
+);
 /*-------------------------------------------------------------------------------*/
 
 /*                                  Индексы                                      */

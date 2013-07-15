@@ -98,17 +98,19 @@ begin
 
         end;
         Check((ObjectTest.GetDataSet.RecordCount = RecordCount + 3), 'Количество записей не изменилось');
-      finally
-        ObjectTest.Delete(Id3);
+        ObjectTest.InsertUpdateUnit(Id3, -3, 'Группа 3 - тест', 0, 0, 0, 0, 0, 0);
         with ObjectTest.GetRecord(Id2) do begin
            Check(FieldByName('isLeaf').AsBoolean, 'Не правильно установлено свойство isLeaf Id = ' + IntToStr(Id2));
         end;
+      finally
+        ObjectTest.Delete(Id3);
       end;
-    finally
-      ObjectTest.Delete(Id2);
+      ObjectTest.InsertUpdateUnit(Id2, -3, 'Группа 3 - тест', 0, 0, 0, 0, 0, 0);
       with ObjectTest.GetRecord(Id) do begin
          Check(FieldByName('isLeaf').AsBoolean, 'Не правильно установлено свойство isLeaf Id = ' + IntToStr(Id));
       end;
+    finally
+      ObjectTest.Delete(Id2);
     end;
   finally
     ObjectTest.Delete(Id);

@@ -222,7 +222,3 @@ initialization
   TestFramework.RegisterTest('Документы', TdbMovementTest.Suite);
 
 end.
-
-implementation
-
-end.
