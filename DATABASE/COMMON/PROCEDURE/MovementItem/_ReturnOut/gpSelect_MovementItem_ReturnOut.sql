@@ -71,7 +71,6 @@ BEGIN
            , MIFloat_Price.ValueData AS Price
            , MIFloat_CountForPrice.ValueData AS CountForPrice
 
-           , MIFloat_LiveWeight.ValueData AS LiveWeight
            , MIFloat_HeadCount.ValueData AS HeadCount
 
            , MIString_PartionGoods.ValueData AS PartionGoods
@@ -134,7 +133,6 @@ BEGIN
            , MIString_PartionGoods.ValueData AS PartionGoods
 
            , Object_GoodsKind.ValueData AS GoodsKindName
-           , Object_Asset.ValueData AS AssetKindName
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                            THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
@@ -152,6 +150,7 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
+          
             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
