@@ -1,4 +1,4 @@
-unit SendJournal;
+unit SendPriceJournal;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
-  TSendJournalForm = class(TParentForm)
+  TSendPriceJournalForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -48,6 +48,7 @@ type
     colOperDate: TcxGridDBColumn;
     colFromName: TcxGridDBColumn;
     colToName: TcxGridDBColumn;
+    colTotalSummPVAT: TcxGridDBColumn;
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
@@ -63,7 +64,17 @@ type
     bbDelete: TdxBarButton;
     actSetErased: TdsdChangeMovementStatus;
     spMovementSetErased: TdsdStoredProc;
+    colPriceWithVAT: TcxGridDBColumn;
+    colVATPercent: TcxGridDBColumn;
+    colChangePercent: TcxGridDBColumn;
     colTotalCount: TcxGridDBColumn;
+    colTotalSummMVAT: TcxGridDBColumn;
+    colTotalSumm: TcxGridDBColumn;
+    colTotalSummVAT: TcxGridDBColumn;
+    colCarName: TcxGridDBColumn;
+    colPersonalDriverName: TcxGridDBColumn;
+    colRouteName: TcxGridDBColumn;
+    colRouteSortingName: TcxGridDBColumn;
   private
   public
   end;
@@ -73,6 +84,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TSendJournalForm);
+  RegisterClass(TSendPriceJournalForm);
 
 end.

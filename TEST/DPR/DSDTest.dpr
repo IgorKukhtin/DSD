@@ -137,7 +137,9 @@ uses
   SaleJournal in '..\..\Forms\SaleJournal.pas' {SaleJournalForm},
   Sale in '..\..\Forms\Sale.pas' {SaleForm},
   ReturnOutJournal in '..\..\Forms\ReturnOutJournal.pas' {ReturnOutJournalForm},
-  ReturnOut in '..\..\Forms\ReturnOut.pas' {ReturnOutForm};
+  ReturnOut in '..\..\Forms\ReturnOut.pas' {ReturnOutForm},
+  SendPriceJournal in '..\..\Forms\SendPriceJournal.pas' {SendPriceJournalForm},
+  SendPrice in '..\..\Forms\SendPrice.pas' {SendPriceForm};
 
 {$R *.RES}
 

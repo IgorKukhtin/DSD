@@ -1,4 +1,4 @@
-inherited SendForm: TSendForm
+inherited SendPriceForm: TSendPriceForm
   Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
   ClientHeight = 396
   ClientWidth = 1028
@@ -100,6 +100,7 @@ inherited SendForm: TSendForm
             item
               Kind = skSum
               Position = spFooter
+              Column = colAmountSumm
             end
             item
               Kind = skSum
@@ -118,6 +119,7 @@ inherited SendForm: TSendForm
             item
               Kind = skSum
               Position = spFooter
+              Column = colAmountPartner
             end
             item
               Kind = skSum
@@ -126,6 +128,7 @@ inherited SendForm: TSendForm
           DataController.Summary.FooterSummaryItems = <
             item
               Kind = skSum
+              Column = colAmountSumm
             end
             item
               Kind = skSum
@@ -140,6 +143,7 @@ inherited SendForm: TSendForm
             end
             item
               Kind = skSum
+              Column = colAmountPartner
             end
             item
               Kind = skSum
@@ -175,6 +179,29 @@ inherited SendForm: TSendForm
             DataBinding.FieldName = 'Amount'
             HeaderAlignmentHorz = taCenter
             Width = 80
+          end
+          object colAmountPartner: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1082#1086#1085#1090#1088'.'
+            DataBinding.FieldName = 'AmountPartner'
+            HeaderAlignmentHorz = taCenter
+            Width = 80
+          end
+          object colPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072
+            DataBinding.FieldName = 'Price'
+            HeaderAlignmentHorz = taCenter
+            Width = 80
+          end
+          object colCountForPrice: TcxGridDBColumn
+            Caption = #1050#1086#1083' '#1074' '#1094#1077#1085#1077
+            DataBinding.FieldName = 'CountForPrice'
+            HeaderAlignmentHorz = taCenter
+          end
+          object colAmountSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'AmountSumm'
+            HeaderAlignmentHorz = taCenter
+            Width = 91
           end
           object colHeadCount: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
@@ -365,7 +392,7 @@ inherited SendForm: TSendForm
     Top = 256
   end
   object spSelectMovementItem: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_Send'
+    StoredProcName = 'gpSelect_MovementItem_SendPrice'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -482,6 +509,22 @@ inherited SendForm: TSendForm
           'Width')
       end
       item
+        Component = colPrice
+        Properties.Strings = (
+          'SortIndex'
+          'SortOrder'
+          'Visible'
+          'Width')
+      end
+      item
+        Component = colAmountSumm
+        Properties.Strings = (
+          'SortIndex'
+          'SortOrder'
+          'Visible'
+          'Width')
+      end
+      item
         Component = Owner
         Properties.Strings = (
           'Height'
@@ -532,7 +575,7 @@ inherited SendForm: TSendForm
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       ShortCut = 16464
-      ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportName = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
     end
   end
   object DataSource: TDataSource
@@ -561,7 +604,7 @@ inherited SendForm: TSendForm
     Top = 56
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Send'
+    StoredProcName = 'gpGet_Movement_SendPrice'
     DataSets = <>
     OutputType = otResult
     Params = <

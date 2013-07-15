@@ -7,17 +7,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Send(
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
 
-    IN inOperDatePartner     TDateTime , -- Дата накладной у контрагента
-
-    IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
-    IN inVATPercent          TFloat    , -- % НДС
-    IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки 
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
-    IN inCarId               Integer   , -- Автомобили
-    IN inPersonalDriverId    Integer   , -- Сотрудник (водитель)
-    IN inRouteId             Integer   , -- Маршрут
-    IN inRouteSortingId      Integer   , -- Сортировки маршрутов
+
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
@@ -32,31 +24,10 @@ BEGIN
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Send(), inInvNumber, inOperDate, NULL);
 
-     -- сохранили свойство <Дата накладной у контрагента>
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDatePartner);
-
-     -- сохранили свойство <Цена с НДС (да/нет)>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), ioId, inPriceWithVAT);
-     -- сохранили свойство <% НДС>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, inVATPercent);
-     -- сохранили свойство <(-)% Скидки (+)% Наценки >
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
-
      -- сохранили связь с <От кого (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
      -- сохранили связь с <Кому (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
-
-     -- сохранили связь с <Автомобили>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Car(), ioId, inCarId);
-
-     -- сохранили связь с <Сотрудник (водитель)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalDriver(), ioId, inPersonalDriverId);
-
-     -- сохранили связь с <Маршруты>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Route(), ioId, inRouteId);
-     -- сохранили связь с <Сортировки маршрутов>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_RouteSorting(), ioId, inRouteSortingId);
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);

@@ -1,4 +1,4 @@
-inherited SendJournalForm: TSendJournalForm
+inherited SendPriceJournalForm: TSendPriceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
   ClientHeight = 427
   ClientWidth = 1240
@@ -96,6 +96,59 @@ inherited SendJournalForm: TSendJournalForm
       object colTotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'TotalCount'
+      end
+      object colTotalSumm: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1087#1086#1089#1090#1072#1074#1097'.'
+        DataBinding.FieldName = 'TotalSumm'
+        Width = 80
+      end
+      object colChangePercent: TcxGridDBColumn
+        Caption = '(-)% '#1057#1082', (+)% '#1053#1072#1094
+        DataBinding.FieldName = 'ChangePercent'
+        Width = 90
+      end
+      object colPriceWithVAT: TcxGridDBColumn
+        Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' '
+        DataBinding.FieldName = 'PriceWithVAT'
+      end
+      object colVATPercent: TcxGridDBColumn
+        Caption = '% '#1053#1044#1057
+        DataBinding.FieldName = 'VATPercent'
+        Width = 45
+      end
+      object colTotalSummVAT: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
+        DataBinding.FieldName = 'TotalSummVAT'
+        Width = 60
+      end
+      object colTotalSummMVAT: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
+        DataBinding.FieldName = 'TotalSummMVAT'
+        Visible = False
+        Width = 80
+      end
+      object colTotalSummPVAT: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
+        DataBinding.FieldName = 'TotalSummPVAT'
+        Width = 70
+      end
+      object colCarName: TcxGridDBColumn
+        Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
+        DataBinding.FieldName = 'CarName'
+        Width = 55
+      end
+      object colPersonalDriverName: TcxGridDBColumn
+        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1074#1086#1076#1080#1090#1077#1083#1100')'
+        DataBinding.FieldName = 'PersonalDriverName'
+        Width = 55
+      end
+      object colRouteName: TcxGridDBColumn
+        Caption = #1052#1072#1088#1096#1088#1091#1090
+        DataBinding.FieldName = 'RouteName'
+      end
+      object colRouteSortingName: TcxGridDBColumn
+        Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1080' '#1084#1072#1088#1096#1088#1091#1090#1086#1074
+        DataBinding.FieldName = 'RouteSortingName'
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -348,7 +401,7 @@ inherited SendJournalForm: TSendJournalForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Send'
+    StoredProcName = 'gpSelect_Movement_SendPrice'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -373,7 +426,7 @@ inherited SendJournalForm: TSendJournalForm
     Top = 176
   end
   object spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_Send'
+    StoredProcName = 'gpComplete_Movement_SendPrice'
     DataSets = <>
     OutputType = otResult
     Params = <

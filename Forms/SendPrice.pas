@@ -1,4 +1,4 @@
-unit Send;
+unit SendPrice;
 
 interface
 
@@ -25,7 +25,7 @@ uses
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
-  TSendForm = class(TParentForm)
+  TSendPriceForm = class(TParentForm)
     dsdFormParams: TdsdFormParams;
     spSelectMovementItem: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -58,6 +58,8 @@ type
     colCode: TcxGridDBColumn;
     colName: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
+    colPrice: TcxGridDBColumn;
+    colAmountSumm: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     spSelectMovementContainerItem: TdsdStoredProc;
     cxGridEntryDBTableView: TcxGridDBTableView;
@@ -88,6 +90,8 @@ type
     colByObjectCode: TcxGridDBColumn;
     colByObjectName: TcxGridDBColumn;
     colGoodsName: TcxGridDBColumn;
+    colAmountPartner: TcxGridDBColumn;
+    colCountForPrice: TcxGridDBColumn;
     colHeadCount: TcxGridDBColumn;
     colPartionGoods: TcxGridDBColumn;
     colGoodsKindName: TcxGridDBColumn;
@@ -102,6 +106,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TSendForm);
+  RegisterClass(TSendPriceForm);
 
 end.

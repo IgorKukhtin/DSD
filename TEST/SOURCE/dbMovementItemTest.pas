@@ -16,7 +16,7 @@ type
     procedure TearDown; override;
   published
     procedure MovementItemIncomeTest;
-    procedure MovementItemSendTest;
+    procedure MovementItemSendPriceTest;
     procedure MovementItemSaleTest;
     procedure MovementItemReturnOutTest;
     procedure MovementItemProductionUnionTest;
@@ -66,14 +66,14 @@ type
     constructor Create; override;
   end;
 
-  TMovementItemSendTest = class(TObjectTest)
+  TMovementItemSendPriceTest = class(TObjectTest)
   private
     function InsertDefault: integer; override;
   protected
     procedure SetDataSetParam; override;
     procedure Delete(Id: Integer); override;
   public
-    function InsertUpdateMovementItemSend
+    function InsertUpdateMovementItemSendPrice
       (Id, MovementId, GoodsId: Integer;
        Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
        PartionGoods:String; GoodsKindId: Integer): integer;
@@ -146,20 +146,20 @@ begin
   end;
 end;
 
-procedure TdbMovementItemTest.MovementItemSendTest;
+procedure TdbMovementItemTest.MovementItemSendPriceTest;
 var
-  MovementItemSend: TMovementItemSendTest;
+  MovementItemSendPrice: TMovementItemSendPriceTest;
   Id: Integer;
 begin
-  MovementItemSend := TMovementItemSendTest.Create;
-  Id := MovementItemSend.InsertDefault;
+  MovementItemSendPrice := TMovementItemSendPriceTest.Create;
+  Id := MovementItemSendPrice.InsertDefault;
   // создание документа
   try
   // редактирование
   finally
     // удаление
     DeleteMovementItem(Id);
-    MovementItemSend.Delete(Id);
+    MovementItemSendPrice.Delete(Id);
   end;
 end;
 
@@ -296,16 +296,16 @@ begin
   FParams.AddParam('inShowAll', ftBoolean, ptInput, true);
 end;
 
-{ TMovementSend }
-constructor TMovementItemSendTest.Create;
+{ TMovementSendPrice }
+constructor TMovementItemSendPriceTest.Create;
 begin
   inherited;
-  spInsertUpdate := 'gpInsertUpdate_MovementItem_Send';
-  spSelect := 'gpSelect_MovementItem_Send';
-  spGet := 'gpGet_MovementItem_Send';
+  spInsertUpdate := 'gpInsertUpdate_MovementItem_SendPrice';
+  spSelect := 'gpSelect_MovementItem_SendPrice';
+  spGet := 'gpGet_MovementItem_SendPrice';
 end;
 
-procedure TMovementItemSendTest.Delete(Id: Integer);
+procedure TMovementItemSendPriceTest.Delete(Id: Integer);
 begin
   with TGoodsTest.Create do
   try
@@ -315,14 +315,14 @@ begin
   end;
 end;
 
-function TMovementItemSendTest.InsertDefault: integer;
+function TMovementItemSendPriceTest.InsertDefault: integer;
 var Id, MovementId, GoodsId: Integer;
     Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
     PartionGoods:String;
     GoodsKindId: Integer;
 begin
   Id:=0;
-  MovementId:= TMovementSendTest.Create.GetDefault;
+  MovementId:= TMovementSendPriceTest.Create.GetDefault;
   GoodsId:=TGoodsTest.Create.GetDefault;
   Amount:=10;
   AmountPartner:=11;
@@ -332,12 +332,12 @@ begin
   PartionGoods:='';
   GoodsKindId:=0;
   //
-  result := InsertUpdateMovementItemSend(Id, MovementId, GoodsId,
+  result := InsertUpdateMovementItemSendPrice(Id, MovementId, GoodsId,
                               Amount, AmountPartner, Price, CountForPrice, HeadCount,
                               PartionGoods, GoodsKindId);
 end;
 
-function TMovementItemSendTest.InsertUpdateMovementItemSend
+function TMovementItemSendPriceTest.InsertUpdateMovementItemSendPrice
   (Id, MovementId, GoodsId: Integer;
        Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
        PartionGoods:String;GoodsKindId: Integer): integer;
@@ -356,10 +356,10 @@ begin
   result := InsertUpdate(FParams);
 end;
 
-procedure TMovementItemSendTest.SetDataSetParam;
+procedure TMovementItemSendPriceTest.SetDataSetParam;
 begin
   inherited;
-  FParams.AddParam('inMovementId', ftInteger, ptInput, TMovementSendTest.Create.GetDefault);
+  FParams.AddParam('inMovementId', ftInteger, ptInput, TMovementSendPriceTest.Create.GetDefault);
   FParams.AddParam('inShowAll', ftBoolean, ptInput, true);
 end;
 
@@ -503,8 +503,8 @@ end;
 constructor TMovementItemProductionUnionInTest.Create;
 begin
   inherited;
-  spInsertUpdate := 'gpInsertUpdate_MovementItem_In';
-  spSelect := 'gpSelect_MovementItem_ProductionUnion';
+  spInsertUpdate := 'gpInsertUpdate_MI_ProductionUnion_Master';
+  spSelect := 'gpSelect_MI_ProductionUnion';
   spGet := '';
 end;
 
@@ -557,8 +557,8 @@ end;
 constructor TMovementItemProductionUnionOutTest.Create;
 begin
   inherited;
-  spInsertUpdate := 'gpInsertUpdate_MovementItem_Out';
-  spSelect := 'gpSelect_MovementItem_ProductionUnion';
+  spInsertUpdate := 'gpInsertUpdate_MI_ProductionUnion_Child';
+  spSelect := 'gpSelect_MI_ProductionUnion';
   spGet := '';
 end;
 

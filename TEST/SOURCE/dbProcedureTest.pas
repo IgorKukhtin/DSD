@@ -40,12 +40,15 @@ procedure TdbProcedureTest.CreateMovementItemProcedure;
 begin
   ExecFile(ProcedurePath + 'MovementItem\_Income\gpInsertUpdate_MovementItem_Income.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItem\_Income\gpSelect_MovementItem_Income.sql', ZQuery);
-  ExecFile(ProcedurePath + 'MovementItem\_ProductionUnion\gpInsertUpdate_MovementItem_In.sql', ZQuery);
-  ExecFile(ProcedurePath + 'MovementItem\_ProductionUnion\gpInsertUpdate_MovementItem_Out.sql', ZQuery);
-  ExecFile(ProcedurePath + 'MovementItem\_ProductionUnion\gpSelect_MovementItem_ProductionUnion.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'MovementItem\_ProductionUnion\gpInsertUpdate_MI_ProductionUnion_Child.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\_ProductionUnion\gpInsertUpdate_MI_ProductionUnion_Master.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\_ProductionUnion\gpSelect_MI_ProductionUnion.sql', ZQuery);
 
   ExecFile(ProcedurePath + 'MovementItem\_Send\gpInsertUpdate_MovementItem_Send.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItem\_Send\gpSelect_MovementItem_Send.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\_Send\gpInsertUpdate_MovementItem_SendPrice.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\_Send\gpSelect_MovementItem_SendPrice.sql', ZQuery);
 
   ExecFile(ProcedurePath + 'MovementItem\_Sale\gpInsertUpdate_MovementItem_Sale.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItem\_Sale\gpSelect_MovementItem_Sale.sql', ZQuery);
@@ -70,6 +73,10 @@ begin
   ExecFile(ProcedurePath + 'Movement\_Send\gpInsertUpdate_Movement_Send.sql', ZQuery);
   ExecFile(ProcedurePath + 'Movement\_Send\gpGet_Movement_Send.sql', ZQuery);
   ExecFile(ProcedurePath + 'Movement\_Send\gpSelect_Movement_Send.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'Movement\_Send\gpInsertUpdate_Movement_SendPrice.sql', ZQuery);
+  ExecFile(ProcedurePath + 'Movement\_Send\gpGet_Movement_SendPrice.sql', ZQuery);
+  ExecFile(ProcedurePath + 'Movement\_Send\gpSelect_Movement_SendPrice.sql', ZQuery);
 
   ExecFile(ProcedurePath + 'Movement\_Sale\gpInsertUpdate_Movement_Sale.sql', ZQuery);
   ExecFile(ProcedurePath + 'Movement\_Sale\gpGet_Movement_Sale.sql', ZQuery);
