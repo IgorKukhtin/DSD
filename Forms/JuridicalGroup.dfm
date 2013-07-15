@@ -2,15 +2,15 @@ inherited JuridicalGroupForm: TJuridicalGroupForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1075#1088#1091#1087#1087' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
   ClientHeight = 376
   ClientWidth = 390
-  ExplicitWidth = 398
-  ExplicitHeight = 403
+  ExplicitWidth = 406
+  ExplicitHeight = 414
   PixelsPerInch = 96
   TextHeight = 13
   object cxDBTreeList1: TcxDBTreeList
     Left = 0
-    Top = 26
+    Top = 28
     Width = 390
-    Height = 350
+    Height = 348
     Align = alClient
     Bands = <
       item
@@ -80,8 +80,8 @@ inherited JuridicalGroupForm: TJuridicalGroupForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -98,7 +98,7 @@ inherited JuridicalGroupForm: TJuridicalGroupForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -206,5 +206,20 @@ inherited JuridicalGroupForm: TJuridicalGroupForm
     Params = <>
     Left = 152
     Top = 152
+  end
+  object spErasedUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+    Left = 288
+    Top = 208
   end
 end

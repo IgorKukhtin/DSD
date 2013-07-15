@@ -54,6 +54,7 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     clErased: TcxGridDBColumn;
+    spErasedUnErased: TdsdStoredProc;
 
   private
     { Private declarations }

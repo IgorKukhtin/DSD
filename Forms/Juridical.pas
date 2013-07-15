@@ -53,6 +53,7 @@ type
     bbChoiceGuides: TdxBarButton;
     bbGridToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
+    spErasedUnErased: TdsdStoredProc;
   private
     { Private declarations }
   public

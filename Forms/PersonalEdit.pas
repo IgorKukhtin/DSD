@@ -20,7 +20,7 @@ uses
   Datasnap.DBClient, dsdAddOn, cxPropertiesStore, dsdDB, dsdAction,
   Vcl.ActnList, cxMaskEdit, cxDropDownEdit, cxLookupEdit, cxDBLookupEdit,
   cxDBLookupComboBox, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel,
-  cxTextEdit, cxButtonEdit;
+  cxTextEdit, cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar;
 
 type
   TPersonalEditForm = class(TParentForm)
@@ -44,10 +44,6 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     MemberGuides: TdsdGuides;
     PositionGuides: TdsdGuides;
-<<<<<<< Updated upstream
-    edDateOut: TcxTextEdit;
-=======
->>>>>>> Stashed changes
     cxLabel6: TcxLabel;
     UnitGuides: TdsdGuides;
     cxLabel7: TcxLabel;
@@ -60,13 +56,8 @@ type
     ceJuridical: TcxButtonEdit;
     ceBusiness: TcxButtonEdit;
     ceMember: TcxButtonEdit;
-<<<<<<< Updated upstream
-    edDateIn: TcxTextEdit;
-=======
     edDateIn: TcxDateEdit;
     edDateOut: TcxDateEdit;
-    procedure edDateInPropertiesChange(Sender: TObject);
->>>>>>> Stashed changes
   private
     { Private declarations }
   public
@@ -76,12 +67,6 @@ type
 implementation
 
 {$R *.dfm}
-procedure TPersonalEditForm.edDateInPropertiesChange(Sender: TObject);
-begin
-  inherited;
-
-end;
-
 initialization
   RegisterClass(TPersonalEditForm);
 end.

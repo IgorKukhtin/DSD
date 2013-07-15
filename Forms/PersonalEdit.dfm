@@ -144,7 +144,6 @@
   object edDateIn: TcxDateEdit
     Left = 40
     Top = 128
-    Properties.OnChange = edDateInPropertiesChange
     TabOrder = 18
     Width = 273
   end
@@ -248,11 +247,13 @@
         Name = 'inDateIn'
         DataType = ftDateTime
         ParamType = ptInput
+        Value = Null
       end
       item
         Name = 'inDateOut'
         DataType = ftDateTime
         ParamType = ptInput
+        Value = Null
       end>
     Left = 504
     Top = 40
@@ -377,13 +378,17 @@
       end
       item
         Name = 'DateIn'
+        Component = edDateIn
         DataType = ftInteger
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'DateOut'
+        Component = edDateOut
         DataType = ftInteger
         ParamType = ptOutput
+        Value = ''
       end>
     Left = 456
     Top = 224

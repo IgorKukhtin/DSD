@@ -14,7 +14,6 @@ inherited BranchForm: TBranchForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = 8
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -208,10 +207,10 @@ inherited BranchForm: TBranchForm
     Top = 144
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
-      StoredProc = spErasedUnErased
+      StoredProc = dsdStoredProc
       StoredProcList = <
         item
-          StoredProc = spErasedUnErased
+          StoredProc = dsdStoredProc
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -268,7 +267,11 @@ inherited BranchForm: TBranchForm
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
-      StoredProcList = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8

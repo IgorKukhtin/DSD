@@ -54,6 +54,7 @@ type
     bbChoiceGuides: TdxBarButton;
     dsdChoiceGuides: TdsdChoiceGuides;
     clErased: TcxGridDBColumn;
+    spErasedUnErased: TdsdStoredProc;
   private
     { Private declarations }
   public

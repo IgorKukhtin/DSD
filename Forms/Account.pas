@@ -58,6 +58,7 @@ type
     clInfoMoneyDestination: TcxGridDBColumn;
     clInfoMoney: TcxGridDBColumn;
     clErased: TcxGridDBColumn;
+    spErasedUnErased: TdsdStoredProc;
   private
     { Private declarations }
   public

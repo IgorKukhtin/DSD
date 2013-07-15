@@ -2,15 +2,15 @@ inherited BusinessForm: TBusinessForm
   Caption = #1041#1080#1079#1085#1077#1089#1099
   ClientHeight = 376
   ClientWidth = 390
-  ExplicitWidth = 398
-  ExplicitHeight = 403
+  ExplicitWidth = 406
+  ExplicitHeight = 414
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 28
     Width = 390
-    Height = 350
+    Height = 348
     Align = alClient
     TabOrder = 0
     object cxGridDBTableView: TcxGridDBTableView
@@ -70,8 +70,8 @@ inherited BusinessForm: TBusinessForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -88,7 +88,7 @@ inherited BusinessForm: TBusinessForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -232,5 +232,20 @@ inherited BusinessForm: TBusinessForm
     Params = <>
     Left = 152
     Top = 152
+  end
+  object spErasedUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+    Left = 288
+    Top = 208
   end
 end
