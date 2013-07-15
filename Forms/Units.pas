@@ -58,13 +58,13 @@ type
     ceBranchName: TcxGridDBColumn;
     ceisErased: TcxGridDBColumn;
     dsdDBTreeAddOn: TdsdDBTreeAddOn;
-    dsdChoiceGuides: TdsdChoiceGuides;
     dsdFormParams: TdsdFormParams;
     bbChoice: TdxBarButton;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     dxBarStatic: TdxBarStatic;
     ceTreeState: TcxGridDBColumn;
+    dsdChoiceGuides: TdsdChoiceGuides;
   private
     { Private declarations }
   public

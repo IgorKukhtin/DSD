@@ -49,13 +49,13 @@ type
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
-    dsdChoiceGuides: TdsdChoiceGuides;
     bbGridToExcel: TdxBarButton;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     dxBarStatic: TdxBarStatic;
     bbChoiceGuides: TdxBarButton;
     spErasedUnErased: TdsdStoredProc;
+    dsdChoiceGuides: TdsdChoiceGuides;
   private
     { Private declarations }
   public

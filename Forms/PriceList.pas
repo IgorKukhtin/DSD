@@ -47,14 +47,14 @@ type
     bbSetErased: TdxBarButton;
     bbSetUnErased: TdxBarButton;
     clCode: TcxGridDBColumn;
-    dsdGridToExcel1: TdsdGridToExcel;
-    dsdChoiceGuides1: TdsdChoiceGuides;
+    dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
     dxBarStatic1: TdxBarStatic;
     bbChoiceGuides: TdxBarButton;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    dsdChoiceGuides: TdsdChoiceGuides;
   private
     { Private declarations }
   public

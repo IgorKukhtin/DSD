@@ -49,13 +49,13 @@ type
     bbToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     spErasedUnErased: TdsdStoredProc;
-    dsdChoiceGuides: TdsdChoiceGuides;
     bbChoice: TdxBarButton;
     cxGridDBTableView: TcxGridDBTableView;
     clCode: TcxGridDBColumn;
     clName: TcxGridDBColumn;
     clErased: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    dsdChoiceGuides: TdsdChoiceGuides;
   private
     { Private declarations }
   public

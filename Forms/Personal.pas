@@ -49,7 +49,6 @@ type
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
-    dsdChoiceGuides: TdsdChoiceGuides;
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
@@ -60,6 +59,7 @@ type
     clUnit: TcxGridDBColumn;
     clJuridical: TcxGridDBColumn;
     clBusiness: TcxGridDBColumn;
+    dsdChoiceGuides: TdsdChoiceGuides;
   private
     { Private declarations }
   public

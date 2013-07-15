@@ -50,11 +50,11 @@ type
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
-    dsdChoiceGuides: TdsdChoiceGuides;
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clCarModel: TcxGridDBColumn;
+    dsdChoiceGuides: TdsdChoiceGuides;
   private
     { Private declarations }
   public
