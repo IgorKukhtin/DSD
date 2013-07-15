@@ -2,15 +2,15 @@ inherited JuridicalForm: TJuridicalForm
   Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
   ClientHeight = 473
   ClientWidth = 637
-  ExplicitWidth = 645
-  ExplicitHeight = 500
+  ExplicitWidth = 653
+  ExplicitHeight = 511
   PixelsPerInch = 96
   TextHeight = 13
   object cxDBTreeList: TcxDBTreeList
     Left = 0
-    Top = 26
+    Top = 28
     Width = 637
-    Height = 447
+    Height = 445
     Align = alClient
     Bands = <
       item
@@ -87,8 +87,8 @@ inherited JuridicalForm: TJuridicalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -105,7 +105,7 @@ inherited JuridicalForm: TJuridicalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -136,9 +136,25 @@ inherited JuridicalForm: TJuridicalForm
           ItemName = 'bbUnErased'
         end
         item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoiceGuides'
         end>
       OneOnRow = True
       Row = 0
@@ -149,30 +165,40 @@ inherited JuridicalForm: TJuridicalForm
     object bbRefresh: TdxBarButton
       Action = actRefresh
       Category = 0
-      ImageIndex = 4
     end
     object bbInsert: TdxBarButton
       Action = actInsert
       Category = 0
-      ImageIndex = 0
     end
     object bbEdit: TdxBarButton
       Action = actUpdate
       Category = 0
-      ImageIndex = 1
     end
     object bbErased: TdxBarButton
       Action = dsdSetErased
       Category = 0
-      ImageIndex = 2
     end
     object bbUnErased: TdxBarButton
       Action = dsdSetUnErased
       Category = 0
-      ImageIndex = 8
+    end
+    object bbChoiceGuides: TdxBarButton
+      Action = dsdChoiceGuides
+      Category = 0
+    end
+    object bbGridToExcel: TdxBarButton
+      Action = dsdGridToExcel
+      Category = 0
+    end
+    object dxBarStatic: TdxBarStatic
+      Caption = '     '
+      Category = 0
+      Hint = '     '
+      Visible = ivAlways
     end
   end
   object ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 232
     Top = 144
     object actRefresh: TdsdDataSetRefresh
@@ -184,12 +210,14 @@ inherited JuridicalForm: TJuridicalForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
       ShortCut = 116
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
+      ImageIndex = 0
       FormName = 'TJuridicalEditForm'
       GuiParams = <
         item
@@ -206,6 +234,7 @@ inherited JuridicalForm: TJuridicalForm
       Category = 'DSDLib'
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
+      ImageIndex = 1
       FormName = 'TJuridicalEditForm'
       GuiParams = <
         item
@@ -223,10 +252,10 @@ inherited JuridicalForm: TJuridicalForm
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       StoredProcList = <>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
       ShortCut = 46
-      isSetErased = False
       DataSource = DataSource
     end
     object dsdSetUnErased: TdsdUpdateErased
@@ -234,6 +263,7 @@ inherited JuridicalForm: TJuridicalForm
       StoredProcList = <>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
       ShortCut = 32776
       isSetErased = False
       DataSource = DataSource
@@ -245,12 +275,27 @@ inherited JuridicalForm: TJuridicalForm
           Name = 'Key'
           Component = ClientDataSet
           ComponentItem = 'Id'
+          DataType = ftString
+          ParamType = ptOutput
+        end
+        item
+          Name = 'TextValue'
+          Component = ClientDataSet
+          ComponentItem = 'Name'
           DataType = ftInteger
-          ParamType = ptInput
+          ParamType = ptOutput
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ShortCut = 13
+      ImageIndex = 7
+    end
+    object dsdGridToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
     end
   end
   object dsdStoredProc: TdsdStoredProc

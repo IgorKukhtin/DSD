@@ -19,7 +19,8 @@ uses
   dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus, dsdGuides, Data.DB,
   Datasnap.DBClient, cxMaskEdit, cxDropDownEdit, cxLookupEdit, cxDBLookupEdit,
   cxDBLookupComboBox, dsdAddOn, cxPropertiesStore, dsdDB, dsdAction,
-  Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit;
+  Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit,
+  cxButtonEdit;
 
 type
   TCarEditForm = class(TParentForm)
@@ -38,11 +39,11 @@ type
     spGet: TdsdStoredProc;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn;
-    ceCarModel: TcxLookupComboBox;
     cxLabel5: TcxLabel;
     CarModelGuide: TdsdGuides;
     cxLabel2: TcxLabel;
     cxTextEdit1: TcxTextEdit;
+    ceCarModel: TcxButtonEdit;
   private
     { Private declarations }
   public

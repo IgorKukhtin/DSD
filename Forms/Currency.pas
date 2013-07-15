@@ -50,12 +50,12 @@ type
     dsdSetUnErased: TdsdUpdateErased;
     clJuridicalName: TcxGridDBColumn;
     dsdGridToExcel: TdsdGridToExcel;
-    dsdChoiceGuides1: TdsdChoiceGuides;
     dxBarStatic: TdxBarStatic;
     bbChoiceGuides: TdxBarButton;
     bbGridToExcel: TdxBarButton;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    dsdChoiceGuides: TdsdChoiceGuides;
   private
     { Private declarations }
   public

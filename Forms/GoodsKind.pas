@@ -53,8 +53,8 @@ type
     bbGridToExcel: TdxBarButton;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     spErasedUnErased: TdsdStoredProc;
-    dsdChoiceGuides: TdsdChoiceGuides;
     bbChoiceGuide: TdxBarButton;
+    dsdChoiceGuides: TdsdChoiceGuides;
   private
     { Private declarations }
   public

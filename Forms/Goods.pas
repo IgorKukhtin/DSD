@@ -51,7 +51,6 @@ type
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel1: TdsdGridToExcel;
-    dsdChoiceGuides1: TdsdChoiceGuides;
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     spErasedUnErased: TdsdStoredProc;
@@ -61,6 +60,7 @@ type
     clMeasure: TcxGridDBColumn;
     clTradeMark: TcxGridDBColumn;
     clInfoMoney: TcxGridDBColumn;
+    dsdChoiceGuides: TdsdChoiceGuides;
   private
     { Private declarations }
   public

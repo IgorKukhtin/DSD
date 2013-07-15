@@ -264,6 +264,28 @@ inherited ProfitLossDirectionForm: TProfitLossDirectionForm
       isSetErased = False
       DataSource = DataSource
     end
+    object dsdChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      Params = <
+        item
+          Name = 'Key'
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          DataType = ftString
+          ParamType = ptOutput
+        end
+        item
+          Name = 'TextValue'
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ShortCut = 13
+      ImageIndex = 7
+    end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       Grid = cxGrid
@@ -271,14 +293,6 @@ inherited ProfitLossDirectionForm: TProfitLossDirectionForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
-    end
-    object dsdChoiceGuides: TdsdChoiceGuides
-      Category = 'DSDLib'
-      Params = <>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
-      ImageIndex = 7
     end
   end
   object dsdStoredProc: TdsdStoredProc

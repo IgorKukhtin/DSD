@@ -2,15 +2,15 @@ inherited UnitForm: TUnitForm
   Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
   ClientHeight = 403
   ClientWidth = 768
-  ExplicitWidth = 776
-  ExplicitHeight = 430
+  ExplicitWidth = 784
+  ExplicitHeight = 441
   PixelsPerInch = 96
   TextHeight = 13
   object cxDBTreeList: TcxDBTreeList
     Left = 0
-    Top = 26
+    Top = 28
     Width = 313
-    Height = 377
+    Height = 375
     Align = alLeft
     Bands = <
       item
@@ -46,16 +46,16 @@ inherited UnitForm: TUnitForm
   end
   object cxSplitter1: TcxSplitter
     Left = 313
-    Top = 26
+    Top = 28
     Width = 8
-    Height = 377
+    Height = 375
     Control = cxDBTreeList
   end
   object cxGrid: TcxGrid
     Left = 321
-    Top = 26
+    Top = 28
     Width = 447
-    Height = 377
+    Height = 375
     Align = alClient
     Images = dmMain.SortImageList
     TabOrder = 6
@@ -148,8 +148,8 @@ inherited UnitForm: TUnitForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -166,7 +166,7 @@ inherited UnitForm: TUnitForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -246,9 +246,12 @@ inherited UnitForm: TUnitForm
       ImageIndex = 8
     end
     object bbChoice: TdxBarButton
-      Action = dsdChoiceGuides
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Category = 0
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Visible = ivAlways
       ImageIndex = 7
+      ShortCut = 13
     end
     object dxBarStatic: TdxBarStatic
       Caption = '     '
@@ -258,6 +261,7 @@ inherited UnitForm: TUnitForm
     end
   end
   object ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 232
     Top = 144
     object actRefresh: TdsdDataSetRefresh
@@ -310,11 +314,32 @@ inherited UnitForm: TUnitForm
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       StoredProcList = <>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 46
-      isSetErased = False
       DataSource = TreeDS
+    end
+    object dsdChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      Params = <
+        item
+          Name = 'Key'
+          ComponentItem = 'Id'
+          DataType = ftString
+          ParamType = ptOutput
+          Value = Null
+        end
+        item
+          Name = 'TextValue'
+          ComponentItem = 'Name'
+          DataType = ftInteger
+          ParamType = ptOutput
+          Value = Null
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ShortCut = 13
+      ImageIndex = 7
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -324,13 +349,6 @@ inherited UnitForm: TUnitForm
       ShortCut = 32776
       isSetErased = False
       DataSource = TreeDS
-    end
-    object dsdChoiceGuides: TdsdChoiceGuides
-      Category = 'DSDLib'
-      Params = <>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
     end
   end
   object spTree: TdsdStoredProc

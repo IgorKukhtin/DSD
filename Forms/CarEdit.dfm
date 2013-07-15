@@ -51,17 +51,6 @@
     TabOrder = 5
     Width = 273
   end
-  object ceCarModel: TcxLookupComboBox
-    Left = 32
-    Top = 180
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
-      item
-        FieldName = 'Name'
-      end>
-    TabOrder = 6
-    Width = 273
-  end
   object cxLabel5: TcxLabel
     Left = 32
     Top = 157
@@ -75,6 +64,17 @@
   object cxTextEdit1: TcxTextEdit
     Left = 32
     Top = 130
+    TabOrder = 8
+    Width = 273
+  end
+  object ceCarModel: TcxButtonEdit
+    Left = 32
+    Top = 180
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
     TabOrder = 9
     Width = 273
   end
@@ -143,7 +143,7 @@
         Component = CarModelGuide
         DataType = ftInteger
         ParamType = ptOutput
-        Value = '0'
+        Value = ''
       end>
     Left = 320
     Top = 32
@@ -192,7 +192,7 @@
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = '0'
+        Value = ''
       end
       item
         Name = 'CarModelName'
@@ -200,7 +200,7 @@
         ComponentItem = 'TextValue'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = '0'
+        Value = ''
       end
       item
         Name = 'RegistrationCertificate'
@@ -232,7 +232,6 @@
     Top = 65528
   end
   object CarModelGuide: TdsdGuides
-    Key = '0'
     LookupControl = ceCarModel
     FormName = 'TCarModelForm'
     PositionDataSet = 'ClientDataSet'

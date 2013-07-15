@@ -2,15 +2,15 @@ inherited PersonalForm: TPersonalForm
   Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082#1080
   ClientHeight = 358
   ClientWidth = 864
-  ExplicitWidth = 872
-  ExplicitHeight = 385
+  ExplicitWidth = 880
+  ExplicitHeight = 396
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 28
     Width = 864
-    Height = 332
+    Height = 330
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -118,8 +118,8 @@ inherited PersonalForm: TPersonalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -136,7 +136,7 @@ inherited PersonalForm: TPersonalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -299,6 +299,28 @@ inherited PersonalForm: TPersonalForm
       isSetErased = False
       DataSource = DataSource
     end
+    object dsdChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      Params = <
+        item
+          Name = 'Key'
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          DataType = ftString
+          ParamType = ptOutput
+        end
+        item
+          Name = 'TextValue'
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ShortCut = 13
+      ImageIndex = 7
+    end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       Grid = cxGrid
@@ -306,14 +328,6 @@ inherited PersonalForm: TPersonalForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
-    end
-    object dsdChoiceGuides: TdsdChoiceGuides
-      Category = 'DSDLib'
-      Params = <>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
-      ImageIndex = 7
     end
   end
   object dsdStoredProc: TdsdStoredProc
