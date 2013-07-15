@@ -23,9 +23,8 @@ BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)   AS Id
-           , lfGet_ObjectCode(0, zcObject_Unit()) AS Code
+           , lfGet_ObjectCode(0, zc_Object_Unit()) AS Code
            , CAST ('' as TVarChar) AS Name
-           , CAST ('' as TVarChar) AS GLNCode
            
            , CAST (0 as Integer)   AS ParentId
            , CAST (0 as Integer)   AS ParentCode
@@ -56,9 +55,9 @@ BEGIN
    ELSE
        RETURN QUERY 
        SELECT 
-             Object_Unit.Id               AS Id
-           , Object_Unit.ObjectCode AS Code
-           , Object_Unit.ValueData  AS Name
+             Object_Unit.Id           AS Id
+           , Object_Unit.ObjectCode   AS Code
+           , Object_Unit.ValueData    AS Name
          
            , Object_Parent.Id         AS ParentId
            , Object_Parent.ObjectCode AS ParentCode

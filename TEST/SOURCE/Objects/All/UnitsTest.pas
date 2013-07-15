@@ -13,9 +13,11 @@ type
   end;
 
   TUnit = class(TObjectTest)
+  private
+    BranchTest: TBranchTest;
     function InsertDefault: integer; override;
   public
-    // Удаляется Объект и все подчиненные
+    // Удаляется Вставленный ранее Объект и все подчиненные
     procedure Delete(Id: Integer); override;
     function InsertUpdateUnit(Id, Code: Integer; Name: String;
                               ParentId, BranchId, BusinessId, JuridicalId,
@@ -125,24 +127,20 @@ begin
   spInsertUpdate := 'gpInsertUpdate_Object_Unit';
   spSelect := 'gpSelect_Object_Unit';
   spGet := 'gpGet_Object_Unit';
+  BranchTest := TBranchTest.Create;
 end;
 
 procedure TUnit.Delete(Id: Integer);
 begin
   inherited;
-  with TBranchTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free;
-  end;
+  BranchTest.Delete(Id);
 end;
 
 function TUnit.InsertDefault: integer;
 var
   BranchId: Integer;
 begin
-  BranchId := TBranchTest.Create.GetDefault;
+  BranchId := BranchTest.GetDefault;
   result := InsertUpdateUnit(0, 1, 'Подразделение', 0, BranchId, 0, 0, 0, 0);
 end;
 

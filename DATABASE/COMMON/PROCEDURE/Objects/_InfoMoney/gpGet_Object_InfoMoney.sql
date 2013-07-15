@@ -27,7 +27,7 @@ BEGIN
            , CAST (0 as Integer)   AS InfoMoneyGroupCode
            , CAST ('' as TVarChar) AS InfoMoneyGroupName
                      
-           , CAST ('' as TVarChar) AS InfoMoneyDestinationId
+           , CAST (0 as Integer) AS InfoMoneyDestinationId
            , CAST (0 as Integer)   AS InfoMoneyDestinationCode
            , CAST ('' as TVarChar) AS InfoMoneyDestinationName
           

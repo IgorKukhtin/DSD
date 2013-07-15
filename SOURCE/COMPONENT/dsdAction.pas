@@ -280,7 +280,8 @@ begin
   result := true;
   for I := 0 to StoredProcList.Count - 1  do
       if Assigned(StoredProcList[i]) then
-         StoredProcList[i].StoredProc.Execute
+         if Assigned(StoredProcList[i].StoredProc) then
+            StoredProcList[i].StoredProc.Execute
 end;
 
 
@@ -534,7 +535,10 @@ end;
 
 function TdsdChoiceGuides.Execute: boolean;
 begin
-  Guides.AfterChoice(FParams.ParamByName('Key').AsString, FParams.ParamByName('TextValue').AsString);
+  if Assigned(FParams.ParamByName('Key')) and Assigned(FParams.ParamByName('TextValue')) then
+     Guides.AfterChoice(FParams.ParamByName('Key').AsString, FParams.ParamByName('TextValue').AsString)
+  else
+     raise Exception.Create('Не определены параметры возврата значений при выборе из справочника');
   TForm(Owner).Close;
 end;
 

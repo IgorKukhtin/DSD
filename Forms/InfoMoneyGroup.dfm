@@ -1,19 +1,21 @@
 inherited InfoMoneyGroupForm: TInfoMoneyGroupForm
   Caption = #1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1081
-  ClientHeight = 381
-  ClientWidth = 432
-  ExplicitWidth = 448
-  ExplicitHeight = 419
+  ClientHeight = 365
+  ClientWidth = 464
+  ExplicitWidth = 472
+  ExplicitHeight = 392
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
-    Width = 432
-    Height = 353
+    Top = 26
+    Width = 464
+    Height = 339
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 432
+    ExplicitHeight = 355
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -87,8 +89,8 @@ inherited InfoMoneyGroupForm: TInfoMoneyGroupForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -105,7 +107,7 @@ inherited InfoMoneyGroupForm: TInfoMoneyGroupForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -285,7 +287,21 @@ inherited InfoMoneyGroupForm: TInfoMoneyGroupForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
-      Params = <>
+      Params = <
+        item
+          Name = 'Key'
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          DataType = ftString
+          ParamType = ptOutput
+        end
+        item
+          Name = 'TextValue'
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptOutput
+        end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ShortCut = 13

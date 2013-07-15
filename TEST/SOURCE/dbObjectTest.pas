@@ -10,6 +10,8 @@ type
     FspInsertUpdate: string;
     FspSelect: string;
     FspGet: string;
+    // Список добавленных Id
+    FInsertedIdList: TStringList;
   protected
     FdsdStoredProc: TdsdStoredProc;
     FParams: TdsdParams;
@@ -456,6 +458,7 @@ constructor TObjectTest.Create;
 begin
   FdsdStoredProc := TdsdStoredProc.Create(nil);
   FParams := TdsdParams.Create(TdsdParam);
+  FInsertedIdList := TStringList.Create;
 end;
 
 procedure TObjectTest.DeleteObject(Id: Integer);
@@ -470,14 +473,19 @@ begin
   TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Id]))
 end;
 
-procedure TObjectTest.Delete(Id: Integer);
+procedure TObjectTest.Delete;
 begin
+  // здесь мы разрешаем удалять ТОЛЬКО вставленные в момент теста данные
   DeleteObject(Id);
 end;
 
 destructor TObjectTest.Destoy;
+var i: integer;
 begin
-  FdsdStoredProc.Free
+  FdsdStoredProc.Free;
+  // Удаляем вставленные, но не удаленные в момент теста процедуры.
+//  for i := 0 to FInsertedIdList. do
+
 end;
 
 function TObjectTest.GetDataSet: TDataSet;
@@ -1479,6 +1487,7 @@ end;
 function TBranchTest.InsertDefault: integer;
 begin
   result := InsertUpdateBranch(0, 1, 'Филиал');
+  //FInsertedId := result;
 end;
 
 function TBranchTest.InsertUpdateBranch;
