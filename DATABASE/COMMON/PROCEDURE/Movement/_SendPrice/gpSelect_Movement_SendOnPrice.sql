@@ -1,8 +1,8 @@
-﻿-- Function: gpSelect_Movement_SendPrice()
+﻿-- Function: gpSelect_Movement_SendOnPrice()
 
--- DROP FUNCTION gpSelect_Movement_SendPrice (TDateTime, TDateTime, TVarChar);
+-- DROP FUNCTION gpSelect_Movement_SendOnPrice (TDateTime, TDateTime, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_SendPrice(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_SendOnPrice(
     IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
     IN inSession     TVarChar    -- сессия пользователя
@@ -144,7 +144,7 @@ END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement_SendPrice (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_SendOnPrice (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*
@@ -156,4 +156,4 @@ ALTER FUNCTION gpSelect_Movement_SendPrice (TDateTime, TDateTime, TVarChar) OWNE
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_SendPrice (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_SendOnPrice (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= '2')

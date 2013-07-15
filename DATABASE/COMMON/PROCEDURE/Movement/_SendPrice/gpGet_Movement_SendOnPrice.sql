@@ -1,8 +1,8 @@
--- Function: gpGet_Movement_SendPrice()
+-- Function: gpGet_Movement_SendOnPrice()
 
--- DROP FUNCTION gpGet_Movement_SendPrice (Integer, TVarChar);
+-- DROP FUNCTION gpGet_Movement_SendOnPrice (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_Movement_SendPrice(
+CREATE OR REPLACE FUNCTION gpGet_Movement_SendOnPrice(
     IN inMovementId        Integer  , -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
@@ -20,7 +20,7 @@ $BODY$
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_SendPrice());
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_SendOnPrice());
 
      RETURN QUERY 
        SELECT
@@ -138,7 +138,7 @@ BEGIN
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_SendPrice (Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Movement_SendOnPrice (Integer, TVarChar) OWNER TO postgres;
 
 
 /*
@@ -152,4 +152,4 @@ ALTER FUNCTION gpGet_Movement_SendPrice (Integer, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_SendPrice (inMovementId:= 1, inSession:= '2')
+-- SELECT * FROM gpGet_Movement_SendOnPrice (inMovementId:= 1, inSession:= '2')

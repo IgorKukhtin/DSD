@@ -47,8 +47,9 @@ begin
 
   ExecFile(ProcedurePath + 'MovementItem\_Send\gpInsertUpdate_MovementItem_Send.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItem\_Send\gpSelect_MovementItem_Send.sql', ZQuery);
-  ExecFile(ProcedurePath + 'MovementItem\_Send\gpInsertUpdate_MovementItem_SendPrice.sql', ZQuery);
-  ExecFile(ProcedurePath + 'MovementItem\_Send\gpSelect_MovementItem_SendPrice.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'MovementItem\_SendOnPrice\gpInsertUpdate_MovementItem_SendOnPrice.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\_SendOnPrice\gpSelect_MovementItem_SendOnPrice.sql', ZQuery);
 
   ExecFile(ProcedurePath + 'MovementItem\_Sale\gpInsertUpdate_MovementItem_Sale.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItem\_Sale\gpSelect_MovementItem_Sale.sql', ZQuery);
@@ -74,9 +75,9 @@ begin
   ExecFile(ProcedurePath + 'Movement\_Send\gpGet_Movement_Send.sql', ZQuery);
   ExecFile(ProcedurePath + 'Movement\_Send\gpSelect_Movement_Send.sql', ZQuery);
 
-  ExecFile(ProcedurePath + 'Movement\_Send\gpInsertUpdate_Movement_SendPrice.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\_Send\gpGet_Movement_SendPrice.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\_Send\gpSelect_Movement_SendPrice.sql', ZQuery);
+  ExecFile(ProcedurePath + 'Movement\_SendOnPrice\gpInsertUpdate_Movement_SendOnPrice.sql', ZQuery);
+  ExecFile(ProcedurePath + 'Movement\_SendOnPrice\gpGet_Movement_SendOnPrice.sql', ZQuery);
+  ExecFile(ProcedurePath + 'Movement\_SendOnPrice\gpSelect_Movement_SendOnPrice.sql', ZQuery);
 
   ExecFile(ProcedurePath + 'Movement\_Sale\gpInsertUpdate_Movement_Sale.sql', ZQuery);
   ExecFile(ProcedurePath + 'Movement\_Sale\gpGet_Movement_Sale.sql', ZQuery);

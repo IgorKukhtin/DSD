@@ -1,8 +1,8 @@
-﻿-- Function: gpInsertUpdate_Movement_SendPrice()
+﻿-- Function: gpInsertUpdate_Movement_SendOnPrice()
 
--- DROP FUNCTION gpInsertUpdate_Movement_SendPrice();
+-- DROP FUNCTION gpInsertUpdate_Movement_SendOnPrice();
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SendPrice(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SendOnPrice(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
@@ -77,4 +77,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_SendPrice (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_Movement_SendOnPrice (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')

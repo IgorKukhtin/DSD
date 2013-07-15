@@ -1,8 +1,8 @@
--- Function: gpInsertUpdate_MovementItem_SendPrice()
+-- Function: gpInsertUpdate_MovementItem_SendOnPrice()
 
--- DROP FUNCTION gpInsertUpdate_MovementItem_SendPrice();
+-- DROP FUNCTION gpInsertUpdate_MovementItem_SendOnPrice();
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SendPrice(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SendOnPrice(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
@@ -63,4 +63,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_SendPrice (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inAmountPacker:= 0, inPrice:= 1, inCountForPrice:= 1, inLiveWeight:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inAssetId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_MovementItem_SendOnPrice (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inAmountPacker:= 0, inPrice:= 1, inCountForPrice:= 1, inLiveWeight:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inAssetId:= 0, inSession:= '2')

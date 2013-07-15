@@ -1,8 +1,8 @@
--- Function: gpSelect_MovementItem_SendPrice()
+-- Function: gpSelect_MovementItem_SendOnPrice()
 
--- DROP FUNCTION gpSelect_MovementItem_SendPrice (Integer, Boolean, TVarChar);
+-- DROP FUNCTION gpSelect_MovementItem_SendOnPrice (Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_MovementItem_SendPrice(
+CREATE OR REPLACE FUNCTION gpSelect_MovementItem_SendOnPrice(
     IN inMovementId  Integer      , -- ключ Документа
     IN inShowAll     Boolean      , -- 
     IN inSession     TVarChar       -- сессия пользователя
@@ -17,7 +17,7 @@ $BODY$
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_SendPrice());
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_SendOnPrice());
 
      inShowAll:= TRUE;
 
@@ -176,14 +176,14 @@ END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_SendPrice (Integer, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_MovementItem_SendOnPrice (Integer, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  
- 15.07.13         * SendPrice              
+ 15.07.13         * SendOnPrice              
  12.07.13         *
 
 */

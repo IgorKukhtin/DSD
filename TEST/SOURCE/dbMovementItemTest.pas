@@ -16,7 +16,7 @@ type
     procedure TearDown; override;
   published
     procedure MovementItemIncomeTest;
-    procedure MovementItemSendPriceTest;
+    procedure MovementItemSendOnPriceTest;
     procedure MovementItemSaleTest;
     procedure MovementItemReturnOutTest;
     procedure MovementItemProductionUnionTest;
@@ -66,14 +66,14 @@ type
     constructor Create; override;
   end;
 
-  TMovementItemSendPriceTest = class(TObjectTest)
+  TMovementItemSendOnPriceTest = class(TObjectTest)
   private
     function InsertDefault: integer; override;
   protected
     procedure SetDataSetParam; override;
     procedure Delete(Id: Integer); override;
   public
-    function InsertUpdateMovementItemSendPrice
+    function InsertUpdateMovementItemSendOnPrice
       (Id, MovementId, GoodsId: Integer;
        Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
        PartionGoods:String; GoodsKindId: Integer): integer;
@@ -146,20 +146,20 @@ begin
   end;
 end;
 
-procedure TdbMovementItemTest.MovementItemSendPriceTest;
+procedure TdbMovementItemTest.MovementItemSendOnPriceTest;
 var
-  MovementItemSendPrice: TMovementItemSendPriceTest;
+  MovementItemSendOnPrice: TMovementItemSendOnPriceTest;
   Id: Integer;
 begin
-  MovementItemSendPrice := TMovementItemSendPriceTest.Create;
-  Id := MovementItemSendPrice.InsertDefault;
+  MovementItemSendOnPrice := TMovementItemSendOnPriceTest.Create;
+  Id := MovementItemSendOnPrice.InsertDefault;
   // создание документа
   try
   // редактирование
   finally
     // удаление
     DeleteMovementItem(Id);
-    MovementItemSendPrice.Delete(Id);
+    MovementItemSendOnPrice.Delete(Id);
   end;
 end;
 
@@ -296,16 +296,16 @@ begin
   FParams.AddParam('inShowAll', ftBoolean, ptInput, true);
 end;
 
-{ TMovementSendPrice }
-constructor TMovementItemSendPriceTest.Create;
+{ TMovementSSendOnPrice }
+constructor TMovementItemSendOnPriceTest.Create;
 begin
   inherited;
-  spInsertUpdate := 'gpInsertUpdate_MovementItem_SendPrice';
-  spSelect := 'gpSelect_MovementItem_SendPrice';
-  spGet := 'gpGet_MovementItem_SendPrice';
+  spInsertUpdate := 'gpInsertUpdate_MovementItem_SendOnPrice';
+  spSelect := 'gpSelect_MovementItem_SendOnPrice';
+  spGet := 'gpGet_MovementItem_SendOnPrice';
 end;
 
-procedure TMovementItemSendPriceTest.Delete(Id: Integer);
+procedure TMovementItemSendOnPriceTest.Delete(Id: Integer);
 begin
   with TGoodsTest.Create do
   try
@@ -315,14 +315,14 @@ begin
   end;
 end;
 
-function TMovementItemSendPriceTest.InsertDefault: integer;
+function TMovementItemSendOnPriceTest.InsertDefault: integer;
 var Id, MovementId, GoodsId: Integer;
     Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
     PartionGoods:String;
     GoodsKindId: Integer;
 begin
   Id:=0;
-  MovementId:= TMovementSendPriceTest.Create.GetDefault;
+  MovementId:= TMovementSendOnPriceTest.Create.GetDefault;
   GoodsId:=TGoodsTest.Create.GetDefault;
   Amount:=10;
   AmountPartner:=11;
@@ -332,12 +332,12 @@ begin
   PartionGoods:='';
   GoodsKindId:=0;
   //
-  result := InsertUpdateMovementItemSendPrice(Id, MovementId, GoodsId,
+  result := InsertUpdateMovementItemSendOnPrice(Id, MovementId, GoodsId,
                               Amount, AmountPartner, Price, CountForPrice, HeadCount,
                               PartionGoods, GoodsKindId);
 end;
 
-function TMovementItemSendPriceTest.InsertUpdateMovementItemSendPrice
+function TMovementItemSendOnPriceTest.InsertUpdateMovementItemSendOnPrice
   (Id, MovementId, GoodsId: Integer;
        Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
        PartionGoods:String;GoodsKindId: Integer): integer;
@@ -356,10 +356,10 @@ begin
   result := InsertUpdate(FParams);
 end;
 
-procedure TMovementItemSendPriceTest.SetDataSetParam;
+procedure TMovementItemSendOnPriceTest.SetDataSetParam;
 begin
   inherited;
-  FParams.AddParam('inMovementId', ftInteger, ptInput, TMovementSendPriceTest.Create.GetDefault);
+  FParams.AddParam('inMovementId', ftInteger, ptInput, TMovementSendOnPriceTest.Create.GetDefault);
   FParams.AddParam('inShowAll', ftBoolean, ptInput, true);
 end;
 
