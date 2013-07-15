@@ -51,11 +51,13 @@ inherited CarForm: TCarForm
       end
       object clRegistrationCertificate: TcxGridDBColumn
         Caption = #1058#1077#1093#1087#1072#1089#1087#1086#1088#1090
+        DataBinding.FieldName = 'RegistrationCertificate'
         HeaderAlignmentVert = vaCenter
         Width = 141
       end
       object clCarModel: TcxGridDBColumn
         Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+        DataBinding.FieldName = 'CarModelName'
         Width = 82
       end
       object clErased: TcxGridDBColumn

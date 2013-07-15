@@ -51,21 +51,29 @@ inherited AccountForm: TAccountForm
       end
       object clAccountGroup: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1099' '#1089#1095#1077#1090#1086#1074
+        DataBinding.FieldName = 'AccountGroupName'
         HeaderAlignmentVert = vaCenter
         Width = 67
       end
       object clAccountDirection: TcxGridDBColumn
         Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1095#1077#1090#1086#1074' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103' '#9
+        DataBinding.FieldName = 'AccountDirectionName'
         HeaderAlignmentVert = vaCenter
         Width = 141
       end
       object clInfoMoneyDestination: TcxGridDBColumn
         Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyDestinationName'
         HeaderAlignmentVert = vaCenter
         Width = 115
       end
+      object clInfoMoneyGroup: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1081
+        DataBinding.FieldName = 'InfoMoneyGroupName'
+      end
       object clInfoMoney: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentVert = vaCenter
         Width = 56
       end

@@ -118,7 +118,7 @@
       item
         Name = 'inINN'
         Component = ceINN
-        DataType = ftInteger
+        DataType = ftString
         ParamType = ptInput
         Value = ''
       end>

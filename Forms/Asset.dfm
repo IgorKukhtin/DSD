@@ -51,11 +51,13 @@ inherited AssetForm: TAssetForm
       end
       object clInvNumber: TcxGridDBColumn
         Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1085#1099#1081' '#1085#1086#1084#1077#1088
+        DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentVert = vaCenter
         Width = 148
       end
       object clAssetGroup: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1099' '#1086#1089#1085#1086#1074#1085#1099#1093' '#1089#1088#1077#1076#1089#1090#1074
+        DataBinding.FieldName = 'AssetGroupName'
         HeaderAlignmentVert = vaCenter
         Width = 199
       end

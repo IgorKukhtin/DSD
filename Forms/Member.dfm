@@ -51,6 +51,7 @@ inherited MemberForm: TMemberForm
       end
       object clMember_INN: TcxGridDBColumn
         Caption = #1048#1053#1053
+        DataBinding.FieldName = 'INN'
         HeaderAlignmentVert = vaCenter
         Width = 209
       end

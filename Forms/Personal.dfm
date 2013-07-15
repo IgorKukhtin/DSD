@@ -16,6 +16,7 @@ inherited PersonalForm: TPersonalForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitTop = 20
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -51,31 +52,37 @@ inherited PersonalForm: TPersonalForm
       end
       object clDateIn: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1088#1080#1085#1103#1090#1080#1103
+        DataBinding.FieldName = 'DateIn'
         HeaderAlignmentVert = vaCenter
         Width = 96
       end
       object clDateOut: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
+        DataBinding.FieldName = 'DateOut'
         HeaderAlignmentVert = vaCenter
         Width = 108
       end
       object clMember: TcxGridDBColumn
         Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
+        DataBinding.FieldName = 'MemberName'
         HeaderAlignmentVert = vaCenter
         Width = 87
       end
       object clPosition: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1080
+        DataBinding.FieldName = 'PositionName'
         HeaderAlignmentVert = vaCenter
         Width = 89
       end
       object clUnit: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+        DataBinding.FieldName = 'BusinessName'
         HeaderAlignmentVert = vaCenter
         Width = 112
       end
       object clJuridical: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
+        DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentVert = vaCenter
         Width = 114
       end
