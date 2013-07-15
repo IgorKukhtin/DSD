@@ -20,7 +20,7 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, dxSkinsdxBarPainter, dsdAddOn,
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid;
+  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox;
 
 type
   TPersonalForm = class(TParentForm)
@@ -60,6 +60,7 @@ type
     clJuridical: TcxGridDBColumn;
     clBusiness: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
+    clErased: TcxGridDBColumn;
   private
     { Private declarations }
   public

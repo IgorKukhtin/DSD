@@ -55,7 +55,6 @@
     Left = 32
     Top = 136
     TabOrder = 6
-    Text = 'ceINN'
     Width = 273
   end
   object cxLabel2: TcxLabel
@@ -120,8 +119,8 @@
         Name = 'inINN'
         Component = ceINN
         DataType = ftInteger
-        ParamType = ptOutput
-        Value = 'ceINN'
+        ParamType = ptInput
+        Value = ''
       end>
     Left = 320
     Top = 40
@@ -169,7 +168,7 @@
         Component = ceINN
         DataType = ftInteger
         ParamType = ptOutput
-        Value = 'ceINN'
+        Value = ''
       end>
     Left = 192
     Top = 104

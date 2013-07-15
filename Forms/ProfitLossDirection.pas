@@ -53,6 +53,7 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
+    clErased: TcxGridDBColumn;
   private
     { Private declarations }
   public

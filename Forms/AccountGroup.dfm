@@ -45,6 +45,11 @@ inherited AccountGroupForm: TAccountGroupForm
         HeaderAlignmentVert = vaCenter
         Width = 458
       end
+      object clErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

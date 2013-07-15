@@ -49,6 +49,13 @@ inherited AccountDirectionForm: TAccountDirectionForm
         HeaderAlignmentVert = vaCenter
         Width = 286
       end
+      object clErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -214,7 +221,7 @@ inherited AccountDirectionForm: TAccountDirectionForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'AccountDirectionEditForm'
+      FormName = 'TAccountDirectionEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -231,7 +238,7 @@ inherited AccountDirectionForm: TAccountDirectionForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'AccountDirectionEditForm'
+      FormName = 'TAccountDirectionEditForm'
       GuiParams = <
         item
           Name = 'Id'

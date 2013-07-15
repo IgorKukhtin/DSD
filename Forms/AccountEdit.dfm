@@ -195,7 +195,7 @@
         Name = 'inInfoMoneyId'
         Component = InfoMoneyGuides
         DataType = ftInteger
-        ParamType = ptOutput
+        ParamType = ptInput
         Value = ''
       end>
     Left = 240
