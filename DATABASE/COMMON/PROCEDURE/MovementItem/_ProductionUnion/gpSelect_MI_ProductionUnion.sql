@@ -25,41 +25,39 @@ BEGIN
             , MovementItem.Amount      AS Amount
             , MIBoolean_PartionClose.ValueData AS PartionClose
             , MIString_Comment.ValueData AS Comment
-            , MIFloat_Count.ValueData    AS COUNT
+            , MIFloat_Count.ValueData    AS Count
             , MIFloat_RealWeight.ValueData AS RealWeight
-            , Object_Receipt.ValueData AS ReceiptName
-          
-            , MIFloat_Count.ValueData AS Count
-            
             , MIFloat_CuterCount.ValueData AS CuterCount
-          
-            
+           
+            , Object_Receipt.ObjectCode AS ReceiptCode
+            , Object_Receipt.ValueData  AS ReceiptName
+ 
             , MovementItem.isErased    AS isErased
             
         FROM MovementItem 
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+             
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Receipt
                                               ON MILinkObject_Receipt.MovementItemId = MovementItem.Id 
                                              AND MILinkObject_Receipt.DescId = zc_MILinkObject_Receipt()
-                                             
              LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = MILinkObject_Receipt.ObjectId
-
-             LEFT JOIN MovementItemString AS MIString_PartionGoods
-                                          ON MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
-                                         AND MIString_PartionGoods.MovementItemId =  MovementItem.Id
 
              LEFT JOIN MovementItemFloat AS MIFloat_Count
                                          ON MIFloat_Count.MovementItemId = MovementItem.Id 
                                         AND MIFloat_Count.DescId = zc_MIFloat_Count()
+
              LEFT JOIN MovementItemFloat AS MIFloat_RealWeight
                                          ON MIFloat_RealWeight.MovementItemId = MovementItem.Id 
                                         AND MIFloat_RealWeight.DescId = zc_MIFloat_RealWeight()
+
              LEFT JOIN MovementItemFloat AS MIFloat_CuterCount
                                          ON MIFloat_CuterCount.MovementItemId = MovementItem.Id 
                                         AND MIFloat_CuterCount.DescId = zc_MIFloat_CuterCount()
+             
              LEFT JOIN MovementItemBoolean AS MIBoolean_PartionClose
                                            ON MIBoolean_PartionClose.MovementItemId = MovementItem.Id 
                                           AND MIBoolean_PartionClose.DescId = zc_MIBoolean_PartionClose()
+
              LEFT JOIN MovementItemString AS MIString_Comment
                                           ON MIString_Comment.MovementItemId = MovementItem.Id 
                                          AND MIString_Comment.DescId = zc_MIString_Comment()
@@ -106,7 +104,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
-               
+ 15.07.13         *              
  30.06.13                                        *
 
 */
