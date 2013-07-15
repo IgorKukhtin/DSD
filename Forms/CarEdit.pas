@@ -40,10 +40,7 @@ type
     dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn;
     ceCarModel: TcxLookupComboBox;
     cxLabel5: TcxLabel;
-    CarModelDataSet: TClientDataSet;
-    spGetCarModel: TdsdStoredProc;
-    CarModelDS: TDataSource;
-    dsdCarModel: TdsdGuides;
+    CarModelGuide: TdsdGuides;
     cxLabel2: TcxLabel;
     cxTextEdit1: TcxTextEdit;
   private

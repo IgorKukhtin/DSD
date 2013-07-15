@@ -28,5 +28,6 @@ CREATE INDEX idx_ObjectCostLink_ObjectId_DescId  ON ObjectCostLink(ObjectId, Des
  ДАТА         АВТОР
  ----------------
                  Климентьев К.И.   Кухтин И.В.
+14.07.13              * rem fk_ObjectCostLink_ObjectId
 11.07.13                               *       
 */

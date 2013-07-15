@@ -1,8 +1,8 @@
--- Function: lpInsertUpdate_MovementFloat_Income_TotalSumm (Integer)
+-- Function: Send (Integer)
 
--- DROP FUNCTION lpInsertUpdate_MovementFloat_Income_TotalSumm (Integer);
+-- DROP FUNCTION Send (Integer);
 
-CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementFloat_Income_TotalSumm(
+CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementFloat_TotalSumm(
     IN inMovementId Integer -- Ключ объекта <Документ>
 )
   RETURNS VOID AS
@@ -156,7 +156,7 @@ BEGIN
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION lpInsertUpdate_MovementFloat_Income_TotalSumm (Integer) OWNER TO postgres;
+ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgres;
 
   
 /*-------------------------------------------------------------------------------*/
@@ -168,4 +168,4 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_Income_TotalSumm (Integer) OWNER TO 
 */
 
 -- тест
--- SELECT * FROM lpInsertUpdate_MovementFloat_Income_TotalSumm (inMovementId:= 5028)
+-- SELECT * FROM Send (inMovementId:= 5028)

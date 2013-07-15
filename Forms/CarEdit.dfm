@@ -59,7 +59,6 @@
       item
         FieldName = 'Name'
       end>
-    Properties.ListSource = CarModelDS
     TabOrder = 6
     Width = 273
   end
@@ -131,6 +130,20 @@
         DataType = ftString
         ParamType = ptInput
         Value = ''
+      end
+      item
+        Name = 'nRegistrationCertificate'
+        Component = cxTextEdit1
+        DataType = ftString
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'inCarModelId'
+        Component = CarModelGuide
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = '0'
       end>
     Left = 320
     Top = 32
@@ -172,6 +185,29 @@
         DataType = ftString
         ParamType = ptOutput
         Value = ''
+      end
+      item
+        Name = 'CarModelId'
+        Component = CarModelGuide
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = '0'
+      end
+      item
+        Name = 'CarModelName'
+        Component = CarModelGuide
+        ComponentItem = 'TextValue'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = '0'
+      end
+      item
+        Name = 'RegistrationCertificate'
+        Component = cxTextEdit1
+        DataType = ftString
+        ParamType = ptOutput
+        Value = ''
       end>
     Left = 88
     Top = 48
@@ -195,34 +231,12 @@
     Left = 168
     Top = 65528
   end
-  object CarModelDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 160
-    Top = 149
-  end
-  object spGetCarModel: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_CarModel'
-    DataSet = CarModelDataSet
-    DataSets = <
-      item
-        DataSet = CarModelDataSet
-      end>
-    Params = <>
-    Left = 200
-    Top = 149
-  end
-  object CarModelDS: TDataSource
-    DataSet = CarModelDataSet
-    Left = 256
-    Top = 165
-  end
-  object dsdCarModel: TdsdGuides
+  object CarModelGuide: TdsdGuides
     Key = '0'
     LookupControl = ceCarModel
     FormName = 'TCarModelForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 296
-    Top = 157
+    Left = 344
+    Top = 149
   end
 end

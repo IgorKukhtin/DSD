@@ -16,6 +16,9 @@ type
     procedure TearDown; override;
   published
     procedure MovementItemIncomeTest;
+    procedure MovementItemSendTest;
+    procedure MovementItemSaleTest;
+    procedure MovementItemReturnOutTest;
     procedure MovementItemProductionUnionTest;
   end;
 
@@ -63,6 +66,47 @@ type
     constructor Create; override;
   end;
 
+  TMovementItemSendTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  protected
+    procedure SetDataSetParam; override;
+    procedure Delete(Id: Integer); override;
+  public
+    function InsertUpdateMovementItemSend
+      (Id, MovementId, GoodsId: Integer;
+       Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
+       PartionGoods:String; GoodsKindId: Integer): integer;
+    constructor Create; override;
+  end;
+
+  TMovementItemSaleTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  protected
+    procedure SetDataSetParam; override;
+    procedure Delete(Id: Integer); override;
+  public
+    function InsertUpdateMovementItemSale
+      (Id, MovementId, GoodsId: Integer;
+       Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
+       PartionGoods:String; GoodsKindId: Integer): integer;
+    constructor Create; override;
+  end;
+
+  TMovementItemReturnOutTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  protected
+    procedure SetDataSetParam; override;
+    procedure Delete(Id: Integer); override;
+  public
+    function InsertUpdateMovementItemReturnOut
+      (Id, MovementId, GoodsId: Integer;
+       Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
+       PartionGoods:String; GoodsKindId: Integer): integer;
+    constructor Create; override;
+  end;
 implementation
 
 uses Storage, SysUtils, dbMovementTest, DBClient, dsdDB;
@@ -99,6 +143,57 @@ begin
     // удаление
     DeleteMovementItem(Id);
     MovementItemIncome.Delete(Id);
+  end;
+end;
+
+procedure TdbMovementItemTest.MovementItemSendTest;
+var
+  MovementItemSend: TMovementItemSendTest;
+  Id: Integer;
+begin
+  MovementItemSend := TMovementItemSendTest.Create;
+  Id := MovementItemSend.InsertDefault;
+  // создание документа
+  try
+  // редактирование
+  finally
+    // удаление
+    DeleteMovementItem(Id);
+    MovementItemSend.Delete(Id);
+  end;
+end;
+
+procedure TdbMovementItemTest.MovementItemSaleTest;
+var
+  MovementItemSale: TMovementItemSaleTest;
+  Id: Integer;
+begin
+  MovementItemSale := TMovementItemSaleTest.Create;
+  Id := MovementItemSale.InsertDefault;
+  // создание документа
+  try
+  // редактирование
+  finally
+    // удаление
+    DeleteMovementItem(Id);
+    MovementItemSale.Delete(Id);
+  end;
+end;
+
+procedure TdbMovementItemTest.MovementItemReturnOutTest;
+var
+  MovementItemReturnOut: TMovementItemReturnOutTest;
+  Id: Integer;
+begin
+  MovementItemReturnOut := TMovementItemReturnOutTest.Create;
+  Id := MovementItemReturnOut.InsertDefault;
+  // создание документа
+  try
+  // редактирование
+  finally
+    // удаление
+    DeleteMovementItem(Id);
+    MovementItemReturnOut.Delete(Id);
   end;
 end;
 
@@ -200,6 +295,208 @@ begin
   FParams.AddParam('inMovementId', ftInteger, ptInput, TMovementIncomeTest.Create.GetDefault);
   FParams.AddParam('inShowAll', ftBoolean, ptInput, true);
 end;
+
+{ TMovementSend }
+constructor TMovementItemSendTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_MovementItem_Send';
+  spSelect := 'gpSelect_MovementItem_Send';
+  spGet := 'gpGet_MovementItem_Send';
+end;
+
+procedure TMovementItemSendTest.Delete(Id: Integer);
+begin
+  with TGoodsTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free;
+  end;
+end;
+
+function TMovementItemSendTest.InsertDefault: integer;
+var Id, MovementId, GoodsId: Integer;
+    Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
+    PartionGoods:String;
+    GoodsKindId: Integer;
+begin
+  Id:=0;
+  MovementId:= TMovementSendTest.Create.GetDefault;
+  GoodsId:=TGoodsTest.Create.GetDefault;
+  Amount:=10;
+  AmountPartner:=11;
+  Price:=2.34;
+  CountForPrice:=1;
+  HeadCount:=5;
+  PartionGoods:='';
+  GoodsKindId:=0;
+  //
+  result := InsertUpdateMovementItemSend(Id, MovementId, GoodsId,
+                              Amount, AmountPartner, Price, CountForPrice, HeadCount,
+                              PartionGoods, GoodsKindId);
+end;
+
+function TMovementItemSendTest.InsertUpdateMovementItemSend
+  (Id, MovementId, GoodsId: Integer;
+       Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
+       PartionGoods:String;GoodsKindId: Integer): integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inMovementId', ftInteger, ptInput, MovementId);
+  FParams.AddParam('inGoodsId', ftInteger, ptInput, GoodsId);
+  FParams.AddParam('inAmount', ftFloat, ptInput, Amount);
+  FParams.AddParam('inAmountPartner', ftFloat, ptInput, AmountPartner);
+  FParams.AddParam('inPrice', ftFloat, ptInput, Price);
+  FParams.AddParam('inCountForPrice', ftFloat, ptInput, CountForPrice);
+  FParams.AddParam('inHeadCount', ftFloat, ptInput, HeadCount);
+  FParams.AddParam('inPartionGoods', ftString, ptInput, PartionGoods);
+  FParams.AddParam('inGoodsKindId', ftInteger, ptInput, GoodsKindId);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TMovementItemSendTest.SetDataSetParam;
+begin
+  inherited;
+  FParams.AddParam('inMovementId', ftInteger, ptInput, TMovementSendTest.Create.GetDefault);
+  FParams.AddParam('inShowAll', ftBoolean, ptInput, true);
+end;
+
+{ TMovementSale }
+constructor TMovementItemSaleTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_MovementItem_Sale';
+  spSelect := 'gpSelect_MovementItem_Sale';
+  spGet := 'gpGet_MovementItem_Sale';
+end;
+
+procedure TMovementItemSaleTest.Delete(Id: Integer);
+begin
+  with TGoodsTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free;
+  end;
+end;
+
+function TMovementItemSaleTest.InsertDefault: integer;
+var Id, MovementId, GoodsId: Integer;
+    Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
+    PartionGoods:String;
+    GoodsKindId: Integer;
+begin
+  Id:=0;
+  MovementId:= TMovementSaleTest.Create.GetDefault;
+  GoodsId:=TGoodsTest.Create.GetDefault;
+  Amount:=10;
+  AmountPartner:=11;
+  Price:=2.34;
+  CountForPrice:=1;
+  HeadCount:=5;
+  PartionGoods:='';
+  GoodsKindId:=0;
+  //
+  result := InsertUpdateMovementItemSale(Id, MovementId, GoodsId,
+                              Amount, AmountPartner, Price, CountForPrice, HeadCount,
+                              PartionGoods, GoodsKindId);
+end;
+
+function TMovementItemSaleTest.InsertUpdateMovementItemSale
+  (Id, MovementId, GoodsId: Integer;
+       Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
+       PartionGoods:String;GoodsKindId: Integer): integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inMovementId', ftInteger, ptInput, MovementId);
+  FParams.AddParam('inGoodsId', ftInteger, ptInput, GoodsId);
+  FParams.AddParam('inAmount', ftFloat, ptInput, Amount);
+  FParams.AddParam('inAmountPartner', ftFloat, ptInput, AmountPartner);
+  FParams.AddParam('inPrice', ftFloat, ptInput, Price);
+  FParams.AddParam('inCountForPrice', ftFloat, ptInput, CountForPrice);
+  FParams.AddParam('inHeadCount', ftFloat, ptInput, HeadCount);
+  FParams.AddParam('inPartionGoods', ftString, ptInput, PartionGoods);
+  FParams.AddParam('inGoodsKindId', ftInteger, ptInput, GoodsKindId);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TMovementItemSaleTest.SetDataSetParam;
+begin
+  inherited;
+  FParams.AddParam('inMovementId', ftInteger, ptInput, TMovementSaleTest.Create.GetDefault);
+  FParams.AddParam('inShowAll', ftBoolean, ptInput, true);
+end;
+
+{ TMovementReturnOut }
+constructor TMovementItemReturnOutTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_MovementItem_ReturnOut';
+  spSelect := 'gpSelect_MovementItem_ReturnOut';
+  spGet := 'gpGet_MovementItem_ReturnOut';
+end;
+
+procedure TMovementItemReturnOutTest.Delete(Id: Integer);
+begin
+  with TGoodsTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free;
+  end;
+end;
+
+function TMovementItemReturnOutTest.InsertDefault: integer;
+var Id, MovementId, GoodsId: Integer;
+    Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
+    PartionGoods:String;
+    GoodsKindId: Integer;
+begin
+  Id:=0;
+  MovementId:= TMovementReturnOutTest.Create.GetDefault;
+  GoodsId:=TGoodsTest.Create.GetDefault;
+  Amount:=10;
+  AmountPartner:=11;
+  Price:=2.34;
+  CountForPrice:=1;
+  HeadCount:=5;
+  PartionGoods:='';
+  GoodsKindId:=0;
+  //
+  result := InsertUpdateMovementItemReturnOut(Id, MovementId, GoodsId,
+                              Amount, AmountPartner, Price, CountForPrice, HeadCount,
+                              PartionGoods, GoodsKindId);
+end;
+
+function TMovementItemReturnOutTest.InsertUpdateMovementItemReturnOut
+  (Id, MovementId, GoodsId: Integer;
+       Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
+       PartionGoods:String;GoodsKindId: Integer): integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inMovementId', ftInteger, ptInput, MovementId);
+  FParams.AddParam('inGoodsId', ftInteger, ptInput, GoodsId);
+  FParams.AddParam('inAmount', ftFloat, ptInput, Amount);
+  FParams.AddParam('inAmountPartner', ftFloat, ptInput, AmountPartner);
+  FParams.AddParam('inPrice', ftFloat, ptInput, Price);
+  FParams.AddParam('inCountForPrice', ftFloat, ptInput, CountForPrice);
+  FParams.AddParam('inHeadCount', ftFloat, ptInput, HeadCount);
+  FParams.AddParam('inPartionGoods', ftString, ptInput, PartionGoods);
+  FParams.AddParam('inGoodsKindId', ftInteger, ptInput, GoodsKindId);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TMovementItemReturnOutTest.SetDataSetParam;
+begin
+  inherited;
+  FParams.AddParam('inMovementId', ftInteger, ptInput, TMovementReturnOutTest.Create.GetDefault);
+  FParams.AddParam('inShowAll', ftBoolean, ptInput, true);
+end;
+
 
 { TMovementItemProductionUnionInTest }
 

@@ -1,9 +1,9 @@
 ﻿inherited AccountEditForm: TAccountEditForm
   Caption = #1053#1086#1074#1099#1081' '#1089#1095#1077#1090
-  ClientHeight = 396
-  ClientWidth = 507
-  ExplicitWidth = 515
-  ExplicitHeight = 423
+  ClientHeight = 350
+  ClientWidth = 381
+  ExplicitWidth = 397
+  ExplicitHeight = 388
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -18,8 +18,8 @@
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 32
-    Top = 353
+    Left = 40
+    Top = 316
     Width = 75
     Height = 25
     Action = dsdExecStoredProc
@@ -29,7 +29,7 @@
   end
   object cxButton2: TcxButton
     Left = 238
-    Top = 353
+    Top = 316
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -56,65 +56,62 @@
     Top = 103
     Caption = #1043#1088#1091#1087#1087#1099' '#1089#1095#1077#1090#1086#1074
   end
-  object ceAccountGroup: TcxLookupComboBox
-    Left = 40
-    Top = 126
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
-      item
-        FieldName = 'Name'
-      end>
-    Properties.ListSource = AccountGroupDS
-    TabOrder = 7
-    Width = 273
-  end
   object cxLabel2: TcxLabel
     Left = 40
     Top = 159
     Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1095#1077#1090#1086#1074' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103' '
   end
-  object ceAccountDirection: TcxLookupComboBox
-    Left = 40
-    Top = 182
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
-      item
-        FieldName = 'Name'
-      end>
-    TabOrder = 9
-    Width = 273
-  end
   object cxLabel4: TcxLabel
     Left = 40
-    Top = 231
+    Top = 209
     Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-  end
-  object ceInfoMoneyDestination: TcxLookupComboBox
-    Left = 40
-    Top = 246
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
-      item
-        FieldName = 'Name'
-      end>
-    Properties.ListSource = InfoMoneyDestinationDS
-    TabOrder = 11
-    Width = 273
   end
   object cxLabel5: TcxLabel
     Left = 40
-    Top = 287
+    Top = 259
     Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
-  object ceInfoMoney: TcxLookupComboBox
+  object ceAccountGroup: TcxButtonEdit
     Left = 40
-    Top = 302
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
+    Top = 120
+    Properties.Buttons = <
       item
-        FieldName = 'Name'
+        Default = True
+        Kind = bkEllipsis
       end>
-    Properties.ListSource = InfoMoneyDS
+    TabOrder = 10
+    Width = 273
+  end
+  object ceAccountDirection: TcxButtonEdit
+    Left = 40
+    Top = 182
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 11
+    Width = 273
+  end
+  object ceInfoMoneyDestination: TcxButtonEdit
+    Left = 40
+    Top = 232
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 12
+    Width = 273
+  end
+  object ceInfoMoney: TcxButtonEdit
+    Left = 40
+    Top = 282
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
     TabOrder = 13
     Width = 273
   end
@@ -129,7 +126,6 @@
           StoredProc = spGet
         end
         item
-          StoredProc = spGetAccountGroup
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -175,24 +171,32 @@
         Value = ''
       end
       item
-        Name = 'inBranchId'
-        Component = dsdAccountGroup
+        Name = 'inAccountGroupId'
+        Component = AccountGroupGuides
         DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
+        Value = ''
       end
       item
-        Name = 'inPaidKindId'
-        Component = dsdAccountDirectionnGuides
+        Name = 'inAccountDirectionId'
+        Component = AccountDirectionnGuides
         DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
+        Value = ''
       end
       item
-        Name = 'inCurrencyId'
+        Name = 'inInfoMoneyDestinationId'
+        Component = InfoMoneyDestinationGuides
         DataType = ftInteger
         ParamType = ptInput
-        Value = Null
+        Value = ''
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Component = InfoMoneyGuides
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
       end>
     Left = 240
     Top = 48
@@ -236,108 +240,80 @@
         Value = ''
       end
       item
-        Name = 'BranchId'
-        Component = dsdAccountGroup
-        ComponentItem = 'Id'
+        Name = 'AccountGroupId'
+        Component = AccountGroupGuides
+        ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = '0'
+        Value = ''
       end
       item
-        Name = 'BranchName'
-        Component = dsdAccountGroup
-        ComponentItem = 'Name'
+        Name = 'AccountGroupName'
+        Component = AccountGroupGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptOutput
-        Value = '0'
+        Value = ''
       end
       item
-        Name = 'PaidKindId'
-        Component = dsdAccountDirectionnGuides
+        Name = 'AccountDirectionId'
+        Component = AccountDirectionnGuides
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = '0'
+        Value = ''
       end
       item
-        Name = 'PaidKindName'
-        Component = dsdAccountDirectionnGuides
+        Name = 'AccountDirectionName'
+        Component = AccountDirectionnGuides
         ComponentItem = 'TextValue'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = '0'
+        Value = ''
       end
       item
-        Name = 'CurrencyId'
+        Name = 'InfoMoneyDestinationId'
+        Component = InfoMoneyDestinationGuides
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = Null
+        Value = ''
       end
       item
-        Name = 'CurrencyName'
+        Name = 'InfoMoneyDestinationName'
+        Component = InfoMoneyDestinationGuides
         ComponentItem = 'TextValue'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = Null
+        Value = ''
+      end
+      item
+        Name = 'InfoMoneyId'
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'InfoMoneyName'
+        Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
       end>
     Left = 192
     Top = 88
   end
-  object AccountGroupDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 176
-    Top = 117
-  end
-  object spGetAccountGroup: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_AccountGroup'
-    DataSet = AccountGroupDataSet
-    DataSets = <
-      item
-        DataSet = AccountGroupDataSet
-      end>
-    Params = <>
-    Left = 216
-    Top = 117
-  end
-  object AccountGroupDS: TDataSource
-    DataSet = AccountGroupDataSet
-    Left = 248
-    Top = 117
-  end
-  object dsdAccountGroup: TdsdGuides
-    Key = '0'
+  object AccountGroupGuides: TdsdGuides
     LookupControl = ceAccountGroup
     FormName = 'TInfoMoneyGroupForm'
     PositionDataSet = 'ClientDataSet'
     Left = 328
     Top = 125
   end
-  object AccountDirectionDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 160
-    Top = 165
-  end
-  object spGetAccountDirection: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_AccountDirection'
-    DataSet = AccountDirectionDataSet
-    DataSets = <
-      item
-        DataSet = AccountDirectionDataSet
-      end>
-    Params = <>
-    Left = 216
-    Top = 165
-  end
-  object AccountDirectionDS: TDataSource
-    DataSet = AccountDirectionDataSet
-    Left = 256
-    Top = 165
-  end
-  object dsdAccountDirectionnGuides: TdsdGuides
-    Key = '0'
+  object AccountDirectionnGuides: TdsdGuides
     LookupControl = ceAccountDirection
     FormName = 'TAccountDirectionForm'
     PositionDataSet = 'ClientDataSet'
@@ -360,67 +336,21 @@
     Top = 40
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 416
-    Top = 288
+    Left = 384
+    Top = 280
   end
-  object InfoMoneyDestinationDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 176
-    Top = 229
-  end
-  object spGetInfoMoneyDestination: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_InfoMoneyDestination'
-    DataSet = InfoMoneyDestinationDataSet
-    DataSets = <
-      item
-        DataSet = InfoMoneyDestinationDataSet
-      end>
-    Params = <>
-    Left = 216
-    Top = 229
-  end
-  object InfoMoneyDestinationDS: TDataSource
-    DataSet = InfoMoneyDestinationDataSet
-    Left = 272
-    Top = 221
-  end
-  object dsdInfoMoneyDestinationGuides: TdsdGuides
-    Key = '0'
+  object InfoMoneyDestinationGuides: TdsdGuides
     LookupControl = ceInfoMoneyDestination
     FormName = 'TInfoMoneyDestinationForm'
     PositionDataSet = 'ClientDataSet'
     Left = 368
     Top = 237
   end
-  object InfoMoneyDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 168
-    Top = 285
-  end
-  object spGetInfoMoney: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_InfoMoney'
-    DataSet = InfoMoneyDataSet
-    DataSets = <
-      item
-        DataSet = InfoMoneyDataSet
-      end>
-    Params = <>
-    Left = 208
-    Top = 285
-  end
-  object InfoMoneyDS: TDataSource
-    DataSet = InfoMoneyDataSet
-    Left = 248
-    Top = 285
-  end
-  object dsdInfoMoney: TdsdGuides
-    Key = '0'
+  object InfoMoneyGuides: TdsdGuides
     LookupControl = ceInfoMoney
     FormName = 'TInfoMoneyForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 320
+    Left = 328
     Top = 293
   end
 end

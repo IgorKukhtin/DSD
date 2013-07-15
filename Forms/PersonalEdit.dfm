@@ -1,9 +1,9 @@
 ﻿inherited PersonalEditForm: TPersonalEditForm
   Caption = #1053#1086#1074#1099#1081' '#1089#1086#1090#1088#1091#1076#1085#1080#1082
   ClientHeight = 370
-  ClientWidth = 686
-  ExplicitWidth = 694
-  ExplicitHeight = 397
+  ClientWidth = 691
+  ExplicitWidth = 707
+  ExplicitHeight = 408
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -61,63 +61,27 @@
     Top = 159
     Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
   end
-  object ceMember: TcxLookupComboBox
-    Left = 351
-    Top = 182
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
-      item
-        FieldName = 'Name'
-      end>
-    Properties.ListSource = MemberDS
-    TabOrder = 8
-    Width = 273
-  end
   object cxLabel5: TcxLabel
     Left = 40
     Top = 209
     Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
   end
-  object cePosition: TcxLookupComboBox
-    Left = 40
-    Top = 230
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
-      item
-        FieldName = 'Name'
-      end>
-    Properties.ListSource = PositionDS
-    TabOrder = 10
-    Width = 273
-  end
   object edDateIn: TcxTextEdit
     Left = 40
     Top = 132
-    TabOrder = 11
+    TabOrder = 9
     Width = 273
   end
   object edDateOut: TcxTextEdit
     Left = 40
     Top = 182
-    TabOrder = 12
+    TabOrder = 10
     Width = 273
   end
   object cxLabel6: TcxLabel
     Left = 351
     Top = 159
     Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
-  end
-  object ceUnit: TcxLookupComboBox
-    Left = 351
-    Top = 26
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
-      item
-        FieldName = 'Name'
-      end>
-    Properties.ListSource = UnitDS
-    TabOrder = 14
-    Width = 273
   end
   object cxLabel7: TcxLabel
     Left = 351
@@ -129,38 +93,69 @@
     Top = 53
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
   end
-  object ceJuridical: TcxLookupComboBox
-    Left = 351
-    Top = 76
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
-      item
-        FieldName = 'Name'
-      end>
-    Properties.ListSource = JuridicalDS
-    TabOrder = 17
-    Width = 273
-  end
-  object ceBusiness: TcxLookupComboBox
-    Left = 351
-    Top = 132
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
-      item
-        FieldName = 'Name'
-      end>
-    Properties.ListSource = BusinessDS
-    TabOrder = 18
-    Width = 273
-  end
   object cxLabel9: TcxLabel
     Left = 351
     Top = 109
     Caption = #1041#1080#1079#1085#1077#1089
   end
+  object cePosition: TcxButtonEdit
+    Left = 40
+    Top = 232
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 15
+    Width = 273
+  end
+  object ceUnit: TcxButtonEdit
+    Left = 351
+    Top = 26
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 16
+    Width = 273
+  end
+  object ceJuridical: TcxButtonEdit
+    Left = 351
+    Top = 76
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 17
+    Width = 273
+  end
+  object ceBusiness: TcxButtonEdit
+    Left = 351
+    Top = 128
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 18
+    Width = 273
+  end
+  object ceMember: TcxButtonEdit
+    Left = 351
+    Top = 182
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 19
+    Width = 273
+  end
   object ActionList: TActionList
     Left = 296
-    Top = 72
+    Top = 40
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spGet
@@ -214,25 +209,56 @@
         Value = ''
       end
       item
-        Name = 'inBranchId'
+        Name = 'inMemberId '
+        Component = MemberGuides
         DataType = ftInteger
         ParamType = ptInput
-        Value = Null
+        Value = ''
       end
       item
-        Name = 'inPaidKindId'
+        Name = 'inPositionId'
+        Component = PositionGuides
         DataType = ftInteger
         ParamType = ptInput
-        Value = Null
+        Value = ''
       end
       item
-        Name = 'inCurrencyId'
+        Name = 'inUnitId'
+        Component = UnitGuides
         DataType = ftInteger
         ParamType = ptInput
-        Value = Null
+        Value = ''
+      end
+      item
+        Name = 'inJuridicalId'
+        Component = JuridicalGuides
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'inBusinessId'
+        Component = BusinessGuides
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'inDateIn'
+        Component = edDateIn
+        DataType = ftDateTime
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'inDateOut'
+        Component = edDateOut
+        DataType = ftDateTime
+        ParamType = ptOutput
+        Value = ''
       end>
-    Left = 240
-    Top = 48
+    Left = 504
+    Top = 40
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -242,8 +268,8 @@
         ParamType = ptInputOutput
         Value = '0'
       end>
-    Left = 240
-    Top = 8
+    Left = 296
+    Top = 24
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Personal'
@@ -273,49 +299,101 @@
         Value = ''
       end
       item
-        Name = 'BranchId'
-        ComponentItem = 'Id'
+        Name = 'MemberId'
+        Component = MemberGuides
+        ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = Null
+        Value = ''
       end
       item
-        Name = 'BranchName'
+        Name = 'MemberName'
+        Component = MemberGuides
         ComponentItem = 'Name'
         DataType = ftString
         ParamType = ptOutput
-        Value = Null
+        Value = ''
       end
       item
-        Name = 'PaidKindId'
+        Name = 'PositionId'
+        Component = PositionGuides
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = Null
+        Value = ''
       end
       item
-        Name = 'PaidKindName'
+        Name = 'PositionName'
+        Component = PositionGuides
         ComponentItem = 'TextValue'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = Null
+        Value = ''
       end
       item
-        Name = 'CurrencyId'
+        Name = 'UnitId'
+        Component = UnitGuides
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = Null
+        Value = ''
       end
       item
-        Name = 'CurrencyName'
+        Name = 'UnitName'
+        Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = Null
+        Value = ''
+      end
+      item
+        Name = 'JuridicalId'
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'JuridicalName'
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'BusinessId'
+        Component = BusinessGuides
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'BusinessName'
+        Component = BusinessGuides
+        ComponentItem = 'TextValue'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'DateIn'
+        Component = edDateIn
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'DateOut'
+        Component = edDateOut
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
       end>
-    Left = 528
-    Top = 232
+    Left = 456
+    Top = 224
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -333,157 +411,42 @@
     Top = 40
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 584
-    Top = 240
-  end
-  object MemberDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 560
-    Top = 181
-  end
-  object spGetMember: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Member'
-    DataSet = MemberDataSet
-    DataSets = <
-      item
-        DataSet = MemberDataSet
-      end>
-    Params = <>
-    Left = 592
-    Top = 181
-  end
-  object MemberDS: TDataSource
-    DataSet = MemberDataSet
-    Left = 632
-    Top = 181
+    Left = 368
+    Top = 216
   end
   object MemberGuides: TdsdGuides
-    Key = '0'
     LookupControl = ceMember
     FormName = 'TMemberForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 664
-    Top = 181
+    Left = 632
+    Top = 173
   end
-  object PositionDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 440
-    Top = 229
-  end
-  object spGetPosition: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Position'
-    DataSet = PositionDataSet
-    DataSets = <
-      item
-        DataSet = PositionDataSet
-      end>
-    Params = <>
-    Left = 408
-    Top = 229
-  end
-  object PositionDS: TDataSource
-    DataSet = PositionDataSet
-    Left = 344
-    Top = 229
-  end
-  object dsdPosition: TdsdGuides
-    Key = '0'
+  object PositionGuides: TdsdGuides
     LookupControl = cePosition
     FormName = 'TPositionForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 376
-    Top = 229
+    Left = 320
+    Top = 173
   end
-  object UnitDS: TDataSource
-    DataSet = UnitDataSet
-    Left = 591
-    Top = 23
-  end
-  object dsdUnit: TdsdGuides
-    Key = '0'
+  object UnitGuides: TdsdGuides
     LookupControl = ceUnit
     FormName = 'TUnitForm'
     PositionDataSet = 'ClientDataSet'
     Left = 623
     Top = 23
   end
-  object spGetUnit: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Unit'
-    DataSet = UnitDataSet
-    DataSets = <
-      item
-        DataSet = UnitDataSet
-      end>
-    Params = <>
-    Left = 647
-    Top = 23
-  end
-  object UnitDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 671
-    Top = 23
-  end
-  object JuridicalDS: TDataSource
-    DataSet = JuridicalDataSet
-    Left = 583
-    Top = 65
-  end
-  object JuridicalDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 663
-    Top = 65
-  end
-  object spGetJuridical: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Juridical'
-    DataSet = JuridicalDataSet
-    DataSets = <
-      item
-        DataSet = JuridicalDataSet
-      end>
-    Params = <>
-    Left = 639
-    Top = 65
-  end
-  object dsdJuridical: TdsdGuides
-    Key = '0'
+  object JuridicalGuides: TdsdGuides
     LookupControl = ceJuridical
     FormName = 'TJuridicalForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 615
-    Top = 65
+    Left = 623
+    Top = 73
   end
-  object BusinessDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 655
-    Top = 113
-  end
-  object dsdBusiness: TdsdGuides
-    Key = '0'
+  object BusinessGuides: TdsdGuides
     LookupControl = ceBusiness
     FormName = 'TBusinessForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 607
-    Top = 113
-  end
-  object spGetBusiness: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Business'
-    DataSet = BusinessDataSet
-    DataSets = <
-      item
-        DataSet = BusinessDataSet
-      end>
-    Params = <>
-    Left = 631
-    Top = 113
-  end
-  object BusinessDS: TDataSource
-    DataSet = BusinessDataSet
-    Left = 575
-    Top = 113
+    Left = 367
+    Top = 281
   end
 end

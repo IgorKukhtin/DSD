@@ -56,32 +56,30 @@
     Top = 103
     Caption = #1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1081
   end
-  object ceInfoMoneyGroup: TcxLookupComboBox
-    Left = 40
-    Top = 126
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
-      item
-        FieldName = 'Name'
-      end>
-    Properties.ListSource = InfoMoneyGroupDS
-    TabOrder = 7
-    Width = 273
-  end
   object cxLabel2: TcxLabel
     Left = 40
     Top = 159
     Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
-  object ceInfoMoneyDestination: TcxLookupComboBox
+  object ceInfoMoneyGroup: TcxButtonEdit
+    Left = 40
+    Top = 128
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 8
+    Width = 273
+  end
+  object ceInfoMoneyDestination: TcxButtonEdit
     Left = 40
     Top = 182
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
+    Properties.Buttons = <
       item
-        FieldName = 'Name'
+        Default = True
+        Kind = bkEllipsis
       end>
-    Properties.ListSource = InfoMoneyDestinationDS
     TabOrder = 9
     Width = 273
   end
@@ -96,7 +94,6 @@
           StoredProc = spGet
         end
         item
-          StoredProc = spGetInfoMoneyGroup
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -142,27 +139,21 @@
         Value = ''
       end
       item
-        Name = 'inBranchId'
+        Name = 'inInfoMoneyGroupId'
         Component = dsdInfoMoneyGroupGuides
         DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
+        Value = ''
       end
       item
-        Name = 'inPaidKindId'
+        Name = 'inInfoMoneyDestinationId'
         Component = dsdInfoMoneyDestinationGuides
         DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
-      end
-      item
-        Name = 'inCurrencyId'
-        DataType = ftInteger
-        ParamType = ptInput
-        Value = Null
+        Value = ''
       end>
-    Left = 240
-    Top = 48
+    Left = 32
+    Top = 120
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -203,108 +194,47 @@
         Value = ''
       end
       item
-        Name = 'BranchId'
+        Name = 'InfoMoneyGroupId'
         Component = dsdInfoMoneyGroupGuides
         ComponentItem = 'Id'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = '0'
+        Value = ''
       end
       item
-        Name = 'BranchName'
+        Name = 'InfoMoneyGroupName'
         Component = dsdInfoMoneyGroupGuides
         ComponentItem = 'Name'
-        DataType = ftString
+        DataType = ftInteger
         ParamType = ptOutput
-        Value = '0'
+        Value = ''
       end
       item
-        Name = 'PaidKindId'
+        Name = 'InfoMoneyDestinationId'
         Component = dsdInfoMoneyDestinationGuides
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = '0'
+        Value = ''
       end
       item
-        Name = 'PaidKindName'
+        Name = 'InfoMoneyDestinationName'
         Component = dsdInfoMoneyDestinationGuides
         ComponentItem = 'TextValue'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = '0'
-      end
-      item
-        Name = 'CurrencyId'
-        ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
-      end
-      item
-        Name = 'CurrencyName'
-        ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
+        Value = ''
       end>
-    Left = 192
-    Top = 88
-  end
-  object InfoMoneyGroupDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 176
-    Top = 117
-  end
-  object spGetInfoMoneyGroup: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_InfoMoneyGroup'
-    DataSet = InfoMoneyGroupDataSet
-    DataSets = <
-      item
-        DataSet = InfoMoneyGroupDataSet
-      end>
-    Params = <>
-    Left = 216
-    Top = 117
-  end
-  object InfoMoneyGroupDS: TDataSource
-    DataSet = InfoMoneyGroupDataSet
-    Left = 248
-    Top = 117
+    Top = 120
   end
   object dsdInfoMoneyGroupGuides: TdsdGuides
-    Key = '0'
     LookupControl = ceInfoMoneyGroup
     FormName = 'TInfoMoneyGroupForm'
     PositionDataSet = 'ClientDataSet'
     Left = 328
     Top = 125
   end
-  object InfoMoneyDestinationDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 176
-    Top = 165
-  end
-  object spGetInfoMoneyDestination: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_InfoMoneyDestination'
-    DataSet = InfoMoneyDestinationDataSet
-    DataSets = <
-      item
-        DataSet = InfoMoneyDestinationDataSet
-      end>
-    Params = <>
-    Left = 216
-    Top = 165
-  end
-  object InfoMoneyDestinationDS: TDataSource
-    DataSet = InfoMoneyDestinationDataSet
-    Left = 264
-    Top = 173
-  end
   object dsdInfoMoneyDestinationGuides: TdsdGuides
-    Key = '0'
     LookupControl = ceInfoMoneyDestination
     FormName = 'TInfoMoneyDestinationForm'
     PositionDataSet = 'ClientDataSet'

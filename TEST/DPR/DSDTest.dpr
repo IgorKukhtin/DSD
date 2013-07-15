@@ -131,13 +131,17 @@ uses
   CommonObjectHistoryProcedureTest in '..\SOURCE\ObjectHistory\CommonObjectHistoryProcedureTest.pas',
   CommonProtocolProcedureTest in '..\SOURCE\Protocol\CommonProtocolProcedureTest.pas',
   CommonFunctionTest in '..\SOURCE\Function\CommonFunctionTest.pas',
-  CommonReportsProcedureTest in '..\SOURCE\Reports\CommonReportsProcedureTest.pas';
+  CommonReportsProcedureTest in '..\SOURCE\Reports\CommonReportsProcedureTest.pas',
+  SendJournal in '..\..\Forms\SendJournal.pas' {SendJournalForm},
+  Send in '..\..\Forms\Send.pas' {SendForm},
+  SaleJournal in '..\..\Forms\SaleJournal.pas' {SaleJournalForm},
+  Sale in '..\..\Forms\Sale.pas' {SaleForm},
+  ReturnOutJournal in '..\..\Forms\ReturnOutJournal.pas' {ReturnOutJournalForm},
+  ReturnOut in '..\..\Forms\ReturnOut.pas' {ReturnOutForm};
 
 {$R *.RES}
 
 begin
-  // Регистрируем тесты здесь, так как важна очередность
-
   Application.Initialize;
   Application.CreateForm(TdmMain, dmMain);
   Application.Run;

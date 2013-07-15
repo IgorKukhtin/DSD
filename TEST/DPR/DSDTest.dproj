@@ -356,6 +356,24 @@
 			<DCCReference Include="..\SOURCE\Protocol\CommonProtocolProcedureTest.pas"/>
 			<DCCReference Include="..\SOURCE\Function\CommonFunctionTest.pas"/>
 			<DCCReference Include="..\SOURCE\Reports\CommonReportsProcedureTest.pas"/>
+			<DCCReference Include="..\..\Forms\SendJournal.pas">
+				<Form>SendJournalForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Send.pas">
+				<Form>SendForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\SaleJournal.pas">
+				<Form>SaleJournalForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Sale.pas">
+				<Form>SaleForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\ReturnOutJournal.pas">
+				<Form>ReturnOutJournalForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\ReturnOut.pas">
+				<Form>ReturnOutForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

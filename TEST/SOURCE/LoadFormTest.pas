@@ -39,6 +39,9 @@ type
     procedure LoadCashFormTest;
     procedure LoadCurrencyFormTest;
     procedure LoadIncomeFormTest;
+    procedure LoadSendFormTest;
+    procedure LoadSaleFormTest;
+    procedure LoadReturnOutFormTest;
     procedure LoadReportFormTest;
     procedure LoadInfoMoneyGroupFormTest;
     procedure LoadInfoMoneyDestinationFormTest;
@@ -184,6 +187,29 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
+end;
+procedure TLoadFormTest.LoadSendFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
+end;
+
+procedure TLoadFormTest.LoadSaleFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSaleForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSaleJournalForm');
+end;
+
+procedure TLoadFormTest.LoadReturnOutFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnOutForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReturnOutJournalForm');
 end;
 
 procedure TLoadFormTest.LoadJuridicalFormTest;

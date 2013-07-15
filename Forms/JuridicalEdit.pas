@@ -10,7 +10,18 @@ uses
   Vcl.StdActns, cxCurrencyEdit, cxCheckBox,
   Data.DB, Datasnap.DBClient, cxMaskEdit, cxDropDownEdit,
   cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox, ParentForm, dsdGuides,
-  dsdDB, dsdAction;
+  dsdDB, dsdAction, dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue, cxButtonEdit;
 
 type
   TJuridicalEditForm = class(TParentForm)
@@ -31,17 +42,11 @@ type
     edGLNCode: TcxTextEdit;
     cbisCorporate: TcxCheckBox;
     cxLabel3: TcxLabel;
-    ceParentGroup: TcxLookupComboBox;
-    JuridicalGroupDataSet: TClientDataSet;
-    spGetJuridicalGroup: TdsdStoredProc;
-    JuridicalGroupDS: TDataSource;
-    dsdJuridicalGroupGuides: TdsdGuides;
+    JuridicalGroupGuides: TdsdGuides;
     cxLabel4: TcxLabel;
-    ceGoodsProperty: TcxLookupComboBox;
-    GoodsPropertyDataSet: TClientDataSet;
-    spGetGoodsProperty: TdsdStoredProc;
-    GoodsPropertyDS: TDataSource;
-    dsdGoodsPropertyGuides: TdsdGuides;
+    GoodsPropertyGuides: TdsdGuides;
+    ceJuridicalGroup: TcxButtonEdit;
+    ceGoodsProperty: TcxButtonEdit;
   private
     { Private declarations }
   public

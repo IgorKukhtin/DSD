@@ -16,7 +16,7 @@ INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
 
 CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_Goods() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_Goods'); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
-   SELECT 'zc_ContainerLinkObject_Goods', 'Товары', zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_Goods');
+  SELECT 'zc_ContainerLinkObject_Goods', 'Товары', zc_Object_Goods() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_Goods');
 
 CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_GoodsKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_GoodsKind'); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
@@ -91,6 +91,7 @@ INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.07.13                                        * restore zc_ContainerLinkObject_Goods
  11.07.13                                        * НОВАЯ СХЕМА2 - Create and Insert
  05.07.13          * переход всего на НОВУЮ СХЕМУ
  03.07.13                                        * НОВАЯ СХЕМА

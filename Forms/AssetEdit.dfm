@@ -62,22 +62,21 @@
     Top = 104
     Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1085#1099#1081' '#1085#1086#1084#1077#1088
   end
-  object ceAssetGroup: TcxLookupComboBox
-    Left = 40
-    Top = 178
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
-      item
-        FieldName = 'Name'
-      end>
-    Properties.ListSource = AssetGroupDS
-    TabOrder = 8
-    Width = 273
-  end
   object cxLabel4: TcxLabel
     Left = 40
     Top = 155
     Caption = #1043#1088#1091#1087#1087#1099' '#1086#1089#1085#1086#1074#1085#1099#1093' '#1089#1088#1077#1076#1089#1090#1074
+  end
+  object ceAssetGroup: TcxButtonEdit
+    Left = 40
+    Top = 178
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 9
+    Width = 273
   end
   object ActionList: TActionList
     Left = 336
@@ -132,6 +131,18 @@
         DataType = ftString
         ParamType = ptInput
         Value = ''
+      end
+      item
+        Name = 'inInvNumber'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'inAssetGroup'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
       end>
     Left = 304
     Top = 56
@@ -173,13 +184,35 @@
         DataType = ftInteger
         ParamType = ptOutput
         Value = ''
+      end
+      item
+        Name = 'AssetGroupId'
+        Component = AssetGroupGuides
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'AssetGroupName'
+        Component = AssetGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'InvNumber'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
       end>
     Left = 304
     Top = 16
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 304
-    Top = 88
+    Top = 104
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -196,34 +229,11 @@
     Left = 336
     Top = 16
   end
-  object AssetGroupDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 176
-    Top = 165
-  end
-  object spGetAssetGroup: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_AssetGroup'
-    DataSet = AssetGroupDataSet
-    DataSets = <
-      item
-        DataSet = AssetGroupDataSet
-      end>
-    Params = <>
-    Left = 216
-    Top = 165
-  end
-  object AssetGroupDS: TDataSource
-    DataSet = AssetGroupDataSet
-    Left = 272
-    Top = 157
-  end
   object AssetGroupGuides: TdsdGuides
-    Key = '0'
     LookupControl = ceAssetGroup
     FormName = 'TAssetGroupForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 368
+    Left = 328
     Top = 173
   end
 end

@@ -56,51 +56,48 @@
     Top = 103
     Caption = #1060#1080#1083#1080#1072#1083
   end
-  object ceBranch: TcxLookupComboBox
-    Left = 40
-    Top = 126
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
-      item
-        FieldName = 'Name'
-      end>
-    Properties.ListSource = BranchDS
-    TabOrder = 7
-    Width = 273
-  end
   object cxLabel2: TcxLabel
     Left = 40
     Top = 159
     Caption = #1042#1080#1076' '#1086#1087#1083#1072#1090#1099
-  end
-  object cePaidKind: TcxLookupComboBox
-    Left = 40
-    Top = 182
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
-      item
-        FieldName = 'Name'
-      end>
-    Properties.ListSource = PaidKindDS
-    TabOrder = 9
-    Width = 273
   end
   object cxLabel4: TcxLabel
     Left = 40
     Top = 215
     Caption = #1042#1072#1083#1102#1090#1099
   end
-  object ceCurrency: TcxLookupComboBox
+  object ceBranch: TcxButtonEdit
     Left = 40
-    Top = 238
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
+    Top = 126
+    Properties.Buttons = <
       item
-        FieldName = 'Name'
+        Default = True
+        Kind = bkEllipsis
       end>
-    Properties.ListSource = CurrencyDS
-    TabOrder = 11
+    TabOrder = 9
     Width = 273
+  end
+  object cePaidKind: TcxButtonEdit
+    Left = 40
+    Top = 188
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 10
+    Width = 273
+  end
+  object ceCurrency: TcxButtonEdit
+    Left = 48
+    Top = 240
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 11
+    Width = 265
   end
   object ActionList: TActionList
     Left = 296
@@ -113,7 +110,6 @@
           StoredProc = spGet
         end
         item
-          StoredProc = spGetBranch
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -163,21 +159,21 @@
         Component = dsdBranchGuides
         DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
+        Value = ''
       end
       item
         Name = 'inPaidKindId'
         Component = dsdPaidKindGuides
         DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
+        Value = ''
       end
       item
         Name = 'inCurrencyId'
         Component = dsdCurrencyGuides
         DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
+        Value = ''
       end>
     Left = 240
     Top = 48
@@ -226,15 +222,15 @@
         ComponentItem = 'Id'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = '0'
+        Value = ''
       end
       item
         Name = 'BranchName'
         Component = dsdBranchGuides
         ComponentItem = 'Name'
-        DataType = ftString
+        DataType = ftInteger
         ParamType = ptOutput
-        Value = '0'
+        Value = ''
       end
       item
         Name = 'PaidKindId'
@@ -242,7 +238,7 @@
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = '0'
+        Value = ''
       end
       item
         Name = 'PaidKindName'
@@ -250,7 +246,7 @@
         ComponentItem = 'TextValue'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = '0'
+        Value = ''
       end
       item
         Name = 'CurrencyId'
@@ -258,7 +254,7 @@
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = '0'
+        Value = ''
       end
       item
         Name = 'CurrencyName'
@@ -266,95 +262,26 @@
         ComponentItem = 'TextValue'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = '0'
+        Value = ''
       end>
     Left = 192
     Top = 88
   end
-  object BranchDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 176
-    Top = 117
-  end
-  object spGetBranch: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Branch'
-    DataSet = BranchDataSet
-    DataSets = <
-      item
-        DataSet = BranchDataSet
-      end>
-    Params = <>
-    Left = 216
-    Top = 117
-  end
-  object BranchDS: TDataSource
-    DataSet = BranchDataSet
-    Left = 256
-    Top = 117
-  end
   object dsdBranchGuides: TdsdGuides
-    Key = '0'
     LookupControl = ceBranch
     FormName = 'TBranchForm'
     PositionDataSet = 'ClientDataSet'
     Left = 312
     Top = 125
   end
-  object PaidKindDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 176
-    Top = 165
-  end
-  object spGetPaidKind: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_PaidKind'
-    DataSet = PaidKindDataSet
-    DataSets = <
-      item
-        DataSet = PaidKindDataSet
-      end>
-    Params = <>
-    Left = 216
-    Top = 165
-  end
-  object PaidKindDS: TDataSource
-    DataSet = PaidKindDataSet
-    Left = 256
-    Top = 165
-  end
   object dsdPaidKindGuides: TdsdGuides
-    Key = '0'
     LookupControl = cePaidKind
     FormName = 'TPaidKindForm'
     PositionDataSet = 'ClientDataSet'
     Left = 312
     Top = 173
   end
-  object CurrencyDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 176
-    Top = 221
-  end
-  object spGetCurrency: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Branch'
-    DataSet = CurrencyDataSet
-    DataSets = <
-      item
-        DataSet = CurrencyDataSet
-      end>
-    Params = <>
-    Left = 216
-    Top = 221
-  end
-  object CurrencyDS: TDataSource
-    DataSet = CurrencyDataSet
-    Left = 256
-    Top = 221
-  end
   object dsdCurrencyGuides: TdsdGuides
-    Key = '0'
     LookupControl = ceCurrency
     FormName = 'TCurrencyForm'
     PositionDataSet = 'ClientDataSet'

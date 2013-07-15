@@ -2,8 +2,7 @@
   Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
   ClientHeight = 202
   ClientWidth = 371
-  ExplicitWidth = 379
-  ExplicitHeight = 229
+  ExplicitWidth = 387
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -56,15 +55,14 @@
     Top = 3
     Caption = #1050#1086#1076
   end
-  object ceParentGroup: TcxLookupComboBox
+  object ceParentGroup: TcxButtonEdit
     Left = 40
     Top = 121
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
+    Properties.Buttons = <
       item
-        FieldName = 'Name'
+        Default = True
+        Kind = bkEllipsis
       end>
-    Properties.ListSource = DataSource
     TabOrder = 7
     Width = 273
   end
@@ -115,19 +113,21 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inName'
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inJuridicalGroupId'
-        Component = dsdJuridicalGroupGuides
+        Component = JuridicalGroupGuides
         DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
+        Value = ''
       end>
     Left = 296
     Top = 16
@@ -161,28 +161,30 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'Name'
         Component = edName
         DataType = ftString
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'JuridicalGroupId'
-        Component = dsdJuridicalGroupGuides
+        Component = JuridicalGroupGuides
         ComponentItem = 'Id'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = '0'
+        Value = ''
       end
       item
         Name = 'JuridicalGroupName'
-        Component = dsdJuridicalGroupGuides
+        Component = JuridicalGroupGuides
         ComponentItem = 'Name'
         DataType = ftString
         ParamType = ptOutput
-        Value = '0'
+        Value = ''
       end>
     Left = 328
     Top = 16
@@ -209,9 +211,11 @@
     Left = 168
     Top = 160
   end
-  object dsdJuridicalGroupGuides: TdsdGuides
+  object JuridicalGroupGuides: TdsdGuides
     LookupControl = ceParentGroup
-    Left = 336
-    Top = 152
+    FormName = 'TJuridicalGroupForm'
+    PositionDataSet = 'ClientDataSet'
+    Left = 328
+    Top = 128
   end
 end

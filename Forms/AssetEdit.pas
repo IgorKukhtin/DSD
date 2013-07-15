@@ -19,7 +19,8 @@ uses
   dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus, dsdGuides, Data.DB,
   Datasnap.DBClient, cxMaskEdit, cxDropDownEdit, cxLookupEdit, cxDBLookupEdit,
   cxDBLookupComboBox, cxPropertiesStore, dsdAddOn, dsdDB, dsdAction,
-  Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit;
+  Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit,
+  cxButtonEdit;
 
 type
   TAssetEditForm = class(TParentForm)
@@ -40,12 +41,9 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     ceInvNumber: TcxTextEdit;
     cxLabel2: TcxLabel;
-    ceAssetGroup: TcxLookupComboBox;
     cxLabel4: TcxLabel;
-    AssetGroupDataSet: TClientDataSet;
-    spGetAssetGroup: TdsdStoredProc;
-    AssetGroupDS: TDataSource;
     AssetGroupGuides: TdsdGuides;
+    ceAssetGroup: TcxButtonEdit;
   private
     { Private declarations }
   public

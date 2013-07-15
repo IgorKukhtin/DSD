@@ -19,7 +19,7 @@ uses
   dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus, dsdAddOn, cxPropertiesStore,
   dsdDB, dsdAction, Vcl.ActnList, cxCurrencyEdit, cxLabel, Vcl.StdCtrls,
   cxButtons, cxTextEdit, dsdGuides, Data.DB, Datasnap.DBClient, cxMaskEdit,
-  cxDropDownEdit, cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox;
+  cxDropDownEdit, cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox, cxButtonEdit;
 
 type
   TInfoMoneyEditForm = class(TParentForm)
@@ -30,9 +30,7 @@ type
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
-    ceInfoMoneyGroup: TcxLookupComboBox;
     cxLabel2: TcxLabel;
-    ceInfoMoneyDestination: TcxLookupComboBox;
     ActionList: TActionList;
     dsdDataSetRefresh: TdsdDataSetRefresh;
     dsdExecStoredProc: TdsdExecStoredProc;
@@ -40,16 +38,12 @@ type
     spInsertUpdate: TdsdStoredProc;
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
-    InfoMoneyGroupDataSet: TClientDataSet;
-    spGetInfoMoneyGroup: TdsdStoredProc;
-    InfoMoneyGroupDS: TDataSource;
     dsdInfoMoneyGroupGuides: TdsdGuides;
-    InfoMoneyDestinationDataSet: TClientDataSet;
-    spGetInfoMoneyDestination: TdsdStoredProc;
-    InfoMoneyDestinationDS: TDataSource;
     dsdInfoMoneyDestinationGuides: TdsdGuides;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    ceInfoMoneyGroup: TcxButtonEdit;
+    ceInfoMoneyDestination: TcxButtonEdit;
   private
     { Private declarations }
   public

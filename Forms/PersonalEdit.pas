@@ -20,7 +20,7 @@ uses
   Datasnap.DBClient, dsdAddOn, cxPropertiesStore, dsdDB, dsdAction,
   Vcl.ActnList, cxMaskEdit, cxDropDownEdit, cxLookupEdit, cxDBLookupEdit,
   cxDBLookupComboBox, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel,
-  cxTextEdit;
+  cxTextEdit, cxButtonEdit;
 
 type
   TPersonalEditForm = class(TParentForm)
@@ -32,9 +32,7 @@ type
     ceCode: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
     cxLabel2: TcxLabel;
-    ceMember: TcxLookupComboBox;
     cxLabel5: TcxLabel;
-    cePosition: TcxLookupComboBox;
     ActionList: TActionList;
     dsdDataSetRefresh: TdsdDataSetRefresh;
     dsdExecStoredProc: TdsdExecStoredProc;
@@ -44,35 +42,22 @@ type
     spGet: TdsdStoredProc;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    MemberDataSet: TClientDataSet;
-    spGetMember: TdsdStoredProc;
-    MemberDS: TDataSource;
     MemberGuides: TdsdGuides;
-    PositionDataSet: TClientDataSet;
-    spGetPosition: TdsdStoredProc;
-    PositionDS: TDataSource;
-    dsdPosition: TdsdGuides;
+    PositionGuides: TdsdGuides;
     edDateIn: TcxTextEdit;
     edDateOut: TcxTextEdit;
     cxLabel6: TcxLabel;
-    ceUnit: TcxLookupComboBox;
-    UnitDS: TDataSource;
-    dsdUnit: TdsdGuides;
-    spGetUnit: TdsdStoredProc;
-    UnitDataSet: TClientDataSet;
+    UnitGuides: TdsdGuides;
     cxLabel7: TcxLabel;
-    JuridicalDS: TDataSource;
-    JuridicalDataSet: TClientDataSet;
-    spGetJuridical: TdsdStoredProc;
     cxLabel8: TcxLabel;
-    ceJuridical: TcxLookupComboBox;
-    dsdJuridical: TdsdGuides;
-    ceBusiness: TcxLookupComboBox;
-    BusinessDataSet: TClientDataSet;
-    dsdBusiness: TdsdGuides;
-    spGetBusiness: TdsdStoredProc;
-    BusinessDS: TDataSource;
+    JuridicalGuides: TdsdGuides;
+    BusinessGuides: TdsdGuides;
     cxLabel9: TcxLabel;
+    cePosition: TcxButtonEdit;
+    ceUnit: TcxButtonEdit;
+    ceJuridical: TcxButtonEdit;
+    ceBusiness: TcxButtonEdit;
+    ceMember: TcxButtonEdit;
   private
     { Private declarations }
   public

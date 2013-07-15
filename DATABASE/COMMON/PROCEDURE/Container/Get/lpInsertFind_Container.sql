@@ -72,7 +72,8 @@ BEGIN
      SELECT COUNT(*) INTO vbRecordCount FROM _tmpContainer;
 
      -- находим
-     vbContainerId:=(SELECT Container.Id
+     vbContainerId:= (SELECT Container.Id
+--     SELECT Container.Id INTO vbContainerId
                      FROM Container
                           JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
                           JOIN _tmpContainer ON _tmpContainer.ObjectId = ContainerLinkObject.ObjectId
