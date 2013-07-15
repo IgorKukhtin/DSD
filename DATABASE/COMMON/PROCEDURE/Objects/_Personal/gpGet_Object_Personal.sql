@@ -26,7 +26,7 @@ BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , MAX (Object.ObjectCode) + 1 AS Code
+           , lfGet_ObjectCode(0, zc_Object_Personal()) AS Code
            , CAST ('' as TVarChar)  AS Name
            
            , CAST (0 as Integer)   AS MemberId
@@ -49,12 +49,10 @@ BEGIN
            , CAST (0 as Integer)   AS BusinessCode
            , CAST ('' as TVarChar) AS BusinessName
 
-           , CAST ('' as TDateTime)   AS DateIn
-           , CAST ('' as TDateTime)   AS DateOut
+           , CAST (NULL as TDateTime)   AS DateIn
+           , CAST (NULL as TDateTime)   AS DateOut
 
-           , CAST (NULL AS Boolean) AS isErased
-       FROM Object 
-       WHERE Object.DescId = zc_Object_Personal();
+           , CAST (NULL AS Boolean) AS isErased;
    ELSE
      RETURN QUERY 
      SELECT 

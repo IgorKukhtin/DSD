@@ -44,7 +44,6 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     MemberGuides: TdsdGuides;
     PositionGuides: TdsdGuides;
-    edDateIn: TcxTextEdit;
     edDateOut: TcxTextEdit;
     cxLabel6: TcxLabel;
     UnitGuides: TdsdGuides;
@@ -58,6 +57,7 @@ type
     ceJuridical: TcxButtonEdit;
     ceBusiness: TcxButtonEdit;
     ceMember: TcxButtonEdit;
+    edDateIn: TcxTextEdit;
   private
     { Private declarations }
   public

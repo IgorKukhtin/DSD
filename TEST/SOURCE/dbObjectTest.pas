@@ -10,16 +10,16 @@ type
     FspInsertUpdate: string;
     FspSelect: string;
     FspGet: string;
-    // Список добавленных Id
-    FInsertedIdList: TStringList;
   protected
     FdsdStoredProc: TdsdStoredProc;
     FParams: TdsdParams;
+    // Список добавленных Id
+    FInsertedIdList: TStringList;
     property spGet: string read FspGet write FspGet;
     property spSelect: string read FspSelect write FspSelect;
     property spInsertUpdate: string read FspInsertUpdate write FspInsertUpdate;
     function InsertUpdate(dsdParams: TdsdParams): Integer;
-    function InsertDefault: integer; virtual; abstract;
+    function InsertDefault: integer; virtual;
     procedure SetDataSetParam; virtual;
     procedure DeleteObject(Id: Integer);
   public
@@ -473,10 +473,14 @@ begin
   TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Id]))
 end;
 
-procedure TObjectTest.Delete;
+procedure TObjectTest.Delete(Id: Integer);
+var Index: Integer;
 begin
-  // здесь мы разрешаем удалять ТОЛЬКО вставленные в момент теста данные
-  DeleteObject(Id);
+  if FInsertedIdList.Find(IntToStr(Id), Index) then
+     // здесь мы разрешаем удалять ТОЛЬКО вставленные в момент теста данные
+     DeleteObject(Id)
+  else
+     raise Exception.Create('Попытка удалить запись, вставленную вне теста!!!');
 end;
 
 destructor TObjectTest.Destoy;
@@ -484,8 +488,9 @@ var i: integer;
 begin
   FdsdStoredProc.Free;
   // Удаляем вставленные, но не удаленные в момент теста процедуры.
-//  for i := 0 to FInsertedIdList. do
-
+  for i := 0 to FInsertedIdList.Count - 1 do
+      DeleteObject(StrToInt(FInsertedIdList[i]));
+  FInsertedIdList.Free;
 end;
 
 function TObjectTest.GetDataSet: TDataSet;
@@ -522,6 +527,11 @@ begin
     Execute;
     result := DataSets[0].DataSet;
   end;
+end;
+
+function TObjectTest.InsertDefault: integer;
+begin
+  FInsertedIdList.Add(IntToStr(result));
 end;
 
 function TObjectTest.InsertUpdate(dsdParams: TdsdParams): Integer;

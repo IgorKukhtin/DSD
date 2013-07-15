@@ -17,12 +17,11 @@ type
     BranchTest: TBranchTest;
     function InsertDefault: integer; override;
   public
-    // Удаляется Вставленный ранее Объект и все подчиненные
-    procedure Delete(Id: Integer); override;
     function InsertUpdateUnit(Id, Code: Integer; Name: String;
                               ParentId, BranchId, BusinessId, JuridicalId,
                               AccountDirectionId, ProfitLossDirectionId: integer): integer;
     constructor Create; override;
+    destructor Destroy; override;
   end;
 
 
@@ -130,18 +129,17 @@ begin
   BranchTest := TBranchTest.Create;
 end;
 
-procedure TUnit.Delete(Id: Integer);
+destructor TUnit.Destroy;
 begin
   inherited;
-  BranchTest.Delete(Id);
+  // Удаление вставленного филиала
+  BranchTest.Free;
 end;
 
 function TUnit.InsertDefault: integer;
-var
-  BranchId: Integer;
 begin
-  BranchId := BranchTest.GetDefault;
-  result := InsertUpdateUnit(0, 1, 'Подразделение', 0, BranchId, 0, 0, 0, 0);
+  result := InsertUpdateUnit(0, 1, 'Подразделение', 0, BranchTest.GetDefault, 0, 0, 0, 0);
+  inherited;
 end;
 
 function TUnit.InsertUpdateUnit(Id, Code: Integer; Name: String;
@@ -161,6 +159,8 @@ begin
   FParams.AddParam('inProfitLossDirectionId', ftInteger, ptInput, ProfitLossDirectionId);
 
   result := InsertUpdate(FParams);
+  if Id = 0 then
+     FInsertedIdList.Add(IntToStr(result));
 end;
 
 
