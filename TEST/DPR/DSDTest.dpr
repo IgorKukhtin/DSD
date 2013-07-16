@@ -138,8 +138,8 @@ uses
   Sale in '..\..\Forms\Sale.pas' {SaleForm},
   ReturnOutJournal in '..\..\Forms\ReturnOutJournal.pas' {ReturnOutJournalForm},
   ReturnOut in '..\..\Forms\ReturnOut.pas' {ReturnOutForm},
-  SendPriceJournal in '..\..\Forms\SendPriceJournal.pas' {SendPriceJournalForm},
-  SendPrice in '..\..\Forms\SendPrice.pas' {SendPriceForm};
+  SendOnPriceJournal in '..\..\Forms\SendOnPriceJournal.pas' {SendOnPriceJournalForm},
+  SendOnPrice in '..\..\Forms\SendOnPrice.pas' {SendOnPriceForm};
 
 {$R *.RES}
 
