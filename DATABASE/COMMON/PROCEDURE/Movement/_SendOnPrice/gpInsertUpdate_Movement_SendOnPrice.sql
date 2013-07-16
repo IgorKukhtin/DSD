@@ -30,7 +30,7 @@ BEGIN
      vbUserId := inSession;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Send(), inInvNumber, inOperDate, NULL);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_SendOnPrice(), inInvNumber, inOperDate, NULL);
 
      -- сохранили свойство <Дата накладной у контрагента>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDatePartner);
@@ -72,6 +72,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.07.13                                        * zc_Movement_SendOnPrice
  12.07.13         *
 
 */
