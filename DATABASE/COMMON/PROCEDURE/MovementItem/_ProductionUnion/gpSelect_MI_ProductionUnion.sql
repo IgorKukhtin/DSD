@@ -22,17 +22,17 @@ BEGIN
             , Object_Goods.ObjectCode  AS GoodsCode
             , Object_Goods.ValueData   AS GoodsName
           
-            , MovementItem.Amount      AS Amount
+            , MovementItem.Amount          AS Amount
             , MIBoolean_PartionClose.ValueData AS PartionClose
-            , MIString_Comment.ValueData AS Comment
-            , MIFloat_Count.ValueData    AS Count
+            , MIString_Comment.ValueData   AS Comment
+            , MIFloat_Count.ValueData      AS Count
             , MIFloat_RealWeight.ValueData AS RealWeight
             , MIFloat_CuterCount.ValueData AS CuterCount
            
             , Object_Receipt.ObjectCode AS ReceiptCode
             , Object_Receipt.ValueData  AS ReceiptName
  
-            , MovementItem.isErased    AS isErased
+            , MovementItem.isErased     AS isErased
             
         FROM MovementItem 
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
@@ -68,16 +68,20 @@ BEGIN
 
     OPEN Cursor2 FOR 
         SELECT 
-          MovementItem.Id,
-          MovementItem.ObjectId,
-          Object_Goods.ObjectCode  AS GoodsCode,
-          Object_Goods.ValueData   AS GoodsName,
-          MovementItem.Amount,
-          MovementItem.isErased,
-          MovementItem.ParentId,
-          MIString_PartionGoods.ValueData AS PartionName,
-          MIFloat_AmountReceipt.ValueData AS AmountReceipt,
-          MIString_Comment.ValueData AS Comment
+              MovementItem.Id
+            , MovementItem.ObjectId
+            , Object_Goods.ObjectCode    AS GoodsCode
+            , Object_Goods.ValueData     AS GoodsName
+
+            , MovementItem.Amount        AS Amount
+            , MovementItem.ParentId      AS ParentId
+            
+            , MIString_PartionGoods.ValueData AS PartionName
+            , MIFloat_AmountReceipt.ValueData AS AmountReceipt
+            , MIString_Comment.ValueData AS Comment
+            
+            , MovementItem.isErased
+            
         FROM MovementItem 
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
@@ -88,6 +92,7 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_AmountReceipt
                                          ON MIFloat_AmountReceipt.MovementItemId = MovementItem.Id 
                                         AND MIFloat_AmountReceipt.DescId = zc_MIFloat_AmountReceipt()
+                                        
              LEFT JOIN MovementItemString AS MIString_Comment
                                           ON MIString_Comment.MovementItemId = MovementItem.Id 
                                          AND MIString_Comment.DescId = zc_MIString_Comment()

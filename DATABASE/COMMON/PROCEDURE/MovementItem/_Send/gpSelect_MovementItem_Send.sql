@@ -7,10 +7,10 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Send(
     IN inShowAll     Boolean      , -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat, AmountPartner TFloat
-             , Price TFloat, CountForPrice TFloat,  HeadCount TFloat
+RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , Amount TFloat, HeadCount TFloat
              , PartionGoods TVarChar, GoodsKindName  TVarChar
-             , AmountSumm TFloat, isErased Boolean
+             , isErased Boolean
               )
 AS
 $BODY$

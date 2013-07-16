@@ -24,7 +24,7 @@ BEGIN
 -- inEndDate:= '01.01.2100';
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Send());
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_SendOnPrice());
 
      RETURN QUERY 
        SELECT
@@ -137,7 +137,7 @@ BEGIN
                                         AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
             LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
 
-       WHERE Movement.DescId = zc_Movement_Send()
+       WHERE Movement.DescId = zc_Movement_SendOnPrice()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
   
 END;

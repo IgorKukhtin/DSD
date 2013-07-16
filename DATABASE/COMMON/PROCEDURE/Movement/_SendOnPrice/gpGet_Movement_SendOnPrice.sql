@@ -133,7 +133,7 @@ BEGIN
                                         AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
             LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
        WHERE Movement.Id =  inMovementId
-         AND Movement.DescId = zc_Movement_Send();
+         AND Movement.DescId = zc_Movement_SendOnPrice();
   
 END;
 $BODY$
