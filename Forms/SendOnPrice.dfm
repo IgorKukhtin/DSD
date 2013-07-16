@@ -1,11 +1,11 @@
-inherited SendPriceForm: TSendPriceForm
-  Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+inherited SendOnPriceForm: TSendOnPriceForm
+  Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077' '
   ClientHeight = 396
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1036
-  ExplicitHeight = 430
+  ExplicitWidth = 1044
+  ExplicitHeight = 434
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -217,6 +217,9 @@ inherited SendPriceForm: TSendPriceForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -392,7 +395,7 @@ inherited SendPriceForm: TSendPriceForm
     Top = 256
   end
   object spSelectMovementItem: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_SendPrice'
+    StoredProcName = 'gpSelect_MovementItem_SendOnPrice'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -419,8 +422,8 @@ inherited SendPriceForm: TSendPriceForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -432,8 +435,8 @@ inherited SendPriceForm: TSendPriceForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 136
-    Top = 224
+    Left = 128
+    Top = 208
     DockControlHeights = (
       0
       0
@@ -604,7 +607,7 @@ inherited SendPriceForm: TSendPriceForm
     Top = 56
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_SendPrice'
+    StoredProcName = 'gpGet_Movement_SendOnPrice'
     DataSets = <>
     OutputType = otResult
     Params = <

@@ -1,4 +1,4 @@
-unit SendPrice;
+unit SendOnPrice;
 
 interface
 
@@ -25,7 +25,7 @@ uses
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
-  TSendPriceForm = class(TParentForm)
+  TSendOnPriceForm = class(TParentForm)
     dsdFormParams: TdsdFormParams;
     spSelectMovementItem: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -106,6 +106,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TSendPriceForm);
+  RegisterClass(TSendOnPriceForm);
 
 end.

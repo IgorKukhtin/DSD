@@ -1,9 +1,10 @@
-inherited SendPriceJournalForm: TSendPriceJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
+  Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077' '
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '
   ClientHeight = 427
   ClientWidth = 1240
-  ExplicitWidth = 1248
-  ExplicitHeight = 461
+  ExplicitWidth = 1256
+  ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -219,8 +220,8 @@ inherited SendPriceJournalForm: TSendPriceJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -330,7 +331,7 @@ inherited SendPriceJournalForm: TSendPriceJournalForm
       Category = 'DSDLib'
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
-      FormName = 'TSendForm'
+      FormName = 'TSendOnPriceForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -346,7 +347,7 @@ inherited SendPriceJournalForm: TSendPriceJournalForm
       Category = 'DSDLib'
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      FormName = 'TSendForm'
+      FormName = 'TSendOnPriceForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -401,7 +402,7 @@ inherited SendPriceJournalForm: TSendPriceJournalForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_SendPrice'
+    StoredProcName = 'gpSelect_Movement_SendOnPrice'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -426,7 +427,7 @@ inherited SendPriceJournalForm: TSendPriceJournalForm
     Top = 176
   end
   object spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_SendPrice'
+    StoredProcName = 'gpComplete_Movement_SendOnPrice'
     DataSets = <>
     OutputType = otResult
     Params = <

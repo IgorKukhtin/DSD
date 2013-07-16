@@ -40,7 +40,7 @@ type
     procedure LoadCurrencyFormTest;
     procedure LoadIncomeFormTest;
     procedure LoadSendFormTest;
-    procedure LoadSendPriceFormTest;
+    procedure LoadSendOnPriceFormTest;
     procedure LoadSaleFormTest;
     procedure LoadReturnOutFormTest;
     procedure LoadReportFormTest;

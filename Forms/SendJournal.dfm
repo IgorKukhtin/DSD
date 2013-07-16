@@ -2,8 +2,8 @@ inherited SendJournalForm: TSendJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
   ClientHeight = 427
   ClientWidth = 1240
-  ExplicitWidth = 1248
-  ExplicitHeight = 461
+  ExplicitWidth = 1256
+  ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -166,8 +166,8 @@ inherited SendJournalForm: TSendJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

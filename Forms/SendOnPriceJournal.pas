@@ -1,4 +1,4 @@
-unit SendPriceJournal;
+unit SendOnPriceJournal;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
-  TSendPriceJournalForm = class(TParentForm)
+  TSendOnPriceJournalForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -84,6 +84,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TSendPriceJournalForm);
+  RegisterClass(TSendOnPriceJournalForm);
 
 end.
