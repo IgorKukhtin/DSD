@@ -3428,23 +3428,9 @@ begin
         Add('select Bill.Id as ObjectId');
         Add('     , Bill.BillNumber as InvNumber');
         Add('     , Bill.BillDate as OperDate');
-
-        Add('     , OperDate as OperDatePartner');
-
-        Add('     , Bill.isNds as PriceWithVAT');
-        Add('     , Bill.Nds as VATPercent');
-        Add('     , case when Bill.isByMinusDiscountTax=zc_rvYes() then -Bill.DiscountTax else Bill.DiscountTax end as ChangePercent');
-
         Add('     , pgUnitFrom.Id_Postgres as FromId_Postgres');
         Add('     , pgUnitTo.Id_Postgres as ToId_Postgres');
-        Add('     , null as CarId');
-        Add('     , null as PersonalDriverId');
-
-        Add('     , null as RouteId');
-        Add('     , null as RouteSortingId');
-
         Add('     , Bill.Id_Postgres as Id_Postgres');
-        Add('     , zc_rvYes() as zc_rvYes');
         Add('from dba.Bill');
         Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId');
         Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId');
@@ -3452,10 +3438,10 @@ begin
         Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkSendUnitToUnit())'
-           +'  and UnitFrom.pgUnitId is not null'
-           +'  and UnitTo.pgUnitId is not null'
-           +'  and pgUnitFrom.Id_Postgres_Branch is null'
-           +'  and pgUnitTo.Id_Postgres_Branch is null'
+           +'  and (UnitFrom.pgUnitId is not null or UnitFrom.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
+           +'  and (UnitTo.pgUnitId is not null or UnitFrom.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
+           +'  and (pgUnitFrom.Id_Postgres_Branch is null or UnitFrom.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
+           +'  and (pgUnitTo.Id_Postgres_Branch is null or UnitFrom.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
            );
         Add('order by ObjectId');
         Open;
@@ -3472,20 +3458,8 @@ begin
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
-
-        toStoredProc.Params.AddParam ('inOperDatePartner',ftDateTime,ptInput, '');
-
-        toStoredProc.Params.AddParam ('inPriceWithVAT',ftBoolean,ptInput, false);
-        toStoredProc.Params.AddParam ('inVATPercent',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inChangePercent',ftFloat,ptInput, 0);
-
         toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, '');
         toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inCarId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inPersonalDriverId',ftInteger,ptInput, '');
-
-        toStoredProc.Params.AddParam ('inRouteId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inRouteSortingId',ftInteger,ptInput, '');
         //
         while not EOF do
         begin
@@ -3496,20 +3470,8 @@ begin
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber').AsString;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
-
-             toStoredProc.Params.ParamByName('inOperDatePartner').Value:=FieldByName('OperDatePartner').AsDateTime;
-
-             if FieldByName('PriceWithVAT').AsInteger=FieldByName('zc_rvYes').AsInteger then toStoredProc.Params.ParamByName('inPriceWithVAT').Value:=true else toStoredProc.Params.ParamByName('inPriceWithVAT').Value:=false;
-             toStoredProc.Params.ParamByName('inVATPercent').Value:=FieldByName('VATPercent').AsFloat;
-             toStoredProc.Params.ParamByName('inChangePercent').Value:=FieldByName('ChangePercent').AsFloat;
-
              toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inCarId').Value:=FieldByName('CarId').AsInteger;
-             toStoredProc.Params.ParamByName('inPersonalDriverId').Value:=FieldByName('PersonalDriverId').AsInteger;
-
-             toStoredProc.Params.ParamByName('inRouteId').Value:=FieldByName('RouteId').AsInteger;
-             toStoredProc.Params.ParamByName('inRouteSortingId').Value:=FieldByName('RouteSortingId').AsInteger;
 
              if not myExecToStoredProc then ;//exit;
              //

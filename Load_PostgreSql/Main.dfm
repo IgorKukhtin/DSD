@@ -124,7 +124,6 @@ object MainForm: TMainForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitLeft = 469
     object cbGoodsGroup: TCheckBox
       Tag = 10
       Left = 15
@@ -429,7 +428,6 @@ object MainForm: TMainForm
     BevelOuter = bvNone
     TabOrder = 3
     OnClick = DocumentPanelClick
-    ExplicitLeft = 784
     object Label1: TLabel
       Left = 6
       Top = 22
