@@ -30,14 +30,23 @@ CREATE OR REPLACE FUNCTION zc_ObjectCostLink_JuridicalBasis() RETURNS Integer AS
 INSERT INTO ObjectCostLinkDesc (Code, ItemName, ObjectDescId)
   SELECT 'zc_ObjectCostLink_JuridicalBasis', 'Главное юридическое лицо', zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectCostLinkDesc WHERE Code = 'zc_ObjectCostLink_JuridicalBasis');
 
-CREATE OR REPLACE FUNCTION zc_ObjectCostLink_Branch() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ObjectCostLinkDesc WHERE Code = 'zc_ObjectCostLink_JuridicalBasis'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_ObjectCostLink_Branch() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ObjectCostLinkDesc WHERE Code = 'zc_ObjectCostLink_Branch'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectCostLinkDesc (Code, ItemName, ObjectDescId)
   SELECT 'zc_ObjectCostLink_Branch', 'Филиалы', zc_Object_Branch() WHERE NOT EXISTS (SELECT * FROM ObjectCostLinkDesc WHERE Code = 'zc_ObjectCostLink_Branch');
+
+CREATE OR REPLACE FUNCTION zc_ObjectCostLink_Personal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ObjectCostLinkDesc WHERE Code = 'zc_ObjectCostLink_Personal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectCostLinkDesc (Code, ItemName, ObjectDescId)
+  SELECT 'zc_ObjectCostLink_Personal', 'Сотрудники(экспедиторы)', zc_Object_Branch() WHERE NOT EXISTS (SELECT * FROM ObjectCostLinkDesc WHERE Code = 'zc_ObjectCostLink_Personal');
+
+CREATE OR REPLACE FUNCTION zc_ObjectCostLink_AssetTo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ObjectCostLinkDesc WHERE Code = 'zc_ObjectCostLink_AssetTo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectCostLinkDesc (Code, ItemName, ObjectDescId)
+  SELECT 'zc_ObjectCostLink_AssetTo', 'Основные средства(для которого закуплено ТМЦ)', zc_Object_Branch() WHERE NOT EXISTS (SELECT * FROM ObjectCostLinkDesc WHERE Code = 'zc_ObjectCostLink_AssetTo');
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.07.13                                        * add zc_ObjectCostLink_Personal and zc_ObjectCostLink_AssetTo
  11.07.13                                        *
 */

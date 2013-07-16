@@ -196,12 +196,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
 end;
-procedure TLoadFormTest.LoadSendPriceFormTest;
+procedure TLoadFormTest.LoadSendOnPriceFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendPriceForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSendPriceForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendPriceJournalForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSendPriceJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPriceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendOnPriceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPriceJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendOnPriceJournalForm');
 end;
 
 procedure TLoadFormTest.LoadSaleFormTest;
