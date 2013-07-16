@@ -4134,7 +4134,7 @@ begin
         Add('     left outer join dba.MoneyKind on MoneyKind.Id = Bill.MoneyKindId');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkSendUnitToUnit(),zc_bkSaleToClient())'
-// +'  and Bill.Id = 1260716'
+//  +'  and Bill.Id = 1260716'
            +'  and (((UnitFrom.pgUnitId is not null'
            +'     or UnitFrom.PersonalId_Postgres is not null'
            +'     or pgUnitFrom.Id_Postgres_Branch is not null)'
