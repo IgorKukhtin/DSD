@@ -374,11 +374,11 @@
 			<DCCReference Include="..\..\Forms\ReturnOut.pas">
 				<Form>ReturnOutForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\SendPriceJournal.pas">
-				<Form>SendPriceJournalForm</Form>
+			<DCCReference Include="..\..\Forms\SendOnPrice.pas">
+				<Form>SendOnPriceForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\SendPrice.pas">
-				<Form>SendPriceForm</Form>
+			<DCCReference Include="..\..\Forms\SendOnPriceJournal.pas">
+				<Form>SendOnPriceJournalForm</Form>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
