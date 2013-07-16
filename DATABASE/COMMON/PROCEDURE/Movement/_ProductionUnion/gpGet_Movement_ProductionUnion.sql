@@ -35,14 +35,14 @@ $BODY$BEGIN
                                   ON MovementFloat_TotalCount.MovementId =  Movement.Id
                                  AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                         ON MovementLinkObject_From.MovementId = Movement.Id
-                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = Movement.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                       ON MovementLinkObject_From.MovementId = Movement.Id
+                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+          LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                       ON MovementLinkObject_To.MovementId = Movement.Id
+                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+          LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
      WHERE Movement.Id = inMovementId
        AND Movement.DescId = zc_Movement_ProductionUnion();
@@ -55,8 +55,8 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 16.17.13                                        * DROP FUNCTION
- 15.17.13         *
+ 16.07.13                                        * DROP FUNCTION
+ 15.07.13         *
  30.06.13                                        *
 
 */
