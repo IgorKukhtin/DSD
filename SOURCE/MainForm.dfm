@@ -17,8 +17,8 @@ object MainForm: TMainForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -87,6 +87,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbReturnOut'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSendOnPrice'
         end
         item
           Visible = True
@@ -257,6 +261,10 @@ object MainForm: TMainForm
     end
     object bbIncome: TdxBarButton
       Action = actIncome
+      Category = 0
+    end
+    object bbSendOnPrice: TdxBarButton
+      Action = actSendOnPrice
       Category = 0
     end
     object bbSend: TdxBarButton
@@ -488,12 +496,26 @@ object MainForm: TMainForm
   object ActionList: TActionList
     Left = 192
     Top = 48
+    object actIncome: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      Caption = #1055#1088#1080#1093#1086#1076#1085#1099#1077' '#1085#1072#1082#1083#1072#1076#1085#1099#1077
+      FormName = 'TIncomeJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
     object actExit: TFileExit
       Category = #1055#1088#1080#1083#1086#1078#1077#1085#1080#1077
       Caption = #1042#1099'&x'#1086#1076
       Hint = #1042#1099#1093#1086#1076'|'#1047#1072#1082#1088#1099#1090#1100' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1077
       ImageIndex = 43
       ShortCut = 16472
+    end
+    object actSendOnPrice: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077
+      FormName = 'TSendOnPriceJournalForm'
+      GuiParams = <>
+      isShowModal = False
     end
     object actBank: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
@@ -612,13 +634,6 @@ object MainForm: TMainForm
       Caption = #1042#1080#1076#1099' '#1092#1086#1088#1084' '#1086#1087#1083#1072#1090#1099
       Hint = #1042#1080#1076#1099' '#1092#1086#1088#1084' '#1086#1087#1083#1072#1090#1099
       FormName = 'TPaidKindForm'
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actIncome: TdsdOpenForm
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      Caption = #1055#1088#1080#1093#1086#1076#1085#1099#1077' '#1085#1072#1082#1083#1072#1076#1085#1099#1077
-      FormName = 'TIncomeJournalForm'
       GuiParams = <>
       isShowModal = False
     end

@@ -120,6 +120,8 @@ type
     bbLoss: TdxBarButton;
     bbReturnIn: TdxBarButton;
     bbReturnOut: TdxBarButton;
+    actSendOnPrice: TdsdOpenForm;
+    bbSendOnPrice: TdxBarButton;
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }

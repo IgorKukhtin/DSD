@@ -374,11 +374,11 @@
 			<DCCReference Include="..\..\Forms\ReturnOut.pas">
 				<Form>ReturnOutForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\SendOnPrice.pas">
-				<Form>SendOnPriceForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\SendOnPriceJournal.pas">
 				<Form>SendOnPriceJournalForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\SendOnPrice.pas">
+				<Form>SendOnPriceForm</Form>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
@@ -445,6 +445,7 @@
 					<SourceProjectName>C:\Users\Игорь\Documents\RAD Studio\Projects\Project6.dproj</SourceProjectName>
 					<TestProjectName/>
 				</UnitTesting>
+				<ModelSupport>False</ModelSupport>
 			</BorlandProject>
 			<ProjectFileVersion>12</ProjectFileVersion>
 		</ProjectExtensions>
