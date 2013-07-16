@@ -1,6 +1,6 @@
 ﻿-- Function: gpInsertUpdate_Movement_Sale()
 
--- DROP FUNCTION gpInsertUpdate_Movement_Sale();
+-- DROP FUNCTION gpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>

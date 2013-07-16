@@ -65,7 +65,6 @@ begin
   ExecFile(ProcedurePath + 'Movement\_Income\gpInsertUpdate_Movement_Income.sql', ZQuery);
   ExecFile(ProcedurePath + 'Movement\_Income\gpGet_Movement_Income.sql', ZQuery);
   ExecFile(ProcedurePath + 'Movement\_Income\gpSelect_Movement_Income.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\_Income\lpInsertUpdate_MovementFloat_TotalSumm.sql', ZQuery);
 
   ExecFile(ProcedurePath + 'Movement\_ProductionUnion\gpInsertUpdate_Movement_ProductionUnion.sql', ZQuery);
   ExecFile(ProcedurePath + 'Movement\_ProductionUnion\gpGet_Movement_ProductionUnion.sql', ZQuery);

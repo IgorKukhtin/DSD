@@ -1,6 +1,6 @@
--- Function: Send (Integer)
+-- Function: lpInsertUpdate_MovementFloat_TotalSumm (Integer)
 
--- DROP FUNCTION Send (Integer);
+-- DROP FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementFloat_TotalSumm(
     IN inMovementId Integer -- Ключ объекта <Документ>
