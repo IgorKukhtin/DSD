@@ -1,38 +1,38 @@
-п»ї-- Function: gpInsertUpdate_Movement_Send()
+-- Function: gpInsertUpdate_Movement_Send()
 
 -- DROP FUNCTION gpInsertUpdate_Movement_Send();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Send(
- INOUT ioId                  Integer   , -- РљР»СЋС‡ РѕР±СЉРµРєС‚Р° <Р”РѕРєСѓРјРµРЅС‚ РџРµСЂРµРјРµС‰РµРЅРёРµ>
-    IN inInvNumber           TVarChar  , -- РќРѕРјРµСЂ РґРѕРєСѓРјРµРЅС‚Р°
-    IN inOperDate            TDateTime , -- Р”Р°С‚Р° РґРѕРєСѓРјРµРЅС‚Р°
+ INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
+    IN inInvNumber           TVarChar  , -- Номер документа
+    IN inOperDate            TDateTime , -- Дата документа
 
-    IN inFromId              Integer   , -- РћС‚ РєРѕРіРѕ (РІ РґРѕРєСѓРјРµРЅС‚Рµ)
-    IN inToId                Integer   , -- РљРѕРјСѓ (РІ РґРѕРєСѓРјРµРЅС‚Рµ)
+    IN inFromId              Integer   , -- От кого (в документе)
+    IN inToId                Integer   , -- Кому (в документе)
 
-    IN inSession             TVarChar    -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
 
-     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+     -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Send());
      vbUserId := inSession;
 
-     -- СЃРѕС…СЂР°РЅРёР»Рё <Р”РѕРєСѓРјРµРЅС‚>
+     -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Send(), inInvNumber, inOperDate, NULL);
 
-     -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІСЏР·СЊ СЃ <РћС‚ РєРѕРіРѕ (РІ РґРѕРєСѓРјРµРЅС‚Рµ)>
+     -- сохранили связь с <От кого (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
-     -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІСЏР·СЊ СЃ <РљРѕРјСѓ (РІ РґРѕРєСѓРјРµРЅС‚Рµ)>
+     -- сохранили связь с <Кому (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
 
-     -- РїРµСЂРµСЃС‡РёС‚Р°Р»Рё РС‚РѕРіРѕРІС‹Рµ СЃСѓРјРјС‹ РїРѕ РЅР°РєР»Р°РґРЅРѕР№
+     -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
    
-     -- СЃРѕС…СЂР°РЅРёР»Рё РїСЂРѕС‚РѕРєРѕР»
+     -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 
 END;
@@ -41,11 +41,11 @@ LANGUAGE PLPGSQL VOLATILE;
 
 
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  12.07.13         *
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpInsertUpdate_Movement_Send (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')

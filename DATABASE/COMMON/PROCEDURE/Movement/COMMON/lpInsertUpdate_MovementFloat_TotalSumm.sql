@@ -6,6 +6,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementFloat_TotalSumm(
     IN inMovementId Integer -- Ключ объекта <Документ>
 )
   RETURNS VOID AS
+--  RETURNS TABLE () AS
 $BODY$
   DECLARE vbOperCount_Partner TFloat;
   DECLARE vbOperSumm_Partner TFloat;
@@ -109,16 +110,16 @@ BEGIN
             INTO vbOperCount_Partner, vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_Partner, vbOperCount_Packer, vbOperSumm_Packer
      FROM 
           (SELECT 
-                 SUM (MIFloat_AmountPartner.ValueData) AS tmpOperCount_Partner
+                 SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS tmpOperCount_Partner
                  -- сумма по Контрагенту - с округлением до 2-х знаков
                , SUM (CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) <> 0 THEN COALESCE (CAST (MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)), 0)
                                                                                    ELSE COALESCE (CAST (MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData AS NUMERIC (16, 2)), 0)
                       END) AS tmpOperSumm_Partner
 
-               , SUM (MIFloat_AmountPacker.ValueData) AS tmpOperCount_Packer
+               , SUM (COALESCE (MIFloat_AmountPacker.ValueData, 0)) AS tmpOperCount_Packer
                  -- промежуточная сумма по Заготовителю - с округлением до 2-х знаков
                , SUM (CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) <> 0 THEN COALESCE (CAST (MIFloat_AmountPacker.ValueData * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)), 0)
-                                                                              ELSE COALESCE (CAST (MIFloat_AmountPacker.ValueData * MIFloat_Price.ValueData AS NUMERIC (16, 2)), 0)
+                                                                                   ELSE COALESCE (CAST (MIFloat_AmountPacker.ValueData * MIFloat_Price.ValueData AS NUMERIC (16, 2)), 0)
                       END) AS tmpOperSumm_Packer
             FROM Movement
                  JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.isErased = FALSE
@@ -163,7 +164,7 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-
+ 16.07.13                                        * add COALESCE (MIFloat_AmountPartner... and MIFloat_AmountPacker...
  07.07.13                                        *
 */
 

@@ -7,9 +7,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Send(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
-    IN inAmountPartner       TFloat    , -- Количество у контрагента
-    IN inPrice               TFloat    , -- Цена
-    IN inCountForPrice       TFloat    , -- Цена за количество
     IN inHeadCount           TFloat    , -- Количество голов
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
@@ -27,14 +24,6 @@ BEGIN
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
    
-     -- сохранили свойство <Количество у контрагента>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), ioId, inAmountPartner);
-
-     -- сохранили свойство <Цена>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
-     -- сохранили свойство <Цена за количество>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, inCountForPrice);
-
      -- сохранили свойство <Партия товара>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, inPartionGoods);
 
@@ -43,10 +32,6 @@ BEGIN
 
      -- создали объект <Связи Товары и Виды товаров>
      PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, vbUserId);
-
-     -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
-
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
@@ -59,8 +44,9 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.07.13                                        * del params by SendOnPrice
  12.07.13          * 
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_Send (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inAmountPacker:= 0, inPrice:= 1, inCountForPrice:= 1, inLiveWeight:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inAssetId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_MovementItem_Send (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')

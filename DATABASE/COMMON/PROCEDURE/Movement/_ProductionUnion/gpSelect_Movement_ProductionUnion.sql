@@ -1,6 +1,6 @@
 -- Function: gpSelect_Movement_ProductionUnion()
 
---DROP FUNCTION gpSelect_Movement_ProductionUnion();
+-- DROP FUNCTION gpSelect_Movement_ProductionUnion (TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnion(
     IN inStartDate   TDateTime,
@@ -58,6 +58,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.17.13                                        * DROP FUNCTION
  15.07.13         *              
  30.06.13                                        *
 
