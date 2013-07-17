@@ -139,7 +139,9 @@ uses
   ReturnOutJournal in '..\..\Forms\ReturnOutJournal.pas' {ReturnOutJournalForm},
   ReturnOut in '..\..\Forms\ReturnOut.pas' {ReturnOutForm},
   SendOnPriceJournal in '..\..\Forms\SendOnPriceJournal.pas' {SendOnPriceJournalForm},
-  SendOnPrice in '..\..\Forms\SendOnPrice.pas' {SendOnPriceForm};
+  SendOnPrice in '..\..\Forms\SendOnPrice.pas' {SendOnPriceForm},
+  ReturnInJournal in '..\..\Forms\ReturnInJournal.pas' {ReturnInJournalForm},
+  ReturnIn in '..\..\Forms\ReturnIn.pas' {ReturnInForm};
 
 {$R *.RES}
 

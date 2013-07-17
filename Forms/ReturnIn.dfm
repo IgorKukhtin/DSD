@@ -1,4 +1,4 @@
-inherited ReturnOutForm: TReturnOutForm
+inherited ReturnInForm: TReturnInForm
   Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
   ClientHeight = 396
   ClientWidth = 1028
@@ -93,6 +93,7 @@ inherited ReturnOutForm: TReturnOutForm
         Height = 262
         Align = alClient
         TabOrder = 0
+        ExplicitTop = 3
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource
@@ -392,7 +393,7 @@ inherited ReturnOutForm: TReturnOutForm
     Top = 256
   end
   object spSelectMovementItem: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_ReturnOut'
+    StoredProcName = 'gpSelect_MovementItem_ReturnIn'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -432,8 +433,8 @@ inherited ReturnOutForm: TReturnOutForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 136
-    Top = 224
+    Left = 128
+    Top = 192
     DockControlHeights = (
       0
       0
@@ -604,7 +605,7 @@ inherited ReturnOutForm: TReturnOutForm
     Top = 56
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_ReturnOut'
+    StoredProcName = 'gpGet_Movement_ReturnIn'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -662,8 +663,8 @@ inherited ReturnOutForm: TReturnOutForm
         ParamType = ptOutput
         Value = ''
       end>
-    Left = 136
-    Top = 72
+    Left = 160
+    Top = 56
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -704,7 +705,7 @@ inherited ReturnOutForm: TReturnOutForm
     Top = 224
   end
   object spInsertUpdateMovementItem: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_ReturnOut'
+    StoredProcName = 'gpInsertUpdate_MovementItem_ReturnIn'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -774,8 +775,8 @@ inherited ReturnOutForm: TReturnOutForm
         ParamType = ptInput
         Value = '0'
       end>
-    Left = 520
-    Top = 120
+    Left = 608
+    Top = 288
   end
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'
