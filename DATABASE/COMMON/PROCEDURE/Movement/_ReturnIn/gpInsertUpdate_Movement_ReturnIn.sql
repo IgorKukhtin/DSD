@@ -3,7 +3,7 @@
 -- DROP FUNCTION gpInsertUpdate_Movement_ReturnIn();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnIn(
- INOUT ioId                  Integer   , -- Ключ объекта <Документ Возврат поставщику>
+ INOUT ioId                  Integer   , -- Ключ объекта <Документ Возврат покупателя>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
 
