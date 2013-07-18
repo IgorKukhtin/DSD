@@ -208,6 +208,9 @@ inherited ReturnOutForm: TReturnOutForm
             DataBinding.FieldName = 'HeadCount'
             HeaderAlignmentHorz = taCenter
           end
+          object colAssetName: TcxGridDBColumn
+            Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072
+          end
         end
         object cxGridLevel: TcxGridLevel
           GridView = cxGridDBTableView
@@ -217,6 +220,9 @@ inherited ReturnOutForm: TReturnOutForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
