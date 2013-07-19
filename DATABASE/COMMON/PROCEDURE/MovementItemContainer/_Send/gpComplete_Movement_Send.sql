@@ -32,10 +32,9 @@ BEGIN
                                , isPartionCount Boolean, isPartionSumm Boolean
                                , PartionGoodsId Integer) ON COMMIT DROP;
      -- таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_From Integer
-                                   , OperSumm TFloat
-                                   , ObjectCostId_From Integer, AccountId_From Integer, InfoMoneyId_Detail_From Integer) ON COMMIT DROP;
-     -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_From Integer, OperSumm TFloat, InfoMoneyId_Detail_From Integer) ON COMMIT DROP;
+
+     -- заполняем таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementItemId, MovementId, OperDate, UnitId_From, PersonalId_From, UnitId_To, PersonalId_To, BranchId_To
                          , ContainerId_GoodsFrom, ContainerId_GoodsTo, GoodsId, GoodsKindId, AssetId, PartionGoods
                          , OperCount
@@ -322,13 +321,11 @@ BEGIN
 
 
      -- самое интересное: заполняем таблицу - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItemSumm (MovementItemId, ContainerId_From, OperSumm, ObjectCostId_From, AccountId_From, InfoMoneyId_Detail_From)
+     INSERT INTO _tmpItemSumm (MovementItemId, ContainerId_From, OperSumm, InfoMoneyId_Detail_From)
         SELECT
               _tmpItem.MovementItemId
             , Container_Summ.Id                            AS ContainerId_From
             , ABS (_tmpItem.OperCount * HistoryCost.Price) AS OperSumm
-            , ContainerObjectCost_Basis.ObjectCostId       AS ObjectCostId_From
-            , Container_Summ.ObjectId                      AS AccountId_From
             , ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail_From
         FROM _tmpItem
              JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_GoodsFrom
