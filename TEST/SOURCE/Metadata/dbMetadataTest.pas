@@ -76,7 +76,7 @@ begin
 //  ExecFile(MetadataPath + 'Movement\InsertMovementFloatDesc.sql', ZQuery); НОВАЯ СХЕМА2
 //  ExecFile(MetadataPath + 'Movement\InsertMovementDateDesc.sql', ZQuery); НОВАЯ СХЕМА2
   ExecFile(MetadataPath + 'Movement\InsertMovementBooleanDesc.sql', ZQuery);
-  ExecFile(MetadataPath + 'Movement\InsertMovementStringDesc.sql', ZQuery);
+//  ExecFile(MetadataPath + 'Movement\InsertMovementStringDesc.sql', ZQuery);  НОВАЯ СХЕМА2
 end;
 
 procedure TdbMetaDataTest.CreateMovementDescFunction;
@@ -96,6 +96,7 @@ begin
   ExecFile(MetadataPath + 'MovementItem\CreateMovementItemFloatDescFunction.sql', ZQuery);
   ExecFile(MetadataPath + 'MovementItem\CreateMovementItemBooleanDescFunction.sql', ZQuery);
   ExecFile(MetadataPath + 'MovementItem\CreateMovementItemStringDescFunction.sql', ZQuery);
+  ExecFile(MetadataPath + 'MovementItem\CreateMovementItemDateDescFunction.sql', ZQuery);
 end;
 
 procedure TdbMetaDataTest.CreateMovementItemContainerFunction;

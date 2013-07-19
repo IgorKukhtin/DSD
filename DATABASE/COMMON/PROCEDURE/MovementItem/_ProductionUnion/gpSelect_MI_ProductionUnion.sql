@@ -76,7 +76,7 @@ BEGIN
             , MovementItem.Amount        AS Amount
             , MovementItem.ParentId      AS ParentId
             
-            , MIString_PartionGoods.ValueData AS PartionName
+            , MIDate_PartionGoods.ValueData AS PartionName
             , MIFloat_AmountReceipt.ValueData AS AmountReceipt
             , MIString_Comment.ValueData AS Comment
             
@@ -85,9 +85,9 @@ BEGIN
         FROM MovementItem 
              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
-             LEFT JOIN MovementItemString AS MIString_PartionGoods
-                                          ON MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
-                                         AND MIString_PartionGoods.MovementItemId =  MovementItem.Id
+             LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                        ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+                                       AND MIDate_PartionGoods.MovementItemId =  MovementItem.Id
 
              LEFT JOIN MovementItemFloat AS MIFloat_AmountReceipt
                                          ON MIFloat_AmountReceipt.MovementItemId = MovementItem.Id 

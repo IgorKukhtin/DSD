@@ -62,7 +62,7 @@ type
     function InsertUpdateMovementProductionUnionChild
       (Id, MovementId, GoodsId: Integer;
        Amount: double; ParentId: integer;
-       AmountReceipt: double; Comment: string): integer;
+       AmountReceipt: double; Comment: string; PartionGoods: TDateTime): integer;
     constructor Create; override;
   end;
 
@@ -90,7 +90,7 @@ type
     function InsertUpdateMovementItemSale
       (Id, MovementId, GoodsId: Integer;
        Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
-       PartionGoods:String; GoodsKindId: Integer): integer;
+       PartionGoods:String; GoodsKindId, AssetId: Integer): integer;
     constructor Create; override;
   end;
 
@@ -104,7 +104,7 @@ type
     function InsertUpdateMovementItemReturnOut
       (Id, MovementId, GoodsId: Integer;
        Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
-       PartionGoods:String; GoodsKindId: Integer): integer;
+       PartionGoods:String; GoodsKindId, AssetId: Integer): integer;
     constructor Create; override;
   end;
 implementation
@@ -386,7 +386,7 @@ function TMovementItemSaleTest.InsertDefault: integer;
 var Id, MovementId, GoodsId: Integer;
     Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
     PartionGoods:String;
-    GoodsKindId: Integer;
+    GoodsKindId, AssetId: Integer;
 begin
   Id:=0;
   MovementId:= TMovementSaleTest.Create.GetDefault;
@@ -398,16 +398,17 @@ begin
   HeadCount:=5;
   PartionGoods:='';
   GoodsKindId:=0;
+  AssetId:=0;
   //
   result := InsertUpdateMovementItemSale(Id, MovementId, GoodsId,
                               Amount, AmountPartner, Price, CountForPrice, HeadCount,
-                              PartionGoods, GoodsKindId);
+                              PartionGoods, GoodsKindId, AssetId);
 end;
 
 function TMovementItemSaleTest.InsertUpdateMovementItemSale
   (Id, MovementId, GoodsId: Integer;
        Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
-       PartionGoods:String;GoodsKindId: Integer): integer;
+       PartionGoods:String; GoodsKindId, AssetId: Integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -420,6 +421,7 @@ begin
   FParams.AddParam('inHeadCount', ftFloat, ptInput, HeadCount);
   FParams.AddParam('inPartionGoods', ftString, ptInput, PartionGoods);
   FParams.AddParam('inGoodsKindId', ftInteger, ptInput, GoodsKindId);
+  FParams.AddParam('inAssetId', ftInteger, ptInput, AssetId);
   result := InsertUpdate(FParams);
 end;
 
@@ -453,7 +455,7 @@ function TMovementItemReturnOutTest.InsertDefault: integer;
 var Id, MovementId, GoodsId: Integer;
     Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
     PartionGoods:String;
-    GoodsKindId: Integer;
+    GoodsKindId, AssetId: Integer;
 begin
   Id:=0;
   MovementId:= TMovementReturnOutTest.Create.GetDefault;
@@ -465,16 +467,17 @@ begin
   HeadCount:=5;
   PartionGoods:='';
   GoodsKindId:=0;
+  AssetId:=0;
   //
   result := InsertUpdateMovementItemReturnOut(Id, MovementId, GoodsId,
                               Amount, AmountPartner, Price, CountForPrice, HeadCount,
-                              PartionGoods, GoodsKindId);
+                              PartionGoods, GoodsKindId, AssetId);
 end;
 
 function TMovementItemReturnOutTest.InsertUpdateMovementItemReturnOut
   (Id, MovementId, GoodsId: Integer;
        Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
-       PartionGoods:String;GoodsKindId: Integer): integer;
+       PartionGoods:String; GoodsKindId, AssetId: Integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -487,6 +490,7 @@ begin
   FParams.AddParam('inHeadCount', ftFloat, ptInput, HeadCount);
   FParams.AddParam('inPartionGoods', ftString, ptInput, PartionGoods);
   FParams.AddParam('inGoodsKindId', ftInteger, ptInput, GoodsKindId);
+  FParams.AddParam('inAssetId', ftInteger, ptInput, AssetId);
   result := InsertUpdate(FParams);
 end;
 
@@ -597,12 +601,12 @@ begin
   MovementItem_InId := TMovementItemProductionUnionMasterTest.Create.GetDefault;
 
   result := InsertUpdateMovementProductionUnionChild(0, MovementId, GoodsId, 10,
-  MovementItem_InId, 10, 'Comment');
+  MovementItem_InId, 10, 'Comment', Date);
 end;
 
 function TMovementItemProductionUnionChildTest.InsertUpdateMovementProductionUnionChild(
   Id, MovementId, GoodsId: Integer; Amount: double; ParentId: integer;
-  AmountReceipt: double; Comment: string): integer;
+  AmountReceipt: double; Comment: string; PartionGoods: TDateTime): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -612,6 +616,7 @@ begin
   FParams.AddParam('inParentId', ftInteger, ptInput, ParentId);
   FParams.AddParam('inAmountReceipt', ftFloat, ptInput, AmountReceipt);
   FParams.AddParam('inComment', ftString, ptInput, Comment);
+  FParams.AddParam('inPartionGoods', ftDateTime, ptInput, PartionGoods);
   result := InsertUpdate(FParams);
 end;
 

@@ -30,7 +30,7 @@ BEGIN
    -- сохранили свойство <Количество по рецептуре на 1 кутер>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountReceipt(), ioId, inAmountReceipt);
    -- сохранили свойство <Партия товара>
-   PERFORM lpInsertUpdate_MovementItemDate (zc_MIFloat_PartionGoods(), ioId, inPartionGoods);
+   PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoods);
 
 END;
 $BODY$
