@@ -78,14 +78,17 @@ BEGIN
      CREATE TEMP TABLE _tmpObjectCost (DescId Integer, ObjectId Integer) ON COMMIT DROP;
 
      -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItem (MovementItemId Integer, MovementId Integer, OperDate TDateTime, JuridicalId_From Integer, isCorporate Boolean, PersonalId_From Integer, UnitId Integer, BranchId_Unit Integer, PersonalId_Packer Integer, PaidKindId Integer, ContractId Integer, ContainerId_Goods Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar
+     CREATE TEMP TABLE _tmpItem (MovementItemId Integer, MovementId Integer, OperDate TDateTime, JuridicalId_From Integer, isCorporate Boolean, PersonalId_From Integer
+                               , UnitId Integer, BranchId_Unit Integer, PersonalId_Packer Integer, PaidKindId Integer, ContractId Integer
+                               , ContainerId_Goods Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar
                                , OperCount TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, tmpOperSumm_Packer TFloat, OperSumm_Packer TFloat
                                , AccountDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, InfoMoneyDestinationId_isCorporate Integer, InfoMoneyId_isCorporate Integer
                                , JuridicalId_basis Integer, BusinessId Integer
                                , isPartionCount Boolean, isPartionSumm Boolean
                                , PartionMovementId Integer, PartionGoodsId Integer) ON COMMIT DROP;
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItem (MovementItemId, MovementId, OperDate, JuridicalId_From, isCorporate, PersonalId_From, UnitId, BranchId_Unit, PersonalId_Packer, PaidKindId, ContractId, ContainerId_Goods, GoodsId, GoodsKindId, AssetId, PartionGoods
+     INSERT INTO _tmpItem (MovementItemId, MovementId, OperDate, JuridicalId_From, isCorporate, PersonalId_From, UnitId, BranchId_Unit, PersonalId_Packer, PaidKindId, ContractId
+                         , ContainerId_Goods, GoodsId, GoodsKindId, AssetId, PartionGoods
                          , OperCount, tmpOperSumm_Partner, OperSumm_Partner, tmpOperSumm_Packer, OperSumm_Packer
                          , AccountDirectionId, InfoMoneyDestinationId, InfoMoneyId, InfoMoneyDestinationId_isCorporate, InfoMoneyId_isCorporate
                          , JuridicalId_basis, BusinessId
@@ -108,7 +111,7 @@ BEGIN
             , _tmp.GoodsId
             , _tmp.GoodsKindId
             , _tmp.AssetId
-            , CASE WHEN _tmp.isPartionCount OR _tmp.isPartionSumm THEN _tmp.PartionGoods ELSE '' END AS PartionGoods
+            , _tmp.PartionGoods
 
             , _tmp.OperCount
 
@@ -195,8 +198,7 @@ BEGIN
                 , MovementItem.ObjectId AS GoodsId
                 , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                 , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
-                , CASE WHEN Movement.OperDate <= zc_DateStart_PartionGoods() THEN ''
-                       WHEN COALESCE (MIString_PartionGoods.ValueData, '') <> '' THEN MIString_PartionGoods.ValueData
+                , CASE WHEN COALESCE (MIString_PartionGoods.ValueData, '') <> '' THEN MIString_PartionGoods.ValueData
                        WHEN COALESCE (MIString_PartionGoodsCalc.ValueData, '') <> '' THEN MIString_PartionGoodsCalc.ValueData
                        ELSE ''
                   END AS PartionGoods
@@ -394,7 +396,7 @@ BEGIN
    UPDATE _tmpItem SET PartionMovementId = lpInsertFind_Object_PartionMovement (MovementId) WHERE InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100();
 
    -- формируются Партии товара, если PartionGoods <> ''
-   UPDATE _tmpItem SET PartionGoodsId = lpInsertFind_Object_PartionGoods (PartionGoods) WHERE isPartionCount OR isPartionSumm;
+   UPDATE _tmpItem SET PartionGoodsId = lpInsertFind_Object_PartionGoods (PartionGoods) WHERE OperDate >= zc_DateStart_PartionGoods() AND (isPartionCount OR isPartionSumm);
 
    -- RETURN QUERY SELECT _tmpItem.MovementItemId, _tmpItem.MovementId, _tmpItem.OperDate, _tmpItem.JuridicalId_From, _tmpItem.isCorporate, _tmpItem.PersonalId_From, _tmpItem.UnitId, _tmpItem.BranchId_Unit, _tmpItem.PersonalId_Packer, _tmpItem.PaidKindId, _tmpItem.ContractId, _tmpItem.ContainerId_Goods, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.AssetId, _tmpItem.PartionGoods, _tmpItem.OperCount, _tmpItem.tmpOperSumm_Partner, _tmpItem.OperSumm_Partner, _tmpItem.tmpOperSumm_Packer, _tmpItem.OperSumm_Packer, _tmpItem.AccountDirectionId, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId, _tmpItem.InfoMoneyDestinationId_isCorporate, _tmpItem.InfoMoneyId_isCorporate, _tmpItem.JuridicalId_basis, _tmpItem.BusinessId                         , _tmpItem.isPartionCount, _tmpItem.isPartionSumm, _tmpItem.PartionMovementId, _tmpItem.PartionGoodsId FROM _tmpItem;
 
@@ -414,7 +416,7 @@ BEGIN
                                                                               , inObjectCostId     := NULL
                                                                               , inDescId_1   := zc_ContainerLinkObject_Unit()
                                                                               , inObjectId_1 := UnitId
-                                                                              , inDescId_2   := CASE WHEN isPartionCount THEN zc_ContainerLinkObject_PartionGoods() ELSE NULL END
+                                                                              , inDescId_2   := zc_ContainerLinkObject_PartionGoods()
                                                                               , inObjectId_2 := CASE WHEN isPartionCount THEN PartionGoodsId ELSE NULL END
                                                                                )
                                                 WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100()
@@ -492,11 +494,11 @@ BEGIN
                                                                                                                                                    , inObjectId_2 := BusinessId
                                                                                                                                                    , inDescId_3   := zc_ObjectCostLink_Branch()
                                                                                                                                                    , inObjectId_3 := BranchId_Unit
-                                                                                                                                                   , inDescId_4   := CASE WHEN OperDate >= zc_DateStart_ObjectCostOnUnit() THEN zc_ObjectCostLink_Unit() ELSE NULL END
+                                                                                                                                                   , inDescId_4   := zc_ObjectCostLink_Unit()
                                                                                                                                                    , inObjectId_4 := CASE WHEN OperDate >= zc_DateStart_ObjectCostOnUnit() THEN UnitId ELSE NULL END
                                                                                                                                                    , inDescId_5   := zc_ObjectCostLink_Goods()
                                                                                                                                                    , inObjectId_5 := GoodsId
-                                                                                                                                                   , inDescId_6   := CASE WHEN isPartionSumm THEN zc_ObjectCostLink_PartionGoods() ELSE NULL END
+                                                                                                                                                   , inDescId_6   := zc_ObjectCostLink_PartionGoods()
                                                                                                                                                    , inObjectId_6 := CASE WHEN isPartionSumm THEN PartionGoodsId ELSE NULL END
                                                                                                                                                    , inDescId_7   := zc_ObjectCostLink_InfoMoney()
                                                                                                                                                    , inObjectId_7 := InfoMoneyId
@@ -507,7 +509,7 @@ BEGIN
                                                                                                     , inObjectId_1 := UnitId
                                                                                                     , inDescId_2   := zc_ContainerLinkObject_Goods()
                                                                                                     , inObjectId_2 := GoodsId
-                                                                                                    , inDescId_3   := CASE WHEN isPartionSumm THEN zc_ContainerLinkObject_PartionGoods() ELSE NULL END
+                                                                                                    , inDescId_3   := zc_ContainerLinkObject_PartionGoods()
                                                                                                     , inObjectId_3 := CASE WHEN isPartionSumm THEN PartionGoodsId ELSE NULL END
                                                                                                     , inDescId_4   := zc_ContainerLinkObject_InfoMoney()
                                                                                                     , inObjectId_4 := InfoMoneyId
@@ -535,7 +537,7 @@ BEGIN
                                                                                                                                                    , inObjectId_2 := BusinessId
                                                                                                                                                    , inDescId_3   := zc_ObjectCostLink_Branch()
                                                                                                                                                    , inObjectId_3 := BranchId_Unit
-                                                                                                                                                   , inDescId_4   := CASE WHEN OperDate >= zc_DateStart_ObjectCostOnUnit() THEN zc_ObjectCostLink_Unit() ELSE NULL END
+                                                                                                                                                   , inDescId_4   := zc_ObjectCostLink_Unit()
                                                                                                                                                    , inObjectId_4 := CASE WHEN OperDate >= zc_DateStart_ObjectCostOnUnit() THEN UnitId ELSE NULL END
                                                                                                                                                    , inDescId_5   := zc_ObjectCostLink_Goods()
                                                                                                                                                    , inObjectId_5 := GoodsId
@@ -621,7 +623,7 @@ BEGIN
                                                                                                                                                    , inObjectId_2 := BusinessId
                                                                                                                                                    , inDescId_3   := zc_ObjectCostLink_Branch()
                                                                                                                                                    , inObjectId_3 := BranchId_Unit
-                                                                                                                                                   , inDescId_4   := CASE WHEN OperDate >= zc_DateStart_ObjectCostOnUnit() THEN zc_ObjectCostLink_Unit() ELSE NULL END
+                                                                                                                                                   , inDescId_4   := zc_ObjectCostLink_Unit()
                                                                                                                                                    , inObjectId_4 := CASE WHEN OperDate >= zc_DateStart_ObjectCostOnUnit() THEN UnitId ELSE NULL END
                                                                                                                                                    , inDescId_5   := zc_ObjectCostLink_Goods()
                                                                                                                                                    , inObjectId_5 := GoodsId
@@ -749,7 +751,7 @@ LANGUAGE PLPGSQL VOLATILE;
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
                
- 16.07.13                                        * add PartionGoods
+ 17.07.13                                        * all
  12.07.13                                        * add PartionGoods
  11.07.13                                        * add ObjectCost
  04.07.13                                        * !!! finich !!!

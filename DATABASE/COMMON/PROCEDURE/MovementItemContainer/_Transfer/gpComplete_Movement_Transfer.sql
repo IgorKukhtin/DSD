@@ -35,7 +35,7 @@ BEGIN
 
      -- таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer, MovementId Integer, OperDate TDateTime, UnitId_From Integer, PersonalId_From Integer, UnitId_To Integer, PersonalId_To Integer
-                               , BranchId_From Integer, BranchId_To Integer
+                               , BranchId_To Integer
                                , ContainerId_GoodsFrom Integer, ContainerId_GoodsTo Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar
                                , OperCount TFloat
                                , AccountDirectionId_To Integer, InfoMoneyDestinationId_To Integer, InfoMoneyId_To Integer

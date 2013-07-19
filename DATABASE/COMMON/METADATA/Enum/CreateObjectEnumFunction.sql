@@ -62,6 +62,11 @@ CREATE OR REPLACE FUNCTION zc_Enum_AccountGroup_100000() RETURNS Integer AS $BOD
 -- !!! 
 -- !!! 2-уровень Управленческих Счетов
 -- !!! 
+-- 20000; "Запасы"; 20500; "сотрудники (МО)"
+CREATE OR REPLACE FUNCTION zc_Enum_AccountDirection_20500() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AccountDirection_20500' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+-- 20000; "Запасы"; 20600; "сотрудники (экспедиторы)"
+CREATE OR REPLACE FUNCTION zc_Enum_AccountDirection_20600() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AccountDirection_20600' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
 -- 30000; "Дебиторы"; 30100; "Покупатели"
 CREATE OR REPLACE FUNCTION zc_Enum_AccountDirection_30100() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_AccountDirection_30100' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 -- 30000; "Дебиторы"; 30200; "Наши компании"
@@ -131,7 +136,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_InfoMoneyDestination_30100() RETURNS Integer 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-
+ 18.07.13                                        * add zc_Enum_AccountDirection_20500, 20600
  03.07.13                                        * add 2-уровень Управленческих Счетов
  02.07.13                                        * add 1-уровень Управленческих Счетов
  01.07.13                                        * add 2-уровень Управленческих назначений
