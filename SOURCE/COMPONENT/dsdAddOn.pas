@@ -3,20 +3,37 @@ unit dsdAddOn;
 interface
 
 uses Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView,
-     cxTextEdit, DB, dsdAction, cxGridTableView, cxGraphics, cxStyles, Forms;
+     cxTextEdit, DB, dsdAction, cxGridTableView,
+     VCL.Graphics, cxGraphics, cxStyles, Forms, Controls, SysUtils;
 
 type
 
   TdsdDBTreeAddOn = class(TComponent)
   private
     FDBTreeList: TcxDBTreeList;
+    FisLeafFieldName: String;
+    FImages: TImageList;
     procedure SetDBTreeList(const Value: TcxDBTreeList);
+    // сотируем при нажатых Ctrl, Shift или Alt
+    procedure onColumnHeaderClick(Sender: TcxCustomTreeList; AColumn: TcxTreeListColumn);
+    // рисуем свои иконки
+    procedure onCustomDrawHeaderCell(Sender: TcxCustomTreeList;
+       ACanvas: TcxCanvas; AViewInfo: TcxTreeListHeaderCellViewInfo;
+       var ADone: Boolean);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure onGetNodeImageIndex(Sender: TcxCustomTreeList; ANode: TcxTreeListNode;
               AIndexType: TcxTreeListImageIndexType; var AIndex: TImageIndex);
+  public
+    constructor Create(AOwner: TComponent); override;
   published
+    property SortImages: TImageList read FImages write FImages;
+    property isLeafFieldName: String read FisLeafFieldName write FisLeafFieldName;
     property DBTreeList: TcxDBTreeList read FDBTreeList write SetDBTreeList;
+  end;
+
+  ESortException = class(Exception)
+
   end;
 
   // Добавляет ряд функционала на GridView
@@ -28,6 +45,7 @@ type
     FView: TcxGridDBTableView;
     // контрол для ввода условия фильтра
     edFilter: TcxTextEdit;
+    FImages: TImageList;
     procedure OnKeyPress(Sender: TObject; var Key: Char);
     procedure SetView(const Value: TcxGridDBTableView);
     procedure edFilterExit(Sender: TObject);
@@ -49,6 +67,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
   published
+    property SortImages: TImageList read FImages write FImages;
     property View: TcxGridDBTableView read FView write SetView;
   end;
 
@@ -69,9 +88,10 @@ type
 
 implementation
 
-uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf, Windows, SysUtils, VCL.Controls,
-     cxFilter, cxClasses, cxLookAndFeelPainters, cxCustomData, VCL.Graphics,
-     cxGridCommon, math, cxPropertiesStore, cxGridCustomView, UtilConst, cxStorage;
+uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf, Windows,
+     cxFilter, cxClasses, cxLookAndFeelPainters, cxCustomData,
+     cxGridCommon, math, cxPropertiesStore, cxGridCustomView, UtilConst, cxStorage,
+     cxGeometry;
 
 type
 
@@ -86,6 +106,12 @@ end;
 
 { TdsdDBTreeAddOn }
 
+constructor TdsdDBTreeAddOn.Create(AOwner: TComponent);
+begin
+  inherited;
+  isLeafFieldName := 'isLeaf';
+end;
+
 procedure TdsdDBTreeAddOn.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
@@ -94,21 +120,78 @@ begin
      DBTreeList := nil;
 end;
 
+procedure TdsdDBTreeAddOn.onColumnHeaderClick(Sender: TcxCustomTreeList;
+  AColumn: TcxTreeListColumn);
+begin
+  // сотируем при нажатых Ctrl, Shift или Alt
+  if not (ShiftDown or CtrlDown or AltDown) then
+     raise ESortException.Create('');
+end;
+
+procedure TdsdDBTreeAddOn.onCustomDrawHeaderCell(Sender: TcxCustomTreeList;
+  ACanvas: TcxCanvas; AViewInfo: TcxTreeListHeaderCellViewInfo;
+  var ADone: Boolean);
+var
+  I: Integer;
+  R: TRect;
+  ASortingImageSize: Integer;
+  ASortingImageIndex: Integer;
+begin
+   with AViewInfo do begin
+    Painter.DrawHeaderBorder(ACanvas,
+      cxRectInflate(AViewInfo.BoundsRect, -1, -1),
+      AViewInfo.Neighbors, AViewInfo.Borders);
+
+    Painter.DrawHeaderEx(ACanvas,
+      BoundsRect, TextBounds, Neighbors, Borders, State, AlignHorz, AlignVert,
+      MultiLine, ShowEndEllipsis, Text, ViewParams.Font, ViewParams.TextColor,
+      ViewParams.Color, nil);
+   end;
+
+   if Assigned(SortImages) then
+      ASortingImageSize := SortImages.Width;
+
+    R := AViewInfo.BoundsRect;
+    R.Left := R.Right - ASortingImageSize - 3;
+    InflateRect(R, -1, -1);
+    if AViewInfo.SortOrder <> soNone then
+    begin
+      //ACanvas.Brush.Color := AViewInfo. Color;
+      ACanvas.Brush.Style := bsClear;
+      if AViewInfo.SortOrder = soAscending then
+         ASortingImageIndex := min(0, 11)
+      else
+         ASortingImageIndex := 11 + min(0, 11);
+      if Assigned(SortImages) then
+         ACanvas.DrawImage(SortImages, R.Left, R.Top, ASortingImageIndex);
+    end;
+
+  ADone := true
+end;
+
 procedure TdsdDBTreeAddOn.onGetNodeImageIndex(Sender: TcxCustomTreeList;
   ANode: TcxTreeListNode; AIndexType: TcxTreeListImageIndexType;
   var AIndex: TImageIndex);
 begin
-  if ANode.Expanded then
-     AIndex := 1
-  else
-     AIndex := 0;
+  // Устанавливаем индексы картинок
+  if Assigned(FDBTreeList) then
+    if ANode.Expanded then
+       AIndex := 1
+    else
+       if ANode.CanExpand then
+          AIndex := 0
+       else
+          AIndex := 2;
 end;
 
 procedure TdsdDBTreeAddOn.SetDBTreeList(const Value: TcxDBTreeList);
 begin
   FDBTreeList := Value;
-  if Assigned(FDBTreeList) then
-     FDBTreeList.OnGetNodeImageIndex := onGetNodeImageIndex;
+  if Assigned(FDBTreeList) then begin
+     FDBTreeList.OnGetNodeImageIndex := OnGetNodeImageIndex;
+     FDBTreeList.OnColumnHeaderClick := OnColumnHeaderClick;
+     FDBTreeList.OnCustomDrawHeaderCell := OnCustomDrawHeaderCell;
+  end;
 end;
 
 { TdsdDBFilterAddOn }
@@ -141,8 +224,8 @@ var
   ASortingImageSize: Integer;
   ASortingImageIndex: Integer;
 begin
-  if Assigned(Sender.Images) then
-     ASortingImageSize := Sender.Images.Width;
+  if Assigned(SortImages) then
+     ASortingImageSize := SortImages.Width;
   with AViewInfo do
   begin
     Sender.Painter.LookAndFeelPainter.DrawHeader(ACanvas, Bounds, TextAreaBounds, Neighbors,
@@ -173,8 +256,8 @@ begin
          ASortingImageIndex := min(AViewInfo.Column.SortIndex, 11)
       else
          ASortingImageIndex := 11 + min(AViewInfo.Column.SortIndex, 11);
-      if Assigned(Sender.Images) then
-         ACanvas.DrawImage(Sender.Images, R.Left, R.Top, ASortingImageIndex);
+      if Assigned(SortImages) then
+         ACanvas.DrawImage(SortImages, R.Left, R.Top, ASortingImageIndex);
     end;
     ADone := True;
   end;
@@ -316,6 +399,7 @@ var
   i: integer;
   PropertiesStore: TcxPropertiesStore;
   GridView: TcxCustomGridView;
+  TreeList: TcxDBTreeList;
 begin
   Data := StringReplace(TdsdFormStorageFactory.GetStorage.LoadUserFormSettings(FForm.Name), '&', '&amp;', [rfReplaceAll]);
   if Data <> '' then begin
@@ -327,6 +411,12 @@ begin
            GridView := FForm.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxCustomGridView;
            if Assigned(GridView) then begin
               GridView.RestoreFromStream(TStringStream.Create(gfStrXmlToStr(XMLToAnsi(ChildNodes[i].GetAttribute('data')))));
+           end;
+        end;
+        if ChildNodes[i].NodeName = 'cxTreeList' then begin
+           TreeList := FForm.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxDBTreeList;
+           if Assigned(TreeList) then begin
+              TreeList.RestoreFromStream(TStringStream.Create(gfStrXmlToStr(XMLToAnsi(ChildNodes[i].GetAttribute('data')))));
            end;
         end;
         if ChildNodes[i].NodeName = 'cxPropertiesStore' then begin
@@ -348,7 +438,6 @@ var
   TempStream: TStringStream;
   i, j: integer;
   xml: string;
-  fff, bbb: string;
 begin
   TempStream :=  TStringStream.Create;
   try
@@ -359,6 +448,12 @@ begin
          with TcxCustomGridView(FForm.Components[i]) do begin
            StoreToStream(TempStream);
            xml := xml + '<cxGridView name = "' + Name + '" data = "' + gfStrToXmlStr(TempStream.DataString) + '" />';
+           TempStream.Clear;
+         end;
+      if FForm.Components[i] is TcxDBTreeList then
+         with TcxDBTreeList(FForm.Components[i]) do begin
+           StoreToStream(TempStream);
+           xml := xml + '<cxTreeList name = "' + Name + '" data = "' + gfStrToXmlStr(TempStream.DataString) + '" />';
            TempStream.Clear;
          end;
       // сохраняем остальные установки

@@ -70,14 +70,16 @@ end;
 
 function TdsdGuides.GetKey: String;
 begin
-  FKey := '';
   if Assigned(LookupControl) then begin
-     if LookupControl is TcxLookupComboBox then
+     if LookupControl is TcxLookupComboBox then begin
         // Проверим выбран ли элемент
         if VarisNull((LookupControl as TcxLookupComboBox).EditValue) then
            Result := '0'
         else
            Result := (LookupControl as TcxLookupComboBox).EditValue;
+     end
+     else
+       Result := FKey;
   end;
 end;
 

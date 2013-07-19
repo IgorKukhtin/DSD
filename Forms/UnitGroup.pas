@@ -43,6 +43,7 @@ type
     cxDBTreeList1cxDBTreeListColumn1: TcxDBTreeListColumn;
     cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn;
     dsdDBTreeAddOn: TdsdDBTreeAddOn;
+    actChoiceGuides: TdsdChoiceGuides;
   private
     { Private declarations }
   public

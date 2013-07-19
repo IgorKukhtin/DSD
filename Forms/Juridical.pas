@@ -21,12 +21,13 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinsdxBarPainter, dxBarExtItems;
+  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinsdxBarPainter, dxBarExtItems,
+  cxImageComboBox, cxCheckBox, cxSplitter, dsdAddOn;
 
 type
   TJuridicalForm = class(TParentForm)
-    DataSource: TDataSource;
-    ClientDataSet: TClientDataSet;
+    TreeDS: TDataSource;
+    TreeDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
@@ -35,7 +36,7 @@ type
     actRefresh: TdsdDataSetRefresh;
     actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
-    dsdStoredProc: TdsdStoredProc;
+    TreeStoredProc: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     bbErased: TdxBarButton;
@@ -43,16 +44,27 @@ type
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     cxDBTreeList: TcxDBTreeList;
-    cxDBTreeListcxDBTreeListColumn1: TcxDBTreeListColumn;
-    cxDBTreeListcxDBTreeListColumn2: TcxDBTreeListColumn;
-    cxDBTreeListcxDBTreeListColumn3: TcxDBTreeListColumn;
-    cxDBTreeListcxDBTreeListColumn4: TcxDBTreeListColumn;
+    ceName: TcxDBTreeListColumn;
     dsdFormParams: TdsdFormParams;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdGridToExcel: TdsdGridToExcel;
     bbChoiceGuides: TdxBarButton;
     bbGridToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
+    cxSplitter: TcxSplitter;
+    cxGrid: TcxGrid;
+    cxGridDBTableView: TcxGridDBTableView;
+    ceTreeState: TcxGridDBColumn;
+    ceCode: TcxGridDBColumn;
+    ceJuridicalName: TcxGridDBColumn;
+    ceisErased: TcxGridDBColumn;
+    cxGridLevel: TcxGridLevel;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
+    dsdDBTreeAddOn: TdsdDBTreeAddOn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    GridDS: TDataSource;
+    GridDataSet: TClientDataSet;
+    GridStoredProc: TdsdStoredProc;
   private
     { Private declarations }
   public

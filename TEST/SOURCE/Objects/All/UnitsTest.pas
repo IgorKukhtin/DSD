@@ -21,7 +21,6 @@ type
                               ParentId, BranchId, BusinessId, JuridicalId,
                               AccountDirectionId, ProfitLossDirectionId: integer): integer;
     constructor Create; override;
-    destructor Destroy; override;
   end;
 
 
@@ -129,13 +128,6 @@ begin
   BranchTest := TBranchTest.Create;
 end;
 
-destructor TUnit.Destroy;
-begin
-  inherited;
-  // Удаление вставленного филиала
-  BranchTest.Free;
-end;
-
 function TUnit.InsertDefault: integer;
 begin
   result := InsertUpdateUnit(0, 1, 'Подразделение', 0, BranchTest.GetDefault, 0, 0, 0, 0);
@@ -160,7 +152,7 @@ begin
 
   result := InsertUpdate(FParams);
   if Id = 0 then
-     FInsertedIdList.Add(IntToStr(result));
+     InsertedIdObjectList.Add(IntToStr(result));
 end;
 
 

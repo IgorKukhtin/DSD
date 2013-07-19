@@ -2,15 +2,15 @@ inherited UnitForm: TUnitForm
   Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
   ClientHeight = 403
   ClientWidth = 768
-  ExplicitWidth = 784
-  ExplicitHeight = 441
+  ExplicitWidth = 776
+  ExplicitHeight = 430
   PixelsPerInch = 96
   TextHeight = 13
   object cxDBTreeList: TcxDBTreeList
     Left = 0
-    Top = 28
+    Top = 26
     Width = 313
-    Height = 375
+    Height = 377
     Align = alLeft
     Bands = <
       item
@@ -36,6 +36,7 @@ inherited UnitForm: TUnitForm
       Caption.AlignVert = vaCenter
       Caption.Text = #1043#1088#1091#1087#1087#1072
       DataBinding.FieldName = 'Name'
+      Options.Editing = False
       Width = 110
       Position.ColIndex = 0
       Position.RowIndex = 0
@@ -46,18 +47,17 @@ inherited UnitForm: TUnitForm
   end
   object cxSplitter1: TcxSplitter
     Left = 313
-    Top = 28
+    Top = 26
     Width = 8
-    Height = 375
+    Height = 377
     Control = cxDBTreeList
   end
   object cxGrid: TcxGrid
     Left = 321
-    Top = 28
+    Top = 26
     Width = 447
-    Height = 375
+    Height = 377
     Align = alClient
-    Images = dmMain.SortImageList
     TabOrder = 6
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
@@ -65,7 +65,6 @@ inherited UnitForm: TUnitForm
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
-      Images = dmMain.SortImageList
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsView.ColumnAutoWidth = True
@@ -74,8 +73,18 @@ inherited UnitForm: TUnitForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object ceTreeState: TcxGridDBColumn
+        DataBinding.FieldName = 'isLeaf'
         PropertiesClassName = 'TcxImageComboBoxProperties'
-        Properties.Items = <>
+        Properties.Images = dmMain.TreeImageList
+        Properties.Items = <
+          item
+            ImageIndex = 0
+            Value = False
+          end
+          item
+            ImageIndex = 2
+            Value = True
+          end>
         SortIndex = 0
         SortOrder = soAscending
         Width = 20
@@ -115,11 +124,11 @@ inherited UnitForm: TUnitForm
     end
   end
   object TreeDS: TDataSource
-    DataSet = ClientTreeDataSet
+    DataSet = TreeDataSet
     Left = 96
     Top = 96
   end
-  object ClientTreeDataSet: TClientDataSet
+  object TreeDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 96
@@ -148,8 +157,8 @@ inherited UnitForm: TUnitForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -166,7 +175,7 @@ inherited UnitForm: TUnitForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -246,17 +255,12 @@ inherited UnitForm: TUnitForm
       ImageIndex = 8
     end
     object bbChoice: TdxBarButton
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Action = dsdChoiceGuides
       Category = 0
-      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      Visible = ivAlways
-      ImageIndex = 7
-      ShortCut = 13
     end
     object dxBarStatic: TdxBarStatic
       Caption = '     '
       Category = 0
-      Hint = '     '
       Visible = ivAlways
     end
   end
@@ -291,7 +295,7 @@ inherited UnitForm: TUnitForm
           Value = '0'
         end>
       isShowModal = True
-      DataSource = TreeDS
+      DataSource = GridDS
       DataSetRefresh = actRefresh
     end
     object actUpdate: TdsdInsertUpdateAction
@@ -302,13 +306,14 @@ inherited UnitForm: TUnitForm
       GuiParams = <
         item
           Name = 'Id'
-          Component = ClientGridDataSet
+          Component = GridDataSet
+          ComponentItem = 'Id'
           DataType = ftInteger
           ParamType = ptInput
         end>
       isShowModal = True
       ActionType = acUpdate
-      DataSource = TreeDS
+      DataSource = GridDS
       DataSetRefresh = actRefresh
     end
     object dsdSetErased: TdsdUpdateErased
@@ -324,17 +329,15 @@ inherited UnitForm: TUnitForm
       Params = <
         item
           Name = 'Key'
-          ComponentItem = 'Id'
+          Component = GridDataSet
           DataType = ftString
           ParamType = ptOutput
-          Value = Null
         end
         item
           Name = 'TextValue'
-          ComponentItem = 'Name'
-          DataType = ftInteger
+          Component = GridDataSet
+          DataType = ftString
           ParamType = ptOutput
-          Value = Null
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -352,22 +355,22 @@ inherited UnitForm: TUnitForm
     end
   end
   object spTree: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Unit'
-    DataSet = ClientTreeDataSet
+    StoredProcName = 'gpSelect_Object_Unit_Tree'
+    DataSet = TreeDataSet
     DataSets = <
       item
-        DataSet = ClientTreeDataSet
+        DataSet = TreeDataSet
       end>
     Params = <>
     Left = 152
     Top = 152
   end
   object GridDS: TDataSource
-    DataSet = ClientGridDataSet
+    DataSet = GridDataSet
     Left = 360
     Top = 104
   end
-  object ClientGridDataSet: TClientDataSet
+  object GridDataSet: TClientDataSet
     Aggregates = <>
     IndexFieldNames = 'ParentId'
     MasterFields = 'Id'
@@ -379,16 +382,18 @@ inherited UnitForm: TUnitForm
   end
   object spGrid: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Unit'
-    DataSet = ClientGridDataSet
+    DataSet = GridDataSet
     DataSets = <
       item
-        DataSet = ClientGridDataSet
+        DataSet = GridDataSet
       end>
     Params = <>
     Left = 416
     Top = 160
   end
   object dsdDBTreeAddOn: TdsdDBTreeAddOn
+    SortImages = dmMain.SortImageList
+    isLeafFieldName = 'isLeaf'
     DBTreeList = cxDBTreeList
     Left = 192
     Top = 240
@@ -397,14 +402,14 @@ inherited UnitForm: TUnitForm
     Params = <
       item
         Name = 'Key'
-        Component = ClientGridDataSet
+        Component = GridDataSet
         ComponentItem = 'Id'
         DataType = ftString
         ParamType = ptOutput
       end
       item
         Name = 'TextValue'
-        Component = ClientGridDataSet
+        Component = GridDataSet
         ComponentItem = 'Name'
         DataType = ftString
         ParamType = ptOutput
@@ -417,6 +422,7 @@ inherited UnitForm: TUnitForm
     Top = 280
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    SortImages = dmMain.SortImageList
     View = cxGridDBTableView
     Left = 424
     Top = 240

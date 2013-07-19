@@ -10,7 +10,8 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, Datasnap.DBClient, dsdDB, cxPropertiesStore, dxBar,
   Vcl.ActnList, dsdAction, ParentForm, DataModul, Vcl.ComCtrls,
-  cxTL, cxTLdxBarBuiltInMenu, cxInplaceContainer, cxTLData, cxDBTL, cxMaskEdit;
+  cxTL, cxTLdxBarBuiltInMenu, cxInplaceContainer, cxTLData, cxDBTL, cxMaskEdit,
+  dsdAddOn, dxBarExtItems;
 
 type
   TJuridicalGroupForm = class(TParentForm)
@@ -27,9 +28,20 @@ type
     dsdStoredProc: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    cxDBTreeList1: TcxDBTreeList;
+    cxDBTreeList: TcxDBTreeList;
     colCode: TcxDBTreeListColumn;
     colName: TcxDBTreeListColumn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    dsdDBTreeAddOn: TdsdDBTreeAddOn;
+    spErasedUnErased: TdsdStoredProc;
+    actSetErased: TdsdUpdateErased;
+    actSetUnErased: TdsdUpdateErased;
+    actGridToExcel: TdsdGridToExcel;
+    actChoiceGuides: TdsdChoiceGuides;
+    bbSetErased: TdxBarButton;
+    bbSetEnerased: TdxBarButton;
+    dxBarStatic1: TdxBarStatic;
+    bbChoiceGuide: TdxBarButton;
   private
     { Private declarations }
   public

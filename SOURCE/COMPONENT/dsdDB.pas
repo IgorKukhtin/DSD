@@ -366,11 +366,13 @@ end;
 
 function TdsdParam.AsString: string;
 var i: Integer;
+    Data: OleVariant;
 begin
-  if varType(Value) in [varSingle, varDouble, varCurrency] then
-     result := gfFloatToStr(Value)
+  Data := Value;
+  if varType(Data) in [varSingle, varDouble, varCurrency] then
+     result := gfFloatToStr(Data)
   else
-     result := Value;
+     result := Data;
   case DataType of
     ftSmallint, ftInteger, ftWord:
            if not TryStrToInt(result, i)

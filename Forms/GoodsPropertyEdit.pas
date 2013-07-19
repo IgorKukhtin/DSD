@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxPropertiesStore, dsdDB,
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
   cxEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit, Vcl.ActnList,
-  Vcl.StdActns, dsdAction, ParentForm, cxCurrencyEdit;
+  Vcl.StdActns, dsdAction, ParentForm, cxCurrencyEdit, dsdAddOn;
 
 type
   TGoodsPropertyEditForm = class(TParentForm)
@@ -20,10 +20,11 @@ type
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     dsdDataSetRefresh: TdsdDataSetRefresh;
-    dsdExecStoredProc: TdsdExecStoredProc;
-    dsdFormClose1: TdsdFormClose;
+    dsdFormClose: TdsdFormClose;
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    cxPropertiesStore: TcxPropertiesStore;
   private
     { Private declarations }
   public

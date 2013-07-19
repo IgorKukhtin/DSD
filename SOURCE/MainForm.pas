@@ -122,7 +122,7 @@ type
     bbReturnOut: TdxBarButton;
     procedure FormCreate(Sender: TObject);
   private
-    { Private declarations }
+    procedure OnException(Sender: TObject; E: Exception);
   public
     { Public declarations }
   end;
@@ -132,7 +132,7 @@ var
 
 implementation
 
-uses ParentForm, dsdDB, Storage, CommonData;
+uses ParentForm, dsdDB, Storage, CommonData, dsdAddOn;
 
 {$R DevExpressRus.res}
 
@@ -143,6 +143,14 @@ begin
   // Локализуем сообщения DevExpress
   cxLocalizer.Active:= True;
   cxLocalizer.Locale:= 1049;
+ // Application.OnException := OnException;
+end;
+
+procedure TMainForm.OnException(Sender: TObject; E: Exception);
+begin
+  if E is ESortException then
+  else
+     raise E;
 end;
 
 end.

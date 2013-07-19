@@ -28,7 +28,7 @@ uses
 type
   TUnitForm = class(TParentForm)
     TreeDS: TDataSource;
-    ClientTreeDataSet: TClientDataSet;
+    TreeDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
@@ -51,7 +51,7 @@ type
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     GridDS: TDataSource;
-    ClientGridDataSet: TClientDataSet;
+    GridDataSet: TClientDataSet;
     spGrid: TdsdStoredProc;
     ceCode: TcxGridDBColumn;
     ceName: TcxGridDBColumn;

@@ -2,15 +2,15 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
   Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
   ClientHeight = 376
   ClientWidth = 390
-  ExplicitWidth = 406
-  ExplicitHeight = 414
+  ExplicitWidth = 398
+  ExplicitHeight = 403
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
+    Top = 26
     Width = 390
-    Height = 348
+    Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -87,8 +87,8 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -105,7 +105,7 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -218,7 +218,7 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'GoodsPropertyEditForm'
+      FormName = 'TGoodsPropertyEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -235,7 +235,7 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'GoodsPropertyEditForm'
+      FormName = 'TGoodsPropertyEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -282,7 +282,7 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
-          DataType = ftInteger
+          DataType = ftString
           ParamType = ptOutput
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -315,6 +315,7 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
     Top = 152
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    SortImages = dmMain.SortImageList
     View = cxGridDBTableView
     Left = 224
     Top = 232

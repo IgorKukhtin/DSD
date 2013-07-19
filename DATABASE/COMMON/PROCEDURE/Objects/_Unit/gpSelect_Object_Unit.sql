@@ -24,7 +24,7 @@ BEGIN
            , Object_Unit.ObjectCode AS Code
            , Object_Unit.ValueData  AS Name
          
-           , Object_Parent.Id         AS ParentId
+           , COALESCE(Object_Parent.Id, 0)  AS ParentId
            , Object_Parent.ObjectCode AS ParentCode
            , Object_Parent.ValueData  AS ParentName 
 

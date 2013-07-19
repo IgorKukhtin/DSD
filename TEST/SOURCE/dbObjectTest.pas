@@ -13,8 +13,6 @@ type
   protected
     FdsdStoredProc: TdsdStoredProc;
     FParams: TdsdParams;
-    // Список добавленных Id
-    FInsertedIdList: TStringList;
     property spGet: string read FspGet write FspGet;
     property spSelect: string read FspSelect write FspSelect;
     property spInsertUpdate: string read FspInsertUpdate write FspInsertUpdate;
@@ -57,7 +55,6 @@ type
     procedure GoodsProperty_Test;
     procedure GoodsPropertyValue_Test;
     procedure JuridicalGroup_Test;
-    procedure Juridical_Test;
     procedure Measure_Test;
     procedure PaidKind_Test;
     procedure Partner_Test;
@@ -155,17 +152,6 @@ type
     procedure Delete(Id: Integer); override;
     function InsertUpdatePartner(const Id: integer; Code: Integer;
         Name, GLNCode: string; JuridicalId, RouteId, RouteSortingId: integer): integer;
-    constructor Create; override;
-  end;
-
-  TJuridicalTest = class(TObjectTest)
-  private
-    function InsertDefault: integer; override;
-  public
-      // Удаляется Объект и все подчиненные
-   procedure Delete(Id: Integer); override;
-   function InsertUpdateJuridical(const Id: integer; Code: Integer;
-        Name, GLNCode: string; isCorporate: boolean; JuridicalGroupId, GoodsPropertyId, InfoMoneyId: integer): integer;
     constructor Create; override;
   end;
 
@@ -449,7 +435,7 @@ type
 uses ZDbcIntfs, SysUtils, Storage, DBClient, XMLDoc, CommonData, Forms,
      UtilConvert, ZLibEx, zLibUtil,
 
-     UnitsTest;
+     UnitsTest, JuridicalTest;
 
 
 { TObjectTest }
@@ -458,7 +444,6 @@ constructor TObjectTest.Create;
 begin
   FdsdStoredProc := TdsdStoredProc.Create(nil);
   FParams := TdsdParams.Create(TdsdParam);
-  FInsertedIdList := TStringList.Create;
 end;
 
 procedure TObjectTest.DeleteObject(Id: Integer);
@@ -476,9 +461,11 @@ end;
 procedure TObjectTest.Delete(Id: Integer);
 var Index: Integer;
 begin
-  if FInsertedIdList.Find(IntToStr(Id), Index) then
+  if InsertedIdObjectList.Find(IntToStr(Id), Index) then begin
      // здесь мы разрешаем удалять ТОЛЬКО вставленные в момент теста данные
-     DeleteObject(Id)
+     DeleteObject(Id);
+     InsertedIdObjectList.Delete(Index);
+  end
   else
      raise Exception.Create('Попытка удалить запись, вставленную вне теста!!!');
 end;
@@ -487,10 +474,6 @@ destructor TObjectTest.Destoy;
 var i: integer;
 begin
   FdsdStoredProc.Free;
-  // Удаляем вставленные, но не удаленные в момент теста процедуры.
-  for i := 0 to FInsertedIdList.Count - 1 do
-      DeleteObject(StrToInt(FInsertedIdList[i]));
-  FInsertedIdList.Free;
 end;
 
 function TObjectTest.GetDataSet: TDataSet;
@@ -531,10 +514,10 @@ end;
 
 function TObjectTest.InsertDefault: integer;
 begin
-  FInsertedIdList.Add(IntToStr(result));
 end;
 
 function TObjectTest.InsertUpdate(dsdParams: TdsdParams): Integer;
+var OldId: integer;
 begin
   with FdsdStoredProc do begin
     StoredProcName := FspInsertUpdate;
@@ -542,6 +525,8 @@ begin
     Params.Assign(dsdParams);
     Execute;
     Result := StrToInt(ParamByName('ioId').Value);
+    if OldId <> Result then
+       InsertedIdObjectList.Add(IntToStr(result));
   end;
 end;
 
@@ -652,6 +637,11 @@ end;
 procedure TdbObjectTest.TearDown;
 begin
   inherited;
+  with TObjectTest.Create do
+    while InsertedIdObjectList.Count > 0 do begin
+       DeleteObject(StrToInt(InsertedIdObjectList[0]));
+       InsertedIdObjectList.Delete(0);
+    end;
 end;
 {------------------------------------------------------------------------------}
 procedure TdbObjectTest.SetUp;
@@ -726,12 +716,6 @@ begin
     Free;
   end;
   with TBranchTest.Create do
-  try
-    Delete(GetDefault)
-  finally
-    Free;
-  end;
-  with TPaidKindTest.Create do
   try
     Delete(GetDefault)
   finally
@@ -887,7 +871,7 @@ end;
 procedure TBankTest.Delete(Id: Integer);
 begin
   inherited;
-  with TJuridicalTest.Create do
+  with TJuridical.Create do
   try
     Delete(GetDefault);
   finally
@@ -899,7 +883,7 @@ function TBankTest.InsertDefault: integer;
 var
   JuridicalId: Integer;
 begin
-  JuridicalId := TJuridicalTest.Create.GetDefault;
+  JuridicalId := TJuridical.Create.GetDefault;
   result := InsertUpdateBank(0, -1, 'Банк', 'МФО', JuridicalId)
 end;
 
@@ -926,31 +910,13 @@ end;
 procedure TPartnerTest.Delete(Id: Integer);
 begin
   inherited;
-  with TJuridicalTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free;
-  end;
-  with TRouteTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free;
-  end;
-  with TRouteSortingTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free;
-  end;
 end;
 
 function TPartnerTest.InsertDefault: integer;
 var
   JuridicalId, RouteId, RouteSortingId: Integer;
 begin
-  JuridicalId := TJuridicalTest.Create.GetDefault;
+  JuridicalId := TJuridical.Create.GetDefault;
   RouteId := TRouteTest.Create.GetDefault;
   RouteSortingId := TRouteSortingTest.Create.GetDefault;
   result := InsertUpdatePartner(0, -1, 'Контрагенты', 'GLNCode', JuridicalId, RouteId, RouteSortingId);
@@ -968,63 +934,6 @@ begin
   FParams.AddParam('inRouteSortingId', ftInteger, ptInput, RouteSortingId);
   result := InsertUpdate(FParams);
 end;
-
-    { TJuridicalTest }
- constructor TJuridicalTest.Create;
-begin
-  inherited;
-  spInsertUpdate := 'gpInsertUpdate_Object_Juridical';
-  spSelect := 'gpSelect_Object_Juridical';
-  spGet := 'gpGet_Object_Juridical';
-end;
-
-procedure TJuridicalTest.Delete(Id: Integer);
-begin
-  inherited;
-  with TJuridicalGroupTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free;
-  end;
-  with TGoodsPropertyTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free;
-  end;
-  with TInfoMoneyTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free;
-  end;
-end;
-
-function TJuridicalTest.InsertDefault: integer;
-var
-  JuridicalGroupId, GoodsPropertyId, InfoMoneyId: Integer;
-begin
-  JuridicalGroupId := TJuridicalGroupTest.Create.GetDefault;
-  GoodsPropertyId := TGoodsPropertyTest.Create.GetDefault;
-  InfoMoneyId:= TInfoMoneyTest.Create.GetDefault;;
-  result := InsertUpdateJuridical(0, -1, 'Юр. лицо', 'GLNCode', true, JuridicalGroupId, GoodsPropertyId, InfoMoneyId)
-end;
-
-function TJuridicalTest.InsertUpdateJuridical;
-begin
-  FParams.Clear;
-  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
-  FParams.AddParam('inCode', ftInteger, ptInput, Code);
-  FParams.AddParam('inName', ftString, ptInput, Name);
-  FParams.AddParam('inGLNCode', ftString, ptInput, GLNCode);
-  FParams.AddParam('isCorporate', ftBoolean, ptInput, isCorporate);
-  FParams.AddParam('inJuridicalGroupId', ftInteger, ptInput, JuridicalGroupId);
-  FParams.AddParam('inGoodsPropertyId', ftInteger, ptInput, GoodsPropertyId);
-  FParams.AddParam('inInfoMoneyId', ftInteger, ptInput, InfoMoneyId);
-  result := InsertUpdate(FParams);
-end;
-
 { TDataBaseUsersObjectTest }
 
 procedure TdbObjectTest.JuridicalGroup_Test;
@@ -1078,26 +987,6 @@ begin
     finally
       ObjectTest.Delete(Id2);
     end;
-  finally
-    ObjectTest.Delete(Id);
-  end;
-end;
-
-procedure TdbObjectTest.Juridical_Test;
-var Id: integer;
-    RecordCount: Integer;
-    ObjectTest: TJuridicalTest;
-begin
-  ObjectTest := TJuridicalTest.Create;
-  // Получим список
-  RecordCount := GetRecordCount(ObjectTest);
-  // Вставка юр лица
-  Id := ObjectTest.InsertDefault;
-  try
-    // Получение данных о юр лице
-    with ObjectTest.GetRecord(Id) do
-      Check((FieldByName('GLNCode').AsString = 'GLNCode'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
-
   finally
     ObjectTest.Delete(Id);
   end;
@@ -1486,7 +1375,7 @@ end;
 procedure TBranchTest.Delete(Id: Integer);
 begin
   inherited;
-  with TJuridicalTest.Create do
+  with TJuridical.Create do
   try
     Delete(GetDefault);
   finally
@@ -1729,7 +1618,7 @@ end;
 procedure TBankAccountTest.Delete(Id: Integer);
 begin
   inherited;
-  with TJuridicalTest.Create do
+  with TJuridical.Create do
   try
     Delete(GetDefault);
   finally
@@ -1753,7 +1642,7 @@ function TBankAccountTest.InsertDefault: integer;
 var
   JuridicalId, BankId, CurrencyId: Integer;
 begin
-  JuridicalId := TJuridicalTest.Create.GetDefault;
+  JuridicalId := TJuridical.Create.GetDefault;
   BankId:= TBankTest.Create.GetDefault;
   CurrencyId:= TCurrencyTest.Create.GetDefault;
 
@@ -2476,18 +2365,6 @@ begin
   finally
     Free;
   end;
-    {with TUnitTest.Create do
-  try
-    Delete(GetDefault)
-  finally
-    Free;
-  end;}
-    with TJuridicalTest.Create do
-  try
-    Delete(GetDefault)
-  finally
-    Free;
-  end;
     with TBusinessTest.Create do
   try
     Delete(GetDefault)
@@ -2508,7 +2385,7 @@ begin
   MemberId := TMemberTest.Create.GetDefault;
   PositionId := TPositionTest.Create.GetDefault;
   UnitId := TUnit.Create.GetDefault;
-  JuridicalId := TJuridicalTest.Create.GetDefault;
+  JuridicalId := TJuridical.Create.GetDefault;
   BusinessId := TBusinessTest.Create.GetDefault;
   result := InsertUpdatePersonal(0, 3, 'Сотрудник', MemberId, PositionId, UnitId, JuridicalId, BusinessId, Date,Date);
 end;

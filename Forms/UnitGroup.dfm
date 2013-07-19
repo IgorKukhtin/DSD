@@ -1,16 +1,16 @@
 inherited UnitGroupForm: TUnitGroupForm
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1075#1088#1091#1087#1087' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
+  Caption = #1043#1088#1091#1087#1087#1099' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
   ClientHeight = 376
   ClientWidth = 390
-  ExplicitWidth = 406
-  ExplicitHeight = 414
+  ExplicitWidth = 398
+  ExplicitHeight = 403
   PixelsPerInch = 96
   TextHeight = 13
   object cxDBTreeList: TcxDBTreeList
     Left = 0
-    Top = 28
+    Top = 26
     Width = 390
-    Height = 348
+    Height = 350
     Align = alClient
     Bands = <
       item
@@ -64,8 +64,8 @@ inherited UnitGroupForm: TUnitGroupForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -82,7 +82,7 @@ inherited UnitGroupForm: TUnitGroupForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -132,6 +132,7 @@ inherited UnitGroupForm: TUnitGroupForm
     end
   end
   object ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 232
     Top = 144
     object actRefresh: TdsdDataSetRefresh
@@ -179,6 +180,14 @@ inherited UnitGroupForm: TUnitGroupForm
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
+    object actChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      Params = <>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ShortCut = 13
+      ImageIndex = 7
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_UnitGroup'
@@ -192,6 +201,7 @@ inherited UnitGroupForm: TUnitGroupForm
     Top = 152
   end
   object dsdDBTreeAddOn: TdsdDBTreeAddOn
+    isLeafFieldName = 'isLeaf'
     DBTreeList = cxDBTreeList
     Left = 152
     Top = 216

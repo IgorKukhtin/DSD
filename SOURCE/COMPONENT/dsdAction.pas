@@ -72,6 +72,7 @@ type
     constructor Create(AOwner: TComponent); override;
   end;
 
+  // Сохраняет или изменяет значение в справочнике и закрывает форму
   TdsdInsertUpdateGuides = class (TdsdCustomDataSetAction)
   private
     FInsertUpdateAction: TCustomAction;
@@ -243,7 +244,7 @@ type
 implementation
 
 uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
-     Vcl.Controls, Menus, cxGridExportLink, ShellApi, frxClass, frxDesgn;
+     Vcl.Controls, Menus, cxGridExportLink, ShellApi, frxClass, frxDesgn, messages;
 
 procedure Register;
 begin
@@ -658,9 +659,10 @@ end;
 { TdsdInsertUpdateGuides }
 
 function TdsdInsertUpdateGuides.Execute: boolean;
+var Action: TCloseAction;
 begin
   inherited;
-  TForm(Owner).Close;
+  TParentForm(Owner).Close(Self);
 end;
 
 end.

@@ -3,7 +3,7 @@ CREATE OR REPLACE FUNCTION zc_ObjectHistoryFloat_PriceListItem_Value()
 $BODY$BEGIN
   RETURN 1;
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE
+  LANGUAGE plpgsql IMMUTABLE
   COST 100;
 ALTER FUNCTION zc_ObjectHistoryFloat_PriceListItem_Value()
   OWNER TO postgres;

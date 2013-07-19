@@ -113,6 +113,7 @@
       item
         Name = 'ioId'
         Component = dsdFormParams
+        ComponentItem = 'Id'
         DataType = ftInteger
         ParamType = ptInputOutput
         Value = '0'

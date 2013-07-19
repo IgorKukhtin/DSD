@@ -49,12 +49,9 @@ uses
   GoodsKind in '..\..\Forms\GoodsKind.pas' {GoodsKindForm},
   Bank in '..\..\Forms\Bank.pas' {CurrencyForm},
   GoodsGroup in '..\..\Forms\GoodsGroup.pas' {GoodsGroupForm},
-  JuridicalGroupEdit in '..\..\Forms\JuridicalGroupEdit.pas' {JuridicalGroupEditForm},
   JuridicalGroup in '..\..\Forms\JuridicalGroup.pas' {JuridicalGroupForm},
   PartnerEdit in '..\..\Forms\PartnerEdit.pas' {PartnerEditForm},
   GoodsEdit in '..\..\Forms\GoodsEdit.pas' {GoodsEditForm},
-  UnitGroupEdit in '..\..\Forms\UnitGroupEdit.pas' {UnitGroupEditForm},
-  UnitGroup in '..\..\Forms\UnitGroup.pas' {UnitGroupForm},
   Goods in '..\..\Forms\Goods.pas' {GoodsForm},
   UnitEdit in '..\..\Forms\UnitEdit.pas' {UnitEditForm},
   MeasureEdit in '..\..\Forms\MeasureEdit.pas' {MeasureEditForm},
@@ -137,7 +134,9 @@ uses
   SaleJournal in '..\..\Forms\SaleJournal.pas' {SaleJournalForm},
   Sale in '..\..\Forms\Sale.pas' {SaleForm},
   ReturnOutJournal in '..\..\Forms\ReturnOutJournal.pas' {ReturnOutJournalForm},
-  ReturnOut in '..\..\Forms\ReturnOut.pas' {ReturnOutForm};
+  ReturnOut in '..\..\Forms\ReturnOut.pas' {ReturnOutForm},
+  JuridicalGroupEdit in '..\..\Forms\JuridicalGroupEdit.pas' {JuridicalGroupEditForm},
+  JuridicalTest in '..\SOURCE\Objects\All\JuridicalTest.pas';
 
 {$R *.RES}
 

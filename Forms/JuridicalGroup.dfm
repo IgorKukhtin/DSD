@@ -6,7 +6,7 @@ inherited JuridicalGroupForm: TJuridicalGroupForm
   ExplicitHeight = 403
   PixelsPerInch = 96
   TextHeight = 13
-  object cxDBTreeList1: TcxDBTreeList
+  object cxDBTreeList: TcxDBTreeList
     Left = 0
     Top = 26
     Width = 390
@@ -18,13 +18,17 @@ inherited JuridicalGroupForm: TJuridicalGroupForm
     DataController.DataSource = DataSource
     DataController.ParentField = 'ParentId'
     DataController.KeyField = 'Id'
+    Images = dmMain.TreeImageList
     Navigator.Buttons.CustomButtons = <>
     OptionsView.ColumnAutoWidth = True
     RootValue = -1
+    Styles.StyleSheet = dmMain.cxTreeListStyleSheet
     TabOrder = 4
     object colName: TcxDBTreeListColumn
       Caption.Text = #1053#1072#1079#1074#1072#1085#1080#1077
       DataBinding.FieldName = 'Name'
+      Options.Hidden = True
+      Options.Editing = False
       Width = 300
       Position.ColIndex = 0
       Position.RowIndex = 0
@@ -35,6 +39,8 @@ inherited JuridicalGroupForm: TJuridicalGroupForm
     object colCode: TcxDBTreeListColumn
       Caption.Text = #1050#1086#1076
       DataBinding.FieldName = 'Code'
+      Options.Hidden = True
+      Options.Editing = False
       Width = 88
       Position.ColIndex = 1
       Position.RowIndex = 0
@@ -57,19 +63,11 @@ inherited JuridicalGroupForm: TJuridicalGroupForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = colCode
+        Component = Owner
         Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
-      item
-        Component = colName
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
+          'Height'
+          'Left'
+          'Top'
           'Width')
       end>
     StorageName = 'cxPropertiesStore'
@@ -121,9 +119,30 @@ inherited JuridicalGroupForm: TJuridicalGroupForm
           ItemName = 'bbEdit'
         end
         item
+          Visible = True
+          ItemName = 'bbSetErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetEnerased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbChoiceGuide'
         end>
       OneOnRow = True
       Row = 0
@@ -134,20 +153,36 @@ inherited JuridicalGroupForm: TJuridicalGroupForm
     object bbRefresh: TdxBarButton
       Action = actRefresh
       Category = 0
-      ImageIndex = 4
     end
     object bbInsert: TdxBarButton
       Action = actInsert
       Category = 0
-      ImageIndex = 0
     end
     object bbEdit: TdxBarButton
       Action = actUpdate
       Category = 0
-      ImageIndex = 1
+    end
+    object bbSetErased: TdxBarButton
+      Action = actSetErased
+      Category = 0
+    end
+    object bbSetEnerased: TdxBarButton
+      Action = actSetUnErased
+      Category = 0
+    end
+    object dxBarStatic1: TdxBarStatic
+      Caption = '     '
+      Category = 0
+      Hint = '     '
+      Visible = ivAlways
+    end
+    object bbChoiceGuide: TdxBarButton
+      Action = actChoiceGuides
+      Category = 0
     end
   end
   object ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 232
     Top = 144
     object actRefresh: TdsdDataSetRefresh
@@ -159,12 +194,14 @@ inherited JuridicalGroupForm: TJuridicalGroupForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
       ShortCut = 116
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
+      ImageIndex = 0
       FormName = 'TJuridicalGroupEditForm'
       GuiParams = <
         item
@@ -181,6 +218,7 @@ inherited JuridicalGroupForm: TJuridicalGroupForm
       Category = 'DSDLib'
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
+      ImageIndex = 1
       FormName = 'TJuridicalGroupEditForm'
       GuiParams = <
         item
@@ -195,6 +233,62 @@ inherited JuridicalGroupForm: TJuridicalGroupForm
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
+    object actSetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ShortCut = 46
+      DataSource = DataSource
+    end
+    object actSetUnErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 32776
+      isSetErased = False
+      DataSource = DataSource
+    end
+    object actGridToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
+    end
+    object actChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      Params = <
+        item
+          Name = 'Key'
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end
+        item
+          Name = 'TextValue'
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptOutput
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ShortCut = 13
+      ImageIndex = 7
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_JuridicalGroup'
@@ -204,7 +298,33 @@ inherited JuridicalGroupForm: TJuridicalGroupForm
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 152
-    Top = 152
+    Left = 8
+    Top = 48
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 104
+    Top = 248
+  end
+  object dsdDBTreeAddOn: TdsdDBTreeAddOn
+    SortImages = dmMain.SortImageList
+    isLeafFieldName = 'isLeaf'
+    DBTreeList = cxDBTreeList
+    Left = 48
+    Top = 160
+  end
+  object spErasedUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+    Left = 16
+    Top = 64
   end
 end

@@ -21,7 +21,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, cxButtonEdit;
 
 type
   TUnitEditForm = class(TParentForm)
@@ -33,23 +33,29 @@ type
     spInsertUpdate: TdsdStoredProc;
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
-    dsdDataSetRefresh: TdsdDataSetRefresh;
-    dsdExecStoredProc: TdsdExecStoredProc;
-    dsdFormClose1: TdsdFormClose;
+    DataSetRefresh: TdsdDataSetRefresh;
+    InsertUpdateGuides: TdsdInsertUpdateGuides;
+    FormClose: TdsdFormClose;
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
-    ceParentGroup: TcxLookupComboBox;
-    UnitGroupDataSet: TClientDataSet;
-    spGetJuridicalGroup: TdsdStoredProc;
-    UnitlGroupDS: TDataSource;
-    dsdUnitGroupGuides: TdsdGuides;
+    ParentGuides: TdsdGuides;
     cxLabel4: TcxLabel;
-    ceBranch: TcxLookupComboBox;
-    BranchDataSet: TClientDataSet;
-    spGetBranch: TdsdStoredProc;
-    BranchDS: TDataSource;
-    dsdBranchGuides: TdsdGuides;
+    BranchGuides: TdsdGuides;
+    ceParent: TcxButtonEdit;
+    cxLabel2: TcxLabel;
+    BusinessGuides: TdsdGuides;
+    ceBranch: TcxButtonEdit;
+    ceBusiness: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    ceJuridical: TcxButtonEdit;
+    JuridicalGuides: TdsdGuides;
+    cxLabel6: TcxLabel;
+    ceAccountDirection: TcxButtonEdit;
+    cxLabel7: TcxLabel;
+    ceProfitLossDirection: TcxButtonEdit;
+    AccountDirectionGuides: TdsdGuides;
+    ProfitLossDirectionGuides: TdsdGuides;
   private
     { Private declarations }
   public

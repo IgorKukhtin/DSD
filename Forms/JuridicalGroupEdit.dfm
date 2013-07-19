@@ -2,7 +2,8 @@
   Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
   ClientHeight = 202
   ClientWidth = 371
-  ExplicitWidth = 387
+  ExplicitWidth = 379
+  ExplicitHeight = 229
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -18,20 +19,20 @@
   end
   object cxButton1: TcxButton
     Left = 72
-    Top = 148
+    Top = 160
     Width = 75
     Height = 25
-    Action = dsdExecStoredProc
+    Action = InsertUpdateGuides
     Default = True
     ModalResult = 1
     TabOrder = 3
   end
   object cxButton2: TcxButton
     Left = 216
-    Top = 148
+    Top = 160
     Width = 75
     Height = 25
-    Action = dsdFormClose1
+    Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 8
@@ -77,13 +78,12 @@
           StoredProc = spGet
         end
         item
-          StoredProc = spGetGroup
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
     end
-    object dsdExecStoredProc: TdsdExecStoredProc
+    object InsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       StoredProc = spInsertUpdate
       StoredProcList = <
@@ -92,7 +92,8 @@
         end>
       Caption = 'Ok'
     end
-    object dsdFormClose1: TdsdFormClose
+    object dsdFormClose: TdsdFormClose
+      Category = 'DSDLib'
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -129,7 +130,7 @@
         ParamType = ptInput
         Value = ''
       end>
-    Left = 296
+    Left = 128
     Top = 16
   end
   object dsdFormParams: TdsdFormParams
@@ -140,8 +141,8 @@
         ParamType = ptInputOutput
         Value = '0'
       end>
-    Left = 184
-    Top = 24
+    Left = 72
+    Top = 8
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_JuridicalGroup'
@@ -171,45 +172,23 @@
         Value = ''
       end
       item
-        Name = 'JuridicalGroupId'
+        Name = 'ParentId'
         Component = JuridicalGroupGuides
-        ComponentItem = 'Id'
+        ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
         Value = ''
       end
       item
-        Name = 'JuridicalGroupName'
+        Name = 'ParentName'
         Component = JuridicalGroupGuides
-        ComponentItem = 'Name'
+        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptOutput
         Value = ''
       end>
-    Left = 328
-    Top = 16
-  end
-  object DataSource: TDataSource
-    DataSet = ClientDataSet
-    Left = 192
-    Top = 152
-  end
-  object ClientDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 152
-    Top = 144
-  end
-  object spGetGroup: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_JuridicalGroup'
-    DataSet = ClientDataSet
-    DataSets = <
-      item
-        DataSet = ClientDataSet
-      end>
-    Params = <>
-    Left = 168
-    Top = 160
+    Left = 184
+    Top = 24
   end
   object JuridicalGroupGuides: TdsdGuides
     LookupControl = ceParentGroup
@@ -217,5 +196,23 @@
     PositionDataSet = 'ClientDataSet'
     Left = 328
     Top = 128
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 320
+    Top = 48
+  end
+  object cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
+    StorageName = 'cxPropertiesStore'
+    Left = 328
+    Top = 16
   end
 end

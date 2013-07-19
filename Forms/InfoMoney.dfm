@@ -2,15 +2,15 @@ inherited InfoMoneyForm: TInfoMoneyForm
   Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' '
   ClientHeight = 376
   ClientWidth = 597
-  ExplicitWidth = 613
-  ExplicitHeight = 414
+  ExplicitWidth = 605
+  ExplicitHeight = 403
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
+    Top = 26
     Width = 597
-    Height = 348
+    Height = 350
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
@@ -97,8 +97,8 @@ inherited InfoMoneyForm: TInfoMoneyForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -115,7 +115,7 @@ inherited InfoMoneyForm: TInfoMoneyForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -193,7 +193,7 @@ inherited InfoMoneyForm: TInfoMoneyForm
       Category = 0
     end
     object bbGridToExcel: TdxBarButton
-      Action = dsdGridToExcel1
+      Action = dsdGridToExcel
       Category = 0
     end
     object dxBarStatic1: TdxBarStatic
@@ -300,7 +300,7 @@ inherited InfoMoneyForm: TInfoMoneyForm
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
-          DataType = ftInteger
+          DataType = ftString
           ParamType = ptOutput
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -308,7 +308,7 @@ inherited InfoMoneyForm: TInfoMoneyForm
       ShortCut = 13
       ImageIndex = 7
     end
-    object dsdGridToExcel1: TdsdGridToExcel
+    object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'

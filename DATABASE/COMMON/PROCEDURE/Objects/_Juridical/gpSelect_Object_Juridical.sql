@@ -7,11 +7,11 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                GLNCode TVarChar, isCorporate Boolean,
-               JuridicalGroupId Integer, JuridicalGroupCode Integer, JuridicalGroupName TVarChar,
-               GoodsPropertyId Integer, GoodsPropertyCode Integer, GoodsPropertyName TVarChar, 
-               InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar, 
-               InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar, 
-               InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, 
+               JuridicalGroupId Integer, JuridicalGroupName TVarChar,
+               GoodsPropertyId Integer, GoodsPropertyName TVarChar, 
+               InfoMoneyGroupId Integer, InfoMoneyGroupName TVarChar, 
+               InfoMoneyDestinationId Integer, InfoMoneyDestinationName TVarChar, 
+               InfoMoneyId Integer, InfoMoneyName TVarChar, 
                isErased BOOLEAN) AS
 $BODY$BEGIN
 
@@ -19,41 +19,36 @@ $BODY$BEGIN
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_Juridical());
 
    RETURN QUERY 
-   SELECT 
-         Object_JuridicalGroup.Id         AS Id 
-       , Object_JuridicalGroup.ObjectCode AS Code
-       , CAST ('' AS TVarChar)            AS Name
+--   SELECT 
+--         Object_JuridicalGroup.Id         AS Id 
+--       , Object_JuridicalGroup.ObjectCode AS Code
+--       , CAST ('' AS TVarChar)            AS Name
        
-       , CAST ('' AS TVarChar)     AS GLNCode
-       , CAST (NULL AS Boolean)    AS isCorporate
+--       , CAST ('' AS TVarChar)     AS GLNCode
+--       , CAST (NULL AS Boolean)    AS isCorporate
 
-       , ObjectLink_JuridicalGroup_Parent.ChildObjectId AS JuridicalGroupId
-       , Object_JuridicalGroup.ObjectCode               AS JuridicalGroupCode
-       , Object_JuridicalGroup.ValueData                AS JuridicalGroupName
+--       , ObjectLink_JuridicalGroup_Parent.ChildObjectId AS JuridicalGroupId
+ --      , Object_JuridicalGroup.ValueData                AS JuridicalGroupName
        
-       , CAST (0 as Integer)    AS GoodsPropertyId 
-       , CAST (0 as Integer)    AS GoodsPropertyCode 
-       , CAST ('' as TVarChar)  AS GoodsPropertyName 
+--       , CAST (0 as Integer)    AS GoodsPropertyId 
+  --     , CAST ('' as TVarChar)  AS GoodsPropertyName 
        
-       , CAST (0 as Integer)    AS InfoMoneyGroupId
-       , CAST (0 as Integer)    AS InfoMoneyGroupCode
-       , CAST ('' as TVarChar)  AS InfoMoneyGroupName
+    --   , CAST (0 as Integer)    AS InfoMoneyGroupId
+      -- , CAST ('' as TVarChar)  AS InfoMoneyGroupName
 
-       , CAST (0 as Integer)    AS InfoMoneyDestinationId
-       , CAST (0 as Integer)    AS InfoMoneyDestinationCode
-       , CAST ('' as TVarChar)  AS InfoMoneyDestinationName
+--       , CAST (0 as Integer)    AS InfoMoneyDestinationId
+  --     , CAST ('' as TVarChar)  AS InfoMoneyDestinationName
 
-       , CAST (0 as Integer)    AS InfoMoneyId
-       , CAST (0 as Integer)    AS InfoMoneyCode
-       , CAST ('' as TVarChar)  AS InfoMoneyName
+    --   , CAST (0 as Integer)    AS InfoMoneyId
+      -- , CAST ('' as TVarChar)  AS InfoMoneyName
        
-       , Object_JuridicalGroup.isErased   AS isErased
-   FROM Object AS Object_JuridicalGroup
-        LEFT JOIN ObjectLink AS ObjectLink_JuridicalGroup_Parent
-                             ON ObjectLink_JuridicalGroup_Parent.ObjectId = Object_JuridicalGroup.Id
-                            AND ObjectLink_JuridicalGroup_Parent.DescId = zc_ObjectLink_JuridicalGroup_Parent()
-   WHERE Object_JuridicalGroup.DescId = zc_Object_JuridicalGroup()
-  UNION
+--       , Object_JuridicalGroup.isErased   AS isErased
+  -- FROM Object AS Object_JuridicalGroup
+    --    LEFT JOIN ObjectLink AS ObjectLink_JuridicalGroup_Parent
+      --                       ON ObjectLink_JuridicalGroup_Parent.ObjectId = Object_JuridicalGroup.Id
+        --                    AND ObjectLink_JuridicalGroup_Parent.DescId = zc_ObjectLink_JuridicalGroup_Parent()
+--   WHERE Object_JuridicalGroup.DescId = zc_Object_JuridicalGroup()
+  --UNION
    SELECT 
          Object_Juridical.Id             AS Id 
        , Object_Juridical.ObjectCode     AS Code
@@ -63,24 +58,19 @@ $BODY$BEGIN
        , ObjectBoolean_isCorporate.ValueData AS isCorporate
 
 
-       , ObjectLink_Juridical_JuridicalGroup.ChildObjectId AS JuridicalGroupId
-       , CAST (0 as Integer)             AS JuridicalGroupCode
+       , COALESCE(ObjectLink_Juridical_JuridicalGroup.ChildObjectId, 0) AS JuridicalGroupId
        , CAST ('' AS TVarChar)           AS JuridicalGroupName
     
        , Object_GoodsProperty.Id         AS GoodsPropertyId
-       , Object_GoodsProperty.ObjectCode AS GoodsPropertyCode
        , Object_GoodsProperty.ValueData  AS GoodsPropertyName
        
        , lfObject_InfoMoney.InfoMoneyGroupId   AS InfoMoneyGroupId
-       , lfObject_InfoMoney.InfoMoneyGroupCode AS InfoMoneyGroupCode
        , lfObject_InfoMoney.InfoMoneyGroupName AS InfoMoneyGroupName
 
        , lfObject_InfoMoney.InfoMoneyDestinationId   AS InfoMoneyDestinationId
-       , lfObject_InfoMoney.InfoMoneyDestinationCode AS InfoMoneyDestinationCode
        , lfObject_InfoMoney.InfoMoneyDestinationName AS InfoMoneyDestinationName
 
        , lfObject_InfoMoney.InfoMoneyId   AS InfoMoneyId
-       , lfObject_InfoMoney.InfoMoneyCode AS InfoMoneyCode
        , lfObject_InfoMoney.InfoMoneyName AS InfoMoneyName
        
        , Object_Juridical.isErased        AS isErased

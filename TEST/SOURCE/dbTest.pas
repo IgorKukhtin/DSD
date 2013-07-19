@@ -2,7 +2,7 @@ unit dbTest;
 
 interface
 
-uses TestFramework, ZConnection, ZDataset;
+uses TestFramework, ZConnection, ZDataset, Classes;
 
 type
 
@@ -22,9 +22,14 @@ type
     procedure Test; virtual;
   end;
 
+  var
+      // Список добавленных Id
+    InsertedIdObjectList: TStringList;
+
+
 implementation
 
-uses zLibUtil, Classes, SysUtils;
+uses zLibUtil, SysUtils;
 { TdbTest }
 
 function FilesInDir(sMask, sDirPath: String; var iFilesCount: Integer; var saFound: TStrings; bRecurse: Boolean = True): Integer;
@@ -99,6 +104,9 @@ procedure TdbTest.Test;
 begin
 
 end;
+
+initialization
+  InsertedIdObjectList := TStringList.Create;
 
 
 end.

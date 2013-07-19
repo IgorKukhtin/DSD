@@ -137,9 +137,6 @@
 			<DCCReference Include="..\..\Forms\GoodsGroup.pas">
 				<Form>GoodsGroupForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\JuridicalGroupEdit.pas">
-				<Form>JuridicalGroupEditForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\JuridicalGroup.pas">
 				<Form>JuridicalGroupForm</Form>
 			</DCCReference>
@@ -148,12 +145,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\GoodsEdit.pas">
 				<Form>GoodsEditForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\UnitGroupEdit.pas">
-				<Form>UnitGroupEditForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\UnitGroup.pas">
-				<Form>UnitGroupForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Goods.pas">
 				<Form>GoodsForm</Form>
@@ -374,6 +365,10 @@
 			<DCCReference Include="..\..\Forms\ReturnOut.pas">
 				<Form>ReturnOutForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\JuridicalGroupEdit.pas">
+				<Form>JuridicalGroupEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\JuridicalTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

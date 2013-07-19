@@ -22,6 +22,7 @@ type
     constructor CreateNew(AOwner: TComponent; Dummy: Integer = 0); override;
     property Params: TdsdParams read FParams;
     procedure Execute(Sender: TComponent; Params: TdsdParams);
+    procedure Close(Sender: TObject);
   end;
 
 implementation
@@ -35,6 +36,17 @@ uses
   cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, dsdAction, frxDBSet, dxBarExtItems;
 
 {$R *.dfm}
+
+procedure TParentForm.Close(Sender: TObject);
+var FormAction: IFormAction;
+begin
+  // Вызывается событие на закрытие формы, например для справочников для перечитывания
+  if Sender is TdsdInsertUpdateGuides then
+     if Assigned(FSender) then
+        if FSender.GetInterface(IFormAction, FormAction) then
+           FormAction.OnFormClose(Params);
+  inherited Close;
+end;
 
 constructor TParentForm.CreateNew(AOwner: TComponent; Dummy: Integer = 0);
 begin
@@ -66,13 +78,8 @@ begin
 end;
 
 procedure TParentForm.FormClose(Sender: TObject; var Action: TCloseAction);
-var i: Integer;
-    FormAction: IFormAction;
 begin
-  // Вызывается событие на закрытие формы, например для справочников для перечитывания
-  if Assigned(FSender) then
-     if FSender.GetInterface(IFormAction, FormAction) then
-        FormAction.OnFormClose(Params);
+  inherited;
   Action := caFree;
 end;
 
@@ -97,8 +104,6 @@ begin
         // объединили вызывающий справочник и кнопку выбора!!!
         TdsdChoiceGuides(FChoiceAction).Guides := TdsdGuides(FSender);
   end;
-
-
 end;
 
 initialization

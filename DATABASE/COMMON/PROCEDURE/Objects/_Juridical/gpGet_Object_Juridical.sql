@@ -8,12 +8,9 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Juridical(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                GLNCode TVarChar, isCorporate Boolean, 
-               JuridicalGroupId Integer, JuridicalGroupCode Integer, JuridicalGroupName TVarChar,  
-               GoodsPropertyId Integer, GoodsPropertyCode Integer, GoodsPropertyName TVarChar, 
-               InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar, 
-               InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar, 
-               InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, 
-               isErased boolean) AS
+               JuridicalGroupId Integer, JuridicalGroupName TVarChar,  
+               GoodsPropertyId Integer, GoodsPropertyName TVarChar, 
+               InfoMoneyId Integer, InfoMoneyName TVarChar) AS
 $BODY$
 BEGIN
 
@@ -25,35 +22,20 @@ BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , COALESCE (MAX (Object.ObjectCode), 0) + 1 AS Code
+           , lfGet_ObjectCode(0, zc_Object_Juridical()) AS Code
            , CAST ('' as TVarChar)  AS NAME
            
            , CAST ('' as TVarChar)  AS GLNCode
-           , CAST ('' as TVarChar)  AS isCorporate
+           , CAST (false as Boolean)  AS isCorporate
            
            , CAST (0 as Integer)    AS JuridicalGroupId
-           , CAST (0 as Integer)    AS JuridicalGroupCodde
            , CAST ('' as TVarChar)  AS JuridicalGroupName
            
            , CAST (0 as Integer)    AS GoodsPropertyId 
-           , CAST (0 as Integer)    AS GoodsPropertyCode 
            , CAST ('' as TVarChar)  AS GoodsPropertyName 
            
-           , CAST (0 as Integer)    AS InfoMoneyGroupId
-           , CAST (0 as Integer)    AS InfoMoneyGroupCode
-           , CAST ('' as TVarChar)  AS InfoMoneyGroupName
-
-           , CAST (0 as Integer)    AS InfoMoneyDestinationId
-           , CAST (0 as Integer)    AS InfoMoneyDestinationCode
-           , CAST ('' as TVarChar)  AS InfoMoneyDestinationName
-
            , CAST (0 as Integer)    AS InfoMoneyId
-           , CAST (0 as Integer)    AS InfoMoneyCode
-           , CAST ('' as TVarChar)  AS InfoMoneyName
-
-           , CAST (NULL AS Boolean) AS isErased       
-       FROM Object 
-       WHERE Object.DescId = zc_Object_Juridical();
+           , CAST ('' as TVarChar)  AS InfoMoneyName;
    ELSE
        RETURN QUERY 
        SELECT 
@@ -65,26 +47,14 @@ BEGIN
            , ObjectBoolean_isCorporate.ValueData AS isCorporate
            
            , Object_JuridicalGroup.Id         AS JuridicalGroupId
-           , Object_JuridicalGroup.ObjectCode AS JuridicalGroupCode
            , Object_JuridicalGroup.ValueData  AS JuridicalGroupName
            
            , Object_GoodsProperty.Id         AS GoodsPropertyId
-           , Object_GoodsProperty.ObjectCode AS GoodsPropertyCode
            , Object_GoodsProperty.ValueData  AS GoodsPropertyName
            
-           , lfObject_InfoMoney.InfoMoneyGroupId   AS InfoMoneyGroupId
-           , lfObject_InfoMoney.InfoMoneyGroupCode AS InfoMoneyGroupCode
-           , lfObject_InfoMoney.InfoMoneyGroupName AS InfoMoneyGroupName
+           , Object_InfoMoney.Id             AS InfoMoneyId
+           , Object_InfoMoney.ValueData      AS InfoMoneyName
 
-           , lfObject_InfoMoney.InfoMoneyDestinationId   AS InfoMoneyDestinationId
-           , lfObject_InfoMoney.InfoMoneyDestinationCode AS InfoMoneyDestinationCode
-           , lfObject_InfoMoney.InfoMoneyDestinationName AS InfoMoneyDestinationName
-
-           , lfObject_InfoMoney.InfoMoneyId   AS InfoMoneyId
-           , lfObject_InfoMoney.InfoMoneyCode AS InfoMoneyCode
-           , lfObject_InfoMoney.InfoMoneyName AS InfoMoneyName
-
-           , Object_Juridical.isErased        AS isErased
        FROM Object AS Object_Juridical
            LEFT JOIN ObjectString AS ObjectString_GLNCode 
                                   ON ObjectString_GLNCode.ObjectId = Object_Juridical.Id 
@@ -106,7 +76,7 @@ BEGIN
            LEFT JOIN ObjectLink AS ObjectLink_Juridical_InfoMoney
                                 ON ObjectLink_Juridical_InfoMoney.ObjectId = Object_Juridical.Id
                                AND ObjectLink_Juridical_InfoMoney.DescId = zc_ObjectLink_Juridical_InfoMoney()
-           LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ObjectLink_Juridical_InfoMoney.ChildObjectId
+           LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Juridical_InfoMoney.ChildObjectId
 
        WHERE Object_Juridical.Id = inId;
    END IF;      
