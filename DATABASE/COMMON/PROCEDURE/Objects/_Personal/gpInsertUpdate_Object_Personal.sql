@@ -44,9 +44,9 @@ BEGIN
    -- сохранили связь с <Бизнесом>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_Business(), ioId, inBusinessId);
    -- сохранили свойство <Дата принятия>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Personal_DateIn(), ioId, inDateIn);
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Personal_In(), ioId, inDateIn);
    -- сохранили свойство <Дата увольнения>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Personal_DateOut(), ioId, inDateOut);
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Personal_Out(), ioId, inDateOut);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -61,8 +61,8 @@ ALTER FUNCTION gpInsertUpdate_Object_Personal (Integer, Integer, TVarChar, Integ
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-               
- 01.07.13          * 
+ 19.07.13         *    rename zc_ObjectDate...
+ 01.07.13         * 
 
 */
 

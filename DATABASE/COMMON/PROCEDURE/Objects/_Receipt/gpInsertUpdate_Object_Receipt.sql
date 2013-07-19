@@ -69,9 +69,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Receipt_WeightPackage(), ioId, inWeightPackage);
 
    -- сохранили свойство <Начальная дата>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Receipt_StartDate(), ioId, inStartDate);
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Receipt_Start(), ioId, inStartDate);
    -- сохранили свойство <Конечная дата>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Receipt_EndDate(), ioId, inEndDate);
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Receipt_End(), ioId, inEndDate);
  
     -- сохранили свойство <Признак главный>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Receipt_Main(), ioId, inMain);
@@ -90,8 +90,8 @@ ALTER FUNCTION gpInsertUpdate_Object_Receipt (Integer, TVarChar, TVarChar, TVarC
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-               
- 10.07.13          * 
+ 19.07.13         * rename zc_ObjectDate_               
+ 10.07.13         * 
 
 */
 

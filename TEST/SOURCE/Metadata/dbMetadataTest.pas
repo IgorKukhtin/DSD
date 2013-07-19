@@ -48,7 +48,7 @@ begin
   ExecFile(MetadataPath + 'Object\InsertObjectFloatDesc.sql', ZQuery);
 //  ExecFile(MetadataPath + 'Object\InsertObjectBooleanDesc.sql', ZQuery); НОВАЯ СХЕМА2
   ExecFile(MetadataPath + 'Object\InsertObjectLinkDesc.sql', ZQuery);
-  ExecFile(MetadataPath + 'Object\InsertObjectDateDesc.sql', ZQuery);
+//  ExecFile(MetadataPath + 'Object\InsertObjectDateDesc.sql', ZQuery); НОВАЯ СХЕМА2
  end;
 
 procedure TdbMetaDataTest.InsertObjectHistoryDesc;
