@@ -1,9 +1,9 @@
 ﻿inherited PersonalEditForm: TPersonalEditForm
   Caption = #1053#1086#1074#1099#1081' '#1089#1086#1090#1088#1091#1076#1085#1080#1082
-  ClientHeight = 370
-  ClientWidth = 691
-  ExplicitWidth = 707
-  ExplicitHeight = 408
+  ClientHeight = 326
+  ClientWidth = 655
+  ExplicitWidth = 671
+  ExplicitHeight = 364
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -66,18 +66,6 @@
     Top = 209
     Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
   end
-  object edDateIn: TcxTextEdit
-    Left = 40
-    Top = 132
-    TabOrder = 9
-    Width = 273
-  end
-  object edDateOut: TcxTextEdit
-    Left = 40
-    Top = 182
-    TabOrder = 10
-    Width = 273
-  end
   object cxLabel6: TcxLabel
     Left = 351
     Top = 159
@@ -106,7 +94,7 @@
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 15
+    TabOrder = 13
     Width = 273
   end
   object ceUnit: TcxButtonEdit
@@ -117,7 +105,7 @@
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 16
+    TabOrder = 14
     Width = 273
   end
   object ceJuridical: TcxButtonEdit
@@ -128,7 +116,7 @@
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 17
+    TabOrder = 15
     Width = 273
   end
   object ceBusiness: TcxButtonEdit
@@ -139,7 +127,7 @@
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 18
+    TabOrder = 16
     Width = 273
   end
   object ceMember: TcxButtonEdit
@@ -150,6 +138,18 @@
         Default = True
         Kind = bkEllipsis
       end>
+    TabOrder = 17
+    Width = 273
+  end
+  object edDateIn: TcxDateEdit
+    Left = 40
+    Top = 128
+    TabOrder = 18
+    Width = 273
+  end
+  object edDateOut: TcxDateEdit
+    Left = 40
+    Top = 184
     TabOrder = 19
     Width = 273
   end
@@ -233,29 +233,27 @@
         Name = 'inJuridicalId'
         Component = JuridicalGuides
         DataType = ftInteger
-        ParamType = ptOutput
+        ParamType = ptInput
         Value = ''
       end
       item
         Name = 'inBusinessId'
         Component = BusinessGuides
         DataType = ftInteger
-        ParamType = ptOutput
+        ParamType = ptInput
         Value = ''
       end
       item
         Name = 'inDateIn'
-        Component = edDateIn
         DataType = ftDateTime
-        ParamType = ptOutput
-        Value = ''
+        ParamType = ptInput
+        Value = Null
       end
       item
         Name = 'inDateOut'
-        Component = edDateOut
         DataType = ftDateTime
-        ParamType = ptOutput
-        Value = ''
+        ParamType = ptInput
+        Value = Null
       end>
     Left = 504
     Top = 40
@@ -425,8 +423,8 @@
     LookupControl = cePosition
     FormName = 'TPositionForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 320
-    Top = 173
+    Left = 328
+    Top = 165
   end
   object UnitGuides: TdsdGuides
     LookupControl = ceUnit

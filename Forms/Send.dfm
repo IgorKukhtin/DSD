@@ -100,7 +100,6 @@ inherited SendForm: TSendForm
             item
               Kind = skSum
               Position = spFooter
-              Column = colAmountSumm
             end
             item
               Kind = skSum
@@ -119,7 +118,6 @@ inherited SendForm: TSendForm
             item
               Kind = skSum
               Position = spFooter
-              Column = colAmountPartner
             end
             item
               Kind = skSum
@@ -128,7 +126,6 @@ inherited SendForm: TSendForm
           DataController.Summary.FooterSummaryItems = <
             item
               Kind = skSum
-              Column = colAmountSumm
             end
             item
               Kind = skSum
@@ -143,7 +140,6 @@ inherited SendForm: TSendForm
             end
             item
               Kind = skSum
-              Column = colAmountPartner
             end
             item
               Kind = skSum
@@ -180,33 +176,14 @@ inherited SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             Width = 80
           end
-          object colAmountPartner: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1082#1086#1085#1090#1088'.'
-            DataBinding.FieldName = 'AmountPartner'
-            HeaderAlignmentHorz = taCenter
-            Width = 80
-          end
-          object colPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072
-            DataBinding.FieldName = 'Price'
-            HeaderAlignmentHorz = taCenter
-            Width = 80
-          end
-          object colCountForPrice: TcxGridDBColumn
-            Caption = #1050#1086#1083' '#1074' '#1094#1077#1085#1077
-            DataBinding.FieldName = 'CountForPrice'
-            HeaderAlignmentHorz = taCenter
-          end
-          object colAmountSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072
-            DataBinding.FieldName = 'AmountSumm'
-            HeaderAlignmentHorz = taCenter
-            Width = 91
-          end
           object colHeadCount: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             HeaderAlignmentHorz = taCenter
+          end
+          object colAssetName: TcxGridDBColumn
+            Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072
+            HeaderGlyphAlignmentHorz = taCenter
           end
         end
         object cxGridLevel: TcxGridLevel
@@ -217,6 +194,9 @@ inherited SendForm: TSendForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -502,22 +482,6 @@ inherited SendForm: TSendForm
       end
       item
         Component = colName
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
-      item
-        Component = colPrice
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
-      item
-        Component = colAmountSumm
         Properties.Strings = (
           'SortIndex'
           'SortOrder'

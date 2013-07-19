@@ -51,23 +51,34 @@ inherited ProfitLossForm: TProfitLossForm
       end
       object clProfitLossGroup: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1099' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093
+        DataBinding.FieldName = 'ProfitLossGroupName'
         HeaderAlignmentVert = vaCenter
         Width = 155
       end
       object clProfitLossDirection: TcxGridDBColumn
         Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103#9
+        DataBinding.FieldName = 'ProfitLossDirectionName'
         HeaderAlignmentVert = vaCenter
         Width = 167
       end
       object clInfoMoneyDestination: TcxGridDBColumn
         Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyDestinationName'
         HeaderAlignmentVert = vaCenter
         Width = 97
       end
       object clInfoMoney: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentVert = vaCenter
         Width = 64
+      end
+      object clErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -267,7 +278,11 @@ inherited ProfitLossForm: TProfitLossForm
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
-      StoredProcList = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
@@ -276,7 +291,11 @@ inherited ProfitLossForm: TProfitLossForm
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
-      StoredProcList = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
@@ -334,5 +353,20 @@ inherited ProfitLossForm: TProfitLossForm
     View = cxGridDBTableView
     Left = 160
     Top = 216
+  end
+  object spErasedUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+    Left = 288
+    Top = 208
   end
 end

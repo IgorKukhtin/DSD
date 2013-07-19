@@ -16,7 +16,7 @@ type
     procedure TearDown; override;
   published
     procedure MovementItemIncomeTest;
-    procedure MovementItemSendTest;
+    procedure MovementItemSendOnPriceTest;
     procedure MovementItemSaleTest;
     procedure MovementItemReturnOutTest;
     procedure MovementItemProductionUnionTest;
@@ -36,13 +36,13 @@ type
     constructor Create; override;
   end;
 
-  TMovementItemProductionUnionInTest = class(TObjectTest)
+  TMovementItemProductionUnionMasterTest = class(TObjectTest)
   private
     function InsertDefault: integer; override;
     procedure Delete(Id: Integer); override;
   public
     function GetDataSet: TDataSet; override;
-    function InsertUpdateMovementProductionUnionIn
+    function InsertUpdateMovementProductionUnionMaster
       (Id, MovementId, GoodsId: Integer;
        Amount: double; PartionClose: Boolean; Comment: String;
        Count, RealWeight, CuterCount: double;
@@ -50,7 +50,7 @@ type
     constructor Create; override;
   end;
 
-  TMovementItemProductionUnionOutTest = class(TObjectTest)
+  TMovementItemProductionUnionChildTest = class(TObjectTest)
   private
     MovementItem_InId: INTEGER;
     function InsertDefault: integer; override;
@@ -59,21 +59,21 @@ type
     procedure Delete(Id: Integer); override;
   public
     function GetDataSet: TDataSet; override;
-    function InsertUpdateMovementProductionUnionOut
+    function InsertUpdateMovementProductionUnionChild
       (Id, MovementId, GoodsId: Integer;
        Amount: double; ParentId: integer;
        AmountReceipt: double; Comment: string): integer;
     constructor Create; override;
   end;
 
-  TMovementItemSendTest = class(TObjectTest)
+  TMovementItemSendOnPriceTest = class(TObjectTest)
   private
     function InsertDefault: integer; override;
   protected
     procedure SetDataSetParam; override;
     procedure Delete(Id: Integer); override;
   public
-    function InsertUpdateMovementItemSend
+    function InsertUpdateMovementItemSendOnPrice
       (Id, MovementId, GoodsId: Integer;
        Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
        PartionGoods:String; GoodsKindId: Integer): integer;
@@ -146,20 +146,20 @@ begin
   end;
 end;
 
-procedure TdbMovementItemTest.MovementItemSendTest;
+procedure TdbMovementItemTest.MovementItemSendOnPriceTest;
 var
-  MovementItemSend: TMovementItemSendTest;
+  MovementItemSendOnPrice: TMovementItemSendOnPriceTest;
   Id: Integer;
 begin
-  MovementItemSend := TMovementItemSendTest.Create;
-  Id := MovementItemSend.InsertDefault;
+  MovementItemSendOnPrice := TMovementItemSendOnPriceTest.Create;
+  Id := MovementItemSendOnPrice.InsertDefault;
   // создание документа
   try
   // редактирование
   finally
     // удаление
     DeleteMovementItem(Id);
-    MovementItemSend.Delete(Id);
+    MovementItemSendOnPrice.Delete(Id);
   end;
 end;
 
@@ -199,20 +199,20 @@ end;
 
 procedure TdbMovementItemTest.MovementItemProductionUnionTest;
 var
-  MovementItemProductionUnionOut: TMovementItemProductionUnionOutTest;
+  MovementItemProductionUnionChild: TMovementItemProductionUnionChildTest;
   Id: Integer;
 begin
-  MovementItemProductionUnionOut := TMovementItemProductionUnionOutTest.Create;
-  Id := MovementItemProductionUnionOut.InsertDefault;
+  MovementItemProductionUnionChild := TMovementItemProductionUnionChildTest.Create;
+  Id := MovementItemProductionUnionChild.InsertDefault;
   // создание документа
-  MovementItemProductionUnionOut.GetDataSet;
+  MovementItemProductionUnionChild.GetDataSet;
   try
   // редактирование
   finally
     // удаление
     DeleteMovementItem(Id);
-    DeleteMovementItem(MovementItemProductionUnionOut.MovementItem_InId);
-    MovementItemProductionUnionOut.Delete(Id);
+    DeleteMovementItem(MovementItemProductionUnionChild.MovementItem_InId);
+    MovementItemProductionUnionChild.Delete(Id);
   end;
 end;
 
@@ -296,16 +296,16 @@ begin
   FParams.AddParam('inShowAll', ftBoolean, ptInput, true);
 end;
 
-{ TMovementSend }
-constructor TMovementItemSendTest.Create;
+{ TMovementSSendOnPrice }
+constructor TMovementItemSendOnPriceTest.Create;
 begin
   inherited;
-  spInsertUpdate := 'gpInsertUpdate_MovementItem_Send';
-  spSelect := 'gpSelect_MovementItem_Send';
-  spGet := 'gpGet_MovementItem_Send';
+  spInsertUpdate := 'gpInsertUpdate_MovementItem_SendOnPrice';
+  spSelect := 'gpSelect_MovementItem_SendOnPrice';
+  spGet := 'gpGet_MovementItem_SendOnPrice';
 end;
 
-procedure TMovementItemSendTest.Delete(Id: Integer);
+procedure TMovementItemSendOnPriceTest.Delete(Id: Integer);
 begin
   with TGoodsTest.Create do
   try
@@ -315,14 +315,14 @@ begin
   end;
 end;
 
-function TMovementItemSendTest.InsertDefault: integer;
+function TMovementItemSendOnPriceTest.InsertDefault: integer;
 var Id, MovementId, GoodsId: Integer;
     Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
     PartionGoods:String;
     GoodsKindId: Integer;
 begin
   Id:=0;
-  MovementId:= TMovementSendTest.Create.GetDefault;
+  MovementId:= TMovementSendOnPriceTest.Create.GetDefault;
   GoodsId:=TGoodsTest.Create.GetDefault;
   Amount:=10;
   AmountPartner:=11;
@@ -332,12 +332,12 @@ begin
   PartionGoods:='';
   GoodsKindId:=0;
   //
-  result := InsertUpdateMovementItemSend(Id, MovementId, GoodsId,
+  result := InsertUpdateMovementItemSendOnPrice(Id, MovementId, GoodsId,
                               Amount, AmountPartner, Price, CountForPrice, HeadCount,
                               PartionGoods, GoodsKindId);
 end;
 
-function TMovementItemSendTest.InsertUpdateMovementItemSend
+function TMovementItemSendOnPriceTest.InsertUpdateMovementItemSendOnPrice
   (Id, MovementId, GoodsId: Integer;
        Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
        PartionGoods:String;GoodsKindId: Integer): integer;
@@ -356,10 +356,10 @@ begin
   result := InsertUpdate(FParams);
 end;
 
-procedure TMovementItemSendTest.SetDataSetParam;
+procedure TMovementItemSendOnPriceTest.SetDataSetParam;
 begin
   inherited;
-  FParams.AddParam('inMovementId', ftInteger, ptInput, TMovementSendTest.Create.GetDefault);
+  FParams.AddParam('inMovementId', ftInteger, ptInput, TMovementSendOnPriceTest.Create.GetDefault);
   FParams.AddParam('inShowAll', ftBoolean, ptInput, true);
 end;
 
@@ -498,17 +498,17 @@ begin
 end;
 
 
-{ TMovementItemProductionUnionInTest }
+{ TMovementItemProductionUnionMasterTest }
 
-constructor TMovementItemProductionUnionInTest.Create;
+constructor TMovementItemProductionUnionMasterTest.Create;
 begin
   inherited;
-  spInsertUpdate := 'gpInsertUpdate_MovementItem_In';
-  spSelect := 'gpSelect_MovementItem_ProductionUnion';
+  spInsertUpdate := 'gpInsertUpdate_MI_ProductionUnion_Master';
+  spSelect := 'gpSelect_MI_ProductionUnion';
   spGet := '';
 end;
 
-procedure TMovementItemProductionUnionInTest.Delete(Id: Integer);
+procedure TMovementItemProductionUnionMasterTest.Delete(Id: Integer);
 begin
   with TGoodsTest.Create do
   try
@@ -518,22 +518,22 @@ begin
   end;
 end;
 
-function TMovementItemProductionUnionInTest.GetDataSet: TDataSet;
+function TMovementItemProductionUnionMasterTest.GetDataSet: TDataSet;
 begin
 
 end;
 
-function TMovementItemProductionUnionInTest.InsertDefault: integer;
+function TMovementItemProductionUnionMasterTest.InsertDefault: integer;
 var MovementId, GoodsId: Integer;
 begin
   MovementId := TMovementIncomeTest.Create.GetDefault;
   GoodsId := TGoodsTest.Create.GetDefault;
 
-  result := InsertUpdateMovementProductionUnionIn(0, MovementId, GoodsId,
+  result := InsertUpdateMovementProductionUnionMaster(0, MovementId, GoodsId,
   10, false, 'Партия', 2.34, 505.67, 1, 0);
 end;
 
-function TMovementItemProductionUnionInTest.InsertUpdateMovementProductionUnionIn(
+function TMovementItemProductionUnionMasterTest.InsertUpdateMovementProductionUnionMaster(
   Id, MovementId, GoodsId: Integer; Amount: double; PartionClose: Boolean;
   Comment: String; Count, RealWeight, CuterCount: double;
   ReceiptId: Integer): integer;
@@ -552,17 +552,17 @@ begin
   result := InsertUpdate(FParams);
 end;
 
-{ TMovementItemProductionUnionOutTest }
+{ TMovementItemProductionUnionChildTest }
 
-constructor TMovementItemProductionUnionOutTest.Create;
+constructor TMovementItemProductionUnionChildTest.Create;
 begin
   inherited;
-  spInsertUpdate := 'gpInsertUpdate_MovementItem_Out';
-  spSelect := 'gpSelect_MovementItem_ProductionUnion';
+  spInsertUpdate := 'gpInsertUpdate_MI_ProductionUnion_Child';
+  spSelect := 'gpSelect_MI_ProductionUnion';
   spGet := '';
 end;
 
-procedure TMovementItemProductionUnionOutTest.Delete(Id: Integer);
+procedure TMovementItemProductionUnionChildTest.Delete(Id: Integer);
 begin
   with TGoodsTest.Create do
   try
@@ -572,7 +572,7 @@ begin
   end;
 end;
 
-function TMovementItemProductionUnionOutTest.GetDataSet: TDataSet;
+function TMovementItemProductionUnionChildTest.GetDataSet: TDataSet;
 begin
   with FdsdStoredProc do begin
     if (DataSets.Count = 0) or not Assigned(DataSets[0].DataSet) then
@@ -589,18 +589,18 @@ begin
   end;
 end;
 
-function TMovementItemProductionUnionOutTest.InsertDefault: integer;
+function TMovementItemProductionUnionChildTest.InsertDefault: integer;
 var MovementId, GoodsId: Integer;
 begin
   MovementId := TMovementIncomeTest.Create.GetDefault;
   GoodsId := TGoodsTest.Create.GetDefault;
-  MovementItem_InId := TMovementItemProductionUnionInTest.Create.GetDefault;
+  MovementItem_InId := TMovementItemProductionUnionMasterTest.Create.GetDefault;
 
-  result := InsertUpdateMovementProductionUnionOut(0, MovementId, GoodsId, 10,
+  result := InsertUpdateMovementProductionUnionChild(0, MovementId, GoodsId, 10,
   MovementItem_InId, 10, 'Comment');
 end;
 
-function TMovementItemProductionUnionOutTest.InsertUpdateMovementProductionUnionOut(
+function TMovementItemProductionUnionChildTest.InsertUpdateMovementProductionUnionChild(
   Id, MovementId, GoodsId: Integer; Amount: double; ParentId: integer;
   AmountReceipt: double; Comment: string): integer;
 begin
@@ -615,7 +615,7 @@ begin
   result := InsertUpdate(FParams);
 end;
 
-procedure TMovementItemProductionUnionOutTest.SetDataSetParam;
+procedure TMovementItemProductionUnionChildTest.SetDataSetParam;
 begin
   inherited;
   FParams.AddParam('inMovementId', ftInteger, ptInput, TMovementProductionUnionTest.Create.GetDefault);

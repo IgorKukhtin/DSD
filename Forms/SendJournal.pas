@@ -48,7 +48,6 @@ type
     colOperDate: TcxGridDBColumn;
     colFromName: TcxGridDBColumn;
     colToName: TcxGridDBColumn;
-    colTotalSummPVAT: TcxGridDBColumn;
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
@@ -64,17 +63,7 @@ type
     bbDelete: TdxBarButton;
     actSetErased: TdsdChangeMovementStatus;
     spMovementSetErased: TdsdStoredProc;
-    colPriceWithVAT: TcxGridDBColumn;
-    colVATPercent: TcxGridDBColumn;
-    colChangePercent: TcxGridDBColumn;
     colTotalCount: TcxGridDBColumn;
-    colTotalSummMVAT: TcxGridDBColumn;
-    colTotalSumm: TcxGridDBColumn;
-    colTotalSummVAT: TcxGridDBColumn;
-    colCarName: TcxGridDBColumn;
-    colPersonalDriverName: TcxGridDBColumn;
-    colRouteName: TcxGridDBColumn;
-    colRouteSortingName: TcxGridDBColumn;
   private
   public
   end;

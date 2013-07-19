@@ -136,7 +136,11 @@ uses
   ReturnOutJournal in '..\..\Forms\ReturnOutJournal.pas' {ReturnOutJournalForm},
   ReturnOut in '..\..\Forms\ReturnOut.pas' {ReturnOutForm},
   JuridicalGroupEdit in '..\..\Forms\JuridicalGroupEdit.pas' {JuridicalGroupEditForm},
-  JuridicalTest in '..\SOURCE\Objects\All\JuridicalTest.pas';
+  JuridicalTest in '..\SOURCE\Objects\All\JuridicalTest.pas',
+  SendOnPriceJournal in '..\..\Forms\SendOnPriceJournal.pas' {SendOnPriceJournalForm},
+  SendOnPrice in '..\..\Forms\SendOnPrice.pas' {SendOnPriceForm},
+  ReturnInJournal in '..\..\Forms\ReturnInJournal.pas' {ReturnInJournalForm},
+  ReturnIn in '..\..\Forms\ReturnIn.pas' {ReturnInForm};
 
 {$R *.RES}
 

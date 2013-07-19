@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
     IN inHeadCount           TFloat    , -- Количество голов
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
+    IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
@@ -44,6 +45,9 @@ BEGIN
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
 
+     -- сохранили связь с <Основные средства (для которых закупается ТМЦ)>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
+
      -- создали объект <Связи Товары и Виды товаров>
      PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, vbUserId);
 
@@ -62,7 +66,8 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 13.07.13          * 
+ 18.07.13         * add inAssetId               
+ 13.07.13         * 
 
 */
 

@@ -7,10 +7,11 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Send(
     IN inShowAll     Boolean      , -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat, AmountPartner TFloat
-             , Price TFloat, CountForPrice TFloat,  HeadCount TFloat
+RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , Amount TFloat, HeadCount TFloat
              , PartionGoods TVarChar, GoodsKindName  TVarChar
-             , AmountSumm TFloat, isErased Boolean
+             , AssetId Integer, AssetName TVarChar
+             , isErased Boolean
               )
 AS
 $BODY$
@@ -19,7 +20,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Send());
 
-     inShowAll:= TRUE;
+     -- inShowAll:= TRUE;
 
      IF inShowAll THEN 
 
@@ -29,11 +30,7 @@ BEGIN
            , Object_Goods.Id          AS GoodsId
            , Object_Goods.ObjectCode  AS GoodsCode
            , Object_Goods.ValueData   AS GoodsName
-           , CAST (NULL AS TFloat) AS Amount
-           , CAST (NULL AS TFloat) AS AmountPartner
-
-           , CAST (NULL AS TFloat) AS Price
-           , CAST (NULL AS TFloat) AS CountForPrice
+           , MovementItem.Amount AS Amount
 
            , CAST (NULL AS TFloat) AS HeadCount
 
@@ -41,7 +38,9 @@ BEGIN
 
            , Object_GoodsKind.ValueData AS GoodsKindName
 
-           , CAST (NULL AS TFloat) AS AmountSumm
+           , Object_Asset.Id         AS AssetId
+           , Object_Asset.ValueData  AS AssetName
+
            , FALSE AS isErased
 
        FROM Object AS Object_Goods
@@ -57,6 +56,11 @@ BEGIN
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                                             AND MILinkObject_GoodsKind.ObjectId = lfObject_GoodsByGoodsKind.GoodsKindId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                             ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
+
        WHERE Object_Goods.DescId = zc_Object_Goods()
          AND (MILinkObject_GoodsKind.ObjectId IS NULL OR (MovementItem.MovementId IS NULL AND lfObject_GoodsByGoodsKind.GoodsId IS NULL))
       UNION ALL
@@ -65,11 +69,7 @@ BEGIN
            , Object_Goods.Id          AS GoodsId
            , Object_Goods.ObjectCode  AS GoodsCode
            , Object_Goods.ValueData   AS GoodsName
-           , MovementItem.Amount
-           , MIFloat_AmountPartner.ValueData   AS AmountPartner
-
-           , MIFloat_Price.ValueData AS Price
-           , MIFloat_CountForPrice.ValueData AS CountForPrice
+           , MovementItem.Amount      AS Amount
 
            , MIFloat_HeadCount.ValueData AS HeadCount
 
@@ -77,25 +77,13 @@ BEGIN
 
            , Object_GoodsKind.ValueData AS GoodsKindName
 
-           , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                           THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
-                        ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
-                   END AS TFloat) AS AmountSumm
+           , Object_Asset.Id         AS AssetId
+           , Object_Asset.ValueData  AS AssetName
+           
            , MovementItem.isErased
 
        FROM MovementItem
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
-
-            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                        ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                       AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-
-            LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
-            LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
 
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
@@ -109,6 +97,11 @@ BEGIN
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                             ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
 
        WHERE MovementItem.MovementId = inMovementId
          AND MovementItem.DescId =  zc_MI_Master();
@@ -122,37 +115,19 @@ BEGIN
            , Object_Goods.ObjectCode  AS GoodsCode
            , Object_Goods.ValueData   AS GoodsName
            , MovementItem.Amount
-           , MIFloat_AmountPartner.ValueData   AS AmountPartner
-
-           , MIFloat_Price.ValueData AS Price
-           , MIFloat_CountForPrice.ValueData AS CountForPrice
-
            , MIFloat_HeadCount.ValueData AS HeadCount
 
            , MIString_PartionGoods.ValueData AS PartionGoods
 
            , Object_GoodsKind.ValueData AS GoodsKindName
+           
+           , Object_Asset.Id         AS AssetId
+           , Object_Asset.ValueData  AS AssetName
 
-           , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                           THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
-                        ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0) ) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
-                   END AS TFloat) AS AmountSumm
            , MovementItem.isErased
 
        FROM MovementItem
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
-
-            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                        ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                       AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-
-            LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
-         
-            LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
 
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
@@ -166,6 +141,11 @@ BEGIN
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                             ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
 
        WHERE MovementItem.MovementId = inMovementId
          AND MovementItem.DescId =  zc_MI_Master();
@@ -182,7 +162,7 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, TVarChar) OWNER TO 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-               
+ 18.07.13         * add Object_Asset               
  12.07.13         *
 
 */

@@ -49,6 +49,13 @@ inherited TradeMarkForm: TTradeMarkForm
         HeaderAlignmentVert = vaCenter
         Width = 286
       end
+      object clErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -247,7 +254,11 @@ inherited TradeMarkForm: TTradeMarkForm
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
-      StoredProcList = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
@@ -256,7 +267,11 @@ inherited TradeMarkForm: TTradeMarkForm
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
-      StoredProcList = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
@@ -313,6 +328,21 @@ inherited TradeMarkForm: TTradeMarkForm
   object dsdDBViewAddOn: TdsdDBViewAddOn
     View = cxGridDBTableView
     Left = 160
+    Top = 208
+  end
+  object spErasedUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+    Left = 288
     Top = 208
   end
 end

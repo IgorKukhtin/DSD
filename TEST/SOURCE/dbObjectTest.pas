@@ -744,7 +744,7 @@ begin
   finally
     Free;
   end;
-  result := InsertUpdateCash(0, 3, 'Главная касса', CurrencyId, BranchId, PaidKindId);
+  result := InsertUpdateCash(0, -3, 'Главная касса', CurrencyId, BranchId, PaidKindId);
 end;
 
 function TCashTest.InsertUpdateCash(const Id, Code: integer; CashName: string;
@@ -772,7 +772,7 @@ end;
 
 function TJuridicalGroupTest.InsertDefault: integer;
 begin
-  result := InsertUpdateJuridicalGroup(0, 1, 'Группа юр лиц 1', 0);
+  result := InsertUpdateJuridicalGroup(0, -1, 'Группа юр лиц 1', 0);
 end;
 
 function TJuridicalGroupTest.InsertUpdateJuridicalGroup(const Id, Code: Integer;
@@ -798,7 +798,7 @@ end;
 
 function TGoodsPropertyTest.InsertDefault: integer;
 begin
-  result := InsertUpdateGoodsProperty(0, 1, 'Классификатор свойств товаров');
+  result := InsertUpdateGoodsProperty(0, -1, 'Классификатор свойств товаров');
 end;
 
 function TGoodsPropertyTest.InsertUpdateGoodsProperty(const Id, Code: Integer;
@@ -822,7 +822,7 @@ end;
 
 function TRouteTest.InsertDefault: integer;
 begin
-  result := InsertUpdateRoute(0, 1, 'Маршрут');
+  result := InsertUpdateRoute(0, -1, 'Маршрут');
 end;
 
 function TRouteTest.InsertUpdateRoute(const Id, Code: Integer;
@@ -846,7 +846,7 @@ end;
 
 function TRouteSortingTest.InsertDefault: integer;
 begin
-  result := InsertUpdateRouteSorting(0, 1, 'Сортировка маршрутов');
+  result := InsertUpdateRouteSorting(0, -1, 'Сортировка маршрутов');
 end;
 
 function TRouteSortingTest.InsertUpdateRouteSorting(const Id, Code: Integer;
@@ -1224,7 +1224,7 @@ end;
 
 function TPriceListTest.InsertDefault: integer;
 begin
-  result := InsertUpdatePriceList(0, 1, 'Прайс-лист');
+  result := InsertUpdatePriceList(0, -1, 'Прайс-лист');
 end;
 
 function TPriceListTest.InsertUpdatePriceList(const Id, Code: Integer;
@@ -1248,7 +1248,7 @@ end;
 
 function TPaidKindTest.InsertDefault: integer;
 begin
-  result := InsertUpdatePaidKind(0, 3, 'Вид Формы оплаты');
+  result := InsertUpdatePaidKind(0, -3, 'Вид Формы оплаты');
 end;
 
 function TPaidKindTest.InsertUpdatePaidKind;
@@ -1290,7 +1290,7 @@ end;
 
 function TContractKindTest.InsertDefault: integer;
 begin
-  result := InsertUpdateContractKind(0, 1, 'Вид договора');
+  result := InsertUpdateContractKind(0, -1, 'Вид договора');
 end;
 
 function TContractKindTest.InsertUpdateContractKind;
@@ -1332,7 +1332,7 @@ end;
 
 function TBusinessTest.InsertDefault: integer;
 begin
-  result := InsertUpdateBusiness(0, 1, 'Бизнес');
+  result := InsertUpdateBusiness(0, -1, 'Бизнес');
 end;
 
 function TBusinessTest.InsertUpdateBusiness;
@@ -1385,7 +1385,7 @@ end;
 
 function TBranchTest.InsertDefault: integer;
 begin
-  result := InsertUpdateBranch(0, 1, 'Филиал');
+  result := InsertUpdateBranch(0, -1, 'Филиал');
   //FInsertedId := result;
 end;
 
@@ -1431,7 +1431,7 @@ var
   ParentId: Integer;
 begin
   ParentId:=0;
-  result := InsertUpdateGoodsGroup(0, 1, 'Группа товара', ParentId);
+  result := InsertUpdateGoodsGroup(0, -1, 'Группа товара', ParentId);
 end;
 
 function TGoodsGroupTest.InsertUpdateGoodsGroup;
@@ -1511,7 +1511,7 @@ end;
 
 function TGoodsKindTest.InsertDefault: integer;
 begin
-  result := InsertUpdateGoodsKind(0, 1, 'Вид товара');
+  result := InsertUpdateGoodsKind(0, -1, 'Вид товара');
 end;
 
 function TGoodsKindTest.InsertUpdateGoodsKind;
@@ -1691,7 +1691,7 @@ end;
 
 function TCarModelTest.InsertDefault: integer;
 begin
-  result := InsertUpdateCarModel(0, 1, 'Марка автомобиля');
+  result := InsertUpdateCarModel(0, -1, 'Марка автомобиля');
 end;
 
 function TCarModelTest.InsertUpdateCarModel;
@@ -1747,7 +1747,7 @@ var
   CarModelId: Integer;
 begin
   CarModelId := TCarModelTest.Create.GetDefault;
-  result := InsertUpdateCar(0, 1, 'Автомобиль', 'АЕ НЕ', CarModelId);
+  result := InsertUpdateCar(0, -1, 'Автомобиль', 'АЕ НЕ', CarModelId);
 end;
 
 function TCarTest.InsertUpdateCar;
@@ -1791,7 +1791,7 @@ end;
 
 function TAccountGroupTest.InsertDefault: integer;
 begin
-  result := InsertUpdateAccountGroup(0, 4, 'Группа управленческих счетов 1');
+  result := InsertUpdateAccountGroup(0, -4, 'Группа управленческих счетов 1');
 end;
 
 function TAccountGroupTest.InsertUpdateAccountGroup(const Id, Code: Integer;
@@ -1835,7 +1835,7 @@ end;
 
 function TAccountDirectionTest.InsertDefault: integer;
 begin
-  result := InsertUpdateAccountDirection(0, 4, 'Аналитики управленческих счетов 1');
+  result := InsertUpdateAccountDirection(0, -4, 'Аналитики управленческих счетов 1');
 end;
 
 function TAccountDirectionTest.InsertUpdateAccountDirection(const Id, Code: Integer;
@@ -1950,7 +1950,7 @@ end;
 
 function TProfitLossGroupTest.InsertDefault: integer;
 begin
-  result := InsertUpdateProfitLossGroup(0, 4, 'Группы статей отчета о прибылях и убытках 1');
+  result := InsertUpdateProfitLossGroup(0, -4, 'Группы статей отчета о прибылях и убытках 1');
 end;
 
 function TProfitLossGroupTest.InsertUpdateProfitLossGroup(const Id, Code: Integer;
@@ -1994,7 +1994,7 @@ end;
 
 function TProfitLossDirectionTest.InsertDefault: integer;
 begin
-  result := InsertUpdateProfitLossDirection(0, 1, 'Аналитики статей отчета о прибылях и убытках - направление 1');
+  result := InsertUpdateProfitLossDirection(0, -1, 'Аналитики статей отчета о прибылях и убытках - направление 1');
 end;
 
 function TProfitLossDirectionTest.InsertUpdateProfitLossDirection(const Id, Code: Integer;
@@ -2063,7 +2063,7 @@ var
 begin
   ProfitLossGroupId := TProfitLossGroupTest.Create.GetDefault;
   ProfitLossDirectionId:= TProfitLossDirectionTest.Create.GetDefault;;
-  result := InsertUpdateProfitLoss(0, 3, 'Управленческие счет 1', ProfitLossGroupId, ProfitLossDirectionId, 1, 1);
+  result := InsertUpdateProfitLoss(0, -3, 'Управленческие счет 1', ProfitLossGroupId, ProfitLossDirectionId, 1, 1);
 end;
 
 function TProfitLossTest.InsertUpdateProfitLoss;
@@ -2109,7 +2109,7 @@ end;
 
 function TInfoMoneyGroupTest.InsertDefault: integer;
 begin
-  result := InsertUpdateInfoMoneyGroup(0, 4, 'Группы управленческих аналитик 1');
+  result := InsertUpdateInfoMoneyGroup(0, -4, 'Группы управленческих аналитик 1');
 end;
 
 function TInfoMoneyGroupTest.InsertUpdateInfoMoneyGroup(const Id, Code: Integer;
@@ -2153,7 +2153,7 @@ end;
 
 function TInfoMoneyDestinationTest.InsertDefault: integer;
 begin
-  result := InsertUpdateInfoMoneyDestination(0, 1, 'Управленческие аналитики - назначение');
+  result := InsertUpdateInfoMoneyDestination(0, -1, 'Управленческие аналитики - назначение');
 end;
 
 function TInfoMoneyDestinationTest.InsertUpdateInfoMoneyDestination(const Id, Code: Integer;
@@ -2219,7 +2219,7 @@ var
 begin
   InfoMoneyGroupId := TInfoMoneyGroupTest.Create.GetDefault;
   InfoMoneyDestinationId:= TInfoMoneyDestinationTest.Create.GetDefault;;
-  result := InsertUpdateInfoMoney(0, 3, 'Управленческие аналитики 1', InfoMoneyGroupId, InfoMoneyDestinationId);
+  result := InsertUpdateInfoMoney(0, -3, 'Управленческие аналитики 1', InfoMoneyGroupId, InfoMoneyDestinationId);
 end;
 
 function TInfoMoneyTest.InsertUpdateInfoMoney;
@@ -2265,7 +2265,7 @@ end;
 
 function TMemberTest.InsertDefault: integer;
 begin
-  result := InsertUpdateMember(0, 1, 'Физические лица','123');
+  result := InsertUpdateMember(0, -1, 'Физические лица','123');
 end;
 
 function TMemberTest.InsertUpdateMember(const Id, Code: Integer;
@@ -2309,7 +2309,7 @@ end;
 
 function TPositionTest.InsertDefault: integer;
 begin
-  result := InsertUpdatePosition(0, 1, 'Должности');
+  result := InsertUpdatePosition(0, -1, 'Должности');
 end;
 
 function TPositionTest.InsertUpdatePosition(const Id, Code: Integer;
@@ -2387,7 +2387,7 @@ begin
   UnitId := TUnit.Create.GetDefault;
   JuridicalId := TJuridical.Create.GetDefault;
   BusinessId := TBusinessTest.Create.GetDefault;
-  result := InsertUpdatePersonal(0, 3, 'Сотрудник', MemberId, PositionId, UnitId, JuridicalId, BusinessId, Date,Date);
+  result := InsertUpdatePersonal(0, -3, 'Сотрудник', MemberId, PositionId, UnitId, JuridicalId, BusinessId, Date,Date);
 end;
 
 function TPersonalTest.InsertUpdatePersonal;
@@ -2439,7 +2439,7 @@ var
   ParentId: Integer;
 begin
   ParentId:=0;
-  result := InsertUpdateAssetGroup(0, 1, 'Группа основных средств', ParentId);
+  result := InsertUpdateAssetGroup(0, -1, 'Группа основных средств', ParentId);
 end;
 
 function TAssetGroupTest.InsertUpdateAssetGroup;

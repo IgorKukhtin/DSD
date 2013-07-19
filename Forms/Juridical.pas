@@ -65,6 +65,7 @@ type
     GridDS: TDataSource;
     GridDataSet: TClientDataSet;
     GridStoredProc: TdsdStoredProc;
+    spErasedUnErased: TdsdStoredProc;
   private
     { Private declarations }
   public

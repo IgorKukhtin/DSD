@@ -50,13 +50,23 @@ inherited InfoMoneyForm: TInfoMoneyForm
       end
       object clInfoMoneyGroup: TcxGridDBColumn
         Caption = ' '#9#1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1081
+        DataBinding.FieldName = 'InfoMoneyGroupName'
         HeaderAlignmentVert = vaCenter
         Width = 123
       end
-      object clInfoMoney_Destination: TcxGridDBColumn
+      object clInfoMoneyDestination: TcxGridDBColumn
         Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyDestinationName'
         HeaderAlignmentVert = vaCenter
         Width = 200
+      end
+      object clErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
       end
     end
     object cxGridLevel: TcxGridLevel

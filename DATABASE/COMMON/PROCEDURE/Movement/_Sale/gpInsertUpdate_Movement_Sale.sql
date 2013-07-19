@@ -1,74 +1,74 @@
-п»ї-- Function: gpInsertUpdate_Movement_Sale()
+-- Function: gpInsertUpdate_Movement_Sale()
 
--- DROP FUNCTION gpInsertUpdate_Movement_Sale();
+-- DROP FUNCTION gpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
- INOUT ioId                  Integer   , -- РљР»СЋС‡ РѕР±СЉРµРєС‚Р° <Р”РѕРєСѓРјРµРЅС‚ РџРµСЂРµРјРµС‰РµРЅРёРµ>
-    IN inInvNumber           TVarChar  , -- РќРѕРјРµСЂ РґРѕРєСѓРјРµРЅС‚Р°
-    IN inOperDate            TDateTime , -- Р”Р°С‚Р° РґРѕРєСѓРјРµРЅС‚Р°
+ INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
+    IN inInvNumber           TVarChar  , -- Номер документа
+    IN inOperDate            TDateTime , -- Дата документа
 
-    IN inOperDatePartner     TDateTime , -- Р”Р°С‚Р° РЅР°РєР»Р°РґРЅРѕР№ Сѓ РєРѕРЅС‚СЂР°РіРµРЅС‚Р°
+    IN inOperDatePartner     TDateTime , -- Дата накладной у контрагента
 
-    IN inPriceWithVAT        Boolean   , -- Р¦РµРЅР° СЃ РќР”РЎ (РґР°/РЅРµС‚)
-    IN inVATPercent          TFloat    , -- % РќР”РЎ
-    IN inChangePercent       TFloat    , -- (-)% РЎРєРёРґРєРё (+)% РќР°С†РµРЅРєРё 
-    IN inFromId              Integer   , -- РћС‚ РєРѕРіРѕ (РІ РґРѕРєСѓРјРµРЅС‚Рµ)
-    IN inToId                Integer   , -- РљРѕРјСѓ (РІ РґРѕРєСѓРјРµРЅС‚Рµ)
-    IN inPaidKindId          Integer   , -- Р’РёРґС‹ С„РѕСЂРј РѕРїР»Р°С‚С‹ 
-    IN inContractId          Integer   , -- Р”РѕРіРѕРІРѕСЂР°
-    IN inCarId               Integer   , -- РђРІС‚РѕРјРѕР±РёР»Рё
-    IN inPersonalDriverId    Integer   , -- РЎРѕС‚СЂСѓРґРЅРёРє (РІРѕРґРёС‚РµР»СЊ)
-    IN inRouteId             Integer   , -- РњР°СЂС€СЂСѓС‚
-    IN inRouteSortingId      Integer   , -- РЎРѕСЂС‚РёСЂРѕРІРєРё РјР°СЂС€СЂСѓС‚РѕРІ
-    IN inSession             TVarChar    -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
+    IN inVATPercent          TFloat    , -- % НДС
+    IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки 
+    IN inFromId              Integer   , -- От кого (в документе)
+    IN inToId                Integer   , -- Кому (в документе)
+    IN inPaidKindId          Integer   , -- Виды форм оплаты 
+    IN inContractId          Integer   , -- Договора
+    IN inCarId               Integer   , -- Автомобили
+    IN inPersonalDriverId    Integer   , -- Сотрудник (водитель)
+    IN inRouteId             Integer   , -- Маршрут
+    IN inRouteSortingId      Integer   , -- Сортировки маршрутов
+    IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
 
-     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+     -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Sale());
      vbUserId := inSession;
 
-     -- СЃРѕС…СЂР°РЅРёР»Рё <Р”РѕРєСѓРјРµРЅС‚>
+     -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Sale(), inInvNumber, inOperDate, NULL);
 
-     -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІРѕР№СЃС‚РІРѕ <Р”Р°С‚Р° РЅР°РєР»Р°РґРЅРѕР№ Сѓ РєРѕРЅС‚СЂР°РіРµРЅС‚Р°>
+     -- сохранили свойство <Дата накладной у контрагента>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDatePartner);
 
-     -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІРѕР№СЃС‚РІРѕ <Р¦РµРЅР° СЃ РќР”РЎ (РґР°/РЅРµС‚)>
+     -- сохранили свойство <Цена с НДС (да/нет)>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), ioId, inPriceWithVAT);
-     -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІРѕР№СЃС‚РІРѕ <% РќР”РЎ>
+     -- сохранили свойство <% НДС>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, inVATPercent);
-     -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІРѕР№СЃС‚РІРѕ <(-)% РЎРєРёРґРєРё (+)% РќР°С†РµРЅРєРё >
+     -- сохранили свойство <(-)% Скидки (+)% Наценки >
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
 
-     -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІСЏР·СЊ СЃ <РћС‚ РєРѕРіРѕ (РІ РґРѕРєСѓРјРµРЅС‚Рµ)>
+     -- сохранили связь с <От кого (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
-     -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІСЏР·СЊ СЃ <РљРѕРјСѓ (РІ РґРѕРєСѓРјРµРЅС‚Рµ)>
+     -- сохранили связь с <Кому (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
 
-     -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІСЏР·СЊ СЃ <Р’РёРґС‹ С„РѕСЂРј РѕРїР»Р°С‚С‹ >
+     -- сохранили связь с <Виды форм оплаты >
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
-     -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІСЏР·СЊ СЃ <Р”РѕРіРѕРІРѕСЂР°>
+     -- сохранили связь с <Договора>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
 
-     -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІСЏР·СЊ СЃ <РђРІС‚РѕРјРѕР±РёР»Рё>
+     -- сохранили связь с <Автомобили>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Car(), ioId, inCarId);
 
-     -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІСЏР·СЊ СЃ <РЎРѕС‚СЂСѓРґРЅРёРє (РІРѕРґРёС‚РµР»СЊ)>
+     -- сохранили связь с <Сотрудник (водитель)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalDriver(), ioId, inPersonalDriverId);
 
-     -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІСЏР·СЊ СЃ <РњР°СЂС€СЂСѓС‚С‹>
+     -- сохранили связь с <Маршруты>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Route(), ioId, inRouteId);
-     -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІСЏР·СЊ СЃ <РЎРѕСЂС‚РёСЂРѕРІРєРё РјР°СЂС€СЂСѓС‚РѕРІ>
+     -- сохранили связь с <Сортировки маршрутов>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_RouteSorting(), ioId, inRouteSortingId);
 
-     -- РїРµСЂРµСЃС‡РёС‚Р°Р»Рё РС‚РѕРіРѕРІС‹Рµ СЃСѓРјРјС‹ РїРѕ РЅР°РєР»Р°РґРЅРѕР№
+     -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
    
-     -- СЃРѕС…СЂР°РЅРёР»Рё РїСЂРѕС‚РѕРєРѕР»
+     -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 
 END;
@@ -77,11 +77,11 @@ LANGUAGE PLPGSQL VOLATILE;
 
 
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  13.07.13         *
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpInsertUpdate_Movement_Sale (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inCarId:= 0, inPaidKindId:= 1, inContractId:= 0, inPersonalDriverId:= 0, inRouteId:= 0, inRouteSortingId:= 0, inSession:= '2')

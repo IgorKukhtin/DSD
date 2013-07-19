@@ -1,11 +1,11 @@
-п»ї-- Function: gpSelect_Movement_Sale()
+-- Function: gpSelect_Movement_Sale()
 
 -- DROP FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale(
     IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
-    IN inSession     TVarChar    -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime
@@ -25,7 +25,7 @@ BEGIN
 -- inStartDate:= '01.01.2013';
 -- inEndDate:= '01.01.2100';
 
-     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+     -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
 
      RETURN QUERY 
@@ -154,12 +154,12 @@ ALTER FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, TVarChar) OWNER TO 
 
 
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
                
  13.07.13          *
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpSelect_Movement_Sale (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= '2')

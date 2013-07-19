@@ -74,7 +74,7 @@ object MainForm: TMainForm
       OnClick = CloseButtonClick
     end
     object cbSetNull_Id_Postgres: TCheckBox
-      Left = 775
+      Left = 754
       Top = 20
       Width = 292
       Height = 17
@@ -82,9 +82,9 @@ object MainForm: TMainForm
       TabOrder = 3
     end
     object cbOnlyOpen: TCheckBox
-      Left = 775
+      Left = 754
       Top = 39
-      Width = 292
+      Width = 264
       Height = 17
       Caption = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1076#1077#1081#1089#1090#1074#1080#1077' ('#1090#1086#1083#1100#1082#1086' '#1087#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077')'
       TabOrder = 4
@@ -107,6 +107,14 @@ object MainForm: TMainForm
       TabOrder = 6
       OnClick = OKCompleteDocumentButtonClick
     end
+    object cbOnlyOpenMI: TCheckBox
+      Left = 1024
+      Top = 39
+      Width = 132
+      Height = 17
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' MI'
+      TabOrder = 7
+    end
   end
   object GuidePanel: TPanel
     Left = 462
@@ -116,7 +124,6 @@ object MainForm: TMainForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitLeft = 469
     object cbGoodsGroup: TCheckBox
       Tag = 10
       Left = 15
@@ -421,7 +428,6 @@ object MainForm: TMainForm
     BevelOuter = bvNone
     TabOrder = 3
     OnClick = DocumentPanelClick
-    ExplicitLeft = 784
     object Label1: TLabel
       Left = 6
       Top = 22
@@ -561,6 +567,7 @@ object MainForm: TMainForm
       Width = 194
       Height = 17
       Caption = '1.3. '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -576,6 +583,7 @@ object MainForm: TMainForm
       Width = 213
       Height = 17
       Caption = '3.2. '#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -591,6 +599,7 @@ object MainForm: TMainForm
       Width = 213
       Height = 17
       Caption = '4.1. '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -606,6 +615,7 @@ object MainForm: TMainForm
       Width = 213
       Height = 17
       Caption = '4.2. '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -621,6 +631,7 @@ object MainForm: TMainForm
       Width = 213
       Height = 17
       Caption = '5. '#1057#1087#1080#1089#1072#1085#1080#1077
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -636,6 +647,7 @@ object MainForm: TMainForm
       Width = 213
       Height = 17
       Caption = '6. '#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -651,6 +663,7 @@ object MainForm: TMainForm
       Width = 213
       Height = 17
       Caption = '7. '#1047#1072#1103#1074#1082#1080
+      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11

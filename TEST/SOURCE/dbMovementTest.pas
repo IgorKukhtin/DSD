@@ -17,9 +17,15 @@ type
   published
     procedure MovementIncomeTest;
     procedure MovementProductionUnionTest;
-    procedure MovementSendTest;
+    procedure MovementSendOnPriceTest;
     procedure MovementSaleTest;
     procedure MovementReturnOutTest;
+    procedure MovementReturnInTest;
+    procedure MovementSendTest;
+
+    procedure MovementLossTest;
+    procedure MovementInventoryTest;
+
   end;
 
   TMovementIncomeTest = class(TObjectTest)
@@ -48,13 +54,13 @@ type
   end;
 
 
-  TMovementSendTest = class(TObjectTest)
+  TMovementSendOnPriceTest = class(TObjectTest)
   private
     function InsertDefault: integer; override;
   protected
     procedure SetDataSetParam; override;
   public
-    function InsertUpdateMovementSend(Id: Integer; InvNumber: String; OperDate: TDateTime;
+    function InsertUpdateMovementSendOnPrice(Id: Integer; InvNumber: String; OperDate: TDateTime;
              OperDatePartner: TDateTime; PriceWithVAT: Boolean;
              VATPercent, ChangePercent: double;
              FromId, ToId, CarId, PersonalDriverId, RouteId, RouteSortingId: Integer
@@ -87,6 +93,53 @@ type
              VATPercent, ChangePercent: double;
              FromId, ToId, PaidKindId, ContractId: Integer
              ): integer;
+    constructor Create; override;
+  end;
+
+  TMovementReturnInTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  protected
+    procedure SetDataSetParam; override;
+  public
+    function InsertUpdateMovementReturnIn(Id: Integer; InvNumber: String; OperDate: TDateTime;
+             OperDatePartner: TDateTime; PriceWithVAT: Boolean;
+             VATPercent, ChangePercent: double;
+             FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId: Integer
+             ): integer;
+    constructor Create; override;
+  end;
+
+  TMovementSendTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  protected
+    procedure SetDataSetParam; override;
+  public
+    function InsertUpdateMovementSend(Id: Integer; InvNumber: String; OperDate: TDateTime;
+             FromId, ToId: Integer): integer;
+    constructor Create; override;
+  end;
+
+  TMovementLossTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  protected
+    procedure SetDataSetParam; override;
+  public
+    function InsertUpdateMovementLoss(Id: Integer; InvNumber: String; OperDate: TDateTime;
+             FromId, ToId: Integer): integer;
+    constructor Create; override;
+  end;
+
+  TMovementInventoryTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  protected
+    procedure SetDataSetParam; override;
+  public
+    function InsertUpdateMovementInventory(Id: Integer; InvNumber: String; OperDate: TDateTime;
+             FromId, ToId: Integer): integer;
     constructor Create; override;
   end;
 
@@ -144,13 +197,13 @@ begin
   end;
 end;
 
-procedure TdbMovementTest.MovementSendTest;
+procedure TdbMovementTest.MovementSendOnPriceTest;
 var
-  MovementSend: TMovementSendTest;
+  MovementSendOnPrice: TMovementSendOnPriceTest;
   Id: Integer;
 begin
-  MovementSend := TMovementSendTest.Create;
-  Id := MovementSend.InsertDefault;
+  MovementSendOnPrice := TMovementSendOnPriceTest.Create;
+  Id := MovementSendOnPrice.InsertDefault;
   // создание документа
   try
   // редактирование
@@ -192,13 +245,76 @@ begin
   end;
 end;
 
+procedure TdbMovementTest.MovementReturnInTest;
+var
+  MovementReturnIn: TMovementReturnInTest;
+  Id: Integer;
+begin
+  MovementReturnIn := TMovementReturnInTest.Create;
+  Id := MovementReturnIn.InsertDefault;
+  // создание документа
+  try
+  // редактирование
+  finally
+    // удаление
+    DeleteMovement(Id);
+  end;
+end;
+
+procedure TdbMovementTest.MovementSendTest;
+var
+  MovementSend: TMovementSendTest;
+  Id: Integer;
+begin
+  MovementSend := TMovementSendTest.Create;
+  Id := MovementSend.InsertDefault;
+  // создание документа
+  try
+  // редактирование
+  finally
+    // удаление
+    DeleteMovement(Id);
+  end;
+end;
+
+procedure TdbMovementTest.MovementLossTest;
+var
+  MovementLoss: TMovementLossTest;
+  Id: Integer;
+begin
+  MovementLoss := TMovementLossTest.Create;
+  Id := MovementLoss.InsertDefault;
+  // создание документа
+  try
+  // редактирование
+  finally
+    // удаление
+    DeleteMovement(Id);
+  end;
+end;
+
+procedure TdbMovementTest.MovementInventoryTest;
+var
+  MovementInventory: TMovementInventoryTest;
+  Id: Integer;
+begin
+  MovementInventory := TMovementInventoryTest.Create;
+  Id := MovementInventory.InsertDefault;
+  // создание документа
+  try
+  // редактирование
+  finally
+    // удаление
+    DeleteMovement(Id);
+  end;
+end;
+
 procedure TdbMovementTest.SetUp;
 begin
   inherited;
 end;
 {------------------------------------------------------------------------------}
 { TMovementIncome }
-
 constructor TMovementIncomeTest.Create;
 begin
   inherited;
@@ -314,17 +430,16 @@ end;
 
 
 
-{ TMovementSend }
-
-constructor TMovementSendTest.Create;
+{ TMovementSendOnPrice }
+constructor TMovementSendOnPriceTest.Create;
 begin
   inherited;
-  spInsertUpdate := 'gpInsertUpdate_Movement_Send';
-  spSelect := 'gpSelect_Movement_Send';
-  spGet := 'gpGet_Movement_Send';
+  spInsertUpdate := 'gpInsertUpdate_Movement_SendOnPrice';
+  spSelect := 'gpSelect_Movement_SendOnPrice';
+  spGet := 'gpGet_Movement_SendOnPrice';
 end;
 
-function TMovementSendTest.InsertDefault: integer;
+function TMovementSendOnPriceTest.InsertDefault: integer;
 var Id: Integer;
     InvNumber: String;
     OperDate: TDateTime;
@@ -349,14 +464,14 @@ begin
   RouteId:=0;
   RouteSortingId:=0;
   //
-  result := InsertUpdateMovementSend(Id, InvNumber, OperDate,
+  result := InsertUpdateMovementSendOnPrice(Id, InvNumber, OperDate,
              OperDatePartner, PriceWithVAT,
              VATPercent, ChangePercent,
              FromId, ToId, CarId, PersonalDriverId, RouteId, RouteSortingId);
 
 end;
 
-function TMovementSendTest.InsertUpdateMovementSend(Id: Integer; InvNumber: String; OperDate: TDateTime;
+function TMovementSendOnPriceTest.InsertUpdateMovementSendOnPrice(Id: Integer; InvNumber: String; OperDate: TDateTime;
              OperDatePartner: TDateTime; PriceWithVAT: Boolean;
              VATPercent, ChangePercent: double;
              FromId, ToId, CarId, PersonalDriverId, RouteId, RouteSortingId: Integer):Integer;
@@ -383,7 +498,7 @@ begin
   result := InsertUpdate(FParams);
 end;
 
-procedure TMovementSendTest.SetDataSetParam;
+procedure TMovementSendOnPriceTest.SetDataSetParam;
 begin
   inherited;
   FParams.AddParam('inStartDate', ftDateTime, ptInput, Date);
@@ -471,7 +586,6 @@ begin
 end;
 
 { TMovementReturnOut }
-
 constructor TMovementReturnOutTest.Create;
 begin
   inherited;
@@ -540,6 +654,223 @@ begin
   FParams.AddParam('inStartDate', ftDateTime, ptInput, Date);
   FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
 end;
+
+{ TMovementReturnIn }
+constructor TMovementReturnInTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Movement_ReturnIn';
+  spSelect := 'gpSelect_Movement_ReturnIn';
+  spGet := 'gpGet_Movement_ReturnIn';
+end;
+
+function TMovementReturnInTest.InsertDefault: integer;
+var Id: Integer;
+    InvNumber: String;
+    OperDate: TDateTime;
+    OperDatePartner: TDateTime;
+    PriceWithVAT: Boolean;
+    VATPercent, ChangePercent: double;
+    FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId: Integer;
+begin
+  Id:=0;
+  InvNumber:='1';
+  OperDate:= Date;
+
+  OperDatePartner:= Date;
+
+  PriceWithVAT:=true;
+  VATPercent:=20;
+  ChangePercent:=-10;
+
+  FromId := TPartnerTest.Create.GetDefault;
+  ToId := TUnit.Create.GetDefault;
+  PaidKindId:=TPaidKindTest.Create.GetDefault;
+  ContractId:=TContractTest.Create.GetDefault;
+  CarId:=TCarTest.Create.GetDefault;
+  PersonalDriverId:=0;
+  //
+  result := InsertUpdateMovementReturnIn(Id, InvNumber, OperDate,
+             OperDatePartner, PriceWithVAT,
+             VATPercent, ChangePercent,
+             FromId, ToId, PaidKindId, ContractId,
+             CarId, PersonalDriverId);
+end;
+
+function TMovementReturnInTest.InsertUpdateMovementReturnIn(Id: Integer; InvNumber: String; OperDate: TDateTime;
+             OperDatePartner: TDateTime; PriceWithVAT: Boolean;
+             VATPercent, ChangePercent: double;
+             FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId: Integer):Integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
+  FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
+
+  FParams.AddParam('inOperDatePartner', ftDateTime, ptInput, OperDatePartner);
+
+  FParams.AddParam('inPriceWithVAT', ftBoolean, ptInput, PriceWithVAT);
+  FParams.AddParam('inVATPercent', ftFloat, ptInput, VATPercent);
+  FParams.AddParam('inChangePercent', ftFloat, ptInput, ChangePercent);
+
+  FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
+  FParams.AddParam('inToId', ftInteger, ptInput, ToId);
+  FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
+  FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
+
+  FParams.AddParam('inCarId', ftInteger, ptInput, CarId);
+  FParams.AddParam('inPersonalDriverId', ftInteger, ptInput, PersonalDriverId);
+
+  result := InsertUpdate(FParams);
+end;
+
+procedure TMovementReturnInTest.SetDataSetParam;
+begin
+  inherited;
+  FParams.AddParam('inStartDate', ftDateTime, ptInput, Date);
+  FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
+end;
+
+{ TMovementSend }
+constructor TMovementSendTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Movement_Send';
+  spSelect := 'gpSelect_Movement_Send';
+  spGet := 'gpGet_Movement_Send';
+end;
+
+function TMovementSendTest.InsertDefault: integer;
+var Id: Integer;
+    InvNumber: String;
+    OperDate: TDateTime;
+    FromId, ToId: Integer;
+begin
+  Id:=0;
+  InvNumber:='1';
+  OperDate:= Date;
+
+  FromId := TPartnerTest.Create.GetDefault;
+  ToId := TUnit.Create.GetDefault;
+
+  //
+  result := InsertUpdateMovementSend(Id, InvNumber, OperDate, FromId, ToId);
+
+end;
+
+function TMovementSendTest.InsertUpdateMovementSend(Id: Integer; InvNumber: String; OperDate: TDateTime;
+                         FromId, ToId: Integer):Integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
+  FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
+
+  FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
+  FParams.AddParam('inToId', ftInteger, ptInput, ToId);
+
+  result := InsertUpdate(FParams);
+end;
+
+procedure TMovementSendTest.SetDataSetParam;
+begin
+  inherited;
+  FParams.AddParam('inStartDate', ftDateTime, ptInput, Date);
+  FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
+end;
+
+{ TMovementLoss }
+constructor TMovementLossTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Movement_Loss';
+  spSelect := 'gpSelect_Movement_Loss';
+  spGet := 'gpGet_Movement_Loss';
+end;
+
+function TMovementLossTest.InsertDefault: integer;
+var Id: Integer;
+    InvNumber: String;
+    OperDate: TDateTime;
+    FromId, ToId: Integer;
+begin
+  Id:=0;
+  InvNumber:='1';
+  OperDate:= Date;
+
+  FromId := TPartnerTest.Create.GetDefault;
+  ToId := TUnit.Create.GetDefault;
+  //
+  result := InsertUpdateMovementLoss(Id, InvNumber, OperDate, FromId, ToId);
+end;
+
+function TMovementLossTest.InsertUpdateMovementLoss(Id: Integer; InvNumber: String; OperDate: TDateTime;
+                                                    FromId, ToId: Integer):Integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
+  FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
+
+  FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
+  FParams.AddParam('inToId', ftInteger, ptInput, ToId);
+
+  result := InsertUpdate(FParams);
+end;
+
+procedure TMovementLossTest.SetDataSetParam;
+begin
+  inherited;
+  FParams.AddParam('inStartDate', ftDateTime, ptInput, Date);
+  FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
+end;
+
+{ TMovementInventory }
+constructor TMovementInventoryTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Movement_Inventory';
+  spSelect := 'gpSelect_Movement_Inventory';
+  spGet := 'gpGet_Movement_Inventory';
+end;
+
+function TMovementInventoryTest.InsertDefault: integer;
+var Id: Integer;
+    InvNumber: String;
+    OperDate: TDateTime;
+    FromId, ToId: Integer;
+begin
+  Id:=0;
+  InvNumber:='1';
+  OperDate:= Date;
+
+  FromId := TPartnerTest.Create.GetDefault;
+  ToId := TUnit.Create.GetDefault;
+  //
+  result := InsertUpdateMovementInventory(Id, InvNumber, OperDate, FromId, ToId);
+end;
+
+function TMovementInventoryTest.InsertUpdateMovementInventory(Id: Integer; InvNumber: String; OperDate: TDateTime;
+                                                    FromId, ToId: Integer):Integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
+  FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
+
+  FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
+  FParams.AddParam('inToId', ftInteger, ptInput, ToId);
+
+  result := InsertUpdate(FParams);
+end;
+
+procedure TMovementInventoryTest.SetDataSetParam;
+begin
+  inherited;
+  FParams.AddParam('inStartDate', ftDateTime, ptInput, Date);
+  FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
+end;
+
 
 initialization
 

@@ -20,7 +20,7 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, dxSkinsdxBarPainter, dsdAddOn,
   dsdDB, dsdAction, Vcl.ActnList, dxBar, cxClasses, cxPropertiesStore,
   Datasnap.DBClient, cxGridLevel, cxGridCustomTableView, cxGridTableView,
-  cxGridDBTableView, cxGridCustomView, cxGrid, dxBarExtItems;
+  cxGridDBTableView, cxGridCustomView, cxGrid, dxBarExtItems, cxCheckBox;
 
 type
   TAccountDirectionForm = class(TParentForm)
@@ -53,6 +53,8 @@ type
     dxBarStatic: TdxBarStatic;
     bbChoiceGuides: TdxBarButton;
     dsdChoiceGuides: TdsdChoiceGuides;
+    clErased: TcxGridDBColumn;
+    spErasedUnErased: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -2,8 +2,8 @@ inherited PartnerForm: TPartnerForm
   Caption = #1055#1072#1088#1090#1085#1077#1088#1099
   ClientHeight = 473
   ClientWidth = 750
-  ExplicitWidth = 758
-  ExplicitHeight = 500
+  ExplicitWidth = 766
+  ExplicitHeight = 511
   PixelsPerInch = 96
   TextHeight = 13
   object cxDBTreeList: TcxDBTreeList
@@ -25,9 +25,6 @@ inherited PartnerForm: TPartnerForm
     OptionsView.ColumnAutoWidth = True
     RootValue = -1
     TabOrder = 4
-    ExplicitTop = 26
-    ExplicitWidth = 637
-    ExplicitHeight = 447
     object cxDBTreeListcxDBTreeListColumn1: TcxDBTreeListColumn
       Caption.Text = #1050#1086#1076
       DataBinding.FieldName = 'Code'
@@ -260,5 +257,20 @@ inherited PartnerForm: TPartnerForm
     Params = <>
     Left = 152
     Top = 152
+  end
+  object spErasedUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+    Left = 288
+    Top = 208
   end
 end

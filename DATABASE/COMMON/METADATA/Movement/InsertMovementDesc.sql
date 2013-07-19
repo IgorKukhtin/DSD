@@ -1,17 +1,12 @@
---------------------------- !!!!!!!!!!!!!!!!!!!
---------------------------- !!! НОВАЯ СХЕМА !!!
---------------------------- !!!!!!!!!!!!!!!!!!!
+--------------------------- !!!!!!!!!!!!!!!!!!!!
+--------------------------- !!! НОВАЯ СХЕМА2 !!!
+--------------------------- !!!!!!!!!!!!!!!!!!!!
 
-INSERT INTO MovementDesc (Code, ItemName)
-  SELECT 'zc_Movement_Income', 'Документ Приход' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_Income');
-
-INSERT INTO MovementDesc (Code, ItemName)
-  SELECT 'zc_Movement_ProductionUnion', 'Документ Производство - смешивание' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_ProductionUnion');
-
+все пишем в CreateMovementDescFunction
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-
+ 16.07.13                                        * НОВАЯ СХЕМА2 - move to CreateMovementDescFunction.sql 
  30.06.13                                        * НОВАЯ СХЕМА
 */

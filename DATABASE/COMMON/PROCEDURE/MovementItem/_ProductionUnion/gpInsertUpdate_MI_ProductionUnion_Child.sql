@@ -1,15 +1,16 @@
--- Function: gpInsertUpdate_MovementItem_Out()
+-- Function: gpInsertUpdate_MI_ProductionUnion_Child()
 
--- DROP FUNCTION gpInsertUpdate_MovementItem_Out();
+-- DROP FUNCTION gpInsertUpdate_MI_ProductionUnion_Child();
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Out(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
+    IN inMovementId          Integer   , -- Ключ объекта <Документ Производство - смешивание>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
-    IN inParentId          Integer,
-    IN inAmountReceipt     TFloat,        /* Количество по рецептуре на 1 кутер */
-    IN inComment	         TVarChar,      /* Комментарий	                   */
+    IN inParentId            Integer   , -- Главный элемент документа
+    IN inAmountReceipt       TFloat    , -- Количество по рецептуре на 1 кутер 
+    IN inComment	         TVarChar  , -- Комментарий
+    IN inPartionGoods        TDateTime , -- Партия товара	                   
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
@@ -24,9 +25,12 @@ BEGIN
    -- сохранили <Элемент документа>
    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inGoodsId, inMovementId, inAmount, inParentId);
    
+   -- сохранили свойство <Комментарий>
    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
-
+   -- сохранили свойство <Количество по рецептуре на 1 кутер>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountReceipt(), ioId, inAmountReceipt);
+   -- сохранили свойство <Партия товара>
+   PERFORM lpInsertUpdate_MovementItemDate (zc_MIFloat_PartionGoods(), ioId, inPartionGoods);
 
 END;
 $BODY$
@@ -36,10 +40,10 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-               
+ 15.07.13         *     
  30.06.13                                        *
 
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_Out (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inParentId:= NULL, inAmountReceipt:= 1, inComment:= '', inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_MI_ProductionUnion_Child (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inParentId:= NULL, inAmountReceipt:= 1, inComment:= '', inSession:= '2')

@@ -48,6 +48,7 @@ type
     cxDBTreeListcxDBTreeListColumn3: TcxDBTreeListColumn;
     cxDBTreeListcxDBTreeListColumn4: TcxDBTreeListColumn;
     cxDBTreeListcxDBTreeListColumn5: TcxDBTreeListColumn;
+    spErasedUnErased: TdsdStoredProc;
   private
     { Private declarations }
   public
