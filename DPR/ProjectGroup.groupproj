@@ -9,10 +9,10 @@
 			<Projects Include="DSDDesignComponent.dproj">
 				<Dependencies/>
 			</Projects>
-			<Projects Include="DSD.dproj">
+			<Projects Include="..\TEST\DPR\DSDTest.dproj">
 				<Dependencies/>
 			</Projects>
-			<Projects Include="..\TEST\DPR\DSDTest.dproj">
+			<Projects Include="DSD.dproj">
 				<Dependencies/>
 			</Projects>
 			<Projects Include="Load_PostgreSql.dproj">
@@ -53,15 +53,6 @@
 		<Target Name="DSDDesignComponent:Make">
 			<MSBuild Projects="DSDDesignComponent.dproj" Targets="Make"/>
 		</Target>
-		<Target Name="DSD">
-			<MSBuild Projects="DSD.dproj"/>
-		</Target>
-		<Target Name="DSD:Clean">
-			<MSBuild Projects="DSD.dproj" Targets="Clean"/>
-		</Target>
-		<Target Name="DSD:Make">
-			<MSBuild Projects="DSD.dproj" Targets="Make"/>
-		</Target>
 		<Target Name="DSDTest">
 			<MSBuild Projects="..\TEST\DPR\DSDTest.dproj"/>
 		</Target>
@@ -70,6 +61,15 @@
 		</Target>
 		<Target Name="DSDTest:Make">
 			<MSBuild Projects="..\TEST\DPR\DSDTest.dproj" Targets="Make"/>
+		</Target>
+		<Target Name="DSD">
+			<MSBuild Projects="DSD.dproj"/>
+		</Target>
+		<Target Name="DSD:Clean">
+			<MSBuild Projects="DSD.dproj" Targets="Clean"/>
+		</Target>
+		<Target Name="DSD:Make">
+			<MSBuild Projects="DSD.dproj" Targets="Make"/>
 		</Target>
 		<Target Name="Load_PostgreSql">
 			<MSBuild Projects="Load_PostgreSql.dproj"/>
@@ -108,13 +108,13 @@
 			<MSBuild Projects="..\TEST\DPR\FarmacyTest.dproj" Targets="Make"/>
 		</Target>
 		<Target Name="Build">
-			<CallTarget Targets="DSDComponent;DSDDesignComponent;DSD;DSDTest;Load_PostgreSql;Load_Farmacy;Farmacy;FarmacyTest"/>
+			<CallTarget Targets="DSDComponent;DSDDesignComponent;DSDTest;DSD;Load_PostgreSql;Load_Farmacy;Farmacy;FarmacyTest"/>
 		</Target>
 		<Target Name="Clean">
-			<CallTarget Targets="DSDComponent:Clean;DSDDesignComponent:Clean;DSD:Clean;DSDTest:Clean;Load_PostgreSql:Clean;Load_Farmacy:Clean;Farmacy:Clean;FarmacyTest:Clean"/>
+			<CallTarget Targets="DSDComponent:Clean;DSDDesignComponent:Clean;DSDTest:Clean;DSD:Clean;Load_PostgreSql:Clean;Load_Farmacy:Clean;Farmacy:Clean;FarmacyTest:Clean"/>
 		</Target>
 		<Target Name="Make">
-			<CallTarget Targets="DSDComponent:Make;DSDDesignComponent:Make;DSD:Make;DSDTest:Make;Load_PostgreSql:Make;Load_Farmacy:Make;Farmacy:Make;FarmacyTest:Make"/>
+			<CallTarget Targets="DSDComponent:Make;DSDDesignComponent:Make;DSDTest:Make;DSD:Make;Load_PostgreSql:Make;Load_Farmacy:Make;Farmacy:Make;FarmacyTest:Make"/>
 		</Target>
 		<Import Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')" Project="$(BDS)\Bin\CodeGear.Group.Targets"/>
 	</Project>

@@ -2,15 +2,15 @@ inherited MemberForm: TMemberForm
   Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
   ClientHeight = 410
   ClientWidth = 500
-  ExplicitWidth = 516
-  ExplicitHeight = 448
+  ExplicitWidth = 508
+  ExplicitHeight = 437
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
+    Top = 26
     Width = 500
-    Height = 382
+    Height = 384
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -96,8 +96,8 @@ inherited MemberForm: TMemberForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -114,7 +114,7 @@ inherited MemberForm: TMemberForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -299,7 +299,7 @@ inherited MemberForm: TMemberForm
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
-          DataType = ftInteger
+          DataType = ftString
           ParamType = ptOutput
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -332,6 +332,7 @@ inherited MemberForm: TMemberForm
     Top = 160
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    SortImages = dmMain.SortImageList
     View = cxGridDBTableView
     Left = 168
     Top = 216

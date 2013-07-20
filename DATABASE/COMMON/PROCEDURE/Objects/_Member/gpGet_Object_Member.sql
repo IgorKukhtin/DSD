@@ -18,12 +18,10 @@ BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , MAX (Object.ObjectCode) + 1 AS Code
+           , lfGet_ObjectCode(0, zc_Object_Member()) AS Code
            , CAST ('' as TVarChar)  AS NAME
            , CAST ('' as TVarChar)  AS INN
-           , CAST (NULL AS Boolean) AS isErased
-        FROM Object 
-       WHERE Object.DescId = zc_Object_Member();
+           , CAST (NULL AS Boolean) AS isErased;
    ELSE
        RETURN QUERY 
      SELECT 
@@ -52,6 +50,7 @@ ALTER FUNCTION gpGet_Object_Member(integer, TVarChar) OWNER TO postgres;
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  01.07.13          *
+ 19.07.13                        *
 
 */
 

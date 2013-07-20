@@ -1,157 +1,150 @@
 ﻿inherited PersonalEditForm: TPersonalEditForm
-  Caption = #1053#1086#1074#1099#1081' '#1089#1086#1090#1088#1091#1076#1085#1080#1082
-  ClientHeight = 326
-  ClientWidth = 655
-  ExplicitWidth = 671
-  ExplicitHeight = 364
+  Caption = 'C'#1086#1090#1088#1091#1076#1085#1080#1082
+  ClientHeight = 271
+  ClientWidth = 608
+  ExplicitWidth = 616
+  ExplicitHeight = 298
   PixelsPerInch = 96
   TextHeight = 13
-  object edName: TcxTextEdit
-    Left = 40
-    Top = 76
-    TabOrder = 0
-    Width = 273
-  end
-  object cxLabel1: TcxLabel
-    Left = 40
-    Top = 48
-    Caption = 'NULL'
-  end
   object cxButton1: TcxButton
-    Left = 173
-    Top = 289
+    Left = 168
+    Top = 238
     Width = 75
     Height = 25
     Action = dsdExecStoredProc
     Default = True
     ModalResult = 8
-    TabOrder = 2
+    TabOrder = 8
   end
   object cxButton2: TcxButton
-    Left = 478
-    Top = 289
+    Left = 365
+    Top = 235
     Width = 75
     Height = 25
     Action = dsdFormClose1
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 8
-    TabOrder = 3
+    TabOrder = 9
   end
   object Код: TcxLabel
-    Left = 40
+    Left = 16
     Top = 3
     Caption = #1050#1086#1076
   end
   object ceCode: TcxCurrencyEdit
-    Left = 40
+    Left = 16
     Top = 26
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    TabOrder = 5
+    TabOrder = 0
     Width = 273
   end
   object cxLabel3: TcxLabel
-    Left = 40
-    Top = 103
+    Left = 168
+    Top = 167
     Caption = #1044#1072#1090#1072' '#1087#1088#1080#1085#1103#1090#1080#1103
   end
   object cxLabel2: TcxLabel
-    Left = 40
-    Top = 159
+    Left = 319
+    Top = 167
     Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
   end
   object cxLabel5: TcxLabel
-    Left = 40
-    Top = 209
+    Left = 16
+    Top = 117
     Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
   end
   object cxLabel6: TcxLabel
-    Left = 351
-    Top = 159
+    Left = 15
+    Top = 63
     Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
   end
   object cxLabel7: TcxLabel
-    Left = 351
+    Left = 319
     Top = 3
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
   end
   object cxLabel8: TcxLabel
-    Left = 351
-    Top = 53
+    Left = 319
+    Top = 63
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
   end
   object cxLabel9: TcxLabel
-    Left = 351
-    Top = 109
+    Left = 319
+    Top = 121
     Caption = #1041#1080#1079#1085#1077#1089
   end
   object cePosition: TcxButtonEdit
-    Left = 40
-    Top = 232
+    Left = 16
+    Top = 140
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 13
+    TabOrder = 2
     Width = 273
   end
   object ceUnit: TcxButtonEdit
-    Left = 351
+    Left = 319
     Top = 26
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 14
+    TabOrder = 3
     Width = 273
   end
   object ceJuridical: TcxButtonEdit
-    Left = 351
-    Top = 76
+    Left = 319
+    Top = 86
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 15
+    TabOrder = 4
     Width = 273
   end
   object ceBusiness: TcxButtonEdit
-    Left = 351
-    Top = 128
+    Left = 319
+    Top = 140
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 16
+    TabOrder = 5
     Width = 273
   end
   object ceMember: TcxButtonEdit
-    Left = 351
-    Top = 182
+    Left = 15
+    Top = 86
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 17
+    TabOrder = 1
     Width = 273
   end
   object edDateIn: TcxDateEdit
-    Left = 40
-    Top = 128
-    TabOrder = 18
-    Width = 273
+    Left = 168
+    Top = 192
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 6
+    Width = 121
   end
   object edDateOut: TcxDateEdit
-    Left = 40
-    Top = 184
-    TabOrder = 19
-    Width = 273
+    Left = 319
+    Top = 192
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 7
+    Width = 121
   end
   object ActionList: TActionList
     Left = 296
@@ -198,13 +191,6 @@
         Name = 'inCode'
         Component = ceCode
         DataType = ftInteger
-        ParamType = ptInput
-        Value = ''
-      end
-      item
-        Name = 'inName'
-        Component = edName
-        DataType = ftString
         ParamType = ptInput
         Value = ''
       end
@@ -281,13 +267,6 @@
         DataType = ftInteger
         ParamType = ptInput
         Value = '0'
-      end
-      item
-        Name = 'Name'
-        Component = edName
-        DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'Code'
@@ -390,8 +369,8 @@
         ParamType = ptOutput
         Value = ''
       end>
-    Left = 456
-    Top = 224
+    Left = 472
+    Top = 168
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -409,15 +388,15 @@
     Top = 40
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 368
-    Top = 216
+    Left = 512
+    Top = 184
   end
   object MemberGuides: TdsdGuides
     LookupControl = ceMember
     FormName = 'TMemberForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 632
-    Top = 173
+    Left = 320
+    Top = 77
   end
   object PositionGuides: TdsdGuides
     LookupControl = cePosition
@@ -429,22 +408,22 @@
   object UnitGuides: TdsdGuides
     LookupControl = ceUnit
     FormName = 'TUnitForm'
-    PositionDataSet = 'ClientDataSet'
-    Left = 623
-    Top = 23
+    PositionDataSet = 'GridDataSet'
+    Left = 487
+    Top = 7
   end
   object JuridicalGuides: TdsdGuides
     LookupControl = ceJuridical
     FormName = 'TJuridicalForm'
-    PositionDataSet = 'ClientDataSet'
-    Left = 623
-    Top = 73
+    PositionDataSet = 'GridDataSet'
+    Left = 551
+    Top = 49
   end
   object BusinessGuides: TdsdGuides
     LookupControl = ceBusiness
     FormName = 'TBusinessForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 367
-    Top = 281
+    Left = 527
+    Top = 113
   end
 end

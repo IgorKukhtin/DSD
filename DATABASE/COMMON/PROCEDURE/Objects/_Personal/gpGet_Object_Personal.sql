@@ -49,8 +49,8 @@ BEGIN
            , CAST (0 as Integer)   AS BusinessCode
            , CAST ('' as TVarChar) AS BusinessName
 
-           , CAST (NULL as TDateTime)   AS DateIn
-           , CAST (NULL as TDateTime)   AS DateOut
+           , CAST (CURRENT_TIMESTAMP as TDateTime)   AS DateIn
+           , CAST (CURRENT_TIMESTAMP as TDateTime)   AS DateOut
 
            , CAST (NULL AS Boolean) AS isErased;
    ELSE

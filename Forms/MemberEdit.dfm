@@ -1,9 +1,9 @@
 ﻿inherited MemberEditForm: TMemberEditForm
-  Caption = #1053#1086#1074#1086#1077' '#1083#1080#1094#1086
-  ClientHeight = 215
-  ClientWidth = 443
-  ExplicitWidth = 459
-  ExplicitHeight = 253
+  Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+  ClientHeight = 200
+  ClientWidth = 338
+  ExplicitWidth = 346
+  ExplicitHeight = 227
   PixelsPerInch = 96
   TextHeight = 13
   object edMeasureName: TcxTextEdit
@@ -22,7 +22,7 @@
     Top = 163
     Width = 75
     Height = 25
-    Action = dsdExecStoredProc
+    Action = InsertUpdateGuides
     Default = True
     ModalResult = 8
     TabOrder = 2
@@ -32,7 +32,7 @@
     Top = 163
     Width = 75
     Height = 25
-    Action = dsdFormClose1
+    Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 8
@@ -63,8 +63,8 @@
     Caption = #1048#1053#1053
   end
   object ActionList: TActionList
-    Left = 304
-    Top = 104
+    Left = 256
+    Top = 88
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spGet
@@ -76,7 +76,7 @@
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
     end
-    object dsdExecStoredProc: TdsdExecStoredProc
+    object InsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       StoredProc = spInsertUpdate
       StoredProcList = <
@@ -85,7 +85,7 @@
         end>
       Caption = 'Ok'
     end
-    object dsdFormClose1: TdsdFormClose
+    object dsdFormClose: TdsdFormClose
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -122,8 +122,8 @@
         ParamType = ptInput
         Value = ''
       end>
-    Left = 320
-    Top = 40
+    Left = 232
+    Top = 48
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -133,8 +133,8 @@
         ParamType = ptInputOutput
         Value = '0'
       end>
-    Left = 384
-    Top = 152
+    Left = 120
+    Top = 136
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Member'
@@ -185,10 +185,10 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 392
-    Top = 112
+    Left = 128
+    Top = 96
   end
-  object dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 168
   end
 end

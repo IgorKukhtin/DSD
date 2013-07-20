@@ -216,7 +216,7 @@
   object dsdJuridicalGuides: TdsdGuides
     LookupControl = edJuridicalName
     FormName = 'TJuridicalForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'GridDataSet'
     Left = 312
     Top = 141
   end
@@ -225,7 +225,15 @@
     Top = 176
   end
   object cxPropertiesStore: TcxPropertiesStore
-    Components = <>
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 304

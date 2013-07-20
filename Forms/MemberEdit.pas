@@ -30,13 +30,12 @@ type
     ceCode: TcxCurrencyEdit;
     ActionList: TActionList;
     dsdDataSetRefresh: TdsdDataSetRefresh;
-    dsdExecStoredProc: TdsdExecStoredProc;
-    dsdFormClose1: TdsdFormClose;
+    dsdFormClose: TdsdFormClose;
     spInsertUpdate: TdsdStoredProc;
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     cxPropertiesStore: TcxPropertiesStore;
-    dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLabel2: TcxLabel;
     ceINN: TcxTextEdit;
   private

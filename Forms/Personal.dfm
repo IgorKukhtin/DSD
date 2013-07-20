@@ -2,21 +2,20 @@ inherited PersonalForm: TPersonalForm
   Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082#1080
   ClientHeight = 358
   ClientWidth = 864
-  ExplicitWidth = 880
-  ExplicitHeight = 396
+  ExplicitWidth = 872
+  ExplicitHeight = 385
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
+    Top = 26
     Width = 864
-    Height = 330
+    Height = 332
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = 20
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -26,7 +25,6 @@ inherited PersonalForm: TPersonalForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -43,12 +41,6 @@ inherited PersonalForm: TPersonalForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
         Width = 72
-      end
-      object clName: TcxGridDBColumn
-        Caption = 'NULL'
-        DataBinding.FieldName = 'Name'
-        HeaderAlignmentVert = vaCenter
-        Width = 106
       end
       object clDateIn: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1088#1080#1085#1103#1090#1080#1103
@@ -132,8 +124,8 @@ inherited PersonalForm: TPersonalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -150,7 +142,7 @@ inherited PersonalForm: TPersonalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -368,6 +360,7 @@ inherited PersonalForm: TPersonalForm
     Top = 160
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    SortImages = dmMain.SortImageList
     View = cxGridDBTableView
     Left = 168
     Top = 216

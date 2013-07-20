@@ -2,15 +2,15 @@ inherited PositionForm: TPositionForm
   Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1080
   ClientHeight = 379
   ClientWidth = 507
-  ExplicitWidth = 523
-  ExplicitHeight = 417
+  ExplicitWidth = 515
+  ExplicitHeight = 406
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
+    Top = 26
     Width = 507
-    Height = 351
+    Height = 353
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -90,8 +90,8 @@ inherited PositionForm: TPositionForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -108,7 +108,7 @@ inherited PositionForm: TPositionForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -293,7 +293,7 @@ inherited PositionForm: TPositionForm
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
-          DataType = ftInteger
+          DataType = ftString
           ParamType = ptOutput
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -326,6 +326,7 @@ inherited PositionForm: TPositionForm
     Top = 160
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    SortImages = dmMain.SortImageList
     View = cxGridDBTableView
     Left = 168
     Top = 216

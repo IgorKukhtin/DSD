@@ -1,9 +1,9 @@
 ﻿inherited PositionEditForm: TPositionEditForm
-  Caption = #1053#1086#1074#1072#1103' '#1076#1086#1083#1078#1085#1086#1089#1090#1100
+  Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
   ClientHeight = 187
   ClientWidth = 370
-  ExplicitWidth = 386
-  ExplicitHeight = 225
+  ExplicitWidth = 378
+  ExplicitHeight = 214
   PixelsPerInch = 96
   TextHeight = 13
   object edMeasureName: TcxTextEdit
@@ -22,7 +22,7 @@
     Top = 120
     Width = 75
     Height = 25
-    Action = dsdExecStoredProc
+    Action = InsertUpdateGuides
     Default = True
     ModalResult = 8
     TabOrder = 2
@@ -32,7 +32,7 @@
     Top = 120
     Width = 75
     Height = 25
-    Action = dsdFormClose1
+    Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 8
@@ -65,7 +65,7 @@
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
     end
-    object dsdExecStoredProc: TdsdExecStoredProc
+    object InsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       StoredProc = spInsertUpdate
       StoredProcList = <
@@ -74,7 +74,8 @@
         end>
       Caption = 'Ok'
     end
-    object dsdFormClose1: TdsdFormClose
+    object dsdFormClose: TdsdFormClose
+      Category = 'DSDLib'
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -163,7 +164,7 @@
     Left = 24
     Top = 80
   end
-  object dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 168
   end
 end

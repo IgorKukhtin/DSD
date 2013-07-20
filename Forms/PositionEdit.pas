@@ -30,13 +30,11 @@ type
     ceCode: TcxCurrencyEdit;
     ActionList: TActionList;
     dsdDataSetRefresh: TdsdDataSetRefresh;
-    dsdExecStoredProc: TdsdExecStoredProc;
-    dsdFormClose1: TdsdFormClose;
     spInsertUpdate: TdsdStoredProc;
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     cxPropertiesStore: TcxPropertiesStore;
-    dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
   private
     { Private declarations }
   public

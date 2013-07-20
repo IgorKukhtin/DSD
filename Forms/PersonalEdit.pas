@@ -24,8 +24,6 @@ uses
 
 type
   TPersonalEditForm = class(TParentForm)
-    edName: TcxTextEdit;
-    cxLabel1: TcxLabel;
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     Код: TcxLabel;
