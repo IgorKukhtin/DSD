@@ -298,7 +298,6 @@ object MainForm: TMainForm
       Width = 225
       Height = 17
       Caption = '5.2. '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' - '#1094#1077#1085#1099
-      Enabled = False
       TabOrder = 16
     end
     object cbGoodsProperty: TCheckBox
@@ -815,6 +814,39 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 8
+    end
+    object cbCompleteProductionUnion: TCheckBox
+      Tag = 30
+      Left = 15
+      Top = 251
+      Width = 194
+      Height = 17
+      Caption = '4.1. '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 9
+      OnClick = cbCompleteIncomeClick
+    end
+    object cbCompleteProductionSeparate: TCheckBox
+      Tag = 30
+      Left = 15
+      Top = 274
+      Width = 194
+      Height = 17
+      Caption = '4.2. '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      Enabled = False
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 10
+      OnClick = cbCompleteIncomeClick
     end
   end
   object DataSource: TDataSource

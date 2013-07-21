@@ -1,14 +1,14 @@
-п»їCREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemDate(
- inDescId                    Integer           ,  /* РєРѕРґ РєР»Р°СЃСЃР° СЃРІРѕР№СЃС‚РІР°       */
- inMovementItemId            Integer           ,  /* РєР»СЋС‡ РіР»Р°РІРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°     */
- inValueData                 TDateTime            /* Р—РЅР°С‡РµРЅРёРµ */
+CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemDate(
+ inDescId                    Integer           ,  /* код класса свойства       */
+ inMovementItemId            Integer           ,  /* ключ главного объекта     */
+ inValueData                 TDateTime            /* Значение */
 )
   RETURNS boolean AS
 $BODY$BEGIN
 
     UPDATE MovementItemDate SET ValueData = inValueData WHERE MovementItemId = inMovementItemId AND DescId = inDescId;
     IF NOT found THEN            
-       /* РІСЃС‚Р°РІРёС‚СЊ <РєР»СЋС‡ СЃРІРѕР№СЃС‚РІР°> , <РєР»СЋС‡ РіР»Р°РІРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°> Рё <РєР»СЋС‡ РїРѕРґС‡РёРЅРµРЅРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°> */
+       /* вставить <ключ свойства> , <ключ главного объекта> и <ключ подчиненного объекта> */
        INSERT INTO MovementItemDate (DescId, MovementItemId, ValueData)
            VALUES (inDescId, inMovementItemId, inValueData);
     END IF;             
@@ -18,3 +18,4 @@ END;$BODY$
   COST 100;
 ALTER FUNCTION lpInsertUpdate_MovementItemDate(Integer, Integer, TDateTime)
   OWNER TO postgres;
+

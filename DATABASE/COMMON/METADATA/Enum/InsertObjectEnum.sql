@@ -127,6 +127,7 @@ BEGIN
      -- !!! 
      -- !!! 2-уровень Управленческих Счетов
      -- !!! 
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20400,  inDescId:= zc_Object_AccountDirection(), inEnumName:= 'zc_Enum_AccountDirection_20400');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20500,  inDescId:= zc_Object_AccountDirection(), inEnumName:= 'zc_Enum_AccountDirection_20500');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20600,  inDescId:= zc_Object_AccountDirection(), inEnumName:= 'zc_Enum_AccountDirection_20600');
 
@@ -171,6 +172,7 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.07.13                                        * add zc_Enum_AccountDirection_20400
  18.07.13                                        * add zc_Enum_AccountDirection_20500, 20600
  02.07.13                                        * add 1-уровень Управленческих Счетов
  01.07.13                                        * add 2-уровень Управленческих назначений
