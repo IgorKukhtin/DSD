@@ -393,8 +393,8 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 136
-    Top = 224
+    Left = 120
+    Top = 200
     DockControlHeights = (
       0
       0

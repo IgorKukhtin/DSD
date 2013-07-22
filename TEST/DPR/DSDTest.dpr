@@ -148,7 +148,11 @@ uses
   ProductionSeparateJournal in '..\..\Forms\ProductionSeparateJournal.pas' {ProductionSeparateJournalForm},
   ProductionUnionJournal in '..\..\Forms\ProductionUnionJournal.pas' {ProductionUnionJournalForm},
   Report_ProfitLoss in '..\..\Forms\Report\Report_ProfitLoss.pas' {Report_ProfitLossForm},
-  Report_HistoryCost in '..\..\Forms\Report\Report_HistoryCost.pas' {Report_HistoryCostForm};
+  Report_HistoryCost in '..\..\Forms\Report\Report_HistoryCost.pas' {Report_HistoryCostForm},
+  ProductionUnion in '..\..\Forms\ProductionUnion.pas' {ProductionUnionForm},
+  ProductionSeparate in '..\..\Forms\ProductionSeparate.pas' {ProductionSeparateForm},
+  Contract in '..\..\Forms\Contract.pas' {ContractForm},
+  ContractEdit in '..\..\Forms\ContractEdit.pas' {ContractEditForm};
 
 {$R *.RES}
 
