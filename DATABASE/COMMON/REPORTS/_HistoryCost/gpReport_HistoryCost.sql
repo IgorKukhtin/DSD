@@ -7,10 +7,16 @@ CREATE OR REPLACE FUNCTION gpReport_HistoryCost(
     IN inEndDate     TDateTime , --
     IN inSession     TVarChar    -- ñåññèÿ ïîëüçîâàòåëÿ
 )
-RETURNS TABLE (RootName TVarChar, AccountGroupCode Integer, AccountGroupName TVarChar, AccountDirectionCode Integer, AccountDirectionName TVarChar, AccountCode Integer, AccountName  TVarChar, AccountOnComplete Boolean
-             , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyCode_Detail Integer, InfoMoneyName_Detail  TVarChar
-             , ByObjectCode Integer, ByObjectName TVarChar
-             , AmountDebetStart TFloat, AmountKreditStart TFloat, AmountDebet TFloat, AmountKredit TFloat, AmountDebetEnd TFloat, AmountKreditEnd TFloat
+RETURNS TABLE (ObjectCostId Integer
+             , UnitParentCode Integer, UnitParentName TVarChar, UnitCode Integer, UnitName TVarChar, GoodsGroupCode Integer, GoodsGroupName TVarChar, GoodsKindCode Integer, GoodsKindName TVarChar
+             , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyCode_Detail Integer, InfoMoneyName_Detail TVarChar
+             , PartionGoodsName TVarChar
+             , BusinessCode Integer, BusinessName TVarChar, JuridicalBasisCode Integer, JuridicalBasisName TVarChar
+             , BranchCode Integer, BranchName TVarChar, PersonalCode Integer, PersonalName TVarChar, AssetCode Integer, AssetName TVarChar
+             , CountStart TFloat, CountDebet TFloat, CountKredit TFloat, CountEnd TFloat
+             , CountStart_calc TFloat, CountDebet_calc TFloat, CountKredit_calc TFloat, CountEnd_calc TFloat
+             , SummStart TFloat, SummDebet TFloat, SummKredit TFloat, SummEnd TFloat
+             , SummStart_calc TFloat, SummDebet_calc TFloat, SummKredit_calc TFloat, SummEnd_calc TFloat
               )
 AS
 $BODY$BEGIN
@@ -20,102 +26,105 @@ $BODY$BEGIN
 
      RETURN QUERY 
        SELECT
-             CAST (CASE WHEN lfObject_Account.AccountCode >= 70000 THEN 'ÏÀÑÑÈÂÛ' ELSE 'ÀÊÒÈÂÛ' END AS TVarChar) AS RootName
+             ContainerObjectCost.ObjectCostId
 
-           , lfObject_Account.AccountGroupCode                AS AccountGroupCode
-           , lfObject_Account.AccountGroupName                AS AccountGroupName
-           , lfObject_Account.AccountDirectionCode            AS AccountDirectionCode
-           , lfObject_Account.AccountDirectionName            AS AccountDirectionName
-           , lfObject_Account.AccountCode                     AS AccountCode
-           , lfObject_Account.AccountName                     AS AccountName
-           , lfObject_Account.onComplete                      AS AccountOnComplete
+           , Object_UnitParent.ObjectCode AS UnitParentCode
+           , Object_UnitParent.ValueData AS UnitParentName
+           , Object_Unit.ObjectCode AS UnitCode
+           , Object_Unit.ValueData AS UnitName
+
+           , Object_GoodsGroup.ObjectCode AS GoodsGroupCode
+           , Object_GoodsGroup.ValueData AS GoodsGroupName
+           , Object_Goods.ObjectCode AS GoodsCode
+           , Object_Goods.ValueData AS GoodsName
+           , Object_GoodsKind.ObjectCode AS GoodsKindCode
+           , Object_GoodsKind.ValueData AS GoodsKindName
 
            , lfObject_InfoMoney.InfoMoneyCode
            , lfObject_InfoMoney.InfoMoneyName
            , lfObject_InfoMoney_Detail.InfoMoneyCode AS InfoMoneyCode_Detail
            , lfObject_InfoMoney_Detail.InfoMoneyName AS InfoMoneyName_Detail
 
-           , Object_by.ObjectCode         AS ByObjectCode
-           , Object_by.ValueData          AS ByObjectName
+           , Object_PartionGoods.ValueData AS PartionGoodsName
 
-           , CAST (CASE WHEN tmpReportOperation.AmountRemainsStart > 0 THEN tmpReportOperation.AmountRemainsStart ELSE 0 END AS TFloat) AS AmountDebetStart
-           , CAST (CASE WHEN tmpReportOperation.AmountRemainsStart < 0 THEN -tmpReportOperation.AmountRemainsStart ELSE 0 END AS TFloat) AS AmountKreditStart
-           , CAST (tmpReportOperation.AmountDebet AS TFloat) AS AmountDebet
-           , CAST (tmpReportOperation.AmountKredit AS TFloat) AS AmountKredit
-           , CAST (CASE WHEN tmpReportOperation.AmountRemainsEnd > 0 THEN tmpReportOperation.AmountRemainsEnd ELSE 0 END AS TFloat) AS AmountDebetEnd
-           , CAST (CASE WHEN tmpReportOperation.AmountRemainsEnd < 0 THEN -tmpReportOperation.AmountRemainsEnd ELSE 0 END AS TFloat) AS AmountKreditEnd
-       FROM 
-           lfSelect_Object_Account() AS lfObject_Account
-           LEFT JOIN
-           (SELECT tmpMIContainer_Remains.AccountId
-                 , ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId
-                 , ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail
-                 , ContainerLinkObject_Personal.ObjectId AS PersonalId
-                 , ContainerLinkObject_Juridical.ObjectId AS JuridicalId
-                 , ContainerLinkObject_Unit.ObjectId AS UnitId
-                 , SUM (tmpMIContainer_Remains.AmountRemainsStart) AS AmountRemainsStart
-                 , SUM (tmpMIContainer_Remains.AmountDebet) AS AmountDebet
-                 , SUM (tmpMIContainer_Remains.AmountKredit) AS AmountKredit
-                 , SUM (tmpMIContainer_Remains.AmountRemainsStart + tmpMIContainer_Remains.AmountDebet - tmpMIContainer_Remains.AmountKredit) AS AmountRemainsEnd
-            FROM
-                (SELECT Container.ObjectId AS AccountId
-                      , Container.Id AS ContainerId
-                      , COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
-                      , COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
-                      , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS AmountRemainsStart
-                      /*, COALESCE (SUM (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Passive() THEN MIContainer_byPeriod.Amount ELSE 0 END), 0) AS AmountDebet
-                      , COALESCE (SUM (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Passive() THEN -MIContainer_byPeriod.Amount ELSE 0 END), 0) AS AmountKredit
-                      , Container.Amount - COALESCE (SUM (MIContainer_byEndDate.Amount), 0) AS AmountRemainsEnd*/
-                 FROM Container
-                      LEFT JOIN MovementItemContainer AS MIContainer
-                                                      ON MIContainer.Containerid = Container.Id
-                                                     AND MIContainer.OperDate >= inStartDate
-                      /*LEFT JOIN MovementItemContainer AS MIContainer_byEndDate
-                                                      ON MIContainer_byEndDate.Containerid = Container.Id
-                                                     AND MIContainer_byEndDate.OperDate > inEndDate
-                      LEFT JOIN MovementItemContainer AS MIContainer_byPeriod
-                                                      ON MIContainer_byPeriod.Containerid = Container.Id
-                                                     AND MIContainer_byPeriod.OperDate BETWEEN inStartDate AND inEndDate*/
-                 WHERE Container.DescId = zc_Container_Summ()
-                 GROUP BY Container.ObjectId
-                        , Container.Amount
-                        , Container.Id
-                 HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0) -- AmountRemainsStart <> 0
-                     OR (COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) <> 0) -- AmountDebet <> 0
-                     OR (COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -MIContainer.Amount ELSE 0 END), 0) <> 0) -- AmountKredit <> 0
-                 /*HAVING (Container.Amount - COALESCE (SUM (MIContainer_byEndDate.Amount), 0) <> 0) -- AmountRemainsEnd <> 0
-                     OR (COALESCE (SUM (CASE WHEN MIContainer_byPeriod.Amount > 0 THEN MIContainer_byPeriod.Amount ELSE 0 END), 0) <> 0) -- AmountDebet <> 0
-                     OR (COALESCE (SUM (CASE WHEN MIContainer_byPeriod.Amount < 0 THEN -MIContainer_byPeriod.Amount ELSE 0 END), 0) <> 0) -- AmountKredit <> 0*/
-                ) AS tmpMIContainer_Remains
-                LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
-                                              ON ContainerLinkObject_InfoMoney.ContainerId = tmpMIContainer_Remains.ContainerId
-                                             AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-                LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
-                                              ON ContainerLinkObject_InfoMoneyDetail.ContainerId = tmpMIContainer_Remains.ContainerId
-                                             AND ContainerLinkObject_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
-                LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Juridical
-                                              ON ContainerLinkObject_Juridical.ContainerId = tmpMIContainer_Remains.ContainerId
-                                             AND ContainerLinkObject_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-                                             AND 1=1
-                LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Personal
-                                              ON ContainerLinkObject_Personal.ContainerId = tmpMIContainer_Remains.ContainerId
-                                             AND ContainerLinkObject_Personal.DescId = zc_ContainerLinkObject_Personal()
-                                             AND 1=1
-                LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Unit
-                                              ON ContainerLinkObject_Unit.ContainerId = tmpMIContainer_Remains.ContainerId
-                                             AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
-                                             AND 1=1
-            GROUP BY tmpMIContainer_Remains.AccountId
-                   , ContainerLinkObject_InfoMoney.ObjectId
-                   , ContainerLinkObject_InfoMoneyDetail.ObjectId
-                   , ContainerLinkObject_Personal.ObjectId
-                   , ContainerLinkObject_Juridical.ObjectId
-                   , ContainerLinkObject_Unit.ObjectId
-           ) AS tmpReportOperation ON tmpReportOperation.AccountId = lfObject_Account.AccountId
-           LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = tmpReportOperation.InfoMoneyId
-           LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney_Detail ON lfObject_InfoMoney_Detail.InfoMoneyId = CASE WHEN COALESCE (tmpReportOperation.InfoMoneyId_Detail, 0) = 0 THEN tmpReportOperation.InfoMoneyId ELSE tmpReportOperation.InfoMoneyId_Detail END
-           LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (JuridicalId, COALESCE (PersonalId, UnitId))
-          ;
+           , Object_Business.ObjectCode AS BusinessCode
+           , Object_Business.ValueData AS BusinessName
+           , Object_JuridicalBasis.ObjectCode AS JuridicalBasisCode
+           , Object_JuridicalBasis.ValueData AS JuridicalBasisName
+           , Object_Branch.ObjectCode AS BranchCode
+           , Object_Branch.ValueData AS BranchName
+           , Object_Personal.ObjectCode AS PersonalCode
+           , Object_Personal.ValueData AS PersonalName
+           , Object_Asset.ObjectCode AS AssetCode
+           , Object_Asset.ValueData AS AssetName
+
+       FROM ContainerObjectCost
+            LEFT JOIN ObjectCostLink AS ObjectCostLink_Unit
+                                     ON ObjectCostLink_Unit.ObjectCostId = ContainerObjectCost.ObjectCostId
+                                    AND ObjectCostLink_Unit.DescId = zc_ObjectCostLink_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectCostLink_Unit.ObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
+                                 ON ObjectLink_Unit_Parent.ObjectId = ObjectCostLink_Unit.ObjectId
+                                AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
+            LEFT JOIN Object AS Object_UnitParent ON Object_UnitParent.Id = ObjectLink_Unit_Parent.ChildObjectId
+
+            LEFT JOIN ObjectCostLink AS ObjectCostLink_Goods
+                                     ON ObjectCostLink_Goods.ObjectCostId = ContainerObjectCost.ObjectCostId
+                                    AND ObjectCostLink_Goods.DescId = zc_ObjectCostLink_Goods()
+            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectCostLink_Goods.ObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                 ON ObjectLink_Goods_GoodsGroup.ObjectId = ObjectCostLink_Goods.ObjectId
+                                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+            LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+
+            LEFT JOIN ObjectCostLink AS ObjectCostLink_GoodsKind
+                                     ON ObjectCostLink_GoodsKind.ObjectCostId = ContainerObjectCost.ObjectCostId
+                                    AND ObjectCostLink_GoodsKind.DescId = zc_ObjectCostLink_GoodsKind()
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectCostLink_GoodsKind.ObjectId
+
+            LEFT JOIN ObjectCostLink AS ObjectCostLink_InfoMoney
+                                     ON ObjectCostLink_InfoMoney.ObjectCostId = ContainerObjectCost.ObjectCostId
+                                    AND ObjectCostLink_InfoMoney.DescId = zc_ObjectCostLink_InfoMoney()
+            LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ObjectCostLink_InfoMoney.ObjectId
+
+            LEFT JOIN ObjectCostLink AS ObjectCostLink_InfoMoneyDetail
+                                     ON ObjectCostLink_InfoMoneyDetail.ObjectCostId = ContainerObjectCost.ObjectCostId
+                                    AND ObjectCostLink_InfoMoneyDetail.DescId = zc_ObjectCostLink_InfoMoneyDetail()
+            LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney_Detail ON lfObject_InfoMoney_Detail.InfoMoneyId = ObjectCostLink_InfoMoneyDetail.ObjectId
+
+            LEFT JOIN ObjectCostLink AS ObjectCostLink_PartionGoods
+                                     ON ObjectCostLink_PartionGoods.ObjectCostId = ContainerObjectCost.ObjectCostId
+                                    AND ObjectCostLink_PartionGoods.DescId = zc_ObjectCostLink_PartionGoods()
+            LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = ObjectCostLink_PartionGoods.ObjectId
+
+            LEFT JOIN ObjectCostLink AS ObjectCostLink_Business
+                                     ON ObjectCostLink_Business.ObjectCostId = ContainerObjectCost.ObjectCostId
+                                    AND ObjectCostLink_Business.DescId = zc_ObjectCostLink_Business()
+            LEFT JOIN Object AS Object_Business ON Object_Business.Id = ObjectCostLink_Business.ObjectId
+
+            LEFT JOIN ObjectCostLink AS ObjectCostLink_JuridicalBasis
+                                     ON ObjectCostLink_JuridicalBasis.ObjectCostId = ContainerObjectCost.ObjectCostId
+                                    AND ObjectCostLink_JuridicalBasis.DescId = zc_ObjectCostLink_JuridicalBasis()
+            LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = ObjectCostLink_JuridicalBasis.ObjectId
+
+            LEFT JOIN ObjectCostLink AS ObjectCostLink_Branch
+                                     ON ObjectCostLink_Branch.ObjectCostId = ContainerObjectCost.ObjectCostId
+                                    AND ObjectCostLink_Branch.DescId = zc_ObjectCostLink_Branch()
+            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectCostLink_Branch.ObjectId
+
+            LEFT JOIN ObjectCostLink AS ObjectCostLink_Personal
+                                     ON ObjectCostLink_Personal.ObjectCostId = ContainerObjectCost.ObjectCostId
+                                    AND ObjectCostLink_Personal.DescId = zc_ObjectCostLink_Personal()
+            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectCostLink_Personal.ObjectId
+
+            LEFT JOIN ObjectCostLink AS ObjectCostLink_AssetTo
+                                     ON ObjectCostLink_AssetTo.ObjectCostId = ContainerObjectCost.ObjectCostId
+                                    AND ObjectCostLink_AssetTo.DescId = zc_ObjectCostLink_AssetTo()
+            LEFT JOIN Object AS Object_AssetTo ON Object_AssetTo.Id = ObjectCostLink_AssetTo.ObjectId
+
+            LEFT JOIN Object AS Object_AssetTo ON Object_AssetTo.Id = ObjectCostLink_AssetTo.ObjectId
+
+       WHERE ContainerObjectCost.DescId = zc_ObjectCost_Basis() 
   
 END;
 $BODY$

@@ -556,14 +556,13 @@ begin
      //
      Gauge.Visible:=true;
      //
+     if not fStop then pInsertHistoryCost;
      //
      if not fStop then pCompleteDocument_Income;
      if not fStop then pCompleteDocument_Send;
      if not fStop then pCompleteDocument_SendOnPrice;
      if not fStop then pCompleteDocument_ProductionUnion;
      if not fStop then pCompleteDocument_ProductionSeparate;
-
-     if not fStop then pInsertHistoryCost;
      //
      Gauge.Visible:=false;
      DBGrid.Enabled:=true;
@@ -1988,7 +1987,7 @@ begin
              //Personal
              toStoredProc_two.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres_two').AsInteger;
              toStoredProc_two.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
-             toStoredProc_two.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             //toStoredProc_two.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
              toStoredProc_two.Params.ParamByName('inMemberId').Value:=toStoredProc.Params.ParamByName('ioId').Value;
              toStoredProc_two.Params.ParamByName('inPositionId').Value:=FieldByName('PositionId_PG').AsInteger;
              toStoredProc_two.Params.ParamByName('inUnitId').Value:=FieldByName('UnitId_PG').AsInteger;
@@ -3062,6 +3061,10 @@ begin
         end;
         Add('order by StartDate, EndDate');
         Open;
+        //
+        Application.ProcessMessages;
+        Application.ProcessMessages;
+        Application.ProcessMessages;
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -5386,4 +5389,5 @@ alter table dba.PriceListItems_byHistory add Id_Postgres integer null;
 alter table dba.Bill add Id_Postgres integer null;
 alter table dba.BillItems add Id_Postgres integer null;
 alter table dba.BillItemsReceipt add Id_Postgres integer null;
+
 }
