@@ -1987,7 +1987,7 @@ begin
              //Personal
              toStoredProc_two.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres_two').AsInteger;
              toStoredProc_two.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
-             toStoredProc_two.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             //toStoredProc_two.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
              toStoredProc_two.Params.ParamByName('inMemberId').Value:=toStoredProc.Params.ParamByName('ioId').Value;
              toStoredProc_two.Params.ParamByName('inPositionId').Value:=FieldByName('PositionId_PG').AsInteger;
              toStoredProc_two.Params.ParamByName('inUnitId').Value:=FieldByName('UnitId_PG').AsInteger;
@@ -5389,4 +5389,5 @@ alter table dba.PriceListItems_byHistory add Id_Postgres integer null;
 alter table dba.Bill add Id_Postgres integer null;
 alter table dba.BillItems add Id_Postgres integer null;
 alter table dba.BillItemsReceipt add Id_Postgres integer null;
+
 }

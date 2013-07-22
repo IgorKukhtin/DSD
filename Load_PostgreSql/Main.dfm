@@ -742,7 +742,7 @@ object MainForm: TMainForm
       Width = 90
     end
     object cbComplete: TCheckBox
-      Left = 14
+      Left = 15
       Top = 39
       Width = 102
       Height = 17
@@ -807,7 +807,7 @@ object MainForm: TMainForm
     object cbInsertHistoryCost: TCheckBox
       Tag = 100
       Left = 15
-      Top = 361
+      Top = 61
       Width = 194
       Height = 17
       Caption = #1057#1045#1041#1045#1057#1058#1054#1048#1052#1054#1057#1058#1068' '#1087#1086' '#1052#1045#1057#1071#1062#1040#1052
