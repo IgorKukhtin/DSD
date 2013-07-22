@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpReport_Balance(
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (RootName TVarChar, AccountGroupCode Integer, AccountGroupName TVarChar, AccountDirectionCode Integer, AccountDirectionName TVarChar, AccountCode Integer, AccountName  TVarChar, AccountOnComplete Boolean
-             , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyCode_Detail Integer, InfoMoneyName_Detail  TVarChar
+             , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyCode_Detail Integer, InfoMoneyName_Detail TVarChar
              , ByObjectCode Integer, ByObjectName TVarChar
              , AmountDebetStart TFloat, AmountKreditStart TFloat, AmountDebet TFloat, AmountKredit TFloat, AmountDebetEnd TFloat, AmountKreditEnd TFloat
               )

@@ -556,14 +556,13 @@ begin
      //
      Gauge.Visible:=true;
      //
+     if not fStop then pInsertHistoryCost;
      //
      if not fStop then pCompleteDocument_Income;
      if not fStop then pCompleteDocument_Send;
      if not fStop then pCompleteDocument_SendOnPrice;
      if not fStop then pCompleteDocument_ProductionUnion;
      if not fStop then pCompleteDocument_ProductionSeparate;
-
-     if not fStop then pInsertHistoryCost;
      //
      Gauge.Visible:=false;
      DBGrid.Enabled:=true;
@@ -3062,6 +3061,10 @@ begin
         end;
         Add('order by StartDate, EndDate');
         Open;
+        //
+        Application.ProcessMessages;
+        Application.ProcessMessages;
+        Application.ProcessMessages;
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;

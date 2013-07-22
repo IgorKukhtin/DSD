@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_HistoryCost(
     IN inSession     TVarChar    -- сессия пользователя
 )                              
 --  RETURNS VOID AS
-  RETURNS TABLE (vbItearation Integer, Price TFloat, PriceNext TFloat, FromObjectCostId Integer, ObjectCostId Integer, StartCount TFloat, StartSumm TFloat, IncomeCount TFloat, IncomeSumm TFloat, CalcCount TFloat, CalcSumm TFloat, CalcSummNext TFloat)
+  RETURNS TABLE (vbItearation Integer, Price TFloat, PriceNext TFloat, ObjectCostId Integer, FromObjectCostId Integer, StartCount TFloat, StartSumm TFloat, IncomeCount TFloat, IncomeSumm TFloat, CalcCount TFloat, CalcSumm TFloat, CalcSummNext TFloat)
 AS
 $BODY$
    DECLARE vbItearation Integer;
@@ -179,29 +179,29 @@ BEGIN
 
      vbItearation:=0;
      vbCountDiff:= 100000;
-     WHILE vbItearation < 30 AND vbCountDiff > 0
+     WHILE vbItearation < 500 AND vbCountDiff > 0
      LOOP
          UPDATE _tmpMaster SET CalcSumm = _tmpSumm.CalcSumm
                -- Расчет суммы всех составляющих
          FROM (SELECT _tmpChild.MasterObjectCostId AS ObjectCostId
                     , CAST (SUM (_tmpChild.OperCount * _tmpPrice.OperPrice) AS TFloat) AS CalcSumm
-                      FROM 
-                          -- Расчет цены
-                          (SELECT _tmpMaster.ObjectCostId
-                                , CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) > 0
-                                          THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount)
-                                       WHEN  (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) < 0
-                                          THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount)
-                                       ELSE 0
-                                  END AS OperPrice
-                           FROM _tmpMaster
-                          ) AS _tmpPrice 
-                          JOIN _tmpChild ON _tmpChild.ObjectCostId = _tmpPrice.ObjectCostId
-                                            -- Отбрасываем в том случае если сам в себя
-                                        AND _tmpChild.MasterObjectCostId <> _tmpChild.ObjectCostId
+               FROM 
+                    -- Расчет цены
+                    (SELECT _tmpMaster.ObjectCostId
+                          , CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount /*+ _tmpMaster.CalcCount*/) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) > 0
+                                     THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount /*+ _tmpMaster.CalcCount*/)
+                                 WHEN  (_tmpMaster.StartCount + _tmpMaster.IncomeCount /*+ _tmpMaster.CalcCount*/) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) < 0
+                                     THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount /*+ _tmpMaster.CalcCount*/)
+                                 ELSE 0
+                            END AS OperPrice
+                     FROM _tmpMaster
+                    ) AS _tmpPrice 
+                    JOIN _tmpChild ON _tmpChild.ObjectCostId = _tmpPrice.ObjectCostId
+                                      -- Отбрасываем в том случае если сам в себя
+                                  AND _tmpChild.MasterObjectCostId <> _tmpChild.ObjectCostId
 
-                      GROUP BY _tmpChild.MasterObjectCostId
-                     ) AS _tmpSumm 
+               GROUP BY _tmpChild.MasterObjectCostId
+              ) AS _tmpSumm 
          WHERE _tmpMaster.ObjectCostId = _tmpSumm.ObjectCostId;
 
          -- увеличивам итерации
@@ -212,61 +212,87 @@ BEGIN
                -- Расчет суммы всех составляющих
             , (SELECT _tmpChild.MasterObjectCostId AS ObjectCostId
                     , CAST (SUM (_tmpChild.OperCount * _tmpPrice.OperPrice) AS TFloat) AS CalcSumm
-                      FROM 
-                          -- Расчет цены
-                          (SELECT _tmpMaster.ObjectCostId
-                                , CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) > 0
-                                          THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount)
-                                       WHEN  (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) < 0
-                                          THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount)
-                                       ELSE 0
-                                  END AS OperPrice
-                           FROM _tmpMaster
-                          ) AS _tmpPrice 
-                          JOIN _tmpChild ON _tmpChild.ObjectCostId = _tmpPrice.ObjectCostId
-                                            -- Отбрасываем в том случае если сам в себя
-                                        AND _tmpChild.MasterObjectCostId <> _tmpChild.ObjectCostId
-
-                      GROUP BY _tmpChild.MasterObjectCostId
-                     ) AS _tmpSumm 
+               FROM 
+                    -- Расчет цены
+                    (SELECT _tmpMaster.ObjectCostId
+                          , CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount /*+ _tmpMaster.CalcCount*/) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) > 0
+                                     THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount /*+ _tmpMaster.CalcCount*/)
+                                 WHEN  (_tmpMaster.StartCount + _tmpMaster.IncomeCount /*+ _tmpMaster.CalcCount*/) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) < 0
+                                     THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount /*+ _tmpMaster.CalcCount*/)
+                                 ELSE 0
+                            END AS OperPrice
+                     FROM _tmpMaster
+                    ) AS _tmpPrice 
+                    JOIN _tmpChild ON _tmpChild.ObjectCostId = _tmpPrice.ObjectCostId
+                                      -- Отбрасываем в том случае если сам в себя
+                                  AND _tmpChild.MasterObjectCostId <> _tmpChild.ObjectCostId
+               GROUP BY _tmpChild.MasterObjectCostId
+              ) AS _tmpSumm 
          WHERE _tmpMaster.ObjectCostId = _tmpSumm.ObjectCostId
            AND _tmpMaster.CalcSumm <> _tmpSumm.CalcSumm;
 
      END LOOP;
 
-     -- tmp return
-     RETURN QUERY SELECT vbItearation
-                       , CAST (CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount) <> 0
-                                       THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount)
-                               END AS TFloat) AS Price
-                       , CAST (CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount) <> 0
-                                       THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + COALESCE (_tmpSumm.CalcSumm, 0)) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount)
-                               END AS TFloat) AS PriceNext
-                       , CAST (0 AS Integer) AS FromObjectCostId
-                       , _tmpSumm.FromObjectCostId
-                       , _tmpMaster.ObjectCostId, _tmpMaster.StartCount, _tmpMaster.StartSumm, _tmpMaster.IncomeCount, _tmpMaster.IncomeSumm, _tmpMaster.CalcCount, _tmpMaster.CalcSumm, _tmpSumm.CalcSumm AS CalcSummNext
-                  FROM _tmpMaster LEFT JOIN
+
+     -- Удаляем предыдущую с/с
+     DELETE FROM HistoryCost WHERE (inStartDate BETWEEN StartDate AND EndDate) OR (inEndDate BETWEEN StartDate AND EndDate);
+
+     -- Сохраняем что насчитали
+     INSERT INTO HistoryCost (ObjectCostId, StartDate, EndDate, Price, StartCount, StartSumm, IncomeCount, IncomeSumm, CalcCount, CalcSumm)
+        SELECT _tmpMaster.ObjectCostId, inStartDate AS StartDate, inEndDate AS EndDate
+             , CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount /*+ _tmpMaster.CalcCount*/) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) > 0
+                       THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount /*+ _tmpMaster.CalcCount*/)
+                    WHEN  (_tmpMaster.StartCount + _tmpMaster.IncomeCount /*+ _tmpMaster.CalcCount*/) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) < 0
+                        THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount /*+ _tmpMaster.CalcCount*/)
+                    ELSE 0
+               END AS Price
+             , _tmpMaster.StartCount, _tmpMaster.StartSumm, _tmpMaster.IncomeCount, _tmpMaster.IncomeSumm, _tmpMaster.CalcCount, _tmpMaster.CalcSumm
+        FROM _tmpMaster;
+
+
+     -- tmp
+     RETURN QUERY
+        SELECT vbItearation
+             , CAST (CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount /*+ _tmpMaster.CalcCount*/) <> 0
+                              THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount /*+ _tmpMaster.CalcCount*/)
+                      END AS TFloat) AS Price
+             , CAST (CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount /*+ _tmpMaster.CalcCount*/) <> 0
+                              THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + COALESCE (_tmpSumm.CalcSumm, 0)) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount /*+ _tmpMaster.CalcCount*/)
+                     END AS TFloat) AS PriceNext
+             , _tmpMaster.ObjectCostId
+             , _tmpSumm.FromObjectCostId
+             , _tmpMaster.StartCount, _tmpMaster.StartSumm, _tmpMaster.IncomeCount, _tmpMaster.IncomeSumm, _tmpMaster.CalcCount, _tmpMaster.CalcSumm, _tmpSumm.CalcSumm AS CalcSummNext
+         FROM _tmpMaster LEFT JOIN
                -- Расчет суммы всех составляющих
               (SELECT _tmpChild.MasterObjectCostId AS ObjectCostId
+--                    , _tmpChild.ObjectCostId AS FromObjectCostId
+                    , 0 AS FromObjectCostId
                     , CAST (SUM (_tmpChild.OperCount * _tmpPrice.OperPrice) AS TFloat) AS CalcSumm
-                      FROM 
-                          -- Расчет цены
-                          (SELECT _tmpMaster.ObjectCostId
-                                , CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) > 0
-                                          THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount)
-                                       WHEN  (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) < 0
-                                          THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount + _tmpMaster.CalcCount)
-                                       ELSE 0
-                                  END AS OperPrice
-                           FROM _tmpMaster
-                          ) AS _tmpPrice 
-                          JOIN _tmpChild ON _tmpChild.ObjectCostId = _tmpPrice.ObjectCostId
-                                            -- Отбрасываем в том случае если сам в себя
-                                        AND _tmpChild.MasterObjectCostId <> _tmpChild.ObjectCostId
-
-                      GROUP BY _tmpChild.MasterObjectCostId
-                     ) AS _tmpSumm ON _tmpMaster.ObjectCostId = _tmpSumm.ObjectCostId
-     ;
+               FROM 
+                    -- Расчет цены
+                    (SELECT _tmpMaster.ObjectCostId
+                          , CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount /*+ _tmpMaster.CalcCount*/) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) > 0
+                                     THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount /*+ _tmpMaster.CalcCount*/)
+                                 WHEN  (_tmpMaster.StartCount + _tmpMaster.IncomeCount /*+ _tmpMaster.CalcCount*/) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) < 0
+                                     THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount /*+ _tmpMaster.CalcCount*/)
+                                 ELSE 0
+                            END AS OperPrice
+                     FROM _tmpMaster
+                    ) AS _tmpPrice 
+                    JOIN _tmpChild ON _tmpChild.ObjectCostId = _tmpPrice.ObjectCostId
+                                      -- Отбрасываем в том случае если сам в себя
+                                  AND _tmpChild.MasterObjectCostId <> _tmpChild.ObjectCostId
+               GROUP BY _tmpChild.MasterObjectCostId
+--                      , _tmpChild.ObjectCostId
+              ) AS _tmpSumm ON _tmpMaster.ObjectCostId = _tmpSumm.ObjectCostId
+--         WHERE CAST (CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount /*+ _tmpMaster.CalcCount*/) <> 0
+--                              THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount /*+ _tmpMaster.CalcCount*/)
+--                      END AS TFloat)
+--            <> CAST (CASE WHEN (_tmpMaster.StartCount + _tmpMaster.IncomeCount /*+ _tmpMaster.CalcCount*/) <> 0
+--                              THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + COALESCE (_tmpSumm.CalcSumm, 0)) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount /*+ _tmpMaster.CalcCount*/)
+--                     END AS TFloat)
+--           AND _tmpMaster.ObjectCostId IN (5316) -- , 6087, 6011, 5309, 3661, 6669, 3697, 6086, 5188, 4335)
+        ;
 
 END;
 $BODY$
