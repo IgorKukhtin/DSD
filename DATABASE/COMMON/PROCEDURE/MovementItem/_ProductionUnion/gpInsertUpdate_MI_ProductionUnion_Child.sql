@@ -10,7 +10,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Child(
     IN inParentId            Integer   , -- Главный элемент документа
     IN inAmountReceipt       TFloat    , -- Количество по рецептуре на 1 кутер 
     IN inComment	         TVarChar  , -- Комментарий
-    IN inPartionGoods        TDateTime , -- Партия товара	                   
+    IN inPartionGoodsDate    TDateTime , -- Партия товара	
+    IN inPartionGoods        TVarChar  , -- Партия товара        
+    IN inGoogsKindId         Integer   , -- Виды товаров            
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
@@ -25,12 +27,18 @@ BEGIN
    -- сохранили <Элемент документа>
    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inGoodsId, inMovementId, inAmount, inParentId);
    
+   -- сохранили связь с <Виды товаров>
+   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
+
    -- сохранили свойство <Комментарий>
    PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
    -- сохранили свойство <Количество по рецептуре на 1 кутер>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountReceipt(), ioId, inAmountReceipt);
+   
    -- сохранили свойство <Партия товара>
-   PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoods);
+   PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate);
+   -- сохранили свойство <Партия товара>
+   PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, inPartionGoods);
 
 END;
 $BODY$

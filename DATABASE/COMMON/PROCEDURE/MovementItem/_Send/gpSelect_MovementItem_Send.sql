@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Send(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , Amount TFloat, HeadCount TFloat
+             , Amount TFloat, HeadCount TFloat, Count TFloat
              , PartionGoods TVarChar, GoodsKindName  TVarChar
              , AssetId Integer, AssetName TVarChar
              , isErased Boolean
@@ -31,7 +31,8 @@ BEGIN
            , Object_Goods.ObjectCode  AS GoodsCode
            , Object_Goods.ValueData   AS GoodsName
            , MovementItem.Amount AS Amount
-
+           
+           , CAST (NULL AS TFloat) AS Count
            , CAST (NULL AS TFloat) AS HeadCount
 
            , CAST (NULL AS TVarChar) AS PartionGoods
@@ -70,7 +71,8 @@ BEGIN
            , Object_Goods.ObjectCode  AS GoodsCode
            , Object_Goods.ValueData   AS GoodsName
            , MovementItem.Amount      AS Amount
-
+           
+           , MIFloat_Count.ValueData     AS Count
            , MIFloat_HeadCount.ValueData AS HeadCount
 
            , MIString_PartionGoods.ValueData AS PartionGoods
@@ -84,6 +86,10 @@ BEGIN
 
        FROM MovementItem
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+
+            LEFT JOIN MovementItemFloat AS MIFloat_Count
+                                        ON MIFloat_Count.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Count.DescId = zc_MIFloat_Count()
 
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
@@ -115,6 +121,7 @@ BEGIN
            , Object_Goods.ObjectCode  AS GoodsCode
            , Object_Goods.ValueData   AS GoodsName
            , MovementItem.Amount
+           , MIFloat_Count.ValueData     AS Count
            , MIFloat_HeadCount.ValueData AS HeadCount
 
            , MIString_PartionGoods.ValueData AS PartionGoods
@@ -128,6 +135,10 @@ BEGIN
 
        FROM MovementItem
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+
+            LEFT JOIN MovementItemFloat AS MIFloat_Count
+                                        ON MIFloat_Count.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Count.DescId = zc_MIFloat_Count()
 
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
@@ -162,6 +173,7 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, TVarChar) OWNER TO 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.07.13         * add Count                              
  18.07.13         * add Object_Asset               
  12.07.13         *
 

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Inventory(
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat
              , HeadCount TFloat, Count TFloat, Summ TFloat
-             , PartionGoods TVarChar, GoodsKindName  TVarChar
+             , PartionGoodsDate TDateTime, PartionGoods TVarChar, GoodsKindName  TVarChar
              , AssetId Integer, AssetName TVarChar 
              , AmountSumm TFloat
              , isErased Boolean
@@ -36,8 +36,9 @@ BEGIN
            , CAST (NULL AS TFloat) AS HeadCount
            , CAST (NULL AS TFloat) AS Count
            , CAST (NULL AS TFloat) AS Summ
-
-           , CAST (NULL AS TVarChar) AS PartionGoods
+           
+           , CAST (NULL AS TDateTime) AS PartionGoodsDate
+           , CAST (NULL AS TVarChar)  AS PartionGoods
 
            , Object_GoodsKind.ValueData AS GoodsKindName
            
@@ -81,7 +82,8 @@ BEGIN
            , MIFloat_Count.ValueData AS Count
            , MIFloat_Summ.ValueData  AS Summ
 
-           , MIString_PartionGoods.ValueData AS PartionGoods
+           , MIDate_PartionGoods.ValueData    AS PartionGoodsDate
+           , MIString_PartionGoods.ValueData  AS PartionGoods
 
            , Object_GoodsKind.ValueData AS GoodsKindName
 
@@ -109,9 +111,13 @@ BEGIN
                                         ON MIFloat_Summ.MovementItemId = MovementItem.Id
                                        AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
 
+            LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                       ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                      AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+
             LEFT JOIN MovementItemString AS MIString_PartionGoods
                                          ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
-                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()                                        
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -140,6 +146,7 @@ BEGIN
            , MIFloat_Count.ValueData AS Count
            , MIFloat_Summ.ValueData  AS Summ
 
+           , MIString_PartionGoodsDate.ValueData AS PartionGoodsDate
            , MIString_PartionGoods.ValueData AS PartionGoods
 
            , Object_GoodsKind.ValueData AS GoodsKindName
@@ -167,6 +174,10 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_Summ
                                         ON MIFloat_Summ.MovementItemId = MovementItem.Id
                                        AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
+
+            LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                       ON MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                      AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
 
             LEFT JOIN MovementItemString AS MIString_PartionGoods
                                          ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
@@ -196,6 +207,7 @@ ALTER FUNCTION gpSelect_MovementItem_Inventory (Integer, Boolean, TVarChar) OWNE
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 22.07.13         * add PartionGoodsDate              
  18.07.13         * 
 
 */

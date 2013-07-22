@@ -8,10 +8,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Master(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inPartionClose	     Boolean   , -- партия закрыта (да/нет)        	
+    IN inPartionGoods        TVarChar  , -- Партия товара
     IN inComment	         TVarChar  , -- Комментарий	                   
     IN inCount	             TFloat    , -- Количество батонов или упаковок 
     IN inRealWeight	         TFloat    , -- Фактический вес(информативно)   
     IN inCuterCount          TFloat    , -- Количество кутеров	           
+    IN inGoodsKindId         Integer   , -- Виды товаров 
     IN inReceiptId           Integer   , -- Рецептуры	                   
     IN inSession             TVarChar    -- сессия пользователя
 )                              
@@ -28,8 +30,16 @@ BEGIN
    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
    -- сохранили связь с <Рецептуры>
    PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_Receipt(), ioId, inReceiptId);
+   
+   -- сохранили связь с <Виды товаров>
+   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
+   
    -- сохранили свойство <партия закрыта (да/нет)>
    PERFORM lpInsertUpdate_MovementItemBoolean(zc_MIBoolean_PartionClose(), ioId, inPartionClose);
+   
+   -- сохранили свойство <Партия товара>
+   PERFORM lpInsertUpdate_MovementItemString(zc_MIString_PartionGoods(), ioId, inPartionGoods);
+
    -- сохранили свойство <Комментарий>
    PERFORM lpInsertUpdate_MovementItemString(zc_MIString_Comment(), ioId, inComment);
    -- сохранили свойство <Количество батонов или упаковок>
@@ -47,6 +57,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.07.13         * add GoodsKind
  17.07.13         *              
  30.06.13                                        *
 

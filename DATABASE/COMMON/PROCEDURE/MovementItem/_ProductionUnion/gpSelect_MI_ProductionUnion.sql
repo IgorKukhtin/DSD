@@ -23,12 +23,18 @@ BEGIN
             , Object_Goods.ValueData   AS GoodsName
           
             , MovementItem.Amount          AS Amount
+
             , MIBoolean_PartionClose.ValueData AS PartionClose
+            , MIString_PartionGoods.ValueData  AS PartionGoods
+          
             , MIString_Comment.ValueData   AS Comment
             , MIFloat_Count.ValueData      AS Count
             , MIFloat_RealWeight.ValueData AS RealWeight
             , MIFloat_CuterCount.ValueData AS CuterCount
            
+            , Object_GoodsKind.ObjectCode AS GoodsKindCode
+            , Object_GoodsKind.ValueData  AS GoodsKindName
+
             , Object_Receipt.ObjectCode AS ReceiptCode
             , Object_Receipt.ValueData  AS ReceiptName
  
@@ -41,6 +47,11 @@ BEGIN
                                               ON MILinkObject_Receipt.MovementItemId = MovementItem.Id 
                                              AND MILinkObject_Receipt.DescId = zc_MILinkObject_Receipt()
              LEFT JOIN Object AS Object_Receipt ON Object_Receipt.Id = MILinkObject_Receipt.ObjectId
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id 
+                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
 
              LEFT JOIN MovementItemFloat AS MIFloat_Count
                                          ON MIFloat_Count.MovementItemId = MovementItem.Id 
@@ -61,7 +72,11 @@ BEGIN
              LEFT JOIN MovementItemString AS MIString_Comment
                                           ON MIString_Comment.MovementItemId = MovementItem.Id 
                                          AND MIString_Comment.DescId = zc_MIString_Comment()
-                                         
+
+             LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                          ON MIString_PartionGoods.MovementItemId = MovementItem.Id 
+                                         AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+
        WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master();
     
     RETURN NEXT Cursor1;
@@ -76,10 +91,16 @@ BEGIN
             , MovementItem.Amount        AS Amount
             , MovementItem.ParentId      AS ParentId
             
-            , MIDate_PartionGoods.ValueData AS PartionName
             , MIFloat_AmountReceipt.ValueData AS AmountReceipt
-            , MIString_Comment.ValueData AS Comment
             
+            , MIDate_PartionGoods.ValueData   AS PartionGoodsDate
+            , MIString_PartionGoods.ValueData AS PartionGoods
+            
+            , MIString_Comment.ValueData AS Comment
+
+            , Object_GoodsKind.ObjectCode AS GoodsKindCode
+            , Object_GoodsKind.ValueData  AS GoodsKindName
+
             , MovementItem.isErased
             
         FROM MovementItem 
@@ -88,6 +109,10 @@ BEGIN
              LEFT JOIN MovementItemDate AS MIDate_PartionGoods
                                         ON MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
                                        AND MIDate_PartionGoods.MovementItemId =  MovementItem.Id
+                                       
+             LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                          ON MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                                         AND MIString_PartionGoods.MovementItemId =  MovementItem.Id
 
              LEFT JOIN MovementItemFloat AS MIFloat_AmountReceipt
                                          ON MIFloat_AmountReceipt.MovementItemId = MovementItem.Id 
@@ -96,6 +121,11 @@ BEGIN
              LEFT JOIN MovementItemString AS MIString_Comment
                                           ON MIString_Comment.MovementItemId = MovementItem.Id 
                                          AND MIString_Comment.DescId = zc_MIString_Comment()
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id 
+                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
        
        WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Child();
        
@@ -109,6 +139,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 22.07.13         * add PartionGoods, GoodsKind              
  15.07.13         *              
  30.06.13                                        *
 

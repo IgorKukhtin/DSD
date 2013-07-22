@@ -9,6 +9,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory(
     IN inAmount              TFloat    , -- Количество
     IN inHeadCount           TFloat    , -- Количество голов
     IN inCount               TFloat    , -- Количество батонов или упаковок
+    IN inPartionGoodsDate    TDateTime , -- Партия товара 
+    IN inPartionGoods        TVarChar  , -- Партия товара
     IN inSumm                TFloat    , -- Сумма       
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
     IN inSession             TVarChar    -- сессия пользователя
@@ -34,6 +36,8 @@ BEGIN
      -- сохранили свойство <Сумма>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), ioId, inSumm);
 
+     -- сохранили свойство <Партия товара>
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_PartionGoods(), ioId, inPartionGoodsDate);
      -- сохранили свойство <Партия товара>
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, inPartionGoods);
 
