@@ -78,6 +78,8 @@ type
     colPersonalPackerName: TcxGridDBColumn;
     colTotalSummPacker: TcxGridDBColumn;
     colTotalSummSpending: TcxGridDBColumn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
   private
   public
   end;

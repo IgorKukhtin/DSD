@@ -13,7 +13,6 @@ inherited PaidKindForm: TPaidKindForm
     Height = 350
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 269
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -104,6 +103,14 @@ inherited PaidKindForm: TPaidKindForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoiceGuides'
         end>
       OneOnRow = True
       Row = 0
@@ -115,6 +122,16 @@ inherited PaidKindForm: TPaidKindForm
       Action = actRefresh
       Category = 0
       ImageIndex = 4
+    end
+    object bbStatic: TdxBarStatic
+      Caption = '     '
+      Category = 0
+      Visible = ivAlways
+    end
+    object bbChoiceGuides: TdxBarButton
+      Action = dsdChoiceGuides
+      Category = 0
+      ImageIndex = 7
     end
   end
   object ActionList: TActionList
@@ -133,7 +150,21 @@ inherited PaidKindForm: TPaidKindForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
-      Params = <>
+      Params = <
+        item
+          Name = 'Id'
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          DataType = ftString
+          ParamType = ptOutput
+        end
+        item
+          Name = 'Name'
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptOutput
+        end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ShortCut = 13
@@ -153,5 +184,11 @@ inherited PaidKindForm: TPaidKindForm
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 216
     Top = 200
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    SortImages = dmMain.SortImageList
+    View = cxGridDBTableView
+    Left = 160
+    Top = 208
   end
 end

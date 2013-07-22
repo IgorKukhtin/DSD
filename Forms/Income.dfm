@@ -4,6 +4,7 @@ inherited IncomeForm: TIncomeForm
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
+  ExplicitLeft = -245
   ExplicitWidth = 1036
   ExplicitHeight = 423
   PixelsPerInch = 96
@@ -71,34 +72,30 @@ inherited IncomeForm: TIncomeForm
       Caption = #1050#1086#1084#1091
     end
   end
-  object cxPageControl1: TcxPageControl
+  object cxPageControl: TcxPageControl
     Left = 0
     Top = 110
     Width = 1028
     Height = 286
     Align = alClient
     TabOrder = 5
-    Properties.ActivePage = cxTabSheet2
+    Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 275
     ClientRectBottom = 286
     ClientRectRight = 1028
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitTop = 0
-      ExplicitWidth = 990
-      ExplicitHeight = 248
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 1028
-        Height = 251
+        Height = 262
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 990
-        ExplicitHeight = 248
+        ExplicitLeft = 72
+        ExplicitTop = -72
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource
@@ -160,6 +157,9 @@ inherited IncomeForm: TIncomeForm
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsView.ColumnAutoWidth = True
+          OptionsView.HeaderHeight = 40
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -244,7 +244,6 @@ inherited IncomeForm: TIncomeForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitHeight = 251
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -252,7 +251,6 @@ inherited IncomeForm: TIncomeForm
         Height = 262
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 251
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -271,6 +269,7 @@ inherited IncomeForm: TIncomeForm
           DataController.Summary.SummaryGroups = <>
           OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object colDebetAccountGroupCode: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1044' '#1043#1088#1091#1087#1087#1072' '#1082#1086#1076
             DataBinding.FieldName = 'DebetAccountGroupCode'
@@ -417,8 +416,8 @@ inherited IncomeForm: TIncomeForm
         ParamType = ptInputOutput
         Value = '0'
       end>
-    Left = 176
-    Top = 256
+    Left = 248
+    Top = 72
   end
   object spSelectMovementItem: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Income'
@@ -442,8 +441,8 @@ inherited IncomeForm: TIncomeForm
         ParamType = ptInput
         Value = 'False'
       end>
-    Left = 88
-    Top = 280
+    Left = 96
+    Top = 248
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -461,8 +460,8 @@ inherited IncomeForm: TIncomeForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 136
-    Top = 224
+    Left = 192
+    Top = 72
     DockControlHeights = (
       0
       0
@@ -506,54 +505,6 @@ inherited IncomeForm: TIncomeForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = colAmount
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
-      item
-        Component = colCode
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
-      item
-        Component = colDebetAccountName
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
-      item
-        Component = colName
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
-      item
-        Component = colPrice
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
-      item
-        Component = colAmountSumm
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
-      item
         Component = Owner
         Properties.Strings = (
           'Height'
@@ -562,13 +513,13 @@ inherited IncomeForm: TIncomeForm
           'Width')
       end>
     StorageName = 'cxPropertiesStore'
-    Left = 280
-    Top = 304
+    Left = 360
+    Top = 80
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 376
-    Top = 216
+    Left = 416
+    Top = 80
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spGet
@@ -609,28 +560,27 @@ inherited IncomeForm: TIncomeForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 32
-    Top = 208
+    Left = 48
+    Top = 200
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 72
-    Top = 56
+    Top = 192
   end
   object dsdGuidesFrom: TdsdGuides
     LookupControl = edFrom
     FormName = 'TJuridicalForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 304
-    Top = 56
+    Left = 352
   end
   object dsdGuidesTo: TdsdGuides
     LookupControl = edTo
     FormName = 'TUnitForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 448
-    Top = 56
+    Left = 456
+    Top = 8
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Income'
@@ -696,8 +646,8 @@ inherited IncomeForm: TIncomeForm
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
-    Left = 384
-    Top = 312
+    Left = 456
+    Top = 88
     object N1: TMenuItem
       Action = actRefresh
     end
@@ -718,19 +668,19 @@ inherited IncomeForm: TIncomeForm
         ParamType = ptInput
         Value = '0'
       end>
-    Left = 560
-    Top = 216
+    Left = 568
+    Top = 72
   end
   object EntryCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 424
-    Top = 176
+    Left = 536
+    Top = 72
   end
   object EntryDS: TDataSource
     DataSet = EntryCDS
-    Left = 440
-    Top = 224
+    Left = 536
+    Top = 104
   end
   object spInsertUpdateMovementItem: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Income'
@@ -803,15 +753,15 @@ inherited IncomeForm: TIncomeForm
         ParamType = ptInput
         Value = '0'
       end>
-    Left = 520
-    Top = 120
+    Left = 112
+    Top = 280
   end
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'
     CloseDataSource = False
     DataSet = ClientDataSet
     BCDToCurrency = False
-    Left = 232
-    Top = 216
+    Left = 320
+    Top = 80
   end
 end

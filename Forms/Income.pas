@@ -22,7 +22,8 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  DataModul;
 
 type
   TIncomeForm = class(TParentForm)
@@ -50,7 +51,7 @@ type
     spGet: TdsdStoredProc;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
-    cxPageControl1: TcxPageControl;
+    cxPageControl: TcxPageControl;
     cxTabSheet1: TcxTabSheet;
     cxTabSheet2: TcxTabSheet;
     cxGrid: TcxGrid;

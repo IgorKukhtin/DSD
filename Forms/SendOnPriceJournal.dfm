@@ -1,10 +1,10 @@
 inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
   Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077' '
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1087#1086' '#1094#1077#1085#1077' '
   ClientHeight = 427
   ClientWidth = 1240
-  ExplicitWidth = 1256
-  ExplicitHeight = 465
+  ExplicitWidth = 1248
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -13,7 +13,6 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     Width = 1240
     Height = 41
     Align = alTop
-    Caption = 'Panel1'
     TabOrder = 1
     object deStart: TcxDateEdit
       Left = 208
@@ -52,6 +51,9 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsView.HeaderHeight = 40
+      OptionsView.Indicator = True
+      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object colStatus: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'StatusCode'
@@ -77,7 +79,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
       object colInvNumber: TcxGridDBColumn
         Caption = #1053#1086#1084#1077#1088
         DataBinding.FieldName = 'InvNumber'
-        Width = 41
+        Width = 56
       end
       object colOperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
@@ -220,8 +222,8 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -485,5 +487,15 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
       end>
     Left = 72
     Top = 320
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 200
+    Top = 152
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    SortImages = dmMain.SortImageList
+    View = cxGridDBTableView
+    Left = 208
+    Top = 200
   end
 end

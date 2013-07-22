@@ -9,7 +9,7 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, cxGridLevel, cxClasses,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, Datasnap.DBClient, cxPropertiesStore, dxBar,
-  Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dsdAddOn;
+  Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dsdAddOn, dxBarExtItems;
 
 type
   TPaidKindForm = class(TParentForm)
@@ -28,6 +28,9 @@ type
     dsdStoredProc: TdsdStoredProc;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
+    bbStatic: TdxBarStatic;
+    bbChoiceGuides: TdxBarButton;
   private
     { Private declarations }
   public

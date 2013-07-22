@@ -1,9 +1,9 @@
 inherited SaleJournalForm: TSaleJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
   ClientHeight = 427
   ClientWidth = 1240
   ExplicitWidth = 1248
-  ExplicitHeight = 461
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -12,7 +12,6 @@ inherited SaleJournalForm: TSaleJournalForm
     Width = 1240
     Height = 41
     Align = alTop
-    Caption = 'Panel1'
     TabOrder = 1
     object deStart: TcxDateEdit
       Left = 208
@@ -51,6 +50,9 @@ inherited SaleJournalForm: TSaleJournalForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsView.HeaderHeight = 40
+      OptionsView.Indicator = True
+      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object colStatus: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'StatusCode'
@@ -72,92 +74,111 @@ inherited SaleJournalForm: TSaleJournalForm
             ImageIndex = 13
             Value = 3
           end>
+        HeaderAlignmentVert = vaCenter
       end
       object colInvNumber: TcxGridDBColumn
         Caption = #1053#1086#1084#1077#1088
         DataBinding.FieldName = 'InvNumber'
-        Width = 41
+        HeaderAlignmentVert = vaCenter
+        Width = 54
       end
       object colOperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
+        HeaderAlignmentVert = vaCenter
         Width = 47
       end
       object colFromName: TcxGridDBColumn
         Caption = #1054#1090' '#1082#1086#1075#1086
         DataBinding.FieldName = 'FromName'
+        HeaderAlignmentVert = vaCenter
         Width = 140
       end
       object colToName: TcxGridDBColumn
         Caption = #1050#1086#1084#1091
         DataBinding.FieldName = 'ToName'
+        HeaderAlignmentVert = vaCenter
         Width = 140
       end
       object colTotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'TotalCount'
+        HeaderAlignmentVert = vaCenter
       end
       object colTotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1087#1086#1089#1090#1072#1074#1097'.'
         DataBinding.FieldName = 'TotalSumm'
+        HeaderAlignmentVert = vaCenter
         Width = 80
       end
       object colChangePercent: TcxGridDBColumn
         Caption = '(-)% '#1057#1082', (+)% '#1053#1072#1094
         DataBinding.FieldName = 'ChangePercent'
+        HeaderAlignmentVert = vaCenter
         Width = 90
       end
       object colPriceWithVAT: TcxGridDBColumn
         Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' '
         DataBinding.FieldName = 'PriceWithVAT'
+        HeaderAlignmentVert = vaCenter
       end
       object colVATPercent: TcxGridDBColumn
         Caption = '% '#1053#1044#1057
         DataBinding.FieldName = 'VATPercent'
+        HeaderAlignmentVert = vaCenter
         Width = 45
       end
       object colTotalSummVAT: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSummVAT'
+        HeaderAlignmentVert = vaCenter
         Width = 60
       end
       object colTotalSummMVAT: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSummMVAT'
         Visible = False
+        HeaderAlignmentVert = vaCenter
         Width = 80
       end
       object colTotalSummPVAT: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSummPVAT'
+        HeaderAlignmentVert = vaCenter
         Width = 70
       end
       object colPaidKindName: TcxGridDBColumn
         Caption = #1042#1080#1076
         DataBinding.FieldName = 'PaidKindName'
+        HeaderAlignmentVert = vaCenter
         Width = 30
       end
       object colContractName: TcxGridDBColumn
         Caption = #1044#1086#1075#1086#1074#1086#1088
         DataBinding.FieldName = 'ContractName'
+        HeaderAlignmentVert = vaCenter
       end
       object colCarName: TcxGridDBColumn
         Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
         DataBinding.FieldName = 'CarName'
+        HeaderAlignmentVert = vaCenter
         Width = 55
       end
       object colPersonalDriverName: TcxGridDBColumn
         Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1074#1086#1076#1080#1090#1077#1083#1100')'
         DataBinding.FieldName = 'PersonalDriverName'
+        HeaderAlignmentVert = vaCenter
         Width = 55
       end
       object colRouteName: TcxGridDBColumn
         Caption = #1052#1072#1088#1096#1088#1091#1090
         DataBinding.FieldName = 'RouteName'
+        HeaderAlignmentVert = vaCenter
       end
       object colRouteSortingName: TcxGridDBColumn
         Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1080' '#1084#1072#1088#1096#1088#1091#1090#1086#1074
         DataBinding.FieldName = 'RouteSortingName'
+        HeaderAlignmentVert = vaCenter
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -177,41 +198,6 @@ inherited SaleJournalForm: TSaleJournalForm
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
-      item
-        Component = colFromName
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Width')
-      end
-      item
-        Component = colInvNumber
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Width')
-      end
-      item
-        Component = colOperDate
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Width')
-      end
-      item
-        Component = colStatus
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Width')
-      end
-      item
-        Component = colToName
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Width')
-      end
       item
         Component = Owner
         Properties.Strings = (
@@ -493,5 +479,15 @@ inherited SaleJournalForm: TSaleJournalForm
       end>
     Left = 72
     Top = 320
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 192
+    Top = 240
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    SortImages = dmMain.SortImageList
+    View = cxGridDBTableView
+    Left = 256
+    Top = 240
   end
 end

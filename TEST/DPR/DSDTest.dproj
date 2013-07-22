@@ -91,6 +91,14 @@
 			<DCCReference Include="..\SOURCE\Movement\CommonMovementProcedureTest.pas"/>
 			<DCCReference Include="..\SOURCE\dbMovementTest.pas"/>
 			<DCCReference Include="..\SOURCE\LoadFormTest.pas"/>
+			<DCCReference Include="..\SOURCE\Container\CommonContainerProcedureTest.pas"/>
+			<DCCReference Include="..\SOURCE\MovementItem\CommonMovementItemProcedureTest.pas"/>
+			<DCCReference Include="..\SOURCE\MovementItemContainer\CommonMovementItemContainerProcedureTest.pas"/>
+			<DCCReference Include="..\SOURCE\ObjectCost\CommonObjectCostProcedureTest.pas"/>
+			<DCCReference Include="..\SOURCE\ObjectHistory\CommonObjectHistoryProcedureTest.pas"/>
+			<DCCReference Include="..\SOURCE\Protocol\CommonProtocolProcedureTest.pas"/>
+			<DCCReference Include="..\SOURCE\Function\CommonFunctionTest.pas"/>
+			<DCCReference Include="..\SOURCE\Reports\CommonReportsProcedureTest.pas"/>
 			<DCCReference Include="..\..\SOURCE\DataModul.pas">
 				<Form>dmMain</Form>
 				<DesignClass>TDataModule</DesignClass>
@@ -229,7 +237,7 @@
 				<Form>Report_BalanceForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\LoadReportTest.pas"/>
-			<DCCReference Include="..\SOURCE\dbObjectHistoryTest.pas"/>
+			<DCCReference Include="..\SOURCE\ObjectHistory\All\PriceListItemTest.pas"/>
 			<DCCReference Include="..\..\Forms\InfoMoneyGroup.pas">
 				<Form>InfoMoneyGroupForm</Form>
 			</DCCReference>
@@ -339,14 +347,6 @@
 			<DCCReference Include="..\..\Forms\PersonalEdit.pas">
 				<Form>PersonalEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\Container\CommonContainerProcedureTest.pas"/>
-			<DCCReference Include="..\SOURCE\MovementItem\CommonMovementItemProcedureTest.pas"/>
-			<DCCReference Include="..\SOURCE\MovementItemContainer\CommonMovementItemContainerProcedureTest.pas"/>
-			<DCCReference Include="..\SOURCE\ObjectCost\CommonObjectCostProcedureTest.pas"/>
-			<DCCReference Include="..\SOURCE\ObjectHistory\CommonObjectHistoryProcedureTest.pas"/>
-			<DCCReference Include="..\SOURCE\Protocol\CommonProtocolProcedureTest.pas"/>
-			<DCCReference Include="..\SOURCE\Function\CommonFunctionTest.pas"/>
-			<DCCReference Include="..\SOURCE\Reports\CommonReportsProcedureTest.pas"/>
 			<DCCReference Include="..\..\Forms\SendJournal.pas">
 				<Form>SendJournalForm</Form>
 			</DCCReference>

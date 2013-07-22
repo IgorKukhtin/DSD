@@ -75,6 +75,8 @@ type
     colPersonalDriverName: TcxGridDBColumn;
     colRouteName: TcxGridDBColumn;
     colRouteSortingName: TcxGridDBColumn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
   private
   public
   end;

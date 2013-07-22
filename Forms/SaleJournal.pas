@@ -77,6 +77,8 @@ type
     colRouteName: TcxGridDBColumn;
     colRouteSortingName: TcxGridDBColumn;
     colContractName: TcxGridDBColumn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
   private
   public
   end;

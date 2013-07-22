@@ -1,20 +1,20 @@
 inherited ProductionUnionJournalForm: TProductionUnionJournalForm
   Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
   ClientHeight = 427
-  ClientWidth = 1240
-  ExplicitWidth = 1248
-  ExplicitHeight = 461
+  ClientWidth = 579
+  ExplicitWidth = 587
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
     Top = 26
-    Width = 1240
+    Width = 579
     Height = 41
     Align = alTop
-    Caption = 'Panel1'
     TabOrder = 1
+    ExplicitWidth = 1240
     object deStart: TcxDateEdit
       Left = 208
       Top = 8
@@ -33,11 +33,12 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 67
-    Width = 1240
+    Width = 579
     Height = 360
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
+    ExplicitWidth = 1240
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -52,6 +53,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object colStatus: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'StatusCode'
@@ -210,6 +212,10 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'bbBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbComplete'
         end
         item
@@ -223,7 +229,15 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'bbBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end>
       OneOnRow = True
       Row = 0
@@ -238,12 +252,10 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
     object bbInsert: TdxBarButton
       Action = actInsert
       Category = 0
-      ImageIndex = 0
     end
     object bbEdit: TdxBarButton
       Action = actUpdate
       Category = 0
-      ImageIndex = 1
     end
     object bbComplete: TdxBarButton
       Action = actComplete
@@ -255,6 +267,15 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
     end
     object bbDelete: TdxBarButton
       Action = actSetErased
+      Category = 0
+    end
+    object bbBarStatic: TdxBarStatic
+      Caption = '     '
+      Category = 0
+      Visible = ivAlways
+    end
+    object bbGridToExcel: TdxBarButton
+      Action = dsdGridToExcel
       Category = 0
     end
   end
@@ -278,6 +299,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
       Category = 'DSDLib'
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
+      ImageIndex = 0
       FormName = 'TProductionUnionForm'
       GuiParams = <
         item
@@ -294,6 +316,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
       Category = 'DSDLib'
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
+      ImageIndex = 1
       FormName = 'TProductionUnionForm'
       GuiParams = <
         item
@@ -346,6 +369,14 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
       ImageIndex = 13
       DataSource = DataSource
       Status = mtDelete
+    end
+    object dsdGridToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      Grid = cxGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
     end
   end
   object dsdStoredProc: TdsdStoredProc
