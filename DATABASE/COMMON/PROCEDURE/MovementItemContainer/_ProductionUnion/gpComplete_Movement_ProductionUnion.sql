@@ -32,6 +32,7 @@ BEGIN
                                , JuridicalId_basis_To Integer, BusinessId_To Integer
                                , isPartionCount Boolean, isPartionSumm Boolean, isPartionDate Boolean
                                , PartionGoodsId Integer) ON COMMIT DROP;
+
      -- таблица - количественные Child-элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItemChild (MovementItemId_Parent Integer, MovementItemId Integer, MovementId Integer, OperDate TDateTime, UnitId_From Integer, PersonalId_From Integer
                                     , ContainerId_GoodsFrom Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
@@ -40,7 +41,7 @@ BEGIN
                                     , isPartionCount Boolean, isPartionSumm Boolean, isPartionDate Boolean
                                     , PartionGoodsId Integer) ON COMMIT DROP;
      -- таблица - суммовые Child-элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItemSumm (MovementItemId_Parent Integer, MovementItemId Integer, ContainerId_From Integer, OperSumm TFloat, InfoMoneyId_Detail_From Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpItemSummChild (MovementItemId_Parent Integer, MovementItemId Integer, ContainerId_From Integer, OperSumm TFloat, InfoMoneyId_Detail_From Integer) ON COMMIT DROP;
 
 
      -- заполняем таблицу - количественные Master-элементы документа, со всеми свойствами для формирования Аналитик в проводках
@@ -338,7 +339,7 @@ BEGIN
      -- для теста - Master
      -- RETURN QUERY SELECT _tmpItem.MovementItemId, _tmpItem.MovementId, _tmpItem.OperDate, _tmpItem.UnitId_To, _tmpItem.PersonalId_To, _tmpItem.BranchId_To, _tmpItem.ContainerId_GoodsTo, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.AssetId, _tmpItem.PartionGoods, _tmpItem.PartionGoodsDate, _tmpItem.OperCount, _tmpItem.AccountDirectionId_To, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId, _tmpItem.JuridicalId_basis_To, _tmpItem.BusinessId_To, _tmpItem.isPartionCount, _tmpItem.isPartionSumm, _tmpItem.isPartionDate, _tmpItem.PartionGoodsId FROM _tmpItem;
      -- для теста - Child
-     -- RETURN QUERY SELECT _tmpItemChil.MovementItemId_Parent, _tmpItemChild.MovementItemId, _tmpItemChild.MovementId, _tmpItemChild.OperDate, _tmpItemChild.UnitId_From, _tmpItemChild.PersonalId_From, _tmpItemChild.ContainerId_GoodsFrom, _tmpItemChild.GoodsId, _tmpItemChild.GoodsKindId, _tmpItemChild.AssetId, _tmpItemChild.PartionGoods, _tmpItemChild.PartionGoodsDate, _tmpItemChild.OperCount, _tmpItemChild.AccountDirectionId_From, _tmpItemChild.InfoMoneyDestinationId, _tmpItemChild.InfoMoneyId, _tmpItemChild.isPartionCount, _tmpItemChild.isPartionSumm, _tmpItemChild.isPartionDate, _tmpItemChild.PartionGoodsId FROM _tmpItemChild;
+     -- RETURN QUERY SELECT _tmpItemChild.MovementItemId_Parent, _tmpItemChild.MovementItemId, _tmpItemChild.MovementId, _tmpItemChild.OperDate, _tmpItemChild.UnitId_From, _tmpItemChild.PersonalId_From, _tmpItemChild.ContainerId_GoodsFrom, _tmpItemChild.GoodsId, _tmpItemChild.GoodsKindId, _tmpItemChild.AssetId, _tmpItemChild.PartionGoods, _tmpItemChild.PartionGoodsDate, _tmpItemChild.OperCount, _tmpItemChild.AccountDirectionId_From, _tmpItemChild.InfoMoneyDestinationId, _tmpItemChild.InfoMoneyId, _tmpItemChild.isPartionCount, _tmpItemChild.isPartionSumm, _tmpItemChild.isPartionDate, _tmpItemChild.PartionGoodsId FROM _tmpItemChild;
 
 
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -346,7 +347,7 @@ BEGIN
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-     -- определяется ContainerId_GoodsTo для Child-элементы количественного учета
+     -- определяется ContainerId_GoodsFrom для Child-элементы количественного учета
      UPDATE _tmpItemChild SET ContainerId_GoodsFrom =
                                              CASE WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                                           -- 0)Товар 1)Подразделение 2)!Партия товара!
@@ -476,7 +477,7 @@ BEGIN
 
 
      -- самое интересное: заполняем таблицу - суммовые Child-элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItemSumm (MovementItemId_Parent, MovementItemId, ContainerId_From, OperSumm, InfoMoneyId_Detail_From)
+     INSERT INTO _tmpItemSummChild (MovementItemId_Parent, MovementItemId, ContainerId_From, OperSumm, InfoMoneyId_Detail_From)
         SELECT
               _tmpItemChild.MovementItemId_Parent
             , _tmpItemChild.MovementItemId
@@ -524,12 +525,12 @@ BEGIN
                                                  , inDescId:= zc_MIContainer_Summ()
                                                  , inMovementId:= MovementId
                                                  , inMovementItemId:= _tmpItemChild.MovementItemId
-                                                 , inContainerId:= ContainerId_From
+                                                 , inContainerId:= _tmpItemSummChild.ContainerId_From
                                                  , inAmount:= -OperSumm
                                                  , inOperDate:= OperDate
                                                   )
      FROM _tmpItemChild
-          JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItemChild.MovementItemId;
+          JOIN _tmpItemSummChild ON _tmpItemSummChild.MovementItemId = _tmpItemChild.MovementItemId;
 
              -- формируются Проводки для суммового учета + Аналитика <элемент с/с> - Кому
      PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
@@ -721,7 +722,7 @@ BEGIN
                                                  , inOperDate:= OperDate
                                                   )
      FROM _tmpItem
-          JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId_Parent = _tmpItem.MovementItemId
+          JOIN _tmpItemSummChild ON _tmpItemSummChild.MovementItemId_Parent = _tmpItem.MovementItemId
      GROUP BY _tmpItem.MovementItemId, MovementId, OperDate, UnitId_To, PersonalId_To, BranchId_To
             , ContainerId_GoodsTo, GoodsId, GoodsKindId, AssetId
             , AccountDirectionId_To, InfoMoneyDestinationId, InfoMoneyId, InfoMoneyId_Detail_From
@@ -741,10 +742,11 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.07.13                                        * ! finich !
  20.07.13                                        *
 */
 
 -- тест
--- SELECT * FROM gpUnComplete_Movement (inMovementId:= 159890, inSession:= '2')
--- SELECT * FROM gpComplete_Movement_ProductionUnion (inMovementId:= 159890, inSession:= '2')
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 159890, inSession:= '2')
+-- SELECT * FROM gpUnComplete_Movement (inMovementId:= 161435, inSession:= '2')
+-- SELECT * FROM gpComplete_Movement_ProductionUnion (inMovementId:= 161435, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 161435, inSession:= '2')

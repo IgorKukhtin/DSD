@@ -206,7 +206,7 @@ BEGIN
                          WHEN COALESCE (MIString_PartionGoodsCalc.ValueData, '') <> '' THEN MIString_PartionGoodsCalc.ValueData
                          ELSE ''
                     END AS PartionGoods
-                  , Movement.OperDate AS PartionGoodsDate
+                  , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate
  
                   , MovementItem.Amount AS OperCount
 
@@ -268,6 +268,9 @@ BEGIN
                    LEFT JOIN MovementItemString AS MIString_PartionGoodsCalc
                                                 ON MIString_PartionGoodsCalc.MovementItemId = MovementItem.Id
                                                AND MIString_PartionGoodsCalc.DescId = zc_MIString_PartionGoodsCalc()
+                   LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                              ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
+                                             AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
 
                    LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                 ON MovementLinkObject_From.MovementId = MovementItem.MovementId
@@ -329,6 +332,9 @@ BEGIN
                 AND Movement.DescId = zc_Movement_Income()
                 AND Movement.StatusId = zc_Enum_Status_UnComplete()
              ) AS _tmp;
+
+     -- !!!
+     -- IF NOT EXISTS (SELECT MovementItemId FROM _tmpItem) THEN RETURN; END IF:
 
 
      -- Расчет Итоговой суммы по Контрагенту
@@ -789,7 +795,7 @@ LANGUAGE PLPGSQL VOLATILE;
  19.07.13                                        * all
  12.07.13                                        * add PartionGoods
  11.07.13                                        * add ObjectCost
- 04.07.13                                        * !!! finich !!!
+ 04.07.13                                        * ! finich !
  02.07.13                                        *
 */
 

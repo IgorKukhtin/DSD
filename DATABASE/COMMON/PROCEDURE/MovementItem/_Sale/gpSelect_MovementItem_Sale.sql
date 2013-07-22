@@ -3,7 +3,7 @@
 -- DROP FUNCTION gpSelect_MovementItem_Sale (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Sale(
-    IN inMovementId  Integer      , -- ключ Документа Продажа
+    IN inMovementId  Integer      , -- ключ Документа
     IN inShowAll     Boolean      , -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
@@ -12,9 +12,10 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , PartionGoods TVarChar, GoodsKindName  TVarChar
              , AssetId Integer, AssetName TVarChar
              , AmountSumm TFloat, isErased Boolean
-             )
+              )
 AS
 $BODY$
+  DECLARE vbOperDate TDateTime;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -23,6 +24,8 @@ BEGIN
      -- inShowAll:= TRUE;
 
      IF inShowAll THEN 
+
+     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
 
      RETURN QUERY 
        SELECT
@@ -34,8 +37,8 @@ BEGIN
            , CAST (NULL AS TFloat) AS Amount
            , CAST (NULL AS TFloat) AS AmountPartner
 
-           , CAST (NULL AS TFloat) AS Price
-           , CAST (NULL AS TFloat) AS CountForPrice
+           , CAST (lfObjectHistory_PriceListItem.ValuePrice AS TFloat) AS Price
+           , CAST (1 AS TFloat) AS CountForPrice
 
            , CAST (NULL AS TFloat) AS HeadCount
 
@@ -66,6 +69,9 @@ BEGIN
                                              ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
+
+            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= vbOperDate)
+                   AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = Object_Goods.Id
 
        WHERE Object_Goods.DescId = zc_Object_Goods()
          AND (MILinkObject_GoodsKind.ObjectId IS NULL OR (MovementItem.MovementId IS NULL AND lfObject_GoodsByGoodsKind.GoodsId IS NULL))
@@ -207,6 +213,7 @@ ALTER FUNCTION gpSelect_MovementItem_Sale (Integer, Boolean, TVarChar) OWNER TO 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.07.13                                        * add lfSelect_ObjectHistory_PriceListItem
  18.07.13         * add Object_Asset               
  13.07.13         *
 

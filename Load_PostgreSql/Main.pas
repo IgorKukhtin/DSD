@@ -825,7 +825,9 @@ begin
         Add('                                                                        when fCheckGoodsParentID(2632,Goods.ParentId) =zc_rvYes() then 10102'); // !!!СО!!! - 10102		Основное сырье Мясное сырье Свинина
         Add('                                                                        when fCheckGoodsParentID(2691,Goods.ParentId) =zc_rvYes() then 10103'); // СО-ГОВЯДИНА ПРОДАЖА маг - 10103		Основное сырье Мясное сырье Говядина
         Add('                                                                        when Goods.Id in (2800) then 10104'); // КУРЫ-ГРИЛЬ* - 10104		Основное сырье Мясное сырье Курица
-        Add('                                                                        when Goods.Id in (3039) then 10103'); // КУРЫ-ГРИЛЬ* - 10103		Основное сырье Мясное сырье Говядина
+        Add('                                                                        when Goods.Id in (3039) then 10103'); // ДОНЕР - КЕБАБ - 10103		Основное сырье Мясное сырье Говядина
+        Add('                                                                        when Goods.Id in (17) then 10103'); // Гост СЫРЬЕ - К-3 - 10103		Основное сырье Мясное сырье Говядина
+        Add('                                                                        when Goods.Id in (538) then 10102'); // УДАЛЕННЫЕ П/К - 10102		Основное сырье Мясное сырье Свинина
         Add('                                                                        when fCheckGoodsParentID(3447,Goods.ParentId) =zc_rvYes() then 10102'); // !!!СО-НА ПРОДАЖУ!!! - 10102		Основное сырье Мясное сырье Свинина
 
         Add('                                                                        when fCheckGoodsParentID(3217,Goods.ParentId) =zc_rvYes() then 21301'); // СО-ЭМУЛЬСИИ - 10102		Общефирменные Незавершенное производство Незавершенное производство
@@ -3110,7 +3112,7 @@ begin
            +'  and Id_Postgres is not null'
            +'  and Bill.BillKind=zc_bkIncomeToUnit()'
            );
-        Add('order by ObjectId');
+        Add('order by OperDate,ObjectId');
         Open;
         //
         fStop:=cbOnlyOpen.Checked;
@@ -3614,7 +3616,7 @@ begin
         Add('  and FromId_Postgres <> 0');
         Add('  and ToId_Postgres <> 0');
 
-        Add('order by ObjectId');
+        Add('order by OperDate,ObjectId');
         Open;
         //
         fStop:=cbOnlyOpen.Checked;
@@ -3846,7 +3848,7 @@ begin
         Add('     left outer join dba._pgPersonal as pgPersonalTo on pgPersonalTo.Id=UnitTo.PersonalId_Postgres'
            +'                                                      and pgPersonalTo.Id2_Postgres>0'
            +'                                                      and UnitTo.ParentId=4137'); // МО ЛИЦА-ВСЕ
-        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
+        Add('zzz where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'  and Bill.BillKind in (zc_bkSendUnitToUnit())'
            +'  and  (('
            +'  and isnull(UnitFrom.ParentId,0)<>4137' // МО ЛИЦА-ВСЕ
@@ -3866,7 +3868,7 @@ begin
            +'     or ('
            +'       ))'
            );
-        Add('order by ObjectId');
+        Add('order by OperDate,ObjectId');
         Open;
         //
         fStop:=cbOnlyOpen.Checked;
@@ -4682,7 +4684,7 @@ begin
         Add('  and FromId_Postgres <> 0');
         Add('  and ToId_Postgres <> 0');
 
-        Add('order by ObjectId');
+        Add('order by OperDate,ObjectId');
         Open;
         //
         fStop:=cbOnlyOpen.Checked;
@@ -5012,7 +5014,7 @@ begin
         Add('  and FromId_Postgres <> 0');
         Add('  and ToId_Postgres <> 0');
 
-        Add('order by ObjectId');
+        Add('order by OperDate,ObjectId');
         Open;
         //
         fStop:=cbOnlyOpen.Checked;

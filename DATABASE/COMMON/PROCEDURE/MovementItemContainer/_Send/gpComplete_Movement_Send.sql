@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpComplete_Movement_Send(
     IN inSession           TVarChar   -- сессия пользователя
 )                              
 RETURNS VOID
--- RETURNS TABLE (MovementItemId Integer, MovementId Integer, OperDate TDateTime, UnitId_From Integer, PersonalId_From Integer, UnitId_To Integer, PersonalId_To Integer, BranchId_To Integer, ContainerId_GoodsFrom Integer, ContainerId_GoodsTo Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, OperCount TFloat, AccountDirectionId_To Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, JuridicalId_basis_To Integer, BusinessId_To Integer, isPartionCount Boolean, isPartionSumm Boolean, PartionGoodsId_From Integer, PartionGoodsId_To Integer)
+-- RETURNS TABLE (MovementItemId Integer, MovementId Integer, OperDate TDateTime, UnitId_From Integer, PersonalId_From Integer, UnitId_To Integer, PersonalId_To Integer, BranchId_To Integer, ContainerId_GoodsFrom Integer, ContainerId_GoodsTo Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate_From TDateTime, PartionGoodsDate_To TDateTime, OperCount TFloat, AccountDirectionId_From Integer, AccountDirectionId_To Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, JuridicalId_basis_To Integer, BusinessId_To Integer, isPartionCount Boolean, isPartionSumm Boolean, isPartionDate_From Boolean, isPartionDate_To Boolean, PartionGoodsId_From Integer, PartionGoodsId_To Integer)
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -98,7 +98,7 @@ BEGIN
                   , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
                   , COALESCE (MIString_PartionGoods.ValueData, '') AS PartionGoods
                   , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate_From
-                  , CASE WHEN COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) = zc_DateEnd() THEN Movement.OperDate ELSE MIDate_PartionGoods.ValueData END AS PartionGoodsDate_To
+                  , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate_To
 
                   , MovementItem.Amount AS OperCount
 
@@ -234,7 +234,7 @@ BEGIN
 
 
      -- для теста
-     -- RETURN QUERY SELECT _tmpItem.MovementItemId, _tmpItem.MovementId, _tmpItem.OperDate, _tmpItem.UnitId_From, _tmpItem.PersonalId_From, _tmpItem.UnitId_To, _tmpItem.PersonalId_To, _tmpItem.BranchId_To, _tmpItem.ContainerId_GoodsFrom, _tmpItem.ContainerId_GoodsTo, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.AssetId, _tmpItem.PartionGoods, _tmpItem.OperCount, _tmpItem.AccountDirectionId_To, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId, _tmpItem.JuridicalId_basis_To, _tmpItem.BusinessId_To, _tmpItem.isPartionCount, _tmpItem.isPartionSumm, _tmpItem.PartionGoodsId_From, _tmpItem.PartionGoodsId_To FROM _tmpItem;
+     -- RETURN QUERY SELECT _tmpItem.MovementItemId, _tmpItem.MovementId, _tmpItem.OperDate, _tmpItem.UnitId_From, _tmpItem.PersonalId_From, _tmpItem.UnitId_To, _tmpItem.PersonalId_To, _tmpItem.BranchId_To, _tmpItem.ContainerId_GoodsFrom, _tmpItem.ContainerId_GoodsTo, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.AssetId, _tmpItem.PartionGoods, _tmpItem.PartionGoodsDate_From, _tmpItem.PartionGoodsDate_To, _tmpItem.OperCount, _tmpItem.AccountDirectionId_From, _tmpItem.AccountDirectionId_To, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId, _tmpItem.JuridicalId_basis_To, _tmpItem.BusinessId_To, _tmpItem.isPartionCount, _tmpItem.isPartionSumm, _tmpItem.isPartionDate_From, _tmpItem.isPartionDate_To, _tmpItem.PartionGoodsId_From, _tmpItem.PartionGoodsId_To FROM _tmpItem;
 
 
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
