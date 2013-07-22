@@ -346,8 +346,16 @@ object MainForm: TMainForm
       Action = actGoodsKind
       Category = 0
     end
-    object bbBalance: TdxBarButton
-      Action = actBalance
+    object bbReportBalance: TdxBarButton
+      Action = actReport_Balance
+      Category = 0
+    end
+    object bbReportProfitLoss: TdxBarButton
+      Action = actReport_ProfitLoss
+      Category = 0
+    end
+    object bbReportHistoryCost: TdxBarButton
+      Action = actReport_HistoryCost
       Category = 0
     end
     object bbReports: TdxBarSubItem
@@ -357,7 +365,7 @@ object MainForm: TMainForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbBalance'
+          ItemName = 'bbReportBalance'
         end>
     end
     object bbBank: TdxBarButton
@@ -518,10 +526,31 @@ object MainForm: TMainForm
   object ActionList: TActionList
     Left = 192
     Top = 48
+    object actReport_Balance: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      Caption = #1041#1072#1083#1072#1085#1089
+      FormName = 'TReport_BalanceForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_ProfitLoss: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      Caption = #1054#1090#1095#1077#1090' '#1086' '#1055#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1059#1073#1099#1090#1082#1072#1093
+      FormName = 'TReport_ProfitLossForm'
+      GuiParams = <>
+      isShowModal = False
+    end
     object actIncome: TdsdOpenForm
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       Caption = #1055#1088#1080#1093#1086#1076#1085#1099#1077' '#1085#1072#1082#1083#1072#1076#1085#1099#1077
       FormName = 'TIncomeJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_HistoryCost: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      Caption = #1057#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100
+      FormName = 'TReport_HistoryCostForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -686,13 +715,6 @@ object MainForm: TMainForm
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
       Hint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
       FormName = 'TUnitForm'
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actBalance: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099
-      Caption = #1041#1072#1083#1072#1085#1089
-      FormName = 'TBalanceForm'
       GuiParams = <>
       isShowModal = False
     end

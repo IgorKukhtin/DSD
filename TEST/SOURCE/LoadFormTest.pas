@@ -306,8 +306,12 @@ end;
 
 procedure TLoadFormTest.LoadReportFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBalanceForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TBalanceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_BalanceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_BalanceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_ProfitLossForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HistoryCostForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_HistoryCostForm');
 end;
 
 procedure TLoadFormTest.LoadUnitFormTest;

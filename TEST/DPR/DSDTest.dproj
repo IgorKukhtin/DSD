@@ -225,8 +225,8 @@
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdAddOn.pas"/>
 			<DCCReference Include="..\SOURCE\dbMovementCompleteTest.pas"/>
-			<DCCReference Include="..\..\Forms\Report\Balance.pas">
-				<Form>ParentForm1</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_Balance.pas">
+				<Form>Report_BalanceForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\LoadReportTest.pas"/>
 			<DCCReference Include="..\SOURCE\dbObjectHistoryTest.pas"/>
@@ -398,6 +398,12 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\ProductionUnionJournal.pas">
 				<Form>ProductionUnionJournalForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_ProfitLoss.pas">
+				<Form>Report_ProfitLossForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_HistoryCost.pas">
+				<Form>Report_HistoryCostForm</Form>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

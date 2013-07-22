@@ -63,8 +63,8 @@ type
     actCash: TdsdOpenForm;
     actCurrency: TdsdOpenForm;
     bbGoodsKind: TdxBarButton;
-    actBalance: TdsdOpenForm;
-    bbBalance: TdxBarButton;
+    actReport_Balance: TdsdOpenForm;
+    bbReportBalance: TdxBarButton;
     bbReports: TdxBarSubItem;
     bbBank: TdxBarButton;
     actPrisceList: TdsdOpenForm;
@@ -127,6 +127,10 @@ type
     bbInventory: TdxBarButton;
     bbProductionSeparate: TdxBarButton;
     bbProductionUnion: TdxBarButton;
+    actReport_HistoryCost: TdsdOpenForm;
+    bbReportProfitLoss: TdxBarButton;
+    bbReportHistoryCost: TdxBarButton;
+    actReport_ProfitLoss: TdsdOpenForm;
     procedure FormCreate(Sender: TObject);
   private
     procedure OnException(Sender: TObject; E: Exception);
