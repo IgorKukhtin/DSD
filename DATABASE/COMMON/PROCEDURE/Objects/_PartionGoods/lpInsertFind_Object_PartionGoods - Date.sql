@@ -8,22 +8,33 @@ CREATE OR REPLACE FUNCTION lpInsertFind_Object_PartionGoods(
   RETURNS Integer AS
 $BODY$
    DECLARE vbPartionGoodsId Integer;
-   DECLARE vbOperDate TVarChar;
+   DECLARE vbOperDate_str   TVarChar;
 BEGIN
 
-     -- форматируем в строчку
-     vbOperDate:= COALESCE (TO_CHAR (inOperDate, 'DD.MM.YYYY'), '');
+     IF inOperDate = zc_DateEnd()
+     THEN
+         vbOperDate_str:= '';
+         inOperDate:= NULL;
+     ELSE
+         -- форматируем в строчку
+         vbOperDate_str:= COALESCE (TO_CHAR (inOperDate, 'DD.MM.YYYY'), '');
+     END IF;
 
      -- Находим 
-     vbPartionGoodsId:= (SELECT Id FROM Object WHERE ValueData = vbOperDate AND DescId = zc_Object_PartionGoods());
+     vbPartionGoodsId:= (SELECT Id FROM Object WHERE ValueData = vbOperDate_str AND DescId = zc_Object_PartionGoods());
 
      -- Если не нашли
      IF COALESCE (vbPartionGoodsId, 0) = 0
      THEN
          -- сохранили <Объект>
-         vbPartionGoodsId := lpInsertUpdate_Object (vbPartionGoodsId, zc_Object_PartionGoods(), 0, vbOperDate);
-         -- сохранили
-         PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_PartionGoods_Value(), vbPartionGoodsId, inOperDate);
+         vbPartionGoodsId := lpInsertUpdate_Object (vbPartionGoodsId, zc_Object_PartionGoods(), 0, vbOperDate_str);
+
+         IF vbOperDate_str <> ''
+         THEN
+             -- сохранили
+              PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_PartionGoods_Value(), vbPartionGoodsId, inOperDate);
+         END IF;
+
      END IF;
 
      -- Возвращаем значение
@@ -38,7 +49,8 @@ ALTER FUNCTION lpInsertFind_Object_PartionGoods (TDateTime) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 19.07.13         *  rename zc_ObjectDate_            
+ 20.07.13                                        * vbOperDate_str
+ 19.07.13         * rename zc_ObjectDate_            
  12.07.13                                        * разделил на 2 проц-ки
  02.07.13                                        * сначала Find, потом если надо Insert
  02.07.13         *

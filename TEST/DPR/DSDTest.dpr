@@ -81,7 +81,7 @@ uses
   IncomeJournal in '..\..\Forms\IncomeJournal.pas' {ParentForm2},
   dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas',
   dbMovementCompleteTest in '..\SOURCE\dbMovementCompleteTest.pas',
-  Balance in '..\..\Forms\Report\Balance.pas' {ParentForm1},
+  Report_Balance in '..\..\Forms\Report\Report_Balance.pas' {Report_BalanceForm},
   LoadReportTest in '..\SOURCE\LoadReportTest.pas',
   dbObjectHistoryTest in '..\SOURCE\dbObjectHistoryTest.pas',
   InfoMoneyGroup in '..\..\Forms\InfoMoneyGroup.pas' {InfoMoneyGroupForm},
@@ -146,7 +146,13 @@ uses
   InventoryJournal in '..\..\Forms\InventoryJournal.pas' {InventoryJournalForm},
   Inventory in '..\..\Forms\Inventory.pas' {InventoryForm},
   ProductionSeparateJournal in '..\..\Forms\ProductionSeparateJournal.pas' {ProductionSeparateJournalForm},
-  ProductionUnionJournal in '..\..\Forms\ProductionUnionJournal.pas' {ProductionUnionJournalForm};
+  ProductionUnionJournal in '..\..\Forms\ProductionUnionJournal.pas' {ProductionUnionJournalForm},
+  Report_ProfitLoss in '..\..\Forms\Report\Report_ProfitLoss.pas' {Report_ProfitLossForm},
+  Report_HistoryCost in '..\..\Forms\Report\Report_HistoryCost.pas' {Report_HistoryCostForm},
+  ProductionUnion in '..\..\Forms\ProductionUnion.pas' {ProductionUnionForm},
+  ProductionSeparate in '..\..\Forms\ProductionSeparate.pas' {ProductionSeparateForm},
+  Contract in '..\..\Forms\Contract.pas' {ContractForm},
+  ContractEdit in '..\..\Forms\ContractEdit.pas' {ContractEditForm};
 
 {$R *.RES}
 

@@ -2,7 +2,7 @@ object MainForm: TMainForm
   Left = 202
   Top = 180
   Caption = 'MainForm'
-  ClientHeight = 715
+  ClientHeight = 720
   ClientWidth = 1240
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,7 +19,7 @@ object MainForm: TMainForm
     Left = 0
     Top = 0
     Width = 462
-    Height = 659
+    Height = 664
     Align = alClient
     DataSource = DataSource
     TabOrder = 0
@@ -31,12 +31,13 @@ object MainForm: TMainForm
   end
   object ButtonPanel: TPanel
     Left = 0
-    Top = 659
+    Top = 664
     Width = 1240
     Height = 56
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 659
     object Gauge: TGauge
       Left = 0
       Top = 0
@@ -120,10 +121,11 @@ object MainForm: TMainForm
     Left = 462
     Top = 0
     Width = 321
-    Height = 659
+    Height = 664
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitHeight = 659
     object cbGoodsGroup: TCheckBox
       Tag = 10
       Left = 15
@@ -298,7 +300,6 @@ object MainForm: TMainForm
       Width = 225
       Height = 17
       Caption = '5.2. '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' - '#1094#1077#1085#1099
-      Enabled = False
       TabOrder = 16
     end
     object cbGoodsProperty: TCheckBox
@@ -423,11 +424,12 @@ object MainForm: TMainForm
     Left = 783
     Top = 0
     Width = 232
-    Height = 659
+    Height = 664
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 3
     OnClick = DocumentPanelClick
+    ExplicitHeight = 659
     object Label1: TLabel
       Left = 6
       Top = 22
@@ -675,11 +677,12 @@ object MainForm: TMainForm
     Left = 1015
     Top = 0
     Width = 225
-    Height = 659
+    Height = 664
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 4
     OnClick = DocumentPanelClick
+    ExplicitHeight = 659
     object Label3: TLabel
       Left = 6
       Top = 22
@@ -815,6 +818,38 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 8
+    end
+    object cbCompleteProductionUnion: TCheckBox
+      Tag = 30
+      Left = 15
+      Top = 251
+      Width = 194
+      Height = 17
+      Caption = '4.1. '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 9
+      OnClick = cbCompleteIncomeClick
+    end
+    object cbCompleteProductionSeparate: TCheckBox
+      Tag = 30
+      Left = 15
+      Top = 274
+      Width = 194
+      Height = 17
+      Caption = '4.2. '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 10
+      OnClick = cbCompleteIncomeClick
     end
   end
   object DataSource: TDataSource

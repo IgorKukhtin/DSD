@@ -18,6 +18,7 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdateUnit(Id, Code: Integer; Name: String;
+                              PartionDate: Boolean;
                               ParentId, BranchId, BusinessId, JuridicalId,
                               AccountDirectionId, ProfitLossDirectionId: integer): integer;
     constructor Create; override;
@@ -57,14 +58,14 @@ begin
     end;
     // теперь делаем ссылку на себя и проверяем ошибку
     try
-      ObjectTest.InsertUpdateUnit(Id, -1, 'Группа 1 - тест', Id, 0, 0, 0, 0, 0);
+      ObjectTest.InsertUpdateUnit(Id, -1, 'Группа 1 - тест', true, Id, 0, 0, 0, 0, 0);
       Check(false, 'Нет сообщение об ошибке');
     except
 
     end;
     // добавляем еще группу 2
     // делаем у группы 2 ссылку на группу 1
-    Id2 := ObjectTest.InsertUpdateUnit(0, -2, 'Группа 2 - тест', Id, 0, 0, 0, 0, 0);
+    Id2 := ObjectTest.InsertUpdateUnit(0, -2, 'Группа 2 - тест', true, Id, 0, 0, 0, 0, 0);
     try
       with ObjectTest.GetRecord(Id) do begin
            Check(FieldByName('isLeaf').AsBoolean = false, 'Не правильно установлено свойство isLeaf Id = ' + IntToStr(Id));
@@ -74,14 +75,14 @@ begin
       end;
       // теперь ставим ссылку у группы 1 на группу 2 и проверяем ошибку
       try
-        ObjectTest.InsertUpdateUnit(Id, -1, 'Группа 1 - тест', Id2, 0, 0, 0, 0, 0);
+        ObjectTest.InsertUpdateUnit(Id, -1, 'Группа 1 - тест', true, Id2, 0, 0, 0, 0, 0);
         Check(false, 'Нет сообщение об ошибке');
       except
 
       end;
       // добавляем еще группу 3
       // делаем у группы 3 ссылку на группу 2
-      Id3 := ObjectTest.InsertUpdateUnit(0, -3, 'Группа 3 - тест', Id2, 0, 0, 0, 0, 0);
+      Id3 := ObjectTest.InsertUpdateUnit(0, -3, 'Группа 3 - тест',true, Id2, 0, 0, 0, 0, 0);
       try
         with ObjectTest.GetRecord(Id2) do begin
            Check(FieldByName('isLeaf').AsBoolean = false, 'Не правильно установлено свойство isLeaf Id = ' + IntToStr(Id2));
@@ -92,20 +93,20 @@ begin
         // группа 2 уже ссылка на группу 1
         // делаем у группы 1 ссылку на группу 3 и проверяем ошибку
         try
-          ObjectTest.InsertUpdateUnit(Id, -1, 'Группа 1 - тест', Id3, 0, 0, 0, 0, 0);
+          ObjectTest.InsertUpdateUnit(Id, -1, 'Группа 1 - тест',true, Id3, 0, 0, 0, 0, 0);
           Check(false, 'Нет сообщение об ошибке');
         except
 
         end;
         Check((ObjectTest.GetDataSet.RecordCount = RecordCount + 3), 'Количество записей не изменилось');
-        ObjectTest.InsertUpdateUnit(Id3, -3, 'Группа 3 - тест', 0, 0, 0, 0, 0, 0);
+        ObjectTest.InsertUpdateUnit(Id3, -3, 'Группа 3 - тест', true,0, 0, 0, 0, 0, 0);
         with ObjectTest.GetRecord(Id2) do begin
            Check(FieldByName('isLeaf').AsBoolean, 'Не правильно установлено свойство isLeaf Id = ' + IntToStr(Id2));
         end;
       finally
         ObjectTest.Delete(Id3);
       end;
-      ObjectTest.InsertUpdateUnit(Id2, -3, 'Группа 3 - тест', 0, 0, 0, 0, 0, 0);
+      ObjectTest.InsertUpdateUnit(Id2, -3, 'Группа 3 - тест', true, 0, 0, 0, 0, 0, 0);
       with ObjectTest.GetRecord(Id) do begin
          Check(FieldByName('isLeaf').AsBoolean, 'Не правильно установлено свойство isLeaf Id = ' + IntToStr(Id));
       end;
@@ -130,11 +131,12 @@ end;
 
 function TUnit.InsertDefault: integer;
 begin
-  result := InsertUpdateUnit(0, 1, 'Подразделение', 0, BranchTest.GetDefault, 0, 0, 0, 0);
+  result := InsertUpdateUnit(0, 1, 'Подразделение',true, 0, BranchTest.GetDefault, 0, 0, 0, 0);
   inherited;
 end;
 
 function TUnit.InsertUpdateUnit(Id, Code: Integer; Name: String;
+                                    PartionDate: Boolean;
                                     ParentId, BranchId, BusinessId, JuridicalId,
                                     AccountDirectionId, ProfitLossDirectionId: integer): integer;
 begin
@@ -142,6 +144,7 @@ begin
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inCode', ftInteger, ptInput, Code);
   FParams.AddParam('inName', ftString, ptInput, Name);
+  FParams.AddParam('inPartionDate', ftBoolean, ptInput, PartionDate);
   FParams.AddParam('inParentId', ftInteger, ptInput, ParentId);
   FParams.AddParam('inBranchId', ftInteger, ptInput, BranchId);
 

@@ -105,7 +105,8 @@ type
   private
     function InsertDefault: integer; override;
   public
-    function InsertUpdateContract(const Id: integer; InvNumber, Comment: string): integer;
+    function InsertUpdateContract(const Id: integer; InvNumber, Comment: string;
+                                        SigningDate, StartDate, EndDate: TDateTime ): integer;
     constructor Create; override;
   end;
 
@@ -1110,16 +1111,21 @@ end;
 
 function TContractTest.InsertDefault: integer;
 begin
-  result := InsertUpdateContract(0, '123456', 'comment');
+  result := InsertUpdateContract(0, '123456', 'comment', date,date,date);
 end;
 
 function TContractTest.InsertUpdateContract(const Id: integer; InvNumber,
-  Comment: string): integer;
+  Comment: string; SigningDate, StartDate, EndDate: TDateTime): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
   FParams.AddParam('inComment', ftString, ptInput, Comment);
+
+  FParams.AddParam('inSigningDate', ftDateTime, ptInput, SigningDate);
+  FParams.AddParam('inStartDate', ftDateTime, ptInput, StartDate);
+  FParams.AddParam('inEndDate', ftDateTime, ptInput, EndDate);
+
   result := InsertUpdate(FParams);
 end;
 

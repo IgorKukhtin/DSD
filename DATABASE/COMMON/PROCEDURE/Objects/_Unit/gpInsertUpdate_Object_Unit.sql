@@ -1,18 +1,19 @@
--- Function: gpInsertUpdate_Object_Unit()
+-- Function: gpInsertUpdate_Object_Unit
 
--- DROP FUNCTION gpInsertUpdate_Object_Unit();
+-- DROP FUNCTION gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
- INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
-    IN inCode                    Integer   ,    -- Код объекта <Подразделение>
-    IN inName                    TVarChar  ,    -- Название объекта <Подразделение>
-    IN inParentId                Integer   ,    -- ссылка на подразделение
-    IN inBranchId                Integer   ,    -- ссылка на филиал
-    IN inBusinessId              Integer   ,    -- ссылка на бизнес
-    IN inJuridicalId             Integer   ,    -- ссылка на Юридические лицо
-    IN inAccountDirectionId      Integer   ,    -- ссылка на Аналитики управленческих счетов
-    IN inProfitLossDirectionId   Integer   ,    -- ссылка на Аналитики статей отчета ПиУ
-    IN inSession                 TVarChar       -- сессия пользователя
+ INOUT ioId                      Integer   , -- ключ объекта <Подразделение>
+    IN inCode                    Integer   , -- Код объекта <Подразделение>
+    IN inName                    TVarChar  , -- Название объекта <Подразделение>
+    IN inPartionDate             Boolean   , -- Партии даты в учете
+    IN inParentId                Integer   , -- ссылка на подразделение
+    IN inBranchId                Integer   , -- ссылка на филиал
+    IN inBusinessId              Integer   , -- ссылка на бизнес
+    IN inJuridicalId             Integer   , -- ссылка на Юридические лицо
+    IN inAccountDirectionId      Integer   , -- ссылка на Аналитики управленческих счетов
+    IN inProfitLossDirectionId   Integer   , -- ссылка на Аналитики статей отчета ПиУ
+    IN inSession                 TVarChar    -- сессия пользователя
 )
   RETURNS Integer AS
 $BODY$
@@ -44,6 +45,8 @@ BEGIN
 
    -- сохранили объект
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Unit(), vbCode_calc, inName);
+   -- сохранили свойство <Партии даты в учете>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Unit_PartionDate(), ioId, inPartionDate);
    -- сохранили связь с <Подразделения>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Parent(), ioId, inParentId);
    -- сохранили связь с <Филиалы>
@@ -60,15 +63,15 @@ BEGIN
    -- Если добавляли подразделение
    IF vbOldId <> ioId THEN
       -- Установить свойство лист\папка у себя
-      PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_isLeaf(), ioId, true);
+      PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_isLeaf(), ioId, TRUE);
    END IF;
 
    -- Точно теперь inParentId стал папкой 
-   IF COALESCE(inParentId, 0) <> 0 THEN
-      PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_isLeaf(), inParentId, false);
+   IF COALESCE (inParentId, 0) <> 0 THEN
+      PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_isLeaf(), inParentId, FALSE);
    END IF;
 
-   IF COALESCE(vbOldParentId, 0) <> 0 THEN
+   IF COALESCE (vbOldParentId, 0) <> 0 THEN
       PERFORM lpUpdate_isLeaf(vbOldParentId, zc_ObjectLink_Unit_Parent());
    END IF;
 
@@ -79,18 +82,18 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, tvarchar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Unit (Integer, Integer, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 04.03.13          * vbCode_calc              
- 13.05.13                                        * rem lpCheckUnique_Object_ValueData
- 14.06.13          *              
+ 20.07.13                                        * add inPartionDate
  16.06.13                                        * COALESCE (MAX (ObjectCode), 0)
-
+ 14.06.13          *              
+ 13.05.13                                        * rem lpCheckUnique_Object_ValueData
+ 04.03.13          * vbCode_calc              
 */
 
 -- тест

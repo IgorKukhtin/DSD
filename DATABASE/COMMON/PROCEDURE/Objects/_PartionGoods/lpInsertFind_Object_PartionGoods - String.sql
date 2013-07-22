@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION lpInsertFind_Object_PartionGoods(
 RETURNS Integer AS
 $BODY$
    DECLARE vbPartionGoodsId Integer;
-   DECLARE vbDate           TDateTime;
+   DECLARE vbOperDate       TDateTime;
    DECLARE vbPartnerId      Integer;
    DECLARE vbGoodsId        Integer;
    DECLARE vbValue          TVarChar;
@@ -26,7 +26,7 @@ BEGIN
          -- сохранили <Объект>
          vbPartionGoodsId := lpInsertUpdate_Object (vbPartionGoodsId, zc_Object_PartionGoods(), 0, vbValue);
          -- сохранили
-         PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_PartionGoods_Value(), vbPartionGoodsId, vbDate);
+         PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_PartionGoods_Value(), vbPartionGoodsId, vbOperDate);
          -- сохранили
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_PartionGoods_Partner(), vbPartionGoodsId, vbPartnerId);
          PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_PartionGoods_Goods(), vbPartionGoodsId, vbGoodsId);
@@ -44,10 +44,11 @@ ALTER FUNCTION lpInsertFind_Object_PartionGoods (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.07.13                                        * vbOperDate
  19.07.13         *  rename zc_ObjectDate_              
  12.07.13                                        * разделил на 2 проц-ки
  02.07.13                                        * сначала Find, потом если надо Insert
- 02.07.13          *
+ 02.07.13         *
 */
 
 -- тест

@@ -44,6 +44,13 @@ begin
   ExecFile(ProcedurePath + 'MovementItem\_ProductionUnion\gpInsertUpdate_MI_ProductionUnion_Child.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItem\_ProductionUnion\gpInsertUpdate_MI_ProductionUnion_Master.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItem\_ProductionUnion\gpSelect_MI_ProductionUnion.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\_ProductionUnion\gpSelect_MI_ProductionUnion_Master.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'MovementItem\_ProductionSeparate\gpInsertUpdate_MI_ProductionSeparate_Child.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\_ProductionSeparate\gpInsertUpdate_MI_ProductionSeparate_Master.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\_ProductionSeparate\gpSelect_MI_ProductionSeparate.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\_ProductionSeparate\gpSelect_MI_ProductionSeparate_Master.sql', ZQuery);
+
 
   ExecFile(ProcedurePath + 'MovementItem\_Send\gpInsertUpdate_MovementItem_Send.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItem\_Send\gpSelect_MovementItem_Send.sql', ZQuery);
