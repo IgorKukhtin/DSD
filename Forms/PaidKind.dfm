@@ -1,19 +1,19 @@
 inherited PaidKindForm: TPaidKindForm
   Caption = #1058#1080#1087#1099' '#1086#1087#1083#1072#1090
   ClientHeight = 376
-  ClientWidth = 269
-  ExplicitWidth = 277
+  ClientWidth = 292
+  ExplicitWidth = 300
   ExplicitHeight = 403
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 269
+    Width = 292
     Height = 350
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 390
+    ExplicitWidth = 269
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -28,9 +28,15 @@ inherited PaidKindForm: TPaidKindForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
+      OptionsView.GroupByBox = False
+      OptionsView.HeaderHeight = 40
+      OptionsView.Indicator = True
+      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object clName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 252
       end
     end
@@ -125,6 +131,13 @@ inherited PaidKindForm: TPaidKindForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
     end
+    object dsdChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      Params = <>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ShortCut = 13
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_PaidKind'
@@ -136,5 +149,9 @@ inherited PaidKindForm: TPaidKindForm
     Params = <>
     Left = 152
     Top = 152
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 216
+    Top = 200
   end
 end

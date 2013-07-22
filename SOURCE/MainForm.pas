@@ -17,7 +17,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dxSkinsdxBarPainter;
+  dxSkinXmas2008Blue, dxSkinsdxBarPainter, dsdAddOn, cxPropertiesStore;
 
 type
   TMainForm = class(TForm)
@@ -127,6 +127,8 @@ type
     bbInventory: TdxBarButton;
     bbProductionSeparate: TdxBarButton;
     bbProductionUnion: TdxBarButton;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    cxPropertiesStore: TcxPropertiesStore;
     procedure FormCreate(Sender: TObject);
   private
     procedure OnException(Sender: TObject; E: Exception);
@@ -139,7 +141,7 @@ var
 
 implementation
 
-uses ParentForm, dsdDB, Storage, CommonData, dsdAddOn;
+uses ParentForm, dsdDB, Storage, CommonData;
 
 {$R DevExpressRus.res}
 

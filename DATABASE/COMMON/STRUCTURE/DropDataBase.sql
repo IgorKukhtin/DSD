@@ -1,1 +1,1 @@
-DROP DATABASE dsd;
+DROP DATABASE project;

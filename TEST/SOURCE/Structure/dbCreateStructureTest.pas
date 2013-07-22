@@ -45,7 +45,7 @@ end;
 procedure TdbCreateStructureTest.CreateDataBase;
 begin
   ZConnection.Connected := false;
-  ZConnection.Database := '';
+  ZConnection.Database := 'postgres';
   ZConnection.Connected := true;
   try
     // ≈сли база существует, то сначала надо ее удалить
