@@ -117,8 +117,8 @@ INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_Member', 'Физические лица' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Member');
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_Position', 'Должности' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Position');
-INSERT INTO ObjectDesc (Code, ItemName)
-  SELECT 'zc_Object_Personal', 'Сотрудники' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Personal');
+--INSERT INTO ObjectDesc (Code, ItemName)
+--  SELECT 'zc_Object_Personal', 'Сотрудники' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Personal');
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_AssetGroup', 'Группы основных средств' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_AssetGroup');
 INSERT INTO ObjectDesc (Code, ItemName)

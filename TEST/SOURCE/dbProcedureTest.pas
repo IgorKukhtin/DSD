@@ -70,6 +70,10 @@ begin
   ExecFile(ProcedurePath + 'Movement\_ProductionUnion\gpGet_Movement_ProductionUnion.sql', ZQuery);
   ExecFile(ProcedurePath + 'Movement\_ProductionUnion\gpSelect_Movement_ProductionUnion.sql', ZQuery);
 
+  ExecFile(ProcedurePath + 'Movement\_ProductionSeparate\gpInsertUpdate_Movement_ProductionSeparate.sql', ZQuery);
+  ExecFile(ProcedurePath + 'Movement\_ProductionSeparate\gpGet_Movement_ProductionSeparate.sql', ZQuery);
+  ExecFile(ProcedurePath + 'Movement\_ProductionSeparate\gpSelect_Movement_ProductionSeparate.sql', ZQuery);
+
   ExecFile(ProcedurePath + 'Movement\_Send\gpInsertUpdate_Movement_Send.sql', ZQuery);
   ExecFile(ProcedurePath + 'Movement\_Send\gpGet_Movement_Send.sql', ZQuery);
   ExecFile(ProcedurePath + 'Movement\_Send\gpSelect_Movement_Send.sql', ZQuery);
@@ -85,6 +89,19 @@ begin
   ExecFile(ProcedurePath + 'Movement\_ReturnOut\gpInsertUpdate_Movement_ReturnOut.sql', ZQuery);
   ExecFile(ProcedurePath + 'Movement\_ReturnOut\gpGet_Movement_ReturnOut.sql', ZQuery);
   ExecFile(ProcedurePath + 'Movement\_ReturnOut\gpSelect_Movement_ReturnOut.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'Movement\_ReturnIn\gpInsertUpdate_Movement_ReturnIn.sql', ZQuery);
+  ExecFile(ProcedurePath + 'Movement\_ReturnIn\gpGet_Movement_ReturnIn.sql', ZQuery);
+  ExecFile(ProcedurePath + 'Movement\_ReturnIn\gpSelect_Movement_ReturnIn.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'Movement\_Loss\gpInsertUpdate_Movement_Loss.sql', ZQuery);
+  ExecFile(ProcedurePath + 'Movement\_Loss\gpGet_Movement_Loss.sql', ZQuery);
+  ExecFile(ProcedurePath + 'Movement\_Loss\gpSelect_Movement_Loss.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'Movement\_Inventory\gpInsertUpdate_Movement_Inventory.sql', ZQuery);
+  ExecFile(ProcedurePath + 'Movement\_Inventory\gpGet_Movement_Inventory.sql', ZQuery);
+  ExecFile(ProcedurePath + 'Movement\_Inventory\gpSelect_Movement_Inventory.sql', ZQuery);
+
 end;
 
 procedure TdbProcedureTest.CreateObjectProcedure;

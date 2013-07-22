@@ -59,11 +59,11 @@ BEGIN
 
           LEFT JOIN ObjectDate AS ObjectDate_StartDate 
                                ON ObjectDate_StartDate.ObjectId = Object_ReceiptChild.Id 
-                              AND ObjectDate_StartDate.DescId = zc_ObjectDate_ReceiptChild_StartDate()
+                              AND ObjectDate_StartDate.DescId = zc_ObjectDate_ReceiptChild_Start()
 
           LEFT JOIN ObjectDate AS ObjectDate_EndDate 
                                ON ObjectDate_EndDate.ObjectId = Object_ReceiptChild.Id 
-                              AND ObjectDate_EndDate.DescId = zc_ObjectDate_ReceiptChild_EndDate()
+                              AND ObjectDate_EndDate.DescId = zc_ObjectDate_ReceiptChild_End()
             
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Weight
                                   ON ObjectBoolean_Weight.ObjectId = Object_ReceiptChild.Id 
@@ -90,6 +90,7 @@ ALTER FUNCTION gpSelect_Object_ReceiptChild (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.07.13         * rename zc_ObjectDate_
  09.07.13         * 
 */
 

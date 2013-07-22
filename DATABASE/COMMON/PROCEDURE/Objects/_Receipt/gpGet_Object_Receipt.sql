@@ -140,11 +140,11 @@ BEGIN
 
           LEFT JOIN ObjectDate AS ObjectDate_StartDate 
                                ON ObjectDate_StartDate.ObjectId = Object_Receipt.Id 
-                              AND ObjectDate_StartDate.DescId = zc_ObjectDate_Receipt_StartDate()
+                              AND ObjectDate_StartDate.DescId = zc_ObjectDate_Receipt_Start()
 
           LEFT JOIN ObjectDate AS ObjectDate_EndDate 
                                ON ObjectDate_EndDate.ObjectId = Object_Receipt.Id 
-                              AND ObjectDate_EndDate.DescId = zc_ObjectDate_Receipt_EndDate()
+                              AND ObjectDate_EndDate.DescId = zc_ObjectDate_Receipt_End()
             
           LEFT JOIN ObjectBoolean AS ObjectBoolean_Main
                                   ON ObjectBoolean_Main.ObjectId = Object_Receipt.Id 
@@ -196,7 +196,8 @@ ALTER FUNCTION gpGet_Object_Receipt(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 09.07.13          *              
+ 19.07.13         * rename zc_ObjectDate_
+ 09.07.13         *              
 
 */
 

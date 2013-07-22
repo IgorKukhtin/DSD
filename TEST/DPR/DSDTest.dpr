@@ -140,7 +140,13 @@ uses
   SendOnPriceJournal in '..\..\Forms\SendOnPriceJournal.pas' {SendOnPriceJournalForm},
   SendOnPrice in '..\..\Forms\SendOnPrice.pas' {SendOnPriceForm},
   ReturnInJournal in '..\..\Forms\ReturnInJournal.pas' {ReturnInJournalForm},
-  ReturnIn in '..\..\Forms\ReturnIn.pas' {ReturnInForm};
+  ReturnIn in '..\..\Forms\ReturnIn.pas' {ReturnInForm},
+  LossJournal in '..\..\Forms\LossJournal.pas' {LossJournalForm},
+  Loss in '..\..\Forms\Loss.pas' {LossForm},
+  InventoryJournal in '..\..\Forms\InventoryJournal.pas' {InventoryJournalForm},
+  Inventory in '..\..\Forms\Inventory.pas' {InventoryForm},
+  ProductionSeparateJournal in '..\..\Forms\ProductionSeparateJournal.pas' {ProductionSeparateJournalForm},
+  ProductionUnionJournal in '..\..\Forms\ProductionUnionJournal.pas' {ProductionUnionJournalForm};
 
 {$R *.RES}
 

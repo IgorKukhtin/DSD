@@ -48,7 +48,6 @@ type
     dxBarSeparator1: TdxBarSeparator;
     actPaidKind: TdsdOpenForm;
     actContractKind: TdsdOpenForm;
-    actUnitGroup: TdsdOpenForm;
     actUnit: TdsdOpenForm;
     actGoodsGroup: TdsdOpenForm;
     actGoods: TdsdOpenForm;
@@ -122,6 +121,12 @@ type
     bbReturnOut: TdxBarButton;
     actSendOnPrice: TdsdOpenForm;
     bbSendOnPrice: TdxBarButton;
+    actInventory: TdsdOpenForm;
+    actProductionSeparate: TdsdOpenForm;
+    actProductionUnion: TdsdOpenForm;
+    bbInventory: TdxBarButton;
+    bbProductionSeparate: TdxBarButton;
+    bbProductionUnion: TdxBarButton;
     procedure FormCreate(Sender: TObject);
   private
     procedure OnException(Sender: TObject; E: Exception);

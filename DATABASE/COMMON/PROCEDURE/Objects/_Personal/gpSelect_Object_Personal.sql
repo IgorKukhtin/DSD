@@ -75,10 +75,10 @@ BEGIN
           LEFT JOIN Object AS Object_Business ON Object_Business.Id = ObjectLink_Personal_Business.ChildObjectId
            
           LEFT JOIN ObjectDate AS ObjectDate_DateIn ON ObjectDate_DateIn.ObjectId = Object_Personal.Id 
-                AND ObjectDate_DateIn.DescId = zc_ObjectDate_Personal_DateIn()
+                AND ObjectDate_DateIn.DescId = zc_ObjectDate_Personal_In()
                 
           LEFT JOIN ObjectDate AS ObjectDate_DateOut ON ObjectDate_DateOut.ObjectId = Object_Personal.Id 
-                AND ObjectDate_DateOut.DescId = zc_ObjectDate_Personal_DateOut()          
+                AND ObjectDate_DateOut.DescId = zc_ObjectDate_Personal_Out()          
       
   WHERE Object_Personal.DescId = zc_Object_Personal();
   
@@ -93,8 +93,9 @@ ALTER FUNCTION gpSelect_Object_Personal (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.07.13         *    rename zc_ObjectDate...               
  06.07.13                                        * error zc_ObjectLink_Personal_Juridical
- 01.07.13          *              
+ 01.07.13         *              
 
 */
 

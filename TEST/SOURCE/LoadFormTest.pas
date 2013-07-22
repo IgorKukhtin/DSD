@@ -27,7 +27,7 @@ type
     procedure LoadContractFormTest;
     procedure LoadBusinessFormTest;
     procedure LoadBranchFormTest;
-    procedure LoadUnitGroupFormTest;
+    //procedure LoadUnitGroupFormTest;
     procedure LoadUnitFormTest;
     procedure LoadGoodsGroupFormTest;
     procedure LoadGoodsFormTest;
@@ -44,6 +44,10 @@ type
     procedure LoadSaleFormTest;
     procedure LoadReturnOutFormTest;
     procedure LoadReturnInFormTest;
+    procedure LoadLossFormTest;
+    procedure LoadInventoryFormTest;
+    procedure LoadProductionUnionFormTest;
+    procedure LoadProductionSeparateFormTest;
     procedure LoadReportFormTest;
     procedure LoadInfoMoneyGroupFormTest;
     procedure LoadInfoMoneyDestinationFormTest;
@@ -220,7 +224,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnOutJournalForm');
 end;
-
 procedure TLoadFormTest.LoadReturnInFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInForm'));
@@ -228,7 +231,20 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalForm');
 end;
-
+procedure TLoadFormTest.LoadLossFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLossForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLossJournalForm');
+end;
+procedure TLoadFormTest.LoadInventoryFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInventoryForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInventoryJournalForm');
+end;
 procedure TLoadFormTest.LoadJuridicalFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalForm'));
@@ -236,7 +252,20 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalEditForm');
 end;
-
+procedure TLoadFormTest.LoadProductionSeparateFormTest;
+begin
+  //TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionSeparateForm'));
+  //TdsdFormStorageFactory.GetStorage.Load('TProductionSeparateForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionSeparateJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProductionSeparateJournalForm');
+end;
+procedure TLoadFormTest.LoadProductionUnionFormTest;
+begin
+  //TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionForm'));
+  //TdsdFormStorageFactory.GetStorage.Load('TProductionUnionForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProductionUnionJournalForm');
+end;
 procedure TLoadFormTest.LoadJuridicalGroupFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalGroupForm'));
@@ -289,13 +318,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
 end;
 
-procedure TLoadFormTest.LoadUnitGroupFormTest;
+{procedure TLoadFormTest.LoadUnitGroupFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitGroupForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitGroupEditForm');
-end;
+end; }
 
 
 procedure TLoadFormTest.LoadInfoMoneyGroupFormTest;

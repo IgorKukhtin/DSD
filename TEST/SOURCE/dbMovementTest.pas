@@ -17,6 +17,7 @@ type
   published
     procedure MovementIncomeTest;
     procedure MovementProductionUnionTest;
+    procedure MovementProductionSeparateTest;
     procedure MovementSendOnPriceTest;
     procedure MovementSaleTest;
     procedure MovementReturnOutTest;
@@ -53,6 +54,16 @@ type
     constructor Create; override;
   end;
 
+  TMovementProductionSeparateTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  protected
+    procedure SetDataSetParam; override;
+  public
+    function InsertUpdateMovementProductionSeparate(Id: Integer; InvNumber: String;
+             OperDate: TDateTime; PartionGoods: String; FromId, ToId: Integer): integer;
+    constructor Create; override;
+  end;
 
   TMovementSendOnPriceTest = class(TObjectTest)
   private
@@ -188,6 +199,22 @@ var
 begin
   MovementProductionUnion := TMovementProductionUnionTest.Create;
   Id := MovementProductionUnion.InsertDefault;
+  // создание документа
+  try
+  // редактирование
+  finally
+    // удаление
+    DeleteMovement(Id);
+  end;
+end;
+
+procedure TdbMovementTest.MovementProductionSeparateTest;
+var
+  MovementProductionSeparate: TMovementProductionSeparateTest;
+  Id: Integer;
+begin
+  MovementProductionSeparate := TMovementProductionSeparateTest.Create;
+  Id := MovementProductionSeparate.InsertDefault;
   // создание документа
   try
   // редактирование
@@ -428,6 +455,41 @@ begin
   FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
 end;
 
+
+{ TMovementProductionSeparateTest }
+constructor TMovementProductionSeparateTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Movement_ProductionSeparate';
+  spSelect := 'gpSelect_Movement_ProductionSeparate';
+  spGet := 'gpGet_Movement_ProductionSeparate';
+end;
+
+function TMovementProductionSeparateTest.InsertDefault: integer;
+begin
+  result := InsertUpdateMovementProductionSeparate(0, 'Номер 1' ,Date, '12.05.13', 0, 0);
+end;
+
+function TMovementProductionSeparateTest.InsertUpdateMovementProductionSeparate(
+  Id: Integer; InvNumber: String; OperDate: TDateTime; PartionGoods: String;
+  FromId, ToId: Integer): integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
+  FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
+  FParams.AddParam('inPartionGoods', ftString, ptInput, PartionGoods);
+  FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
+  FParams.AddParam('inToId', ftInteger, ptInput, ToId);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TMovementProductionSeparateTest.SetDataSetParam;
+begin
+  inherited;
+  FParams.AddParam('inStartDate', ftDateTime, ptInput, Date);
+  FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
+end;
 
 
 { TMovementSendOnPrice }

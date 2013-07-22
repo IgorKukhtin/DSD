@@ -107,6 +107,18 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbLoss'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInventory'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProductionSeparate'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProductionUnion'
         end>
     end
     object bbGuides: TdxBarSubItem
@@ -173,10 +185,6 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbBranch'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnitGroup'
         end
         item
           Visible = True
@@ -287,6 +295,18 @@ object MainForm: TMainForm
       Action = actLoss
       Category = 0
     end
+    object bbInventory: TdxBarButton
+      Action = actInventory
+      Category = 0
+    end
+    object bbProductionSeparate: TdxBarButton
+      Action = actProductionSeparate
+      Category = 0
+    end
+    object bbProductionUnion: TdxBarButton
+      Action = actProductionUnion
+      Category = 0
+    end
     object bbPartner: TdxBarButton
       Action = actPartner
       Category = 0
@@ -305,8 +325,10 @@ object MainForm: TMainForm
       Category = 0
     end
     object bbUnitGroup: TdxBarButton
-      Action = actUnitGroup
+      Caption = #1043#1088#1091#1087#1087#1099' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
       Category = 0
+      Hint = #1043#1088#1091#1087#1087#1099' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
+      Visible = ivAlways
     end
     object bbUnit: TdxBarButton
       Action = actUnit
@@ -510,6 +532,20 @@ object MainForm: TMainForm
       ImageIndex = 43
       ShortCut = 16472
     end
+    object actInventory: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
+      FormName = 'TInventoryJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actLoss: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      Caption = #1057#1087#1080#1089#1072#1085#1080#1077
+      FormName = 'TLossJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
     object actSendOnPrice: TdsdOpenForm
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077
@@ -650,14 +686,6 @@ object MainForm: TMainForm
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
       Hint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
       FormName = 'TUnitForm'
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actUnitGroup: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      Caption = #1043#1088#1091#1087#1087#1099' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
-      Hint = #1043#1088#1091#1087#1087#1099' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
-      FormName = 'TUnitGroupForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -848,10 +876,17 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actLoss: TdsdOpenForm
+    object actProductionSeparate: TdsdOpenForm
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
-      Caption = #1057#1087#1080#1089#1072#1085#1080#1077
-      FormName = 'TLossJournalForm'
+      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      FormName = 'TReturnInJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actProductionUnion: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
+      FormName = 'TReturnInJournalForm'
       GuiParams = <>
       isShowModal = False
     end

@@ -41,9 +41,9 @@ BEGIN
    -- сохранили свойство <Зависит от % выхода>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_ReceiptChild_TaxExit(), ioId, inTaxExit);
    -- сохранили свойство <Начальная дата>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReceiptChild_StartDate(), ioId, inStartDate);
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReceiptChild_Start(), ioId, inStartDate);
    -- сохранили свойство <Конечная дата>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReceiptChild_EndDate(), ioId, inEndDate);
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_ReceiptChild_End(), ioId, inEndDate);
    -- сохранили свойство <Комментарий>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_ReceiptChild_Comment(), ioId, inComment);
    -- сохранили протокол
@@ -59,8 +59,8 @@ ALTER FUNCTION gpInsertUpdate_Object_ReceiptChild (Integer, TFloat, Boolean, Boo
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-               
- 09.07.13          * 
+ 19.07.13         * rename zc_ObjectDate_              
+ 09.07.13         * 
 
 */
 
