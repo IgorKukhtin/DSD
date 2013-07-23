@@ -4,7 +4,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
   ClientHeight = 427
   ClientWidth = 1240
   ExplicitWidth = 1248
-  ExplicitHeight = 454
+  ExplicitHeight = 461
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -493,7 +493,6 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     Top = 152
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
-    SortImages = dmMain.SortImageList
     View = cxGridDBTableView
     Left = 208
     Top = 200
