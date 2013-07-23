@@ -356,7 +356,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     Top = 256
   end
   object spSelectMovementItem: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_ProductionSeparate_Master'
+    StoredProcName = 'gpSelect_MI_ProductionSeparate_Master'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -610,7 +610,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         ParamType = ptOutput
         Value = ''
       end>
-    Left = 144
+    Left = 168
     Top = 64
   end
   object PopupMenu: TPopupMenu
