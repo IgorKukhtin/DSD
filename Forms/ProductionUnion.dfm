@@ -1,5 +1,5 @@
 ﻿inherited ProductionUnionForm: TProductionUnionForm
-  Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103
+  Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
   ClientHeight = 396
   ClientWidth = 1028
   KeyPreview = True
@@ -86,9 +86,6 @@
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid: TcxGrid
         Left = 0
         Top = 0

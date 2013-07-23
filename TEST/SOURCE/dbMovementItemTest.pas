@@ -32,7 +32,7 @@ type
     function InsertUpdateMovementItemIncome
       (Id, MovementId, GoodsId: Integer;
        Amount, AmountPartner, AmountPacker, Price, CountForPrice, LiveWeight, HeadCount: double;
-       PartionGoods:String;GoodsKindId,AssetId: Integer): integer;
+       PartionGoods:String; GoodsKindId, AssetId: Integer): integer;
     constructor Create; override;
   end;
 
@@ -44,9 +44,9 @@ type
     function GetDataSet: TDataSet; override;
     function InsertUpdateMovementProductionUnionMaster
       (Id, MovementId, GoodsId: Integer;
-       Amount: double; PartionClose: Boolean; Comment: String;
+       Amount: double; PartionClose: Boolean;  PartionGoods, Comment: String;
        Count, RealWeight, CuterCount: double;
-       ReceiptId: Integer): integer;
+       GoodsKindId, ReceiptId: Integer): integer;
     constructor Create; override;
   end;
 
@@ -62,7 +62,8 @@ type
     function InsertUpdateMovementProductionUnionChild
       (Id, MovementId, GoodsId: Integer;
        Amount: double; ParentId: integer;
-       AmountReceipt: double; Comment: string; PartionGoods: TDateTime): integer;
+       AmountReceipt: double; Comment: string; PartionGoodsDate: TDateTime;
+       PartionGoods: string; GoodsKindId: integer): integer;
     constructor Create; override;
   end;
 
@@ -528,19 +529,20 @@ begin
 end;
 
 function TMovementItemProductionUnionMasterTest.InsertDefault: integer;
-var MovementId, GoodsId: Integer;
+var MovementId, GoodsKindId, GoodsId: Integer;
 begin
   MovementId := TMovementIncomeTest.Create.GetDefault;
   GoodsId := TGoodsTest.Create.GetDefault;
+  GoodsKindId:= TGoodsKindTest.Create.GetDefault;
 
   result := InsertUpdateMovementProductionUnionMaster(0, MovementId, GoodsId,
-  10, false, 'Партия', 2.34, 505.67, 1, 0);
+  10, false,'Партия', 'Партия', 2.34, 505.67, 1, GoodsKindId, 0);
 end;
 
 function TMovementItemProductionUnionMasterTest.InsertUpdateMovementProductionUnionMaster(
   Id, MovementId, GoodsId: Integer; Amount: double; PartionClose: Boolean;
-  Comment: String; Count, RealWeight, CuterCount: double;
-  ReceiptId: Integer): integer;
+  PartionGoods, Comment: String; Count, RealWeight, CuterCount: double;
+  GoodsKindId, ReceiptId: Integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -548,10 +550,12 @@ begin
   FParams.AddParam('inGoodsId', ftInteger, ptInput, GoodsId);
   FParams.AddParam('inAmount', ftFloat, ptInput, Amount);
   FParams.AddParam('inPartionClose', ftBoolean, ptInput, PartionClose);
+  FParams.AddParam('inPartionGoods', ftString, ptInput, PartionGoods);
   FParams.AddParam('inComment', ftString, ptInput, Comment);
   FParams.AddParam('inCount', ftFloat, ptInput, Count);
   FParams.AddParam('inRealWeight', ftFloat, ptInput, RealWeight);
   FParams.AddParam('inCuterCount', ftFloat, ptInput, CuterCount);
+  FParams.AddParam('inGoodsKindId', ftInteger, ptInput, GoodsKindId);
   FParams.AddParam('inReceiptId', ftInteger, ptInput, ReceiptId);
   result := InsertUpdate(FParams);
 end;
@@ -594,19 +598,21 @@ begin
 end;
 
 function TMovementItemProductionUnionChildTest.InsertDefault: integer;
-var MovementId, GoodsId: Integer;
+var MovementId, GoodsId, GoodsKindId : Integer;
 begin
   MovementId := TMovementIncomeTest.Create.GetDefault;
   GoodsId := TGoodsTest.Create.GetDefault;
   MovementItem_InId := TMovementItemProductionUnionMasterTest.Create.GetDefault;
+  GoodsKindId:= TGoodsKindTest.Create.GetDefault;
 
   result := InsertUpdateMovementProductionUnionChild(0, MovementId, GoodsId, 10,
-  MovementItem_InId, 10, 'Comment', Date);
+  MovementItem_InId, 10,'Comment', Date,'Партия', GoodsKindId);
 end;
 
 function TMovementItemProductionUnionChildTest.InsertUpdateMovementProductionUnionChild(
   Id, MovementId, GoodsId: Integer; Amount: double; ParentId: integer;
-  AmountReceipt: double; Comment: string; PartionGoods: TDateTime): integer;
+  AmountReceipt: double; Comment: string; PartionGoodsDate: TDateTime; PartionGoods: string;
+  GoodsKindId: Integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -616,7 +622,9 @@ begin
   FParams.AddParam('inParentId', ftInteger, ptInput, ParentId);
   FParams.AddParam('inAmountReceipt', ftFloat, ptInput, AmountReceipt);
   FParams.AddParam('inComment', ftString, ptInput, Comment);
-  FParams.AddParam('inPartionGoods', ftDateTime, ptInput, PartionGoods);
+  FParams.AddParam('inPartionGoodsDate', ftDateTime, ptInput, PartionGoodsDate);
+  FParams.AddParam('inPartionGoods', ftString, ptInput, PartionGoods);
+  FParams.AddParam('inGoodsKindId', ftInteger, ptInput, GoodsKindId);
   result := InsertUpdate(FParams);
 end;
 
