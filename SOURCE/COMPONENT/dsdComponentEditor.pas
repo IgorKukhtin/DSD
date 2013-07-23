@@ -32,7 +32,7 @@ type
 implementation
 
 uses dsdDB, TypInfo, Db, dsdGuides, cxTextEdit, cxCurrencyEdit, cxCheckBox,
-     cxCalendar, cxButtonEdit;
+     cxCalendar, cxButtonEdit, dsdAction;
 
 procedure Register;
 begin
@@ -53,6 +53,7 @@ begin
   Designer.GetComponentNames(GetTypeData(TypeInfo(TdsdFormParams)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TdsdGuides)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxCheckBox)), Proc);
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TBooleanStoredProcAction)), Proc);
 end;
 
 { TComponentItemTextProperty }
@@ -95,9 +96,6 @@ begin
   // Отображаем только те компоненты, с которыми умеет работать TdsdGuides
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxButtonEdit)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxDateEdit)), Proc);
-
-
-
 end;
 
 end.

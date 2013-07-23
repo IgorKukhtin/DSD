@@ -111,7 +111,7 @@ implementation
 
 uses Storage, CommonData, TypInfo, UtilConvert, SysUtils, cxTextEdit, VCL.Forms,
      XMLDoc, XMLIntf, StrUtils, cxCurrencyEdit, dsdGuides, cxCheckBox, cxCalendar,
-     Variants, XSBuiltIns, UITypes;
+     Variants, XSBuiltIns, UITypes, dsdAction;
 
 procedure Register;
 begin
@@ -466,11 +466,13 @@ begin
           Result := BoolToStr((Component as TcxCheckBox).Checked, true);
        if Component is TcxDateEdit then
           Result := (Component as TcxDateEdit).Text;
+       if Component is TBooleanStoredProcAction then
+          Result := (Component as TBooleanStoredProcAction).Value;
     end
     else
       Result := FValue
   except
-
+    Result := '';
   end;
 end;
 

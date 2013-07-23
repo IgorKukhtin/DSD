@@ -84,6 +84,11 @@ type
     constructor Create(AOwner: TComponent); override;
   end;
 
+  // Вызывает процедуру
+  THeaderSaver = class(TComponent)
+
+  end;
+
   procedure Register;
 
 implementation

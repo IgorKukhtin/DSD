@@ -3,7 +3,7 @@ unit dsdAction;
 interface
 
 uses VCL.ActnList, Forms, Classes, ParentForm, dsdDB, DB, DBClient, UtilConst,
-     cxGrid, dsdGuides;
+     cxGrid, dsdGuides, ImgList;
 
 type
   TDataSetAcionType = (acInsert, acUpdate);
@@ -239,6 +239,35 @@ type
     property ShortCut;
   end;
 
+  TBooleanStoredProcAction = class (TdsdCustomDataSetAction)
+  private
+    FImageIndexFalse: TImageIndex;
+    FImageIndexTrue: TImageIndex;
+    FValue: Boolean;
+    FHintFalse: String;
+    FHintTrue: String;
+    FCaptionFalse: String;
+    FCaptionTrue: String;
+    procedure SetImageIndexFalse(const Value: TImageIndex);
+    procedure SetImageIndexTrue(const Value: TImageIndex);
+    procedure SetValue(const Value: Boolean);
+    procedure SetCaptionFalse(const Value: String);
+    procedure SetCaptionTrue(const Value: String);
+    procedure SetHintFalse(const Value: String);
+    procedure SetHintTrue(const Value: String);
+  public
+    function Execute: boolean; override;
+    constructor Create(AOwner: TComponent); override;
+  published
+    property Value: Boolean read FValue write SetValue;
+    property HintTrue: String read FHintTrue write SetHintTrue;
+    property HintFalse: String read FHintFalse write SetHintFalse;
+    property CaptionTrue: String read FCaptionTrue write SetCaptionTrue;
+    property CaptionFalse: String read FCaptionFalse write SetCaptionFalse;
+    property ImageIndexTrue: TImageIndex read FImageIndexTrue write SetImageIndexTrue;
+    property ImageIndexFalse: TImageIndex read FImageIndexFalse write SetImageIndexFalse;
+  end;
+
   procedure Register;
 
 implementation
@@ -260,6 +289,7 @@ begin
   RegisterActions('DSDLib', [TdsdPrintAction],    TdsdPrintAction);
   RegisterActions('DSDLib', [TdsdUpdateErased], TdsdUpdateErased);
   RegisterActions('DSDLib', [TdsdUpdateDataSet], TdsdUpdateDataSet);
+  RegisterActions('DSDLib', [TBooleanStoredProcAction], TBooleanStoredProcAction);
 end;
 
 { TdsdCustomDataSetAction }
@@ -663,6 +693,77 @@ var Action: TCloseAction;
 begin
   inherited;
   TParentForm(Owner).Close(Self);
+end;
+
+{ TBooleanStoredProcAction }
+
+constructor TBooleanStoredProcAction.Create(AOwner: TComponent);
+begin
+  inherited;
+  FImageIndexTrue := -1;
+  FImageIndexFalse := -1;
+  FHintFalse := 'Показать все';
+  FHintTrue := 'Показать товары в документе';
+  FCaptionFalse := 'Показать все';
+  FCaptionTrue := 'Показать товары в документе';
+  FValue := false;
+end;
+
+function TBooleanStoredProcAction.Execute: boolean;
+begin
+  Value := not Value;
+  inherited;
+end;
+
+procedure TBooleanStoredProcAction.SetCaptionFalse(const Value: String);
+begin
+  FCaptionFalse := Value;
+  Self.Value := Self.Value;
+end;
+
+procedure TBooleanStoredProcAction.SetCaptionTrue(const Value: String);
+begin
+  FCaptionTrue := Value;
+  Self.Value := Self.Value;
+end;
+
+procedure TBooleanStoredProcAction.SetHintFalse(const Value: String);
+begin
+  FHintFalse := Value;
+  Self.Value := Self.Value;
+end;
+
+procedure TBooleanStoredProcAction.SetHintTrue(const Value: String);
+begin
+  FHintTrue := Value;
+  Self.Value := Self.Value;
+end;
+
+procedure TBooleanStoredProcAction.SetImageIndexFalse(const Value: TImageIndex);
+begin
+  FImageIndexFalse := Value;
+  Self.Value := Self.Value;
+end;
+
+procedure TBooleanStoredProcAction.SetImageIndexTrue(const Value: TImageIndex);
+begin
+  FImageIndexTrue := Value;
+  Self.Value := Self.Value;
+end;
+
+procedure TBooleanStoredProcAction.SetValue(const Value: Boolean);
+begin
+  FValue := Value;
+  if Value then begin
+     ImageIndex := ImageIndexTrue;
+     Caption := CaptionTrue;
+     Hint := HintTrue;
+  end
+  else begin
+     ImageIndex := ImageIndexFalse;
+     Caption := CaptionFalse;
+     Hint := HintFalse;
+  end;
 end;
 
 end.

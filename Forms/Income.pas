@@ -23,7 +23,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  DataModul;
+  DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit;
 
 type
   TIncomeForm = class(TParentForm)
@@ -101,6 +101,22 @@ type
     colAssetName: TcxGridDBColumn;
     colGoodsKindName_comlete: TcxGridDBColumn;
     colAccountOnComplete: TcxGridDBColumn;
+    bbBooleanAction: TdxBarButton;
+    bbStatic: TdxBarStatic;
+    BooleanStoredProcAction: TBooleanStoredProcAction;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    EntryViewAddOn: TdsdDBViewAddOn;
+    InsertUpdateMovement: TdsdStoredProc;
+    cxLabel5: TcxLabel;
+    edInvNumberPartner: TcxTextEdit;
+    cxLabel6: TcxLabel;
+    edOperDatePartner: TcxDateEdit;
+    edPriceWithVAT: TcxCheckBox;
+    edVATPercent: TcxCurrencyEdit;
+    cxCurrencyEdit2: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
+    cxLabel8: TcxLabel;
   private
   public
   end;

@@ -144,6 +144,7 @@ initialization
   RegisterClass (TfrxDBDataset);
 
   // Собственнтые компоненты
+  RegisterClass (TBooleanStoredProcAction);
   RegisterClass (TdsdChangeMovementStatus);
   RegisterClass (TdsdChoiceGuides);
   RegisterClass (TdsdDataSetRefresh);
