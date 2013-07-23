@@ -35,7 +35,6 @@ type
     cxLabel5: TcxLabel;
     ActionList: TActionList;
     dsdDataSetRefresh: TdsdDataSetRefresh;
-    dsdExecStoredProc: TdsdExecStoredProc;
     dsdFormClose1: TdsdFormClose;
     spInsertUpdate: TdsdStoredProc;
     dsdFormParams: TdsdFormParams;
@@ -50,6 +49,7 @@ type
     ceProfitLossDirection: TcxButtonEdit;
     ceInfoMoneyDestination: TcxButtonEdit;
     ceInfoMoney: TcxButtonEdit;
+    dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
   private
     { Private declarations }
   public

@@ -1,9 +1,9 @@
 ﻿inherited PersonalEditForm: TPersonalEditForm
   Caption = 'C'#1086#1090#1088#1091#1076#1085#1080#1082
   ClientHeight = 271
-  ClientWidth = 608
-  ExplicitWidth = 616
-  ExplicitHeight = 298
+  ClientWidth = 607
+  ExplicitWidth = 623
+  ExplicitHeight = 309
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
@@ -11,7 +11,7 @@
     Top = 238
     Width = 75
     Height = 25
-    Action = dsdExecStoredProc
+    Action = dsdInsertUpdateGuides
     Default = True
     ModalResult = 8
     TabOrder = 8
@@ -162,16 +162,16 @@
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
     end
-    object dsdExecStoredProc: TdsdExecStoredProc
+    object dsdFormClose1: TdsdFormClose
+    end
+    object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
           StoredProc = spInsertUpdate
         end>
-      Caption = 'Ok'
-    end
-    object dsdFormClose1: TdsdFormClose
+      Caption = #1054#1082
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -252,8 +252,8 @@
         ParamType = ptInputOutput
         Value = '0'
       end>
-    Left = 296
-    Top = 24
+    Left = 224
+    Top = 16
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Personal'
@@ -395,8 +395,8 @@
     LookupControl = ceMember
     FormName = 'TMemberForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 320
-    Top = 77
+    Left = 304
+    Top = 93
   end
   object PositionGuides: TdsdGuides
     LookupControl = cePosition

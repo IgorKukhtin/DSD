@@ -1,9 +1,9 @@
 ﻿inherited InfoMoneyGroupEditForm: TInfoMoneyGroupEditForm
   Caption = #1053#1086#1074#1072#1103' '#1075#1088#1091#1087#1087#1072
-  ClientHeight = 168
-  ClientWidth = 387
-  ExplicitWidth = 403
-  ExplicitHeight = 206
+  ClientHeight = 176
+  ClientWidth = 384
+  ExplicitWidth = 400
+  ExplicitHeight = 214
   PixelsPerInch = 96
   TextHeight = 13
   object edMeasureName: TcxTextEdit
@@ -22,7 +22,7 @@
     Top = 136
     Width = 75
     Height = 25
-    Action = dsdExecStoredProc
+    Action = dsdInsertUpdateGuides
     Default = True
     ModalResult = 8
     TabOrder = 2
@@ -65,16 +65,16 @@
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
     end
-    object dsdExecStoredProc: TdsdExecStoredProc
+    object dsdFormClose1: TdsdFormClose
+    end
+    object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
           StoredProc = spInsertUpdate
         end>
-      Caption = 'Ok'
-    end
-    object dsdFormClose1: TdsdFormClose
+      Caption = #1054#1082
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -104,8 +104,7 @@
         ParamType = ptInput
         Value = ''
       end>
-    Left = 232
-    Top = 16
+    Left = 184
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -115,8 +114,7 @@
         ParamType = ptInputOutput
         Value = '0'
       end>
-    Left = 144
-    Top = 8
+    Left = 104
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_InfoMoneyGroup'
@@ -161,10 +159,8 @@
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 16
-    Top = 48
   end
   object dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn
-    Left = 344
-    Top = 24
+    Left = 312
   end
 end

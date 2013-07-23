@@ -1,21 +1,22 @@
 inherited CarForm: TCarForm
   Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1080
   ClientHeight = 367
-  ClientWidth = 463
-  ExplicitWidth = 479
+  ClientWidth = 549
+  ExplicitWidth = 565
   ExplicitHeight = 405
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 28
-    Width = 463
+    Width = 549
     Height = 339
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 463
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -41,24 +42,25 @@ inherited CarForm: TCarForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 50
+        Width = 44
       end
       object clName: TcxGridDBColumn
         Caption = #1043#1086#1089'.'#1085#1086#1084#1077#1088
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 174
+        Width = 152
       end
       object clRegistrationCertificate: TcxGridDBColumn
         Caption = #1058#1077#1093#1087#1072#1089#1087#1086#1088#1090
         DataBinding.FieldName = 'RegistrationCertificate'
         HeaderAlignmentVert = vaCenter
-        Width = 141
+        Width = 123
       end
       object clCarModel: TcxGridDBColumn
         Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
         DataBinding.FieldName = 'CarModelName'
-        Width = 82
+        HeaderAlignmentVert = vaCenter
+        Width = 78
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -67,6 +69,7 @@ inherited CarForm: TCarForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Width = 50
       end
     end
     object cxGridLevel: TcxGridLevel

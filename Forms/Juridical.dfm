@@ -2,15 +2,15 @@ inherited JuridicalForm: TJuridicalForm
   Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
   ClientHeight = 473
   ClientWidth = 691
-  ExplicitWidth = 699
-  ExplicitHeight = 500
+  ExplicitWidth = 707
+  ExplicitHeight = 511
   PixelsPerInch = 96
   TextHeight = 13
   object cxDBTreeList: TcxDBTreeList
     Left = 0
-    Top = 26
+    Top = 28
     Width = 289
-    Height = 447
+    Height = 445
     Align = alLeft
     Bands = <
       item
@@ -41,16 +41,16 @@ inherited JuridicalForm: TJuridicalForm
   end
   object cxSplitter: TcxSplitter
     Left = 289
-    Top = 26
+    Top = 28
     Width = 8
-    Height = 447
+    Height = 445
     Control = cxDBTreeList
   end
   object cxGrid: TcxGrid
     Left = 297
-    Top = 26
+    Top = 28
     Width = 394
-    Height = 447
+    Height = 445
     Align = alClient
     TabOrder = 6
     object cxGridDBTableView: TcxGridDBTableView
@@ -144,8 +144,8 @@ inherited JuridicalForm: TJuridicalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -162,7 +162,7 @@ inherited JuridicalForm: TJuridicalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -384,13 +384,11 @@ inherited JuridicalForm: TJuridicalForm
     Top = 216
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
-    SortImages = dmMain.SortImageList
     View = cxGridDBTableView
     Left = 360
     Top = 256
   end
   object dsdDBTreeAddOn: TdsdDBTreeAddOn
-    SortImages = dmMain.SortImageList
     isLeafFieldName = 'isLeaf'
     DBTreeList = cxDBTreeList
     Left = 80
@@ -433,10 +431,10 @@ inherited JuridicalForm: TJuridicalForm
     Params = <
       item
         Name = 'inObjectId'
-        Component = ClientDataSet
         ComponentItem = 'Id'
         DataType = ftInteger
         ParamType = ptInput
+        Value = Null
       end>
     Left = 288
     Top = 208

@@ -18,18 +18,18 @@
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1077#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
   end
   object cxButton1: TcxButton
-    Left = 72
-    Top = 104
+    Left = 56
+    Top = 109
     Width = 75
     Height = 25
-    Action = dsdExecStoredProc
+    Action = dsdInsertUpdateGuides
     Default = True
     ModalResult = 8
     TabOrder = 3
   end
   object cxButton2: TcxButton
     Left = 216
-    Top = 104
+    Top = 109
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -65,16 +65,16 @@
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
     end
-    object dsdExecStoredProc: TdsdExecStoredProc
+    object dsdFormClose1: TdsdFormClose
+    end
+    object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
           StoredProc = spInsertUpdate
         end>
-      Caption = 'Ok'
-    end
-    object dsdFormClose1: TdsdFormClose
+      Caption = #1054#1082
     end
   end
   object spInsertUpdate: TdsdStoredProc

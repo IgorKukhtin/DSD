@@ -135,14 +135,14 @@
         Name = 'nRegistrationCertificate'
         Component = cxTextEdit1
         DataType = ftString
-        ParamType = ptOutput
+        ParamType = ptInput
         Value = ''
       end
       item
         Name = 'inCarModelId'
         Component = CarModelGuide
         DataType = ftInteger
-        ParamType = ptOutput
+        ParamType = ptInput
         Value = ''
       end>
     Left = 320

@@ -2,8 +2,8 @@
   Caption = #1041#1080#1079#1085#1077#1089#1099
   ClientHeight = 142
   ClientWidth = 349
-  ExplicitWidth = 357
-  ExplicitHeight = 169
+  ExplicitWidth = 365
+  ExplicitHeight = 180
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -22,7 +22,8 @@
     Top = 104
     Width = 75
     Height = 25
-    Action = dsdExecStoredProc
+    Action = dsdInsertUpdateGuides
+    Caption = 'Ok'
     Default = True
     ModalResult = 8
     TabOrder = 3
@@ -32,7 +33,7 @@
     Top = 104
     Width = 75
     Height = 25
-    Action = dsdFormClose1
+    Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 8
@@ -50,32 +51,6 @@
     Properties.DisplayFormat = '0'
     TabOrder = 0
     Width = 273
-  end
-  object ActionList: TActionList
-    Left = 296
-    Top = 72
-    object dsdDataSetRefresh: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      StoredProc = spGet
-      StoredProcList = <
-        item
-          StoredProc = spGet
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
-    end
-    object dsdExecStoredProc: TdsdExecStoredProc
-      Category = 'DSDLib'
-      StoredProc = spInsertUpdate
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdate
-        end>
-      Caption = 'Ok'
-    end
-    object dsdFormClose1: TdsdFormClose
-    end
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Business'
@@ -95,12 +70,14 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inName'
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        Value = ''
       end>
     Left = 240
     Top = 48
@@ -134,14 +111,45 @@
         Component = edName
         DataType = ftString
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'Code'
         Component = ceCode
         DataType = ftInteger
         ParamType = ptOutput
+        Value = ''
       end>
     Left = 192
     Top = 88
+  end
+  object ActionList: TActionList
+    Left = 296
+    Top = 64
+    object dsdDataSetRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      StoredProc = spGet
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+    end
+    object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
+      Category = 'DSDLib'
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = 'dsdInsertUpdateGuides'
+    end
+    object dsdFormClose: TdsdFormClose
+      Category = 'DSDLib'
+    end
   end
 end

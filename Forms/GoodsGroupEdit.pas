@@ -11,7 +11,18 @@ uses
   cxCurrencyEdit, cxMaskEdit, cxDropDownEdit, cxDBEdit, cxCustomData, cxStyles,
   cxTL, cxTLdxBarBuiltInMenu, cxInplaceContainer, cxTLData, cxDBTL,
   cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox, dsdGuides,
-  Vcl.Grids, Vcl.DBGrids;
+  Vcl.Grids, Vcl.DBGrids, dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue;
 
 type
   TGoodsGroupEditForm = class(TParentForm)
@@ -24,7 +35,6 @@ type
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     dsdDataSetRefresh: TdsdDataSetRefresh;
-    dsdExecStoredProc: TdsdExecStoredProc;
     dsdFormClose1: TdsdFormClose;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -34,6 +44,7 @@ type
     spGetGroup: TdsdStoredProc;
     ceParentGroup: TcxLookupComboBox;
     dsdlGroupGuides: TdsdGuides;
+    dsdInsertUpdateGuides1: TdsdInsertUpdateGuides;
   private
     { Private declarations }
   public

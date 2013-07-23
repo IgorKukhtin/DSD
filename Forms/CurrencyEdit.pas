@@ -33,7 +33,6 @@ type
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     dsdDataSetRefresh: TdsdDataSetRefresh;
-    dsdExecStoredProc: TdsdExecStoredProc;
     dsdFormClose1: TdsdFormClose;
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
@@ -41,6 +40,7 @@ type
     edMFO: TcxTextEdit;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn;
+    dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
   private
     { Private declarations }
   public

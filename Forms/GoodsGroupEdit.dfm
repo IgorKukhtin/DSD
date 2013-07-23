@@ -2,8 +2,7 @@
   Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
   ClientHeight = 202
   ClientWidth = 371
-  ExplicitWidth = 379
-  ExplicitHeight = 229
+  ExplicitWidth = 387
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -22,7 +21,7 @@
     Top = 148
     Width = 75
     Height = 25
-    Action = dsdExecStoredProc
+    Action = dsdInsertUpdateGuides1
     Default = True
     ModalResult = 1
     TabOrder = 3
@@ -85,16 +84,16 @@
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
     end
-    object dsdExecStoredProc: TdsdExecStoredProc
+    object dsdFormClose1: TdsdFormClose
+    end
+    object dsdInsertUpdateGuides1: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
           StoredProc = spInsertUpdate
         end>
-      Caption = 'Ok'
-    end
-    object dsdFormClose1: TdsdFormClose
+      Caption = #1054#1082
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -115,12 +114,14 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inName'
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inUnitGroupId'
@@ -161,12 +162,14 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'Name'
         Component = edName
         DataType = ftString
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'UnitGroupId'
@@ -210,7 +213,9 @@
     Top = 160
   end
   object dsdlGroupGuides: TdsdGuides
+    Key = '0'
     LookupControl = ceParentGroup
+    PositionDataSet = 'ClientDataSet'
     Left = 336
     Top = 152
   end
