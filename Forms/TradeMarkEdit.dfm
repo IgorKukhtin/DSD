@@ -1,9 +1,9 @@
 ﻿inherited TradeMarkEditForm: TTradeMarkEditForm
   Caption = #1053#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
-  ClientHeight = 176
-  ClientWidth = 379
-  ExplicitWidth = 395
-  ExplicitHeight = 214
+  ClientHeight = 160
+  ClientWidth = 369
+  ExplicitWidth = 385
+  ExplicitHeight = 198
   PixelsPerInch = 96
   TextHeight = 13
   object edMeasureName: TcxTextEdit
@@ -22,7 +22,7 @@
     Top = 120
     Width = 75
     Height = 25
-    Action = dsdExecStoredProc
+    Action = dsdInsertUpdateGuides
     Default = True
     ModalResult = 8
     TabOrder = 2
@@ -65,16 +65,16 @@
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
     end
-    object dsdExecStoredProc: TdsdExecStoredProc
+    object dsdFormClose1: TdsdFormClose
+    end
+    object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
           StoredProc = spInsertUpdate
         end>
-      Caption = 'Ok'
-    end
-    object dsdFormClose1: TdsdFormClose
+      Caption = #1054#1082
     end
   end
   object spInsertUpdate: TdsdStoredProc

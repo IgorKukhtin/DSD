@@ -2,8 +2,8 @@
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1075#1086' '#1083#1080#1094#1072
   ClientHeight = 332
   ClientWidth = 367
-  ExplicitWidth = 375
-  ExplicitHeight = 359
+  ExplicitWidth = 383
+  ExplicitHeight = 370
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit

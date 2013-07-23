@@ -1,16 +1,16 @@
 inherited BranchForm: TBranchForm
   Caption = #1060#1080#1083#1080#1072#1083#1099
-  ClientHeight = 376
-  ClientWidth = 588
-  ExplicitWidth = 604
-  ExplicitHeight = 414
+  ClientHeight = 374
+  ClientWidth = 601
+  ExplicitWidth = 617
+  ExplicitHeight = 412
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 28
-    Width = 588
-    Height = 348
+    Width = 601
+    Height = 346
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
@@ -288,7 +288,21 @@ inherited BranchForm: TBranchForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
-      Params = <>
+      Params = <
+        item
+          Name = 'Key'
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          DataType = ftString
+          ParamType = ptOutput
+        end
+        item
+          Name = 'TextValue'
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ShortCut = 13
@@ -303,14 +317,15 @@ inherited BranchForm: TBranchForm
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 152
-    Top = 152
+    Left = 200
+    Top = 192
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 120
     Top = 224
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    SortImages = dmMain.SortImageList
     View = cxGridDBTableView
     Left = 184
     Top = 320

@@ -8,15 +8,16 @@ CREATE OR REPLACE FUNCTION gpReport_HistoryCost(
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ObjectCostId Integer
-             , UnitParentCode Integer, UnitParentName TVarChar, UnitCode Integer, UnitName TVarChar, GoodsGroupCode Integer, GoodsGroupName TVarChar, GoodsKindCode Integer, GoodsKindName TVarChar
+             , MovementId Integer, OperDate TDateTime, InvNumber TVarChar, MovementDescCode TVarChar, Summ_Movement TFloat
+             , Price TFloat, Price_Calc TFloat
+             , UnitParentCode Integer, UnitParentName TVarChar, UnitCode Integer, UnitName TVarChar
+             , GoodsGroupCode Integer, GoodsGroupName TVarChar, GoodsCode Integer, GoodsName TVarChar, GoodsKindCode Integer, GoodsKindName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyCode_Detail Integer, InfoMoneyName_Detail TVarChar
              , PartionGoodsName TVarChar
              , BusinessCode Integer, BusinessName TVarChar, JuridicalBasisCode Integer, JuridicalBasisName TVarChar
              , BranchCode Integer, BranchName TVarChar, PersonalCode Integer, PersonalName TVarChar, AssetCode Integer, AssetName TVarChar
-             , CountStart TFloat, CountDebet TFloat, CountKredit TFloat, CountEnd TFloat
-             , CountStart_calc TFloat, CountDebet_calc TFloat, CountKredit_calc TFloat, CountEnd_calc TFloat
-             , SummStart TFloat, SummDebet TFloat, SummKredit TFloat, SummEnd TFloat
-             , SummStart_calc TFloat, SummDebet_calc TFloat, SummKredit_calc TFloat, SummEnd_calc TFloat
+             , StartCount TFloat, StartCount_calc TFloat, IncomeCount TFloat, IncomeCount_calc TFloat, OutCount TFloat, OutCount_calc TFloat, EndCount TFloat, EndCount_calc TFloat
+             , StartSumm TFloat, StartSumm_calc TFloat, IncomeSumm TFloat, IncomeSumm_calc TFloat, OutSumm TFloat, OutSumm_calc TFloat, EndSumm TFloat, EndSumm_calc TFloat
               )
 AS
 $BODY$BEGIN
@@ -27,6 +28,20 @@ $BODY$BEGIN
      RETURN QUERY 
        SELECT
              ContainerObjectCost.ObjectCostId
+           , _tmpSumm.MovementId
+           , _tmpSumm.OperDate
+           , _tmpSumm.InvNumber
+           , _tmpSumm.Code AS MovementDescCode
+           , _tmpSumm.Amount AS Summ_Movement
+
+           , HistoryCost.Price
+           , CAST (
+             CASE WHEN (COALESCE (tmpOperationCount.AmountRemainsStart, 0) + COALESCE (tmpOperationCount.AmountDebet, 0)) > 0 AND (COALESCE (tmpOperationSumm.AmountRemainsStart, 0) + COALESCE (tmpOperationSumm.AmountDebet, 0)) > 0
+                      THEN  (COALESCE (tmpOperationSumm.AmountRemainsStart, 0) + COALESCE (tmpOperationSumm.AmountDebet, 0)) / (COALESCE (tmpOperationCount.AmountRemainsStart, 0) + COALESCE (tmpOperationCount.AmountDebet, 0))
+                  WHEN  (COALESCE (tmpOperationCount.AmountRemainsStart, 0) + COALESCE (tmpOperationCount.AmountDebet, 0)) < 0 AND (COALESCE (tmpOperationSumm.AmountRemainsStart, 0) + COALESCE (tmpOperationSumm.AmountDebet, 0)) < 0
+                      THEN  (COALESCE (tmpOperationSumm.AmountRemainsStart, 0) + COALESCE (tmpOperationSumm.AmountDebet, 0)) / (COALESCE (tmpOperationCount.AmountRemainsStart, 0) + COALESCE (tmpOperationCount.AmountDebet, 0))
+                  ELSE 0
+             END AS TFloat) AS Price_Calc
 
            , Object_UnitParent.ObjectCode AS UnitParentCode
            , Object_UnitParent.ValueData AS UnitParentName
@@ -57,6 +72,31 @@ $BODY$BEGIN
            , Object_Personal.ValueData AS PersonalName
            , Object_Asset.ObjectCode AS AssetCode
            , Object_Asset.ValueData AS AssetName
+
+           , (HistoryCost.StartCount)  AS StartCount
+           , tmpOperationCount.AmountRemainsStart AS StartCount_calc
+
+           , (HistoryCost.IncomeCount) AS IncomeCount
+           , tmpOperationCount.AmountDebet AS IncomeCount_calc
+
+           , CAST (0 AS TFloat) AS OutCount -- _tmpHistoryCost.OutCount
+           , tmpOperationCount.AmountKredit AS OutCount_calc
+
+           , CAST (0 AS TFloat) AS EndCount -- _tmpHistoryCost.EndCount
+           , tmpOperationCount.AmountRemainsEnd AS EndCount_calc
+
+
+           , (HistoryCost.StartSumm)   AS StartSumm
+           , tmpOperationSumm.AmountRemainsStart AS StartSumm_calc
+
+           , (HistoryCost.IncomeSumm)  AS IncomeSumm
+           , tmpOperationSumm.AmountDebet AS IncomeSumm_calc
+
+           , CAST ( 0 AS TFloat) AS OutSumm -- _tmpHistoryCost.OutSumm
+           , tmpOperationSumm.AmountKredit AS OutSumm_calc
+
+           , CAST ( 0 AS TFloat) AS EndSumm -- _tmpHistoryCost.EndSumm
+           , tmpOperationSumm.AmountRemainsEnd AS EndSumm_calc
 
        FROM ContainerObjectCost
             LEFT JOIN ObjectCostLink AS ObjectCostLink_Unit
@@ -117,14 +157,98 @@ $BODY$BEGIN
                                     AND ObjectCostLink_Personal.DescId = zc_ObjectCostLink_Personal()
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = ObjectCostLink_Personal.ObjectId
 
-            LEFT JOIN ObjectCostLink AS ObjectCostLink_AssetTo
-                                     ON ObjectCostLink_AssetTo.ObjectCostId = ContainerObjectCost.ObjectCostId
-                                    AND ObjectCostLink_AssetTo.DescId = zc_ObjectCostLink_AssetTo()
-            LEFT JOIN Object AS Object_AssetTo ON Object_AssetTo.Id = ObjectCostLink_AssetTo.ObjectId
+            LEFT JOIN ObjectCostLink AS ObjectCostLink_Asset
+                                     ON ObjectCostLink_Asset.ObjectCostId = ContainerObjectCost.ObjectCostId
+                                    AND ObjectCostLink_Asset.DescId = zc_ObjectCostLink_AssetTo()
+            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = ObjectCostLink_Asset.ObjectId
 
-            LEFT JOIN Object AS Object_AssetTo ON Object_AssetTo.Id = ObjectCostLink_AssetTo.ObjectId
+            LEFT JOIN HistoryCost ON HistoryCost.ObjectCostId = ContainerObjectCost.ObjectCostId
+                                 AND HistoryCost.StartDate = inStartDate AND HistoryCost.EndDate = inEndDate
+--            (SELECT HistoryCost.ObjectCostId
+--                  , (HistoryCost.StartCount)  AS StartCount
+--                  , (HistoryCost.StartSumm)   AS StartSumm
+--                  , (HistoryCost.IncomeCount) AS IncomeCount
+--                  , (HistoryCost.IncomeSumm)  AS IncomeSumm
+--             FROM HistoryCost
+--             WHERE HistoryCost.StartDate = inStartDate AND HistoryCost.EndDate = inEndDate
+--            ) AS _tmpHistoryCost ON _tmpHistoryCost.ObjectCostId = ContainerObjectCost.ObjectCostId
 
-       WHERE ContainerObjectCost.DescId = zc_ObjectCost_Basis() 
+            LEFT JOIN
+           (SELECT ContainerObjectCost_Summ.ObjectCostId
+                 , Movement.Id AS MovementId
+                 , Movement.OperDate
+                 , Movement.InvNumber
+                 , MovementDesc.Code
+                 , MIContainer.Amount
+            FROM MovementItemContainer AS MIContainer
+                 JOIN ContainerObjectCost AS ContainerObjectCost_Summ
+                                          ON ContainerObjectCost_Summ.ContainerId = MIContainer.ContainerId
+                                         AND ContainerObjectCost_Summ.ObjectCostDescId = zc_ObjectCost_Basis()
+                 JOIN Movement ON Movement.Id = MIContainer.MovementId
+                 JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+            WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+              AND MIContainer.DescId = zc_MIContainer_Summ()
+           ) AS _tmpSumm ON _tmpSumm.ObjectCostId = ContainerObjectCost.ObjectCostId
+            LEFT JOIN
+
+           (SELECT ContainerObjectCost_RemainsSumm.ObjectCostId
+                 , CAST (SUM (tmpMIContainer_Remains.AmountRemainsStart) AS TFloat) AS AmountRemainsStart
+                 , CAST (SUM (tmpMIContainer_Remains.AmountDebet) AS TFloat) AS AmountDebet
+                 , CAST (SUM (tmpMIContainer_Remains.AmountKredit) AS TFloat) AS AmountKredit
+                 , CAST (SUM (tmpMIContainer_Remains.AmountRemainsStart + tmpMIContainer_Remains.AmountDebet - tmpMIContainer_Remains.AmountKredit) AS TFloat) AS AmountRemainsEnd
+            FROM
+                (SELECT Container.Id AS ContainerId
+                      , COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
+                      , COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
+                      , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS AmountRemainsStart
+                 FROM Container
+                      LEFT JOIN MovementItemContainer AS MIContainer
+                                                      ON MIContainer.Containerid = Container.Id
+                                                     AND MIContainer.OperDate >= inStartDate
+                 WHERE Container.DescId = zc_Container_Summ()
+                 GROUP BY Container.Amount
+                        , Container.Id
+                 HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0) -- AmountRemainsStart <> 0
+                     OR (COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) <> 0) -- AmountDebet <> 0
+                     OR (COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -MIContainer.Amount ELSE 0 END), 0) <> 0) -- AmountKredit <> 0
+                ) AS tmpMIContainer_Remains
+                LEFT JOIN ContainerObjectCost AS ContainerObjectCost_RemainsSumm
+                                              ON ContainerObjectCost_RemainsSumm.ContainerId = tmpMIContainer_Remains.ContainerId
+                                             AND ContainerObjectCost_RemainsSumm.ObjectCostDescId = zc_ObjectCost_Basis()
+            GROUP BY ContainerObjectCost_RemainsSumm.ObjectCostId
+           ) AS tmpOperationSumm ON tmpOperationSumm.ObjectCostId = ContainerObjectCost.ObjectCostId
+            LEFT JOIN
+           (SELECT ContainerObjectCost_RemainsSumm.ObjectCostId
+                 , CAST (SUM (tmpMIContainer_Remains.AmountRemainsStart) AS TFloat) AS AmountRemainsStart
+                 , CAST (SUM (tmpMIContainer_Remains.AmountDebet) AS TFloat) AS AmountDebet
+                 , CAST (SUM (tmpMIContainer_Remains.AmountKredit) AS TFloat) AS AmountKredit
+                 , CAST (SUM (tmpMIContainer_Remains.AmountRemainsStart + tmpMIContainer_Remains.AmountDebet - tmpMIContainer_Remains.AmountKredit) AS TFloat) AS AmountRemainsEnd
+            FROM
+                (SELECT Container.Id AS ContainerId
+                      , COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
+                      , COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
+                      , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS AmountRemainsStart
+                 FROM Container
+                      LEFT JOIN MovementItemContainer AS MIContainer
+                                                      ON MIContainer.Containerid = Container.Id
+                                                     AND MIContainer.OperDate >= inStartDate
+                 WHERE Container.DescId = zc_Container_Count()
+                 GROUP BY Container.Amount
+                        , Container.Id
+                 HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0) -- AmountRemainsStart <> 0
+                     OR (COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) <> 0) -- AmountDebet <> 0
+                     OR (COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -MIContainer.Amount ELSE 0 END), 0) <> 0) -- AmountKredit <> 0
+                ) AS tmpMIContainer_Remains
+                LEFT JOIN Container AS Container_Summ ON Container_Summ.ParentId = tmpMIContainer_Remains.ContainerId
+                                                     AND Container_Summ.DescId = zc_Container_Summ()
+                LEFT JOIN ContainerObjectCost AS ContainerObjectCost_RemainsSumm
+                                              ON ContainerObjectCost_RemainsSumm.ContainerId = Container_Summ.Id
+                                             AND ContainerObjectCost_RemainsSumm.ObjectCostDescId = zc_ObjectCost_Basis()
+            GROUP BY ContainerObjectCost_RemainsSumm.ObjectCostId
+           ) AS tmpOperationCount ON tmpOperationCount.ObjectCostId = ContainerObjectCost.ObjectCostId
+
+       WHERE ContainerObjectCost.ObjectCostDescId = zc_ObjectCost_Basis();
+
   
 END;
 $BODY$
@@ -136,11 +260,8 @@ ALTER FUNCTION gpReport_HistoryCost (TDateTime, TDateTime, TVarChar) OWNER TO po
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 11.07.13                                        * add optimize
- 08.07.13                                        * add ByObjectName
- 08.07.13                                        * add AccountOnComplete
- 04.07.13                                        *
+ 22.07.13                                        *
 */
 
 -- тест
--- SELECT * FROM gpReport_HistoryCost (inStartDate:= '01.01.2013', inEndDate:= '01.01.2013', inSession:= '2')
+-- SELECT * FROM gpReport_HistoryCost (inStartDate:= '01.01.2013', inEndDate:= '31.01.2013', inSession:= '2') AS _tmp WHERE _tmp.ObjectCostId IN (6011)

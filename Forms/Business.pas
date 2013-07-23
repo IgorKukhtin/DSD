@@ -20,34 +20,41 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  cxCheckBox, dxBarExtItems, dsdAddOn;
 
 type
   TBusinessForm = class(TParentForm)
-    cxGridDBTableView: TcxGridDBTableView;
-    cxGridLevel: TcxGridLevel;
-    cxGrid: TcxGrid;
-    clName: TcxGridDBColumn;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
-    dxBarManager: TdxBarManager;
-    dxBarManagerBar1: TdxBar;
+    dsdStoredProc: TdsdStoredProc;
+    spErasedUnErased: TdsdStoredProc;
     ActionList: TActionList;
-    bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
     actInsert: TdsdInsertUpdateAction;
-    bbInsert: TdxBarButton;
-    dsdStoredProc: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
-    bbEdit: TdxBarButton;
-    clErased: TcxGridDBColumn;
-    clCode: TcxGridDBColumn;
-    bbErased: TdxBarButton;
-    bbUnErased: TdxBarButton;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
-    spErasedUnErased: TdsdStoredProc;
+    dsdGridToExcel: TdsdGridToExcel;
+    dsdChoiceGuides: TdsdChoiceGuides;
+    dxBarManager: TdxBarManager;
+    dxBarManagerBar1: TdxBar;
+    bbRefresh: TdxBarButton;
+    bbInsert: TdxBarButton;
+    bbEdit: TdxBarButton;
+    bbErased: TdxBarButton;
+    bbUnErased: TdxBarButton;
+    bbGridToExcel: TdxBarButton;
+    dxBarStatic: TdxBarStatic;
+    bbChoiceGuides: TdxBarButton;
+    cxGrid: TcxGrid;
+    cxGridDBTableView: TcxGridDBTableView;
+    clCode: TcxGridDBColumn;
+    clName: TcxGridDBColumn;
+    clErased: TcxGridDBColumn;
+    cxGridLevel: TcxGridLevel;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
   private
     { Private declarations }
   public

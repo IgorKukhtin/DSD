@@ -2,8 +2,8 @@
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
   ClientHeight = 254
   ClientWidth = 352
-  ExplicitWidth = 360
-  ExplicitHeight = 281
+  ExplicitWidth = 368
+  ExplicitHeight = 292
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -22,7 +22,7 @@
     Top = 216
     Width = 75
     Height = 25
-    Action = dsdExecStoredProc
+    Action = dsdInsertUpdateGuides
     Default = True
     ModalResult = 8
     TabOrder = 2
@@ -118,16 +118,16 @@
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
     end
-    object dsdExecStoredProc: TdsdExecStoredProc
+    object dsdFormClose1: TdsdFormClose
+    end
+    object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
           StoredProc = spInsertUpdate
         end>
-      Caption = 'Ok'
-    end
-    object dsdFormClose1: TdsdFormClose
+      Caption = #1054#1082
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -148,12 +148,14 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inName'
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inGoodsGroupId'
@@ -174,6 +176,7 @@
         Component = ceWeight
         DataType = ftFloat
         ParamType = ptInput
+        Value = ''
       end>
     Left = 240
     Top = 48
@@ -206,12 +209,14 @@
         Component = edName
         DataType = ftString
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'Code'
         Component = ceCode
         DataType = ftInteger
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'GoodsGroupId'
@@ -250,6 +255,7 @@
         Component = ceWeight
         DataType = ftCurrency
         ParamType = ptOutput
+        Value = ''
       end>
     Left = 192
     Top = 88
@@ -277,7 +283,9 @@
     Top = 112
   end
   object dsdGoodsGroupGuides: TdsdGuides
+    Key = '0'
     LookupControl = ceParentGroup
+    PositionDataSet = 'ClientDataSet'
     Left = 312
     Top = 120
   end
@@ -304,7 +312,9 @@
     Top = 200
   end
   object dsdMeasureGuides: TdsdGuides
+    Key = '0'
     LookupControl = ceMeasure
+    PositionDataSet = 'ClientDataSet'
     Left = 152
     Top = 208
   end

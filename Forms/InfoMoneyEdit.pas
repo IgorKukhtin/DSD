@@ -34,7 +34,6 @@ type
     ActionList: TActionList;
     dsdDataSetRefresh: TdsdDataSetRefresh;
     dsdExecStoredProc: TdsdExecStoredProc;
-    dsdFormClose1: TdsdFormClose;
     spInsertUpdate: TdsdStoredProc;
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
@@ -44,6 +43,7 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     ceInfoMoneyGroup: TcxButtonEdit;
     ceInfoMoneyDestination: TcxButtonEdit;
+    dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
   private
     { Private declarations }
   public

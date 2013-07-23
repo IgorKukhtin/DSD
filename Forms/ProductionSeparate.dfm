@@ -178,6 +178,9 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -353,7 +356,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     Top = 256
   end
   object spSelectMovementItem: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_ProductionSeparate_Master'
+    StoredProcName = 'gpSelect_MI_ProductionSeparate_Master'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -607,7 +610,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         ParamType = ptOutput
         Value = ''
       end>
-    Left = 144
+    Left = 168
     Top = 64
   end
   object PopupMenu: TPopupMenu

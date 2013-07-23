@@ -22,7 +22,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinsdxBarPainter, dxBarExtItems,
-  cxImageComboBox, cxCheckBox, cxSplitter, dsdAddOn;
+  cxImageComboBox, cxCheckBox, cxSplitter, dsdAddOn, dxSkinscxPCPainter;
 
 type
   TJuridicalForm = class(TParentForm)

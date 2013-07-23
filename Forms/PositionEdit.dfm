@@ -2,8 +2,8 @@
   Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
   ClientHeight = 187
   ClientWidth = 370
-  ExplicitWidth = 378
-  ExplicitHeight = 214
+  ExplicitWidth = 386
+  ExplicitHeight = 225
   PixelsPerInch = 96
   TextHeight = 13
   object edMeasureName: TcxTextEdit
@@ -72,7 +72,7 @@
         item
           StoredProc = spInsertUpdate
         end>
-      Caption = 'Ok'
+      Caption = 'O'#1082
     end
     object dsdFormClose: TdsdFormClose
       Category = 'DSDLib'

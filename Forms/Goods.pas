@@ -22,7 +22,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dsdAddOn, dxBarExtItems;
+  dsdAddOn, dxBarExtItems, cxCheckBox;
 
 type
   TGoodsForm = class(TParentForm)
@@ -61,6 +61,7 @@ type
     clTradeMark: TcxGridDBColumn;
     clInfoMoney: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
+    clErased: TcxGridDBColumn;
   private
     { Private declarations }
   public

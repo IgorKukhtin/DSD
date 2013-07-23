@@ -2,8 +2,8 @@
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
   ClientHeight = 230
   ClientWidth = 346
-  ExplicitWidth = 354
-  ExplicitHeight = 257
+  ExplicitWidth = 362
+  ExplicitHeight = 268
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -22,7 +22,7 @@
     Top = 169
     Width = 75
     Height = 25
-    Action = dsdExecStoredProc
+    Action = dsdInsertUpdateGuides
     Default = True
     ModalResult = 8
     TabOrder = 2
@@ -96,16 +96,16 @@
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
     end
-    object dsdExecStoredProc: TdsdExecStoredProc
+    object dsdFormClose1: TdsdFormClose
+    end
+    object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
           StoredProc = spInsertUpdate
         end>
-      Caption = 'Ok'
-    end
-    object dsdFormClose1: TdsdFormClose
+      Caption = #1054#1082
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -126,18 +126,21 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inName'
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inGLNCode'
         Component = edGLNCode
         DataType = ftString
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inJuridicalId'
@@ -178,18 +181,21 @@
         Component = edName
         DataType = ftString
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'Code'
         Component = ceCode
         DataType = ftInteger
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'GLNCode'
         Component = edGLNCode
         DataType = ftString
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'JuridicalId'
@@ -233,7 +239,9 @@
     Top = 176
   end
   object dsdJuridicalGuides: TdsdGuides
+    Key = '0'
     LookupControl = ceJuridical
+    PositionDataSet = 'ClientDataSet'
     Left = 312
     Top = 184
   end

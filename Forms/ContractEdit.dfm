@@ -2,8 +2,8 @@ inherited ContractEditForm: TContractEditForm
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
   ClientHeight = 309
   ClientWidth = 531
-  ExplicitWidth = 539
-  ExplicitHeight = 343
+  ExplicitWidth = 547
+  ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   object edInvNumber: TcxTextEdit
@@ -18,17 +18,17 @@ inherited ContractEditForm: TContractEditForm
     Caption = #1053#1086#1084#1077#1088' '#1076#1086#1075#1086#1074#1086#1088#1072
   end
   object cxButton1: TcxButton
-    Left = 306
+    Left = 138
     Top = 264
     Width = 75
     Height = 25
-    Action = dsdExecStoredProc
+    Action = dsdInsertUpdateGuides
     Default = True
     ModalResult = 8
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 408
+    Left = 304
     Top = 264
     Width = 75
     Height = 25
@@ -135,16 +135,16 @@ inherited ContractEditForm: TContractEditForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
     end
-    object dsdExecStoredProc: TdsdExecStoredProc
+    object dsdFormClose1: TdsdFormClose
+    end
+    object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
           StoredProc = spInsertUpdate
         end>
-      Caption = 'Ok'
-    end
-    object dsdFormClose1: TdsdFormClose
+      Caption = #1054#1082
     end
   end
   object spInsertUpdate: TdsdStoredProc

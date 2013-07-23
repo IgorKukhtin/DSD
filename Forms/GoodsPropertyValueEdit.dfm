@@ -2,8 +2,8 @@ inherited GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
   Caption = #1047#1085#1072#1095#1077#1085#1080#1103' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
   ClientHeight = 277
   ClientWidth = 560
-  ExplicitWidth = 568
-  ExplicitHeight = 304
+  ExplicitWidth = 576
+  ExplicitHeight = 315
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -19,13 +19,13 @@ inherited GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
   end
   object cxButton1: TcxButton
     Left = 167
-    Top = 240
+    Top = 244
     Width = 75
     Height = 25
-    Action = dsdExecStoredProc
+    Action = dsdInsertUpdateGuides
     Default = True
     ModalResult = 8
-    TabOrder = 12
+    TabOrder = 11
   end
   object cxButton2: TcxButton
     Left = 311
@@ -163,16 +163,16 @@ inherited GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
     end
-    object dsdExecStoredProc: TdsdExecStoredProc
+    object dsdFormClose1: TdsdFormClose
+    end
+    object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
           StoredProc = spInsertUpdate
         end>
-      Caption = 'Ok'
-    end
-    object dsdFormClose1: TdsdFormClose
+      Caption = #1054#1082
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -193,36 +193,42 @@ inherited GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         Component = edName
         DataType = ftString
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inAmount'
         Component = ceAmount
         DataType = ftFloat
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inBarCode'
         Component = edBarCode
         DataType = ftString
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inArticle'
         Component = edArticle
         DataType = ftString
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inBarCodeGLN'
         Component = edBarCodeGLN
         DataType = ftString
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inArticleGLN'
         Component = edArticleGLN
         DataType = ftString
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inGoodsPropertyId'
@@ -277,36 +283,42 @@ inherited GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         Component = edName
         DataType = ftString
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'Amount'
         Component = ceAmount
         DataType = ftInteger
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'BarCode'
         Component = edBarCode
         DataType = ftInteger
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'Article'
         Component = edArticle
         DataType = ftInteger
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'BarCodeGLN'
         Component = edBarCodeGLN
         DataType = ftInteger
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'ArticleGLN'
         Component = edArticleGLN
         DataType = ftInteger
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'GoodsPropertyId'
@@ -382,7 +394,9 @@ inherited GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
     Top = 21
   end
   object dsdGoodsPropertyGuides: TdsdGuides
+    Key = '0'
     LookupControl = ceGoodsProperty
+    PositionDataSet = 'ClientDataSet'
     Left = 523
     Top = 21
   end
@@ -409,7 +423,9 @@ inherited GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
     Top = 69
   end
   object dsdGoodsGuides: TdsdGuides
+    Key = '0'
     LookupControl = ceGoods
+    PositionDataSet = 'ClientDataSet'
     Left = 267
     Top = 69
   end
@@ -436,7 +452,9 @@ inherited GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
     Top = 93
   end
   object dsdGoodsKindGuides: TdsdGuides
+    Key = '0'
     LookupControl = ceGoodsKind
+    PositionDataSet = 'ClientDataSet'
     Left = 499
     Top = 101
   end

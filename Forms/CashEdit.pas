@@ -34,7 +34,6 @@ type
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     dsdDataSetRefresh: TdsdDataSetRefresh;
-    dsdExecStoredProc: TdsdExecStoredProc;
     dsdFormClose1: TdsdFormClose;
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
@@ -49,6 +48,7 @@ type
     ceBranch: TcxButtonEdit;
     cePaidKind: TcxButtonEdit;
     ceCurrency: TcxButtonEdit;
+    dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
   private
     { Private declarations }
   public

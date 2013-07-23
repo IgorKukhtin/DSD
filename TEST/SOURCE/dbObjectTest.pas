@@ -375,8 +375,8 @@ type
   public
       // Удаляется Объект и все подчиненные
    procedure Delete(Id: Integer); override;
-   function InsertUpdatePersonal(const Id: integer; Code: Integer; Name: string;
-    MemberId, PositionId, UnitId, JuridicalId, BusinessId: integer; DateIn,DateOut: TDateTime): integer;
+   function InsertUpdatePersonal(const Id: integer; Code: Integer; //Name: string;
+    MemberId, PositionId, UnitId, JuridicalId, BusinessId: integer; DateIn, DateOut: TDateTime): integer;
     constructor Create; override;
   end;
 
@@ -2393,7 +2393,8 @@ begin
   UnitId := TUnit.Create.GetDefault;
   JuridicalId := TJuridical.Create.GetDefault;
   BusinessId := TBusinessTest.Create.GetDefault;
-  result := InsertUpdatePersonal(0, -3, 'Сотрудник', MemberId, PositionId, UnitId, JuridicalId, BusinessId, Date,Date);
+  //result := InsertUpdatePersonal(0, -3, 'Сотрудник', MemberId, PositionId, UnitId, JuridicalId, BusinessId, Date,Date);
+  result := InsertUpdatePersonal(0, -3, MemberId, PositionId, UnitId, JuridicalId, BusinessId, Date,Date);
 end;
 
 function TPersonalTest.InsertUpdatePersonal;
@@ -2401,7 +2402,7 @@ begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inCode', ftInteger, ptInput, Code);
-  FParams.AddParam('inName', ftString, ptInput, Name);
+  //FParams.AddParam('inName', ftString, ptInput, Name);
   FParams.AddParam('inMemberId', ftInteger, ptInput, MemberId);
   FParams.AddParam('inPositionId', ftInteger, ptInput, PositionId);
   FParams.AddParam('inUnitId', ftInteger, ptInput, UnitId);
@@ -2425,7 +2426,7 @@ begin
   try
     // Получение данных
     with ObjectTest.GetRecord(Id) do
-      Check((FieldByName('Name').AsString = 'Сотрудник'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+      Check((FieldByName('Code').AsInteger = -3), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
   finally
     ObjectTest.Delete(Id);
   end;

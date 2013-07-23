@@ -1,19 +1,18 @@
 inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
   Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   ClientHeight = 427
   ClientWidth = 1240
   ExplicitWidth = 1248
   ExplicitHeight = 461
   PixelsPerInch = 96
   TextHeight = 13
-  object Panel1: TPanel
+  object TPanel
     Left = 0
     Top = 26
     Width = 1240
     Height = 41
     Align = alTop
-    Caption = 'Panel1'
     TabOrder = 1
     object deStart: TcxDateEdit
       Left = 208
@@ -116,7 +115,7 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 64
+    Left = 88
     Top = 136
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -375,8 +374,8 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
         ParamType = ptInput
         Value = '01.05.2014'
       end>
-    Left = 24
-    Top = 176
+    Left = 40
+    Top = 192
   end
   object spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_ProductionSeparate'
