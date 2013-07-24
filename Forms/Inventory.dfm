@@ -16,7 +16,6 @@ inherited InventoryForm: TInventoryForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1028
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 27
@@ -81,16 +80,12 @@ inherited InventoryForm: TInventoryForm
     TabOrder = 5
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 1028
-    ExplicitHeight = 286
     ClientRectBottom = 323
     ClientRectRight = 1006
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 1028
-      ExplicitHeight = 262
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -98,8 +93,6 @@ inherited InventoryForm: TInventoryForm
         Height = 299
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1028
-        ExplicitHeight = 262
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource
@@ -107,7 +100,7 @@ inherited InventoryForm: TInventoryForm
             item
               Kind = skSum
               Position = spFooter
-              Column = colAmountSumm
+              Column = colSumm
             end
             item
               Kind = skSum
@@ -134,7 +127,7 @@ inherited InventoryForm: TInventoryForm
           DataController.Summary.FooterSummaryItems = <
             item
               Kind = skSum
-              Column = colAmountSumm
+              Column = colSumm
             end
             item
               Kind = skSum
@@ -185,16 +178,19 @@ inherited InventoryForm: TInventoryForm
             HeaderAlignmentHorz = taCenter
             Width = 80
           end
-          object colAmountSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072
-            DataBinding.FieldName = 'AmountSumm'
-            HeaderAlignmentHorz = taCenter
-            Width = 91
-          end
           object colHeadCount: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             HeaderAlignmentHorz = taCenter
+          end
+          object colCount: TcxGridDBColumn
+            Caption = #1050#1086#1083'. '#1091#1087#1072#1082#1086#1074#1086#1082
+          end
+          object colSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'AmountSumm'
+            HeaderAlignmentHorz = taCenter
+            Width = 91
           end
           object colAssetName: TcxGridDBColumn
             Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072
@@ -208,6 +204,7 @@ inherited InventoryForm: TInventoryForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitTop = 0
       ExplicitWidth = 1028
       ExplicitHeight = 262
       object cxGridEntry: TcxGrid
@@ -504,7 +501,7 @@ inherited InventoryForm: TInventoryForm
           'Width')
       end
       item
-        Component = colAmountSumm
+        Component = colSumm
         Properties.Strings = (
           'SortIndex'
           'SortOrder'

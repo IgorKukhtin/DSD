@@ -64,6 +64,14 @@ begin
   ExecFile(ProcedurePath + 'MovementItem\_ReturnOut\gpInsertUpdate_MovementItem_ReturnOut.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItem\_ReturnOut\gpSelect_MovementItem_ReturnOut.sql', ZQuery);
 
+  ExecFile(ProcedurePath + 'MovementItem\_ReturnIn\gpInsertUpdate_MovementItem_ReturnIn.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\_ReturnIn\gpSelect_MovementItem_ReturnIn.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'MovementItem\_Loss\gpInsertUpdate_MovementItem_Loss.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\_Loss\gpSelect_MovementItem_Loss.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'MovementItem\_Inventory\gpInsertUpdate_MovementItem_Inventory.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\_Inventory\gpSelect_MovementItem_Inventory.sql', ZQuery);
 
 end;
 

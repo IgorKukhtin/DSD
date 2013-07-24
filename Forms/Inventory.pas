@@ -58,7 +58,7 @@ type
     colCode: TcxGridDBColumn;
     colName: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
-    colAmountSumm: TcxGridDBColumn;
+    colSumm: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     spSelectMovementContainerItem: TdsdStoredProc;
     cxGridEntryDBTableView: TcxGridDBTableView;
@@ -95,6 +95,7 @@ type
     colGoodsKindName_comlete: TcxGridDBColumn;
     colAccountOnComplete: TcxGridDBColumn;
     colAssetName: TcxGridDBColumn;
+    colCount: TcxGridDBColumn;
   private
   public
   end;

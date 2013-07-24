@@ -1,5 +1,5 @@
 inherited ReturnInForm: TReturnInForm
-  Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+  Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
   ClientHeight = 396
   ClientWidth = 1028
   KeyPreview = True
@@ -220,9 +220,6 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
