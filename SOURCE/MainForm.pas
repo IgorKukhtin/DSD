@@ -133,6 +133,8 @@ type
     bbReportProfitLoss: TdxBarButton;
     bbReportHistoryCost: TdxBarButton;
     actReport_ProfitLoss: TdsdOpenForm;
+    actContract: TdsdOpenForm;
+    bbContract: TdxBarButton;
     procedure FormCreate(Sender: TObject);
   private
     procedure OnException(Sender: TObject; E: Exception);

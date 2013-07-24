@@ -172,6 +172,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbContract'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarSeparator1'
         end
         item
@@ -322,6 +326,10 @@ object MainForm: TMainForm
     end
     object bbContractKind: TdxBarButton
       Action = actContractKind
+      Category = 0
+    end
+    object bbContract: TdxBarButton
+      Action = actContract
       Category = 0
     end
     object bbUnitGroup: TdxBarButton
@@ -627,6 +635,14 @@ object MainForm: TMainForm
       Caption = #1042#1080#1076#1099' '#1076#1086#1075#1086#1074#1086#1088#1086#1074
       Hint = #1042#1080#1076#1099' '#1076#1086#1075#1086#1074#1086#1088#1086#1074
       FormName = 'TContractKindForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actContract: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1044#1086#1075#1086#1074#1086#1088#1072
+      Hint = #1044#1086#1075#1086#1074#1086#1088#1072
+      FormName = 'TContractForm'
       GuiParams = <>
       isShowModal = False
     end

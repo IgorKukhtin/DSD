@@ -11,7 +11,6 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , HeadCount TFloat, Count TFloat, Summ TFloat
              , PartionGoodsDate TDateTime, PartionGoods TVarChar, GoodsKindName  TVarChar
              , AssetId Integer, AssetName TVarChar 
-             , AmountSumm TFloat
              , isErased Boolean
              )
 AS
@@ -45,7 +44,6 @@ BEGIN
            , Object_Asset.Id         AS AssetId
            , Object_Asset.ValueData  AS AssetName
 
-           , CAST (NULL AS TFloat) AS AmountSumm
            , FALSE AS isErased
 
        FROM Object AS Object_Goods
@@ -90,10 +88,6 @@ BEGIN
            , Object_Asset.Id         AS AssetId
            , Object_Asset.ValueData  AS AssetName
 
-           , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                           THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0) ) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
-                        ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
-                   END AS TFloat) AS AmountSumm
            , MovementItem.isErased
 
        FROM MovementItem
@@ -146,7 +140,7 @@ BEGIN
            , MIFloat_Count.ValueData AS Count
            , MIFloat_Summ.ValueData  AS Summ
 
-           , MIString_PartionGoodsDate.ValueData AS PartionGoodsDate
+           , MIDate_PartionGoods.ValueData AS PartionGoodsDate
            , MIString_PartionGoods.ValueData AS PartionGoods
 
            , Object_GoodsKind.ValueData AS GoodsKindName
@@ -154,10 +148,6 @@ BEGIN
            , Object_Asset.Id         AS AssetId
            , Object_Asset.ValueData  AS AssetName
 
-           , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                           THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
-                        ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
-                   END AS TFloat) AS AmountSumm
            , MovementItem.isErased
 
        FROM MovementItem

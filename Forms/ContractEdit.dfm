@@ -1,9 +1,9 @@
 inherited ContractEditForm: TContractEditForm
-  Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+  Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1044#1086#1075#1086#1074#1086#1088#1072
   ClientHeight = 309
   ClientWidth = 531
-  ExplicitWidth = 547
-  ExplicitHeight = 347
+  ExplicitWidth = 539
+  ExplicitHeight = 343
   PixelsPerInch = 96
   TextHeight = 13
   object edInvNumber: TcxTextEdit
