@@ -374,6 +374,14 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbReportBalance'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReportProfitLoss'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReportHistoryCost'
         end>
     end
     object bbBank: TdxBarButton

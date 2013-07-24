@@ -199,7 +199,7 @@ $BODY$BEGIN
                  JOIN MovementItemDesc ON MovementItemDesc.Id = MovementItem.DescId
             WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
               AND MIContainer.DescId = zc_MIContainer_Summ()
-           ) AS _tmpSumm ON _tmpSumm.ObjectCostId = ContainerObjectCost.ObjectCostId
+           ) AS _tmpSumm ON _tmpSumm.ObjectCostId = ContainerObjectCost.ObjectCostId AND 1=0
             LEFT JOIN
 
            (SELECT ContainerObjectCost_RemainsSumm.ObjectCostId
@@ -258,7 +258,33 @@ $BODY$BEGIN
             GROUP BY ContainerObjectCost_RemainsSumm.ObjectCostId
            ) AS tmpOperationCount ON tmpOperationCount.ObjectCostId = ContainerObjectCost.ObjectCostId
 
-       WHERE ContainerObjectCost.ObjectCostDescId = zc_ObjectCost_Basis();
+       WHERE ContainerObjectCost.ObjectCostDescId = zc_ObjectCost_Basis()
+         AND (HistoryCost.CalcCount <> 0
+           OR HistoryCost.StartCount <> 0
+           OR tmpOperationCount.AmountRemainsStart <> 0
+
+           OR HistoryCost.IncomeCount <> 0
+           OR tmpOperationCount.AmountDebet <> 0
+
+           OR tmpOperationCount.AmountKredit <> 0
+
+           OR tmpOperationCount.AmountRemainsEnd <> 0
+
+           OR HistoryCost.StartSumm <> 0
+           OR tmpOperationSumm.AmountRemainsStart <> 0
+
+           OR HistoryCost.IncomeSumm <> 0
+           OR tmpOperationSumm.AmountDebet <> 0
+
+           OR tmpOperationSumm.AmountKredit <> 0
+
+           OR tmpOperationSumm.AmountRemainsEnd <> 0
+
+           OR _tmpSumm.OperCount <> 0
+           OR _tmpSumm.OperPrice <> 0
+           OR _tmpSumm.OperSumm <> 0
+             )
+       ;
 
   
 END;
@@ -275,5 +301,5 @@ ALTER FUNCTION gpReport_HistoryCost (TDateTime, TDateTime, TVarChar) OWNER TO po
 */
 
 -- тест
--- SELECT * FROM gpReport_HistoryCost (inStartDate:= '01.01.2013', inEndDate:= '31.01.2013', inSession:= '2') WHERE _tmp.ObjectCostId IN (13928)
--- SELECT * FROM gpReport_HistoryCost (inStartDate:= '01.01.2013', inEndDate:= '31.01.2013', inSession:= '2') WHERE (MovementId <> 0 OR  IncomeSumm_calc <> 0 OR OutSumm_calc <> 0) and  GoodsCode = 4033
+-- SELECT * FROM gpReport_HistoryCost (inStartDate:= '01.01.2013', inEndDate:= '31.01.2013', inSession:= '2') -- WHERE _tmp.ObjectCostId IN (13928)
+-- SELECT * FROM gpReport_HistoryCost (inStartDate:= '01.01.2013', inEndDate:= '31.01.2013', inSession:= '2') -- WHERE (MovementId <> 0 OR  IncomeSumm_calc <> 0 OR OutSumm_calc <> 0) and  GoodsCode = 4033

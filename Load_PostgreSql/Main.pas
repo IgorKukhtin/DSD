@@ -404,8 +404,12 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.OKGuideButtonClick(Sender: TObject);
+var tmpDate1,tmpDate2:TDateTime;
+    Year, Month, Day, Hour, Min, Sec, MSec: Word;
+    StrTime:String;
 begin
      if MessageDlg('Действительно загрузить выбранные справочники?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
+
      fStop:=false;
      DBGrid.Enabled:=false;
      OKGuideButton.Enabled:=false;
@@ -418,6 +422,8 @@ begin
                                                  pSetNullGuide_Id_Postgres;
                                                  pSetNullDocument_Id_Postgres;
                                            end;
+     //
+     tmpDate1:=NOw;
      //
      if not fStop then pLoadGuide_Measure;
      if not fStop then pLoadGuide_GoodsGroup;
@@ -460,12 +466,23 @@ begin
      toZConnection.Connected:=false;
      //fromADOConnection.Connected:=false;
      //
-     if fStop then ShowMessage('Справочники НЕ загружены.') else ShowMessage('Справочники загружены.');
+     tmpDate2:=NOw;
+     if (tmpDate2-tmpDate1)>=1
+     then StrTime:=DateTimeToStr(tmpDate2-tmpDate1)
+     else begin
+               DecodeTime(tmpDate2-tmpDate1, Hour, Min, Sec, MSec);
+               StrTime:=IntToStr(Hour)+':'+IntToStr(Min)+':'+IntToStr(Sec);
+     end;
+
+     if fStop then ShowMessage('Справочники НЕ загружены. Time=('+StrTime+').') else ShowMessage('Справочники загружены. Time=('+StrTime+').');
      //
      fStop:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.OKDocumentButtonClick(Sender: TObject);
+var tmpDate1,tmpDate2:TDateTime;
+    Year, Month, Day, Hour, Min, Sec, MSec: Word;
+    StrTime:String;
 begin
      if MessageDlg('Действительно загрузить выбранные документы?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
      fStop:=false;
@@ -479,6 +496,8 @@ begin
      if cbSetNull_Id_Postgres.Checked then begin if MessageDlg('Действительно set ДОКУМЕНТЫ.Sybase.ВСЕМ.Id_Postgres = null?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
                                                  pSetNullDocument_Id_Postgres;
                                            end;
+     //
+     tmpDate1:=NOw;
      //
      if not fStop then pLoadGuide_Juridical(true);
      if not fStop then pLoadGuide_Partner(true);
@@ -529,12 +548,23 @@ begin
      toZConnection.Connected:=false;
      //fromADOConnection.Connected:=false;
      //
-     if fStop then ShowMessage('Документы НЕ загружены.') else ShowMessage('Документы загружены.');
+     tmpDate2:=NOw;
+     if (tmpDate2-tmpDate1)>=1
+     then StrTime:=DateTimeToStr(tmpDate2-tmpDate1)
+     else begin
+               DecodeTime(tmpDate2-tmpDate1, Hour, Min, Sec, MSec);
+               StrTime:=IntToStr(Hour)+':'+IntToStr(Min)+':'+IntToStr(Sec);
+     end;
+
+     if fStop then ShowMessage('Документы НЕ загружены. Time=('+StrTime+').') else ShowMessage('Документы загружены. Time=('+StrTime+').');
      //
      fStop:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.OKCompleteDocumentButtonClick(Sender: TObject);
+var tmpDate1,tmpDate2:TDateTime;
+    Year, Month, Day, Hour, Min, Sec, MSec: Word;
+    StrTime:String;
 begin
      if (cbInsertHistoryCost.Checked)
      then if MessageDlg('Действительно расчитать <СЕБЕСТОИМОСТЬ по МЕСЯЦАМ> за период с <'+DateToStr(StrToDate(StartDateCompleteEdit.Text))+'> по <'+DateToStr(StrToDate(EndDateCompleteEdit.Text))+'> ?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit else
@@ -556,6 +586,8 @@ begin
      //
      Gauge.Visible:=true;
      //
+     tmpDate1:=NOw;
+     //
      if not fStop then pInsertHistoryCost;
      //
      if not fStop then pCompleteDocument_Income;
@@ -573,10 +605,18 @@ begin
      toZConnection.Connected:=false;
      //fromADOConnection.Connected:=false;
      //
-     if (fStop)and(cbInsertHistoryCost.Checked) then ShowMessage('СЕБЕСТОИМОСТЬ по МЕСЯЦАМ расчитана НЕ полностью.')
-     else if fStop then ShowMessage('Документы НЕ Распроведены и(или) НЕ Проведены.')
-     else if cbInsertHistoryCost.Checked then ShowMessage('СЕБЕСТОИМОСТЬ по МЕСЯЦАМ расчитана полностью.')
-          else ShowMessage('Документы Распроведены и(или) Проведены.');
+     tmpDate2:=NOw;
+     if (tmpDate2-tmpDate1)>=1
+     then StrTime:=DateTimeToStr(tmpDate2-tmpDate1)
+     else begin
+               DecodeTime(tmpDate2-tmpDate1, Hour, Min, Sec, MSec);
+               StrTime:=IntToStr(Hour)+':'+IntToStr(Min)+':'+IntToStr(Sec);
+     end;
+
+     if (fStop)and(cbInsertHistoryCost.Checked) then ShowMessage('СЕБЕСТОИМОСТЬ по МЕСЯЦАМ расчитана НЕ полностью. Time=('+StrTime+').')
+     else if fStop then ShowMessage('Документы НЕ Распроведены и(или) НЕ Проведены. Time=('+StrTime+').')
+     else if cbInsertHistoryCost.Checked then ShowMessage('СЕБЕСТОИМОСТЬ по МЕСЯЦАМ расчитана полностью. Time=('+StrTime+').')
+          else ShowMessage('Документы Распроведены и(или) Проведены. Time=('+StrTime+').');
      //
      fStop:=true;
 end;
@@ -3760,9 +3800,11 @@ begin
         Add('     , Bill.Id_Postgres as MovementId_Postgres');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , -BillItems.OperCount as Amount');
+        Add('     , BillItems.OperCount_Upakovka as inCount');
         Add('     , BillItems.OperCount_sh as HeadCount');
         Add('     , BillItems.PartionStr_MB as PartionGoods');
         Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
+        Add('     , 0 as AssetId_Postgres');
         Add('     , BillItems.Id_Postgres as Id_Postgres');
         Add('     , zc_rvYes() as zc_rvYes');
         Add('from dba.Bill');
@@ -3799,9 +3841,11 @@ begin
         toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, '');
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, '');
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inHeadCount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inPartionGoods',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAssetId',ftInteger,ptInput, 0);
         //
         //DisableControls;
         while not EOF do
@@ -3813,9 +3857,11 @@ begin
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId_Postgres').AsString;
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
+             toStoredProc.Params.ParamByName('inCount').Value:=FieldByName('inCount').AsFloat;
              toStoredProc.Params.ParamByName('inHeadCount').Value:=FieldByName('HeadCount').AsFloat;
              toStoredProc.Params.ParamByName('inPartionGoods').Value:=FieldByName('PartionGoods').AsString;
              toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inAssetId').Value:=FieldByName('AssetId_Postgres').AsInteger;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
@@ -4579,6 +4625,7 @@ begin
         Add('     , BillItems.OperCount_sh as HeadCount');
         Add('     , BillItems.PartionStr_MB as PartionGoods');
         Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
+        Add('     , 0 as AssetId_Postgres');
         Add('     , BillItems.Id_Postgres as Id_Postgres');
         Add('     , zc_rvYes() as zc_rvYes');
         Add('from dba.Bill');
@@ -4626,6 +4673,7 @@ begin
         toStoredProc.Params.AddParam ('inHeadCount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inPartionGoods',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAssetId',ftInteger,ptInput, 0);
         //
         //DisableControls;
         while not EOF do
@@ -4643,6 +4691,7 @@ begin
              toStoredProc.Params.ParamByName('inHeadCount').Value:=FieldByName('HeadCount').AsFloat;
              toStoredProc.Params.ParamByName('inPartionGoods').Value:=FieldByName('PartionGoods').AsString;
              toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inAssetId').Value:=FieldByName('AssetId_Postgres').AsInteger;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)

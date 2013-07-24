@@ -8,11 +8,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_ProductionUnion_Master(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inPartionClose	     Boolean   , -- партия закрыта (да/нет)        	
-    IN inPartionGoods        TVarChar  , -- Партия товара
-    IN inComment	         TVarChar  , -- Комментарий	                   
     IN inCount	             TFloat    , -- Количество батонов или упаковок 
-    IN inRealWeight	         TFloat    , -- Фактический вес(информативно)   
-    IN inCuterCount          TFloat    , -- Количество кутеров	           
+    IN inRealWeight          TFloat    , -- Фактический вес(информативно)
+    IN inCuterCount          TFloat    , -- Количество кутеров
+    IN inPartionGoods        TVarChar  , -- Партия товара
+    IN inComment             TVarChar  , -- Комментарий	                   
     IN inGoodsKindId         Integer   , -- Виды товаров 
     IN inReceiptId           Integer   , -- Рецептуры	                   
     IN inSession             TVarChar    -- сессия пользователя
@@ -57,6 +57,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.07.13                                        * Важен порядок полей
  22.07.13         * add GoodsKind
  17.07.13         *              
  30.06.13                                        *

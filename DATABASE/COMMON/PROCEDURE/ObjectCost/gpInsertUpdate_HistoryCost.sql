@@ -325,7 +325,8 @@ BEGIN
                     ELSE 0
                END AS Price
              , _tmpMaster.StartCount, _tmpMaster.StartSumm, _tmpMaster.IncomeCount, _tmpMaster.IncomeSumm, _tmpMaster.CalcCount, _tmpMaster.CalcSumm
-        FROM _tmpMaster;
+        FROM _tmpMaster
+        WHERE _tmpMaster.StartCount <> 0 OR _tmpMaster.StartSumm <> 0 OR _tmpMaster.IncomeCount <> 0 OR _tmpMaster.IncomeSumm <> 0 OR _tmpMaster.CalcCount <> 0 OR _tmpMaster.CalcSumm <> 0;
 
      END IF; -- if inInsert > 0
 
