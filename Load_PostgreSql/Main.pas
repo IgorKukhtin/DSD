@@ -3088,7 +3088,7 @@ begin
              toStoredProc.Params.ParamByName('inStartDate').Value:=FieldByName('StartDate').AsDateTime;
              toStoredProc.Params.ParamByName('inEndDate').Value:=FieldByName('EndDate').AsDateTime;
              toStoredProc.Params.ParamByName('inItearationCount').Value:=500;
-             toStoredProc.Params.ParamByName('inInsert').Value:=12345;
+             toStoredProc.Params.ParamByName('inInsert').Value:=12345;//захардкодил
              if not myExecToStoredProc then ;//exit;
              //
              Next;

@@ -329,7 +329,7 @@ BEGIN
 
      END IF; -- if inInsert > 0
 
-     IF inInsert <> 12345 THEN
+     IF inInsert <> 12345 THEN -- 12345 - для Load_PostgreSql
      -- tmp - test
      RETURN QUERY
         SELECT vbItearation, vbCountDiff
