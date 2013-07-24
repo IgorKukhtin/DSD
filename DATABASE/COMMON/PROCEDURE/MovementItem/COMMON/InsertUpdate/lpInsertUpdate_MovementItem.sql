@@ -7,6 +7,11 @@ IN inAmount TFloat,
 IN inParentId Integer)
  AS
 $BODY$BEGIN
+
+    IF inParentId = 0 THEN
+       inParentId := NULL;
+    END IF;
+
   IF COALESCE(ioId, 0) = 0 THEN
      INSERT INTO MovementItem (DescId, ObjectId, MovementId, Amount, ParentId)
             VALUES (inDescId, inObjectId, inMovementId, inAmount, inParentId) RETURNING Id INTO ioId;
@@ -22,3 +27,14 @@ END;           $BODY$
   COST 100;
 ALTER FUNCTION lpInsertUpdate_MovementItem(integer, integer, Integer, Integer, TFloat, Integer)
   OWNER TO postgres; 
+
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.07.13                                        * add inParentId := NULL
+
+*/
+
+-- тест

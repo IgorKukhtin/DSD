@@ -9,6 +9,9 @@ CREATE OR REPLACE FUNCTION gpComplete_Movement_ProductionSeparate(
 RETURNS VOID
 -- RETURNS TABLE (MovementItemId Integer, MovementId Integer, OperDate TDateTime, UnitId_From Integer, PersonalId_From Integer, ContainerId_GoodsFrom Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime, OperCount TFloat, AccountDirectionId_From Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, isPartionCount Boolean, isPartionSumm Boolean, isPartionDate Boolean, PartionGoodsId Integer)
 -- RETURNS TABLE (MovementItemId Integer, MovementId Integer, OperDate TDateTime, UnitId_To Integer, PersonalId_To Integer, BranchId_To Integer, ContainerId_GoodsTo Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime, OperCount TFloat, tmpOperSumm TFloat, AccountDirectionId_To Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, JuridicalId_basis_To Integer, BusinessId_To Integer, isPartionCount Boolean, isPartionSumm Boolean, isPartionDate Boolean, PartionGoodsId Integer)
+
+-- RETURNS TABLE (MovementItemId Integer, ContainerId_From Integer, OperSumm TFloat, InfoMoneyId_Detail_From Integer)
+-- RETURNS TABLE (MovementItemId Integer, OperSumm TFloat, InfoMoneyId_Detail_To Integer)
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -105,7 +108,7 @@ BEGIN
                   , Movement.OperDate
                   , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN MovementLinkObject_To.ObjectId ELSE 0 END, 0) AS UnitId_To
                   , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Personal() THEN MovementLinkObject_To.ObjectId ELSE 0 END, 0) AS PersonalId_To
-                  , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Branch.ObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Branch.ObjectId ELSE 0 END, 0) AS BranchId_To
+                  , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Branch.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Branch.ChildObjectId ELSE 0 END, 0) AS BranchId_To
 
                   , MovementItem.ObjectId AS GoodsId
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -123,8 +126,8 @@ BEGIN
                   -- Статьи назначения
                   , COALESCE (lfObject_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
 
-                  , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Juridical.ObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Juridical.ObjectId ELSE 0 END, 0) AS JuridicalId_basis_To
-                  , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Business.ObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Business.ObjectId ELSE 0 END, 0) AS BusinessId_To
+                  , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Juridical.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Juridical.ChildObjectId ELSE 0 END, 0) AS JuridicalId_basis_To
+                  , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Business.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Business.ChildObjectId ELSE 0 END, 0) AS BusinessId_To
 
                   , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE)     AS isPartionCount
                   , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)      AS isPartionSumm
@@ -273,7 +276,7 @@ BEGIN
                   , COALESCE (ObjectBoolean_PartionDate.ValueData, FALSE)      AS isPartionDate
 
               FROM Movement
-                   JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE
+                   JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
               -- FROM _tmpItem
               --      JOIN MovementItem ON MovementItem.ParentId = _tmpItem.MovementItemId AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE
 
@@ -326,7 +329,7 @@ BEGIN
      UPDATE _tmpItemChild SET PartionGoodsId = CASE WHEN OperDate >= zc_DateStart_PartionGoods()
                                                      AND AccountDirectionId_To = zc_Enum_AccountDirection_20200() -- "Запасы"; 20200; "на складах"
                                                      AND (isPartionCount OR isPartionSumm)
-                                                        THEN lpInsertFind_Object_PartionGoods (PartionGoods)
+                                                        THEN lpInsertFind_Object_PartionGoods (zfFormat_PartionGoods (PartionGoods)) -- парсим патию, т.к. в начале ненужные символы
                                                     WHEN isPartionDate
                                                      AND InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- "Доходы"; 30100; "Продукция"
                                                         THEN lpInsertFind_Object_PartionGoods (PartionGoodsDate)
@@ -339,7 +342,7 @@ BEGIN
      UPDATE _tmpItem SET PartionGoodsId = CASE WHEN OperDate >= zc_DateStart_PartionGoods()
                                                 AND AccountDirectionId_From = zc_Enum_AccountDirection_20200() -- "Запасы"; 20200; "на складах"
                                                 AND (isPartionCount OR isPartionSumm)
-                                                   THEN lpInsertFind_Object_PartionGoods (PartionGoods)
+                                                   THEN lpInsertFind_Object_PartionGoods (zfFormat_PartionGoods (PartionGoods)) -- парсим патию, т.к. в начале ненужные символы
                                                WHEN isPartionDate
                                                 AND InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- "Доходы"; 30100; "Продукция"
                                                    THEN lpInsertFind_Object_PartionGoods (PartionGoodsDate)
@@ -495,24 +498,26 @@ BEGIN
         SELECT
               _tmpItem.MovementItemId
             , Container_Summ.Id                                 AS ContainerId_From
-            , ABS (_tmpItem.OperCount * HistoryCost.Price) AS OperSumm
+            , ABS (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0)) AS OperSumm
             , ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail_From
         FROM _tmpItem
              JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_GoodsFrom
                                              AND Container_Summ.DescId = zc_Container_Summ()
-             JOIN ContainerObjectCost AS ContainerObjectCost_Basis ON ContainerObjectCost_Basis.ContainerId = Container_Summ.Id
-                                                                  AND ContainerObjectCost_Basis.ObjectCostDescId = zc_ObjectCost_Basis()
-             JOIN HistoryCost ON HistoryCost.ObjectCostId = ContainerObjectCost_Basis.ObjectCostId
-                             AND _tmpItem.OperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
              JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
                                       ON ContainerLinkObject_InfoMoneyDetail.ContainerId = Container_Summ.Id
                                      AND ContainerLinkObject_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
-        WHERE (_tmpItem.OperCount * HistoryCost.Price) <> 0;
+             JOIN ContainerObjectCost AS ContainerObjectCost_Basis
+                                      ON ContainerObjectCost_Basis.ContainerId = Container_Summ.Id
+                                     AND ContainerObjectCost_Basis.ObjectCostDescId = zc_ObjectCost_Basis()
+             LEFT JOIN HistoryCost ON HistoryCost.ObjectCostId = ContainerObjectCost_Basis.ObjectCostId
+                                  AND _tmpItem.OperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
+        -- !ОБЯЗАТЕЛЬНО! вставляем нули - WHERE (_tmpItem.OperCount * HistoryCost.Price) <> 0
+        ;
 
 
      -- Группируем итоговые суммы по Факту для Master-элементы документа
      INSERT INTO _tmpItemSummTotal (OperSumm, InfoMoneyId_Detail_From)
-        SELECT SUM (OperSumm), InfoMoneyId_Detail_From FROM _tmpItemSumm GROUP BY InfoMoneyId_Detail_From;
+        SELECT SUM (_tmpItemSumm.OperSumm), _tmpItemSumm.InfoMoneyId_Detail_From FROM _tmpItemSumm GROUP BY _tmpItemSumm.InfoMoneyId_Detail_From;
      -- Расчет Итоговой суммы по Прайсу для Child-элементы документа
      SELECT SUM (tmpOperSumm) INTO vbOperSumm_byItem FROM _tmpItemChild;
 
@@ -527,7 +532,7 @@ BEGIN
 
      -- После распределения группируем итоговые суммы по Факту для Child-элементы документа
      INSERT INTO _tmpItemSummChildTotal (OperSumm, InfoMoneyId_Detail_To)
-        SELECT SUM (OperSumm), InfoMoneyId_Detail_To FROM _tmpItemSummChild GROUP BY InfoMoneyId_Detail_To;
+        SELECT SUM (_tmpItemSummChild.OperSumm), _tmpItemSummChild.InfoMoneyId_Detail_To FROM _tmpItemSummChild GROUP BY _tmpItemSummChild.InfoMoneyId_Detail_To;
 
      -- если не равны ДВЕ суммы, причем !обязательно! в разрезе InfoMoneyId_Detail
      IF EXISTS (SELECT _tmpItemSummTotal.OperSumm
@@ -547,6 +552,11 @@ BEGIN
                                                    );
      END IF;
 
+
+     -- для теста - Master - Summ
+     -- RETURN QUERY SELECT _tmpItemSumm.MovementItemId, _tmpItemSumm.ContainerId_From, _tmpItemSumm.OperSumm, _tmpItemSumm.InfoMoneyId_Detail_From FROM _tmpItemSumm;
+     -- для теста - Child - Summ
+     -- RETURN QUERY SELECT _tmpItemSummChild.MovementItemId, _tmpItemSummChild.OperSumm, _tmpItemSummChild.InfoMoneyId_Detail_To FROM _tmpItemSummChild;
 
 
              -- формируются Проводки для количественного учета - От кого
@@ -794,10 +804,11 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.07.13                                        * !ОБЯЗАТЕЛЬНО! вставляем нули
  21.07.13                                        *
 */
 
 -- тест
--- SELECT * FROM gpUnComplete_Movement (inMovementId:= 166506, inSession:= '2')
--- SELECT * FROM gpComplete_Movement_ProductionSeparate (inMovementId:= 166506, inSession:= '2')
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 166506, inSession:= '2')
+-- SELECT * FROM gpUnComplete_Movement (inMovementId:= 163810, inSession:= '2')
+-- SELECT * FROM gpComplete_Movement_ProductionSeparate (inMovementId:= 163810, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 163810, inSession:= '2')

@@ -91,7 +91,7 @@ BEGIN
                   , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Personal() THEN MovementLinkObject_From.ObjectId ELSE 0 END, 0) AS PersonalId_From
                   , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN MovementLinkObject_To.ObjectId ELSE 0 END, 0) AS UnitId_To
                   , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Personal() THEN MovementLinkObject_To.ObjectId ELSE 0 END, 0) AS PersonalId_To
-                  , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Branch.ObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Branch.ObjectId ELSE 0 END, 0) AS BranchId_To
+                  , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Branch.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Branch.ChildObjectId ELSE 0 END, 0) AS BranchId_To
 
                   , MovementItem.ObjectId AS GoodsId
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -111,8 +111,8 @@ BEGIN
                   -- Статьи назначения (?От Кого? и Кому)
                   , COALESCE (lfObject_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
 
-                  , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Juridical.ObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Juridical.ObjectId ELSE 0 END, 0) AS JuridicalId_basis_To
-                  , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Business.ObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Business.ObjectId ELSE 0 END, 0) AS BusinessId_To
+                  , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Juridical.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Juridical.ChildObjectId ELSE 0 END, 0) AS JuridicalId_basis_To
+                  , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Business.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Business.ChildObjectId ELSE 0 END, 0) AS BusinessId_To
 
                   , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE)     AS isPartionCount
                   , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)      AS isPartionSumm
@@ -375,20 +375,22 @@ BEGIN
      INSERT INTO _tmpItemSumm (MovementItemId, ContainerId_From, OperSumm, InfoMoneyId_Detail_From)
         SELECT
               _tmpItem.MovementItemId
-            , Container_Summ.Id                            AS ContainerId_From
-            , ABS (_tmpItem.OperCount * HistoryCost.Price) AS OperSumm
+            , Container_Summ.Id AS ContainerId_From
+            , ABS (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0)) AS OperSumm
             , ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail_From
         FROM _tmpItem
              JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_GoodsFrom
                                              AND Container_Summ.DescId = zc_Container_Summ()
-             JOIN ContainerObjectCost AS ContainerObjectCost_Basis ON ContainerObjectCost_Basis.ContainerId = Container_Summ.Id
-                                                                  AND ContainerObjectCost_Basis.ObjectCostDescId = zc_ObjectCost_Basis()
-             JOIN HistoryCost ON HistoryCost.ObjectCostId = ContainerObjectCost_Basis.ObjectCostId
-                             AND _tmpItem.OperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
              JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
                                       ON ContainerLinkObject_InfoMoneyDetail.ContainerId = Container_Summ.Id
                                      AND ContainerLinkObject_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
-        WHERE (_tmpItem.OperCount * HistoryCost.Price) <> 0;
+             JOIN ContainerObjectCost AS ContainerObjectCost_Basis
+                                      ON ContainerObjectCost_Basis.ContainerId = Container_Summ.Id
+                                     AND ContainerObjectCost_Basis.ObjectCostDescId = zc_ObjectCost_Basis()
+             LEFT JOIN HistoryCost ON HistoryCost.ObjectCostId = ContainerObjectCost_Basis.ObjectCostId
+                                  AND _tmpItem.OperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
+        -- !ОБЯЗАТЕЛЬНО! вставляем нули - WHERE (_tmpItem.OperCount * HistoryCost.Price) <> 0
+        ;
 
 
              -- формируются Проводки для количественного учета - От кого
@@ -625,6 +627,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.07.13                                        * !ОБЯЗАТЕЛЬНО! вставляем нули
  20.07.13                                        * add MovementItemId
  20.07.13                                        * all Партии товара, ЕСЛИ надо ...
  19.07.13                                        *

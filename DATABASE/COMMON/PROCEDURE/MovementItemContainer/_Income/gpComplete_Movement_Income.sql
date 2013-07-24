@@ -194,7 +194,7 @@ BEGIN
                   , COALESCE (ObjectBoolean_isCorporate.ValueData, FALSE) AS isCorporate
                   , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Member() THEN Object_From.Id ELSE 0 END, 0) AS PersonalId_From
                   , COALESCE (MovementLinkObject_To.ObjectId, 0) AS UnitId
-                  , COALESCE (ObjectLink_Unit_Branch.ObjectId, 0) AS BranchId_Unit
+                  , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) AS BranchId_Unit
                   , COALESCE (MovementLinkObject_PersonalPacker.ObjectId, 0) AS PersonalId_Packer
                   , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0) AS PaidKindId
                   , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId

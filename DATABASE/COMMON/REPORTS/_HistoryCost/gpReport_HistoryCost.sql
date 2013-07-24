@@ -8,15 +8,15 @@ CREATE OR REPLACE FUNCTION gpReport_HistoryCost(
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ObjectCostId Integer
-             , MovementId Integer, OperDate TDateTime, InvNumber TVarChar, MovementDescCode TVarChar, Summ_Movement TFloat
+             , MovementId Integer, MovementItemId Integer, OperDate TDateTime, InvNumber TVarChar, MovementDescCode TVarChar, OperCount TFloat, OperPrice TFloat, OperSumm TFloat
              , Price TFloat, Price_Calc TFloat
              , UnitParentCode Integer, UnitParentName TVarChar, UnitCode Integer, UnitName TVarChar
              , GoodsGroupCode Integer, GoodsGroupName TVarChar, GoodsCode Integer, GoodsName TVarChar, GoodsKindCode Integer, GoodsKindName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyCode_Detail Integer, InfoMoneyName_Detail TVarChar
              , PartionGoodsName TVarChar
-             , BusinessCode Integer, BusinessName TVarChar, JuridicalBasisCode Integer, JuridicalBasisName TVarChar
+             , BusinessId Integer, BusinessCode Integer, BusinessName TVarChar, JuridicalBasisId Integer, JuridicalBasisCode Integer, JuridicalBasisName TVarChar
              , BranchCode Integer, BranchName TVarChar, PersonalCode Integer, PersonalName TVarChar, AssetCode Integer, AssetName TVarChar
-             , StartCount TFloat, StartCount_calc TFloat, IncomeCount TFloat, IncomeCount_calc TFloat, OutCount TFloat, OutCount_calc TFloat, EndCount TFloat, EndCount_calc TFloat
+             , CalcCount TFloat, StartCount TFloat, StartCount_calc TFloat, IncomeCount TFloat, IncomeCount_calc TFloat, OutCount TFloat, OutCount_calc TFloat, EndCount TFloat, EndCount_calc TFloat
              , StartSumm TFloat, StartSumm_calc TFloat, IncomeSumm TFloat, IncomeSumm_calc TFloat, OutSumm TFloat, OutSumm_calc TFloat, EndSumm TFloat, EndSumm_calc TFloat
               )
 AS
@@ -29,10 +29,13 @@ $BODY$BEGIN
        SELECT
              ContainerObjectCost.ObjectCostId
            , _tmpSumm.MovementId
+           , _tmpSumm.MovementItemId
            , _tmpSumm.OperDate
            , _tmpSumm.InvNumber
            , _tmpSumm.Code AS MovementDescCode
-           , _tmpSumm.Amount AS Summ_Movement
+           , _tmpSumm.OperCount
+           , _tmpSumm.OperPrice
+           , _tmpSumm.OperSumm
 
            , HistoryCost.Price
            , CAST (
@@ -62,8 +65,10 @@ $BODY$BEGIN
 
            , Object_PartionGoods.ValueData AS PartionGoodsName
 
+           , Object_Business.Id AS BusinessId
            , Object_Business.ObjectCode AS BusinessCode
            , Object_Business.ValueData AS BusinessName
+           , Object_JuridicalBasis.Id AS JuridicalBasisId
            , Object_JuridicalBasis.ObjectCode AS JuridicalBasisCode
            , Object_JuridicalBasis.ValueData AS JuridicalBasisName
            , Object_Branch.ObjectCode AS BranchCode
@@ -73,6 +78,7 @@ $BODY$BEGIN
            , Object_Asset.ObjectCode AS AssetCode
            , Object_Asset.ValueData AS AssetName
 
+           , (HistoryCost.CalcCount )  AS CalcCount 
            , (HistoryCost.StartCount)  AS StartCount
            , tmpOperationCount.AmountRemainsStart AS StartCount_calc
 
@@ -176,16 +182,21 @@ $BODY$BEGIN
             LEFT JOIN
            (SELECT ContainerObjectCost_Summ.ObjectCostId
                  , Movement.Id AS MovementId
+                 , MIContainer.MovementItemId
                  , Movement.OperDate
                  , Movement.InvNumber
-                 , MovementDesc.Code
-                 , MIContainer.Amount
+                 , CAST (MovementDesc.Code || '+' || MovementItemDesc.Code AS TVarChar) AS Code
+                 , MovementItem.Amount AS OperCount
+                 , CAST (CASE WHEN MovementItem.Amount <> 0 THEN MIContainer.Amount / MovementItem.Amount ELSE 0 END AS TFloat) AS OperPrice
+                 , MIContainer.Amount AS OperSumm
             FROM MovementItemContainer AS MIContainer
                  JOIN ContainerObjectCost AS ContainerObjectCost_Summ
                                           ON ContainerObjectCost_Summ.ContainerId = MIContainer.ContainerId
                                          AND ContainerObjectCost_Summ.ObjectCostDescId = zc_ObjectCost_Basis()
+                 JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
                  JOIN Movement ON Movement.Id = MIContainer.MovementId
                  JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
+                 JOIN MovementItemDesc ON MovementItemDesc.Id = MovementItem.DescId
             WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
               AND MIContainer.DescId = zc_MIContainer_Summ()
            ) AS _tmpSumm ON _tmpSumm.ObjectCostId = ContainerObjectCost.ObjectCostId
@@ -264,4 +275,5 @@ ALTER FUNCTION gpReport_HistoryCost (TDateTime, TDateTime, TVarChar) OWNER TO po
 */
 
 -- тест
--- SELECT * FROM gpReport_HistoryCost (inStartDate:= '01.01.2013', inEndDate:= '31.01.2013', inSession:= '2') AS _tmp WHERE _tmp.ObjectCostId IN (6011)
+-- SELECT * FROM gpReport_HistoryCost (inStartDate:= '01.01.2013', inEndDate:= '31.01.2013', inSession:= '2') WHERE _tmp.ObjectCostId IN (13928)
+-- SELECT * FROM gpReport_HistoryCost (inStartDate:= '01.01.2013', inEndDate:= '31.01.2013', inSession:= '2') WHERE (MovementId <> 0 OR  IncomeSumm_calc <> 0 OR OutSumm_calc <> 0) and  GoodsCode = 4033

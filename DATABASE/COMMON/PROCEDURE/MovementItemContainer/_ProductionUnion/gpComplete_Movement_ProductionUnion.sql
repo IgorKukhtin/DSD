@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpComplete_Movement_ProductionUnion(
 RETURNS VOID
 -- RETURNS TABLE (MovementItemId Integer, MovementId Integer, OperDate TDateTime, UnitId_To Integer, PersonalId_To Integer, BranchId_To Integer, ContainerId_GoodsTo Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime, OperCount TFloat, AccountDirectionId_To Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, JuridicalId_basis_To Integer, BusinessId_To Integer, isPartionCount Boolean, isPartionSumm Boolean, isPartionDate Boolean, PartionGoodsId Integer)
 -- RETURNS TABLE (MovementItemId_Parent Integer, MovementItemId Integer, MovementId Integer, OperDate TDateTime, UnitId_From Integer, PersonalId_From Integer, ContainerId_GoodsFrom Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime, OperCount TFloat, AccountDirectionId_From Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, isPartionCount Boolean, isPartionSumm Boolean, isPartionDate Boolean, PartionGoodsId Integer)
+-- RETURNS TABLE (ObjectCostId Integer, MovementItemId_Parent Integer, MovementItemId Integer, ContainerId_From Integer, OperSumm TFloat, InfoMoneyId_Detail_From Integer)
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -41,7 +42,7 @@ BEGIN
                                     , isPartionCount Boolean, isPartionSumm Boolean, isPartionDate Boolean
                                     , PartionGoodsId Integer) ON COMMIT DROP;
      -- таблица - суммовые Child-элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItemSummChild (MovementItemId_Parent Integer, MovementItemId Integer, ContainerId_From Integer, OperSumm TFloat, InfoMoneyId_Detail_From Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpItemSummChild (ObjectCostId Integer, MovementItemId_Parent Integer, MovementItemId Integer, ContainerId_From Integer, OperSumm TFloat, InfoMoneyId_Detail_From Integer) ON COMMIT DROP;
 
 
      -- заполняем таблицу - количественные Master-элементы документа, со всеми свойствами для формирования Аналитик в проводках
@@ -91,7 +92,7 @@ BEGIN
                   , Movement.OperDate
                   , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN MovementLinkObject_To.ObjectId ELSE 0 END, 0) AS UnitId_To
                   , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Personal() THEN MovementLinkObject_To.ObjectId ELSE 0 END, 0) AS PersonalId_To
-                  , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Branch.ObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Branch.ObjectId ELSE 0 END, 0) AS BranchId_To
+                  , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Branch.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Branch.ChildObjectId ELSE 0 END, 0) AS BranchId_To
 
                   , MovementItem.ObjectId AS GoodsId
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -108,8 +109,8 @@ BEGIN
                   -- Статьи назначения
                   , COALESCE (lfObject_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
 
-                  , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Juridical.ObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Juridical.ObjectId ELSE 0 END, 0) AS JuridicalId_basis_To
-                  , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Business.ObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Business.ObjectId ELSE 0 END, 0) AS BusinessId_To
+                  , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Juridical.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Juridical.ChildObjectId ELSE 0 END, 0) AS JuridicalId_basis_To
+                  , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Business.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Business.ChildObjectId ELSE 0 END, 0) AS BusinessId_To
 
                   , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE)     AS isPartionCount
                   , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)      AS isPartionSumm
@@ -477,24 +478,31 @@ BEGIN
 
 
      -- самое интересное: заполняем таблицу - суммовые Child-элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItemSummChild (MovementItemId_Parent, MovementItemId, ContainerId_From, OperSumm, InfoMoneyId_Detail_From)
+     INSERT INTO _tmpItemSummChild (ObjectCostId, MovementItemId_Parent, MovementItemId, ContainerId_From, OperSumm, InfoMoneyId_Detail_From)
         SELECT
-              _tmpItemChild.MovementItemId_Parent
+              HistoryCost.ObjectCostId
+            , _tmpItemChild.MovementItemId_Parent
             , _tmpItemChild.MovementItemId
-            , Container_Summ.Id                            AS ContainerId_From
-            , ABS (_tmpItemChild.OperCount * HistoryCost.Price) AS OperSumm
+            , Container_Summ.Id AS ContainerId_From
+            , ABS (_tmpItemChild.OperCount * COALESCE (HistoryCost.Price, 0)) AS OperSumm
             , ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail_From
         FROM _tmpItemChild
              JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItemChild.ContainerId_GoodsFrom
                                              AND Container_Summ.DescId = zc_Container_Summ()
-             JOIN ContainerObjectCost AS ContainerObjectCost_Basis ON ContainerObjectCost_Basis.ContainerId = Container_Summ.Id
-                                                                  AND ContainerObjectCost_Basis.ObjectCostDescId = zc_ObjectCost_Basis()
-             JOIN HistoryCost ON HistoryCost.ObjectCostId = ContainerObjectCost_Basis.ObjectCostId
-                             AND _tmpItemChild.OperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
              JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
                                       ON ContainerLinkObject_InfoMoneyDetail.ContainerId = Container_Summ.Id
                                      AND ContainerLinkObject_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
-        WHERE (_tmpItemChild.OperCount * HistoryCost.Price) <> 0;
+             JOIN ContainerObjectCost AS ContainerObjectCost_Basis
+                                      ON ContainerObjectCost_Basis.ContainerId = Container_Summ.Id
+                                     AND ContainerObjectCost_Basis.ObjectCostDescId = zc_ObjectCost_Basis()
+             LEFT JOIN HistoryCost ON HistoryCost.ObjectCostId = ContainerObjectCost_Basis.ObjectCostId
+                                  AND _tmpItemChild.OperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
+        -- !ОБЯЗАТЕЛЬНО! вставляем нули - WHERE (_tmpItemChild.OperCount * HistoryCost.Price) <> 0
+        ;
+
+
+     -- для теста - Child - Summ
+     -- RETURN QUERY SELECT ObjectCostId, _tmpItemSummChild.MovementItemId_Parent, _tmpItemSummChild.MovementItemId, _tmpItemSummChild.ContainerId_From, _tmpItemSummChild.OperSumm, _tmpItemSummChild.InfoMoneyId_Detail_From FROM _tmpItemSummChild WHERE _tmpItemSummChild.MovementItemId = 1919926;
 
 
              -- формируются Проводки для количественного учета - От кого
@@ -742,11 +750,12 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.07.13                                        * !ОБЯЗАТЕЛЬНО! вставляем нули
  21.07.13                                        * ! finich !
  20.07.13                                        *
 */
 
 -- тест
--- SELECT * FROM gpUnComplete_Movement (inMovementId:= 161435, inSession:= '2')
--- SELECT * FROM gpComplete_Movement_ProductionUnion (inMovementId:= 161435, inSession:= '2')
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 161435, inSession:= '2')
+-- SELECT * FROM gpUnComplete_Movement (inMovementId:= 160821, inSession:= '2')
+-- SELECT * FROM gpComplete_Movement_ProductionUnion (inMovementId:= 160821, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 160821, inSession:= '2')

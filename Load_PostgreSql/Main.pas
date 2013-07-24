@@ -3048,7 +3048,7 @@ begin
         DecodeDate(calcStartDate, Year, Month, Day);
         if Month=12 then begin Year:=Year+1;Month:=0;end;
         calcEndDate:=EncodeDate(Year, Month+1, 1)-1;
-        while calcEndDate <= StrToDate(EndDateCompleteEdit.Text) do
+        while calcStartDate <= StrToDate(StartDateCompleteEdit.Text) do
         begin
              if calcStartDate=StrToDate(StartDateCompleteEdit.Text)
              then Add('          select cast('+FormatToDateServer_notNULL(calcStartDate)+' as date) as StartDate, cast('+FormatToDateServer_notNULL(calcEndDate)+' as date) as EndDate')
@@ -3077,6 +3077,8 @@ begin
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('inStartDate',ftDateTime,ptInput, 0);
         toStoredProc.Params.AddParam ('inEndDate',ftDateTime,ptInput, 0);
+        toStoredProc.Params.AddParam ('inItearationCount',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inInsert',ftInteger,ptInput, 0);
         //
         while not EOF do
         begin
@@ -3085,6 +3087,8 @@ begin
              //
              toStoredProc.Params.ParamByName('inStartDate').Value:=FieldByName('StartDate').AsDateTime;
              toStoredProc.Params.ParamByName('inEndDate').Value:=FieldByName('EndDate').AsDateTime;
+             toStoredProc.Params.ParamByName('inItearationCount').Value:=500;
+             toStoredProc.Params.ParamByName('inInsert').Value:=12345;
              if not myExecToStoredProc then ;//exit;
              //
              Next;
@@ -5389,6 +5393,4 @@ alter table dba.PriceListItems_byHistory add Id_Postgres integer null;
 alter table dba.Bill add Id_Postgres integer null;
 alter table dba.BillItems add Id_Postgres integer null;
 alter table dba.BillItemsReceipt add Id_Postgres integer null;
-
-
 }
