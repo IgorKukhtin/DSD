@@ -2,6 +2,7 @@ inherited Report_HistoryCostForm: TReport_HistoryCostForm
   Caption = #1057#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100
   ClientHeight = 395
   ClientWidth = 1329
+  ExplicitLeft = -339
   ExplicitWidth = 1337
   ExplicitHeight = 422
   PixelsPerInch = 96
@@ -244,7 +245,7 @@ inherited Report_HistoryCostForm: TReport_HistoryCostForm
       object OperDate: TcxGridDBColumn
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
-        Width = 50
+        Width = 45
       end
       object InvNumber: TcxGridDBColumn
         DataBinding.FieldName = 'InvNumber'

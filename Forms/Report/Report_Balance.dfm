@@ -156,42 +156,49 @@ inherited Report_BalanceForm: TReport_BalanceForm
       object AccountOnComplete: TcxGridDBColumn
         Caption = '***'
         DataBinding.FieldName = 'AccountOnComplete'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
         HeaderAlignmentHorz = taCenter
         Width = 25
       end
       object AmountDebetStart: TcxGridDBColumn
         Caption = #1044#1077#1073#1077#1090' '#1085#1072#1095#1072#1083#1100#1085#1099#1081
         DataBinding.FieldName = 'AmountDebetStart'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
         HeaderAlignmentHorz = taCenter
         Width = 75
       end
       object AmountKreditStart: TcxGridDBColumn
         Caption = #1050#1088#1077#1076#1080#1090' '#1085#1072#1095#1072#1083#1100#1085#1099#1081
         DataBinding.FieldName = 'AmountKreditStart'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
         HeaderAlignmentHorz = taCenter
         Width = 75
       end
       object AmountDebet: TcxGridDBColumn
         Caption = #1044#1077#1073#1077#1090' '#1086#1073#1086#1088#1086#1090
         DataBinding.FieldName = 'AmountDebet'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
         HeaderAlignmentHorz = taCenter
         Width = 75
       end
       object AmountKredit: TcxGridDBColumn
         Caption = #1050#1088#1077#1076#1080#1090' '#1086#1073#1086#1088#1086#1090
         DataBinding.FieldName = 'AmountKredit'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
         HeaderAlignmentHorz = taCenter
         Width = 75
       end
       object AmountDebetEnd: TcxGridDBColumn
         Caption = #1044#1077#1073#1077#1090' '#1082#1086#1085#1077#1095#1085#1099#1081
         DataBinding.FieldName = 'AmountDebetEnd'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
         HeaderAlignmentHorz = taCenter
         Width = 75
       end
       object AmountKreditEnd: TcxGridDBColumn
         Caption = #1050#1088#1077#1076#1080#1090' '#1082#1086#1085#1077#1095#1085#1099#1081
         DataBinding.FieldName = 'AmountKreditEnd'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
         HeaderAlignmentHorz = taCenter
         Width = 75
       end
