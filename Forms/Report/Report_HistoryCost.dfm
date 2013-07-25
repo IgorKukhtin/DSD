@@ -2,7 +2,6 @@ inherited Report_HistoryCostForm: TReport_HistoryCostForm
   Caption = #1057#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100
   ClientHeight = 395
   ClientWidth = 1329
-  ExplicitLeft = -339
   ExplicitWidth = 1337
   ExplicitHeight = 422
   PixelsPerInch = 96
@@ -259,26 +258,31 @@ inherited Report_HistoryCostForm: TReport_HistoryCostForm
       end
       object OperCount: TcxGridDBColumn
         DataBinding.FieldName = 'OperCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
         HeaderAlignmentHorz = taCenter
         Width = 40
       end
       object OperPrice: TcxGridDBColumn
         DataBinding.FieldName = 'OperPrice'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
         HeaderAlignmentHorz = taCenter
         Width = 30
       end
       object OperSumm: TcxGridDBColumn
         DataBinding.FieldName = 'OperSumm'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
         HeaderAlignmentHorz = taCenter
         Width = 40
       end
       object Price: TcxGridDBColumn
         DataBinding.FieldName = 'Price'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
         HeaderAlignmentHorz = taCenter
         Width = 30
       end
       object Price_Calc: TcxGridDBColumn
         DataBinding.FieldName = 'Price_Calc'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
         HeaderAlignmentHorz = taCenter
         Width = 30
       end
@@ -364,59 +368,72 @@ inherited Report_HistoryCostForm: TReport_HistoryCostForm
       end
       object CalcCount: TcxGridDBColumn
         DataBinding.FieldName = 'CalcCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
         HeaderAlignmentHorz = taCenter
         Width = 30
       end
       object StartCount: TcxGridDBColumn
         DataBinding.FieldName = 'StartCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
         HeaderAlignmentHorz = taCenter
         Width = 75
       end
       object StartCount_calc: TcxGridDBColumn
         DataBinding.FieldName = 'StartCount_calc'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
         HeaderAlignmentHorz = taCenter
         Width = 75
       end
       object IncomeCount: TcxGridDBColumn
         DataBinding.FieldName = 'IncomeCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
         HeaderAlignmentHorz = taCenter
         Width = 75
       end
       object IncomeCount_calc: TcxGridDBColumn
         DataBinding.FieldName = 'IncomeCount_calc'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
         HeaderAlignmentHorz = taCenter
         Width = 75
       end
       object StartSumm: TcxGridDBColumn
         DataBinding.FieldName = 'StartSumm'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
         Width = 75
       end
       object StartSumm_calc: TcxGridDBColumn
         DataBinding.FieldName = 'StartSumm_calc'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
         Width = 75
       end
       object IncomeSumm: TcxGridDBColumn
         DataBinding.FieldName = 'IncomeSumm'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
         Width = 75
       end
       object IncomeSumm_calc: TcxGridDBColumn
         DataBinding.FieldName = 'IncomeSumm_calc'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
         Width = 75
       end
       object OutCount_calc: TcxGridDBColumn
         DataBinding.FieldName = 'OutCount_calc'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
         Width = 75
       end
       object OutSumm_calc: TcxGridDBColumn
         DataBinding.FieldName = 'OutSumm_calc'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
         Width = 75
       end
       object EndCount_calc: TcxGridDBColumn
         DataBinding.FieldName = 'EndCount_calc'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
         Width = 75
       end
       object EndSumm_calc: TcxGridDBColumn
         DataBinding.FieldName = 'EndSumm_calc'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
         Width = 75
       end
     end
@@ -460,6 +477,16 @@ inherited Report_HistoryCostForm: TReport_HistoryCostForm
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
       item
         Component = Owner
         Properties.Strings = (

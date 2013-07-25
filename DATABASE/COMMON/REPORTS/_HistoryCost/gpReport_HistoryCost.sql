@@ -199,7 +199,8 @@ $BODY$BEGIN
                  JOIN MovementItemDesc ON MovementItemDesc.Id = MovementItem.DescId
             WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
               AND MIContainer.DescId = zc_MIContainer_Summ()
-           ) AS _tmpSumm ON _tmpSumm.ObjectCostId = ContainerObjectCost.ObjectCostId AND 1=0
+           ) AS _tmpSumm ON _tmpSumm.ObjectCostId = ContainerObjectCost.ObjectCostId
+                        AND 1=0
             LEFT JOIN
 
            (SELECT ContainerObjectCost_RemainsSumm.ObjectCostId
@@ -259,16 +260,18 @@ $BODY$BEGIN
            ) AS tmpOperationCount ON tmpOperationCount.ObjectCostId = ContainerObjectCost.ObjectCostId
 
        WHERE ContainerObjectCost.ObjectCostDescId = zc_ObjectCost_Basis()
-         AND (HistoryCost.CalcCount <> 0
-           OR HistoryCost.StartCount <> 0
-           OR tmpOperationCount.AmountRemainsStart <> 0
+         AND (
+--              HistoryCost.CalcCount <> 0
+--           OR HistoryCost.StartCount <> 0
+--           OR 
+               tmpOperationCount.AmountRemainsStart <> 0
 
-           OR HistoryCost.IncomeCount <> 0
-           OR tmpOperationCount.AmountDebet <> 0
+--           OR HistoryCost.IncomeCount <> 0
+--           OR tmpOperationCount.AmountDebet <> 0
 
-           OR tmpOperationCount.AmountKredit <> 0
+--           OR tmpOperationCount.AmountKredit <> 0
 
-           OR tmpOperationCount.AmountRemainsEnd <> 0
+--           OR tmpOperationCount.AmountRemainsEnd <> 0
 
            OR HistoryCost.StartSumm <> 0
            OR tmpOperationSumm.AmountRemainsStart <> 0
@@ -283,6 +286,7 @@ $BODY$BEGIN
            OR _tmpSumm.OperCount <> 0
            OR _tmpSumm.OperPrice <> 0
            OR _tmpSumm.OperSumm <> 0
+           OR HistoryCost.Price <> 0
              )
        ;
 

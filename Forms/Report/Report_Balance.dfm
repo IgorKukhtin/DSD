@@ -13,8 +13,6 @@ inherited Report_BalanceForm: TReport_BalanceForm
     Height = 328
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 26
-    ExplicitHeight = 369
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -209,9 +207,6 @@ inherited Report_BalanceForm: TReport_BalanceForm
     Align = alTop
     Caption = 'Panel1'
     TabOrder = 5
-    ExplicitLeft = 8
-    ExplicitTop = 34
-    ExplicitWidth = 1240
     object deStart: TcxDateEdit
       Left = 208
       Top = 8
@@ -240,6 +235,16 @@ inherited Report_BalanceForm: TReport_BalanceForm
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
       item
         Component = Owner
         Properties.Strings = (

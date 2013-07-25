@@ -267,8 +267,8 @@ BEGIN
                FROM 
                     -- Расчет цены
                     (SELECT _tmpMaster.ObjectCostId
-                          , CASE WHEN ((_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) > 0
-                                    OR (_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) < 0)
+                          , CASE WHEN (((_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) > 0)
+                                    OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) < 0))
                                      THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount)
                                  ELSE 0
                             END AS OperPrice
@@ -293,8 +293,8 @@ BEGIN
                FROM 
                     -- Расчет цены
                     (SELECT _tmpMaster.ObjectCostId
-                          , CASE WHEN ((_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) > 0
-                                    OR (_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) < 0)
+                          , CASE WHEN (((_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) > 0)
+                                    OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) < 0))
                                      THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount)
                                  ELSE 0
                             END AS OperPrice
@@ -319,14 +319,15 @@ BEGIN
      -- Сохраняем что насчитали
      INSERT INTO HistoryCost (ObjectCostId, StartDate, EndDate, Price, StartCount, StartSumm, IncomeCount, IncomeSumm, CalcCount, CalcSumm)
         SELECT _tmpMaster.ObjectCostId, inStartDate AS StartDate, inEndDate AS EndDate
-             , CASE WHEN ((_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) > 0
-                       OR (_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) < 0)
-                       THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount)
+             , CASE WHEN (((_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) > 0)
+                       OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) < 0))
+                        THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount)
                     ELSE 0
                END AS Price
              , _tmpMaster.StartCount, _tmpMaster.StartSumm, _tmpMaster.IncomeCount, _tmpMaster.IncomeSumm, _tmpMaster.CalcCount, _tmpMaster.CalcSumm
         FROM _tmpMaster
-        WHERE _tmpMaster.StartCount <> 0 OR _tmpMaster.StartSumm <> 0 OR _tmpMaster.IncomeCount <> 0 OR _tmpMaster.IncomeSumm <> 0 OR _tmpMaster.CalcCount <> 0 OR _tmpMaster.CalcSumm <> 0;
+        WHERE ((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) <> 0)
+        ;
 
      END IF; -- if inInsert > 0
 
@@ -334,12 +335,12 @@ BEGIN
      -- tmp - test
      RETURN QUERY
         SELECT vbItearation, vbCountDiff
-             , CAST (CASE WHEN ((_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) > 0
-                             OR (_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) < 0)
+             , CAST (CASE WHEN (((_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) > 0)
+                             OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) < 0))
                               THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount)
                       END AS TFloat) AS Price
-             , CAST (CASE WHEN ((_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + COALESCE (_tmpSumm.CalcSumm, 0)) > 0
-                             OR (_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + COALESCE (_tmpSumm.CalcSumm, 0)) < 0)
+             , CAST (CASE WHEN (((_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + COALESCE (_tmpSumm.CalcSumm, 0)) > 0)
+                             OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + COALESCE (_tmpSumm.CalcSumm, 0)) < 0))
                               THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + COALESCE (_tmpSumm.CalcSumm, 0)) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount)
                      END AS TFloat) AS PriceNext
              , _tmpMaster.ObjectCostId
@@ -354,8 +355,8 @@ BEGIN
                FROM 
                     -- Расчет цены
                     (SELECT _tmpMaster.ObjectCostId
-                          , CASE WHEN ((_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) > 0
-                                    OR (_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) < 0)
+                          , CASE WHEN (((_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) > 0)
+                                    OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) < 0))
                                      THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount)
                                  ELSE 0
                             END AS OperPrice
@@ -367,12 +368,12 @@ BEGIN
                GROUP BY _tmpChild.MasterObjectCostId
 --                      , _tmpChild.ObjectCostId
               ) AS _tmpSumm ON _tmpMaster.ObjectCostId = _tmpSumm.ObjectCostId
-/*         WHERE CAST (CASE WHEN ((_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) > 0
-                             OR (_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) < 0)
+/*         WHERE CAST (CASE WHEN (((_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) > 0)
+                             OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) < 0))
                               THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount)
                       END AS TFloat)
-            <> CAST (CASE WHEN ((_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + COALESCE (_tmpSumm.CalcSumm, 0)) > 0
-                             OR (_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + COALESCE (_tmpSumm.CalcSumm, 0)) < 0)
+            <> CAST (CASE WHEN (((_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) > 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + COALESCE (_tmpSumm.CalcSumm, 0)) > 0)
+                             OR ((_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount) < 0 AND (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + COALESCE (_tmpSumm.CalcSumm, 0)) < 0))
                               THEN  (_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + COALESCE (_tmpSumm.CalcSumm, 0)) / (_tmpMaster.StartCount + _tmpMaster.IncomeCount - _tmpMaster.CalcCount)
                      END AS TFloat)*/
 --         WHERE _tmpMaster.ObjectCostId IN (14830)

@@ -22,7 +22,7 @@ uses
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
-  cxDropDownEdit, cxCalendar, Vcl.ExtCtrls;
+  cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit;
 
 type
   TReport_HistoryCostForm = class(TParentForm)
