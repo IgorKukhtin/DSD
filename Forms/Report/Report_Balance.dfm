@@ -2,6 +2,7 @@ inherited Report_BalanceForm: TReport_BalanceForm
   Caption = #1041#1072#1083#1072#1085#1089
   ClientHeight = 395
   ClientWidth = 1329
+  ExplicitLeft = -339
   ExplicitWidth = 1337
   ExplicitHeight = 422
   PixelsPerInch = 96
@@ -22,68 +23,68 @@ inherited Report_BalanceForm: TReport_BalanceForm
           Format = ',0.00'
           Kind = skSum
           Position = spFooter
-          Column = cxGridDBTableViewColumn6
+          Column = AmountDebetStart
         end
         item
           Format = ',0.00'
           Kind = skSum
           Position = spFooter
-          Column = cxGridDBTableViewColumn7
+          Column = AmountKreditStart
         end
         item
           Format = ',0.00'
           Kind = skSum
           Position = spFooter
-          Column = cxGridDBTableViewColumn8
+          Column = AmountDebet
         end
         item
           Format = ',0.00'
           Kind = skSum
           Position = spFooter
-          Column = cxGridDBTableViewColumn9
+          Column = AmountKredit
         end
         item
           Format = ',0.00'
           Kind = skSum
           Position = spFooter
-          Column = cxGridDBTableViewColumn10
+          Column = AmountDebetEnd
         end
         item
           Format = ',0.00'
           Kind = skSum
           Position = spFooter
-          Column = cxGridDBTableViewColumn11
+          Column = AmountKreditEnd
         end>
       DataController.Summary.FooterSummaryItems = <
         item
           Format = ',0.00'
           Kind = skSum
-          Column = cxGridDBTableViewColumn6
+          Column = AmountDebetStart
         end
         item
           Format = ',0.00'
           Kind = skSum
-          Column = cxGridDBTableViewColumn7
+          Column = AmountKreditStart
         end
         item
           Format = ',0.00'
           Kind = skSum
-          Column = cxGridDBTableViewColumn8
+          Column = AmountDebet
         end
         item
           Format = ',0.00'
           Kind = skSum
-          Column = cxGridDBTableViewColumn9
+          Column = AmountKredit
         end
         item
           Format = ',0.00'
           Kind = skSum
-          Column = cxGridDBTableViewColumn10
+          Column = AmountDebetEnd
         end
         item
           Format = ',0.00'
           Kind = skSum
-          Column = cxGridDBTableViewColumn11
+          Column = AmountKreditEnd
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -98,97 +99,97 @@ inherited Report_BalanceForm: TReport_BalanceForm
       OptionsView.Footer = True
       OptionsView.GroupFooters = gfAlwaysVisible
       OptionsView.HeaderAutoHeight = True
-      object cxGridDBTableViewColumn1: TcxGridDBColumn
+      object RootName: TcxGridDBColumn
         Caption = #1040'-'#1055
         DataBinding.FieldName = 'RootName'
         HeaderAlignmentHorz = taCenter
         Width = 55
       end
-      object cxGridDBTableViewColumn2: TcxGridDBColumn
+      object AccountGroupName: TcxGridDBColumn
         Caption = #1057#1095#1077#1090' - '#1075#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'AccountGroupName'
         HeaderAlignmentHorz = taCenter
         Width = 100
       end
-      object cxGridDBTableViewColumn3: TcxGridDBColumn
+      object AccountDirectionName: TcxGridDBColumn
         Caption = #1057#1095#1077#1090' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'AccountDirectionName'
         HeaderAlignmentHorz = taCenter
         Width = 100
       end
-      object cxGridDBTableViewColumn4: TcxGridDBColumn
+      object AccountCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1057#1095#1077#1090#1072
         DataBinding.FieldName = 'AccountCode'
         HeaderAlignmentHorz = taCenter
         Width = 50
       end
-      object cxGridDBTableViewColumn5: TcxGridDBColumn
+      object AccountName: TcxGridDBColumn
         Caption = #1057#1095#1077#1090' - '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'AccountName'
         HeaderAlignmentHorz = taCenter
         Width = 100
       end
-      object cxGridDBTableViewColumn12: TcxGridDBColumn
+      object InfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1089#1090'. '#1085#1072#1079#1085#1072#1095'.'
         DataBinding.FieldName = 'InfoMoneyCode'
         HeaderAlignmentHorz = taCenter
         Width = 60
       end
-      object cxGridDBTableViewColumn13: TcxGridDBColumn
+      object InfoMoneyName: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentHorz = taCenter
         Width = 80
       end
-      object cxGridDBTableViewColumn14: TcxGridDBColumn
+      object InfoMoneyCode_Detail: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1089#1090'. '#1085#1072#1079#1085#1072#1095'.'#1076#1077#1090'.'
         DataBinding.FieldName = 'InfoMoneyCode_Detail'
         HeaderAlignmentHorz = taCenter
         Width = 60
       end
-      object cxGridDBTableViewColumn15: TcxGridDBColumn
+      object InfoMoneyName_Detail: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' '#1076#1077#1090#1072#1083#1100#1085#1086
         DataBinding.FieldName = 'InfoMoneyName_Detail'
         HeaderAlignmentHorz = taCenter
         Width = 100
       end
-      object cxGridDBTableViewColumn16: TcxGridDBColumn
+      object AccountOnComplete: TcxGridDBColumn
         Caption = '***'
         DataBinding.FieldName = 'AccountOnComplete'
         HeaderAlignmentHorz = taCenter
         Width = 25
       end
-      object cxGridDBTableViewColumn6: TcxGridDBColumn
+      object AmountDebetStart: TcxGridDBColumn
         Caption = #1044#1077#1073#1077#1090' '#1085#1072#1095#1072#1083#1100#1085#1099#1081
         DataBinding.FieldName = 'AmountDebetStart'
         HeaderAlignmentHorz = taCenter
         Width = 75
       end
-      object cxGridDBTableViewColumn7: TcxGridDBColumn
+      object AmountKreditStart: TcxGridDBColumn
         Caption = #1050#1088#1077#1076#1080#1090' '#1085#1072#1095#1072#1083#1100#1085#1099#1081
         DataBinding.FieldName = 'AmountKreditStart'
         HeaderAlignmentHorz = taCenter
         Width = 75
       end
-      object cxGridDBTableViewColumn8: TcxGridDBColumn
+      object AmountDebet: TcxGridDBColumn
         Caption = #1044#1077#1073#1077#1090' '#1086#1073#1086#1088#1086#1090
         DataBinding.FieldName = 'AmountDebet'
         HeaderAlignmentHorz = taCenter
         Width = 75
       end
-      object cxGridDBTableViewColumn9: TcxGridDBColumn
+      object AmountKredit: TcxGridDBColumn
         Caption = #1050#1088#1077#1076#1080#1090' '#1086#1073#1086#1088#1086#1090
         DataBinding.FieldName = 'AmountKredit'
         HeaderAlignmentHorz = taCenter
         Width = 75
       end
-      object cxGridDBTableViewColumn10: TcxGridDBColumn
+      object AmountDebetEnd: TcxGridDBColumn
         Caption = #1044#1077#1073#1077#1090' '#1082#1086#1085#1077#1095#1085#1099#1081
         DataBinding.FieldName = 'AmountDebetEnd'
         HeaderAlignmentHorz = taCenter
         Width = 75
       end
-      object cxGridDBTableViewColumn11: TcxGridDBColumn
+      object AmountKreditEnd: TcxGridDBColumn
         Caption = #1050#1088#1077#1076#1080#1090' '#1082#1086#1085#1077#1095#1085#1099#1081
         DataBinding.FieldName = 'AmountKreditEnd'
         HeaderAlignmentHorz = taCenter
