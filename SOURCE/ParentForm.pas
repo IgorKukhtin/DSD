@@ -53,6 +53,7 @@ begin
   inherited;
   onKeyDown := FormKeyDown;
   onClose := FormClose;
+  KeyPreview := true;
 end;
 
 procedure TParentForm.Execute(Sender: TComponent; Params: TdsdParams);
@@ -87,8 +88,13 @@ procedure TParentForm.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   if (ssShift in Shift) and (ssCtrl in Shift)
-      and (Key in [byte('s'), byte('S')]) then
-      gc_isDebugMode := not gc_isDebugMode;
+      and (Key in [byte('s'), byte('S')]) then begin
+          gc_isDebugMode := not gc_isDebugMode;
+          if gc_isDebugMode then
+             ShowMessage('Установлен режим отладки')
+           else
+             ShowMessage('Снят режим отладки');
+      end;
 end;
 
 procedure TParentForm.SetSender(const Value: TComponent);

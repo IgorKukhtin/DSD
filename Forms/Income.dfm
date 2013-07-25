@@ -284,6 +284,9 @@ inherited IncomeForm: TIncomeForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -866,14 +869,14 @@ inherited IncomeForm: TIncomeForm
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
-        Value = ''
+        Value = -700000d
       end
       item
         Name = 'inOperDatePartner'
         Component = edOperDatePartner
         DataType = ftDateTime
         ParamType = ptInput
-        Value = ''
+        Value = -700000d
       end
       item
         Name = 'inInvNumberPartner'
@@ -894,14 +897,14 @@ inherited IncomeForm: TIncomeForm
         Component = edVATPercent
         DataType = ftFloat
         ParamType = ptInput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'inChangePercent'
         Component = edChangePercent
         DataType = ftFloat
         ParamType = ptInput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'inFromId'
@@ -1001,14 +1004,14 @@ inherited IncomeForm: TIncomeForm
         Component = edOperDate
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = -700000d
       end
       item
         Name = 'OperDatePartner'
         Component = edOperDatePartner
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = -700000d
       end
       item
         Name = 'InvNumberPartner'

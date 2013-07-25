@@ -302,6 +302,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPriceListForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceListItemForm');
 end;
 
 procedure TLoadFormTest.LoadReportFormTest;

@@ -307,10 +307,7 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-<<<<<<< Updated upstream
-=======
       ExplicitHeight = 173
->>>>>>> Stashed changes
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0

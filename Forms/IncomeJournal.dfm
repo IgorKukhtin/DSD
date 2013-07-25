@@ -362,7 +362,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
           ParamType = ptOutput
           Value = '0'
         end>
-      isShowModal = True
+      isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
@@ -379,7 +379,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
           DataType = ftInteger
           ParamType = ptInput
         end>
-      isShowModal = True
+      isShowModal = False
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
@@ -437,14 +437,14 @@ inherited IncomeJournalForm: TIncomeJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
-        Value = '01.05.2013'
+        Value = 41395d
       end
       item
         Name = 'inEndDate'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
-        Value = '01.05.2014'
+        Value = 41760d
       end>
     Left = 24
     Top = 176

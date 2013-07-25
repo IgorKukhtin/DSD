@@ -10,7 +10,7 @@ uses
   UtilConst in '..\..\SOURCE\UtilConst.pas',
   dbEnumTest in '..\SOURCE\dbEnumTest.pas',
   LoadFarmacyFormTest in '..\SOURCE\LoadFarmacyFormTest.pas',
-  Measure in '..\..\Forms\Measure.pas' {MeasureForm},
+  PriceListItem in '..\..\Forms\PriceListItem.pas' {PriceListItemForm},
   MeasureEdit in '..\..\Forms\MeasureEdit.pas' {MeasureEditForm},
   CommonData in '..\..\SOURCE\CommonData.pas',
   Authentication in '..\..\SOURCE\Authentication.pas',

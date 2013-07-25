@@ -135,6 +135,9 @@ type
     actReport_ProfitLoss: TdsdOpenForm;
     actContract: TdsdOpenForm;
     bbContract: TdxBarButton;
+    actPriceListItem: TdsdOpenForm;
+    bbHistory: TdxBarSubItem;
+    bbPriceListItem: TdxBarButton;
     procedure FormCreate(Sender: TObject);
   private
     procedure OnException(Sender: TObject; E: Exception);

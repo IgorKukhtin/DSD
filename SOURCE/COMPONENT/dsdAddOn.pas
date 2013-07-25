@@ -127,7 +127,7 @@ implementation
 uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf, Windows,
      cxFilter, cxClasses, cxLookAndFeelPainters, cxCustomData,
      cxGridCommon, math, cxPropertiesStore, cxGridCustomView, UtilConst, cxStorage,
-     cxGeometry, cxCalendar, cxCheckBox;
+     cxGeometry, cxCalendar, cxCheckBox, dxBar;
 
 type
 
@@ -437,6 +437,7 @@ var
   PropertiesStore: TcxPropertiesStore;
   GridView: TcxCustomGridView;
   TreeList: TcxDBTreeList;
+  BarManager: TdxBarManager;
 begin
   Data := StringReplace(TdsdFormStorageFactory.GetStorage.LoadUserFormSettings(FForm.Name), '&', '&amp;', [rfReplaceAll]);
   if Data <> '' then begin
@@ -454,6 +455,12 @@ begin
            TreeList := FForm.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxDBTreeList;
            if Assigned(TreeList) then begin
               TreeList.RestoreFromStream(TStringStream.Create(gfStrXmlToStr(XMLToAnsi(ChildNodes[i].GetAttribute('data')))));
+           end;
+        end;
+        if ChildNodes[i].NodeName = 'dxBarManager' then begin
+           BarManager := FForm.FindComponent(ChildNodes[i].GetAttribute('name')) as TdxBarManager;
+           if Assigned(BarManager) then begin
+              BarManager.LoadFromStream(TStringStream.Create(gfStrXmlToStr(XMLToAnsi(ChildNodes[i].GetAttribute('data')))));
            end;
         end;
         if ChildNodes[i].NodeName = 'cxPropertiesStore' then begin
@@ -481,6 +488,12 @@ begin
     xml := '<root>';
     // Сохраняем установки гридов
     for i := 0 to FForm.ComponentCount - 1 do begin
+      if FForm.Components[i] is TdxBarManager then
+         with TdxBarManager(FForm.Components[i]) do begin
+           SaveToStream(TempStream);
+           xml := xml + '<dxBarManager name = "' + Name + '" data = "' + gfStrToXmlStr(TempStream.DataString) + '" />';
+           TempStream.Clear;
+         end;
       if FForm.Components[i] is TcxCustomGridView then
          with TcxCustomGridView(FForm.Components[i]) do begin
            StoreToStream(TempStream);

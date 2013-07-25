@@ -54,6 +54,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbHistory'
+        end
+        item
+          Visible = True
           ItemName = 'bbGuides'
         end
         item
@@ -538,6 +542,20 @@ object MainForm: TMainForm
       Action = actMember
       Category = 0
     end
+    object bbHistory: TdxBarSubItem
+      Caption = #1048#1089#1090#1086#1088#1080#1080
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPriceListItem'
+        end>
+    end
+    object bbPriceListItem: TdxBarButton
+      Action = actPriceListItem
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Left = 192
@@ -933,6 +951,14 @@ object MainForm: TMainForm
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
       FormName = 'TProductionUnionJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actPriceListItem: TdsdOpenForm
+      Category = #1048#1089#1090#1086#1088#1080#1080
+      Caption = #1048#1089#1090#1086#1088#1080#1080' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1086#1074
+      Hint = #1048#1089#1090#1086#1088#1080#1080' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1086#1074
+      FormName = 'TPriceListItemForm'
       GuiParams = <>
       isShowModal = False
     end
