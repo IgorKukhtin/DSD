@@ -4,15 +4,15 @@ inherited ReturnOutForm: TReturnOutForm
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1036
-  ExplicitHeight = 430
+  ExplicitWidth = 1044
+  ExplicitHeight = 434
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
     Left = 0
     Top = 0
     Width = 1028
-    Height = 84
+    Height = 106
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
@@ -73,15 +73,16 @@ inherited ReturnOutForm: TReturnOutForm
   end
   object cxPageControl1: TcxPageControl
     Left = 0
-    Top = 110
+    Top = 134
     Width = 1028
-    Height = 286
+    Height = 262
     Align = alClient
-    TabOrder = 5
+    TabOrder = 3
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 286
-    ClientRectRight = 1028
+    ClientRectBottom = 258
+    ClientRectLeft = 4
+    ClientRectRight = 1024
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -89,8 +90,8 @@ inherited ReturnOutForm: TReturnOutForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1028
-        Height = 262
+        Width = 1020
+        Height = 234
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -220,14 +221,11 @@ inherited ReturnOutForm: TReturnOutForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 1028
-        Height = 262
+        Width = 1020
+        Height = 234
         Align = alClient
         TabOrder = 0
         object cxGridEntryDBTableView: TcxGridDBTableView
@@ -386,6 +384,78 @@ inherited ReturnOutForm: TReturnOutForm
       end
     end
   end
+  object cxLabel5: TcxLabel
+    Left = 899
+    Top = 3
+    Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+  end
+  object edInvNumberPartner: TcxTextEdit
+    Left = 899
+    Top = 26
+    TabOrder = 4
+    Width = 121
+  end
+  object edPaidKind: TcxButtonEdit
+    Left = 752
+    Top = 27
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 6
+    Width = 121
+  end
+  object cxLabel6: TcxLabel
+    Left = 752
+    Top = 4
+    Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+  end
+  object edPriceWithVAT: TcxCheckBox
+    Left = 551
+    Top = 85
+    Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+    TabOrder = 8
+    Width = 137
+  end
+  object edContract: TcxButtonEdit
+    Left = 616
+    Top = 27
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 9
+    Width = 113
+  end
+  object cxLabel9: TcxLabel
+    Left = 616
+    Top = 4
+    Caption = #1044#1086#1075#1086#1074#1086#1088
+  end
+  object edVATPercent: TcxCurrencyEdit
+    Left = 335
+    Top = 78
+    TabOrder = 12
+    Width = 65
+  end
+  object cxLabel7: TcxLabel
+    Left = 335
+    Top = 55
+    Caption = '% '#1053#1044#1057
+  end
+  object cxCurrencyEdit2: TcxCurrencyEdit
+    Left = 416
+    Top = 79
+    TabOrder = 15
+    Width = 129
+  end
+  object cxLabel8: TcxLabel
+    Left = 416
+    Top = 56
+    Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
+  end
   object dsdFormParams: TdsdFormParams
     Params = <
       item
@@ -425,8 +495,8 @@ inherited ReturnOutForm: TReturnOutForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -443,7 +513,7 @@ inherited ReturnOutForm: TReturnOutForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar: TdxBar
       Caption = 'Custom'
@@ -548,10 +618,8 @@ inherited ReturnOutForm: TReturnOutForm
     Top = 216
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
-      StoredProc = spGet
       StoredProcList = <
         item
-          StoredProc = spGet
         end
         item
           StoredProc = spSelectMovementItem
@@ -593,83 +661,21 @@ inherited ReturnOutForm: TReturnOutForm
     Aggregates = <>
     Params = <>
     Left = 72
-    Top = 56
+    Top = 96
   end
   object dsdGuidesFrom: TdsdGuides
     LookupControl = edFrom
     FormName = 'TJuridicalForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 304
-    Top = 56
+    Left = 384
+    Top = 8
   end
   object dsdGuidesTo: TdsdGuides
     LookupControl = edTo
     FormName = 'TUnitForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 448
-    Top = 56
-  end
-  object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_ReturnOut'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Component = dsdFormParams
-        ComponentItem = 'Id'
-        DataType = ftInteger
-        ParamType = ptInput
-        Value = '0'
-      end
-      item
-        Name = 'InvNumber'
-        Component = edInvNumber
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
-      end
-      item
-        Name = 'OperDate'
-        Component = edOperDate
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
-      end
-      item
-        Name = 'FromId'
-        Component = dsdGuidesFrom
-        ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
-      end
-      item
-        Name = 'FromName'
-        Component = dsdGuidesFrom
-        ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
-      end
-      item
-        Name = 'ToId'
-        Component = dsdGuidesTo
-        ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
-      end
-      item
-        Name = 'ToName'
-        Component = dsdGuidesTo
-        ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
-      end>
-    Left = 136
-    Top = 72
+    Left = 496
+    Top = 8
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -790,5 +796,230 @@ inherited ReturnOutForm: TReturnOutForm
     BCDToCurrency = False
     Left = 232
     Top = 216
+  end
+  object dsdGuidesContract: TdsdGuides
+    LookupControl = edContract
+    FormName = 'TContractForm'
+    PositionDataSet = 'ClientDataSet'
+    Left = 680
+    Top = 8
+  end
+  object dsdGuidesPaidKind: TdsdGuides
+    LookupControl = edPaidKind
+    FormName = 'TPaidKindForm'
+    PositionDataSet = 'ClientDataSet'
+    Left = 800
+    Top = 16
+  end
+  object InsertUpdateMovement: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_ReturnOut'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Component = dsdFormParams
+        ComponentItem = 'Id'
+        DataType = ftInteger
+        ParamType = ptInputOutput
+        Value = '0'
+      end
+      item
+        Name = 'inInvNumber'
+        Component = edInvNumber
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'inOperDate'
+        Component = edOperDate
+        DataType = ftDate
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'inOperDatePartner'
+        DataType = ftDate
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'inPriceWithVAT'
+        Component = edPriceWithVAT
+        DataType = ftBoolean
+        ParamType = ptInput
+        Value = 'False'
+      end
+      item
+        Name = 'inVATPercent'
+        Component = edVATPercent
+        DataType = ftFloat
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'inChangePercent'
+        DataType = ftFloat
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'inFromId'
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'inToId'
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'inPaidKindId'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'inContractId'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = Null
+      end>
+    Left = 848
+    Top = 80
+  end
+  object spGet: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_ReturnOut'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Component = dsdFormParams
+        ComponentItem = 'Id'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = '0'
+      end
+      item
+        Name = 'InvNumber'
+        Component = cxLabel4
+        DataType = ftInteger
+        ParamType = ptOutput
+      end
+      item
+        Name = 'OperDate'
+        Component = edOperDate
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'StatusCode'
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'OperDatePartner'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'InvNumberPartner'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'StatusName'
+        ComponentItem = 'TextValue'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'PriceWithVAT'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'VATPercent'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'ChangePercent'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'FromId'
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'FromName'
+        ComponentItem = 'TextValue'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'ToId'
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'PaidKindId'
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'ToName'
+        ComponentItem = 'TextValue'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'PaidKindName'
+        ComponentItem = 'TextValue'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'ContractId'
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'ContractName'
+        ComponentItem = 'TextValue'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end>
+    Left = 152
+    Top = 128
   end
 end

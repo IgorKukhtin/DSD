@@ -1,45 +1,51 @@
 inherited SaleForm: TSaleForm
   Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103
-  ClientHeight = 396
+  ClientHeight = 417
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1036
-  ExplicitHeight = 430
+  ExplicitLeft = -328
+  ExplicitWidth = 1044
+  ExplicitHeight = 455
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
     Left = 0
     Top = 0
     Width = 1028
-    Height = 84
+    Height = 105
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    object edInvNumber: TcxTextEdit
+    object edInvNumberPartner: TcxTextEdit
       Left = 8
-      Top = 27
+      Top = 72
       TabOrder = 0
       Width = 121
     end
-    object cxLabel1: TcxLabel
+    object cxLabel5: TcxLabel
       Left = 8
-      Top = 5
-      Caption = #1053#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Top = 54
+      Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
     end
-    object edOperDate: TcxDateEdit
-      Left = 144
-      Top = 27
+    object edPaidKind: TcxButtonEdit
+      Left = 156
+      Top = 71
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
       TabOrder = 2
       Width = 121
     end
-    object cxLabel2: TcxLabel
-      Left = 144
-      Top = 4
-      Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+    object cxLabel6: TcxLabel
+      Left = 157
+      Top = 54
+      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
-    object edFrom: TcxButtonEdit
-      Left = 288
+    object edContract: TcxButtonEdit
+      Left = 616
       Top = 27
       Properties.Buttons = <
         item
@@ -47,41 +53,91 @@ inherited SaleForm: TSaleForm
           Kind = bkEllipsis
         end>
       TabOrder = 4
-      Width = 137
+      Width = 113
     end
-    object edTo: TcxButtonEdit
-      Left = 440
+    object cxLabel9: TcxLabel
+      Left = 616
+      Top = 4
+      Caption = #1044#1086#1075#1086#1074#1086#1088
+    end
+    object edCar: TcxButtonEdit
+      Left = 672
+      Top = 71
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 6
+      Width = 113
+    end
+    object cxLabel10: TcxLabel
+      Left = 672
+      Top = 48
+      Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
+    end
+    object edPersonalDriver: TcxButtonEdit
+      Left = 759
       Top = 27
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 5
-      Width = 145
+      TabOrder = 8
+      Width = 130
     end
-    object cxLabel3: TcxLabel
-      Left = 288
+    object cxLabel11: TcxLabel
+      Left = 759
       Top = 4
-      Caption = #1054#1090' '#1082#1086#1075#1086
+      Caption = #1042#1086#1076#1080#1090#1077#1083#1100
     end
-    object cxLabel4: TcxLabel
-      Left = 440
+    object edRoute: TcxButtonEdit
+      Left = 907
+      Top = 27
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 10
+      Width = 121
+    end
+    object cxLabel12: TcxLabel
+      Left = 907
       Top = 4
-      Caption = #1050#1086#1084#1091
+      Caption = #1052#1072#1088#1096#1088#1091#1090
+    end
+    object edRouteSorting: TcxButtonEdit
+      Left = 872
+      Top = 71
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 12
+      Width = 121
+    end
+    object cxLabel13: TcxLabel
+      Left = 872
+      Top = 54
+      Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072
     end
   end
   object cxPageControl1: TcxPageControl
     Left = 0
-    Top = 110
+    Top = 133
     Width = 1028
-    Height = 286
+    Height = 284
     Align = alClient
-    TabOrder = 5
-    Properties.ActivePage = cxTabSheet1
+    TabOrder = 1
+    Properties.ActivePage = cxTabSheet2
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 286
-    ClientRectRight = 1028
+    ExplicitLeft = -8
+    ClientRectBottom = 280
+    ClientRectLeft = 4
+    ClientRectRight = 1024
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -89,8 +145,8 @@ inherited SaleForm: TSaleForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1028
-        Height = 262
+        Width = 1020
+        Height = 256
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -221,14 +277,11 @@ inherited SaleForm: TSaleForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 1028
-        Height = 262
+        Width = 1020
+        Height = 256
         Align = alClient
         TabOrder = 0
         object cxGridEntryDBTableView: TcxGridDBTableView
@@ -387,6 +440,89 @@ inherited SaleForm: TSaleForm
       end
     end
   end
+  object cxCurrencyEdit2: TcxCurrencyEdit
+    Left = 512
+    Top = 72
+    TabOrder = 3
+    Width = 129
+  end
+  object edVATPercent: TcxCurrencyEdit
+    Left = 431
+    Top = 71
+    TabOrder = 5
+    Width = 65
+  end
+  object cxLabel7: TcxLabel
+    Left = 431
+    Top = 48
+    Caption = '% '#1053#1044#1057
+  end
+  object cxLabel8: TcxLabel
+    Left = 512
+    Top = 49
+    Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
+  end
+  object edTo: TcxButtonEdit
+    Left = 440
+    Top = 27
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 8
+    Width = 145
+  end
+  object cxLabel4: TcxLabel
+    Left = 440
+    Top = 4
+    Caption = #1050#1086#1084#1091
+  end
+  object cxLabel3: TcxLabel
+    Left = 288
+    Top = 4
+    Caption = #1054#1090' '#1082#1086#1075#1086
+  end
+  object edFrom: TcxButtonEdit
+    Left = 288
+    Top = 27
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 10
+    Width = 137
+  end
+  object edOperDate: TcxDateEdit
+    Left = 156
+    Top = 27
+    TabOrder = 12
+    Width = 121
+  end
+  object cxLabel2: TcxLabel
+    Left = 156
+    Top = 4
+    Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+  end
+  object cxLabel1: TcxLabel
+    Left = 8
+    Top = 5
+    Caption = #1053#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+  end
+  object edPriceWithVAT: TcxCheckBox
+    Left = 288
+    Top = 71
+    Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+    TabOrder = 15
+    Width = 137
+  end
+  object edInvNumber: TcxTextEdit
+    Left = 8
+    Top = 27
+    TabOrder = 18
+    Width = 121
+  end
   object dsdFormParams: TdsdFormParams
     Params = <
       item
@@ -426,8 +562,8 @@ inherited SaleForm: TSaleForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -444,7 +580,7 @@ inherited SaleForm: TSaleForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar: TdxBar
       Caption = 'Custom'
@@ -593,22 +729,8 @@ inherited SaleForm: TSaleForm
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 72
-    Top = 56
-  end
-  object dsdGuidesFrom: TdsdGuides
-    LookupControl = edFrom
-    FormName = 'TJuridicalForm'
-    PositionDataSet = 'ClientDataSet'
-    Left = 304
-    Top = 56
-  end
-  object dsdGuidesTo: TdsdGuides
-    LookupControl = edTo
-    FormName = 'TUnitForm'
-    PositionDataSet = 'ClientDataSet'
-    Left = 448
-    Top = 56
+    Left = 56
+    Top = 104
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale'
@@ -625,10 +747,9 @@ inherited SaleForm: TSaleForm
       end
       item
         Name = 'InvNumber'
-        Component = edInvNumber
+        Component = cxLabel4
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'OperDate'
@@ -638,39 +759,163 @@ inherited SaleForm: TSaleForm
         Value = ''
       end
       item
-        Name = 'FromId'
-        Component = dsdGuidesFrom
+        Name = 'StatusCode'
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = Null
+      end
+      item
+        Name = 'OperDatePartner'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'InvNumberPartner'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'StatusName'
+        ComponentItem = 'TextValue'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'PriceWithVAT'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'VATPercent'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'ChangePercent'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'FromId'
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
       end
       item
         Name = 'FromName'
-        Component = dsdGuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = Null
       end
       item
         Name = 'ToId'
-        Component = dsdGuidesTo
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = Null
+      end
+      item
+        Name = 'PaidKindId'
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
       end
       item
         Name = 'ToName'
-        Component = dsdGuidesTo
         ComponentItem = 'TextValue'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = Null
+      end
+      item
+        Name = 'PaidKindName'
+        ComponentItem = 'TextValue'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'ContractId'
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'ContractName'
+        ComponentItem = 'TextValue'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'CarId'
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'CarName'
+        ComponentItem = 'TextValue'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'PersonalDriverId'
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'PersonalDriverName'
+        ComponentItem = 'TextValue'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'RouteId'
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'RouteName'
+        ComponentItem = 'TextValue'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'RouteSortingId'
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'RouteSortingName'
+        ComponentItem = 'TextValue'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
       end>
-    Left = 144
-    Top = 64
+    Left = 152
+    Top = 128
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -791,5 +1036,165 @@ inherited SaleForm: TSaleForm
     BCDToCurrency = False
     Left = 232
     Top = 216
+  end
+  object InsertUpdateMovement: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_Sale'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Component = dsdFormParams
+        ComponentItem = 'Id'
+        DataType = ftInteger
+        ParamType = ptInputOutput
+        Value = '0'
+      end
+      item
+        Name = 'inInvNumber'
+        Component = edInvNumber
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'inOperDate'
+        Component = edOperDate
+        DataType = ftDate
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'inOperDatePartner'
+        DataType = ftDate
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'inPriceWithVAT'
+        Component = edPriceWithVAT
+        DataType = ftBoolean
+        ParamType = ptInput
+        Value = 'False'
+      end
+      item
+        Name = 'inVATPercent'
+        Component = edVATPercent
+        DataType = ftFloat
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'inChangePercent'
+        DataType = ftFloat
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'inFromId'
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'inToId'
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'inPaidKindId'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'inContractId'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'inCarId'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'inPersonalDriverId'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'inRouteId'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'inRouteSortingId'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = Null
+      end>
+    Left = 752
+    Top = 112
+  end
+  object dsdGuidesFrom: TdsdGuides
+    LookupControl = edFrom
+    FormName = 'TJuridicalForm'
+    PositionDataSet = 'GridDataSet'
+    Left = 352
+  end
+  object dsdGuidesTo: TdsdGuides
+    LookupControl = edTo
+    FormName = 'TUnitForm'
+    PositionDataSet = 'GridDataSet'
+    Left = 472
+    Top = 8
+  end
+  object dsdGuidesPaidKind: TdsdGuides
+    LookupControl = edPaidKind
+    FormName = 'TPaidKindForm'
+    PositionDataSet = 'ClientDataSet'
+    Left = 224
+    Top = 48
+  end
+  object dsdGuidesContract: TdsdGuides
+    LookupControl = edContract
+    FormName = 'TContractForm'
+    PositionDataSet = 'ClientDataSet'
+    Left = 680
+    Top = 8
+  end
+  object dsdGuidesCar: TdsdGuides
+    LookupControl = edCar
+    FormName = 'TCarForm'
+    PositionDataSet = 'ClientDataSet'
+    Left = 784
+    Top = 56
+  end
+  object dsdGuidesPersonalDriver: TdsdGuides
+    LookupControl = edPersonalDriver
+    FormName = 'TPersonalForm'
+    PositionDataSet = 'ClientDataSet'
+    Left = 824
+  end
+  object dsdGuidesRoute: TdsdGuides
+    LookupControl = edRoute
+    FormName = 'TRouteForm'
+    PositionDataSet = 'ClientDataSet'
+    Left = 968
+    Top = 8
+  end
+  object dsdGuidesRouteSorting: TdsdGuides
+    LookupControl = edRouteSorting
+    FormName = 'TRouteSortingForm'
+    PositionDataSet = 'ClientDataSet'
+    Left = 920
+    Top = 56
   end
 end

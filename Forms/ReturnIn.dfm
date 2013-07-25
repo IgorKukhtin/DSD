@@ -4,15 +4,15 @@ inherited ReturnInForm: TReturnInForm
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1036
-  ExplicitHeight = 430
+  ExplicitWidth = 1044
+  ExplicitHeight = 434
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
     Left = 0
     Top = 0
     Width = 1028
-    Height = 84
+    Height = 113
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
@@ -70,29 +70,116 @@ inherited ReturnInForm: TReturnInForm
       Top = 4
       Caption = #1050#1086#1084#1091
     end
+    object edInvNumberPartner: TcxTextEdit
+      Left = 8
+      Top = 72
+      TabOrder = 8
+      Width = 121
+    end
+    object cxLabel5: TcxLabel
+      Left = 8
+      Top = 54
+      Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+    end
+    object cxLabel6: TcxLabel
+      Left = 157
+      Top = 54
+      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+    end
+    object edPaidKind: TcxButtonEdit
+      Left = 156
+      Top = 71
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 11
+      Width = 121
+    end
+    object edContract: TcxButtonEdit
+      Left = 616
+      Top = 27
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 12
+      Width = 113
+    end
+    object cxLabel9: TcxLabel
+      Left = 616
+      Top = 4
+      Caption = #1044#1086#1075#1086#1074#1086#1088
+    end
+    object edCar: TcxButtonEdit
+      Left = 672
+      Top = 71
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 14
+      Width = 113
+    end
+    object cxLabel10: TcxLabel
+      Left = 672
+      Top = 48
+      Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
+    end
+    object cxLabel11: TcxLabel
+      Left = 759
+      Top = 4
+      Caption = #1042#1086#1076#1080#1090#1077#1083#1100
+    end
+    object edPersonalDriver: TcxButtonEdit
+      Left = 759
+      Top = 27
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 17
+      Width = 130
+    end
+    object edPriceWithVAT: TcxCheckBox
+      Left = 296
+      Top = 71
+      Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+      TabOrder = 18
+      Width = 137
+    end
   end
   object cxPageControl1: TcxPageControl
     Left = 0
-    Top = 110
+    Top = 141
     Width = 1028
-    Height = 286
+    Height = 255
     Align = alClient
-    TabOrder = 5
+    TabOrder = 3
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 286
-    ClientRectRight = 1028
+    ExplicitTop = 195
+    ExplicitHeight = 201
+    ClientRectBottom = 251
+    ClientRectLeft = 4
+    ClientRectRight = 1024
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 173
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1028
-        Height = 262
+        Width = 1020
+        Height = 227
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 173
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource
@@ -220,13 +307,18 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+<<<<<<< Updated upstream
+=======
+      ExplicitHeight = 173
+>>>>>>> Stashed changes
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 1028
-        Height = 262
+        Width = 1020
+        Height = 227
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 173
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -383,6 +475,28 @@ inherited ReturnInForm: TReturnInForm
       end
     end
   end
+  object edVATPercent: TcxCurrencyEdit
+    Left = 431
+    Top = 70
+    TabOrder = 5
+    Width = 65
+  end
+  object cxLabel7: TcxLabel
+    Left = 431
+    Top = 47
+    Caption = '% '#1053#1044#1057
+  end
+  object cxLabel8: TcxLabel
+    Left = 512
+    Top = 48
+    Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
+  end
+  object cxCurrencyEdit2: TcxCurrencyEdit
+    Left = 512
+    Top = 71
+    TabOrder = 9
+    Width = 129
+  end
   object dsdFormParams: TdsdFormParams
     Params = <
       item
@@ -422,8 +536,8 @@ inherited ReturnInForm: TReturnInForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -440,13 +554,13 @@ inherited ReturnInForm: TReturnInForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar: TdxBar
       Caption = 'Custom'
       CaptionButtons = <>
       DockedDockingStyle = dsTop
-      DockedLeft = 0
+      DockedLeft = 10
       DockedTop = 0
       DockingStyle = dsTop
       FloatLeft = 671
@@ -545,10 +659,8 @@ inherited ReturnInForm: TReturnInForm
     Top = 216
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
-      StoredProc = spGet
       StoredProcList = <
         item
-          StoredProc = spGet
         end
         item
           StoredProc = spSelectMovementItem
@@ -603,70 +715,8 @@ inherited ReturnInForm: TReturnInForm
     LookupControl = edTo
     FormName = 'TUnitForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 448
-    Top = 56
-  end
-  object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_ReturnIn'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Component = dsdFormParams
-        ComponentItem = 'Id'
-        DataType = ftInteger
-        ParamType = ptInput
-        Value = '0'
-      end
-      item
-        Name = 'InvNumber'
-        Component = edInvNumber
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
-      end
-      item
-        Name = 'OperDate'
-        Component = edOperDate
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
-      end
-      item
-        Name = 'FromId'
-        Component = dsdGuidesFrom
-        ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
-      end
-      item
-        Name = 'FromName'
-        Component = dsdGuidesFrom
-        ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
-      end
-      item
-        Name = 'ToId'
-        Component = dsdGuidesTo
-        ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
-      end
-      item
-        Name = 'ToName'
-        Component = dsdGuidesTo
-        ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
-      end>
-    Left = 160
-    Top = 56
+    Left = 520
+    Top = 80
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -787,5 +837,283 @@ inherited ReturnInForm: TReturnInForm
     BCDToCurrency = False
     Left = 232
     Top = 216
+  end
+  object dsdGuidesContract: TdsdGuides
+    LookupControl = edContract
+    FormName = 'TContractForm'
+    PositionDataSet = 'ClientDataSet'
+    Left = 680
+    Top = 8
+  end
+  object dsdGuidesPersonalDriver: TdsdGuides
+    LookupControl = edPersonalDriver
+    FormName = 'TPersonalForm'
+    PositionDataSet = 'ClientDataSet'
+    Left = 824
+  end
+  object dsdGuidesCar: TdsdGuides
+    LookupControl = edCar
+    FormName = 'TCarForm'
+    PositionDataSet = 'ClientDataSet'
+    Left = 784
+    Top = 56
+  end
+  object dsdGuidesPaidKind: TdsdGuides
+    LookupControl = edPaidKind
+    FormName = 'TPaidKindForm'
+    PositionDataSet = 'ClientDataSet'
+    Left = 224
+    Top = 64
+  end
+  object InsertUpdateMovement: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_ReturnIn'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Component = dsdFormParams
+        ComponentItem = 'Id'
+        DataType = ftInteger
+        ParamType = ptInputOutput
+        Value = '0'
+      end
+      item
+        Name = 'inInvNumber'
+        Component = edInvNumber
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'inOperDate'
+        Component = edOperDate
+        DataType = ftDate
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'inOperDatePartner'
+        DataType = ftDate
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'inPriceWithVAT'
+        Component = edPriceWithVAT
+        DataType = ftBoolean
+        ParamType = ptInput
+        Value = 'False'
+      end
+      item
+        Name = 'inVATPercent'
+        Component = edVATPercent
+        DataType = ftFloat
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'inChangePercent'
+        DataType = ftFloat
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'inFromId'
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'inToId'
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'inPaidKindId'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'inContractId'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'inCarId'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'inPersonalDriverId'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = Null
+      end>
+    Left = 752
+    Top = 112
+  end
+  object spGet: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_ReturnIn'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Component = dsdFormParams
+        ComponentItem = 'Id'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = '0'
+      end
+      item
+        Name = 'InvNumber'
+        Component = cxLabel4
+        DataType = ftInteger
+        ParamType = ptOutput
+      end
+      item
+        Name = 'OperDate'
+        Component = edOperDate
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'StatusCode'
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'OperDatePartner'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'InvNumberPartner'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'StatusName'
+        ComponentItem = 'TextValue'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'PriceWithVAT'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'VATPercent'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'ChangePercent'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'FromId'
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'FromName'
+        ComponentItem = 'TextValue'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'ToId'
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'PaidKindId'
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'ToName'
+        ComponentItem = 'TextValue'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'PaidKindName'
+        ComponentItem = 'TextValue'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'ContractId'
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'ContractName'
+        ComponentItem = 'TextValue'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'CarId'
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'CarName'
+        ComponentItem = 'TextValue'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'PersonalDriverId'
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end
+      item
+        Name = 'PersonalDriverName'
+        ComponentItem = 'TextValue'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end>
+    Left = 152
+    Top = 128
   end
 end

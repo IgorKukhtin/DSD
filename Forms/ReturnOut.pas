@@ -22,7 +22,8 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  cxCurrencyEdit, cxCheckBox;
 
 type
   TReturnOutForm = class(TParentForm)
@@ -47,7 +48,6 @@ type
     cxLabel4: TcxLabel;
     dsdGuidesFrom: TdsdGuides;
     dsdGuidesTo: TdsdGuides;
-    spGet: TdsdStoredProc;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
     cxPageControl1: TcxPageControl;
@@ -98,6 +98,21 @@ type
     colGoodsKindName_comlete: TcxGridDBColumn;
     colAccountOnComplete: TcxGridDBColumn;
     colAssetName: TcxGridDBColumn;
+    cxLabel5: TcxLabel;
+    edInvNumberPartner: TcxTextEdit;
+    edPaidKind: TcxButtonEdit;
+    cxLabel6: TcxLabel;
+    edPriceWithVAT: TcxCheckBox;
+    edContract: TcxButtonEdit;
+    cxLabel9: TcxLabel;
+    dsdGuidesContract: TdsdGuides;
+    dsdGuidesPaidKind: TdsdGuides;
+    edVATPercent: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
+    cxCurrencyEdit2: TcxCurrencyEdit;
+    cxLabel8: TcxLabel;
+    InsertUpdateMovement: TdsdStoredProc;
+    spGet: TdsdStoredProc;
   private
   public
   end;

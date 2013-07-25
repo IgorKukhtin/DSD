@@ -22,7 +22,8 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  cxCheckBox, cxCurrencyEdit;
 
 type
   TSaleForm = class(TParentForm)
@@ -37,16 +38,6 @@ type
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     DataPanel: TPanel;
-    edInvNumber: TcxTextEdit;
-    cxLabel1: TcxLabel;
-    edOperDate: TcxDateEdit;
-    cxLabel2: TcxLabel;
-    edFrom: TcxButtonEdit;
-    edTo: TcxButtonEdit;
-    cxLabel3: TcxLabel;
-    cxLabel4: TcxLabel;
-    dsdGuidesFrom: TdsdGuides;
-    dsdGuidesTo: TdsdGuides;
     spGet: TdsdStoredProc;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
@@ -98,6 +89,42 @@ type
     colGoodsKindName_comlete: TcxGridDBColumn;
     colAccountOnComplete: TcxGridDBColumn;
     colAssetName: TcxGridDBColumn;
+    cxCurrencyEdit2: TcxCurrencyEdit;
+    edVATPercent: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
+    cxLabel8: TcxLabel;
+    edTo: TcxButtonEdit;
+    cxLabel4: TcxLabel;
+    cxLabel3: TcxLabel;
+    edFrom: TcxButtonEdit;
+    edOperDate: TcxDateEdit;
+    cxLabel2: TcxLabel;
+    cxLabel1: TcxLabel;
+    edPriceWithVAT: TcxCheckBox;
+    edInvNumber: TcxTextEdit;
+    InsertUpdateMovement: TdsdStoredProc;
+    edInvNumberPartner: TcxTextEdit;
+    cxLabel5: TcxLabel;
+    dsdGuidesFrom: TdsdGuides;
+    dsdGuidesTo: TdsdGuides;
+    edPaidKind: TcxButtonEdit;
+    dsdGuidesPaidKind: TdsdGuides;
+    cxLabel6: TcxLabel;
+    edContract: TcxButtonEdit;
+    cxLabel9: TcxLabel;
+    dsdGuidesContract: TdsdGuides;
+    edCar: TcxButtonEdit;
+    cxLabel10: TcxLabel;
+    dsdGuidesCar: TdsdGuides;
+    edPersonalDriver: TcxButtonEdit;
+    cxLabel11: TcxLabel;
+    dsdGuidesPersonalDriver: TdsdGuides;
+    edRoute: TcxButtonEdit;
+    cxLabel12: TcxLabel;
+    dsdGuidesRoute: TdsdGuides;
+    edRouteSorting: TcxButtonEdit;
+    cxLabel13: TcxLabel;
+    dsdGuidesRouteSorting: TdsdGuides;
   private
   public
   end;
