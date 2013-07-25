@@ -4,7 +4,7 @@ interface
 
 uses Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView,
      cxTextEdit, DB, dsdAction, cxGridTableView,
-     VCL.Graphics, cxGraphics, cxStyles, Forms, Controls, SysUtils;
+     VCL.Graphics, cxGraphics, cxStyles, Forms, Controls, SysUtils, dsdDB, Contnrs;
 
 type
 
@@ -84,9 +84,40 @@ type
     constructor Create(AOwner: TComponent); override;
   end;
 
+  TControlListItem = class(TCollectionItem)
+  private
+    FControl: TControl;
+    procedure SetControl(const Value: TControl);
+  published
+    property Control: TControl read FControl write SetControl;
+  end;
+
+  THeaderSaver = class;
+
+  TControlList = class(TCollection)
+  private
+    function GetItem(Index: Integer): TControlListItem;
+    procedure SetItem(Index: Integer; const Value: TControlListItem);
+  public
+    HeaderSaver: THeaderSaver;
+    constructor Create(HeaderSaver: THeaderSaver);
+    function Add: TControlListItem;
+    property Items[Index: Integer]: TControlListItem read GetItem write SetItem; default;
+  end;
+
   // Вызывает процедуру
   THeaderSaver = class(TComponent)
-
+  private
+    FControlList: TControlList;
+    FStoredProc: TdsdStoredProc;
+    FEnterValue: TStringList;
+    procedure OnEnter(Sender: TObject);
+    procedure OnExit(Sender: TObject);
+  public
+    constructor Create(AOwner: TComponent); override;
+  published
+    property StoredProc: TdsdStoredProc read FStoredProc write FStoredProc;
+    property ControlList: TControlList read FControlList write FControlList;
   end;
 
   procedure Register;
@@ -96,7 +127,7 @@ implementation
 uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf, Windows,
      cxFilter, cxClasses, cxLookAndFeelPainters, cxCustomData,
      cxGridCommon, math, cxPropertiesStore, cxGridCustomView, UtilConst, cxStorage,
-     cxGeometry;
+     cxGeometry, cxCalendar, cxCheckBox;
 
 type
 
@@ -104,6 +135,7 @@ type
 
 procedure Register;
 begin
+   RegisterComponents('DSDComponent', [THeaderSaver]);
    RegisterComponents('DSDComponent', [TdsdDBTreeAddOn]);
    RegisterComponents('DSDComponent', [TdsdDBViewAddOn]);
    RegisterComponents('DSDComponent', [TdsdUserSettingsStorageAddOn]);
@@ -478,5 +510,79 @@ begin
   end;
 end;
 
+
+{ THeaderSaver }
+
+constructor THeaderSaver.Create(AOwner: TComponent);
+begin
+  inherited;
+  FControlList := TControlList.Create(Self);
+  FEnterValue := TStringList.Create;
+end;
+
+procedure THeaderSaver.OnEnter(Sender: TObject);
+begin
+  if Sender is TcxTextEdit then
+     FEnterValue.Values[TComponent(Sender).Name] := (Sender as TcxTextEdit).Text;
+  if Sender is TcxDateEdit then
+     FEnterValue.Values[TComponent(Sender).Name] := (Sender as TcxDateEdit).Text;
+  if Sender is TcxCheckBox then
+     FEnterValue.Values[TComponent(Sender).Name] := BoolToStr((Sender as TcxCheckBox).Checked);
+end;
+
+procedure THeaderSaver.OnExit(Sender: TObject);
+var isChanged: boolean;
+begin
+  if Sender is TcxTextEdit then
+     isChanged := FEnterValue.Values[TComponent(Sender).Name] <> (Sender as TcxTextEdit).Text;
+  if Sender is TcxDateEdit then
+     isChanged := FEnterValue.Values[TComponent(Sender).Name] <> (Sender as TcxDateEdit).Text;
+  if Sender is TcxCheckBox then
+     isChanged := FEnterValue.Values[TComponent(Sender).Name] <> BoolToStr((Sender as TcxCheckBox).Checked);
+  if isChanged then
+     StoredProc.Execute;
+end;
+
+{ TControlList }
+
+function TControlList.Add: TControlListItem;
+begin
+  result := TControlListItem(inherited Add);
+end;
+
+constructor TControlList.Create(HeaderSaver: THeaderSaver);
+begin
+  inherited Create(TControlListItem);
+  Self.HeaderSaver := HeaderSaver;
+end;
+
+function TControlList.GetItem(Index: Integer): TControlListItem;
+begin
+  Result := TControlListItem(inherited GetItem(Index));
+end;
+
+procedure TControlList.SetItem(Index: Integer; const Value: TControlListItem);
+begin
+  inherited SetItem(Index, Value);
+end;
+
+{ TControlListItem }
+
+procedure TControlListItem.SetControl(const Value: TControl);
+begin
+  FControl := Value;
+  if FControl is TcxTextEdit then begin
+     (FControl as TcxTextEdit).OnEnter := TControlList(Collection).HeaderSaver.OnEnter;
+     (FControl as TcxTextEdit).OnExit := TControlList(Collection).HeaderSaver.OnExit;
+  end;
+  if FControl is TcxDateEdit then begin
+     (FControl as TcxDateEdit).OnEnter := TControlList(Collection).HeaderSaver.OnEnter;
+     (FControl as TcxDateEdit).OnExit := TControlList(Collection).HeaderSaver.OnExit;
+  end;
+  if FControl is TcxCheckBox then begin
+     (FControl as TcxCheckBox).OnEnter := TControlList(Collection).HeaderSaver.OnEnter;
+     (FControl as TcxCheckBox).OnExit := TControlList(Collection).HeaderSaver.OnExit;
+  end;
+end;
 
 end.

@@ -163,5 +163,6 @@ initialization
   RegisterClass (TdsdUpdateDataSet);
   RegisterClass (TdsdUpdateErased);
   RegisterClass (TdsdUserSettingsStorageAddOn);
+  RegisterClass (THeaderSaver);
 
 end.

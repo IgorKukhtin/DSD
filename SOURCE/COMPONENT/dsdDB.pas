@@ -369,6 +369,8 @@ var i: Integer;
     Data: OleVariant;
 begin
   Data := Value;
+  if VarisNull(Data) then
+     Data := '';
   if varType(Data) in [varSingle, varDouble, varCurrency] then
      result := gfFloatToStr(Data)
   else
@@ -459,13 +461,13 @@ begin
               ftInteger: Result := '0';
             end;
        if Component is TcxCurrencyEdit then
-          Result := (Component as TcxCurrencyEdit).Text;
+          Result := (Component as TcxCurrencyEdit).Value;
        if Component is TdsdGuides then
           Result := (Component as TdsdGuides).Key;
        if Component is TcxCheckBox then
           Result := BoolToStr((Component as TcxCheckBox).Checked, true);
        if Component is TcxDateEdit then
-          Result := (Component as TcxDateEdit).Text;
+          Result := (Component as TcxDateEdit).Date;
        if Component is TBooleanStoredProcAction then
           Result := (Component as TBooleanStoredProcAction).Value;
     end

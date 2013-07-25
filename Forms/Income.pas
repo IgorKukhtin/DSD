@@ -48,7 +48,6 @@ type
     cxLabel4: TcxLabel;
     dsdGuidesFrom: TdsdGuides;
     dsdGuidesTo: TdsdGuides;
-    spGet: TdsdStoredProc;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
     cxPageControl: TcxPageControl;
@@ -107,16 +106,18 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     EntryViewAddOn: TdsdDBViewAddOn;
-    InsertUpdateMovement: TdsdStoredProc;
+    spInsertUpdateMovement: TdsdStoredProc;
     cxLabel5: TcxLabel;
-    edInvNumberPartner: TcxTextEdit;
     cxLabel6: TcxLabel;
     edOperDatePartner: TcxDateEdit;
     edPriceWithVAT: TcxCheckBox;
     edVATPercent: TcxCurrencyEdit;
-    cxCurrencyEdit2: TcxCurrencyEdit;
+    edChangePercent: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
     cxLabel8: TcxLabel;
+    HeaderSaver: THeaderSaver;
+    edInvNumberPartner: TcxTextEdit;
+    spGet: TdsdStoredProc;
   private
   public
   end;

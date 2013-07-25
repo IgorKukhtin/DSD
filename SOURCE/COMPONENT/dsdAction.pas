@@ -318,8 +318,12 @@ end;
 
 function TdsdCustomDataSetAction.GetStoredProc: TdsdStoredProc;
 begin
-  if StoredProcList.Count > 0 then
-     result := StoredProcList[0].StoredProc
+  if StoredProcList.Count > 0 then begin
+     if Assigned(StoredProcList[0].StoredProc) then
+        result := StoredProcList[0].StoredProc
+     else
+        result := nil
+  end
   else
      result := nil
 end;

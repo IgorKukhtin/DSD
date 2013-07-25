@@ -83,7 +83,7 @@ inherited IncomeForm: TIncomeForm
       TabOrder = 9
       Width = 65
     end
-    object cxCurrencyEdit2: TcxCurrencyEdit
+    object edChangePercent: TcxCurrencyEdit
       Left = 512
       Top = 72
       TabOrder = 10
@@ -106,18 +106,15 @@ inherited IncomeForm: TIncomeForm
     Width = 1028
     Height = 272
     Align = alClient
-    TabOrder = 5
+    TabOrder = 2
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 110
-    ExplicitHeight = 286
     ClientRectBottom = 272
     ClientRectRight = 1028
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 262
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -125,7 +122,6 @@ inherited IncomeForm: TIncomeForm
         Height = 248
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 262
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource
@@ -194,29 +190,34 @@ inherited IncomeForm: TIncomeForm
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 58
           end
           object colName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 200
           end
           object colGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object colPartionGoods: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103
             DataBinding.FieldName = 'PartionGoods'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 120
           end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -271,6 +272,7 @@ inherited IncomeForm: TIncomeForm
             Caption = #1076#1083#1103' '#1054#1089#1085#1086#1074#1085#1086#1075#1086' '#1089#1088#1077#1076#1089#1090#1074#1072
             DataBinding.FieldName = 'AssetName'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
         end
@@ -282,7 +284,6 @@ inherited IncomeForm: TIncomeForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitHeight = 262
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -290,7 +291,6 @@ inherited IncomeForm: TIncomeForm
         Height = 248
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 262
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -453,12 +453,6 @@ inherited IncomeForm: TIncomeForm
     Top = 49
     Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
   end
-  object edInvNumberPartner: TcxTextEdit
-    Left = 8
-    Top = 71
-    TabOrder = 7
-    Width = 121
-  end
   object cxLabel6: TcxLabel
     Left = 155
     Top = 48
@@ -466,6 +460,12 @@ inherited IncomeForm: TIncomeForm
   end
   object edOperDatePartner: TcxDateEdit
     Left = 155
+    Top = 71
+    TabOrder = 4
+    Width = 121
+  end
+  object edInvNumberPartner: TcxTextEdit
+    Left = 8
     Top = 71
     TabOrder = 9
     Width = 121
@@ -681,68 +681,6 @@ inherited IncomeForm: TIncomeForm
     Left = 472
     Top = 8
   end
-  object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Income'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inId'
-        Component = dsdFormParams
-        ComponentItem = 'Id'
-        DataType = ftInteger
-        ParamType = ptInput
-        Value = '0'
-      end
-      item
-        Name = 'InvNumber'
-        Component = edInvNumber
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
-      end
-      item
-        Name = 'OperDate'
-        Component = edOperDate
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
-      end
-      item
-        Name = 'FromId'
-        Component = dsdGuidesFrom
-        ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
-      end
-      item
-        Name = 'FromName'
-        Component = dsdGuidesFrom
-        ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
-      end
-      item
-        Name = 'ToId'
-        Component = dsdGuidesTo
-        ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
-      end
-      item
-        Name = 'ToName'
-        Component = dsdGuidesTo
-        ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
-      end>
-    Left = 136
-    Top = 104
-  end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
     Left = 456
@@ -817,9 +755,17 @@ inherited IncomeForm: TIncomeForm
       end
       item
         Name = 'inAmountPartner'
+        Component = ClientDataSet
+        ComponentItem = 'AmountPartner'
         DataType = ftFloat
         ParamType = ptInput
-        Value = '0'
+      end
+      item
+        Name = 'inAmountPacker'
+        Component = ClientDataSet
+        ComponentItem = 'AmountPacker'
+        DataType = ftInteger
+        ParamType = ptInput
       end
       item
         Name = 'inPrice'
@@ -830,24 +776,40 @@ inherited IncomeForm: TIncomeForm
       end
       item
         Name = 'inCountForPrice'
+        Component = ClientDataSet
+        ComponentItem = 'CountForPrice'
         DataType = ftFloat
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inLiveWeight'
+        Component = ClientDataSet
+        ComponentItem = 'LiveWeight'
         DataType = ftFloat
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inHeadCount'
+        Component = ClientDataSet
+        ComponentItem = 'HeadCount'
         DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPartionGoods'
+        Component = ClientDataSet
+        ComponentItem = 'PartionGoods'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsKindId'
+        DataType = ftInteger
         ParamType = ptInput
         Value = '0'
       end
       item
-        Name = 'inGoodsKindId'
+        Name = 'inAssetId'
         DataType = ftInteger
         ParamType = ptInput
         Value = '0'
@@ -879,7 +841,8 @@ inherited IncomeForm: TIncomeForm
     Left = 368
     Top = 240
   end
-  object InsertUpdateMovement: TdsdStoredProc
+  object spInsertUpdateMovement: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_Income'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -901,14 +864,14 @@ inherited IncomeForm: TIncomeForm
       item
         Name = 'inOperDate'
         Component = edOperDate
-        DataType = ftDate
+        DataType = ftDateTime
         ParamType = ptInput
         Value = ''
       end
       item
         Name = 'inOperDatePartner'
         Component = edOperDatePartner
-        DataType = ftDate
+        DataType = ftDateTime
         ParamType = ptInput
         Value = ''
       end
@@ -935,9 +898,10 @@ inherited IncomeForm: TIncomeForm
       end
       item
         Name = 'inChangePercent'
+        Component = edChangePercent
         DataType = ftFloat
         ParamType = ptInput
-        Value = Null
+        Value = ''
       end
       item
         Name = 'inFromId'
@@ -986,6 +950,106 @@ inherited IncomeForm: TIncomeForm
         Value = Null
       end>
     Left = 696
+    Top = 72
+  end
+  object HeaderSaver: THeaderSaver
+    StoredProc = spInsertUpdateMovement
+    ControlList = <
+      item
+        Control = edInvNumber
+      end
+      item
+        Control = edInvNumberPartner
+      end
+      item
+        Control = edOperDate
+      end
+      item
+        Control = edOperDatePartner
+      end
+      item
+        Control = edFrom
+      end
+      item
+        Control = edTo
+      end>
+    Left = 544
+    Top = 80
+  end
+  object spGet: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Income'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Component = dsdFormParams
+        ComponentItem = 'Id'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = '0'
+      end
+      item
+        Name = 'InvNumber'
+        Component = edInvNumber
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'OperDate'
+        Component = edOperDate
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'OperDatePartner'
+        Component = edOperDatePartner
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'InvNumberPartner'
+        Component = edInvNumberPartner
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'FromId'
+        Component = dsdGuidesFrom
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'FromName'
+        Component = dsdGuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'ToId'
+        Component = dsdGuidesTo
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'ToName'
+        Component = dsdGuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end>
+    Left = 136
     Top = 72
   end
 end
