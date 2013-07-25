@@ -260,30 +260,35 @@ inherited Report_HistoryCostForm: TReport_HistoryCostForm
       object OperCount: TcxGridDBColumn
         DataBinding.FieldName = 'OperCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taCenter
         Width = 40
       end
       object OperPrice: TcxGridDBColumn
         DataBinding.FieldName = 'OperPrice'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taCenter
         Width = 30
       end
       object OperSumm: TcxGridDBColumn
         DataBinding.FieldName = 'OperSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taCenter
         Width = 40
       end
       object Price: TcxGridDBColumn
         DataBinding.FieldName = 'Price'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taCenter
         Width = 30
       end
       object Price_Calc: TcxGridDBColumn
         DataBinding.FieldName = 'Price_Calc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taCenter
         Width = 30
       end
@@ -370,71 +375,84 @@ inherited Report_HistoryCostForm: TReport_HistoryCostForm
       object CalcCount: TcxGridDBColumn
         DataBinding.FieldName = 'CalcCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taCenter
         Width = 30
       end
       object StartCount: TcxGridDBColumn
         DataBinding.FieldName = 'StartCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taCenter
         Width = 75
       end
       object StartCount_calc: TcxGridDBColumn
         DataBinding.FieldName = 'StartCount_calc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taCenter
         Width = 75
       end
       object IncomeCount: TcxGridDBColumn
         DataBinding.FieldName = 'IncomeCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taCenter
         Width = 75
       end
       object IncomeCount_calc: TcxGridDBColumn
         DataBinding.FieldName = 'IncomeCount_calc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taCenter
         Width = 75
       end
       object StartSumm: TcxGridDBColumn
         DataBinding.FieldName = 'StartSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
         Width = 75
       end
       object StartSumm_calc: TcxGridDBColumn
         DataBinding.FieldName = 'StartSumm_calc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
         Width = 75
       end
       object IncomeSumm: TcxGridDBColumn
         DataBinding.FieldName = 'IncomeSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
         Width = 75
       end
       object IncomeSumm_calc: TcxGridDBColumn
         DataBinding.FieldName = 'IncomeSumm_calc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
         Width = 75
       end
       object OutCount_calc: TcxGridDBColumn
         DataBinding.FieldName = 'OutCount_calc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
         Width = 75
       end
       object OutSumm_calc: TcxGridDBColumn
         DataBinding.FieldName = 'OutSumm_calc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
         Width = 75
       end
       object EndCount_calc: TcxGridDBColumn
         DataBinding.FieldName = 'EndCount_calc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
         Width = 75
       end
       object EndSumm_calc: TcxGridDBColumn
         DataBinding.FieldName = 'EndSumm_calc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
         Width = 75
       end
     end
