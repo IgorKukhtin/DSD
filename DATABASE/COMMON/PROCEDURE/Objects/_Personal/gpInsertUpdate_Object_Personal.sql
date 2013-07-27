@@ -5,7 +5,7 @@
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Personal(
  INOUT ioId                  Integer   , -- ключ объекта <Сотрудники>
     IN inCode                Integer   , -- Код объекта 
-    IN inName                Integer   , -- 
+    IN inName                TVarChar   , -- 
     IN inMemberId            Integer   , -- ссылка на Физ.лица 
     IN inPositionId          Integer   , -- ссылка на Должность
     IN inUnitId              Integer   , -- ссылка на Подразделение
@@ -58,7 +58,7 @@ END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer,Integer,Integer,Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Personal (Integer, Integer, TVarChar, Integer, Integer,Integer,Integer,Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
   
 /*---------------------------------------------------------------------------------------
