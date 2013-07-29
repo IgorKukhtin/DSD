@@ -82,8 +82,8 @@ INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_JuridicalGroup', 'Группы юр. лиц' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_JuridicalGroup');
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_Juridical', 'Юр лица' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Juridical');
-INSERT INTO ObjectDesc (Code, ItemName)
-  SELECT 'zc_Object_Partner', 'Контрагент' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Partner');
+--INSERT INTO ObjectDesc (Code, ItemName)
+--  SELECT 'zc_Object_Partner', 'Контрагент' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Partner');
 -- INSERT INTO ObjectDesc (Code, ItemName)
 --  SELECT 'zc_Object_UnitGroup', 'Группы подразеделений' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_UnitGroup');
 INSERT INTO ObjectDesc (Code, ItemName)

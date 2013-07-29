@@ -88,7 +88,7 @@ type
     function InsertUpdateMovementSale(Id: Integer; InvNumber: String; OperDate: TDateTime;
              OperDatePartner: TDateTime; PriceWithVAT: Boolean;
              VATPercent, ChangePercent: double;
-             FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId, RouteId, RouteSortingId: Integer
+             FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId, PersonalId, RouteId, RouteSortingId: Integer
              ): integer;
     constructor Create; override;
   end;
@@ -583,7 +583,7 @@ var Id: Integer;
     OperDatePartner: TDateTime;
     PriceWithVAT: Boolean;
     VATPercent, ChangePercent: double;
-    FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId, RouteId, RouteSortingId: Integer;
+    FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId, PersonalId,RouteId, RouteSortingId: Integer;
 begin
   Id:=0;
   InvNumber:='1';
@@ -600,20 +600,23 @@ begin
   ContractId:=TContractTest.Create.GetDefault;
   CarId:=0;
   PersonalDriverId:=0;
+  PersonalId:=0;
   RouteId:=0;
   RouteSortingId:=0;
   //
   result := InsertUpdateMovementSale(Id, InvNumber, OperDate,
              OperDatePartner, PriceWithVAT,
              VATPercent, ChangePercent,
-             FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId, RouteId, RouteSortingId);
+             FromId, ToId, PaidKindId, ContractId, CarId,
+             PersonalDriverId, PersonalId, RouteId, RouteSortingId);
 
 end;
 
 function TMovementSaleTest.InsertUpdateMovementSale(Id: Integer; InvNumber: String; OperDate: TDateTime;
              OperDatePartner: TDateTime; PriceWithVAT: Boolean;
              VATPercent, ChangePercent: double;
-             FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId, RouteId, RouteSortingId: Integer):Integer;
+             FromId, ToId, PaidKindId, ContractId, CarId,
+             PersonalDriverId, PersonalId, RouteId, RouteSortingId: Integer):Integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -634,6 +637,7 @@ begin
 
   FParams.AddParam('inCarId', ftInteger, ptInput, CarId);
   FParams.AddParam('inPersonalDriverId', ftInteger, ptInput, PersonalDriverId);
+  FParams.AddParam('inPersonalId', ftInteger, ptInput, PersonalId);
   FParams.AddParam('inRouteId', ftInteger, ptInput, RouteId);
   FParams.AddParam('inRouteSortingId', ftInteger, ptInput, RouteSortingId);
 

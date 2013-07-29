@@ -152,7 +152,8 @@ type
     // Удаляется Объект и все подчиненные
     procedure Delete(Id: Integer); override;
     function InsertUpdatePartner(const Id: integer; Code: Integer;
-        Name, GLNCode: string; JuridicalId, RouteId, RouteSortingId: integer): integer;
+        Name, GLNCode: string; PrepareDayCount, DocumentDayCount: Double;
+        JuridicalId, RouteId, RouteSortingId, PersonalTakeId: integer): integer;
     constructor Create; override;
   end;
 
@@ -915,12 +916,13 @@ end;
 
 function TPartnerTest.InsertDefault: integer;
 var
-  JuridicalId, RouteId, RouteSortingId: Integer;
+  JuridicalId, RouteId, RouteSortingId, PersonalTakeId: Integer;
 begin
   JuridicalId := TJuridical.Create.GetDefault;
   RouteId := TRouteTest.Create.GetDefault;
   RouteSortingId := TRouteSortingTest.Create.GetDefault;
-  result := InsertUpdatePartner(0, -1, 'Контрагенты', 'GLNCode', JuridicalId, RouteId, RouteSortingId);
+  PersonalTakeId := 0; //TPersonalTest.Create.GetDefault;
+  result := InsertUpdatePartner(0, -6, 'Контрагенты', 'GLNCode', 15, 15, JuridicalId, RouteId, RouteSortingId, PersonalTakeId);
 end;
 
 function TPartnerTest.InsertUpdatePartner;
@@ -930,9 +932,12 @@ begin
   FParams.AddParam('inCode', ftInteger, ptInput, Code);
   FParams.AddParam('inName', ftString, ptInput, Name);
   FParams.AddParam('inGLNCode', ftString, ptInput, GLNCode);
+  FParams.AddParam('inPrepareDayCount', ftFloat, ptInput, PrepareDayCount);
+  FParams.AddParam('inDocumentDayCount', ftFloat, ptInput, DocumentDayCount);
   FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
   FParams.AddParam('inRouteId', ftInteger, ptInput, RouteId);
   FParams.AddParam('inRouteSortingId', ftInteger, ptInput, RouteSortingId);
+  FParams.AddParam('inPersonalTakeId', ftInteger, ptInput, PersonalTakeId);
   result := InsertUpdate(FParams);
 end;
 { TDataBaseUsersObjectTest }

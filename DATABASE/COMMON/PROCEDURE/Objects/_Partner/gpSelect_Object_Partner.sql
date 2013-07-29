@@ -25,9 +25,9 @@ BEGIN
          , Object_JuridicalGroup.ObjectCode  AS Code
          , CAST('' AS TVarChar)              AS NAME
          
-         , CAST('' AS TVarChar)   AS GLNCode
-         , CAST('' AS TVarChar)   AS PrepareDayCount
-         , CAST('' AS TVarChar)   AS DocumentDayCount
+         , CAST('' AS TVarChar) AS GLNCode
+         , CAST(0 as TFloat)   AS PrepareDayCount
+         , CAST(0 as TFloat)   AS DocumentDayCount
          
          , ObjectLink_JuridicalGroup_Parent.ChildObjectId AS JuridicalGroupId
          , Object_JuridicalGroup.ObjectCode  AS JuridicalGroupCode
@@ -63,6 +63,7 @@ BEGIN
          , Object_Partner.ValueData      AS NAME
          
          , ObjectString_GLNCode.ValueData     AS GLNCode
+         
          , Partner_PrepareDayCount.ValueData  AS PrepareDayCount
          , Partner_DocumentDayCount.ValueData AS DocumentDayCount
          
@@ -93,13 +94,13 @@ BEGIN
                                 ON ObjectString_GLNCode.ObjectId = Object_Partner.Id 
                                AND ObjectString_GLNCode.DescId = zc_ObjectString_Partner_GLNCode()
 
-         LEFT JOIN ObjectString AS Partner_PrepareDayCount 
-                                ON Partner_PrepareDayCount.ObjectId = Object_Partner.Id
-                               AND Partner_PrepareDayCount.DescId = zc_ObjectFloat_Partner_PrepareDayCount()  
+         LEFT JOIN ObjectFloat AS Partner_PrepareDayCount 
+                               ON Partner_PrepareDayCount.ObjectId = Object_Partner.Id
+                              AND Partner_PrepareDayCount.DescId = zc_ObjectFloat_Partner_PrepareDayCount()  
         
-         LEFT JOIN ObjectString AS Partner_DocumentDayCount 
-                                ON Partner_DocumentDayCount.ObjectId = Object_Partner.Id
-                               AND Partner_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()                                                              
+         LEFT JOIN ObjectFloat AS Partner_DocumentDayCount 
+                               ON Partner_DocumentDayCount.ObjectId = Object_Partner.Id
+                              AND Partner_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()                                                              
 
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                               ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id 

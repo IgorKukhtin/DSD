@@ -28,8 +28,9 @@ BEGIN
            , CAST ('' as TVarChar)  AS NAME
            
            , CAST ('' as TVarChar)  AS GLNCode
-           , CAST ('' as TVarChar)  AS PrepareDayCount
-           , CAST ('' as TVarChar)  AS DocumentDayCount
+           
+           , CAST ('' as TFloat)  AS PrepareDayCount
+           , CAST ('' as TFloat)  AS DocumentDayCount
            
            , CAST (0 as Integer)    AS JuridicalId
            , CAST (0 as Integer)    AS JuridicalCode
@@ -84,13 +85,13 @@ BEGIN
                                   ON Partner_GLNCode.ObjectId = Object_Partner.Id
                                  AND Partner_GLNCode.DescId = zc_ObjectString_Partner_GLNCode()
                                  
-           LEFT JOIN ObjectString AS Partner_PrepareDayCount 
-                                  ON Partner_PrepareDayCount.ObjectId = Object_Partner.Id
-                                 AND Partner_PrepareDayCount.DescId = zc_ObjectFloat_Partner_PrepareDayCount()                                 
+           LEFT JOIN ObjectFloat AS Partner_PrepareDayCount 
+                                 ON Partner_PrepareDayCount.ObjectId = Object_Partner.Id
+                                AND Partner_PrepareDayCount.DescId = zc_ObjectFloat_Partner_PrepareDayCount()                                 
         
-           LEFT JOIN ObjectString AS Partner_DocumentDayCount 
-                                  ON Partner_DocumentDayCount.ObjectId = Object_Partner.Id
-                                 AND Partner_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()    
+           LEFT JOIN ObjectFloat AS Partner_DocumentDayCount 
+                                 ON Partner_DocumentDayCount.ObjectId = Object_Partner.Id
+                                AND Partner_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()    
                                  
            LEFT JOIN ObjectLink AS Partner_Juridical
                                 ON Partner_Juridical.ObjectId = Object_Partner.Id 
