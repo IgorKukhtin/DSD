@@ -4,8 +4,8 @@ inherited ReturnOutForm: TReturnOutForm
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1044
-  ExplicitHeight = 434
+  ExplicitWidth = 1036
+  ExplicitHeight = 423
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -73,16 +73,15 @@ inherited ReturnOutForm: TReturnOutForm
   end
   object cxPageControl1: TcxPageControl
     Left = 0
-    Top = 134
+    Top = 132
     Width = 1028
-    Height = 262
+    Height = 264
     Align = alClient
-    TabOrder = 3
+    TabOrder = 2
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 258
-    ClientRectLeft = 4
-    ClientRectRight = 1024
+    ClientRectBottom = 264
+    ClientRectRight = 1028
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -90,8 +89,8 @@ inherited ReturnOutForm: TReturnOutForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1020
-        Height = 234
+        Width = 1028
+        Height = 240
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -221,6 +220,9 @@ inherited ReturnOutForm: TReturnOutForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -392,7 +394,7 @@ inherited ReturnOutForm: TReturnOutForm
   object edInvNumberPartner: TcxTextEdit
     Left = 899
     Top = 26
-    TabOrder = 4
+    TabOrder = 3
     Width = 121
   end
   object edPaidKind: TcxButtonEdit
@@ -403,7 +405,7 @@ inherited ReturnOutForm: TReturnOutForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 6
+    TabOrder = 5
     Width = 121
   end
   object cxLabel6: TcxLabel
@@ -415,7 +417,7 @@ inherited ReturnOutForm: TReturnOutForm
     Left = 551
     Top = 85
     Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
-    TabOrder = 8
+    TabOrder = 6
     Width = 137
   end
   object edContract: TcxButtonEdit
@@ -426,7 +428,7 @@ inherited ReturnOutForm: TReturnOutForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 9
+    TabOrder = 8
     Width = 113
   end
   object cxLabel9: TcxLabel
@@ -437,7 +439,7 @@ inherited ReturnOutForm: TReturnOutForm
   object edVATPercent: TcxCurrencyEdit
     Left = 335
     Top = 78
-    TabOrder = 12
+    TabOrder = 10
     Width = 65
   end
   object cxLabel7: TcxLabel
@@ -495,8 +497,8 @@ inherited ReturnOutForm: TReturnOutForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -513,7 +515,7 @@ inherited ReturnOutForm: TReturnOutForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar: TdxBar
       Caption = 'Custom'
@@ -836,7 +838,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = edOperDate
         DataType = ftDate
         ParamType = ptInput
-        Value = ''
+        Value = -700000d
       end
       item
         Name = 'inOperDatePartner'
@@ -856,7 +858,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = edVATPercent
         DataType = ftFloat
         ParamType = ptInput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'inChangePercent'
@@ -917,7 +919,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = edOperDate
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = -700000d
       end
       item
         Name = 'StatusCode'

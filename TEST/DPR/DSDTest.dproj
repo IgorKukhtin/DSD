@@ -187,8 +187,8 @@
 			<DCCReference Include="..\..\Forms\Branch.pas">
 				<Form>BranchForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\PriceListItem.pas">
-				<Form>PriceListItemForm</Form>
+			<DCCReference Include="..\..\Forms\PriceListGoodsItem.pas">
+				<Form>PriceListGoodsItemForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\GoodsPropertyValue.pas">
 				<Form>GoodsPropertyValueForm</Form>
@@ -420,6 +420,11 @@
 			<DCCReference Include="..\..\Forms\Measure.pas">
 				<Form>MeasureForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\PriceListItem.pas">
+				<Form>PriceListItemForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Component\ComponentActionTest.pas"/>
+			<DCCReference Include="..\SOURCE\Component\ComponentDBTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

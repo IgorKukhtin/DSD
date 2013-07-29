@@ -88,6 +88,8 @@ type
   private
     FControl: TControl;
     procedure SetControl(const Value: TControl);
+  protected
+    function GetDisplayName: string; override;
   published
     property Control: TControl read FControl write SetControl;
   end;
@@ -580,6 +582,14 @@ begin
 end;
 
 { TControlListItem }
+
+function TControlListItem.GetDisplayName: string;
+begin
+  if Assigned(Control) then
+     result := Control.Name
+  else
+     result := inherited;
+end;
 
 procedure TControlListItem.SetControl(const Value: TControl);
 begin

@@ -228,10 +228,12 @@ type
   TdsdPrintAction = class(TdsdCustomDataSetAction)
   private
     FReportName: String;
+    FParams: TdsdParams;
   public
     function Execute: boolean; override;
     constructor Create(AOwner: TComponent); override;
   published
+    property Params: TdsdParams read FParams write FParams;
     property ReportName: String read FReportName write FReportName;
     property Caption;
     property Hint;
@@ -673,14 +675,17 @@ end;
 constructor TdsdPrintAction.Create(AOwner: TComponent);
 begin
   inherited;
-
+  FParams := TdsdParams.Create(TdsdParam);
 end;
 
 function TdsdPrintAction.Execute: boolean;
+var i: integer;
 begin
   inherited;
   with TfrxReport.Create(nil) do begin
-    LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport('Приходная накладная'));
+    LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport(ReportName));
+    for i := 0 to Params.Count - 1 do
+        Variables[Params[i].Name] := chr(39) + Params[i].AsString + chr(39);
     if ShiftDown then
        DesignReport
     else begin

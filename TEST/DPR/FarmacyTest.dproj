@@ -88,8 +88,8 @@
 			<DCCReference Include="..\..\SOURCE\UtilConst.pas"/>
 			<DCCReference Include="..\SOURCE\dbEnumTest.pas"/>
 			<DCCReference Include="..\SOURCE\LoadFarmacyFormTest.pas"/>
-			<DCCReference Include="..\..\Forms\PriceListItem.pas">
-				<Form>PriceListItemForm</Form>
+			<DCCReference Include="..\..\Forms\PriceListGoodsItem.pas">
+				<Form>PriceListGoodsItemForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\MeasureEdit.pas">
 				<Form>MeasureEditForm</Form>

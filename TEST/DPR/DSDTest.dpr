@@ -71,7 +71,7 @@ uses
   BankEdit in '..\..\Forms\BankEdit.pas' {BankEditForm},
   BranchEdit in '..\..\Forms\BranchEdit.pas' {BranchEditForm},
   Branch in '..\..\Forms\Branch.pas' {BranchForm},
-  PriceListItem in '..\..\Forms\PriceListItem.pas' {PriceListItemForm},
+  PriceListGoodsItem in '..\..\Forms\PriceListGoodsItem.pas' {PriceListGoodsItemForm},
   GoodsPropertyValue in '..\..\Forms\GoodsPropertyValue.pas' {GoodsPropertyValueForm},
   ContractKindEdit in '..\..\Forms\ContractKindEdit.pas' {ContractKindEditForm},
   ContractKind in '..\..\Forms\ContractKind.pas' {ContractKindForm},
@@ -153,7 +153,10 @@ uses
   ProductionSeparate in '..\..\Forms\ProductionSeparate.pas' {ProductionSeparateForm},
   Contract in '..\..\Forms\Contract.pas' {ContractForm},
   ContractEdit in '..\..\Forms\ContractEdit.pas' {ContractEditForm},
-  Measure in '..\..\Forms\Measure.pas' {MeasureForm};
+  Measure in '..\..\Forms\Measure.pas' {MeasureForm},
+  PriceListItem in '..\..\Forms\PriceListItem.pas' {PriceListItemForm},
+  ComponentActionTest in '..\SOURCE\Component\ComponentActionTest.pas',
+  ComponentDBTest in '..\SOURCE\Component\ComponentDBTest.pas';
 
 {$R *.RES}
 

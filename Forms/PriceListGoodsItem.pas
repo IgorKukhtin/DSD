@@ -1,4 +1,4 @@
-unit PriceListItem;
+unit PriceListGoodsItem;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   cxDateUtils, cxDropDownEdit, cxCalendar, cxCurrencyEdit;
 
 type
-  TPriceListItemForm = class(TParentForm)
+  TPriceListGoodsItemForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -44,22 +44,18 @@ type
     bbToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     cxGridDBTableView: TcxGridDBTableView;
-    clName: TcxGridDBColumn;
     clStartDate: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     Panel: TPanel;
     cxLabel1: TcxLabel;
     edPriceList: TcxButtonEdit;
     PriceListGuides: TdsdGuides;
-    edShowDate: TcxDateEdit;
-    cxLabel2: TcxLabel;
-    cxLabel3: TcxLabel;
-    edOperDate: TcxDateEdit;
     clEndDate: TcxGridDBColumn;
     clPrice: TcxGridDBColumn;
-    clGoodsCode: TcxGridDBColumn;
-    actPriceListGoods: TdsdOpenForm;
-    bbPriceListGoodsItem: TdxBarButton;
+    cxLabel4: TcxLabel;
+    edGoods: TcxButtonEdit;
+    GoodsGuides: TdsdGuides;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public
@@ -71,6 +67,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TPriceListItemForm);
+  RegisterClass(TPriceListGoodsItemForm);
 
 end.

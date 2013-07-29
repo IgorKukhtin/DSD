@@ -1,21 +1,24 @@
-inherited PriceListItemForm: TPriceListItemForm
-  Caption = #1055#1088#1072#1081#1089' '#1083#1080#1089#1090
+inherited PriceListGoodsItemForm: TPriceListGoodsItemForm
+  Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1072
   ClientHeight = 398
-  ClientWidth = 724
+  ClientWidth = 497
   KeyPreview = True
-  ExplicitWidth = 732
+  ExplicitWidth = 505
   ExplicitHeight = 425
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 67
-    Width = 724
-    Height = 331
+    Top = 63
+    Width = 497
+    Height = 335
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitTop = 67
+    ExplicitWidth = 724
+    ExplicitHeight = 331
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -34,17 +37,6 @@ inherited PriceListItemForm: TPriceListItemForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clGoodsCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'GoodsCode'
-        HeaderAlignmentVert = vaCenter
-      end
-      object clName: TcxGridDBColumn
-        Caption = #1058#1086#1074#1072#1088
-        DataBinding.FieldName = 'GoodsName'
-        HeaderAlignmentVert = vaCenter
-        Width = 243
-      end
       object clStartDate: TcxGridDBColumn
         Caption = #1062#1077#1085#1072' '#1089' '
         DataBinding.FieldName = 'StartDate'
@@ -72,18 +64,18 @@ inherited PriceListItemForm: TPriceListItemForm
   object Panel: TPanel
     Left = 0
     Top = 26
-    Width = 724
-    Height = 41
+    Width = 497
+    Height = 37
     Align = alTop
     BevelOuter = bvNone
-    TabOrder = 2
+    TabOrder = 1
     object cxLabel1: TcxLabel
-      Left = 16
+      Left = 4
       Top = 9
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090':'
     end
     object edPriceList: TcxButtonEdit
-      Left = 83
+      Left = 71
       Top = 9
       Properties.Buttons = <
         item
@@ -93,29 +85,22 @@ inherited PriceListItemForm: TPriceListItemForm
       TabOrder = 1
       Width = 182
     end
-    object edShowDate: TcxDateEdit
-      Left = 333
+    object cxLabel4: TcxLabel
+      Left = 268
       Top = 9
-      EditValue = 41275d
-      TabOrder = 2
-      Width = 121
+      Caption = #1058#1086#1074#1072#1088':'
     end
-    object cxLabel2: TcxLabel
-      Left = 280
+    object edGoods: TcxButtonEdit
+      Left = 308
       Top = 9
-      Caption = #1062#1077#1085#1072' '#1085#1072':'
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 3
+      Width = 182
     end
-  end
-  object cxLabel3: TcxLabel
-    Left = 462
-    Top = 36
-    Caption = #1059#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1094#1077#1085#1091' '#1085#1072':'
-  end
-  object edOperDate: TcxDateEdit
-    Left = 572
-    Top = 35
-    TabOrder = 7
-    Width = 121
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -180,15 +165,6 @@ inherited PriceListItemForm: TPriceListItemForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbPriceListGoodsItem'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -216,10 +192,6 @@ inherited PriceListItemForm: TPriceListItemForm
       Hint = '       '
       Visible = ivAlways
     end
-    object bbPriceListGoodsItem: TdxBarButton
-      Action = actPriceListGoods
-      Category = 0
-    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -245,48 +217,9 @@ inherited PriceListItemForm: TPriceListItemForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object actPriceListGoods: TdsdOpenForm
-      Category = 'DSDLib'
-      Caption = #1062#1077#1085#1099' '#1087#1086' '#1090#1086#1074#1072#1088#1091
-      Hint = #1062#1077#1085#1099' '#1087#1086' '#1090#1086#1074#1072#1088#1091
-      ImageIndex = 28
-      FormName = 'TPriceListGoodsItemForm'
-      GuiParams = <
-        item
-          Name = 'PriceListId'
-          Component = PriceListGuides
-          ComponentItem = 'Key'
-          DataType = ftInteger
-          ParamType = ptInput
-          Value = ''
-        end
-        item
-          Name = 'PriceListName'
-          Component = PriceListGuides
-          ComponentItem = 'TextValue'
-          DataType = ftString
-          ParamType = ptInput
-          Value = ''
-        end
-        item
-          Name = 'GoodsId'
-          Component = ClientDataSet
-          ComponentItem = 'GoodsId'
-          DataType = ftInteger
-          ParamType = ptInput
-        end
-        item
-          Name = 'GoodsName'
-          Component = ClientDataSet
-          ComponentItem = 'GoodsName'
-          DataType = ftString
-          ParamType = ptInput
-        end>
-      isShowModal = False
-    end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_ObjectHistory_PriceListItem'
+    StoredProcName = 'gpSelect_ObjectHistory_PriceListGoodsItem'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -302,11 +235,12 @@ inherited PriceListItemForm: TPriceListItemForm
         Value = ''
       end
       item
-        Name = 'inOperDate'
-        Component = edShowDate
-        DataType = ftDateTime
+        Name = 'inGoodsId'
+        Component = GoodsGuides
+        ComponentItem = 'Key'
+        DataType = ftInteger
         ParamType = ptInput
-        Value = 41275d
+        Value = ''
       end>
     Left = 144
     Top = 104
@@ -326,5 +260,47 @@ inherited PriceListItemForm: TPriceListItemForm
     FormName = 'TPriceListForm'
     PositionDataSet = 'ClientDataSet'
     Left = 136
+  end
+  object GoodsGuides: TdsdGuides
+    LookupControl = edGoods
+    FormName = 'TGoodsForm'
+    PositionDataSet = 'GridDataSet'
+    Left = 344
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'PriceListId'
+        Component = PriceListGuides
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'PriceListName'
+        Component = PriceListGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'GoodsId'
+        Component = GoodsGuides
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'GoodsName'
+        Component = GoodsGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptOutput
+        Value = ''
+      end>
+    Left = 264
   end
 end

@@ -445,37 +445,42 @@ end;
 function TdsdParam.GetValue: Variant;
 // Если указан Component, то параметры берутся из него
 // иначе из значения Value
+var DateTime: TDateTime;
 begin
-  try
-    if Assigned(FComponent) then begin
-       // В зависимости от типа компонента Value содержится в разных property
-       if Component is TcxTextEdit then
-          Result := (Component as TcxTextEdit).Text;
-       if (Component is TDataSet) and (Component as TDataSet).Active then
-          Result := (Component as TDataSet).FieldByName(ComponentItem).Value;
-       if (Component is TdsdFormParams) then
-          if Assigned((Component as TdsdFormParams).ParamByName(ComponentItem)) then
-             Result := (Component as TdsdFormParams).ParamByName(ComponentItem).Value
-          else
-            case DataType of
-              ftInteger: Result := '0';
-            end;
-       if Component is TcxCurrencyEdit then
-          Result := (Component as TcxCurrencyEdit).Value;
-       if Component is TdsdGuides then
-          Result := (Component as TdsdGuides).Key;
-       if Component is TcxCheckBox then
-          Result := BoolToStr((Component as TcxCheckBox).Checked, true);
-       if Component is TcxDateEdit then
-          Result := (Component as TcxDateEdit).Date;
-       if Component is TBooleanStoredProcAction then
-          Result := (Component as TBooleanStoredProcAction).Value;
-    end
-    else
-      Result := FValue
-  except
-    Result := '';
-  end;
+  if Assigned(FComponent) then begin
+     // В зависимости от типа компонента Value содержится в разных property
+     if Component is TcxTextEdit then
+        Result := (Component as TcxTextEdit).Text;
+     if (Component is TDataSet) and (Component as TDataSet).Active then
+        Result := (Component as TDataSet).FieldByName(ComponentItem).Value;
+     if (Component is TdsdFormParams) then
+        if Assigned((Component as TdsdFormParams).ParamByName(ComponentItem)) then
+           Result := (Component as TdsdFormParams).ParamByName(ComponentItem).Value
+        else
+          case DataType of
+            ftInteger: Result := '0';
+          end;
+     if Component is TcxCurrencyEdit then
+        Result := (Component as TcxCurrencyEdit).Value;
+     if Component is TdsdGuides then begin
+        if LowerCase(ComponentItem) = 'textvalue'  then
+           Result := (Component as TdsdGuides).TextValue
+        else
+           Result := (Component as TdsdGuides).Key;
+     end;
+     if Component is TcxCheckBox then
+        Result := BoolToStr((Component as TcxCheckBox).Checked, true);
+     if Component is TcxDateEdit then begin
+        DateTime := (Component as TcxDateEdit).Date;
+        if DateTime = -700000 then
+           DateTime := 0;
+        Result := DateTime;
+     end;
+     if Component is TBooleanStoredProcAction then
+        Result := (Component as TBooleanStoredProcAction).Value;
+  end
+  else
+    Result := FValue
 end;
 
 procedure TdsdParam.SetComponent(const Value: TComponent);
@@ -551,6 +556,5 @@ end;
 initialization
   RegisterClass(TdsdDataSets);
   VerifyBoolStrArray;
-
 
 end.

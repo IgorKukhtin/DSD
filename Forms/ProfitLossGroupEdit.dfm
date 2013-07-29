@@ -2,8 +2,8 @@
   Caption = #1053#1086#1074#1072#1103' '#1075#1088#1091#1087#1087#1072
   ClientHeight = 155
   ClientWidth = 399
-  ExplicitWidth = 415
-  ExplicitHeight = 193
+  ExplicitWidth = 407
+  ExplicitHeight = 182
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -96,7 +96,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
@@ -144,7 +144,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = 0.000000000000000000
       end>
     Left = 304
     Top = 16
