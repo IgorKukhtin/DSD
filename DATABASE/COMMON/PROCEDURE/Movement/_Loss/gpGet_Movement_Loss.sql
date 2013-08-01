@@ -6,7 +6,8 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Loss(
     IN inMovementId        Integer  , -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+             , StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              )

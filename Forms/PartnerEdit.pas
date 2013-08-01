@@ -46,6 +46,20 @@ type
     JuridicalDS: TDataSource;
     dsdJuridicalGuides: TdsdGuides;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
+    cxLabel4: TcxLabel;
+    edPrepareDayCount: TcxTextEdit;
+    edDocumentDayCount: TcxTextEdit;
+    cxLabel5: TcxLabel;
+    cxLabel6: TcxLabel;
+    ceRoute: TcxLookupComboBox;
+    cxLabel7: TcxLabel;
+    ceRouteSorting: TcxLookupComboBox;
+    cxLabel8: TcxLabel;
+    cePersonalTake: TcxLookupComboBox;
+    dsdPersonalTakeGuides: TdsdGuides;
+    dsdRouteSortingGuides: TdsdGuides;
+    dsdRouteGuides: TdsdGuides;
+
   private
     { Private declarations }
   public
@@ -56,6 +70,7 @@ type
 implementation
 
 {$R *.dfm}
+
 
 initialization
   RegisterClass(TPartnerEditForm);

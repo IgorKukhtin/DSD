@@ -6,9 +6,10 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_ProductionSeparate(
     IN inMovementId  Integer,       -- ключ Документа
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-               , TotalCount TFloat, PartionGoods TVarChar
-               , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar) 
+RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+             , StatusCode Integer, StatusName TVarChar
+             , TotalCount TFloat, PartionGoods TVarChar
+             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar) 
 AS
 $BODY$BEGIN
 

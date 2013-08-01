@@ -125,6 +125,9 @@ type
     edRouteSorting: TcxButtonEdit;
     cxLabel13: TcxLabel;
     dsdGuidesRouteSorting: TdsdGuides;
+    cxLabel14: TcxLabel;
+    edPersonal: TcxButtonEdit;
+    dsdGuidesPersonal: TdsdGuides;
   private
   public
   end;

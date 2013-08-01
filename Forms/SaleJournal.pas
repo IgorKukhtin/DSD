@@ -79,6 +79,7 @@ type
     colContractName: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    colPersonalName: TcxGridDBColumn;
   private
   public
   end;
