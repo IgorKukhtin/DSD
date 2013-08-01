@@ -27,7 +27,7 @@ uses
 
 type
   TIncomeForm = class(TParentForm)
-    dsdFormParams: TdsdFormParams;
+    FormParams: TdsdFormParams;
     spSelectMovementItem: TdsdStoredProc;
     dxBarManager: TdxBarManager;
     dxBarManagerBar: TdxBar;
@@ -118,6 +118,7 @@ type
     HeaderSaver: THeaderSaver;
     edInvNumberPartner: TcxTextEdit;
     spGet: TdsdStoredProc;
+    RefreshAddOn: TRefreshAddOn;
   private
   public
   end;

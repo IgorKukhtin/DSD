@@ -571,9 +571,14 @@ begin
 end;
 
 function TdsdChoiceGuides.Execute: boolean;
+var ParentId: string;
 begin
+  if Assigned(FParams.ParamByName('ParentId')) then
+     ParentId := FParams.ParamByName('ParentId').AsString
+  else
+     ParentId := '';
   if Assigned(FParams.ParamByName('Key')) and Assigned(FParams.ParamByName('TextValue')) then
-     Guides.AfterChoice(FParams.ParamByName('Key').AsString, FParams.ParamByName('TextValue').AsString)
+     Guides.AfterChoice(FParams.ParamByName('Key').AsString, FParams.ParamByName('TextValue').AsString, ParentId)
   else
      raise Exception.Create('Не определены параметры возврата значений при выборе из справочника');
   TForm(Owner).Close;

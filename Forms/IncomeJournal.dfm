@@ -286,6 +286,10 @@ inherited IncomeJournalForm: TIncomeJournalForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbComplete'
         end
         item
@@ -298,6 +302,10 @@ inherited IncomeJournalForm: TIncomeJournalForm
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
           Visible = True
           ItemName = 'bbRefresh'
         end>
@@ -332,6 +340,11 @@ inherited IncomeJournalForm: TIncomeJournalForm
     object bbDelete: TdxBarButton
       Action = actSetErased
       Category = 0
+    end
+    object bbStatic: TdxBarStatic
+      Caption = '     '
+      Category = 0
+      Visible = ivAlways
     end
   end
   object ActionList: TActionList

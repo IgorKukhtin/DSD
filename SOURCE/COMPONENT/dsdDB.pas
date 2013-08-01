@@ -516,10 +516,13 @@ begin
           Free;
         end;
      if Component is TdsdGuides then
-        if LowerCase(ComponentItem) = 'textvalue' then
+        if LowerCase(ComponentItem) = 'textvalue' then begin
            (Component as TdsdGuides).TextValue := FValue
-        else
-           (Component as TdsdGuides).Key := FValue;
+        end else
+          if LowerCase(ComponentItem) = 'parentid' then
+             (Component as TdsdGuides).ParentId := FValue
+          else
+             (Component as TdsdGuides).Key := FValue;
   end
 end;
 

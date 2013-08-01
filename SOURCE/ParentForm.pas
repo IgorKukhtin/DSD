@@ -81,6 +81,8 @@ end;
 procedure TParentForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   inherited;
+  // Нужно что бы вызать событие OnExit на последнем компоненте
+  ActiveControl := nil;
   Action := caFree;
 end;
 
@@ -170,5 +172,6 @@ initialization
   RegisterClass (TdsdUpdateErased);
   RegisterClass (TdsdUserSettingsStorageAddOn);
   RegisterClass (THeaderSaver);
+  RegisterClass (TRefreshAddOn);
 
 end.

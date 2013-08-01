@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Income(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
-             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, ToParentId Integer
              , PaidKindId Integer, PaidKindName TVarChar, ContractId Integer, ContractName TVarChar, CarId Integer, CarName TVarChar
              , PersonalDriverId Integer, PersonalDriverName TVarChar, PersonalPackerId Integer, PersonalPackerName TVarChar
               )
@@ -39,6 +39,7 @@ BEGIN
            , Object_From.ValueData             AS FromName
            , Object_To.Id                      AS ToId
            , Object_To.ValueData               AS ToName
+           , ObjectLink_Unit_Parent.ChildObjectId AS ToParentId
            , Object_PaidKind.Id                AS PaidKindId
            , Object_PaidKind.ValueData         AS PaidKindName
            , Object_Contract.Id                AS ContractId
@@ -77,6 +78,7 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent ON ObjectLink_Unit_Parent.ObjectId = Object_To.Id AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
@@ -116,6 +118,7 @@ ALTER FUNCTION gpGet_Movement_Income (Integer, TVarChar) OWNER TO postgres;
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
                
+ 30.07.13                       * ToParentId Integer
  09.07.13                                        *  ‡ÒÓÚ‡
  08.07.13                                        * zc_MovementFloat_ChangePercent
  30.06.13                                        *

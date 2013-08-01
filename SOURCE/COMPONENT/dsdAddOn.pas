@@ -122,6 +122,23 @@ type
     property ControlList: TControlList read FControlList write FControlList;
   end;
 
+  TRefreshAddOn = class(TComponent)
+  private
+    FFormName: string;
+    FDataSet: string;
+    FOnClose: TCloseEvent;
+    FRefreshAction: string;
+    FFormParams: string;
+    procedure OnClose(Sender: TObject; var Action: TCloseAction);
+  public
+    constructor Create(AOwner: TComponent); override;
+  published
+    property FormName: string read FFormName write FFormName;
+    property DataSet: string read FDataSet write FDataSet;
+    property RefreshAction: string read FRefreshAction write FRefreshAction;
+    property FormParams: string read FFormParams write FFormParams;
+  end;
+
   procedure Register;
 
 implementation
@@ -129,7 +146,7 @@ implementation
 uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf, Windows,
      cxFilter, cxClasses, cxLookAndFeelPainters, cxCustomData,
      cxGridCommon, math, cxPropertiesStore, cxGridCustomView, UtilConst, cxStorage,
-     cxGeometry, cxCalendar, cxCheckBox, dxBar;
+     cxGeometry, cxCalendar, cxCheckBox, dxBar, cxButtonEdit, cxCurrencyEdit;
 
 type
 
@@ -141,6 +158,7 @@ begin
    RegisterComponents('DSDComponent', [TdsdDBTreeAddOn]);
    RegisterComponents('DSDComponent', [TdsdDBViewAddOn]);
    RegisterComponents('DSDComponent', [TdsdUserSettingsStorageAddOn]);
+   RegisterComponents('DSDComponent', [TRefreshAddOn]);
 end;
 
 { TdsdDBTreeAddOn }
@@ -539,6 +557,10 @@ procedure THeaderSaver.OnEnter(Sender: TObject);
 begin
   if Sender is TcxTextEdit then
      FEnterValue.Values[TComponent(Sender).Name] := (Sender as TcxTextEdit).Text;
+  if Sender is TcxButtonEdit then
+     FEnterValue.Values[TComponent(Sender).Name] := (Sender as TcxButtonEdit).Text;
+  if Sender is TcxCurrencyEdit then
+     FEnterValue.Values[TComponent(Sender).Name] := (Sender as TcxCurrencyEdit).Text;
   if Sender is TcxDateEdit then
      FEnterValue.Values[TComponent(Sender).Name] := (Sender as TcxDateEdit).Text;
   if Sender is TcxCheckBox then
@@ -550,6 +572,10 @@ var isChanged: boolean;
 begin
   if Sender is TcxTextEdit then
      isChanged := FEnterValue.Values[TComponent(Sender).Name] <> (Sender as TcxTextEdit).Text;
+  if Sender is TcxButtonEdit then
+     isChanged := FEnterValue.Values[TComponent(Sender).Name] <> (Sender as TcxButtonEdit).Text;
+  if Sender is TcxCurrencyEdit then
+     isChanged := FEnterValue.Values[TComponent(Sender).Name] <> (Sender as TcxCurrencyEdit).Text;
   if Sender is TcxDateEdit then
      isChanged := FEnterValue.Values[TComponent(Sender).Name] <> (Sender as TcxDateEdit).Text;
   if Sender is TcxCheckBox then
@@ -602,10 +628,49 @@ begin
      (FControl as TcxDateEdit).OnEnter := TControlList(Collection).HeaderSaver.OnEnter;
      (FControl as TcxDateEdit).OnExit := TControlList(Collection).HeaderSaver.OnExit;
   end;
+  if FControl is TcxButtonEdit then begin
+     (FControl as TcxButtonEdit).OnEnter := TControlList(Collection).HeaderSaver.OnEnter;
+     (FControl as TcxButtonEdit).OnExit := TControlList(Collection).HeaderSaver.OnExit;
+  end;
   if FControl is TcxCheckBox then begin
      (FControl as TcxCheckBox).OnEnter := TControlList(Collection).HeaderSaver.OnEnter;
      (FControl as TcxCheckBox).OnExit := TControlList(Collection).HeaderSaver.OnExit;
   end;
+  if FControl is TcxCurrencyEdit then begin
+     (FControl as TcxCurrencyEdit).OnEnter := TControlList(Collection).HeaderSaver.OnEnter;
+     (FControl as TcxCurrencyEdit).OnExit := TControlList(Collection).HeaderSaver.OnExit;
+  end;
+end;
+
+{ TRefreshAddOn }
+
+constructor TRefreshAddOn.Create(AOwner: TComponent);
+begin
+  inherited;
+  DataSet := 'ClientDataSet';
+  RefreshAction := 'actRefresh';
+  FormParams := 'FormParams';
+  if AOwner is TForm then begin
+     FOnClose := (AOwner as TForm).OnClose;
+     (AOwner as TForm).OnClose := Self.OnClose;
+  end;
+end;
+
+procedure TRefreshAddOn.OnClose(Sender: TObject; var Action: TCloseAction);
+var i: integer;
+begin
+  if Assigned(FOnClose) then
+     FOnClose(Sender, Action);
+  // ѕеречитываем и позиционируемс€
+  // “олько сначала находим форму указанного типа
+  for I := 0 to Screen.FormCount - 1 do
+      if lowercase(Screen.Forms[i].Name) = lowercase(FormName) then
+         with Screen.Forms[i] do begin
+           if Assigned(FindComponent(RefreshAction)) then
+              TdsdDataSetRefresh(FindComponent(RefreshAction)).Execute;
+           if Assigned(FindComponent(DataSet)) and Assigned(FindComponent(FormParams)) then
+              TDataSet(FindComponent(DataSet)).Locate('Id', TdsdFormParams(FindComponent(FormParams)).ParamByName('Id').AsString, []);
+         end;
 end;
 
 end.

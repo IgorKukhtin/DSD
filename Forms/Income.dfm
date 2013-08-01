@@ -470,7 +470,7 @@ inherited IncomeForm: TIncomeForm
     TabOrder = 9
     Width = 121
   end
-  object dsdFormParams: TdsdFormParams
+  object FormParams: TdsdFormParams
     Params = <
       item
         Name = 'Id'
@@ -491,7 +491,7 @@ inherited IncomeForm: TIncomeForm
     Params = <
       item
         Name = 'inMovementId'
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         DataType = ftInteger
         ParamType = ptInput
@@ -695,12 +695,14 @@ inherited IncomeForm: TIncomeForm
     LookupControl = edFrom
     FormName = 'TJuridicalForm'
     PositionDataSet = 'GridDataSet'
+    ParentDataSet = 'TreeDataSet'
     Left = 352
   end
   object dsdGuidesTo: TdsdGuides
     LookupControl = edTo
     FormName = 'TUnitForm'
     PositionDataSet = 'GridDataSet'
+    ParentDataSet = 'TreeDataSet'
     Left = 472
     Top = 8
   end
@@ -722,7 +724,7 @@ inherited IncomeForm: TIncomeForm
     Params = <
       item
         Name = 'inMovementId'
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         DataType = ftInteger
         ParamType = ptInput
@@ -756,7 +758,7 @@ inherited IncomeForm: TIncomeForm
       end
       item
         Name = 'inMovementId'
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         DataType = ftInteger
         ParamType = ptInput
@@ -871,7 +873,7 @@ inherited IncomeForm: TIncomeForm
     Params = <
       item
         Name = 'ioId'
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         DataType = ftInteger
         ParamType = ptInputOutput
@@ -1015,7 +1017,7 @@ inherited IncomeForm: TIncomeForm
     Params = <
       item
         Name = 'inId'
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         DataType = ftInteger
         ParamType = ptInput
@@ -1080,8 +1082,45 @@ inherited IncomeForm: TIncomeForm
         DataType = ftInteger
         ParamType = ptOutput
         Value = ''
+      end
+      item
+        Name = 'ToParentId'
+        Component = dsdGuidesTo
+        ComponentItem = 'ParentId'
+        DataType = ftString
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'PriceWithVAT'
+        Component = edPriceWithVAT
+        DataType = ftBoolean
+        ParamType = ptOutput
+        Value = 'False'
+      end
+      item
+        Name = 'VATPercent'
+        Component = edVATPercent
+        DataType = ftFloat
+        ParamType = ptOutput
+        Value = 0.000000000000000000
+      end
+      item
+        Name = 'ChangePercent'
+        Component = edChangePercent
+        DataType = ftFloat
+        ParamType = ptOutput
+        Value = 0.000000000000000000
       end>
     Left = 136
     Top = 72
+  end
+  object RefreshAddOn: TRefreshAddOn
+    FormName = 'IncomeJournalForm'
+    DataSet = 'ClientDataSet'
+    RefreshAction = 'actRefresh'
+    FormParams = 'FormParams'
+    Left = 632
+    Top = 16
   end
 end

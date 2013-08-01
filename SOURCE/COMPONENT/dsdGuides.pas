@@ -19,6 +19,8 @@ type
     FKey: String;
     FTextValue: String;
     FPositionDataSet: string;
+    FParentDataSet: string;
+    FParentId: String;
     function GetKey: String;
     function GetTextValue: String;
     procedure SetKey(const Value: String);
@@ -32,13 +34,20 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     // Вызыввем процедуру после выбора элемента из справочника
-    procedure AfterChoice(AKey, ATextValue: string);
+    procedure AfterChoice(AKey, ATextValue, AParentId: string);
   published
+    // ID записи
     property Key: String read GetKey write SetKey;
+    // Текстовое значение
     property TextValue: String read GetTextValue write SetTextValue;
+    // Родитель для древовидных справочников
+    property ParentId: String read FParentId write FParentId;
     property LookupControl: TWinControl read FLookupControl write SetLookupControl;
     property FormName: string read FFormName write FFormName;
+    // Где позиционируемся по ИД
     property PositionDataSet: string read FPositionDataSet write FPositionDataSet;
+    // Где позиционируемся по ParentId
+    property ParentDataSet: string read FParentDataSet write FParentDataSet;
   end;
 
   procedure Register;
@@ -55,17 +64,19 @@ end;
 
 { TdsdGuides }
 
-procedure TdsdGuides.AfterChoice(AKey, ATextValue: string);
+procedure TdsdGuides.AfterChoice(AKey, ATextValue, AParentId: string);
 begin
   // Вычитали параметры из дата сета. ВСЕ
   Key := AKey;
   TextValue := ATextValue;
+  ParentId := AParentId;
 end;
 
 constructor TdsdGuides.Create(AOwner: TComponent);
 begin
   inherited;
   PositionDataSet := 'ClientDataSet';
+  ParentDataSet := 'TreeDataSet';
 end;
 
 function TdsdGuides.GetKey: String;
@@ -114,6 +125,14 @@ begin
   Form := TdsdFormStorageFactory.GetStorage.Load(FormName);
   // Открыли форму
   Form.Execute(Self, nil);
+  // Спозиционировались на ParentData если он есть
+  if ParentDataSet <> '' then begin
+     DataSet := Form.FindComponent(ParentDataSet) as TDataSet;
+     if not Assigned(DataSet) then
+        raise Exception.Create('Не правильно установлено свойство ParentDataSet для формы ' + FormName);
+     if ParentId <> '' then
+        DataSet.Locate('Id', ParentId, []);
+  end;
   // Спозиционировались на дата сете
   DataSet := Form.FindComponent(PositionDataSet) as TDataSet;
   if not Assigned(DataSet) then

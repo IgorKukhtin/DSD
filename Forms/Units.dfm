@@ -330,12 +330,21 @@ inherited UnitForm: TUnitForm
         item
           Name = 'Key'
           Component = GridDataSet
+          ComponentItem = 'Id'
           DataType = ftString
           ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = GridDataSet
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptOutput
+        end
+        item
+          Name = 'ParentId'
+          Component = TreeDataSet
+          ComponentItem = 'Id'
           DataType = ftString
           ParamType = ptOutput
         end>

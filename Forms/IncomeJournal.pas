@@ -23,7 +23,8 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  dxBarExtItems;
 
 type
   TIncomeJournalForm = class(TParentForm)
@@ -80,6 +81,7 @@ type
     colTotalSummSpending: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    bbStatic: TdxBarStatic;
   private
   public
   end;
