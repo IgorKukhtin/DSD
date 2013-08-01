@@ -18,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
     IN inContractId          Integer   , -- Договора
     IN inCarId               Integer   , -- Автомобили
     IN inPersonalDriverId    Integer   , -- Сотрудник (водитель)
+    IN inPersonalId          Integer   , -- Сотрудник (экспедитор)
     IN inRouteId             Integer   , -- Маршрут
     IN inRouteSortingId      Integer   , -- Сортировки маршрутов
     IN inSession             TVarChar    -- сессия пользователя
@@ -59,6 +60,9 @@ BEGIN
 
      -- сохранили связь с <Сотрудник (водитель)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalDriver(), ioId, inPersonalDriverId);
+     
+     -- сохранили связь с <Сотрудник (экспедитор)>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Personal(), ioId, inPersonalId);
 
      -- сохранили связь с <Маршруты>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Route(), ioId, inRouteId);

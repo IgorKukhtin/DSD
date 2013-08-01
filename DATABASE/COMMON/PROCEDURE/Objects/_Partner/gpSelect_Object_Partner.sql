@@ -6,11 +6,12 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Partner(
     IN inSession           TVarChar            -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
-               GLNCode TVarChar,
+               GLNCode TVarChar,  PrepareDayCount TFloat, DocumentDayCount TFloat,
                JuridicalGroupId Integer, JuridicalGroupCode Integer, JuridicalGroupName TVarChar,
                JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, 
                RouteId Integer, RouteCode Integer, RouteName TVarChar,
                RouteSortingId Integer, RouteSortingCode Integer, RouteSortingName TVarChar,
+               PersonalTakeId Integer, PersonalTakeCode Integer, PersonalTakeName TVarChar,
                isErased BOOLEAN) AS
 $BODY$
 BEGIN
@@ -24,7 +25,9 @@ BEGIN
          , Object_JuridicalGroup.ObjectCode  AS Code
          , CAST('' AS TVarChar)              AS NAME
          
-         , CAST('' AS TVarChar)              AS GLNCode
+         , CAST('' AS TVarChar) AS GLNCode
+         , CAST(0 as TFloat)   AS PrepareDayCount
+         , CAST(0 as TFloat)   AS DocumentDayCount
          
          , ObjectLink_JuridicalGroup_Parent.ChildObjectId AS JuridicalGroupId
          , Object_JuridicalGroup.ObjectCode  AS JuridicalGroupCode
@@ -42,6 +45,10 @@ BEGIN
          , CAST (0 as Integer)    AS RouteSortingCode 
          , CAST('' AS TVarChar)   AS RouteSortingName
          
+         , CAST (0 as Integer)    AS PersonalTakeId
+         , CAST (0 as Integer)    AS PersonalTakeCode
+         , CAST ('' as TVarChar)  AS PersonalTakeName
+                  
          , Object_JuridicalGroup.isErased AS isErased
          
      FROM Object AS Object_JuridicalGroup
@@ -55,7 +62,10 @@ BEGIN
          , Object_Partner.ObjectCode     AS Code
          , Object_Partner.ValueData      AS NAME
          
-         , ObjectString_GLNCode.ValueData AS GLNCode
+         , ObjectString_GLNCode.ValueData     AS GLNCode
+         
+         , Partner_PrepareDayCount.ValueData  AS PrepareDayCount
+         , Partner_DocumentDayCount.ValueData AS DocumentDayCount
          
          , ObjectLink_Juridical_JuridicalGroup.ChildObjectId AS JuridicalGroupId
          , CAST (0 as Integer)           AS JuridicalGroupCode
@@ -73,11 +83,24 @@ BEGIN
          , Object_RouteSorting.ObjectCode   AS RouteSortingCode
          , Object_RouteSorting.ValueData    AS RouteSortingName
          
+         , Object_PersonalTake.Id         AS PersonalTakeId
+         , Object_PersonalTake.ObjectCode AS PersonalTakeCode
+         , Object_PersonalTake.ValueData  AS PersonalTakeName
+                  
          , Object_Partner.isErased   AS isErased
+         
      FROM Object AS Object_Partner
          LEFT JOIN ObjectString AS ObjectString_GLNCode 
                                 ON ObjectString_GLNCode.ObjectId = Object_Partner.Id 
                                AND ObjectString_GLNCode.DescId = zc_ObjectString_Partner_GLNCode()
+
+         LEFT JOIN ObjectFloat AS Partner_PrepareDayCount 
+                               ON Partner_PrepareDayCount.ObjectId = Object_Partner.Id
+                              AND Partner_PrepareDayCount.DescId = zc_ObjectFloat_Partner_PrepareDayCount()  
+        
+         LEFT JOIN ObjectFloat AS Partner_DocumentDayCount 
+                               ON Partner_DocumentDayCount.ObjectId = Object_Partner.Id
+                              AND Partner_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()                                                              
 
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                               ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id 
@@ -98,6 +121,11 @@ BEGIN
                              AND ObjectLink_Partner_RouteSorting.DescId = zc_ObjectLink_Partner_RouteSorting()
          LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = ObjectLink_Partner_RouteSorting.ChildObjectId
          
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTake
+                              ON ObjectLink_Partner_PersonalTake.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_PersonalTake.DescId = zc_ObjectLink_Partner_PersonalTake()
+         LEFT JOIN Object AS Object_PersonalTake ON Object_PersonalTake.Id = ObjectLink_Partner_PersonalTake.ChildObjectId
+         
     WHERE Object_Partner.DescId = zc_Object_Partner();
   
 END;
@@ -110,7 +138,8 @@ ALTER FUNCTION gpSelect_Object_Partner(TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
- 03.07.13          * + Route,RouteSorting
+ 29.07.13         *  + PersonalTakeId, PrepareDayCount, DocumentDayCount                      
+ 03.07.13         *  + Route,RouteSorting
  00.
 */
 

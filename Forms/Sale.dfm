@@ -1,22 +1,23 @@
 inherited SaleForm: TSaleForm
   Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103
-  ClientHeight = 417
-  ClientWidth = 1028
+  ClientHeight = 443
+  ClientWidth = 1074
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitLeft = -328
-  ExplicitWidth = 1044
-  ExplicitHeight = 455
+  ExplicitWidth = 1082
+  ExplicitHeight = 477
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1028
+    Width = 1074
     Height = 105
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitTop = 4
+    ExplicitWidth = 1079
     object edInvNumberPartner: TcxTextEdit
       Left = 8
       Top = 72
@@ -61,7 +62,7 @@ inherited SaleForm: TSaleForm
       Caption = #1044#1086#1075#1086#1074#1086#1088
     end
     object edCar: TcxButtonEdit
-      Left = 672
+      Left = 652
       Top = 71
       Properties.Buttons = <
         item
@@ -72,7 +73,7 @@ inherited SaleForm: TSaleForm
       Width = 113
     end
     object cxLabel10: TcxLabel
-      Left = 672
+      Left = 652
       Top = 48
       Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
     end
@@ -93,8 +94,8 @@ inherited SaleForm: TSaleForm
       Caption = #1042#1086#1076#1080#1090#1077#1083#1100
     end
     object edRoute: TcxButtonEdit
-      Left = 907
-      Top = 27
+      Left = 795
+      Top = 71
       Properties.Buttons = <
         item
           Default = True
@@ -104,12 +105,12 @@ inherited SaleForm: TSaleForm
       Width = 121
     end
     object cxLabel12: TcxLabel
-      Left = 907
-      Top = 4
+      Left = 795
+      Top = 48
       Caption = #1052#1072#1088#1096#1088#1091#1090
     end
     object edRouteSorting: TcxButtonEdit
-      Left = 872
+      Left = 944
       Top = 71
       Properties.Buttons = <
         item
@@ -120,35 +121,55 @@ inherited SaleForm: TSaleForm
       Width = 121
     end
     object cxLabel13: TcxLabel
-      Left = 872
+      Left = 944
       Top = 54
       Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072
+    end
+    object cxLabel14: TcxLabel
+      Left = 903
+      Top = 4
+      Caption = #1069#1082#1089#1087#1077#1076#1080#1090#1086#1088
+    end
+    object edPersonal: TcxButtonEdit
+      Left = 903
+      Top = 27
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 15
+      Width = 130
     end
   end
   object cxPageControl1: TcxPageControl
     Left = 0
-    Top = 133
-    Width = 1028
-    Height = 284
+    Top = 131
+    Width = 1074
+    Height = 312
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheet2
     Properties.CustomButtons.Buttons = <>
-    ExplicitLeft = -8
-    ClientRectBottom = 280
-    ClientRectLeft = 4
-    ClientRectRight = 1024
+    ExplicitWidth = 1028
+    ExplicitHeight = 286
+    ClientRectBottom = 312
+    ClientRectRight = 1074
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 1028
+      ExplicitHeight = 262
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1020
-        Height = 256
+        Width = 1074
+        Height = 288
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1028
+        ExplicitHeight = 262
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource
@@ -277,13 +298,17 @@ inherited SaleForm: TSaleForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitWidth = 1028
+      ExplicitHeight = 262
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 1020
-        Height = 256
+        Width = 1074
+        Height = 288
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1028
+        ExplicitHeight = 262
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -441,24 +466,24 @@ inherited SaleForm: TSaleForm
     end
   end
   object cxCurrencyEdit2: TcxCurrencyEdit
-    Left = 512
+    Left = 502
     Top = 72
-    TabOrder = 3
+    TabOrder = 2
     Width = 129
   end
   object edVATPercent: TcxCurrencyEdit
-    Left = 431
+    Left = 423
     Top = 71
     TabOrder = 5
     Width = 65
   end
   object cxLabel7: TcxLabel
-    Left = 431
+    Left = 423
     Top = 48
     Caption = '% '#1053#1044#1057
   end
   object cxLabel8: TcxLabel
-    Left = 512
+    Left = 494
     Top = 49
     Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
   end
@@ -491,7 +516,7 @@ inherited SaleForm: TSaleForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 10
+    TabOrder = 9
     Width = 137
   end
   object edOperDate: TcxDateEdit
@@ -514,7 +539,7 @@ inherited SaleForm: TSaleForm
     Left = 288
     Top = 71
     Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
-    TabOrder = 15
+    TabOrder = 14
     Width = 137
   end
   object edInvNumber: TcxTextEdit
@@ -562,8 +587,8 @@ inherited SaleForm: TSaleForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -580,7 +605,7 @@ inherited SaleForm: TSaleForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar: TdxBar
       Caption = 'Custom'
@@ -1174,8 +1199,8 @@ inherited SaleForm: TSaleForm
     LookupControl = edCar
     FormName = 'TCarForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 784
-    Top = 56
+    Left = 712
+    Top = 72
   end
   object dsdGuidesPersonalDriver: TdsdGuides
     LookupControl = edPersonalDriver
@@ -1187,14 +1212,20 @@ inherited SaleForm: TSaleForm
     LookupControl = edRoute
     FormName = 'TRouteForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 968
-    Top = 8
+    Left = 840
+    Top = 64
   end
   object dsdGuidesRouteSorting: TdsdGuides
     LookupControl = edRouteSorting
     FormName = 'TRouteSortingForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 920
-    Top = 56
+    Left = 984
+    Top = 72
+  end
+  object dsdGuidesPersonal: TdsdGuides
+    LookupControl = edPersonal
+    FormName = 'TPersonalForm'
+    PositionDataSet = 'ClientDataSet'
+    Left = 952
   end
 end

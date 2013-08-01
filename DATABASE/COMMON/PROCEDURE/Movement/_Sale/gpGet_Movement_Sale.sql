@@ -14,7 +14,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar
-             , CarId Integer, CarName TVarChar, PersonalDriverId Integer, PersonalDriverName TVarChar
+             , CarId Integer, CarName TVarChar
+             , PersonalDriverId Integer, PersonalDriverName TVarChar
+             , PersonalId Integer, PersonalName TVarChar
              , RouteId Integer, RouteName TVarChar, RouteSortingId Integer, RouteSortingName TVarChar
               )
 AS
@@ -60,6 +62,9 @@ BEGIN
            
            , Object_PersonalDriver.Id          AS PersonalDriverId
            , Object_PersonalDriver.ValueData   AS PersonalDriverName
+
+           , Object_Personal.Id          AS PersonalId
+           , Object_Personal.ValueData   AS PersonalName
            
            , Object_Route.Id               AS RouteId
            , Object_Route.ValueData        AS RouteName
@@ -129,6 +134,11 @@ BEGIN
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
             LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
+                                         ON MovementLinkObject_Personal.MovementId = Movement.Id
+                                        AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
+            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
                                          ON MovementLinkObject_Route.MovementId = Movement.Id
                                         AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
@@ -151,7 +161,7 @@ ALTER FUNCTION gpGet_Movement_Sale (Integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
-               
+ 29.07.13         * add zc_MovementLinkObject_Personal              
  14.07.13         *
 
 */

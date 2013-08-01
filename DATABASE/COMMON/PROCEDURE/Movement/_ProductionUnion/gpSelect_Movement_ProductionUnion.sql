@@ -7,8 +7,10 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ProductionUnion(
     IN inEndDate     TDateTime,
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-               , TotalCount TFloat, FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar)
+RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+             , StatusCode Integer, StatusName TVarChar
+             , TotalCount TFloat
+             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar)
 AS
 $BODY$
 BEGIN

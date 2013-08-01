@@ -7,14 +7,16 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ReturnIn(
     IN inEndDate     TDateTime , --
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+             , StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalCount TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar
-             , CarId Integer, CarName TVarChar, PersonalDriverId Integer, PersonalDriverName TVarChar
+             , CarId Integer, CarName TVarChar
+             , PersonalDriverId Integer, PersonalDriverName TVarChar
               )
 AS
 $BODY$
