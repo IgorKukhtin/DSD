@@ -67,6 +67,8 @@ type
     procedure LoadPersonalFormTest;
     procedure LoadCarFormTest;
     procedure LoadCarModelFormTest;
+    procedure LoadZakazExternalFormTest;
+    procedure LoadZakazInternalFormTest;
   end;
 
 implementation
@@ -230,6 +232,20 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReturnInForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReturnInJournalForm');
+end;
+procedure TLoadFormTest.LoadZakazExternalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TZakazExternalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TZakazExternalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TZakazExternalJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TZakazExternalJournalForm');
+end;
+procedure TLoadFormTest.LoadZakazInternalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TZakazInternalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TZakazInternalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TZakazInternalJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TZakazInternalJournalForm');
 end;
 procedure TLoadFormTest.LoadLossFormTest;
 begin

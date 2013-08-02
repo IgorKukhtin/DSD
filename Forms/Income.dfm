@@ -5,7 +5,7 @@ inherited IncomeForm: TIncomeForm
   KeyPreview = True
   PopupMenu = PopupMenu
   ExplicitWidth = 1036
-  ExplicitHeight = 423
+  ExplicitHeight = 430
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -478,8 +478,8 @@ inherited IncomeForm: TIncomeForm
         ParamType = ptInputOutput
         Value = '0'
       end>
-    Left = 248
-    Top = 104
+    Left = 256
+    Top = 96
   end
   object spSelectMovementItem: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Income'
@@ -504,8 +504,8 @@ inherited IncomeForm: TIncomeForm
         ParamType = ptInput
         Value = False
       end>
-    Left = 96
-    Top = 248
+    Left = 48
+    Top = 256
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -523,7 +523,7 @@ inherited IncomeForm: TIncomeForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 192
+    Left = 184
     Top = 104
     DockControlHeights = (
       0
@@ -688,8 +688,8 @@ inherited IncomeForm: TIncomeForm
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 72
-    Top = 192
+    Left = 136
+    Top = 200
   end
   object dsdGuidesFrom: TdsdGuides
     LookupControl = edFrom
@@ -730,13 +730,13 @@ inherited IncomeForm: TIncomeForm
         ParamType = ptInput
         Value = '0'
       end>
-    Left = 640
+    Left = 704
     Top = 128
   end
   object EntryCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 608
+    Left = 560
     Top = 128
   end
   object EntryDS: TDataSource
@@ -839,8 +839,8 @@ inherited IncomeForm: TIncomeForm
         ParamType = ptInput
         Value = '0'
       end>
-    Left = 112
-    Top = 280
+    Left = 56
+    Top = 320
   end
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'
@@ -853,12 +853,12 @@ inherited IncomeForm: TIncomeForm
   object dsdDBViewAddOn: TdsdDBViewAddOn
     SortImages = dmMain.SortImageList
     View = cxGridDBTableView
-    Left = 280
-    Top = 248
+    Left = 248
+    Top = 232
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 304
-    Top = 288
+    Left = 232
+    Top = 304
   end
   object EntryViewAddOn: TdsdDBViewAddOn
     SortImages = dmMain.SortImageList
@@ -1120,7 +1120,7 @@ inherited IncomeForm: TIncomeForm
     DataSet = 'ClientDataSet'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
-    Left = 632
-    Top = 16
+    Left = 680
+    Top = 8
   end
 end

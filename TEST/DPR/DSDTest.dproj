@@ -425,6 +425,18 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Component\ComponentActionTest.pas"/>
 			<DCCReference Include="..\SOURCE\Component\ComponentDBTest.pas"/>
+			<DCCReference Include="..\..\Forms\ZakazExternalJournal.pas">
+				<Form>ZakazExternalJournalForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\ZakazExternal.pas">
+				<Form>ZakazExternalForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\ZakazInternalJournal.pas">
+				<Form>ZakazInternalJournalForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\ZakazInternal.pas">
+				<Form>ZakazInternalForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

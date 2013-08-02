@@ -5,7 +5,7 @@ inherited ReturnOutForm: TReturnOutForm
   KeyPreview = True
   PopupMenu = PopupMenu
   ExplicitWidth = 1036
-  ExplicitHeight = 423
+  ExplicitHeight = 430
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -220,14 +220,11 @@ inherited ReturnOutForm: TReturnOutForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 1020
-        Height = 234
+        Width = 1028
+        Height = 240
         Align = alClient
         TabOrder = 0
         object cxGridEntryDBTableView: TcxGridDBTableView
@@ -651,6 +648,7 @@ inherited ReturnOutForm: TReturnOutForm
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       ShortCut = 16464
+      Params = <>
       ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
     end
   end
@@ -668,14 +666,16 @@ inherited ReturnOutForm: TReturnOutForm
   object dsdGuidesFrom: TdsdGuides
     LookupControl = edFrom
     FormName = 'TJuridicalForm'
-    PositionDataSet = 'ClientDataSet'
-    Left = 384
-    Top = 8
+    PositionDataSet = 'GridDataSet'
+    ParentDataSet = 'TreeDataSet'
+    Left = 352
+    Top = 16
   end
   object dsdGuidesTo: TdsdGuides
     LookupControl = edTo
     FormName = 'TUnitForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'GridDataSet'
+    ParentDataSet = 'TreeDataSet'
     Left = 496
     Top = 8
   end
@@ -802,14 +802,16 @@ inherited ReturnOutForm: TReturnOutForm
   object dsdGuidesContract: TdsdGuides
     LookupControl = edContract
     FormName = 'TContractForm'
-    PositionDataSet = 'ClientDataSet'
-    Left = 680
-    Top = 8
+    PositionDataSet = 'GridDataSet'
+    ParentDataSet = 'TreeDataSet'
+    Left = 648
+    Top = 24
   end
   object dsdGuidesPaidKind: TdsdGuides
     LookupControl = edPaidKind
     FormName = 'TPaidKindForm'
     PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'TreeDataSet'
     Left = 800
     Top = 16
   end
@@ -838,7 +840,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = edOperDate
         DataType = ftDate
         ParamType = ptInput
-        Value = -700000d
+        Value = 0d
       end
       item
         Name = 'inOperDatePartner'
@@ -919,7 +921,7 @@ inherited ReturnOutForm: TReturnOutForm
         Component = edOperDate
         DataType = ftInteger
         ParamType = ptOutput
-        Value = -700000d
+        Value = 0d
       end
       item
         Name = 'StatusCode'

@@ -156,7 +156,11 @@ uses
   Measure in '..\..\Forms\Measure.pas' {MeasureForm},
   PriceListItem in '..\..\Forms\PriceListItem.pas' {PriceListItemForm},
   ComponentActionTest in '..\SOURCE\Component\ComponentActionTest.pas',
-  ComponentDBTest in '..\SOURCE\Component\ComponentDBTest.pas';
+  ComponentDBTest in '..\SOURCE\Component\ComponentDBTest.pas',
+  ZakazExternalJournal in '..\..\Forms\ZakazExternalJournal.pas' {ZakazExternalJournalForm},
+  ZakazExternal in '..\..\Forms\ZakazExternal.pas' {ZakazExternalForm},
+  ZakazInternalJournal in '..\..\Forms\ZakazInternalJournal.pas' {ZakazInternalJournalForm},
+  ZakazInternal in '..\..\Forms\ZakazInternal.pas' {ZakazInternalForm};
 
 {$R *.RES}
 

@@ -138,6 +138,10 @@ type
     actPriceListItem: TdsdOpenForm;
     bbHistory: TdxBarSubItem;
     bbPriceListItem: TdxBarButton;
+    actZakazExternal: TdsdOpenForm;
+    bbZakazExternal: TdxBarButton;
+    bbZakazInternal: TdxBarButton;
+    actZakazInternal: TdsdOpenForm;
     procedure FormCreate(Sender: TObject);
   private
     procedure OnException(Sender: TObject; E: Exception);

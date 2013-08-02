@@ -588,6 +588,7 @@
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       ShortCut = 16464
+      Params = <>
       ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
     end
   end
@@ -605,14 +606,16 @@
   object dsdGuidesFrom: TdsdGuides
     LookupControl = edFrom
     FormName = 'TJuridicalForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'GridDataSet'
+    ParentDataSet = 'TreeDataSet'
     Left = 304
     Top = 56
   end
   object dsdGuidesTo: TdsdGuides
     LookupControl = edTo
     FormName = 'TUnitForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'GridDataSet'
+    ParentDataSet = 'TreeDataSet'
     Left = 448
     Top = 56
   end
@@ -641,7 +644,7 @@
         Component = edOperDate
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = 0d
       end
       item
         Name = 'FromId'
