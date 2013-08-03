@@ -107,6 +107,7 @@ type
     cbInsertHistoryCost: TCheckBox;
     cbCompleteProductionUnion: TCheckBox;
     cbCompleteProductionSeparate: TCheckBox;
+    cbRouteSorting: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -198,6 +199,7 @@ type
     procedure pLoadGuide_UnitOld;
     procedure pLoadGuide_Unit;
     procedure pLoadGuide_Member_andPersonal;
+    procedure pLoadGuide_RouteSorting;
 
     procedure pLoadGuide_PriceList;
     procedure pLoadGuide_PriceListItems;
@@ -441,6 +443,8 @@ begin
      //if not fStop then pLoadGuide_UnitGroup;
      if not fStop then pLoadGuide_Unit;
      if not fStop then pLoadGuide_Member_andPersonal;
+     if not fStop then pLoadGuide_RouteSorting;
+
 
      if not fStop then pLoadGuide_PriceList;
      if not fStop then pLoadGuide_PriceListItems;
@@ -632,7 +636,7 @@ begin
      fExecSqFromQuery('update dba.MoneyKind set Id_Postgres = null');
      fExecSqFromQuery('update dba.ContractKind set Id_Postgres = null');
      //  !!! Unit.PersonalId_Postgres and Unit.pgUnitId - is by User !!!
-     fExecSqFromQuery('update dba.Unit set Id_Postgres_Business = null, Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = null');
+     fExecSqFromQuery('update dba.Unit set Id_Postgres_RouteSorting=null,Id_Postgres_Business = null, Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = null');
      fExecSqFromQuery('update dba._pgPersonal set Id1_Postgres = null, Id2_Postgres = null');
      fExecSqFromQuery('update dba.PriceList_byHistory set Id_Postgres = null');
      fExecSqFromQuery('update dba.PriceListItems_byHistory set Id_Postgres = null');
@@ -1342,8 +1346,8 @@ begin
                      +'   and fCheckUnitClientParentID(3349,Unit.Id)=zc_rvNo()' // ÍÍÍ
                      +'   and fCheckUnitClientParentID(600,Unit.Id)=zc_rvNo()'  // œ≈–≈”◊≈“
                      +'   and fCheckUnitClientParentID(149,Unit.Id)=zc_rvNo()'  // –¿—’Œƒ€ œ–Œ»«¬Œƒ—“¬¿
-                     +'   and Unit_all.PersonalId_Postgres IS NULL'
-                     +'   and Unit_all.pgUnitId IS NULL'
+                     +'   and isnull(Unit_all.PersonalId_Postgres,0)=0'
+                     +'   and isnull(Unit_all.pgUnitId, 0)=0'
                      +'      )'
                      +'  or Unit.Id=3'    // ¿À¿Õ
                      );
@@ -1454,14 +1458,19 @@ begin
                   Add('select Unit.Id as ObjectId');
                   Add('     , Unit.UnitCode as ObjectCode');
                   Add('     , Unit.UnitName as ObjectName');
-                  Add('     , Unit.Id3_Postgres as Id_Postgres');
+                  Add('     , ClientInformation.GLN as GLNCode');
+                  Add('     , case when isnull(Unit_RouteSorting.KindRoute,0) = 1 then 1 else 0 end as PrepareDayCount');
+                  Add('     , isnull(_toolsView_Client_isChangeDate.addDay,0) as DocumentDayCount');
                   Add('     , Unit_Juridical.Id2_Postgres as JuridicalId_Postgres');
                   Add('     , 0 as RouteId_Postgres');
-                  Add('     , 0 as RouteSortingId_Postgres');
-                  Add('     , ClientInformation.GLN as GLNCode');
+                  Add('     , Unit_RouteSorting.Id_Postgres_RouteSorting as RouteSortingId_Postgres');
+                  Add('     , 0 as PersonalTakeId_Postgres');
+                  Add('     , Unit.Id3_Postgres as Id_Postgres');
                   Add('from dba.Unit');
                   Add('     left outer join dba.Unit as Unit_Juridical on Unit_Juridical.Id = isnull(zf_ChangeIntToNull( Unit.DolgByUnitID), isnull(zf_ChangeIntToNull( Unit.InformationFromUnitID), Unit.Id))');
                   Add('     left outer join dba.ClientInformation on ClientInformation.ClientId = Unit.Id');
+                  Add('     left outer join dba.Unit as Unit_RouteSorting on Unit_RouteSorting.Id = Unit.RouteUnitID');
+                  Add('     left outer join dba._toolsView_Client_isChangeDate on _toolsView_Client_isChangeDate.ClientId = Unit.ID');
                   Add('where Unit.Id1_Postgres is null'
 //                     +'  and (isnull(Unit.findGoodsCard,zc_rvNo()) = zc_rvNo()'
 //                     +'    or fCheckUnitClientParentID(152,Unit.Id)=zc_rvYes())' // œÓÒÚ‡‚˘ËÍË-¬—≈
@@ -1471,8 +1480,8 @@ begin
                      +'  and fCheckUnitClientParentID(3349,Unit.Id)=zc_rvNo()' // ÍÍÍ
                      +'  and fCheckUnitClientParentID(600,Unit.Id)=zc_rvNo()'  // œ≈–≈”◊≈“
                      +'  and fCheckUnitClientParentID(149,Unit.Id)=zc_rvNo()'  // –¿—’Œƒ€ œ–Œ»«¬Œƒ—“¬¿
-                     +'  and Unit.PersonalId_Postgres IS NULL'
-                     +'  and Unit.pgUnitId IS NULL'
+                     +'  and isnull(Unit.PersonalId_Postgres,0)=0'
+                     +'  and isnull(Unit.pgUnitId, 0)=0'
                      );
                   Add('order by ObjectId');
              end // if not isBill
@@ -1519,9 +1528,12 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inGLNCode',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inPrepareDayCount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inDocumentDayCount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inRouteId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inRouteSortingId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPersonalTakeId',ftInteger,ptInput, 0);
         //
         while not EOF do
         begin
@@ -1532,9 +1544,12 @@ begin
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
              toStoredProc.Params.ParamByName('inGLNCode').Value:=FieldByName('GLNCode').AsString;
+             toStoredProc.Params.ParamByName('inPrepareDayCount').Value:=FieldByName('PrepareDayCount').AsFloat;
+             toStoredProc.Params.ParamByName('inDocumentDayCount').Value:=FieldByName('DocumentDayCount').AsFloat;
              toStoredProc.Params.ParamByName('inJuridicalId').Value:=FieldByName('JuridicalId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inRouteId').Value:=FieldByName('RouteId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inRouteSortingId').Value:=FieldByName('RouteSortingId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inPersonalTakeId').Value:=FieldByName('PersonalTakeId_Postgres').AsInteger;
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
@@ -2051,6 +2066,64 @@ begin
      end;
      //
      myDisabledCB(cbMember_andPersonal);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadGuide_RouteSorting();
+begin
+     if (not cbRouteSorting.Checked)or(not cbRouteSorting.Enabled) then exit;
+     //
+     myEnabledCB(cbRouteSorting);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+             begin
+                  Add('select Unit.Id as ObjectId');
+                  Add('     , Unit.UnitCode as ObjectCode');
+                  Add('     , Unit.UnitName as ObjectName');
+                  Add('     , Unit.Id_Postgres_RouteSorting as Id_Postgres');
+                  Add('from dba.Unit as Unit_all');
+                  Add('     join dba.Unit on Unit.Id = Unit_all.RouteUnitID');
+//                  Add('where (Unit_all.ID<>Unit_all.RouteUnitID)');
+                  Add('order by ObjectId');
+             end;
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_RouteSorting';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.Unit set Id_Postgres_RouteSorting='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        //EnableControls;
+     end;
+     //
+     myDisabledCB(cbRouteSorting);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_PriceList;
@@ -5380,6 +5453,7 @@ end.
 
 
 {
+-- dblog -t D:\Database\Alan\v9ProfiMeating_log D:\Database\Alan\v9ProfiMeating.db
 --
 -- !!!! ‚ ·‡ÁÂ ÒË·‡ÒÂ Ì‡‰Ó ÒÓÁ‰‡Ú¸ ÍÎ˛˜Ë !!!
 --
@@ -5433,6 +5507,7 @@ alter table dba.Unit add Id3_Postgres integer null;
 alter table dba.Unit add Id_Postgres_Business integer null;
 alter table dba.Unit add PersonalId_Postgres integer null;
 alter table dba.Unit add pgUnitId integer null;
+alter table dba.Unit add Id_Postgres_RouteSorting integer null;
 
 alter table dba._pgUnit add Id_Postgres_Branch integer null;
 
