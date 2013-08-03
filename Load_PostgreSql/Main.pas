@@ -1464,12 +1464,13 @@ begin
                   Add('     , Unit_Juridical.Id2_Postgres as JuridicalId_Postgres');
                   Add('     , 0 as RouteId_Postgres');
                   Add('     , Unit_RouteSorting.Id_Postgres_RouteSorting as RouteSortingId_Postgres');
-                  Add('     , 0 as PersonalTakeId_Postgres');
+                  Add('     , _pgPersonal.Id2_Postgres as PersonalTakeId_Postgres');
                   Add('     , Unit.Id3_Postgres as Id_Postgres');
                   Add('from dba.Unit');
                   Add('     left outer join dba.Unit as Unit_Juridical on Unit_Juridical.Id = isnull(zf_ChangeIntToNull( Unit.DolgByUnitID), isnull(zf_ChangeIntToNull( Unit.InformationFromUnitID), Unit.Id))');
                   Add('     left outer join dba.ClientInformation on ClientInformation.ClientId = Unit.Id');
                   Add('     left outer join dba.Unit as Unit_RouteSorting on Unit_RouteSorting.Id = Unit.RouteUnitID');
+                  Add('     left outer join dba._pgPersonal on _pgPersonal.Id = Unit_RouteSorting.PersonalId_Postgres');
                   Add('     left outer join dba._toolsView_Client_isChangeDate on _toolsView_Client_isChangeDate.ClientId = Unit.ID');
                   Add('where Unit.Id1_Postgres is null'
 //                     +'  and (isnull(Unit.findGoodsCard,zc_rvNo()) = zc_rvNo()'
@@ -2042,7 +2043,7 @@ begin
              //Personal
              toStoredProc_two.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres_two').AsInteger;
              toStoredProc_two.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
-             //toStoredProc_two.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc_two.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
              toStoredProc_two.Params.ParamByName('inMemberId').Value:=toStoredProc.Params.ParamByName('ioId').Value;
              toStoredProc_two.Params.ParamByName('inPositionId').Value:=FieldByName('PositionId_PG').AsInteger;
              toStoredProc_two.Params.ParamByName('inUnitId').Value:=FieldByName('UnitId_PG').AsInteger;
@@ -2084,7 +2085,11 @@ begin
                   Add('     , Unit.Id_Postgres_RouteSorting as Id_Postgres');
                   Add('from dba.Unit as Unit_all');
                   Add('     join dba.Unit on Unit.Id = Unit_all.RouteUnitID');
-//                  Add('where (Unit_all.ID<>Unit_all.RouteUnitID)');
+                  Add('where (Unit_all.ID<>Unit_all.RouteUnitID)');
+                  Add('group by ObjectId');
+                  Add('       , ObjectCode');
+                  Add('       , ObjectName');
+                  Add('       , Id_Postgres');
                   Add('order by ObjectId');
              end;
         Open;
@@ -4064,7 +4069,7 @@ begin
         Add('     , null as PersonalDriverId');
 
         Add('     , null as RouteId');
-        Add('     , null as RouteSortingId');
+        Add('     , case when isnull(Bill.RouteUnitId,0) = Bill.ToId then ToId_Postgres else Unit_RouteSorting.Id_Postgres_RouteSorting end as RouteSortingId_Postgres');
 
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('     , zc_rvYes() as zc_rvYes');
@@ -4075,6 +4080,8 @@ begin
         Add('     left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id=UnitFrom.PersonalId_Postgres');
         Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
         Add('     left outer join dba._pgPersonal as pgPersonalTo on pgPersonalTo.Id=UnitTo.PersonalId_Postgres');
+        Add('     left outer join dba.Unit as Unit_RouteSorting on Unit_RouteSorting.Id = Bill.RouteUnitId');
+        Add('     left outer join dba._pgPersonal on _pgPersonal.Id = Unit_RouteSorting.PersonalId_Postgres');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkSendUnitToUnit())'
 // +' and Bill.Id = 1260716'
@@ -4144,7 +4151,7 @@ begin
              toStoredProc.Params.ParamByName('inPersonalDriverId').Value:=FieldByName('PersonalDriverId').AsInteger;
 
              toStoredProc.Params.ParamByName('inRouteId').Value:=FieldByName('RouteId').AsInteger;
-             toStoredProc.Params.ParamByName('inRouteSortingId').Value:=FieldByName('RouteSortingId').AsInteger;
+             toStoredProc.Params.ParamByName('inRouteSortingId').Value:=FieldByName('RouteSortingId_Postgres').AsInteger;
 
              if not myExecToStoredProc then ;//exit;
              //
@@ -4290,7 +4297,7 @@ begin
         Add('     , null as PersonalDriverId');
 
         Add('     , null as RouteId');
-        Add('     , null as RouteSortingId');
+        Add('     , case when isnull(Bill.RouteUnitId,0) = Bill.ToId then ToId_Postgres else Unit_RouteSorting.Id_Postgres_RouteSorting end as RouteSortingId_Postgres');
 
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('     , zc_rvYes() as zc_rvYes');
@@ -4299,6 +4306,7 @@ begin
         Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId');
         Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId');
         Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
+        Add('     left outer join dba.Unit as Unit_RouteSorting on Unit_RouteSorting.Id = Bill.RouteUnitId');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkSendUnitToUnit())'
 // +' and Bill.Id = 1260716'
@@ -4400,7 +4408,7 @@ begin
              toStoredProc.Params.ParamByName('inPersonalDriverId').Value:=FieldByName('PersonalDriverId').AsInteger;
 
              toStoredProc.Params.ParamByName('inRouteId').Value:=FieldByName('RouteId').AsInteger;
-             toStoredProc.Params.ParamByName('inRouteSortingId').Value:=FieldByName('RouteSortingId').AsInteger;
+             toStoredProc.Params.ParamByName('inRouteSortingId').Value:=FieldByName('RouteSortingId_Postgres').AsInteger;
 
              if not myExecToStoredProc then ;//exit;
              //
@@ -4553,7 +4561,7 @@ begin
      //
      myDisabledCB(cbSendUnitBranch);
 end;
-//----------------------------------------------------------------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------*--------------------------------------------------------------------------
 procedure TMainForm.pLoadDocument_Sale;
 begin
      if (not cbSale.Checked)or(not cbSale.Enabled) then exit;
@@ -4581,7 +4589,8 @@ begin
         Add('     , null as PersonalDriverId');
 
         Add('     , null as RouteId');
-        Add('     , null as RouteSortingId');
+        Add('     , case when isnull(Bill.RouteUnitId,0) = Bill.ToId then ToId_Postgres else Unit_RouteSorting.Id_Postgres_RouteSorting end as RouteSortingId_Postgres');
+        Add('     , _pgPersonal.Id2_Postgres as PersonalId_Postgres');
 
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('     , zc_rvYes() as zc_rvYes');
@@ -4593,6 +4602,8 @@ begin
         Add('     left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id=UnitFrom.PersonalId_Postgres'
            +'                                                      and pgPersonalFrom.Id2_Postgres>0');
         Add('     left outer join dba.MoneyKind on MoneyKind.Id = Bill.MoneyKindId');
+        Add('     left outer join dba.Unit as Unit_RouteSorting on Unit_RouteSorting.Id = Bill.RouteUnitId');
+        Add('     left outer join dba._pgPersonal on _pgPersonal.Id = Unit_RouteSorting.PersonalId_Postgres');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkSendUnitToUnit(),zc_bkSaleToClient())'
 // +' and Bill.Id = 1260716'
@@ -4634,6 +4645,7 @@ begin
         toStoredProc.Params.AddParam ('inContractId',ftInteger,ptInput, '');
         toStoredProc.Params.AddParam ('inCarId',ftInteger,ptInput, '');
         toStoredProc.Params.AddParam ('inPersonalDriverId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inPersonalId',ftInteger,ptInput, '');
 
         toStoredProc.Params.AddParam ('inRouteId',ftInteger,ptInput, '');
         toStoredProc.Params.AddParam ('inRouteSortingId',ftInteger,ptInput, '');
@@ -4660,9 +4672,10 @@ begin
              toStoredProc.Params.ParamByName('inContractId').Value:=FieldByName('ContractId').AsInteger;
              toStoredProc.Params.ParamByName('inCarId').Value:=FieldByName('CarId').AsInteger;
              toStoredProc.Params.ParamByName('inPersonalDriverId').Value:=FieldByName('PersonalDriverId').AsInteger;
+             toStoredProc.Params.ParamByName('inPersonalId').Value:=FieldByName('PersonalId_Postgres').AsInteger;
 
              toStoredProc.Params.ParamByName('inRouteId').Value:=FieldByName('RouteId').AsInteger;
-             toStoredProc.Params.ParamByName('inRouteSortingId').Value:=FieldByName('RouteSortingId').AsInteger;
+             toStoredProc.Params.ParamByName('inRouteSortingId').Value:=FieldByName('RouteSortingId_Postgres').AsInteger;
 
              if not myExecToStoredProc then ;//exit;
              //

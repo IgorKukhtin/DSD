@@ -335,6 +335,7 @@ end;
 procedure TdbProcedureTest.CreateReportProcedure;
 begin
   ExecFile(ReportsPath + '_Balance\gpReport_Balance.sql', ZQuery);
+  ExecFile(ReportsPath + '_HistoryCost\gpReport_HistoryCost.sql', ZQuery);
 end;
 
 initialization

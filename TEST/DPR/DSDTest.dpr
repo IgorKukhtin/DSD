@@ -31,7 +31,6 @@ uses
   CommonContainerProcedureTest in '..\SOURCE\Container\CommonContainerProcedureTest.pas',
   CommonMovementItemProcedureTest in '..\SOURCE\MovementItem\CommonMovementItemProcedureTest.pas',
   CommonMovementItemContainerProcedureTest in '..\SOURCE\MovementItemContainer\CommonMovementItemContainerProcedureTest.pas',
-  CommonObjectCostProcedureTest in '..\SOURCE\ObjectCost\CommonObjectCostProcedureTest.pas',
   CommonObjectHistoryProcedureTest in '..\SOURCE\ObjectHistory\CommonObjectHistoryProcedureTest.pas',
   CommonProtocolProcedureTest in '..\SOURCE\Protocol\CommonProtocolProcedureTest.pas',
   CommonFunctionTest in '..\SOURCE\Function\CommonFunctionTest.pas',
@@ -160,7 +159,8 @@ uses
   ZakazExternalJournal in '..\..\Forms\ZakazExternalJournal.pas' {ZakazExternalJournalForm},
   ZakazExternal in '..\..\Forms\ZakazExternal.pas' {ZakazExternalForm},
   ZakazInternalJournal in '..\..\Forms\ZakazInternalJournal.pas' {ZakazInternalJournalForm},
-  ZakazInternal in '..\..\Forms\ZakazInternal.pas' {ZakazInternalForm};
+  ZakazInternal in '..\..\Forms\ZakazInternal.pas' {ZakazInternalForm},
+  CommonObjectCostProcedureTest in '..\SOURCE\ObjectCost\CommonObjectCostProcedureTest.pas';
 
 {$R *.RES}
 

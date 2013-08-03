@@ -238,7 +238,7 @@ object MainForm: TMainForm
       Tag = 10
       Left = 15
       Top = 221
-      Width = 106
+      Width = 119
       Height = 17
       Caption = '3.3. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
       TabOrder = 10
@@ -410,18 +410,24 @@ object MainForm: TMainForm
     end
     object cbTradeMark: TCheckBox
       Tag = 10
-      Left = 154
+      Left = 151
       Top = 80
-      Width = 130
+      Width = 135
       Height = 17
       Caption = '1.5. '#1058#1086#1088#1075#1086#1074#1099#1077' '#1084#1072#1088#1082#1080
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
       TabOrder = 29
     end
     object cbRouteSorting: TCheckBox
       Tag = 10
-      Left = 154
+      Left = 151
       Top = 221
-      Width = 163
+      Width = 168
       Height = 17
       Caption = '3.4. '#1057#1086#1088#1090#1080#1088#1086#1074#1082#1080' '#1052#1072#1088#1096#1088#1091#1090#1086#1074
       TabOrder = 30
