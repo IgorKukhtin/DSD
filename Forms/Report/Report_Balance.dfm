@@ -2,9 +2,8 @@ inherited Report_BalanceForm: TReport_BalanceForm
   Caption = #1041#1072#1083#1072#1085#1089
   ClientHeight = 395
   ClientWidth = 1329
-  ExplicitLeft = -339
-  ExplicitWidth = 1337
-  ExplicitHeight = 422
+  ExplicitWidth = 1345
+  ExplicitHeight = 434
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -136,7 +135,7 @@ inherited Report_BalanceForm: TReport_BalanceForm
         Width = 60
       end
       object InfoMoneyName: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentHorz = taCenter
         Width = 80
@@ -148,7 +147,7 @@ inherited Report_BalanceForm: TReport_BalanceForm
         Width = 60
       end
       object InfoMoneyName_Detail: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' '#1076#1077#1090#1072#1083#1100#1085#1086
+        Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' '#1076#1077#1090#1072#1083#1100#1085#1086
         DataBinding.FieldName = 'InfoMoneyName_Detail'
         HeaderAlignmentHorz = taCenter
         Width = 100
@@ -232,7 +231,7 @@ inherited Report_BalanceForm: TReport_BalanceForm
     object deEnd: TcxDateEdit
       Left = 352
       Top = 8
-      EditValue = 41760d
+      EditValue = 41395d
       TabOrder = 1
       Width = 121
     end
@@ -276,8 +275,8 @@ inherited Report_BalanceForm: TReport_BalanceForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -370,14 +369,14 @@ inherited Report_BalanceForm: TReport_BalanceForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
-        Value = '01.05.2013'
+        Value = 41395d
       end
       item
         Name = 'inEndDate'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
-        Value = '01.05.2014'
+        Value = 41395d
       end>
     Left = 152
     Top = 152

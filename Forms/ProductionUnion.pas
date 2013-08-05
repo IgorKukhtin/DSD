@@ -99,6 +99,14 @@ type
     colAccountOnComplete: TcxGridDBColumn;
     colReceiptName: TcxGridDBColumn;
     colRealWeight: TcxGridDBColumn;
+    colGoodsCode: TcxGridDBColumn;
+    colInfoMoneyCode: TcxGridDBColumn;
+    colInfoMoneyName: TcxGridDBColumn;
+    colInfoMoneyCode_Detail: TcxGridDBColumn;
+    colInfoMoneyName_Detail: TcxGridDBColumn;
+    colGoodsCode_Parent: TcxGridDBColumn;
+    colGoodsName_Parent: TcxGridDBColumn;
+    colGoodsKindName_Parent: TcxGridDBColumn;
   private
   public
   end;

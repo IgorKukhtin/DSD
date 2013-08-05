@@ -248,10 +248,6 @@ BEGIN
         SELECT _tmpAll.MasterObjectCostId, _tmpAll.ObjectCostId, SUM (_tmpAll.CalcCount) FROM _tmpAll WHERE _tmpAll.CalcCount <> 0 GROUP BY _tmpAll.MasterObjectCostId, _tmpAll.ObjectCostId;
 
 
---     return;
-
-
-
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
      -- !!! Ну а теперь - САМА с/с !!!
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -422,6 +418,32 @@ LANGUAGE PLPGSQL VOLATILE;
        UNION ALL
         SELECT 4 AS MasterObjectCostId, 3 AS ObjectCostId, 10 AS OperCount
        ;
+
+
+     INSERT INTO _tmpMaster (ObjectCostId, StartCount, StartSumm, IncomeCount, IncomeSumm , CalcCount, CalcSumm)
+        SELECT CAST (1 AS Integer) AS ObjectCostId, CAST (30 AS TFloat) AS StartCount, CAST (200 AS TFloat) AS StartSumm, CAST (0 AS TFloat) AS IncomeCount, CAST (0 AS TFloat) AS IncomeSumm, CAST (0 AS TFloat) AS CalcCount, CAST (0 AS TFloat) AS CalcSumm
+       UNION ALL
+        SELECT CAST (2 AS Integer) AS ObjectCostId, CAST (30 AS TFloat) AS StartCount, CAST (0 AS TFloat) AS StartSumm, CAST (0 AS TFloat) AS IncomeCount, CAST (0 AS TFloat) AS IncomeSumm, CAST (0 AS TFloat) AS CalcCount, CAST (0 AS TFloat) AS CalcSumm
+       UNION ALL
+        SELECT CAST (3 AS Integer) AS ObjectCostId, CAST (20 AS TFloat) AS StartCount, CAST (10 AS TFloat) AS StartSumm, CAST (0 AS TFloat) AS IncomeCount, CAST (0 AS TFloat) AS IncomeSumm, CAST (0 AS TFloat) AS CalcCount, CAST (0 AS TFloat) AS CalcSumm
+       UNION ALL
+        SELECT CAST (4 AS Integer) AS ObjectCostId, CAST (13 AS TFloat) AS StartCount, CAST (20 AS TFloat) AS StartSumm, CAST (0 AS TFloat) AS IncomeCount, CAST (0 AS TFloat) AS IncomeSumm, CAST (0 AS TFloat) AS CalcCount, CAST (0 AS TFloat) AS CalcSumm
+       UNION ALL
+        SELECT CAST (5 AS Integer) AS ObjectCostId, CAST (20 AS TFloat) AS StartCount, CAST (30 AS TFloat) AS StartSumm, CAST (0 AS TFloat) AS IncomeCount, CAST (0 AS TFloat) AS IncomeSumm, CAST (0 AS TFloat) AS CalcCount, CAST (0 AS TFloat) AS CalcSumm
+       ;
+     -- таблица - Все расходы
+     INSERT INTO _tmpChild (MasterObjectCostId, ObjectCostId, OperCount)
+        SELECT 2 AS MasterObjectCostId, 1 AS ObjectCostId, 30 AS OperCount
+       UNION ALL
+        SELECT 2 AS MasterObjectCostId, 3 AS ObjectCostId, 20 AS OperCount
+       UNION ALL
+        SELECT 2 AS MasterObjectCostId, 4 AS ObjectCostId, 13 AS OperCount
+       UNION ALL
+        SELECT 2 AS MasterObjectCostId, 5 AS ObjectCostId, 20 AS OperCount
+       UNION ALL
+        SELECT 1 AS MasterObjectCostId, 2 AS ObjectCostId, 30 AS OperCount
+       ;
+
 */
 
 -- тест
