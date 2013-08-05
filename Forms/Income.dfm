@@ -4,8 +4,8 @@ inherited IncomeForm: TIncomeForm
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1036
-  ExplicitHeight = 430
+  ExplicitWidth = 1044
+  ExplicitHeight = 435
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -441,6 +441,31 @@ inherited IncomeForm: TIncomeForm
             HeaderAlignmentHorz = taCenter
             Width = 70
           end
+          object colGoodsCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1090#1086#1074'.'
+            DataBinding.FieldName = 'GoodsCode'
+            Width = 40
+          end
+          object colInfoMoneyCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1089#1090'. '#1085#1072#1079#1085#1072#1095'.'
+            DataBinding.FieldName = 'InfoMoneyCode'
+            Width = 40
+          end
+          object colInfoMoneyName: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName'
+            Width = 55
+          end
+          object colInfoMoneyCode_Detail: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1089#1090'. '#1085#1072#1079#1085#1072#1095'.'#1076#1077#1090'.'
+            DataBinding.FieldName = 'InfoMoneyCode_Detail'
+            Width = 40
+          end
+          object colInfoMoneyName_Detail: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' '#1076#1077#1090#1072#1083#1100#1085#1086
+            DataBinding.FieldName = 'InfoMoneyName_Detail'
+            Width = 55
+          end
         end
         object cxGridEntryLevel: TcxGridLevel
           GridView = cxGridEntryDBTableView
@@ -510,8 +535,8 @@ inherited IncomeForm: TIncomeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

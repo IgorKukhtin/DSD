@@ -283,6 +283,7 @@ ALTER FUNCTION gpSelect_MovementItemContainer_Movement (Integer, TVarChar) OWNER
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.08.13                                        * add Goods_Parent and InfoMoney
  11.07.13                                        * add zc_ObjectLink_Account_AccountKind
  08.07.13                                        * add AccountOnComplete
  04.07.13                                        * rename AccountId to ObjectId

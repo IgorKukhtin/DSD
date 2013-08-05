@@ -2,8 +2,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1087#1088#1080#1093#1086#1076#1072
   ClientHeight = 427
   ClientWidth = 1240
-  ExplicitWidth = 1248
-  ExplicitHeight = 454
+  ExplicitWidth = 1256
+  ExplicitHeight = 466
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -23,7 +23,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
     object deEnd: TcxDateEdit
       Left = 352
       Top = 8
-      EditValue = 41760d
+      EditValue = 41395d
       TabOrder = 1
       Width = 121
     end
@@ -243,8 +243,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -457,7 +457,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41760d
+        Value = 41395d
       end>
     Left = 24
     Top = 176

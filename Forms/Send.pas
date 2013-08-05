@@ -94,6 +94,11 @@ type
     colGoodsKindName_comlete: TcxGridDBColumn;
     colAccountOnComplete: TcxGridDBColumn;
     colAssetName: TcxGridDBColumn;
+    colGoodsCode: TcxGridDBColumn;
+    colInfoMoneyCode: TcxGridDBColumn;
+    colInfoMoneyName: TcxGridDBColumn;
+    colInfoMoneyCode_Detail: TcxGridDBColumn;
+    colInfoMoneyName_Detail: TcxGridDBColumn;
   private
   public
   end;

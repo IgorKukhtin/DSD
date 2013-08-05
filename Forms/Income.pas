@@ -119,6 +119,11 @@ type
     edInvNumberPartner: TcxTextEdit;
     spGet: TdsdStoredProc;
     RefreshAddOn: TRefreshAddOn;
+    colGoodsCode: TcxGridDBColumn;
+    colInfoMoneyCode: TcxGridDBColumn;
+    colInfoMoneyName: TcxGridDBColumn;
+    colInfoMoneyCode_Detail: TcxGridDBColumn;
+    colInfoMoneyName_Detail: TcxGridDBColumn;
   private
   public
   end;

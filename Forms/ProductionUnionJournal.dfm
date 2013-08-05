@@ -24,7 +24,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
     object deEnd: TcxDateEdit
       Left = 352
       Top = 8
-      EditValue = 41760d
+      EditValue = 41395d
       TabOrder = 1
       Width = 121
     end
@@ -407,7 +407,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41760d
+        Value = 41395d
       end>
     Left = 24
     Top = 176
