@@ -5530,4 +5530,5 @@ alter table dba.PriceListItems_byHistory add Id_Postgres integer null;
 alter table dba.Bill add Id_Postgres integer null;
 alter table dba.BillItems add Id_Postgres integer null;
 alter table dba.BillItemsReceipt add Id_Postgres integer null;
+
 }

@@ -126,8 +126,8 @@ BEGIN
                  LEFT JOIN Object AS Object_GoodsKind_Parent ON Object_GoodsKind_Parent.Id = MILinkObject_GoodsKind.ObjectId
 
             WHERE MovementItemContainer.MovementId = inMovementId
-              AND COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Passive()
-              -- AND MovementItemContainer.Amount > 0
+              -- AND COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Passive()
+              AND MovementItemContainer.Amount >= 0
             GROUP BY Container.ObjectId
                    , MovementItemContainer.Id
                    , Object_by.ObjectCode
@@ -253,8 +253,8 @@ BEGIN
                  LEFT JOIN Object AS Object_GoodsKind_Parent ON Object_GoodsKind_Parent.Id = MILinkObject_GoodsKind.ObjectId
 
             WHERE MovementItemContainer.MovementId = inMovementId
-              AND ObjectLink_AccountKind.ChildObjectId = zc_Enum_AccountKind_Passive()
-              -- AND MovementItemContainer.Amount < 0
+              -- AND ObjectLink_AccountKind.ChildObjectId = zc_Enum_AccountKind_Passive()
+              AND MovementItemContainer.Amount < 0
             GROUP BY Container.ObjectId
                    , MovementItemContainer.Id
                    , Object_by.ObjectCode
