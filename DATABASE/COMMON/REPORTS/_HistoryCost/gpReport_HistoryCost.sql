@@ -200,7 +200,7 @@ $BODY$BEGIN
                  JOIN MovementItemDesc ON MovementItemDesc.Id = MovementItem.DescId
             WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
               AND MIContainer.DescId = zc_MIContainer_Summ()
---              AND 1=0
+              AND 1=0
            ) AS _tmpSumm ON _tmpSumm.ObjectCostId = ContainerObjectCost.ObjectCostId
             LEFT JOIN
 
@@ -260,8 +260,7 @@ $BODY$BEGIN
             GROUP BY ContainerObjectCost_RemainsSumm.ObjectCostId
            ) AS tmpOperationCount ON tmpOperationCount.ObjectCostId = ContainerObjectCost.ObjectCostId
 
---       WHERE ContainerObjectCost.ObjectCostDescId = zc_ObjectCost_Basis()
-/*         AND (
+       WHERE (
 --              HistoryCost.CalcCount <> 0
 --           OR HistoryCost.StartCount <> 0
 --           OR 
@@ -288,7 +287,7 @@ $BODY$BEGIN
            OR _tmpSumm.OperPrice <> 0
            OR _tmpSumm.OperSumm <> 0
            OR HistoryCost.Price <> 0
-             )*/
+             )
        ;
 
   
@@ -308,3 +307,4 @@ ALTER FUNCTION gpReport_HistoryCost (TDateTime, TDateTime, TVarChar) OWNER TO po
 -- тест
 -- SELECT * FROM gpReport_HistoryCost (inStartDate:= '01.01.2013', inEndDate:= '31.01.2013', inSession:= '2') -- WHERE ObjectCostId IN (13928)
 -- SELECT * FROM gpReport_HistoryCost (inStartDate:= '01.01.2013', inEndDate:= '31.01.2013', inSession:= '2') -- WHERE (MovementId <> 0 OR  IncomeSumm_calc <> 0 OR OutSumm_calc <> 0) and  GoodsCode = 4033
+3977

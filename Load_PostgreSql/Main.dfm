@@ -925,16 +925,4 @@ object MainForm: TMainForm
     Left = 96
     Top = 336
   end
-  object toStoredProc: TdsdStoredProc
-    DataSets = <>
-    Params = <>
-    Left = 120
-    Top = 416
-  end
-  object toStoredProc_two: TdsdStoredProc
-    DataSets = <>
-    Params = <>
-    Left = 205
-    Top = 416
-  end
 end

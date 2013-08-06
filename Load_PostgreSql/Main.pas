@@ -2204,6 +2204,7 @@ begin
         Add('from dba.PriceListItems_byHistory');
         Add('     left outer join dba.PriceList_byHistory on PriceList_byHistory.Id=PriceListItems_byHistory.PriceListID');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id=PriceListItems_byHistory.GoodsPropertyId');
+        Add('where PriceListItems_byHistory.StartDate<>zc_DateStart() or PriceListItems_byHistory.NewPrice<>0');
         Add('order by PriceListId_PG, OperDate, GoodsId_PG');
         Open;
         //
