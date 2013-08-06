@@ -22,20 +22,21 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  cxSplitter;
 
 type
   TProductionSeparateForm = class(TParentForm)
     dsdFormParams: TdsdFormParams;
-    spSelectMovementItem: TdsdStoredProc;
+    spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
     dxBarManagerBar: TdxBar;
     bbRefresh: TdxBarButton;
     cxPropertiesStore: TcxPropertiesStore;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
-    DataSource: TDataSource;
-    ClientDataSet: TClientDataSet;
+    MasterDS: TDataSource;
+    MasterCDS: TClientDataSet;
     DataPanel: TPanel;
     edInvNumber: TcxTextEdit;
     cxLabel1: TcxLabel;
@@ -59,7 +60,7 @@ type
     colName: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
-    spSelectMovementContainerItem: TdsdStoredProc;
+    spSelectMIContainer: TdsdStoredProc;
     cxGridEntryDBTableView: TcxGridDBTableView;
     cxGridEntryLevel: TcxGridLevel;
     cxGridEntry: TcxGrid;
@@ -70,7 +71,7 @@ type
     colKreditAccountName: TcxGridDBColumn;
     colKreditAmount: TcxGridDBColumn;
     actUpdateDataSet: TdsdUpdateDataSet;
-    spInsertUpdateMovementItem: TdsdStoredProc;
+    spInsertUpdateMI: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     frxDBDataset: TfrxDBDataset;
@@ -96,6 +97,16 @@ type
     colInfoMoneyName: TcxGridDBColumn;
     colInfoMoneyCode_Detail: TcxGridDBColumn;
     colInfoMoneyName_Detail: TcxGridDBColumn;
+    cxGridChild: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    colChildGoodsCode: TcxGridDBColumn;
+    colChildGoodsName: TcxGridDBColumn;
+    colChildAmount: TcxGridDBColumn;
+    colChildHeadCount: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxSplitterChild: TcxSplitter;
+    ChildCDS: TClientDataSet;
+    ChildDS: TDataSource;
   private
   public
   end;

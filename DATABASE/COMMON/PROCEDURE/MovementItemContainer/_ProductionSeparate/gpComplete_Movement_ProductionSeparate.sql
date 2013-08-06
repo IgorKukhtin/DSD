@@ -117,7 +117,7 @@ BEGIN
                   , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate
 
                   , MovementItem.Amount AS OperCount
-                  , COALESCE (MovementItem.Amount * lfObjectHistory_PriceListItem.ValuePrice) AS tmpOperSumm
+                  , COALESCE (MovementItem.Amount * lfObjectHistory_PriceListItem.ValuePrice, 0) AS tmpOperSumm
 
                   -- Аналитики счетов - направления (Кому)
                   , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_AccountDirection.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN zc_Enum_AccountDirection_20500() END, 0) AS AccountDirectionId_To
@@ -524,11 +524,12 @@ BEGIN
      -- Распределяем сумму по Факту для Child-элементы документа
      INSERT INTO _tmpItemSummChild (MovementItemId, OperSumm, InfoMoneyId_Detail_To)
         SELECT _tmpItemChild.MovementItemId
-             , _tmpItemSummTotal.OperSumm * _tmpItemChild.tmpOperSumm / vbOperSumm_byItem
+             , CASE WHEN vbOperSumm_byItem <> 0 THEN _tmpItemSummTotal.OperSumm * _tmpItemChild.tmpOperSumm / vbOperSumm_byItem ELSE 0 END
              , _tmpItemSummTotal.InfoMoneyId_Detail_From
         FROM _tmpItemChild
-             JOIN _tmpItemSummTotal ON _tmpItemSummTotal.OperSumm <> 0
-        WHERE vbOperSumm_byItem <> 0;
+             LEFT JOIN _tmpItemSummTotal ON _tmpItemSummTotal.OperSumm <> 0
+        -- WHERE vbOperSumm_byItem <> 0
+        ;
 
      -- После распределения группируем итоговые суммы по Факту для Child-элементы документа
      INSERT INTO _tmpItemSummChildTotal (OperSumm, InfoMoneyId_Detail_To)
@@ -804,11 +805,12 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.08.13                                        * err on vbOperSumm
  24.07.13                                        * !ОБЯЗАТЕЛЬНО! вставляем нули
  21.07.13                                        *
 */
 
 -- тест
--- SELECT * FROM gpUnComplete_Movement (inMovementId:= 163810, inSession:= '2')
--- SELECT * FROM gpComplete_Movement_ProductionSeparate (inMovementId:= 163810, inSession:= '2')
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 163810, inSession:= '2')
+-- SELECT * FROM gpUnComplete_Movement (inMovementId:= 8324, inSession:= '2')
+-- SELECT * FROM gpComplete_Movement_ProductionSeparate (inMovementId:= 8324, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 8324, inSession:= '2')
