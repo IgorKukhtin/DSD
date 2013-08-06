@@ -31,7 +31,6 @@ type
 
     procedure MovementLossTest;
     procedure MovementInventoryTest;
-
     procedure MovementZakazExternalTest;
     procedure MovementZakazInternalTest;
   end;
