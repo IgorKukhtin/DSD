@@ -1,16 +1,24 @@
 unit dbMovementTest;
 
 interface
-uses TestFramework, dbObjectTest, Classes;
+uses TestFramework, dbObjectTest, Classes, dbTest;
 
 type
 
   TMovementTest = class(TObjectTest)
   protected
     procedure InsertUpdateInList(Id: integer); override;
+  public
+    procedure DeleteRecord(Id: Integer); override;
   end;
 
-  TdbMovementTest = class (TTestCase)
+  TdbMovementTestNew = class (TdbTest)
+  protected
+    // возвращаем данные для тестирования
+    procedure TearDown; override;
+  end;
+
+  TdbMovementTest = class (TdbTest)
   private
     // Удаление документа
     procedure DeleteMovement(Id: integer);
@@ -949,9 +957,34 @@ end;
 
 { TMovementTest }
 
+procedure TMovementTest.DeleteRecord(Id: Integer);
+const
+  pXML =
+  '<xml Session = "">' +
+    '<lpDelete_Movement OutputType="otResult">' +
+       '<inId DataType="ftInteger" Value="%d"/>' +
+    '</lpDelete_Movement>' +
+  '</xml>';
+begin
+  TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Id]))
+end;
+
 procedure TMovementTest.InsertUpdateInList(Id: integer);
 begin
   InsertedIdMovementList.Add(IntToStr(Id));
+end;
+
+{ TdbMovementTestNew }
+
+procedure TdbMovementTestNew.TearDown;
+begin
+  inherited;
+    if Assigned(InsertedIdMovementList) then
+     with TMovementTest.Create do
+       while InsertedIdMovementList.Count > 0 do begin
+          DeleteRecord(StrToInt(InsertedIdMovementList[0]));
+          InsertedIdMovementList.Delete(0);
+       end;
 end;
 
 initialization

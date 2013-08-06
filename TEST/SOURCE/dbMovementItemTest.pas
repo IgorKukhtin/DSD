@@ -725,7 +725,7 @@ var Id, MovementId, GoodsId: Integer;
     Amount, AmountSecond: double;
     GoodsKindId: Integer;
 begin
-  Id:=0;
+{  Id:=0;
   MovementId:= TMovementZakazExternalTest.Create.GetDefault;
   GoodsId:=TGoodsTest.Create.GetDefault;
   Amount:=10;
@@ -733,7 +733,7 @@ begin
   GoodsKindId:=0;
   //
   result := InsertUpdateMovementItemZakazExternal(Id, MovementId, GoodsId,
-                              Amount, AmountSecond, GoodsKindId);
+                              Amount, AmountSecond, GoodsKindId);}
 end;
 
 function TMovementItemZakazExternalTest.InsertUpdateMovementItemZakazExternal
@@ -755,7 +755,7 @@ end;
 procedure TMovementItemZakazExternalTest.SetDataSetParam;
 begin
   inherited;
-  FParams.AddParam('inMovementId', ftInteger, ptInput, TMovementZakazExternalTest.Create.GetDefault);
+//  FParams.AddParam('inMovementId', ftInteger, ptInput, TMovementZakazExternalTest.Create.GetDefault);
   FParams.AddParam('inShowAll', ftBoolean, ptInput, true);
 end;
 
@@ -783,7 +783,7 @@ var Id, MovementId, GoodsId: Integer;
     Amount, AmountSecond: double;
     GoodsKindId: Integer;
 begin
-  Id:=0;
+{  Id:=0;
   MovementId:= TMovementZakazInternalTest.Create.GetDefault;
   GoodsId:=TGoodsTest.Create.GetDefault;
   Amount:=10;
@@ -791,7 +791,7 @@ begin
   GoodsKindId:=0;
   //
   result := InsertUpdateMovementItemZakazInternal(Id, MovementId, GoodsId,
-                              Amount, AmountSecond, GoodsKindId);
+                              Amount, AmountSecond, GoodsKindId);}
 end;
 
 function TMovementItemZakazInternalTest.InsertUpdateMovementItemZakazInternal
@@ -812,7 +812,7 @@ end;
 procedure TMovementItemZakazInternalTest.SetDataSetParam;
 begin
   inherited;
-  FParams.AddParam('inMovementId', ftInteger, ptInput, TMovementZakazInternalTest.Create.GetDefault);
+  //FParams.AddParam('inMovementId', ftInteger, ptInput, TMovementZakazInternalTest.Create.GetDefault);
   FParams.AddParam('inShowAll', ftBoolean, ptInput, true);
 end;
 

@@ -20,8 +20,8 @@ type
     procedure InsertUpdateInList(Id: integer); virtual;
     function InsertDefault: integer; virtual;
     procedure SetDataSetParam; virtual;
-    procedure DeleteObject(Id: Integer);
   public
+    procedure DeleteRecord(Id: Integer); virtual;
     function GetDefault: integer;
     function GetDataSet: TDataSet; virtual;
     function GetRecord(Id: integer): TDataSet;
@@ -449,7 +449,7 @@ begin
   FParams := TdsdParams.Create(TdsdParam);
 end;
 
-procedure TObjectTest.DeleteObject(Id: Integer);
+procedure TObjectTest.DeleteRecord(Id: Integer);
 const
    pXML =
   '<xml Session = "">' +
@@ -466,7 +466,7 @@ var Index: Integer;
 begin
   if InsertedIdObjectList.Find(IntToStr(Id), Index) then begin
      // здесь мы разрешаем удалять ТОЛЬКО вставленные в момент теста данные
-     DeleteObject(Id);
+     DeleteRecord(Id);
      InsertedIdObjectList.Delete(Index);
   end
   else
@@ -645,11 +645,12 @@ end;
 procedure TdbObjectTest.TearDown;
 begin
   inherited;
-  with TObjectTest.Create do
-    while InsertedIdObjectList.Count > 0 do begin
-       DeleteObject(StrToInt(InsertedIdObjectList[0]));
-       InsertedIdObjectList.Delete(0);
-    end;
+  if Assigned(InsertedIdObjectList) then
+     with TObjectTest.Create do
+       while InsertedIdObjectList.Count > 0 do begin
+          DeleteRecord(StrToInt(InsertedIdObjectList[0]));
+          InsertedIdObjectList.Delete(0);
+       end;
 end;
 {------------------------------------------------------------------------------}
 procedure TdbObjectTest.SetUp;

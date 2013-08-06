@@ -5,7 +5,7 @@ interface
 uses dbTest, dbMovementTest;
 
 type
-  TCashOperationTest = class (TdbTest)
+  TCashOperationTest = class (TdbMovementTestNew)
   published
     procedure ProcedureLoad; override;
     procedure Test; override;
@@ -15,31 +15,63 @@ type
   private
     function InsertDefault: integer; override;
   public
-    function InsertUpdateCashOperation(const Id: integer; InvNumber: Integer; OperDate: TDateTime;
+    function InsertUpdateCashOperation(const Id: integer; InvNumber: String; OperDate: TDateTime;
         FromId, ToId, PaidKindId, InfoMoneyId, ContractId, UnitId: integer): integer;
     constructor Create; override;
   end;
 
 implementation
 
-uses UtilConst;
+uses UtilConst, JuridicalTest, dbObjectTest, SysUtils, Db, TestFramework;
 
 { TIncomeCashJuridical }
 
 constructor TCashOperation.Create;
 begin
   inherited;
-
+  spInsertUpdate := 'gpInsertUpdate_Movement_Cash';
+  spSelect := 'gpSelect_Movement_Cash';
+  spGet := 'gpGet_Movement_Cash';
 end;
 
 function TCashOperation.InsertDefault: integer;
+var Id: Integer;
+    InvNumber: String;
+    OperDate: TDateTime;
+    FromId, ToId, PaidKindId, InfoMoneyId, ContractId, UnitId: Integer;
 begin
-
+  Id:=0;
+  InvNumber:='1';
+  OperDate:= Date;
+  // Выбираем кассу
+  FromId := TCashTest.Create.GetDefault;
+  // Выбираем Юр лицо
+  ToId := TJuridical.Create.GetDefault;
+  PaidKindId := 0;
+  ContractId := 0;
+  InfoMoneyId := 0;
+  UnitId := 0;
+  //
+  result := InsertUpdateCashOperation(Id, InvNumber, OperDate,
+              FromId, ToId, PaidKindId, InfoMoneyId, ContractId, UnitId);
 end;
 
-function TCashOperation.InsertUpdateCashOperation(const Id: integer; InvNumber: Integer; OperDate: TDateTime;
+function TCashOperation.InsertUpdateCashOperation(const Id: integer; InvNumber: String; OperDate: TDateTime;
         FromId, ToId, PaidKindId, InfoMoneyId, ContractId, UnitId: integer): integer;
 begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
+  FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
+
+  FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
+  FParams.AddParam('inToId', ftInteger, ptInput, ToId);
+  FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
+  FParams.AddParam('inInfoMoneyId', ftInteger, ptInput, InfoMoneyId);
+  FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
+  FParams.AddParam('inUnitId', ftInteger, ptInput, UnitId);
+
+  result := InsertUpdate(FParams);
 
 end;
 
@@ -52,14 +84,24 @@ begin
 end;
 
 procedure TCashOperationTest.Test;
-var JuridicalId: integer;
+var MovementCashOperation: TCashOperation;
+    Id: Integer;
 begin
   inherited;
-  // Создаем Юр лицо
-
-  // Создаем кассу
   // Создаем документ
-
+  MovementCashOperation := TCashOperation.Create;
+  Id := MovementCashOperation.InsertDefault;
+  // создание документа
+  try
+  // редактирование
+  finally
+  end;
 end;
+
+initialization
+
+  TestFramework.RegisterTest('Документы', TCashOperationTest.Suite);
+
+
 
 end.

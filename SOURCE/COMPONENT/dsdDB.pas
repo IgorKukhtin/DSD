@@ -249,6 +249,8 @@ begin
      Session := gc_User.Session
   else
      Session := '2';
+  if trim(StoredProcName) = '' then
+     raise Exception.Create('Не указано название процедуры в объекте типа TdsdStoredProc');
   Result :=
            '<xml Session = "' + Session + '" >' +
                 '<' + StoredProcName + ' OutputType = "' + GetEnumName(TypeInfo(TOutputType), ord(OutputType)) + '">' +
