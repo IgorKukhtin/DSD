@@ -194,7 +194,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
@@ -290,7 +290,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'ParentId'
@@ -395,6 +395,8 @@
     LookupControl = ceParent
     FormName = 'TUnitForm'
     PositionDataSet = 'TreeDataSet'
+    ParentDataSet = 'TreeDataSet'
+    Params = <>
     Left = 152
     Top = 56
   end
@@ -402,6 +404,8 @@
     LookupControl = ceBranch
     FormName = 'TBranchForm'
     PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'TreeDataSet'
+    Params = <>
     Left = 424
     Top = 48
   end
@@ -409,6 +413,7 @@
     LookupControl = ceBusiness
     FormName = 'TBusinessForm'
     PositionDataSet = 'ClientDataSet'
+    Params = <>
     Left = 168
     Top = 120
   end
@@ -416,6 +421,8 @@
     LookupControl = ceJuridical
     FormName = 'TJuridicalForm'
     PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'TreeDataSet'
+    Params = <>
     Left = 384
     Top = 112
   end
@@ -423,6 +430,7 @@
     LookupControl = ceAccountDirection
     FormName = 'TAccountDirectionForm'
     PositionDataSet = 'ClientDataSet'
+    Params = <>
     Left = 160
     Top = 168
   end
@@ -430,6 +438,7 @@
     LookupControl = ceProfitLossDirection
     FormName = 'TProfitLossDirectionForm'
     PositionDataSet = 'ClientDataSet'
+    Params = <>
     Left = 376
     Top = 160
   end

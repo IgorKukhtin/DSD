@@ -17,6 +17,7 @@ type
     property spSelect: string read FspSelect write FspSelect;
     property spInsertUpdate: string read FspInsertUpdate write FspInsertUpdate;
     function InsertUpdate(dsdParams: TdsdParams): Integer;
+    procedure InsertUpdateInList(Id: integer); virtual;
     function InsertDefault: integer; virtual;
     procedure SetDataSetParam; virtual;
     procedure DeleteObject(Id: Integer);
@@ -528,8 +529,13 @@ begin
     Execute;
     Result := StrToInt(ParamByName('ioId').Value);
     if OldId <> Result then
-       InsertedIdObjectList.Add(IntToStr(result));
+       InsertUpdateInList(Result)
   end;
+end;
+
+procedure TObjectTest.InsertUpdateInList(Id: integer);
+begin
+  InsertedIdObjectList.Add(IntToStr(Id));
 end;
 
 procedure TObjectTest.SetDataSetParam;

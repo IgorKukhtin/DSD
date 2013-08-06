@@ -2,7 +2,7 @@ unit dsdGuides;
 
 interface
 
-uses Classes, Controls;
+uses Classes, Controls, dsdDB;
 
 type
 
@@ -21,6 +21,7 @@ type
     FPositionDataSet: string;
     FParentDataSet: string;
     FParentId: String;
+    FParams: TdsdParams;
     function GetKey: String;
     function GetTextValue: String;
     procedure SetKey(const Value: String);
@@ -48,13 +49,15 @@ type
     property PositionDataSet: string read FPositionDataSet write FPositionDataSet;
     // Где позиционируемся по ParentId
     property ParentDataSet: string read FParentDataSet write FParentDataSet;
+    // данные, получаемые после выбора из справочника. Например для передачи в другие контролы
+    property Params: TdsdParams read FParams write FParams;
   end;
 
   procedure Register;
 
 implementation
 
-uses cxDBLookupComboBox, cxButtonEdit, Variants, ParentForm, FormStorage, DB, dsdDB,
+uses cxDBLookupComboBox, cxButtonEdit, Variants, ParentForm, FormStorage, DB,
      SysUtils;
 
 procedure Register;
@@ -75,8 +78,7 @@ end;
 constructor TdsdGuides.Create(AOwner: TComponent);
 begin
   inherited;
-  PositionDataSet := 'ClientDataSet';
-  ParentDataSet := 'TreeDataSet';
+  FParams := TdsdParams.Create(TParam);
 end;
 
 function TdsdGuides.GetKey: String;

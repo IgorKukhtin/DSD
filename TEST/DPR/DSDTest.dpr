@@ -25,7 +25,7 @@ uses
   dbObjectTest in '..\SOURCE\dbObjectTest.pas',
   UnitsTest in '..\SOURCE\Objects\All\UnitsTest.pas',
   CommonMovementProcedureTest in '..\SOURCE\Movement\CommonMovementProcedureTest.pas',
-  dbMovementTest in '..\SOURCE\dbMovementTest.pas',
+  dbMovementTest in '..\SOURCE\Movement\dbMovementTest.pas',
   LoadFormTest in '..\SOURCE\LoadFormTest.pas',
   Forms,
   CommonContainerProcedureTest in '..\SOURCE\Container\CommonContainerProcedureTest.pas',
@@ -156,7 +156,8 @@ uses
   Measure in '..\..\Forms\Measure.pas' {MeasureForm},
   PriceListItem in '..\..\Forms\PriceListItem.pas' {PriceListItemForm},
   ComponentActionTest in '..\SOURCE\Component\ComponentActionTest.pas',
-  ComponentDBTest in '..\SOURCE\Component\ComponentDBTest.pas';
+  ComponentDBTest in '..\SOURCE\Component\ComponentDBTest.pas',
+  CashOperationTest in '..\SOURCE\Movement\All\CashOperationTest.pas';
 
 {$R *.RES}
 
