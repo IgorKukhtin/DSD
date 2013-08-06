@@ -27,6 +27,9 @@ type
     procedure MovementLossTest;
     procedure MovementInventoryTest;
 
+    procedure MovementZakazExternalTest;
+    procedure MovementZakazInternalTest;
+
   end;
 
   TMovementIncomeTest = class(TObjectTest)
@@ -150,6 +153,30 @@ type
     procedure SetDataSetParam; override;
   public
     function InsertUpdateMovementInventory(Id: Integer; InvNumber: String; OperDate: TDateTime;
+             FromId, ToId: Integer): integer;
+    constructor Create; override;
+  end;
+
+  TMovementZakazExternalTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  protected
+    procedure SetDataSetParam; override;
+  public
+    function InsertUpdateMovementZakazExternal(Id: Integer; InvNumber: String; OperDate: TDateTime;
+             OperDatePartner, OperDateMark: TDateTime; InvNumberPartner: String;
+             FromId, PersonalId, RouteId, RouteSortingId: Integer
+             ): integer;
+    constructor Create; override;
+  end;
+
+  TMovementZakazInternalTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  protected
+    procedure SetDataSetParam; override;
+  public
+    function InsertUpdateMovementZakazInternal(Id: Integer; InvNumber: String; OperDate: TDateTime;
              FromId, ToId: Integer): integer;
     constructor Create; override;
   end;
@@ -327,6 +354,38 @@ var
 begin
   MovementInventory := TMovementInventoryTest.Create;
   Id := MovementInventory.InsertDefault;
+  // создание документа
+  try
+  // редактирование
+  finally
+    // удаление
+    DeleteMovement(Id);
+  end;
+end;
+
+procedure TdbMovementTest.MovementZakazExternalTest;
+var
+  MovementZakazExternal: TMovementZakazExternalTest;
+  Id: Integer;
+begin
+  MovementZakazExternal := TMovementZakazExternalTest.Create;
+  Id := MovementZakazExternal.InsertDefault;
+  // создание документа
+  try
+  // редактирование
+  finally
+    // удаление
+    DeleteMovement(Id);
+  end;
+end;
+
+procedure TdbMovementTest.MovementZakazInternalTest;
+var
+  MovementZakazInternal: TMovementZakazInternalTest;
+  Id: Integer;
+begin
+  MovementZakazInternal := TMovementZakazInternalTest.Create;
+  Id := MovementZakazInternal.InsertDefault;
   // создание документа
   try
   // редактирование
@@ -937,6 +996,118 @@ begin
   FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
 end;
 
+
+{ TMovementZakazExternal }
+constructor TMovementZakazExternalTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Movement_ZakazExternal';
+  spSelect := 'gpSelect_Movement_ZakazExternal';
+  spGet := 'gpGet_Movement_ZakazExternal';
+end;
+
+function TMovementZakazExternalTest.InsertDefault: integer;
+var Id: Integer;
+    InvNumber: String;
+    OperDate: TDateTime;
+    OperDatePartner: TDateTime;
+    OperDateMark: TDateTime;
+    InvNumberPartner: String;
+    FromId, PersonalId, RouteId, RouteSortingId: Integer;
+begin
+  Id:=0;
+  InvNumber:='1';
+  OperDate:= Date;
+  OperDatePartner:= Date;
+  OperDateMark:= Date;
+  InvNumberPartner:='4';
+
+  FromId := TPartnerTest.Create.GetDefault;
+  PersonalId:=0;
+  RouteId:=0;
+  RouteSortingId:=0;
+  //
+  result := InsertUpdateMovementZakazExternal(Id, InvNumber, OperDate,
+             OperDatePartner, OperDateMark, InvNumberPartner,
+             FromId, PersonalId, RouteId, RouteSortingId);
+
+end;
+
+function TMovementZakazExternalTest.InsertUpdateMovementZakazExternal(Id: Integer; InvNumber: String; OperDate: TDateTime;
+             OperDatePartner, OperDateMark: TDateTime; InvNumberPartner: String;
+             FromId, PersonalId, RouteId, RouteSortingId: Integer):Integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
+  FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
+
+  FParams.AddParam('inOperDatePartner', ftDateTime, ptInput, OperDatePartner);
+  FParams.AddParam('inOperDateMark', ftDateTime, ptInput, OperDateMark);
+  FParams.AddParam('inInvNumberPartner', ftString, ptInput, InvNumberPartner);
+  FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
+
+  FParams.AddParam('inPersonalId', ftInteger, ptInput, PersonalId);
+  FParams.AddParam('inRouteId', ftInteger, ptInput, RouteId);
+  FParams.AddParam('inRouteSortingId', ftInteger, ptInput, RouteSortingId);
+
+  result := InsertUpdate(FParams);
+end;
+
+procedure TMovementZakazExternalTest.SetDataSetParam;
+begin
+  inherited;
+  FParams.AddParam('inStartDate', ftDateTime, ptInput, Date);
+  FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
+end;
+
+{ TMovementZakazInternal }
+constructor TMovementZakazInternalTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Movement_ZakazInternal';
+  spSelect := 'gpSelect_Movement_ZakazInternal';
+  spGet := 'gpGet_Movement_ZakazInternal';
+end;
+
+function TMovementZakazInternalTest.InsertDefault: integer;
+var Id: Integer;
+    InvNumber: String;
+    OperDate: TDateTime;
+    FromId, ToId: Integer;
+begin
+  Id:=0;
+  InvNumber:='1';
+  OperDate:= Date;
+
+  FromId := TPartnerTest.Create.GetDefault;
+  ToId := TUnit.Create.GetDefault;
+  //
+  result := InsertUpdateMovementZakazInternal(Id, InvNumber, OperDate
+                                            , FromId, ToId);
+
+end;
+
+function TMovementZakazInternalTest.InsertUpdateMovementZakazInternal(Id: Integer; InvNumber: String; OperDate: TDateTime;
+                                                                      FromId, ToId: Integer):Integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
+  FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
+
+  FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
+  FParams.AddParam('inToId', ftInteger, ptInput, ToId);
+
+  result := InsertUpdate(FParams);
+end;
+
+procedure TMovementZakazInternalTest.SetDataSetParam;
+begin
+  inherited;
+  FParams.AddParam('inStartDate', ftDateTime, ptInput, Date);
+  FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
+end;
 
 initialization
 

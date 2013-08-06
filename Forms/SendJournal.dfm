@@ -2,8 +2,8 @@ inherited SendJournalForm: TSendJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
   ClientHeight = 427
   ClientWidth = 1240
-  ExplicitWidth = 1248
-  ExplicitHeight = 454
+  ExplicitWidth = 1256
+  ExplicitHeight = 466
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -24,7 +24,7 @@ inherited SendJournalForm: TSendJournalForm
     object deEnd: TcxDateEdit
       Left = 352
       Top = 8
-      EditValue = 41760d
+      EditValue = 41395d
       TabOrder = 1
       Width = 121
     end
@@ -151,6 +151,16 @@ inherited SendJournalForm: TSendJournalForm
           'Width')
       end
       item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
         Component = Owner
         Properties.Strings = (
           'Height'
@@ -166,8 +176,8 @@ inherited SendJournalForm: TSendJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -360,14 +370,14 @@ inherited SendJournalForm: TSendJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
-        Value = '01.05.2013'
+        Value = 41395d
       end
       item
         Name = 'inEndDate'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
-        Value = '01.05.2014'
+        Value = 41395d
       end>
     Left = 24
     Top = 176

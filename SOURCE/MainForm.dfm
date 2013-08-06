@@ -123,6 +123,14 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbProductionUnion'
+        end
+        item
+          Visible = True
+          ItemName = 'bbZakazExternal'
+        end
+        item
+          Visible = True
+          ItemName = 'bbZakazInternal'
         end>
     end
     object bbGuides: TdxBarSubItem
@@ -313,6 +321,14 @@ object MainForm: TMainForm
     end
     object bbProductionUnion: TdxBarButton
       Action = actProductionUnion
+      Category = 0
+    end
+    object bbZakazExternal: TdxBarButton
+      Action = actZakazExternal
+      Category = 0
+    end
+    object bbZakazInternal: TdxBarButton
+      Action = actZakazInternal
       Category = 0
     end
     object bbPartner: TdxBarButton
@@ -954,11 +970,25 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actZakazExternal: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      Caption = #1047#1072#1103#1074#1082#1072' ('#1089#1090#1086#1088#1086#1085#1085#1103#1103')'
+      FormName = 'TZakazExternalJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
     object actPriceListItem: TdsdOpenForm
       Category = #1048#1089#1090#1086#1088#1080#1080
       Caption = #1048#1089#1090#1086#1088#1080#1080' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1086#1074
       Hint = #1048#1089#1090#1086#1088#1080#1080' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1086#1074
       FormName = 'TPriceListItemForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actZakazInternal: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      Caption = #1047#1072#1103#1074#1082#1072' ('#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103')'
+      FormName = 'TZakazInternalJournalForm'
       GuiParams = <>
       isShowModal = False
     end

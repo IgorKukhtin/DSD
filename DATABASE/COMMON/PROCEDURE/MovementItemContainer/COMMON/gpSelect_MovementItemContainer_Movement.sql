@@ -9,12 +9,14 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItemContainer_Movement(
 )
 RETURNS TABLE (DebetAmount TFloat, DebetAccountGroupCode Integer, DebetAccountGroupName TVarChar, DebetAccountDirectionCode Integer, DebetAccountDirectionName TVarChar, DebetAccountCode Integer, DebetAccountName  TVarChar
              , KreditAmount TFloat, KreditAccountGroupCode Integer, KreditAccountGroupName TVarChar, KreditAccountDirectionCode Integer, KreditAccountDirectionName TVarChar, KreditAccountCode Integer, KreditAccountName  TVarChar
-             , AccountOnComplete Boolean, ByObjectCode Integer, ByObjectName TVarChar, GoodsGroupCode Integer, GoodsGroupName TVarChar, GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
+             , AccountOnComplete Boolean, ByObjectCode Integer, ByObjectName TVarChar, GoodsGroupCode Integer, GoodsGroupName TVarChar
+             , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
+             , GoodsCode_Parent Integer, GoodsName_Parent TVarChar, GoodsKindName_Parent TVarChar
+             , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyCode_Detail Integer, InfoMoneyName_Detail TVarChar
               )
 AS
 $BODY$
 BEGIN
-
      -- ïðîâåðêà ïðàâ ïîëüçîâàòåëÿ íà âûçîâ ïðîöåäóðû
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItemContainer_Movement());
 
@@ -44,6 +46,13 @@ BEGIN
            , tmpMovementItemContainer.GoodsCode
            , tmpMovementItemContainer.GoodsName
            , tmpMovementItemContainer.GoodsKindName
+           , tmpMovementItemContainer.GoodsCode_Parent
+           , tmpMovementItemContainer.GoodsName_Parent
+           , tmpMovementItemContainer.GoodsKindName_Parent
+           , tmpMovementItemContainer.InfoMoneyCode
+           , tmpMovementItemContainer.InfoMoneyName
+           , tmpMovementItemContainer.InfoMoneyCode_Detail
+           , tmpMovementItemContainer.InfoMoneyName_Detail
        FROM 
            (SELECT 
                   SUM (MovementItemContainer.Amount)  AS Amount
@@ -55,6 +64,13 @@ BEGIN
                 , Object_Goods.ObjectCode      AS GoodsCode
                 , Object_Goods.ValueData       AS GoodsName
                 , Object_GoodsKind.ValueData   AS GoodsKindName
+                , Object_Goods_Parent.ObjectCode      AS GoodsCode_Parent
+                , Object_Goods_Parent.ValueData       AS GoodsName_Parent
+                , Object_GoodsKind_Parent.ValueData   AS GoodsKindName_Parent
+                , lfObject_InfoMoney.InfoMoneyCode
+                , lfObject_InfoMoney.InfoMoneyName
+                , lfObject_InfoMoney_Detail.InfoMoneyCode AS InfoMoneyCode_Detail
+                , lfObject_InfoMoney_Detail.InfoMoneyName AS InfoMoneyName_Detail
             FROM MovementItemContainer
                  JOIN Container ON Container.Id = MovementItemContainer.ContainerId
                                AND Container.DescId = zc_Container_Summ()
@@ -72,10 +88,21 @@ BEGIN
                                               AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
                  LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (ContainerLinkObject_Juridical.ObjectId, COALESCE (ContainerLinkObject_Personal.ObjectId, ContainerLinkObject_Unit.ObjectId))
 
+                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
+                                               ON ContainerLinkObject_InfoMoney.ContainerId = MovementItemContainer.ContainerId
+                                              AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+                                              -- AND 1=0
+                 LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ContainerLinkObject_InfoMoney.ObjectId
+                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
+                                               ON ContainerLinkObject_InfoMoneyDetail.ContainerId = MovementItemContainer.ContainerId
+                                              AND ContainerLinkObject_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
+                                              -- AND 1=0
+                 LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney_Detail ON lfObject_InfoMoney_Detail.InfoMoneyId = CASE WHEN COALESCE (ContainerLinkObject_InfoMoneyDetail.ObjectId, 0) = 0 THEN ContainerLinkObject_InfoMoney.ObjectId ELSE ContainerLinkObject_InfoMoneyDetail.ObjectId END
+
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Goods
                                                ON ContainerLinkObject_Goods.ContainerId = MovementItemContainer.ContainerId
                                               AND ContainerLinkObject_Goods.DescId = zc_ContainerLinkObject_Goods()
-                                              AND 1=0
+                                              -- AND 1=0
                  LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ContainerLinkObject_Goods.ObjectId
 
                  LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
@@ -89,10 +116,20 @@ BEGIN
                                               -- AND 1=0
                  LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ContainerLinkObject_GoodsKind.ObjectId
 
+                 LEFT JOIN MovementItem ON MovementItem.Id = MovementItemContainer.MovementItemId
+                 LEFT JOIN MovementItem AS MovementItem_Parent ON MovementItem_Parent.Id = MovementItem.ParentId
+                 LEFT JOIN Object AS Object_Goods_Parent ON Object_Goods_Parent.Id = COALESCE (MovementItem_Parent.ObjectId, MovementItem.ObjectId)
+
+                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                  ON MILinkObject_GoodsKind.MovementItemId = COALESCE (MovementItem_Parent.Id, MovementItem.Id)
+                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                 LEFT JOIN Object AS Object_GoodsKind_Parent ON Object_GoodsKind_Parent.Id = MILinkObject_GoodsKind.ObjectId
+
             WHERE MovementItemContainer.MovementId = inMovementId
-              AND COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Passive()
-              -- AND MovementItemContainer.Amount > 0
+              -- AND COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Passive()
+              AND MovementItemContainer.Amount >= 0
             GROUP BY Container.ObjectId
+                   , MovementItemContainer.Id
                    , Object_by.ObjectCode
                    , Object_by.ValueData
                    , Object_GoodsGroup.ObjectCode
@@ -100,6 +137,13 @@ BEGIN
                    , Object_Goods.ObjectCode
                    , Object_Goods.ValueData
                    , Object_GoodsKind.ValueData
+                   , Object_Goods_Parent.ObjectCode
+                   , Object_Goods_Parent.ValueData
+                   , Object_GoodsKind_Parent.ValueData
+                   , lfObject_InfoMoney.InfoMoneyCode
+                   , lfObject_InfoMoney.InfoMoneyName
+                   , lfObject_InfoMoney_Detail.InfoMoneyCode
+                   , lfObject_InfoMoney_Detail.InfoMoneyName
            ) AS tmpMovementItemContainer
            LEFT JOIN lfSelect_Object_Account() AS lfObject_Account ON lfObject_Account.AccountId = tmpMovementItemContainer.ObjectId
 
@@ -129,6 +173,13 @@ BEGIN
            , tmpMovementItemContainer.GoodsCode
            , tmpMovementItemContainer.GoodsName
            , tmpMovementItemContainer.GoodsKindName
+           , tmpMovementItemContainer.GoodsCode_Parent
+           , tmpMovementItemContainer.GoodsName_Parent
+           , tmpMovementItemContainer.GoodsKindName_Parent
+           , tmpMovementItemContainer.InfoMoneyCode
+           , tmpMovementItemContainer.InfoMoneyName
+           , tmpMovementItemContainer.InfoMoneyCode_Detail
+           , tmpMovementItemContainer.InfoMoneyName_Detail
        FROM 
            (SELECT 
                   -SUM (MovementItemContainer.Amount)  AS Amount
@@ -140,6 +191,13 @@ BEGIN
                 , Object_Goods.ObjectCode      AS GoodsCode
                 , Object_Goods.ValueData       AS GoodsName
                 , Object_GoodsKind.ValueData   AS GoodsKindName
+                , Object_Goods_Parent.ObjectCode      AS GoodsCode_Parent
+                , Object_Goods_Parent.ValueData       AS GoodsName_Parent
+                , Object_GoodsKind_Parent.ValueData   AS GoodsKindName_Parent
+                , lfObject_InfoMoney.InfoMoneyCode
+                , lfObject_InfoMoney.InfoMoneyName
+                , lfObject_InfoMoney_Detail.InfoMoneyCode AS InfoMoneyCode_Detail
+                , lfObject_InfoMoney_Detail.InfoMoneyName AS InfoMoneyName_Detail
             FROM MovementItemContainer
                  JOIN Container ON Container.Id = MovementItemContainer.ContainerId
                                AND Container.DescId = zc_Container_Summ()
@@ -157,10 +215,21 @@ BEGIN
                                               AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
                  LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (ContainerLinkObject_Juridical.ObjectId, COALESCE (ContainerLinkObject_Personal.ObjectId, ContainerLinkObject_Unit.ObjectId))
 
+                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
+                                               ON ContainerLinkObject_InfoMoney.ContainerId = MovementItemContainer.ContainerId
+                                              AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+                                              -- AND 1=0
+                 LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ContainerLinkObject_InfoMoney.ObjectId
+                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
+                                               ON ContainerLinkObject_InfoMoneyDetail.ContainerId = MovementItemContainer.ContainerId
+                                              AND ContainerLinkObject_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
+                                              -- AND 1=0
+                 LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney_Detail ON lfObject_InfoMoney_Detail.InfoMoneyId = CASE WHEN COALESCE (ContainerLinkObject_InfoMoneyDetail.ObjectId, 0) = 0 THEN ContainerLinkObject_InfoMoney.ObjectId ELSE ContainerLinkObject_InfoMoneyDetail.ObjectId END
+
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Goods
                                                ON ContainerLinkObject_Goods.ContainerId = MovementItemContainer.ContainerId
                                               AND ContainerLinkObject_Goods.DescId = zc_ContainerLinkObject_Goods()
-                                              AND 1=0
+                                              -- AND 1=0
                  LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ContainerLinkObject_Goods.ObjectId
 
                  LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
@@ -174,10 +243,20 @@ BEGIN
                                               -- AND 1=0
                  LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ContainerLinkObject_GoodsKind.ObjectId
 
+                 LEFT JOIN MovementItem ON MovementItem.Id = MovementItemContainer.MovementItemId
+                 LEFT JOIN MovementItem AS MovementItem_Parent ON MovementItem_Parent.Id = MovementItem.ParentId
+                 LEFT JOIN Object AS Object_Goods_Parent ON Object_Goods_Parent.Id = COALESCE (MovementItem_Parent.ObjectId, MovementItem.ObjectId)
+
+                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                  ON MILinkObject_GoodsKind.MovementItemId = COALESCE (MovementItem_Parent.Id, MovementItem.Id)
+                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                 LEFT JOIN Object AS Object_GoodsKind_Parent ON Object_GoodsKind_Parent.Id = MILinkObject_GoodsKind.ObjectId
+
             WHERE MovementItemContainer.MovementId = inMovementId
-              AND ObjectLink_AccountKind.ChildObjectId = zc_Enum_AccountKind_Passive()
-              -- AND MovementItemContainer.Amount < 0
+              -- AND ObjectLink_AccountKind.ChildObjectId = zc_Enum_AccountKind_Passive()
+              AND MovementItemContainer.Amount < 0
             GROUP BY Container.ObjectId
+                   , MovementItemContainer.Id
                    , Object_by.ObjectCode
                    , Object_by.ValueData
                    , Object_GoodsGroup.ObjectCode
@@ -185,6 +264,13 @@ BEGIN
                    , Object_Goods.ObjectCode
                    , Object_Goods.ValueData
                    , Object_GoodsKind.ValueData
+                   , Object_Goods_Parent.ObjectCode
+                   , Object_Goods_Parent.ValueData
+                   , Object_GoodsKind_Parent.ValueData
+                   , lfObject_InfoMoney.InfoMoneyCode
+                   , lfObject_InfoMoney.InfoMoneyName
+                   , lfObject_InfoMoney_Detail.InfoMoneyCode
+                   , lfObject_InfoMoney_Detail.InfoMoneyName
            ) AS tmpMovementItemContainer
            LEFT JOIN lfSelect_Object_Account() AS lfObject_Account ON lfObject_Account.AccountId = tmpMovementItemContainer.ObjectId;
      
@@ -197,6 +283,7 @@ ALTER FUNCTION gpSelect_MovementItemContainer_Movement (Integer, TVarChar) OWNER
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 05.08.13                                        * add Goods_Parent and InfoMoney
  11.07.13                                        * add zc_ObjectLink_Account_AccountKind
  08.07.13                                        * add AccountOnComplete
  04.07.13                                        * rename AccountId to ObjectId
@@ -204,4 +291,4 @@ ALTER FUNCTION gpSelect_MovementItemContainer_Movement (Integer, TVarChar) OWNER
 */
 
 -- òåñò
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 5140, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 7769, inSession:= '2')

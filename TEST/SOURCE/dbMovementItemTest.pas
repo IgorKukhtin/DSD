@@ -20,6 +20,8 @@ type
     procedure MovementItemSaleTest;
     procedure MovementItemReturnOutTest;
     procedure MovementItemProductionUnionTest;
+    procedure MovementItemZakazExternalTest;
+    procedure MovementItemZakazInternalTest;
   end;
 
   TMovementItemIncomeTest = class(TObjectTest)
@@ -108,6 +110,35 @@ type
        PartionGoods:String; GoodsKindId, AssetId: Integer): integer;
     constructor Create; override;
   end;
+
+  TMovementItemZakazExternalTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  protected
+    procedure SetDataSetParam; override;
+    procedure Delete(Id: Integer); override;
+  public
+    function InsertUpdateMovementItemZakazExternal
+      (Id, MovementId, GoodsId: Integer;
+       Amount, AmountSecond: double;
+       GoodsKindId: Integer): integer;
+    constructor Create; override;
+  end;
+
+  TMovementItemZakazInternalTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  protected
+    procedure SetDataSetParam; override;
+    procedure Delete(Id: Integer); override;
+  public
+    function InsertUpdateMovementItemZakazInternal
+      (Id, MovementId, GoodsId: Integer;
+       Amount, AmountSecond: double;
+       GoodsKindId: Integer): integer;
+    constructor Create; override;
+  end;
+
 implementation
 
 uses Storage, SysUtils, dbMovementTest, DBClient, dsdDB;
@@ -214,6 +245,40 @@ begin
     DeleteMovementItem(Id);
     DeleteMovementItem(MovementItemProductionUnionChild.MovementItem_InId);
     MovementItemProductionUnionChild.Delete(Id);
+  end;
+end;
+
+procedure TdbMovementItemTest.MovementItemZakazExternalTest;
+var
+  MovementItemZakazExternal: TMovementItemZakazExternalTest;
+  Id: Integer;
+begin
+  MovementItemZakazExternal := TMovementItemZakazExternalTest.Create;
+  Id := MovementItemZakazExternal.InsertDefault;
+  // создание документа
+  try
+  // редактирование
+  finally
+    // удаление
+    DeleteMovementItem(Id);
+    MovementItemZakazExternal.Delete(Id);
+  end;
+end;
+
+procedure TdbMovementItemTest.MovementItemZakazInternalTest;
+var
+  MovementItemZakazInternal: TMovementItemZakazInternalTest;
+  Id: Integer;
+begin
+  MovementItemZakazInternal := TMovementItemZakazInternalTest.Create;
+  Id := MovementItemZakazInternal.InsertDefault;
+  // создание документа
+  try
+  // редактирование
+  finally
+    // удаление
+    DeleteMovementItem(Id);
+    MovementItemZakazInternal.Delete(Id);
   end;
 end;
 
@@ -634,6 +699,123 @@ begin
   FParams.AddParam('inMovementId', ftInteger, ptInput, TMovementProductionUnionTest.Create.GetDefault);
   FParams.AddParam('inShowAll', ftBoolean, ptInput, true);
 end;
+
+
+{ TMovementZakazExternal }
+constructor TMovementItemZakazExternalTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_MovementItem_ZakazExternal';
+  spSelect := 'gpSelect_MovementItem_ZakazExternal';
+  spGet := 'gpGet_MovementItem_ZakazExternal';
+end;
+
+procedure TMovementItemZakazExternalTest.Delete(Id: Integer);
+begin
+  with TGoodsTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free;
+  end;
+end;
+
+function TMovementItemZakazExternalTest.InsertDefault: integer;
+var Id, MovementId, GoodsId: Integer;
+    Amount, AmountSecond: double;
+    GoodsKindId: Integer;
+begin
+  Id:=0;
+  MovementId:= TMovementZakazExternalTest.Create.GetDefault;
+  GoodsId:=TGoodsTest.Create.GetDefault;
+  Amount:=10;
+  AmountSecond:=11;
+  GoodsKindId:=0;
+  //
+  result := InsertUpdateMovementItemZakazExternal(Id, MovementId, GoodsId,
+                              Amount, AmountSecond, GoodsKindId);
+end;
+
+function TMovementItemZakazExternalTest.InsertUpdateMovementItemZakazExternal
+  (Id, MovementId, GoodsId: Integer;
+       Amount, AmountSecond: double;
+       GoodsKindId: Integer): integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inMovementId', ftInteger, ptInput, MovementId);
+  FParams.AddParam('inGoodsId', ftInteger, ptInput, GoodsId);
+  FParams.AddParam('inAmount', ftFloat, ptInput, Amount);
+  FParams.AddParam('inAmountSecond', ftFloat, ptInput, AmountSecond);
+  FParams.AddParam('inGoodsKindId', ftInteger, ptInput, GoodsKindId);
+
+  result := InsertUpdate(FParams);
+end;
+
+procedure TMovementItemZakazExternalTest.SetDataSetParam;
+begin
+  inherited;
+  FParams.AddParam('inMovementId', ftInteger, ptInput, TMovementZakazExternalTest.Create.GetDefault);
+  FParams.AddParam('inShowAll', ftBoolean, ptInput, true);
+end;
+
+{ TMovementZakazInternal }
+constructor TMovementItemZakazInternalTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_MovementItem_ZakazInternal';
+  spSelect := 'gpSelect_MovementItem_ZakazInternal';
+  spGet := 'gpGet_MovementItem_ZakazInternal';
+end;
+
+procedure TMovementItemZakazInternalTest.Delete(Id: Integer);
+begin
+  with TGoodsTest.Create do
+  try
+    Delete(GetDefault);
+  finally
+    Free;
+  end;
+end;
+
+function TMovementItemZakazInternalTest.InsertDefault: integer;
+var Id, MovementId, GoodsId: Integer;
+    Amount, AmountSecond: double;
+    GoodsKindId: Integer;
+begin
+  Id:=0;
+  MovementId:= TMovementZakazInternalTest.Create.GetDefault;
+  GoodsId:=TGoodsTest.Create.GetDefault;
+  Amount:=10;
+  AmountSecond:=11;
+  GoodsKindId:=0;
+  //
+  result := InsertUpdateMovementItemZakazInternal(Id, MovementId, GoodsId,
+                              Amount, AmountSecond, GoodsKindId);
+end;
+
+function TMovementItemZakazInternalTest.InsertUpdateMovementItemZakazInternal
+  (Id, MovementId, GoodsId: Integer;
+       Amount, AmountSecond: double;
+       GoodsKindId: Integer): integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inMovementId', ftInteger, ptInput, MovementId);
+  FParams.AddParam('inGoodsId', ftInteger, ptInput, GoodsId);
+  FParams.AddParam('inAmount', ftFloat, ptInput, Amount);
+  FParams.AddParam('inAmountSecond', ftFloat, ptInput, AmountSecond);
+  FParams.AddParam('inGoodsKindId', ftInteger, ptInput, GoodsKindId);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TMovementItemZakazInternalTest.SetDataSetParam;
+begin
+  inherited;
+  FParams.AddParam('inMovementId', ftInteger, ptInput, TMovementZakazInternalTest.Create.GetDefault);
+  FParams.AddParam('inShowAll', ftBoolean, ptInput, true);
+end;
+
 
 initialization
   TestFramework.RegisterTest('Строки Документов', TdbMovementItemTest.Suite);

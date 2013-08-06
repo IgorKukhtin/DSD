@@ -34,6 +34,9 @@ end;
 procedure TdbProcedureTest.CreateMovementItemContainerProcedure;
 begin
   ExecFile(ProcedurePath + 'MovementItemContainer\_Income\gpComplete_Movement_Income.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItemContainer\_Send\gpComplete_Movement_Send.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItemContainer\_ProductionSeparate\gpComplete_Movement_ProductionSeparate.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItemContainer\_ProductionUnion\gpComplete_Movement_ProductionUnion.sql', ZQuery);
 end;
 
 procedure TdbProcedureTest.CreateMovementItemProcedure;
@@ -72,6 +75,12 @@ begin
 
   ExecFile(ProcedurePath + 'MovementItem\_Inventory\gpInsertUpdate_MovementItem_Inventory.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItem\_Inventory\gpSelect_MovementItem_Inventory.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'MovementItem\_ZakazExternal\gpInsertUpdate_MI_ZakazExternal.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\_ZakazExternal\gpSelect_MI_ZakazExternal.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'MovementItem\_ZakazInternal\gpInsertUpdate_MI_ZakazInternal.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\_ZakazInternal\gpSelect_MI_ZakazInternal.sql', ZQuery);
 
 end;
 
@@ -116,6 +125,14 @@ begin
   ExecFile(ProcedurePath + 'Movement\_Inventory\gpInsertUpdate_Movement_Inventory.sql', ZQuery);
   ExecFile(ProcedurePath + 'Movement\_Inventory\gpGet_Movement_Inventory.sql', ZQuery);
   ExecFile(ProcedurePath + 'Movement\_Inventory\gpSelect_Movement_Inventory.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'Movement\_ZakazExternal\gpInsertUpdate_Movement_ZakazExternal.sql', ZQuery);
+  ExecFile(ProcedurePath + 'Movement\_ZakazExternal\gpGet_Movement_ZakazExternal.sql', ZQuery);
+  ExecFile(ProcedurePath + 'Movement\_ZakazExternal\gpSelect_Movement_ZakazExternal.sql', ZQuery);
+
+  ExecFile(ProcedurePath + 'Movement\_ZakazInternal\gpInsertUpdate_Movement_ZakazInternal.sql', ZQuery);
+  ExecFile(ProcedurePath + 'Movement\_ZakazInternal\gpGet_Movement_ZakazInternal.sql', ZQuery);
+  ExecFile(ProcedurePath + 'Movement\_ZakazInternal\gpSelect_Movement_ZakazInternal.sql', ZQuery);
 
 end;
 
@@ -321,6 +338,7 @@ end;
 procedure TdbProcedureTest.CreateReportProcedure;
 begin
   ExecFile(ReportsPath + '_Balance\gpReport_Balance.sql', ZQuery);
+  ExecFile(ReportsPath + '_HistoryCost\gpReport_HistoryCost.sql', ZQuery);
 end;
 
 initialization

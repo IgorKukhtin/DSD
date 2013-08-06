@@ -477,10 +477,10 @@ BEGIN
                                              END;
 
 
-     -- самое интересное: заполн€ем таблицу - суммовые Child-элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках
+     -- самое интересное: заполн€ем таблицу - суммовые Child-элементы документа, со всеми свойствами дл€ формировани€ јналитик в проводках, здесь ObjectCostId только дл€ теста
      INSERT INTO _tmpItemSummChild (ObjectCostId, MovementItemId_Parent, MovementItemId, ContainerId_From, OperSumm, InfoMoneyId_Detail_From)
         SELECT
-              HistoryCost.ObjectCostId
+              ContainerObjectCost_Basis.ObjectCostId
             , _tmpItemChild.MovementItemId_Parent
             , _tmpItemChild.MovementItemId
             , Container_Summ.Id AS ContainerId_From

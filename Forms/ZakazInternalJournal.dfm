@@ -1,9 +1,9 @@
-inherited SaleJournalForm: TSaleJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
+inherited ZakazInternalJournalForm: TZakazInternalJournalForm
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1047#1072#1103#1074#1082#1080' ('#1074#1085#1091#1090#1088#1077#1085#1085#1080#1077')'
   ClientHeight = 427
   ClientWidth = 1240
-  ExplicitWidth = 1256
-  ExplicitHeight = 466
+  ExplicitWidth = 1248
+  ExplicitHeight = 461
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -23,7 +23,7 @@ inherited SaleJournalForm: TSaleJournalForm
     object deEnd: TcxDateEdit
       Left = 352
       Top = 8
-      EditValue = 41395d
+      EditValue = 41760d
       TabOrder = 1
       Width = 121
     end
@@ -86,7 +86,7 @@ inherited SaleJournalForm: TSaleJournalForm
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentVert = vaCenter
-        Width = 47
+        Width = 56
       end
       object colFromName: TcxGridDBColumn
         Caption = #1054#1090' '#1082#1086#1075#1086
@@ -96,92 +96,12 @@ inherited SaleJournalForm: TSaleJournalForm
       end
       object colToName: TcxGridDBColumn
         Caption = #1050#1086#1084#1091
-        DataBinding.FieldName = 'ToName'
         HeaderAlignmentVert = vaCenter
-        Width = 140
+        Width = 84
       end
       object colTotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'TotalCount'
-        HeaderAlignmentVert = vaCenter
-      end
-      object colTotalSumm: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1087#1086#1089#1090#1072#1074#1097'.'
-        DataBinding.FieldName = 'TotalSumm'
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object colChangePercent: TcxGridDBColumn
-        Caption = '(-)% '#1057#1082', (+)% '#1053#1072#1094
-        DataBinding.FieldName = 'ChangePercent'
-        HeaderAlignmentVert = vaCenter
-        Width = 90
-      end
-      object colPriceWithVAT: TcxGridDBColumn
-        Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' '
-        DataBinding.FieldName = 'PriceWithVAT'
-        HeaderAlignmentVert = vaCenter
-      end
-      object colVATPercent: TcxGridDBColumn
-        Caption = '% '#1053#1044#1057
-        DataBinding.FieldName = 'VATPercent'
-        HeaderAlignmentVert = vaCenter
-        Width = 45
-      end
-      object colTotalSummVAT: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
-        DataBinding.FieldName = 'TotalSummVAT'
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object colTotalSummMVAT: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
-        DataBinding.FieldName = 'TotalSummMVAT'
-        Visible = False
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object colTotalSummPVAT: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
-        DataBinding.FieldName = 'TotalSummPVAT'
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object colPaidKindName: TcxGridDBColumn
-        Caption = #1042#1080#1076
-        DataBinding.FieldName = 'PaidKindName'
-        HeaderAlignmentVert = vaCenter
-        Width = 30
-      end
-      object colContractName: TcxGridDBColumn
-        Caption = #1044#1086#1075#1086#1074#1086#1088
-        DataBinding.FieldName = 'ContractName'
-        HeaderAlignmentVert = vaCenter
-      end
-      object colCarName: TcxGridDBColumn
-        Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
-        DataBinding.FieldName = 'CarName'
-        HeaderAlignmentVert = vaCenter
-        Width = 55
-      end
-      object colPersonalDriverName: TcxGridDBColumn
-        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1074#1086#1076#1080#1090#1077#1083#1100')'
-        DataBinding.FieldName = 'PersonalDriverName'
-        HeaderAlignmentVert = vaCenter
-        Width = 55
-      end
-      object colPersonalName: TcxGridDBColumn
-        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
-        HeaderAlignmentVert = vaCenter
-      end
-      object colRouteName: TcxGridDBColumn
-        Caption = #1052#1072#1088#1096#1088#1091#1090
-        DataBinding.FieldName = 'RouteName'
-        HeaderAlignmentVert = vaCenter
-      end
-      object colRouteSortingName: TcxGridDBColumn
-        Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1080' '#1084#1072#1088#1096#1088#1091#1090#1086#1074
-        DataBinding.FieldName = 'RouteSortingName'
         HeaderAlignmentVert = vaCenter
       end
     end
@@ -203,16 +123,6 @@ inherited SaleJournalForm: TSaleJournalForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = deEnd
-        Properties.Strings = (
-          'Date')
-      end
-      item
-        Component = deStart
-        Properties.Strings = (
-          'Date')
-      end
-      item
         Component = Owner
         Properties.Strings = (
           'Height'
@@ -228,8 +138,8 @@ inherited SaleJournalForm: TSaleJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -339,7 +249,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Category = 'DSDLib'
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
-      FormName = 'TSaleForm'
+      FormName = 'TZakazInternalForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -355,7 +265,7 @@ inherited SaleJournalForm: TSaleJournalForm
       Category = 'DSDLib'
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      FormName = 'TSaleForm'
+      FormName = 'TZakazInternalForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -410,7 +320,7 @@ inherited SaleJournalForm: TSaleJournalForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale'
+    StoredProcName = 'gpSelect_Movement_ZakazInternal'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -422,20 +332,20 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41395d
+        Value = '01.05.2013'
       end
       item
         Name = 'inEndDate'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41395d
+        Value = '01.05.2014'
       end>
     Left = 128
     Top = 176
   end
   object spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_Sale'
+    StoredProcName = 'gpComplete_Movement_ZakazInternal'
     DataSets = <>
     OutputType = otResult
     Params = <

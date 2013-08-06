@@ -4,8 +4,8 @@ inherited IncomeForm: TIncomeForm
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1036
-  ExplicitHeight = 423
+  ExplicitWidth = 1044
+  ExplicitHeight = 435
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -441,6 +441,31 @@ inherited IncomeForm: TIncomeForm
             HeaderAlignmentHorz = taCenter
             Width = 70
           end
+          object colGoodsCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1090#1086#1074'.'
+            DataBinding.FieldName = 'GoodsCode'
+            Width = 40
+          end
+          object colInfoMoneyCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1089#1090'. '#1085#1072#1079#1085#1072#1095'.'
+            DataBinding.FieldName = 'InfoMoneyCode'
+            Width = 40
+          end
+          object colInfoMoneyName: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName'
+            Width = 55
+          end
+          object colInfoMoneyCode_Detail: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1089#1090'. '#1085#1072#1079#1085#1072#1095'.'#1076#1077#1090'.'
+            DataBinding.FieldName = 'InfoMoneyCode_Detail'
+            Width = 40
+          end
+          object colInfoMoneyName_Detail: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' '#1076#1077#1090#1072#1083#1100#1085#1086
+            DataBinding.FieldName = 'InfoMoneyName_Detail'
+            Width = 55
+          end
         end
         object cxGridEntryLevel: TcxGridLevel
           GridView = cxGridEntryDBTableView
@@ -478,8 +503,8 @@ inherited IncomeForm: TIncomeForm
         ParamType = ptInputOutput
         Value = '0'
       end>
-    Left = 248
-    Top = 104
+    Left = 256
+    Top = 96
   end
   object spSelectMovementItem: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Income'
@@ -504,14 +529,14 @@ inherited IncomeForm: TIncomeForm
         ParamType = ptInput
         Value = False
       end>
-    Left = 96
-    Top = 248
+    Left = 48
+    Top = 256
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -523,7 +548,7 @@ inherited IncomeForm: TIncomeForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 192
+    Left = 184
     Top = 104
     DockControlHeights = (
       0
@@ -688,8 +713,8 @@ inherited IncomeForm: TIncomeForm
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 72
-    Top = 192
+    Left = 136
+    Top = 200
   end
   object dsdGuidesFrom: TdsdGuides
     LookupControl = edFrom
@@ -730,13 +755,13 @@ inherited IncomeForm: TIncomeForm
         ParamType = ptInput
         Value = '0'
       end>
-    Left = 640
+    Left = 704
     Top = 128
   end
   object EntryCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 608
+    Left = 560
     Top = 128
   end
   object EntryDS: TDataSource
@@ -839,8 +864,8 @@ inherited IncomeForm: TIncomeForm
         ParamType = ptInput
         Value = '0'
       end>
-    Left = 112
-    Top = 280
+    Left = 56
+    Top = 320
   end
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'
@@ -853,12 +878,12 @@ inherited IncomeForm: TIncomeForm
   object dsdDBViewAddOn: TdsdDBViewAddOn
     SortImages = dmMain.SortImageList
     View = cxGridDBTableView
-    Left = 280
-    Top = 248
+    Left = 248
+    Top = 232
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 304
-    Top = 288
+    Left = 232
+    Top = 304
   end
   object EntryViewAddOn: TdsdDBViewAddOn
     SortImages = dmMain.SortImageList
@@ -1120,7 +1145,7 @@ inherited IncomeForm: TIncomeForm
     DataSet = 'ClientDataSet'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
-    Left = 632
-    Top = 16
+    Left = 680
+    Top = 8
   end
 end

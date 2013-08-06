@@ -537,7 +537,7 @@ BEGIN
                                                                                                                                                      , inDescId_7   := zc_ObjectCostLink_InfoMoney()
                                                                                                                                                      , inObjectId_7 := InfoMoneyId
                                                                                                                                                      , inDescId_8   := zc_ObjectCostLink_InfoMoneyDetail()
-                                                                                                                                                     , inObjectId_8 := CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
+                                                                                                                                                     , inObjectId_8 := InfoMoneyId -- CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
                                                                                                                                                       )
                                                                                                       , inDescId_1   := zc_ContainerLinkObject_Unit()
                                                                                                       , inObjectId_1 := UnitId
@@ -548,7 +548,7 @@ BEGIN
                                                                                                       , inDescId_4   := zc_ContainerLinkObject_InfoMoney()
                                                                                                       , inObjectId_4 := InfoMoneyId
                                                                                                       , inDescId_5   := zc_ContainerLinkObject_InfoMoneyDetail()
-                                                                                                      , inObjectId_5 := CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
+                                                                                                      , inObjectId_5 := InfoMoneyId -- CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
                                                                                                        )
                                                                         WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100()
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение 2)Товар 3)Основные средства(для которого закуплено ТМЦ) 4)Статьи назначения 5)Статьи назначения(детализация с/с)
@@ -580,7 +580,7 @@ BEGIN
                                                                                                                                                      , inDescId_7   := zc_ObjectCostLink_InfoMoney()
                                                                                                                                                      , inObjectId_7 := InfoMoneyId
                                                                                                                                                      , inDescId_8   := zc_ObjectCostLink_InfoMoneyDetail()
-                                                                                                                                                     , inObjectId_8 := CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
+                                                                                                                                                     , inObjectId_8 := InfoMoneyId -- CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
                                                                                                                                                       )
                                                                                                       , inDescId_1   := zc_ContainerLinkObject_Unit()
                                                                                                       , inObjectId_1 := UnitId
@@ -591,7 +591,7 @@ BEGIN
                                                                                                       , inDescId_4   := zc_ContainerLinkObject_InfoMoney()
                                                                                                       , inObjectId_4 := InfoMoneyId
                                                                                                       , inDescId_5   := zc_ContainerLinkObject_InfoMoneyDetail()
-                                                                                                      , inObjectId_5 := CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
+                                                                                                      , inObjectId_5 := InfoMoneyId -- CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
                                                                                                        )
                                                                         WHEN InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20700()  -- Товары    -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20700()
                                                                                                       , zc_Enum_InfoMoneyDestination_30100()) -- Продукция -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()
@@ -668,7 +668,7 @@ BEGIN
                                                                                                                                                      , inDescId_6   := zc_ObjectCostLink_InfoMoney()
                                                                                                                                                      , inObjectId_6 := InfoMoneyId
                                                                                                                                                      , inDescId_7   := zc_ObjectCostLink_InfoMoneyDetail()
-                                                                                                                                                     , inObjectId_7 := CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
+                                                                                                                                                     , inObjectId_7 := InfoMoneyId -- CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
                                                                                                                                                       )
                                                                                                       , inDescId_1   := zc_ContainerLinkObject_Unit()
                                                                                                       , inObjectId_1 := UnitId
@@ -677,7 +677,7 @@ BEGIN
                                                                                                       , inDescId_3   := zc_ContainerLinkObject_InfoMoney()
                                                                                                       , inObjectId_3 := InfoMoneyId
                                                                                                       , inDescId_4   := zc_ContainerLinkObject_InfoMoneyDetail()
-                                                                                                      , inObjectId_4 := CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
+                                                                                                      , inObjectId_4 := InfoMoneyId -- CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
                                                                                                        )
                                                                    END
                                                  , inAmount:= OperSumm_Partner + OperSumm_Packer
@@ -790,6 +790,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.08.13                                        * no InfoMoneyId_isCorporate
  20.07.13                                        * add MovementItemId
  20.07.13                                        * all Партии товара, ЕСЛИ надо ...
  19.07.13                                        * all

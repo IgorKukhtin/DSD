@@ -4,8 +4,8 @@ inherited ReturnInForm: TReturnInForm
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1044
-  ExplicitHeight = 434
+  ExplicitWidth = 1036
+  ExplicitHeight = 430
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -155,31 +155,26 @@ inherited ReturnInForm: TReturnInForm
   end
   object cxPageControl1: TcxPageControl
     Left = 0
-    Top = 141
+    Top = 139
     Width = 1028
-    Height = 255
+    Height = 257
     Align = alClient
-    TabOrder = 3
+    TabOrder = 2
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 195
-    ExplicitHeight = 201
-    ClientRectBottom = 251
-    ClientRectLeft = 4
-    ClientRectRight = 1024
+    ClientRectBottom = 257
+    ClientRectRight = 1028
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 173
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1020
-        Height = 227
+        Width = 1028
+        Height = 233
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 173
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource
@@ -307,15 +302,13 @@ inherited ReturnInForm: TReturnInForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitHeight = 173
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 1020
-        Height = 227
+        Width = 1028
+        Height = 233
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 173
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -475,7 +468,7 @@ inherited ReturnInForm: TReturnInForm
   object edVATPercent: TcxCurrencyEdit
     Left = 431
     Top = 70
-    TabOrder = 5
+    TabOrder = 4
     Width = 65
   end
   object cxLabel7: TcxLabel
@@ -533,8 +526,8 @@ inherited ReturnInForm: TReturnInForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -551,7 +544,7 @@ inherited ReturnInForm: TReturnInForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar: TdxBar
       Caption = 'Custom'
@@ -687,6 +680,7 @@ inherited ReturnInForm: TReturnInForm
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       ShortCut = 16464
+      Params = <>
       ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
     end
   end
@@ -704,16 +698,18 @@ inherited ReturnInForm: TReturnInForm
   object dsdGuidesFrom: TdsdGuides
     LookupControl = edFrom
     FormName = 'TJuridicalForm'
-    PositionDataSet = 'ClientDataSet'
-    Left = 304
-    Top = 56
+    PositionDataSet = 'GridDataSet'
+    ParentDataSet = 'TreeDataSet'
+    Left = 344
+    Top = 16
   end
   object dsdGuidesTo: TdsdGuides
     LookupControl = edTo
     FormName = 'TUnitForm'
-    PositionDataSet = 'ClientDataSet'
-    Left = 520
-    Top = 80
+    PositionDataSet = 'GridDataSet'
+    ParentDataSet = 'TreeDataSet'
+    Left = 488
+    Top = 8
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -839,6 +835,7 @@ inherited ReturnInForm: TReturnInForm
     LookupControl = edContract
     FormName = 'TContractForm'
     PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'TreeDataSet'
     Left = 680
     Top = 8
   end
@@ -846,12 +843,14 @@ inherited ReturnInForm: TReturnInForm
     LookupControl = edPersonalDriver
     FormName = 'TPersonalForm'
     PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'TreeDataSet'
     Left = 824
   end
   object dsdGuidesCar: TdsdGuides
     LookupControl = edCar
     FormName = 'TCarForm'
     PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'TreeDataSet'
     Left = 784
     Top = 56
   end
@@ -859,6 +858,7 @@ inherited ReturnInForm: TReturnInForm
     LookupControl = edPaidKind
     FormName = 'TPaidKindForm'
     PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'TreeDataSet'
     Left = 224
     Top = 64
   end
@@ -887,7 +887,7 @@ inherited ReturnInForm: TReturnInForm
         Component = edOperDate
         DataType = ftDate
         ParamType = ptInput
-        Value = ''
+        Value = 0d
       end
       item
         Name = 'inOperDatePartner'
@@ -907,7 +907,7 @@ inherited ReturnInForm: TReturnInForm
         Component = edVATPercent
         DataType = ftFloat
         ParamType = ptInput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'inChangePercent'
@@ -980,7 +980,7 @@ inherited ReturnInForm: TReturnInForm
         Component = edOperDate
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = 0d
       end
       item
         Name = 'StatusCode'

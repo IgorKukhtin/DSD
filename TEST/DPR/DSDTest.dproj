@@ -94,7 +94,6 @@
 			<DCCReference Include="..\SOURCE\Container\CommonContainerProcedureTest.pas"/>
 			<DCCReference Include="..\SOURCE\MovementItem\CommonMovementItemProcedureTest.pas"/>
 			<DCCReference Include="..\SOURCE\MovementItemContainer\CommonMovementItemContainerProcedureTest.pas"/>
-			<DCCReference Include="..\SOURCE\ObjectCost\CommonObjectCostProcedureTest.pas"/>
 			<DCCReference Include="..\SOURCE\ObjectHistory\CommonObjectHistoryProcedureTest.pas"/>
 			<DCCReference Include="..\SOURCE\Protocol\CommonProtocolProcedureTest.pas"/>
 			<DCCReference Include="..\SOURCE\Function\CommonFunctionTest.pas"/>
@@ -426,6 +425,19 @@
 			<DCCReference Include="..\SOURCE\Component\ComponentActionTest.pas"/>
 			<DCCReference Include="..\SOURCE\Component\ComponentDBTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\CashOperationTest.pas"/>
+			<DCCReference Include="..\..\Forms\ZakazExternalJournal.pas">
+				<Form>ZakazExternalJournalForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\ZakazExternal.pas">
+				<Form>ZakazExternalForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\ZakazInternalJournal.pas">
+				<Form>ZakazInternalJournalForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\ZakazInternal.pas">
+				<Form>ZakazInternalForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\ObjectCost\CommonObjectCostProcedureTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

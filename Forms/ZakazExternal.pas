@@ -1,4 +1,4 @@
-unit Income;
+unit ZakazExternal;
 
 interface
 
@@ -22,12 +22,11 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit;
+  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
-  TIncomeForm = class(TParentForm)
-    FormParams: TdsdFormParams;
+  TZakazExternalForm = class(TParentForm)
+    dsdFormParams: TdsdFormParams;
     spSelectMovementItem: TdsdStoredProc;
     dxBarManager: TdxBarManager;
     dxBarManagerBar: TdxBar;
@@ -42,15 +41,12 @@ type
     cxLabel1: TcxLabel;
     edOperDate: TcxDateEdit;
     cxLabel2: TcxLabel;
-    edFrom: TcxButtonEdit;
-    edTo: TcxButtonEdit;
     cxLabel3: TcxLabel;
-    cxLabel4: TcxLabel;
     dsdGuidesFrom: TdsdGuides;
-    dsdGuidesTo: TdsdGuides;
+    spGet: TdsdStoredProc;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
-    cxPageControl: TcxPageControl;
+    cxPageControl1: TcxPageControl;
     cxTabSheet1: TcxTabSheet;
     cxTabSheet2: TcxTabSheet;
     cxGrid: TcxGrid;
@@ -58,8 +54,6 @@ type
     colCode: TcxGridDBColumn;
     colName: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
-    colAmountSumm: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     spSelectMovementContainerItem: TdsdStoredProc;
     cxGridEntryDBTableView: TcxGridDBTableView;
@@ -90,40 +84,26 @@ type
     colByObjectCode: TcxGridDBColumn;
     colByObjectName: TcxGridDBColumn;
     colGoodsName: TcxGridDBColumn;
-    colAmountPartner: TcxGridDBColumn;
-    colAmountPacker: TcxGridDBColumn;
-    colCountForPrice: TcxGridDBColumn;
-    colHeadCount: TcxGridDBColumn;
-    colPartionGoods: TcxGridDBColumn;
-    colLiveWeight: TcxGridDBColumn;
+    colAmountSecond: TcxGridDBColumn;
     colGoodsKindName: TcxGridDBColumn;
-    colAssetName: TcxGridDBColumn;
     colGoodsKindName_comlete: TcxGridDBColumn;
     colAccountOnComplete: TcxGridDBColumn;
-    bbBooleanAction: TdxBarButton;
-    bbStatic: TdxBarStatic;
-    BooleanStoredProcAction: TBooleanStoredProcAction;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    EntryViewAddOn: TdsdDBViewAddOn;
-    spInsertUpdateMovement: TdsdStoredProc;
-    cxLabel5: TcxLabel;
-    cxLabel6: TcxLabel;
-    edOperDatePartner: TcxDateEdit;
-    edPriceWithVAT: TcxCheckBox;
-    edVATPercent: TcxCurrencyEdit;
-    edChangePercent: TcxCurrencyEdit;
-    cxLabel7: TcxLabel;
-    cxLabel8: TcxLabel;
-    HeaderSaver: THeaderSaver;
+    cxLabel14: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
-    spGet: TdsdStoredProc;
-    RefreshAddOn: TRefreshAddOn;
-    colGoodsCode: TcxGridDBColumn;
-    colInfoMoneyCode: TcxGridDBColumn;
-    colInfoMoneyName: TcxGridDBColumn;
-    colInfoMoneyCode_Detail: TcxGridDBColumn;
-    colInfoMoneyName_Detail: TcxGridDBColumn;
+    cxLabel4: TcxLabel;
+    edOperDateMark: TcxDateEdit;
+    cxLabel12: TcxLabel;
+    edRoute: TcxButtonEdit;
+    dsdGuidesRoute: TdsdGuides;
+    cxLabel13: TcxLabel;
+    edRouteSorting: TcxButtonEdit;
+    dsdGuidesRouteSorting: TdsdGuides;
+    cxLabel6: TcxLabel;
+    cxLabel5: TcxLabel;
+    edOperDatePartner: TcxDateEdit;
+    edFrom: TcxButtonEdit;
+    edPersonal: TcxButtonEdit;
+    dsdGuidesPersonal: TdsdGuides;
   private
   public
   end;
@@ -133,6 +113,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TIncomeForm);
+  RegisterClass(TZakazExternalForm);
 
 end.

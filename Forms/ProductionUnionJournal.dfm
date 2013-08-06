@@ -3,8 +3,8 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
   ClientHeight = 427
   ClientWidth = 579
-  ExplicitWidth = 587
-  ExplicitHeight = 461
+  ExplicitWidth = 595
+  ExplicitHeight = 466
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -24,7 +24,7 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
     object deEnd: TcxDateEdit
       Left = 352
       Top = 8
-      EditValue = 41760d
+      EditValue = 41395d
       TabOrder = 1
       Width = 121
     end
@@ -152,6 +152,16 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
           'Width')
       end
       item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
         Component = Owner
         Properties.Strings = (
           'Height'
@@ -167,8 +177,8 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -390,14 +400,14 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
-        Value = '01.05.2013'
+        Value = 41395d
       end
       item
         Name = 'inEndDate'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
-        Value = '01.05.2014'
+        Value = 41395d
       end>
     Left = 24
     Top = 176
