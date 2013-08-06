@@ -70,7 +70,7 @@ inherited ZakazExternalForm: TZakazExternalForm
       Top = 4
       Caption = #1052#1072#1088#1096#1088#1091#1090
     end
-    object edRoute: TcxButtonEdit
+    object ceRoute: TcxButtonEdit
       Left = 715
       Top = 27
       Properties.Buttons = <
@@ -86,7 +86,7 @@ inherited ZakazExternalForm: TZakazExternalForm
       Top = 4
       Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072
     end
-    object edRouteSorting: TcxButtonEdit
+    object ceRouteSorting: TcxButtonEdit
       Left = 859
       Top = 27
       Properties.Buttons = <
@@ -124,7 +124,7 @@ inherited ZakazExternalForm: TZakazExternalForm
       TabOrder = 16
       Width = 161
     end
-    object edPersonal: TcxButtonEdit
+    object cePersonal: TcxButtonEdit
       Left = 560
       Top = 27
       Properties.Buttons = <
@@ -553,8 +553,8 @@ inherited ZakazExternalForm: TZakazExternalForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 96
-    Top = 128
+    Left = 144
+    Top = 112
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spGet
@@ -596,20 +596,21 @@ inherited ZakazExternalForm: TZakazExternalForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 256
-    Top = 120
+    Left = 296
+    Top = 96
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 72
-    Top = 128
+    Top = 96
   end
   object dsdGuidesFrom: TdsdGuides
     LookupControl = edFrom
     FormName = 'TJuridicalForm'
     PositionDataSet = 'GridDataSet'
     ParentDataSet = 'TreeDataSet'
+    Params = <>
     Left = 320
     Top = 16
   end
@@ -703,7 +704,7 @@ inherited ZakazExternalForm: TZakazExternalForm
   object EntryCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 352
+    Left = 368
     Top = 128
   end
   object EntryDS: TDataSource
@@ -793,28 +794,52 @@ inherited ZakazExternalForm: TZakazExternalForm
     Left = 240
     Top = 232
   end
-  object dsdGuidesRoute: TdsdGuides
-    LookupControl = edRoute
+  object RouteGuides: TdsdGuides
+    LookupControl = ceRoute
     FormName = 'TRouteForm'
-    PositionDataSet = 'GridDataSet'
-    ParentDataSet = 'TreeDataSet'
+    PositionDataSet = 'ClientDataSet'
+    Params = <>
     Left = 760
     Top = 16
   end
   object dsdGuidesRouteSorting: TdsdGuides
-    LookupControl = edRouteSorting
+    LookupControl = ceRouteSorting
     FormName = 'TRouteSortingForm'
-    PositionDataSet = 'GridDataSet'
-    ParentDataSet = 'TreeDataSet'
+    PositionDataSet = 'ClientDataSet'
+    Params = <>
     Left = 896
     Top = 24
   end
-  object dsdGuidesPersonal: TdsdGuides
-    LookupControl = edPersonal
+  object PersonalGuides: TdsdGuides
+    LookupControl = cePersonal
     FormName = 'TPersonalForm'
-    PositionDataSet = 'GridDataSet'
-    ParentDataSet = 'TreeDataSet'
-    Left = 592
+    PositionDataSet = 'ClientDataSet'
+    Params = <>
+    Left = 608
     Top = 24
+  end
+  object InfoMoneyGuides: TdsdGuides
+    FormName = 'TInfoMoneyForm'
+    PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'TreeDataSet'
+    Params = <>
+    Left = 296
+    Top = 232
+  end
+  object dsdGuides1: TdsdGuides
+    FormName = 'TInfoMoneyForm'
+    PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'TreeDataSet'
+    Params = <>
+    Left = 360
+    Top = 264
+  end
+  object JuridicalGroupGuides: TdsdGuides
+    FormName = 'TJuridicalGroupForm'
+    PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'TreeDataSet'
+    Params = <>
+    Left = 264
+    Top = 152
   end
 end

@@ -668,6 +668,7 @@ inherited ReturnOutForm: TReturnOutForm
     FormName = 'TJuridicalForm'
     PositionDataSet = 'GridDataSet'
     ParentDataSet = 'TreeDataSet'
+    Params = <>
     Left = 352
     Top = 16
   end
@@ -676,6 +677,7 @@ inherited ReturnOutForm: TReturnOutForm
     FormName = 'TUnitForm'
     PositionDataSet = 'GridDataSet'
     ParentDataSet = 'TreeDataSet'
+    Params = <>
     Left = 496
     Top = 8
   end
@@ -802,16 +804,16 @@ inherited ReturnOutForm: TReturnOutForm
   object dsdGuidesContract: TdsdGuides
     LookupControl = edContract
     FormName = 'TContractForm'
-    PositionDataSet = 'GridDataSet'
-    ParentDataSet = 'TreeDataSet'
-    Left = 648
-    Top = 24
+    PositionDataSet = 'ClientDataSet'
+    Params = <>
+    Left = 656
+    Top = 16
   end
   object dsdGuidesPaidKind: TdsdGuides
     LookupControl = edPaidKind
     FormName = 'TPaidKindForm'
     PositionDataSet = 'ClientDataSet'
-    ParentDataSet = 'TreeDataSet'
+    Params = <>
     Left = 800
     Top = 16
   end

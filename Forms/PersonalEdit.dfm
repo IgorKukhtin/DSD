@@ -2,8 +2,8 @@
   Caption = 'C'#1086#1090#1088#1091#1076#1085#1080#1082
   ClientHeight = 271
   ClientWidth = 607
-  ExplicitWidth = 623
-  ExplicitHeight = 309
+  ExplicitWidth = 615
+  ExplicitHeight = 305
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
@@ -192,7 +192,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'inMemberId '
@@ -273,7 +273,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'MemberId'
@@ -360,14 +360,14 @@
         Component = edDateIn
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = 0d
       end
       item
         Name = 'DateOut'
         Component = edDateOut
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = 0d
       end>
     Left = 472
     Top = 168
@@ -395,20 +395,23 @@
     LookupControl = ceMember
     FormName = 'TMemberForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 304
+    Params = <>
+    Left = 296
     Top = 93
   end
   object PositionGuides: TdsdGuides
     LookupControl = cePosition
     FormName = 'TPositionForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 328
+    Params = <>
+    Left = 288
     Top = 165
   end
   object UnitGuides: TdsdGuides
     LookupControl = ceUnit
     FormName = 'TUnitForm'
     PositionDataSet = 'GridDataSet'
+    Params = <>
     Left = 487
     Top = 7
   end
@@ -416,13 +419,15 @@
     LookupControl = ceJuridical
     FormName = 'TJuridicalForm'
     PositionDataSet = 'GridDataSet'
-    Left = 551
-    Top = 49
+    Params = <>
+    Left = 559
+    Top = 65
   end
   object BusinessGuides: TdsdGuides
     LookupControl = ceBusiness
     FormName = 'TBusinessForm'
     PositionDataSet = 'ClientDataSet'
+    Params = <>
     Left = 527
     Top = 113
   end

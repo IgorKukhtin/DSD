@@ -93,17 +93,20 @@ type
     cxLabel4: TcxLabel;
     edOperDateMark: TcxDateEdit;
     cxLabel12: TcxLabel;
-    edRoute: TcxButtonEdit;
-    dsdGuidesRoute: TdsdGuides;
+    ceRoute: TcxButtonEdit;
+    RouteGuides: TdsdGuides;
     cxLabel13: TcxLabel;
-    edRouteSorting: TcxButtonEdit;
+    ceRouteSorting: TcxButtonEdit;
     dsdGuidesRouteSorting: TdsdGuides;
     cxLabel6: TcxLabel;
     cxLabel5: TcxLabel;
     edOperDatePartner: TcxDateEdit;
     edFrom: TcxButtonEdit;
-    edPersonal: TcxButtonEdit;
-    dsdGuidesPersonal: TdsdGuides;
+    cePersonal: TcxButtonEdit;
+    PersonalGuides: TdsdGuides;
+    InfoMoneyGuides: TdsdGuides;
+    dsdGuides1: TdsdGuides;
+    JuridicalGroupGuides: TdsdGuides;
   private
   public
   end;
