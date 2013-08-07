@@ -42,9 +42,9 @@ BEGIN
                                , isPartionCount Boolean, isPartionSumm Boolean, isPartionDate Boolean
                                , PartionGoodsId Integer) ON COMMIT DROP;
      -- таблица - суммовые Master-элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_From Integer, OperSumm TFloat, InfoMoneyId_Detail_From Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, MIContainerId Integer, ContainerId_From Integer, OperSumm TFloat, InfoMoneyId_Detail_From Integer) ON COMMIT DROP;
      -- таблица - группируем суммовые Master-элементы документа
-     CREATE TEMP TABLE _tmpItemSummTotal (OperSumm TFloat, InfoMoneyId_Detail_From Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpItemSummTotal (MIContainerId Integer, InfoMoneyId_Detail_From Integer, OperSumm TFloat) ON COMMIT DROP;
 
      -- таблица - количественные Child-элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItemChild (MovementItemId Integer, MovementId Integer, OperDate TDateTime, UnitId_To Integer, PersonalId_To Integer, BranchId_To Integer
@@ -55,9 +55,9 @@ BEGIN
                                     , isPartionCount Boolean, isPartionSumm Boolean, isPartionDate Boolean
                                     , PartionGoodsId Integer) ON COMMIT DROP;
      -- таблица - суммовые Child-элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItemSummChild (MovementItemId Integer, OperSumm TFloat, InfoMoneyId_Detail_To Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpItemSummChild (MovementItemId Integer, MIContainerId_Parent Integer, InfoMoneyId_Detail_To Integer, OperSumm TFloat) ON COMMIT DROP;
      -- таблица - группируем суммовые Child-элементы документа
-     CREATE TEMP TABLE _tmpItemSummChildTotal (OperSumm TFloat, InfoMoneyId_Detail_To Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpItemSummChildTotal (MIContainerId_Parent Integer, OperSumm TFloat) ON COMMIT DROP;
 
 
      -- заполняем таблицу - количественные Child-элементы документа, со всеми свойствами для формирования Аналитик в проводках
@@ -494,12 +494,13 @@ BEGIN
 
 
      -- самое интересное: заполняем таблицу - суммовые Master-элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItemSumm (MovementItemId, ContainerId_From, OperSumm, InfoMoneyId_Detail_From)
+     INSERT INTO _tmpItemSumm (MovementItemId, MIContainerId, ContainerId_From, InfoMoneyId_Detail_From, OperSumm)
         SELECT
               _tmpItem.MovementItemId
-            , Container_Summ.Id                                 AS ContainerId_From
-            , ABS (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0)) AS OperSumm
+            , 0 AS MIContainerId
+            , Container_Summ.Id  AS ContainerId_From
             , ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail_From
+            , ABS (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0)) AS OperSumm
         FROM _tmpItem
              JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_GoodsFrom
                                              AND Container_Summ.DescId = zc_Container_Summ()
@@ -515,42 +516,99 @@ BEGIN
         ;
 
 
+     -- формируются Проводки для количественного учета - От кого
+     PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
+                                                 , inDescId:= zc_MIContainer_Count()
+                                                 , inMovementId:= MovementId
+                                                 , inMovementItemId:= MovementItemId
+                                                 , inParentId:= NULL
+                                                 , inContainerId:= ContainerId_GoodsFrom -- был опеределен выше
+                                                 , inAmount:= -OperCount
+                                                 , inOperDate:= OperDate
+                                                 , inIsActive:= FALSE
+                                                  )
+     FROM _tmpItem;
+
+     -- формируются Проводки для количественного учета - Кому
+     PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
+                                                 , inDescId:= zc_MIContainer_Count()
+                                                 , inMovementId:= MovementId
+                                                 , inMovementItemId:= MovementItemId
+                                                 , inContainerId:= ContainerId_GoodsTo -- был опеределен выше
+                                                 , inParentId:= NULL
+                                                 , inAmount:= OperCount
+                                                 , inOperDate:= OperDate
+                                                 , inIsActive:= TRUE
+                                                  )
+     FROM _tmpItemChild;
+
+
+     -- формируются Проводки для суммового учета - От кого + сохраняется MIContainer.Id
+     UPDATE _tmpItemSumm SET MIContainerId = lpInsertUpdate_MovementItemContainer (ioId:= 0
+                                                                                 , inDescId:= zc_MIContainer_Summ()
+                                                                                 , inMovementId:= MovementId
+                                                                                 , inMovementItemId:= _tmpItem.MovementItemId
+                                                                                 , inParentId:= NULL
+                                                                                 , inContainerId:= _tmpItemSumm.ContainerId_From
+                                                                                 , inAmount:= -OperSumm
+                                                                                 , inOperDate:= OperDate
+                                                                                 , inIsActive:= FALSE
+                                                                                  )
+     FROM _tmpItem
+     WHERE _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId;
+
+
      -- Группируем итоговые суммы по Факту для Master-элементы документа
-     INSERT INTO _tmpItemSummTotal (OperSumm, InfoMoneyId_Detail_From)
-        SELECT SUM (_tmpItemSumm.OperSumm), _tmpItemSumm.InfoMoneyId_Detail_From FROM _tmpItemSumm GROUP BY _tmpItemSumm.InfoMoneyId_Detail_From;
+     INSERT INTO _tmpItemSummTotal (MIContainerId, InfoMoneyId_Detail_From, OperSumm)
+        SELECT _tmpItemSumm.MIContainerId, _tmpItemSumm.InfoMoneyId_Detail_From, SUM (_tmpItemSumm.OperSumm) FROM _tmpItemSumm GROUP BY _tmpItemSumm.MIContainerId, _tmpItemSumm.InfoMoneyId_Detail_From;
      -- Расчет Итоговой суммы по Прайсу для Child-элементы документа
      SELECT SUM (tmpOperSumm) INTO vbOperSumm_byItem FROM _tmpItemChild;
 
      -- Распределяем сумму по Факту для Child-элементы документа
-     INSERT INTO _tmpItemSummChild (MovementItemId, OperSumm, InfoMoneyId_Detail_To)
+     INSERT INTO _tmpItemSummChild (MovementItemId, MIContainerId_Parent, InfoMoneyId_Detail_To, OperSumm)
         SELECT _tmpItemChild.MovementItemId
-             , CASE WHEN vbOperSumm_byItem <> 0 THEN _tmpItemSummTotal.OperSumm * _tmpItemChild.tmpOperSumm / vbOperSumm_byItem ELSE 0 END
+             , _tmpItemSummTotal.MIContainerId
              , _tmpItemSummTotal.InfoMoneyId_Detail_From
+             , CASE WHEN vbOperSumm_byItem <> 0 THEN _tmpItemSummTotal.OperSumm * _tmpItemChild.tmpOperSumm / vbOperSumm_byItem ELSE 0 END
         FROM _tmpItemChild
-             LEFT JOIN _tmpItemSummTotal ON _tmpItemSummTotal.OperSumm <> 0
-        -- WHERE vbOperSumm_byItem <> 0
+             JOIN _tmpItemSummTotal ON 1=1
+        -- !ОБЯЗАТЕЛЬНО! вставляем нули - WHERE vbOperSumm_byItem <> 0
         ;
 
      -- После распределения группируем итоговые суммы по Факту для Child-элементы документа
-     INSERT INTO _tmpItemSummChildTotal (OperSumm, InfoMoneyId_Detail_To)
-        SELECT SUM (_tmpItemSummChild.OperSumm), _tmpItemSummChild.InfoMoneyId_Detail_To FROM _tmpItemSummChild GROUP BY _tmpItemSummChild.InfoMoneyId_Detail_To;
+     INSERT INTO _tmpItemSummChildTotal (MIContainerId_Parent, OperSumm)
+        SELECT _tmpItemSummChild.MIContainerId_Parent, SUM (_tmpItemSummChild.OperSumm) FROM _tmpItemSummChild GROUP BY _tmpItemSummChild.MIContainerId_Parent;
 
-     -- если не равны ДВЕ суммы, причем !обязательно! в разрезе InfoMoneyId_Detail
+     -- если не равны ДВЕ суммы, причем !обязательно! в разрезе MIContainerId
      IF EXISTS (SELECT _tmpItemSummTotal.OperSumm
                 FROM _tmpItemSummTotal
-                     JOIN _tmpItemSummChildTotal ON _tmpItemSummChildTotal.InfoMoneyId_Detail_To = _tmpItemSummTotal.InfoMoneyId_Detail_From
+                     JOIN _tmpItemSummChildTotal ON _tmpItemSummChildTotal.MIContainerId_Parent = _tmpItemSummTotal.MIContainerId
                 WHERE _tmpItemSummTotal.OperSumm <> _tmpItemSummChildTotal.OperSumm
                )
      THEN
          -- на разницу корректируем самую большую сумму (теоретически может получиться Значение < 0, но эту ошибку не обрабатываем)
          UPDATE _tmpItemSummChild
-            SET OperSumm = _tmpItemSummChild.OperSumm - (_tmpItemSummChildTotal.OperSumm - _tmpItemSummTotal.OperSumm)
-         FROM _tmpItemSummTotal
-              JOIN _tmpItemSummChildTotal ON _tmpItemSummChildTotal.InfoMoneyId_Detail_To = _tmpItemSummTotal.InfoMoneyId_Detail_From
-         WHERE _tmpItemSummTotal.InfoMoneyId_Detail_From = _tmpItemSummChild.InfoMoneyId_Detail_To
-           AND _tmpItemSummTotal.OperSumm <> _tmpItemSummChildTotal.OperSumm
-           AND _tmpItemSummChild.MovementItemId IN (SELECT MAX (MovementItemId) FROM _tmpItemSummChild WHERE OperSumm IN (SELECT MAX (OperSumm) FROM _tmpItemSummChild GROUP BY InfoMoneyId_Detail_To)
-                                                   );
+            SET OperSumm = _tmpItemSummChild.OperSumm - _tmp_Total.SummDiff
+         FROM (
+               -- Выбираем тех у кого есть разница и для них находим MovementItemId
+               SELECT _tmpItemSummTotal.MIContainerId, _tmp_Find.MovementItemId
+                    , (_tmpItemSummChildTotal.OperSumm - _tmpItemSummTotal.OperSumm) AS SummDiff
+               FROM _tmpItemSummTotal
+                    JOIN _tmpItemSummChildTotal ON _tmpItemSummChildTotal.MIContainerId = _tmpItemSummTotal.MIContainerId
+                    -- Выбираем любой MovementItemId с Максимальной суммой
+                    JOIN (SELECT MAX (_tmpItemSummChild.MovementItemId) AS MovementItemId, _tmpItemSummChild.MIContainerId
+                          FROM _tmpItemSummChild
+                               -- Выбираем по Максимальной суммы
+                               JOIN (SELECT MAX (_tmpItemSummChild.OperSumm) AS OperSumm, _tmpItemSummChild.MIContainerId FROM _tmpItemSummChild
+                                     GROUP BY _tmpItemSummChild.MIContainerId
+                                    ) AS _tmp_MaxSumm ON _tmp_MaxSumm.MIContainerId = _tmpItemSummChild.MIContainerId
+                                                     AND _tmp_MaxSumm.OperSumm = _tmpItemSummChild.OperSumm
+                          GROUP BY _tmpItemSummChild.MIContainerId
+                         ) AS _tmp_Find ON _tmp_Find.MIContainerId = _tmpItemSummTotal.MIContainerId
+               WHERE _tmpItemSummTotal.OperSumm <> _tmpItemSummChildTotal.OperSumm
+              ) AS _tmp_Total
+         WHERE _tmpItemSummChild.MovementItemId = _tmp_Total.MovementItemId
+        ;
      END IF;
 
 
@@ -560,46 +618,12 @@ BEGIN
      -- RETURN QUERY SELECT _tmpItemSummChild.MovementItemId, _tmpItemSummChild.OperSumm, _tmpItemSummChild.InfoMoneyId_Detail_To FROM _tmpItemSummChild;
 
 
-             -- формируются Проводки для количественного учета - От кого
-     PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
-                                                 , inDescId:= zc_MIContainer_Count()
-                                                 , inMovementId:= MovementId
-                                                 , inMovementItemId:= MovementItemId
-                                                 , inContainerId:= ContainerId_GoodsFrom -- был опеределен выше
-                                                 , inAmount:= -OperCount
-                                                 , inOperDate:= OperDate
-                                                  )
-     FROM _tmpItem;
-
-             -- формируются Проводки для количественного учета - Кому
-     PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
-                                                 , inDescId:= zc_MIContainer_Count()
-                                                 , inMovementId:= MovementId
-                                                 , inMovementItemId:= MovementItemId
-                                                 , inContainerId:= ContainerId_GoodsTo -- был опеределен выше
-                                                 , inAmount:= OperCount
-                                                 , inOperDate:= OperDate
-                                                  )
-     FROM _tmpItemChild;
-
-
-             -- формируются Проводки для суммового учета - От кого
-     PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
-                                                 , inDescId:= zc_MIContainer_Summ()
-                                                 , inMovementId:= MovementId
-                                                 , inMovementItemId:= _tmpItem.MovementItemId
-                                                 , inContainerId:= _tmpItemSumm.ContainerId_From
-                                                 , inAmount:= -OperSumm
-                                                 , inOperDate:= OperDate
-                                                  )
-     FROM _tmpItem
-          JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId;
-
-             -- формируются Проводки для суммового учета + Аналитика <элемент с/с> - Кому
+     -- формируются Проводки для суммового учета + Аналитика <элемент с/с> - Кому
      PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
                                                  , inDescId:= zc_MIContainer_Summ()
                                                  , inMovementId:= MovementId
                                                  , inMovementItemId:= _tmpItemChild.MovementItemId
+                                                 , inParentId:= _tmpItemSummChild.MIContainerId_Parent
                                                  , inContainerId:= CASE WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение 2)Товар 3)!Партии товара! 4)Статьи назначения 5)Статьи назначения(детализация с/с)
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Сотрудник (МО) 2)Товар 3)!Партии товара! 4)Статьи назначения 5)Статьи назначения(детализация с/с)
@@ -783,10 +807,12 @@ BEGIN
                                                                    END
                                                  , inAmount:= SUM (OperSumm)
                                                  , inOperDate:= OperDate
+                                                 , inIsActive:= TRUE
                                                   )
      FROM _tmpItemChild
           JOIN _tmpItemSummChild ON _tmpItemSummChild.MovementItemId = _tmpItemChild.MovementItemId
      GROUP BY _tmpItemChild.MovementItemId, MovementId, OperDate, UnitId_To, PersonalId_To, BranchId_To
+            , _tmpItemSummChild.MIContainerId_Parent
             , ContainerId_GoodsTo, GoodsId, GoodsKindId, AssetId
             , AccountDirectionId_To, InfoMoneyDestinationId, InfoMoneyId, InfoMoneyId_Detail_To
             , JuridicalId_basis_To, BusinessId_To
@@ -805,6 +831,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.08.13                                        * add inParentId and inIsActive
  06.08.13                                        * err on vbOperSumm
  24.07.13                                        * !ОБЯЗАТЕЛЬНО! вставляем нули
  21.07.13                                        *

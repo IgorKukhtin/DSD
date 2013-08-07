@@ -93,9 +93,6 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Height = 154
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 8
-        ExplicitWidth = 1020
-        ExplicitHeight = 162
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -148,7 +145,6 @@ inherited ProductionSeparateForm: TProductionSeparateForm
               Kind = skSum
             end>
           DataController.Summary.SummaryGroups = <>
-          OptionsView.ColumnAutoWidth = True
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -173,6 +169,10 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentHorz = taCenter
             Width = 80
           end
+          object colId: TcxGridDBColumn
+            DataBinding.FieldName = 'Id'
+            Width = 40
+          end
         end
         object cxGridLevel: TcxGridLevel
           GridView = cxGridDBTableView
@@ -185,7 +185,6 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Height = 100
         Align = alBottom
         TabOrder = 1
-        ExplicitTop = 161
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -236,7 +235,6 @@ inherited ProductionSeparateForm: TProductionSeparateForm
               Kind = skSum
             end>
           DataController.Summary.SummaryGroups = <>
-          OptionsView.ColumnAutoWidth = True
           object colChildGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -256,7 +254,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             Width = 80
           end
           object colChildHeadCount: TcxGridDBColumn
-            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1075#1086#1083#1086#1074
+            Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'AmountReceipt'
             HeaderAlignmentHorz = taCenter
             Width = 80
@@ -272,8 +270,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         Width = 1028
         Height = 8
         AlignSplitter = salBottom
-        ExplicitLeft = 3
-        ExplicitTop = 148
+        Control = cxGridChild
       end
     end
     object cxTabSheet2: TcxTabSheet
@@ -459,6 +456,25 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             DataBinding.FieldName = 'InfoMoneyName_Detail'
             Width = 55
           end
+          object colGoodsCode_Parent: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1090#1086#1074'.'#1075#1083'.'
+            DataBinding.FieldName = 'GoodsCode_Parent'
+            Width = 40
+          end
+          object colGoodsName_Parent: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088' '#1075#1083#1072#1074#1085#1099#1081
+            DataBinding.FieldName = 'GoodsName_Parent'
+            Width = 55
+          end
+          object colGoodsKindName_Parent: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072' '#1075#1083'.'
+            DataBinding.FieldName = 'GoodsKindName_Parent'
+            Width = 50
+          end
+          object colMIId_Parent: TcxGridDBColumn
+            DataBinding.FieldName = 'MIId_Parent'
+            Width = 40
+          end
         end
         object cxGridEntryLevel: TcxGridLevel
           GridView = cxGridEntryDBTableView
@@ -642,6 +658,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     FormName = 'TJuridicalForm'
     PositionDataSet = 'GridDataSet'
     ParentDataSet = 'TreeDataSet'
+    Params = <>
     Left = 376
     Top = 24
   end
@@ -650,6 +667,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     FormName = 'TUnitForm'
     PositionDataSet = 'GridDataSet'
     ParentDataSet = 'TreeDataSet'
+    Params = <>
     Left = 536
     Top = 24
   end

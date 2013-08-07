@@ -2622,7 +2622,7 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select min(Id) as ObjectId');
+        Add('select max(Id) as ObjectId');
         Add('     , min(_pgInfoMoney.ObjectCode) - 101 as ObjectCode');
         Add('     , _pgInfoMoney.Name1 as ObjectName');
         Add('     , max (isnull (_pgInfoMoney.Id1_Postgres, 0)) as Id_Postgres');
@@ -2678,7 +2678,7 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select min(Id) as ObjectId');
+        Add('select max(Id) as ObjectId');
         Add('     , min(_pgInfoMoney.ObjectCode) - 1 as ObjectCode');
         Add('     , _pgInfoMoney.Name2 as ObjectName');
         Add('     , max (isnull (_pgInfoMoney.Id2_Postgres, 0)) as Id_Postgres');
@@ -2797,7 +2797,7 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select min(Id) as ObjectId');
+        Add('select max(Id) as ObjectId');
         Add('     , min(_pgAccount.ObjectCode) - 101 as ObjectCode');
         Add('     , _pgAccount.Name1 as ObjectName');
         Add('     , max (isnull (_pgAccount.Id1_Postgres, 0)) as Id_Postgres');
@@ -2852,7 +2852,7 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select min(Id) as ObjectId');
+        Add('select max(Id) as ObjectId');
         Add('     , min(_pgAccount.ObjectCode) - 1 as ObjectCode');
         Add('     , _pgAccount.Name2 as ObjectName');
         Add('     , max (isnull (_pgAccount.Id2_Postgres, 0)) as Id_Postgres');
@@ -2977,7 +2977,7 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select min(Id) as ObjectId');
+        Add('select max(Id) as ObjectId');
         Add('     , min(_pgProfitLoss.ObjectCode) - 101 as ObjectCode');
         Add('     , _pgProfitLoss.Name1 as ObjectName');
         Add('     , max (isnull (_pgProfitLoss.Id1_Postgres, 0)) as Id_Postgres');
@@ -3033,7 +3033,7 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select min(Id) as ObjectId');
+        Add('select max(Id) as ObjectId');
         Add('     , min(_pgProfitLoss.ObjectCode) - 1 as ObjectCode');
         Add('     , _pgProfitLoss.Name2 as ObjectName');
         Add('     , max (isnull (_pgProfitLoss.Id2_Postgres, 0)) as Id_Postgres');

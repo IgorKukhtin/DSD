@@ -42,7 +42,7 @@ BEGIN
                                     , isPartionCount Boolean, isPartionSumm Boolean, isPartionDate Boolean
                                     , PartionGoodsId Integer) ON COMMIT DROP;
      -- таблица - суммовые Child-элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItemSummChild (ObjectCostId Integer, MovementItemId_Parent Integer, MovementItemId Integer, ContainerId_From Integer, OperSumm TFloat, InfoMoneyId_Detail_From Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpItemSummChild (ObjectCostId Integer, MovementItemId_Parent Integer, MovementItemId Integer, MIContainerId Integer, ContainerId_From Integer, OperSumm TFloat, InfoMoneyId_Detail_From Integer) ON COMMIT DROP;
 
 
      -- заполняем таблицу - количественные Master-элементы документа, со всеми свойствами для формирования Аналитик в проводках
@@ -478,11 +478,12 @@ BEGIN
 
 
      -- самое интересное: заполняем таблицу - суммовые Child-элементы документа, со всеми свойствами для формирования Аналитик в проводках, здесь ObjectCostId только для теста
-     INSERT INTO _tmpItemSummChild (ObjectCostId, MovementItemId_Parent, MovementItemId, ContainerId_From, OperSumm, InfoMoneyId_Detail_From)
+     INSERT INTO _tmpItemSummChild (ObjectCostId, MovementItemId_Parent, MovementItemId, MIContainerId, ContainerId_From, OperSumm, InfoMoneyId_Detail_From)
         SELECT
               ContainerObjectCost_Basis.ObjectCostId
             , _tmpItemChild.MovementItemId_Parent
             , _tmpItemChild.MovementItemId
+            , 0 AS MIContainerId
             , Container_Summ.Id AS ContainerId_From
             , ABS (_tmpItemChild.OperCount * COALESCE (HistoryCost.Price, 0)) AS OperSumm
             , ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail_From
@@ -505,46 +506,53 @@ BEGIN
      -- RETURN QUERY SELECT ObjectCostId, _tmpItemSummChild.MovementItemId_Parent, _tmpItemSummChild.MovementItemId, _tmpItemSummChild.ContainerId_From, _tmpItemSummChild.OperSumm, _tmpItemSummChild.InfoMoneyId_Detail_From FROM _tmpItemSummChild WHERE _tmpItemSummChild.MovementItemId = 1919926;
 
 
-             -- формируются Проводки для количественного учета - От кого
+     -- формируются Проводки для количественного учета - От кого
      PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
                                                  , inDescId:= zc_MIContainer_Count()
                                                  , inMovementId:= MovementId
                                                  , inMovementItemId:= MovementItemId
+                                                 , inParentId:= NULL
                                                  , inContainerId:= ContainerId_GoodsFrom -- был опеределен выше
                                                  , inAmount:= -OperCount
                                                  , inOperDate:= OperDate
+                                                 , inIsActive:= FALSE
                                                   )
      FROM _tmpItemChild;
 
-             -- формируются Проводки для количественного учета - Кому
+     -- формируются Проводки для количественного учета - Кому
      PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
                                                  , inDescId:= zc_MIContainer_Count()
                                                  , inMovementId:= MovementId
                                                  , inMovementItemId:= MovementItemId
+                                                 , inParentId:= NULL
                                                  , inContainerId:= ContainerId_GoodsTo -- был опеределен выше
                                                  , inAmount:= OperCount
                                                  , inOperDate:= OperDate
+                                                 , inIsActive:= TRUE
                                                   )
      FROM _tmpItem;
 
 
-             -- формируются Проводки для суммового учета - От кого
-     PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
-                                                 , inDescId:= zc_MIContainer_Summ()
-                                                 , inMovementId:= MovementId
-                                                 , inMovementItemId:= _tmpItemChild.MovementItemId
-                                                 , inContainerId:= _tmpItemSummChild.ContainerId_From
-                                                 , inAmount:= -OperSumm
-                                                 , inOperDate:= OperDate
+     -- формируются Проводки для суммового учета - От кого + сохраняется MIContainer.Id
+     UPDATE _tmpItemSummChild SET MIContainerId = lpInsertUpdate_MovementItemContainer (ioId:= 0
+                                                                                      , inDescId:= zc_MIContainer_Summ()
+                                                                                      , inMovementId:= MovementId
+                                                                                      , inMovementItemId:= _tmpItemChild.MovementItemId
+                                                                                      , inParentId:= NULL
+                                                                                      , inContainerId:= _tmpItemSummChild.ContainerId_From
+                                                                                      , inAmount:= -OperSumm
+                                                                                      , inOperDate:= OperDate
+                                                                                      , inIsActive:= FALSE
                                                   )
      FROM _tmpItemChild
-          JOIN _tmpItemSummChild ON _tmpItemSummChild.MovementItemId = _tmpItemChild.MovementItemId;
+     WHERE _tmpItemSummChild.MovementItemId = _tmpItemChild.MovementItemId;
 
-             -- формируются Проводки для суммового учета + Аналитика <элемент с/с> - Кому
+     -- формируются Проводки для суммового учета + Аналитика <элемент с/с> - Кому
      PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
                                                  , inDescId:= zc_MIContainer_Summ()
                                                  , inMovementId:= MovementId
                                                  , inMovementItemId:= _tmpItem.MovementItemId
+                                                 , inParentId:= _tmpItemSummChild.MIContainerId
                                                  , inContainerId:= CASE WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение 2)Товар 3)!Партии товара! 4)Статьи назначения 5)Статьи назначения(детализация с/с)
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Сотрудник (МО) 2)Товар 3)!Партии товара! 4)Статьи назначения 5)Статьи назначения(детализация с/с)
@@ -728,10 +736,12 @@ BEGIN
                                                                    END
                                                  , inAmount:= SUM (OperSumm)
                                                  , inOperDate:= OperDate
+                                                 , inIsActive:= TRUE
                                                   )
      FROM _tmpItem
           JOIN _tmpItemSummChild ON _tmpItemSummChild.MovementItemId_Parent = _tmpItem.MovementItemId
      GROUP BY _tmpItem.MovementItemId, MovementId, OperDate, UnitId_To, PersonalId_To, BranchId_To
+            , _tmpItemSummChild.MIContainerId
             , ContainerId_GoodsTo, GoodsId, GoodsKindId, AssetId
             , AccountDirectionId_To, InfoMoneyDestinationId, InfoMoneyId, InfoMoneyId_Detail_From
             , JuridicalId_basis_To, BusinessId_To
@@ -750,12 +760,13 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.08.13                                        * add inParentId and inIsActive
  24.07.13                                        * !ОБЯЗАТЕЛЬНО! вставляем нули
  21.07.13                                        * ! finich !
  20.07.13                                        *
 */
 
 -- тест
--- SELECT * FROM gpUnComplete_Movement (inMovementId:= 160821, inSession:= '2')
--- SELECT * FROM gpComplete_Movement_ProductionUnion (inMovementId:= 160821, inSession:= '2')
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 160821, inSession:= '2')
+-- SELECT * FROM gpUnComplete_Movement (inMovementId:= 8279, inSession:= '2')
+-- SELECT * FROM gpComplete_Movement_ProductionUnion (inMovementId:= 8279, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 8279, inSession:= '2')
