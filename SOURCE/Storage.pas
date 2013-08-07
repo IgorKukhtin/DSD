@@ -50,7 +50,7 @@ type
     IdHTTP: TIdHTTP;
     FSendList: TStringList;
     FReceiveStream: TStringStream;
-    Str: RawByteString;
+    Str: AnsiString;//RawByteString;
     XMLDocument: IXMLDocument;
     isArchive: boolean;
     function PrepareStr: string;
@@ -140,11 +140,7 @@ begin
   // Определяем тип возвращаемого результата
   ResultType := trim(Copy(FReceiveStream.DataString, 1, ResultTypeLenght));
   isArchive := trim(lowercase(Copy(FReceiveStream.DataString, ResultTypeLenght + 1, IsArchiveLenght))) = 't';
-  // Сдвигаем указатель на нужное кол-во байт, что бы не копировать строку
-  if isArchive then
-     Str := RawByteString(pointer(integer(FReceiveStream.Bytes) + ResultTypeLenght + IsArchiveLenght))
-  else
-     Str := Copy(FReceiveStream.DataString, ResultTypeLenght + IsArchiveLenght + 1, maxint);
+  Str := Copy(FReceiveStream.DataString, ResultTypeLenght + IsArchiveLenght + 1, maxint);
   if ResultType = gcMultiDataSet then begin
      Result := ProcessMultiDataSet;
      exit;
