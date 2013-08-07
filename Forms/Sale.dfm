@@ -16,8 +16,6 @@ inherited SaleForm: TSaleForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitTop = 4
-    ExplicitWidth = 1079
     object edInvNumberPartner: TcxTextEdit
       Left = 8
       Top = 72
@@ -151,16 +149,12 @@ inherited SaleForm: TSaleForm
     TabOrder = 1
     Properties.ActivePage = cxTabSheet2
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 1028
-    ExplicitHeight = 286
     ClientRectBottom = 312
     ClientRectRight = 1074
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 1028
-      ExplicitHeight = 262
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -168,8 +162,6 @@ inherited SaleForm: TSaleForm
         Height = 288
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1028
-        ExplicitHeight = 262
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource
@@ -298,8 +290,6 @@ inherited SaleForm: TSaleForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitWidth = 1028
-      ExplicitHeight = 262
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -307,8 +297,6 @@ inherited SaleForm: TSaleForm
         Height = 288
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1028
-        ExplicitHeight = 262
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -539,7 +527,7 @@ inherited SaleForm: TSaleForm
     Left = 288
     Top = 71
     Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
-    TabOrder = 14
+    TabOrder = 13
     Width = 137
   end
   object edInvNumber: TcxTextEdit
@@ -743,6 +731,7 @@ inherited SaleForm: TSaleForm
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       ShortCut = 16464
+      Params = <>
       ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
     end
   end
@@ -781,7 +770,7 @@ inherited SaleForm: TSaleForm
         Component = edOperDate
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = 0d
       end
       item
         Name = 'StatusCode'
@@ -1087,7 +1076,7 @@ inherited SaleForm: TSaleForm
         Component = edOperDate
         DataType = ftDate
         ParamType = ptInput
-        Value = ''
+        Value = 0d
       end
       item
         Name = 'inOperDatePartner'
@@ -1107,7 +1096,7 @@ inherited SaleForm: TSaleForm
         Component = edVATPercent
         DataType = ftFloat
         ParamType = ptInput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'inChangePercent'
@@ -1172,12 +1161,14 @@ inherited SaleForm: TSaleForm
     LookupControl = edFrom
     FormName = 'TJuridicalForm'
     PositionDataSet = 'GridDataSet'
+    Params = <>
     Left = 352
   end
   object dsdGuidesTo: TdsdGuides
     LookupControl = edTo
     FormName = 'TUnitForm'
     PositionDataSet = 'GridDataSet'
+    Params = <>
     Left = 472
     Top = 8
   end
@@ -1185,6 +1176,7 @@ inherited SaleForm: TSaleForm
     LookupControl = edPaidKind
     FormName = 'TPaidKindForm'
     PositionDataSet = 'ClientDataSet'
+    Params = <>
     Left = 224
     Top = 48
   end
@@ -1192,13 +1184,15 @@ inherited SaleForm: TSaleForm
     LookupControl = edContract
     FormName = 'TContractForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 680
+    Params = <>
+    Left = 664
     Top = 8
   end
   object dsdGuidesCar: TdsdGuides
     LookupControl = edCar
     FormName = 'TCarForm'
     PositionDataSet = 'ClientDataSet'
+    Params = <>
     Left = 712
     Top = 72
   end
@@ -1206,12 +1200,14 @@ inherited SaleForm: TSaleForm
     LookupControl = edPersonalDriver
     FormName = 'TPersonalForm'
     PositionDataSet = 'ClientDataSet'
+    Params = <>
     Left = 824
   end
   object dsdGuidesRoute: TdsdGuides
     LookupControl = edRoute
     FormName = 'TRouteForm'
     PositionDataSet = 'ClientDataSet'
+    Params = <>
     Left = 840
     Top = 64
   end
@@ -1219,6 +1215,7 @@ inherited SaleForm: TSaleForm
     LookupControl = edRouteSorting
     FormName = 'TRouteSortingForm'
     PositionDataSet = 'ClientDataSet'
+    Params = <>
     Left = 984
     Top = 72
   end
@@ -1226,6 +1223,7 @@ inherited SaleForm: TSaleForm
     LookupControl = edPersonal
     FormName = 'TPersonalForm'
     PositionDataSet = 'ClientDataSet'
+    Params = <>
     Left = 952
   end
 end

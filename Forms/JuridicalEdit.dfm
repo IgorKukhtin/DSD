@@ -2,8 +2,8 @@
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1075#1086' '#1083#1080#1094#1072
   ClientHeight = 332
   ClientWidth = 367
-  ExplicitWidth = 383
-  ExplicitHeight = 370
+  ExplicitWidth = 375
+  ExplicitHeight = 366
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -81,7 +81,7 @@
   end
   object ceJuridicalGroup: TcxButtonEdit
     Left = 40
-    Top = 160
+    Top = 162
     Properties.Buttons = <
       item
         Default = True
@@ -166,7 +166,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
@@ -249,7 +249,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'GLNCode'
@@ -320,21 +320,27 @@
     LookupControl = ceJuridicalGroup
     FormName = 'TJuridicalGroupForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 320
+    ParentDataSet = 'TreeDataSet'
+    Params = <>
+    Left = 224
     Top = 152
   end
   object GoodsPropertyGuides: TdsdGuides
     LookupControl = ceGoodsProperty
     FormName = 'TGoodsPropertyForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 328
+    ParentDataSet = 'TreeDataSet'
+    Params = <>
+    Left = 288
     Top = 192
   end
   object InfoMoneyGuides: TdsdGuides
     LookupControl = ceInfoMoney
     FormName = 'TInfoMoneyForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 328
+    ParentDataSet = 'TreeDataSet'
+    Params = <>
+    Left = 288
     Top = 240
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

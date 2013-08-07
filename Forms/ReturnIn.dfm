@@ -159,7 +159,7 @@ inherited ReturnInForm: TReturnInForm
     Width = 1028
     Height = 257
     Align = alClient
-    TabOrder = 2
+    TabOrder = 1
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 257
@@ -700,6 +700,7 @@ inherited ReturnInForm: TReturnInForm
     FormName = 'TJuridicalForm'
     PositionDataSet = 'GridDataSet'
     ParentDataSet = 'TreeDataSet'
+    Params = <>
     Left = 344
     Top = 16
   end
@@ -708,6 +709,7 @@ inherited ReturnInForm: TReturnInForm
     FormName = 'TUnitForm'
     PositionDataSet = 'GridDataSet'
     ParentDataSet = 'TreeDataSet'
+    Params = <>
     Left = 488
     Top = 8
   end
@@ -835,7 +837,7 @@ inherited ReturnInForm: TReturnInForm
     LookupControl = edContract
     FormName = 'TContractForm'
     PositionDataSet = 'ClientDataSet'
-    ParentDataSet = 'TreeDataSet'
+    Params = <>
     Left = 680
     Top = 8
   end
@@ -843,14 +845,14 @@ inherited ReturnInForm: TReturnInForm
     LookupControl = edPersonalDriver
     FormName = 'TPersonalForm'
     PositionDataSet = 'ClientDataSet'
-    ParentDataSet = 'TreeDataSet'
+    Params = <>
     Left = 824
   end
   object dsdGuidesCar: TdsdGuides
     LookupControl = edCar
     FormName = 'TCarForm'
     PositionDataSet = 'ClientDataSet'
-    ParentDataSet = 'TreeDataSet'
+    Params = <>
     Left = 784
     Top = 56
   end
@@ -858,7 +860,7 @@ inherited ReturnInForm: TReturnInForm
     LookupControl = edPaidKind
     FormName = 'TPaidKindForm'
     PositionDataSet = 'ClientDataSet'
-    ParentDataSet = 'TreeDataSet'
+    Params = <>
     Left = 224
     Top = 64
   end
