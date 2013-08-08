@@ -579,7 +579,7 @@ BEGIN
      INSERT INTO _tmpItemSummChildTotal (MIContainerId_Parent, OperSumm)
         SELECT _tmpItemSummChild.MIContainerId_Parent, SUM (_tmpItemSummChild.OperSumm) FROM _tmpItemSummChild GROUP BY _tmpItemSummChild.MIContainerId_Parent;
 
-     -- если не равны ДВЕ суммы, причем !обязательно! в разрезе MIContainerId
+     -- если не равны ДВЕ суммы, причем !обязательно! в разрезе MIContainerId_Parent
      IF EXISTS (SELECT _tmpItemSummTotal.OperSumm
                 FROM _tmpItemSummTotal
                      JOIN _tmpItemSummChildTotal ON _tmpItemSummChildTotal.MIContainerId_Parent = _tmpItemSummTotal.MIContainerId
@@ -594,17 +594,17 @@ BEGIN
                SELECT _tmpItemSummTotal.MIContainerId, _tmp_Find.MovementItemId
                     , (_tmpItemSummChildTotal.OperSumm - _tmpItemSummTotal.OperSumm) AS SummDiff
                FROM _tmpItemSummTotal
-                    JOIN _tmpItemSummChildTotal ON _tmpItemSummChildTotal.MIContainerId = _tmpItemSummTotal.MIContainerId
+                    JOIN _tmpItemSummChildTotal ON _tmpItemSummChildTotal.MIContainerId_Parent = _tmpItemSummTotal.MIContainerId
                     -- Выбираем любой MovementItemId с Максимальной суммой
-                    JOIN (SELECT MAX (_tmpItemSummChild.MovementItemId) AS MovementItemId, _tmpItemSummChild.MIContainerId
+                    JOIN (SELECT MAX (_tmpItemSummChild.MovementItemId) AS MovementItemId, _tmpItemSummChild.MIContainerId_Parent
                           FROM _tmpItemSummChild
                                -- Выбираем по Максимальной суммы
-                               JOIN (SELECT MAX (_tmpItemSummChild.OperSumm) AS OperSumm, _tmpItemSummChild.MIContainerId FROM _tmpItemSummChild
-                                     GROUP BY _tmpItemSummChild.MIContainerId
-                                    ) AS _tmp_MaxSumm ON _tmp_MaxSumm.MIContainerId = _tmpItemSummChild.MIContainerId
+                               JOIN (SELECT MAX (_tmpItemSummChild.OperSumm) AS OperSumm, _tmpItemSummChild.MIContainerId_Parent FROM _tmpItemSummChild
+                                     GROUP BY _tmpItemSummChild.MIContainerId_Parent
+                                    ) AS _tmp_MaxSumm ON _tmp_MaxSumm.MIContainerId_Parent = _tmpItemSummChild.MIContainerId_Parent
                                                      AND _tmp_MaxSumm.OperSumm = _tmpItemSummChild.OperSumm
-                          GROUP BY _tmpItemSummChild.MIContainerId
-                         ) AS _tmp_Find ON _tmp_Find.MIContainerId = _tmpItemSummTotal.MIContainerId
+                          GROUP BY _tmpItemSummChild.MIContainerId_Parent
+                         ) AS _tmp_Find ON _tmp_Find.MIContainerId_Parent = _tmpItemSummTotal.MIContainerId
                WHERE _tmpItemSummTotal.OperSumm <> _tmpItemSummChildTotal.OperSumm
               ) AS _tmp_Total
          WHERE _tmpItemSummChild.MovementItemId = _tmp_Total.MovementItemId

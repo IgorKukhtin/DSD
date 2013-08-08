@@ -92,7 +92,7 @@ BEGIN
         HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
             OR (COALESCE (SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END), 0) <> 0)
             -- OR (COALESCE (SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount < 0 THEN -MIContainer.Amount ELSE 0 END), 0) <> 0)
-/*       UNION ALL
+       UNION ALL
         -- Количество - РАСХОД Перемещение
         SELECT COALESCE (ContainerObjectCost_In.ObjectCostId, 0) AS MasterObjectCostId
              , COALESCE (ContainerObjectCost_Out.ObjectCostId, 0) AS ObjectCostId
@@ -100,25 +100,19 @@ BEGIN
              , 0 AS StartSumm
              , 0 AS IncomeCount
              , 0 AS IncomeSumm
-             , - SUM (MIContainer_Count_Out.Amount) AS CalcCount
-             , - SUM (MIContainer_Summ_Out.Amount) AS CalcSumm
+             , SUM (MIContainer_Count_In.Amount) AS CalcCount
+             , SUM (MIContainer_Summ_In.Amount) AS CalcSumm
         FROM Movement
-             JOIN MovementItemContainer AS MIContainer_Count_Out
-                                        ON MIContainer_Count_Out.MovementId = Movement.Id
-                                       AND MIContainer_Count_Out.Amount < 0
-                                       AND MIContainer_Count_Out.DescId = zc_MIContainer_Count()
              JOIN MovementItemContainer AS MIContainer_Count_In
-                                        ON MIContainer_Count_In.MovementItemId = MIContainer_Count_Out.MovementItemId
+                                        ON MIContainer_Count_In.MovementItemId = Movement.Id
                                        AND MIContainer_Count_In.DescId = zc_MIContainer_Count()
-                                       AND MIContainer_Count_In.Amount > 0
-             JOIN MovementItemContainer AS MIContainer_Summ_Out
-                                        ON MIContainer_Summ_Out.MovementItemId = MIContainer_Count_Out.MovementItemId
-                                       AND MIContainer_Summ_Out.DescId = zc_MIContainer_Summ()
-                                       AND MIContainer_Summ_Out.Amount < 0
+                                       AND MIContainer_Count_In.isActive = TRUE
              JOIN MovementItemContainer AS MIContainer_Summ_In
                                         ON MIContainer_Summ_In.MovementItemId = MIContainer_Count_In.MovementItemId
                                        AND MIContainer_Summ_In.DescId = zc_MIContainer_Summ()
-                                       AND MIContainer_Summ_In.Amount > 0
+
+             JOIN MovementItemContainer AS MIContainer_Summ_Out ON MIContainer_Summ_Out.Id = MIContainer_Summ_In.ParentId
+
              LEFT JOIN ContainerObjectCost AS ContainerObjectCost_Out
                                            ON ContainerObjectCost_Out.Containerid = MIContainer_Summ_Out.ContainerId
                                           AND ContainerObjectCost_Out.ObjectCostDescId = zc_ObjectCost_Basis()
@@ -143,21 +137,14 @@ BEGIN
         FROM Movement
              JOIN MovementItemContainer AS MIContainer_Count_Out
                                         ON MIContainer_Count_Out.MovementId = Movement.Id
-                                       AND MIContainer_Count_Out.Amount < 0
                                        AND MIContainer_Count_Out.DescId = zc_MIContainer_Count()
-             JOIN MovementItem AS MI_Out ON MI_Out.Id = MIContainer_Count_Out.MovementItemId
-             JOIN MovementItemContainer AS MIContainer_Count_In
-                                        ON MIContainer_Count_In.MovementItemId = MI_Out.ParentId
-                                       AND MIContainer_Count_In.DescId = zc_MIContainer_Count()
-                                       AND MIContainer_Count_In.Amount >= 0
+                                       AND MIContainer_Count_Out.isActive = FALSE
              JOIN MovementItemContainer AS MIContainer_Summ_Out
                                         ON MIContainer_Summ_Out.MovementItemId = MIContainer_Count_Out.MovementItemId
                                        AND MIContainer_Summ_Out.DescId = zc_MIContainer_Summ()
---                                       AND MIContainer_Summ_Out.Amount < 0
-             JOIN MovementItemContainer AS MIContainer_Summ_In
-                                        ON MIContainer_Summ_In.MovementItemId = MIContainer_Count_In.MovementItemId
-                                       AND MIContainer_Summ_In.DescId = zc_MIContainer_Summ()
---                                       AND MIContainer_Summ_In.Amount > 0
+
+             JOIN MovementItemContainer AS MIContainer_Summ_In ON MIContainer_Summ_In.Id = MIContainer_Summ_Out.ParentId
+
              LEFT JOIN ContainerObjectCost AS ContainerObjectCost_Out
                                            ON ContainerObjectCost_Out.Containerid = MIContainer_Summ_Out.ContainerId
                                           AND ContainerObjectCost_Out.ObjectCostDescId = zc_ObjectCost_Basis()
@@ -186,19 +173,13 @@ BEGIN
              JOIN MovementItemContainer AS MIContainer_Count_Out
                                         ON MIContainer_Count_Out.MovementId = Movement.Id
                                        AND MIContainer_Count_Out.DescId = zc_MIContainer_Count()
-                                       AND MIContainer_Count_Out.Amount < 0
-             JOIN MovementItemContainer AS MIContainer_Count_In
-                                        ON MIContainer_Count_In.MovementId = Movement.Id
-                                       AND MIContainer_Count_In.DescId = zc_MIContainer_Count()
-                                       AND MIContainer_Count_In.Amount >= 0
+                                       AND MIContainer_Count_Out.isActive = FALSE
              JOIN MovementItemContainer AS MIContainer_Summ_Out
                                         ON MIContainer_Summ_Out.MovementItemId = MIContainer_Count_Out.MovementItemId
                                        AND MIContainer_Summ_Out.DescId = zc_MIContainer_Summ()
---                                       AND MIContainer_Summ_Out.Amount < 0
-             JOIN MovementItemContainer AS MIContainer_Summ_In
-                                        ON MIContainer_Summ_In.MovementItemId = MIContainer_Count_In.MovementItemId
-                                       AND MIContainer_Summ_In.DescId = zc_MIContainer_Summ()
---                                       AND MIContainer_Summ_In.Amount > 0
+
+             JOIN MovementItemContainer AS MIContainer_Summ_In ON MIContainer_Summ_In.MovementItemId = MIContainer_Summ_Out.ParentId
+
              LEFT JOIN ContainerObjectCost AS ContainerObjectCost_Out
                                            ON ContainerObjectCost_Out.Containerid = MIContainer_Summ_Out.ContainerId
                                           AND ContainerObjectCost_Out.ObjectCostDescId = zc_ObjectCost_Basis()
@@ -212,7 +193,7 @@ BEGIN
                    LEFT JOIN MovementItemContainer AS MIContainer_Summ_Out
                                                    ON MIContainer_Summ_Out.MovementId = Movement.Id
                                                   AND MIContainer_Summ_Out.DescId = zc_MIContainer_Summ()
-                                                  AND MIContainer_Summ_Out.Amount < 0
+                                                  AND MIContainer_Summ_Out.isActive = FALSE
               WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                 AND Movement.DescId = zc_Movement_ProductionSeparate()
                 AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -223,7 +204,7 @@ BEGIN
           AND Movement.DescId = zc_Movement_ProductionSeparate()
           AND Movement.StatusId = zc_Enum_Status_Complete()
         GROUP BY ContainerObjectCost_In.ObjectCostId
-               , ContainerObjectCost_Out.ObjectCostId*/
+               , ContainerObjectCost_Out.ObjectCostId
         ;
 
 
@@ -364,6 +345,7 @@ BEGIN
                GROUP BY _tmpChild.MasterObjectCostId
 --                      , _tmpChild.ObjectCostId
               ) AS _tmpSumm ON _tmpMaster.ObjectCostId = _tmpSumm.ObjectCostId
+         WHERE ((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) <> 0)
         ;
      END IF; -- if inInsert <> 12345
 
@@ -438,4 +420,3 @@ LANGUAGE PLPGSQL VOLATILE;
 -- тест
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2013', inEndDate:= '31.01.2013', inItearationCount:= 1, inInsert:= -1, inSession:= '2') WHERE ObjectCostId = 15148
 -- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2013', inEndDate:= '31.01.2013', inItearationCount:= 100, inInsert:= -1, inSession:= '2') WHERE Price <> PriceNext
-

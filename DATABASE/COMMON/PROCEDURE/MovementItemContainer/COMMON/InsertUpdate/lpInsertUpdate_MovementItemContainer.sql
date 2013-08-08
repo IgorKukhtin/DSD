@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_MovementItemContainer
 
--- DROP FUNCTION lpInsertUpdate_MovementItemContainer (Integer, Integer, Integer, Integer, TFloat, TDateTime);
+-- DROP FUNCTION lpInsertUpdate_MovementItemContainer (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TDateTime, Boolean);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemContainer(
  INOUT ioId Integer          , --
@@ -29,7 +29,7 @@ BEGIN
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION lpInsertUpdate_MovementItemContainer (Integer, Integer, Integer, Integer, Integer, TFloat, TDateTime) OWNER TO postgres;
+ALTER FUNCTION lpInsertUpdate_MovementItemContainer (Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TDateTime, Boolean) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
