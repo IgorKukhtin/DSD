@@ -1,19 +1,20 @@
 inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
   Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-  ClientHeight = 427
-  ClientWidth = 1240
-  ExplicitWidth = 1256
-  ExplicitHeight = 466
+  ClientHeight = 363
+  ClientWidth = 717
+  ExplicitWidth = 725
+  ExplicitHeight = 390
   PixelsPerInch = 96
   TextHeight = 13
   object TPanel
     Left = 0
     Top = 26
-    Width = 1240
+    Width = 717
     Height = 41
     Align = alTop
     TabOrder = 1
+    ExplicitWidth = 1240
     object deStart: TcxDateEdit
       Left = 208
       Top = 8
@@ -32,11 +33,13 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 67
-    Width = 1240
-    Height = 360
+    Width = 717
+    Height = 296
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
+    ExplicitWidth = 1240
+    ExplicitHeight = 360
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -47,10 +50,15 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
+      OptionsCustomize.ColumnHiding = True
+      OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsView.ColumnAutoWidth = True
+      OptionsView.HeaderHeight = 40
+      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object colStatus: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'StatusCode'
@@ -72,34 +80,42 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
             ImageIndex = 13
             Value = 3
           end>
+        HeaderAlignmentVert = vaCenter
       end
       object colInvNumber: TcxGridDBColumn
         Caption = #1053#1086#1084#1077#1088
         DataBinding.FieldName = 'InvNumber'
+        HeaderAlignmentVert = vaCenter
         Width = 41
       end
       object colOperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
+        HeaderAlignmentVert = vaCenter
         Width = 47
       end
       object colFromName: TcxGridDBColumn
         Caption = #1054#1090' '#1082#1086#1075#1086
         DataBinding.FieldName = 'FromName'
+        HeaderAlignmentVert = vaCenter
         Width = 140
       end
       object colToName: TcxGridDBColumn
         Caption = #1050#1086#1084#1091
         DataBinding.FieldName = 'ToName'
+        HeaderAlignmentVert = vaCenter
         Width = 140
       end
       object colTotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'TotalCount'
+        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentVert = vaCenter
       end
       object colPartionGoodsName: TcxGridDBColumn
         Caption = #1055#1072#1088#1090#1080#1103
         DataBinding.FieldName = 'PersonalDriverName'
+        HeaderAlignmentVert = vaCenter
         Width = 55
       end
     end
@@ -181,8 +197,8 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -224,6 +240,10 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbComplete'
         end
         item
@@ -236,6 +256,10 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
           Visible = True
           ItemName = 'bbRefresh'
         end>
@@ -271,6 +295,11 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
       Action = actSetErased
       Category = 0
     end
+    object dxBarStatic: TdxBarStatic
+      Caption = '      '
+      Category = 0
+      Visible = ivAlways
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -300,7 +329,7 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
           ParamType = ptOutput
           Value = '0'
         end>
-      isShowModal = True
+      isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
@@ -317,7 +346,7 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
           DataType = ftInteger
           ParamType = ptInput
         end>
-      isShowModal = True
+      isShowModal = False
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
@@ -446,5 +475,15 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
       end>
     Left = 72
     Top = 320
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 168
+    Top = 216
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    SortImages = dmMain.SortImageList
+    View = cxGridDBTableView
+    Left = 176
+    Top = 264
   end
 end

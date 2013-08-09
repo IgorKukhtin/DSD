@@ -71,6 +71,7 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     colPersonalName: TcxGridDBColumn;
     colInvNumberPartner: TcxGridDBColumn;
+    dxBarButton: TdxBarButton;
   private
   public
   end;

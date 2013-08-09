@@ -2,15 +2,15 @@ inherited InventoryJournalForm: TInventoryJournalForm
   Hint = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
   ClientHeight = 427
-  ClientWidth = 1240
-  ExplicitWidth = 1248
-  ExplicitHeight = 461
+  ClientWidth = 778
+  ExplicitWidth = 786
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
     Top = 26
-    Width = 1240
+    Width = 778
     Height = 41
     Align = alTop
     Caption = 'Panel1'
@@ -33,7 +33,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 67
-    Width = 1240
+    Width = 778
     Height = 360
     Align = alClient
     PopupMenu = PopupMenu
@@ -52,6 +52,9 @@ inherited InventoryJournalForm: TInventoryJournalForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsView.ColumnAutoWidth = True
+      OptionsView.HeaderHeight = 40
+      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object colStatus: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'StatusCode'
@@ -73,34 +76,43 @@ inherited InventoryJournalForm: TInventoryJournalForm
             ImageIndex = 13
             Value = 3
           end>
+        HeaderAlignmentVert = vaCenter
       end
       object colInvNumber: TcxGridDBColumn
         Caption = #1053#1086#1084#1077#1088
         DataBinding.FieldName = 'InvNumber'
+        HeaderAlignmentVert = vaCenter
         Width = 63
       end
       object colOperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
+        HeaderAlignmentVert = vaCenter
         Width = 47
       end
       object colFromName: TcxGridDBColumn
         Caption = #1054#1090' '#1082#1086#1075#1086
         DataBinding.FieldName = 'FromName'
+        HeaderAlignmentVert = vaCenter
         Width = 194
       end
       object colToName: TcxGridDBColumn
         Caption = #1050#1086#1084#1091
         DataBinding.FieldName = 'ToName'
+        HeaderAlignmentVert = vaCenter
         Width = 218
       end
       object colTotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'TotalCount'
+        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentVert = vaCenter
       end
       object colTotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1087#1086#1089#1090#1072#1074#1097'.'
         DataBinding.FieldName = 'TotalSumm'
+        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentVert = vaCenter
         Width = 90
       end
     end
@@ -121,41 +133,6 @@ inherited InventoryJournalForm: TInventoryJournalForm
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
-      item
-        Component = colFromName
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Width')
-      end
-      item
-        Component = colInvNumber
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Width')
-      end
-      item
-        Component = colOperDate
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Width')
-      end
-      item
-        Component = colStatus
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Width')
-      end
-      item
-        Component = colToName
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Width')
-      end
       item
         Component = Owner
         Properties.Strings = (
@@ -215,6 +192,10 @@ inherited InventoryJournalForm: TInventoryJournalForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbComplete'
         end
         item
@@ -227,6 +208,10 @@ inherited InventoryJournalForm: TInventoryJournalForm
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
           Visible = True
           ItemName = 'bbRefresh'
         end>
@@ -262,6 +247,11 @@ inherited InventoryJournalForm: TInventoryJournalForm
       Action = actSetErased
       Category = 0
     end
+    object dxBarStatic: TdxBarStatic
+      Caption = '      '
+      Category = 0
+      Visible = ivAlways
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -291,7 +281,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
           ParamType = ptOutput
           Value = '0'
         end>
-      isShowModal = True
+      isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
@@ -299,6 +289,8 @@ inherited InventoryJournalForm: TInventoryJournalForm
       Category = 'DSDLib'
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
+      SecondaryShortCuts.Strings = (
+        'Enter')
       FormName = 'TInventoryForm'
       GuiParams = <
         item
@@ -308,7 +300,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
           DataType = ftInteger
           ParamType = ptInput
         end>
-      isShowModal = True
+      isShowModal = False
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
@@ -366,14 +358,14 @@ inherited InventoryJournalForm: TInventoryJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
-        Value = '01.05.2013'
+        Value = 41395d
       end
       item
         Name = 'inEndDate'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
-        Value = '01.05.2014'
+        Value = 41760d
       end>
     Left = 24
     Top = 176
@@ -437,5 +429,15 @@ inherited InventoryJournalForm: TInventoryJournalForm
       end>
     Left = 72
     Top = 320
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 184
+    Top = 192
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    SortImages = dmMain.SortImageList
+    View = cxGridDBTableView
+    Left = 184
+    Top = 248
   end
 end

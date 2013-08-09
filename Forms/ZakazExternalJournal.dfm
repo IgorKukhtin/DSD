@@ -3,7 +3,7 @@ inherited ZakazExternalJournalForm: TZakazExternalJournalForm
   ClientHeight = 427
   ClientWidth = 1240
   ExplicitWidth = 1248
-  ExplicitHeight = 461
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -208,6 +208,10 @@ inherited ZakazExternalJournalForm: TZakazExternalJournalForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'dxBarButton'
+        end
+        item
+          Visible = True
           ItemName = 'bbComplete'
         end
         item
@@ -220,6 +224,10 @@ inherited ZakazExternalJournalForm: TZakazExternalJournalForm
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarButton'
+        end
+        item
           Visible = True
           ItemName = 'bbRefresh'
         end>
@@ -255,6 +263,12 @@ inherited ZakazExternalJournalForm: TZakazExternalJournalForm
       Action = actSetErased
       Category = 0
     end
+    object dxBarButton: TdxBarButton
+      Caption = '     '
+      Category = 0
+      Hint = '     '
+      Visible = ivAlways
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -284,7 +298,7 @@ inherited ZakazExternalJournalForm: TZakazExternalJournalForm
           ParamType = ptOutput
           Value = '0'
         end>
-      isShowModal = True
+      isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
@@ -301,7 +315,7 @@ inherited ZakazExternalJournalForm: TZakazExternalJournalForm
           DataType = ftInteger
           ParamType = ptInput
         end>
-      isShowModal = True
+      isShowModal = False
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
@@ -359,14 +373,14 @@ inherited ZakazExternalJournalForm: TZakazExternalJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
-        Value = '01.05.2013'
+        Value = 41395d
       end
       item
         Name = 'inEndDate'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
-        Value = '01.05.2014'
+        Value = 41760d
       end>
     Left = 128
     Top = 176

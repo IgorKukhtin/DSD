@@ -1,18 +1,19 @@
 inherited ZakazInternalJournalForm: TZakazInternalJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1047#1072#1103#1074#1082#1080' ('#1074#1085#1091#1090#1088#1077#1085#1085#1080#1077')'
   ClientHeight = 427
-  ClientWidth = 1240
-  ExplicitWidth = 1248
-  ExplicitHeight = 461
+  ClientWidth = 815
+  ExplicitWidth = 823
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
     Top = 26
-    Width = 1240
+    Width = 815
     Height = 41
     Align = alTop
     TabOrder = 1
+    ExplicitWidth = 1240
     object deStart: TcxDateEdit
       Left = 208
       Top = 8
@@ -31,11 +32,12 @@ inherited ZakazInternalJournalForm: TZakazInternalJournalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 67
-    Width = 1240
+    Width = 815
     Height = 360
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
+    ExplicitWidth = 1240
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -46,10 +48,13 @@ inherited ZakazInternalJournalForm: TZakazInternalJournalForm
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
+      OptionsCustomize.ColumnHiding = True
+      OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsView.ColumnAutoWidth = True
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -181,6 +186,10 @@ inherited ZakazInternalJournalForm: TZakazInternalJournalForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbComplete'
         end
         item
@@ -193,6 +202,10 @@ inherited ZakazInternalJournalForm: TZakazInternalJournalForm
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
           Visible = True
           ItemName = 'bbRefresh'
         end>
@@ -228,6 +241,11 @@ inherited ZakazInternalJournalForm: TZakazInternalJournalForm
       Action = actSetErased
       Category = 0
     end
+    object dxBarStatic: TdxBarStatic
+      Caption = '     '
+      Category = 0
+      Visible = ivAlways
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -257,7 +275,7 @@ inherited ZakazInternalJournalForm: TZakazInternalJournalForm
           ParamType = ptOutput
           Value = '0'
         end>
-      isShowModal = True
+      isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
@@ -274,7 +292,7 @@ inherited ZakazInternalJournalForm: TZakazInternalJournalForm
           DataType = ftInteger
           ParamType = ptInput
         end>
-      isShowModal = True
+      isShowModal = False
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
@@ -332,14 +350,14 @@ inherited ZakazInternalJournalForm: TZakazInternalJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
-        Value = '01.05.2013'
+        Value = 41395d
       end
       item
         Name = 'inEndDate'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
-        Value = '01.05.2014'
+        Value = 41760d
       end>
     Left = 128
     Top = 176
