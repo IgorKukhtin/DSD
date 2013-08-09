@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpReport_HistoryCost(
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ObjectCostId Integer
-             , MovementId Integer, MovementItemId Integer, MovementItemId Integer, OperDate TDateTime, InvNumber TVarChar, MovementDescCode TVarChar, OperCount TFloat, OperPrice TFloat -- , OperSumm TFloat
+             , MovementId Integer, MovementItemId Integer, ContainerId Integer, OperDate TDateTime, InvNumber TVarChar, MovementDescCode TVarChar, OperCount TFloat, OperPrice TFloat -- , OperSumm TFloat
              , Price TFloat, Price_Calc TFloat
              , UnitParentCode Integer, UnitParentName TVarChar, UnitCode Integer, UnitName TVarChar
              , GoodsGroupCode Integer, GoodsGroupName TVarChar, GoodsCode Integer, GoodsName TVarChar, GoodsKindCode Integer, GoodsKindName TVarChar
@@ -30,12 +30,13 @@ $BODY$BEGIN
              ContainerObjectCost.ObjectCostId
            , _tmpSumm.MovementId
            , _tmpSumm.MovementItemId
+           , _tmpSumm.ContainerId
            , _tmpSumm.OperDate
            , _tmpSumm.InvNumber
            , _tmpSumm.Code AS MovementDescCode
            , _tmpSumm.OperCount
            , CAST (_tmpSumm.OperPrice AS TFloat) AS OperPrice
-           , CAST (_tmpSumm.OperSumm AS TFloat) AS OperSumm
+--           , CAST (_tmpSumm.OperSumm AS TFloat) AS OperSumm
 
            , HistoryCost.Price
            , CAST (
@@ -184,6 +185,7 @@ $BODY$BEGIN
            (SELECT ContainerObjectCost_Summ.ObjectCostId
                  , Movement.Id AS MovementId
                  , MIContainer.MovementItemId
+                 , MIContainer.ContainerId
                  , Movement.OperDate
                  , Movement.InvNumber
                  , CAST (MovementDesc.Code || '+' || MovementItemDesc.Code AS TVarChar) AS Code
