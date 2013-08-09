@@ -478,15 +478,15 @@ BEGIN
 
 
      -- самое интересное: заполняем таблицу - суммовые Child-элементы документа, со всеми свойствами для формирования Аналитик в проводках, здесь ObjectCostId только для теста
-     INSERT INTO _tmpItemSummChild (ObjectCostId, MovementItemId_Parent, MovementItemId, MIContainerId, ContainerId_From, OperSumm, InfoMoneyId_Detail_From)
+     INSERT INTO _tmpItemSummChild (ObjectCostId, MovementItemId_Parent, MovementItemId, MIContainerId, ContainerId_From, InfoMoneyId_Detail_From, OperSumm)
         SELECT
               ContainerObjectCost_Basis.ObjectCostId
             , _tmpItemChild.MovementItemId_Parent
             , _tmpItemChild.MovementItemId
             , 0 AS MIContainerId
             , Container_Summ.Id AS ContainerId_From
-            , ABS (_tmpItemChild.OperCount * COALESCE (HistoryCost.Price, 0)) AS OperSumm
             , ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail_From
+            , SUM (ABS (_tmpItemChild.OperCount * COALESCE (HistoryCost.Price, 0))) AS OperSumm
         FROM _tmpItemChild
              JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItemChild.ContainerId_GoodsFrom
                                              AND Container_Summ.DescId = zc_Container_Summ()
@@ -499,6 +499,13 @@ BEGIN
              LEFT JOIN HistoryCost ON HistoryCost.ObjectCostId = ContainerObjectCost_Basis.ObjectCostId
                                   AND _tmpItemChild.OperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
         -- !ОБЯЗАТЕЛЬНО! вставляем нули - WHERE (_tmpItemChild.OperCount * HistoryCost.Price) <> 0
+        WHERE zc_isHistoryCost() = TRUE AND (ContainerLinkObject_InfoMoneyDetail.ObjectId = 0 OR zc_isHistoryCost_byInfoMoneyDetail()= TRUE)
+        GROUP BY
+                 ContainerObjectCost_Basis.ObjectCostId
+               , _tmpItemChild.MovementItemId_Parent
+               , _tmpItemChild.MovementItemId
+               , Container_Summ.Id
+               , ContainerLinkObject_InfoMoneyDetail.ObjectId
         ;
 
 
@@ -760,7 +767,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 07.08.13                                        * add inParentId and inIsActive
+ 09.08.13                                        * add zc_isHistoryCost and zc_isHistoryCost_byInfoMoneyDetail
  24.07.13                                        * !ОБЯЗАТЕЛЬНО! вставляем нули
  21.07.13                                        * ! finich !
  20.07.13                                        *

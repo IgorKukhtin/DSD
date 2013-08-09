@@ -419,5 +419,5 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2013', inEndDate:= '31.01.2013', inItearationCount:= 1, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') -- WHERE ObjectCostId = 15148
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2013', inEndDate:= '31.01.2013', inItearationCount:= 100, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') -- WHERE Price <> PriceNext
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2013', inEndDate:= '31.01.2013', inItearationCount:= 1, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') -- WHERE ObjectCostId = 15148
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.02.2013', inEndDate:= '28.02.2013', inItearationCount:= 500, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') -- WHERE Price <> PriceNext
