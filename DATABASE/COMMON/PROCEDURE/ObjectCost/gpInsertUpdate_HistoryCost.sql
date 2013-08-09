@@ -1,12 +1,13 @@
 -- Function: gpInsertUpdate_HistoryCost()
 
--- DROP FUNCTION gpInsertUpdate_HistoryCost (TDateTime, TDateTime, Integer, Integer, TVarChar);
+-- DROP FUNCTION gpInsertUpdate_HistoryCost (TDateTime, TDateTime, Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_HistoryCost(
     IN inStartDate       TDateTime , --
     IN inEndDate         TDateTime , --
     IN inItearationCount Integer , --
     IN inInsert          Integer , --
+    IN inDiffSumm        TFloat , --
     IN inSession         TVarChar    -- сессия пользователя
 )                              
 --  RETURNS VOID
@@ -104,7 +105,7 @@ BEGIN
              , SUM (MIContainer_Summ_In.Amount) AS CalcSumm
         FROM Movement
              JOIN MovementItemContainer AS MIContainer_Count_In
-                                        ON MIContainer_Count_In.MovementItemId = Movement.Id
+                                        ON MIContainer_Count_In.MovementId = Movement.Id
                                        AND MIContainer_Count_In.DescId = zc_MIContainer_Count()
                                        AND MIContainer_Count_In.isActive = TRUE
              JOIN MovementItemContainer AS MIContainer_Summ_In
@@ -143,7 +144,7 @@ BEGIN
                                         ON MIContainer_Summ_Out.MovementItemId = MIContainer_Count_Out.MovementItemId
                                        AND MIContainer_Summ_Out.DescId = zc_MIContainer_Summ()
 
-             JOIN MovementItemContainer AS MIContainer_Summ_In ON MIContainer_Summ_In.Id = MIContainer_Summ_Out.ParentId
+             JOIN MovementItemContainer AS MIContainer_Summ_In ON MIContainer_Summ_In.ParentId = MIContainer_Summ_Out.Id
 
              LEFT JOIN ContainerObjectCost AS ContainerObjectCost_Out
                                            ON ContainerObjectCost_Out.Containerid = MIContainer_Summ_Out.ContainerId
@@ -178,7 +179,7 @@ BEGIN
                                         ON MIContainer_Summ_Out.MovementItemId = MIContainer_Count_Out.MovementItemId
                                        AND MIContainer_Summ_Out.DescId = zc_MIContainer_Summ()
 
-             JOIN MovementItemContainer AS MIContainer_Summ_In ON MIContainer_Summ_In.MovementItemId = MIContainer_Summ_Out.ParentId
+             JOIN MovementItemContainer AS MIContainer_Summ_In ON MIContainer_Summ_In.ParentId = MIContainer_Summ_Out.Id
 
              LEFT JOIN ContainerObjectCost AS ContainerObjectCost_Out
                                            ON ContainerObjectCost_Out.Containerid = MIContainer_Summ_Out.ContainerId
@@ -283,7 +284,7 @@ BEGIN
                GROUP BY _tmpChild.MasterObjectCostId
               ) AS _tmpSumm 
          WHERE _tmpMaster.ObjectCostId = _tmpSumm.ObjectCostId
-           AND _tmpMaster.CalcSumm <> _tmpSumm.CalcSumm;
+           AND ABS (_tmpMaster.CalcSumm - _tmpSumm.CalcSumm) <= inDiffSumm;
 
      END LOOP;
 
@@ -345,7 +346,7 @@ BEGIN
                GROUP BY _tmpChild.MasterObjectCostId
 --                      , _tmpChild.ObjectCostId
               ) AS _tmpSumm ON _tmpMaster.ObjectCostId = _tmpSumm.ObjectCostId
-         WHERE ((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) <> 0)
+--         WHERE ((_tmpMaster.StartSumm + _tmpMaster.IncomeSumm + _tmpMaster.CalcSumm) <> 0)
         ;
      END IF; -- if inInsert <> 12345
 
@@ -418,5 +419,5 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2013', inEndDate:= '31.01.2013', inItearationCount:= 1, inInsert:= -1, inSession:= '2') WHERE ObjectCostId = 15148
--- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2013', inEndDate:= '31.01.2013', inItearationCount:= 100, inInsert:= -1, inSession:= '2') WHERE Price <> PriceNext
+ SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2013', inEndDate:= '31.01.2013', inItearationCount:= 1, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') -- WHERE ObjectCostId = 15148
+-- SELECT * FROM gpInsertUpdate_HistoryCost (inStartDate:= '01.01.2013', inEndDate:= '31.01.2013', inItearationCount:= 100, inInsert:= -1, inDiffSumm:= 0.009, inSession:= '2') -- WHERE Price <> PriceNext

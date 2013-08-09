@@ -441,7 +441,6 @@ object MainForm: TMainForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 3
-    OnClick = DocumentPanelClick
     object Label1: TLabel
       Left = 6
       Top = 22
@@ -693,7 +692,6 @@ object MainForm: TMainForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 4
-    OnClick = DocumentPanelClick
     object Label3: TLabel
       Left = 6
       Top = 22
@@ -892,25 +890,7 @@ object MainForm: TMainForm
     Left = 384
     Top = 304
   end
-  object toZConnection: TZConnection
-    ControlsCodePage = cCP_UTF16
-    UTF8StringsAsWideField = True
-    ClientCodepage = 'WIN1251'
-    Properties.Strings = (
-      'codepage=WIN1251'
-      'AutoEncodeStrings=ON'
-      'controls_cp=CP_UTF16')
-    HostName = 'localhost'
-    Port = 5432
-    Database = 'dsd'
-    User = 'postgres'
-    Password = 'postgres'
-    Protocol = 'postgresql-9'
-    Left = 128
-    Top = 280
-  end
   object toQuery: TZQuery
-    Connection = toZConnection
     SQL.Strings = (
       'select  * from Object')
     Params = <>
@@ -919,10 +899,16 @@ object MainForm: TMainForm
     Left = 208
     Top = 320
   end
-  object toStoredProc_ZConnection: TZStoredProc
-    Connection = toZConnection
+  object toStoredProc: TdsdStoredProc
+    DataSets = <>
     Params = <>
-    Left = 96
-    Top = 336
+    Left = 128
+    Top = 248
+  end
+  object toStoredProc_two: TdsdStoredProc
+    DataSets = <>
+    Params = <>
+    Left = 120
+    Top = 160
   end
 end

@@ -118,10 +118,11 @@ BEGIN
                                               -- AND 1=0
                  LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ContainerLinkObject_GoodsKind.ObjectId
 
+                 LEFT JOIN Movement ON Movement.Id = MovementItemContainer.MovementId
                  LEFT JOIN MovementItemContainer AS MovementItemContainer_Parent ON MovementItemContainer_Parent.Id = MovementItemContainer.ParentId
-
+                                                                                AND Movement.DescId = zc_Movement_ProductionSeparate()
                  LEFT JOIN MovementItem ON MovementItem.Id = MovementItemContainer.MovementItemId
-                 LEFT JOIN MovementItem AS MovementItem_Parent ON MovementItem_Parent.Id = MovementItemContainer_Parent.MovementItemId
+                 LEFT JOIN MovementItem AS MovementItem_Parent ON MovementItem_Parent.Id = COALESCE (MovementItemContainer_Parent.MovementItemId, MovementItem.ParentId)
                  LEFT JOIN Object AS Object_Goods_Parent ON Object_Goods_Parent.Id = COALESCE (MovementItem_Parent.ObjectId, MovementItem.ObjectId)
 
                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
@@ -250,10 +251,11 @@ BEGIN
                                               -- AND 1=0
                  LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ContainerLinkObject_GoodsKind.ObjectId
 
+                 LEFT JOIN Movement ON Movement.Id = MovementItemContainer.MovementId
                  LEFT JOIN MovementItemContainer AS MovementItemContainer_Parent ON MovementItemContainer_Parent.Id = MovementItemContainer.ParentId
-
+                                                                                AND Movement.DescId = zc_Movement_ProductionSeparate()
                  LEFT JOIN MovementItem ON MovementItem.Id = MovementItemContainer.MovementItemId
-                 LEFT JOIN MovementItem AS MovementItem_Parent ON MovementItem_Parent.Id = MovementItemContainer_Parent.MovementItemId
+                 LEFT JOIN MovementItem AS MovementItem_Parent ON MovementItem_Parent.Id = COALESCE (MovementItemContainer_Parent.MovementItemId, MovementItem.ParentId)
                  LEFT JOIN Object AS Object_Goods_Parent ON Object_Goods_Parent.Id = COALESCE (MovementItem_Parent.ObjectId, MovementItem.ObjectId)
 
                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind

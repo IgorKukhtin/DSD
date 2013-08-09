@@ -61,12 +61,9 @@ type
     OKDocumentButton: TButton;
     Label1: TLabel;
     Label2: TLabel;
-    toZConnection: TZConnection;
     toQuery: TZQuery;
-    toStoredProc_ZConnection: TZStoredProc;
     StartDateEdit: TcxDateEdit;
     EndDateEdit: TcxDateEdit;
-    toStoredProc: TdsdStoredProc;
     cbInfoMoneyGroup: TCheckBox;
     cbInfoMoneyDestination: TCheckBox;
     cbInfoMoney: TCheckBox;
@@ -86,7 +83,6 @@ type
     cbComplete: TCheckBox;
     cbUnComplete: TCheckBox;
     OKCompleteDocumentButton: TButton;
-    toStoredProc_two: TdsdStoredProc;
     cbMember_andPersonal: TCheckBox;
     cbTradeMark: TCheckBox;
     cbIncomePacker: TCheckBox;
@@ -108,6 +104,8 @@ type
     cbCompleteProductionUnion: TCheckBox;
     cbCompleteProductionSeparate: TCheckBox;
     cbRouteSorting: TCheckBox;
+    toStoredProc: TdsdStoredProc;
+    toStoredProc_two: TdsdStoredProc;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -115,7 +113,6 @@ type
     procedure CloseButtonClick(Sender: TObject);
     procedure cbAllDocumentClick(Sender: TObject);
     procedure OKDocumentButtonClick(Sender: TObject);
-    procedure DocumentPanelClick(Sender: TObject);
     procedure cbAllCompleteDocumentClick(Sender: TObject);
     procedure cbCompleteClick(Sender: TObject);
     procedure cbUnCompleteClick(Sender: TObject);
@@ -146,41 +143,41 @@ type
     procedure pCompleteDocument_ProductionUnion;
     procedure pCompleteDocument_ProductionSeparate;
     // Documents :
-    procedure pLoadDocument_Income;
-    procedure pLoadDocumentItem_Income;
-    procedure pLoadDocument_IncomePacker;
-    procedure pLoadDocumentItem_IncomePacker;
+    function pLoadDocument_Income:Integer;
+    procedure pLoadDocumentItem_Income(SaveCount:Integer);
+    function pLoadDocument_IncomePacker:Integer;
+    procedure pLoadDocumentItem_IncomePacker(SaveCount:Integer);
 
-    procedure pLoadDocument_SendUnit;
-    procedure pLoadDocumentItem_SendUnit;
-    procedure pLoadDocument_SendPersonal;
-    procedure pLoadDocumentItem_SendPersonal;
-    procedure pLoadDocument_SendUnitBranch;
-    procedure pLoadDocumentItem_SendUnitBranch;
+    function pLoadDocument_SendUnit:Integer;
+    procedure pLoadDocumentItem_SendUnit(SaveCount:Integer);
+    function pLoadDocument_SendPersonal:Integer;
+    procedure pLoadDocumentItem_SendPersonal(SaveCount:Integer);
+    function pLoadDocument_SendUnitBranch:Integer;
+    procedure pLoadDocumentItem_SendUnitBranch(SaveCount:Integer);
 
-    procedure pLoadDocument_Sale;
-    procedure pLoadDocumentItem_Sale;
+    function pLoadDocument_Sale:Integer;
+    procedure pLoadDocumentItem_Sale(SaveCount:Integer);
 
-    procedure pLoadDocument_ReturnOut;
-    procedure pLoadDocumentItem_ReturnOut;
-    procedure pLoadDocument_ReturnIn;
-    procedure pLoadDocumentItem_ReturnIn;
+    function pLoadDocument_ReturnOut:Integer;
+    procedure pLoadDocumentItem_ReturnOut(SaveCount:Integer);
+    function pLoadDocument_ReturnIn:Integer;
+    procedure pLoadDocumentItem_ReturnIn(SaveCount:Integer);
 
-    procedure pLoadDocument_ProductionUnion;
-    procedure pLoadDocumentItem_ProductionUnionMaster;
-    procedure pLoadDocumentItem_ProductionUnionChild;
-    procedure pLoadDocument_ProductionSeparate;
-    procedure pLoadDocumentItem_ProductionSeparateMaster;
-    procedure pLoadDocumentItem_ProductionSeparateChild;
+    function pLoadDocument_ProductionUnion:Integer;
+    function pLoadDocumentItem_ProductionUnionMaster(SaveCount:Integer):Integer;
+    procedure pLoadDocumentItem_ProductionUnionChild(SaveCount1,SaveCount2:Integer);
+    function pLoadDocument_ProductionSeparate:Integer;
+    function pLoadDocumentItem_ProductionSeparateMaster(SaveCount:Integer):Integer;
+    procedure pLoadDocumentItem_ProductionSeparateChild(SaveCount1,SaveCount2:Integer);
 
-    procedure pLoadDocument_Loss;
-    procedure pLoadDocumentItem_Loss;
+    function pLoadDocument_Loss:Integer;
+    procedure pLoadDocumentItem_Loss(SaveCount:Integer);
 
-    procedure pLoadDocument_Inventory;
-    procedure pLoadDocumentItem_Inventory;
+    function pLoadDocument_Inventory:Integer;
+    procedure pLoadDocumentItem_Inventory(SaveCount:Integer);
 
-    procedure pLoadDocument_Zakaz;
-    procedure pLoadDocumentItem_Zakaz;
+    function pLoadDocument_Zakaz:Integer;
+    procedure pLoadDocumentItem_Zakaz(SaveCount:Integer);
 
     // Guides :
     procedure pLoadGuide_Measure;
@@ -245,11 +242,6 @@ begin
      //
      if fStop then Close;
 end;
-procedure TMainForm.DocumentPanelClick(Sender: TObject);
-begin
-
-end;
-
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fGetSession:String;
 begin Result:='1005'; end;
@@ -278,14 +270,15 @@ end;
 function TMainForm.myExecToStoredProc_ZConnection:Boolean;
 begin
     result:=false;
-    toStoredProc_ZConnection.Prepared:=true;
+    ShowMessage ('ERROR - toStoredProc_ZConnection on myExecToStoredProc_ZConnection')
+    {toStoredProc_ZConnection.Prepared:=true;
      try toStoredProc_ZConnection.ExecProc;
      except
            //on E:EDBEngineError do begin EDB_EngineErrorMsg(E);exit;end;
            on E:EADOError do begin EADO_EngineErrorMsg(E);exit;end;
 
      end;
-     result:=true;
+     result:=true;}
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.myExecToStoredProc:Boolean;
@@ -467,8 +460,8 @@ begin
      OKDocumentButton.Enabled:=true;
      OKCompleteDocumentButton.Enabled:=true;
      //
-     toZConnection.Connected:=false;
-     //fromADOConnection.Connected:=false;
+     //toZConnection.Connected:=false;
+     fromADOConnection.Connected:=false;
      //
      tmpDate2:=NOw;
      if (tmpDate2-tmpDate1)>=1
@@ -487,6 +480,7 @@ procedure TMainForm.OKDocumentButtonClick(Sender: TObject);
 var tmpDate1,tmpDate2:TDateTime;
     Year, Month, Day, Hour, Min, Sec, MSec: Word;
     StrTime:String;
+    myRecordCount1,myRecordCount2:Integer;
 begin
      if MessageDlg('Действительно загрузить выбранные документы?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
      fStop:=false;
@@ -506,42 +500,42 @@ begin
      if not fStop then pLoadGuide_Juridical(true);
      if not fStop then pLoadGuide_Partner(true);
      //
-     if not fStop then pLoadDocument_Income;
-     if not fStop then pLoadDocumentItem_Income;
+     if not fStop then myRecordCount1:=pLoadDocument_Income;
+     if not fStop then pLoadDocumentItem_Income(myRecordCount1);
 
-     if not fStop then pLoadDocument_IncomePacker;
-     if not fStop then pLoadDocumentItem_IncomePacker;
+     if not fStop then myRecordCount1:=pLoadDocument_IncomePacker;
+     if not fStop then pLoadDocumentItem_IncomePacker(myRecordCount1);
 
-     if not fStop then pLoadDocument_SendUnit;
-     if not fStop then pLoadDocumentItem_SendUnit;
-     if not fStop then pLoadDocument_SendPersonal;
-     if not fStop then pLoadDocumentItem_SendPersonal;
-     if not fStop then pLoadDocument_SendUnitBranch;
-     if not fStop then pLoadDocumentItem_SendUnitBranch;
+     if not fStop then myRecordCount1:=pLoadDocument_SendUnit;
+     if not fStop then pLoadDocumentItem_SendUnit(myRecordCount1);
+     if not fStop then myRecordCount1:=pLoadDocument_SendPersonal;
+     if not fStop then pLoadDocumentItem_SendPersonal(myRecordCount1);
+     if not fStop then myRecordCount1:=pLoadDocument_SendUnitBranch;
+     if not fStop then pLoadDocumentItem_SendUnitBranch(myRecordCount1);
 
-     if not fStop then pLoadDocument_Sale;
-     if not fStop then pLoadDocumentItem_Sale;
+     if not fStop then myRecordCount1:=pLoadDocument_Sale;
+     if not fStop then pLoadDocumentItem_Sale(myRecordCount1);
 
-     if not fStop then pLoadDocument_ReturnOut;
-     if not fStop then pLoadDocumentItem_ReturnOut;
-     if not fStop then pLoadDocument_ReturnIn;
-     if not fStop then pLoadDocumentItem_ReturnIn;
+     if not fStop then myRecordCount1:=pLoadDocument_ReturnOut;
+     if not fStop then pLoadDocumentItem_ReturnOut(myRecordCount1);
+     if not fStop then myRecordCount1:=pLoadDocument_ReturnIn;
+     if not fStop then pLoadDocumentItem_ReturnIn(myRecordCount1);
 
-     if not fStop then pLoadDocument_ProductionUnion;
-     if not fStop then pLoadDocumentItem_ProductionUnionMaster;
-     if not fStop then pLoadDocumentItem_ProductionUnionChild;
-     if not fStop then pLoadDocument_ProductionSeparate;
-     if not fStop then pLoadDocumentItem_ProductionSeparateMaster;
-     if not fStop then pLoadDocumentItem_ProductionSeparateChild;
+     if not fStop then myRecordCount1:=pLoadDocument_ProductionUnion;
+     if not fStop then myRecordCount2:=pLoadDocumentItem_ProductionUnionMaster(myRecordCount1);
+     if not fStop then pLoadDocumentItem_ProductionUnionChild(myRecordCount1,myRecordCount2);
+     if not fStop then myRecordCount1:=pLoadDocument_ProductionSeparate;
+     if not fStop then myRecordCount2:=pLoadDocumentItem_ProductionSeparateMaster(myRecordCount1);
+     if not fStop then pLoadDocumentItem_ProductionSeparateChild(myRecordCount1,myRecordCount2);
 
-     if not fStop then pLoadDocument_Loss;
-     if not fStop then pLoadDocumentItem_Loss;
+     if not fStop then myRecordCount1:=pLoadDocument_Loss;
+     if not fStop then pLoadDocumentItem_Loss(myRecordCount1);
 
-     if not fStop then pLoadDocument_Inventory;
-     if not fStop then pLoadDocumentItem_Inventory;
+     if not fStop then myRecordCount1:=pLoadDocument_Inventory;
+     if not fStop then pLoadDocumentItem_Inventory(myRecordCount1);
 
-     if not fStop then pLoadDocument_Zakaz;
-     if not fStop then pLoadDocumentItem_Zakaz;
+     if not fStop then myRecordCount1:=pLoadDocument_Zakaz;
+     if not fStop then pLoadDocumentItem_Zakaz(myRecordCount1);
      //
      Gauge.Visible:=false;
      DBGrid.Enabled:=true;
@@ -549,8 +543,8 @@ begin
      OKDocumentButton.Enabled:=true;
      OKCompleteDocumentButton.Enabled:=true;
      //
-     toZConnection.Connected:=false;
-     //fromADOConnection.Connected:=false;
+     //toZConnection.Connected:=false;
+     fromADOConnection.Connected:=false;
      //
      tmpDate2:=NOw;
      if (tmpDate2-tmpDate1)>=1
@@ -606,8 +600,8 @@ begin
      OKDocumentButton.Enabled:=true;
      OKCompleteDocumentButton.Enabled:=true;
      //
-     toZConnection.Connected:=false;
-     //fromADOConnection.Connected:=false;
+     //toZConnection.Connected:=false;
+     fromADOConnection.Connected:=false;
      //
      tmpDate2:=NOw;
      if (tmpDate2-tmpDate1)>=1
@@ -891,6 +885,7 @@ begin
         Add('       , isPartionSumm');
         Add('order by ObjectId');
         Open;
+        cbGoods.Caption:='1.3. ('+IntToStr(RecordCount)+') Товары';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -971,7 +966,8 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Goods_toZConnection;
 begin
-     if (not cbGoods.Checked)or(not cbGoods.Enabled) then exit;
+    ShowMessage ('ERROR - pLoadGuide_Goods_toZConnection');
+{     if (not cbGoods.Checked)or(not cbGoods.Enabled) then exit;
      //
      myEnabledCB(cbGoods);
      //
@@ -1036,7 +1032,7 @@ begin
         end;
      end;
      //
-     myDisabledCB(cbGoods);
+     myDisabledCB(cbGoods);}
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_GoodsKind;
@@ -1396,6 +1392,7 @@ begin
                   Add('order by ObjectId');}
              end; // if not isBill
         Open;
+        cbJuridical.Caption:='3.2. ('+IntToStr(RecordCount)+') Юридические лица';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -1515,6 +1512,7 @@ begin
                   Add('order by ObjectId');}
              end; // if not isBill
         Open;
+        cbPartner.Caption:='3.3. ('+IntToStr(RecordCount)+') Контрагенты';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -1915,6 +1913,7 @@ begin
         Add('order by ObjectCode');
 
         Open;
+        cbUnit.Caption:='4.4. ('+IntToStr(RecordCount)+') Подразделения';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -2093,6 +2092,7 @@ begin
                   Add('order by ObjectId');
              end;
         Open;
+        cbRouteSorting.Caption:='3.4. ('+IntToStr(RecordCount)+') Сортировки Маршрутов';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -2207,6 +2207,7 @@ begin
         Add('where PriceListItems_byHistory.StartDate<>zc_DateStart() or PriceListItems_byHistory.NewPrice<>0');
         Add('order by PriceListId_PG, OperDate, GoodsId_PG');
         Open;
+        cbPriceListItems.Caption:='5.2. ('+IntToStr(RecordCount)+') Прайс листы - цены';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -2442,6 +2443,7 @@ begin
            );
         Add('order by is7, BarCode7, ObjectId');
         Open;
+        cbGoodsPropertyValue.Caption:='6.2. ('+IntToStr(RecordCount)+') Значения свойств товаров для классификатора';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -3198,6 +3200,7 @@ begin
         toStoredProc.Params.AddParam ('inEndDate',ftDateTime,ptInput, 0);
         toStoredProc.Params.AddParam ('inItearationCount',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inInsert',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inDiffSumm',ftFloat,ptInput, 0);
         //
         while not EOF do
         begin
@@ -3208,6 +3211,7 @@ begin
              toStoredProc.Params.ParamByName('inEndDate').Value:=FieldByName('EndDate').AsDateTime;
              toStoredProc.Params.ParamByName('inItearationCount').Value:=500;
              toStoredProc.Params.ParamByName('inInsert').Value:=12345;//захардкодил
+             toStoredProc.Params.ParamByName('inDiffSumm').Value:=0.009;
              if not myExecToStoredProc then ;//exit;
              //
              Next;
@@ -3240,6 +3244,7 @@ begin
            );
         Add('order by OperDate,ObjectId');
         Open;
+        cbCompleteIncome.Caption:='1. ('+IntToStr(RecordCount)+') Приход от поставщика';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -3275,7 +3280,11 @@ begin
              //
              Next;
              Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
              Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
              Application.ProcessMessages;
         end;
      end;
@@ -3283,8 +3292,9 @@ begin
      myDisabledCB(cbCompleteIncome);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadDocument_Income;
+function TMainForm.pLoadDocument_Income:Integer;
 begin
+     Result:=0;
      if (not cbIncome.Checked)or(not cbIncome.Enabled) then exit;
      //
      myEnabledCB(cbIncome);
@@ -3325,6 +3335,8 @@ begin
            );
         Add('order by ObjectId');
         Open;
+        Result:=RecordCount;
+        cbIncome.Caption:='1.1. ('+IntToStr(RecordCount)+') Приход от поставщика';
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
         if cbOnlyOpen.Checked then exit;
@@ -3394,9 +3406,8 @@ begin
      myDisabledCB(cbIncome);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadDocumentItem_Income;
+procedure TMainForm.pLoadDocumentItem_Income(SaveCount:Integer);
 begin
-
      if (not cbIncome.Checked)or(not cbIncome.Enabled) then exit;
      //
      myEnabledCB(cbIncome);
@@ -3433,6 +3444,7 @@ begin
            );
         Add('order by ObjectId');
         Open;
+        cbIncome.Caption:='1.1. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Приход от поставщика';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -3492,8 +3504,9 @@ begin
      myDisabledCB(cbIncome);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadDocument_IncomePacker;
+function TMainForm.pLoadDocument_IncomePacker:Integer;
 begin
+     Result:=0;
      if (not cbIncomePacker.Checked)or(not cbIncomePacker.Enabled) then exit;
      //
      myEnabledCB(cbIncomePacker);
@@ -3536,6 +3549,8 @@ begin
            );
         Add('order by ObjectId');
         Open;
+        Result:=RecordCount;
+        cbIncomePacker.Caption:='1.2. ('+IntToStr(RecordCount)+') Приход от заготовителя';
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
         if cbOnlyOpen.Checked then exit;
@@ -3605,9 +3620,8 @@ begin
      myDisabledCB(cbIncomePacker);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadDocumentItem_IncomePacker;
+procedure TMainForm.pLoadDocumentItem_IncomePacker(SaveCount:Integer);
 begin
-
      if (not cbIncomePacker.Checked)or(not cbIncomePacker.Enabled) then exit;
      //
      myEnabledCB(cbIncomePacker);
@@ -3647,6 +3661,7 @@ begin
            );
         Add('order by ObjectId');
         Open;
+        cbIncomePacker.Caption:='1.2. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Приход от заготовителя';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -3744,6 +3759,7 @@ begin
 
         Add('order by OperDate,ObjectId');
         Open;
+        cbCompleteSend.Caption:='2.1. ('+IntToStr(RecordCount)+') Перемещение';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -3779,7 +3795,11 @@ begin
              //
              Next;
              Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
              Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
              Application.ProcessMessages;
         end;
      end;
@@ -3787,8 +3807,9 @@ begin
      myDisabledCB(cbCompleteSend);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadDocument_SendUnit;
+function TMainForm.pLoadDocument_SendUnit:Integer;
 begin
+     Result:=0;
      if (not cbSendUnit.Checked)or(not cbSendUnit.Enabled) then exit;
      //
      myEnabledCB(cbSendUnit);
@@ -3823,6 +3844,8 @@ begin
            );
         Add('order by ObjectId');
         Open;
+        Result:=RecordCount;
+        cbSendUnit.Caption:='2.1. ('+IntToStr(RecordCount)+') Перемещение с подразделениями';
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
         if cbOnlyOpen.Checked then exit;
@@ -3866,7 +3889,7 @@ begin
      myDisabledCB(cbSendUnit);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadDocumentItem_SendUnit;
+procedure TMainForm.pLoadDocumentItem_SendUnit(SaveCount:Integer);
 begin
      if (not cbSendUnit.Checked)or(not cbSendUnit.Enabled) then exit;
      //
@@ -3906,6 +3929,7 @@ begin
            );
         Add('order by ObjectId');
         Open;
+        cbSendUnit.Caption:='2.1. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Перемещение с подразделениями';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -4002,6 +4026,7 @@ begin
            );
         Add('order by OperDate,ObjectId');
         Open;
+        cbCompleteSendOnPrice.Caption:='2.2. ('+IntToStr(RecordCount)+') Перемещение по цене';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -4037,7 +4062,11 @@ begin
              //
              Next;
              Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
              Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
              Application.ProcessMessages;
         end;
      end;
@@ -4045,8 +4074,9 @@ begin
      myDisabledCB(cbCompleteSendOnPrice);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadDocument_SendPersonal;
+function TMainForm.pLoadDocument_SendPersonal:Integer;
 begin
+     Result:=0;
      if (not cbSendPersonal.Checked)or(not cbSendPersonal.Enabled) then exit;
      //
      myEnabledCB(cbSendPersonal);
@@ -4102,6 +4132,8 @@ begin
            );
         Add('order by ObjectId');
         Open;
+        Result:=RecordCount;
+        cbSendPersonal.Caption:='2.2. ('+IntToStr(RecordCount)+') Перемещение с экспедиторами';
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
         if cbOnlyOpen.Checked then exit;
@@ -4169,7 +4201,7 @@ begin
      myDisabledCB(cbSendPersonal);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadDocumentItem_SendPersonal;
+procedure TMainForm.pLoadDocumentItem_SendPersonal(SaveCount:Integer);
 begin
      if (not cbSendPersonal.Checked)or(not cbSendPersonal.Enabled) then exit;
      //
@@ -4221,7 +4253,8 @@ begin
            );
         Add('order by ObjectId');
         Open;
-        //
+        cbSendPersonal.Caption:='2.2. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Перемещение с экспедиторами';
+       //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
         //
@@ -4273,8 +4306,9 @@ begin
      myDisabledCB(cbSendPersonal);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadDocument_SendUnitBranch;
+function TMainForm.pLoadDocument_SendUnitBranch:Integer;
 begin
+     Result:=0;
      if (not cbSendUnitBranch.Checked)or(not cbSendUnitBranch.Enabled) then exit;
      //
      myEnabledCB(cbSendUnitBranch);
@@ -4359,6 +4393,8 @@ begin
            );
         Add('order by ObjectId');
         Open;
+        Result:=RecordCount;
+        cbSendUnitBranch.Caption:='2.3. ('+IntToStr(RecordCount)+') Перемещение с филиалами';
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
         if cbOnlyOpen.Checked then exit;
@@ -4426,7 +4462,7 @@ begin
      myDisabledCB(cbSendUnitBranch);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadDocumentItem_SendUnitBranch;
+procedure TMainForm.pLoadDocumentItem_SendUnitBranch(SaveCount:Integer);
 begin
      if (not cbSendUnitBranch.Checked)or(not cbSendUnitBranch.Enabled) then exit;
      //
@@ -4511,6 +4547,7 @@ begin
            );
         Add('order by ObjectId');
         Open;
+        cbSendUnitBranch.Caption:='2.3. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Перемещение с филиалами';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -4563,8 +4600,9 @@ begin
      myDisabledCB(cbSendUnitBranch);
 end;
 //--------------------------------------------------------------------------*--------------------------------------------------------------------------
-procedure TMainForm.pLoadDocument_Sale;
+function TMainForm.pLoadDocument_Sale:Integer;
 begin
+     Result:=0;
      if (not cbSale.Checked)or(not cbSale.Enabled) then exit;
      //
      myEnabledCB(cbSale);
@@ -4620,6 +4658,8 @@ begin
            );
         Add('order by ObjectId');
         Open;
+        Result:=RecordCount;
+        cbSale.Caption:='3.1. ('+IntToStr(RecordCount)+') Продажа покупателю';
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
         if cbOnlyOpen.Checked then exit;
@@ -4693,7 +4733,7 @@ begin
      myDisabledCB(cbSale);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadDocumentItem_Sale;
+procedure TMainForm.pLoadDocumentItem_Sale (SaveCount:Integer);
 begin
      if (not cbSale.Checked)or(not cbSale.Enabled) then exit;
      //
@@ -4740,6 +4780,7 @@ begin
            );
         Add('order by ObjectId');
         Open;
+        cbSale.Caption:='3.1. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Продажа покупателю';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -4829,6 +4870,7 @@ begin
 
         Add('order by OperDate,ObjectId');
         Open;
+        cbCompleteProductionUnion.Caption:='4.1. ('+IntToStr(RecordCount)+') Производство смешивание';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -4864,7 +4906,11 @@ begin
              //
              Next;
              Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
              Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
              Application.ProcessMessages;
         end;
      end;
@@ -4872,8 +4918,9 @@ begin
      myDisabledCB(cbCompleteProductionUnion);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadDocument_ProductionUnion;
+function TMainForm.pLoadDocument_ProductionUnion:Integer;
 begin
+     Result:=0;
      if (not cbProductionUnion.Checked)or(not cbProductionUnion.Enabled) then exit;
      //
      myEnabledCB(cbProductionUnion);
@@ -4899,6 +4946,8 @@ begin
            );
         Add('order by ObjectId');
         Open;
+        Result:=RecordCount;
+        cbProductionUnion.Caption:='4.1. ('+IntToStr(RecordCount)+') Производство смешивание';
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
         if cbOnlyOpen.Checked then exit;
@@ -4942,8 +4991,9 @@ begin
      myDisabledCB(cbProductionUnion);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadDocumentItem_ProductionUnionMaster;
+function TMainForm.pLoadDocumentItem_ProductionUnionMaster(SaveCount:Integer):Integer;
 begin
+     Result:=0;
      if (not cbProductionUnion.Checked)or(not cbProductionUnion.Enabled) then exit;
      //
      myEnabledCB(cbProductionUnion);
@@ -4978,6 +5028,8 @@ begin
            );
         Add('order by ObjectId');
         Open;
+        Result:=RecordCount;
+        cbProductionUnion.Caption:='4.1. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Производство смешивание';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -5039,7 +5091,7 @@ begin
      myDisabledCB(cbProductionUnion);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadDocumentItem_ProductionUnionChild;
+procedure TMainForm.pLoadDocumentItem_ProductionUnionChild(SaveCount1,SaveCount2:Integer);
 begin
      if (not cbProductionUnion.Checked)or(not cbProductionUnion.Enabled) then exit;
      //
@@ -5074,6 +5126,7 @@ begin
            );
         Add('order by ObjectId');
         Open;
+        cbProductionUnion.Caption:='4.1. ('+IntToStr(SaveCount1)+')('+IntToStr(SaveCount2)+')('+IntToStr(RecordCount)+') Производство смешивание';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -5159,6 +5212,7 @@ begin
 
         Add('order by OperDate,ObjectId');
         Open;
+        cbCompleteProductionSeparate.Caption:='4.2. ('+IntToStr(RecordCount)+') Производство разделение';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -5194,7 +5248,11 @@ begin
              //
              Next;
              Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
              Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
              Application.ProcessMessages;
         end;
      end;
@@ -5202,8 +5260,9 @@ begin
      myDisabledCB(cbCompleteProductionSeparate);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadDocument_ProductionSeparate;
+function TMainForm.pLoadDocument_ProductionSeparate:Integer;
 begin
+     Result:=0;
      if (not cbProductionSeparate.Checked)or(not cbProductionSeparate.Enabled) then exit;
      //
      myEnabledCB(cbProductionSeparate);
@@ -5229,6 +5288,8 @@ begin
            );
         Add('order by ObjectId');
         Open;
+        Result:=RecordCount;
+        cbProductionSeparate.Caption:='4.2. ('+IntToStr(RecordCount)+') Производство разделение';
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
         if cbOnlyOpen.Checked then exit;
@@ -5274,8 +5335,9 @@ begin
      myDisabledCB(cbProductionSeparate);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadDocumentItem_ProductionSeparateMaster;
+function TMainForm.pLoadDocumentItem_ProductionSeparateMaster(SaveCount:Integer):Integer;
 begin
+     Result:=0;
      if (not cbProductionSeparate.Checked)or(not cbProductionSeparate.Enabled) then exit;
      //
      myEnabledCB(cbProductionSeparate);
@@ -5302,6 +5364,8 @@ begin
            );
         Add('order by ObjectId');
         Open;
+        Result:=RecordCount;
+        cbProductionSeparate.Caption:='4.2. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Производство разделение';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -5347,7 +5411,7 @@ begin
      myDisabledCB(cbProductionSeparate);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadDocumentItem_ProductionSeparateChild;
+procedure TMainForm.pLoadDocumentItem_ProductionSeparateChild(SaveCount1,SaveCount2:Integer);
 begin
      if (not cbProductionSeparate.Checked)or(not cbProductionSeparate.Enabled) then exit;
      //
@@ -5376,6 +5440,7 @@ begin
            );
         Add('order by ObjectId');
         Open;
+        cbProductionSeparate.Caption:='4.2. ('+IntToStr(SaveCount1)+')('+IntToStr(SaveCount2)+')('+IntToStr(RecordCount)+') Производство разделение';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -5423,43 +5488,43 @@ begin
      myDisabledCB(cbProductionSeparate);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadDocument_ReturnOut;
+function TMainForm.pLoadDocument_ReturnOut:Integer;
 begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadDocumentItem_ReturnOut;
+procedure TMainForm.pLoadDocumentItem_ReturnOut(SaveCount:Integer);
 begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadDocument_ReturnIn;
+function TMainForm.pLoadDocument_ReturnIn:Integer;
 begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadDocumentItem_ReturnIn;
+procedure TMainForm.pLoadDocumentItem_ReturnIn(SaveCount:Integer);
 begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadDocument_Loss;
+function TMainForm.pLoadDocument_Loss:Integer;
 begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadDocumentItem_Loss;
+procedure TMainForm.pLoadDocumentItem_Loss(SaveCount:Integer);
 begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadDocument_Inventory;
+function TMainForm.pLoadDocument_Inventory:Integer;
 begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadDocumentItem_Inventory;
+procedure TMainForm.pLoadDocumentItem_Inventory(SaveCount:Integer);
 begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadDocument_Zakaz;
+function TMainForm.pLoadDocument_Zakaz:Integer;
 begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadDocumentItem_Zakaz;
+procedure TMainForm.pLoadDocumentItem_Zakaz(SaveCount:Integer);
 begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
