@@ -112,6 +112,7 @@ type
     colGoodsKindName_Parent: TcxGridDBColumn;
     colId: TcxGridDBColumn;
     colMIId_Parent: TcxGridDBColumn;
+    colObjectCostId: TcxGridDBColumn;
   private
   public
   end;

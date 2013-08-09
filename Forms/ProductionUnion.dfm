@@ -532,6 +532,9 @@
             DataBinding.FieldName = 'GoodsKindName_Parent'
             Width = 50
           end
+          object colObjectCostId: TcxGridDBColumn
+            DataBinding.FieldName = 'ObjectCostId'
+          end
           object colMIId_Parent: TcxGridDBColumn
             DataBinding.FieldName = 'MIId_Parent'
             Width = 40

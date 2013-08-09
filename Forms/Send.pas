@@ -99,6 +99,7 @@ type
     colInfoMoneyName: TcxGridDBColumn;
     colInfoMoneyCode_Detail: TcxGridDBColumn;
     colInfoMoneyName_Detail: TcxGridDBColumn;
+    colObjectCostId: TcxGridDBColumn;
   private
   public
   end;

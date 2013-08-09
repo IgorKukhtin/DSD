@@ -54,7 +54,6 @@ type
     MovementDescCode: TcxGridDBColumn;
     OperCount: TcxGridDBColumn;
     OperPrice: TcxGridDBColumn;
-    OperSumm: TcxGridDBColumn;
     Price: TcxGridDBColumn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
@@ -85,6 +84,7 @@ type
     OutSumm_calc: TcxGridDBColumn;
     EndCount_calc: TcxGridDBColumn;
     EndSumm_calc: TcxGridDBColumn;
+    ContainerId: TcxGridDBColumn;
   private
   public
   end;

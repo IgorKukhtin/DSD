@@ -2,8 +2,9 @@ inherited Report_HistoryCostForm: TReport_HistoryCostForm
   Caption = #1057#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100
   ClientHeight = 395
   ClientWidth = 1329
+  ExplicitLeft = -539
   ExplicitWidth = 1345
-  ExplicitHeight = 434
+  ExplicitHeight = 430
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -112,7 +113,6 @@ inherited Report_HistoryCostForm: TReport_HistoryCostForm
           Format = ',0.00'
           Kind = skSum
           Position = spFooter
-          Column = OperSumm
         end
         item
           Format = ',0.00'
@@ -203,7 +203,6 @@ inherited Report_HistoryCostForm: TReport_HistoryCostForm
         item
           Format = ',0.00'
           Kind = skSum
-          Column = OperSumm
         end
         item
           Format = ',0.00'
@@ -241,6 +240,9 @@ inherited Report_HistoryCostForm: TReport_HistoryCostForm
         HeaderAlignmentHorz = taCenter
         Width = 40
       end
+      object ContainerId: TcxGridDBColumn
+        DataBinding.FieldName = 'ContainerId'
+      end
       object OperDate: TcxGridDBColumn
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
@@ -269,13 +271,6 @@ inherited Report_HistoryCostForm: TReport_HistoryCostForm
         Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taCenter
         Width = 30
-      end
-      object OperSumm: TcxGridDBColumn
-        DataBinding.FieldName = 'OperSumm'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
-        HeaderAlignmentHorz = taCenter
-        Width = 40
       end
       object Price: TcxGridDBColumn
         DataBinding.FieldName = 'Price'
