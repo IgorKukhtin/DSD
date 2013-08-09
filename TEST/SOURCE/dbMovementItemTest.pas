@@ -1,11 +1,18 @@
 unit dbMovementItemTest;
 
 interface
-uses TestFramework, dbObjectTest, DB;
+uses TestFramework, dbObjectTest, DB, dbTest, Classes;
 
 type
 
-  TdbMovementItemTest = class (TTestCase)
+  TMovementItemTest = class (TObjectTest)
+  protected
+    procedure InsertUpdateInList(Id: integer); override;
+  public
+    procedure DeleteRecord(Id: Integer); override;
+  end;
+
+  TdbMovementItemTest = class (TdbTest)
   private
     // Удаление документа
     procedure DeleteMovementItem(Id: integer);
@@ -24,7 +31,7 @@ type
     procedure MovementItemZakazInternalTest;
   end;
 
-  TMovementItemIncomeTest = class(TObjectTest)
+  TMovementItemIncomeTest = class(TMovementItemTest)
   private
     function InsertDefault: integer; override;
   protected
@@ -38,7 +45,7 @@ type
     constructor Create; override;
   end;
 
-  TMovementItemProductionUnionMasterTest = class(TObjectTest)
+  TMovementItemProductionUnionMasterTest = class(TMovementItemTest)
   private
     function InsertDefault: integer; override;
     procedure Delete(Id: Integer); override;
@@ -52,7 +59,7 @@ type
     constructor Create; override;
   end;
 
-  TMovementItemProductionUnionChildTest = class(TObjectTest)
+  TMovementItemProductionUnionChildTest = class(TMovementItemTest)
   private
     MovementItem_InId: INTEGER;
     function InsertDefault: integer; override;
@@ -69,7 +76,7 @@ type
     constructor Create; override;
   end;
 
-  TMovementItemSendOnPriceTest = class(TObjectTest)
+  TMovementItemSendOnPriceTest = class(TMovementItemTest)
   private
     function InsertDefault: integer; override;
   protected
@@ -83,7 +90,7 @@ type
     constructor Create; override;
   end;
 
-  TMovementItemSaleTest = class(TObjectTest)
+  TMovementItemSaleTest = class(TMovementItemTest)
   private
     function InsertDefault: integer; override;
   protected
@@ -97,7 +104,7 @@ type
     constructor Create; override;
   end;
 
-  TMovementItemReturnOutTest = class(TObjectTest)
+  TMovementItemReturnOutTest = class(TMovementItemTest)
   private
     function InsertDefault: integer; override;
   protected
@@ -111,7 +118,7 @@ type
     constructor Create; override;
   end;
 
-  TMovementItemZakazExternalTest = class(TObjectTest)
+  TMovementItemZakazExternalTest = class(TMovementItemTest)
   private
     function InsertDefault: integer; override;
   protected
@@ -125,7 +132,7 @@ type
     constructor Create; override;
   end;
 
-  TMovementItemZakazInternalTest = class(TObjectTest)
+  TMovementItemZakazInternalTest = class(TMovementItemTest)
   private
     function InsertDefault: integer; override;
   protected
@@ -139,6 +146,10 @@ type
     constructor Create; override;
   end;
 
+  var
+      // Список добавленных Id
+    InsertedIdMovementItemList: TStringList;
+
 implementation
 
 uses Storage, SysUtils, dbMovementTest, DBClient, dsdDB;
@@ -147,6 +158,24 @@ uses Storage, SysUtils, dbMovementTest, DBClient, dsdDB;
 procedure TdbMovementItemTest.TearDown;
 begin
   inherited;
+  if Assigned(InsertedIdMovementItemList) then
+     with TMovementTest.Create do
+       while InsertedIdMovementItemList.Count > 0 do begin
+          DeleteRecord(StrToInt(InsertedIdMovementItemList[0]));
+          InsertedIdMovementItemList.Delete(0);
+       end;
+  if Assigned(InsertedIdMovementList) then
+     with TMovementTest.Create do
+       while InsertedIdMovementList.Count > 0 do begin
+          DeleteRecord(StrToInt(InsertedIdMovementList[0]));
+          InsertedIdMovementList.Delete(0);
+       end;
+  if Assigned(InsertedIdObjectList) then
+     with TObjectTest.Create do
+       while InsertedIdObjectList.Count > 0 do begin
+          DeleteRecord(StrToInt(InsertedIdObjectList[0]));
+          InsertedIdObjectList.Delete(0);
+       end;
 end;
 {------------------------------------------------------------------------------}
 procedure TdbMovementItemTest.DeleteMovementItem(Id: integer);
@@ -817,7 +846,28 @@ begin
 end;
 
 
+{ TMovementItemTest }
+
+procedure TMovementItemTest.DeleteRecord(Id: Integer);
+const
+   pXML =
+  '<xml Session = "">' +
+    '<lpDelete_MovementItem OutputType="otResult">' +
+       '<inId DataType="ftInteger" Value="%d"/>' +
+    '</lpDelete_MovementItem>' +
+  '</xml>';
+begin
+  TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Id]))
+end;
+
+procedure TMovementItemTest.InsertUpdateInList(Id: integer);
+begin
+  InsertedIdMovementItemList.Add(IntToStr(Id));
+end;
+
 initialization
+  InsertedIdMovementItemList := TStringList.Create;
+
   TestFramework.RegisterTest('Строки Документов', TdbMovementItemTest.Suite);
 
 end.

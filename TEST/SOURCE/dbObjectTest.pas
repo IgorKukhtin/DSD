@@ -31,6 +31,12 @@ type
     destructor Destoy;
   end;
 
+  TdbObjectTestNew = class (TdbTest)
+  protected
+    // возвращаем данные для тестирования
+    procedure TearDown; override;
+  end;
+
   TdbObjectTest = class (TdbTest)
   protected
     // подготавливаем данные для тестирования
@@ -86,8 +92,6 @@ type
   private
     function InsertDefault: integer; override;
   public
-    // Удаляется Объект и все подчиненные
-    procedure Delete(Id: Integer); override;
     function InsertUpdateBank(const Id, Code: Integer; Name: string; MFO: string; JuridicalId: integer): integer;
     constructor Create; override;
   end;
@@ -221,8 +225,6 @@ type
   private
     function InsertDefault: integer; override;
   public
-   // Удаляется Объект и все подчиненные
-   procedure Delete(Id: Integer); override;
    function InsertUpdateBranch(const Id: integer; Code: Integer;
         Name: string): integer;
     constructor Create; override;
@@ -254,8 +256,6 @@ type
   TBankAccountTest = class(TObjectTest)
   function InsertDefault: integer; override;
   public
-     // Удаляется Объект и все подчиненные
-    procedure Delete(Id: Integer); override;
     function InsertUpdateBankAccount(Id, Code: Integer; Name: String;
                             JuridicalId, BankId, CurrencyId: Integer): integer;
     constructor Create; override;
@@ -271,8 +271,6 @@ type
   TCarTest = class(TObjectTest)
   function InsertDefault: integer; override;
   public
-    // Удаляется Объект и все подчиненные
-    procedure Delete(Id: Integer); override;
     function InsertUpdateCar(const Id, Code : integer; Name, RegistrationCertificateId: string; CarModelId: Integer): integer;
     constructor Create; override;
   end;
@@ -302,8 +300,6 @@ type
   TAccountTest = class(TObjectTest)
   function InsertDefault: integer; override;
   public
-    // Удаляется Объект и все подчиненные
-    procedure Delete(Id: Integer); override;
     function InsertUpdateAccount(const Id, Code : integer; Name: string; AccountGroupId: Integer;
                                      AccountDirectionId, InfoMoneyDestinationId, InfoMoneyId: integer): integer;
     constructor Create; override;
@@ -326,8 +322,6 @@ type
   TProfitLossTest = class(TObjectTest)
   function InsertDefault: integer; override;
   public
-    // Удаляется Объект и все подчиненные
-    procedure Delete(Id: Integer); override;
     function InsertUpdateProfitLoss(const Id, Code : integer; Name: string; ProfitLossGroupId: Integer;
                                      ProfitLossDirectionId, InfoMoneyDestinationId, InfoMoneyId: integer): integer;
     constructor Create; override;
@@ -350,8 +344,6 @@ type
   TInfoMoneyTest = class(TObjectTest)
   function InsertDefault: integer; override;
   public
-    // Удаляется Объект и все подчиненные
-    procedure Delete(Id: Integer); override;
     function InsertUpdateInfoMoney(const Id, Code : integer; Name: string; InfoMoneyGroupId: Integer;
                                      InfoMoneyDestinationId: integer): integer;
     constructor Create; override;
@@ -375,8 +367,6 @@ type
   private
     function InsertDefault: integer; override;
   public
-      // Удаляется Объект и все подчиненные
-   procedure Delete(Id: Integer); override;
    function InsertUpdatePersonal(const Id: integer; Code: Integer; Name: string;
     MemberId, PositionId, UnitId, JuridicalId, BusinessId: integer; DateIn, DateOut: TDateTime): integer;
     constructor Create; override;
@@ -394,8 +384,6 @@ type
   TAssetTest = class(TObjectTest)
   function InsertDefault: integer; override;
   public
-    // Удаляется Объект и все подчиненные
-    procedure Delete(Id: Integer); override;
     function InsertUpdateAsset(const Id, Code : integer; Name, InvNumber: string; AssetGroupId: Integer): integer;
     constructor Create; override;
   end;
@@ -411,8 +399,6 @@ type
   private
     function InsertDefault: integer; override;
   public
-      // Удаляется Объект и все подчиненные
-   procedure Delete(Id: Integer); override;
    function InsertUpdateReceiptChild(const Id: integer; Value: Double; Weight, TaxExit: boolean;
                                      StartDate, EndDate: TDateTime; Comment: string;
                                      ReceiptId, GoodsId, GoodsKindId: integer): integer;
@@ -423,8 +409,6 @@ type
   private
     function InsertDefault: integer; override;
   public
-      // Удаляется Объект и все подчиненные
-   procedure Delete(Id: Integer); override;
    function InsertUpdateReceipt(const Id: integer; Name, Code, Comment: string;
                                 Value, ValueCost, TaxExit, PartionValue, PartionCount, WeightPackage: Double;
                                 StartDate, EndDate: TDateTime;
@@ -877,17 +861,6 @@ begin
   spGet := 'gpGet_Object_Bank';
 end;
 
-procedure TBankTest.Delete(Id: Integer);
-begin
-  inherited;
-  with TJuridical.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free;
-  end;
-end;
-
 function TBankTest.InsertDefault: integer;
 var
   JuridicalId: Integer;
@@ -1184,18 +1157,6 @@ end;
 procedure TGoodsPropertyValueTest.Delete(Id: Integer);
 begin
   inherited;
-  with TGoodsTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free;
-  end;
-  with TGoodsPropertyTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free;
-  end;
 end;
 
 function TGoodsPropertyValueTest.InsertDefault: integer;
@@ -1388,17 +1349,6 @@ begin
   spInsertUpdate := 'gpInsertUpdate_Object_Branch';
   spSelect := 'gpSelect_Object_Branch';
   spGet := 'gpGet_Object_Branch';
-end;
-
-procedure TBranchTest.Delete(Id: Integer);
-begin
-  inherited;
-  with TJuridical.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free
-  end;
 end;
 
 function TBranchTest.InsertDefault: integer;
@@ -1633,29 +1583,6 @@ begin
   spGet := 'gpGet_Object_BankAccount';
 end;
 
-procedure TBankAccountTest.Delete(Id: Integer);
-begin
-  inherited;
-  with TJuridical.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free
-  end;
-  with TBankTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free
-  end;
-  with TCurrencyTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free
-  end;
-end;
-
 function TBankAccountTest.InsertDefault: integer;
 var
   JuridicalId, BankId, CurrencyId: Integer;
@@ -1748,17 +1675,6 @@ begin
   spSelect := 'gpSelect_Object_Car';
   spGet := 'gpGet_Object_Car';
 end;
-
-procedure TCarTest.Delete(Id: Integer);
-begin
-  inherited;
-  with TCarModelTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free
-  end;
- end;
 
 function TCarTest.InsertDefault: integer;
 var
@@ -1893,24 +1809,6 @@ begin
   spSelect := 'gpSelect_Object_Account';
   spGet := 'gpGet_Object_Account';
 end;
-
-procedure TAccountTest.Delete(Id: Integer);
-begin
-  inherited;
-  with TAccountGroupTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free
-  end;
-  with TAccountDirectionTest.Create do
-  try
-    Delete(GetDefault)
-  finally
-    Free;
-  end;
-
- end;
 
 function TAccountTest.InsertDefault: integer;
 var
@@ -2054,24 +1952,6 @@ begin
   spGet := 'gpGet_Object_ProfitLoss';
 end;
 
-procedure TProfitLossTest.Delete(Id: Integer);
-begin
-  inherited;
-  with TProfitLossGroupTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free
-  end;
-  with TProfitLossDirectionTest.Create do
-  try
-    Delete(GetDefault)
-  finally
-    Free;
-  end;
-
- end;
-
 function TProfitLossTest.InsertDefault: integer;
 var
   ProfitLossGroupId: Integer;
@@ -2212,24 +2092,6 @@ begin
   spGet := 'gpGet_Object_InfoMoney';
 end;
 
-procedure TInfoMoneyTest.Delete(Id: Integer);
-begin
-  inherited;
-  with TInfoMoneyGroupTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free
-  end;
-  with TInfoMoneyDestinationTest.Create do
-  try
-    Delete(GetDefault)
-  finally
-    Free;
-  end;
-
- end;
-
 function TInfoMoneyTest.InsertDefault: integer;
 var
   InfoMoneyGroupId: Integer;
@@ -2368,30 +2230,6 @@ begin
   spGet := 'gpGet_Object_Personal';
 end;
 
-procedure TPersonalTest.Delete(Id: Integer);
-begin
-  inherited;
-  with TMemberTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free
-  end;
-  with TPositionTest.Create do
-  try
-    Delete(GetDefault)
-  finally
-    Free;
-  end;
-    with TBusinessTest.Create do
-  try
-    Delete(GetDefault)
-  finally
-    Free;
-  end;
-
- end;
-
 function TPersonalTest.InsertDefault: integer;
 var
   MemberId: Integer;
@@ -2406,7 +2244,6 @@ begin
   JuridicalId := TJuridical.Create.GetDefault;
   BusinessId := TBusinessTest.Create.GetDefault;
   result := InsertUpdatePersonal(0, -3, 'Сотрудник', MemberId, PositionId, UnitId, JuridicalId, BusinessId, Date,Date);
-  //result := InsertUpdatePersonal(0, -3, MemberId, PositionId, UnitId, JuridicalId, BusinessId, Date,Date);
 end;
 
 function TPersonalTest.InsertUpdatePersonal;
@@ -2536,17 +2373,6 @@ begin
   spGet := 'gpGet_Object_Asset';
 end;
 
-procedure TAssetTest.Delete(Id: Integer);
-begin
-  inherited;
-  with TAssetGroupTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free
-  end;
- end;
-
 function TAssetTest.InsertDefault: integer;
 var
   AssetGroupId: Integer;
@@ -2636,35 +2462,10 @@ begin
   spGet := 'gpGet_Object_ReceiptChild';
 end;
 
-procedure TReceiptChildTest.Delete(Id: Integer);
-begin
-  inherited;
- { with TReceiptTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free
-  end;  }
-  with TGoodsTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free
-  end;
-  with TGoodsKindTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free
-  end;
-end;
-
 function TReceiptChildTest.InsertDefault: integer;
 var
-  //ReceipId: Integer;
   GoodsId, GoodsKindId: Integer;
 begin
-  //ReceipId := TReceipTest.Create.GetDefault;
   GoodsId:= TGoodsTest.Create.GetDefault;
   GoodsKindId:= TGoodsKindTest.Create.GetDefault;
 
@@ -2716,44 +2517,8 @@ begin
   spGet := 'gpGet_Object_Receipt';
 end;
 
-procedure TReceiptTest.Delete(Id: Integer);
-begin
-  inherited;
-  with TGoodsTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free
-  end;
-  with TGoodsKindTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free
-  end;
-  {with TGoodsKindCompleteTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free
-  end;}
-  with TReceiptCostTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free
-  end;
-  {with TReceiptKindTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free
-  end;}
-end;
-
 function TReceiptTest.InsertDefault: integer;
 var
-  //ReceipId: Integer;
   GoodsId, GoodsKindId, ReceiptCostId: Integer;
 begin
   ReceiptCostId := TReceiptCostTest.Create.GetDefault;
@@ -2804,6 +2569,19 @@ begin
   finally
     ObjectTest.Delete(Id);
   end;
+end;
+
+{ TdbObjectTestNew }
+
+procedure TdbObjectTestNew.TearDown;
+begin
+  inherited;
+  if Assigned(InsertedIdObjectList) then
+     with TObjectTest.Create do
+       while InsertedIdObjectList.Count > 0 do begin
+          DeleteRecord(StrToInt(InsertedIdObjectList[0]));
+          InsertedIdObjectList.Delete(0);
+       end;
 end;
 
 initialization

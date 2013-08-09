@@ -17,7 +17,8 @@ type
   public
     function InsertUpdateCashOperation(const Id: integer; InvNumber: String;
         OperDate: TDateTime; Amount: Double;
-        FromId, ToId, PaidKindId, InfoMoneyId, ContractId, UnitId: integer): integer;
+        FromId, ToId, PaidKindId, InfoMoneyId, ContractId, UnitId, PositionId: integer;
+        AccrualsDate: TDateTime): integer;
     constructor Create; override;
   end;
 
@@ -40,7 +41,8 @@ var Id: Integer;
     InvNumber: String;
     OperDate: TDateTime;
     Amount: Double;
-    FromId, ToId, PaidKindId, InfoMoneyId, ContractId, UnitId: Integer;
+    FromId, ToId, PaidKindId, InfoMoneyId, ContractId, UnitId, PositionId: Integer;
+    AccrualsDate: TDateTime;
 begin
   Id:=0;
   InvNumber:='1';
@@ -55,13 +57,17 @@ begin
   UnitId := 0;
   Amount := 265.68;
   //
+  PositionId := 0;
+  AccrualsDate := Date;
+
   result := InsertUpdateCashOperation(Id, InvNumber, OperDate, Amount,
-              FromId, ToId, PaidKindId, InfoMoneyId, ContractId, UnitId);
+              FromId, ToId, PaidKindId, InfoMoneyId, ContractId, UnitId, PositionId, AccrualsDate);
 end;
 
 function TCashOperation.InsertUpdateCashOperation(const Id: integer; InvNumber: String;
         OperDate: TDateTime; Amount: Double;
-        FromId, ToId, PaidKindId, InfoMoneyId, ContractId, UnitId: integer): integer;
+        FromId, ToId, PaidKindId, InfoMoneyId, ContractId, UnitId, PositionId: integer;
+        AccrualsDate: TDateTime): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -75,6 +81,8 @@ begin
   FParams.AddParam('inInfoMoneyId', ftInteger, ptInput, InfoMoneyId);
   FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
   FParams.AddParam('inUnitId', ftInteger, ptInput, UnitId);
+  FParams.AddParam('inPositionId', ftInteger, ptInput, PositionId);
+  FParams.AddParam('inAccrualsDate', ftDateTime, ptInput, AccrualsDate);
 
   result := InsertUpdate(FParams);
 

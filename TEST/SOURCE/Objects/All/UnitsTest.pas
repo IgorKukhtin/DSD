@@ -6,7 +6,7 @@ uses dbTest, dbObjectTest;
 
 type
 
-  TUnitTest = class (TdbTest)
+  TUnitTest = class (TdbObjectTestNew)
   published
     procedure ProcedureLoad; override;
     procedure Test; override;

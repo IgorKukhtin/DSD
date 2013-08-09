@@ -6,7 +6,7 @@ uses dbTest, dbObjectTest;
 
 type
 
-  TJuridicalTest = class (TdbTest)
+  TJuridicalTest = class (TdbObjectTestNew)
   published
     procedure ProcedureLoad; override;
     procedure Test; override;

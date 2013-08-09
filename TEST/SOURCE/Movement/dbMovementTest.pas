@@ -18,15 +18,10 @@ type
     procedure TearDown; override;
   end;
 
-  TdbMovementTest = class (TdbTest)
+  TdbMovementTest = class (TdbMovementTestNew)
   private
     // ”даление документа
     procedure DeleteMovement(Id: integer);
-  protected
-    // подготавливаем данные дл€ тестировани€
-    procedure SetUp; override;
-    // возвращаем данные дл€ тестировани€
-    procedure TearDown; override;
   published
     procedure MovementIncomeTest;
     procedure MovementProductionUnionTest;
@@ -43,7 +38,7 @@ type
     procedure MovementZakazInternalTest;
   end;
 
-  TMovementIncomeTest = class(TObjectTest)
+  TMovementIncomeTest = class(TMovementTest)
   private
     function InsertDefault: integer; override;
   protected
@@ -57,7 +52,7 @@ type
     constructor Create; override;
   end;
 
-  TMovementProductionUnionTest = class(TObjectTest)
+  TMovementProductionUnionTest = class(TMovementTest)
   private
     function InsertDefault: integer; override;
   protected
@@ -68,7 +63,7 @@ type
     constructor Create; override;
   end;
 
-  TMovementProductionSeparateTest = class(TObjectTest)
+  TMovementProductionSeparateTest = class(TMovementTest)
   private
     function InsertDefault: integer; override;
   protected
@@ -79,7 +74,7 @@ type
     constructor Create; override;
   end;
 
-  TMovementSendOnPriceTest = class(TObjectTest)
+  TMovementSendOnPriceTest = class(TMovementTest)
   private
     function InsertDefault: integer; override;
   protected
@@ -93,7 +88,7 @@ type
     constructor Create; override;
   end;
 
-  TMovementSaleTest = class(TObjectTest)
+  TMovementSaleTest = class(TMovementTest)
   private
     function InsertDefault: integer; override;
   protected
@@ -107,7 +102,7 @@ type
     constructor Create; override;
   end;
 
-  TMovementReturnOutTest = class(TObjectTest)
+  TMovementReturnOutTest = class(TMovementTest)
   private
     function InsertDefault: integer; override;
   protected
@@ -121,7 +116,7 @@ type
     constructor Create; override;
   end;
 
-  TMovementReturnInTest = class(TObjectTest)
+  TMovementReturnInTest = class(TMovementTest)
   private
     function InsertDefault: integer; override;
   protected
@@ -135,7 +130,7 @@ type
     constructor Create; override;
   end;
 
-  TMovementSendTest = class(TObjectTest)
+  TMovementSendTest = class(TMovementTest)
   private
     function InsertDefault: integer; override;
   protected
@@ -146,7 +141,7 @@ type
     constructor Create; override;
   end;
 
-  TMovementLossTest = class(TObjectTest)
+  TMovementLossTest = class(TMovementTest)
   private
     function InsertDefault: integer; override;
   protected
@@ -157,7 +152,7 @@ type
     constructor Create; override;
   end;
 
-  TMovementInventoryTest = class(TObjectTest)
+  TMovementInventoryTest = class(TMovementTest)
   private
     function InsertDefault: integer; override;
   protected
@@ -168,7 +163,7 @@ type
     constructor Create; override;
   end;
 
-  TMovementZakazExternalTest = class(TObjectTest)
+  TMovementZakazExternalTest = class(TMovementTest)
   private
     function InsertDefault: integer; override;
   protected
@@ -181,7 +176,7 @@ type
     constructor Create; override;
   end;
 
-  TMovementZakazInternalTest = class(TObjectTest)
+  TMovementZakazInternalTest = class(TMovementTest)
   private
     function InsertDefault: integer; override;
   protected
@@ -200,11 +195,6 @@ implementation
 
 uses DB, Storage, SysUtils, UnitsTest;
 { TDataBaseObjectTest }
-{------------------------------------------------------------------------------}
-procedure TdbMovementTest.TearDown;
-begin
-  inherited;
-end;
 {------------------------------------------------------------------------------}
 procedure TdbMovementTest.DeleteMovement(Id: integer);
 const
@@ -408,12 +398,6 @@ begin
     // удаление
     DeleteMovement(Id);
   end;
-end;
-
-
-procedure TdbMovementTest.SetUp;
-begin
-  inherited;
 end;
 {------------------------------------------------------------------------------}
 { TMovementIncome }
@@ -1155,10 +1139,16 @@ begin
           DeleteRecord(StrToInt(InsertedIdMovementList[0]));
           InsertedIdMovementList.Delete(0);
        end;
+  if Assigned(InsertedIdObjectList) then
+     with TObjectTest.Create do
+       while InsertedIdObjectList.Count > 0 do begin
+          DeleteRecord(StrToInt(InsertedIdObjectList[0]));
+          InsertedIdObjectList.Delete(0);
+       end;
 end;
 
 initialization
-
+  InsertedIdMovementList := TStringList.Create;
   TestFramework.RegisterTest('ƒокументы', TdbMovementTest.Suite);
 
 end.

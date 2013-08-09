@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash(
     IN inContractId          Integer   , -- Договора
     IN inUnitId              Integer   , -- Подразделения
     IN inPositionId          Integer   , -- Должность
-    IN inAccrualsDate        TDateTime , -- Дата начисления
+    IN inAccrualDate         TDateTime , -- Дата начисления
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
@@ -49,7 +49,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Position(), ioId, inPositionId);
 
      -- сохранили <Дату начисления>
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_AccrualsDate(), ioId, inAccrualsDate);
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_AccrualDate(), ioId, inAccrualDate);
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
