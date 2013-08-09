@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpReport_HistoryCost(
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ObjectCostId Integer
-             , MovementId Integer, MovementItemId Integer, OperDate TDateTime, InvNumber TVarChar, MovementDescCode TVarChar, OperCount TFloat, OperPrice TFloat, OperSumm TFloat
+             , MovementId Integer, MovementItemId Integer, ContainerId Integer, OperDate TDateTime, InvNumber TVarChar, MovementDescCode TVarChar, OperCount TFloat, OperPrice TFloat -- , OperSumm TFloat
              , Price TFloat, Price_Calc TFloat
              , UnitParentCode Integer, UnitParentName TVarChar, UnitCode Integer, UnitName TVarChar
              , GoodsGroupCode Integer, GoodsGroupName TVarChar, GoodsCode Integer, GoodsName TVarChar, GoodsKindCode Integer, GoodsKindName TVarChar
@@ -30,12 +30,13 @@ $BODY$BEGIN
              ContainerObjectCost.ObjectCostId
            , _tmpSumm.MovementId
            , _tmpSumm.MovementItemId
+           , _tmpSumm.ContainerId
            , _tmpSumm.OperDate
            , _tmpSumm.InvNumber
            , _tmpSumm.Code AS MovementDescCode
            , _tmpSumm.OperCount
-           , _tmpSumm.OperPrice
-           , _tmpSumm.OperSumm
+           , CAST (_tmpSumm.OperPrice AS TFloat) AS OperPrice
+--           , CAST (_tmpSumm.OperSumm AS TFloat) AS OperSumm
 
            , HistoryCost.Price
            , CAST (
@@ -184,26 +185,24 @@ $BODY$BEGIN
            (SELECT ContainerObjectCost_Summ.ObjectCostId
                  , Movement.Id AS MovementId
                  , MIContainer.MovementItemId
+                 , MIContainer.ContainerId
                  , Movement.OperDate
                  , Movement.InvNumber
                  , CAST (MovementDesc.Code || '+' || MovementItemDesc.Code AS TVarChar) AS Code
                  , MovementItem.Amount AS OperCount
                  , CAST (CASE WHEN MovementItem.Amount <> 0 THEN MIContainer.Amount / MovementItem.Amount ELSE 0 END AS TFloat) AS OperPrice
                  , MIContainer.Amount AS OperSumm
-            FROM MovementItemContainer AS MIContainer
+            FROM (SELECT MovementItemContainer.ContainerId, MovementItemContainer.MovementItemId, ABS (SUM (Amount)) AS Amount FROM MovementItemContainer WHERE MovementItemContainer.OperDate BETWEEN inStartDate AND inEndDate AND MovementItemContainer.DescId = zc_MIContainer_Summ() GROUP BY MovementItemContainer.ContainerId, MovementItemContainer.MovementItemId) AS MIContainer
                  JOIN ContainerObjectCost AS ContainerObjectCost_Summ
                                           ON ContainerObjectCost_Summ.ContainerId = MIContainer.ContainerId
                                          AND ContainerObjectCost_Summ.ObjectCostDescId = zc_ObjectCost_Basis()
                  JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
-                 JOIN Movement ON Movement.Id = MIContainer.MovementId
+                 JOIN Movement ON Movement.Id = MovementItem.MovementId
                  JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
                  JOIN MovementItemDesc ON MovementItemDesc.Id = MovementItem.DescId
-            WHERE MIContainer.OperDate BETWEEN inStartDate AND inEndDate
-              AND MIContainer.DescId = zc_MIContainer_Summ()
-              AND 1=0
+            -- WHERE 1=0
            ) AS _tmpSumm ON _tmpSumm.ObjectCostId = ContainerObjectCost.ObjectCostId
             LEFT JOIN
-
            (SELECT ContainerObjectCost_RemainsSumm.ObjectCostId
                  , CAST (SUM (tmpMIContainer_Remains.AmountRemainsStart) AS TFloat) AS AmountRemainsStart
                  , CAST (SUM (tmpMIContainer_Remains.AmountDebet) AS TFloat) AS AmountDebet
@@ -260,7 +259,8 @@ $BODY$BEGIN
             GROUP BY ContainerObjectCost_RemainsSumm.ObjectCostId
            ) AS tmpOperationCount ON tmpOperationCount.ObjectCostId = ContainerObjectCost.ObjectCostId
 
-       WHERE (
+--       WHERE HistoryCost.Price <> 0
+/*       WHERE (
 --              HistoryCost.CalcCount <> 0
 --           OR HistoryCost.StartCount <> 0
 --           OR 
@@ -287,7 +287,7 @@ $BODY$BEGIN
            OR _tmpSumm.OperPrice <> 0
            OR _tmpSumm.OperSumm <> 0
            OR HistoryCost.Price <> 0
-             )
+             )*/
        ;
 
   

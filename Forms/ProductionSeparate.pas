@@ -107,6 +107,11 @@ type
     cxSplitterChild: TcxSplitter;
     ChildCDS: TClientDataSet;
     ChildDS: TDataSource;
+    colGoodsCode_Parent: TcxGridDBColumn;
+    colGoodsName_Parent: TcxGridDBColumn;
+    colGoodsKindName_Parent: TcxGridDBColumn;
+    colId: TcxGridDBColumn;
+    colMIId_Parent: TcxGridDBColumn;
   private
   public
   end;

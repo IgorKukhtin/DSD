@@ -213,6 +213,10 @@
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
+          object colId: TcxGridDBColumn
+            DataBinding.FieldName = 'Id'
+            Width = 30
+          end
         end
         object cxGridLevel: TcxGridLevel
           GridView = cxGridDBTableView
@@ -327,6 +331,7 @@
         Width = 1028
         Height = 8
         AlignSplitter = salBottom
+        Control = cxGridChild
       end
     end
     object cxTabSheet2: TcxTabSheet
@@ -527,6 +532,10 @@
             DataBinding.FieldName = 'GoodsKindName_Parent'
             Width = 50
           end
+          object colMIId_Parent: TcxGridDBColumn
+            DataBinding.FieldName = 'MIId_Parent'
+            Width = 40
+          end
         end
         object cxGridEntryLevel: TcxGridLevel
           GridView = cxGridEntryDBTableView
@@ -710,6 +719,7 @@
     FormName = 'TJuridicalForm'
     PositionDataSet = 'GridDataSet'
     ParentDataSet = 'TreeDataSet'
+    Params = <>
     Left = 375
     Top = 28
   end
@@ -718,6 +728,7 @@
     FormName = 'TUnitForm'
     PositionDataSet = 'GridDataSet'
     ParentDataSet = 'TreeDataSet'
+    Params = <>
     Left = 536
     Top = 28
   end

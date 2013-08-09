@@ -23,17 +23,17 @@ BEGIN
    -- Проверки
    IF COALESCE (inAccountGroupId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Невозможно определить Счет т.к. не установлено <Группа счетов>';
+       RAISE EXCEPTION 'Невозможно определить Счет т.к. не установлено <Группа счетов> : "%", "%", "%", "%"', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
    END IF;
 
    IF COALESCE (inAccountDirectionId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Невозможно определить Счет т.к. не установлено <Аналитики счетов - направления>';
+       RAISE EXCEPTION 'Невозможно определить Счет т.к. не установлено <Аналитики счетов - направления> : "%", "%", "%", "%"', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
    END IF;
 
    IF COALESCE (inInfoMoneyDestinationId, 0) = 0 AND COALESCE (inInfoMoneyId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Невозможно определить Счет т.к. не установлено <Управленческие назначения>';
+       RAISE EXCEPTION 'Невозможно определить Счет т.к. не установлено <Управленческие назначения> : "%", "%", "%", "%"', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
    END IF;
 
 

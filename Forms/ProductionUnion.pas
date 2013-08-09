@@ -120,6 +120,8 @@ type
     ChildDS: TDataSource;
     cxSplitterChild: TcxSplitter;
     colChildComment: TcxGridDBColumn;
+    colId: TcxGridDBColumn;
+    colMIId_Parent: TcxGridDBColumn;
   private
   public
   end;

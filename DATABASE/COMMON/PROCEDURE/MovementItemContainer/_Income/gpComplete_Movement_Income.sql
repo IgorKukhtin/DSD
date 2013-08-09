@@ -498,15 +498,18 @@ BEGIN
                                                  , inDescId:= zc_MIContainer_Count()
                                                  , inMovementId:= MovementId
                                                  , inMovementItemId:= MovementItemId
+                                                 , inParentId:= NULL
                                                  , inContainerId:= ContainerId_Goods -- был опеределен выше
                                                  , inAmount:= OperCount
                                                  , inOperDate:= OperDate
+                                                 , inIsActive:= TRUE
                                                   )
              -- формируются Проводки для суммового учета + Аналитика <элемент с/с>
            , lpInsertUpdate_MovementItemContainer (ioId:= 0
                                                  , inDescId:= zc_MIContainer_Summ()
                                                  , inMovementId:= MovementId
                                                  , inMovementItemId:= MovementItemId
+                                                 , inParentId:= NULL
                                                  , inContainerId:= CASE WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение 2)Товар 3)!Партии товара! 4)Статьи назначения 5)Статьи назначения(детализация с/с)
                                                                            THEN lpInsertFind_Container (inContainerDescId:= zc_Container_Summ()
@@ -682,6 +685,7 @@ BEGIN
                                                                    END
                                                  , inAmount:= OperSumm_Partner + OperSumm_Packer
                                                  , inOperDate:= OperDate
+                                                 , inIsActive:= TRUE
                                                   )
      FROM _tmpItem;
 
@@ -690,6 +694,7 @@ BEGIN
                                                  , inDescId:= zc_MIContainer_Summ()
                                                  , inMovementId:= MovementId
                                                  , inMovementItemId:= MovementItemId
+                                                 , inParentId:= NULL
                                                  , inContainerId:= CASE WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                                                          AND PersonalId_From = 0
                                                                          AND NOT isCorporate
@@ -743,6 +748,7 @@ BEGIN
                                                                    END
                                                  , inAmount:= - SUM (OperSumm_Partner)
                                                  , inOperDate:= OperDate
+                                                 , inIsActive:= FALSE
                                                   )
      FROM _tmpItem
      GROUP BY MovementItemId, MovementId, OperDate, JuridicalId_From, isCorporate, PersonalId_From, PaidKindId, ContractId, InfoMoneyDestinationId, InfoMoneyId, InfoMoneyDestinationId_isCorporate, InfoMoneyId_isCorporate, JuridicalId_basis, BusinessId, PartionMovementId;
@@ -753,6 +759,7 @@ BEGIN
                                                  , inDescId:= zc_MIContainer_Summ()
                                                  , inMovementId:= MovementId
                                                  , inMovementItemId:= MovementItemId
+                                                 , inParentId:= NULL
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1) Сотрудники(поставщики) 3)Статьи назначения
                                                  , inContainerId:=              lpInsertFind_Container (inContainerDescId:= zc_Container_Summ()
                                                                                                       , inParentId:= NULL
@@ -773,6 +780,7 @@ BEGIN
                                                                                                        )
                                                  , inAmount:= - SUM (OperSumm_Packer)
                                                  , inOperDate:= OperDate
+                                                 , inIsActive:= FALSE
                                                   )
      FROM _tmpItem
      WHERE OperSumm_Packer <> 0
@@ -790,6 +798,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.08.13                                        * add inParentId and inIsActive
  05.08.13                                        * no InfoMoneyId_isCorporate
  20.07.13                                        * add MovementItemId
  20.07.13                                        * all Партии товара, ЕСЛИ надо ...
@@ -801,6 +810,6 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpUnComplete_Movement (inMovementId:= 5028, inSession:= '2')
--- SELECT * FROM gpComplete_Movement_Income (inMovementId:= 5028, inSession:= '2')
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 5028, inSession:= '2')
+-- SELECT * FROM gpUnComplete_Movement (inMovementId:= 55, inSession:= '2')
+-- SELECT * FROM gpComplete_Movement_Income (inMovementId:= 55, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 55, inSession:= '2')
