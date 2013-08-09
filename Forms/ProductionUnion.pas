@@ -122,6 +122,7 @@ type
     colChildComment: TcxGridDBColumn;
     colId: TcxGridDBColumn;
     colMIId_Parent: TcxGridDBColumn;
+    colObjectCostId: TcxGridDBColumn;
   private
   public
   end;

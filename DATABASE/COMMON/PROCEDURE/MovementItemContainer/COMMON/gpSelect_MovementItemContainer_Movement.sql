@@ -11,7 +11,7 @@ RETURNS TABLE (DebetAmount TFloat, DebetAccountGroupCode Integer, DebetAccountGr
              , KreditAmount TFloat, KreditAccountGroupCode Integer, KreditAccountGroupName TVarChar, KreditAccountDirectionCode Integer, KreditAccountDirectionName TVarChar, KreditAccountCode Integer, KreditAccountName  TVarChar
              , AccountOnComplete Boolean, ByObjectCode Integer, ByObjectName TVarChar, GoodsGroupCode Integer, GoodsGroupName TVarChar
              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
-             , MIId_Parent Integer, GoodsCode_Parent Integer, GoodsName_Parent TVarChar, GoodsKindName_Parent TVarChar
+             , ObjectCostId Integer, MIId_Parent Integer, GoodsCode_Parent Integer, GoodsName_Parent TVarChar, GoodsKindName_Parent TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyCode_Detail Integer, InfoMoneyName_Detail TVarChar
               )
 AS
@@ -46,6 +46,7 @@ BEGIN
            , tmpMovementItemContainer.GoodsCode
            , tmpMovementItemContainer.GoodsName
            , tmpMovementItemContainer.GoodsKindName
+           , tmpMovementItemContainer.ObjectCostId
            , tmpMovementItemContainer.MIId_Parent
            , tmpMovementItemContainer.GoodsCode_Parent
            , tmpMovementItemContainer.GoodsName_Parent
@@ -65,6 +66,7 @@ BEGIN
                 , Object_Goods.ObjectCode      AS GoodsCode
                 , Object_Goods.ValueData       AS GoodsName
                 , Object_GoodsKind.ValueData   AS GoodsKindName
+                , ContainerObjectCost.ObjectCostId
                 , COALESCE (MovementItem_Parent.Id, MovementItem.Id) AS MIId_Parent
                 , Object_Goods_Parent.ObjectCode      AS GoodsCode_Parent
                 , Object_Goods_Parent.ValueData       AS GoodsName_Parent
@@ -76,6 +78,8 @@ BEGIN
             FROM MovementItemContainer
                  JOIN Container ON Container.Id = MovementItemContainer.ContainerId
                                AND Container.DescId = zc_Container_Summ()
+                 LEFT JOIN ContainerObjectCost ON ContainerObjectCost.ContainerId = MovementItemContainer.ContainerId
+                                              AND ContainerObjectCost.ObjectCostDescId = zc_ObjectCost_Basis()
                  LEFT JOIN ObjectLink AS ObjectLink_AccountKind
                                       ON ObjectLink_AccountKind.ObjectId = Container.ObjectId
                                      AND ObjectLink_AccountKind.DescId = zc_ObjectLink_Account_AccountKind()
@@ -142,6 +146,7 @@ BEGIN
                    , Object_Goods.ObjectCode
                    , Object_Goods.ValueData
                    , Object_GoodsKind.ValueData
+                   , ContainerObjectCost.ObjectCostId
                    , COALESCE (MovementItem_Parent.Id, MovementItem.Id)
                    , Object_Goods_Parent.ObjectCode
                    , Object_Goods_Parent.ValueData
@@ -179,6 +184,7 @@ BEGIN
            , tmpMovementItemContainer.GoodsCode
            , tmpMovementItemContainer.GoodsName
            , tmpMovementItemContainer.GoodsKindName
+           , tmpMovementItemContainer.ObjectCostId
            , tmpMovementItemContainer.MIId_Parent
            , tmpMovementItemContainer.GoodsCode_Parent
            , tmpMovementItemContainer.GoodsName_Parent
@@ -198,6 +204,7 @@ BEGIN
                 , Object_Goods.ObjectCode      AS GoodsCode
                 , Object_Goods.ValueData       AS GoodsName
                 , Object_GoodsKind.ValueData   AS GoodsKindName
+                , ContainerObjectCost.ObjectCostId
                 , COALESCE (MovementItem_Parent.Id, MovementItem.Id) AS MIId_Parent
                 , Object_Goods_Parent.ObjectCode      AS GoodsCode_Parent
                 , Object_Goods_Parent.ValueData       AS GoodsName_Parent
@@ -209,6 +216,8 @@ BEGIN
             FROM MovementItemContainer
                  JOIN Container ON Container.Id = MovementItemContainer.ContainerId
                                AND Container.DescId = zc_Container_Summ()
+                 LEFT JOIN ContainerObjectCost ON ContainerObjectCost.ContainerId = MovementItemContainer.ContainerId
+                                              AND ContainerObjectCost.ObjectCostDescId = zc_ObjectCost_Basis()
                  LEFT JOIN ObjectLink AS ObjectLink_AccountKind
                                       ON ObjectLink_AccountKind.ObjectId = Container.ObjectId
                                      AND ObjectLink_AccountKind.DescId = zc_ObjectLink_Account_AccountKind()
@@ -275,6 +284,7 @@ BEGIN
                    , Object_Goods.ObjectCode
                    , Object_Goods.ValueData
                    , Object_GoodsKind.ValueData
+                   , ContainerObjectCost.ObjectCostId
                    , COALESCE (MovementItem_Parent.Id, MovementItem.Id)
                    , Object_Goods_Parent.ObjectCode
                    , Object_Goods_Parent.ValueData

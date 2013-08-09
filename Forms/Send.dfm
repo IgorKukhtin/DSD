@@ -5,7 +5,7 @@ inherited SendForm: TSendForm
   KeyPreview = True
   PopupMenu = PopupMenu
   ExplicitWidth = 1044
-  ExplicitHeight = 435
+  ExplicitHeight = 431
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -374,6 +374,9 @@ inherited SendForm: TSendForm
             DataBinding.FieldName = 'InfoMoneyName_Detail'
             Width = 55
           end
+          object colObjectCostId: TcxGridDBColumn
+            DataBinding.FieldName = 'ObjectCostId'
+          end
         end
         object cxGridEntryLevel: TcxGridLevel
           GridView = cxGridEntryDBTableView
@@ -580,6 +583,7 @@ inherited SendForm: TSendForm
     FormName = 'TJuridicalForm'
     PositionDataSet = 'GridDataSet'
     ParentDataSet = 'TreeDataSet'
+    Params = <>
     Left = 304
     Top = 56
   end
@@ -588,6 +592,7 @@ inherited SendForm: TSendForm
     FormName = 'TUnitForm'
     PositionDataSet = 'GridDataSet'
     ParentDataSet = 'TreeDataSet'
+    Params = <>
     Left = 448
     Top = 56
   end
