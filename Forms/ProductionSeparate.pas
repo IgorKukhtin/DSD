@@ -113,6 +113,7 @@ type
     colId: TcxGridDBColumn;
     colMIId_Parent: TcxGridDBColumn;
     colObjectCostId: TcxGridDBColumn;
+    colPrice_comlete: TcxGridDBColumn;
   private
   public
   end;
