@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItemContainer_Movement(
 )
 RETURNS TABLE (DebetAmount TFloat, DebetAccountGroupCode Integer, DebetAccountGroupName TVarChar, DebetAccountDirectionCode Integer, DebetAccountDirectionName TVarChar, DebetAccountCode Integer, DebetAccountName  TVarChar
              , KreditAmount TFloat, KreditAccountGroupCode Integer, KreditAccountGroupName TVarChar, KreditAccountDirectionCode Integer, KreditAccountDirectionName TVarChar, KreditAccountCode Integer, KreditAccountName  TVarChar
+             , Price TFloat
              , AccountOnComplete Boolean, ByObjectCode Integer, ByObjectName TVarChar, GoodsGroupCode Integer, GoodsGroupName TVarChar
              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
              , ObjectCostId Integer, MIId_Parent Integer, GoodsCode_Parent Integer, GoodsName_Parent TVarChar, GoodsKindName_Parent TVarChar
@@ -38,6 +39,7 @@ BEGIN
            , CAST (NULL AS Integer)         AS KreditAccountCode
            , CAST ('' AS TVarChar)          AS KreditAccountName
 
+           , CAST (tmpMovementItemContainer.Price AS TFloat) AS Price
            , lfObject_Account.onComplete AS AccountOnComplete
            , tmpMovementItemContainer.ByObjectCode
            , tmpMovementItemContainer.ByObjectName
@@ -75,6 +77,7 @@ BEGIN
                 , lfObject_InfoMoney.InfoMoneyName
                 , lfObject_InfoMoney_Detail.InfoMoneyCode AS InfoMoneyCode_Detail
                 , lfObject_InfoMoney_Detail.InfoMoneyName AS InfoMoneyName_Detail
+                , CASE WHEN SUM (MovementItem.Amount) <> 0 THEN SUM (MovementItemContainer.Amount) / SUM (MovementItem.Amount) ELSE 0 END AS Price
             FROM MovementItemContainer
                  JOIN Container ON Container.Id = MovementItemContainer.ContainerId
                                AND Container.DescId = zc_Container_Summ()
@@ -123,9 +126,9 @@ BEGIN
                  LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ContainerLinkObject_GoodsKind.ObjectId
 
                  LEFT JOIN Movement ON Movement.Id = MovementItemContainer.MovementId
+                 LEFT JOIN MovementItem ON MovementItem.Id = MovementItemContainer.MovementItemId
                  LEFT JOIN MovementItemContainer AS MovementItemContainer_Parent ON MovementItemContainer_Parent.Id = MovementItemContainer.ParentId
                                                                                 AND Movement.DescId = zc_Movement_ProductionSeparate()
-                 LEFT JOIN MovementItem ON MovementItem.Id = MovementItemContainer.MovementItemId
                  LEFT JOIN MovementItem AS MovementItem_Parent ON MovementItem_Parent.Id = COALESCE (MovementItemContainer_Parent.MovementItemId, MovementItem.ParentId)
                  LEFT JOIN Object AS Object_Goods_Parent ON Object_Goods_Parent.Id = COALESCE (MovementItem_Parent.ObjectId, MovementItem.ObjectId)
 
@@ -136,7 +139,7 @@ BEGIN
 
             WHERE MovementItemContainer.MovementId = inMovementId
               -- AND COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Passive()
-              AND MovementItemContainer.Amount >= 0
+              AND MovementItemContainer.isActive = TRUE
             GROUP BY Container.ObjectId
                    , MovementItemContainer.Id
                    , Object_by.ObjectCode
@@ -176,6 +179,7 @@ BEGIN
            , lfObject_Account.AccountCode                     AS KreditAccountCode
            , lfObject_Account.AccountName                     AS KreditAccountName
 
+           , CAST (tmpMovementItemContainer.Price AS TFloat) AS Price
            , lfObject_Account.onComplete AS AccountOnComplete
            , tmpMovementItemContainer.ByObjectCode
            , tmpMovementItemContainer.ByObjectName
@@ -213,6 +217,7 @@ BEGIN
                 , lfObject_InfoMoney.InfoMoneyName
                 , lfObject_InfoMoney_Detail.InfoMoneyCode AS InfoMoneyCode_Detail
                 , lfObject_InfoMoney_Detail.InfoMoneyName AS InfoMoneyName_Detail
+                , CASE WHEN SUM (MovementItem.Amount) <> 0 THEN -SUM (MovementItemContainer.Amount) / SUM (MovementItem.Amount) ELSE 0 END AS Price
             FROM MovementItemContainer
                  JOIN Container ON Container.Id = MovementItemContainer.ContainerId
                                AND Container.DescId = zc_Container_Summ()
@@ -261,9 +266,9 @@ BEGIN
                  LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ContainerLinkObject_GoodsKind.ObjectId
 
                  LEFT JOIN Movement ON Movement.Id = MovementItemContainer.MovementId
+                 LEFT JOIN MovementItem ON MovementItem.Id = MovementItemContainer.MovementItemId
                  LEFT JOIN MovementItemContainer AS MovementItemContainer_Parent ON MovementItemContainer_Parent.Id = MovementItemContainer.ParentId
                                                                                 AND Movement.DescId = zc_Movement_ProductionSeparate()
-                 LEFT JOIN MovementItem ON MovementItem.Id = MovementItemContainer.MovementItemId
                  LEFT JOIN MovementItem AS MovementItem_Parent ON MovementItem_Parent.Id = COALESCE (MovementItemContainer_Parent.MovementItemId, MovementItem.ParentId)
                  LEFT JOIN Object AS Object_Goods_Parent ON Object_Goods_Parent.Id = COALESCE (MovementItem_Parent.ObjectId, MovementItem.ObjectId)
 
@@ -274,7 +279,7 @@ BEGIN
 
             WHERE MovementItemContainer.MovementId = inMovementId
               -- AND ObjectLink_AccountKind.ChildObjectId = zc_Enum_AccountKind_Passive()
-              AND MovementItemContainer.Amount < 0
+              AND MovementItemContainer.isActive = FALSE
             GROUP BY Container.ObjectId
                    , MovementItemContainer.Id
                    , Object_by.ObjectCode
@@ -305,6 +310,7 @@ ALTER FUNCTION gpSelect_MovementItemContainer_Movement (Integer, TVarChar) OWNER
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 06.08.13                                        * add isActive
  06.08.13                                        * add MIId_Parent
  05.08.13                                        * add Goods_Parent and InfoMoney
  11.07.13                                        * add zc_ObjectLink_Account_AccountKind

@@ -33,6 +33,8 @@ BEGIN
                                , JuridicalId_basis_To Integer, BusinessId_To Integer
                                , isPartionCount Boolean, isPartionSumm Boolean, isPartionDate Boolean
                                , PartionGoodsId Integer) ON COMMIT DROP;
+     -- таблица - суммовые Master-элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, MIContainerId Integer, OperSumm TFloat, InfoMoneyId_Detail_To Integer) ON COMMIT DROP;
 
      -- таблица - количественные Child-элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItemChild (MovementItemId_Parent Integer, MovementItemId Integer, MovementId Integer, OperDate TDateTime, UnitId_From Integer, PersonalId_From Integer
@@ -42,7 +44,7 @@ BEGIN
                                     , isPartionCount Boolean, isPartionSumm Boolean, isPartionDate Boolean
                                     , PartionGoodsId Integer) ON COMMIT DROP;
      -- таблица - суммовые Child-элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItemSummChild (ObjectCostId Integer, MovementItemId_Parent Integer, MovementItemId Integer, MIContainerId Integer, ContainerId_From Integer, OperSumm TFloat, InfoMoneyId_Detail_From Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpItemSummChild (ObjectCostId Integer, MovementItemId_Parent Integer, MovementItemId Integer, ContainerId_From Integer, OperSumm TFloat, InfoMoneyId_Detail_From Integer) ON COMMIT DROP;
 
 
      -- заполняем таблицу - количественные Master-элементы документа, со всеми свойствами для формирования Аналитик в проводках
@@ -478,12 +480,11 @@ BEGIN
 
 
      -- самое интересное: заполняем таблицу - суммовые Child-элементы документа, со всеми свойствами для формирования Аналитик в проводках, здесь ObjectCostId только для теста
-     INSERT INTO _tmpItemSummChild (ObjectCostId, MovementItemId_Parent, MovementItemId, MIContainerId, ContainerId_From, InfoMoneyId_Detail_From, OperSumm)
+     INSERT INTO _tmpItemSummChild (ObjectCostId, MovementItemId_Parent, MovementItemId, ContainerId_From, InfoMoneyId_Detail_From, OperSumm)
         SELECT
               ContainerObjectCost_Basis.ObjectCostId
             , _tmpItemChild.MovementItemId_Parent
             , _tmpItemChild.MovementItemId
-            , 0 AS MIContainerId
             , Container_Summ.Id AS ContainerId_From
             , ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail_From
             , SUM (ABS (_tmpItemChild.OperCount * COALESCE (HistoryCost.Price, 0))) AS OperSumm
@@ -507,6 +508,9 @@ BEGIN
                , Container_Summ.Id
                , ContainerLinkObject_InfoMoneyDetail.ObjectId
         ;
+     -- группируем и получаем таблицу - суммовые Master-элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     INSERT INTO _tmpItemSumm (MovementItemId, MIContainerId, InfoMoneyId_Detail_To, OperSumm)
+        SELECT MovementItemId_Parent, 0 AS MIContainerId, InfoMoneyId_Detail_From, SUM (OperSumm) FROM _tmpItemSummChild GROUP BY MovementItemId_Parent, InfoMoneyId_Detail_From;
 
 
      -- для теста - Child - Summ
@@ -540,26 +544,13 @@ BEGIN
      FROM _tmpItem;
 
 
-     -- формируются Проводки для суммового учета - От кого + сохраняется MIContainer.Id
-     UPDATE _tmpItemSummChild SET MIContainerId = lpInsertUpdate_MovementItemContainer (ioId:= 0
-                                                                                      , inDescId:= zc_MIContainer_Summ()
-                                                                                      , inMovementId:= MovementId
-                                                                                      , inMovementItemId:= _tmpItemChild.MovementItemId
-                                                                                      , inParentId:= NULL
-                                                                                      , inContainerId:= _tmpItemSummChild.ContainerId_From
-                                                                                      , inAmount:= -OperSumm
-                                                                                      , inOperDate:= OperDate
-                                                                                      , inIsActive:= FALSE
-                                                  )
-     FROM _tmpItemChild
-     WHERE _tmpItemSummChild.MovementItemId = _tmpItemChild.MovementItemId;
-
-     -- формируются Проводки для суммового учета + Аналитика <элемент с/с> - Кому
-     PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
+     -- формируются Проводки для суммового учета + Аналитика <элемент с/с> - Кому + сохраняется MIContainer.Id
+     UPDATE _tmpItemSumm SET MIContainerId =
+             lpInsertUpdate_MovementItemContainer (ioId:= 0
                                                  , inDescId:= zc_MIContainer_Summ()
                                                  , inMovementId:= MovementId
                                                  , inMovementItemId:= _tmpItem.MovementItemId
-                                                 , inParentId:= _tmpItemSummChild.MIContainerId
+                                                 , inParentId:= NULL
                                                  , inContainerId:= CASE WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение 2)Товар 3)!Партии товара! 4)Статьи назначения 5)Статьи назначения(детализация с/с)
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Сотрудник (МО) 2)Товар 3)!Партии товара! 4)Статьи назначения 5)Статьи назначения(детализация с/с)
@@ -592,7 +583,7 @@ BEGIN
                                                                                                                                                      , inDescId_7   := zc_ObjectCostLink_InfoMoney()
                                                                                                                                                      , inObjectId_7 := InfoMoneyId
                                                                                                                                                      , inDescId_8   := zc_ObjectCostLink_InfoMoneyDetail()
-                                                                                                                                                     , inObjectId_8 := InfoMoneyId_Detail_From
+                                                                                                                                                     , inObjectId_8 := InfoMoneyId_Detail_To
                                                                                                                                                       )
                                                                                                       , inDescId_1   := CASE WHEN PersonalId_To <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Unit() END
                                                                                                       , inObjectId_1 := CASE WHEN PersonalId_To <> 0 THEN PersonalId_To ELSE UnitId_To END
@@ -603,7 +594,7 @@ BEGIN
                                                                                                       , inDescId_4   := zc_ContainerLinkObject_InfoMoney()
                                                                                                       , inObjectId_4 := InfoMoneyId
                                                                                                       , inDescId_5   := zc_ContainerLinkObject_InfoMoneyDetail()
-                                                                                                      , inObjectId_5 := InfoMoneyId_Detail_From
+                                                                                                      , inObjectId_5 := InfoMoneyId_Detail_To
                                                                                                        )
                                                                         WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100()
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение 2)Товар 3)Основные средства(для которого закуплено ТМЦ) 4)Статьи назначения 5)Статьи назначения(детализация с/с)
@@ -637,7 +628,7 @@ BEGIN
                                                                                                                                                      , inDescId_7   := zc_ObjectCostLink_InfoMoney()
                                                                                                                                                      , inObjectId_7 := InfoMoneyId
                                                                                                                                                      , inDescId_8   := zc_ObjectCostLink_InfoMoneyDetail()
-                                                                                                                                                     , inObjectId_8 := InfoMoneyId_Detail_From
+                                                                                                                                                     , inObjectId_8 := InfoMoneyId_Detail_To
                                                                                                                                                       )
                                                                                                       , inDescId_1   := CASE WHEN PersonalId_To <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Unit() END
                                                                                                       , inObjectId_1 := CASE WHEN PersonalId_To <> 0 THEN PersonalId_To ELSE UnitId_To END
@@ -648,7 +639,7 @@ BEGIN
                                                                                                       , inDescId_4   := zc_ContainerLinkObject_InfoMoney()
                                                                                                       , inObjectId_4 := InfoMoneyId
                                                                                                       , inDescId_5   := zc_ContainerLinkObject_InfoMoneyDetail()
-                                                                                                      , inObjectId_5 := InfoMoneyId_Detail_From
+                                                                                                      , inObjectId_5 := InfoMoneyId_Detail_To
                                                                                                        )
                                                                         WHEN InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20700()  -- Товары    -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20700()
                                                                                                       , zc_Enum_InfoMoneyDestination_30100()) -- Продукция -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()
@@ -685,7 +676,7 @@ BEGIN
                                                                                                                                                      , inDescId_8   := zc_ObjectCostLink_InfoMoney()
                                                                                                                                                      , inObjectId_8 := InfoMoneyId
                                                                                                                                                      , inDescId_9   := zc_ObjectCostLink_InfoMoneyDetail()
-                                                                                                                                                     , inObjectId_9 := InfoMoneyId_Detail_From
+                                                                                                                                                     , inObjectId_9 := InfoMoneyId_Detail_To
                                                                                                                                                       )
                                                                                                       , inDescId_1   := CASE WHEN PersonalId_To <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Unit() END
                                                                                                       , inObjectId_1 := CASE WHEN PersonalId_To <> 0 THEN PersonalId_To ELSE UnitId_To END
@@ -698,7 +689,7 @@ BEGIN
                                                                                                       , inDescId_5   := zc_ContainerLinkObject_InfoMoney()
                                                                                                       , inObjectId_5 := InfoMoneyId
                                                                                                       , inDescId_6   := zc_ContainerLinkObject_InfoMoneyDetail()
-                                                                                                      , inObjectId_6 := InfoMoneyId_Detail_From
+                                                                                                      , inObjectId_6 := InfoMoneyId_Detail_To
                                                                                                        )
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение 2)Товар 3)Статьи назначения 4)Статьи назначения(детализация с/с)
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Сотрудник (МО) 2)Товар 3)Статьи назначения 4)Статьи назначения(детализация с/с)
@@ -729,7 +720,7 @@ BEGIN
                                                                                                                                                      , inDescId_6   := zc_ObjectCostLink_InfoMoney()
                                                                                                                                                      , inObjectId_6 := InfoMoneyId
                                                                                                                                                      , inDescId_7   := zc_ObjectCostLink_InfoMoneyDetail()
-                                                                                                                                                     , inObjectId_7 := InfoMoneyId_Detail_From
+                                                                                                                                                     , inObjectId_7 := InfoMoneyId_Detail_To
                                                                                                                                                       )
                                                                                                       , inDescId_1   := CASE WHEN PersonalId_To <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Unit() END
                                                                                                       , inObjectId_1 := CASE WHEN PersonalId_To <> 0 THEN PersonalId_To ELSE UnitId_To END
@@ -738,22 +729,32 @@ BEGIN
                                                                                                       , inDescId_3   := zc_ContainerLinkObject_InfoMoney()
                                                                                                       , inObjectId_3 := InfoMoneyId
                                                                                                       , inDescId_4   := zc_ContainerLinkObject_InfoMoneyDetail()
-                                                                                                      , inObjectId_4 := InfoMoneyId_Detail_From
+                                                                                                      , inObjectId_4 := InfoMoneyId_Detail_To
                                                                                                        )
                                                                    END
-                                                 , inAmount:= SUM (OperSumm)
+                                                 , inAmount:= _tmpItemSumm.OperSumm
                                                  , inOperDate:= OperDate
                                                  , inIsActive:= TRUE
                                                   )
      FROM _tmpItem
-          JOIN _tmpItemSummChild ON _tmpItemSummChild.MovementItemId_Parent = _tmpItem.MovementItemId
-     GROUP BY _tmpItem.MovementItemId, MovementId, OperDate, UnitId_To, PersonalId_To, BranchId_To
-            , _tmpItemSummChild.MIContainerId
-            , ContainerId_GoodsTo, GoodsId, GoodsKindId, AssetId
-            , AccountDirectionId_To, InfoMoneyDestinationId, InfoMoneyId, InfoMoneyId_Detail_From
-            , JuridicalId_basis_To, BusinessId_To
-            , isPartionSumm
-            , PartionGoodsId;
+     WHERE _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId;
+
+     -- формируются Проводки для суммового учета - От кого
+     PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
+                                                 , inDescId:= zc_MIContainer_Summ()
+                                                 , inMovementId:= MovementId
+                                                 , inMovementItemId:= _tmpItemChild.MovementItemId
+                                                 , inParentId:= _tmpItemSumm.MIContainerId
+                                                 , inContainerId:= _tmpItemSummChild.ContainerId_From
+                                                 , inAmount:= -_tmpItemSummChild.OperSumm
+                                                 , inOperDate:= OperDate
+                                                 , inIsActive:= FALSE
+                                                  )
+     FROM _tmpItemChild
+          JOIN _tmpItemSummChild ON _tmpItemSummChild.MovementItemId = _tmpItemChild.MovementItemId
+          JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItemSummChild.MovementItemId_Parent
+                           AND _tmpItemSumm.InfoMoneyId_Detail_To = _tmpItemSummChild.InfoMoneyId_Detail_From
+     WHERE _tmpItemSummChild.MovementItemId = _tmpItemChild.MovementItemId;
 
 
      -- ФИНИШ - Обязательно меняем статус документа
@@ -767,6 +768,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.08.13                                        * в проводках для суммового учета: Master - приход, Child - расход (т.е. точно так же как и для MovementItem)
  09.08.13                                        * add zc_isHistoryCost and zc_isHistoryCost_byInfoMoneyDetail
  24.07.13                                        * !ОБЯЗАТЕЛЬНО! вставляем нули
  21.07.13                                        * ! finich !

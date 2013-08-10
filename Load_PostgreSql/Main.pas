@@ -4611,10 +4611,10 @@ begin
         Close;
         Clear;
         Add('select Bill.Id as ObjectId');
-        Add('     , cast (Bill.BillNumber as TVarCharMedium) + case when FromId_Postgres is null then '+FormatToVarCharServer_notNULL('-')+' + UnitFrom.UnitName else '+FormatToVarCharServer_notNULL('')+' end as InvNumber');
+        Add('     , case when FromId_Postgres is null then '+FormatToVarCharServer_notNULL('-')+' + UnitFrom.UnitName else '+FormatToVarCharServer_notNULL('')+' end + cast (Bill.BillNumber as TVarCharMedium) as InvNumber');
         Add('     , Bill.BillDate as OperDate');
 
-        Add('     , OperDate as OperDatePartner');
+        Add('     , OperDate + isnull(_toolsView_Client_isChangeDate.addDay,0) as OperDatePartner');
 
         Add('     , Bill.isNds as PriceWithVAT');
         Add('     , Bill.Nds as VATPercent');
@@ -4631,8 +4631,10 @@ begin
         Add('     , case when isnull(Bill.RouteUnitId,0) = Bill.ToId then ToId_Postgres else Unit_RouteSorting.Id_Postgres_RouteSorting end as RouteSortingId_Postgres');
         Add('     , _pgPersonal.Id2_Postgres as PersonalId_Postgres');
 
-        Add('     , Bill.Id_Postgres as Id_Postgres');
+        Add('     , zc_rvNo() as isFl');
+
         Add('     , zc_rvYes() as zc_rvYes');
+        Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('from dba.Bill');
         Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId');
         Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId');
@@ -4643,6 +4645,7 @@ begin
         Add('     left outer join dba.MoneyKind on MoneyKind.Id = Bill.MoneyKindId');
         Add('     left outer join dba.Unit as Unit_RouteSorting on Unit_RouteSorting.Id = Bill.RouteUnitId');
         Add('     left outer join dba._pgPersonal on _pgPersonal.Id = Unit_RouteSorting.PersonalId_Postgres');
+        Add('     left outer join dba._toolsView_Client_isChangeDate on _toolsView_Client_isChangeDate.ClientId = UnitTo.ID');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkSendUnitToUnit(),zc_bkSaleToClient())'
 // +' and Bill.Id = 1260716'
@@ -4656,7 +4659,53 @@ begin
            +'     and isnull(UnitTo.ParentId,0)<>4137)' // ÃŒ À»÷¿-¬—≈
            +'     or Bill.BillKind = zc_bkSaleToClient())'
            );
-        Add('order by ObjectId');
+        Add('union all');
+        Add('select Bill.Id as ObjectId');
+        Add('     , '+FormatToVarCharServer_notNULL('f')+'+case when FromId_Postgres is null then fUnit.UnitName + '+FormatToVarCharServer_notNULL('-')+' else '+FormatToVarCharServer_notNULL('')+' end + cast (Bill.BillNumber as TVarCharMedium) as InvNumber');
+        Add('     , Bill.BillDate - isnull(_toolsView_Client_isChangeDate.addDay,0) as OperDate');
+
+        Add('     , Bill.BillDate as OperDatePartner');
+
+        Add('     , Bill.isNds as PriceWithVAT');
+        Add('     , Bill.Nds as VATPercent');
+        Add('     , case when Bill.isByMinusDiscountTax=zc_rvYes() then -Bill.DiscountTax else Bill.DiscountTax end as ChangePercent');
+
+        Add('     , isnull(pgPersonalFrom.Id2_Postgres, pgUnitFrom.Id_Postgres) as FromId_Postgres');
+        Add('     , UnitTo.Id3_Postgres as ToId_Postgres');
+        Add('     , MoneyKind.Id_Postgres as PaidKindId_Postgres');
+        Add('     , null as ContractId');
+        Add('     , null as CarId');
+        Add('     , null as PersonalDriverId');
+
+        Add('     , null as RouteId');
+        Add('     , case when isnull(Bill.RouteUnitId,0) = Bill.ToId then ToId_Postgres else Unit_RouteSorting.Id_Postgres_RouteSorting end as RouteSortingId_Postgres');
+        Add('     , _pgPersonal.Id2_Postgres as PersonalId_Postgres');
+
+        Add('     , zc_rvYes() as isFl');
+
+        Add('     , zc_rvYes() as zc_rvYes');
+        Add('     , Bill.Id_Postgres as Id_Postgres');
+        Add('from dba.fBill as Bill');
+        Add('     left outer join dba.fUnit_byLoad AS fUnitFrom on fUnitFrom.UnitId = Bill.FromId and fUnitFrom.Id_byLoad <> 0');
+        Add('     left outer join dba.fUnit_byLoad AS fUnitTo on fUnitTo.UnitId = Bill.ToId and fUnitTo.Id_byLoad <> 0');
+
+        Add('     left outer join dba.fUnit on fUnit.Id = Bill.FromId');
+
+        Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = fUnitFrom.Id_byLoad');
+        Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = fUnitTo.Id_byLoad');
+
+        Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId');
+        Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
+        Add('     left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id=UnitFrom.PersonalId_Postgres'
+           +'                                                      and pgPersonalFrom.Id2_Postgres>0');
+        Add('     left outer join dba.MoneyKind on MoneyKind.Id = Bill.MoneyKindId');
+        Add('     left outer join dba.Unit as Unit_RouteSorting on Unit_RouteSorting.Id = Bill.RouteUnitId and 1=0');
+        Add('     left outer join dba._pgPersonal on _pgPersonal.Id = Unit_RouteSorting.PersonalId_Postgres');
+        Add('     left outer join dba._toolsView_Client_isChangeDate on _toolsView_Client_isChangeDate.ClientId = UnitTo.ID');
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+           +'  and Bill.BillKind in (zc_bkSaleToClient())'
+           );
+        Add('order by OperDate, ObjectId');
         Open;
         Result:=RecordCount;
         cbSale.Caption:='3.1. ('+IntToStr(RecordCount)+') œÓ‰‡Ê‡ ÔÓÍÛÔ‡ÚÂÎ˛';
@@ -4720,8 +4769,10 @@ begin
 
              if not myExecToStoredProc then ;//exit;
              //
-             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             if ((1=0)or(FieldByName('Id_Postgres').AsInteger=0))and(FieldByName('isFl').AsInteger<>FieldByName('zc_rvYes').AsInteger)
              then fExecSqFromQuery('update dba.Bill set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
+             if ((1=0)or(FieldByName('Id_Postgres').AsInteger=0))and(FieldByName('isFl').AsInteger=FieldByName('zc_rvYes').AsInteger)
+             then fExecSqFromQuery('update dba.fBill set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
              //
              Next;
              Application.ProcessMessages;
@@ -4753,8 +4804,13 @@ begin
         Add('     , BillItems.PartionStr_MB as PartionGoods');
         Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
         Add('     , 0 as AssetId_Postgres');
-        Add('     , BillItems.Id_Postgres as Id_Postgres');
+
+        Add('     , zc_rvNo() as isFl');
+        Add('     , zc_rvNo() as isError');
+        Add('     , '+FormatToVarCharServer_notNULL('')+' as errInvNumber');
+
         Add('     , zc_rvYes() as zc_rvYes');
+        Add('     , BillItems.Id_Postgres as Id_Postgres');
         Add('from dba.Bill');
         Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId');
         Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId');
@@ -4776,6 +4832,46 @@ begin
            +'     and isnull(UnitFrom.ParentId,0)<>4137' // ÃŒ À»÷¿-¬—≈
            +'     and isnull(UnitTo.ParentId,0)<>4137)' // ÃŒ À»÷¿-¬—≈
            +'     or Bill.BillKind = zc_bkSaleToClient())'
+           +'  and BillItems.Id is not null'
+           );
+        Add('union all');
+        Add('select BillItems.Id as ObjectId');
+        Add('     , Bill.Id_Postgres as MovementId_Postgres');
+        Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
+        Add('     , -BillItems.OperCount as Amount');
+        Add('     , Amount as AmountPartner');
+        Add('     , BillItems.OperPrice as Price');
+        Add('     , 1 as CountForPrice');
+        Add('     , BillItems.OperCount_sh as HeadCount');
+        Add('     , BillItems.PartionStr_MB as PartionGoods');
+        Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
+        Add('     , 0 as AssetId_Postgres');
+
+        Add('     , zc_rvYes() as isFl');
+        Add('     , case when GoodsProperty.Id is null or KindPackage.Id is null then zc_rvYes() else zc_rvNo() end as isError');
+        Add('     , case when isError=zc_rvYes() then '+FormatToVarCharServer_notNULL('f_err_')+'+case when isnull(pgPersonalFrom.Id2_Postgres, pgUnitFrom.Id_Postgres) is null then fUnit.UnitName + '+FormatToVarCharServer_notNULL('-')+' else '+FormatToVarCharServer_notNULL('')+' end + cast (Bill.BillNumber as TVarCharMedium)'
+           +'            else '+FormatToVarCharServer_notNULL('')+' end as errInvNumber');
+        Add('     , zc_rvYes() as zc_rvYes');
+        Add('     , BillItems.Id_Postgres as Id_Postgres');
+        Add('from dba.fBill as Bill');
+
+        Add('     left outer join dba.fUnit_byLoad AS fUnitFrom on fUnitFrom.UnitId = Bill.FromId and fUnitFrom.Id_byLoad <> 0');
+        Add('     left outer join dba.fUnit on fUnit.Id = Bill.FromId');
+        Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = fUnitFrom.Id_byLoad');
+        Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId');
+        Add('     left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id=UnitFrom.PersonalId_Postgres'
+           +'                                                      and pgPersonalFrom.Id2_Postgres>0');
+
+        Add('     left outer join dba.fBillItems as BillItems on BillItems.BillId = Bill.Id');
+        Add('     left outer join dba.fGoodsProperty_Detail_byLoad on fGoodsProperty_Detail_byLoad.GoodsPropertyId = BillItems.GoodsPropertyId');
+        Add('                                                     and fGoodsProperty_Detail_byLoad.KindPackageId = BillItems.KindPackageId');
+        Add('     left outer join dba.GoodsProperty_Detail on GoodsProperty_Detail.Id = fGoodsProperty_Detail_byLoad.Id_byLoad');
+        Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = GoodsProperty_Detail.GoodsPropertyId');
+        Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
+        Add('     left outer join dba.KindPackage on KindPackage.Id = GoodsProperty_Detail.KindPackageId');
+//        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+           +'  and Bill.BillKind in (zc_bkSaleToClient())'
            +'  and BillItems.Id is not null'
            );
         Add('order by ObjectId');
@@ -4803,6 +4899,12 @@ begin
         toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAssetId',ftInteger,ptInput, 0);
         //
+        toStoredProc_two.StoredProcName:='gtmpUpdate_Movement_InvNumber';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inId',ftInteger,ptInputOutput, 0);
+        toStoredProc_two.Params.AddParam ('inInvNumber',ftString,ptInput, '');
+        //
         //DisableControls;
         while not EOF do
         begin
@@ -4822,8 +4924,17 @@ begin
              toStoredProc.Params.ParamByName('inAssetId').Value:=FieldByName('AssetId_Postgres').AsInteger;
              if not myExecToStoredProc then ;//exit;
              //
-             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             if ((1=0)or(FieldByName('Id_Postgres').AsInteger=0))and(FieldByName('isFl').AsInteger<>FieldByName('zc_rvYes').AsInteger)
              then fExecSqFromQuery('update dba.BillItems set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString);
+             if ((1=0)or(FieldByName('Id_Postgres').AsInteger=0))and(FieldByName('isFl').AsInteger=FieldByName('zc_rvYes').AsInteger)
+             then fExecSqFromQuery('update dba.fBillItems set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString);
+             //
+             if (FieldByName('isError').AsInteger=FieldByName('zc_rvYes').AsInteger)
+             then begin
+                  toStoredProc_two.Params.ParamByName('inId').Value:=FieldByName('MovementId_Postgres').AsInteger;
+                  toStoredProc_two.Params.ParamByName('inInvNumber').Value:=FieldByName('errInvNumber').AsString;
+                  if not myExecToStoredProc_two then;
+             end;
              //
              Next;
              Application.ProcessMessages;
