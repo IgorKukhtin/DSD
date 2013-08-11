@@ -411,7 +411,7 @@ object MainForm: TMainForm
     object cbTradeMark: TCheckBox
       Tag = 10
       Left = 151
-      Top = 80
+      Top = 81
       Width = 135
       Height = 17
       Caption = '1.5. '#1058#1086#1088#1075#1086#1074#1099#1077' '#1084#1072#1088#1082#1080
@@ -752,7 +752,7 @@ object MainForm: TMainForm
     end
     object cbComplete: TCheckBox
       Left = 15
-      Top = 39
+      Top = 41
       Width = 102
       Height = 17
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080
@@ -767,7 +767,7 @@ object MainForm: TMainForm
     end
     object cbUnComplete: TCheckBox
       Left = 122
-      Top = 39
+      Top = 41
       Width = 102
       Height = 17
       Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080
@@ -816,7 +816,7 @@ object MainForm: TMainForm
     object cbInsertHistoryCost: TCheckBox
       Tag = 100
       Left = 15
-      Top = 61
+      Top = 81
       Width = 194
       Height = 17
       Caption = #1057#1045#1041#1045#1057#1058#1054#1048#1052#1054#1057#1058#1068' '#1087#1086' '#1052#1045#1057#1071#1062#1040#1052
@@ -859,6 +859,21 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 10
       OnClick = cbCompleteIncomeClick
+    end
+    object cbLastComplete: TCheckBox
+      Left = 15
+      Top = 61
+      Width = 191
+      Height = 17
+      Caption = '!!!'#1073#1077#1079' '#1085#1091#1083#1077#1074#1099#1093' '#1087#1088#1086#1074#1086#1076#1086#1082'!!!'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 11
+      OnClick = cbUnCompleteClick
     end
   end
   object DataSource: TDataSource

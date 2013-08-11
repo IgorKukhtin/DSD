@@ -106,6 +106,7 @@ type
     cbRouteSorting: TCheckBox;
     toStoredProc: TdsdStoredProc;
     toStoredProc_two: TdsdStoredProc;
+    cbLastComplete: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -137,11 +138,11 @@ type
 
     procedure pInsertHistoryCost;
     // DocumentsCompelete :
-    procedure pCompleteDocument_Income;
-    procedure pCompleteDocument_Send;
-    procedure pCompleteDocument_SendOnPrice;
-    procedure pCompleteDocument_ProductionUnion;
-    procedure pCompleteDocument_ProductionSeparate;
+    procedure pCompleteDocument_Income(isLastComplete:Boolean);
+    procedure pCompleteDocument_Send(isLastComplete:Boolean);
+    procedure pCompleteDocument_SendOnPrice(isLastComplete:Boolean);
+    procedure pCompleteDocument_ProductionUnion(isLastComplete:Boolean);
+    procedure pCompleteDocument_ProductionSeparate(isLastComplete:Boolean);
     // Documents :
     function pLoadDocument_Income:Integer;
     procedure pLoadDocumentItem_Income(SaveCount:Integer);
@@ -586,13 +587,22 @@ begin
      //
      tmpDate1:=NOw;
      //
+     if (cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled) then
+     begin
+          if not fStop then pCompleteDocument_Income(FALSE);
+          if not fStop then pCompleteDocument_Send(FALSE);
+          if not fStop then pCompleteDocument_SendOnPrice(FALSE);
+          if not fStop then pCompleteDocument_ProductionUnion(FALSE);
+          if not fStop then pCompleteDocument_ProductionSeparate(FALSE);
+     end;
+
      if not fStop then pInsertHistoryCost;
      //
-     if not fStop then pCompleteDocument_Income;
-     if not fStop then pCompleteDocument_Send;
-     if not fStop then pCompleteDocument_SendOnPrice;
-     if not fStop then pCompleteDocument_ProductionUnion;
-     if not fStop then pCompleteDocument_ProductionSeparate;
+     if(not fStop)and(not ((cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled)))then pCompleteDocument_Income(cbLastComplete.Checked);
+     if not fStop then pCompleteDocument_Send(cbLastComplete.Checked);
+     if not fStop then pCompleteDocument_SendOnPrice(cbLastComplete.Checked);
+     if not fStop then pCompleteDocument_ProductionUnion(cbLastComplete.Checked);
+     if not fStop then pCompleteDocument_ProductionSeparate(cbLastComplete.Checked);
      //
      Gauge.Visible:=false;
      DBGrid.Enabled:=true;
@@ -3209,7 +3219,7 @@ begin
              //
              toStoredProc.Params.ParamByName('inStartDate').Value:=FieldByName('StartDate').AsDateTime;
              toStoredProc.Params.ParamByName('inEndDate').Value:=FieldByName('EndDate').AsDateTime;
-             toStoredProc.Params.ParamByName('inItearationCount').Value:=500;
+             toStoredProc.Params.ParamByName('inItearationCount').Value:=800;
              toStoredProc.Params.ParamByName('inInsert').Value:=12345;//захардкодил
              toStoredProc.Params.ParamByName('inDiffSumm').Value:=0.009;
              if not myExecToStoredProc then ;//exit;
@@ -3224,7 +3234,7 @@ begin
      myDisabledCB(cbInsertHistoryCost);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pCompleteDocument_Income;
+procedure TMainForm.pCompleteDocument_Income(isLastComplete:Boolean);
 begin
      if (not cbCompleteIncome.Checked)or(not cbCompleteIncome.Enabled) then exit;
      //
@@ -3261,6 +3271,7 @@ begin
         toStoredProc_two.OutputType := otResult;
         toStoredProc_two.Params.Clear;
         toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inIsLastComplete',ftBoolean, ptInput, 0);
         //
         while not EOF do
         begin
@@ -3275,6 +3286,7 @@ begin
              if cbComplete.Checked then
              begin
                   toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  toStoredProc_two.Params.ParamByName('inIsLastComplete').Value:=isLastComplete;
                   if not myExecToStoredProc_two then ;//exit;
              end;
              //
@@ -3721,7 +3733,7 @@ begin
      myDisabledCB(cbIncomePacker);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pCompleteDocument_Send;
+procedure TMainForm.pCompleteDocument_Send(isLastComplete:Boolean);
 begin
      if (not cbCompleteSend.Checked)or(not cbCompleteSend.Enabled) then exit;
      //
@@ -3776,6 +3788,7 @@ begin
         toStoredProc_two.OutputType := otResult;
         toStoredProc_two.Params.Clear;
         toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inIsLastComplete',ftBoolean, ptInput, 0);
         //
         while not EOF do
         begin
@@ -3790,6 +3803,7 @@ begin
              if cbComplete.Checked then
              begin
                   toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  toStoredProc_two.Params.ParamByName('inIsLastComplete').Value:=isLastComplete;
                   if not myExecToStoredProc_two then ;//exit;
              end;
              //
@@ -3980,7 +3994,7 @@ begin
      myDisabledCB(cbSendUnit);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pCompleteDocument_SendOnPrice;
+procedure TMainForm.pCompleteDocument_SendOnPrice(isLastComplete:Boolean);
 begin
      if (not cbCompleteSendOnPrice.Checked)or(not cbCompleteSendOnPrice.Enabled) then exit;
      //
@@ -4946,7 +4960,7 @@ begin
      myDisabledCB(cbSale);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pCompleteDocument_ProductionUnion;
+procedure TMainForm.pCompleteDocument_ProductionUnion(isLastComplete:Boolean);
 begin
      if (not cbCompleteProductionUnion.Checked)or(not cbCompleteProductionUnion.Enabled) then exit;
      //
@@ -4998,6 +5012,7 @@ begin
         toStoredProc_two.OutputType := otResult;
         toStoredProc_two.Params.Clear;
         toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inIsLastComplete',ftBoolean, ptInput, 0);
         //
         while not EOF do
         begin
@@ -5012,6 +5027,7 @@ begin
              if cbComplete.Checked then
              begin
                   toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  toStoredProc_two.Params.ParamByName('inIsLastComplete').Value:=isLastComplete;
                   if not myExecToStoredProc_two then ;//exit;
              end;
              //
@@ -5295,7 +5311,7 @@ begin
      myDisabledCB(cbProductionUnion);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pCompleteDocument_ProductionSeparate;
+procedure TMainForm.pCompleteDocument_ProductionSeparate(isLastComplete:Boolean);
 begin
      if (not cbCompleteProductionSeparate.Checked)or(not cbCompleteProductionSeparate.Enabled) then exit;
      //
@@ -5340,6 +5356,7 @@ begin
         toStoredProc_two.OutputType := otResult;
         toStoredProc_two.Params.Clear;
         toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inIsLastComplete',ftBoolean, ptInput, 0);
         //
         while not EOF do
         begin
@@ -5354,6 +5371,7 @@ begin
              if cbComplete.Checked then
              begin
                   toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  toStoredProc_two.Params.ParamByName('inIsLastComplete').Value:=isLastComplete;
                   if not myExecToStoredProc_two then ;//exit;
              end;
              //
@@ -5707,5 +5725,6 @@ alter table dba.PriceListItems_byHistory add Id_Postgres integer null;
 alter table dba.Bill add Id_Postgres integer null;
 alter table dba.BillItems add Id_Postgres integer null;
 alter table dba.BillItemsReceipt add Id_Postgres integer null;
+
 ok
 }

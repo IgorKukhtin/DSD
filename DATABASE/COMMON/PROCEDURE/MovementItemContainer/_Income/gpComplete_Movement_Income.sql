@@ -1,9 +1,11 @@
 -- Function: gpComplete_Movement_Income()
 
 -- DROP FUNCTION gpComplete_Movement_Income (Integer, TVarChar);
+-- DROP FUNCTION gpComplete_Movement_Income (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Income(
     IN inMovementId        Integer  , -- ключ Документа
+    IN inIsLastComplete    Boolean  , -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
     IN inSession           TVarChar   -- сессия пользователя
 )                              
 RETURNS VOID
@@ -815,5 +817,5 @@ LANGUAGE PLPGSQL VOLATILE;
 
 -- тест
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 55, inSession:= '2')
--- SELECT * FROM gpComplete_Movement_Income (inMovementId:= 55, inSession:= '2')
+-- SELECT * FROM gpComplete_Movement_Income (inMovementId:= 55, inIsLastComplete:= FALSE, inSession:= '2')
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 55, inSession:= '2')
