@@ -9,7 +9,6 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_BankAccount(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , ParentId Integer
              , Amount TFloat 
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
@@ -34,7 +33,6 @@ BEGIN
            , Movement.OperDate
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
-           , Movement.ParentId          AS ParentId 
                       
            , MovementFloat_Amount.ValueData    AS Amount
 

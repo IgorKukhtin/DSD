@@ -1,23 +1,23 @@
-unit BankAccountTest;
+unit PersonalReportTest;
 
 interface
 
 uses dbTest, dbMovementTest;
 
 type
-  TBankAccountTest = class (TdbMovementTestNew)
+  TPersonalReportTest = class (TdbMovementTestNew)
   published
     procedure ProcedureLoad; override;
     procedure Test; override;
   end;
 
-  TBankAccount = class(TMovementTest)
+  TPersonalReport = class(TMovementTest)
   private
     function InsertDefault: integer; override;
   public
-    function InsertUpdateBankAccount(const Id: integer; InvNumber: String;
+    function InsertUpdatePersonalReport(const Id: integer; InvNumber: String;
         OperDate: TDateTime; Amount: Double;
-        FromId, ToId, InfoMoneyId, ContractId, UnitId: integer): integer;
+        FromId, ToId, PaidKindId, InfoMoneyId, ContractId, UnitId: integer): integer;
     constructor Create; override;
   end;
 
@@ -25,40 +25,41 @@ implementation
 
 uses UtilConst, JuridicalTest, dbObjectTest, SysUtils, Db, TestFramework;
 
-{ TBankAccount }
+{ TPersonalReport }
 
-constructor TBankAccount.Create;
+constructor TPersonalReport.Create;
 begin
   inherited;
-  spInsertUpdate := 'gpInsertUpdate_Movement_BankAccount';
-  spSelect := 'gpSelect_Movement_BankAccount';
-  spGet := 'gpGet_Movement_BankAccount';
+  spInsertUpdate := 'gpInsertUpdate_Movement_PersonalReport';
+  spSelect := 'gpSelect_Movement_PersonalReport';
+  spGet := 'gpGet_Movement_PersonalReport';
 end;
 
-function TBankAccount.InsertDefault: integer;
+function TPersonalReport.InsertDefault: integer;
 var Id: Integer;
     InvNumber: String;
     OperDate: TDateTime;
     Amount: Double;
-    FromId, ToId, InfoMoneyId, ContractId, UnitId: Integer;
+    FromId, ToId, PaidKindId, InfoMoneyId, ContractId, UnitId: Integer;
 begin
   Id:=0;
   InvNumber:='1';
   OperDate:= Date;
-  FromId := TJuridical.Create.GetDefault;
+  FromId := TPersonalTest.Create.GetDefault;
   ToId := TJuridical.Create.GetDefault;
-  ContractId := 0;
+  PaidKindId := 0;
   InfoMoneyId := 0;
   UnitId := 0;
+  ContractId := 0;
   Amount := 265.68;
 
-  result := InsertUpdateBankAccount(Id, InvNumber, OperDate, Amount,
-              FromId, ToId, InfoMoneyId, ContractId, UnitId);
+  result := InsertUpdatePersonalReport(Id, InvNumber, OperDate, Amount,
+              FromId, ToId, PaidKindId, InfoMoneyId, ContractId, UnitId);
 end;
 
-function TBankAccount.InsertUpdateBankAccount(const Id: integer; InvNumber: String;
+function TPersonalReport.InsertUpdatePersonalReport(const Id: integer; InvNumber: String;
         OperDate: TDateTime; Amount: Double;
-        FromId, ToId, InfoMoneyId, ContractId, UnitId: integer): integer;
+        FromId, ToId, PaidKindId, InfoMoneyId, ContractId, UnitId: integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -67,6 +68,7 @@ begin
   FParams.AddParam('inAmount', ftFloat, ptInput, Amount);
   FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
   FParams.AddParam('inToId', ftInteger, ptInput, ToId);
+  FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
   FParams.AddParam('inInfoMoneyId', ftInteger, ptInput, InfoMoneyId);
   FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
   FParams.AddParam('inUnitId', ftInteger, ptInput, UnitId);
@@ -75,22 +77,22 @@ begin
 
 end;
 
-{ TBankAccountTest }
+{ TPersonalReportTest }
 
-procedure TBankAccountTest.ProcedureLoad;
+procedure TPersonalReportTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'Movement\_BankAccount\';
+  ScriptDirectory := ProcedurePath + 'Movement\_PersonalReport\';
   inherited;
 end;
 
-procedure TBankAccountTest.Test;
-var MovementBankAccount: TBankAccount;
+procedure TPersonalReportTest.Test;
+var MovementPersonalReport: TPersonalReport;
     Id: Integer;
 begin
   inherited;
   // Создаем документ
-  MovementBankAccount := TBankAccount.Create;
-  Id := MovementBankAccount.InsertDefault;
+  MovementPersonalReport := TPersonalReport.Create;
+  Id := MovementPersonalReport.InsertDefault;
   // создание документа
   try
   // редактирование
@@ -100,6 +102,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TBankAccountTest.Suite);
+  TestFramework.RegisterTest('Документы', TPersonalReportTest.Suite);
 
 end.

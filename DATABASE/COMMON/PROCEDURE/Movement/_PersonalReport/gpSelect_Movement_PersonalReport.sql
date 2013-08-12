@@ -1,8 +1,8 @@
--- Function: gpSelect_Movement_AdvanceHolderReport()
+-- Function: gpSelect_Movement_PersonalReport()
 
--- DROP FUNCTION gpSelect_Movement_AdvanceHolderReport (TDateTime, TDateTime, TVarChar);
+-- DROP FUNCTION gpSelect_Movement_PersonalReport (TDateTime, TDateTime, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_AdvanceHolderReport(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalReport(
     IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
     IN inSession     TVarChar    -- сессия пользователя
@@ -25,7 +25,7 @@ BEGIN
 -- inEndDate:= '01.01.2100';
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_AdvanceHolderReport());
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PersonalReport());
 
      RETURN QUERY 
        SELECT
@@ -92,13 +92,13 @@ BEGIN
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
             
-       WHERE Movement.DescId = zc_Movement_AdvanceHolderReport()
+       WHERE Movement.DescId = zc_Movement_PersonalReport()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
   
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement_AdvanceHolderReport (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_PersonalReport (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*
@@ -109,4 +109,4 @@ ALTER FUNCTION gpSelect_Movement_AdvanceHolderReport (TDateTime, TDateTime, TVar
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_AdvanceHolderReport (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_PersonalReport (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= '2')

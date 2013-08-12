@@ -162,7 +162,11 @@ uses
   ZakazInternalJournal in '..\..\Forms\ZakazInternalJournal.pas' {ZakazInternalJournalForm},
   ZakazInternal in '..\..\Forms\ZakazInternal.pas' {ZakazInternalForm},
   CommonObjectCostProcedureTest in '..\SOURCE\ObjectCost\CommonObjectCostProcedureTest.pas',
-  BankAccountTest in '..\SOURCE\Movement\All\BankAccountTest.pas';
+  BankStatementTest in '..\SOURCE\Movement\All\BankStatementTest.pas',
+  BankAccountTest in '..\SOURCE\Movement\All\BankAccountTest.pas',
+  ServiceTest in '..\SOURCE\Movement\All\ServiceTest.pas',
+  PersonalServiceTest in '..\SOURCE\Movement\All\PersonalServiceTest.pas',
+  PersonalReportTest in '..\SOURCE\Movement\All\PersonalReportTest.pas';
 
 {$R *.RES}
 
