@@ -19,16 +19,16 @@ CREATE TABLE HistoryCost(
    IncomeCount           TFloat NOT NULL,
    IncomeSumm            TFloat NOT NULL,
    CalcCount             TFloat NOT NULL,
-   CalcSumm              TFloat NOT NULL
+   CalcSumm              TFloat NOT NULL,
+   OutCount              TFloat NOT NULL,
+   OutSumm               TFloat NOT NULL
 );
 
 /*-------------------------------------------------------------------------------*/
 
 /*                                  Индексы                                      */
 
-
 CREATE UNIQUE INDEX idx_HistoryCost_ObjectCostId_StartDate_EndDate ON HistoryCost(ObjectCostId, StartDate, EndDate);
-
 /*-------------------------------------------------------------------------------*/
 
 
@@ -38,6 +38,7 @@ CREATE UNIQUE INDEX idx_HistoryCost_ObjectCostId_StartDate_EndDate ON HistoryCos
  ДАТА         АВТОР
  ----------------
                  Климентьев К.И.   Кухтин И.В.   
-03.08.13              * StratSumm
-11.07.13                               *
+ 11.08.13             * add OutCount and OutSumm
+ 03.08.13             * StratSumm
+ 11.07.13                             *
 */

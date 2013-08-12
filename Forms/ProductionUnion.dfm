@@ -497,6 +497,11 @@
             HeaderAlignmentHorz = taCenter
             Width = 70
           end
+          object colPrice_comlete: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072
+            DataBinding.FieldName = 'Price'
+            Width = 40
+          end
           object colInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1089#1090'. '#1085#1072#1079#1085#1072#1095'.'
             DataBinding.FieldName = 'InfoMoneyCode'

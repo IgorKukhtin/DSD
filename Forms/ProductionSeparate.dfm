@@ -169,10 +169,6 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentHorz = taCenter
             Width = 80
           end
-          object colId: TcxGridDBColumn
-            DataBinding.FieldName = 'Id'
-            Width = 40
-          end
         end
         object cxGridLevel: TcxGridLevel
           GridView = cxGridDBTableView
@@ -259,6 +255,10 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             HeaderAlignmentHorz = taCenter
             Width = 80
           end
+          object coChildlId: TcxGridDBColumn
+            DataBinding.FieldName = 'Id'
+            Width = 50
+          end
         end
         object cxGridLevel1: TcxGridLevel
           GridView = cxGridDBTableView1
@@ -276,6 +276,9 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -435,6 +438,11 @@ inherited ProductionSeparateForm: TProductionSeparateForm
             DataBinding.FieldName = 'KreditAmount'
             HeaderAlignmentHorz = taCenter
             Width = 70
+          end
+          object colPrice_comlete: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072
+            DataBinding.FieldName = 'Price'
+            Width = 40
           end
           object colInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1089#1090'. '#1085#1072#1079#1085#1072#1095'.'

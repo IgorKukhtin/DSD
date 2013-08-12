@@ -17,8 +17,8 @@ object MainForm: TMainForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -33,7 +33,7 @@ object MainForm: TMainForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManager1Bar1: TdxBar
       Caption = 'MainMenu'
@@ -999,7 +999,7 @@ object MainForm: TMainForm
     Top = 48
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 216
+    Left = 184
     Top = 96
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -1014,7 +1014,118 @@ object MainForm: TMainForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 272
+    Left = 240
     Top = 96
+  end
+  object frxReport1: TfrxReport
+    Version = '4.12.2'
+    DotMatrixReport = False
+    IniFile = '\Software\Fast Reports'
+    PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
+    PreviewOptions.Zoom = 1.000000000000000000
+    PrintOptions.Printer = 'Default'
+    PrintOptions.PrintOnSheet = 0
+    ReportOptions.CreateDate = 41491.770671736100000000
+    ReportOptions.LastChange = 41491.770671736100000000
+    ScriptLanguage = 'PascalScript'
+    ScriptText.Strings = (
+      ''
+      'begin'
+      ''
+      'end.')
+    Left = 360
+    Top = 88
+    Datasets = <>
+    Variables = <>
+    Style = <>
+    object Data: TfrxDataPage
+      Height = 1000.000000000000000000
+      Width = 1000.000000000000000000
+    end
+    object Page1: TfrxReportPage
+      PaperWidth = 210.000000000000000000
+      PaperHeight = 297.000000000000000000
+      PaperSize = 9
+      LeftMargin = 10.000000000000000000
+      RightMargin = 10.000000000000000000
+      TopMargin = 10.000000000000000000
+      BottomMargin = 10.000000000000000000
+      object ReportTitle1: TfrxReportTitle
+        Height = 52.913420000000000000
+        Top = 18.897650000000000000
+        Width = 718.110700000000000000
+        object Memo2: TfrxMemoView
+          Align = baWidth
+          Top = 1.259843329999999000
+          Width = 718.110700000000000000
+          Height = 17.637806670000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = []
+          HAlign = haCenter
+          Memo.UTF8W = (
+            #1040#1085#1072#1083#1080#1079' '#1088#1072#1089#1093#1086#1076#1072' '#1057#1067#1056#1068#1071' '#1089#1086#1075#1083#1072#1089#1085#1086' '#1079#1072#1103#1074#1082#1072#1084' '#1089' _______ '#1087#1086'_______')
+          ParentFont = False
+        end
+        object Memo3: TfrxMemoView
+          Align = baWidth
+          Top = 31.496083330000000000
+          Width = 718.110700000000000000
+          Height = 17.637806670000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -11
+          Font.Name = 'Arial'
+          Font.Style = []
+          Memo.UTF8W = (
+            #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1054#1090' '#1082#1086#1075#1086'): _____  '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1050#1086#1084#1091'):  _____')
+          ParentFont = False
+        end
+        object Memo4: TfrxMemoView
+          Left = 594.646053330000000000
+          Top = 1.259843329999999000
+          Width = 118.425273330000000000
+          Height = 11.338590000000000000
+          ShowHint = False
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -9
+          Font.Name = 'Arial'
+          Font.Style = []
+          Memo.UTF8W = (
+            '[Date][Time]')
+          ParentFont = False
+        end
+      end
+      object MasterData1: TfrxMasterData
+        Height = 22.677180000000000000
+        Top = 177.637910000000000000
+        Width = 718.110700000000000000
+        RowCount = 0
+      end
+      object PageFooter1: TfrxPageFooter
+        Height = 22.677180000000000000
+        Top = 260.787570000000000000
+        Width = 718.110700000000000000
+        object Memo1: TfrxMemoView
+          Left = 642.520100000000000000
+          Width = 75.590600000000000000
+          Height = 18.897650000000000000
+          ShowHint = False
+          HAlign = haRight
+          Memo.UTF8W = (
+            '[Page#]')
+        end
+      end
+      object ColumnHeader1: TfrxColumnHeader
+        Height = 22.677180000000000000
+        Top = 94.488250000000000000
+        Width = 718.110700000000000000
+      end
+    end
   end
 end

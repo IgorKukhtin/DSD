@@ -16,7 +16,8 @@ RETURNS TABLE (ObjectCostId Integer
              , PartionGoodsName TVarChar
              , BusinessId Integer, BusinessCode Integer, BusinessName TVarChar, JuridicalBasisId Integer, JuridicalBasisCode Integer, JuridicalBasisName TVarChar
              , BranchCode Integer, BranchName TVarChar, PersonalCode Integer, PersonalName TVarChar, AssetCode Integer, AssetName TVarChar
-             , CalcCount TFloat, StartCount TFloat, StartCount_calc TFloat, IncomeCount TFloat, IncomeCount_calc TFloat, OutCount TFloat, OutCount_calc TFloat, EndCount TFloat, EndCount_calc TFloat
+             , CalcCount TFloat, CalcSumm TFloat
+             , StartCount TFloat, StartCount_calc TFloat, IncomeCount TFloat, IncomeCount_calc TFloat, OutCount TFloat, OutCount_calc TFloat, EndCount TFloat, EndCount_calc TFloat
              , StartSumm TFloat, StartSumm_calc TFloat, IncomeSumm TFloat, IncomeSumm_calc TFloat, OutSumm TFloat, OutSumm_calc TFloat, EndSumm TFloat, EndSumm_calc TFloat
               )
 AS
@@ -36,14 +37,12 @@ $BODY$BEGIN
            , _tmpSumm.Code AS MovementDescCode
            , _tmpSumm.OperCount
            , CAST (_tmpSumm.OperPrice AS TFloat) AS OperPrice
---           , CAST (_tmpSumm.OperSumm AS TFloat) AS OperSumm
 
            , HistoryCost.Price
            , CAST (
-             CASE WHEN (COALESCE (tmpOperationCount.AmountRemainsStart, 0) + COALESCE (tmpOperationCount.AmountDebet, 0)) > 0 AND (COALESCE (tmpOperationSumm.AmountRemainsStart, 0) + COALESCE (tmpOperationSumm.AmountDebet, 0)) > 0
-                      THEN  (COALESCE (tmpOperationSumm.AmountRemainsStart, 0) + COALESCE (tmpOperationSumm.AmountDebet, 0)) / (COALESCE (tmpOperationCount.AmountRemainsStart, 0) + COALESCE (tmpOperationCount.AmountDebet, 0))
-                  WHEN  (COALESCE (tmpOperationCount.AmountRemainsStart, 0) + COALESCE (tmpOperationCount.AmountDebet, 0)) < 0 AND (COALESCE (tmpOperationSumm.AmountRemainsStart, 0) + COALESCE (tmpOperationSumm.AmountDebet, 0)) < 0
-                      THEN  (COALESCE (tmpOperationSumm.AmountRemainsStart, 0) + COALESCE (tmpOperationSumm.AmountDebet, 0)) / (COALESCE (tmpOperationCount.AmountRemainsStart, 0) + COALESCE (tmpOperationCount.AmountDebet, 0))
+             CASE WHEN ((COALESCE (tmpOperationSumm.StartCount, 0) + COALESCE (tmpOperationSumm.IncomeCount, 0)) > 0 AND (COALESCE (tmpOperationSumm.StartSumm, 0) + COALESCE (tmpOperationSumm.IncomeSumm, 0)) > 0)
+                    OR ((COALESCE (tmpOperationSumm.StartCount, 0) + COALESCE (tmpOperationSumm.IncomeCount, 0)) < 0 AND (COALESCE (tmpOperationSumm.StartSumm, 0) + COALESCE (tmpOperationSumm.IncomeSumm, 0)) < 0)
+                      THEN  (COALESCE (tmpOperationSumm.StartSumm, 0) + COALESCE (tmpOperationSumm.IncomeSumm, 0)) / (COALESCE (tmpOperationSumm.StartCount, 0) + COALESCE (tmpOperationSumm.IncomeCount, 0))
                   ELSE 0
              END AS TFloat) AS Price_Calc
 
@@ -79,31 +78,33 @@ $BODY$BEGIN
            , Object_Asset.ObjectCode AS AssetCode
            , Object_Asset.ValueData AS AssetName
 
-           , (HistoryCost.CalcCount )  AS CalcCount 
+           , (HistoryCost.CalcCount) AS CalcCount
+           , (HistoryCost.CalcSumm)  AS CalcSumm
+
            , (HistoryCost.StartCount)  AS StartCount
-           , tmpOperationCount.AmountRemainsStart AS StartCount_calc
+           , tmpOperationSumm.StartCount AS StartCount_calc
 
-           , (HistoryCost.IncomeCount) AS IncomeCount
-           , tmpOperationCount.AmountDebet AS IncomeCount_calc
+           , CAST (HistoryCost.IncomeCount + HistoryCost.CalcCount AS TFloat) AS IncomeCount
+           , tmpOperationSumm.IncomeCount AS IncomeCount_calc
 
-           , CAST (0 AS TFloat) AS OutCount -- _tmpHistoryCost.OutCount
-           , tmpOperationCount.AmountKredit AS OutCount_calc
+           , HistoryCost.OutCount
+           , tmpOperationSumm.OutCount AS OutCount_calc
 
-           , CAST (0 AS TFloat) AS EndCount -- _tmpHistoryCost.EndCount
-           , tmpOperationCount.AmountRemainsEnd AS EndCount_calc
+           , CAST (HistoryCost.StartCount + HistoryCost.IncomeCount + HistoryCost.CalcCount - HistoryCost.OutCount AS TFloat) AS EndCount
+           , CAST (tmpOperationSumm.StartCount + tmpOperationSumm.IncomeCount - tmpOperationSumm.OutCount AS TFloat) AS EndCount_calc
 
 
            , (HistoryCost.StartSumm)   AS StartSumm
-           , tmpOperationSumm.AmountRemainsStart AS StartSumm_calc
+           , tmpOperationSumm.StartSumm AS StartSumm_calc
 
-           , (HistoryCost.IncomeSumm)  AS IncomeSumm
-           , tmpOperationSumm.AmountDebet AS IncomeSumm_calc
+           , CAST (HistoryCost.IncomeSumm + HistoryCost.CalcSumm AS TFloat)  AS IncomeSumm
+           , tmpOperationSumm.IncomeSumm AS IncomeSumm_calc
 
-           , CAST ( 0 AS TFloat) AS OutSumm -- _tmpHistoryCost.OutSumm
-           , tmpOperationSumm.AmountKredit AS OutSumm_calc
+           , HistoryCost.OutSumm
+           , tmpOperationSumm.OutSumm AS OutSumm_calc
 
-           , CAST ( 0 AS TFloat) AS EndSumm -- _tmpHistoryCost.EndSumm
-           , tmpOperationSumm.AmountRemainsEnd AS EndSumm_calc
+           , CAST (HistoryCost.StartSumm + HistoryCost.IncomeSumm + HistoryCost.CalcSumm - HistoryCost.OutSumm AS TFloat) AS EndSumm
+           , CAST (tmpOperationSumm.StartSumm + tmpOperationSumm.IncomeSumm - tmpOperationSumm.OutSumm AS TFloat) AS EndSumm_calc
 
        FROM (SELECT ContainerObjectCost.ObjectCostId FROM ContainerObjectCost WHERE ContainerObjectCost.ObjectCostDescId = zc_ObjectCost_Basis() GROUP BY ContainerObjectCost.ObjectCostId
             ) AS ContainerObjectCost
@@ -172,16 +173,8 @@ $BODY$BEGIN
 
             LEFT JOIN HistoryCost ON HistoryCost.ObjectCostId = ContainerObjectCost.ObjectCostId
                                  AND HistoryCost.StartDate = inStartDate AND HistoryCost.EndDate = inEndDate
---            (SELECT HistoryCost.ObjectCostId
---                  , (HistoryCost.StartCount)  AS StartCount
---                  , (HistoryCost.StartSumm)   AS StartSumm
---                  , (HistoryCost.IncomeCount) AS IncomeCount
---                  , (HistoryCost.IncomeSumm)  AS IncomeSumm
---             FROM HistoryCost
---             WHERE HistoryCost.StartDate = inStartDate AND HistoryCost.EndDate = inEndDate
---            ) AS _tmpHistoryCost ON _tmpHistoryCost.ObjectCostId = ContainerObjectCost.ObjectCostId
-
             LEFT JOIN
+            -- это операции в разрезе документов
            (SELECT ContainerObjectCost_Summ.ObjectCostId
                  , Movement.Id AS MovementId
                  , MIContainer.MovementItemId
@@ -202,92 +195,58 @@ $BODY$BEGIN
                  JOIN MovementItemDesc ON MovementItemDesc.Id = MovementItem.DescId
             -- WHERE 1=0
            ) AS _tmpSumm ON _tmpSumm.ObjectCostId = ContainerObjectCost.ObjectCostId
+            -- это Количество и Сумма - ост, приход, расход
             LEFT JOIN
-           (SELECT ContainerObjectCost_RemainsSumm.ObjectCostId
-                 , CAST (SUM (tmpMIContainer_Remains.AmountRemainsStart) AS TFloat) AS AmountRemainsStart
-                 , CAST (SUM (tmpMIContainer_Remains.AmountDebet) AS TFloat) AS AmountDebet
-                 , CAST (SUM (tmpMIContainer_Remains.AmountKredit) AS TFloat) AS AmountKredit
-                 , CAST (SUM (tmpMIContainer_Remains.AmountRemainsStart + tmpMIContainer_Remains.AmountDebet - tmpMIContainer_Remains.AmountKredit) AS TFloat) AS AmountRemainsEnd
+           (SELECT ContainerObjectCost.ObjectCostId AS ObjectCostId
+                 , CAST (SUM (tmpContainer.StartCount) AS  TFloat) AS StartCount
+                 , CAST (SUM (tmpContainer.StartSumm) AS  TFloat) AS StartSumm
+                 , CAST (SUM (tmpContainer.IncomeCount) AS  TFloat) AS IncomeCount
+                 , CAST (SUM (tmpContainer.IncomeSumm) AS  TFloat) AS IncomeSumm
+                 , CAST (SUM (tmpContainer.OutCount) AS  TFloat) AS OutCount
+                 , CAST (SUM (tmpContainer.OutSumm) AS  TFloat) AS OutSumm
             FROM
                 (SELECT Container.Id AS ContainerId
-                      , COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
-                      , COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
-                      , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS AmountRemainsStart
+                      , Container.DescId
+                      , CASE WHEN Container.DescId = zc_Container_Count() THEN Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END AS StartCount
+                      , CASE WHEN Container.DescId = zc_Container_Summ()  THEN Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END AS StartSumm
+                      , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS IncomeCount
+                      , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS IncomeSumm
+                      , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount < 0 THEN -MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS OutCount
+                      , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount < 0 THEN -MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS OutSumm
                  FROM Container
                       LEFT JOIN MovementItemContainer AS MIContainer
                                                       ON MIContainer.Containerid = Container.Id
                                                      AND MIContainer.OperDate >= inStartDate
-                 WHERE Container.DescId = zc_Container_Summ()
-                 GROUP BY Container.Amount
-                        , Container.Id
-                 HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0) -- AmountRemainsStart <> 0
+                 -- WHERE Container.DescId = IN (zc_Container_Summ(), zc_Container_Count())
+                 GROUP BY Container.Id
+                        , Container.DescId
+                        , Container.Amount
+                 HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
                      OR (COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) <> 0) -- AmountDebet <> 0
                      OR (COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -MIContainer.Amount ELSE 0 END), 0) <> 0) -- AmountKredit <> 0
-                ) AS tmpMIContainer_Remains
-                LEFT JOIN ContainerObjectCost AS ContainerObjectCost_RemainsSumm
-                                              ON ContainerObjectCost_RemainsSumm.ContainerId = tmpMIContainer_Remains.ContainerId
-                                             AND ContainerObjectCost_RemainsSumm.ObjectCostDescId = zc_ObjectCost_Basis()
-            GROUP BY ContainerObjectCost_RemainsSumm.ObjectCostId
+                ) AS tmpContainer
+                LEFT JOIN Container AS Container_Summ
+                                    ON Container_Summ.ParentId = tmpContainer.ContainerId
+                                   AND Container_Summ.DescId = zc_Container_Summ()
+                                   AND tmpContainer.DescId = zc_Container_Count()
+                LEFT JOIN ContainerObjectCost ON ContainerObjectCost.ContainerId = COALESCE (Container_Summ.Id, tmpContainer.ContainerId)
+                                             AND ContainerObjectCost.ObjectCostDescId = zc_ObjectCost_Basis()
+            GROUP BY ContainerObjectCost.ObjectCostId
            ) AS tmpOperationSumm ON tmpOperationSumm.ObjectCostId = ContainerObjectCost.ObjectCostId
-            LEFT JOIN
-           (SELECT ContainerObjectCost_RemainsSumm.ObjectCostId
-                 , CAST (SUM (tmpMIContainer_Remains.AmountRemainsStart) AS TFloat) AS AmountRemainsStart
-                 , CAST (SUM (tmpMIContainer_Remains.AmountDebet) AS TFloat) AS AmountDebet
-                 , CAST (SUM (tmpMIContainer_Remains.AmountKredit) AS TFloat) AS AmountKredit
-                 , CAST (SUM (tmpMIContainer_Remains.AmountRemainsStart + tmpMIContainer_Remains.AmountDebet - tmpMIContainer_Remains.AmountKredit) AS TFloat) AS AmountRemainsEnd
-            FROM
-                (SELECT Container.Id AS ContainerId
-                      , COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
-                      , COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
-                      , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS AmountRemainsStart
-                 FROM Container
-                      LEFT JOIN MovementItemContainer AS MIContainer
-                                                      ON MIContainer.Containerid = Container.Id
-                                                     AND MIContainer.OperDate >= inStartDate
-                 WHERE Container.DescId = zc_Container_Count()
-                 GROUP BY Container.Amount
-                        , Container.Id
-                 HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0) -- AmountRemainsStart <> 0
-                     OR (COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) <> 0) -- AmountDebet <> 0
-                     OR (COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -MIContainer.Amount ELSE 0 END), 0) <> 0) -- AmountKredit <> 0
-                ) AS tmpMIContainer_Remains
-                LEFT JOIN Container AS Container_Summ ON Container_Summ.ParentId = tmpMIContainer_Remains.ContainerId
-                                                     AND Container_Summ.DescId = zc_Container_Summ()
-                LEFT JOIN ContainerObjectCost AS ContainerObjectCost_RemainsSumm
-                                              ON ContainerObjectCost_RemainsSumm.ContainerId = Container_Summ.Id
-                                             AND ContainerObjectCost_RemainsSumm.ObjectCostDescId = zc_ObjectCost_Basis()
-            GROUP BY ContainerObjectCost_RemainsSumm.ObjectCostId
-           ) AS tmpOperationCount ON tmpOperationCount.ObjectCostId = ContainerObjectCost.ObjectCostId
 
 --       WHERE HistoryCost.Price <> 0
-/*       WHERE (
---              HistoryCost.CalcCount <> 0
---           OR HistoryCost.StartCount <> 0
---           OR 
-               tmpOperationCount.AmountRemainsStart <> 0
+       WHERE HistoryCost.StartSumm <> 0
+          OR tmpOperationSumm.StartSumm <> 0
 
---           OR HistoryCost.IncomeCount <> 0
---           OR tmpOperationCount.AmountDebet <> 0
+          OR HistoryCost.CalcSumm <> 0
+          OR HistoryCost.IncomeSumm <> 0
+          OR tmpOperationSumm.IncomeSumm <> 0
 
---           OR tmpOperationCount.AmountKredit <> 0
+          OR HistoryCost.OutSumm <> 0
+          OR tmpOperationSumm.OutSumm <> 0
 
---           OR tmpOperationCount.AmountRemainsEnd <> 0
-
-           OR HistoryCost.StartSumm <> 0
-           OR tmpOperationSumm.AmountRemainsStart <> 0
-
-           OR HistoryCost.IncomeSumm <> 0
-           OR tmpOperationSumm.AmountDebet <> 0
-
-           OR tmpOperationSumm.AmountKredit <> 0
-
-           OR tmpOperationSumm.AmountRemainsEnd <> 0
-
-           OR _tmpSumm.OperCount <> 0
-           OR _tmpSumm.OperPrice <> 0
-           OR _tmpSumm.OperSumm <> 0
-           OR HistoryCost.Price <> 0
-             )*/
+          OR HistoryCost.Price <> 0
+          OR _tmpSumm.MovementId <> 0
        ;
 
   
@@ -301,6 +260,7 @@ ALTER FUNCTION gpReport_HistoryCost (TDateTime, TDateTime, TVarChar) OWNER TO po
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.08.13                                        *
  22.07.13                                        *
 */
 

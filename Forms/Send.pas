@@ -100,6 +100,7 @@ type
     colInfoMoneyCode_Detail: TcxGridDBColumn;
     colInfoMoneyName_Detail: TcxGridDBColumn;
     colObjectCostId: TcxGridDBColumn;
+    colPrice_comlete: TcxGridDBColumn;
   private
   public
   end;

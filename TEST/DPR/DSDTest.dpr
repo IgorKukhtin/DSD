@@ -161,7 +161,8 @@ uses
   ZakazExternal in '..\..\Forms\ZakazExternal.pas' {ZakazExternalForm},
   ZakazInternalJournal in '..\..\Forms\ZakazInternalJournal.pas' {ZakazInternalJournalForm},
   ZakazInternal in '..\..\Forms\ZakazInternal.pas' {ZakazInternalForm},
-  CommonObjectCostProcedureTest in '..\SOURCE\ObjectCost\CommonObjectCostProcedureTest.pas';
+  CommonObjectCostProcedureTest in '..\SOURCE\ObjectCost\CommonObjectCostProcedureTest.pas',
+  BankAccountTest in '..\SOURCE\Movement\All\BankAccountTest.pas';
 
 {$R *.RES}
 

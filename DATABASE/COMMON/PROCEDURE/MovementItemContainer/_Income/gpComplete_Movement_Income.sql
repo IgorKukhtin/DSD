@@ -1,9 +1,11 @@
 -- Function: gpComplete_Movement_Income()
 
 -- DROP FUNCTION gpComplete_Movement_Income (Integer, TVarChar);
+-- DROP FUNCTION gpComplete_Movement_Income (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Income(
     IN inMovementId        Integer  , -- ключ Документа
+    IN inIsLastComplete    Boolean  , -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
     IN inSession           TVarChar   -- сессия пользователя
 )                              
 RETURNS VOID
@@ -493,7 +495,7 @@ BEGIN
                                                                                  )
                                              END;
 
-             -- формируются Проводки для количественного учета
+     -- формируются Проводки для количественного учета
      PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
                                                  , inDescId:= zc_MIContainer_Count()
                                                  , inMovementId:= MovementId
@@ -504,8 +506,10 @@ BEGIN
                                                  , inOperDate:= OperDate
                                                  , inIsActive:= TRUE
                                                   )
-             -- формируются Проводки для суммового учета + Аналитика <элемент с/с>
-           , lpInsertUpdate_MovementItemContainer (ioId:= 0
+     FROM _tmpItem;
+
+     -- формируются Проводки для суммового учета + Аналитика <элемент с/с>
+     PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
                                                  , inDescId:= zc_MIContainer_Summ()
                                                  , inMovementId:= MovementId
                                                  , inMovementItemId:= MovementItemId
@@ -540,7 +544,7 @@ BEGIN
                                                                                                                                                      , inDescId_7   := zc_ObjectCostLink_InfoMoney()
                                                                                                                                                      , inObjectId_7 := InfoMoneyId
                                                                                                                                                      , inDescId_8   := zc_ObjectCostLink_InfoMoneyDetail()
-                                                                                                                                                     , inObjectId_8 := InfoMoneyId -- CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
+                                                                                                                                                     , inObjectId_8 := CASE WHEN zc_isHistoryCost_byInfoMoneyDetail() THEN InfoMoneyId ELSE 0 END -- CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
                                                                                                                                                       )
                                                                                                       , inDescId_1   := zc_ContainerLinkObject_Unit()
                                                                                                       , inObjectId_1 := UnitId
@@ -551,7 +555,7 @@ BEGIN
                                                                                                       , inDescId_4   := zc_ContainerLinkObject_InfoMoney()
                                                                                                       , inObjectId_4 := InfoMoneyId
                                                                                                       , inDescId_5   := zc_ContainerLinkObject_InfoMoneyDetail()
-                                                                                                      , inObjectId_5 := InfoMoneyId -- CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
+                                                                                                      , inObjectId_5 := CASE WHEN zc_isHistoryCost_byInfoMoneyDetail() THEN InfoMoneyId ELSE 0 END -- CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
                                                                                                        )
                                                                         WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100()
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение 2)Товар 3)Основные средства(для которого закуплено ТМЦ) 4)Статьи назначения 5)Статьи назначения(детализация с/с)
@@ -583,7 +587,7 @@ BEGIN
                                                                                                                                                      , inDescId_7   := zc_ObjectCostLink_InfoMoney()
                                                                                                                                                      , inObjectId_7 := InfoMoneyId
                                                                                                                                                      , inDescId_8   := zc_ObjectCostLink_InfoMoneyDetail()
-                                                                                                                                                     , inObjectId_8 := InfoMoneyId -- CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
+                                                                                                                                                     , inObjectId_8 := CASE WHEN zc_isHistoryCost_byInfoMoneyDetail() THEN InfoMoneyId ELSE 0 END -- CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
                                                                                                                                                       )
                                                                                                       , inDescId_1   := zc_ContainerLinkObject_Unit()
                                                                                                       , inObjectId_1 := UnitId
@@ -594,7 +598,7 @@ BEGIN
                                                                                                       , inDescId_4   := zc_ContainerLinkObject_InfoMoney()
                                                                                                       , inObjectId_4 := InfoMoneyId
                                                                                                       , inDescId_5   := zc_ContainerLinkObject_InfoMoneyDetail()
-                                                                                                      , inObjectId_5 := InfoMoneyId -- CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
+                                                                                                      , inObjectId_5 := CASE WHEN zc_isHistoryCost_byInfoMoneyDetail() THEN InfoMoneyId ELSE 0 END -- CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
                                                                                                        )
                                                                         WHEN InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20700()  -- Товары    -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20700()
                                                                                                       , zc_Enum_InfoMoneyDestination_30100()) -- Продукция -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()
@@ -629,7 +633,7 @@ BEGIN
                                                                                                                                                      , inDescId_8   := zc_ObjectCostLink_InfoMoney()
                                                                                                                                                      , inObjectId_8 := InfoMoneyId
                                                                                                                                                      , inDescId_9   := zc_ObjectCostLink_InfoMoneyDetail()
-                                                                                                                                                     , inObjectId_9 := CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
+                                                                                                                                                     , inObjectId_9 := CASE WHEN zc_isHistoryCost_byInfoMoneyDetail() THEN InfoMoneyId ELSE 0 END -- CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
                                                                                                                                                       )
                                                                                                       , inDescId_1   := zc_ContainerLinkObject_Unit()
                                                                                                       , inObjectId_1 := UnitId
@@ -642,7 +646,7 @@ BEGIN
                                                                                                       , inDescId_5   := zc_ContainerLinkObject_InfoMoney()
                                                                                                       , inObjectId_5 := InfoMoneyId
                                                                                                       , inDescId_6   := zc_ContainerLinkObject_InfoMoneyDetail()
-                                                                                                      , inObjectId_6 := CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
+                                                                                                      , inObjectId_6 := CASE WHEN zc_isHistoryCost_byInfoMoneyDetail() THEN InfoMoneyId ELSE 0 END -- CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
                                                                                                        )
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение 2)Товар 3)Статьи назначения 4)Статьи назначения(детализация с/с)
                                                                            ELSE lpInsertFind_Container (inContainerDescId:= zc_Container_Summ()
@@ -671,7 +675,7 @@ BEGIN
                                                                                                                                                      , inDescId_6   := zc_ObjectCostLink_InfoMoney()
                                                                                                                                                      , inObjectId_6 := InfoMoneyId
                                                                                                                                                      , inDescId_7   := zc_ObjectCostLink_InfoMoneyDetail()
-                                                                                                                                                     , inObjectId_7 := InfoMoneyId -- CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
+                                                                                                                                                     , inObjectId_7 := CASE WHEN zc_isHistoryCost_byInfoMoneyDetail() THEN InfoMoneyId ELSE 0 END -- CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
                                                                                                                                                       )
                                                                                                       , inDescId_1   := zc_ContainerLinkObject_Unit()
                                                                                                       , inObjectId_1 := UnitId
@@ -680,14 +684,15 @@ BEGIN
                                                                                                       , inDescId_3   := zc_ContainerLinkObject_InfoMoney()
                                                                                                       , inObjectId_3 := InfoMoneyId
                                                                                                       , inDescId_4   := zc_ContainerLinkObject_InfoMoneyDetail()
-                                                                                                      , inObjectId_4 := InfoMoneyId -- CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
+                                                                                                      , inObjectId_4 := CASE WHEN zc_isHistoryCost_byInfoMoneyDetail() THEN InfoMoneyId ELSE 0 END -- CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
                                                                                                        )
                                                                    END
                                                  , inAmount:= OperSumm_Partner + OperSumm_Packer
                                                  , inOperDate:= OperDate
                                                  , inIsActive:= TRUE
                                                   )
-     FROM _tmpItem;
+     FROM _tmpItem
+     WHERE zc_isHistoryCost() = TRUE;
 
      -- формируются Проводки - долг Поставщику или Сотруднику (подотчетные лица)
      PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
@@ -743,7 +748,7 @@ BEGIN
                                                                                                       , inDescId_3   := CASE WHEN PersonalId_From <> 0 THEN NULL ELSE zc_ContainerLinkObject_Contract() END
                                                                                                       , inObjectId_3 := ContractId
                                                                                                       , inDescId_4   := zc_ContainerLinkObject_InfoMoney()
-                                                                                                      , inObjectId_4 := CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
+                                                                                                      , inObjectId_4 := InfoMoneyId -- CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
                                                                                                        )
                                                                    END
                                                  , inAmount:= - SUM (OperSumm_Partner)
@@ -798,6 +803,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.08.13                                        * add zc_isHistoryCost and zc_isHistoryCost_byInfoMoneyDetail
  07.08.13                                        * add inParentId and inIsActive
  05.08.13                                        * no InfoMoneyId_isCorporate
  20.07.13                                        * add MovementItemId
@@ -811,5 +817,5 @@ LANGUAGE PLPGSQL VOLATILE;
 
 -- тест
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 55, inSession:= '2')
--- SELECT * FROM gpComplete_Movement_Income (inMovementId:= 55, inSession:= '2')
+-- SELECT * FROM gpComplete_Movement_Income (inMovementId:= 55, inIsLastComplete:= FALSE, inSession:= '2')
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 55, inSession:= '2')

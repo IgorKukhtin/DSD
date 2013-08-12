@@ -110,9 +110,10 @@ type
     colGoodsCode_Parent: TcxGridDBColumn;
     colGoodsName_Parent: TcxGridDBColumn;
     colGoodsKindName_Parent: TcxGridDBColumn;
-    colId: TcxGridDBColumn;
     colMIId_Parent: TcxGridDBColumn;
     colObjectCostId: TcxGridDBColumn;
+    colPrice_comlete: TcxGridDBColumn;
+    coChildlId: TcxGridDBColumn;
   private
   public
   end;
