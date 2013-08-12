@@ -435,6 +435,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
     Top = 192
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    OnDblClickAction = actUpdate
     SortImages = dmMain.SortImageList
     View = cxGridDBTableView
     Left = 184

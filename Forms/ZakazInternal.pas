@@ -22,7 +22,8 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  DataModul, dsdAddOn;
 
 type
   TZakazInternalForm = class(TParentForm)
@@ -92,6 +93,11 @@ type
     edFrom: TcxButtonEdit;
     edTo: TcxButtonEdit;
     dsdGuidesFrom: TdsdGuides;
+    RefreshAddOn: TRefreshAddOn;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    EntryDBViewAddOn: TdsdDBViewAddOn;
+    HeaderSaver: THeaderSaver;
   private
   public
   end;

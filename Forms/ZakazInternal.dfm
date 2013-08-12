@@ -1,21 +1,22 @@
 inherited ZakazInternalForm: TZakazInternalForm
   Caption = #1047#1072#1103#1074#1082#1072' ('#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103')'
   ClientHeight = 405
-  ClientWidth = 1028
+  ClientWidth = 823
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1036
-  ExplicitHeight = 439
+  ExplicitWidth = 831
+  ExplicitHeight = 432
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1028
+    Width = 823
     Height = 57
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 1028
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 27
@@ -52,25 +53,28 @@ inherited ZakazInternalForm: TZakazInternalForm
   object cxPageControl1: TcxPageControl
     Left = 0
     Top = 83
-    Width = 1028
+    Width = 823
     Height = 322
     Align = alClient
-    TabOrder = 3
+    TabOrder = 1
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 1028
     ClientRectBottom = 322
-    ClientRectRight = 1028
+    ClientRectRight = 823
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 1028
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1028
+        Width = 823
         Height = 298
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1028
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource
@@ -122,34 +126,39 @@ inherited ZakazInternalForm: TZakazInternalForm
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsView.ColumnAutoWidth = True
+          OptionsView.HeaderHeight = 40
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
-            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 58
           end
           object colName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsName'
-            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 200
           end
           object colGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
-            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 100
           end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
-            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object colAmountSecond: TcxGridDBColumn
             Caption = #1050#1086#1083'.'#1076#1086#1079#1072#1082#1072#1079
             DataBinding.FieldName = 'PartionGoods'
-            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
             Width = 120
           end
         end
@@ -161,13 +170,15 @@ inherited ZakazInternalForm: TZakazInternalForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitWidth = 1028
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 1028
+        Width = 823
         Height = 298
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1028
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -184,13 +195,19 @@ inherited ZakazInternalForm: TZakazInternalForm
               Column = colDebetAmount
             end>
           DataController.Summary.SummaryGroups = <>
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
           OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object colDebetAccountGroupCode: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1044' '#1043#1088#1091#1087#1087#1072' '#1082#1086#1076
             DataBinding.FieldName = 'DebetAccountGroupCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 40
           end
           object colDebetAccountGroupName: TcxGridDBColumn
@@ -198,6 +215,7 @@ inherited ZakazInternalForm: TZakazInternalForm
             DataBinding.FieldName = 'DebetAccountGroupName'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 90
           end
           object colDebetAccountDirectionCode: TcxGridDBColumn
@@ -205,6 +223,7 @@ inherited ZakazInternalForm: TZakazInternalForm
             DataBinding.FieldName = 'DebetAccountDirectionCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 40
           end
           object colDebetAccountDirectionName: TcxGridDBColumn
@@ -212,18 +231,21 @@ inherited ZakazInternalForm: TZakazInternalForm
             DataBinding.FieldName = 'DebetAccountDirectionName'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 90
           end
           object colDebetAccountCode: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1044' '#1082#1086#1076
             DataBinding.FieldName = 'DebetAccountCode'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 40
           end
           object colDebetAccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1044
             DataBinding.FieldName = 'DebetAccountName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 120
           end
           object colKreditAccountGroupCode: TcxGridDBColumn
@@ -231,6 +253,7 @@ inherited ZakazInternalForm: TZakazInternalForm
             DataBinding.FieldName = 'KreditAccountGroupCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 40
           end
           object colKreditAccountGroupName: TcxGridDBColumn
@@ -238,6 +261,7 @@ inherited ZakazInternalForm: TZakazInternalForm
             DataBinding.FieldName = 'KreditAccountGroupName'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object colKreditAccountDirectionCode: TcxGridDBColumn
@@ -245,6 +269,7 @@ inherited ZakazInternalForm: TZakazInternalForm
             DataBinding.FieldName = 'KreditAccountDirectionCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 40
           end
           object colKreditAccountDirectionName: TcxGridDBColumn
@@ -252,18 +277,21 @@ inherited ZakazInternalForm: TZakazInternalForm
             DataBinding.FieldName = 'KreditAccountDirectionName'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object colKreditAccountCode: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1050' '#1082#1086#1076
             DataBinding.FieldName = 'KreditAccountCode'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 40
           end
           object colKreditAccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1050
             DataBinding.FieldName = 'KreditAccountName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 120
           end
           object colByObjectCode: TcxGridDBColumn
@@ -271,12 +299,14 @@ inherited ZakazInternalForm: TZakazInternalForm
             DataBinding.FieldName = 'ByObjectCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 40
           end
           object colByObjectName: TcxGridDBColumn
             Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'ByObjectName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object colGoodsGroupName: TcxGridDBColumn
@@ -284,6 +314,7 @@ inherited ZakazInternalForm: TZakazInternalForm
             DataBinding.FieldName = 'GoodsGroupName'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object colGoodsName: TcxGridDBColumn
@@ -291,30 +322,35 @@ inherited ZakazInternalForm: TZakazInternalForm
             DataBinding.FieldName = 'GoodsName'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object colGoodsKindName_comlete: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 60
           end
           object colAccountOnComplete: TcxGridDBColumn
             Caption = '***'
             DataBinding.FieldName = 'AccountOnComplete'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 25
           end
           object colDebetAmount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1076#1077#1073#1077#1090
             DataBinding.FieldName = 'DebetAmount'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object colKreditAmount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1082#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'KreditAmount'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
         end
@@ -332,7 +368,7 @@ inherited ZakazInternalForm: TZakazInternalForm
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 5
+    TabOrder = 3
     Width = 153
   end
   object edTo: TcxButtonEdit
@@ -354,8 +390,8 @@ inherited ZakazInternalForm: TZakazInternalForm
         ParamType = ptInputOutput
         Value = '0'
       end>
-    Left = 176
-    Top = 256
+    Left = 96
+    Top = 32
   end
   object spSelectMovementItem: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_ZakazInternal'
@@ -398,8 +434,8 @@ inherited ZakazInternalForm: TZakazInternalForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 112
-    Top = 208
+    Left = 120
+    Top = 32
     DockControlHeights = (
       0
       0
@@ -443,38 +479,6 @@ inherited ZakazInternalForm: TZakazInternalForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = colAmount
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
-      item
-        Component = colCode
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
-      item
-        Component = colDebetAccountName
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
-      item
-        Component = colName
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
-      item
         Component = Owner
         Properties.Strings = (
           'Height'
@@ -483,13 +487,12 @@ inherited ZakazInternalForm: TZakazInternalForm
           'Width')
       end>
     StorageName = 'cxPropertiesStore'
-    Left = 280
-    Top = 304
+    Top = 32
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 96
-    Top = 128
+    Left = 64
+    Top = 32
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spGet
@@ -531,20 +534,21 @@ inherited ZakazInternalForm: TZakazInternalForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 32
-    Top = 208
+    Left = 40
+    Top = 184
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 72
-    Top = 128
+    Left = 24
+    Top = 160
   end
   object dsdGuidesFrom: TdsdGuides
     LookupControl = edFrom
     FormName = 'TUnitForm'
     PositionDataSet = 'GridDataSet'
     ParentDataSet = 'TreeDataSet'
+    Params = <>
     Left = 336
     Top = 24
   end
@@ -553,6 +557,7 @@ inherited ZakazInternalForm: TZakazInternalForm
     FormName = 'TUnitForm'
     PositionDataSet = 'GridDataSet'
     ParentDataSet = 'TreeDataSet'
+    Params = <>
     Left = 512
     Top = 16
   end
@@ -620,8 +625,8 @@ inherited ZakazInternalForm: TZakazInternalForm
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
-    Left = 384
-    Top = 312
+    Left = 32
+    Top = 32
     object N1: TMenuItem
       Action = actRefresh
     end
@@ -642,19 +647,19 @@ inherited ZakazInternalForm: TZakazInternalForm
         ParamType = ptInput
         Value = '0'
       end>
-    Left = 552
-    Top = 248
+    Left = 104
+    Top = 320
   end
   object EntryCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 352
-    Top = 128
+    Left = 464
+    Top = 120
   end
   object EntryDS: TDataSource
     DataSet = EntryCDS
     Left = 432
-    Top = 232
+    Top = 112
   end
   object spInsertUpdateMovementItem: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_ZakazInternal'
@@ -727,8 +732,8 @@ inherited ZakazInternalForm: TZakazInternalForm
         ParamType = ptInput
         Value = '0'
       end>
-    Left = 616
-    Top = 288
+    Left = 128
+    Top = 352
   end
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'
@@ -737,5 +742,34 @@ inherited ZakazInternalForm: TZakazInternalForm
     BCDToCurrency = False
     Left = 240
     Top = 232
+  end
+  object RefreshAddOn: TRefreshAddOn
+    FormName = 'TZakazInternalJournalForm'
+    DataSet = 'ClientDataSet'
+    RefreshAction = 'actRefresh'
+    FormParams = 'FormParams'
+    Left = 608
+    Top = 24
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    SortImages = dmMain.SortImageList
+    View = cxGridDBTableView
+    Left = 184
+    Top = 192
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 368
+    Top = 224
+  end
+  object EntryDBViewAddOn: TdsdDBViewAddOn
+    SortImages = dmMain.SortImageList
+    View = cxGridEntryDBTableView
+    Left = 440
+    Top = 192
+  end
+  object HeaderSaver: THeaderSaver
+    ControlList = <>
+    Left = 552
+    Top = 56
   end
 end

@@ -7,12 +7,12 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Goods(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
-               GoodsGroupId Integer, GoodsGroupCode Integer, GoodsGroupName TVarChar, 
-               MeasureId Integer,  MeasureCode Integer, MeasureName TVarChar,
-               TradeMarkId Integer,  TradeMarkCode Integer, TradeMarkName TVarChar, 
-               InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar,
-               InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar, 
-               InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar,
+               GoodsGroupId Integer, GoodsGroupName TVarChar, 
+               MeasureId Integer,  MeasureName TVarChar,
+               TradeMarkId Integer,  TradeMarkName TVarChar, 
+               InfoMoneyId Integer, InfoMoneyName TVarChar,
+               InfoMoneyGroupId Integer, InfoMoneyGroupName TVarChar, 
+               InfoMoneyDestinationId Integer, InfoMoneyDestinationName TVarChar,
                Weight TFloat, isErased boolean) AS
 $BODY$
 BEGIN
@@ -28,30 +28,24 @@ BEGIN
            , COALESCE (MAX (Object.ObjectCode), 0) + 1 AS Code
            , CAST ('' as TVarChar)  AS Name
            , CAST (0 as Integer)   AS GoodsGroupId
-           , CAST (0 as Integer)   AS GoodsGroupCode
            , CAST ('' as TVarChar) AS GoodsGroupName 
            
            , CAST (0 as Integer)   AS MeasureId
-           , CAST (0 as Integer)   AS MeasureCode
            , CAST ('' as TVarChar) AS MeasureName
            
            , CAST (0 as Integer)   AS TradeMarkId
-           , CAST (0 as Integer)   AS TradeMarkCode
            , CAST ('' as TVarChar) AS TradeMarkName
            
            , CAST (0 as Integer)   AS InfoMoneyId
-           , CAST (0 as Integer)   AS InfoMoneyCode
            , CAST ('' as TVarChar) AS InfoMoneyName
            
            , CAST (0 as Integer)   AS InfoMoneyGroupId
-           , CAST (0 as Integer)   AS InfoMoneyGroupCode
            , CAST ('' as TVarChar) AS InfoMoneyGroupName
            
            , CAST (0 as Integer)   AS InfoMoneyDestinationId
-           , CAST (0 as Integer)   AS InfoMoneyDestinationCode
            , CAST ('' as TVarChar) AS InfoMoneyDestinationName
            
-           , CAST ('' as TVarChar) AS Weight
+           , CAST (0 as TFloat) AS Weight
            , CAST (NULL AS Boolean) AS isErased
        FROM Object 
        WHERE Object.DescId = zc_Object_Goods();
@@ -63,27 +57,21 @@ BEGIN
            , Object_Goods.ValueData      AS Name
          
            , Object_GoodsGroup.Id         AS GoodsGroupId
-           , Object_GoodsGroup.ObjectCode AS GoodsGroupCode
            , Object_GoodsGroup.ValueData  AS GoodsGroupName 
           
            , Object_Measure.Id            AS MeasureId
-           , Object_Measure.ObjectCode    AS MeasureCode
            , Object_Measure.ValueData     AS MeasureName
 
            , Object_TradeMark.Id         AS TradeMarkId
-           , Object_TradeMark.ObjectCode AS TradeMarkCode
            , Object_TradeMark.ValueData  AS TradeMarkName
          
            , Object_InfoMoney.Id         AS InfoMoneyId
-           , Object_InfoMoney.ObjectCode AS InfoMoneyCode
            , Object_InfoMoney.ValueData  AS InfoMoneyName
          
            , Object_InfoMoneyGroup.Id         AS InfoMoneyGroupId
-           , Object_InfoMoneyGroup.ObjectCode AS InfoMoneyGroupCode
            , Object_InfoMoneyGroup.ValueData  AS InfoMoneyGroupName
          
            , Object_InfoMoneyDestination.Id         AS InfoMoneyDestinationId
-           , Object_InfoMoneyDestination.ObjectCode AS InfoMoneyDestinationCode
            , Object_InfoMoneyDestination.ValueData  AS InfoMoneyDestinationName
          
            , ObjectFloat_Weight.ValueData AS Weight

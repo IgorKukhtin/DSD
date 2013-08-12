@@ -22,7 +22,8 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  DataModul, dsdAddOn;
 
 type
   TInventoryForm = class(TParentForm)
@@ -96,6 +97,11 @@ type
     colAccountOnComplete: TcxGridDBColumn;
     colAssetName: TcxGridDBColumn;
     colCount: TcxGridDBColumn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
+    EntryDBViewAddOn: TdsdDBViewAddOn;
+    RefreshAddOn: TRefreshAddOn;
+    HeaderSaver: THeaderSaver;
   private
   public
   end;

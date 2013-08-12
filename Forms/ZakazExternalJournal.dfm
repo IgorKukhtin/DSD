@@ -306,6 +306,8 @@ inherited ZakazExternalJournalForm: TZakazExternalJournalForm
       Category = 'DSDLib'
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
+      SecondaryShortCuts.Strings = (
+        'Enter')
       FormName = 'TZakazExternalForm'
       GuiParams = <
         item
@@ -450,6 +452,7 @@ inherited ZakazExternalJournalForm: TZakazExternalJournalForm
     Top = 240
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    OnDblClickAction = actUpdate
     SortImages = dmMain.SortImageList
     View = cxGridDBTableView
     Left = 256

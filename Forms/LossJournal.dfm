@@ -2,19 +2,19 @@ inherited LossJournalForm: TLossJournalForm
   Hint = #1057#1087#1080#1089#1072#1085#1080#1077
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1057#1087#1080#1089#1072#1085#1080#1077
   ClientHeight = 427
-  ClientWidth = 1240
-  ExplicitWidth = 1248
-  ExplicitHeight = 461
+  ClientWidth = 780
+  ExplicitWidth = 788
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
     Top = 26
-    Width = 1240
+    Width = 780
     Height = 41
     Align = alTop
-    Caption = 'Panel1'
     TabOrder = 1
+    ExplicitWidth = 1240
     object deStart: TcxDateEdit
       Left = 208
       Top = 8
@@ -33,11 +33,12 @@ inherited LossJournalForm: TLossJournalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 67
-    Width = 1240
+    Width = 780
     Height = 360
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
+    ExplicitWidth = 1240
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -48,10 +49,16 @@ inherited LossJournalForm: TLossJournalForm
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
+      OptionsCustomize.ColumnHiding = True
+      OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsView.ColumnAutoWidth = True
+      OptionsView.HeaderHeight = 40
+      OptionsView.Indicator = True
+      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object colStatus: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'StatusCode'
@@ -73,30 +80,37 @@ inherited LossJournalForm: TLossJournalForm
             ImageIndex = 13
             Value = 3
           end>
+        HeaderAlignmentVert = vaCenter
       end
       object colInvNumber: TcxGridDBColumn
         Caption = #1053#1086#1084#1077#1088
         DataBinding.FieldName = 'InvNumber'
+        HeaderAlignmentVert = vaCenter
         Width = 52
       end
       object colOperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
+        HeaderAlignmentVert = vaCenter
         Width = 60
       end
       object colFromName: TcxGridDBColumn
         Caption = #1054#1090' '#1082#1086#1075#1086
         DataBinding.FieldName = 'FromName'
+        HeaderAlignmentVert = vaCenter
         Width = 163
       end
       object colToName: TcxGridDBColumn
         Caption = #1050#1086#1084#1091
         DataBinding.FieldName = 'ToName'
+        HeaderAlignmentVert = vaCenter
         Width = 168
       end
       object colTotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'TotalCount'
+        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentVert = vaCenter
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -210,6 +224,10 @@ inherited LossJournalForm: TLossJournalForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbComplete'
         end
         item
@@ -222,6 +240,10 @@ inherited LossJournalForm: TLossJournalForm
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
           Visible = True
           ItemName = 'bbRefresh'
         end>
@@ -257,6 +279,11 @@ inherited LossJournalForm: TLossJournalForm
       Action = actSetErased
       Category = 0
     end
+    object dxBarStatic: TdxBarStatic
+      Caption = '     '
+      Category = 0
+      Visible = ivAlways
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -286,7 +313,7 @@ inherited LossJournalForm: TLossJournalForm
           ParamType = ptOutput
           Value = '0'
         end>
-      isShowModal = True
+      isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
@@ -303,7 +330,7 @@ inherited LossJournalForm: TLossJournalForm
           DataType = ftInteger
           ParamType = ptInput
         end>
-      isShowModal = True
+      isShowModal = False
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
@@ -361,14 +388,14 @@ inherited LossJournalForm: TLossJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
-        Value = '01.05.2013'
+        Value = 41395d
       end
       item
         Name = 'inEndDate'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
-        Value = '01.05.2014'
+        Value = 41760d
       end>
     Left = 24
     Top = 176
@@ -432,5 +459,16 @@ inherited LossJournalForm: TLossJournalForm
       end>
     Left = 72
     Top = 320
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 240
+    Top = 168
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    OnDblClickAction = actUpdate
+    SortImages = dmMain.SortImageList
+    View = cxGridDBTableView
+    Left = 248
+    Top = 216
   end
 end

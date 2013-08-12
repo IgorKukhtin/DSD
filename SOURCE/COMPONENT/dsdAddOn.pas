@@ -4,7 +4,8 @@ interface
 
 uses Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView,
      cxTextEdit, DB, dsdAction, cxGridTableView,
-     VCL.Graphics, cxGraphics, cxStyles, Forms, Controls, SysUtils, dsdDB, Contnrs;
+     VCL.Graphics, cxGraphics, cxStyles, Forms, Controls,
+     VCL.ActnList, SysUtils, dsdDB, Contnrs;
 
 type
 
@@ -46,6 +47,8 @@ type
     // контрол для ввода условия фильтра
     edFilter: TcxTextEdit;
     FImages: TImageList;
+    FOnDblClickAction: TCustomAction;
+    procedure OnDblClick(Sender: TObject);
     procedure OnKeyPress(Sender: TObject; var Key: Char);
     procedure SetView(const Value: TcxGridDBTableView);
     procedure edFilterExit(Sender: TObject);
@@ -67,6 +70,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
   published
+    property OnDblClickAction: TCustomAction read FOnDblClickAction write FOnDblClickAction;
     property SortImages: TImageList read FImages write FImages;
     property View: TcxGridDBTableView read FView write SetView;
   end;
@@ -320,6 +324,12 @@ begin
   end;
 end;
 
+procedure TdsdDBViewAddOn.OnDblClick(Sender: TObject);
+begin
+  if Assigned(FOnDblClickAction) then
+     FOnDblClickAction.Execute
+end;
+
 procedure TdsdDBViewAddOn.onFilterChanged(Sender: TObject);
 begin
   if FView.DataController.Filter.Root.Count > 0 then
@@ -400,6 +410,8 @@ begin
   inherited Notification(AComponent, Operation);
   if (Operation = opRemove) and (AComponent = FView) then
      FView := nil;
+  if (Operation = opRemove) and (AComponent = FOnDblClickAction) then
+     FOnDblClickAction := nil;
 end;
 
 procedure TdsdDBViewAddOn.OnKeyPress(Sender: TObject; var Key: Char);
@@ -418,6 +430,7 @@ begin
   FView.OnCustomDrawColumnHeader := OnCustomDrawColumnHeader;
   FView.DataController.Filter.OnChanged := onFilterChanged;
   FView.OnColumnHeaderClick := OnColumnHeaderClick;
+  FView.OnDblClick := OnDblClick;
 end;
 
 { TdsdUserSettingsStorageAddOn }

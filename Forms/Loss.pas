@@ -22,7 +22,8 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  dsdAddOn, DataModul;
 
 type
   TLossForm = class(TParentForm)
@@ -95,6 +96,11 @@ type
     colGoodsKindName_comlete: TcxGridDBColumn;
     colAccountOnComplete: TcxGridDBColumn;
     colAssetName: TcxGridDBColumn;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    EntryDBViewAddOn: TdsdDBViewAddOn;
+    HeaderSaver: THeaderSaver;
+    RefreshAddOn: TRefreshAddOn;
   private
   public
   end;

@@ -13,7 +13,6 @@ inherited ZakazInternalJournalForm: TZakazInternalJournalForm
     Height = 41
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 1240
     object deStart: TcxDateEdit
       Left = 208
       Top = 8
@@ -37,7 +36,6 @@ inherited ZakazInternalJournalForm: TZakazInternalJournalForm
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
-    ExplicitWidth = 1240
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -283,6 +281,8 @@ inherited ZakazInternalJournalForm: TZakazInternalJournalForm
       Category = 'DSDLib'
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
+      SecondaryShortCuts.Strings = (
+        'Enter')
       FormName = 'TZakazInternalForm'
       GuiParams = <
         item
@@ -427,6 +427,7 @@ inherited ZakazInternalJournalForm: TZakazInternalJournalForm
     Top = 240
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    OnDblClickAction = actUpdate
     SortImages = dmMain.SortImageList
     View = cxGridDBTableView
     Left = 256

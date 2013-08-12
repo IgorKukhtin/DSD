@@ -5,7 +5,7 @@ inherited LossForm: TLossForm
   KeyPreview = True
   PopupMenu = PopupMenu
   ExplicitWidth = 1036
-  ExplicitHeight = 430
+  ExplicitHeight = 423
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -147,50 +147,64 @@ inherited LossForm: TLossForm
               Kind = skSum
             end>
           DataController.Summary.SummaryGroups = <>
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
           OptionsView.ColumnAutoWidth = True
+          OptionsView.HeaderHeight = 40
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
-            Width = 58
+            HeaderAlignmentVert = vaCenter
+            Width = 76
           end
           object colName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
-            Width = 200
+            HeaderAlignmentVert = vaCenter
+            Width = 261
           end
           object colGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             HeaderAlignmentHorz = taCenter
-            Width = 100
+            HeaderAlignmentVert = vaCenter
+            Width = 130
           end
           object colPartionGoods: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103
             DataBinding.FieldName = 'PartionGoods'
             HeaderAlignmentHorz = taCenter
-            Width = 120
+            HeaderAlignmentVert = vaCenter
+            Width = 157
           end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
-            HeaderAlignmentHorz = taCenter
-            Width = 80
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
+            Width = 79
           end
           object colAmountSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
-            HeaderAlignmentHorz = taCenter
-            Width = 91
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
+            Width = 100
           end
           object colHeadCount: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
-            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
+            Width = 78
           end
           object colAssetName: TcxGridDBColumn
             Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072
+            HeaderAlignmentVert = vaCenter
+            Width = 133
           end
         end
         object cxGridLevel: TcxGridLevel
@@ -226,11 +240,14 @@ inherited LossForm: TLossForm
           DataController.Summary.SummaryGroups = <>
           OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
+          OptionsView.HeaderAutoHeight = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object colDebetAccountGroupCode: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1044' '#1043#1088#1091#1087#1087#1072' '#1082#1086#1076
             DataBinding.FieldName = 'DebetAccountGroupCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 40
           end
           object colDebetAccountGroupName: TcxGridDBColumn
@@ -238,6 +255,7 @@ inherited LossForm: TLossForm
             DataBinding.FieldName = 'DebetAccountGroupName'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 90
           end
           object colDebetAccountDirectionCode: TcxGridDBColumn
@@ -245,6 +263,7 @@ inherited LossForm: TLossForm
             DataBinding.FieldName = 'DebetAccountDirectionCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 40
           end
           object colDebetAccountDirectionName: TcxGridDBColumn
@@ -252,18 +271,21 @@ inherited LossForm: TLossForm
             DataBinding.FieldName = 'DebetAccountDirectionName'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 90
           end
           object colDebetAccountCode: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1044' '#1082#1086#1076
             DataBinding.FieldName = 'DebetAccountCode'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 40
           end
           object colDebetAccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1044
             DataBinding.FieldName = 'DebetAccountName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 120
           end
           object colKreditAccountGroupCode: TcxGridDBColumn
@@ -271,6 +293,7 @@ inherited LossForm: TLossForm
             DataBinding.FieldName = 'KreditAccountGroupCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 40
           end
           object colKreditAccountGroupName: TcxGridDBColumn
@@ -278,6 +301,7 @@ inherited LossForm: TLossForm
             DataBinding.FieldName = 'KreditAccountGroupName'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object colKreditAccountDirectionCode: TcxGridDBColumn
@@ -285,6 +309,7 @@ inherited LossForm: TLossForm
             DataBinding.FieldName = 'KreditAccountDirectionCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 40
           end
           object colKreditAccountDirectionName: TcxGridDBColumn
@@ -292,18 +317,21 @@ inherited LossForm: TLossForm
             DataBinding.FieldName = 'KreditAccountDirectionName'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object colKreditAccountCode: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1050' '#1082#1086#1076
             DataBinding.FieldName = 'KreditAccountCode'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 40
           end
           object colKreditAccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1050
             DataBinding.FieldName = 'KreditAccountName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 120
           end
           object colByObjectCode: TcxGridDBColumn
@@ -311,12 +339,14 @@ inherited LossForm: TLossForm
             DataBinding.FieldName = 'ByObjectCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 40
           end
           object colByObjectName: TcxGridDBColumn
             Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'ByObjectName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object colGoodsGroupName: TcxGridDBColumn
@@ -324,6 +354,7 @@ inherited LossForm: TLossForm
             DataBinding.FieldName = 'GoodsGroupName'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object colGoodsName: TcxGridDBColumn
@@ -331,30 +362,35 @@ inherited LossForm: TLossForm
             DataBinding.FieldName = 'GoodsName'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object colGoodsKindName_comlete: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 60
           end
           object colAccountOnComplete: TcxGridDBColumn
             Caption = '***'
             DataBinding.FieldName = 'AccountOnComplete'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 25
           end
           object colDebetAmount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1076#1077#1073#1077#1090
             DataBinding.FieldName = 'DebetAmount'
-            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object colKreditAmount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1082#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'KreditAmount'
-            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
         end
@@ -372,8 +408,8 @@ inherited LossForm: TLossForm
         ParamType = ptInputOutput
         Value = '0'
       end>
-    Left = 176
-    Top = 256
+    Left = 240
+    Top = 64
   end
   object spSelectMovementItem: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Loss'
@@ -397,8 +433,8 @@ inherited LossForm: TLossForm
         ParamType = ptInput
         Value = 'False'
       end>
-    Left = 88
-    Top = 280
+    Left = 144
+    Top = 272
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -416,8 +452,8 @@ inherited LossForm: TLossForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 128
-    Top = 208
+    Left = 32
+    Top = 56
     DockControlHeights = (
       0
       0
@@ -509,13 +545,12 @@ inherited LossForm: TLossForm
           'Width')
       end>
     StorageName = 'cxPropertiesStore'
-    Left = 280
-    Top = 304
+    Top = 56
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 360
-    Top = 216
+    Left = 64
+    Top = 56
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spGet
@@ -557,30 +592,32 @@ inherited LossForm: TLossForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 32
-    Top = 208
+    Left = 96
+    Top = 200
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 72
-    Top = 56
+    Left = 120
+    Top = 200
   end
   object dsdGuidesFrom: TdsdGuides
     LookupControl = edFrom
     FormName = 'TJuridicalForm'
     PositionDataSet = 'GridDataSet'
     ParentDataSet = 'TreeDataSet'
-    Left = 304
-    Top = 56
+    Params = <>
+    Left = 312
+    Top = 16
   end
   object dsdGuidesTo: TdsdGuides
     LookupControl = edTo
     FormName = 'TUnitForm'
     PositionDataSet = 'GridDataSet'
     ParentDataSet = 'TreeDataSet'
-    Left = 448
-    Top = 56
+    Params = <>
+    Left = 456
+    Top = 24
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Loss'
@@ -641,13 +678,13 @@ inherited LossForm: TLossForm
         ParamType = ptOutput
         Value = ''
       end>
-    Left = 136
-    Top = 72
+    Left = 192
+    Top = 64
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
-    Left = 384
-    Top = 312
+    Left = 96
+    Top = 56
     object N1: TMenuItem
       Action = actRefresh
     end
@@ -668,8 +705,8 @@ inherited LossForm: TLossForm
         ParamType = ptInput
         Value = '0'
       end>
-    Left = 560
-    Top = 216
+    Left = 176
+    Top = 304
   end
   object EntryCDS: TClientDataSet
     Aggregates = <>
@@ -753,15 +790,44 @@ inherited LossForm: TLossForm
         ParamType = ptInput
         Value = '0'
       end>
-    Left = 520
-    Top = 120
+    Left = 216
+    Top = 328
   end
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'
     CloseDataSource = False
     DataSet = ClientDataSet
     BCDToCurrency = False
-    Left = 232
-    Top = 216
+    Left = 280
+    Top = 200
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    SortImages = dmMain.SortImageList
+    View = cxGridDBTableView
+    Left = 312
+    Top = 248
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 328
+    Top = 296
+  end
+  object EntryDBViewAddOn: TdsdDBViewAddOn
+    SortImages = dmMain.SortImageList
+    View = cxGridEntryDBTableView
+    Left = 480
+    Top = 192
+  end
+  object HeaderSaver: THeaderSaver
+    ControlList = <>
+    Left = 432
+    Top = 64
+  end
+  object RefreshAddOn: TRefreshAddOn
+    FormName = 'TLossJournalForm'
+    DataSet = 'ClientDataSet'
+    RefreshAction = 'actRefresh'
+    FormParams = 'FormParams'
+    Left = 568
+    Top = 72
   end
 end
