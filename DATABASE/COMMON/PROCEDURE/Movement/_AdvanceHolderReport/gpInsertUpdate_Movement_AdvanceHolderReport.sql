@@ -1,19 +1,21 @@
--- Function: gpInsertUpdate_Movement_BankAccount()
+-- Function: gpInsertUpdate_Movement_AdvanceHolderReport()
 
--- DROP FUNCTION gpInsertUpdate_Movement_BankAccount();
+-- DROP FUNCTION gpInsertUpdate_Movement_AdvanceHolderReport();
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_AdvanceHolderReport(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
-    IN inParentId            Integer   , -- Элемент выписки банка
+    
     IN inAmount              TFloat    , -- Сумма операции 
-
-    IN inFromId              Integer   , -- От кого (в документе) -- Юридическое лицо, Расчетный счет 	
-    IN inToId                Integer   , -- Кому (в документе)  -- Юридическое лицо, Расчетный счет 	
+    
+    IN inFromId              Integer   , -- Сотрудники
+    IN inToId                Integer   , -- Юридическое лицо
+    IN inPaidKindId          Integer   , -- Виды форм оплаты
     IN inInfoMoneyId         Integer   , -- Статьи назначения 
-    IN inContractId          Integer   , -- Договора
+    IN inContractId          Integer   , -- Договор  
     IN inUnitId              Integer   , -- Подразделение
+
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
@@ -22,27 +24,32 @@ $BODY$
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankAccount());
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_AdvanceHolderReport());
      vbUserId := inSession;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_BankAccount(), inInvNumber, inOperDate, NULL);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_AdvanceHolderReport(), inInvNumber, inOperDate, NULL);
 
      -- сохранили свойство <Сумма операции>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), ioId, inAmount);
 
-     -- сохранили связь с <От кого (в документе)>
+     -- сохранили связь с <Сотрудники>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
-     -- сохранили связь с <Кому (в документе)>
+     -- сохранили связь с <Юридическое лицо>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
+     
+     -- сохранили связь с <Виды форм оплаты >
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
 
      -- сохранили связь с <Статьи назначения>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_InfoMoney(), ioId, inInfoMoneyId);
-     -- сохранили связь с <Договора>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
+     
+     -- сохранили связь с <Договор>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);     
+     
      -- сохранили связь с <Подразделение>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
-
+    
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 
@@ -54,9 +61,9 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 09.08.13         *
+ 12.08.13         *
 
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_BankAccount (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_Movement_AdvanceHolderReport (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inAmount:= 20, inFromId:= 1, inToId:= 1, inPaidKindId:= 1,  inInfoMoneyId:= 0, inUnitId:= 0, inServiceDate:= '01.01.2013', inSession:= '2')
