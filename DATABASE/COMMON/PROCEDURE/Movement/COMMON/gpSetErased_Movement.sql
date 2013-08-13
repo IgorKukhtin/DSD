@@ -14,7 +14,7 @@ $BODY$BEGIN
   PERFORM lpDelete_MovementItemContainer(inMovementId);
 
   -- Обязательно меняем статус документа
-  UPDATE Movement SET StatusId = zc_Object_Status_Erased() WHERE Id = inMovementId;
+  UPDATE Movement SET StatusId = zc_Enum_Status_Erased() WHERE Id = inMovementId;
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE
