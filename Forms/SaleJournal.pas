@@ -68,7 +68,7 @@ type
     colPriceWithVAT: TcxGridDBColumn;
     colVATPercent: TcxGridDBColumn;
     colChangePercent: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
+    colTotalCountPartner: TcxGridDBColumn;
     colTotalSummMVAT: TcxGridDBColumn;
     colTotalSumm: TcxGridDBColumn;
     colTotalSummVAT: TcxGridDBColumn;
@@ -84,6 +84,7 @@ type
     dxBarStatic: TdxBarStatic;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
+    colTotalCount: TcxGridDBColumn;
   private
   public
   end;
