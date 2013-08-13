@@ -1,8 +1,8 @@
--- Function: gpGet_Movement_AdvanceHolderReport()
+-- Function: gpGet_Movement_PersonalReport()
 
--- DROP FUNCTION gpGet_Movement_AdvanceHolderReport (Integer, TVarChar);
+-- DROP FUNCTION gpGet_Movement_PersonalReport (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_Movement_AdvanceHolderReport(
+CREATE OR REPLACE FUNCTION gpGet_Movement_PersonalReport(
     IN inMovementId        Integer  , -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
@@ -21,7 +21,7 @@ $BODY$
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_AdvanceHolderReport());
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_PersonalReport());
 
      RETURN QUERY 
        SELECT
@@ -89,12 +89,12 @@ BEGIN
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
    
        WHERE Movement.Id =  inMovementId
-         AND Movement.DescId = zc_Movement_AdvanceHolderReport();
+         AND Movement.DescId = zc_Movement_PersonalReport();
   
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_AdvanceHolderReport (Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Movement_PersonalReport (Integer, TVarChar) OWNER TO postgres;
 
 
 /*
@@ -106,4 +106,4 @@ ALTER FUNCTION gpGet_Movement_AdvanceHolderReport (Integer, TVarChar) OWNER TO p
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_AdvanceHolderReport (inMovementId:= 1, inSession:= '2')
+-- SELECT * FROM gpGet_Movement_PersonalReport (inMovementId:= 1, inSession:= '2')

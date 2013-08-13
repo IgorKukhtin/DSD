@@ -6,7 +6,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
-    IN inParentId            Integer   , -- Элемент выписки банка
     IN inAmount              TFloat    , -- Сумма операции 
 
     IN inFromId              Integer   , -- От кого (в документе) -- Юридическое лицо, Расчетный счет 	

@@ -438,7 +438,12 @@
 				<Form>ZakazInternalForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\ObjectCost\CommonObjectCostProcedureTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\BankStatementTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\BankAccountTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\ServiceTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\PersonalServiceTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\PersonalReportTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\BankStatementItemTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

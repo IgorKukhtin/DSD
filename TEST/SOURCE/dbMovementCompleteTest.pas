@@ -34,6 +34,7 @@ const
   '<xml Session = "">' +
     '<gpComplete_Movement_Income OutputType="otResult">' +
        '<inId DataType="ftInteger" Value="%d"/>' +
+       '<inIsLastComplete DataType="ftBoolean" Value="false"/>' +
     '</gpComplete_Movement_Income>' +
   '</xml>';
 var
