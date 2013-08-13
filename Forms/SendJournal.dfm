@@ -14,7 +14,6 @@ inherited SendJournalForm: TSendJournalForm
     Align = alTop
     Caption = 'Panel1'
     TabOrder = 1
-    ExplicitWidth = 1240
     object deStart: TcxDateEdit
       Left = 208
       Top = 8
@@ -38,7 +37,6 @@ inherited SendJournalForm: TSendJournalForm
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
-    ExplicitWidth = 1240
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -256,6 +254,10 @@ inherited SendJournalForm: TSendJournalForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end>
       OneOnRow = True
       Row = 0
@@ -293,6 +295,10 @@ inherited SendJournalForm: TSendJournalForm
       Caption = '     '
       Category = 0
       Visible = ivAlways
+    end
+    object bbGridToExcel: TdxBarButton
+      Action = dsdGridToExcel
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -383,6 +389,14 @@ inherited SendJournalForm: TSendJournalForm
       ImageIndex = 13
       DataSource = DataSource
       Status = mtDelete
+    end
+    object dsdGridToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      Grid = cxGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -475,6 +489,7 @@ inherited SendJournalForm: TSendJournalForm
     Top = 200
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    OnDblClickAction = actUpdate
     SortImages = dmMain.SortImageList
     View = cxGridDBTableView
     Left = 168

@@ -5,7 +5,7 @@ inherited SaleForm: TSaleForm
   KeyPreview = True
   PopupMenu = PopupMenu
   ExplicitWidth = 1082
-  ExplicitHeight = 477
+  ExplicitHeight = 470
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -147,7 +147,7 @@ inherited SaleForm: TSaleForm
     Height = 312
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheet2
+    Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 312
     ClientRectRight = 1074

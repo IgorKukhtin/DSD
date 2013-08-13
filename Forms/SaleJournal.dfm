@@ -295,6 +295,10 @@ inherited SaleJournalForm: TSaleJournalForm
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end>
       OneOnRow = True
       Row = 0
@@ -332,6 +336,10 @@ inherited SaleJournalForm: TSaleJournalForm
       Caption = '     '
       Category = 0
       Visible = ivAlways
+    end
+    object bbGridToExcel: TdxBarButton
+      Action = dsdGridToExcel
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -422,6 +430,14 @@ inherited SaleJournalForm: TSaleJournalForm
       ImageIndex = 13
       DataSource = DataSource
       Status = mtDelete
+    end
+    object dsdGridToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      Grid = cxGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -514,6 +530,7 @@ inherited SaleJournalForm: TSaleJournalForm
     Top = 240
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    OnDblClickAction = actUpdate
     SortImages = dmMain.SortImageList
     View = cxGridDBTableView
     Left = 256

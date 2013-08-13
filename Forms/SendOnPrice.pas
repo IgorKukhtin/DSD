@@ -22,7 +22,8 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  dsdAddOn, DataModul, dxBarExtItems;
 
 type
   TSendOnPriceForm = class(TParentForm)
@@ -97,6 +98,17 @@ type
     colGoodsKindName: TcxGridDBColumn;
     colGoodsKindName_comlete: TcxGridDBColumn;
     colAccountOnComplete: TcxGridDBColumn;
+    RefreshAddOn: TRefreshAddOn;
+    DBViewAddOn: TdsdDBViewAddOn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    EntryDBViewAddOn: TdsdDBViewAddOn;
+    BooleanStoredProcAction1: TBooleanStoredProcAction;
+    dsdGridToExcel: TdsdGridToExcel;
+    EntryToExcel: TdsdGridToExcel;
+    bbShowAll: TdxBarButton;
+    bbGridToExcel: TdxBarButton;
+    bbEntryToExcel: TdxBarButton;
+    dxBarStatic: TdxBarStatic;
   private
   public
   end;

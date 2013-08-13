@@ -324,6 +324,10 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end>
       OneOnRow = True
@@ -339,12 +343,10 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     object bbInsert: TdxBarButton
       Action = actInsert
       Category = 0
-      ImageIndex = 0
     end
     object bbEdit: TdxBarButton
       Action = actUpdate
       Category = 0
-      ImageIndex = 1
     end
     object bbComplete: TdxBarButton
       Action = actComplete
@@ -362,6 +364,10 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
       Caption = '     '
       Category = 0
       Visible = ivAlways
+    end
+    object bbGridToExcel: TdxBarButton
+      Action = dsdGridToExcel
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -383,7 +389,9 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
+      ImageIndex = 0
       FormName = 'TSendOnPriceForm'
       GuiParams = <
         item
@@ -399,7 +407,9 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
+      ImageIndex = 1
       FormName = 'TSendOnPriceForm'
       GuiParams = <
         item
@@ -452,6 +462,14 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
       ImageIndex = 13
       DataSource = DataSource
       Status = mtDelete
+    end
+    object dsdGridToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      Grid = cxGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -544,6 +562,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     Top = 152
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    OnDblClickAction = actUpdate
     SortImages = dmMain.SortImageList
     View = cxGridDBTableView
     Left = 208

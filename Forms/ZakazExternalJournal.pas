@@ -43,24 +43,17 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
-    colStatus: TcxGridDBColumn;
     colInvNumber: TcxGridDBColumn;
     colOperDate: TcxGridDBColumn;
     colFromName: TcxGridDBColumn;
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
-    actComplete: TdsdChangeMovementStatus;
     spMovementComplete: TdsdStoredProc;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
-    bbComplete: TdxBarButton;
-    actUnComplete: TdsdChangeMovementStatus;
     spMovementUnComplete: TdsdStoredProc;
-    bbUnComplete: TdxBarButton;
     N2: TMenuItem;
-    bbDelete: TdxBarButton;
-    actSetErased: TdsdChangeMovementStatus;
     spMovementSetErased: TdsdStoredProc;
     colTotalCount: TcxGridDBColumn;
     colOperDateMark: TcxGridDBColumn;
@@ -72,6 +65,8 @@ type
     colPersonalName: TcxGridDBColumn;
     colInvNumberPartner: TcxGridDBColumn;
     dxBarButton: TdxBarButton;
+    dsdGridToExcel: TdsdGridToExcel;
+    bbGridToExcel: TdxBarButton;
   private
   public
   end;

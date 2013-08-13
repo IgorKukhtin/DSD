@@ -1,15 +1,15 @@
 inherited ZakazExternalJournalForm: TZakazExternalJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1047#1072#1103#1074#1082#1080' '#1089#1090#1086#1088#1086#1085#1085#1080#1077
   ClientHeight = 427
-  ClientWidth = 1240
-  ExplicitWidth = 1248
+  ClientWidth = 907
+  ExplicitWidth = 915
   ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
     Top = 26
-    Width = 1240
+    Width = 907
     Height = 41
     Align = alTop
     TabOrder = 1
@@ -31,7 +31,7 @@ inherited ZakazExternalJournalForm: TZakazExternalJournalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 67
-    Width = 1240
+    Width = 907
     Height = 360
     Align = alClient
     PopupMenu = PopupMenu
@@ -50,32 +50,10 @@ inherited ZakazExternalJournalForm: TZakazExternalJournalForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsView.ColumnAutoWidth = True
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object colStatus: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1091#1089
-        DataBinding.FieldName = 'StatusCode'
-        PropertiesClassName = 'TcxImageComboBoxProperties'
-        Properties.Images = dmMain.ImageList
-        Properties.Items = <
-          item
-            Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
-            ImageIndex = 11
-            Value = 1
-          end
-          item
-            Description = #1055#1088#1086#1074#1077#1076#1077#1085
-            ImageIndex = 12
-            Value = 2
-          end
-          item
-            Description = #1059#1076#1072#1083#1077#1085
-            ImageIndex = 13
-            Value = 3
-          end>
-        HeaderAlignmentVert = vaCenter
-      end
       object colInvNumber: TcxGridDBColumn
         Caption = #1053#1086#1084#1077#1088
         DataBinding.FieldName = 'InvNumber'
@@ -192,10 +170,10 @@ inherited ZakazExternalJournalForm: TZakazExternalJournalForm
       DockedLeft = 0
       DockedTop = 0
       DockingStyle = dsTop
-      FloatLeft = 671
-      FloatTop = 8
+      FloatLeft = 456
+      FloatTop = 273
       FloatClientWidth = 51
-      FloatClientHeight = 71
+      FloatClientHeight = 98
       ItemLinks = <
         item
           Visible = True
@@ -212,24 +190,15 @@ inherited ZakazExternalJournalForm: TZakazExternalJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbDelete'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'dxBarButton'
         end
         item
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end>
       OneOnRow = True
       Row = 0
@@ -244,23 +213,9 @@ inherited ZakazExternalJournalForm: TZakazExternalJournalForm
     object bbInsert: TdxBarButton
       Action = actInsert
       Category = 0
-      ImageIndex = 0
     end
     object bbEdit: TdxBarButton
       Action = actUpdate
-      Category = 0
-      ImageIndex = 1
-    end
-    object bbComplete: TdxBarButton
-      Action = actComplete
-      Category = 0
-    end
-    object bbUnComplete: TdxBarButton
-      Action = actUnComplete
-      Category = 0
-    end
-    object bbDelete: TdxBarButton
-      Action = actSetErased
       Category = 0
     end
     object dxBarButton: TdxBarButton
@@ -268,6 +223,10 @@ inherited ZakazExternalJournalForm: TZakazExternalJournalForm
       Category = 0
       Hint = '     '
       Visible = ivAlways
+    end
+    object bbGridToExcel: TdxBarButton
+      Action = dsdGridToExcel
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -289,7 +248,9 @@ inherited ZakazExternalJournalForm: TZakazExternalJournalForm
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
+      ImageIndex = 0
       FormName = 'TZakazExternalForm'
       GuiParams = <
         item
@@ -305,7 +266,9 @@ inherited ZakazExternalJournalForm: TZakazExternalJournalForm
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
+      ImageIndex = 1
       SecondaryShortCuts.Strings = (
         'Enter')
       FormName = 'TZakazExternalForm'
@@ -322,44 +285,13 @@ inherited ZakazExternalJournalForm: TZakazExternalJournalForm
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
-    object actUnComplete: TdsdChangeMovementStatus
+    object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
-      StoredProc = spMovementUnComplete
-      StoredProcList = <
-        item
-          StoredProc = spMovementUnComplete
-        end>
-      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      ImageIndex = 11
-      DataSource = DataSource
-      Status = mtUncomplete
-    end
-    object actComplete: TdsdChangeMovementStatus
-      Category = 'DSDLib'
-      StoredProc = spMovementComplete
-      StoredProcList = <
-        item
-          StoredProc = spMovementComplete
-        end>
-      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 12
-      DataSource = DataSource
-      Status = mtComplete
-    end
-    object actSetErased: TdsdChangeMovementStatus
-      Category = 'DSDLib'
-      StoredProc = spMovementSetErased
-      StoredProcList = <
-        item
-          StoredProc = spMovementSetErased
-        end>
-      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
-      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
-      ImageIndex = 13
-      DataSource = DataSource
-      Status = mtDelete
+      Grid = cxGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -407,10 +339,14 @@ inherited ZakazExternalJournalForm: TZakazExternalJournalForm
     Left = 104
     Top = 32
     object N1: TMenuItem
-      Action = actComplete
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 12
     end
     object N2: TMenuItem
-      Action = actUnComplete
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 11
     end
   end
   object spMovementUnComplete: TdsdStoredProc

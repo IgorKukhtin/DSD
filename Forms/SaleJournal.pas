@@ -82,6 +82,8 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     colPersonalName: TcxGridDBColumn;
     dxBarStatic: TdxBarStatic;
+    dsdGridToExcel: TdsdGridToExcel;
+    bbGridToExcel: TdxBarButton;
   private
   public
   end;

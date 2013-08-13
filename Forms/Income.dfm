@@ -511,8 +511,8 @@ inherited IncomeForm: TIncomeForm
         ParamType = ptInputOutput
         Value = '0'
       end>
-    Left = 256
-    Top = 96
+    Left = 48
+    Top = 144
   end
   object spSelectMovementItem: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Income'
@@ -556,8 +556,8 @@ inherited IncomeForm: TIncomeForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 184
-    Top = 104
+    Left = 16
+    Top = 144
     DockControlHeights = (
       0
       0
@@ -627,13 +627,13 @@ inherited IncomeForm: TIncomeForm
           'Width')
       end>
     StorageName = 'cxPropertiesStore'
-    Left = 360
-    Top = 112
+    Left = 112
+    Top = 144
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 416
-    Top = 112
+    Left = 80
+    Top = 144
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spGet

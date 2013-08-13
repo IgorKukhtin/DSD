@@ -14,7 +14,6 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
     Height = 41
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 1240
     object deStart: TcxDateEdit
       Left = 208
       Top = 8
@@ -38,8 +37,6 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
-    ExplicitWidth = 1240
-    ExplicitHeight = 360
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource

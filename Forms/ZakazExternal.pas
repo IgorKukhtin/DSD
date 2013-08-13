@@ -23,7 +23,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dsdAddOn, DataModul;
+  dsdAddOn, DataModul, dxBarExtItems;
 
 type
   TZakazExternalForm = class(TParentForm)
@@ -84,6 +84,11 @@ type
     cxGridLevel: TcxGridLevel;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    GridToExcel: TdsdGridToExcel;
+    bbGridToExcel: TdxBarButton;
+    BooleanStoredProcAction: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
+    dxBarStatic: TdxBarStatic;
   private
   public
   end;

@@ -56,29 +56,6 @@ inherited ZakazInternalJournalForm: TZakazInternalJournalForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object colStatus: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1091#1089
-        DataBinding.FieldName = 'StatusCode'
-        PropertiesClassName = 'TcxImageComboBoxProperties'
-        Properties.Images = dmMain.ImageList
-        Properties.Items = <
-          item
-            Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
-            ImageIndex = 11
-            Value = 1
-          end
-          item
-            Description = #1055#1088#1086#1074#1077#1076#1077#1085
-            ImageIndex = 12
-            Value = 2
-          end
-          item
-            Description = #1059#1076#1072#1083#1077#1085
-            ImageIndex = 13
-            Value = 3
-          end>
-        HeaderAlignmentVert = vaCenter
-      end
       object colInvNumber: TcxGridDBColumn
         Caption = #1053#1086#1084#1077#1088
         DataBinding.FieldName = 'InvNumber'
@@ -188,20 +165,11 @@ inherited ZakazInternalJournalForm: TZakazInternalJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbDelete'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end
         item
           Visible = True
@@ -220,29 +188,19 @@ inherited ZakazInternalJournalForm: TZakazInternalJournalForm
     object bbInsert: TdxBarButton
       Action = actInsert
       Category = 0
-      ImageIndex = 0
     end
     object bbEdit: TdxBarButton
       Action = actUpdate
-      Category = 0
-      ImageIndex = 1
-    end
-    object bbComplete: TdxBarButton
-      Action = actComplete
-      Category = 0
-    end
-    object bbUnComplete: TdxBarButton
-      Action = actUnComplete
-      Category = 0
-    end
-    object bbDelete: TdxBarButton
-      Action = actSetErased
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
       Caption = '     '
       Category = 0
       Visible = ivAlways
+    end
+    object bbGridToExcel: TdxBarButton
+      Action = dsdGridToExcel
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -264,7 +222,9 @@ inherited ZakazInternalJournalForm: TZakazInternalJournalForm
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
+      ImageIndex = 0
       FormName = 'TZakazInternalForm'
       GuiParams = <
         item
@@ -280,7 +240,9 @@ inherited ZakazInternalJournalForm: TZakazInternalJournalForm
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
+      ImageIndex = 1
       SecondaryShortCuts.Strings = (
         'Enter')
       FormName = 'TZakazInternalForm'
@@ -297,44 +259,13 @@ inherited ZakazInternalJournalForm: TZakazInternalJournalForm
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
-    object actUnComplete: TdsdChangeMovementStatus
+    object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
-      StoredProc = spMovementUnComplete
-      StoredProcList = <
-        item
-          StoredProc = spMovementUnComplete
-        end>
-      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      ImageIndex = 11
-      DataSource = DataSource
-      Status = mtUncomplete
-    end
-    object actComplete: TdsdChangeMovementStatus
-      Category = 'DSDLib'
-      StoredProc = spMovementComplete
-      StoredProcList = <
-        item
-          StoredProc = spMovementComplete
-        end>
-      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 12
-      DataSource = DataSource
-      Status = mtComplete
-    end
-    object actSetErased: TdsdChangeMovementStatus
-      Category = 'DSDLib'
-      StoredProc = spMovementSetErased
-      StoredProcList = <
-        item
-          StoredProc = spMovementSetErased
-        end>
-      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
-      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
-      ImageIndex = 13
-      DataSource = DataSource
-      Status = mtDelete
+      Grid = cxGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -382,10 +313,14 @@ inherited ZakazInternalJournalForm: TZakazInternalJournalForm
     Left = 104
     Top = 32
     object N1: TMenuItem
-      Action = actComplete
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 12
     end
     object N2: TMenuItem
-      Action = actUnComplete
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 11
     end
   end
   object spMovementUnComplete: TdsdStoredProc

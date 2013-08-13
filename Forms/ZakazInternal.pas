@@ -23,7 +23,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  DataModul, dsdAddOn;
+  DataModul, dsdAddOn, dxBarExtItems;
 
 type
   TZakazInternalForm = class(TParentForm)
@@ -47,48 +47,21 @@ type
     spGet: TdsdStoredProc;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
-    cxPageControl1: TcxPageControl;
-    cxTabSheet1: TcxTabSheet;
-    cxTabSheet2: TcxTabSheet;
+    cxPageControl: TcxPageControl;
+    tbGrid: TcxTabSheet;
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     colCode: TcxGridDBColumn;
     colName: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
-    spSelectMovementContainerItem: TdsdStoredProc;
-    cxGridEntryDBTableView: TcxGridDBTableView;
-    cxGridEntryLevel: TcxGridLevel;
-    cxGridEntry: TcxGrid;
-    colDebetAccountName: TcxGridDBColumn;
-    colDebetAmount: TcxGridDBColumn;
-    EntryCDS: TClientDataSet;
-    EntryDS: TDataSource;
-    colKreditAccountName: TcxGridDBColumn;
-    colKreditAmount: TcxGridDBColumn;
     actUpdateDataSet: TdsdUpdateDataSet;
     spInsertUpdateMovementItem: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     frxDBDataset: TfrxDBDataset;
-    colDebetAccountGroupCode: TcxGridDBColumn;
-    colDebetAccountGroupName: TcxGridDBColumn;
-    colDebetAccountDirectionCode: TcxGridDBColumn;
-    colDebetAccountDirectionName: TcxGridDBColumn;
-    colDebetAccountCode: TcxGridDBColumn;
-    colKreditAccountGroupCode: TcxGridDBColumn;
-    colKreditAccountGroupName: TcxGridDBColumn;
-    colKreditAccountDirectionCode: TcxGridDBColumn;
-    colKreditAccountDirectionName: TcxGridDBColumn;
-    colKreditAccountCode: TcxGridDBColumn;
-    colGoodsGroupName: TcxGridDBColumn;
-    colByObjectCode: TcxGridDBColumn;
-    colByObjectName: TcxGridDBColumn;
-    colGoodsName: TcxGridDBColumn;
     colAmountSecond: TcxGridDBColumn;
     colGoodsKindName: TcxGridDBColumn;
-    colGoodsKindName_comlete: TcxGridDBColumn;
-    colAccountOnComplete: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edFrom: TcxButtonEdit;
     edTo: TcxButtonEdit;
@@ -96,8 +69,12 @@ type
     RefreshAddOn: TRefreshAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    EntryDBViewAddOn: TdsdDBViewAddOn;
     HeaderSaver: THeaderSaver;
+    dsdGridToExcel: TdsdGridToExcel;
+    bbExcelToGrid: TdxBarButton;
+    BooleanStoredProcAction: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
+    dxBarStatic: TdxBarStatic;
   private
   public
   end;

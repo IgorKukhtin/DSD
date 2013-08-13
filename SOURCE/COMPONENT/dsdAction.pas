@@ -3,7 +3,7 @@ unit dsdAction;
 interface
 
 uses VCL.ActnList, Forms, Classes, ParentForm, dsdDB, DB, DBClient, UtilConst,
-     cxGrid, dsdGuides, ImgList;
+     cxGrid, dsdGuides, ImgList, cxPC;
 
 type
   TDataSetAcionType = (acInsert, acUpdate);
@@ -11,6 +11,8 @@ type
   TdsdStoredProcItem = class(TCollectionItem)
   private
     FStoredProc: TdsdStoredProc;
+  protected
+    function GetDisplayName: string; override;
   published
     property StoredProc: TdsdStoredProc read FStoredProc write FStoredProc;
   end;
@@ -36,6 +38,22 @@ type
     procedure OnFormClose(Params: TdsdParams);
   end;
 
+  TOnPageChanging = procedure (Sender: TObject; NewPage: TcxTabSheet; var AllowChange: Boolean) of object;
+
+  // ќбщий класс нужен дл€ некороторых общих операций. Ќапример учитывать TabSheet
+  TdsdCustomAction = class(TCustomAction)
+  private
+    FOnPageChanging: TOnPageChanging;
+    FTabSheet: TcxTabSheet;
+    procedure SetTabSheet(const Value: TcxTabSheet);
+    procedure OnPageChanging(Sender: TObject; NewPage: TcxTabSheet; var AllowChange: Boolean);
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+  published
+    // ѕри установке данного свойства Action будет активирован только если TabSheet активен
+    property TabSheet: TcxTabSheet read FTabSheet write SetTabSheet;
+  end;
+
   TDataSetDataLink = class(TDataLink)
   private
     FAction: IDataSetAction;
@@ -46,7 +64,7 @@ type
     constructor Create(Action: IDataSetAction);
   end;
 
-  TdsdCustomDataSetAction = class(TCustomAction, IDataSetAction)
+  TdsdCustomDataSetAction = class(TdsdCustomAction, IDataSetAction)
   private
     FStoredProcList: TdsdStoredProcList;
     function GetStoredProc: TdsdStoredProc;
@@ -134,7 +152,7 @@ type
     property DataSource: TDataSource read GetDataSource write SetDataSource;
   end;
 
-  TdsdOpenForm = class(TCustomAction, IFormAction)
+  TdsdOpenForm = class(TdsdCustomAction, IFormAction)
   private
     FParams: TdsdParams;
     FFormName: string;
@@ -181,7 +199,7 @@ type
   end;
 
 
-  TdsdFormClose = class(TCustomAction)
+  TdsdFormClose = class(TdsdCustomAction)
   public
     function Execute: boolean; override;
   end;
@@ -189,7 +207,7 @@ type
   // ƒействие выбора значени€ из справочника
   // «аполн€ет параметры формы указанными параметрами. ѕараметры заполн€ютс€ по имени
   // и закрывает форму
-  TdsdChoiceGuides = class(TCustomAction)
+  TdsdChoiceGuides = class(TdsdCustomAction)
   private
     FParams: TdsdParams;
     FGuides: TdsdGuides;
@@ -208,7 +226,7 @@ type
     property SecondaryShortCuts;
   end;
 
-  TdsdGridToExcel = class (TCustomAction)
+  TdsdGridToExcel = class (TdsdCustomAction)
   private
     FGrid: TcxGrid;
   protected
@@ -778,6 +796,44 @@ begin
      Caption := CaptionFalse;
      Hint := HintFalse;
   end;
+end;
+
+{ TdsdCustomAction }
+
+procedure TdsdCustomAction.Notification(AComponent: TComponent;
+  Operation: TOperation);
+begin
+  inherited Notification(AComponent, Operation);
+  if (Operation = opRemove) and (AComponent = TabSheet) then
+     TabSheet := nil;
+end;
+
+procedure TdsdCustomAction.OnPageChanging(Sender: TObject; NewPage: TcxTabSheet;
+  var AllowChange: Boolean);
+begin
+  if Assigned(FOnPageChanging) then
+     FOnPageChanging(Sender, NewPage, AllowChange);
+  Enabled := TabSheet = NewPage;
+  Visible := Enabled
+end;
+
+procedure TdsdCustomAction.SetTabSheet(const Value: TcxTabSheet);
+begin
+  FTabSheet := Value;
+  if Assigned(FTabSheet) then begin
+     FOnPageChanging := FTabSheet.PageControl.OnPageChanging;
+     FTabSheet.PageControl.OnPageChanging := OnPageChanging;
+     Enabled := TabSheet = FTabSheet.PageControl.ActivePage;
+     Visible := Enabled
+  end;
+end;
+
+{ TdsdStoredProcItem }
+
+function TdsdStoredProcItem.GetDisplayName: string;
+begin
+//  if Assigned(FStoredProc) then
+  //   result := FStoredProc.Name + ' \ ' + FStoredProc.StoredProcName
 end;
 
 end.

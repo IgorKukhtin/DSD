@@ -4,8 +4,8 @@ inherited SendForm: TSendForm
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1044
-  ExplicitHeight = 431
+  ExplicitWidth = 1036
+  ExplicitHeight = 423
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -397,8 +397,8 @@ inherited SendForm: TSendForm
         ParamType = ptInputOutput
         Value = '0'
       end>
-    Left = 176
-    Top = 256
+    Left = 40
+    Top = 56
   end
   object spSelectMovementItem: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Send'
@@ -428,8 +428,8 @@ inherited SendForm: TSendForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -441,8 +441,8 @@ inherited SendForm: TSendForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 136
-    Top = 224
+    Left = 8
+    Top = 56
     DockControlHeights = (
       0
       0
@@ -526,13 +526,13 @@ inherited SendForm: TSendForm
           'Width')
       end>
     StorageName = 'cxPropertiesStore'
-    Left = 280
-    Top = 304
+    Left = 72
+    Top = 56
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 376
-    Top = 216
+    Left = 104
+    Top = 56
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spGet
@@ -580,8 +580,8 @@ inherited SendForm: TSendForm
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 72
-    Top = 56
+    Left = 80
+    Top = 144
   end
   object dsdGuidesFrom: TdsdGuides
     LookupControl = edFrom
@@ -782,5 +782,12 @@ inherited SendForm: TSendForm
     BCDToCurrency = False
     Left = 232
     Top = 216
+  end
+  object RefreshAddOn: TRefreshAddOn
+    DataSet = 'ClientDataSet'
+    RefreshAction = 'actRefresh'
+    FormParams = 'FormParams'
+    Left = 552
+    Top = 56
   end
 end
