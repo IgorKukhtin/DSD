@@ -166,7 +166,8 @@ uses
   BankAccountTest in '..\SOURCE\Movement\All\BankAccountTest.pas',
   ServiceTest in '..\SOURCE\Movement\All\ServiceTest.pas',
   PersonalServiceTest in '..\SOURCE\Movement\All\PersonalServiceTest.pas',
-  PersonalReportTest in '..\SOURCE\Movement\All\PersonalReportTest.pas';
+  PersonalReportTest in '..\SOURCE\Movement\All\PersonalReportTest.pas',
+  BankStatementItemTest in '..\SOURCE\Movement\All\BankStatementItemTest.pas';
 
 {$R *.RES}
 

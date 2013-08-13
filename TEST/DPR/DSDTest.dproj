@@ -443,6 +443,7 @@
 			<DCCReference Include="..\SOURCE\Movement\All\ServiceTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\PersonalServiceTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\PersonalReportTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\BankStatementItemTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
