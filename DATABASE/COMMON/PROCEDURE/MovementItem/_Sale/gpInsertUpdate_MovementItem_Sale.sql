@@ -31,7 +31,7 @@ BEGIN
          RAISE EXCEPTION 'Документ не может корректироваться т.к. он <"%">.', (SELECT Object_Status.ValueData FROM Movement JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId WHERE Movement.Id = inMovementId );
      END IF;
      -- проверка - удаленный элемент документа не может корректироваться
-     IF ioId <> 0 AND NOT EXISTS (SELECT Id FROM MovementItem WHERE Id = ioId AND isErased = TRUE)
+     IF ioId <> 0 AND EXISTS (SELECT Id FROM MovementItem WHERE Id = ioId AND isErased = TRUE)
      THEN
          RAISE EXCEPTION 'Элемент не может корректироваться т.к. он <Удален>.';
      END IF;

@@ -105,7 +105,7 @@ inherited SaleJournalForm: TSaleJournalForm
       end
       object colTotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' ('#1086#1090#1087#1088#1072#1074#1083#1077#1085#1086')'
-        DataBinding.FieldName = 'lTotalCount'
+        DataBinding.FieldName = 'TotalCount'
         HeaderAlignmentVert = vaCenter
         Width = 92
       end

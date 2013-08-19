@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementFloat_TotalSumm(
     IN inMovementId Integer -- Ключ объекта <Документ>
 )
   RETURNS VOID AS
---  RETURNS TABLE () AS
+--  RETURNS TABLE (vbOperCount_Master TFloat) AS
 $BODY$
   DECLARE vbOperCount_Master TFloat;
   DECLARE vbOperCount_Child TFloat;
@@ -113,7 +113,7 @@ BEGIN
                               ELSE CAST ( (1 + vbVATPercent / 100) * (tmpOperSumm_Packer) AS NUMERIC (16, 2))
                          END
             END
-            INTO vbOperCount_Partner, vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_Partner, vbOperCount_Packer, vbOperSumm_Packer
+            INTO vbOperCount_Master, vbOperCount_Child, vbOperCount_Partner, vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_Partner, vbOperCount_Packer, vbOperSumm_Packer
      FROM 
           (SELECT 
                  SUM (CASE WHEN MovementItem.DescId = zc_MI_Master() THEN MovementItem.Amount ELSE 0 END) AS tmpOperCount_Master
@@ -149,6 +149,10 @@ BEGIN
             WHERE Movement.Id = inMovementId
           ) AS _tmp;
 
+     -- Тест
+     -- RETURN QUERY 
+     -- SELECT vbOperCount_Master;
+     -- return;
 
      -- Сохранили свойство <Итого количество("главные элементы")>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), inMovementId, vbOperCount_Master);
@@ -182,4 +186,4 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 */
 
 -- тест
--- SELECT * FROM Send (inMovementId:= 5028)
+-- SELECT * FROM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= 162323)
