@@ -13,7 +13,7 @@ result(ObjectId Integer, BillId Integer, InvNumber TVarCharLongLong, OperDate Da
 begin
   declare local temporary table _tmpList(
        ObjectId Integer
-     , BillId_calc Integer null
+     , BillId_pg Integer null
      , InvNumber_all TVarCharLongLong
      , InvNumber integer
      , OperDate Date
@@ -177,8 +177,8 @@ where Bill.BillDate between @inStartDate and @inEndDate
 ;
 
    //
-   update _tmpList  set  _tmpList.BillId_calc = _tmpList2.BillId_calc
-   from (select max (ObjectId) as BillId_calc, InvNumber, OperDate, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, PaidKindId_Postgres from _tmpList group by InvNumber, OperDate, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, PaidKindId_Postgres having count()>1) as _tmpList2
+   update _tmpList  set  _tmpList.BillId_pg = _tmpList2.BillId_pg
+   from (select max (ObjectId) as BillId_pg, InvNumber, OperDate, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, PaidKindId_Postgres from _tmpList group by InvNumber, OperDate, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, PaidKindId_Postgres having count()>1) as _tmpList2
    where isFl = zc_rvNo()
      and _tmpList.InvNumber = _tmpList2.InvNumber
      and _tmpList.OperDate = _tmpList2.OperDate
@@ -190,7 +190,7 @@ where Bill.BillDate between @inStartDate and @inEndDate
      and _tmpList.PaidKindId_Postgres = _tmpList2.PaidKindId_Postgres
    ;
    //
-   update dba.Bill left outer join _tmpList on _tmpList.ObjectId = Bill.Id set Bill.BillId_calc   = _tmpList.BillId_calc
+   update dba.Bill left outer join _tmpList on _tmpList.ObjectId = Bill.Id set Bill.BillId_pg   = _tmpList.BillId_pg
    where Bill.BillDate between @inStartDate and @inEndDate;
    // 
    -- result
@@ -214,7 +214,7 @@ where Bill.BillDate between @inStartDate and @inEndDate
         , isnull(_tmpList2.isFl, _tmpList.isFl) as isFl
         , zc_rvYes() as zc_rvYes
         , isnull(_tmpList2.Id_Postgres, _tmpList.Id_Postgres) as Id_Postgres
-   from _tmpList left outer join _tmpList as _tmpList2 on _tmpList2.ObjectId = _tmpList.BillId_calc
+   from _tmpList left outer join _tmpList as _tmpList2 on _tmpList2.ObjectId = _tmpList.BillId_pg
    group by ObjectId, BillId, InvNumber, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, PaidKindId_Postgres
           , ContractId, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, isFl, Id_Postgres
    order by 4, 3, 1
@@ -223,4 +223,3 @@ where Bill.BillDate between @inStartDate and @inEndDate
 end
 //
 -- call dba._pgSelect_Bill_Sale ('2013-07-01', '2013-07-07')
-go
