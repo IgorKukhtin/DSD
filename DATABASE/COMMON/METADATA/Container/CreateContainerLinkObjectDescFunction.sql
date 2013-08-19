@@ -86,6 +86,10 @@ CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_JuridicalBasis() RETURNS Integ
 INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
   SELECT 'zc_ContainerLinkObject_JuridicalBasis', 'Главное юридическое лицо', zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_JuridicalBasis');
 
+CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_Cash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_Cash'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
+  SELECT 'zc_ContainerLinkObject_Cash', 'Касса', zc_Object_Cash() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_Cash');
+
 
 /*-------------------------------------------------------------------------------*/
 /*

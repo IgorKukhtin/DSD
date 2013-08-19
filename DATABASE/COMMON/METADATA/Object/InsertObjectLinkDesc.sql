@@ -23,12 +23,6 @@ INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_UserRole_User', 'Связь с пользователем в справочнике ролей пользователя', zc_Object_UserRole(), zc_Object_User() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_UserRole_User');
 
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
-SELECT 'zc_ObjectLink_Cash_Currency', 'Связь кассы с валютой', zc_Object_Cash(), zc_Object_Currency() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Cash_Currency');
-
-INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
-SELECT 'zc_ObjectLink_Cash_Branch', 'Связь кассы с филиалом', zc_Object_Cash(), zc_Object_Branch() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Cash_Branch');
-
-INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_JuridicalGroup_Parent', 'Связь группы юр лиц с группой юр лиц', zc_Object_JuridicalGroup(), zc_Object_JuridicalGroup() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalGroup_Parent');
 
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)

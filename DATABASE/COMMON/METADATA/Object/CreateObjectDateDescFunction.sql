@@ -12,7 +12,7 @@ INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
 
 CREATE OR REPLACE FUNCTION zc_ObjectDate_PartionGoods_Value() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PartionGoods_Value'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
-  SELECT zc_Object_Personal(), 'zc_ObjectDate_PartionGoods_Value', 'Дата партии товара' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PartionGoods_Value');
+  SELECT zc_Object_PartionGoods(), 'zc_ObjectDate_PartionGoods_Value', 'Дата партии товара' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_PartionGoods_Value');
 
 CREATE OR REPLACE FUNCTION zc_ObjectDate_ReceiptChild_Start() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_ReceiptChild_Start'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)

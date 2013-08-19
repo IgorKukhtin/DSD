@@ -23,7 +23,7 @@ type
 
 implementation
 
-uses Storage, SysUtils, dbMovementTest, DBClient, dsdDB, dbMovementItemTest;
+uses Storage, SysUtils, dbMovementTest, DBClient, dsdDB, dbMovementItemTest, dbObjectTest;
 { TdbMovementItemTest }
 
 { TdbMovementCompleteTest }
@@ -81,7 +81,24 @@ end;
 procedure TdbMovementCompleteTest.TearDown;
 begin
   inherited;
-
+  if Assigned(InsertedIdMovementItemList) then
+     with TMovementTest.Create do
+       while InsertedIdMovementItemList.Count > 0 do begin
+          DeleteRecord(StrToInt(InsertedIdMovementItemList[0]));
+          InsertedIdMovementItemList.Delete(0);
+       end;
+  if Assigned(InsertedIdMovementList) then
+     with TMovementTest.Create do
+       while InsertedIdMovementList.Count > 0 do begin
+          DeleteRecord(StrToInt(InsertedIdMovementList[0]));
+          InsertedIdMovementList.Delete(0);
+       end;
+  if Assigned(InsertedIdObjectList) then
+     with TObjectTest.Create do
+       while InsertedIdObjectList.Count > 0 do begin
+          DeleteRecord(StrToInt(InsertedIdObjectList[0]));
+          InsertedIdObjectList.Delete(0);
+       end;
 end;
 
 procedure TdbMovementCompleteTest.UnCompleteMovement(Id: integer);

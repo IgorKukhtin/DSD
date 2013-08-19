@@ -38,8 +38,8 @@ BEGIN
 
 
    -- Находим Управленческий счет по <Управленческие назначения> или <Статьи назначения>
-   IF inInfoMoneyDestinationId <> 0 THEN SELECT AccountId INTO vbAccountId FROM lfSelect_Object_Account() WHERE AccountGroupId = inAccountGroupId AND AccountDirectionId = inAccountDirectionId AND InfoMoneyDestinationId = inInfoMoneyDestinationId;
-                                    ELSE SELECT AccountId INTO vbAccountId FROM lfSelect_Object_Account() WHERE AccountGroupId = inAccountGroupId AND AccountDirectionId = inAccountDirectionId AND InfoMoneyId = inInfoMoneyId;
+   IF inInfoMoneyDestinationId <> 0 THEN vbAccountId := lfGet_Object_AccountByInfoMoneyDestination (inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId);
+                                    ELSE vbAccountId := lfGet_Object_AccountByInfoMoney(inAccountGroupId, inAccountDirectionId, inInfoMoneyId);
    END IF;
 
 
@@ -72,8 +72,9 @@ BEGIN
 
 
        -- Еще раз находим Управленческий счет по <Управленческие назначения> или <Статьи назначения> (но здесь другой vbAccountDirectionId)
-       IF inInfoMoneyDestinationId <> 0 THEN SELECT AccountId INTO vbAccountId FROM lfSelect_Object_Account() WHERE AccountGroupId = inAccountGroupId AND AccountDirectionId = vbAccountDirectionId AND InfoMoneyDestinationId = inInfoMoneyDestinationId;
-                                        ELSE SELECT AccountId INTO vbAccountId FROM lfSelect_Object_Account() WHERE AccountGroupId = inAccountGroupId AND AccountDirectionId = vbAccountDirectionId AND InfoMoneyId = inInfoMoneyId;
+       IF inInfoMoneyDestinationId <> 0 
+          THEN vbAccountId := lfGet_Object_AccountByInfoMoneyDestination (inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId);
+          ELSE vbAccountId := lfGet_Object_AccountByInfoMoney(inAccountGroupId, inAccountDirectionId, inInfoMoneyId);
        END IF;
 
        -- Создаем новый счет

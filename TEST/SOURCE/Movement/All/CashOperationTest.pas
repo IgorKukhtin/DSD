@@ -24,7 +24,8 @@ type
 
 implementation
 
-uses UtilConst, JuridicalTest, dbObjectTest, SysUtils, Db, TestFramework;
+uses UtilConst, JuridicalTest, dbObjectTest, SysUtils, Db, TestFramework,
+     DBClient, dsdDB, CashTest;
 
 { TIncomeCashJuridical }
 
@@ -34,6 +35,7 @@ begin
   spInsertUpdate := 'gpInsertUpdate_Movement_Cash';
   spSelect := 'gpSelect_Movement_Cash';
   spGet := 'gpGet_Movement_Cash';
+  spCompleteProcedure := 'gpComplete_Movement_Cash';
 end;
 
 function TCashOperation.InsertDefault: integer;
@@ -48,12 +50,17 @@ begin
   InvNumber:='1';
   OperDate:= Date;
   // Выбираем кассу
-  FromId := TCashTest.Create.GetDefault;
+  FromId := TCash.Create.GetDefault;
   // Выбираем Юр лицо
   ToId := TJuridical.Create.GetDefault;
   PaidKindId := 0;
   ContractId := 0;
   InfoMoneyId := 0;
+  with TInfoMoneyTest.Create.GetDataSet do begin
+     if Locate('Code', '10103', []) then
+        InfoMoneyId := FieldByName('Id').AsInteger;
+
+  end;
   UnitId := 0;
   Amount := 265.68;
   //
@@ -94,27 +101,53 @@ procedure TCashOperationTest.ProcedureLoad;
 begin
   ScriptDirectory := ProcedurePath + 'Movement\_Cash\';
   inherited;
+  ScriptDirectory := ProcedurePath + 'MovementItemContainer\_Cash\';
+  inherited;
 end;
 
 procedure TCashOperationTest.Test;
 var MovementCashOperation: TCashOperation;
     Id: Integer;
+    StoredProc: TdsdStoredProc;
+    AccountAmount, AccountAmountTwo: double;
 begin
   inherited;
+  AccountAmount := 0;
+  AccountAmountTwo := 0;
   // Создаем документ
   MovementCashOperation := TCashOperation.Create;
-  Id := MovementCashOperation.InsertDefault;
   // создание документа
+  Id := MovementCashOperation.InsertDefault;
+  // Проверяем остаток по счету кассы
+  StoredProc := TdsdStoredProc.Create(nil);
+  StoredProc.Params.AddParam('inStartDate', ftDateTime, ptInput, Date);
+  StoredProc.Params.AddParam('inEndDate', ftDateTime, ptInput, TDateTime(Date));
+  StoredProc.StoredProcName := 'gpReport_Balance';
+  StoredProc.DataSet := TClientDataSet.Create(nil);
+  StoredProc.OutputType := otDataSet;
+  StoredProc.Execute;
+  with StoredProc.DataSet do begin
+     if Locate('AccountCode', '40101', []) then
+        AccountAmount := FieldByName('AmountDebetEnd').AsFloat + FieldByName('AmountKreditEnd').AsFloat
+  end;
   try
-  // редактирование
+    // проведение
+    MovementCashOperation.DocumentComplete(Id);
+    StoredProc.Execute;
+    with StoredProc.DataSet do begin
+      if Locate('AccountCode', '40101', []) then
+         AccountAmountTwo := FieldByName('AmountDebetEnd').AsFloat - FieldByName('AmountKreditEnd').AsFloat;
+    end;
+    Check(abs(AccountAmount - (AccountAmountTwo + 265.68)) < 0.01, 'Провелось не правильно. Было ' + FloatToStr(AccountAmount) + ' стало ' + FloatToStr(AccountAmountTwo));
   finally
+    // распроведение
+    MovementCashOperation.DocumentUnComplete(Id);
+    StoredProc.Free;
   end;
 end;
 
 initialization
 
   TestFramework.RegisterTest('Документы', TCashOperationTest.Suite);
-
-
 
 end.

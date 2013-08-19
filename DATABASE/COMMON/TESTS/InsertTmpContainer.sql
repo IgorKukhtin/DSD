@@ -1,0 +1,21 @@
+﻿CREATE TABLE test1(a1 INTEGER, a2 INTEGER);
+CREATE TABLE test2(b1 INTEGER, b2 INTEGER);
+
+INSERT INTO test2 SELECT 1, 4;
+
+WITH upd AS (
+INSERT INTO test1
+(
+	a1,
+	a2
+)
+SELECT 1, 7
+UNION SELECT 2, 7
+  RETURNING a1, a2)
+UPDATE test2
+SET b2 = a2 FROM upd WHERE test2.b1 = upd.a1;
+
+SELECT * FROM test2 t;
+
+DROP TABLE test2;
+DROP TABLE test1;

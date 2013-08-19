@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Cash(
     IN inSession     TVarChar       -- текущий пользователь 
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
-               CurrencyId Integer, CurrencyName TVarChar, BranchId Integer, BranchName TVarChar, PaidKindId Integer, PaidKindName TVarChar) AS
+               CurrencyId Integer, CurrencyName TVarChar, BranchId Integer, BranchName TVarChar, 
+               MainJuridicalId Integer, MainJuridicalName TVarChar, BusinessId Integer, BusinessName TVarChar) AS
 $BODY$
 BEGIN
 
@@ -18,17 +19,17 @@ BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , COALESCE (MAX (Object.ObjectCode), 0) + 1 AS Code
+           , lfGet_ObjectCode(zc_Object_Cash(), inCode) AS Code
            , CAST ('' as TVarChar)  AS Name
            , CAST (NULL AS Boolean) AS isErased
            , CAST (0 as Integer)    AS CurrencyId
            , CAST ('' as TVarChar)  AS CurrencyName
            , CAST (0 as Integer)    AS BranchId
            , CAST ('' as TVarChar)  AS BranchName
-           , CAST (0 as Integer)    AS PaidKindId
-           , CAST ('' as TVarChar)  AS PaidKindName          
-       FROM Object 
-       WHERE Object.DescId = zc_Object_Cash();
+           , CAST (0 as Integer)    AS MainJuridicalId
+           , CAST ('' as TVarChar)  AS MainJuridicalName
+           , CAST (0 as Integer)    AS BusinessId
+           , CAST ('' as TVarChar)  AS BusinessName;
    ELSE
        RETURN QUERY 
        SELECT 
@@ -40,8 +41,10 @@ BEGIN
            , Currency.ValueData AS CurrencyName
            , Branch.Id          AS BranchId
            , Branch.ValueData   AS BranchName
-           , PaidKind.Id        AS PaidKindId
-           , PaidKind.ValueData AS PaidKindName
+           , MainJuridical.Id   AS MainJuridicalId
+           , MainJuridical.ValueData  AS MainJuridicalName
+           , Business.Id        AS BusinessId
+           , Business.ValueData AS BusinessName
        FROM Object
            JOIN ObjectLink AS Cash_Currency
                            ON Cash_Currency.ObjectId = Object.Id
@@ -51,10 +54,14 @@ BEGIN
                                 ON Cash_Branch.ObjectId = Object.Id
                                AND Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
            LEFT JOIN Object AS Branch ON Branch.Id = Cash_Branch.ChildObjectId
-           LEFT JOIN ObjectLink AS Cash_PaidKind
-                                ON Cash_PaidKind.ObjectId = Object.Id
-                               AND Cash_PaidKind.DescId = zc_ObjectLink_Cash_PaidKind()
-           LEFT JOIN Object AS PaidKind ON Branch.Id = Cash_PaidKind.ChildObjectId
+           LEFT JOIN ObjectLink AS Cash_MainJuridical
+                                ON Cash_MainJuridical.ObjectId = Object.Id
+                               AND Cash_MainJuridical.DescId = zc_ObjectLink_Cash_MainJuridical()
+           LEFT JOIN Object AS MainJuridical ON MainJuridical.Id = Cash_MainJuridical.ChildObjectId
+           LEFT JOIN ObjectLink AS Cash_Business
+                                ON Cash_Business.ObjectId = Object.Id
+                               AND Cash_Business.DescId = zc_ObjectLink_Cash_Business()
+           LEFT JOIN Object AS Business ON Business.Id = Cash_Business.ChildObjectId
        WHERE Object.Id = inId;
    END IF;  
   

@@ -4,9 +4,9 @@
 -- DROP FUNCTION gpComplete_Movement_ProductionSeparate (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_ProductionSeparate(
-    IN inMovementId        Integer  , -- ключ Документа
-    IN inIsLastComplete    Boolean  , -- это последнее проведение после расчета с/с (в этоми случае нулевых проводок делать !!!НЕ НАДО!!!)
-    IN inSession           TVarChar   -- сессия пользователя
+    IN inMovementId        Integer              , -- ключ Документа
+    IN inIsLastComplete    Boolean DEFAULT False, -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
+    IN inSession           TVarChar               -- сессия пользователя
 )                              
 RETURNS VOID
 -- RETURNS TABLE (MovementItemId Integer, MovementId Integer, OperDate TDateTime, UnitId_From Integer, PersonalId_From Integer, ContainerId_GoodsFrom Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime, OperCount TFloat, AccountDirectionId_From Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, isPartionCount Boolean, isPartionSumm Boolean, isPartionDate Boolean, PartionGoodsId Integer)

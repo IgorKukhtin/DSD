@@ -41,8 +41,6 @@ procedure TdbMetaDataTest.InsertObjectDesc;
 begin
   ExecFile(MetadataPath + 'Object\InsertObjectDesc.sql', ZQuery);
   ExecFile(MetadataPath + 'Object\InsertObjectStringDesc.sql', ZQuery);
-  ExecFile(MetadataPath + 'Object\InsertObjectBLOBDesc.sql', ZQuery);
-  ExecFile(MetadataPath + 'Object\InsertObjectFloatDesc.sql', ZQuery);
   ExecFile(MetadataPath + 'Object\InsertObjectLinkDesc.sql', ZQuery);
  end;
 

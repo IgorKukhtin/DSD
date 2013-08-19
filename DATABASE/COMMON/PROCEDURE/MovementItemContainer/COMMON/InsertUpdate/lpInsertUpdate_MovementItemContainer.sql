@@ -18,14 +18,12 @@ $BODY$
 BEGIN
      -- меняем параметр
      IF inParentId = 0 THEN inParentId:= NULL; END IF;
-     -- меняем параметр
-     inAmount:= COALESCE (inAmount, 0);
 
      -- изменить значение остатка
      UPDATE Container SET Amount = Amount + COALESCE (inAmount, 0) WHERE Id = inContainerId;
      -- сохранили проводку
      INSERT INTO MovementItemContainer (DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
-                                VALUES (inDescId, inMovementId, inMovementItemId, inContainerId, inParentId, inAmount, inOperDate, inIsActive) RETURNING Id INTO ioId;
+                                VALUES (inDescId, inMovementId, inMovementItemId, inContainerId, inParentId, COALESCE (inAmount, 0), inOperDate, inIsActive) RETURNING Id INTO ioId;
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;

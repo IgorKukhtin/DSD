@@ -51,7 +51,6 @@ type
     procedure BankAccount_Test;
     procedure Branch_Test;
     procedure Business_Test;
-    procedure Cash_Test;
     procedure CarModel_Test;
     procedure Car_Test;
     procedure Contract_Test;
@@ -71,7 +70,6 @@ type
     procedure User_Test;
     procedure AccountGroup_Test;
     procedure AccountDirection_Test;
-    procedure Account_Test;
     procedure ProfitLossGroup_Test;
     procedure ProfitLossDirection_Test;
     procedure ProfitLoss_Test;
@@ -93,16 +91,6 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdateBank(const Id, Code: Integer; Name: string; MFO: string; JuridicalId: integer): integer;
-    constructor Create; override;
-  end;
-
-  TCashTest = class(TObjectTest)
-    function InsertDefault: integer; override;
-  public
-    // Удаляется Объект и все подчиненные
-    procedure Delete(Id: Integer); override;
-    function InsertUpdateCash(const Id, Code : integer; CashName: string; CurrencyId: Integer;
-                                     BranchId, PaidKindId: integer): integer;
     constructor Create; override;
   end;
 
@@ -297,14 +285,6 @@ type
     constructor Create; override;
   end;
 
-  TAccountTest = class(TObjectTest)
-  function InsertDefault: integer; override;
-  public
-    function InsertUpdateAccount(const Id, Code : integer; Name: string; AccountGroupId: Integer;
-                                     AccountDirectionId, InfoMoneyDestinationId, InfoMoneyId: integer): integer;
-    constructor Create; override;
-  end;
-
   TProfitLossGroupTest = class(TObjectTest)
   function InsertDefault: integer; override;
   public
@@ -417,6 +397,11 @@ type
     constructor Create; override;
   end;
 
+  var
+      // Список добавленных Id
+    InsertedIdObjectList: TStringList;
+
+
  implementation
 
 uses ZDbcIntfs, SysUtils, Storage, DBClient, XMLDoc, CommonData, Forms,
@@ -528,28 +513,6 @@ begin
 end;
 
 { TDataBaseObjectTest }
-{------------------------------------------------------------------------------}
-procedure TdbObjectTest.Cash_Test;
-var Id: integer;
-    RecordCount: Integer;
-    ObjectTest: TCashTest;
-begin
-  ObjectTest := TCashTest.Create;
-  // Получим список
-  RecordCount := GetRecordCount(ObjectTest);
-  // Вставка кассы
-  Id := ObjectTest.InsertDefault;
-  try
-    // Получение данных о кассе
-    with ObjectTest.GetRecord(Id) do
-      Check((FieldByName('name').AsString = 'Главная касса'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
-
-    // Получим список касс
-    Check((GetRecordCount(ObjectTest) = RecordCount + 1), 'Количество записей не изменилось');
-  finally
-    ObjectTest.Delete(Id);
-  end;
-end;
 {------------------------------------------------------------------------------}
 function TdbObjectTest.GetRecordCount(ObjectTest: TObjectTest): integer;
 begin
@@ -688,71 +651,6 @@ begin
   FParams.AddParam('inPassword', ftString, ptInput, Password);
   result := InsertUpdate(FParams);
 end;
-
-{ TCashTest }
-
-constructor TCashTest.Create;
-begin
-  inherited Create;
-  spInsertUpdate := 'gpInsertUpdate_Object_Cash';
-  spSelect := 'gpSelect_Object_Cash';
-  spGet := 'gpGet_Object_Cash';
-end;
-
-procedure TCashTest.Delete(Id: Integer);
-begin
-  inherited;
-  with TCurrencyTest.Create do
-  try
-    Delete(GetDefault)
-  finally
-    Free;
-  end;
-  with TBranchTest.Create do
-  try
-    Delete(GetDefault)
-  finally
-    Free;
-  end;
-end;
-
-function TCashTest.InsertDefault: integer;
-var CurrencyId, BranchId, PaidKindId: Integer;
-begin
-  with TCurrencyTest.Create do
-  try
-    CurrencyId := GetDefault
-  finally
-    Free;
-  end;
-  with TBranchTest.Create do
-  try
-    BranchId := GetDefault
-  finally
-    Free;
-  end;
-  with TPaidKindTest.Create do
-  try
-    PaidKindId := GetDefault
-  finally
-    Free;
-  end;
-  result := InsertUpdateCash(0, -3, 'Главная касса', CurrencyId, BranchId, PaidKindId);
-end;
-
-function TCashTest.InsertUpdateCash(const Id, Code: integer; CashName: string;
-  CurrencyId, BranchId, PaidKindId: Integer): integer;
-begin
-  FParams.Clear;
-  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
-  FParams.AddParam('inCode', ftInteger, ptInput, Code);
-  FParams.AddParam('inCashName', ftString, ptInput, CashName);
-  FParams.AddParam('inCurrencyId', ftInteger, ptInput, CurrencyId);
-  FParams.AddParam('inBranchId', ftInteger, ptInput, BranchId);
-  FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
-  result := InsertUpdate(FParams);
-end;
-
 
 { TJuridicalGroupTest }
 constructor TJuridicalGroupTest.Create;
@@ -1801,60 +1699,6 @@ begin
   end;
 end;
 
-{TAccountTest}
- constructor TAccountTest.Create;
-begin
-  inherited;
-  spInsertUpdate := 'gpInsertUpdate_Object_Account';
-  spSelect := 'gpSelect_Object_Account';
-  spGet := 'gpGet_Object_Account';
-end;
-
-function TAccountTest.InsertDefault: integer;
-var
-  AccountGroupId: Integer;
-  AccountDirectionId: Integer;
- // InfoMoneyDestinationId: Integer;
- // InfoMoneyId: Integer;
-begin
-  AccountGroupId := TAccountGroupTest.Create.GetDefault;
-  AccountDirectionId:= TAccountDirectionTest.Create.GetDefault;;
-  result := InsertUpdateAccount(0, -3, 'Test - Управленческие счет 1', AccountGroupId, AccountDirectionId, 1,1);
-end;
-
-function TAccountTest.InsertUpdateAccount;
-begin
-  FParams.Clear;
-  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
-  FParams.AddParam('inCode', ftInteger, ptInput, Code);
-  FParams.AddParam('inName', ftString, ptInput, Name);
-  FParams.AddParam('inAccountGroupId', ftInteger, ptInput, AccountGroupId);
-  FParams.AddParam('inAccountDirectionId', ftInteger, ptInput, AccountDirectionId);
-  FParams.AddParam('inInfoMoneyDestinationId', ftInteger, ptInput, InfoMoneyDestinationId);
-  //FParams.AddParam('inAccountKindId', ftInteger, ptInput, AccountKindId);
-  FParams.AddParam('inInfoMoneyId', ftInteger, ptInput, InfoMoneyId);
-  result := InsertUpdate(FParams);
-end;
-
-procedure TdbObjectTest.Account_Test;
-var Id: integer;
-    RecordCount: Integer;
-    ObjectTest: TAccountTest;
-begin
-  ObjectTest := TAccountTest.Create;
-  // Получим список
-  RecordCount := GetRecordCount(ObjectTest);
-  // Вставка Управленческого счета
-  Id := ObjectTest.InsertDefault;
-  try
-    // Получение данных о Упр.счете
-    with ObjectTest.GetRecord(Id) do
-      Check((FieldByName('Name').AsString = 'Test - Управленческие счет 1'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
-  finally
-    ObjectTest.Delete(Id);
-  end;
-end;
-
 { TProfitLossGroupTest }
 constructor TProfitLossGroupTest.Create;
 begin
@@ -2585,6 +2429,7 @@ begin
 end;
 
 initialization
+  InsertedIdObjectList := TStringList.Create;
   TestFramework.RegisterTest('Объекты', TdbObjectTest.Suite);
 
 end.

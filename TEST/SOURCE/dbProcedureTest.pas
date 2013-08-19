@@ -151,13 +151,6 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_UserFormSettings\gpInsertUpdate_Object_UserFormSettings.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_UserFormSettings\gpGet_Object_UserFormSettings.sql', ZQuery);
 
-  ExecFile(ProcedurePath + 'OBJECTS\_Account\gpInsertUpdate_Object_Account.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\_Account\lpFind_Object_Account.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\_Account\lfSelect_Object_Account.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\_Account\gpSelect_Object_Account.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\_Account\gpGet_Object_Account.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\_Account\lpInsertFind_Object_Account.sql', ZQuery);
-
   ExecFile(ProcedurePath + 'OBJECTS\_AccountDirection\lfSelect_Object_AccountDirection.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_AccountDirection\gpInsertUpdate_Object_AccountDirection.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_AccountDirection\gpSelect_Object_AccountDirection.sql', ZQuery);
@@ -191,10 +184,6 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_CarModel\gpSelect_Object_CarModel.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_CarModel\gpGet_Object_CarModel.sql', ZQuery);
 
-  ExecFile(ProcedurePath + 'OBJECTS\_Cash\gpInsertUpdate_Object_Cash.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\_Cash\gpSelect_Object_Cash.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\_Cash\gpGet_Object_Cash.sql', ZQuery);
-
   ExecFile(ProcedurePath + 'OBJECTS\_Contract\gpInsertUpdate_Object_Contract.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Contract\gpSelect_Object_Contract.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_Contract\gpGet_Object_Contract.sql', ZQuery);
@@ -227,11 +216,6 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_GoodsPropertyValue\gpInsertUpdate_Object_GoodsPropertyValue.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_GoodsPropertyValue\gpSelect_Object_GoodsPropertyValue.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_GoodsPropertyValue\gpGet_Object_GoodsPropertyValue.sql', ZQuery);
-
-  ExecFile(ProcedurePath + 'OBJECTS\_InfoMoney\gpInsertUpdate_Object_InfoMoney.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\_InfoMoney\gpSelect_Object_InfoMoney.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\_InfoMoney\gpGet_Object_InfoMoney.sql', ZQuery);
-  ExecFile(ProcedurePath + 'OBJECTS\_InfoMoney\lfSelect_Object_InfoMoney.sql', ZQuery);
 
   ExecFile(ProcedurePath + 'OBJECTS\_InfoMoneyDestination\gpInsertUpdate_Object_InfoMoneyDestination.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_InfoMoneyDestination\gpSelect_Object_InfoMoneyDestination.sql', ZQuery);

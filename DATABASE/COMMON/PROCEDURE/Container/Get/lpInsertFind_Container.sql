@@ -73,7 +73,6 @@ BEGIN
 
      -- находим
      vbContainerId:= (SELECT Container.Id
---     SELECT Container.Id INTO vbContainerId
                      FROM Container
                           JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
                           JOIN _tmpContainer ON _tmpContainer.ObjectId = ContainerLinkObject.ObjectId
@@ -82,74 +81,6 @@ BEGIN
                        AND Container.DescId = inContainerDescId
                      GROUP BY Container.Id
                      HAVING COUNT(*) = vbRecordCount);
-
-
-   /*   -- находим
-     SELECT Container.Id INTO vbContainerId
-     FROM Container
-          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_01
-                                        ON ContainerLinkObject_01.ObjectId = inJuridicalId_basis
-                                       AND ContainerLinkObject_01.DescId = zc_ContainerLinkObject_JuridicalBasis()
-                                       AND ContainerLinkObject_01.ContainerId = Container.Id
-          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_02
-                                        ON ContainerLinkObject_02.ObjectId = inBusinessId
-                                       AND ContainerLinkObject_02.DescId = zc_ContainerLinkObject_Business()
-                                       AND ContainerLinkObject_02.ContainerId = Container.Id
-          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_1
-                                        ON ContainerLinkObject_1.ObjectId = inObjectId_1
-                                       AND ContainerLinkObject_1.DescId = inDescId_1
-                                       AND ContainerLinkObject_1.ContainerId = Container.Id
-          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_2
-                                        ON ContainerLinkObject_2.ObjectId = inObjectId_2
-                                       AND ContainerLinkObject_2.DescId = inDescId_2
-                                       AND ContainerLinkObject_2.ContainerId = Container.Id
-          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_3
-                                        ON ContainerLinkObject_3.ObjectId = inObjectId_3
-                                       AND ContainerLinkObject_3.DescId = inDescId_3
-                                       AND ContainerLinkObject_3.ContainerId = Container.Id
-          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_4
-                                        ON ContainerLinkObject_4.ObjectId = inObjectId_4
-                                       AND ContainerLinkObject_4.DescId = inDescId_4
-                                       AND ContainerLinkObject_4.ContainerId = Container.Id
-          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_5
-                                        ON ContainerLinkObject_5.ObjectId = inObjectId_5
-                                       AND ContainerLinkObject_5.DescId = inDescId_5
-                                       AND ContainerLinkObject_5.ContainerId = Container.Id
-          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_6
-                                        ON ContainerLinkObject_6.ObjectId = inObjectId_6
-                                       AND ContainerLinkObject_6.DescId = inDescId_6
-                                       AND ContainerLinkObject_6.ContainerId = Container.Id
-          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_7
-                                        ON ContainerLinkObject_7.ObjectId = inObjectId_7
-                                       AND ContainerLinkObject_7.DescId = inDescId_7
-                                       AND ContainerLinkObject_7.ContainerId = Container.Id
-          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_8
-                                        ON ContainerLinkObject_8.ObjectId = inObjectId_8
-                                       AND ContainerLinkObject_8.DescId = inDescId_8
-                                       AND ContainerLinkObject_8.ContainerId = Container.Id
-          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_9
-                                        ON ContainerLinkObject_9.ObjectId = inObjectId_9
-                                       AND ContainerLinkObject_9.DescId = inDescId_9
-                                       AND ContainerLinkObject_9.ContainerId = Container.Id
-          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_10
-                                        ON ContainerLinkObject_10.ObjectId = inObjectId_10
-                                       AND ContainerLinkObject_10.DescId = inDescId_10
-                                       AND ContainerLinkObject_10.ContainerId = Container.Id
-     WHERE Container.ObjectId = inObjectId
-       AND Container.DescId = inContainerDescId
-       AND (ContainerLinkObject_01.ObjectId IS NOT NULL OR inContainerDescId = zc_Container_Count())
-       AND (ContainerLinkObject_02.ObjectId IS NOT NULL OR inContainerDescId = zc_Container_Count())
-       AND (ContainerLinkObject_1.ObjectId IS NOT NULL OR COALESCE (inDescId_1, 0) = 0)
-       AND (ContainerLinkObject_2.ObjectId IS NOT NULL OR COALESCE (inDescId_2, 0) = 0)
-       AND (ContainerLinkObject_3.ObjectId IS NOT NULL OR COALESCE (inDescId_3, 0) = 0)
-       AND (ContainerLinkObject_4.ObjectId IS NOT NULL OR COALESCE (inDescId_4, 0) = 0)
-       AND (ContainerLinkObject_5.ObjectId IS NOT NULL OR COALESCE (inDescId_5, 0) = 0)
-       AND (ContainerLinkObject_6.ObjectId IS NOT NULL OR COALESCE (inDescId_6, 0) = 0)
-       AND (ContainerLinkObject_7.ObjectId IS NOT NULL OR COALESCE (inDescId_7, 0) = 0)
-       AND (ContainerLinkObject_8.ObjectId IS NOT NULL OR COALESCE (inDescId_8, 0) = 0)
-       AND (ContainerLinkObject_9.ObjectId IS NOT NULL OR COALESCE (inDescId_9, 0) = 0)
-       AND (ContainerLinkObject_10.ObjectId IS NOT NULL OR COALESCE (inDescId_10, 0) = 0)
-     ;*/
 
 
      -- просто тест

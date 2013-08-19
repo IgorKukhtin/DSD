@@ -22,10 +22,6 @@ type
     procedure Test; virtual;
   end;
 
-  var
-      // Список добавленных Id
-    InsertedIdObjectList: TStringList;
-
 
 implementation
 
@@ -104,9 +100,5 @@ procedure TdbTest.Test;
 begin
 
 end;
-
-initialization
-  InsertedIdObjectList := TStringList.Create;
-
 
 end.

@@ -4,9 +4,9 @@
 -- DROP FUNCTION gpComplete_Movement_Income (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Income(
-    IN inMovementId        Integer  , -- ключ Документа
-    IN inIsLastComplete    Boolean  , -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
-    IN inSession           TVarChar   -- сессия пользователя
+    IN inMovementId        Integer              , -- ключ Документа
+    IN inIsLastComplete    Boolean DEFAULT False, -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
+    IN inSession           TVarChar               -- сессия пользователя
 )                              
 RETURNS VOID
 --  RETURNS TABLE (MovementItemId Integer, MovementId Integer, OperDate TDateTime, JuridicalId_From Integer, isCorporate Boolean, PersonalId_From Integer, UnitId Integer, BranchId_Unit Integer, PersonalId_Packer Integer, PaidKindId Integer, ContractId Integer, ContainerId_Goods Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, OperCount TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, tmpOperSumm_Packer TFloat, OperSumm_Packer TFloat, AccountDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, InfoMoneyDestinationId_isCorporate Integer, InfoMoneyId_isCorporate Integer, JuridicalId_basis Integer, BusinessId Integer, isPartionCount Boolean, isPartionSumm Boolean, PartionMovementId Integer, PartionGoodsId Integer)

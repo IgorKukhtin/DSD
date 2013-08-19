@@ -9,11 +9,16 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_UserRole_Role() RETURNS integer AS $BOD
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_UserRole_User() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_UserRole_User'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
+
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Cash_Currency() RETURNS integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Cash_Currency'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+   SELECT 'zc_ObjectLink_Cash_Currency', 'Связь кассы с валютой', zc_Object_Cash(), zc_Object_Currency() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Cash_Currency');
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Cash_PaidKind() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Cash_PaidKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_Cash_Branch() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Cash_Branch'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+   SELECT 'zc_ObjectLink_Cash_Branch', 'Связь кассы с филиалом', zc_Object_Cash(), zc_Object_Branch() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Cash_Branch');
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_JuridicalGroup_Parent() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_JuridicalGroup_Parent'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
@@ -38,8 +43,6 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_BankAccount_Juridical() RETURNS integer
 CREATE OR REPLACE FUNCTION zc_ObjectLink_BankAccount_Bank() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_BankAccount_Bank'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_BankAccount_Currency() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_BankAccount_Currency'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-
-CREATE OR REPLACE FUNCTION zc_ObjectLink_Cash_Branch() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Cash_Branch'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsPropertyValue_GoodsProperty() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsPropertyValue_GoodsProperty'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
@@ -149,6 +152,17 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Partner_PersonalTake() RETURNS Integer 
 INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Partner_PersonalTake', 'Связь Контрагента с Сотрудником (экспедитор)', zc_Object_Partner(), zc_Object_Personal() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Partner_PersonalTake');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Partner_PersonalTake() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Partner_PersonalTake'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Partner_PersonalTake', 'Связь Контрагента с Сотрудником (экспедитор)', zc_Object_Partner(), zc_Object_Personal() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Partner_PersonalTake');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Cash_MainJuridical() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Cash_MainJuridical'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Cash_MainJuridical', 'Связь кассы с главным юр лицом', zc_Object_Cash(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Cash_MainJuridical');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Cash_Business() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Cash_Business'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc (Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_Cash_Business', 'Связь кассы с бизнесом', zc_Object_Cash(), zc_Object_Business() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Cash_Business');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

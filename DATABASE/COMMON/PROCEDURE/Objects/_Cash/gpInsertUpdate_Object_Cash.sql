@@ -4,12 +4,13 @@
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Cash(
  INOUT ioId	         Integer   ,   	-- ключ объекта <Касса> 
-    IN inCode        Integer   ,    -- код объекта <Касса> 
-    IN inCashName    TVarChar  ,    -- Название объекта <Касса> 
-    IN inCurrencyId  Integer   ,    -- Валюта данной кассы 
-    IN inBranchId    Integer   ,    -- Какому филиалу принадлежит касса 
-    IN inPaidKindhId Integer   ,    -- Вид формы оплаты кассы 
-    IN inSession     TVarChar       -- сессия пользователя
+    IN inCode            Integer   ,    -- код объекта <Касса> 
+    IN inCashName        TVarChar  ,    -- Название объекта <Касса> 
+    IN inCurrencyId      Integer   ,    -- Валюта данной кассы 
+    IN inBranchId        Integer   ,    -- Какому филиалу принадлежит касса 
+    IN inMainJuridicalId Integer   ,    -- Главное юр Лицо
+    IN inBusinessId      Integer   ,    -- Бизнес
+    IN inSession         TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
@@ -23,12 +24,7 @@ $BODY$
    UserId := inSession;
 
    -- Если код не установлен, определяем его каи последний+1
-   IF COALESCE (inCode, 0) = 0
-   THEN 
-       SELECT MAX (ObjectCode) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_Cash();
-   ELSE
-       Code_max := inCode;
-   END IF; 
+   inCode := lfGet_ObjectCode(zc_Object_Cash(), inCode);
     
    -- проверка прав уникальности для свойства <Наименование Касса>  
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Cash(), inCashName);
@@ -40,6 +36,8 @@ $BODY$
 
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Cash_Currency(), ioId, inCurrencyId);
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Cash_Branch(), ioId, inBranchId);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Cash_MainJuridical(), ioId, inMainJuridicalId);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Cash_Business(), ioId, inBusinessId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, UserId);
@@ -47,7 +45,7 @@ $BODY$
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Cash(Integer, Integer, TVarChar, Integer, Integer, Integer, tvarchar)
+ALTER FUNCTION gpInsertUpdate_Object_Cash(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, tvarchar)
   OWNER TO postgres;
   
   

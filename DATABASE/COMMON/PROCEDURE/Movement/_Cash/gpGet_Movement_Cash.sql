@@ -1,8 +1,8 @@
--- Function: gpGet_Movement_Income()
+-- Function: gpGet_Movement_Cash()
 
--- DROP FUNCTION gpGet_Movement_Income (Integer, TVarChar);
+-- DROP FUNCTION gpGet_Movement_Cash (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_Movement_Income(
+CREATE OR REPLACE FUNCTION gpGet_Movement_Cash(
     IN inMovementId        Integer  , -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
