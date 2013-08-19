@@ -25,6 +25,18 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Sale());
      vbUserId := inSession;
 
+     -- проверка - проведенный/удаленный документ не может корректироваться
+     IF NOT EXISTS (SELECT Id FROM Movement WHERE Id = inMovementId AND StatusId = zc_Enum_Status_UnComplete())
+     THEN
+         RAISE EXCEPTION 'Документ не может корректироваться т.к. он <"%">.', (SELECT Object_Status.ValueData FROM Movement JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId WHERE Movement.Id = inMovementId );
+     END IF;
+     -- проверка - удаленный элемент документа не может корректироваться
+     IF ioId <> 0 AND NOT EXISTS (SELECT Id FROM MovementItem WHERE Id = ioId AND isErased = TRUE)
+     THEN
+         RAISE EXCEPTION 'Элемент не может корректироваться т.к. он <Удален>.';
+     END IF;
+
+
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
    
@@ -69,6 +81,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.08.13                                        * add RAISE EXCEPTION
  09.07.13                                        * add IF inGoodsId <> 0
  18.07.13         * add inAssetId               
  13.07.13         * 
