@@ -170,7 +170,8 @@ uses
   BankStatementItemTest in '..\SOURCE\Movement\All\BankStatementItemTest.pas',
   AccountTest in '..\SOURCE\Objects\All\AccountTest.pas',
   CashTest in '..\SOURCE\Objects\All\CashTest.pas',
-  InfoMoneyTest in '..\SOURCE\Objects\All\InfoMoneyTest.pas';
+  InfoMoneyTest in '..\SOURCE\Objects\All\InfoMoneyTest.pas',
+  TransportTest in '..\SOURCE\Movement\All\TransportTest.pas';
 
 {$R *.RES}
 
