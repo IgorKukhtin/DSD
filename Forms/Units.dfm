@@ -1,64 +1,24 @@
 inherited UnitForm: TUnitForm
   Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
-  ClientHeight = 403
-  ClientWidth = 768
-  ExplicitWidth = 776
-  ExplicitHeight = 430
+  ClientHeight = 420
+  ClientWidth = 667
+  ExplicitWidth = 683
+  ExplicitHeight = 458
   PixelsPerInch = 96
   TextHeight = 13
-  object cxDBTreeList: TcxDBTreeList
-    Left = 0
-    Top = 26
-    Width = 313
-    Height = 377
-    Align = alLeft
-    Bands = <
-      item
-      end>
-    DataController.DataSource = TreeDS
-    DataController.ParentField = 'ParentId'
-    DataController.KeyField = 'Id'
-    Images = dmMain.TreeImageList
-    Navigator.Buttons.CustomButtons = <>
-    OptionsBehavior.IncSearch = True
-    OptionsCustomizing.ColumnHiding = True
-    OptionsCustomizing.ColumnsQuickCustomization = True
-    OptionsData.Editing = False
-    OptionsData.Deleting = False
-    OptionsView.ColumnAutoWidth = True
-    OptionsView.GridLines = tlglBoth
-    OptionsView.Indicator = True
-    OptionsView.TreeLineStyle = tllsSolid
-    RootValue = -1
-    Styles.StyleSheet = dmMain.cxTreeListStyleSheet
-    TabOrder = 1
-    object ceParentName: TcxDBTreeListColumn
-      Caption.AlignVert = vaCenter
-      Caption.Text = #1043#1088#1091#1087#1087#1072
-      DataBinding.FieldName = 'Name'
-      Options.Editing = False
-      Width = 110
-      Position.ColIndex = 0
-      Position.RowIndex = 0
-      Position.BandIndex = 0
-      Summary.FooterSummaryItems = <>
-      Summary.GroupFooterSummaryItems = <>
-    end
-  end
   object cxSplitter1: TcxSplitter
-    Left = 313
-    Top = 26
+    Left = 0
+    Top = 28
     Width = 8
-    Height = 377
-    Control = cxDBTreeList
+    Height = 392
   end
   object cxGrid: TcxGrid
-    Left = 321
-    Top = 26
-    Width = 447
-    Height = 377
+    Left = 8
+    Top = 28
+    Width = 659
+    Height = 392
     Align = alClient
-    TabOrder = 6
+    TabOrder = 1
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GridDS
@@ -72,43 +32,26 @@ inherited UnitForm: TUnitForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object ceTreeState: TcxGridDBColumn
-        DataBinding.FieldName = 'isLeaf'
-        PropertiesClassName = 'TcxImageComboBoxProperties'
-        Properties.Images = dmMain.TreeImageList
-        Properties.Items = <
-          item
-            ImageIndex = 0
-            Value = False
-          end
-          item
-            ImageIndex = 2
-            Value = True
-          end>
-        SortIndex = 0
-        SortOrder = soAscending
-        Width = 20
-      end
       object ceCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 64
+        Width = 95
       end
       object ceName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        SortIndex = 1
+        SortIndex = 0
         SortOrder = soAscending
-        Width = 163
+        Width = 241
       end
       object ceBranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
         HeaderAlignmentVert = vaCenter
-        Width = 92
+        Width = 135
       end
       object ceisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -116,31 +59,15 @@ inherited UnitForm: TUnitForm
         PropertiesClassName = 'TcxCheckBoxProperties'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 94
+        Width = 139
       end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
     end
   end
-  object TreeDS: TDataSource
-    DataSet = TreeDataSet
-    Left = 96
-    Top = 96
-  end
-  object TreeDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 96
-    Top = 144
-  end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
-      item
-        Component = cxDBTreeList
-        Properties.Strings = (
-          'Width')
-      end
       item
         Component = Owner
         Properties.Strings = (
@@ -157,8 +84,8 @@ inherited UnitForm: TUnitForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -175,7 +102,7 @@ inherited UnitForm: TUnitForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -270,10 +197,8 @@ inherited UnitForm: TUnitForm
     Top = 144
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
-      StoredProc = spTree
       StoredProcList = <
         item
-          StoredProc = spTree
         end
         item
           StoredProc = spGrid
@@ -322,7 +247,6 @@ inherited UnitForm: TUnitForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 46
-      DataSource = TreeDS
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -343,10 +267,10 @@ inherited UnitForm: TUnitForm
         end
         item
           Name = 'ParentId'
-          Component = TreeDataSet
           ComponentItem = 'Id'
           DataType = ftString
           ParamType = ptOutput
+          Value = Null
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -360,19 +284,7 @@ inherited UnitForm: TUnitForm
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 32776
       isSetErased = False
-      DataSource = TreeDS
     end
-  end
-  object spTree: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Unit_Tree'
-    DataSet = TreeDataSet
-    DataSets = <
-      item
-        DataSet = TreeDataSet
-      end>
-    Params = <>
-    Left = 152
-    Top = 152
   end
   object GridDS: TDataSource
     DataSet = GridDataSet
@@ -383,7 +295,6 @@ inherited UnitForm: TUnitForm
     Aggregates = <>
     IndexFieldNames = 'ParentId'
     MasterFields = 'Id'
-    MasterSource = TreeDS
     PacketRecords = 0
     Params = <>
     Left = 360
@@ -399,13 +310,6 @@ inherited UnitForm: TUnitForm
     Params = <>
     Left = 416
     Top = 160
-  end
-  object dsdDBTreeAddOn: TdsdDBTreeAddOn
-    SortImages = dmMain.SortImageList
-    isLeafFieldName = 'isLeaf'
-    DBTreeList = cxDBTreeList
-    Left = 192
-    Top = 240
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -427,8 +331,8 @@ inherited UnitForm: TUnitForm
     Top = 232
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 336
-    Top = 280
+    Left = 304
+    Top = 240
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     SortImages = dmMain.SortImageList

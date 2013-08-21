@@ -59,7 +59,7 @@ uses
   JuridicalGroup in '..\..\Forms\JuridicalGroup.pas' {JuridicalGroupForm},
   PartnerEdit in '..\..\Forms\PartnerEdit.pas' {PartnerEditForm},
   GoodsEdit in '..\..\Forms\GoodsEdit.pas' {GoodsEditForm},
-  Goods in '..\..\Forms\Goods.pas' {GoodsForm},
+  GoodsTree in '..\..\Forms\GoodsTree.pas' {GoodsTreeForm},
   UnitEdit in '..\..\Forms\UnitEdit.pas' {UnitEditForm},
   MeasureEdit in '..\..\Forms\MeasureEdit.pas' {MeasureEditForm},
   PaidKind in '..\..\Forms\PaidKind.pas' {PaidKindForm},
@@ -82,7 +82,7 @@ uses
   JuridicalEdit in '..\..\Forms\JuridicalEdit.pas' {JuridicalEditForm},
   Juridical in '..\..\Forms\Juridical.pas' {JuridicalForm},
   dsdDB in '..\..\SOURCE\COMPONENT\dsdDB.pas',
-  Units in '..\..\Forms\Units.pas' {UnitForm},
+  UnitTree in '..\..\Forms\UnitTree.pas' {UnitTreeForm},
   dbMovementItemTest in '..\SOURCE\dbMovementItemTest.pas',
   Income in '..\..\Forms\Income.pas' {IncomeForm},
   IncomeJournal in '..\..\Forms\IncomeJournal.pas' {ParentForm2},
@@ -171,7 +171,15 @@ uses
   AccountTest in '..\SOURCE\Objects\All\AccountTest.pas',
   CashTest in '..\SOURCE\Objects\All\CashTest.pas',
   InfoMoneyTest in '..\SOURCE\Objects\All\InfoMoneyTest.pas',
-  TransportTest in '..\SOURCE\Movement\All\TransportTest.pas';
+  TransportTest in '..\SOURCE\Movement\All\TransportTest.pas',
+  PersonalServiceEdit in '..\..\Forms\PersonalServiceEdit.pas' {PersonalServiceEditForm},
+  PersonalService in '..\..\Forms\PersonalService.pas' {PersonalServiceForm},
+  Service in '..\..\Forms\Service.pas' {ServiceForm},
+  ServiceEdit in '..\..\Forms\ServiceEdit.pas' {ServiceEditForm},
+  Goods in '..\..\Forms\Goods.pas' {GoodsForm},
+  Units in '..\..\Forms\Units.pas' {UnitForm},
+  JuridicalTree in '..\..\Forms\JuridicalTree.pas' {JuridicalTreeForm};
+
 
 {$R *.RES}
 

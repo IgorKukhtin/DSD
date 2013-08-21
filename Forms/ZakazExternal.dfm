@@ -4,8 +4,8 @@ inherited ZakazExternalForm: TZakazExternalForm
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1036
-  ExplicitHeight = 432
+  ExplicitWidth = 1044
+  ExplicitHeight = 443
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -138,15 +138,16 @@ inherited ZakazExternalForm: TZakazExternalForm
   end
   object cxPageControl1: TcxPageControl
     Left = 0
-    Top = 154
+    Top = 156
     Width = 1028
-    Height = 251
+    Height = 249
     Align = alClient
     TabOrder = 5
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 251
-    ClientRectRight = 1028
+    ClientRectBottom = 245
+    ClientRectLeft = 4
+    ClientRectRight = 1024
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -154,8 +155,8 @@ inherited ZakazExternalForm: TZakazExternalForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1028
-        Height = 227
+        Width = 1020
+        Height = 221
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -293,8 +294,8 @@ inherited ZakazExternalForm: TZakazExternalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -311,7 +312,7 @@ inherited ZakazExternalForm: TZakazExternalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar: TdxBar
       Caption = 'Custom'
@@ -471,7 +472,6 @@ inherited ZakazExternalForm: TZakazExternalForm
     LookupControl = edFrom
     FormName = 'TJuridicalForm'
     PositionDataSet = 'GridDataSet'
-    ParentDataSet = 'TreeDataSet'
     Params = <>
     Left = 320
     Top = 16

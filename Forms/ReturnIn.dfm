@@ -4,8 +4,8 @@ inherited ReturnInForm: TReturnInForm
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1036
-  ExplicitHeight = 430
+  ExplicitWidth = 1044
+  ExplicitHeight = 434
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -155,15 +155,16 @@ inherited ReturnInForm: TReturnInForm
   end
   object cxPageControl1: TcxPageControl
     Left = 0
-    Top = 139
+    Top = 141
     Width = 1028
-    Height = 257
+    Height = 255
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 257
-    ClientRectRight = 1028
+    ClientRectBottom = 251
+    ClientRectLeft = 4
+    ClientRectRight = 1024
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -171,8 +172,8 @@ inherited ReturnInForm: TReturnInForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1028
-        Height = 233
+        Width = 1020
+        Height = 227
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -305,8 +306,8 @@ inherited ReturnInForm: TReturnInForm
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 1028
-        Height = 233
+        Width = 1020
+        Height = 227
         Align = alClient
         TabOrder = 0
         object cxGridEntryDBTableView: TcxGridDBTableView
@@ -526,8 +527,8 @@ inherited ReturnInForm: TReturnInForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -544,7 +545,7 @@ inherited ReturnInForm: TReturnInForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar: TdxBar
       Caption = 'Custom'
@@ -565,6 +566,10 @@ inherited ReturnInForm: TReturnInForm
         item
           Visible = True
           ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end>
       OneOnRow = True
       Row = 0
@@ -578,6 +583,10 @@ inherited ReturnInForm: TReturnInForm
     end
     object bbPrint: TdxBarButton
       Action = actPrint
+      Category = 0
+    end
+    object bbGridToExcel: TdxBarButton
+      Action = dsdGridToExcel
       Category = 0
     end
   end
@@ -683,6 +692,13 @@ inherited ReturnInForm: TReturnInForm
       Params = <>
       ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
     end
+    object dsdGridToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
+    end
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -699,7 +715,6 @@ inherited ReturnInForm: TReturnInForm
     LookupControl = edFrom
     FormName = 'TJuridicalForm'
     PositionDataSet = 'GridDataSet'
-    ParentDataSet = 'TreeDataSet'
     Params = <>
     Left = 344
     Top = 16
@@ -708,7 +723,6 @@ inherited ReturnInForm: TReturnInForm
     LookupControl = edTo
     FormName = 'TUnitForm'
     PositionDataSet = 'GridDataSet'
-    ParentDataSet = 'TreeDataSet'
     Params = <>
     Left = 488
     Top = 8

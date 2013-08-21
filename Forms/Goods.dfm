@@ -1,22 +1,19 @@
 inherited GoodsForm: TGoodsForm
-  Caption = #1058#1086#1074#1072#1088#1099
-  ClientHeight = 473
-  ClientWidth = 770
-  ExplicitLeft = -49
-  ExplicitTop = -23
-  ExplicitWidth = 786
-  ExplicitHeight = 511
+  Caption = 'T'#1086#1074#1072#1088#1099
+  ClientHeight = 404
+  ClientWidth = 645
+  ExplicitWidth = 661
+  ExplicitHeight = 442
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 28
-    Width = 770
-    Height = 445
+    Width = 645
+    Height = 376
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = 8
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -53,25 +50,30 @@ inherited GoodsForm: TGoodsForm
       end
       object clWeight: TcxGridDBColumn
         Caption = #1042#1077#1089' '#1090#1086#1074#1072#1088#1072
+        DataBinding.FieldName = 'Weight'
         HeaderAlignmentVert = vaCenter
         Width = 72
       end
       object clGoodsGroup: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1099' '#1090#1086#1074#1072#1088#1086#1074
+        DataBinding.FieldName = 'GoodsGroupName'
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
       object clMeasure: TcxGridDBColumn
         Caption = #1045#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
+        DataBinding.FieldName = 'MeasureName'
         HeaderAlignmentVert = vaCenter
         Width = 78
       end
       object clTradeMark: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1099#1077' '#1084#1072#1088#1082#1080
+        DataBinding.FieldName = 'TradeMarkName'
         Width = 82
       end
       object clInfoMoney: TcxGridDBColumn
         Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
+        DataBinding.FieldName = 'InfoMoneyName'
         Width = 119
       end
       object clErased: TcxGridDBColumn
@@ -89,14 +91,14 @@ inherited GoodsForm: TGoodsForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 56
-    Top = 96
+    Left = 48
+    Top = 192
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 64
-    Top = 160
+    Left = 96
+    Top = 200
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -115,8 +117,8 @@ inherited GoodsForm: TGoodsForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 248
-    Top = 72
+    Left = 80
+    Top = 88
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -134,8 +136,8 @@ inherited GoodsForm: TGoodsForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 152
-    Top = 88
+    Left = 192
+    Top = 96
     DockControlHeights = (
       0
       0
@@ -233,8 +235,8 @@ inherited GoodsForm: TGoodsForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 248
-    Top = 136
+    Left = 136
+    Top = 96
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -348,12 +350,12 @@ inherited GoodsForm: TGoodsForm
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 216
-    Top = 224
+    Left = 112
+    Top = 152
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 104
-    Top = 208
+    Left = 40
+    Top = 152
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -368,11 +370,11 @@ inherited GoodsForm: TGoodsForm
         ParamType = ptInput
       end>
     Left = 160
-    Top = 160
+    Top = 152
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     View = cxGridDBTableView
-    Left = 272
+    Left = 160
     Top = 184
   end
 end

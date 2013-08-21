@@ -101,6 +101,8 @@ type
     EntryDBViewAddOn: TdsdDBViewAddOn;
     HeaderSaver: THeaderSaver;
     RefreshAddOn: TRefreshAddOn;
+    dsdGridToExcel: TdsdGridToExcel;
+    bbGridToExcel: TdxBarButton;
   private
   public
   end;

@@ -103,6 +103,8 @@ type
     colObjectCostId: TcxGridDBColumn;
     colPrice_comlete: TcxGridDBColumn;
     RefreshAddOn: TRefreshAddOn;
+    dsdGridToExcel: TdsdGridToExcel;
+    bbGridToExcel: TdxBarButton;
   private
   public
   end;

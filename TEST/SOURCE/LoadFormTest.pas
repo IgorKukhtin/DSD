@@ -155,6 +155,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTreeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsTreeForm');
 end;
 
 procedure TLoadFormTest.LoadGoodsGroupFormTest;
@@ -267,6 +269,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalTreeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TJuridicalTreeForm');
 end;
 procedure TLoadFormTest.LoadProductionSeparateFormTest;
 begin
@@ -340,6 +344,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TUnitForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitTreeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnitTreeForm');
 end;
 
 {procedure TLoadFormTest.LoadUnitGroupFormTest;

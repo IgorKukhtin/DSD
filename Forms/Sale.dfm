@@ -4,8 +4,8 @@ inherited SaleForm: TSaleForm
   ClientWidth = 1074
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1082
-  ExplicitHeight = 470
+  ExplicitWidth = 1090
+  ExplicitHeight = 481
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -142,15 +142,16 @@ inherited SaleForm: TSaleForm
   end
   object cxPageControl1: TcxPageControl
     Left = 0
-    Top = 131
+    Top = 133
     Width = 1074
-    Height = 312
+    Height = 310
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 312
-    ClientRectRight = 1074
+    ClientRectBottom = 306
+    ClientRectLeft = 4
+    ClientRectRight = 1070
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -158,8 +159,8 @@ inherited SaleForm: TSaleForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1074
-        Height = 288
+        Width = 1066
+        Height = 282
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -293,8 +294,8 @@ inherited SaleForm: TSaleForm
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 1074
-        Height = 288
+        Width = 1066
+        Height = 282
         Align = alClient
         TabOrder = 0
         object cxGridEntryDBTableView: TcxGridDBTableView
@@ -575,8 +576,8 @@ inherited SaleForm: TSaleForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -593,7 +594,7 @@ inherited SaleForm: TSaleForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar: TdxBar
       Caption = 'Custom'
@@ -614,6 +615,10 @@ inherited SaleForm: TSaleForm
         item
           Visible = True
           ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end>
       OneOnRow = True
       Row = 0
@@ -627,6 +632,10 @@ inherited SaleForm: TSaleForm
     end
     object bbPrint: TdxBarButton
       Action = actPrint
+      Category = 0
+    end
+    object bbGridToExcel: TdxBarButton
+      Action = dsdGridToExcel
       Category = 0
     end
   end
@@ -734,6 +743,13 @@ inherited SaleForm: TSaleForm
       Params = <>
       ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
     end
+    object dsdGridToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
+    end
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -743,7 +759,7 @@ inherited SaleForm: TSaleForm
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 56
+    Left = 88
     Top = 104
   end
   object spGet: TdsdStoredProc

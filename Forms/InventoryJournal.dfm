@@ -3,13 +3,13 @@ inherited InventoryJournalForm: TInventoryJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
   ClientHeight = 427
   ClientWidth = 778
-  ExplicitWidth = 786
-  ExplicitHeight = 454
+  ExplicitWidth = 794
+  ExplicitHeight = 465
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 26
+    Top = 28
     Width = 778
     Height = 41
     Align = alTop
@@ -32,9 +32,9 @@ inherited InventoryJournalForm: TInventoryJournalForm
   end
   object cxGrid: TcxGrid
     Left = 0
-    Top = 67
+    Top = 69
     Width = 778
-    Height = 360
+    Height = 358
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
@@ -149,8 +149,8 @@ inherited InventoryJournalForm: TInventoryJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -167,7 +167,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar: TdxBar
       Caption = 'Custom'
@@ -213,6 +213,10 @@ inherited InventoryJournalForm: TInventoryJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end>
       OneOnRow = True
@@ -251,6 +255,10 @@ inherited InventoryJournalForm: TInventoryJournalForm
       Caption = '      '
       Category = 0
       Visible = ivAlways
+    end
+    object bbGridToExcel: TdxBarButton
+      Action = dsdGridToExcel
+      Category = 0
     end
   end
   object ActionList: TActionList
@@ -343,6 +351,13 @@ inherited InventoryJournalForm: TInventoryJournalForm
       ImageIndex = 13
       DataSource = DataSource
       Status = mtDelete
+    end
+    object dsdGridToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
     end
   end
   object dsdStoredProc: TdsdStoredProc

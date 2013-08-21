@@ -4,8 +4,8 @@ inherited ZakazInternalForm: TZakazInternalForm
   ClientWidth = 823
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 831
-  ExplicitHeight = 432
+  ExplicitWidth = 839
+  ExplicitHeight = 443
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -16,6 +16,8 @@ inherited ZakazInternalForm: TZakazInternalForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitLeft = 8
+    ExplicitTop = 8
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 27
@@ -51,15 +53,16 @@ inherited ZakazInternalForm: TZakazInternalForm
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 83
+    Top = 85
     Width = 823
-    Height = 322
+    Height = 320
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = tbGrid
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 322
-    ClientRectRight = 823
+    ClientRectBottom = 316
+    ClientRectLeft = 4
+    ClientRectRight = 819
     ClientRectTop = 24
     object tbGrid: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -67,8 +70,8 @@ inherited ZakazInternalForm: TZakazInternalForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 823
-        Height = 298
+        Width = 815
+        Height = 292
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -228,8 +231,8 @@ inherited ZakazInternalForm: TZakazInternalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -246,7 +249,7 @@ inherited ZakazInternalForm: TZakazInternalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar: TdxBar
       Caption = 'Custom'
@@ -406,7 +409,6 @@ inherited ZakazInternalForm: TZakazInternalForm
     LookupControl = edFrom
     FormName = 'TUnitForm'
     PositionDataSet = 'GridDataSet'
-    ParentDataSet = 'TreeDataSet'
     Params = <>
     Left = 336
     Top = 24
@@ -415,7 +417,6 @@ inherited ZakazInternalForm: TZakazInternalForm
     LookupControl = edTo
     FormName = 'TUnitForm'
     PositionDataSet = 'GridDataSet'
-    ParentDataSet = 'TreeDataSet'
     Params = <>
     Left = 512
     Top = 16

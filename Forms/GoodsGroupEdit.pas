@@ -22,7 +22,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, cxButtonEdit;
 
 type
   TGoodsGroupEditForm = class(TParentForm)
@@ -36,15 +36,12 @@ type
     spGet: TdsdStoredProc;
     dsdDataSetRefresh: TdsdDataSetRefresh;
     dsdFormClose1: TdsdFormClose;
-    DataSource: TDataSource;
-    ClientDataSet: TClientDataSet;
     cxLabel2: TcxLabel;
     ceCode: TcxCurrencyEdit;
     Код: TcxLabel;
-    spGetGroup: TdsdStoredProc;
-    ceParentGroup: TcxLookupComboBox;
-    dsdlGroupGuides: TdsdGuides;
+    dsdGoodsGroupGuides: TdsdGuides;
     dsdInsertUpdateGuides1: TdsdInsertUpdateGuides;
+    ceParentGroup: TcxButtonEdit;
   private
     { Private declarations }
   public

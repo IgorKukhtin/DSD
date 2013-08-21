@@ -21,7 +21,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, cxButtonEdit;
 
 type
   TGoodsEditForm = class(TParentForm)
@@ -38,20 +38,20 @@ type
      Ó‰: TcxLabel;
     ceCode: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
-    ceParentGroup: TcxLookupComboBox;
-    GoodsGroupDataSet: TClientDataSet;
-    spGetGoodsGroup: TdsdStoredProc;
-    GoodslGroupDS: TDataSource;
     dsdGoodsGroupGuides: TdsdGuides;
     cxLabel4: TcxLabel;
-    ceMeasure: TcxLookupComboBox;
-    MeasureDataSet: TClientDataSet;
-    spGetMeasure: TdsdStoredProc;
-    MeasureDS: TDataSource;
     dsdMeasureGuides: TdsdGuides;
     cxLabel2: TcxLabel;
     ceWeight: TcxCurrencyEdit;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
+    ceParentGroup: TcxButtonEdit;
+    ceMeasure: TcxButtonEdit;
+    ÒÂTradeMark: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    dsdTradeMarkGuides: TdsdGuides;
+    ceInfoMoney: TcxButtonEdit;
+    cxLabel6: TcxLabel;
+    dsdInfoMoneyGuides: TdsdGuides;
   private
     { Private declarations }
   public

@@ -1,5 +1,5 @@
 ﻿inherited GoodsGroupEditForm: TGoodsGroupEditForm
-  Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
+  Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074
   ClientHeight = 202
   ClientWidth = 371
   ExplicitWidth = 387
@@ -55,15 +55,14 @@
     Top = 3
     Caption = #1050#1086#1076
   end
-  object ceParentGroup: TcxLookupComboBox
+  object ceParentGroup: TcxButtonEdit
     Left = 40
     Top = 121
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
+    Properties.Buttons = <
       item
-        FieldName = 'Name'
+        Default = True
+        Kind = bkEllipsis
       end>
-    Properties.ListSource = DataSource
     TabOrder = 7
     Width = 273
   end
@@ -78,7 +77,6 @@
           StoredProc = spGet
         end
         item
-          StoredProc = spGetGroup
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -97,7 +95,7 @@
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_UnitGroup'
+    StoredProcName = 'gpInsertUpdate_Object_GoodsGroup'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -114,7 +112,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
@@ -124,14 +122,14 @@
         Value = ''
       end
       item
-        Name = 'inUnitGroupId'
-        Component = dsdlGroupGuides
+        Name = 'inParentId'
+        Component = dsdGoodsGroupGuides
         DataType = ftInteger
         ParamType = ptInput
         Value = '0'
       end>
-    Left = 296
-    Top = 16
+    Left = 256
+    Top = 8
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -145,7 +143,7 @@
     Top = 24
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_UnitGroup'
+    StoredProcName = 'gpGet_Object_GoodsGroup'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -162,7 +160,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'Name'
@@ -172,51 +170,30 @@
         Value = ''
       end
       item
-        Name = 'UnitGroupId'
-        Component = dsdlGroupGuides
-        ComponentItem = 'Id'
+        Name = 'ParentId'
+        Component = dsdGoodsGroupGuides
+        ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
         Value = '0'
       end
       item
-        Name = 'UnitGroupName'
-        Component = dsdlGroupGuides
-        ComponentItem = 'Name'
+        Name = 'ParentName'
+        Component = dsdGoodsGroupGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptOutput
-        Value = '0'
+        Value = ''
       end>
     Left = 328
     Top = 16
   end
-  object DataSource: TDataSource
-    DataSet = ClientDataSet
-    Left = 192
-    Top = 152
-  end
-  object ClientDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 152
-    Top = 144
-  end
-  object spGetGroup: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_UnitGroup'
-    DataSet = ClientDataSet
-    DataSets = <
-      item
-        DataSet = ClientDataSet
-      end>
-    Params = <>
-    Left = 168
-    Top = 160
-  end
-  object dsdlGroupGuides: TdsdGuides
+  object dsdGoodsGroupGuides: TdsdGuides
     Key = '0'
     LookupControl = ceParentGroup
     PositionDataSet = 'ClientDataSet'
-    Left = 336
-    Top = 152
+    Params = <>
+    Left = 296
+    Top = 112
   end
 end

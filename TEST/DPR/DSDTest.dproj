@@ -153,8 +153,8 @@
 			<DCCReference Include="..\..\Forms\GoodsEdit.pas">
 				<Form>GoodsEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Goods.pas">
-				<Form>GoodsForm</Form>
+			<DCCReference Include="..\..\Forms\GoodsTree.pas">
+				<Form>GoodsTreeForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\UnitEdit.pas">
 				<Form>UnitEditForm</Form>
@@ -220,8 +220,8 @@
 				<Form>JuridicalForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdDB.pas"/>
-			<DCCReference Include="..\..\Forms\Units.pas">
-				<Form>UnitForm</Form>
+			<DCCReference Include="..\..\Forms\UnitTree.pas">
+				<Form>UnitTreeForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\dbMovementItemTest.pas"/>
 			<DCCReference Include="..\..\Forms\Income.pas">
@@ -444,10 +444,38 @@
 			<DCCReference Include="..\SOURCE\Movement\All\PersonalServiceTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\PersonalReportTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\BankStatementItemTest.pas"/>
+
 			<DCCReference Include="..\SOURCE\Objects\All\AccountTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\InfoMoneyTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\CashTest.pas"/>
  			<DCCReference Include="..\SOURCE\Movement\All\TransportTest.pas"/>
+
+			<DCCReference Include="..\..\Forms\PersonalServiceEdit.pas">
+				<Form>PersonalServiceEditForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\PersonalService.pas">
+				<Form>PersonalServiceForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Service.pas">
+				<Form>ServiceForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\ServiceEdit.pas">
+				<Form>ServiceEditForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Goods.pas">
+				<Form>GoodsForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Units.pas">
+				<Form>UnitForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\JuridicalTree.pas">
+				<Form>JuridicalTreeForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

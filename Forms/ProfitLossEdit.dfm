@@ -161,7 +161,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
@@ -237,7 +237,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'ProfitLossGroupId'
@@ -310,6 +310,7 @@
     LookupControl = ceProfitLossGroup
     FormName = 'TProfitLossGroupForm'
     PositionDataSet = 'ClientDataSet'
+    Params = <>
     Left = 184
     Top = 117
   end
@@ -317,6 +318,7 @@
     LookupControl = ceProfitLossDirection
     FormName = 'TProfitLossDirectionForm'
     PositionDataSet = 'ClientDataSet'
+    Params = <>
     Left = 192
     Top = 173
   end
@@ -343,6 +345,7 @@
     LookupControl = ceInfoMoneyDestination
     FormName = 'TInfoMoneyDestinationForm'
     PositionDataSet = 'ClientDataSet'
+    Params = <>
     Left = 208
     Top = 229
   end
@@ -350,6 +353,7 @@
     LookupControl = ceInfoMoney
     FormName = 'TInfoMoneyForm'
     PositionDataSet = 'ClientDataSet'
+    Params = <>
     Left = 184
     Top = 269
   end

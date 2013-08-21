@@ -4,8 +4,8 @@ inherited SendOnPriceForm: TSendOnPriceForm
   ClientWidth = 924
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 932
-  ExplicitHeight = 423
+  ExplicitWidth = 940
+  ExplicitHeight = 434
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -16,7 +16,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1028
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 27
@@ -74,29 +73,27 @@ inherited SendOnPriceForm: TSendOnPriceForm
   end
   object cxPageControl1: TcxPageControl
     Left = 0
-    Top = 110
+    Top = 112
     Width = 924
-    Height = 286
+    Height = 284
     Align = alClient
     TabOrder = 5
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 1028
-    ClientRectBottom = 286
-    ClientRectRight = 924
+    ClientRectBottom = 280
+    ClientRectLeft = 4
+    ClientRectRight = 920
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 1028
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 924
-        Height = 262
+        Width = 916
+        Height = 256
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1028
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource
@@ -230,15 +227,13 @@ inherited SendOnPriceForm: TSendOnPriceForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitWidth = 1028
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 924
-        Height = 262
+        Width = 916
+        Height = 256
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1028
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -456,8 +451,8 @@ inherited SendOnPriceForm: TSendOnPriceForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -474,7 +469,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar: TdxBar
       Caption = 'Custom'
@@ -669,7 +664,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
-      TabSheet = cxTabSheet1
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -678,7 +672,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
     end
     object EntryToExcel: TdsdGridToExcel
       Category = 'DSDLib'
-      TabSheet = cxTabSheet2
       Grid = cxGridEntry
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -701,7 +694,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
     LookupControl = edFrom
     FormName = 'TUnitForm'
     PositionDataSet = 'GridDataSet'
-    ParentDataSet = 'TreeDataSet'
     Params = <>
     Left = 304
     Top = 56
@@ -710,7 +702,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
     LookupControl = edTo
     FormName = 'TUnitForm'
     PositionDataSet = 'GridDataSet'
-    ParentDataSet = 'TreeDataSet'
     Params = <>
     Left = 448
     Top = 56

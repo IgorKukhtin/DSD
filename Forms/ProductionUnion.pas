@@ -124,6 +124,8 @@ type
     colMIId_Parent: TcxGridDBColumn;
     colObjectCostId: TcxGridDBColumn;
     colPrice_comlete: TcxGridDBColumn;
+    dsdGridToExcel: TdsdGridToExcel;
+    bbGridToExcel: TdxBarButton;
   private
   public
   end;

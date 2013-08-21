@@ -126,6 +126,8 @@ type
     colInfoMoneyName_Detail: TcxGridDBColumn;
     colObjectCostId: TcxGridDBColumn;
     colPrice_comlete: TcxGridDBColumn;
+    dsdGridToExcel: TdsdGridToExcel;
+    bbGridToExel: TdxBarButton;
   private
   public
   end;

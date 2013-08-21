@@ -113,6 +113,8 @@ type
     cxLabel8: TcxLabel;
     InsertUpdateMovement: TdsdStoredProc;
     spGet: TdsdStoredProc;
+    dsdGridToExcel: TdsdGridToExcel;
+    bbGridToExcel: TdxBarButton;
   private
   public
   end;

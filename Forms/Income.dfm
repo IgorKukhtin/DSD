@@ -4,8 +4,8 @@ inherited IncomeForm: TIncomeForm
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1036
-  ExplicitHeight = 423
+  ExplicitWidth = 1044
+  ExplicitHeight = 434
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -102,15 +102,16 @@ inherited IncomeForm: TIncomeForm
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 124
+    Top = 126
     Width = 1028
-    Height = 272
+    Height = 270
     Align = alClient
     TabOrder = 2
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 272
-    ClientRectRight = 1028
+    ClientRectBottom = 266
+    ClientRectLeft = 4
+    ClientRectRight = 1024
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -118,8 +119,8 @@ inherited IncomeForm: TIncomeForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1028
-        Height = 248
+        Width = 1020
+        Height = 242
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -287,8 +288,8 @@ inherited IncomeForm: TIncomeForm
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 1028
-        Height = 248
+        Width = 1020
+        Height = 242
         Align = alClient
         TabOrder = 0
         object cxGridEntryDBTableView: TcxGridDBTableView
@@ -543,8 +544,8 @@ inherited IncomeForm: TIncomeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -561,7 +562,7 @@ inherited IncomeForm: TIncomeForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar: TdxBar
       Caption = 'Custom'
@@ -591,6 +592,10 @@ inherited IncomeForm: TIncomeForm
         item
           Visible = True
           ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExel'
         end>
       OneOnRow = True
       Row = 0
@@ -614,6 +619,10 @@ inherited IncomeForm: TIncomeForm
       Caption = '     '
       Category = 0
       Visible = ivAlways
+    end
+    object bbGridToExel: TdxBarButton
+      Action = dsdGridToExcel
+      Category = 0
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -712,6 +721,13 @@ inherited IncomeForm: TIncomeForm
       ImageIndexTrue = 25
       ImageIndexFalse = 26
     end
+    object dsdGridToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
+    end
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -728,7 +744,6 @@ inherited IncomeForm: TIncomeForm
     LookupControl = edFrom
     FormName = 'TJuridicalForm'
     PositionDataSet = 'GridDataSet'
-    ParentDataSet = 'TreeDataSet'
     Params = <>
     Left = 352
   end
@@ -736,7 +751,6 @@ inherited IncomeForm: TIncomeForm
     LookupControl = edTo
     FormName = 'TUnitForm'
     PositionDataSet = 'GridDataSet'
-    ParentDataSet = 'TreeDataSet'
     Params = <>
     Left = 472
     Top = 8

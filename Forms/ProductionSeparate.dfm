@@ -5,7 +5,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   KeyPreview = True
   PopupMenu = PopupMenu
   ExplicitWidth = 1044
-  ExplicitHeight = 431
+  ExplicitHeight = 434
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -73,15 +73,16 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   end
   object cxPageControl1: TcxPageControl
     Left = 0
-    Top = 110
+    Top = 112
     Width = 1028
-    Height = 286
+    Height = 284
     Align = alClient
     TabOrder = 5
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 286
-    ClientRectRight = 1028
+    ClientRectBottom = 280
+    ClientRectLeft = 4
+    ClientRectRight = 1024
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -89,8 +90,8 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1028
-        Height = 154
+        Width = 1020
+        Height = 148
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -176,8 +177,8 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 162
-        Width = 1028
+        Top = 156
+        Width = 1020
         Height = 100
         Align = alBottom
         TabOrder = 1
@@ -266,8 +267,8 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       end
       object cxSplitterChild: TcxSplitter
         Left = 0
-        Top = 154
-        Width = 1028
+        Top = 148
+        Width = 1020
         Height = 8
         AlignSplitter = salBottom
         Control = cxGridChild
@@ -276,14 +277,11 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 1028
-        Height = 262
+        Width = 1020
+        Height = 256
         Align = alClient
         TabOrder = 0
         object cxGridEntryDBTableView: TcxGridDBTableView
@@ -554,7 +552,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar: TdxBar
       Caption = 'Custom'
@@ -575,6 +573,10 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         item
           Visible = True
           ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExel'
         end>
       OneOnRow = True
       Row = 0
@@ -588,6 +590,10 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     end
     object bbPrint: TdxBarButton
       Action = actPrint
+      Category = 0
+    end
+    object bbGridToExel: TdxBarButton
+      Action = dsdGridToExcel
       Category = 0
     end
   end
@@ -652,6 +658,13 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       Params = <>
       ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
     end
+    object dsdGridToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -668,7 +681,6 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     LookupControl = edFrom
     FormName = 'TJuridicalForm'
     PositionDataSet = 'GridDataSet'
-    ParentDataSet = 'TreeDataSet'
     Params = <>
     Left = 376
     Top = 24
@@ -677,7 +689,6 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     LookupControl = edTo
     FormName = 'TUnitForm'
     PositionDataSet = 'GridDataSet'
-    ParentDataSet = 'TreeDataSet'
     Params = <>
     Left = 536
     Top = 24

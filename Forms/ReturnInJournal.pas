@@ -75,6 +75,8 @@ type
     colContractName: TcxGridDBColumn;
     colCarName: TcxGridDBColumn;
     colPersonalDriverName: TcxGridDBColumn;
+    dsdGridToExcel: TdsdGridToExcel;
+    bbGridToExcel: TdxBarButton;
   private
   public
   end;

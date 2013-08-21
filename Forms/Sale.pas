@@ -128,6 +128,8 @@ type
     cxLabel14: TcxLabel;
     edPersonal: TcxButtonEdit;
     dsdGuidesPersonal: TdsdGuides;
+    dsdGridToExcel: TdsdGridToExcel;
+    bbGridToExcel: TdxBarButton;
   private
   public
   end;

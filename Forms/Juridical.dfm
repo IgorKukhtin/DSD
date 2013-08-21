@@ -1,58 +1,24 @@
 inherited JuridicalForm: TJuridicalForm
   Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
-  ClientHeight = 473
-  ClientWidth = 691
-  ExplicitWidth = 707
-  ExplicitHeight = 511
+  ClientHeight = 405
+  ClientWidth = 712
+  ExplicitWidth = 728
+  ExplicitHeight = 443
   PixelsPerInch = 96
   TextHeight = 13
-  object cxDBTreeList: TcxDBTreeList
+  object cxSplitter: TcxSplitter
     Left = 0
     Top = 28
-    Width = 289
-    Height = 445
-    Align = alLeft
-    Bands = <
-      item
-      end>
-    DataController.DataSource = TreeDS
-    DataController.ParentField = 'ParentId'
-    DataController.KeyField = 'Id'
-    Images = dmMain.TreeImageList
-    Navigator.Buttons.CustomButtons = <>
-    OptionsBehavior.IncSearch = True
-    OptionsData.Editing = False
-    OptionsData.Deleting = False
-    OptionsView.ColumnAutoWidth = True
-    RootValue = -1
-    Styles.StyleSheet = dmMain.cxTreeListStyleSheet
-    TabOrder = 1
-    object ceName: TcxDBTreeListColumn
-      Caption.Text = #1043#1088#1091#1087#1087#1072
-      DataBinding.FieldName = 'Name'
-      Options.Editing = False
-      Width = 128
-      Position.ColIndex = 0
-      Position.RowIndex = 0
-      Position.BandIndex = 0
-      Summary.FooterSummaryItems = <>
-      Summary.GroupFooterSummaryItems = <>
-    end
-  end
-  object cxSplitter: TcxSplitter
-    Left = 289
-    Top = 28
     Width = 8
-    Height = 445
-    Control = cxDBTreeList
+    Height = 377
   end
   object cxGrid: TcxGrid
-    Left = 297
+    Left = 8
     Top = 28
-    Width = 394
-    Height = 445
+    Width = 704
+    Height = 377
     Align = alClient
-    TabOrder = 6
+    TabOrder = 1
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GridDS
@@ -66,36 +32,20 @@ inherited JuridicalForm: TJuridicalForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object ceTreeState: TcxGridDBColumn
-        DataBinding.FieldName = 'isLeaf'
-        PropertiesClassName = 'TcxImageComboBoxProperties'
-        Properties.Images = dmMain.TreeImageList
-        Properties.Items = <
-          item
-            ImageIndex = 0
-            Value = False
-          end
-          item
-            ImageIndex = 2
-            Value = True
-          end>
-        SortIndex = 0
-        SortOrder = soAscending
-        Width = 24
-        IsCaptionAssigned = True
-      end
       object ceCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 53
+        Options.Editing = False
+        Width = 54
       end
       object ceJuridicalName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 183
+        Options.Editing = False
+        Width = 509
       end
       object ceisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -103,31 +53,16 @@ inherited JuridicalForm: TJuridicalForm
         PropertiesClassName = 'TcxCheckBoxProperties'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 66
+        Options.Editing = False
+        Width = 76
       end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
     end
   end
-  object TreeDS: TDataSource
-    DataSet = TreeDataSet
-    Left = 96
-    Top = 96
-  end
-  object TreeDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 96
-    Top = 144
-  end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
-      item
-        Component = cxDBTreeList
-        Properties.Strings = (
-          'Width')
-      end
       item
         Component = Owner
         Properties.Strings = (
@@ -138,8 +73,8 @@ inherited JuridicalForm: TJuridicalForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 232
-    Top = 96
+    Left = 208
+    Top = 88
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -256,14 +191,12 @@ inherited JuridicalForm: TJuridicalForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 232
-    Top = 144
+    Left = 208
+    Top = 136
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
-      StoredProc = TreeStoredProc
       StoredProcList = <
         item
-          StoredProc = TreeStoredProc
         end
         item
           StoredProc = GridStoredProc
@@ -367,51 +300,29 @@ inherited JuridicalForm: TJuridicalForm
       ShortCut = 16472
     end
   end
-  object TreeStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Juridical_Tree'
-    DataSet = TreeDataSet
-    DataSets = <
-      item
-        DataSet = TreeDataSet
-      end>
-    Params = <>
-    Left = 152
-    Top = 152
-  end
-  object dsdFormParams: TdsdFormParams
-    Params = <>
-    Left = 136
-    Top = 216
-  end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    SortImages = dmMain.SortImageList
     View = cxGridDBTableView
-    Left = 360
-    Top = 256
-  end
-  object dsdDBTreeAddOn: TdsdDBTreeAddOn
-    isLeafFieldName = 'isLeaf'
-    DBTreeList = cxDBTreeList
-    Left = 80
-    Top = 208
+    Left = 208
+    Top = 184
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 336
-    Top = 208
+    Left = 272
+    Top = 184
   end
   object GridDS: TDataSource
     DataSet = GridDataSet
-    Left = 336
-    Top = 104
+    Left = 272
+    Top = 88
   end
   object GridDataSet: TClientDataSet
     Aggregates = <>
     IndexFieldNames = 'JuridicalGroupId'
     MasterFields = 'Id'
-    MasterSource = TreeDS
     PacketRecords = 0
     Params = <>
-    Left = 336
-    Top = 152
+    Left = 272
+    Top = 136
   end
   object GridStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Juridical'
@@ -421,8 +332,8 @@ inherited JuridicalForm: TJuridicalForm
         DataSet = GridDataSet
       end>
     Params = <>
-    Left = 392
-    Top = 160
+    Left = 152
+    Top = 136
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -431,12 +342,12 @@ inherited JuridicalForm: TJuridicalForm
     Params = <
       item
         Name = 'inObjectId'
+        Component = GridDataSet
         ComponentItem = 'Id'
         DataType = ftInteger
         ParamType = ptInput
-        Value = Null
       end>
-    Left = 288
-    Top = 208
+    Left = 152
+    Top = 184
   end
 end

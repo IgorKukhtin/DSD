@@ -119,6 +119,8 @@ type
     cxCurrencyEdit2: TcxCurrencyEdit;
     InsertUpdateMovement: TdsdStoredProc;
     spGet: TdsdStoredProc;
+    dsdGridToExcel: TdsdGridToExcel;
+    bbGridToExcel: TdxBarButton;
   private
   public
   end;
