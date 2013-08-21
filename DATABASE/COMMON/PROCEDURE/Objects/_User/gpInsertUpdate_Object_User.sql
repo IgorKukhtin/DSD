@@ -16,7 +16,7 @@ $BODY$
   DECLARE Code_max Integer;  
      
 BEGIN
-   UserId := lpCheckRight(inSession, zc_Object_Process_User());
+   UserId := lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_User());
 
    -- проверка уникальности для свойства <Наименование Пользователя>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_User(), inUserName);

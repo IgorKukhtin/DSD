@@ -1,4 +1,4 @@
-SELECT  
+/*SELECT  
   Role.ItemName AS RoleName,
   Process.ItemName AS ProcessName
 FROM 
@@ -13,4 +13,4 @@ FROM
     ON Process.Id = RoleRight_Process.EnumId
 
 
-WHERE Object.DescId = zc_Object_RoleRight()
+WHERE Object.DescId = zc_Object_RoleRight()*/

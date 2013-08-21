@@ -6,7 +6,7 @@
 CREATE OR REPLACE FUNCTION gpComplete_Movement_ProductionUnion(
     IN inMovementId        Integer              , -- ключ Документа
     IN inIsLastComplete    Boolean DEFAULT False, -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
-    IN inSession           TVarChar               -- сессия пользователя
+    IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )                              
 RETURNS VOID
 -- RETURNS TABLE (MovementItemId Integer, MovementId Integer, OperDate TDateTime, UnitId_To Integer, PersonalId_To Integer, BranchId_To Integer, ContainerId_GoodsTo Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime, OperCount TFloat, AccountDirectionId_To Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, JuridicalId_basis_To Integer, BusinessId_To Integer, isPartionCount Boolean, isPartionSumm Boolean, isPartionDate Boolean, PartionGoodsId Integer)

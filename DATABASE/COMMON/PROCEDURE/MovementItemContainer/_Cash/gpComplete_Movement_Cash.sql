@@ -25,6 +25,8 @@ $BODY$
   DECLARE vbObjectId Integer;
   DECLARE vbObjectDescId Integer;
   DECLARE vbAccountId Integer;
+  DECLARE vbAccountGroupId Integer;
+  DECLARE vbAccountDirectionId Integer;
   DECLARE vbUserId Integer;
 BEGIN
 --   PERFORM lpCheckRight(inSession, zc_Enum_Process_Measure());
@@ -112,15 +114,43 @@ BEGIN
            zc_Enum_InfoMoneyDestination_20400(), zc_Enum_InfoMoneyDestination_20500(), zc_Enum_InfoMoneyDestination_20600(),
            zc_Enum_InfoMoneyDestination_20700()) 
       THEN
-           vbAccountId := lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_70000() -- Кредиторы
-                                                     , inAccountDirectionId     := zc_Enum_AccountDirection_70100() -- Поставщики
-                                                     , inInfoMoneyDestinationId := vbInfoMoneyDestinationId
-                                                     , inInfoMoneyId            := NULL
-                                                     , inUserId                 := vbUserId
-                                                     );
-                                                                                                      
+           vbAccountGroupId := zc_Enum_AccountGroup_70000(); -- Кредиторы;
+           vbAccountDirectionId := zc_Enum_AccountDirection_70100(); -- Поставщики;
+      END IF;
+      IF vbInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21400()) 
+      THEN
+           vbAccountGroupId := zc_Enum_AccountGroup_70000(); -- Кредиторы;
+           vbAccountDirectionId := zc_Enum_AccountDirection_70200();  -- "услуги полученные"
+      END IF;
+      IF vbInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500()) 
+      THEN
+           vbAccountGroupId := zc_Enum_AccountGroup_70000(); -- Кредиторы;
+           vbAccountDirectionId := zc_Enum_AccountDirection_70300();  -- "Маркетинг"
+      END IF;
+      IF vbInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21600()) 
+      THEN
+           vbAccountGroupId := zc_Enum_AccountGroup_70000(); -- Кредиторы;
+           vbAccountDirectionId := zc_Enum_AccountDirection_70400();  -- "Коммунальные услуги"
+      END IF;
+      IF vbInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_50100()) 
+      THEN
+           vbAccountGroupId := zc_Enum_AccountGroup_90000(); -- Расчеты с бюджетом;
+           vbAccountDirectionId := zc_Enum_AccountDirection_90100();  -- "Налоговые платежи"
+      END IF;
+      IF vbInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_50200()) 
+      THEN
+           vbAccountGroupId := zc_Enum_AccountGroup_90000(); -- Расчеты с бюджетом;
+           vbAccountDirectionId := zc_Enum_AccountDirection_90200();  -- "Налоговые платежи (прочие)"
       END IF;
    END IF;
+
+   vbAccountId := lpInsertFind_Object_Account (inAccountGroupId         := vbAccountGroupId
+                                             , inAccountDirectionId     := vbAccountDirectionId
+                                             , inInfoMoneyDestinationId := vbInfoMoneyDestinationId
+                                             , inInfoMoneyId            := NULL
+                                             , inUserId                 := vbUserId
+                                               );
+                                                                                                      
 
    -- таблица - Аналитики остатка
    CREATE TEMP TABLE _tmpContainer (DescId Integer, ObjectId Integer) ON COMMIT DROP;

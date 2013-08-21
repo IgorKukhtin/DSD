@@ -9,6 +9,7 @@ type
   TCommonObjectProcedure = class (TdbTest)
   published
     procedure ProcedureLoad; override;
+    procedure AllProcedureLoad;
   end;
 
 implementation
@@ -16,6 +17,11 @@ implementation
 uses UtilConst, TestFramework;
 
 { ОбщиеПроцедурыОбъектов }
+
+procedure TCommonObjectProcedure.AllProcedureLoad;
+begin
+  DirectoryLoad(ProcedurePath + 'OBJECTS\')
+end;
 
 procedure TCommonObjectProcedure.ProcedureLoad;
 begin

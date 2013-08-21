@@ -1,31 +1,22 @@
+-- создаются функции
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Select_Object_User() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Select_Object_User' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Get_Object_User() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Get_Object_User' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_Object_User() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_Object_User' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
+
 DO $$
 BEGIN
-   -- Добавляем процессы
-   PERFORM lpInsertUpdate_Object (zc_Object_Process_User(), zc_Object_Process(), 0, 'Изменение пользователей');
+
+   -- сохраняются элементы справочника (zc_Object_Process)
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_Object_User(), inDescId:= zc_Object_Process(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Process_Select_Object_User'), inName:= 'Проверка получения данных', inEnumName:= 'zc_Enum_Process_Select_Object_User');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Get_Object_User(), inDescId:= zc_Object_Process(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Process_Get_Object_User'), inName:= 'Проверка выборки данных', inEnumName:= 'zc_Enum_Process_Get_Object_User');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_Object_User(), inDescId:= zc_Object_Process(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Process_InsertUpdate_Object_User'), inName:= 'Проверка сохранения данных', inEnumName:= 'zc_Enum_Process_InsertUpdate_Object_User');
 
    -- Добавляем роли
-   PERFORM lpInsertUpdate_Object(zc_Object_Role_Admin(), zc_Object_Role(), 0, 'Роль администратора');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_Admin(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_Admin'), inName:= 'Роль администратора', inEnumName:= 'zc_Enum_Role_Admin');
 
    -- Добавляем формы оплаты
-   PERFORM lpInsertUpdate_Object(zc_Object_PaidKind_FirstForm(),  zc_Object_PaidKind(), 1, 'Первая форма');
-   PERFORM lpInsertUpdate_Object(zc_Object_PaidKind_SecondForm(), zc_Object_PaidKind(), 2, 'Вторая форма');
-
-   /*-- Добавляем статусы !!! уже есть в НОВОЙ СХЕМЕ, надо будет потом удалить !!!
-   PERFORM lpInsertUpdate_Object(zc_Object_Status_UnComplete(), zc_Object_Status(), 0, 'Не проведен');
-   PERFORM lpInsertUpdate_Object(zc_Object_Status_Complete(), zc_Object_Status(), 1, 'Проведен');
-   PERFORM lpInsertUpdate_Object(zc_Object_Status_Erased(), zc_Object_Status(), 2, 'Удален');*/
-
-   /*-- Вставляем группы счетов
-   PERFORM lpInsertUpdate_Object(zc_Object_AccountGroup_Inventory(), zc_Object_AccountGroup(), 1, 'Запасы');
-   -- Вставляем аналитики счетов (место)
-   PERFORM lpInsertUpdate_Object(zc_Object_AccountDirection_Store(), zc_Object_AccountDirection(), 1, 'на складах');
-   -- Будем вставлять счета   
-   PERFORM lpInsertUpdate_Object(zc_Object_Account_InventoryStoreEmpties(), zc_Object_Account(), 1, 'Запасы - на складахГП - Оборотная тара');
-   PERFORM lpInsertUpdate_Object(zc_Object_Account_CreditorsSupplierMeat(), zc_Object_Account(), 1, 'Кредиторы - поставщики - Мясное сырье');*/
-
-   -- Увеличиваем последовательность
-   PERFORM setval('object_id_seq', (select max( id ) + 1 from Object));
-
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidKind_FirstForm(),  inDescId:= zc_Object_PaidKind(), inCode:= 1, inName:= 'Первая форма', inEnumName:= 'zc_Enum_PaidKind_FirstForm');
+   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidKind_SecondForm(), inDescId:= zc_Object_PaidKind(), inCode:= 2, inName:= 'Вторая форма', inEnumName:= 'zc_Enum_PaidKind_SecondForm');
 END $$;
 
 DO $$
@@ -35,18 +26,18 @@ BEGIN
    IF NOT EXISTS(SELECT * FROM OBJECT 
    JOIN ObjectLink AS RoleRight_Role 
      ON RoleRight_Role.descid = zc_ObjectLink_RoleRight_Role() 
-    AND RoleRight_Role.childobjectid = zc_Object_Role_Admin()
+    AND RoleRight_Role.childobjectid = zc_Enum_Role_Admin()
     AND RoleRight_Role.objectid = OBJECT.id 
  
    JOIN ObjectLink AS RoleRight_Process 
      ON RoleRight_Process.descid = zc_ObjectLink_RoleRight_Process() 
-    AND RoleRight_Process.childobjectid = zc_Object_Process_User()
+    AND RoleRight_Process.childobjectid = zc_Enum_Process_InsertUpdate_Object_User()
     AND RoleRight_Process.objectid = OBJECT.id 
   WHERE OBJECT.descid = zc_Object_RoleRight()) THEN
      -- Создаем права роли администратора
      ioId := lpInsertUpdate_Object(ioId, zc_Object_RoleRight(), 0, '');
-     PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_RoleRight_Role(), ioId, zc_Object_Role_Admin());
-     PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_RoleRight_Process(), ioId, zc_Object_Process_User());
+     PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_RoleRight_Role(), ioId, zc_Enum_Role_Admin());
+     PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_RoleRight_Process(), ioId, zc_Enum_Process_InsertUpdate_Object_User());
    END IF;
 END $$;
 
@@ -70,7 +61,7 @@ BEGIN
 
      JOIN ObjectLink AS UserRole_Role 
        ON UserRole_Role.descid = zc_ObjectLink_UserRole_Role() 
-      AND UserRole_Role.childobjectid = zc_Object_Role_Admin()
+      AND UserRole_Role.childobjectid = zc_Enum_Role_Admin()
       AND UserRole_Role.objectid = OBJECT.id 
  
      JOIN ObjectLink AS UserRole_User 
@@ -82,26 +73,16 @@ BEGIN
      -- Соединяем пользователя с ролью
      ioId := lpInsertUpdate_Object(ioId, zc_Object_UserRole(), 0, '');
 
-     PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_UserRole_Role(), ioId, zc_Object_Role_Admin());
+     PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_UserRole_Role(), ioId, zc_Enum_Role_Admin());
 
      PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_UserRole_User(), ioId, UserId);
    END IF;
 END $$;
 
 
---------------------------- !!!!!!!!!!!!!!!!!!!
---------------------------- !!! НОВАЯ СХЕМА !!!
---------------------------- !!!!!!!!!!!!!!!!!!!
-
--- !!! Меняем автоинкрементное поле !!!
 DO $$
 BEGIN
-PERFORM setval('object_id_seq', (select max (id) + 1 from Object));
-END $$;
 
-DO $$
-BEGIN
-     -- !!! ОБЯЗАТЕЛЬНО НАДО ЗАМЕНИТЬ zc_Object_Status_UnComplete -> zc_Enum_Status_UnComplete
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Status_UnComplete(), inDescId:= zc_Object_Status(), inCode:= 1, inName:= 'Не проведен', inEnumName:= 'zc_Enum_Status_UnComplete');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Status_Complete(), inDescId:= zc_Object_Status(), inCode:= 2, inName:= 'Проведен', inEnumName:= 'zc_Enum_Status_Complete');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Status_Erased(), inDescId:= zc_Object_Status(), inCode:= 3, inName:= 'Удален', inEnumName:= 'zc_Enum_Status_Erased');
@@ -150,6 +131,11 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 70900,  inDescId:= zc_Object_AccountDirection(), inEnumName:= 'zc_Enum_AccountDirection_70900');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 71000,  inDescId:= zc_Object_AccountDirection(), inEnumName:= 'zc_Enum_AccountDirection_71000');
 
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 90100,  inDescId:= zc_Object_AccountDirection(), inEnumName:= 'zc_Enum_AccountDirection_90100');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 90200,  inDescId:= zc_Object_AccountDirection(), inEnumName:= 'zc_Enum_AccountDirection_90200');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 90300,  inDescId:= zc_Object_AccountDirection(), inEnumName:= 'zc_Enum_AccountDirection_90300');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 90400,  inDescId:= zc_Object_AccountDirection(), inEnumName:= 'zc_Enum_AccountDirection_90400');
+
      -- !!! 
      -- !!! 2-уровень Управленческих назначений
      -- !!! 
@@ -165,7 +151,19 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20700, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_20700');
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 30100, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_30100');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 30200, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_30200');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 30300, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_30300');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 30400, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_30400');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 30500, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_30500');
 
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 40100, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_40100');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 40200, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_40200');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 40300, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_40300');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 40400, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_40400');
+
+     -- !!! 
+     -- !!! 3-уровень Счета
+     -- !!! 
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 40101, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_40101');
 

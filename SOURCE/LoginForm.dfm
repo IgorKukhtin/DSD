@@ -101,7 +101,16 @@ object LoginForm: TLoginForm
         Component = edUserName
         Properties.Strings = (
           'Properties.CharCase'
-          'Properties.Items')
+          'Properties.Items'
+          'Text')
+      end
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
       end>
     StorageName = 'cxPropertiesStore'
     Left = 328

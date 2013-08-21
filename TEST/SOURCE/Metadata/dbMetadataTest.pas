@@ -17,7 +17,6 @@ type
   published
     // Очередность важна - по алфавиту не ставить!!!
     procedure CreateObjectDescFunction;
-    procedure InsertObjectDesc;
     procedure CreateContainerDescFunction;
     procedure CreateObjectHistoryDescFunction;
     procedure InsertObjectHistoryDesc;
@@ -36,13 +35,6 @@ implementation
 uses zLibUtil;
 
 { TdbMetaDataTest }
-
-procedure TdbMetaDataTest.InsertObjectDesc;
-begin
-  ExecFile(MetadataPath + 'Object\InsertObjectDesc.sql', ZQuery);
-  ExecFile(MetadataPath + 'Object\InsertObjectStringDesc.sql', ZQuery);
-  ExecFile(MetadataPath + 'Object\InsertObjectLinkDesc.sql', ZQuery);
- end;
 
 procedure TdbMetaDataTest.InsertObjectHistoryDesc;
 begin
@@ -96,8 +88,11 @@ end;
 procedure TdbMetaDataTest.CreateObjectDescFunction;
 begin
   ExecFile(MetadataPath + 'Object\CreateObjectDescFunction.sql', ZQuery);
+  ExecFile(MetadataPath + 'Object\InsertObjectDesc.sql', ZQuery);
   ExecFile(MetadataPath + 'Object\CreateObjectStringDescFunction.sql', ZQuery);
+  ExecFile(MetadataPath + 'Object\InsertObjectStringDesc.sql', ZQuery);
   ExecFile(MetadataPath + 'Object\CreateObjectLinkDescFunction.sql', ZQuery);
+  ExecFile(MetadataPath + 'Object\InsertObjectLinkDesc.sql', ZQuery);
   ExecFile(MetadataPath + 'Object\CreateObjectBLOBDescFunction.sql', ZQuery);
   ExecFile(MetadataPath + 'Object\CreateObjectFloatDescFunction.sql', ZQuery);
   ExecFile(MetadataPath + 'Object\CreateObjectBooleanDescFunction.sql', ZQuery);

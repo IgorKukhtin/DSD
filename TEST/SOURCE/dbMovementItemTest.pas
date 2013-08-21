@@ -8,14 +8,12 @@ type
   TMovementItemTest = class (TObjectTest)
   protected
     procedure InsertUpdateInList(Id: integer); override;
-  public
     procedure DeleteRecord(Id: Integer); override;
+  public
+    procedure Delete(Id: Integer); override;
   end;
 
   TdbMovementItemTest = class (TdbTest)
-  private
-    // Удаление документа
-    procedure DeleteMovementItem(Id: integer);
   protected
     // подготавливаем данные для тестирования
     procedure SetUp; override;
@@ -36,7 +34,6 @@ type
     function InsertDefault: integer; override;
   protected
     procedure SetDataSetParam; override;
-    procedure Delete(Id: Integer); override;
   public
     function InsertUpdateMovementItemIncome
       (Id, MovementId, GoodsId: Integer;
@@ -48,7 +45,6 @@ type
   TMovementItemProductionUnionMasterTest = class(TMovementItemTest)
   private
     function InsertDefault: integer; override;
-    procedure Delete(Id: Integer); override;
   public
     function GetDataSet: TDataSet; override;
     function InsertUpdateMovementProductionUnionMaster
@@ -65,7 +61,6 @@ type
     function InsertDefault: integer; override;
   protected
     procedure SetDataSetParam; override;
-    procedure Delete(Id: Integer); override;
   public
     function GetDataSet: TDataSet; override;
     function InsertUpdateMovementProductionUnionChild
@@ -81,7 +76,6 @@ type
     function InsertDefault: integer; override;
   protected
     procedure SetDataSetParam; override;
-    procedure Delete(Id: Integer); override;
   public
     function InsertUpdateMovementItemSendOnPrice
       (Id, MovementId, GoodsId: Integer;
@@ -95,7 +89,6 @@ type
     function InsertDefault: integer; override;
   protected
     procedure SetDataSetParam; override;
-    procedure Delete(Id: Integer); override;
   public
     function InsertUpdateMovementItemSale
       (Id, MovementId, GoodsId: Integer;
@@ -109,7 +102,6 @@ type
     function InsertDefault: integer; override;
   protected
     procedure SetDataSetParam; override;
-    procedure Delete(Id: Integer); override;
   public
     function InsertUpdateMovementItemReturnOut
       (Id, MovementId, GoodsId: Integer;
@@ -123,7 +115,6 @@ type
     function InsertDefault: integer; override;
   protected
     procedure SetDataSetParam; override;
-    procedure Delete(Id: Integer); override;
   public
     function InsertUpdateMovementItemZakazExternal
       (Id, MovementId, GoodsId: Integer;
@@ -137,7 +128,6 @@ type
     function InsertDefault: integer; override;
   protected
     procedure SetDataSetParam; override;
-    procedure Delete(Id: Integer); override;
   public
     function InsertUpdateMovementItemZakazInternal
       (Id, MovementId, GoodsId: Integer;
@@ -152,43 +142,28 @@ type
 
 implementation
 
-uses Storage, SysUtils, dbMovementTest, DBClient, dsdDB;
+uses Storage, SysUtils, dbMovementTest, DBClient, dsdDB, CommonData, Authentication;
 { TdbMovementItemTest }
 {------------------------------------------------------------------------------}
 procedure TdbMovementItemTest.TearDown;
 begin
   inherited;
   if Assigned(InsertedIdMovementItemList) then
-     with TMovementTest.Create do
-       while InsertedIdMovementItemList.Count > 0 do begin
-          DeleteRecord(StrToInt(InsertedIdMovementItemList[0]));
-          InsertedIdMovementItemList.Delete(0);
-       end;
+     with TMovementItemTest.Create do
+       while InsertedIdMovementItemList.Count > 0 do
+          Delete(StrToInt(InsertedIdMovementItemList[0]));
+
   if Assigned(InsertedIdMovementList) then
      with TMovementTest.Create do
-       while InsertedIdMovementList.Count > 0 do begin
-          DeleteRecord(StrToInt(InsertedIdMovementList[0]));
-          InsertedIdMovementList.Delete(0);
-       end;
+       while InsertedIdMovementList.Count > 0 do
+          Delete(StrToInt(InsertedIdMovementList[0]));
+
   if Assigned(InsertedIdObjectList) then
      with TObjectTest.Create do
-       while InsertedIdObjectList.Count > 0 do begin
-          DeleteRecord(StrToInt(InsertedIdObjectList[0]));
-          InsertedIdObjectList.Delete(0);
-       end;
+       while InsertedIdObjectList.Count > 0 do
+          Delete(StrToInt(InsertedIdObjectList[0]));
 end;
-{------------------------------------------------------------------------------}
-procedure TdbMovementItemTest.DeleteMovementItem(Id: integer);
-const
-   pXML =
-  '<xml Session = "">' +
-    '<lpDelete_MovementItem OutputType="otResult">' +
-       '<inId DataType="ftInteger" Value="%d"/>' +
-    '</lpDelete_MovementItem>' +
-  '</xml>';
-begin
-  TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Id]))
-end;
+
 {------------------------------------------------------------------------------}
 procedure TdbMovementItemTest.MovementItemIncomeTest;
 var
@@ -202,7 +177,6 @@ begin
   // редактирование
   finally
     // удаление
-    DeleteMovementItem(Id);
     MovementItemIncome.Delete(Id);
   end;
 end;
@@ -219,7 +193,6 @@ begin
   // редактирование
   finally
     // удаление
-    DeleteMovementItem(Id);
     MovementItemSendOnPrice.Delete(Id);
   end;
 end;
@@ -236,7 +209,6 @@ begin
   // редактирование
   finally
     // удаление
-    DeleteMovementItem(Id);
     MovementItemSale.Delete(Id);
   end;
 end;
@@ -253,7 +225,6 @@ begin
   // редактирование
   finally
     // удаление
-    DeleteMovementItem(Id);
     MovementItemReturnOut.Delete(Id);
   end;
 end;
@@ -271,9 +242,8 @@ begin
   // редактирование
   finally
     // удаление
-    DeleteMovementItem(Id);
-    DeleteMovementItem(MovementItemProductionUnionChild.MovementItem_InId);
     MovementItemProductionUnionChild.Delete(Id);
+    MovementItemProductionUnionChild.Delete(MovementItemProductionUnionChild.MovementItem_InId);
   end;
 end;
 
@@ -282,16 +252,15 @@ var
   MovementItemZakazExternal: TMovementItemZakazExternalTest;
   Id: Integer;
 begin
-  MovementItemZakazExternal := TMovementItemZakazExternalTest.Create;
+(*  MovementItemZakazExternal := TMovementItemZakazExternalTest.Create;
   Id := MovementItemZakazExternal.InsertDefault;
   // создание документа
   try
   // редактирование
   finally
     // удаление
-    DeleteMovementItem(Id);
     MovementItemZakazExternal.Delete(Id);
-  end;
+  end;  *)
 end;
 
 procedure TdbMovementItemTest.MovementItemZakazInternalTest;
@@ -299,21 +268,21 @@ var
   MovementItemZakazInternal: TMovementItemZakazInternalTest;
   Id: Integer;
 begin
-  MovementItemZakazInternal := TMovementItemZakazInternalTest.Create;
+(*  MovementItemZakazInternal := TMovementItemZakazInternalTest.Create;
   Id := MovementItemZakazInternal.InsertDefault;
   // создание документа
   try
   // редактирование
   finally
     // удаление
-    DeleteMovementItem(Id);
     MovementItemZakazInternal.Delete(Id);
-  end;
+  end;     *)
 end;
 
 procedure TdbMovementItemTest.SetUp;
 begin
   inherited;
+  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
 end;
 {------------------------------------------------------------------------------}
 { TMovementIncome }
@@ -324,16 +293,6 @@ begin
   spInsertUpdate := 'gpInsertUpdate_MovementItem_Income';
   spSelect := 'gpSelect_MovementItem_Income';
   spGet := 'gpGet_MovementItem_Income';
-end;
-
-procedure TMovementItemIncomeTest.Delete(Id: Integer);
-begin
-  with TGoodsTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free;
-  end;
 end;
 
 function TMovementItemIncomeTest.InsertDefault: integer;
@@ -400,16 +359,6 @@ begin
   spGet := 'gpGet_MovementItem_SendOnPrice';
 end;
 
-procedure TMovementItemSendOnPriceTest.Delete(Id: Integer);
-begin
-  with TGoodsTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free;
-  end;
-end;
-
 function TMovementItemSendOnPriceTest.InsertDefault: integer;
 var Id, MovementId, GoodsId: Integer;
     Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
@@ -465,16 +414,6 @@ begin
   spInsertUpdate := 'gpInsertUpdate_MovementItem_Sale';
   spSelect := 'gpSelect_MovementItem_Sale';
   spGet := 'gpGet_MovementItem_Sale';
-end;
-
-procedure TMovementItemSaleTest.Delete(Id: Integer);
-begin
-  with TGoodsTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free;
-  end;
 end;
 
 function TMovementItemSaleTest.InsertDefault: integer;
@@ -534,16 +473,6 @@ begin
   spInsertUpdate := 'gpInsertUpdate_MovementItem_ReturnOut';
   spSelect := 'gpSelect_MovementItem_ReturnOut';
   spGet := 'gpGet_MovementItem_ReturnOut';
-end;
-
-procedure TMovementItemReturnOutTest.Delete(Id: Integer);
-begin
-  with TGoodsTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free;
-  end;
 end;
 
 function TMovementItemReturnOutTest.InsertDefault: integer;
@@ -607,16 +536,6 @@ begin
   spGet := '';
 end;
 
-procedure TMovementItemProductionUnionMasterTest.Delete(Id: Integer);
-begin
-  with TGoodsTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free;
-  end;
-end;
-
 function TMovementItemProductionUnionMasterTest.GetDataSet: TDataSet;
 begin
 
@@ -662,16 +581,6 @@ begin
   spInsertUpdate := 'gpInsertUpdate_MI_ProductionUnion_Child';
   spSelect := 'gpSelect_MI_ProductionUnion';
   spGet := '';
-end;
-
-procedure TMovementItemProductionUnionChildTest.Delete(Id: Integer);
-begin
-  with TGoodsTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free;
-  end;
 end;
 
 function TMovementItemProductionUnionChildTest.GetDataSet: TDataSet;
@@ -739,16 +648,6 @@ begin
   spGet := 'gpGet_MovementItem_ZakazExternal';
 end;
 
-procedure TMovementItemZakazExternalTest.Delete(Id: Integer);
-begin
-  with TGoodsTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free;
-  end;
-end;
-
 function TMovementItemZakazExternalTest.InsertDefault: integer;
 var Id, MovementId, GoodsId: Integer;
     Amount, AmountSecond: double;
@@ -797,16 +696,6 @@ begin
   spGet := 'gpGet_MovementItem_ZakazInternal';
 end;
 
-procedure TMovementItemZakazInternalTest.Delete(Id: Integer);
-begin
-  with TGoodsTest.Create do
-  try
-    Delete(GetDefault);
-  finally
-    Free;
-  end;
-end;
-
 function TMovementItemZakazInternalTest.InsertDefault: integer;
 var Id, MovementId, GoodsId: Integer;
     Amount, AmountSecond: double;
@@ -848,6 +737,18 @@ end;
 
 { TMovementItemTest }
 
+procedure TMovementItemTest.Delete(Id: Integer);
+var Index: Integer;
+begin
+  if InsertedIdMovementItemList.Find(IntToStr(Id), Index) then begin
+     // здесь мы разрешаем удалять ТОЛЬКО вставленные в момент теста данные
+     DeleteRecord(Id);
+     InsertedIdMovementItemList.Delete(Index);
+  end
+  else
+     raise Exception.Create('Попытка удалить запись, вставленную вне теста!!!');
+end;
+
 procedure TMovementItemTest.DeleteRecord(Id: Integer);
 const
    pXML =
@@ -867,6 +768,7 @@ end;
 
 initialization
   InsertedIdMovementItemList := TStringList.Create;
+  InsertedIdMovementItemList.Sorted := true;;
 
   TestFramework.RegisterTest('Строки Документов', TdbMovementItemTest.Suite);
 

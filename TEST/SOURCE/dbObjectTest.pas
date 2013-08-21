@@ -20,12 +20,11 @@ type
     procedure InsertUpdateInList(Id: integer); virtual;
     function InsertDefault: integer; virtual;
     procedure SetDataSetParam; virtual;
-  public
     procedure DeleteRecord(Id: Integer); virtual;
+  public
     function GetDefault: integer;
     function GetDataSet: TDataSet; virtual;
     function GetRecord(Id: integer): TDataSet;
-    // Удаляется Объект и все подчиненные
     procedure Delete(Id: Integer); virtual;
     constructor Create; virtual;
     destructor Destoy;
@@ -33,6 +32,7 @@ type
 
   TdbObjectTestNew = class (TdbTest)
   protected
+    procedure SetUp; override;
     // возвращаем данные для тестирования
     procedure TearDown; override;
   end;
@@ -130,8 +130,6 @@ type
   private
     function InsertDefault: integer; override;
   public
-      // Удаляется Объект и все подчиненные
-    procedure Delete(Id: Integer); override;
     function InsertUpdateGoodsPropertyValue(const Id: Integer; Name: string;
         Amount: double; BarCode, Article, BarCodeGLN, ArticleGLN: string;
         GoodsPropertyId, GoodsId, GoodsKindId: Integer): integer;
@@ -142,8 +140,6 @@ type
   private
     function InsertDefault: integer; override;
   public
-    // Удаляется Объект и все подчиненные
-    procedure Delete(Id: Integer); override;
     function InsertUpdatePartner(const Id: integer; Code: Integer;
         Name, GLNCode: string; PrepareDayCount, DocumentDayCount: Double;
         JuridicalId, RouteId, RouteSortingId, PersonalTakeId: integer): integer;
@@ -787,11 +783,6 @@ begin
   spGet := 'gpGet_Object_Partner';
 end;
 
-procedure TPartnerTest.Delete(Id: Integer);
-begin
-  inherited;
-end;
-
 function TPartnerTest.InsertDefault: integer;
 var
   JuridicalId, RouteId, RouteSortingId, PersonalTakeId: Integer;
@@ -1050,11 +1041,6 @@ begin
   spInsertUpdate := 'gpInsertUpdate_Object_GoodsPropertyValue';
   spSelect := 'gpSelect_Object_GoodsPropertyValue';
   spGet := 'gpGet_Object_GoodsPropertyValue';
-end;
-
-procedure TGoodsPropertyValueTest.Delete(Id: Integer);
-begin
-  inherited;
 end;
 
 function TGoodsPropertyValueTest.InsertDefault: integer;
@@ -2417,6 +2403,12 @@ end;
 
 { TdbObjectTestNew }
 
+procedure TdbObjectTestNew.SetUp;
+begin
+  inherited;
+  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
+end;
+
 procedure TdbObjectTestNew.TearDown;
 begin
   inherited;
@@ -2430,6 +2422,8 @@ end;
 
 initialization
   InsertedIdObjectList := TStringList.Create;
+  InsertedIdObjectList.Sorted := true;
+
   TestFramework.RegisterTest('Объекты', TdbObjectTest.Suite);
 
 end.

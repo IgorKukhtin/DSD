@@ -2,11 +2,16 @@ unit PriceListItemTest;
 
 interface
 
-uses dbTest, dbObjectTest;
+uses dbTest, dbObjectTest, SysUtils, Classes;
 
 type
 
   TPriceListItemTest = class (TdbTest)
+  protected
+    // подготавливаем данные для тестирования
+    procedure SetUp; override;
+    // возвращаем данные для тестирования
+    procedure TearDown; override;
   published
     procedure ProcedureLoad; override;
     procedure Test; override;
@@ -15,20 +20,57 @@ type
   TPriceListItem = class(TObjectTest)
   private
     function InsertDefault: integer; override;
+    procedure DeleteRecord(Id: Integer); override;
+    procedure InsertUpdateInList(Id: integer); override;
   public
     function InsertUpdatePriceListItem(const Id: integer; PriceListId, GoodsId: integer;
                  OperDate: TDateTime; Price: double): integer;
     constructor Create; override;
+    procedure Delete(Id: Integer); override;
   end;
+
+var
+    InsertedIdObjectHistoryList : TStringList;
 
 implementation
 
-uses DB, UtilConst, TestFramework, SysUtils;
+uses DB, UtilConst, TestFramework, Authentication, CommonData, Storage,
+   dbMovementItemTest, dbMovementTest;
 
 procedure TPriceListItemTest.ProcedureLoad;
 begin
   ScriptDirectory := ProcedurePath + 'OBJECTHistory\_PriceListItem\';
   inherited;
+end;
+
+procedure TPriceListItemTest.SetUp;
+begin
+  inherited;
+  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
+end;
+
+procedure TPriceListItemTest.TearDown;
+begin
+  inherited;
+  if Assigned(InsertedIdObjectHistoryList) then
+     with TPriceListItem.Create do
+       while InsertedIdObjectHistoryList.Count > 0 do
+          Delete(StrToInt(InsertedIdObjectHistoryList[0]));
+
+  if Assigned(InsertedIdMovementItemList) then
+     with TMovementItemTest.Create do
+       while InsertedIdMovementItemList.Count > 0 do
+          Delete(StrToInt(InsertedIdMovementItemList[0]));
+
+  if Assigned(InsertedIdMovementList) then
+     with TMovementTest.Create do
+       while InsertedIdMovementList.Count > 0 do
+          Delete(StrToInt(InsertedIdMovementList[0]));
+
+  if Assigned(InsertedIdObjectList) then
+     with TObjectTest.Create do
+       while InsertedIdObjectList.Count > 0 do
+          Delete(StrToInt(InsertedIdObjectList[0]));
 end;
 
 procedure TPriceListItemTest.Test;
@@ -37,7 +79,7 @@ var GoodsId, PriceListId: Integer;
     ObjectTest: TPriceListItem;
     Id_2012, Id_2013, Id_2011, Id_2011_06_06: Integer;
 begin
-(*  GoodsId := TGoodsTest.Create.GetDefault;
+  GoodsId := TGoodsTest.Create.GetDefault;
   PriceListId := TPriceListTest.Create.GetDefault;
   try
     ObjectTest := TPriceListItem.Create;
@@ -45,6 +87,7 @@ begin
     Id_2012 := ObjectTest.InsertUpdatePriceListItem(0, PriceListId, GoodsId, StrToDate('01.01.2012'), 2012);
     // Добавляем историю с датой 01.01.2013
     Id_2013 := ObjectTest.InsertUpdatePriceListItem(0, PriceListId, GoodsId, StrToDate('01.01.2013'), 2013);
+    ObjectTest.InsertUpdatePriceListItem(0, PriceListId, GoodsId, StrToDate('01.01.2014'), 2014);
     // Добавляем историю с датой 01.01.2011
     Id_2011 := ObjectTest.InsertUpdatePriceListItem(0, PriceListId, GoodsId, StrToDate('01.01.2011'), 2011);
     // Добавляем историю с датой 06.06.2011
@@ -58,27 +101,15 @@ begin
     ObjectTest.InsertUpdatePriceListItem(Id_2012, PriceListId, GoodsId, StrToDate('01.01.2012'), 2012);
 
     // Удаляем историю с датой 06.06.2011
-    DeleteHistoryObject(Id_2011_06_06);
+    ObjectTest.Delete(Id_2011_06_06);
     // Удаляем историю с датой 01.01.2011
-    DeleteHistoryObject(Id_2011);
+    ObjectTest.Delete(Id_2011);
     // Удаляем историю с датой 01.01.2013
-    DeleteHistoryObject(Id_2013);
+    ObjectTest.Delete(Id_2013);
     // Удаляем историю с датой 01.01.2012
-    DeleteHistoryObject(Id_2012);
+    ObjectTest.Delete(Id_2012);
   finally
-    with TGoodsTest.Create do
-      try
-        Delete(GetDefault);
-      finally
-        Free
-      end;
-    with TPriceListTest.Create do
-      try
-        Delete(GetDefault);
-      finally
-        Free
-      end;
-  end;*)
+  end;
 end;
 
 { TPriceListItemHistoryTest }
@@ -91,9 +122,38 @@ begin
   spGet := '';
 end;
 
+procedure TPriceListItem.Delete(Id: Integer);
+var Index: Integer;
+begin
+  if InsertedIdObjectHistoryList.Find(IntToStr(Id), Index) then begin
+     // здесь мы разрешаем удалять ТОЛЬКО вставленные в момент теста данные
+     DeleteRecord(Id);
+     InsertedIdObjectHistoryList.Delete(Index);
+  end
+  else
+     raise Exception.Create('Попытка удалить запись, вставленную вне теста!!!');
+end;
+
+procedure TPriceListItem.DeleteRecord(Id: Integer);
+const
+   pXML =
+  '<xml Session = "">' +
+    '<lpDelete_ObjectHistory OutputType="otResult">' +
+       '<inId DataType="ftInteger" Value="%d"/>' +
+    '</lpDelete_ObjectHistory>' +
+  '</xml>';
+begin
+  TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Id]))
+end;
+
 function TPriceListItem.InsertDefault: integer;
 begin
 
+end;
+
+procedure TPriceListItem.InsertUpdateInList(Id: integer);
+begin
+  InsertedIdObjectHistoryList.Add(IntToStr(Id));
 end;
 
 function TPriceListItem.InsertUpdatePriceListItem(const Id: integer;
@@ -109,6 +169,9 @@ begin
 end;
 
 initialization
+  InsertedIdObjectHistoryList := TStringList.Create;
+  InsertedIdObjectHistoryList.Sorted := true;;
+
   TestFramework.RegisterTest('Истории', TPriceListItemTest.Suite);
 
 end.

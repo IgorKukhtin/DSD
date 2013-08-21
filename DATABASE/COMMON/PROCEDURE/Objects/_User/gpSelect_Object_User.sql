@@ -9,7 +9,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Login TVarChar, Password
 $BODY$BEGIN
 
    -- проверка прав пользователя на вызов процедуры
-   PERFORM lpCheckRight(inSession, zc_Object_Process_User());
+--   PERFORM lpCheckRight(inSession, zc_Object_Process_User());
 
    RETURN QUERY 
    SELECT 

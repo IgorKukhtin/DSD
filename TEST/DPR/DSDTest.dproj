@@ -445,8 +445,8 @@
 			<DCCReference Include="..\SOURCE\Movement\All\PersonalReportTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\BankStatementItemTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\AccountTest.pas"/>
-			<DCCReference Include="..\SOURCE\Objects\All\CashTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\InfoMoneyTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\CashTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

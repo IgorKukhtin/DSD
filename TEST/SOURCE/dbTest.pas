@@ -16,6 +16,7 @@ type
     // возвращаем данные для тестирования
     procedure TearDown; override;
     // получение поличества записей
+    procedure DirectoryLoad(Directory: string);
   public
     // загрузка процедура из определенной директории
     procedure ProcedureLoad; virtual;
@@ -81,19 +82,27 @@ begin
   ZQuery.Free;
 end;
 
-procedure TdbTest.ProcedureLoad;
+procedure TdbTest.DirectoryLoad(Directory: string);
 var iFilesCount: Integer;
     saFound: TStrings;
     i: integer;
 begin
   saFound := TStringList.Create;
   try
-    FilesInDir('*.sql', ScriptDirectory, iFilesCount, saFound);
+    FilesInDir('*.sql', Directory, iFilesCount, saFound);
     for I := 0 to saFound.Count - 1 do
       ExecFile(saFound[i], ZQuery);
   finally
     saFound.Free
   end;
+end;
+
+procedure TdbTest.ProcedureLoad;
+var iFilesCount: Integer;
+    saFound: TStrings;
+    i: integer;
+begin
+  DirectoryLoad(ScriptDirectory);
 end;
 
 procedure TdbTest.Test;

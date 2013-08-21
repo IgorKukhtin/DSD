@@ -1,7 +1,7 @@
 unit CommonObjectHistoryProcedureTest;
 
 interface
-uses dbTest;
+uses dbTest, dbObjectTest;
 
 type
 
@@ -10,10 +10,15 @@ type
     procedure ProcedureLoad; override;
   end;
 
+  TObjectHistoryTest = class(TObjectTest)
+  public
+    procedure DeleteRecord(Id: Integer); override;
+  end;
+
 
 implementation
 
-uses UtilConst, TestFramework;
+uses UtilConst, TestFramework, Storage, SysUtils;
 
 { TCommonMovementProcedure }
 
@@ -22,6 +27,20 @@ begin
   inherited;
   ScriptDirectory := ProcedurePath + 'ObjectHistory\Common\';
   inherited;
+end;
+
+{ TObjectHistoryTest }
+
+procedure TObjectHistoryTest.DeleteRecord(Id: Integer);
+const
+   pXML =
+  '<xml Session = "">' +
+    '<lpDelete_ObjectHistory OutputType="otResult">' +
+       '<inId DataType="ftInteger" Value="%d"/>' +
+    '</lpDelete_ObjectHistory>' +
+  '</xml>';
+begin
+  TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Id]))
 end;
 
 initialization

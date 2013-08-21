@@ -12,14 +12,16 @@ type
     procedure InsertUpdateInList(Id: integer); override;
     procedure DocumentComplete(Id: integer);
     procedure DocumentUncomplete(Id: integer);
+    procedure DeleteRecord(Id: Integer); override;
   public
     constructor Create; override;
-    procedure DeleteRecord(Id: Integer); override;
+    procedure Delete(Id: Integer); override;
   end;
 
   TdbMovementTestNew = class (TdbTest)
   protected
-    // возвращаем данные для тестирования
+    procedure SetUp; override;
+      // возвращаем данные для тестирования
     procedure TearDown; override;
   end;
 
@@ -198,7 +200,7 @@ type
 
 implementation
 
-uses DB, Storage, SysUtils, UnitsTest, dbMovementItemTest, dsdDB;
+uses DB, Storage, SysUtils, UnitsTest, dbMovementItemTest, dsdDB, CommonData, Authentication;
 { TDataBaseObjectTest }
 {------------------------------------------------------------------------------}
 procedure TdbMovementTest.DeleteMovement(Id: integer);
@@ -1122,6 +1124,18 @@ begin
   spUnCompleteProcedure := 'gpUnComplete_Movement';
 end;
 
+procedure TMovementTest.Delete(Id: Integer);
+var Index: Integer;
+begin
+  if InsertedIdMovementList.Find(IntToStr(Id), Index) then begin
+     // здесь мы разрешаем удалять ТОЛЬКО вставленные в момент теста данные
+     DeleteRecord(Id);
+     InsertedIdMovementList.Delete(Index);
+  end
+  else
+     raise Exception.Create('Попытка удалить запись, вставленную вне теста!!!');
+end;
+
 procedure TMovementTest.DeleteRecord(Id: Integer);
 const
   pXML =
@@ -1163,31 +1177,35 @@ end;
 
 { TdbMovementTestNew }
 
+procedure TdbMovementTestNew.SetUp;
+begin
+  inherited;
+  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
+end;
+
 procedure TdbMovementTestNew.TearDown;
 begin
   inherited;
   if Assigned(InsertedIdMovementItemList) then
      with TMovementTest.Create do
-       while InsertedIdMovementItemList.Count > 0 do begin
-          DeleteRecord(StrToInt(InsertedIdMovementItemList[0]));
-          InsertedIdMovementItemList.Delete(0);
-       end;
+       while InsertedIdMovementItemList.Count > 0 do
+          Delete(StrToInt(InsertedIdMovementItemList[0]));
+
   if Assigned(InsertedIdMovementList) then
    with TMovementTest.Create do
-     while InsertedIdMovementList.Count > 0 do begin
-        DeleteRecord(StrToInt(InsertedIdMovementList[0]));
-        InsertedIdMovementList.Delete(0);
-     end;
+     while InsertedIdMovementList.Count > 0 do
+        Delete(StrToInt(InsertedIdMovementList[0]));
+
   if Assigned(InsertedIdObjectList) then
      with TObjectTest.Create do
-       while InsertedIdObjectList.Count > 0 do begin
-          DeleteRecord(StrToInt(InsertedIdObjectList[0]));
-          InsertedIdObjectList.Delete(0);
-       end;
+       while InsertedIdObjectList.Count > 0 do
+          Delete(StrToInt(InsertedIdObjectList[0]));
 end;
 
 initialization
   InsertedIdMovementList := TStringList.Create;
+  InsertedIdMovementList.Sorted := true;
+
   TestFramework.RegisterTest('Документы', TdbMovementTest.Suite);
 
 end.

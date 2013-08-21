@@ -73,13 +73,24 @@ BEGIN
   END IF;
 
   IF COALESCE(PriorId, 0) <> 0 THEN
-     UPDATE ObjectHistory SET EndDate = COALESCE((SELECT MAX(StartDate)     
+     UPDATE ObjectHistory SET EndDate = COALESCE((SELECT MIN(StartDate)     
                                            FROM ObjectHistory
                                           WHERE ObjectHistory.DescId = inDescId 
                                             AND ObjectHistory.ObjectId = inObjectId
-                                            AND ObjectHistory.StartDate > lStartDate), zc_DateEnd()) 
+                                            AND ObjectHistory.StartDate > lStartDate), zc_DateEnd())  
      WHERE Id = PriorId;
   END IF;
+
+
+
+
+
+
+
+
+
+
+
 
 
 

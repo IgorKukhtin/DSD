@@ -10,8 +10,6 @@ type
   private
     // Распроведение документа
     procedure UnCompleteMovement(Id: integer);
-        // Удаление документа
-    procedure DeleteMovementItem(Id: integer);
   protected
     // подготавливаем данные для тестирования
     procedure SetUp; override;
@@ -23,7 +21,8 @@ type
 
 implementation
 
-uses Storage, SysUtils, dbMovementTest, DBClient, dsdDB, dbMovementItemTest, dbObjectTest;
+uses Storage, SysUtils, dbMovementTest, DBClient, dsdDB, dbMovementItemTest,
+     dbObjectTest, Authentication, CommonData;
 { TdbMovementItemTest }
 
 { TdbMovementCompleteTest }
@@ -52,53 +51,33 @@ begin
       UnCompleteMovement(MovementId);
     end;
   finally
-    DeleteMovementItem(MovementItemId);
-    with TMovementItemIncomeTest.Create do
-         Delete(MovementItemId);
 
-    MovementIncomeTest.Free
   end;
-end;
-
-procedure TdbMovementCompleteTest.DeleteMovementItem(Id: integer);
-const
-   pXML =
-  '<xml Session = "">' +
-    '<lpDelete_MovementItem OutputType="otResult">' +
-       '<inId DataType="ftInteger" Value="%d"/>' +
-    '</lpDelete_MovementItem>' +
-  '</xml>';
-begin
-  TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Id]))
 end;
 
 procedure TdbMovementCompleteTest.SetUp;
 begin
   inherited;
-
+  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
 end;
 
 procedure TdbMovementCompleteTest.TearDown;
 begin
   inherited;
   if Assigned(InsertedIdMovementItemList) then
-     with TMovementTest.Create do
-       while InsertedIdMovementItemList.Count > 0 do begin
-          DeleteRecord(StrToInt(InsertedIdMovementItemList[0]));
-          InsertedIdMovementItemList.Delete(0);
-       end;
+     with TMovementItemTest.Create do
+       while InsertedIdMovementItemList.Count > 0 do
+          Delete(StrToInt(InsertedIdMovementItemList[0]));
+
   if Assigned(InsertedIdMovementList) then
      with TMovementTest.Create do
-       while InsertedIdMovementList.Count > 0 do begin
-          DeleteRecord(StrToInt(InsertedIdMovementList[0]));
-          InsertedIdMovementList.Delete(0);
-       end;
+       while InsertedIdMovementList.Count > 0 do
+          Delete(StrToInt(InsertedIdMovementList[0]));
+
   if Assigned(InsertedIdObjectList) then
      with TObjectTest.Create do
-       while InsertedIdObjectList.Count > 0 do begin
-          DeleteRecord(StrToInt(InsertedIdObjectList[0]));
-          InsertedIdObjectList.Delete(0);
-       end;
+       while InsertedIdObjectList.Count > 0 do
+          Delete(StrToInt(InsertedIdObjectList[0]));
 end;
 
 procedure TdbMovementCompleteTest.UnCompleteMovement(Id: integer);

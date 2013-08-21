@@ -248,7 +248,7 @@ begin
   if Assigned(gc_User) then
      Session := gc_User.Session
   else
-     Session := '2';
+     raise Exception.Create('Пользователь не установлен');
   if trim(StoredProcName) = '' then
      raise Exception.Create('Не указано название процедуры в объекте типа TdsdStoredProc');
   Result :=

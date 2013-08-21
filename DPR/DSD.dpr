@@ -24,13 +24,13 @@ uses
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-         // Процесс аутентификации
- // with TLoginForm.Create(Application) do
+  //  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
+  // Процесс аутентификации
+  with TLoginForm.Create(Application) do
     //Если все хорошо создаем главную форму Application.CreateForm();
-   // if ShowModal = mrOk then
-  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
-
-  Application.CreateForm(TMainForm, MainFormInstance);
-  Application.CreateForm(TdmMain, dmMain);
+    if ShowModal = mrOk then begin
+       Application.CreateForm(TMainForm, MainFormInstance);
+       Application.CreateForm(TdmMain, dmMain);
+    end;
   Application.Run;
 end.
