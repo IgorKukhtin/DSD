@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<TfrxReport Version="4.12.2" DotMatrixReport="False" IniFile="\Software\Fast Reports" PreviewOptions.Buttons="4095" PreviewOptions.Zoom="1" PrintOptions.Printer="Default" PrintOptions.PrintOnSheet="0" ReportOptions.CreateDate="41484,6912644792" ReportOptions.Description.Text="" ReportOptions.LastChange="41484,7413866782" ScriptLanguage="PascalScript" ScriptText.Text="&#13;&#10;begin&#13;&#10;&#13;&#10;end." PropData="044C65667403880103546F7002380844617461736574730100095661726961626C65730100055374796C650100">
+  <TfrxDataPage Name="Data" Height="1000" Left="0" Top="0" Width="1000"/>
+  <TfrxReportPage Name="Page1" PaperWidth="210" PaperHeight="297" PaperSize="9" LeftMargin="10" RightMargin="10" TopMargin="10" BottomMargin="10" ColumnWidth="0" ColumnPositions.Text="" HGuides.Text="" VGuides.Text="">
+    <TfrxReportTitle Name="ReportTitle1" Height="54,39236652" Left="0" Top="18,89765" Width="718,1107">
+      <TfrxMemoView Name="Memo2" Align="baWidth" Left="0" Top="14,14275742" Width="718,1107" Height="19,50725161" ShowHint="False" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="1" HAlign="haCenter" ParentFont="False" VAlign="vaCenter" Text="Заявки покупателей с _________ по __________"/>
+    </TfrxReportTitle>
+    <TfrxPageHeader Name="PageHeader1" Height="22,67718" Left="0" Top="94,48825" Width="718,1107">
+      <TfrxMemoView Name="Memo3" Align="baWidth" Left="0" Top="3,45087522" Width="718,1107" Height="13,1461913" ShowHint="False" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="1" ParentFont="False" VAlign="vaBottom" Text="Маршрут:________"/>
+      <TfrxMemoView Name="Memo4" Left="272,477744186046" Top="19,776610465116" Width="75,5906" Height="10,5475255813954" ShowHint="False" Font.Charset="1" Font.Color="0" Font.Height="-9" Font.Name="Arial" Font.Style="1" HAlign="haRight" ParentFont="False" Text=""/>
+    </TfrxPageHeader>
+    <TfrxMemoView Name="Memo1" Align="baWidth" Left="0" Top="7,55906" Width="718,1107" Height="18,8976378" ShowHint="False" Font.Charset="1" Font.Color="0" Font.Height="-9" Font.Name="Arial" Font.Style="1" HAlign="haRight" ParentFont="False" Text="[DATE] [TIME]"/>
+    <TfrxPageFooter Name="PageFooter1" Height="22,67718" Left="0" Top="483,77984" Width="718,1107">
+      <TfrxMemoView Name="Memo5" Left="503,13561485" Top="4,00859242000001" Width="206,15618182" Height="18,32499394" ShowHint="False" Font.Charset="1" Font.Color="0" Font.Height="-9" Font.Name="Arial" Font.Style="1" HAlign="haRight" ParentFont="False" VAlign="vaBottom" Text="Страница [Page#]"/>
+    </TfrxPageFooter>
+    <TfrxColumnHeader Name="ColumnHeader1" Height="49,13385827" Left="0" Top="139,84261" Width="718,1107">
+      <TfrxMemoView Name="Memo6" Left="15,11812" Top="0" Width="35,14955992" Height="49,13385827" ShowHint="False" Color="15790320" Font.Charset="1" Font.Color="0" Font.Height="-16" Font.Name="Arial" Font.Style="1" Frame.Typ="15" ParentFont="False" VAlign="vaCenter" Text="Код"/>
+      <TfrxMemoView Name="Memo8" Left="50,26767016" Top="0" Width="240,85913909" Height="49,13385827" ShowHint="False" Color="15790320" Font.Charset="1" Font.Color="0" Font.Height="-16" Font.Name="Arial" Font.Style="1" Frame.Typ="15" ParentFont="False" VAlign="vaCenter" Text="Наименование"/>
+      <TfrxMemoView Name="Memo9" Left="291,02381" Top="0" Width="56,34935636" Height="49,13385827" ShowHint="False" Color="15790320" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="1" Frame.Typ="15" ParentFont="False" VAlign="vaCenter" Text="Ед.Изм."/>
+      <TfrxMemoView Name="Memo10" Left="347,33858268" Top="0" Width="123,21259843" Height="49,13385827" ShowHint="False" Color="15790320" Font.Charset="1" Font.Color="0" Font.Height="-16" Font.Name="Arial" Font.Style="1" Frame.Typ="15" ParentFont="False" VAlign="vaCenter" Text="Кол-во Итого"/>
+      <TfrxMemoView Name="Memo11" Left="470,17322835" Top="0" Width="123,21259843" Height="49,13385827" ShowHint="False" Color="15790320" Font.Charset="1" Font.Color="0" Font.Height="-16" Font.Name="Arial" Font.Style="1" Frame.Typ="15" ParentFont="False" VAlign="vaCenter" Text="Кол-во Киев"/>
+      <TfrxMemoView Name="Memo12" Left="593,38582677" Top="0" Width="123,21259843" Height="49,13385827" ShowHint="False" Color="15790320" Font.Charset="1" Font.Color="0" Font.Height="-16" Font.Name="Arial" Font.Style="1" Frame.Typ="15" ParentFont="False" VAlign="vaCenter" Text="Кол-во Другие"/>
+    </TfrxColumnHeader>
+    <TfrxMasterData Name="MasterData1" Height="22,67716535" Left="0" Top="355,27582" Width="718,1107" ColumnWidth="0" ColumnGap="0" RowCount="4">
+      <TfrxMemoView Name="Memo7" Left="15,11811024" Top="0" Width="35,1496063" Height="22,67716535" ShowHint="False" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" Frame.Typ="15" HAlign="haCenter" ParentFont="False" VAlign="vaCenter" Text="2"/>
+      <TfrxMemoView Name="Memo13" Left="50,26771654" Top="0" Width="240,75590551" Height="22,67716535" ShowHint="False" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" Frame.Typ="15" ParentFont="False" VAlign="vaCenter" Text="Колбаска ОМНОМНОМ 1"/>
+      <TfrxMemoView Name="Memo14" Left="291,02381" Top="0" Width="56,34935636" Height="22,67716535" ShowHint="False" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" Frame.Typ="15" ParentFont="False" VAlign="vaCenter" Text="Кг."/>
+      <TfrxMemoView Name="Memo15" Left="347,33858268" Top="0" Width="123,21259843" Height="22,67716535" ShowHint="False" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" Frame.Typ="15" ParentFont="False" VAlign="vaCenter" Text="3"/>
+      <TfrxMemoView Name="Memo16" Left="470,17322835" Top="0" Width="123,21259843" Height="22,67716535" ShowHint="False" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" Frame.Typ="15" ParentFont="False" VAlign="vaCenter" Text="1"/>
+      <TfrxMemoView Name="Memo17" Left="593,38582677" Top="0" Width="123,21259843" Height="22,67716535" ShowHint="False" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" Frame.Typ="15" ParentFont="False" VAlign="vaCenter" Text="4"/>
+    </TfrxMasterData>
+    <TfrxGroupHeader Name="GroupHeader1" Height="37,79527559" Left="0" Top="249,44898" Width="718,1107" Condition="&#60;CopyName#&#62;">
+      <TfrxMemoView Name="Memo18" Left="15,11812" Top="0" Width="701,85826772" Height="37,79527559" ShowHint="False" Color="8421504" Font.Charset="1" Font.Color="0" Font.Height="-16" Font.Name="Arial" Font.Style="1" Frame.Typ="15" ParentFont="False" VAlign="vaCenter" Text="ц. ИРНА"/>
+    </TfrxGroupHeader>
+    <TfrxGroupHeader Name="GroupHeader2" Height="22,67718" Left="0" Top="309,92146" Width="718,1107" Condition="&#60;Page&#62;">
+      <TfrxMemoView Name="Memo29" Left="15,11812" Top="0" Width="701,85826772" Height="22,67716535" ShowHint="False" Color="12632256" Font.Charset="1" Font.Color="0" Font.Height="-16" Font.Name="Arial" Font.Style="1" Frame.Typ="15" ParentFont="False" VAlign="vaCenter" Text="ц. ИРНА-Деликатесы"/>
+    </TfrxGroupHeader>
+    <TfrxMemoView Name="Memo28" Left="771,77971551" Top="480,00031" Width="221,1023622" Height="22,67716535" ShowHint="False" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" Frame.Typ="15" ParentFont="False" VAlign="vaCenter" Text=""/>
+    <TfrxReportSummary Name="ReportSummary1" Height="22,67718" Left="0" Top="438,42548" Width="718,1107">
+      <TfrxMemoView Name="Memo20" Left="15,11812" Top="0" Width="332,22047244" Height="22,67716535" ShowHint="False" Color="8421504" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" Frame.Typ="15" HAlign="haRight" ParentFont="False" VAlign="vaCenter" Text="Итого"/>
+      <TfrxMemoView Name="Memo26" Left="347,33859244" Top="0" Width="123,21259843" Height="22,67716535" ShowHint="False" Color="8421504" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" Frame.Typ="15" ParentFont="False" VAlign="vaCenter" Text="Сумма"/>
+      <TfrxMemoView Name="Memo27" Left="470,17322835" Top="0" Width="123,21259843" Height="22,67716535" ShowHint="False" Color="8421504" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" Frame.Typ="15" ParentFont="False" VAlign="vaCenter" Text="Сумма"/>
+      <TfrxMemoView Name="Memo25" Left="593,38621" Top="0" Width="123,21259843" Height="22,67716535" ShowHint="False" Color="8421504" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" Frame.Typ="15" ParentFont="False" VAlign="vaCenter" Text="Сумма"/>
+    </TfrxReportSummary>
+  </TfrxReportPage>
+</TfrxReport>
