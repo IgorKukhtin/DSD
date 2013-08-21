@@ -33,7 +33,8 @@ uses
   dxBar, cxTextEdit, cxLabel,
   StdActns, cxDBTL, cxCurrencyEdit, cxDropDownEdit, dsdGuides,
   cxDBLookupComboBox, DBGrids, cxCheckBox, cxCalendar, ExtCtrls, dsdAddOn,
-  cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, dsdAction, frxDBSet, dxBarExtItems;
+  cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, dsdAction, frxDBSet, dxBarExtItems,
+  cxDBPivotGrid;
 
 {$R *.dfm}
 
@@ -130,6 +131,8 @@ initialization
   RegisterClass (TcxCheckBox);
   RegisterClass (TcxCurrencyEdit);
   RegisterClass (TcxDateEdit);
+  RegisterClass (TcxDBPivotGrid);
+  RegisterClass (TcxDBPivotGridField);
   RegisterClass (TcxDBTreeList);
   RegisterClass (TcxDBTreeListColumn);
   RegisterClass (TcxGroupBox);

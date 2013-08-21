@@ -1,17 +1,17 @@
 inherited Report_BalanceForm: TReport_BalanceForm
   Caption = #1041#1072#1083#1072#1085#1089
-  ClientHeight = 395
+  ClientHeight = 440
   ClientWidth = 1329
-  ExplicitWidth = 1345
-  ExplicitHeight = 434
+  ExplicitWidth = 1337
+  ExplicitHeight = 467
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 67
+    Top = 261
     Width = 1329
-    Height = 328
-    Align = alClient
+    Height = 179
+    Align = alBottom
     TabOrder = 0
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
@@ -220,7 +220,7 @@ inherited Report_BalanceForm: TReport_BalanceForm
     Height = 41
     Align = alTop
     Caption = 'Panel1'
-    TabOrder = 5
+    TabOrder = 3
     object deStart: TcxDateEdit
       Left = 208
       Top = 8
@@ -236,16 +236,141 @@ inherited Report_BalanceForm: TReport_BalanceForm
       Width = 121
     end
   end
+  object cxDBPivotGrid: TcxDBPivotGrid
+    Left = 0
+    Top = 67
+    Width = 1329
+    Height = 194
+    Align = alClient
+    DataSource = DataSource
+    Groups = <>
+    TabOrder = 6
+    object pvRootName: TcxDBPivotGridField
+      Area = faRow
+      AreaIndex = 0
+      IsCaptionAssigned = True
+      Caption = #1040'-'#1055
+      DataBinding.FieldName = 'RootName'
+      Visible = True
+      UniqueName = #1040'-'#1055
+    end
+    object pvAccountGroupName: TcxDBPivotGridField
+      Area = faRow
+      AreaIndex = 1
+      IsCaptionAssigned = True
+      Caption = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
+      DataBinding.FieldName = 'AccountGroupName'
+      Visible = True
+      UniqueName = #1057#1095#1077#1090'-'#1075#1088#1091#1087#1087#1072
+    end
+    object pvAccountDirectionName: TcxDBPivotGridField
+      Area = faRow
+      AreaIndex = 2
+      IsCaptionAssigned = True
+      Caption = #1057#1095#1077#1090' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+      DataBinding.FieldName = 'AccountDirectionName'
+      Visible = True
+      UniqueName = #1057#1095#1077#1090' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+    end
+    object pvAccountName: TcxDBPivotGridField
+      Area = faRow
+      AreaIndex = 3
+      IsCaptionAssigned = True
+      Caption = #1057#1095#1077#1090' - '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+      DataBinding.FieldName = 'AccountName'
+      Visible = True
+      UniqueName = #1057#1095#1077#1090' - '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+    end
+    object pvInfoMoneyName: TcxDBPivotGridField
+      AreaIndex = 0
+      IsCaptionAssigned = True
+      Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+      DataBinding.FieldName = 'InfoMoneyName'
+      Visible = True
+      UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    end
+    object pvAmountDebetStart: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 0
+      IsCaptionAssigned = True
+      Caption = #1044#1077#1073#1077#1090' '#1085#1072#1095#1072#1083#1100#1085#1099#1081
+      DataBinding.FieldName = 'AmountDebetStart'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DisplayFormat = ',0.00'
+      Styles.ColumnHeader = dmMain.cxHeaderStyle
+      Visible = True
+      UniqueName = 'AmountDebetStart'
+    end
+    object pvAmountKreditStart: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 1
+      IsCaptionAssigned = True
+      Caption = #1050#1088#1077#1076#1080#1090' '#1085#1072#1095#1072#1083#1100#1085#1099#1081
+      DataBinding.FieldName = 'AmountKreditStart'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DisplayFormat = ',0.00'
+      Styles.ColumnHeader = dmMain.cxHeaderStyle
+      Visible = True
+      UniqueName = 'AmountKreditStart'
+    end
+    object pvAmountDebet: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 2
+      IsCaptionAssigned = True
+      Caption = #1044#1077#1073#1077#1090' '#1086#1073#1086#1088#1086#1090
+      DataBinding.FieldName = 'AmountDebet'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DisplayFormat = ',0.00'
+      Styles.ColumnHeader = dmMain.cxHeaderStyle
+      Visible = True
+      UniqueName = #1044#1077#1073#1077#1090' '#1086#1073#1086#1088#1086#1090
+    end
+    object pvAmountKredit: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 3
+      IsCaptionAssigned = True
+      Caption = #1050#1088#1077#1076#1080#1090' '#1086#1073#1086#1088#1086#1090
+      DataBinding.FieldName = 'AmountKredit'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DisplayFormat = ',0.00'
+      Styles.ColumnHeader = dmMain.cxHeaderStyle
+      Visible = True
+      UniqueName = #1050#1088#1077#1076#1080#1090' '#1086#1073#1086#1088#1086#1090
+    end
+    object pvAmountDebetEnd: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 4
+      IsCaptionAssigned = True
+      Caption = #1044#1077#1073#1077#1090' '#1082#1086#1085#1077#1095#1085#1099#1081
+      DataBinding.FieldName = 'AmountDebetEnd'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DisplayFormat = ',0.00'
+      Styles.ColumnHeader = dmMain.cxHeaderStyle
+      Visible = True
+      UniqueName = 'AmountDebetEnd'
+    end
+    object pvAmountKreditEnd: TcxDBPivotGridField
+      Area = faData
+      AreaIndex = 5
+      IsCaptionAssigned = True
+      Caption = #1050#1088#1077#1076#1080#1090' '#1082#1086#1085#1077#1095#1085#1099#1081
+      DataBinding.FieldName = 'AmountKreditEnd'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DisplayFormat = ',0.00'
+      Styles.ColumnHeader = dmMain.cxHeaderStyle
+      Visible = True
+      UniqueName = 'AmountKreditEnd'
+    end
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 96
-    Top = 96
+    Left = 88
+    Top = 8
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 96
-    Top = 144
+    Left = 56
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -269,14 +394,14 @@ inherited Report_BalanceForm: TReport_BalanceForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 232
-    Top = 96
+    Left = 168
+    Top = 16
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -288,8 +413,8 @@ inherited Report_BalanceForm: TReport_BalanceForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 152
-    Top = 88
+    Left = 120
+    Top = 16
     DockControlHeights = (
       0
       0
@@ -333,8 +458,8 @@ inherited Report_BalanceForm: TReport_BalanceForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 232
-    Top = 144
+    Left = 16
+    Top = 32
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -379,15 +504,14 @@ inherited Report_BalanceForm: TReport_BalanceForm
         Value = 41395d
       end>
     Left = 152
-    Top = 152
+    Top = 24
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     View = cxGridDBTableView
-    Left = 232
-    Top = 192
+    Left = 552
+    Top = 8
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 232
-    Top = 232
+    Left = 528
   end
 end

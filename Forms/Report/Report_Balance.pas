@@ -22,7 +22,8 @@ uses
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
-  cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit;
+  cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, cxCustomPivotGrid,
+  cxDBPivotGrid;
 
 type
   TReport_BalanceForm = class(TParentForm)
@@ -61,6 +62,18 @@ type
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
+    cxDBPivotGrid: TcxDBPivotGrid;
+    pvRootName: TcxDBPivotGridField;
+    pvAccountGroupName: TcxDBPivotGridField;
+    pvAccountDirectionName: TcxDBPivotGridField;
+    pvAccountName: TcxDBPivotGridField;
+    pvInfoMoneyName: TcxDBPivotGridField;
+    pvAmountDebet: TcxDBPivotGridField;
+    pvAmountKredit: TcxDBPivotGridField;
+    pvAmountDebetStart: TcxDBPivotGridField;
+    pvAmountKreditStart: TcxDBPivotGridField;
+    pvAmountDebetEnd: TcxDBPivotGridField;
+    pvAmountKreditEnd: TcxDBPivotGridField;
   private
   public
   end;
