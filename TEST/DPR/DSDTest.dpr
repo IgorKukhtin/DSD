@@ -169,8 +169,9 @@ uses
   PersonalReportTest in '..\SOURCE\Movement\All\PersonalReportTest.pas',
   BankStatementItemTest in '..\SOURCE\Movement\All\BankStatementItemTest.pas',
   AccountTest in '..\SOURCE\Objects\All\AccountTest.pas',
+  CashTest in '..\SOURCE\Objects\All\CashTest.pas',
   InfoMoneyTest in '..\SOURCE\Objects\All\InfoMoneyTest.pas',
-  CashTest in '..\SOURCE\Objects\All\CashTest.pas';
+  TransportTest in '..\SOURCE\Movement\All\TransportTest.pas';
 
 {$R *.RES}
 

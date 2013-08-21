@@ -74,10 +74,14 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_Business() RETURNS Integer AS $
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_Business', 'Бизнес' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Business');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_Member() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Member'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_Member', 'Сотрудники' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Member');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.08.13         * add zc_MovementLinkObject_Member
  12.08.13         * add zc_MovementLinkObject_BankAccount, Juridical, MainJuridical              
  29.07.13         * НОВАЯ СХЕМА 2, add zc_MovementLinkObject_Personal
  30.06.13                                        * НОВАЯ СХЕМА

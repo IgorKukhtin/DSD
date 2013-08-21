@@ -8,7 +8,7 @@ BEGIN
 PERFORM setval('objectdesc_id_seq', (select max (id) + 1 from ObjectDesc));
 END $$;
 */
-INSERT INTO ObjectDesc(Code, ItemName)
+/*INSERT INTO ObjectDesc(Code, ItemName)
 SELECT 'zc_Object_Cash', 'Кассы' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Cash');
 
 INSERT INTO ObjectDesc(Code, ItemName)
@@ -82,11 +82,12 @@ INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_JuridicalGroup', 'Группы юр. лиц' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_JuridicalGroup');
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_Juridical', 'Юр лица' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Juridical');
+*/
 --INSERT INTO ObjectDesc (Code, ItemName)
 --  SELECT 'zc_Object_Partner', 'Контрагент' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Partner');
 -- INSERT INTO ObjectDesc (Code, ItemName)
 --  SELECT 'zc_Object_UnitGroup', 'Группы подразеделений' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_UnitGroup');
-INSERT INTO ObjectDesc (Code, ItemName)
+/*INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_Unit', 'Справочник подразделений' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Unit');
 
 INSERT INTO ObjectDesc (Code, ItemName)
@@ -131,7 +132,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_TradeMark', 'Торговые марки' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_TradeMark');
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_AccountKind', 'Виды счетов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_AccountKind');
-  
+*/  
 -- INSERT INTO ObjectDesc (Code, ItemName)
 --  SELECT 'zc_Object_AccountPlan', 'План счетов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_AccountPlan');
 
