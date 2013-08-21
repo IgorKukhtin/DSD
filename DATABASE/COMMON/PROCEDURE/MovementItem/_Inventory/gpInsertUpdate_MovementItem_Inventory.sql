@@ -1,18 +1,19 @@
 -- Function: gpInsertUpdate_MovementItem_Inventory()
 
--- DROP FUNCTION gpInsertUpdate_MovementItem_Inventory();
+-- DROP FUNCTION gpInsertUpdate_MovementItem_Inventory (Integer, Integer, Integer, TFloat, TDateTime, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar );
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ Возврат поставщику>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
+    IN inPartionGoodsDate    TDateTime , -- Партия товара 
+    IN inSumm                TFloat    , -- Сумма       
     IN inHeadCount           TFloat    , -- Количество голов
     IN inCount               TFloat    , -- Количество батонов или упаковок
-    IN inPartionGoodsDate    TDateTime , -- Партия товара 
     IN inPartionGoods        TVarChar  , -- Партия товара
-    IN inSumm                TFloat    , -- Сумма       
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
+    IN inGoodsKindId         Integer   , -- 
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
@@ -44,6 +45,9 @@ BEGIN
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
      
+     -- сохранили связь с <>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
+
      -- сохранили связь с <Основные средства (для которых закупается ТМЦ)>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
 
@@ -64,6 +68,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.08.13                                        * add inGoodsKindId
  18.07.13         *
 */
 

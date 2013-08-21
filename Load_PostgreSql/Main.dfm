@@ -658,7 +658,6 @@ object MainForm: TMainForm
       Width = 213
       Height = 17
       Caption = '6. '#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
-      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -905,14 +904,15 @@ object MainForm: TMainForm
     Left = 384
     Top = 304
   end
-  object toQuery: TZQuery
+  object toSqlQuery: TZQuery
+    Connection = ToZConnection
     SQL.Strings = (
       'select  * from Object')
     Params = <>
     Properties.Strings = (
       'select * from Object order by 1 desc')
-    Left = 208
-    Top = 320
+    Left = 168
+    Top = 416
   end
   object toStoredProc: TdsdStoredProc
     DataSets = <>
@@ -925,5 +925,26 @@ object MainForm: TMainForm
     Params = <>
     Left = 120
     Top = 160
+  end
+  object fromQuery_two: TADOQuery
+    Connection = fromADOConnection
+    CursorType = ctStatic
+    Parameters = <>
+    SQL.Strings = (
+      'select * from Goods where HasChildren<>-1 order by 1 desc')
+    Left = 312
+    Top = 384
+  end
+  object ToZConnection: TZConnection
+    ControlsCodePage = cCP_UTF16
+    UTF8StringsAsWideField = True
+    DesignConnection = True
+    HostName = 'localhost'
+    Port = 0
+    User = 'postgres'
+    Password = 'postgres'
+    Protocol = 'postgresql-9'
+    Left = 144
+    Top = 360
   end
 end
