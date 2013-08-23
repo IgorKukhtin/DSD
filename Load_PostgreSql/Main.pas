@@ -229,6 +229,7 @@ var
   MainForm: TMainForm;
 
 implementation
+uses Authentication,CommonData,Storage;
 {$R *.dfm}
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.StopButtonClick(Sender: TObject);
@@ -422,6 +423,8 @@ begin
      if Month=12 then begin Month:=1;Year:=Year+1;end else Month:=Month+1;
      EndDateEdit.Text:=DateToStr(StrToDate('01.'+IntToStr(Month)+'.'+IntToStr(Year))-1);
      EndDateCompleteEdit.Text:=EndDateEdit.Text;
+     //
+     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'јдмин', 'јдмин', gc_User);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.OKGuideButtonClick(Sender: TObject);
@@ -2184,6 +2187,9 @@ begin
         Add('select PriceList_byHistory.Id as ObjectId');
         Add('     , 0 as ObjectCode');
         Add('     , PriceList_byHistory.PriceListName as ObjectName');
+        Add('     , case when PriceList_byHistory.Id = 2 then zc_rvYes() else zc_rvNo() end as zc_PriceList_Basis');
+        Add('     , case when PriceList_byHistory.Id = zc_def_PriceList_onRecalcProduction() then zc_rvYes() else zc_rvNo() end as zc_PriceList_ProductionSeparate');
+        Add('     , zc_rvYes() as zc_rvYes');
         Add('     , PriceList_byHistory.Id_Postgres as Id_Postgres');
         Add('from dba.PriceList_byHistory');
         Add('order by ObjectId');
@@ -2215,6 +2221,11 @@ begin
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.PriceList_byHistory set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             if FieldByName('zc_PriceList_Basis').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then fExecSqToQuery ('CREATE OR REPLACE FUNCTION zc_PriceList_Basis() RETURNS Integer AS $BODY$BEGIN RETURN ('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;');
+             if FieldByName('zc_PriceList_ProductionSeparate').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then fExecSqToQuery ('CREATE OR REPLACE FUNCTION zc_PriceList_ProductionSeparate() RETURNS Integer AS $BODY$BEGIN RETURN ('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;');
              //
              Next;
              Application.ProcessMessages;
@@ -3210,7 +3221,7 @@ begin
         DecodeDate(calcStartDate, Year, Month, Day);
         if Month=12 then begin Year:=Year+1;Month:=0;end;
         calcEndDate:=EncodeDate(Year, Month+1, 1)-1;
-        while calcStartDate <= StrToDate(StartDateCompleteEdit.Text) do
+        while calcStartDate <= StrToDate(EndDateCompleteEdit.Text) do
         begin
              if calcStartDate=StrToDate(StartDateCompleteEdit.Text)
              then Add('          select cast('+FormatToDateServer_notNULL(calcStartDate)+' as date) as StartDate, cast('+FormatToDateServer_notNULL(calcEndDate)+' as date) as EndDate')
@@ -5710,17 +5721,18 @@ begin
      //
      myEnabledCB(cbInventory);
      //
+     // добавл€ем периоды по мес€цам
      with fromQuery_two,Sql do begin
         Close;
         Clear;
         //
-        calcStartDate:=StrToDate(StartDateCompleteEdit.Text);
+        calcStartDate:=StrToDate(StartDateEdit.Text);
         DecodeDate(calcStartDate, Year, Month, Day);
         if Month=12 then begin Year:=Year+1;Month:=0;end;
         calcEndDate:=EncodeDate(Year, Month+1, 1)-1;
-        while calcStartDate <= StrToDate(StartDateCompleteEdit.Text) do
+        while calcStartDate <= StrToDate(EndDateEdit.Text) do
         begin
-             if calcStartDate=StrToDate(StartDateCompleteEdit.Text)
+             if calcStartDate=StrToDate(StartDateEdit.Text)
              then Add('          select cast('+FormatToDateServer_notNULL(calcStartDate)+' as date) as StartDate, cast('+FormatToDateServer_notNULL(calcEndDate)+' as date) as EndDate')
              else Add('union all select cast('+FormatToDateServer_notNULL(calcStartDate)+' as date) as StartDate, cast('+FormatToDateServer_notNULL(calcEndDate)+' as date) as EndDate');
              //
@@ -5735,6 +5747,7 @@ begin
 
      saveStartDate:=StrToDate(StartDateEdit.Text);
      saveEndDate:=StrToDate(EndDateEdit.Text);
+
    while not fromQuery_two.EOF do begin
      StartDateEdit.Text:=fromQuery_two.FieldByName('StartDate').AsString;
      EndDateEdit.Text:=fromQuery_two.FieldByName('EndDate').AsString;
@@ -5771,6 +5784,7 @@ begin
         toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, '');
         toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, '');
         //
+        // добавл€ем все накладные из одного периода
         while not EOF do
         begin
              //!!!
@@ -5795,7 +5809,9 @@ begin
              Application.ProcessMessages;
         end;
      end;
+     // после добавлени€ всех накладных из одного периода, вставл€ем строчную часть
      pLoadDocumentItem_Inventory(Gauge.MaxValue);
+     // переходим к след.периоду
      fromQuery_two.Next;
      //
    end;

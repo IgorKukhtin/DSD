@@ -4,12 +4,12 @@ inherited InventoryJournalForm: TInventoryJournalForm
   ClientHeight = 427
   ClientWidth = 778
   ExplicitWidth = 794
-  ExplicitHeight = 465
+  ExplicitHeight = 462
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 28
+    Top = 26
     Width = 778
     Height = 41
     Align = alTop
@@ -32,9 +32,9 @@ inherited InventoryJournalForm: TInventoryJournalForm
   end
   object cxGrid: TcxGrid
     Left = 0
-    Top = 69
+    Top = 67
     Width = 778
-    Height = 358
+    Height = 360
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
@@ -109,7 +109,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
         HeaderAlignmentVert = vaCenter
       end
       object colTotalSumm: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1087#1086#1089#1090#1072#1074#1097'.'
+        Caption = #1057#1091#1084#1084#1072
         DataBinding.FieldName = 'TotalSumm'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
@@ -133,6 +133,16 @@ inherited InventoryJournalForm: TInventoryJournalForm
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
       item
         Component = Owner
         Properties.Strings = (
@@ -167,7 +177,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar: TdxBar
       Caption = 'Custom'

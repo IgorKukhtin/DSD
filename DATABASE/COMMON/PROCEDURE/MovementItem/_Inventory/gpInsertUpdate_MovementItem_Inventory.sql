@@ -12,14 +12,16 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Inventory(
     IN inHeadCount           TFloat    , -- Количество голов
     IN inCount               TFloat    , -- Количество батонов или упаковок
     IN inPartionGoods        TVarChar  , -- Партия товара
-    IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
     IN inGoodsKindId         Integer   , -- 
+    IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
+
+     IF inPartionGoodsDate <= '01.01.1900' THEN inPartionGoodsDate:= NULL; END IF;
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Inventory());
@@ -74,3 +76,4 @@ LANGUAGE PLPGSQL VOLATILE;
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_MovementItem_Inventory (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inPrice:= 1, inCountForPrice:= 1, inLiveWeight:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
+

@@ -938,9 +938,12 @@ object MainForm: TMainForm
   object ToZConnection: TZConnection
     ControlsCodePage = cCP_UTF16
     UTF8StringsAsWideField = True
+    Catalog = 'public'
+    Connected = True
     DesignConnection = True
     HostName = 'localhost'
     Port = 0
+    Database = 'project'
     User = 'postgres'
     Password = 'postgres'
     Protocol = 'postgresql-9'
