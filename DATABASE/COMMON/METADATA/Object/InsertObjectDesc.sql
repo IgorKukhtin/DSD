@@ -135,7 +135,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 */  
 -- INSERT INTO ObjectDesc (Code, ItemName)
 --  SELECT 'zc_Object_AccountPlan', 'План счетов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_AccountPlan');
-
+select 1
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
