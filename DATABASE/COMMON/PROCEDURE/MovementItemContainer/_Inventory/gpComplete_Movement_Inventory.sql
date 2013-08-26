@@ -15,6 +15,7 @@ $BODY$
   DECLARE vbUserId Integer;
 
   DECLARE vbOperDate TDateTime;
+  DECLARE vbStatusId Integer;
   DECLARE vbUnitId Integer;
   DECLARE vbPersonalId Integer;
   DECLARE vbProfitLossGroupId Integer;
@@ -27,9 +28,10 @@ BEGIN
 
      -- Ёти параметры нужны дл€ расчета остатка
      SELECT Movement.OperDate
+          , Movement.StatusId
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN MovementLinkObject_From.ObjectId ELSE 0 END, 0)
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Personal() THEN MovementLinkObject_From.ObjectId ELSE 0 END, 0)
-            INTO vbOperDate, vbUnitId, vbPersonalId
+            INTO vbOperDate, vbStatusId, vbUnitId, vbPersonalId
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
@@ -38,11 +40,22 @@ BEGIN
 
      WHERE Movement.Id = inMovementId;
 
-     -- Ёти параметры нужны дл€ проводок по прибыли
-     SELECT lfObject_Unit_byProfitLossDirection.ProfitLossGroupId
-          , lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId
-            INTO vbProfitLossGroupId, vbProfitLossDirectionId
-     FROM lfGet_Object_Unit_byProfitLossDirection (vbUnitId) AS lfObject_Unit_byProfitLossDirection;
+
+     -- !!!≈сли документ не проведен - остаемс€, иначе - выход!!!
+     IF vbStatusId <> zc_Enum_Status_UnComplete() THEN RETURN; END IF;
+
+
+     -- ќпредел€ютс€ параметры дл€ проводок по прибыли
+     IF vbUnitId <> 0
+     THEN
+         SELECT lfObject_Unit_byProfitLossDirection.ProfitLossGroupId
+              , lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId
+                INTO vbProfitLossGroupId, vbProfitLossDirectionId
+         FROM lfGet_Object_Unit_byProfitLossDirection (vbUnitId) AS lfObject_Unit_byProfitLossDirection;
+     ELSE
+         vbProfitLossGroupId := zc_Enum_ProfitLossGroup_20000(); -- 20000; "ќбщепроизводственные расходы"
+         vbProfitLossDirectionId := zc_Enum_ProfitDirection_20500(); -- 20500; "ѕрочие потери (—писание+инвентаризаци€)
+     END IF;
 
 
      -- таблица - јналитики остатка
@@ -739,5 +752,5 @@ LANGUAGE PLPGSQL VOLATILE;
 
 -- тест
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 29120, inSession:= '2')
- SELECT * FROM gpComplete_Movement_Inventory (inMovementId:= 29120, inIsLastComplete:= FALSE, inSession:= '2')
+-- SELECT * FROM gpComplete_Movement_Inventory (inMovementId:= 29130, inIsLastComplete:= FALSE, inSession:= '2')
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 29120, inSession:= '2')
