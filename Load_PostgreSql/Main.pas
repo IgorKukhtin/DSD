@@ -109,6 +109,7 @@ type
     cbLastComplete: TCheckBox;
     fromQuery_two: TADOQuery;
     ToZConnection: TZConnection;
+    cbCompleteInventory: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -147,6 +148,7 @@ type
     procedure pCompleteDocument_SendOnPrice(isLastComplete:Boolean);
     procedure pCompleteDocument_ProductionUnion(isLastComplete:Boolean);
     procedure pCompleteDocument_ProductionSeparate(isLastComplete:Boolean);
+    procedure pCompleteDocument_Inventory(isLastComplete:Boolean);
     // Documents :
     function pLoadDocument_Income:Integer;
     procedure pLoadDocumentItem_Income(SaveCount:Integer);
@@ -489,8 +491,8 @@ begin
      OKDocumentButton.Enabled:=true;
      OKCompleteDocumentButton.Enabled:=true;
      //
-     //toZConnection.Connected:=false;
-     fromADOConnection.Connected:=false;
+     toZConnection.Connected:=false;
+     if not cbOnlyOpen.Checked then fromADOConnection.Connected:=false;
      //
      tmpDate2:=NOw;
      if (tmpDate2-tmpDate1)>=1
@@ -572,7 +574,7 @@ begin
      OKDocumentButton.Enabled:=true;
      OKCompleteDocumentButton.Enabled:=true;
      //
-     //toZConnection.Connected:=false;
+     toZConnection.Connected:=false;
      if not cbOnlyOpen.Checked then fromADOConnection.Connected:=false;
      //
      tmpDate2:=NOw;
@@ -622,6 +624,7 @@ begin
           if not fStop then pCompleteDocument_SendOnPrice(FALSE);
           if not fStop then pCompleteDocument_ProductionUnion(FALSE);
           if not fStop then pCompleteDocument_ProductionSeparate(FALSE);
+          if not fStop then pCompleteDocument_Inventory(FALSE);
      end;
 
      if not fStop then pInsertHistoryCost;
@@ -631,6 +634,7 @@ begin
      if not fStop then pCompleteDocument_SendOnPrice(cbLastComplete.Checked);
      if not fStop then pCompleteDocument_ProductionUnion(cbLastComplete.Checked);
      if not fStop then pCompleteDocument_ProductionSeparate(cbLastComplete.Checked);
+     if not fStop then pCompleteDocument_Inventory(cbLastComplete.Checked);
      //
      Gauge.Visible:=false;
      DBGrid.Enabled:=true;
@@ -638,7 +642,7 @@ begin
      OKDocumentButton.Enabled:=true;
      OKCompleteDocumentButton.Enabled:=true;
      //
-     //toZConnection.Connected:=false;
+     toZConnection.Connected:=false;
      if not cbOnlyOpen.Checked then fromADOConnection.Connected:=false;
      //
      tmpDate2:=NOw;
@@ -1086,6 +1090,7 @@ begin
         Add('     , KindPackage.KindPackageCode as ObjectCode');
         Add('     , KindPackage.KindPackageName as ObjectName');
         Add('     , KindPackage.Id_Postgres as Id_Postgres');
+        Add('     , zc_KindPackage_PF() as zc_KindPackage_PF');
         Add('from dba.KindPackage');
         Add('where KindPackage.HasChildren = zc_hsLeaf()');
         Add('  and (KindPackage.ParentId not in (23,30)'
@@ -1121,6 +1126,9 @@ begin
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.KindPackage set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
+             if FieldByName('ObjectId').AsInteger=FieldByName('zc_KindPackage_PF').AsInteger
+             then fExecSqToQuery ('CREATE OR REPLACE FUNCTION zc_GoodsKind_WorkProgress() RETURNS Integer AS $BODY$BEGIN RETURN ('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;');
+             //
              Next;
              Application.ProcessMessages;
              Gauge.Progress:=Gauge.Progress+1;
@@ -1140,8 +1148,8 @@ begin
      //
      fOpenSqToQuery ('select zc_Enum_PaidKind_FirstForm from zc_Enum_PaidKind_FirstForm()');
      zc_Enum_PaidKind_FirstForm:=toSqlQuery.FieldByName('zc_Enum_PaidKind_FirstForm').AsString;
-     fOpenSqToQuery ('select zc_Object_PaidKind_SecondForm from zc_Object_PaidKind_SecondForm()');
-     zc_Object_PaidKind_SecondForm:=toSqlQuery.FieldByName('zc_Object_PaidKind_SecondForm').AsString;
+     fOpenSqToQuery ('select zc_Enum_PaidKind_SecondForm from zc_Enum_PaidKind_SecondForm()');
+     zc_Object_PaidKind_SecondForm:=toSqlQuery.FieldByName('zc_Enum_PaidKind_SecondForm').AsString;
      //
      with fromQuery,Sql do begin
         Close;
@@ -2257,7 +2265,7 @@ begin
         Add('     left outer join dba.PriceList_byHistory on PriceList_byHistory.Id=PriceListItems_byHistory.PriceListID');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id=PriceListItems_byHistory.GoodsPropertyId');
         Add('where PriceListItems_byHistory.StartDate<>zc_DateStart() or PriceListItems_byHistory.NewPrice<>0');
-        Add('order by PriceListId_PG, OperDate, GoodsId_PG');
+        Add('order by PriceListId_PG, GoodsId_PG, OperDate');
         Open;
         cbPriceListItems.Caption:='5.2. ('+IntToStr(RecordCount)+') Прайс листы - цены';
         //
@@ -2769,6 +2777,9 @@ begin
              then fExecSqFromQuery('update dba._pgInfoMoney set Id2_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Name1 in (select Name1 from dba._pgInfoMoney where Id = '+FieldByName('ObjectId').AsString+')'
                                                                                                                                       +'   and Name2 in (select Name2 from dba._pgInfoMoney where Id = '+FieldByName('ObjectId').AsString+')'
                                   );
+             //
+             if FieldByName('ObjectCode').AsInteger=21300 // Незавершенное производство
+             then fExecSqToQuery ('CREATE OR REPLACE FUNCTION zc_InfoMoneyDestination_WorkProgress() RETURNS Integer AS $BODY$BEGIN RETURN ('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;');
              //
              Next;
              Application.ProcessMessages;
@@ -4802,7 +4813,7 @@ begin
         Add('     left outer join (select BillDate, BillNumber, max(fUnitFrom.Id_byLoad) as FromId, max(fUnitTo.Id_byLoad) as ToId'
            +'                      from dba.fBill'
            +'                           left outer join dba._fUnit_byLoadView AS fUnitFrom on fUnitFrom.UnitId = fBill.FromId'
-           +'                           left outer join dba._fUnit_byLoadView AS fUnitTo on fUnitFrom.UnitId = fBill.FromId'
+           +'                           left outer join dba._fUnit_byLoadView AS fUnitTo on fUnitTo.UnitId = fBill.ToId'
            +'                      where isnull(BillId_byLoad,0)=0'
            +'                        and MoneyKindId=zc_mkBN()'
            +'                        and BillKind=zc_bkSaleToClient()'
@@ -5653,6 +5664,84 @@ procedure TMainForm.pLoadDocumentItem_Loss(SaveCount:Integer);
 begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pCompleteDocument_Inventory(isLastComplete:Boolean);
+begin
+     if (not cbCompleteInventory.Checked)or(not cbCompleteInventory.Enabled) then exit;
+     //
+     myEnabledCB(cbCompleteInventory);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Bill.Id as ObjectId');
+        Add('     , Bill.BillNumber as InvNumber');
+        Add('     , Bill.BillDate as OperDate');
+        Add('     , Bill.Id_Postgres as Id_Postgres');
+        Add('     , pgUnitFrom.Id_Postgres as FromId_Postgres');
+        Add('     , pgUnitTo.Id_Postgres as ToId_Postgres');
+        Add('from dba.Bill');
+        Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId');
+        Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId');
+        Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId');
+        Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
+           +'  and Bill.BillKind in (zc_bkProduction())'
+           +'  and Bill.isRemains = zc_rvYes()'
+           +'  and Id_Postgres <> 0'
+           );
+
+        Add('order by OperDate,ObjectId');
+        Open;
+        cbCompleteProductionSeparate.Caption:='6. ('+IntToStr(RecordCount)+') Инвентаризация';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpUnComplete_Movement';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        //
+        toStoredProc_two.StoredProcName:='gpComplete_Movement_Inventory';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inIsLastComplete',ftBoolean, ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             if cbUnComplete.Checked then
+             begin
+                  toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  if not myExecToStoredProc then ;//exit;
+             end;
+             if cbComplete.Checked then
+             begin
+                  toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  toStoredProc_two.Params.ParamByName('inIsLastComplete').Value:=isLastComplete;
+                  if not myExecToStoredProc_two then ;//exit;
+             end;
+             //
+             Next;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbCompleteInventory);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadDocument_Inventory_Erased;
 begin
      if (not cbInventory.Checked)or(not cbInventory.Enabled) then exit;
@@ -5980,3 +6069,4 @@ alter table dba.BillItems add Id_Postgres integer null;
 alter table dba.BillItemsReceipt add Id_Postgres integer null;
 ok
 }
+

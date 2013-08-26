@@ -874,6 +874,22 @@ object MainForm: TMainForm
       TabOrder = 11
       OnClick = cbUnCompleteClick
     end
+    object cbCompleteInventory: TCheckBox
+      Tag = 30
+      Left = 15
+      Top = 331
+      Width = 194
+      Height = 17
+      Caption = '6. '#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 12
+      OnClick = cbCompleteIncomeClick
+    end
   end
   object DataSource: TDataSource
     DataSet = fromQuery

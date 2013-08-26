@@ -618,7 +618,7 @@ BEGIN
                                                  , inMovementItemId:= MovementItemId
                                                  , inParentId:= NULL -- нет связи между количественными элементами
                                                  , inContainerId:= ContainerId_GoodsFrom -- был опеределен выше
-                                                 , inAmount:= -OperCount
+                                                 , inAmount:= -1 * OperCount
                                                  , inOperDate:= OperDate
                                                  , inIsActive:= FALSE
                                                   )
@@ -835,14 +835,14 @@ BEGIN
      WHERE _tmpItemSummChild.MovementItemId = _tmpItemChild.MovementItemId;
 
 
-     -- формируются Проводки для суммового учета - От кого, причем для !!!каждого!! элемента прихода (поэтому и inAmount:= -_tmpItemSummChild.OperSumm)
+     -- формируются Проводки для суммового учета - От кого, причем для !!!каждого!! элемента прихода (поэтому и inAmount:= -1 * _tmpItemSummChild.OperSumm)
      PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
                                                  , inDescId:= zc_MIContainer_Summ()
                                                  , inMovementId:= _tmpItem.MovementId
                                                  , inMovementItemId:= _tmpItem.MovementItemId
                                                  , inParentId:= _tmpItemSummChild.MIContainerId_To -- это связь с суммовым элементом прихода
                                                  , inContainerId:= _tmpItemSumm.ContainerId_From
-                                                 , inAmount:= -_tmpItemSummChild.OperSumm
+                                                 , inAmount:= -1 * _tmpItemSummChild.OperSumm
                                                  , inOperDate:= _tmpItem.OperDate
                                                  , inIsActive:= FALSE
                                                   )

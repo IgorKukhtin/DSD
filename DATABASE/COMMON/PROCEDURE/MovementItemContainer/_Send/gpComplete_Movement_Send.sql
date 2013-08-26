@@ -445,7 +445,7 @@ BEGIN
                                                  , inMovementItemId:= MovementItemId
                                                  , inParentId:= MIContainerId_To -- это связь с количественным элементом прихода
                                                  , inContainerId:= ContainerId_GoodsFrom -- был опеределен выше
-                                                 , inAmount:= -OperCount
+                                                 , inAmount:= -1 * OperCount
                                                  , inOperDate:= OperDate
                                                  , inIsActive:= FALSE
                                                   )
@@ -654,7 +654,7 @@ BEGIN
                                                  , inMovementItemId:= _tmpItem.MovementItemId
                                                  , inParentId:= _tmpItemSumm.MIContainerId_To -- это связь с суммовым элементом прихода
                                                  , inContainerId:= ContainerId_From
-                                                 , inAmount:= -OperSumm
+                                                 , inAmount:= -1 * OperSumm
                                                  , inOperDate:= OperDate
                                                  , inIsActive:= FALSE
                                                   )

@@ -81,7 +81,7 @@ from dba.Bill
      left outer join (select BillDate, BillNumber, max(fUnitFrom.Id_byLoad) as FromId, max(fUnitTo.Id_byLoad) as ToId
                       from dba.fBill
                            left outer join dba._fUnit_byLoadView AS fUnitFrom on fUnitFrom.UnitId = fBill.FromId
-                           left outer join dba._fUnit_byLoadView AS fUnitTo on fUnitFrom.UnitId = fBill.FromId
+                           left outer join dba._fUnit_byLoadView AS fUnitTo on fUnitTo.UnitId = fBill.ToId
                       where isnull(BillId_byLoad,0)=0
                         and MoneyKindId=zc_mkBN()
                         and BillKind=zc_bkSaleToClient()
@@ -170,7 +170,7 @@ where Bill.BillDate between @inStartDate and @inEndDate
 
    //
    update _tmpList  set  _tmpList.BillId_pg = _tmpList2.BillId_pg
-   from (select max (ObjectId) as BillId_pg, InvNumber, OperDate, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, PaidKindId_Postgres from _tmpList group by InvNumber, OperDate, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, PaidKindId_Postgres having count()>1) as _tmpList2
+   from (select max (ObjectId) as BillId_pg, InvNumber, OperDate, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, PaidKindId_Postgres from _tmpList where isFl = zc_rvNo() group by InvNumber, OperDate, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, PaidKindId_Postgres having count()>1) as _tmpList2
    where isFl = zc_rvNo()
      and _tmpList.InvNumber = _tmpList2.InvNumber
      and _tmpList.OperDate = _tmpList2.OperDate

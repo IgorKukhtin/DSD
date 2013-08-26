@@ -23,23 +23,23 @@ BEGIN
    -- Проверки
    IF COALESCE (inAccountGroupId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Невозможно определить Счет т.к. не установлено <Группа счетов> : "%", "%", "%", "%"', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
+       RAISE EXCEPTION 'Невозможно определить Счет т.к. не установлено <Группа счета> : "%", "%", "%", "%"', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
    END IF;
 
    IF COALESCE (inAccountDirectionId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Невозможно определить Счет т.к. не установлено <Аналитики счетов - направления> : "%", "%", "%", "%"', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
+       RAISE EXCEPTION 'Невозможно определить Счет т.к. не установлено <Аналитика счета - направление> : "%", "%", "%", "%"', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
    END IF;
 
    IF COALESCE (inInfoMoneyDestinationId, 0) = 0 AND COALESCE (inInfoMoneyId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Невозможно определить Счет т.к. не установлено <Управленческие назначения> : "%", "%", "%", "%"', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
+       RAISE EXCEPTION 'Невозможно определить Счет т.к. не установлено <Управленческое назначение> : "%", "%", "%", "%"', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
    END IF;
 
 
    -- Находим Управленческий счет по <Управленческие назначения> или <Статьи назначения>
-   IF inInfoMoneyDestinationId <> 0 THEN vbAccountId := lfGet_Object_AccountByInfoMoneyDestination (inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId);
-                                    ELSE vbAccountId := lfGet_Object_AccountByInfoMoney(inAccountGroupId, inAccountDirectionId, inInfoMoneyId);
+   IF inInfoMoneyDestinationId <> 0 THEN vbAccountId := lfGet_Object_Account_byInfoMoneyDestination (inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId);
+                                    ELSE vbAccountId := lfGet_Object_Account_byInfoMoney(inAccountGroupId, inAccountDirectionId, inInfoMoneyId);
    END IF;
 
 
@@ -73,8 +73,8 @@ BEGIN
 
        -- Еще раз находим Управленческий счет по <Управленческие назначения> или <Статьи назначения> (но здесь другой vbAccountDirectionId)
        IF inInfoMoneyDestinationId <> 0 
-          THEN vbAccountId := lfGet_Object_AccountByInfoMoneyDestination (inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId);
-          ELSE vbAccountId := lfGet_Object_AccountByInfoMoney(inAccountGroupId, inAccountDirectionId, inInfoMoneyId);
+          THEN vbAccountId := lfGet_Object_Account_byInfoMoneyDestination (inAccountGroupId, vbAccountDirectionId, inInfoMoneyDestinationId);
+          ELSE vbAccountId := lfGet_Object_Account_byInfoMoney (inAccountGroupId, vbAccountDirectionId, inInfoMoneyId);
        END IF;
 
        -- Создаем новый счет
@@ -137,7 +137,7 @@ ALTER FUNCTION lpInsertFind_Object_Account (Integer, Integer, Integer, Integer, 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-
+ 26.08.13                                        * error - vbAccountDirectionId
  08.07.13                                        * add vbAccountKindId and zc_ObjectBoolean_Account_onComplete
  02.07.13                                        *
 */

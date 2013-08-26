@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpComplete_Movement_Inventory(
     IN inSession           TVarChar               -- сессия пользователя
 )                              
  RETURNS VOID
---  RETURNS TABLE (MovementItemId Integer, MovementId Integer, OperDate TDateTime, UnitId Integer, PersonalId Integer, BranchId Integer, ContainerId_Goods Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, OperCount TFloat, OperSumm TFloat, AccountDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, InfoMoneyId_Detail Integer, JuridicalId_basis Integer, BusinessId Integer, isPartionCount Boolean, isPartionSumm Boolean, isPartionDate Boolean, PartionGoodsId Integer)
+--  RETURNS TABLE (ProfitLossGroupId Integer, ProfitLossDirectionId Integer, MovementItemId Integer, MovementId Integer, OperDate TDateTime, UnitId Integer, PersonalId Integer, BranchId Integer, ContainerId_Goods Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, OperCount TFloat, OperSumm TFloat, AccountDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, InfoMoneyId_Detail Integer, JuridicalId_basis Integer, BusinessId Integer, isPartionCount Boolean, isPartionSumm Boolean, isPartionDate Boolean, PartionGoodsId Integer)
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -17,6 +17,8 @@ $BODY$
   DECLARE vbOperDate TDateTime;
   DECLARE vbUnitId Integer;
   DECLARE vbPersonalId Integer;
+  DECLARE vbProfitLossGroupId Integer;
+  DECLARE vbProfitLossDirectionId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -33,7 +35,15 @@ BEGIN
                                        ON MovementLinkObject_From.MovementId = Movement.Id
                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
           LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
      WHERE Movement.Id = inMovementId;
+
+     -- Эти параметры нужны для проводок по прибыли
+     SELECT lfObject_Unit_byProfitLossDirection.ProfitLossGroupId
+          , lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId
+            INTO vbProfitLossGroupId, vbProfitLossDirectionId
+     FROM lfGet_Object_Unit_byProfitLossDirection (vbUnitId) AS lfObject_Unit_byProfitLossDirection;
+
 
      -- таблица - Аналитики остатка
      CREATE TEMP TABLE _tmpContainer (DescId Integer, ObjectId Integer) ON COMMIT DROP;
@@ -449,10 +459,10 @@ BEGIN
 
 
      -- для теста
-     -- RETURN QUERY SELECT _tmpItem.MovementItemId, _tmpItem.MovementId, _tmpItem.OperDate, _tmpItem.UnitId, _tmpItem.PersonalId, _tmpItem.BranchId, _tmpItem.ContainerId_Goods, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.AssetId, _tmpItem.PartionGoods, _tmpItem.OperCount, _tmpItem.OperSumm, _tmpItem.AccountDirectionId, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId, _tmpItem.InfoMoneyId_Detail, _tmpItem.JuridicalId_basis, _tmpItem.BusinessId, _tmpItem.isPartionCount, _tmpItem.isPartionSumm, _tmpItem.isPartionDate, _tmpItem.PartionGoodsId FROM _tmpItem;
+     -- RETURN QUERY SELECT CAST (vbProfitLossGroupId AS Integer) AS ProfitLossGroupId, CAST (vbProfitLossDirectionId AS Integer) AS ProfitLossDirectionId, _tmpItem.MovementItemId, _tmpItem.MovementId, _tmpItem.OperDate, _tmpItem.UnitId, _tmpItem.PersonalId, _tmpItem.BranchId, _tmpItem.ContainerId_Goods, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.AssetId, _tmpItem.PartionGoods, _tmpItem.OperCount, _tmpItem.OperSumm, _tmpItem.AccountDirectionId, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId, _tmpItem.InfoMoneyId_Detail, _tmpItem.JuridicalId_basis, _tmpItem.BusinessId, _tmpItem.isPartionCount, _tmpItem.isPartionSumm, _tmpItem.isPartionDate, _tmpItem.PartionGoodsId FROM _tmpItem;
 
 
-     -- созаем контейнеры для суммового учета + Аналитика <элемент с/с>
+     -- созаем контейнеры для суммового учета + Аналитика <элемент с/с>, причем !!!только!!! для строчной части (MovementItem), а для остатка они итак есть
      UPDATE _tmpItem SET ContainerId_Summ                        = CASE WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение 2)Товар 3)!Партии товара! 4)Статьи назначения 5)Статьи назначения(детализация с/с)
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Сотрудник (МО или Эксп.) 2)Товар 3)!Партии товара! 4)Статьи назначения 5)Статьи назначения(детализация с/с)
@@ -653,7 +663,7 @@ BEGIN
      FROM (SELECT _tmp_All.MovementItemId, _tmp_All.ContainerId, SUM (_tmp_All.OperSumm) AS OperSumm
            FROM (SELECT _tmpRemainsCount.MovementItemId
                       , _tmpRemainsSumm.ContainerId
-                      , -_tmpRemainsSumm.OperSumm AS OperSumm
+                      , -1 * _tmpRemainsSumm.OperSumm AS OperSumm
                  FROM _tmpRemainsSumm
                       LEFT JOIN _tmpRemainsCount ON _tmpRemainsCount.ContainerId_Goods = _tmpRemainsSumm.ContainerId_Goods
                  WHERE _tmpRemainsSumm.OperSumm <> 0
@@ -661,6 +671,52 @@ BEGIN
                  SELECT MovementItemId, ContainerId_Summ AS ContainerId, OperSumm FROM _tmpItem WHERE OperSumm <> 0
                 ) AS _tmp_All
            GROUP BY _tmp_All.MovementItemId, _tmp_All.ContainerId
+          ) AS _tmp
+     WHERE _tmp.OperSumm <> 0
+       AND zc_isHistoryCost() = TRUE;
+
+
+     -- формируются Проводки - Прибыль !!!только!!! если есть разница по остатку
+     PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
+                                                 , inDescId:= zc_MIContainer_Summ()
+                                                 , inMovementId:= inMovementId
+                                                 , inMovementItemId:= _tmp.MovementItemId
+                                                 , inParentId:= NULL
+                                                 , inContainerId:= lpInsertFind_Container (inContainerDescId:= zc_Container_Summ()
+                                                                                         , inParentId:= NULL
+                                                                                         , inObjectId:= zc_Enum_Account_100301 () -- 100301; "прибыль текущего периода"
+                                                                                         , inJuridicalId_basis:= _tmp.JuridicalId_basis
+                                                                                         , inBusinessId       := _tmp.BusinessId
+                                                                                         , inObjectCostDescId := NULL
+                                                                                         , inObjectCostId     := NULL
+                                                                                         , inDescId_1   := zc_ContainerLinkObject_ProfitLoss()
+                                                                                         , inObjectId_1 := lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := vbProfitLossGroupId
+                                                                                                                                         , inProfitLossDirectionId  := vbProfitLossDirectionId
+                                                                                                                                         , inInfoMoneyDestinationId := InfoMoneyDestinationId
+                                                                                                                                         , inInfoMoneyId            := NULL
+                                                                                                                                         , inUserId                 := vbUserId
+                                                                                                                                          )
+                                                                                          )
+                                                 , inAmount:= _tmp.OperSumm
+                                                 , inOperDate:= vbOperDate
+                                                 , inIsActive:= CASE WHEN _tmp.OperSumm > 0 THEN TRUE
+                                                                     WHEN _tmp.OperSumm < 0 THEN FALSE
+                                                                END
+                                                  )
+     FROM (SELECT _tmp_All.MovementItemId, _tmp_All.JuridicalId_basis, _tmp_All.BusinessId, _tmp_All.InfoMoneyDestinationId, -1 * SUM(_tmp_All.OperSumm) AS OperSumm
+           FROM (SELECT _tmpRemainsCount.MovementItemId
+                      , _tmpItem.JuridicalId_basis
+                      , _tmpItem.BusinessId
+                      , _tmpItem.InfoMoneyDestinationId
+                      , -1 * _tmpRemainsSumm.OperSumm AS OperSumm
+                 FROM _tmpRemainsSumm
+                      LEFT JOIN _tmpRemainsCount ON _tmpRemainsCount.ContainerId_Goods = _tmpRemainsSumm.ContainerId_Goods
+                      LEFT JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpRemainsCount.MovementItemId
+                 WHERE _tmpRemainsSumm.OperSumm <> 0
+                UNION ALL
+                 SELECT MovementItemId, JuridicalId_basis, BusinessId, InfoMoneyDestinationId, OperSumm FROM _tmpItem WHERE OperSumm <> 0
+                ) AS _tmp_All
+           GROUP BY _tmp_All.MovementItemId, _tmp_All.JuridicalId_basis, _tmp_All.BusinessId, _tmp_All.InfoMoneyDestinationId
           ) AS _tmp
      WHERE _tmp.OperSumm <> 0
        AND zc_isHistoryCost() = TRUE;
@@ -682,6 +738,6 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpUnComplete_Movement (inMovementId:= 239257, inSession:= '2')
- SELECT * FROM gpComplete_Movement_Inventory (inMovementId:= 239257, inIsLastComplete:= FALSE, inSession:= '2')
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 239257, inSession:= '2')
+-- SELECT * FROM gpUnComplete_Movement (inMovementId:= 29120, inSession:= '2')
+ SELECT * FROM gpComplete_Movement_Inventory (inMovementId:= 29120, inIsLastComplete:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 29120, inSession:= '2')

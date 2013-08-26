@@ -751,7 +751,7 @@ BEGIN
                                                                                                       , inObjectId_4 := InfoMoneyId -- CASE WHEN isCorporate THEN InfoMoneyId_isCorporate ELSE InfoMoneyId END
                                                                                                        )
                                                                    END
-                                                 , inAmount:= - SUM (OperSumm_Partner)
+                                                 , inAmount:= -1 * SUM (OperSumm_Partner)
                                                  , inOperDate:= OperDate
                                                  , inIsActive:= FALSE
                                                   )
@@ -783,7 +783,7 @@ BEGIN
                                                                                                       , inDescId_2   := zc_ContainerLinkObject_InfoMoney()
                                                                                                       , inObjectId_2 := InfoMoneyId
                                                                                                        )
-                                                 , inAmount:= - SUM (OperSumm_Packer)
+                                                 , inAmount:= -1 * SUM (OperSumm_Packer)
                                                  , inOperDate:= OperDate
                                                  , inIsActive:= FALSE
                                                   )

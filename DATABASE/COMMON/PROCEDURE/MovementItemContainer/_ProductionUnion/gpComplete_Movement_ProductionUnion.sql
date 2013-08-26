@@ -563,7 +563,7 @@ BEGIN
                                                  , inMovementItemId:= _tmpItemChild.MovementItemId
                                                  , inParentId:= _tmpItem.MIContainerId_To -- это связь с количественным элементом прихода
                                                  , inContainerId:= _tmpItemChild.ContainerId_GoodsFrom -- был опеределен выше
-                                                 , inAmount:= -_tmpItemChild.OperCount
+                                                 , inAmount:= -1 * _tmpItemChild.OperCount
                                                  , inOperDate:= _tmpItemChild.OperDate
                                                  , inIsActive:= FALSE
                                                   )
@@ -772,7 +772,7 @@ BEGIN
                                                  , inMovementItemId:= _tmpItemChild.MovementItemId
                                                  , inParentId:= _tmpItemSumm.MIContainerId_To -- это связь с суммовым элементом прихода
                                                  , inContainerId:= _tmpItemSummChild.ContainerId_From
-                                                 , inAmount:= -_tmpItemSummChild.OperSumm
+                                                 , inAmount:= -1 * _tmpItemSummChild.OperSumm
                                                  , inOperDate:= OperDate
                                                  , inIsActive:= FALSE
                                                   )

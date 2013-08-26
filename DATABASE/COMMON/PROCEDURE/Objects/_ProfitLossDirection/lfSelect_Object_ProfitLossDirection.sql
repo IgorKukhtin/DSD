@@ -1,4 +1,4 @@
-п»ї-- Function: lfSelect_Object_ProfitLossDirection ()
+-- Function: lfSelect_Object_ProfitLossDirection ()
 
 -- DROP FUNCTION lfSelect_Object_ProfitLossDirection ();
 
@@ -9,8 +9,7 @@ RETURNS TABLE (ProfitLossGroupId Integer, ProfitLossGroupCode Integer, ProfitLos
    
 $BODY$BEGIN
 
-     -- Р’С‹Р±РёСЂР°РµРј Рё РіСЂСѓРїРїРёСЂСѓРµРј РґР°РЅРЅС‹Рµ РёР· СЃРїСЂР°РІРѕС‡РЅРёРєР° РђРЅР°Р»РёС‚РёРєРё СЃС‡РµС‚РѕРІ - РЅР°РїСЂР°РІР»РµРЅРёСЏ (РїРѕ РґРІСѓРј СЃРїСЂР°РІРѕС‡РЅРёРєР°Рј)
-
+     -- Выбираем и группируем данные из справочника 
      RETURN QUERY 
      
       SELECT 
@@ -34,11 +33,12 @@ ALTER FUNCTION lfSelect_Object_ProfitLossDirection() OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
- 29.06.13          *                            
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.08.13                                        * 1251Cyr
+ 29.06.13          *
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM lfSelect_Object_ProfitLossDirection()
