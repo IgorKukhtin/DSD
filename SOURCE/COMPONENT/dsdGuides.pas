@@ -2,7 +2,7 @@ unit dsdGuides;
 
 interface
 
-uses Classes, Controls, dsdDB;
+uses Classes, Controls, dsdDB, VCL.Menus;
 
 type
 
@@ -22,6 +22,7 @@ type
     FParentDataSet: string;
     FParentId: String;
     FParams: TdsdParams;
+    FPopupMenu: TPopupMenu;
     function GetKey: String;
     function GetTextValue: String;
     procedure SetKey(const Value: String);
@@ -29,11 +30,13 @@ type
     procedure SetLookupControl(const Value: TWinControl);
     procedure OpenGuides;
     procedure OnDblClick(Sender: TObject);
+    procedure OnPopupClick(Sender: TObject);
     procedure OnButtonClick(Sender: TObject; AButtonIndex: Integer);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
     // Вызыввем процедуру после выбора элемента из справочника
     procedure AfterChoice(AKey, ATextValue, AParentId: string);
   published
@@ -79,6 +82,19 @@ constructor TdsdGuides.Create(AOwner: TComponent);
 begin
   inherited;
   FParams := TdsdParams.Create(TParam);
+  FPopupMenu := TPopupMenu.Create(FLookupControl);
+  with FPopupMenu.CreateMenuItem do begin
+    Caption := 'Обнулить значение';
+    ShortCut := 32776;  // Alt + BkSp
+    OnClick := OnPopupClick;
+  end;
+end;
+
+destructor TdsdGuides.Destroy;
+begin
+  FParams.Free;
+  FPopupMenu.Free;
+  inherited;
 end;
 
 function TdsdGuides.GetKey: String;
@@ -119,6 +135,12 @@ begin
   OpenGuides;
 end;
 
+procedure TdsdGuides.OnPopupClick(Sender: TObject);
+begin
+  Key := '0';
+  TextValue := '';
+end;
+
 procedure TdsdGuides.OpenGuides;
 var
   Form: TParentForm;
@@ -139,9 +161,9 @@ begin
   DataSet := Form.FindComponent(PositionDataSet) as TDataSet;
   if not Assigned(DataSet) then
      raise Exception.Create('Не правильно установлено свойство PositionDataSet для формы ' + FormName);
+  Form.Show;
   if Key <> '' then
      DataSet.Locate('Id', Key, []);
-  Form.Show;
 end;
 
 procedure TdsdGuides.SetKey(const Value: String);
@@ -160,6 +182,7 @@ procedure TdsdGuides.SetLookupControl(const Value: TWinControl);
 begin
   FLookupControl := Value;
   TAccessControl(FLookupControl).OnDblClick := OnDblClick;
+  TAccessControl(FLookupControl).PopupMenu := FPopupMenu;
   if FLookupControl is TcxButtonEdit then
      (LookupControl as TcxButtonEdit).Properties.OnButtonClick := OnButtonClick;
 end;

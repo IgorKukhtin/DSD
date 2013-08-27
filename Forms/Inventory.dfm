@@ -4,8 +4,8 @@ inherited InventoryForm: TInventoryForm
   ClientWidth = 806
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 822
-  ExplicitHeight = 428
+  ExplicitWidth = 814
+  ExplicitHeight = 420
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -41,6 +41,7 @@ inherited InventoryForm: TInventoryForm
     object edFrom: TcxButtonEdit
       Left = 288
       Top = 27
+      PopupMenu = PopupMenu
       Properties.Buttons = <
         item
           Default = True
@@ -222,14 +223,11 @@ inherited InventoryForm: TInventoryForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 798
-        Height = 253
+        Width = 806
+        Height = 259
         Align = alClient
         TabOrder = 0
         object cxGridEntryDBTableView: TcxGridDBTableView
@@ -450,8 +448,8 @@ inherited InventoryForm: TInventoryForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -832,12 +830,14 @@ inherited InventoryForm: TInventoryForm
   object dsdDBViewAddOn: TdsdDBViewAddOn
     SortImages = dmMain.SortImageList
     View = cxGridDBTableView
+    ActionItemList = <>
     Left = 296
     Top = 256
   end
   object EntryDBViewAddOn: TdsdDBViewAddOn
     SortImages = dmMain.SortImageList
     View = cxGridEntryDBTableView
+    ActionItemList = <>
     Left = 464
     Top = 192
   end
