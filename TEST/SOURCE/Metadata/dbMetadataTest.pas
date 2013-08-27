@@ -88,11 +88,11 @@ end;
 procedure TdbMetaDataTest.CreateObjectDescFunction;
 begin
   ExecFile(MetadataPath + 'Object\CreateObjectDescFunction.sql', ZQuery);
-  ExecFile(MetadataPath + 'Object\InsertObjectDesc.sql', ZQuery);
+  //ExecFile(MetadataPath + 'Object\InsertObjectDesc.sql', ZQuery);                 Новая схема 2
   ExecFile(MetadataPath + 'Object\CreateObjectStringDescFunction.sql', ZQuery);
-  ExecFile(MetadataPath + 'Object\InsertObjectStringDesc.sql', ZQuery);
+  //ExecFile(MetadataPath + 'Object\InsertObjectStringDesc.sql', ZQuery);           Новая схема 2
   ExecFile(MetadataPath + 'Object\CreateObjectLinkDescFunction.sql', ZQuery);
-  ExecFile(MetadataPath + 'Object\InsertObjectLinkDesc.sql', ZQuery);
+  //ExecFile(MetadataPath + 'Object\InsertObjectLinkDesc.sql', ZQuery);             Новая схема 2
   ExecFile(MetadataPath + 'Object\CreateObjectBLOBDescFunction.sql', ZQuery);
   ExecFile(MetadataPath + 'Object\CreateObjectFloatDescFunction.sql', ZQuery);
   ExecFile(MetadataPath + 'Object\CreateObjectBooleanDescFunction.sql', ZQuery);
