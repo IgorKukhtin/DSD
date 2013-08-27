@@ -112,7 +112,7 @@ object LoginForm: TLoginForm
           'Top'
           'Width')
       end>
-    StorageName = 'cxPropertiesStore'
+    StorageName = 'LoginForm.ini'
     Left = 328
     Top = 72
   end

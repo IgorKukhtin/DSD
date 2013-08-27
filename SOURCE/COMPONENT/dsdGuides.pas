@@ -79,15 +79,18 @@ begin
 end;
 
 constructor TdsdGuides.Create(AOwner: TComponent);
+var MenuItem: TMenuItem;
 begin
   inherited;
   FParams := TdsdParams.Create(TParam);
-  FPopupMenu := TPopupMenu.Create(FLookupControl);
-  with FPopupMenu.CreateMenuItem do begin
+  FPopupMenu := TPopupMenu.Create(nil);
+  MenuItem := TMenuItem.Create(FPopupMenu);
+  with MenuItem do begin
     Caption := 'Обнулить значение';
     ShortCut := 32776;  // Alt + BkSp
     OnClick := OnPopupClick;
   end;
+  FPopupMenu.Items.Add(MenuItem);
 end;
 
 destructor TdsdGuides.Destroy;
@@ -182,9 +185,12 @@ procedure TdsdGuides.SetLookupControl(const Value: TWinControl);
 begin
   FLookupControl := Value;
   TAccessControl(FLookupControl).OnDblClick := OnDblClick;
-  TAccessControl(FLookupControl).PopupMenu := FPopupMenu;
-  if FLookupControl is TcxButtonEdit then
+  if FLookupControl is TcxButtonEdit then begin
      (LookupControl as TcxButtonEdit).Properties.OnButtonClick := OnButtonClick;
+     (LookupControl as TcxButtonEdit).PopupMenu := FPopupMenu;
+  end;
+  if FLookupControl is TcxLookupComboBox then
+     (LookupControl as TcxButtonEdit).PopupMenu := FPopupMenu;
 end;
 
 procedure TdsdGuides.SetTextValue(const Value: String);

@@ -129,6 +129,7 @@ end;
 function TdsdFormStorage.Load(FormName: String): TParentForm;
 begin
   Result := TParentForm.CreateNew(Application);
+  Result.FormClassName := FormName;
 
   LoadStoredProc.ParamByName('FormName').Value := FormName;
 

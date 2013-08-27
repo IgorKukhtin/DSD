@@ -182,7 +182,7 @@ uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf, Windows,
      cxFilter, cxClasses, cxLookAndFeelPainters, cxCustomData,
      cxGridCommon, math, cxPropertiesStore, cxGridCustomView, UtilConst, cxStorage,
      cxGeometry, cxCalendar, cxCheckBox, dxBar, cxButtonEdit, cxCurrencyEdit,
-     VCL.Menus;
+     VCL.Menus, ParentForm;
 
 type
 
@@ -521,8 +521,13 @@ var
   GridView: TcxCustomGridView;
   TreeList: TcxDBTreeList;
   BarManager: TdxBarManager;
+  FormName: string;
 begin
-  Data := StringReplace(TdsdFormStorageFactory.GetStorage.LoadUserFormSettings(FForm.Name), '&', '&amp;', [rfReplaceAll]);
+  if FForm is TParentForm then
+     FormName := TParentForm(FForm).FormClassName
+  else
+     FormName := FForm.ClassName;
+  Data := StringReplace(TdsdFormStorageFactory.GetStorage.LoadUserFormSettings(FormName), '&', '&amp;', [rfReplaceAll]);
   if Data <> '' then begin
     XMLDocument := TXMLDocument.Create(nil);
     XMLDocument.LoadFromXML(Data);
@@ -565,7 +570,12 @@ var
   TempStream: TStringStream;
   i, j: integer;
   xml: string;
+  FormName: string;
 begin
+  if FForm is TParentForm then
+     FormName := TParentForm(FForm).FormClassName
+  else
+     FormName := FForm.ClassName;
   TempStream :=  TStringStream.Create;
   try
     xml := '<root>';
@@ -600,7 +610,7 @@ begin
          end;
     end;
     xml := xml + '</root>';
-    TdsdFormStorageFactory.GetStorage.SaveUserFormSettings(FForm.Name, xml);
+    TdsdFormStorageFactory.GetStorage.SaveUserFormSettings(FormName, xml);
   finally
     TempStream.Free;
   end;

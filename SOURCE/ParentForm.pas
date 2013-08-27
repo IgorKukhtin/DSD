@@ -13,6 +13,7 @@ type
     FParams: TdsdParams;
     // Класс, который вызвал данную форму
     FSender: TComponent;
+    FFormClassName: string;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure SetSender(const Value: TComponent);
@@ -24,6 +25,7 @@ type
     property Params: TdsdParams read FParams;
     procedure Execute(Sender: TComponent; Params: TdsdParams);
     procedure Close(Sender: TObject);
+    property FormClassName: string read FFormClassName write FFormClassName;
   end;
 
 implementation
