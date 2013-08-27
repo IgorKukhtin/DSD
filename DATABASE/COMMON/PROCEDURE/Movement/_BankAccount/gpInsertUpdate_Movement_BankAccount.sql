@@ -11,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount(
     IN inFromId              Integer   , -- От кого (в документе) -- Юридическое лицо, Расчетный счет 	
     IN inToId                Integer   , -- Кому (в документе)  -- Юридическое лицо, Расчетный счет 	
     IN inInfoMoneyId         Integer   , -- Статьи назначения 
+    IN inBusinessId          Integer   , -- Бизнесс
     IN inContractId          Integer   , -- Договора
     IN inUnitId              Integer   , -- Подразделение
     IN inSession             TVarChar    -- сессия пользователя
@@ -37,6 +38,8 @@ BEGIN
 
      -- сохранили связь с <Статьи назначения>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_InfoMoney(), ioId, inInfoMoneyId);
+     -- сохранили связь с <Бизнесом>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Business(), ioId, inBusinessId);
      -- сохранили связь с <Договора>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
      -- сохранили связь с <Подразделение>

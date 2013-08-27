@@ -3,13 +3,13 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
   ClientHeight = 427
   ClientWidth = 1240
-  ExplicitWidth = 1256
-  ExplicitHeight = 465
+  ExplicitWidth = 1248
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 28
+    Top = 26
     Width = 1240
     Height = 41
     Align = alTop
@@ -32,9 +32,9 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   end
   object cxGrid: TcxGrid
     Left = 0
-    Top = 69
+    Top = 67
     Width = 1240
-    Height = 358
+    Height = 360
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
@@ -52,6 +52,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object colStatus: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
         DataBinding.FieldName = 'StatusCode'
@@ -220,8 +221,8 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -238,7 +239,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar: TdxBar
       Caption = 'Custom'
@@ -500,5 +501,21 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       end>
     Left = 72
     Top = 320
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    OnDblClickAction = actUpdate
+    SortImages = dmMain.SortImageList
+    View = cxGridDBTableView
+    ActionItemList = <
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
+    Left = 160
+    Top = 224
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 192
+    Top = 256
   end
 end

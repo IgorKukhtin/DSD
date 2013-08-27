@@ -52,7 +52,8 @@ requires
   fs16,
   frx16,
   frxDB16,
-  dxBarExtItemsRS16;
+  dxBarExtItemsRS16,
+  cxPivotGridRS16;
 
 contains
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',

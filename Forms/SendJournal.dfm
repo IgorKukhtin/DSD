@@ -492,6 +492,11 @@ inherited SendJournalForm: TSendJournalForm
     OnDblClickAction = actUpdate
     SortImages = dmMain.SortImageList
     View = cxGridDBTableView
+    ActionItemList = <
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
     Left = 168
     Top = 256
   end

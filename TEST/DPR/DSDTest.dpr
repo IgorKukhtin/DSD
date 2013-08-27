@@ -163,7 +163,7 @@ uses
   ZakazInternal in '..\..\Forms\ZakazInternal.pas' {ZakazInternalForm},
   CommonObjectCostProcedureTest in '..\SOURCE\ObjectCost\CommonObjectCostProcedureTest.pas',
   BankStatementTest in '..\SOURCE\Movement\All\BankStatementTest.pas',
-  BankAccountTest in '..\SOURCE\Movement\All\BankAccountTest.pas',
+  BankAccountMovementTest in '..\SOURCE\Movement\All\BankAccountMovementTest.pas',
   ServiceTest in '..\SOURCE\Movement\All\ServiceTest.pas',
   PersonalServiceTest in '..\SOURCE\Movement\All\PersonalServiceTest.pas',
   PersonalReportTest in '..\SOURCE\Movement\All\PersonalReportTest.pas',
@@ -178,8 +178,9 @@ uses
   ServiceEdit in '..\..\Forms\ServiceEdit.pas' {ServiceEditForm},
   Goods in '..\..\Forms\Goods.pas' {GoodsForm},
   Units in '..\..\Forms\Units.pas' {UnitForm},
-  JuridicalTree in '..\..\Forms\JuridicalTree.pas' {JuridicalTreeForm};
-
+  JuridicalTree in '..\..\Forms\JuridicalTree.pas' {JuridicalTreeForm},
+  BankAccountTest in '..\SOURCE\Objects\All\BankAccountTest.pas',
+  BusinessTest in '..\SOURCE\Objects\All\BusinessTest.pas';
 
 {$R *.RES}
 

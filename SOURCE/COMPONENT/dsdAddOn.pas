@@ -9,6 +9,34 @@ uses Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView,
 
 type
 
+  TActionItem = class(TCollectionItem)
+  private
+    FSecondaryShortCuts: TShortCutList;
+    FShortCut: TShortCut;
+    FAction: TCustomAction;
+    procedure SetAction(const Value: TCustomAction);
+    procedure SetShortCut(const Value: TShortCut);
+    function GetSecondaryShortCuts: TShortCutList;
+    procedure SetSecondaryShortCuts(const Value: TShortCutList);
+    function IsSecondaryShortCutsStored: Boolean;
+  public
+    constructor Create(Collection: TCollection); override;
+  published
+    property Action: TCustomAction read FAction write SetAction;
+    property ShortCut: TShortCut read FShortCut write SetShortCut default 0;
+    property SecondaryShortCuts: TShortCutList read GetSecondaryShortCuts
+       write SetSecondaryShortCuts stored IsSecondaryShortCutsStored;
+    end;
+
+  TActionItemList = class(TCollection)
+  private
+    function GetItem(Index: Integer): TActionItem;
+    procedure SetItem(Index: Integer; const Value: TActionItem);
+  public
+    function Add: TActionItem;
+    property Items[Index: Integer]: TActionItem read GetItem write SetItem; default;
+  end;
+
   TdsdDBTreeAddOn = class(TComponent)
   private
     FDBTreeList: TcxDBTreeList;
@@ -48,7 +76,9 @@ type
     edFilter: TcxTextEdit;
     FImages: TImageList;
     FOnDblClickAction: TCustomAction;
+    FActionItemList: TActionItemList;
     procedure OnDblClick(Sender: TObject);
+    procedure OnKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure OnKeyPress(Sender: TObject; var Key: Char);
     procedure SetView(const Value: TcxGridDBTableView);
     procedure edFilterExit(Sender: TObject);
@@ -73,6 +103,7 @@ type
     property OnDblClickAction: TCustomAction read FOnDblClickAction write FOnDblClickAction;
     property SortImages: TImageList read FImages write FImages;
     property View: TcxGridDBTableView read FView write SetView;
+    property ActionItemList: TActionItemList read FActionItemList write FActionItemList;
   end;
 
   TdsdUserSettingsStorageAddOn = class(TComponent)
@@ -150,7 +181,8 @@ implementation
 uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf, Windows,
      cxFilter, cxClasses, cxLookAndFeelPainters, cxCustomData,
      cxGridCommon, math, cxPropertiesStore, cxGridCustomView, UtilConst, cxStorage,
-     cxGeometry, cxCalendar, cxCheckBox, dxBar, cxButtonEdit, cxCurrencyEdit;
+     cxGeometry, cxCalendar, cxCheckBox, dxBar, cxButtonEdit, cxCurrencyEdit,
+     VCL.Menus;
 
 type
 
@@ -260,9 +292,12 @@ end;
 constructor TdsdDBViewAddOn.Create(AOwner: TComponent);
 begin
   inherited;
+  ActionItemList := TActionItemList.Create(TActionItem);
+
   edFilter := TcxTextEdit.Create(Self);
-  edFilter.Visible := false;
   edFilter.OnKeyDown := edFilterKeyDown;
+  edFilter.Visible := false;
+
   edFilter.OnExit := edFilterExit;
   FBackGroundStyle := TcxStyle.Create(nil);
   FBackGroundStyle.Color := $00E4E4E4;
@@ -349,7 +384,7 @@ procedure TdsdDBViewAddOn.edFilterKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   case Key of
-    VK_RETURN: lpSetFilter;
+    VK_RETURN: begin lpSetFilter; Key := 0; end;
     VK_ESCAPE: edFilterExit(Sender);
   end;
 end;
@@ -414,11 +449,25 @@ begin
      FOnDblClickAction := nil;
 end;
 
+procedure TdsdDBViewAddOn.OnKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+var i: integer;
+begin
+  // Сначала проверим все action
+  // и если там нет ничего, то тогда идем дальше
+  for I := 0 to ActionItemList.Count - 1 do
+      if ShortCut(Key, Shift) = ActionItemList[i].ShortCut then begin
+         ActionItemList[i].Action.Execute;
+         Key := 0;
+         Shift := [];
+      end;
+end;
+
 procedure TdsdDBViewAddOn.OnKeyPress(Sender: TObject; var Key: Char);
 begin
   // если колонка не редактируема и введена буква или BackSpace то обрабатываем установку фильтра
   if {TcxGridDBColumn(FView.Controller.FocusedColumn).Properties.ReadOnly and} (Key > #31) then begin
-     lpSetEdFilterPos(Key);
+     lpSetEdFilterPos(Char(Key));
      Key := #0;
   end;
 end;
@@ -426,6 +475,7 @@ end;
 procedure TdsdDBViewAddOn.SetView(const Value: TcxGridDBTableView);
 begin
   FView := Value;
+  FView.OnKeyDown := OnKeyDown;
   FView.OnKeyPress := OnKeyPress;
   FView.OnCustomDrawColumnHeader := OnCustomDrawColumnHeader;
   FView.DataController.Filter.OnChanged := onFilterChanged;
@@ -500,7 +550,7 @@ begin
            PropertiesStore := FForm.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxPropertiesStore;
            if Assigned(PropertiesStore) then begin
               PropertiesStore.StorageType := stStream;
-              PropertiesStore.StorageStream := TStringStream.Create(XMLToAnsi(ChildNodes[i].GetAttribute('data')));
+              PropertiesStore.StorageStream := TStringStream.Create(gfStrXmlToStr(XMLToAnsi(ChildNodes[i].GetAttribute('data'))));
               PropertiesStore.RestoreFrom;
               PropertiesStore.StorageStream.Free;
            end;
@@ -684,6 +734,60 @@ begin
            if Assigned(FindComponent(DataSet)) and Assigned(FindComponent(FormParams)) then
               TDataSet(FindComponent(DataSet)).Locate('Id', TdsdFormParams(FindComponent(FormParams)).ParamByName('Id').AsString, []);
          end;
+end;
+
+{ TActionItem }
+
+constructor TActionItem.Create(Collection: TCollection);
+begin
+  inherited;
+
+end;
+
+procedure TActionItem.SetAction(const Value: TCustomAction);
+begin
+  FAction := Value;
+end;
+
+function TActionItem.GetSecondaryShortCuts: TShortCutList;
+begin
+  if FSecondaryShortCuts = nil then
+    FSecondaryShortCuts := TShortCutList.Create;
+  Result := FSecondaryShortCuts;
+end;
+
+procedure TActionItem.SetSecondaryShortCuts(const Value: TShortCutList);
+begin
+  if FSecondaryShortCuts = nil then
+    FSecondaryShortCuts := TShortCutList.Create;
+  FSecondaryShortCuts.Assign(Value);
+end;
+
+function TActionItem.IsSecondaryShortCutsStored: Boolean;
+begin
+  Result := Assigned(FSecondaryShortCuts) and (FSecondaryShortCuts.Count > 0);
+end;
+
+procedure TActionItem.SetShortCut(const Value: TShortCut);
+begin
+  FShortCut := Value;
+end;
+
+{ TActionItemList }
+
+function TActionItemList.Add: TActionItem;
+begin
+  result := TActionItem(inherited Add);
+end;
+
+function TActionItemList.GetItem(Index: Integer): TActionItem;
+begin
+  Result := TActionItem(inherited GetItem(Index));
+end;
+
+procedure TActionItemList.SetItem(Index: Integer; const Value: TActionItem);
+begin
+  inherited SetItem(Index, Value);
 end;
 
 end.

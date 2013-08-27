@@ -220,7 +220,7 @@ inherited Report_BalanceForm: TReport_BalanceForm
     Height = 41
     Align = alTop
     Caption = 'Panel1'
-    TabOrder = 3
+    TabOrder = 1
     object deStart: TcxDateEdit
       Left = 208
       Top = 8
@@ -508,6 +508,7 @@ inherited Report_BalanceForm: TReport_BalanceForm
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     View = cxGridDBTableView
+    ActionItemList = <>
     Left = 552
     Top = 8
   end

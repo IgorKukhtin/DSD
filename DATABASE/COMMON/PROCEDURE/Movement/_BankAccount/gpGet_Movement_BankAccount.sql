@@ -43,7 +43,8 @@ BEGIN
            , Object_Contract.ValueData         AS ContractName
            , Object_Unit.Id                    AS UnitId
            , Object_Unit.ValueData             AS UnitName
-
+           , Object_Business.Id                AS BusinessId
+           , Object_Business.ValueData         AS BusinessName
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -54,7 +55,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+            LEFT JOIN Object AS Object_From ON Obje1ct_From.Id = MovementLinkObject_From.ObjectId
             
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
@@ -76,6 +77,11 @@ BEGIN
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Business
+                                         ON MovementLinkObject_Business.MovementId = Movement.Id
+                                        AND MovementLinkObject_Business.DescId = zc_MovementLinkObject_Business()
+            LEFT JOIN Object AS Object_Business ON Object_Business.Id = MovementLinkObject_Business.ObjectId
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_BankAccount();

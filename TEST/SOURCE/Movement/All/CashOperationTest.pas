@@ -59,7 +59,6 @@ begin
   with TInfoMoneyTest.Create.GetDataSet do begin
      if Locate('Code', '10103', []) then
         InfoMoneyId := FieldByName('Id').AsInteger;
-
   end;
   UnitId := 0;
   Amount := 265.68;
@@ -107,15 +106,18 @@ end;
 
 procedure TCashOperationTest.Test;
 var MovementCashOperation: TCashOperation;
-    Id: Integer;
+    Id, RecordCount: Integer;
     StoredProc: TdsdStoredProc;
     AccountAmount, AccountAmountTwo: double;
 begin
   inherited;
   AccountAmount := 0;
   AccountAmountTwo := 0;
-  // Создаем документ
+  // Создаем объект документ
   MovementCashOperation := TCashOperation.Create;
+
+  RecordCount := MovementCashOperation.GetDataSet.RecordCount;
+
   // создание документа
   Id := MovementCashOperation.InsertDefault;
   // Проверяем остаток по счету кассы
@@ -130,6 +132,7 @@ begin
      if Locate('AccountCode', '40101', []) then
         AccountAmount := FieldByName('AmountDebetEnd').AsFloat + FieldByName('AmountKreditEnd').AsFloat
   end;
+  MovementCashOperation.GetRecord(Id);
   try
     // проведение
     MovementCashOperation.DocumentComplete(Id);

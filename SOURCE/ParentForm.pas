@@ -17,6 +17,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure SetSender(const Value: TComponent);
     property FormSender: TComponent read FSender write SetSender;
+    procedure AfterShow(var a : TWMSHOWWINDOW); message WM_SHOWWINDOW;
   public
     { Public declarations }
     constructor CreateNew(AOwner: TComponent; Dummy: Integer = 0); override;
@@ -37,6 +38,17 @@ uses
   cxDBPivotGrid;
 
 {$R *.dfm}
+
+procedure TParentForm.AfterShow(var a : TWMSHOWWINDOW);
+var
+  i: integer;
+begin
+  for I := 0 to ComponentCount - 1 do begin
+    // Перечитывает видимые компоненты
+    if Components[i] is TdsdDataSetRefresh then
+       (Components[i] as TdsdDataSetRefresh).Execute;
+  end;
+end;
 
 procedure TParentForm.Close(Sender: TObject);
 var FormAction: IFormAction;
@@ -71,11 +83,6 @@ begin
        FChoiceAction := Components[i] as TdsdChoiceGuides;
   end;
 
-  for I := 0 to ComponentCount - 1 do begin
-    // Перечитывает видимые компоненты
-    if Components[i] is TdsdDataSetRefresh then
-       (Components[i] as TdsdDataSetRefresh).Execute;
-  end;
   FormSender := Sender;
 end;
 

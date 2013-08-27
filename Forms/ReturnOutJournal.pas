@@ -75,6 +75,7 @@ type
     colContractName: TcxGridDBColumn;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
   private
   public
   end;

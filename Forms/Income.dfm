@@ -4,8 +4,8 @@ inherited IncomeForm: TIncomeForm
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1044
-  ExplicitHeight = 434
+  ExplicitWidth = 1036
+  ExplicitHeight = 423
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -102,16 +102,15 @@ inherited IncomeForm: TIncomeForm
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 126
+    Top = 124
     Width = 1028
-    Height = 270
+    Height = 272
     Align = alClient
     TabOrder = 2
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 266
-    ClientRectLeft = 4
-    ClientRectRight = 1024
+    ClientRectBottom = 272
+    ClientRectRight = 1028
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -119,8 +118,8 @@ inherited IncomeForm: TIncomeForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1020
-        Height = 242
+        Width = 1028
+        Height = 248
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -288,8 +287,8 @@ inherited IncomeForm: TIncomeForm
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 1020
-        Height = 242
+        Width = 1028
+        Height = 248
         Align = alClient
         TabOrder = 0
         object cxGridEntryDBTableView: TcxGridDBTableView
@@ -544,8 +543,8 @@ inherited IncomeForm: TIncomeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -562,7 +561,7 @@ inherited IncomeForm: TIncomeForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar: TdxBar
       Caption = 'Custom'
@@ -902,6 +901,7 @@ inherited IncomeForm: TIncomeForm
   object dsdDBViewAddOn: TdsdDBViewAddOn
     SortImages = dmMain.SortImageList
     View = cxGridDBTableView
+    ActionItemList = <>
     Left = 248
     Top = 232
   end
@@ -912,6 +912,7 @@ inherited IncomeForm: TIncomeForm
   object EntryViewAddOn: TdsdDBViewAddOn
     SortImages = dmMain.SortImageList
     View = cxGridEntryDBTableView
+    ActionItemList = <>
     Left = 368
     Top = 240
   end

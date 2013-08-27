@@ -3,13 +3,13 @@ inherited InventoryJournalForm: TInventoryJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
   ClientHeight = 427
   ClientWidth = 778
-  ExplicitWidth = 794
-  ExplicitHeight = 465
+  ExplicitWidth = 786
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 28
+    Top = 26
     Width = 778
     Height = 41
     Align = alTop
@@ -32,9 +32,9 @@ inherited InventoryJournalForm: TInventoryJournalForm
   end
   object cxGrid: TcxGrid
     Left = 0
-    Top = 69
+    Top = 67
     Width = 778
-    Height = 358
+    Height = 360
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
@@ -149,8 +149,8 @@ inherited InventoryJournalForm: TInventoryJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -167,7 +167,7 @@ inherited InventoryJournalForm: TInventoryJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar: TdxBar
       Caption = 'Custom'
@@ -297,8 +297,6 @@ inherited InventoryJournalForm: TInventoryJournalForm
       Category = 'DSDLib'
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      SecondaryShortCuts.Strings = (
-        'Enter')
       FormName = 'TInventoryForm'
       GuiParams = <
         item
@@ -453,6 +451,11 @@ inherited InventoryJournalForm: TInventoryJournalForm
     OnDblClickAction = actUpdate
     SortImages = dmMain.SortImageList
     View = cxGridDBTableView
+    ActionItemList = <
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
     Left = 184
     Top = 248
   end

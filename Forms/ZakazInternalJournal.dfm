@@ -243,8 +243,6 @@ inherited ZakazInternalJournalForm: TZakazInternalJournalForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      SecondaryShortCuts.Strings = (
-        'Enter')
       FormName = 'TZakazInternalForm'
       GuiParams = <
         item
@@ -365,6 +363,11 @@ inherited ZakazInternalJournalForm: TZakazInternalJournalForm
     OnDblClickAction = actUpdate
     SortImages = dmMain.SortImageList
     View = cxGridDBTableView
+    ActionItemList = <
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
     Left = 256
     Top = 240
   end

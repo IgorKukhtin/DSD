@@ -3,13 +3,13 @@ inherited LossJournalForm: TLossJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1057#1087#1080#1089#1072#1085#1080#1077
   ClientHeight = 427
   ClientWidth = 780
-  ExplicitWidth = 796
-  ExplicitHeight = 465
+  ExplicitWidth = 788
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 28
+    Top = 26
     Width = 780
     Height = 41
     Align = alTop
@@ -31,9 +31,9 @@ inherited LossJournalForm: TLossJournalForm
   end
   object cxGrid: TcxGrid
     Left = 0
-    Top = 69
+    Top = 67
     Width = 780
-    Height = 358
+    Height = 360
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
@@ -179,8 +179,8 @@ inherited LossJournalForm: TLossJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -197,7 +197,7 @@ inherited LossJournalForm: TLossJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar: TdxBar
       Caption = 'Custom'
@@ -481,6 +481,11 @@ inherited LossJournalForm: TLossJournalForm
     OnDblClickAction = actUpdate
     SortImages = dmMain.SortImageList
     View = cxGridDBTableView
+    ActionItemList = <
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
     Left = 248
     Top = 216
   end

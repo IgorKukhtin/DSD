@@ -77,6 +77,8 @@ type
     colPersonalDriverName: TcxGridDBColumn;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
   private
   public
   end;

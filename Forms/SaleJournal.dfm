@@ -2,9 +2,8 @@ inherited SaleJournalForm: TSaleJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
   ClientHeight = 427
   ClientWidth = 1240
-  ExplicitLeft = -258
-  ExplicitWidth = 1256
-  ExplicitHeight = 462
+  ExplicitWidth = 1248
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -238,8 +237,8 @@ inherited SaleJournalForm: TSaleJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -541,6 +540,11 @@ inherited SaleJournalForm: TSaleJournalForm
     OnDblClickAction = actUpdate
     SortImages = dmMain.SortImageList
     View = cxGridDBTableView
+    ActionItemList = <
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
     Left = 256
     Top = 240
   end

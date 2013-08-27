@@ -13,6 +13,7 @@ type
     procedure DocumentComplete(Id: integer);
     procedure DocumentUncomplete(Id: integer);
     procedure DeleteRecord(Id: Integer); override;
+    procedure SetDataSetParam; override;
   public
     constructor Create; override;
     procedure Delete(Id: Integer); override;
@@ -1173,6 +1174,13 @@ end;
 procedure TMovementTest.InsertUpdateInList(Id: integer);
 begin
   InsertedIdMovementList.Add(IntToStr(Id));
+end;
+
+procedure TMovementTest.SetDataSetParam;
+begin
+  inherited;
+  FParams.AddParam('inStartDate', ftDateTime, ptInput, FloatToDateTime(Date - 1));
+  FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
 end;
 
 { TdbMovementTestNew }

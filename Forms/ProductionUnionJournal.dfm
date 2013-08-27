@@ -488,8 +488,14 @@ inherited ProductionUnionJournalForm: TProductionUnionJournalForm
     Top = 232
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    OnDblClickAction = actUpdate
     SortImages = dmMain.SortImageList
     View = cxGridDBTableView
+    ActionItemList = <
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
     Left = 160
     Top = 200
   end

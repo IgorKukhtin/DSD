@@ -48,9 +48,7 @@ type
 
   published
     procedure Bank_Test;
-    procedure BankAccount_Test;
     procedure Branch_Test;
-    procedure Business_Test;
     procedure CarModel_Test;
     procedure Car_Test;
     procedure Contract_Test;
@@ -196,15 +194,6 @@ type
     constructor Create; override;
   end;
 
-  TBusinessTest = class(TObjectTest)
-  private
-    function InsertDefault: integer; override;
-  public
-    function InsertUpdateBusiness(const Id: integer; Code: Integer;
-        Name: string): integer;
-    constructor Create; override;
-  end;
-
   TBranchTest = class(TObjectTest)
   private
     function InsertDefault: integer; override;
@@ -234,14 +223,6 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdateMeasure(Id, Code: Integer; Name: String): integer;
-    constructor Create; override;
-  end;
-
-  TBankAccountTest = class(TObjectTest)
-  function InsertDefault: integer; override;
-  public
-    function InsertUpdateBankAccount(Id, Code: Integer; Name: String;
-                            JuridicalId, BankId, CurrencyId: Integer): integer;
     constructor Create; override;
   end;
 
@@ -403,7 +384,7 @@ type
 uses ZDbcIntfs, SysUtils, Storage, DBClient, XMLDoc, CommonData, Forms,
      UtilConvert, ZLibEx, zLibUtil,
 
-     UnitsTest, JuridicalTest;
+     UnitsTest, JuridicalTest, BusinessTest;
 
 
 { TObjectTest }
@@ -1184,48 +1165,6 @@ begin
   end;
 end;
 
-{TBusinessTest}
-constructor TBusinessTest.Create;
-begin
-  inherited;
-  spInsertUpdate := 'gpInsertUpdate_Object_Business';
-  spSelect := 'gpSelect_Object_Business';
-  spGet := 'gpGet_Object_Business';
-end;
-
-function TBusinessTest.InsertDefault: integer;
-begin
-  result := InsertUpdateBusiness(0, -1, 'Бизнес');
-end;
-
-function TBusinessTest.InsertUpdateBusiness;
-begin
-  FParams.Clear;
-  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
-  FParams.AddParam('inCode', ftInteger, ptInput, Code);
-  FParams.AddParam('inName', ftString, ptInput, Name);
-  result := InsertUpdate(FParams);
-end;
-
-procedure TdbObjectTest.Business_Test;
-var Id: integer;
-    RecordCount: Integer;
-    ObjectTest: TBusinessTest;
-begin
-  ObjectTest := TBusinessTest.Create;
-  // Получим список
-  RecordCount := GetRecordCount(ObjectTest);
-  // Вставка Бизнеса
-  Id := ObjectTest.InsertDefault;
-  try
-    // Получение данных о Бизнесе
-    with ObjectTest.GetRecord(Id) do
-      Check((FieldByName('Name').AsString = 'Бизнес'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
-  finally
-    ObjectTest.Delete(Id);
-  end;
-end;
-
  {TBranchTest}
  constructor TBranchTest.Create;
 begin
@@ -1452,58 +1391,6 @@ begin
     with ObjectTest.GetRecord(Id) do
       Check((FieldByName('Name').AsString = 'Классификатор свойств товаров'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
 
-  finally
-    ObjectTest.Delete(Id);
-  end;
-end;
-
-
- {TBankAccountTest}
- constructor TBankAccountTest.Create;
-begin
-  inherited;
-  spInsertUpdate := 'gpInsertUpdate_Object_BankAccount';
-  spSelect := 'gpSelect_Object_BankAccount';
-  spGet := 'gpGet_Object_BankAccount';
-end;
-
-function TBankAccountTest.InsertDefault: integer;
-var
-  JuridicalId, BankId, CurrencyId: Integer;
-begin
-  JuridicalId := TJuridical.Create.GetDefault;
-  BankId:= TBankTest.Create.GetDefault;
-  CurrencyId:= TCurrencyTest.Create.GetDefault;
-
-  result := InsertUpdateBankAccount(0, -1, 'Расчетный счет', JuridicalId, BankId, CurrencyId);
-end;
-
-function TBankAccountTest.InsertUpdateBankAccount;
-begin
-  FParams.Clear;
-  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
-  FParams.AddParam('inCode', ftInteger, ptInput, Code);
-  FParams.AddParam('inName', ftString, ptInput, Name);
-  FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
-  FParams.AddParam('inBankId', ftInteger, ptInput, BankId);
-  FParams.AddParam('inCurrencyId', ftInteger, ptInput, CurrencyId);
-  result := InsertUpdate(FParams);
-end;
-
-procedure TdbObjectTest.BankAccount_Test;
-var Id: integer;
-    RecordCount: Integer;
-    ObjectTest: TBankAccountTest;
-begin
-  ObjectTest := TBankAccountTest.Create;
-  // Получим список
-  RecordCount := GetRecordCount(ObjectTest);
-  // Вставка Филиала
-  Id := ObjectTest.InsertDefault;
-  try
-    // Получение данных о Филиале
-    with ObjectTest.GetRecord(Id) do
-      Check((FieldByName('Name').AsString = 'Расчетный счет'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
   finally
     ObjectTest.Delete(Id);
   end;
@@ -2072,7 +1959,7 @@ begin
   PositionId := TPositionTest.Create.GetDefault;
   UnitId := TUnit.Create.GetDefault;
   JuridicalId := TJuridical.Create.GetDefault;
-  BusinessId := TBusinessTest.Create.GetDefault;
+  BusinessId := TBusiness.Create.GetDefault;
   result := InsertUpdatePersonal(0, -3, 'Сотрудник', MemberId, PositionId, UnitId, JuridicalId, BusinessId, Date,Date);
 end;
 

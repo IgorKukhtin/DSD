@@ -106,42 +106,52 @@ BEGIN
      RAISE EXCEPTION 'У кассы не установлен бизнес. Проведение невозможно';
    END IF;
 
-   -- Определяем счета по управленческим операциям
-   IF vbObjectDescId = zc_Object_Juridical()
+   -- Если мы платим
+   IF vbCashId = vbFromId 
    THEN
-      IF vbInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100(), zc_Enum_InfoMoneyDestination_10200(),
-           zc_Enum_InfoMoneyDestination_20100(), zc_Enum_InfoMoneyDestination_20200(), zc_Enum_InfoMoneyDestination_20300(),
-           zc_Enum_InfoMoneyDestination_20400(), zc_Enum_InfoMoneyDestination_20500(), zc_Enum_InfoMoneyDestination_20600(),
-           zc_Enum_InfoMoneyDestination_20700()) 
-      THEN
-           vbAccountGroupId := zc_Enum_AccountGroup_70000(); -- Кредиторы;
-           vbAccountDirectionId := zc_Enum_AccountDirection_70100(); -- Поставщики;
-      END IF;
-      IF vbInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21400()) 
-      THEN
-           vbAccountGroupId := zc_Enum_AccountGroup_70000(); -- Кредиторы;
-           vbAccountDirectionId := zc_Enum_AccountDirection_70200();  -- "услуги полученные"
-      END IF;
-      IF vbInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500()) 
-      THEN
-           vbAccountGroupId := zc_Enum_AccountGroup_70000(); -- Кредиторы;
-           vbAccountDirectionId := zc_Enum_AccountDirection_70300();  -- "Маркетинг"
-      END IF;
-      IF vbInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21600()) 
-      THEN
-           vbAccountGroupId := zc_Enum_AccountGroup_70000(); -- Кредиторы;
-           vbAccountDirectionId := zc_Enum_AccountDirection_70400();  -- "Коммунальные услуги"
-      END IF;
-      IF vbInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_50100()) 
-      THEN
-           vbAccountGroupId := zc_Enum_AccountGroup_90000(); -- Расчеты с бюджетом;
-           vbAccountDirectionId := zc_Enum_AccountDirection_90100();  -- "Налоговые платежи"
-      END IF;
-      IF vbInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_50200()) 
-      THEN
-           vbAccountGroupId := zc_Enum_AccountGroup_90000(); -- Расчеты с бюджетом;
-           vbAccountDirectionId := zc_Enum_AccountDirection_90200();  -- "Налоговые платежи (прочие)"
-      END IF;
+       -- Определяем счета по управленческим операциям
+       CASE vbObjectDescId 
+            -- Юр. лицо
+            WHEN zc_Object_Juridical() THEN
+                 -- Выбираем по управленческой статье
+                 SELECT outAccountGroupId, outAccountDirectionId INTO vbAccountGroupId, vbAccountDirectionId FROM lfGet_Object_AccountForJuridical(vbInfoMoneyDestinationId, true);
+            -- Сотрудник
+            WHEN zc_Object_Personal() THEN
+                 -- Выбираем по управленческой статье
+                 CASE vbInfoMoneyDestinationId  
+                       WHEN zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье
+                       THEN
+                            vbAccountGroupId := zc_Enum_AccountGroup_70000(); -- Кредиторы;
+                            vbAccountDirectionId := zc_Enum_AccountDirection_70600(); -- сотрудники (заготовители);
+                       WHEN zc_Enum_InfoMoneyDestination_60100() -- Заработная плата
+                       THEN
+                            vbAccountGroupId := zc_Enum_AccountGroup_70000(); -- Кредиторы;
+                            vbAccountDirectionId := zc_Enum_AccountDirection_70500(); -- Заработная плата;
+                 END CASE;
+       END CASE;
+   ELSE -- Нам платят
+       CASE vbObjectDescId 
+            -- Юр. лицо
+            WHEN zc_Object_Juridical() THEN
+                 -- Выбираем по управленческой статье
+                 SELECT outAccountGroupId, outAccountDirectionId INTO vbAccountGroupId, vbAccountDirectionId FROM lfGet_Object_AccountForJuridical(vbInfoMoneyDestinationId, true);
+            -- Сотрудник
+            WHEN zc_Object_Personal() THEN
+                 -- Выбираем по управленческой статье
+                 CASE vbInfoMoneyDestinationId  
+                       WHEN zc_Enum_InfoMoneyDestination_10100(), zc_Enum_InfoMoneyDestination_10200(),
+                            zc_Enum_InfoMoneyDestination_20100(), zc_Enum_InfoMoneyDestination_20200(), zc_Enum_InfoMoneyDestination_20300(),
+                            zc_Enum_InfoMoneyDestination_20400(), zc_Enum_InfoMoneyDestination_20500(), zc_Enum_InfoMoneyDestination_20600(),
+                            zc_Enum_InfoMoneyDestination_20700()
+                       THEN
+                            vbAccountGroupId := zc_Enum_AccountGroup_30000(); -- Дебиторы;
+                            vbAccountDirectionId := zc_Enum_AccountDirection_30500(); -- сотрудники (подотчетные лица)
+                       WHEN zc_Enum_InfoMoneyDestination_60100() -- Заработная плата
+                       THEN
+                            vbAccountGroupId := zc_Enum_AccountGroup_70000(); -- Кредиторы;
+                            vbAccountDirectionId := zc_Enum_AccountDirection_70500(); -- Заработная плата;
+                 END CASE;
+       END CASE;
    END IF;
 
    vbAccountId := lpInsertFind_Object_Account (inAccountGroupId         := vbAccountGroupId
@@ -194,7 +204,7 @@ BEGIN
                                                                                          , inDescId_1   := zc_ContainerLinkObject_Juridical()
                                                                                          , inObjectId_1 := vbObjectId
                                                                                          , inDescId_2   := zc_ContainerLinkObject_PaidKind()
-                                                                                         , inObjectId_2 := zc_Object_PaidKind_SecondForm()
+                                                                                         , inObjectId_2 := zc_Enum_PaidKind_SecondForm()
                                                                                          , inDescId_3   := zc_ContainerLinkObject_Contract()
                                                                                          , inObjectId_3 := COALESCE(vbContractId, 0)
                                                                                          , inDescId_4   := zc_ContainerLinkObject_InfoMoney()
