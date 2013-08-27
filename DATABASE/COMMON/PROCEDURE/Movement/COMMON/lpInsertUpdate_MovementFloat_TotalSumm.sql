@@ -16,6 +16,7 @@ $BODY$
   DECLARE vbOperSumm_Packer TFloat;
   DECLARE vbOperSumm_MVAT TFloat;
   DECLARE vbOperSumm_PVAT TFloat;
+  DECLARE vbOperSumm_Inventory TFloat;
 
   DECLARE vbPriceWithVAT Boolean;
   DECLARE vbVATPercent TFloat;
@@ -113,7 +114,9 @@ BEGIN
                               ELSE CAST ( (1 + vbVATPercent / 100) * (tmpOperSumm_Packer) AS NUMERIC (16, 2))
                          END
             END
-            INTO vbOperCount_Master, vbOperCount_Child, vbOperCount_Partner, vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_Partner, vbOperCount_Packer, vbOperSumm_Packer
+            -- сумма ввода остатка
+          , tmpOperSumm_Inventory
+            INTO vbOperCount_Master, vbOperCount_Child, vbOperCount_Partner, vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_Partner, vbOperCount_Packer, vbOperSumm_Packer, vbOperSumm_Inventory
      FROM 
           (SELECT 
                  SUM (CASE WHEN MovementItem.DescId = zc_MI_Master() THEN MovementItem.Amount ELSE 0 END) AS tmpOperCount_Master
@@ -129,6 +132,9 @@ BEGIN
                , SUM (CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) <> 0 THEN COALESCE (CAST (MIFloat_AmountPacker.ValueData * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)), 0)
                                                                                    ELSE COALESCE (CAST (MIFloat_AmountPacker.ValueData * MIFloat_Price.ValueData AS NUMERIC (16, 2)), 0)
                       END) AS tmpOperSumm_Packer
+                 -- сумма ввода остатка
+               , SUM (COALESCE (MIFloat_Summ.ValueData, 0)) as tmpOperSumm_Inventory
+
             FROM Movement
                  JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.isErased = FALSE
 
@@ -145,6 +151,10 @@ BEGIN
                  LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                              ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                             AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+
+                 LEFT JOIN MovementItemFloat AS MIFloat_Summ
+                                             ON MIFloat_Summ.MovementItemId = MovementItem.Id
+                                            AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
 
             WHERE Movement.Id = inMovementId
           ) AS _tmp;
@@ -165,7 +175,7 @@ BEGIN
      -- Сохранили свойство <Итого сумма по накладной (с НДС)>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPVAT(), inMovementId, vbOperSumm_PVAT);
      -- Сохранили свойство <Итого сумма по накладной (с учетом НДС и скидки)>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, vbOperSumm_Partner);
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, vbOperSumm_Partner + vbOperSumm_Inventory);
      -- Сохранили свойство <Итого сумма заготовителю по накладной (с учетом НДС)>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPacker(), inMovementId, vbOperSumm_Packer);
 
@@ -180,6 +190,7 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.08.13                                        * add vbOperSumm_Inventory
  13.08.13                                        * add vbOperCount_Master and vbOperCount_Child
  16.07.13                                        * add COALESCE (MIFloat_AmountPartner... and MIFloat_AmountPacker...
  07.07.13                                        *

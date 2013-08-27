@@ -122,7 +122,17 @@ BEGIN
                   , COALESCE (MovementItem.Amount * lfObjectHistory_PriceListItem.ValuePrice, 0) AS tmpOperSumm
 
                   -- Аналитики счетов - направления (Кому)
-                  , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_AccountDirection.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN zc_Enum_AccountDirection_20500() END, 0) AS AccountDirectionId_To
+                  , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit()
+                                       THEN ObjectLink_UnitTo_AccountDirection.ChildObjectId
+                                   WHEN Object_To.DescId = zc_Object_Personal()
+                                       THEN CASE WHEN lfObject_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100() -- "Основное сырье"; 10100; "Мясное сырье"
+                                                                                                  , zc_Enum_InfoMoneyDestination_20700() -- "Общефирменные"; 20700; "Товары"
+                                                                                                  , zc_Enum_InfoMoneyDestination_30100() -- "Доходы"; 30100; "Продукция"
+                                                                                                   )
+                                                     THEN 0 -- !!!по идее их здесь не может быть!!! zc_Enum_AccountDirection_20600() -- "Запасы"; 20600; "сотрудники (экспедиторы)"
+                                                 ELSE zc_Enum_AccountDirection_20500() -- "Запасы"; 20500; "сотрудники (МО)"
+                                            END
+                              END, 0) AS AccountDirectionId_To
                   -- Управленческие назначения
                   , COALESCE (lfObject_InfoMoney.InfoMoneyDestinationId, 0) AS InfoMoneyDestinationId
                   -- Статьи назначения
@@ -267,7 +277,17 @@ BEGIN
                   , MovementItem.Amount AS OperCount
 
                   -- Аналитики счетов - направления (От Кого)
-                  , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN ObjectLink_UnitFrom_AccountDirection.ChildObjectId WHEN Object_From.DescId = zc_Object_Personal() THEN zc_Enum_AccountDirection_20500() END, 0) AS AccountDirectionId_From
+                  , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit()
+                                       THEN ObjectLink_UnitFrom_AccountDirection.ChildObjectId
+                                   WHEN Object_From.DescId = zc_Object_Personal()
+                                       THEN CASE WHEN lfObject_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100() -- "Основное сырье"; 10100; "Мясное сырье"
+                                                                                                  , zc_Enum_InfoMoneyDestination_20700() -- "Общефирменные"; 20700; "Товары"
+                                                                                                  , zc_Enum_InfoMoneyDestination_30100() -- "Доходы"; 30100; "Продукция"
+                                                                                                   )
+                                                     THEN 0 -- !!!по идее их здесь не может быть!!! zc_Enum_AccountDirection_20600() -- "Запасы"; 20600; "сотрудники (экспедиторы)"
+                                                 ELSE zc_Enum_AccountDirection_20500() -- "Запасы"; 20500; "сотрудники (МО)"
+                                            END
+                              END, 0) AS AccountDirectionId_From
                   -- Управленческие назначения
                   , COALESCE (lfObject_InfoMoney.InfoMoneyDestinationId, 0) AS InfoMoneyDestinationId
                   -- Статьи назначения
@@ -598,7 +618,7 @@ BEGIN
                                                  , inMovementItemId:= MovementItemId
                                                  , inParentId:= NULL -- нет связи между количественными элементами
                                                  , inContainerId:= ContainerId_GoodsFrom -- был опеределен выше
-                                                 , inAmount:= -OperCount
+                                                 , inAmount:= -1 * OperCount
                                                  , inOperDate:= OperDate
                                                  , inIsActive:= FALSE
                                                   )
@@ -650,7 +670,7 @@ BEGIN
                                                                                                                                                      , inDescId_3   := zc_ObjectCostLink_Branch()
                                                                                                                                                      , inObjectId_3 := BranchId_To
                                                                                                                                                      , inDescId_4   := CASE WHEN PersonalId_To <> 0 THEN zc_ObjectCostLink_Personal() ELSE zc_ObjectCostLink_Unit() END
-                                                                                                                                                     , inObjectId_4 := CASE WHEN PersonalId_To <> 0 THEN PersonalId_To WHEN OperDate >= zc_DateStart_ObjectCostOnUnit() THEN UnitId_To ELSE NULL END
+                                                                                                                                                     , inObjectId_4 := CASE WHEN PersonalId_To <> 0 AND OperDate >= zc_DateStart_ObjectCostOnUnit() THEN PersonalId_To WHEN OperDate >= zc_DateStart_ObjectCostOnUnit() THEN UnitId_To ELSE NULL END
                                                                                                                                                      , inDescId_5   := zc_ObjectCostLink_Goods()
                                                                                                                                                      , inObjectId_5 := GoodsId
                                                                                                                                                      , inDescId_6   := zc_ObjectCostLink_PartionGoods()
@@ -695,7 +715,7 @@ BEGIN
                                                                                                                                                      , inDescId_3   := zc_ObjectCostLink_Branch()
                                                                                                                                                      , inObjectId_3 := BranchId_To
                                                                                                                                                      , inDescId_4   := CASE WHEN PersonalId_To <> 0 THEN zc_ObjectCostLink_Personal() ELSE zc_ObjectCostLink_Unit() END
-                                                                                                                                                     , inObjectId_4 := CASE WHEN PersonalId_To <> 0 THEN PersonalId_To WHEN OperDate >= zc_DateStart_ObjectCostOnUnit() THEN UnitId_To ELSE NULL END
+                                                                                                                                                     , inObjectId_4 := CASE WHEN PersonalId_To <> 0 AND OperDate >= zc_DateStart_ObjectCostOnUnit() THEN PersonalId_To WHEN OperDate >= zc_DateStart_ObjectCostOnUnit() THEN UnitId_To ELSE NULL END
                                                                                                                                                      , inDescId_5   := zc_ObjectCostLink_Goods()
                                                                                                                                                      , inObjectId_5 := GoodsId
                                                                                                                                                      , inDescId_6   := zc_ObjectCostLink_AssetTo()
@@ -724,7 +744,7 @@ BEGIN
                                                                                                       , inParentId:= ContainerId_GoodsTo
                                                                                                       , inObjectId:= lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы -- select * from gpSelect_Object_AccountGroup ('2') where Id = zc_Enum_AccountGroup_20000()
                                                                                                                                                 , inAccountDirectionId     := AccountDirectionId_To
-                                                                                                                                                , inInfoMoneyDestinationId := InfoMoneyDestinationId
+                                                                                                                                                , inInfoMoneyDestinationId := CASE WHEN GoodsKindId = zc_GoodsKind_WorkProgress() THEN zc_InfoMoneyDestination_WorkProgress() ELSE InfoMoneyDestinationId END
                                                                                                                                                 , inInfoMoneyId            := NULL
                                                                                                                                                 , inUserId                 := vbUserId
                                                                                                                                                  )
@@ -789,7 +809,7 @@ BEGIN
                                                                                                                                                      , inDescId_3   := zc_ObjectCostLink_Branch()
                                                                                                                                                      , inObjectId_3 := BranchId_To
                                                                                                                                                      , inDescId_4   := CASE WHEN PersonalId_To <> 0 THEN zc_ObjectCostLink_Personal() ELSE zc_ObjectCostLink_Unit() END
-                                                                                                                                                     , inObjectId_4 := CASE WHEN PersonalId_To <> 0 THEN PersonalId_To WHEN OperDate >= zc_DateStart_ObjectCostOnUnit() THEN UnitId_To ELSE NULL END
+                                                                                                                                                     , inObjectId_4 := CASE WHEN PersonalId_To <> 0 AND OperDate >= zc_DateStart_ObjectCostOnUnit() THEN PersonalId_To WHEN OperDate >= zc_DateStart_ObjectCostOnUnit() THEN UnitId_To ELSE NULL END
                                                                                                                                                      , inDescId_5   := zc_ObjectCostLink_Goods()
                                                                                                                                                      , inObjectId_5 := GoodsId
                                                                                                                                                      , inDescId_6   := zc_ObjectCostLink_InfoMoney()
@@ -815,14 +835,14 @@ BEGIN
      WHERE _tmpItemSummChild.MovementItemId = _tmpItemChild.MovementItemId;
 
 
-     -- формируются Проводки для суммового учета - От кого, причем для !!!каждого!! элемента прихода (поэтому и inAmount:= -_tmpItemSummChild.OperSumm)
+     -- формируются Проводки для суммового учета - От кого, причем для !!!каждого!! элемента прихода (поэтому и inAmount:= -1 * _tmpItemSummChild.OperSumm)
      PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
                                                  , inDescId:= zc_MIContainer_Summ()
                                                  , inMovementId:= _tmpItem.MovementId
                                                  , inMovementItemId:= _tmpItem.MovementItemId
                                                  , inParentId:= _tmpItemSummChild.MIContainerId_To -- это связь с суммовым элементом прихода
                                                  , inContainerId:= _tmpItemSumm.ContainerId_From
-                                                 , inAmount:= -_tmpItemSummChild.OperSumm
+                                                 , inAmount:= -1 * _tmpItemSummChild.OperSumm
                                                  , inOperDate:= _tmpItem.OperDate
                                                  , inIsActive:= FALSE
                                                   )
@@ -844,6 +864,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.08.13                                        * add zc_InfoMoneyDestination_WorkProgress
  11.08.13                                        * add inIsLastComplete
  10.08.13                                        * в проводках !!!ТОЛЬКО!! для суммового учета: Master - приход, Child - расход (т.е. !!!НАОБОРОТ!!! как в MovementItem зато получились как ProductionUnion)
  09.08.13                                        * add zc_isHistoryCost and zc_isHistoryCost_byInfoMoneyDetail

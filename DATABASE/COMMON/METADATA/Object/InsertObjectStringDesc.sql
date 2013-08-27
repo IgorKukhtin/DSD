@@ -9,6 +9,7 @@ BEGIN
 PERFORM setval ('objectstringdesc_id_seq', (select max (id) + 1 from ObjectStringDesc));
 END $$;
 */
+/*
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_objectString_Currency_InternalName', zc_object_Currency(), 'Currency_InternalName' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_objectString_Currency_InternalName');
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
@@ -50,7 +51,7 @@ INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_Asset_InvNumber', zc_object_Asset(), 'Инвентарный номер Основных средств' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Asset_InvNumber');  
 
-
+*/
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.

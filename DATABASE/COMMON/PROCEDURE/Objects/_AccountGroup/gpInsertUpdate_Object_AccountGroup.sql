@@ -14,6 +14,8 @@ $BODY$
    DECLARE Code_calc Integer;   
  
 BEGIN
+   -- !!! это временно !!!
+   ioId := (SELECT Id FROM Object WHERE ObjectCode=inCode AND DescId =zc_Object_AccountGroup());
  
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_AccountGroup());
@@ -43,6 +45,7 @@ ALTER FUNCTION gpInsertUpdate_Object_AccountGroup (Integer, Integer, TVarChar, T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.08.13                                        * !!! это временно !!!
  21.06.13          * zc_Enum_Process_InsertUpdate_Object_AccountGroup(); Code_calc:=lpGet_ObjectCode (inCode, zc_Object_User());
  17.06.13          *
 
