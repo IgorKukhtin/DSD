@@ -190,7 +190,7 @@ begin
      (LookupControl as TcxButtonEdit).PopupMenu := FPopupMenu;
   end;
   if FLookupControl is TcxLookupComboBox then
-     (LookupControl as TcxButtonEdit).PopupMenu := FPopupMenu;
+     (LookupControl as TcxLookupComboBox).PopupMenu := FPopupMenu;
 end;
 
 procedure TdsdGuides.SetTextValue(const Value: String);

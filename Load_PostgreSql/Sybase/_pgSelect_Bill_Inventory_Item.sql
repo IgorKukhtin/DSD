@@ -158,7 +158,7 @@ begin
          left outer join dba.GoodsProperty on GoodsProperty.Id = _tmpList_Remains_byKindPackage.GoodsPropertyId
          left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId
          left outer join dba.KindPackage on KindPackage.Id = _tmpList_Remains_byKindPackage.KindPackageId
-                                        and Goods.ParentId not in(686,1670,2387,2849,5874)--  “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+                                        and Goods.ParentId not in(686,1670,2387,2849,5874) where MovementId <> 0 --  “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
 
     group by Bill.Id_Postgres
            , Bill.BillNumber

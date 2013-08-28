@@ -3,8 +3,8 @@ inherited InventoryJournalForm: TInventoryJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
   ClientHeight = 427
   ClientWidth = 778
-  ExplicitWidth = 794
-  ExplicitHeight = 462
+  ExplicitWidth = 786
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -404,6 +404,12 @@ inherited InventoryJournalForm: TInventoryJournalForm
         ComponentItem = 'Id'
         DataType = ftInteger
         ParamType = ptInput
+      end
+      item
+        Name = 'inIsLastComplete'
+        DataType = ftBoolean
+        ParamType = ptInput
+        Value = 'False'
       end>
     Left = 64
     Top = 232

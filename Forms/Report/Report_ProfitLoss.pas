@@ -22,13 +22,11 @@ uses
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
-  cxDropDownEdit, cxCalendar, Vcl.ExtCtrls;
+  cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, cxCustomPivotGrid,
+  cxDBPivotGrid;
 
 type
   TReport_ProfitLossForm = class(TParentForm)
-    cxGridDBTableView: TcxGridDBTableView;
-    cxGridLevel: TcxGridLevel;
-    cxGrid: TcxGrid;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -38,29 +36,25 @@ type
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
     dsdStoredProc: TdsdStoredProc;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
-    cxGridDBTableViewColumn2: TcxGridDBColumn;
-    cxGridDBTableViewColumn3: TcxGridDBColumn;
-    cxGridDBTableViewColumn4: TcxGridDBColumn;
-    cxGridDBTableViewColumn5: TcxGridDBColumn;
-    cxGridDBTableViewColumn6: TcxGridDBColumn;
-    cxGridDBTableViewColumn7: TcxGridDBColumn;
-    cxGridDBTableViewColumn8: TcxGridDBColumn;
     actExportToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
-    cxGridDBTableViewColumn9: TcxGridDBColumn;
-    cxGridDBTableViewColumn10: TcxGridDBColumn;
-    cxGridDBTableViewColumn11: TcxGridDBColumn;
-    cxGridDBTableViewColumn12: TcxGridDBColumn;
-    cxGridDBTableViewColumn13: TcxGridDBColumn;
-    cxGridDBTableViewColumn14: TcxGridDBColumn;
-    cxGridDBTableViewColumn15: TcxGridDBColumn;
-    cxGridDBTableViewColumn16: TcxGridDBColumn;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
+    cxDBPivotGrid: TcxDBPivotGrid;
+    clProfitLossGroupName: TcxDBPivotGridField;
+    clProfitLossDirectionCode: TcxDBPivotGridField;
+    clProfitLossDirectionName: TcxDBPivotGridField;
+    clProfitLossCode: TcxDBPivotGridField;
+    clProfitLossName: TcxDBPivotGridField;
+    clOnComplete: TcxDBPivotGridField;
+    clInfoMoneyCode: TcxDBPivotGridField;
+    clInfoMoneyName: TcxDBPivotGridField;
+    clByObjectName: TcxDBPivotGridField;
+    clGoodsName: TcxDBPivotGridField;
+    clAmount: TcxDBPivotGridField;
+    clProfitLossGroupCode: TcxDBPivotGridField;
   private
   public
   end;

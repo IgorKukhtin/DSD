@@ -483,6 +483,12 @@ inherited SaleJournalForm: TSaleJournalForm
         ComponentItem = 'Id'
         DataType = ftInteger
         ParamType = ptInput
+      end
+      item
+        Name = 'inIsLastComplete'
+        DataType = ftBoolean
+        ParamType = ptInput
+        Value = 'False'
       end>
     Left = 64
     Top = 232

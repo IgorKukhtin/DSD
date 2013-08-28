@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpReport_ProfitLoss(
     IN inEndDate     TDateTime , --
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (ProfitLossGroupCode Integer, ProfitLossGroupName TVarChar, ProfitLossDirectionCode Integer, ProfitLossDirectionName TVarChar, ProfitLossCode Integer, ProfitLossName  TVarChar, OnComplete Boolean
+RETURNS TABLE (ProfitLossGroupCode Integer, ProfitLossGroupName TVarChar, ProfitLossDirectionCode Integer, ProfitLossDirectionName TVarChar
+             , ProfitLossCode Integer, ProfitLossName  TVarChar, OnComplete Boolean
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyCode_Detail Integer, InfoMoneyName_Detail TVarChar
              , ByObjectCode Integer, ByObjectName TVarChar
              , GoodsCode Integer, GoodsName TVarChar

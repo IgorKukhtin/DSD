@@ -508,6 +508,12 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         ComponentItem = 'Id'
         DataType = ftInteger
         ParamType = ptInput
+      end
+      item
+        Name = 'inIsLastComplete'
+        DataType = ftBoolean
+        ParamType = ptInput
+        Value = 'False'
       end>
     Left = 64
     Top = 232
@@ -565,6 +571,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     OnDblClickAction = actUpdate
     SortImages = dmMain.SortImageList
     View = cxGridDBTableView
+    ActionItemList = <>
     Left = 208
     Top = 200
   end
