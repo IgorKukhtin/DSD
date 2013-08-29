@@ -24,7 +24,7 @@ type
     dxBarManager: TdxBarManager;
     dxBarManager1Bar1: TdxBar;
     bbExit: TdxBarButton;
-    bbDocuments: TdxBarSubItem;
+    bbGoodsDocuments: TdxBarSubItem;
     bbGuides: TdxBarSubItem;
     ActionList: TActionList;
     actExit: TFileExit;
@@ -142,6 +142,10 @@ type
     bbZakazExternal: TdxBarButton;
     bbZakazInternal: TdxBarButton;
     actZakazInternal: TdsdOpenForm;
+    bbFinanceDocuments: TdxBarSubItem;
+    bbIncomeCash: TdxBarButton;
+    actIncomeCash: TdsdOpenForm;
+    actOutcomeCash: TdsdOpenForm;
     procedure FormCreate(Sender: TObject);
   private
     procedure OnException(Sender: TObject; E: Exception);

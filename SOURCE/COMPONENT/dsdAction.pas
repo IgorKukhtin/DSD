@@ -585,7 +585,6 @@ begin
   FParams := TdsdParams.Create(TdsdParam);
   Caption := 'Выбор из справочника';
   Hint := 'Выбор из справочника';
-  ShortCut := VK_RETURN;
 end;
 
 function TdsdChoiceGuides.Execute: boolean;

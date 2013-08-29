@@ -19,6 +19,8 @@ type
     function GetSecondaryShortCuts: TShortCutList;
     procedure SetSecondaryShortCuts(const Value: TShortCutList);
     function IsSecondaryShortCutsStored: Boolean;
+  protected
+    function GetDisplayName: string; override;
   public
     constructor Create(Collection: TCollection); override;
   published
@@ -75,7 +77,7 @@ type
     // контрол для ввода условия фильтра
     edFilter: TcxTextEdit;
     FImages: TImageList;
-    FOnDblClickAction: TCustomAction;
+    FOnDblClickActionList: TActionItemList;
     FActionItemList: TActionItemList;
     procedure OnDblClick(Sender: TObject);
     procedure OnKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -100,7 +102,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
   published
-    property OnDblClickAction: TCustomAction read FOnDblClickAction write FOnDblClickAction;
+    property OnDblClickActionList: TActionItemList read FOnDblClickActionList write FOnDblClickActionList;
     property SortImages: TImageList read FImages write FImages;
     property View: TcxGridDBTableView read FView write SetView;
     property ActionItemList: TActionItemList read FActionItemList write FActionItemList;
@@ -293,6 +295,7 @@ constructor TdsdDBViewAddOn.Create(AOwner: TComponent);
 begin
   inherited;
   ActionItemList := TActionItemList.Create(TActionItem);
+  OnDblClickActionList := TActionItemList.Create(TActionItem);
 
   edFilter := TcxTextEdit.Create(Self);
   edFilter.OnKeyDown := edFilterKeyDown;
@@ -360,9 +363,17 @@ begin
 end;
 
 procedure TdsdDBViewAddOn.OnDblClick(Sender: TObject);
+var i: integer;
 begin
-  if Assigned(FOnDblClickAction) then
-     FOnDblClickAction.Execute
+  // Выполняем События на DblClick
+  for I := 0 to FOnDblClickActionList.Count - 1 do
+    if Assigned(FOnDblClickActionList[i].Action) then
+       if OnDblClickActionList[i].Action.Enabled then begin
+          // Выполнили первое действие в списке
+          OnDblClickActionList[i].Action.Execute;
+          // И сразу вышли!!!
+          exit;
+       end;
 end;
 
 procedure TdsdDBViewAddOn.onFilterChanged(Sender: TObject);
@@ -445,8 +456,6 @@ begin
   inherited Notification(AComponent, Operation);
   if (Operation = opRemove) and (AComponent = FView) then
      FView := nil;
-  if (Operation = opRemove) and (AComponent = FOnDblClickAction) then
-     FOnDblClickAction := nil;
 end;
 
 procedure TdsdDBViewAddOn.OnKeyDown(Sender: TObject; var Key: Word;
@@ -457,9 +466,11 @@ begin
   // и если там нет ничего, то тогда идем дальше
   for I := 0 to ActionItemList.Count - 1 do
       if ShortCut(Key, Shift) = ActionItemList[i].ShortCut then begin
-         ActionItemList[i].Action.Execute;
-         Key := 0;
-         Shift := [];
+         if ActionItemList[i].Action.Enabled then begin
+            ActionItemList[i].Action.Execute;
+            Key := 0;
+            Shift := [];
+         end;
       end;
 end;
 
@@ -757,6 +768,14 @@ end;
 procedure TActionItem.SetAction(const Value: TCustomAction);
 begin
   FAction := Value;
+end;
+
+function TActionItem.GetDisplayName: string;
+begin
+  if Assigned(Action) then
+     result := Action.Name
+  else
+     result := inherited;
 end;
 
 function TActionItem.GetSecondaryShortCuts: TShortCutList;
