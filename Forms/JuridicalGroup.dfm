@@ -1,16 +1,16 @@
 inherited JuridicalGroupForm: TJuridicalGroupForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1075#1088#1091#1087#1087' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
-  ClientHeight = 376
-  ClientWidth = 390
-  ExplicitWidth = 398
-  ExplicitHeight = 403
+  ClientHeight = 335
+  ClientWidth = 397
+  ExplicitWidth = 405
+  ExplicitHeight = 362
   PixelsPerInch = 96
   TextHeight = 13
   object cxDBTreeList: TcxDBTreeList
     Left = 0
     Top = 26
-    Width = 390
-    Height = 350
+    Width = 397
+    Height = 309
     Align = alClient
     Bands = <
       item
@@ -20,6 +20,7 @@ inherited JuridicalGroupForm: TJuridicalGroupForm
     DataController.KeyField = 'Id'
     Images = dmMain.TreeImageList
     Navigator.Buttons.CustomButtons = <>
+    OptionsSelection.InvertSelect = False
     OptionsView.ColumnAutoWidth = True
     RootValue = -1
     Styles.StyleSheet = dmMain.cxTreeListStyleSheet
@@ -286,7 +287,6 @@ inherited JuridicalGroupForm: TJuridicalGroupForm
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
       ImageIndex = 7
     end
   end
@@ -298,8 +298,8 @@ inherited JuridicalGroupForm: TJuridicalGroupForm
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 8
-    Top = 48
+    Left = 240
+    Top = 208
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 104
@@ -324,7 +324,25 @@ inherited JuridicalGroupForm: TJuridicalGroupForm
         DataType = ftInteger
         ParamType = ptInput
       end>
-    Left = 16
-    Top = 64
+    Left = 160
+    Top = 168
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+      end
+      item
+        Action = actUpdate
+      end>
+    SortImages = dmMain.SortImageList
+    ActionItemList = <
+      item
+        ShortCut = 13
+      end
+      item
+        ShortCut = 13
+      end>
+    Left = 176
+    Top = 216
   end
 end

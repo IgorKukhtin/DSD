@@ -2,21 +2,20 @@ inherited ServiceForm: TServiceForm
   Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1091#1089#1083#1091#1075' '#1087#1086' '#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1084#1091' '#1083#1080#1094#1091
   ClientHeight = 380
   ClientWidth = 666
-  ExplicitWidth = 682
-  ExplicitHeight = 418
+  ExplicitWidth = 674
+  ExplicitHeight = 407
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
+    Top = 26
     Width = 666
-    Height = 352
+    Height = 354
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = 8
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -33,6 +32,7 @@ inherited ServiceForm: TServiceForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -145,8 +145,8 @@ inherited ServiceForm: TServiceForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -163,7 +163,7 @@ inherited ServiceForm: TServiceForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -353,7 +353,6 @@ inherited ServiceForm: TServiceForm
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
       ImageIndex = 7
     end
     object dsdGridToExcel: TdsdGridToExcel
@@ -380,11 +379,6 @@ inherited ServiceForm: TServiceForm
     Left = 160
     Top = 160
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
-    View = cxGridDBTableView
-    Left = 160
-    Top = 216
-  end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
     DataSets = <>
@@ -399,5 +393,27 @@ inherited ServiceForm: TServiceForm
       end>
     Left = 288
     Top = 208
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+        Action = actUpdate
+      end>
+    SortImages = dmMain.SortImageList
+    View = cxGridDBTableView
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
+    Left = 160
+    Top = 224
   end
 end

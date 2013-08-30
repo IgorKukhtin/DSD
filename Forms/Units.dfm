@@ -2,21 +2,21 @@ inherited UnitForm: TUnitForm
   Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
   ClientHeight = 420
   ClientWidth = 667
-  ExplicitWidth = 683
-  ExplicitHeight = 458
+  ExplicitWidth = 675
+  ExplicitHeight = 447
   PixelsPerInch = 96
   TextHeight = 13
   object cxSplitter1: TcxSplitter
     Left = 0
-    Top = 28
+    Top = 26
     Width = 8
-    Height = 392
+    Height = 394
   end
   object cxGrid: TcxGrid
     Left = 8
-    Top = 28
+    Top = 26
     Width = 659
-    Height = 392
+    Height = 394
     Align = alClient
     TabOrder = 1
     object cxGridDBTableView: TcxGridDBTableView
@@ -27,6 +27,11 @@ inherited UnitForm: TUnitForm
       DataController.Summary.SummaryGroups = <>
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
+      OptionsData.Inserting = False
+      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -37,7 +42,7 @@ inherited UnitForm: TUnitForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 95
+        Width = 65
       end
       object ceName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -45,13 +50,13 @@ inherited UnitForm: TUnitForm
         HeaderAlignmentVert = vaCenter
         SortIndex = 0
         SortOrder = soAscending
-        Width = 241
+        Width = 271
       end
       object ceBranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
         HeaderAlignmentVert = vaCenter
-        Width = 135
+        Width = 242
       end
       object ceisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -59,7 +64,7 @@ inherited UnitForm: TUnitForm
         PropertiesClassName = 'TcxCheckBoxProperties'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 139
+        Width = 67
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -84,8 +89,8 @@ inherited UnitForm: TUnitForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -102,7 +107,7 @@ inherited UnitForm: TUnitForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -274,7 +279,6 @@ inherited UnitForm: TUnitForm
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
       ImageIndex = 7
     end
     object dsdSetUnErased: TdsdUpdateErased
@@ -335,9 +339,25 @@ inherited UnitForm: TUnitForm
     Top = 240
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+        Action = actUpdate
+      end>
     SortImages = dmMain.SortImageList
     View = cxGridDBTableView
-    Left = 424
-    Top = 240
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
+    Left = 216
+    Top = 232
   end
 end

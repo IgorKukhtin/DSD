@@ -2,15 +2,15 @@ inherited RouteForm: TRouteForm
   Caption = #1052#1072#1088#1096#1088#1091#1090#1099
   ClientHeight = 420
   ClientWidth = 502
-  ExplicitWidth = 518
-  ExplicitHeight = 458
+  ExplicitWidth = 510
+  ExplicitHeight = 447
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
+    Top = 26
     Width = 502
-    Height = 392
+    Height = 394
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -32,6 +32,7 @@ inherited RouteForm: TRouteForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -90,8 +91,8 @@ inherited RouteForm: TRouteForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -108,7 +109,7 @@ inherited RouteForm: TRouteForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -298,7 +299,6 @@ inherited RouteForm: TRouteForm
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
       ImageIndex = 7
     end
     object dsdGridToExcel: TdsdGridToExcel
@@ -325,11 +325,6 @@ inherited RouteForm: TRouteForm
     Left = 160
     Top = 152
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
-    View = cxGridDBTableView
-    Left = 160
-    Top = 208
-  end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
     DataSets = <>
@@ -344,5 +339,27 @@ inherited RouteForm: TRouteForm
       end>
     Left = 288
     Top = 208
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+        Action = actUpdate
+      end>
+    SortImages = dmMain.SortImageList
+    View = cxGridDBTableView
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
+    Left = 160
+    Top = 216
   end
 end

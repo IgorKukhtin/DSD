@@ -2,15 +2,15 @@ inherited UnitTreeForm: TUnitTreeForm
   Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
   ClientHeight = 403
   ClientWidth = 768
-  ExplicitWidth = 784
-  ExplicitHeight = 441
+  ExplicitWidth = 776
+  ExplicitHeight = 430
   PixelsPerInch = 96
   TextHeight = 13
   object cxDBTreeList: TcxDBTreeList
     Left = 0
-    Top = 28
+    Top = 26
     Width = 313
-    Height = 375
+    Height = 377
     Align = alLeft
     Bands = <
       item
@@ -32,7 +32,6 @@ inherited UnitTreeForm: TUnitTreeForm
     RootValue = -1
     Styles.StyleSheet = dmMain.cxTreeListStyleSheet
     TabOrder = 1
-    ExplicitLeft = 2
     object ceParentName: TcxDBTreeListColumn
       Caption.AlignVert = vaCenter
       Caption.Text = #1043#1088#1091#1087#1087#1072
@@ -48,19 +47,18 @@ inherited UnitTreeForm: TUnitTreeForm
   end
   object cxSplitter1: TcxSplitter
     Left = 313
-    Top = 28
+    Top = 26
     Width = 8
-    Height = 375
+    Height = 377
     Control = cxDBTreeList
   end
   object cxGrid: TcxGrid
     Left = 321
-    Top = 28
+    Top = 26
     Width = 447
-    Height = 375
+    Height = 377
     Align = alClient
     TabOrder = 6
-    ExplicitLeft = 319
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GridDS
@@ -69,6 +67,11 @@ inherited UnitTreeForm: TUnitTreeForm
       DataController.Summary.SummaryGroups = <>
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
+      OptionsData.Inserting = False
+      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -159,8 +162,8 @@ inherited UnitTreeForm: TUnitTreeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -177,7 +180,7 @@ inherited UnitTreeForm: TUnitTreeForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -433,9 +436,25 @@ inherited UnitTreeForm: TUnitTreeForm
     Top = 280
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+        Action = actUpdate
+      end>
     SortImages = dmMain.SortImageList
     View = cxGridDBTableView
-    Left = 424
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
+    Left = 432
     Top = 240
   end
 end

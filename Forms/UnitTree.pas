@@ -61,10 +61,10 @@ type
     dsdFormParams: TdsdFormParams;
     bbChoice: TdxBarButton;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
     dxBarStatic: TdxBarStatic;
     ceTreeState: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
   private
     { Private declarations }
   public
