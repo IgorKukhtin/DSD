@@ -1,8 +1,8 @@
-п»ї/*
-  РЎРѕР·РґР°РЅРёРµ 
-    - С‚Р°Р±Р»РёС†С‹ MovementItemContainer (РїРµСЂРµРјРµС‰РµРЅРёСЏ)
-    - СЃРІСЏР·РµР№
-    - РёРЅРґРµРєСЃРѕРІ
+/*
+  Создание 
+    - таблицы MovementItemContainer (перемещения)
+    - связей
+    - индексов
 */
 /*-------------------------------------------------------------------------------*/
 
@@ -26,7 +26,7 @@ CREATE TABLE MovementItemContainer(
 
 /*-------------------------------------------------------------------------------*/
 
-/*                                  РРЅРґРµРєСЃС‹                                      */
+/*                                  Индексы                                      */
 
 CREATE INDEX idx_MovementItemContainer_MovementId_DescId ON MovementItemContainer(MovementId, DescId);
 CREATE INDEX idx_MovementItemContainer_ContainerId_DescId_OperDate_Amount ON MovementItemContainer(ContainerId, DescId, OperDate, Amount);
@@ -36,12 +36,8 @@ CREATE INDEX idx_MovementItemContainer_ParentId ON MovementItemContainer(ParentI
 /*-------------------------------------------------------------------------------*/
 
 
-/*
- РџР РРњР•Р§РђРќРРЇ:
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР:
- Р”РђРўРђ         РђР’РўРћР 
- ----------------
-                 РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РљСѓС…С‚РёРЅ Р.Р’.   
-18.06.02                                           
-19.09.02                                                       
+/*-------------------------------------------------------------------------------
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.08.13                                        * 1251Cyr
 */

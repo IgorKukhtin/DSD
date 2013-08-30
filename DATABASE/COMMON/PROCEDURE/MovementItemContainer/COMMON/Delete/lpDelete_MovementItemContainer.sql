@@ -1,22 +1,33 @@
-п»ї--DROP FUNCTION lpDelete_MovementItemContainer(integer);
+-- Function: gpUnComplete_Movement()
 
-CREATE OR REPLACE FUNCTION lpDelete_MovementItemContainer(
-IN inMovementId integer)
+-- DROP FUNCTION lpDelete_MovementItemContainer (Integer);
+
+
+CREATE OR REPLACE FUNCTION lpDelete_MovementItemContainer (IN inMovementId Integer)
   RETURNS void AS
-$BODY$BEGIN
-   /* РёР·РјРµРЅРёС‚СЊ РєРѕР»РёС‡РµСЃС‚РІРѕ РѕСЃС‚Р°С‚РєР° */
-  UPDATE Container SET amount = Container.Amount - Oper.Amount
-  FROM (SELECT SUM(MovementItemContainer.Amount) AS Amount,
-               MovementItemContainer.ContainerId
-        FROM MovementItemContainer
-        WHERE MovementItemContainer.MovementId = inMovementId
-     GROUP BY MovementItemContainer.ContainerId) AS Oper
-   WHERE Oper.ContainerId = Container.id;
+$BODY$
+BEGIN
 
-   /* РЈРґР°Р»РёС‚СЊ РІСЃРµ РїСЂРѕРІРѕРґРєРё */
-   DELETE FROM MovementItemContainer WHERE MovementId = inMovementId;
-END;           $BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION lpDelete_MovementItemContainer(integer)
-  OWNER TO postgres; 
+    -- Изменить значение остатка
+    UPDATE Container SET Amount = Container.Amount - _tmpMIContainer.Amount
+    FROM (SELECT SUM (MIContainer.Amount) AS Amount
+               , MIContainer.ContainerId
+          FROM MovementItemContainer AS MIContainer
+          WHERE MIContainer.MovementId = inMovementId
+          GROUP BY MIContainer.ContainerId
+         ) AS _tmpMIContainer
+    WHERE Container.Id = _tmpMIContainer.ContainerId;
+
+    -- Удалить все проводки
+    DELETE FROM MovementItemContainer WHERE MovementId = inMovementId;
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION lpDelete_MovementItemContainer (Integer) OWNER TO postgres;
+
+/*-------------------------------------------------------------------------------
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.08.13                                        * 1251Cyr
+*/
