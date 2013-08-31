@@ -25,7 +25,7 @@ BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , COALESCE (MAX (ObjectCode), 0) + 1 AS Code
+           , lfGet_ObjectCode(0, zc_Object_Account()) AS Code
            , CAST ('' as TVarChar)  AS Name
 
            , CAST (0 as Integer)    AS AccountGroupId
@@ -52,10 +52,7 @@ BEGIN
            , CAST (0 as Integer)    AS AccountKindCode
            , CAST ('' as TVarChar)  AS AccountKindName
 
-           , CAST (NULL AS Boolean) AS isErased
-
-       FROM Object 
-       WHERE Object.DescId = zc_Object_Account();
+           , CAST (NULL AS Boolean) AS isErased;
    ELSE
        RETURN QUERY 
        SELECT 

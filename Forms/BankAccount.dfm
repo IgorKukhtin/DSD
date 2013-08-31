@@ -22,39 +22,52 @@ inherited BankAccountForm: TBankAccountForm
       DataController.Summary.SummaryGroups = <>
       OptionsBehavior.IncSearch = True
       OptionsBehavior.IncSearchItem = clName
+      OptionsCustomize.ColumnHiding = True
+      OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
+      OptionsView.GroupByBox = False
+      OptionsView.HeaderAutoHeight = True
+      OptionsView.Indicator = True
+      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        HeaderAlignmentVert = vaCenter
         Width = 47
       end
       object clName: TcxGridDBColumn
         Caption = #1056#1072#1089#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentVert = vaCenter
         Width = 134
       end
       object clJuridicalName: TcxGridDBColumn
         Caption = #1070#1088'. '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
+        HeaderAlignmentVert = vaCenter
         Width = 124
       end
       object clBankName: TcxGridDBColumn
         Caption = #1041#1072#1085#1082
         DataBinding.FieldName = 'BankName'
+        HeaderAlignmentVert = vaCenter
         Width = 96
       end
       object clCurrency: TcxGridDBColumn
         Caption = #1042#1072#1083#1102#1090#1072
         DataBinding.FieldName = 'CurrencyName'
+        HeaderAlignmentVert = vaCenter
         Width = 97
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
+        HeaderAlignmentVert = vaCenter
         Width = 88
       end
     end
@@ -63,6 +76,7 @@ inherited BankAccountForm: TBankAccountForm
     end
   end
   object DataSource: TDataSource
+    DataSet = ClientDataSet
     Left = 96
     Top = 96
   end
@@ -75,8 +89,11 @@ inherited BankAccountForm: TBankAccountForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = clName
+        Component = Owner
         Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
           'Width')
       end>
     StorageName = 'cxPropertiesStore'
@@ -137,7 +154,24 @@ inherited BankAccountForm: TBankAccountForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoice'
         end>
       OneOnRow = True
       Row = 0
@@ -148,30 +182,39 @@ inherited BankAccountForm: TBankAccountForm
     object bbRefresh: TdxBarButton
       Action = actRefresh
       Category = 0
-      ImageIndex = 4
     end
     object bbInsert: TdxBarButton
       Action = actInsert
       Category = 0
-      ImageIndex = 0
     end
     object bbEdit: TdxBarButton
       Action = actUpdate
       Category = 0
-      ImageIndex = 1
     end
     object bbErased: TdxBarButton
       Action = dsdSetErased
       Category = 0
-      ImageIndex = 2
     end
     object bbUnErased: TdxBarButton
       Action = dsdSetUnErased
       Category = 0
-      ImageIndex = 8
+    end
+    object dxBarStatic: TdxBarStatic
+      Caption = '     '
+      Category = 0
+      Visible = ivAlways
+    end
+    object bbChoice: TdxBarButton
+      Action = dsdChoiceGuides
+      Category = 0
+    end
+    object bbGridToExcel: TdxBarButton
+      Action = dsdGridToExcel
+      Category = 0
     end
   end
   object ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 232
     Top = 144
     object actRefresh: TdsdDataSetRefresh
@@ -183,12 +226,14 @@ inherited BankAccountForm: TBankAccountForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
       ShortCut = 116
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
+      ImageIndex = 0
       FormName = 'TBankAccountEditForm'
       GuiParams = <
         item
@@ -205,11 +250,13 @@ inherited BankAccountForm: TBankAccountForm
       Category = 'DSDLib'
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
+      ImageIndex = 1
       FormName = 'TBankAccountEditForm'
       GuiParams = <
         item
           Name = 'Id'
           Component = ClientDataSet
+          ComponentItem = 'Id'
           DataType = ftInteger
           ParamType = ptInput
         end>
@@ -221,10 +268,10 @@ inherited BankAccountForm: TBankAccountForm
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       StoredProcList = <>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
       ShortCut = 46
-      isSetErased = False
       DataSource = DataSource
     end
     object dsdSetUnErased: TdsdUpdateErased
@@ -232,13 +279,43 @@ inherited BankAccountForm: TBankAccountForm
       StoredProcList = <>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
       ShortCut = 32776
       isSetErased = False
       DataSource = DataSource
     end
+    object dsdGridToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      Grid = cxGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
+    end
+    object dsdChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      Params = <
+        item
+          Name = 'Key'
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'TextValue'
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ImageIndex = 7
+    end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Branch'
+    StoredProcName = 'gpSelect_Object_BankAccount'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -247,5 +324,31 @@ inherited BankAccountForm: TBankAccountForm
     Params = <>
     Left = 152
     Top = 152
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 208
+    Top = 192
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+        Action = actUpdate
+      end>
+    SortImages = dmMain.SortImageList
+    View = cxGridDBTableView
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
+    Left = 216
+    Top = 240
   end
 end

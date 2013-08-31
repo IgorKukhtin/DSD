@@ -10,7 +10,7 @@ uses
   Vcl.StdActns, cxCurrencyEdit, cxCheckBox,
   Data.DB, Datasnap.DBClient, cxMaskEdit, cxDropDownEdit,
   cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox, ParentForm, dsdGuides,
-  dsdDB, dsdAction;
+  dsdDB, dsdAction, dsdAddOn, cxButtonEdit;
 
 type
   TBankAccountEditForm = class(TParentForm)
@@ -23,28 +23,21 @@ type
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     dsdDataSetRefresh: TdsdDataSetRefresh;
-    dsdExecStoredProc: TdsdExecStoredProc;
-    dsdFormClose1: TdsdFormClose;
+    dsdExecStoredProc: TdsdInsertUpdateGuides;
+    dsdFormClose: TdsdFormClose;
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
-    ceJuridical: TcxLookupComboBox;
-    JuridicalDataSet: TClientDataSet;
-    spGetJuridical: TdsdStoredProc;
-    JuridicalDS: TDataSource;
     dsdJuridicalGuides: TdsdGuides;
     cxLabel2: TcxLabel;
-    ceBank: TcxLookupComboBox;
     cxLabel4: TcxLabel;
-    ceCurrency: TcxLookupComboBox;
-    BankDataSet: TClientDataSet;
-    spGetBank: TdsdStoredProc;
-    BankDS: TDataSource;
     dsdBankGuides: TdsdGuides;
-    CurrencyDataSet: TClientDataSet;
-    spGetCurrency: TdsdStoredProc;
-    CurrencyDS: TDataSource;
     dsdCurrencyGuides: TdsdGuides;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    edJuridical: TcxButtonEdit;
+    edBank: TcxButtonEdit;
+    edCurrency: TcxButtonEdit;
+    cxPropertiesStore: TcxPropertiesStore;
   private
     { Private declarations }
   public

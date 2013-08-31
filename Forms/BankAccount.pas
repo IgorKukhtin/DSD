@@ -9,7 +9,7 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, cxGridLevel, cxClasses,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, Datasnap.DBClient, dsdDB, cxPropertiesStore, dxBar,
-  Vcl.ActnList, DataModul, ParentForm, dsdAction;
+  Vcl.ActnList, DataModul, ParentForm, dsdAction, dsdAddOn, dxBarExtItems;
 
 type
   TBankAccountForm = class(TParentForm)
@@ -39,6 +39,13 @@ type
     clJuridicalName: TcxGridDBColumn;
     clBankName: TcxGridDBColumn;
     clCurrency: TcxGridDBColumn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
+    dsdGridToExcel: TdsdGridToExcel;
+    dsdChoiceGuides: TdsdChoiceGuides;
+    dxBarStatic: TdxBarStatic;
+    bbChoice: TdxBarButton;
+    bbGridToExcel: TdxBarButton;
   private
     { Private declarations }
   public

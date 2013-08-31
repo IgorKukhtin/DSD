@@ -296,14 +296,14 @@ inherited BankForm: TBankForm
           Name = 'Key'
           Component = ClientDataSet
           ComponentItem = 'Id'
-          DataType = ftInteger
+          DataType = ftString
           ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
-          DataType = ftInteger
+          DataType = ftString
           ParamType = ptOutput
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

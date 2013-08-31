@@ -144,10 +144,6 @@ object MainForm: TMainForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbBank'
-        end
-        item
-          Visible = True
           ItemName = 'bbJuridicalGroup'
         end
         item
@@ -213,6 +209,14 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbCash'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBank'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBankAccount'
         end
         item
           Visible = True
@@ -589,6 +593,10 @@ object MainForm: TMainForm
     end
     object bbIncomeCash: TdxBarButton
       Action = actIncomeCash
+      Category = 0
+    end
+    object bbBankAccount: TdxBarButton
+      Action = actBankAccount
       Category = 0
     end
   end

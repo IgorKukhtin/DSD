@@ -21,7 +21,7 @@ BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)   AS Id
-           , COALESCE (MAX (ObjectCode), 0) + 1 AS Code
+           , lfGet_ObjectCode(0, zc_Object_BankAccount()) AS Code
            , CAST ('' as TVarChar) AS Name
            , CAST (NULL AS Boolean)AS isErased
            , CAST (0 as Integer)   AS JuridicalId
@@ -29,9 +29,7 @@ BEGIN
            , CAST (0 as Integer)   AS BankId
            , CAST ('' as TVarChar) AS BankName
            , CAST (0 as Integer)   AS CurrencyId
-           , CAST ('' as TVarChar) AS CurrencyName
-       FROM Object 
-       WHERE Object.DescId = zc_Object_BankAccount();
+           , CAST ('' as TVarChar) AS CurrencyName;
    ELSE
        RETURN QUERY 
        SELECT 

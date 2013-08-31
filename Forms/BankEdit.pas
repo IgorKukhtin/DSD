@@ -29,7 +29,7 @@ type
     ceCode: TcxCurrencyEdit;
     cxLabel2: TcxLabel;
     edMFO: TcxTextEdit;
-    edJuridicalName: TcxButtonEdit;
+    edJuridical: TcxButtonEdit;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
   private

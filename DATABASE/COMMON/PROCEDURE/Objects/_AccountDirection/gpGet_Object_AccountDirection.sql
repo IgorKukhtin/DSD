@@ -17,11 +17,9 @@ $BODY$BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , COALESCE (MAX (Object_AccountDirection.ObjectCode), 0) + 1  AS Code
+           , lfGet_ObjectCode(0, zc_Object_AccountDirection()) AS Code
            , CAST ('' as TVarChar)  AS Name
-           , CAST (NULL AS Boolean) AS isErased
-       FROM Object AS Object_AccountDirection
-       WHERE Object_AccountDirection.DescId = zc_Object_AccountDirection();
+           , CAST (NULL AS Boolean) AS isErased;
    ELSE
        RETURN QUERY 
        SELECT

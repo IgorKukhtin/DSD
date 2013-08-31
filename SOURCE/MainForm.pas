@@ -146,6 +146,7 @@ type
     bbIncomeCash: TdxBarButton;
     actIncomeCash: TdsdOpenForm;
     actOutcomeCash: TdsdOpenForm;
+    bbBankAccount: TdxBarButton;
     procedure FormCreate(Sender: TObject);
   private
     procedure OnException(Sender: TObject; E: Exception);

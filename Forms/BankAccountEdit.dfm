@@ -15,7 +15,7 @@
   object cxLabel1: TcxLabel
     Left = 40
     Top = 48
-    Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+    Caption = #1056#1072#1089#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
   end
   object cxButton1: TcxButton
     Left = 72
@@ -32,7 +32,7 @@
     Top = 273
     Width = 75
     Height = 25
-    Action = dsdFormClose1
+    Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 8
@@ -56,49 +56,46 @@
     Top = 103
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
-  object ceJuridical: TcxLookupComboBox
-    Left = 40
-    Top = 126
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
-      item
-        FieldName = 'Name'
-      end>
-    Properties.ListSource = JuridicalDS
-    TabOrder = 7
-    Width = 273
-  end
   object cxLabel2: TcxLabel
     Left = 40
     Top = 159
     Caption = #1041#1072#1085#1082#1080
-  end
-  object ceBank: TcxLookupComboBox
-    Left = 40
-    Top = 182
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
-      item
-        FieldName = 'Name'
-      end>
-    Properties.ListSource = BankDS
-    TabOrder = 9
-    Width = 273
   end
   object cxLabel4: TcxLabel
     Left = 40
     Top = 215
     Caption = #1042#1072#1083#1102#1090#1099
   end
-  object ceCurrency: TcxLookupComboBox
+  object edJuridical: TcxButtonEdit
+    Left = 40
+    Top = 128
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 9
+    Width = 273
+  end
+  object edBank: TcxButtonEdit
+    Left = 40
+    Top = 182
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 10
+    Width = 273
+  end
+  object edCurrency: TcxButtonEdit
     Left = 40
     Top = 238
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
+    Properties.Buttons = <
       item
-        FieldName = 'Name'
+        Default = True
+        Kind = bkEllipsis
       end>
-    Properties.ListSource = CurrencyDS
     TabOrder = 11
     Width = 273
   end
@@ -113,13 +110,12 @@
           StoredProc = spGet
         end
         item
-          StoredProc = spGetJuridical
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
     end
-    object dsdExecStoredProc: TdsdExecStoredProc
+    object dsdExecStoredProc: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       StoredProc = spInsertUpdate
       StoredProcList = <
@@ -128,11 +124,11 @@
         end>
       Caption = 'Ok'
     end
-    object dsdFormClose1: TdsdFormClose
+    object dsdFormClose: TdsdFormClose
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Bank'
+    StoredProcName = 'gpInsertUpdate_Object_BankAccount'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -149,7 +145,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
@@ -218,12 +214,12 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'JuridicalId'
         Component = dsdJuridicalGuides
-        ComponentItem = 'Id'
+        ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
         Value = '0'
@@ -231,10 +227,10 @@
       item
         Name = 'JuridicalName'
         Component = dsdJuridicalGuides
-        ComponentItem = 'Name'
+        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptOutput
-        Value = '0'
+        Value = ''
       end
       item
         Name = 'BankId'
@@ -250,7 +246,7 @@
         ComponentItem = 'TextValue'
         DataType = ftInteger
         ParamType = ptOutput
-        Value = '0'
+        Value = ''
       end
       item
         Name = 'CurrencyId'
@@ -265,97 +261,55 @@
         Component = dsdCurrencyGuides
         ComponentItem = 'TextValue'
         DataType = ftInteger
-        ParamType = ptInput
-        Value = '0'
+        ParamType = ptOutput
+        Value = ''
       end>
     Left = 192
     Top = 88
   end
-  object JuridicalDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 176
-    Top = 117
-  end
-  object spGetJuridical: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Juridical'
-    DataSet = JuridicalDataSet
-    DataSets = <
-      item
-        DataSet = JuridicalDataSet
-      end>
-    Params = <>
-    Left = 216
-    Top = 117
-  end
-  object JuridicalDS: TDataSource
-    DataSet = JuridicalDataSet
-    Left = 256
-    Top = 117
-  end
   object dsdJuridicalGuides: TdsdGuides
     Key = '0'
-    LookupControl = ceJuridical
-    PositionDataSet = 'ClientDataSet'
+    LookupControl = edJuridical
+    FormName = 'TJuridicalForm'
+    PositionDataSet = 'GridDataSet'
+    Params = <>
     Left = 312
     Top = 125
   end
-  object BankDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 176
-    Top = 165
-  end
-  object spGetBank: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Bank'
-    DataSet = BankDataSet
-    DataSets = <
-      item
-        DataSet = BankDataSet
-      end>
-    Params = <>
-    Left = 216
-    Top = 165
-  end
-  object BankDS: TDataSource
-    DataSet = BankDataSet
-    Left = 256
-    Top = 165
-  end
   object dsdBankGuides: TdsdGuides
     Key = '0'
-    LookupControl = ceBank
+    LookupControl = edBank
+    FormName = 'TBankForm'
     PositionDataSet = 'ClientDataSet'
+    Params = <>
     Left = 312
     Top = 173
   end
-  object CurrencyDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 176
-    Top = 221
-  end
-  object spGetCurrency: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Juridical'
-    DataSet = CurrencyDataSet
-    DataSets = <
-      item
-        DataSet = CurrencyDataSet
-      end>
-    Params = <>
-    Left = 216
-    Top = 221
-  end
-  object CurrencyDS: TDataSource
-    DataSet = CurrencyDataSet
-    Left = 256
-    Top = 221
-  end
   object dsdCurrencyGuides: TdsdGuides
     Key = '0'
-    LookupControl = ceCurrency
+    LookupControl = edCurrency
+    FormName = 'TCurrencyForm'
     PositionDataSet = 'ClientDataSet'
+    Params = <>
     Left = 312
     Top = 229
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 16
+    Top = 40
+  end
+  object cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
+    StorageName = 'cxPropertiesStore'
+    Left = 248
+    Top = 88
   end
 end

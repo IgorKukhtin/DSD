@@ -548,7 +548,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
     Top = 152
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
-    OnDblClickAction = actUpdate
+    OnDblClickActionList = <>
     SortImages = dmMain.SortImageList
     View = cxGridDBTableView
     ActionItemList = <

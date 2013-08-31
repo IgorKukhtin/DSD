@@ -67,7 +67,7 @@
     TabOrder = 8
     Width = 273
   end
-  object edJuridicalName: TcxButtonEdit
+  object edJuridical: TcxButtonEdit
     Left = 40
     Top = 174
     Properties.Buttons = <
@@ -123,7 +123,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
@@ -185,7 +185,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'JuridicalId'
@@ -214,9 +214,10 @@
     Top = 136
   end
   object dsdJuridicalGuides: TdsdGuides
-    LookupControl = edJuridicalName
+    LookupControl = edJuridical
     FormName = 'TJuridicalForm'
     PositionDataSet = 'GridDataSet'
+    Params = <>
     Left = 312
     Top = 141
   end

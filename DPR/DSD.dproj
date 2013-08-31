@@ -42,7 +42,7 @@
 		<PropertyGroup Condition="'$(Base)'!=''">
 			<DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
 			<Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
-			<DCC_UsePackage>JvGlobus;JvMM;JvManagedThreads;fmx;JvDlgs;JvCrypt;DataSnapServer;DBXInterBaseDriver;DataSnapCommon;DataSnapClient;JvNet;DataSnapProviderClient;JvDotNetCtrls;DbxCommonDriver;dbxcds;JvXPCtrls;DBXOracleDriver;CustomIPTransport;JvCore;dsnap;fmxase;JvAppFrm;JvDB;JvRuntimeDesign;inetdbxpress;JvDocking;JvWizards;JvHMI;bindcompfmx;JvBands;rtl;dbrtl;DbxClientDriver;bindcomp;inetdb;JvPluginSystem;JvCmp;JvSystem;xmlrtl;ibxpress;JvTimeFramework;JvControls;DBXMySQLDriver;bindengine;soaprtl;JvStdCtrls;JvCustom;JvJans;JvPrintPreview;JvPageComps;DBXInformixDriver;DBXFirebirdDriver;inet;fmxobj;JvPascalInterpreter;DBXSybaseASADriver;fmxdae;dbexpress;DataSnapIndy10ServerTransport;JvBDE;$(DCC_UsePackage)</DCC_UsePackage>
+			<DCC_UsePackage>JvGlobus;JvMM;JvManagedThreads;fmx;JvDlgs;JvCrypt;DataSnapServer;DBXInterBaseDriver;DataSnapCommon;DataSnapClient;JvNet;DataSnapProviderClient;JvDotNetCtrls;DbxCommonDriver;dbxcds;JvXPCtrls;DBXOracleDriver;CustomIPTransport;JvCore;dsnap;fmxase;JvAppFrm;JvDB;inetdbxpress;JvDocking;JvWizards;JvHMI;bindcompfmx;JvBands;rtl;dbrtl;DbxClientDriver;bindcomp;inetdb;JvPluginSystem;JvCmp;JvSystem;xmlrtl;ibxpress;JvTimeFramework;JvControls;DBXMySQLDriver;bindengine;soaprtl;JvStdCtrls;JvCustom;JvJans;JvPrintPreview;JvPageComps;DBXInformixDriver;DBXFirebirdDriver;inet;fmxobj;JvPascalInterpreter;DBXSybaseASADriver;fmxdae;dbexpress;DataSnapIndy10ServerTransport;JvBDE;$(DCC_UsePackage)</DCC_UsePackage>
 			<DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
 			<DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
 		</PropertyGroup>
@@ -149,6 +149,8 @@
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
 					<Excluded_Packages>
+						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\JvRuntimeDesignDesign160.bpl">JVCL Runtime Design Components</Excluded_Packages>
+						<Excluded_Packages Name="D:\WORK\DSD\DSD\BIN\DSDDesignComponent.bpl">(untitled)</Excluded_Packages>
 						<Excluded_Packages Name="C:\Program Files (x86)\FastReports\FastReport 4\LibD16\dclfsDB16.bpl">FastScript 1.9 DB Components</Excluded_Packages>
 						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\dcldxCoreD7.bpl">File C:\Users\Public\Documents\RAD Studio\9.0\Bpl\dcldxCoreD7.bpl not found</Excluded_Packages>
 						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\dacvcl160.bpl">Devart Data Access GUI related Components</Excluded_Packages>
