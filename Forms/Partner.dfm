@@ -2,15 +2,16 @@ inherited PartnerForm: TPartnerForm
   Caption = #1055#1072#1088#1090#1085#1077#1088#1099
   ClientHeight = 473
   ClientWidth = 750
-  ExplicitWidth = 766
-  ExplicitHeight = 511
+  ExplicitLeft = -3
+  ExplicitWidth = 758
+  ExplicitHeight = 500
   PixelsPerInch = 96
   TextHeight = 13
   object cxDBTreeList: TcxDBTreeList
     Left = 0
-    Top = 28
+    Top = 26
     Width = 750
-    Height = 445
+    Height = 447
     Align = alClient
     Bands = <
       item
@@ -22,6 +23,7 @@ inherited PartnerForm: TPartnerForm
     OptionsBehavior.IncSearch = True
     OptionsData.Editing = False
     OptionsData.Deleting = False
+    OptionsSelection.InvertSelect = False
     OptionsView.ColumnAutoWidth = True
     RootValue = -1
     TabOrder = 4
@@ -96,8 +98,8 @@ inherited PartnerForm: TPartnerForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -114,7 +116,7 @@ inherited PartnerForm: TPartnerForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -145,9 +147,25 @@ inherited PartnerForm: TPartnerForm
           ItemName = 'bbUnErased'
         end
         item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoiceGuides'
         end>
       OneOnRow = True
       Row = 0
@@ -158,30 +176,40 @@ inherited PartnerForm: TPartnerForm
     object bbRefresh: TdxBarButton
       Action = actRefresh
       Category = 0
-      ImageIndex = 4
     end
     object bbInsert: TdxBarButton
       Action = actInsert
       Category = 0
-      ImageIndex = 0
     end
     object bbEdit: TdxBarButton
       Action = actUpdate
       Category = 0
-      ImageIndex = 1
     end
     object bbErased: TdxBarButton
       Action = dsdSetErased
       Category = 0
-      ImageIndex = 2
     end
     object bbUnErased: TdxBarButton
       Action = dsdSetUnErased
       Category = 0
-      ImageIndex = 8
+    end
+    object bbGridToExel: TdxBarButton
+      Action = dsdGridToExcel
+      Category = 0
+    end
+    object bbChoiceGuides: TdxBarButton
+      Action = dsdChoiceGuides
+      Category = 0
+    end
+    object dxBarStatic1: TdxBarStatic
+      Caption = '     '
+      Category = 0
+      Hint = '     '
+      Visible = ivAlways
     end
   end
   object ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 232
     Top = 144
     object actRefresh: TdsdDataSetRefresh
@@ -193,12 +221,14 @@ inherited PartnerForm: TPartnerForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
       ShortCut = 116
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
+      ImageIndex = 0
       FormName = 'TPartnerEditForm'
       GuiParams = <
         item
@@ -215,6 +245,7 @@ inherited PartnerForm: TPartnerForm
       Category = 'DSDLib'
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
+      ImageIndex = 1
       FormName = 'TPartnerEditForm'
       GuiParams = <
         item
@@ -234,6 +265,7 @@ inherited PartnerForm: TPartnerForm
       StoredProcList = <>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
       ShortCut = 46
       DataSource = DataSource
     end
@@ -242,9 +274,24 @@ inherited PartnerForm: TPartnerForm
       StoredProcList = <>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
       ShortCut = 32776
       isSetErased = False
       DataSource = DataSource
+    end
+    object dsdChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      Params = <>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ImageIndex = 7
+    end
+    object dsdGridToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -271,6 +318,24 @@ inherited PartnerForm: TPartnerForm
         ParamType = ptInput
       end>
     Left = 288
+    Top = 208
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+      end
+      item
+        Action = actUpdate
+      end>
+    SortImages = dmMain.SortImageList
+    ActionItemList = <
+      item
+        ShortCut = 13
+      end
+      item
+        ShortCut = 13
+      end>
+    Left = 120
     Top = 208
   end
 end

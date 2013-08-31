@@ -2,21 +2,21 @@ inherited JuridicalForm: TJuridicalForm
   Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
   ClientHeight = 405
   ClientWidth = 712
-  ExplicitWidth = 728
-  ExplicitHeight = 443
+  ExplicitWidth = 720
+  ExplicitHeight = 432
   PixelsPerInch = 96
   TextHeight = 13
   object cxSplitter: TcxSplitter
     Left = 0
-    Top = 28
+    Top = 26
     Width = 8
-    Height = 377
+    Height = 379
   end
   object cxGrid: TcxGrid
     Left = 8
-    Top = 28
+    Top = 26
     Width = 704
-    Height = 377
+    Height = 379
     Align = alClient
     TabOrder = 1
     object cxGridDBTableView: TcxGridDBTableView
@@ -27,6 +27,11 @@ inherited JuridicalForm: TJuridicalForm
       DataController.Summary.SummaryGroups = <>
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
+      OptionsData.Inserting = False
+      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -79,8 +84,8 @@ inherited JuridicalForm: TJuridicalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -97,7 +102,7 @@ inherited JuridicalForm: TJuridicalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -288,7 +293,6 @@ inherited JuridicalForm: TJuridicalForm
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
       ImageIndex = 7
     end
     object dsdGridToExcel: TdsdGridToExcel
@@ -299,12 +303,6 @@ inherited JuridicalForm: TJuridicalForm
       ImageIndex = 6
       ShortCut = 16472
     end
-  end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
-    SortImages = dmMain.SortImageList
-    View = cxGridDBTableView
-    Left = 208
-    Top = 184
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 272
@@ -348,6 +346,28 @@ inherited JuridicalForm: TJuridicalForm
         ParamType = ptInput
       end>
     Left = 152
+    Top = 184
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+        Action = actUpdate
+      end>
+    SortImages = dmMain.SortImageList
+    View = cxGridDBTableView
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
+    Left = 208
     Top = 184
   end
 end

@@ -2,15 +2,15 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
   Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
   ClientHeight = 473
   ClientWidth = 691
-  ExplicitWidth = 707
-  ExplicitHeight = 511
+  ExplicitWidth = 699
+  ExplicitHeight = 500
   PixelsPerInch = 96
   TextHeight = 13
   object cxDBTreeList: TcxDBTreeList
     Left = 0
-    Top = 28
+    Top = 26
     Width = 289
-    Height = 445
+    Height = 447
     Align = alLeft
     Bands = <
       item
@@ -41,16 +41,16 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
   end
   object cxSplitter: TcxSplitter
     Left = 289
-    Top = 28
+    Top = 26
     Width = 8
-    Height = 445
+    Height = 447
     Control = cxDBTreeList
   end
   object cxGrid: TcxGrid
     Left = 297
-    Top = 28
+    Top = 26
     Width = 394
-    Height = 445
+    Height = 447
     Align = alClient
     TabOrder = 6
     object cxGridDBTableView: TcxGridDBTableView
@@ -61,6 +61,11 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
       DataController.Summary.SummaryGroups = <>
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
+      OptionsData.Inserting = False
+      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -148,8 +153,8 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -166,7 +171,7 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -387,12 +392,6 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
     Left = 136
     Top = 216
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
-    SortImages = dmMain.SortImageList
-    View = cxGridDBTableView
-    Left = 360
-    Top = 256
-  end
   object dsdDBTreeAddOn: TdsdDBTreeAddOn
     isLeafFieldName = 'isLeaf'
     DBTreeList = cxDBTreeList
@@ -443,5 +442,27 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
       end>
     Left = 288
     Top = 216
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+        Action = actUpdate
+      end>
+    SortImages = dmMain.SortImageList
+    View = cxGridDBTableView
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
+    Left = 312
+    Top = 280
   end
 end

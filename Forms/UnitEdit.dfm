@@ -7,13 +7,13 @@
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
-    Left = 216
+    Left = 280
     Top = 26
     TabOrder = 0
-    Width = 273
+    Width = 209
   end
   object cxLabel1: TcxLabel
-    Left = 216
+    Left = 280
     Top = 3
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
@@ -47,7 +47,7 @@
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 153
+    Width = 209
   end
   object cxLabel3: TcxLabel
     Left = 40
@@ -55,7 +55,7 @@
     Caption = #1043#1088#1091#1087#1087#1072
   end
   object cxLabel4: TcxLabel
-    Left = 248
+    Left = 280
     Top = 50
     Caption = #1060#1080#1083#1080#1072#1083
   end
@@ -68,7 +68,7 @@
         Kind = bkEllipsis
       end>
     TabOrder = 8
-    Width = 185
+    Width = 209
   end
   object cxLabel2: TcxLabel
     Left = 40
@@ -76,7 +76,7 @@
     Caption = #1041#1080#1079#1085#1077#1089#1099
   end
   object ceBranch: TcxButtonEdit
-    Left = 248
+    Left = 280
     Top = 73
     Properties.Buttons = <
       item
@@ -84,7 +84,7 @@
         Kind = bkEllipsis
       end>
     TabOrder = 10
-    Width = 241
+    Width = 209
   end
   object ceBusiness: TcxButtonEdit
     Left = 40
@@ -95,15 +95,15 @@
         Kind = bkEllipsis
       end>
     TabOrder = 11
-    Width = 201
+    Width = 209
   end
   object cxLabel5: TcxLabel
-    Left = 269
+    Left = 280
     Top = 113
     Caption = #1070#1088'. '#1083#1080#1094#1086
   end
   object ceJuridical: TcxButtonEdit
-    Left = 269
+    Left = 280
     Top = 136
     Properties.Buttons = <
       item
@@ -111,7 +111,7 @@
         Kind = bkEllipsis
       end>
     TabOrder = 13
-    Width = 220
+    Width = 209
   end
   object cxLabel6: TcxLabel
     Left = 40
@@ -127,15 +127,15 @@
         Kind = bkEllipsis
       end>
     TabOrder = 15
-    Width = 201
+    Width = 209
   end
   object cxLabel7: TcxLabel
-    Left = 269
+    Left = 280
     Top = 169
     Caption = #1057#1090#1072#1090#1100#1103' '#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
   end
   object ceProfitLossDirection: TcxButtonEdit
-    Left = 269
+    Left = 280
     Top = 192
     Properties.Buttons = <
       item
@@ -143,7 +143,7 @@
         Kind = bkEllipsis
       end>
     TabOrder = 17
-    Width = 220
+    Width = 209
   end
   object ActionList: TActionList
     Left = 48
@@ -394,34 +394,31 @@
   object ParentGuides: TdsdGuides
     LookupControl = ceParent
     FormName = 'TUnitForm'
-    PositionDataSet = 'TreeDataSet'
-    ParentDataSet = 'TreeDataSet'
+    ParentDataSet = 'ClientDataSet'
     Params = <>
-    Left = 152
-    Top = 56
+    Left = 160
+    Top = 64
   end
   object BranchGuides: TdsdGuides
     LookupControl = ceBranch
     FormName = 'TBranchForm'
-    PositionDataSet = 'ClientDataSet'
-    ParentDataSet = 'TreeDataSet'
+    ParentDataSet = 'ClientDataSet'
     Params = <>
-    Left = 424
-    Top = 48
+    Left = 384
+    Top = 64
   end
   object BusinessGuides: TdsdGuides
     LookupControl = ceBusiness
     FormName = 'TBusinessForm'
-    PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'ClientDataSet'
     Params = <>
-    Left = 168
+    Left = 160
     Top = 120
   end
   object JuridicalGuides: TdsdGuides
     LookupControl = ceJuridical
     FormName = 'TJuridicalForm'
-    PositionDataSet = 'ClientDataSet'
-    ParentDataSet = 'TreeDataSet'
+    ParentDataSet = 'GridDataSet'
     Params = <>
     Left = 384
     Top = 112
@@ -429,17 +426,17 @@
   object AccountDirectionGuides: TdsdGuides
     LookupControl = ceAccountDirection
     FormName = 'TAccountDirectionForm'
-    PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'ClientDataSet'
     Params = <>
     Left = 160
-    Top = 168
+    Top = 184
   end
   object ProfitLossDirectionGuides: TdsdGuides
     LookupControl = ceProfitLossDirection
     FormName = 'TProfitLossDirectionForm'
-    PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'ClientDataSet'
     Params = <>
-    Left = 376
-    Top = 160
+    Left = 384
+    Top = 168
   end
 end

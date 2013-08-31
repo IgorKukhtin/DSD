@@ -25,10 +25,10 @@ CREATE OR REPLACE FUNCTION lpInsertFind_ObjectCost(
     IN inDescId_10               Integer  DEFAULT NULL , -- DescId для 10-ой Аналитики
     IN inObjectId_10             Integer  DEFAULT NULL   -- ObjectId для 10-ой Аналитики
 )
-RETURNS Integer AS
+  RETURNS Integer AS
 $BODY$
-   DECLARE vbObjectCostId Integer;
-   DECLARE vbRecordCount Integer;
+  DECLARE vbObjectCostId Integer;
+  DECLARE vbRecordCount Integer;
 BEGIN
 
      -- удаляем предыдущие
@@ -87,7 +87,7 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION lpInsertFind_ObjectCost (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer) OWNER TO postgres;
 
   
@@ -95,7 +95,6 @@ ALTER FUNCTION lpInsertFind_ObjectCost (Integer, Integer, Integer, Integer, Inte
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-
  10.07.13                                        *
 */
 

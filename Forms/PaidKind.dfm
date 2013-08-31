@@ -1,15 +1,15 @@
 inherited PaidKindForm: TPaidKindForm
   Caption = #1058#1080#1087#1099' '#1086#1087#1083#1072#1090
   ClientHeight = 376
-  ClientWidth = 292
-  ExplicitWidth = 300
+  ClientWidth = 349
+  ExplicitWidth = 357
   ExplicitHeight = 403
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 292
+    Width = 349
     Height = 350
     Align = alClient
     TabOrder = 0
@@ -26,6 +26,7 @@ inherited PaidKindForm: TPaidKindForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -167,7 +168,6 @@ inherited PaidKindForm: TPaidKindForm
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -186,9 +186,23 @@ inherited PaidKindForm: TPaidKindForm
     Top = 200
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+      end>
     SortImages = dmMain.SortImageList
     View = cxGridDBTableView
-    Left = 160
-    Top = 208
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        ShortCut = 13
+      end>
+    Left = 152
+    Top = 240
   end
 end

@@ -51,12 +51,12 @@ type
     dsdSetUnErased: TdsdUpdateErased;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdGridToExcel: TdsdGridToExcel;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     GridDS: TDataSource;
     GridDataSet: TClientDataSet;
     GridStoredProc: TdsdStoredProc;
     spErasedUnErased: TdsdStoredProc;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
   private
     { Private declarations }
   public

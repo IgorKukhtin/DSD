@@ -3398,7 +3398,7 @@ begin
            +'  and Bill.BillKind=zc_bkIncomeToUnit()'
            +'  and UnitFrom.PersonalId_Postgres is null'
            );
-        Add('order by ObjectId');
+        Add('order by OperDate, ObjectId');
         Open;
         Result:=RecordCount;
         cbIncome.Caption:='1.1. ('+IntToStr(RecordCount)+') Приход от поставщика';
@@ -3482,6 +3482,8 @@ begin
         Clear;
         Add('select BillItems.Id as ObjectId');
         Add('     , Bill.Id_Postgres as MovementId_Postgres');
+        Add('     , Bill.BillDate');
+        Add('     , Bill.InvNumber');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , BillItems.OperCount as Amount');
         Add('     , Amount as AmountPartner');
@@ -3507,7 +3509,7 @@ begin
            +'  and UnitFrom.PersonalId_Postgres is null'
            +'  and BillItems.Id is not null'
            );
-        Add('order by ObjectId');
+        Add('order by Bill.BillDate, ObjectId');
         Open;
         cbIncome.Caption:='1.1. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Приход от поставщика';
         //
@@ -3612,7 +3614,7 @@ begin
            +'  and Bill.BillKind=zc_bkIncomeToUnit()'
            +'  and UnitFrom.PersonalId_Postgres is not null'
            );
-        Add('order by ObjectId');
+        Add('order by OperDate, ObjectId');
         Open;
         Result:=RecordCount;
         cbIncomePacker.Caption:='1.2. ('+IntToStr(RecordCount)+') Приход от заготовителя';
@@ -3696,6 +3698,8 @@ begin
         Clear;
         Add('select BillItems.Id as ObjectId');
         Add('     , isnull (Bill_PartionStr_MB.Id_Postgres, Bill.Id_Postgres) as MovementId_Postgres');
+        Add('     , Bill.BillDate');
+        Add('     , Bill.InvNumber');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , case when Bill_PartionStr_MB.Id is null then BillItems.OperCount else 0 end as Amount');
         Add('     , Amount as AmountPartner');
@@ -3724,7 +3728,7 @@ begin
            +'  and BillItems.Id is not null'
 // +'  and BillItems.BillId =1164656'
            );
-        Add('order by ObjectId');
+        Add('order by Bill.BillDate, ObjectId');
         Open;
         cbIncomePacker.Caption:='1.2. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Приход от заготовителя';
         //
@@ -3909,7 +3913,7 @@ begin
            +'  and (pgUnitFrom.Id_Postgres_Branch is null or UnitFrom.ParentId=4137)' // МО ЛИЦА-ВСЕ
            +'  and (pgUnitTo.Id_Postgres_Branch is null or UnitTo.ParentId=4137)' // МО ЛИЦА-ВСЕ
            );
-        Add('order by ObjectId');
+        Add('order by OperDate, ObjectId');
         Open;
         Result:=RecordCount;
         cbSendUnit.Caption:='2.1. ('+IntToStr(RecordCount)+') Перемещение с подразделениями';
@@ -3967,6 +3971,8 @@ begin
         Clear;
         Add('select BillItems.Id as ObjectId');
         Add('     , Bill.Id_Postgres as MovementId_Postgres');
+        Add('     , Bill.BillDate');
+        Add('     , Bill.InvNumber');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , -BillItems.OperCount as Amount');
         Add('     , BillItems.OperCount_Upakovka as inCount');
@@ -3994,7 +4000,7 @@ begin
            +'  and (pgUnitTo.Id_Postgres_Branch is null or UnitTo.ParentId=4137)' // МО ЛИЦА-ВСЕ
            +'  and BillItems.Id is not null'
            );
-        Add('order by ObjectId');
+        Add('order by Bill.BillDate, ObjectId');
         Open;
         cbSendUnit.Caption:='2.1. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Перемещение с подразделениями';
         //
@@ -4197,7 +4203,7 @@ begin
            +'  and pgUnitFrom.Id_Postgres_Branch is null'
            +'  and pgUnitTo.Id_Postgres_Branch is null'
            );
-        Add('order by ObjectId');
+        Add('order by OperDate, ObjectId');
         Open;
         Result:=RecordCount;
         cbSendPersonal.Caption:='2.2. ('+IntToStr(RecordCount)+') Перемещение с экспедиторами';
@@ -4279,6 +4285,8 @@ begin
         Clear;
         Add('select BillItems.Id as ObjectId');
         Add('     , Bill.Id_Postgres as MovementId_Postgres');
+        Add('     , Bill.BillDate');
+        Add('     , Bill.InvNumber');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , -BillItems.OperCount as Amount');
         Add('     , Amount as AmountPartner');
@@ -4318,7 +4326,7 @@ begin
 
            +'  and BillItems.Id is not null'
            );
-        Add('order by ObjectId');
+        Add('order by Bill.BillDate,ObjectId');
         Open;
         cbSendPersonal.Caption:='2.2. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Перемещение с экспедиторами';
        //
@@ -4458,7 +4466,7 @@ begin
            +'    or (UnitTo.pgUnitId is not null'
            +'    and pgUnitFrom.Id_Postgres_Branch is not null))'}
            );
-        Add('order by ObjectId');
+        Add('order by OperDate, ObjectId');
         Open;
         Result:=RecordCount;
         cbSendUnitBranch.Caption:='2.3. ('+IntToStr(RecordCount)+') Перемещение с филиалами';
@@ -4540,6 +4548,8 @@ begin
         Clear;
         Add('select BillItems.Id as ObjectId');
         Add('     , Bill.Id_Postgres as MovementId_Postgres');
+        Add('     , Bill.BillDate');
+        Add('     , Bill.InvNumber');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , -BillItems.OperCount as Amount');
         Add('     , Amount as AmountPartner');
@@ -4612,7 +4622,7 @@ begin
 
            +'  and BillItems.Id is not null'
            );
-        Add('order by ObjectId');
+        Add('order by Bill.BillDate, ObjectId');
         Open;
         cbSendUnitBranch.Caption:='2.3. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Перемещение с филиалами';
         //
@@ -5094,7 +5104,7 @@ begin
            +'  and Bill.BillKind in (zc_bkProductionInFromReceipt())'
            +'  and isnull(Bill.isRemains,zc_rvNo())=zc_rvNo()'
            );
-        Add('order by ObjectId');
+        Add('order by OperDate, ObjectId');
         Open;
         Result:=RecordCount;
         cbProductionUnion.Caption:='4.1. ('+IntToStr(RecordCount)+') Производство смешивание';
@@ -5153,6 +5163,8 @@ begin
         Clear;
         Add('select BillItems.Id as ObjectId');
         Add('     , Bill.Id_Postgres as MovementId_Postgres');
+        Add('     , Bill.BillDate');
+        Add('     , Bill.InvNumber');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , BillItems.OperCount as Amount');
         Add('     , isnull(BillItems.isClosePartion,zc_rvNo()) as PartionClose');
@@ -5176,7 +5188,7 @@ begin
            +'  and isnull(Bill.isRemains,zc_rvNo())=zc_rvNo()'
            +'  and BillItems.Id is not null'
            );
-        Add('order by ObjectId');
+        Add('order by Bill.BillDate, ObjectId');
         Open;
         Result:=RecordCount;
         cbProductionUnion.Caption:='4.1. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Производство смешивание';
@@ -5252,6 +5264,8 @@ begin
         Clear;
         Add('select BillItemsReceipt.Id as ObjectId');
         Add('     , Bill.Id_Postgres as MovementId_Postgres');
+        Add('     , Bill.BillDate');
+        Add('     , Bill.InvNumber');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , -BillItemsReceipt.OperReceiptCount as Amount');
         Add('     , BillItems.Id_Postgres as ParentId_Postgres');
@@ -5274,7 +5288,7 @@ begin
            +'  and isnull(Bill.isRemains,zc_rvNo())=zc_rvNo()'
            +'  and BillItemsReceipt.Id is not null'
            );
-        Add('order by ObjectId');
+        Add('order by Bill.BillDate, ObjectId');
         Open;
         cbProductionUnion.Caption:='4.1. ('+IntToStr(SaveCount1)+')('+IntToStr(SaveCount2)+')('+IntToStr(RecordCount)+') Производство смешивание';
         //
@@ -5438,7 +5452,7 @@ begin
 // +' and Bill.Id_Postgres=22081'
            +'  and Bill.BillKind in (zc_bkProduction())'
            );
-        Add('order by ObjectId');
+        Add('order by OperDate, ObjectId');
         Open;
         Result:=RecordCount;
         cbProductionSeparate.Caption:='4.2. ('+IntToStr(RecordCount)+') Производство разделение';
@@ -5499,6 +5513,8 @@ begin
         Clear;
         Add('select BillItems.Id as ObjectId');
         Add('     , Bill.Id_Postgres as MovementId_Postgres');
+        Add('     , Bill.BillDate');
+        Add('     , Bill.InvNumber');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , -BillItems.OperCount as Amount');
         Add('     , BillItems.OperCount_sh as HeadCount');
@@ -5514,7 +5530,7 @@ begin
            +'  and Bill.BillKind in (zc_bkProduction())'
            +'  and BillItems.Id is not null'
            );
-        Add('order by ObjectId');
+        Add('order by Bill.BillDate, ObjectId');
         Open;
         Result:=RecordCount;
         cbProductionSeparate.Caption:='4.2. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Производство разделение';
@@ -5574,6 +5590,8 @@ begin
         Clear;
         Add('select BillItems.Id as ObjectId');
         Add('     , Bill.Id_Postgres as MovementId_Postgres');
+        Add('     , Bill.BillDate');
+        Add('     , Bill.InvNumber');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , BillItems.OperCount as Amount');
         Add('     , 0 as ParentId_Postgres');
@@ -5590,7 +5608,7 @@ begin
            +'  and Bill.BillKind in (zc_bkProduction())'
            +'  and BillItems.Id is not null'
            );
-        Add('order by ObjectId');
+        Add('order by Bill.BillDate,ObjectId');
         Open;
         cbProductionSeparate.Caption:='4.2. ('+IntToStr(SaveCount1)+')('+IntToStr(SaveCount2)+')('+IntToStr(RecordCount)+') Производство разделение';
         //
@@ -6070,5 +6088,6 @@ alter table dba.Bill add Id_Postgres integer null;
 alter table dba.BillItems add Id_Postgres integer null;
 alter table dba.BillItemsReceipt add Id_Postgres integer null;
 ok
+
 }
 

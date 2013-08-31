@@ -21,7 +21,8 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinsdxBarPainter;
+  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinsdxBarPainter, dxBarExtItems,
+  dsdAddOn;
 
 type
   TPartnerForm = class(TParentForm)
@@ -49,6 +50,12 @@ type
     cxDBTreeListcxDBTreeListColumn4: TcxDBTreeListColumn;
     cxDBTreeListcxDBTreeListColumn5: TcxDBTreeListColumn;
     spErasedUnErased: TdsdStoredProc;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
+    dsdChoiceGuides: TdsdChoiceGuides;
+    dsdGridToExcel: TdsdGridToExcel;
+    bbGridToExel: TdxBarButton;
+    bbChoiceGuides: TdxBarButton;
+    dxBarStatic1: TdxBarStatic;
   private
     { Private declarations }
   public
