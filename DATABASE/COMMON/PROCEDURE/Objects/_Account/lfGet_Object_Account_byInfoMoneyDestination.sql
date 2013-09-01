@@ -12,22 +12,19 @@ BEGIN
      -- Выбираем данные для справочника счетов (на самом деле это три справочника)
      RETURN ( 
        SELECT 
-            Object_Account.Id           
-       FROM Object AS Object_Account
+            ObjectLink_Account_InfoMoneyDestination.ObjectId           
+       FROM ObjectLink AS ObjectLink_Account_InfoMoneyDestination
                  JOIN ObjectLink AS ObjectLink_Account_AccountGroup
-                                 ON ObjectLink_Account_AccountGroup.ObjectId = Object_Account.Id 
+                                 ON ObjectLink_Account_AccountGroup.ObjectId = ObjectLink_Account_InfoMoneyDestination.ObjectId 
                                 AND ObjectLink_Account_AccountGroup.DescId = zc_ObjectLink_Account_AccountGroup()
-
+                                AND ObjectLink_Account_AccountGroup.ChildObjectId = inAccountGroupId 
                  JOIN ObjectLink AS ObjectLink_Account_AccountDirection
-                                 ON ObjectLink_Account_AccountDirection.ObjectId = Object_Account.Id 
+                                 ON ObjectLink_Account_AccountDirection.ObjectId = ObjectLink_Account_InfoMoneyDestination.ObjectId 
                                 AND ObjectLink_Account_AccountDirection.DescId = zc_ObjectLink_Account_AccountDirection()
+                                AND ObjectLink_Account_AccountDirection.ChildObjectId = inAccountDirectionId 
 
-                 JOIN ObjectLink AS ObjectLink_Account_InfoMoneyDestination
-                                 ON ObjectLink_Account_InfoMoneyDestination.ObjectId = Object_Account.Id
-                                AND ObjectLink_Account_InfoMoneyDestination.DescId = zc_ObjectLink_Account_InfoMoneyDestination()
-
-       WHERE ObjectLink_Account_AccountGroup.ChildObjectId = inAccountGroupId AND ObjectLink_Account_AccountDirection.ChildObjectId = inAccountDirectionId 
-         AND ObjectLink_Account_InfoMoneyDestination.ChildObjectId = inInfoMoneyDestinationId AND Object_Account.DescId = zc_Object_Account());
+       WHERE ObjectLink_Account_InfoMoneyDestination.DescId = zc_ObjectLink_Account_InfoMoneyDestination()
+         AND ObjectLink_Account_InfoMoneyDestination.ChildObjectId = inInfoMoneyDestinationId;
 
 END;
 $BODY$
@@ -39,6 +36,7 @@ ALTER FUNCTION lfGet_Object_Account_byInfoMoneyDestination (Integer, Integer, In
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.09.13                                        * селективность 100%
  26.08.13                                        * rename
  13.08.13                        *
 */
