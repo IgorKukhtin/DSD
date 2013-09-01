@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpReport_ProfitLoss(
 RETURNS TABLE (ProfitLossGroupCode Integer, ProfitLossGroupName TVarChar, ProfitLossDirectionCode Integer, ProfitLossDirectionName TVarChar
              , ProfitLossCode Integer, ProfitLossName  TVarChar, OnComplete Boolean
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyCode_Detail Integer, InfoMoneyName_Detail TVarChar
+             , BusinessCode Integer, BusinessName TVarChar
              , ByObjectCode Integer, ByObjectName TVarChar
              , GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat
@@ -35,6 +36,8 @@ $BODY$BEGIN
            , lfObject_InfoMoney_Detail.InfoMoneyCode AS InfoMoneyCode_Detail
            , lfObject_InfoMoney_Detail.InfoMoneyName AS InfoMoneyName_Detail
 
+           , Object_Business.ObjectCode   AS BusinessCode
+           , Object_Business.ValueData    AS BusinessName
            , Object_by.ObjectCode         AS ByObjectCode
            , Object_by.ValueData          AS ByObjectName
            , Object_Goods.ObjectCode      AS GoodsCode
@@ -49,11 +52,12 @@ $BODY$BEGIN
                            , ContainerLinkObject_ProfitLoss.ObjectId AS ProfitLossId
                       FROM (SELECT Container.Id AS ContainerId
                                  , MIContainer_Parent.ContainerId AS ContainerId_Parent
-                                 , -1 * SUM (MIContainer.Amount) AS Amount
+                                 , SUM (MIContainer.Amount) AS Amount
                             FROM Container
                                  JOIN MovementItemContainer AS MIContainer
                                                             ON MIContainer.ContainerId = Container.Id
                                                            AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                                                           AND MIContainer.isActive = FALSE -- !!! что бы не попали операции переброски накопленной прибыль прошлого месяца в долг по прибыли
                                  LEFT JOIN MovementItemContainer AS MIContainer_Parent ON MIContainer_Parent.Id = MIContainer.ParentId
                             WHERE Container.ObjectId = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
                               AND Container.DescId = zc_Container_Summ()
@@ -65,6 +69,9 @@ $BODY$BEGIN
                                                         AND ContainerLinkObject_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss()
                      ) AS tmpProfitLoss ON tmpProfitLoss.ProfitLossId = lfObject_ProfitLoss.ProfitLossId
 
+           LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Business
+                                         ON ContainerLinkObject_Business.ContainerId = tmpProfitLoss.ContainerId_Parent
+                                        AND ContainerLinkObject_Business.DescId = zc_ContainerLinkObject_Business()
            LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
                                          ON ContainerLinkObject_InfoMoney.ContainerId = tmpProfitLoss.ContainerId_Parent
                                         AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
@@ -92,6 +99,7 @@ $BODY$BEGIN
            LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney_Detail ON lfObject_InfoMoney_Detail.InfoMoneyId = COALESCE (ContainerLinkObject_InfoMoneyDetail.ObjectId, ContainerLinkObject_InfoMoney.ObjectId)
                                                                              AND zc_isHistoryCost_byInfoMoneyDetail() = TRUE
 
+           LEFT JOIN Object AS Object_Business ON Object_Business.Id = ContainerLinkObject_Business.ObjectId
            LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (ContainerLinkObject_Juridical.ObjectId, COALESCE (ContainerLinkObject_Personal.ObjectId, ContainerLinkObject_Unit.ObjectId))
            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ContainerLinkObject_Goods.ObjectId
       ;
@@ -106,6 +114,7 @@ ALTER FUNCTION gpReport_ProfitLoss (TDateTime, TDateTime, TVarChar) OWNER TO pos
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.09.13                                        *
  27.08.13                                        *
 */
 
