@@ -35,6 +35,8 @@ BEGIN
      CREATE TEMP TABLE _tmpContainer (DescId Integer, ObjectId Integer) ON COMMIT DROP;
      -- таблица - Аналитики <элемент с/с>
      CREATE TEMP TABLE _tmpObjectCost (DescId Integer, ObjectId Integer) ON COMMIT DROP;
+     -- таблица - 
+     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
 
      -- таблица - количественные Master-элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer, MovementId Integer, OperDate TDateTime, UnitId_From Integer, PersonalId_From Integer
@@ -624,7 +626,10 @@ BEGIN
 
 
      -- формируются Проводки для количественного учета - От кого
-     PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
+       SELECT 0, zc_MIContainer_Count() AS DescId, MovementId, MovementItemId, ContainerId_GoodsFrom, 0 AS ParentId, -1 * OperCount, OperDate, FALSE
+       FROM _tmpItem;
+     /*PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
                                                  , inDescId:= zc_MIContainer_Count()
                                                  , inMovementId:= MovementId
                                                  , inMovementItemId:= MovementItemId
@@ -634,10 +639,13 @@ BEGIN
                                                  , inOperDate:= OperDate
                                                  , inIsActive:= FALSE
                                                   )
-     FROM _tmpItem;
+     FROM _tmpItem;*/
 
      -- формируются Проводки для количественного учета - Кому
-     PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
+       SELECT 0, zc_MIContainer_Count() AS DescId, MovementId, MovementItemId, ContainerId_GoodsTo, 0 AS ParentId, OperCount, OperDate, TRUE
+       FROM _tmpItemChild;
+     /*PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
                                                  , inDescId:= zc_MIContainer_Count()
                                                  , inMovementId:= MovementId
                                                  , inMovementItemId:= MovementItemId
@@ -647,7 +655,7 @@ BEGIN
                                                  , inOperDate:= OperDate
                                                  , inIsActive:= TRUE
                                                   )
-     FROM _tmpItemChild;
+     FROM _tmpItemChild;*/
 
 
 
@@ -851,7 +859,14 @@ BEGIN
 
 
      -- формируются Проводки для суммового учета - От кого, причем для !!!каждого!! элемента прихода (поэтому и inAmount:= -1 * _tmpItemSummChild.OperSumm)
-     PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
+       SELECT 0, zc_MIContainer_Summ() AS DescId, _tmpItem.MovementId, _tmpItem.MovementItemId, _tmpItemSumm.ContainerId_From, _tmpItemSummChild.MIContainerId_To AS ParentId, -1 * _tmpItemSummChild.OperSumm, _tmpItem.OperDate, FALSE
+       FROM _tmpItem
+            JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId
+            JOIN _tmpItemSummChild ON _tmpItemSummChild.MovementItemId_Parent = _tmpItemSumm.MovementItemId
+                                  AND _tmpItemSummChild.InfoMoneyId_Detail_To = _tmpItemSumm.InfoMoneyId_Detail_From
+       ;
+     /*PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
                                                  , inDescId:= zc_MIContainer_Summ()
                                                  , inMovementId:= _tmpItem.MovementId
                                                  , inMovementItemId:= _tmpItem.MovementItemId
@@ -865,10 +880,13 @@ BEGIN
           JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId
           JOIN _tmpItemSummChild ON _tmpItemSummChild.MovementItemId_Parent = _tmpItemSumm.MovementItemId
                                 AND _tmpItemSummChild.InfoMoneyId_Detail_To = _tmpItemSumm.InfoMoneyId_Detail_From
-     ;
+     ;*/
 
 
-     -- ФИНИШ - Обязательно меняем статус документа
+     -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
+     PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
+
+     -- 5.2. ФИНИШ - Обязательно меняем статус документа
      UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_ProductionSeparate() AND StatusId = zc_Enum_Status_UnComplete();
 
 
@@ -879,6 +897,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.09.13                                        * add lpInsertUpdate_MovementItemContainer_byTable
  26.08.13                                        * add zc_InfoMoneyDestination_WorkProgress
  11.08.13                                        * add inIsLastComplete
  10.08.13                                        * в проводках !!!ТОЛЬКО!! для суммового учета: Master - приход, Child - расход (т.е. !!!НАОБОРОТ!!! как в MovementItem зато получились как ProductionUnion)

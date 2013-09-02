@@ -82,6 +82,8 @@ BEGIN
      CREATE TEMP TABLE _tmpObjectCost (DescId Integer, ObjectId Integer) ON COMMIT DROP;
      -- таблица - Аналитики <Проводки для отчета>
      CREATE TEMP TABLE _tmpReportContainer (isActive Boolean, ContainerId Integer) ON COMMIT DROP;
+     -- таблица - 
+     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
 
      -- таблица - элементы по контрагенту, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem_SummPartner (MovementId Integer, OperDate TDateTime, JuridicalId_From Integer, isCorporate Boolean, PersonalId_From Integer
@@ -529,6 +531,10 @@ BEGIN
                                              END;
 
      -- 1.1.2. формируются Проводки для количественного учета
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
+       SELECT 0, zc_MIContainer_Count() AS DescId, MovementId, MovementItemId, ContainerId_Goods, 0 AS ParentId, OperCount, OperDate, TRUE
+       FROM _tmpItem;
+/*
      PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
                                                  , inDescId:= zc_MIContainer_Count()
                                                  , inMovementId:= MovementId
@@ -539,7 +545,7 @@ BEGIN
                                                  , inOperDate:= OperDate
                                                  , inIsActive:= TRUE
                                                   )
-     FROM _tmpItem;
+     FROM _tmpItem;*/
 
      -- 1.2.1. определяется ContainerId_Summ для проводок по суммовому учету + формируется Аналитика <элемент с/с>
      UPDATE _tmpItem SET ContainerId_Summ =                        CASE WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
@@ -721,7 +727,11 @@ BEGIN
      WHERE zc_isHistoryCost() = TRUE;
 
      -- 1.2.2. формируются Проводки для суммового учета
-     PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
+       SELECT 0, zc_MIContainer_Summ() AS DescId, MovementId, MovementItemId, ContainerId_Summ, 0 AS ParentId, OperSumm_Partner + OperSumm_Packer, OperDate, TRUE
+       FROM _tmpItem
+       WHERE zc_isHistoryCost() = TRUE;
+     /*PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
                                                  , inDescId:= zc_MIContainer_Summ()
                                                  , inMovementId:= MovementId
                                                  , inMovementItemId:= MovementItemId
@@ -732,7 +742,7 @@ BEGIN
                                                  , inIsActive:= TRUE
                                                   )
      FROM _tmpItem
-     WHERE zc_isHistoryCost() = TRUE;
+     WHERE zc_isHistoryCost() = TRUE;*/
 
 
      -- 2.1. определяется ContainerId для проводок по долг Поставщику или Сотруднику (подотчетные лица)
@@ -790,7 +800,10 @@ BEGIN
      ;
 
      -- 2.2. формируются Проводки - долг Поставщику или Сотруднику (подотчетные лица)
-     PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
+       SELECT 0, zc_MIContainer_Summ() AS DescId, MovementId, 0 AS MovementItemId, ContainerId, 0 AS ParentId, -1 * OperSumm_Partner, OperDate, FALSE
+       FROM _tmpItem_SummPartner;
+     /*PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
                                                  , inDescId:= zc_MIContainer_Summ()
                                                  , inMovementId:= MovementId
                                                  , inMovementItemId:= NULL
@@ -800,7 +813,7 @@ BEGIN
                                                  , inOperDate:= OperDate
                                                  , inIsActive:= FALSE
                                                   )
-     FROM _tmpItem_SummPartner;
+     FROM _tmpItem_SummPartner;*/
 
 
      -- 3.1. определяется ContainerId для проводок по доплата Заготовителю
@@ -825,21 +838,24 @@ BEGIN
                                                                         );
 
      -- 3.2. формируются Проводки - доплата Заготовителю
-     PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
+       SELECT 0, zc_MIContainer_Summ() AS DescId, MovementId, 0 AS MovementItemId, ContainerId, 0 AS ParentId, -1 * OperSumm_Packer, OperDate, FALSE
+       FROM _tmpItem_SummPacker;
+     /*PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
                                                  , inDescId:= zc_MIContainer_Summ()
                                                  , inMovementId:= MovementId
-                                                 , inMovementItemId:= NULL -- MovementItemId
+                                                 , inMovementItemId:= NULL
                                                  , inParentId:= NULL
                                                  , inContainerId:= ContainerId
                                                  , inAmount:= -1 * OperSumm_Packer
                                                  , inOperDate:= OperDate
                                                  , inIsActive:= FALSE
                                                   )
-     FROM _tmpItem_SummPacker;
+     FROM _tmpItem_SummPacker;*/
 
 
      -- 4.1. формируются Проводки для отчета (Аналитики: Товар и Поставщик или Сотрудник (подотчетные лица))
-     PERFORM lpInsertUpdate_MovementItemReport (inMovementId := _tmpItem.MovementId
+     /*PERFORM lpInsertUpdate_MovementItemReport (inMovementId := _tmpItem.MovementId
                                               , inMovementItemId := _tmpItem.MovementItemId
                                               , inReportContainerId := lpInsertFind_ReportContainer (inContainerId_Active  := _tmpItem.ContainerId_Summ
                                                                                                    , inContainerId_Passive := _tmpItem_SummPartner.ContainerId
@@ -885,10 +901,13 @@ BEGIN
                                        AND _tmpItem_SummPacker.InfoMoneyId = _tmpItem.InfoMoneyId
                                        AND _tmpItem_SummPacker.JuridicalId_basis = _tmpItem.JuridicalId_basis
                                        AND _tmpItem_SummPacker.BusinessId = _tmpItem.BusinessId
-     WHERE _tmpItem.OperSumm_Packer <> 0;
+     WHERE _tmpItem.OperSumm_Packer <> 0;*/
 
 
-     -- 5. ФИНИШ - Обязательно меняем статус документа
+     -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
+     PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
+
+     -- 5.2. ФИНИШ - Обязательно меняем статус документа
      UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_Income() AND StatusId = zc_Enum_Status_UnComplete();
 
 
@@ -899,6 +918,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.09.13                                        * add lpInsertUpdate_MovementItemContainer_byTable
  29.08.13                                        * add lpInsertUpdate_MovementItemReport
  09.08.13                                        * add zc_isHistoryCost and zc_isHistoryCost_byInfoMoneyDetail
  07.08.13                                        * add inParentId and inIsActive
