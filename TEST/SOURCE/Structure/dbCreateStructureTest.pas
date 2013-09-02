@@ -18,6 +18,7 @@ type
     procedure CreateMovement;
     procedure CreateMovementItem;
     procedure CreateMovementItemContainer;
+    procedure CreateMovementItemReport;
     procedure CreateHistory;
     procedure CreateProtocol;
   end;
@@ -107,6 +108,13 @@ procedure TdbCreateStructureTest.CreateMovementItemContainer;
 begin
   ExecFile(StructurePath + 'MovementItemContainer\MovementItemContainerDesc.sql', ZQuery);
   ExecFile(StructurePath + 'MovementItemContainer\MovementItemContainer.sql', ZQuery);
+end;
+
+procedure TdbCreateStructureTest.CreateMovementItemReport;
+begin
+  ExecFile(StructurePath + 'MovementItemReport\ReportContainerSEQUENCE.sql', ZQuery);
+  ExecFile(StructurePath + 'MovementItemReport\ReportContainerLink.sql', ZQuery);
+  ExecFile(StructurePath + 'MovementItemReport\MovementItemReport.sql', ZQuery);
 end;
 
 procedure TdbCreateStructureTest.CreateObject;

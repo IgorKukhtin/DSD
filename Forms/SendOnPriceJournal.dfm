@@ -568,7 +568,7 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     Top = 152
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
-    OnDblClickAction = actUpdate
+    OnDblClickActionList = <>
     SortImages = dmMain.SortImageList
     View = cxGridDBTableView
     ActionItemList = <>

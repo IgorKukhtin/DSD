@@ -180,7 +180,8 @@ uses
   Units in '..\..\Forms\Units.pas' {UnitForm},
   JuridicalTree in '..\..\Forms\JuridicalTree.pas' {JuridicalTreeForm},
   BankAccountTest in '..\SOURCE\Objects\All\BankAccountTest.pas',
-  BusinessTest in '..\SOURCE\Objects\All\BusinessTest.pas';
+  BusinessTest in '..\SOURCE\Objects\All\BusinessTest.pas',
+  CommonMovementItemReportProcedureTest in '..\SOURCE\MovementItemReport\CommonMovementItemReportProcedureTest.pas';
 
 {$R *.RES}
 

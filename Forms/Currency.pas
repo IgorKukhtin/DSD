@@ -48,7 +48,7 @@ type
     bbUnErased: TdxBarButton;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
-    clJuridicalName: TcxGridDBColumn;
+    clInternalName: TcxGridDBColumn;
     dsdGridToExcel: TdsdGridToExcel;
     dxBarStatic: TdxBarStatic;
     bbChoiceGuides: TdxBarButton;

@@ -34,21 +34,24 @@ type
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     dsdDataSetRefresh: TdsdDataSetRefresh;
-    dsdFormClose1: TdsdFormClose;
+    dsdFormClose: TdsdFormClose;
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
     dsdBranchGuides: TdsdGuides;
-    cxLabel2: TcxLabel;
     cxLabel4: TcxLabel;
-    dsdPaidKindGuides: TdsdGuides;
     dsdCurrencyGuides: TdsdGuides;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     ceBranch: TcxButtonEdit;
-    cePaidKind: TcxButtonEdit;
     ceCurrency: TcxButtonEdit;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
+    cxLabel5: TcxLabel;
+    BusinessGuides: TdsdGuides;
+    ceBusiness: TcxButtonEdit;
+    cxLabel6: TcxLabel;
+    ceJuridical: TcxButtonEdit;
+    JuridicalGuides: TdsdGuides;
   private
     { Private declarations }
   public

@@ -360,7 +360,7 @@ inherited ZakazInternalJournalForm: TZakazInternalJournalForm
     Top = 240
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
-    OnDblClickAction = actUpdate
+    OnDblClickActionList = <>
     SortImages = dmMain.SortImageList
     View = cxGridDBTableView
     ActionItemList = <

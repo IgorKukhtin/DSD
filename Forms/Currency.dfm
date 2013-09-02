@@ -29,6 +29,7 @@ inherited CurrencyForm: TCurrencyForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderAutoHeight = True
@@ -48,9 +49,9 @@ inherited CurrencyForm: TCurrencyForm
         HeaderAlignmentVert = vaCenter
         Width = 225
       end
-      object clJuridicalName: TcxGridDBColumn
+      object clInternalName: TcxGridDBColumn
         Caption = #1052#1077#1078#1076#1091#1085#1072#1088#1086#1076#1085#1086#1077' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
-        DataBinding.FieldName = 'JuridicalName'
+        DataBinding.FieldName = 'InternalName'
         HeaderAlignmentVert = vaCenter
         Width = 166
       end
@@ -238,7 +239,7 @@ inherited CurrencyForm: TCurrencyForm
           ParamType = ptOutput
           Value = '0'
         end>
-      isShowModal = True
+      isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
@@ -252,10 +253,11 @@ inherited CurrencyForm: TCurrencyForm
         item
           Name = 'Id'
           Component = ClientDataSet
+          ComponentItem = 'Id'
           DataType = ftInteger
           ParamType = ptInput
         end>
-      isShowModal = True
+      isShowModal = False
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
@@ -309,7 +311,7 @@ inherited CurrencyForm: TCurrencyForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Bank'
+    StoredProcName = 'gpSelect_Object_Currency'
     DataSet = ClientDataSet
     DataSets = <
       item

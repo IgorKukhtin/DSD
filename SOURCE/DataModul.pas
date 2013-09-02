@@ -20,6 +20,7 @@ type
     cxGridTableViewStyleSheet: TcxGridTableViewStyleSheet;
     SortImageList: TImageList;
     cxTreeListStyleSheet: TcxTreeListStyleSheet;
+    cxFooterStyle: TcxStyle;
   end;
 
 var dmMain: TdmMain;

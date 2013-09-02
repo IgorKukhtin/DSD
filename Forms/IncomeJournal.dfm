@@ -2,6 +2,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1087#1088#1080#1093#1086#1076#1072
   ClientHeight = 427
   ClientWidth = 1240
+  ExplicitLeft = -458
+  ExplicitTop = -45
   ExplicitWidth = 1248
   ExplicitHeight = 454
   PixelsPerInch = 96
@@ -34,7 +36,6 @@ inherited IncomeJournalForm: TIncomeJournalForm
     Width = 1240
     Height = 360
     Align = alClient
-    PopupMenu = PopupMenu
     TabOrder = 0
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
@@ -43,14 +44,100 @@ inherited IncomeJournalForm: TIncomeJournalForm
       DataController.Filter.TranslateBetween = True
       DataController.Filter.TranslateIn = True
       DataController.Filter.TranslateLike = True
-      DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.DefaultGroupSummaryItems = <
+        item
+          Kind = skSum
+          Position = spFooter
+          Column = colTotalSummPacker
+        end
+        item
+          Kind = skSum
+          Position = spFooter
+          Column = colTotalSummSpending
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = colTotalSumm
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = colTotalSummPacker
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = colTotalSummSpending
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = colTotalSummVAT
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = colTotalSummMVAT
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = colTotalSummPVAT
+        end
+        item
+          Format = ',0.###;-,0.###; ;'
+          Kind = skSum
+          Column = colTotalCount
+        end>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = ',0.###;-,0.###; ;'
+          Kind = skSum
+          Column = colTotalCount
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = colTotalSumm
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = colTotalSummPacker
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = colTotalSummSpending
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = colTotalSummVAT
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = colTotalSummMVAT
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = colTotalSummPVAT
+        end>
       DataController.Summary.SummaryGroups = <>
+      OptionsCustomize.ColumnHiding = True
+      OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.HeaderHeight = 40
+      OptionsSelection.InvertSelect = False
+      OptionsView.ColumnAutoWidth = True
+      OptionsView.Footer = True
+      OptionsView.GroupSummaryLayout = gslAlignWithColumns
+      OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object colStatus: TcxGridDBColumn
@@ -127,12 +214,17 @@ inherited IncomeJournalForm: TIncomeJournalForm
       object colTotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'TotalCount'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 3
+        Properties.DisplayFormat = ',0.###;-,0.###;;'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
       end
       object colTotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1087#1086#1089#1090#1072#1074#1097'.'
         DataBinding.FieldName = 'TotalSumm'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 80
@@ -140,6 +232,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
       object colTotalSummPacker: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1079#1072#1075#1086#1090#1086#1074'.'
         DataBinding.FieldName = 'TotalSummPacker'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 80
@@ -147,6 +241,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
       object colTotalSummSpending: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1079#1072#1090#1088#1072#1090
         DataBinding.FieldName = 'TotalSummSpending'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 75
@@ -154,6 +250,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
       object colChangePercent: TcxGridDBColumn
         Caption = '(-)% '#1057#1082', (+)% '#1053#1072#1094
         DataBinding.FieldName = 'ChangePercent'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.##;-,0.##; ;'#39
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 90
@@ -174,6 +272,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
       object colTotalSummVAT: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSummVAT'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 60
@@ -181,6 +281,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
       object colTotalSummMVAT: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSummMVAT'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
         Visible = False
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
@@ -189,6 +291,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
       object colTotalSummPVAT: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSummPVAT'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 70
@@ -446,6 +550,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -543,12 +648,11 @@ inherited IncomeJournalForm: TIncomeJournalForm
     Left = 72
     Top = 320
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 136
-    Top = 152
-  end
   object dsdDBViewAddOn: TdsdDBViewAddOn
-    OnDblClickActionList = <>
+    OnDblClickActionList = <
+      item
+        Action = actUpdate
+      end>
     SortImages = dmMain.SortImageList
     View = cxGridDBTableView
     ActionItemList = <
@@ -558,5 +662,9 @@ inherited IncomeJournalForm: TIncomeJournalForm
       end>
     Left = 136
     Top = 208
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 176
+    Top = 272
   end
 end

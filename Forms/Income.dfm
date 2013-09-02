@@ -4,6 +4,7 @@ inherited IncomeForm: TIncomeForm
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
+  ExplicitLeft = -300
   ExplicitWidth = 1036
   ExplicitHeight = 423
   PixelsPerInch = 96
@@ -79,13 +80,21 @@ inherited IncomeForm: TIncomeForm
     end
     object edVATPercent: TcxCurrencyEdit
       Left = 431
-      Top = 71
+      Top = 70
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 0
+      Properties.DisplayFormat = ',0'
       TabOrder = 9
       Width = 65
     end
     object edChangePercent: TcxCurrencyEdit
       Left = 512
-      Top = 72
+      Top = 70
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 3
+      Properties.DisplayFormat = ',0.###'
       TabOrder = 10
       Width = 144
     end
@@ -127,6 +136,7 @@ inherited IncomeForm: TIncomeForm
           DataController.DataSource = DataSource
           DataController.Summary.DefaultGroupSummaryItems = <
             item
+              Format = ',0.00;-,0.00;'
               Kind = skSum
               Position = spFooter
               Column = colAmountSumm
@@ -137,27 +147,28 @@ inherited IncomeForm: TIncomeForm
               Column = colLiveWeight
             end
             item
+              Format = ',0.###;-,0.###; ;'
               Kind = skSum
-              Position = spFooter
-              Column = colHeadCount
-            end
-            item
-              Kind = skSum
-              Position = spFooter
               Column = colAmount
             end
             item
+              Format = ',0.###;-,0.###; ;'
               Kind = skSum
-              Position = spFooter
               Column = colAmountPartner
             end
             item
+              Format = ',0.###;-,0.###; ;'
               Kind = skSum
-              Position = spFooter
               Column = colAmountPacker
+            end
+            item
+              Format = ',0.###;-,0.###; ;'
+              Kind = skSum
+              Column = colHeadCount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
+              Format = ',0.00;-,0.00;'
               Kind = skSum
               Column = colAmountSumm
             end
@@ -166,24 +177,35 @@ inherited IncomeForm: TIncomeForm
               Column = colLiveWeight
             end
             item
+              Format = ',0.###;-,0.###; ;'
               Kind = skSum
               Column = colHeadCount
             end
             item
+              Format = ',0.###;-,0.###; ;'
               Kind = skSum
               Column = colAmount
             end
             item
+              Format = ',0.###;-,0.###; ;'
               Kind = skSum
               Column = colAmountPartner
             end
             item
+              Format = ',0.###;-,0.###; ;'
               Kind = skSum
               Column = colAmountPacker
             end>
           DataController.Summary.SummaryGroups = <>
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
+          OptionsSelection.InvertSelect = False
           OptionsView.ColumnAutoWidth = True
-          OptionsView.HeaderHeight = 40
+          OptionsView.Footer = True
+          OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object colCode: TcxGridDBColumn
@@ -218,6 +240,8 @@ inherited IncomeForm: TIncomeForm
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -225,6 +249,9 @@ inherited IncomeForm: TIncomeForm
           object colAmountPartner: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1082#1086#1085#1090#1088'.'
             DataBinding.FieldName = 'AmountPartner'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -232,6 +259,9 @@ inherited IncomeForm: TIncomeForm
           object colAmountPacker: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1079#1072#1075#1086#1090#1086#1074'.'
             DataBinding.FieldName = 'AmountPacker'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;-,0.###; ;'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -239,6 +269,8 @@ inherited IncomeForm: TIncomeForm
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-0.00;'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -246,12 +278,17 @@ inherited IncomeForm: TIncomeForm
           object colCountForPrice: TcxGridDBColumn
             Caption = #1050#1086#1083' '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = '0;;'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
           end
           object colAmountSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00;'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 91
@@ -259,12 +296,18 @@ inherited IncomeForm: TIncomeForm
           object colLiveWeight: TcxGridDBColumn
             Caption = #1046#1080#1074#1086#1081' '#1074#1077#1089' '
             DataBinding.FieldName = 'LiveWeight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 3
+            Properties.DisplayFormat = ',0.###;; ;'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
           end
           object colHeadCount: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 0
+            Properties.DisplayFormat = '0;-0; ;'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
           end
@@ -307,172 +350,164 @@ inherited IncomeForm: TIncomeForm
               Column = colDebetAmount
             end>
           DataController.Summary.SummaryGroups = <>
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
+          OptionsSelection.InvertSelect = False
           OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object colDebetAccountGroupCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1044' '#1043#1088#1091#1087#1087#1072' '#1082#1086#1076
-            DataBinding.FieldName = 'DebetAccountGroupCode'
-            Visible = False
+          object colAccountCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'AccountCode'
             HeaderAlignmentHorz = taCenter
-            Width = 40
+            HeaderAlignmentVert = vaCenter
+            Width = 73
           end
           object colDebetAccountGroupName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1044' '#1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'DebetAccountGroupName'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 90
-          end
-          object colDebetAccountDirectionCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1044' '#1053#1072#1087#1088#1072#1074#1083' '#1082#1086#1076
-            DataBinding.FieldName = 'DebetAccountDirectionCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            Width = 40
           end
           object colDebetAccountDirectionName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1044' '#1053#1072#1087#1088#1072#1074#1083
             DataBinding.FieldName = 'DebetAccountDirectionName'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object colDebetAccountCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1044' '#1082#1086#1076
-            DataBinding.FieldName = 'DebetAccountCode'
-            HeaderAlignmentHorz = taCenter
-            Width = 40
-          end
           object colDebetAccountName: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1044
+            Caption = #1057#1095#1077#1090' '#1044#1077#1073#1077#1090
             DataBinding.FieldName = 'DebetAccountName'
             HeaderAlignmentHorz = taCenter
-            Width = 120
-          end
-          object colKreditAccountGroupCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1050' '#1043#1088#1091#1087#1087#1072' '#1082#1086#1076
-            DataBinding.FieldName = 'KreditAccountGroupCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            Width = 40
+            HeaderAlignmentVert = vaCenter
+            Width = 90
           end
           object colKreditAccountGroupName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1050' '#1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'KreditAccountGroupName'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 80
-          end
-          object colKreditAccountDirectionCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1050' '#1053#1072#1087#1088#1072#1074#1083' '#1082#1086#1076
-            DataBinding.FieldName = 'KreditAccountDirectionCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            Width = 40
           end
           object colKreditAccountDirectionName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1050' '#1053#1072#1087#1088#1072#1074#1083
             DataBinding.FieldName = 'KreditAccountDirectionName'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colKreditAccountCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1050' '#1082#1086#1076
-            DataBinding.FieldName = 'KreditAccountCode'
-            HeaderAlignmentHorz = taCenter
-            Width = 40
-          end
           object colKreditAccountName: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1050
+            Caption = #1057#1095#1077#1090' '#1050#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'KreditAccountName'
             HeaderAlignmentHorz = taCenter
-            Width = 120
+            HeaderAlignmentVert = vaCenter
+            Width = 88
           end
           object colByObjectCode: TcxGridDBColumn
             Caption = #1054#1073'.'#1082#1086#1076
             DataBinding.FieldName = 'ByObjectCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 40
           end
           object colByObjectName: TcxGridDBColumn
             Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'ByObjectName'
             HeaderAlignmentHorz = taCenter
-            Width = 80
+            HeaderAlignmentVert = vaCenter
+            Width = 98
           end
           object colGoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsGroupName'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object colGoodsCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1090#1086#1074'.'
+            DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentVert = vaCenter
+            Width = 50
           end
           object colGoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object colGoodsKindName_comlete: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 60
           end
           object colAccountOnComplete: TcxGridDBColumn
             Caption = '***'
             DataBinding.FieldName = 'AccountOnComplete'
             HeaderAlignmentHorz = taCenter
-            Width = 25
+            HeaderAlignmentVert = vaCenter
+            Width = 32
           end
           object colDebetAmount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1076#1077#1073#1077#1090
             DataBinding.FieldName = 'DebetAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
-            Width = 70
+            HeaderAlignmentVert = vaCenter
+            Width = 66
           end
           object colKreditAmount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1082#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'KreditAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.Nullable = False
             HeaderAlignmentHorz = taCenter
-            Width = 70
+            HeaderAlignmentVert = vaCenter
+            Width = 75
           end
           object colPrice_comlete: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
-            Width = 40
-          end
-          object colGoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1090#1086#1074'.'
-            DataBinding.FieldName = 'GoodsCode'
-            Width = 40
-          end
-          object colInfoMoneyCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1089#1090'. '#1085#1072#1079#1085#1072#1095'.'
-            DataBinding.FieldName = 'InfoMoneyCode'
-            Width = 40
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;,0.00##; ;'
+            HeaderAlignmentVert = vaCenter
+            Width = 58
           end
           object colInfoMoneyName: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
-            Width = 55
-          end
-          object colInfoMoneyCode_Detail: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1089#1090'. '#1085#1072#1079#1085#1072#1095'.'#1076#1077#1090'.'
-            DataBinding.FieldName = 'InfoMoneyCode_Detail'
-            Width = 40
+            HeaderAlignmentVert = vaCenter
+            Width = 93
           end
           object colInfoMoneyName_Detail: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' '#1076#1077#1090#1072#1083#1100#1085#1086
+            Caption = #1057#1090#1072#1090#1100#1103' '#1076#1077#1090#1072#1083#1100#1085#1086
             DataBinding.FieldName = 'InfoMoneyName_Detail'
-            Width = 55
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object colObjectCostId: TcxGridDBColumn
             DataBinding.FieldName = 'ObjectCostId'
+            HeaderAlignmentVert = vaCenter
+            Width = 81
           end
         end
         object cxGridEntryLevel: TcxGridLevel
@@ -595,6 +630,10 @@ inherited IncomeForm: TIncomeForm
         item
           Visible = True
           ItemName = 'bbGridToExel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEntryToGrid'
         end>
       OneOnRow = True
       Row = 0
@@ -621,6 +660,10 @@ inherited IncomeForm: TIncomeForm
     end
     object bbGridToExel: TdxBarButton
       Action = dsdGridToExcel
+      Category = 0
+    end
+    object bbEntryToGrid: TdxBarButton
+      Action = dsdEntryToExcel
       Category = 0
     end
   end
@@ -722,6 +765,17 @@ inherited IncomeForm: TIncomeForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      TabSheet = cxTabSheet1
+      Grid = cxGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
+    end
+    object dsdEntryToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      TabSheet = cxTabSheet2
+      Grid = cxGridEntry
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -741,8 +795,8 @@ inherited IncomeForm: TIncomeForm
   end
   object dsdGuidesFrom: TdsdGuides
     LookupControl = edFrom
-    FormName = 'TJuridicalForm'
-    PositionDataSet = 'GridDataSet'
+    FormName = 'TPartnerForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <>
     Left = 352
   end
@@ -899,6 +953,7 @@ inherited IncomeForm: TIncomeForm
     Top = 112
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <>
     SortImages = dmMain.SortImageList
     View = cxGridDBTableView
     ActionItemList = <>
@@ -910,6 +965,7 @@ inherited IncomeForm: TIncomeForm
     Top = 304
   end
   object EntryViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <>
     SortImages = dmMain.SortImageList
     View = cxGridEntryDBTableView
     ActionItemList = <>

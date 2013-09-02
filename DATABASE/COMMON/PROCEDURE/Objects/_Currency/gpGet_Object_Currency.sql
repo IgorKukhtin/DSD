@@ -18,12 +18,10 @@ BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , COALESCE (MAX (Object.ObjectCode), 0) + 1 AS Code
+           , CAST (0 as Integer)    AS Code
            , CAST ('' as TVarChar)  AS Name
            , CAST (NULL AS Boolean) AS isErased
-           , CAST ('' as TVarChar)  AS InternalName
-       FROM Object 
-       WHERE Object.DescId = zc_Object_Currency();
+           , CAST ('' as TVarChar)  AS InternalName;
    ELSE
        RETURN QUERY 
        SELECT 

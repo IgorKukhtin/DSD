@@ -1,20 +1,20 @@
 inherited CashForm: TCashForm
   Caption = #1050#1072#1089#1089#1099
   ClientHeight = 374
-  ClientWidth = 544
-  ExplicitWidth = 560
-  ExplicitHeight = 412
+  ClientWidth = 773
+  ExplicitWidth = 781
+  ExplicitHeight = 401
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
-    Width = 544
-    Height = 346
+    Top = 26
+    Width = 773
+    Height = 348
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 20
+    ExplicitWidth = 544
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -31,6 +31,7 @@ inherited CashForm: TCashForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -40,37 +41,43 @@ inherited CashForm: TCashForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 46
+        Width = 62
       end
       object clName: TcxGridDBColumn
         Caption = #1050#1072#1089#1089#1072
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 166
-      end
-      object clJuridicalName: TcxGridDBColumn
-        Caption = #1060#1080#1083#1080#1072#1083
-        DataBinding.FieldName = 'BranchName'
-        HeaderAlignmentVert = vaCenter
-        Width = 110
-      end
-      object clBankName: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1086#1087#1083#1072#1090#1099
-        DataBinding.FieldName = 'PaidKindName'
-        HeaderAlignmentVert = vaCenter
-        Width = 57
+        Width = 172
       end
       object clCurrency: TcxGridDBColumn
         Caption = #1042#1072#1083#1102#1090#1072
         DataBinding.FieldName = 'CurrencyName'
         HeaderAlignmentVert = vaCenter
-        Width = 64
+        Width = 76
+      end
+      object clBranchName: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083
+        DataBinding.FieldName = 'BranchName'
+        HeaderAlignmentVert = vaCenter
+        Width = 98
+      end
+      object clJuridicalName: TcxGridDBColumn
+        Caption = #1070#1088'. '#1083#1080#1094#1086
+        DataBinding.FieldName = 'JuridicalName'
+        HeaderAlignmentVert = vaCenter
+        Width = 153
+      end
+      object clBusinessName: TcxGridDBColumn
+        Caption = #1041#1080#1079#1085#1077#1089#1089
+        DataBinding.FieldName = 'BusinessName'
+        HeaderAlignmentVert = vaCenter
+        Width = 106
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         HeaderAlignmentVert = vaCenter
-        Width = 68
+        Width = 92
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -111,8 +118,8 @@ inherited CashForm: TCashForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -129,7 +136,7 @@ inherited CashForm: TCashForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -250,7 +257,7 @@ inherited CashForm: TCashForm
           ParamType = ptOutput
           Value = '0'
         end>
-      isShowModal = True
+      isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
@@ -264,10 +271,11 @@ inherited CashForm: TCashForm
         item
           Name = 'Id'
           Component = ClientDataSet
+          ComponentItem = 'Id'
           DataType = ftInteger
           ParamType = ptInput
         end>
-      isShowModal = True
+      isShowModal = False
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
@@ -307,7 +315,6 @@ inherited CashForm: TCashForm
       Params = <>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
       ImageIndex = 7
     end
   end
@@ -326,11 +333,6 @@ inherited CashForm: TCashForm
     Left = 168
     Top = 240
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
-    View = cxGridDBTableView
-    Left = 48
-    Top = 192
-  end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
     DataSets = <>
@@ -345,5 +347,27 @@ inherited CashForm: TCashForm
       end>
     Left = 288
     Top = 208
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+        Action = actUpdate
+      end>
+    SortImages = dmMain.SortImageList
+    View = cxGridDBTableView
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
+    Left = 56
+    Top = 240
   end
 end

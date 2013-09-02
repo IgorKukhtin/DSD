@@ -2,15 +2,15 @@ inherited AccountGroupForm: TAccountGroupForm
   Caption = #1043#1088#1091#1087#1087#1099' '#1089#1095#1077#1090#1086#1074
   ClientHeight = 408
   ClientWidth = 368
-  ExplicitWidth = 384
-  ExplicitHeight = 446
+  ExplicitWidth = 376
+  ExplicitHeight = 435
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
+    Top = 26
     Width = 368
-    Height = 380
+    Height = 382
     Align = alClient
     TabOrder = 0
     object cxGridDBTableView: TcxGridDBTableView
@@ -28,6 +28,7 @@ inherited AccountGroupForm: TAccountGroupForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -78,14 +79,14 @@ inherited AccountGroupForm: TAccountGroupForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 376
-    Top = 88
+    Left = 288
+    Top = 72
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -102,7 +103,7 @@ inherited AccountGroupForm: TAccountGroupForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -293,7 +294,6 @@ inherited AccountGroupForm: TAccountGroupForm
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
       ImageIndex = 7
     end
     object dsdGridToExcel: TdsdGridToExcel
@@ -317,13 +317,8 @@ inherited AccountGroupForm: TAccountGroupForm
     Top = 152
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 416
-    Top = 184
-  end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
-    View = cxGridDBTableView
-    Left = 272
-    Top = 224
+    Left = 288
+    Top = 160
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -343,5 +338,27 @@ inherited AccountGroupForm: TAccountGroupForm
       end>
     Left = 48
     Top = 192
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+        Action = actUpdate
+      end>
+    SortImages = dmMain.SortImageList
+    View = cxGridDBTableView
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
+    Left = 168
+    Top = 240
   end
 end

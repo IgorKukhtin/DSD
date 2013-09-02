@@ -2,80 +2,70 @@ inherited PartnerForm: TPartnerForm
   Caption = #1055#1072#1088#1090#1085#1077#1088#1099
   ClientHeight = 473
   ClientWidth = 750
-  ExplicitLeft = -3
   ExplicitWidth = 758
   ExplicitHeight = 500
   PixelsPerInch = 96
   TextHeight = 13
-  object cxDBTreeList: TcxDBTreeList
+  object cxGrid: TcxGrid
     Left = 0
     Top = 26
     Width = 750
     Height = 447
     Align = alClient
-    Bands = <
-      item
-      end>
-    DataController.DataSource = DataSource
-    DataController.ParentField = 'JuridicalGroupId'
-    DataController.KeyField = 'Id'
-    Navigator.Buttons.CustomButtons = <>
-    OptionsBehavior.IncSearch = True
-    OptionsData.Editing = False
-    OptionsData.Deleting = False
-    OptionsSelection.InvertSelect = False
-    OptionsView.ColumnAutoWidth = True
-    RootValue = -1
     TabOrder = 4
-    object cxDBTreeListcxDBTreeListColumn1: TcxDBTreeListColumn
-      Caption.Text = #1050#1086#1076
-      DataBinding.FieldName = 'Code'
-      Width = 59
-      Position.ColIndex = 0
-      Position.RowIndex = 0
-      Position.BandIndex = 0
-      Summary.FooterSummaryItems = <>
-      Summary.GroupFooterSummaryItems = <>
+    ExplicitLeft = 8
+    ExplicitWidth = 704
+    ExplicitHeight = 379
+    object cxGridDBTableView: TcxGridDBTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = DataSource
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.SummaryGroups = <>
+      OptionsCustomize.ColumnHiding = True
+      OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
+      OptionsData.Inserting = False
+      OptionsSelection.InvertSelect = False
+      OptionsView.ColumnAutoWidth = True
+      OptionsView.GroupByBox = False
+      OptionsView.HeaderHeight = 40
+      OptionsView.Indicator = True
+      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object ceCode: TcxGridDBColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'Code'
+        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 54
+      end
+      object ceName: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'Name'
+        HeaderAlignmentVert = vaCenter
+      end
+      object ceJuridicalName: TcxGridDBColumn
+        Caption = #1070#1088'. '#1083#1080#1094#1086
+        DataBinding.FieldName = 'JuridicalName'
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 509
+      end
+      object ceisErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 76
+      end
     end
-    object cxDBTreeListcxDBTreeListColumn2: TcxDBTreeListColumn
-      Caption.Text = #1043#1088#1091#1087#1087#1072
-      DataBinding.FieldName = 'JuridicalGroupName'
-      Width = 110
-      Position.ColIndex = 1
-      Position.RowIndex = 0
-      Position.BandIndex = 0
-      Summary.FooterSummaryItems = <>
-      Summary.GroupFooterSummaryItems = <>
-    end
-    object cxDBTreeListcxDBTreeListColumn3: TcxDBTreeListColumn
-      Caption.Text = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
-      DataBinding.FieldName = 'Name'
-      Width = 293
-      Position.ColIndex = 3
-      Position.RowIndex = 0
-      Position.BandIndex = 0
-      Summary.FooterSummaryItems = <>
-      Summary.GroupFooterSummaryItems = <>
-    end
-    object cxDBTreeListcxDBTreeListColumn4: TcxDBTreeListColumn
-      Caption.Text = #1059#1076#1072#1083#1077#1085
-      DataBinding.FieldName = 'isErased'
-      Width = 55
-      Position.ColIndex = 4
-      Position.RowIndex = 0
-      Position.BandIndex = 0
-      Summary.FooterSummaryItems = <>
-      Summary.GroupFooterSummaryItems = <>
-    end
-    object cxDBTreeListcxDBTreeListColumn5: TcxDBTreeListColumn
-      Caption.Text = #1070#1088' '#1083#1080#1094#1086
-      DataBinding.FieldName = 'JuridicalName'
-      Width = 118
-      Position.ColIndex = 2
-      Position.RowIndex = 0
-      Position.BandIndex = 0
-      Summary.FooterSummaryItems = <>
-      Summary.GroupFooterSummaryItems = <>
+    object cxGridLevel: TcxGridLevel
+      GridView = cxGridDBTableView
     end
   end
   object DataSource: TDataSource
@@ -323,19 +313,23 @@ inherited PartnerForm: TPartnerForm
   object dsdDBViewAddOn: TdsdDBViewAddOn
     OnDblClickActionList = <
       item
+        Action = dsdChoiceGuides
       end
       item
         Action = actUpdate
       end>
     SortImages = dmMain.SortImageList
+    View = cxGridDBTableView
     ActionItemList = <
       item
+        Action = dsdChoiceGuides
         ShortCut = 13
       end
       item
+        Action = actUpdate
         ShortCut = 13
       end>
-    Left = 120
-    Top = 208
+    Left = 328
+    Top = 264
   end
 end

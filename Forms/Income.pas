@@ -76,16 +76,11 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     frxDBDataset: TfrxDBDataset;
-    colDebetAccountGroupCode: TcxGridDBColumn;
     colDebetAccountGroupName: TcxGridDBColumn;
-    colDebetAccountDirectionCode: TcxGridDBColumn;
     colDebetAccountDirectionName: TcxGridDBColumn;
-    colDebetAccountCode: TcxGridDBColumn;
-    colKreditAccountGroupCode: TcxGridDBColumn;
+    colAccountCode: TcxGridDBColumn;
     colKreditAccountGroupName: TcxGridDBColumn;
-    colKreditAccountDirectionCode: TcxGridDBColumn;
     colKreditAccountDirectionName: TcxGridDBColumn;
-    colKreditAccountCode: TcxGridDBColumn;
     colGoodsGroupName: TcxGridDBColumn;
     colByObjectCode: TcxGridDBColumn;
     colByObjectName: TcxGridDBColumn;
@@ -120,14 +115,14 @@ type
     spGet: TdsdStoredProc;
     RefreshAddOn: TRefreshAddOn;
     colGoodsCode: TcxGridDBColumn;
-    colInfoMoneyCode: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
-    colInfoMoneyCode_Detail: TcxGridDBColumn;
     colInfoMoneyName_Detail: TcxGridDBColumn;
     colObjectCostId: TcxGridDBColumn;
     colPrice_comlete: TcxGridDBColumn;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExel: TdxBarButton;
+    dsdEntryToExcel: TdsdGridToExcel;
+    bbEntryToGrid: TdxBarButton;
   private
   public
   end;

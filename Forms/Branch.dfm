@@ -2,15 +2,15 @@ inherited BranchForm: TBranchForm
   Caption = #1060#1080#1083#1080#1072#1083#1099
   ClientHeight = 374
   ClientWidth = 601
-  ExplicitWidth = 617
-  ExplicitHeight = 412
+  ExplicitWidth = 609
+  ExplicitHeight = 401
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
+    Top = 26
     Width = 601
-    Height = 346
+    Height = 348
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
@@ -29,6 +29,7 @@ inherited BranchForm: TBranchForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -91,8 +92,8 @@ inherited BranchForm: TBranchForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -109,7 +110,7 @@ inherited BranchForm: TBranchForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -300,12 +301,11 @@ inherited BranchForm: TBranchForm
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
-          DataType = ftInteger
+          DataType = ftString
           ParamType = ptOutput
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
       ImageIndex = 7
     end
   end
@@ -324,12 +324,6 @@ inherited BranchForm: TBranchForm
     Left = 120
     Top = 224
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
-    SortImages = dmMain.SortImageList
-    View = cxGridDBTableView
-    Left = 184
-    Top = 320
-  end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
     DataSets = <>
@@ -344,5 +338,27 @@ inherited BranchForm: TBranchForm
       end>
     Left = 288
     Top = 208
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+        Action = actUpdate
+      end>
+    SortImages = dmMain.SortImageList
+    View = cxGridDBTableView
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
+    Left = 216
+    Top = 240
   end
 end

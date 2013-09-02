@@ -6,7 +6,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Cash(
     IN inSession     TVarChar        -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
-               CurrencyName TVarChar) AS
+               CurrencyName TVarChar, BranchName TVarChar, JuridicalName TVarChar, 
+               BusinessName TVarChar) AS
 $BODY$BEGIN
 
    -- проверка прав пользователя на вызов процедуры
@@ -19,12 +20,30 @@ $BODY$BEGIN
    , Object.ValueData   AS Name
    , Object.isErased    AS isErased
    , Currency.ValueData AS CurrencyName
-   FROM Object
+   , Branch.ValueData   AS BranchName
+   , MainJuridical.ValueData  AS JuridicalName
+   , Business.ValueData AS BusinessName
+
+FROM Object
 LEFT JOIN ObjectLink 
      ON ObjectLink.ObjectId = Object.Id
     AND ObjectLink.DescId = zc_ObjectLink_Cash_Currency()
 LEFT JOIN Object AS Currency
      ON Currency.Id = ObjectLink.ChildObjectId
+           LEFT JOIN ObjectLink AS Cash_Branch
+                                ON Cash_Branch.ObjectId = Object.Id
+                               AND Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
+           LEFT JOIN Object AS Branch ON Branch.Id = Cash_Branch.ChildObjectId
+           LEFT JOIN ObjectLink AS Cash_MainJuridical
+                                ON Cash_MainJuridical.ObjectId = Object.Id
+                               AND Cash_MainJuridical.DescId = zc_ObjectLink_Cash_MainJuridical()
+           LEFT JOIN Object AS MainJuridical ON MainJuridical.Id = Cash_MainJuridical.ChildObjectId
+           LEFT JOIN ObjectLink AS Cash_Business
+                                ON Cash_Business.ObjectId = Object.Id
+                               AND Cash_Business.DescId = zc_ObjectLink_Cash_Business()
+           LEFT JOIN Object AS Business ON Business.Id = Cash_Business.ChildObjectId
+
+
    WHERE Object.DescId = zc_Object_Cash();
   
 END;$BODY$

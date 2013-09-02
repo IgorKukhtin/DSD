@@ -153,14 +153,14 @@ inherited PaidKindForm: TPaidKindForm
       Category = 'DSDLib'
       Params = <
         item
-          Name = 'Id'
+          Name = 'Key'
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
           ParamType = ptOutput
         end
         item
-          Name = 'Name'
+          Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
@@ -189,17 +189,12 @@ inherited PaidKindForm: TPaidKindForm
     OnDblClickActionList = <
       item
         Action = dsdChoiceGuides
-      end
-      item
       end>
     SortImages = dmMain.SortImageList
     View = cxGridDBTableView
     ActionItemList = <
       item
         Action = dsdChoiceGuides
-        ShortCut = 13
-      end
-      item
         ShortCut = 13
       end>
     Left = 152

@@ -22,7 +22,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinsdxBarPainter, dxBarExtItems,
-  dsdAddOn;
+  dsdAddOn, cxCheckBox;
 
 type
   TPartnerForm = class(TParentForm)
@@ -43,19 +43,20 @@ type
     bbUnErased: TdxBarButton;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
-    cxDBTreeList: TcxDBTreeList;
-    cxDBTreeListcxDBTreeListColumn1: TcxDBTreeListColumn;
-    cxDBTreeListcxDBTreeListColumn2: TcxDBTreeListColumn;
-    cxDBTreeListcxDBTreeListColumn3: TcxDBTreeListColumn;
-    cxDBTreeListcxDBTreeListColumn4: TcxDBTreeListColumn;
-    cxDBTreeListcxDBTreeListColumn5: TcxDBTreeListColumn;
     spErasedUnErased: TdsdStoredProc;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExel: TdxBarButton;
     bbChoiceGuides: TdxBarButton;
     dxBarStatic1: TdxBarStatic;
+    cxGrid: TcxGrid;
+    cxGridDBTableView: TcxGridDBTableView;
+    ceCode: TcxGridDBColumn;
+    ceJuridicalName: TcxGridDBColumn;
+    ceisErased: TcxGridDBColumn;
+    cxGridLevel: TcxGridLevel;
+    ceName: TcxGridDBColumn;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
   private
     { Private declarations }
   public

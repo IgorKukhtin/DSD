@@ -19,7 +19,7 @@ BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , lfGet_ObjectCode(zc_Object_Cash(), inCode) AS Code
+           , lfGet_ObjectCode(0, zc_Object_Cash()) AS Code
            , CAST ('' as TVarChar)  AS Name
            , CAST (NULL AS Boolean) AS isErased
            , CAST (0 as Integer)    AS CurrencyId
@@ -46,10 +46,10 @@ BEGIN
            , Business.Id        AS BusinessId
            , Business.ValueData AS BusinessName
        FROM Object
-           JOIN ObjectLink AS Cash_Currency
+           LEFT JOIN ObjectLink AS Cash_Currency
                            ON Cash_Currency.ObjectId = Object.Id
                           AND Cash_Currency.DescId = zc_ObjectLink_Cash_Currency()
-           JOIN Object AS Currency ON Currency.Id = Cash_Currency.ChildObjectId
+           LEFT JOIN Object AS Currency ON Currency.Id = Cash_Currency.ChildObjectId
            LEFT JOIN ObjectLink AS Cash_Branch
                                 ON Cash_Branch.ObjectId = Object.Id
                                AND Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()

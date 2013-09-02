@@ -53,9 +53,9 @@ type
     bbGridToExcel: TdxBarButton;
     bbChoiceGuides: TdxBarButton;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
     spErasedUnErased: TdsdStoredProc;
     dsdChoiceGuides: TdsdChoiceGuides;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
   private
     { Private declarations }
   public

@@ -51,12 +51,12 @@ type
     dsdGridToExcel: TdsdGridToExcel;
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
     clInvNumber: TcxGridDBColumn;
     clAssetGroup: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     clErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
   private
     { Private declarations }
   public

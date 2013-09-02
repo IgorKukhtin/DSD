@@ -499,7 +499,7 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
     Top = 216
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
-    OnDblClickAction = actUpdate
+    OnDblClickActionList = <>
     SortImages = dmMain.SortImageList
     View = cxGridDBTableView
     ActionItemList = <

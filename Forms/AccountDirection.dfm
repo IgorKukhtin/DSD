@@ -2,15 +2,15 @@ inherited AccountDirectionForm: TAccountDirectionForm
   Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1095#1077#1090#1086#1074' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
   ClientHeight = 450
   ClientWidth = 354
-  ExplicitWidth = 370
-  ExplicitHeight = 488
+  ExplicitWidth = 362
+  ExplicitHeight = 477
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
+    Top = 26
     Width = 354
-    Height = 422
+    Height = 424
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -32,6 +32,7 @@ inherited AccountDirectionForm: TAccountDirectionForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -90,8 +91,8 @@ inherited AccountDirectionForm: TAccountDirectionForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -108,7 +109,7 @@ inherited AccountDirectionForm: TAccountDirectionForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -306,7 +307,6 @@ inherited AccountDirectionForm: TAccountDirectionForm
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
       ImageIndex = 7
     end
   end
@@ -326,7 +326,24 @@ inherited AccountDirectionForm: TAccountDirectionForm
     Top = 152
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+        Action = actUpdate
+      end>
+    SortImages = dmMain.SortImageList
     View = cxGridDBTableView
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
     Left = 160
     Top = 208
   end

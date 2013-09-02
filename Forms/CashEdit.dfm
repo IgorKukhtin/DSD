@@ -1,42 +1,42 @@
 ﻿inherited CashEditForm: TCashEditForm
   Caption = #1050#1072#1089#1089#1072
-  ClientHeight = 307
-  ClientWidth = 348
-  ExplicitWidth = 364
-  ExplicitHeight = 345
+  ClientHeight = 353
+  ClientWidth = 335
+  ExplicitWidth = 343
+  ExplicitHeight = 380
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
     Left = 40
-    Top = 71
-    TabOrder = 0
+    Top = 69
+    TabOrder = 1
     Width = 273
   end
   object cxLabel1: TcxLabel
     Left = 40
-    Top = 48
+    Top = 47
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 72
-    Top = 273
+    Top = 314
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
     ModalResult = 8
-    TabOrder = 2
+    TabOrder = 3
   end
   object cxButton2: TcxButton
     Left = 216
-    Top = 273
+    Top = 314
     Width = 75
     Height = 25
-    Action = dsdFormClose1
+    Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 8
-    TabOrder = 3
+    TabOrder = 4
   end
   object Код: TcxLabel
     Left = 40
@@ -48,27 +48,33 @@
     Top = 26
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    TabOrder = 5
+    TabOrder = 0
     Width = 273
   end
   object cxLabel3: TcxLabel
     Left = 40
-    Top = 103
+    Top = 93
     Caption = #1060#1080#1083#1080#1072#1083
-  end
-  object cxLabel2: TcxLabel
-    Left = 40
-    Top = 159
-    Caption = #1042#1080#1076' '#1086#1087#1083#1072#1090#1099
   end
   object cxLabel4: TcxLabel
     Left = 40
-    Top = 215
+    Top = 149
     Caption = #1042#1072#1083#1102#1090#1099
   end
   object ceBranch: TcxButtonEdit
     Left = 40
-    Top = 126
+    Top = 116
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 8
+    Width = 273
+  end
+  object ceCurrency: TcxButtonEdit
+    Left = 40
+    Top = 170
     Properties.Buttons = <
       item
         Default = True
@@ -77,27 +83,37 @@
     TabOrder = 9
     Width = 273
   end
-  object cePaidKind: TcxButtonEdit
+  object cxLabel5: TcxLabel
     Left = 40
-    Top = 188
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    TabOrder = 10
-    Width = 273
+    Top = 251
+    Caption = #1041#1080#1079#1085#1077#1089
   end
-  object ceCurrency: TcxButtonEdit
-    Left = 48
-    Top = 240
+  object ceBusiness: TcxButtonEdit
+    Left = 40
+    Top = 270
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 11
-    Width = 265
+    Width = 273
+  end
+  object cxLabel6: TcxLabel
+    Left = 40
+    Top = 197
+    Caption = #1070#1088'. '#1083#1080#1094#1086
+  end
+  object ceJuridical: TcxButtonEdit
+    Left = 40
+    Top = 220
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 13
+    Width = 273
   end
   object ActionList: TActionList
     Left = 296
@@ -115,7 +131,7 @@
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
     end
-    object dsdFormClose1: TdsdFormClose
+    object dsdFormClose: TdsdFormClose
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
@@ -145,12 +161,19 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
         Component = edName
         DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'inCurrencyId'
+        Component = dsdCurrencyGuides
+        DataType = ftInteger
         ParamType = ptInput
         Value = ''
       end
@@ -162,15 +185,17 @@
         Value = ''
       end
       item
-        Name = 'inPaidKindId'
-        Component = dsdPaidKindGuides
+        Name = 'inMainJuridicalId'
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptInput
         Value = ''
       end
       item
-        Name = 'inCurrencyId'
-        Component = dsdCurrencyGuides
+        Name = 'inBusinessId'
+        Component = BusinessGuides
+        ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptInput
         Value = ''
@@ -214,12 +239,12 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'BranchId'
         Component = dsdBranchGuides
-        ComponentItem = 'Id'
+        ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
         Value = ''
@@ -227,22 +252,6 @@
       item
         Name = 'BranchName'
         Component = dsdBranchGuides
-        ComponentItem = 'Name'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
-      end
-      item
-        Name = 'PaidKindId'
-        Component = dsdPaidKindGuides
-        ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
-      end
-      item
-        Name = 'PaidKindName'
-        Component = dsdPaidKindGuides
         ComponentItem = 'TextValue'
         DataType = ftInteger
         ParamType = ptOutput
@@ -263,6 +272,38 @@
         DataType = ftInteger
         ParamType = ptOutput
         Value = ''
+      end
+      item
+        Name = 'MainJuridicalId'
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'MainJuridicalName'
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'BusinessId'
+        Component = BusinessGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'BusinessName'
+        Component = BusinessGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptOutput
+        Value = ''
       end>
     Left = 192
     Top = 88
@@ -271,22 +312,17 @@
     LookupControl = ceBranch
     FormName = 'TBranchForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 312
-    Top = 125
-  end
-  object dsdPaidKindGuides: TdsdGuides
-    LookupControl = cePaidKind
-    FormName = 'TPaidKindForm'
-    PositionDataSet = 'ClientDataSet'
-    Left = 312
-    Top = 173
+    Params = <>
+    Left = 256
+    Top = 109
   end
   object dsdCurrencyGuides: TdsdGuides
     LookupControl = ceCurrency
     FormName = 'TCurrencyForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 312
-    Top = 229
+    Params = <>
+    Left = 256
+    Top = 165
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -304,7 +340,23 @@
     Top = 40
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 72
-    Top = 136
+    Left = 80
+    Top = 104
+  end
+  object BusinessGuides: TdsdGuides
+    LookupControl = ceBusiness
+    FormName = 'TBusinessForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <>
+    Left = 248
+    Top = 256
+  end
+  object JuridicalGuides: TdsdGuides
+    LookupControl = ceJuridical
+    FormName = 'TJuridicalForm'
+    PositionDataSet = 'GridDataSet'
+    Params = <>
+    Left = 264
+    Top = 208
   end
 end

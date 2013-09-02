@@ -533,6 +533,7 @@ var
   TreeList: TcxDBTreeList;
   BarManager: TdxBarManager;
   FormName: string;
+  GridFooter: boolean;
 begin
   if FForm is TParentForm then
      FormName := TParentForm(FForm).FormClassName
@@ -547,7 +548,10 @@ begin
         if ChildNodes[i].NodeName = 'cxGridView' then begin
            GridView := FForm.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxCustomGridView;
            if Assigned(GridView) then begin
+              // Это свойство не восстанавливать
+              GridFooter := TcxGridDBTableView(GridView).OptionsView.Footer;
               GridView.RestoreFromStream(TStringStream.Create(gfStrXmlToStr(XMLToAnsi(ChildNodes[i].GetAttribute('data')))));
+              TcxGridDBTableView(GridView).OptionsView.Footer := GridFooter;
            end;
         end;
         if ChildNodes[i].NodeName = 'cxTreeList' then begin

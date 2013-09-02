@@ -813,7 +813,7 @@ begin
   if Assigned(FOnPageChanging) then
      FOnPageChanging(Sender, NewPage, AllowChange);
   Enabled := TabSheet = NewPage;
-  Visible := Enabled
+  Visible := Enabled;
 end;
 
 procedure TdsdCustomAction.SetTabSheet(const Value: TcxTabSheet);

@@ -73,7 +73,7 @@
   object cxLabel2: TcxLabel
     Left = 40
     Top = 113
-    Caption = #1041#1080#1079#1085#1077#1089#1099
+    Caption = #1041#1080#1079#1085#1077#1089
   end
   object ceBranch: TcxButtonEdit
     Left = 280

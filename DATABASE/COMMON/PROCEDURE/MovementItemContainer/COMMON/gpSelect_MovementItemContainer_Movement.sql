@@ -7,8 +7,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItemContainer_Movement(
     IN inMovementId  Integer      , -- ключ Документа
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (DebetAmount TFloat, DebetAccountGroupCode Integer, DebetAccountGroupName TVarChar, DebetAccountDirectionCode Integer, DebetAccountDirectionName TVarChar, DebetAccountCode Integer, DebetAccountName  TVarChar
-             , KreditAmount TFloat, KreditAccountGroupCode Integer, KreditAccountGroupName TVarChar, KreditAccountDirectionCode Integer, KreditAccountDirectionName TVarChar, KreditAccountCode Integer, KreditAccountName  TVarChar
+RETURNS TABLE (AccountCode Integer, DebetAmount TFloat, DebetAccountGroupName TVarChar, DebetAccountDirectionName TVarChar, DebetAccountName TVarChar
+             , KreditAmount TFloat, KreditAccountGroupName TVarChar, KreditAccountDirectionName TVarChar, KreditAccountName  TVarChar
              , Price TFloat
              , AccountOnComplete Boolean, ByObjectCode Integer, ByObjectName TVarChar, GoodsGroupCode Integer, GoodsGroupName TVarChar
              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
@@ -23,23 +23,19 @@ BEGIN
 
      RETURN QUERY 
        SELECT
-             CAST (CASE WHEN tmpMovementItemContainer.isActive = TRUE THEN tmpMovementItemContainer.Amount ELSE 0 END AS TFloat) AS DebetAmount
-           , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active() THEN lfObject_Account.AccountGroupCode ELSE NULL END  AS Integer) AS DebetAccountGroupCode
+             CAST (lfObject_Account.AccountCode AS Integer) AS AccountCode
+
+           , CAST (CASE WHEN tmpMovementItemContainer.isActive = TRUE THEN tmpMovementItemContainer.Amount ELSE 0 END AS TFloat) AS DebetAmount
            , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active() THEN lfObject_Account.AccountGroupName ELSE NULL END  AS TVarChar) AS DebetAccountGroupName
-           , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active() THEN lfObject_Account.AccountDirectionCode ELSE NULL END  AS Integer) AS DebetAccountDirectionCode
            , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active() THEN lfObject_Account.AccountDirectionName ELSE NULL END  AS TVarChar) AS DebetAccountDirectionName
-           , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active() THEN lfObject_Account.AccountCode ELSE NULL END  AS Integer) AS DebetAccountCode
            , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active() THEN lfObject_Account.AccountName ELSE NULL END  AS TVarChar) AS DebetAccountName
 
            , CAST (CASE WHEN tmpMovementItemContainer.isActive = FALSE THEN -1 * tmpMovementItemContainer.Amount ELSE 0 END AS TFloat) AS KreditAmount
-           , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active() THEN lfObject_Account.AccountGroupCode ELSE NULL END  AS Integer) AS KreditAccountGroupCode
            , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active() THEN lfObject_Account.AccountGroupName ELSE NULL END  AS TVarChar) AS KreditAccountGroupName
-           , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active() THEN lfObject_Account.AccountDirectionCode ELSE NULL END  AS Integer) AS KreditAccountDirectionCode
            , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active() THEN lfObject_Account.AccountDirectionName ELSE NULL END  AS TVarChar) AS KreditAccountDirectionName
-           , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active() THEN lfObject_Account.AccountCode ELSE NULL END  AS Integer) AS KreditAccountCode
            , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active() THEN lfObject_Account.AccountName ELSE NULL END  AS TVarChar) AS KreditAccountName
 
-           , CAST (tmpMovementItemContainer.Price AS TFloat) AS Price
+           , CAST (ABS(tmpMovementItemContainer.Price) AS TFloat) AS Price
            , lfObject_Account.onComplete AS AccountOnComplete
            , tmpMovementItemContainer.ByObjectCode
            , tmpMovementItemContainer.ByObjectName
@@ -193,6 +189,7 @@ ALTER FUNCTION gpSelect_MovementItemContainer_Movement (Integer, TVarChar) OWNER
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.09.13                        * убрал коды счетов
  25.08.13                                        * add zc_Enum_AccountKind_Active
  10.08.13                                        * add isActive
  06.08.13                                        * add MIId_Parent

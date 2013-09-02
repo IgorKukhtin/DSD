@@ -48,8 +48,8 @@ type
     bbUnErased: TdxBarButton;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
+    clBranchName: TcxGridDBColumn;
     clJuridicalName: TcxGridDBColumn;
-    clBankName: TcxGridDBColumn;
     clCurrency: TcxGridDBColumn;
     dsdGridToExcel: TdsdGridToExcel;
     dsdChoiceGuides: TdsdChoiceGuides;
@@ -57,8 +57,9 @@ type
     dxBarStatic: TdxBarStatic;
     bbChoiceGuides: TdxBarButton;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
     spErasedUnErased: TdsdStoredProc;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
+    clBusinessName: TcxGridDBColumn;
   private
     { Private declarations }
   public

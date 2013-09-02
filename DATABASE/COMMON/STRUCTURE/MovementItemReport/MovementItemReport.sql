@@ -20,7 +20,8 @@ CREATE TABLE MovementItemReport(
 
 /*-------------------------------------------------------------------------------*/
 /*                                  Индексы                                      */
-CREATE INDEX Idx_MovementItemReport_MovementId ON MovementItemReport (MovementId);
+CREATE INDEX Idx_MovementItemReport_MovementId  ON MovementItemReport (MovementId);
+CREATE INDEX Idx_MovementItemReport_MovementItemId  ON MovementItemReport (MovementItemId);
 CREATE INDEX Idx_MovementItemReport_ReportContainerId_OperDate_Amount ON MovementItemReport (ReportContainerId, OperDate, Amount);
 
 /*-------------------------------------------------------------------------------

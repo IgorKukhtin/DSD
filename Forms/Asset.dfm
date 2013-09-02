@@ -2,15 +2,15 @@ inherited AssetForm: TAssetForm
   Caption = #1054#1089#1085#1086#1074#1085#1099#1077' '#1089#1088#1077#1076#1089#1090#1074#1072
   ClientHeight = 369
   ClientWidth = 537
-  ExplicitWidth = 553
-  ExplicitHeight = 407
+  ExplicitWidth = 545
+  ExplicitHeight = 396
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
+    Top = 26
     Width = 537
-    Height = 341
+    Height = 343
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -32,6 +32,7 @@ inherited AssetForm: TAssetForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -102,8 +103,8 @@ inherited AssetForm: TAssetForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -120,7 +121,7 @@ inherited AssetForm: TAssetForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -337,11 +338,6 @@ inherited AssetForm: TAssetForm
     Left = 160
     Top = 152
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
-    View = cxGridDBTableView
-    Left = 160
-    Top = 208
-  end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
     DataSets = <>
@@ -356,5 +352,27 @@ inherited AssetForm: TAssetForm
       end>
     Left = 288
     Top = 208
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+        Action = actUpdate
+      end>
+    SortImages = dmMain.SortImageList
+    View = cxGridDBTableView
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
+    Left = 328
+    Top = 264
   end
 end
