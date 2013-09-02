@@ -71,16 +71,34 @@ BEGIN
      -- определяем количество Аналитик
      SELECT COUNT(*) INTO vbRecordCount FROM _tmpContainer;
 
+     -- Проверка
+     IF EXISTS (SELECT COUNT(*)
+                FROM (SELECT Container.Id
+                      FROM Container
+                           JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                           JOIN _tmpContainer ON _tmpContainer.ObjectId = ContainerLinkObject.ObjectId
+                                             AND _tmpContainer.DescId = ContainerLinkObject.DescId
+                      WHERE Container.ObjectId = inObjectId
+                        AND Container.DescId = inContainerDescId
+                      GROUP BY Container.Id
+                      HAVING COUNT(*) = vbRecordCount
+                     ) AS _tmpCheck
+                HAVING COUNT(*) > 1)
+     THEN 
+         RAISE EXCEPTION 'Счет не уникален : vbRecordCount = "%", inContainerDescId = "%", inParentId = "%", inObjectId = "%", inJuridicalId_basis = "%", inBusinessId = "%", inObjectCostDescId = "%", inObjectCostId = "%", inDescId_1 = "%", inObjectId_1 = "%", inDescId_2 = "%", inObjectId_2 = "%", inDescId_3 = "%", inObjectId_3 = "%", inDescId_4 = "%", inObjectId_4 = "%", inDescId_5 = "%", inObjectId_5 = "%", inDescId_6 = "%", inObjectId_6 = "%", inDescId_7 = "%", inObjectId_7 = "%"', vbRecordCount, inContainerDescId, inParentId, inObjectId, inJuridicalId_basis, inBusinessId, inObjectCostDescId, inObjectCostId, inDescId_1, inObjectId_1, inDescId_2, inObjectId_2, inDescId_3, inObjectId_3, inDescId_4, inObjectId_4, inDescId_5, inObjectId_5, inDescId_6, inObjectId_6, inDescId_7, inObjectId_7;
+     END IF;
+
+
      -- находим
      vbContainerId:= (SELECT Container.Id
-                     FROM Container
-                          JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
-                          JOIN _tmpContainer ON _tmpContainer.ObjectId = ContainerLinkObject.ObjectId
-                                            AND _tmpContainer.DescId = ContainerLinkObject.DescId
-                     WHERE Container.ObjectId = inObjectId
-                       AND Container.DescId = inContainerDescId
-                     GROUP BY Container.Id
-                     HAVING COUNT(*) = vbRecordCount);
+                      FROM Container
+                           JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                           JOIN _tmpContainer ON _tmpContainer.ObjectId = ContainerLinkObject.ObjectId
+                                             AND _tmpContainer.DescId = ContainerLinkObject.DescId
+                      WHERE Container.ObjectId = inObjectId
+                        AND Container.DescId = inContainerDescId
+                      GROUP BY Container.Id
+                      HAVING COUNT(*) = vbRecordCount);
 
 
      -- просто тест
@@ -133,7 +151,7 @@ ALTER FUNCTION lpInsertFind_Container (Integer, Integer, Integer, Integer, Integ
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-
+ 02.09.13                                        * add Проверка
  11.07.13                                        * add inObjectCostDescId and inObjectCostId
  11.07.13                                        * add inParentId
  09.07.13                                        * !!! finich !!!
