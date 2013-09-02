@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpUnComplete_Movement(
 $BODY$
 BEGIN
 
---   PERFORM lpCheckRight(inSession, zc_Enum_Process_Measure());
+  -- PERFORM lpCheckRight(inSession, zc_Enum_Process_UnComplete_Movement());
 
   -- Удаляем все проводки
   PERFORM lpDelete_MovementItemContainer (inMovementId);

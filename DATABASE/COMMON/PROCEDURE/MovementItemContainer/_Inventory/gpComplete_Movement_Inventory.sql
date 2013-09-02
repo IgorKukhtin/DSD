@@ -47,13 +47,11 @@ BEGIN
 
 
      -- Определяются параметры для проводок по прибыли
-     IF vbUnitId <> 0
+     IF vbUnitId <> 0 AND EXISTS (SELECT lfObject_Unit_byProfitLossDirection.ProfitLossGroupId FROM lfGet_Object_Unit_byProfitLossDirection (vbUnitId) AS lfObject_Unit_byProfitLossDirection WHERE lfObject_Unit_byProfitLossDirection.ProfitLossGroupId = zc_Enum_ProfitLossGroup_40000()) -- 40000; "Расходы на сбыт"
      THEN
          -- такие для Подразделения
-         SELECT lfObject_Unit_byProfitLossDirection.ProfitLossGroupId
-              , lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId
-                INTO vbProfitLossGroupId, vbProfitLossDirectionId
-         FROM lfGet_Object_Unit_byProfitLossDirection (vbUnitId) AS lfObject_Unit_byProfitLossDirection;
+         vbProfitLossGroupId := zc_Enum_ProfitLossGroup_40000(); -- 40000 Расходы на сбыт
+         vbProfitLossDirectionId := zc_Enum_ProfitDirection_40400(); -- 40400; "Прочие потери (Списание+инвентаризация)
      ELSE
          -- такие для сотрудника
          vbProfitLossGroupId := zc_Enum_ProfitLossGroup_20000(); -- 20000; "Общепроизводственные расходы"
@@ -466,9 +464,7 @@ BEGIN
                                                  , inContainerId:= _tmpItem.ContainerId_Goods -- был опеределен выше
                                                  , inAmount:= _tmpItem.OperCount - COALESCE (_tmpRemainsCount.OperCount, 0)
                                                  , inOperDate:= _tmpItem.OperDate
-                                                 , inIsActive:= CASE WHEN (_tmpItem.OperCount - COALESCE (_tmpRemainsCount.OperCount, 0)) > 0 THEN TRUE
-                                                                     WHEN (_tmpItem.OperCount - COALESCE (_tmpRemainsCount.OperCount, 0)) < 0 THEN FALSE
-                                                                END
+                                                 , inIsActive:= TRUE
                                                   )
      FROM _tmpItem
           LEFT JOIN _tmpRemainsCount ON _tmpRemainsCount.MovementItemId = _tmpItem.MovementItemId
@@ -712,9 +708,7 @@ BEGIN
                                                                                  , inContainerId:= _tmpItemSumm.ContainerId
                                                                                  , inAmount:= _tmpItemSumm.OperSumm
                                                                                  , inOperDate:= vbOperDate
-                                                                                 , inIsActive:= CASE WHEN _tmpItemSumm.OperSumm > 0 THEN TRUE
-                                                                                                     WHEN _tmpItemSumm.OperSumm < 0 THEN FALSE
-                                                                                                END
+                                                                                 , inIsActive:= TRUE
                                                                                   )
      WHERE _tmpItemSumm.OperSumm <> 0
        AND zc_isHistoryCost() = TRUE;
@@ -743,9 +737,7 @@ BEGIN
                                                                                           )
                                                  , inAmount:= -1 * _tmpItemSumm.OperSumm
                                                  , inOperDate:= vbOperDate
-                                                 , inIsActive:= CASE WHEN -1 * _tmpItemSumm.OperSumm > 0 THEN TRUE
-                                                                     WHEN -1 * _tmpItemSumm.OperSumm < 0 THEN FALSE
-                                                                END
+                                                 , inIsActive:= FALSE
                                                   )
      FROM _tmpItemSumm
           LEFT JOIN ContainerLinkObject AS ContainerLinkObject_JuridicalBasis
@@ -773,11 +765,12 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.09.13                                        * change isActive
  26.08.13                                        * add zc_InfoMoneyDestination_WorkProgress
  23.08.13                                        *
 */
 
 -- тест
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 29207, inSession:= '2')
- SELECT * FROM gpComplete_Movement_Inventory (inMovementId:= 29207, inIsLastComplete:= FALSE, inSession:= '2')
+-- SELECT * FROM gpComplete_Movement_Inventory (inMovementId:= 29207, inIsLastComplete:= FALSE, inSession:= '2')
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 29207, inSession:= '2')

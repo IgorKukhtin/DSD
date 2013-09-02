@@ -672,7 +672,7 @@ begin
      fExecSqFromQuery('update dba.MoneyKind set Id_Postgres = null');
      fExecSqFromQuery('update dba.ContractKind set Id_Postgres = null');
      //  !!! Unit.PersonalId_Postgres and Unit.pgUnitId - is by User !!!
-     fExecSqFromQuery('update dba.Unit set Id_Postgres_RouteSorting=null,Id_Postgres_Business = null, Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = null');
+     fExecSqFromQuery('update dba.Unit set Id_Postgres_RouteSorting=null,Id_Postgres_Business = null, Id_Postgres_Business_TWO = null, Id_Postgres_Business_Chapli = null, Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = null');
      fExecSqFromQuery('update dba._pgPersonal set Id1_Postgres = null, Id2_Postgres = null');
      fExecSqFromQuery('update dba.PriceList_byHistory set Id_Postgres = null');
      fExecSqFromQuery('update dba.PriceListItems_byHistory set Id_Postgres = null');
@@ -848,7 +848,15 @@ begin
         Add('     , case when isPartionSumm.GoodsPropertyId is not null then zc_rvYes() else zc_rvNo() end as isPartionSumm');
         Add('     , zc_rvYes() as zc_rvYes');
         Add('     , 0 AS TradeMarkId_PG');
+        Add('     , case when Goods.ParentId in (5874)'
+           +'                 then Unit_Alan.Id_Postgres_Business_Chapli'
+           +'            when fCheckGoodsParentID(3251,Goods.ParentId) =zc_rvYes()'
+           +'                 then Unit_Alan.Id_Postgres_Business_TWO'
+           +'            when fCheckGoodsParentID(5,Goods.ParentId) =zc_rvYes()'
+           +'                 then Unit_Alan.Id_Postgres_Business'
+           +'       end as BusinessId_Postgres');
         Add('from dba.GoodsProperty');
+        Add('     left outer join dba.Unit as Unit_Alan on Unit_Alan.Id = 3');// АЛАН
         Add('     left outer join dba._toolsView_GoodsProperty_Obvalka_isPartionStr_MB_TWO AS isPartionCount on isPartionCount.GoodsPropertyId = GoodsProperty.Id');
         Add('     left outer join dba._toolsView_GoodsProperty_Obvalka_isPartionStr_MB AS isPartionSumm on isPartionSumm.GoodsPropertyId = GoodsProperty.Id');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
@@ -856,7 +864,8 @@ begin
         Add('     left outer join dba.Measure on Measure.Id = GoodsProperty.MeasureId');
         Add('     left outer join dba.GoodsProperty_Detail on GoodsProperty_Detail.GoodsPropertyId = GoodsProperty.Id');
         Add('     left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = case when fCheckGoodsParentID(1491,Goods.ParentId) =zc_rvYes() then 20701'); // АГРОСЕЛЬПРОМ  - 20701	Общефирменные Товары	Прочие товары
-        Add('                                                                        when fCheckGoodsParentID(5,   Goods.ParentId) =zc_rvYes()then 30101'); // ГП            - 30101	Доходы	Продукция	Готовая продукция
+        Add('                                                                        when fCheckGoodsParentID(338, Goods.ParentId) =zc_rvYes() then 20901'); // ц.ИРНА      - 20901	Общефирменные	Ирна Ирна
+        Add('                                                                        when fCheckGoodsParentID(5,   Goods.ParentId) =zc_rvYes() then 30101'); // ГП            - 30101	Доходы	Продукция	Готовая продукция
         Add('                                                                        when fCheckGoodsParentID(5306,Goods.ParentId) =zc_rvYes() then 30101'); // ПЕРЕПАК       - 30101	Доходы	Продукция	Готовая продукция
         Add('                                                                        when fCheckGoodsParentID(3482,Goods.ParentId) =zc_rvYes() then 30101'); // эксперименты       - 30101	Доходы	Продукция	Готовая продукция
         Add('                                                                        when fCheckGoodsParentID(5874,Goods.ParentId) =zc_rvYes() then 30102'); // ТУШЕНКА       - 30102	Доходы	Продукция	Тушенка
@@ -923,6 +932,7 @@ begin
         Add('       , MeasureId_Postgres');
         Add('       , ParentId_Postgres');
         Add('       , InfoMoneyId_Postgres');
+        Add('       , BusinessId_Postgres');
         Add('       , isPartionCount');
         Add('       , isPartionSumm');
         Add('order by ObjectId');
@@ -941,11 +951,12 @@ begin
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inWeight',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsGroupId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inMeasureId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inTradeMarkId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inInfoMoneyId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inWeight',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inBusinessId',ftInteger,ptInput, 0);
         //
         toStoredProc_two.StoredProcName:='gpInsertUpdate_ObjectBoolean_Goods_Partion';
         toStoredProc_two.OutputType := otResult;
@@ -965,8 +976,9 @@ begin
              toStoredProc.Params.ParamByName('inWeight').Value:=FieldByName('Ves_onMeasure').AsFloat;
              toStoredProc.Params.ParamByName('inGoodsGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inMeasureId').Value:=FieldByName('MeasureId_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inInfoMoneyId').Value:=FieldByName('InfoMoneyId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inTradeMarkId').Value:=FieldByName('TradeMarkId_PG').AsInteger;
+             toStoredProc.Params.ParamByName('inInfoMoneyId').Value:=FieldByName('InfoMoneyId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inBusinessId').Value:=FieldByName('BusinessId_Postgres').AsInteger;
 
              if not myExecToStoredProc then ;//exit;
 
@@ -1627,12 +1639,26 @@ begin
         Close;
         Clear;
         Add('select Unit_Alan.Id as ObjectId');
-        Add('     , 0 as ObjectCode');
+        Add('     , 1 as ObjectCode');
         Add('     , Unit_Alan.UnitName as ObjectName');
         Add('     , Unit_Alan.Id_Postgres_Business as Id_Postgres');
         Add('from dba.Unit as Unit_Alan');
         Add('where Id = 3');// АЛАН
-        Add('order by ObjectId');
+        Add('union all');
+        Add('select Unit_Alan.Id as ObjectId');
+        Add('     , 2 as ObjectCode');
+        Add('     , '+FormatToVarCharServer_notNULL('Сырье')+' as ObjectName');
+        Add('     , Unit_Alan.Id_Postgres_Business_TWO as Id_Postgres');
+        Add('from dba.Unit as Unit_Alan');
+        Add('where Id = 3');// АЛАН
+        Add('union all');
+        Add('select Unit_Alan.Id as ObjectId');
+        Add('     , 3 as ObjectCode');
+        Add('     , '+FormatToVarCharServer_notNULL('Чапли')+' as ObjectName');
+        Add('     , Unit_Alan.Id_Postgres_Business_Chapli as Id_Postgres');
+        Add('from dba.Unit as Unit_Alan');
+        Add('where Id = 3');// АЛАН
+        Add('order by ObjectId,ObjectCode');
         Open;
         //
         fStop:=cbOnlyOpen.Checked;
@@ -1659,7 +1685,12 @@ begin
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.Unit set Id_Postgres_Business='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             then if FieldByName('ObjectCode').AsInteger=1
+                  then fExecSqFromQuery('update dba.Unit set Id_Postgres_Business='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString)
+                  else if FieldByName('ObjectCode').AsInteger=2
+                       then fExecSqFromQuery('update dba.Unit set Id_Postgres_Business_TWO='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString)
+                       else if FieldByName('ObjectCode').AsInteger=3
+                            then fExecSqFromQuery('update dba.Unit set Id_Postgres_Business_Chapli='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;
@@ -6075,6 +6106,8 @@ alter table dba.Unit add Id1_Postgres integer null;
 alter table dba.Unit add Id2_Postgres integer null;
 alter table dba.Unit add Id3_Postgres integer null;
 alter table dba.Unit add Id_Postgres_Business integer null;
+alter table dba.Unit add Id_Postgres_Business_TWO integer null;
+alter table dba.Unit add Id_Postgres_Business_Chapli integer null;
 alter table dba.Unit add PersonalId_Postgres integer null;
 alter table dba.Unit add pgUnitId integer null;
 alter table dba.Unit add Id_Postgres_RouteSorting integer null;
@@ -6088,6 +6121,5 @@ alter table dba.Bill add Id_Postgres integer null;
 alter table dba.BillItems add Id_Postgres integer null;
 alter table dba.BillItemsReceipt add Id_Postgres integer null;
 ok
-
 }
 

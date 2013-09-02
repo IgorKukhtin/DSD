@@ -14,7 +14,7 @@ $BODY$
 BEGIN
 
      -- Проверка
-     IF COALESCE (inAmount, 0) < 0 
+     IF inAmount < 0 
      THEN
          RAISE EXCEPTION 'Невозможно Сформировать проводку для отчета с inAmount<0 : "%", "%", "%", "%", "%"', inMovementId, inMovementItemId, inReportContainerId, inAmount, inOperDate;
      END IF;

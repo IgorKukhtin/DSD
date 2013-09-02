@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar,
                InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar,
                InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar,
+               BusinessId Integer,  BusinessCode Integer, BusinessName TVarChar, 
                Weight TFloat, isPartionCount Boolean, isPartionSumm Boolean, isErased Boolean) AS
 $BODY$
 BEGIN
@@ -48,6 +49,10 @@ BEGIN
          , Object_InfoMoneyDestination.ObjectCode AS InfoMoneyDestinationCode
          , Object_InfoMoneyDestination.ValueData  AS InfoMoneyDestinationName
          
+         , Object_Business.Id         AS BusinessId
+         , Object_Business.ObjectCode AS BusinessCode
+         , Object_Business.ValueData  AS BusinessName
+
          , ObjectFloat_Weight.ValueData AS Weight
          , ObjectBoolean_PartionCount.ValueData AS isPartionCount
          , ObjectBoolean_PartionSumm.ValueData  AS isPartionSumm
@@ -95,6 +100,11 @@ BEGIN
                 AND ObjectLink_InfoMoney_InfoMoneyDestination.DescId = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
           LEFT JOIN Object AS Object_InfoMoneyDestination ON Object_InfoMoneyDestination.Id = ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId              
       
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Business
+                 ON ObjectLink_Goods_Business.ObjectId = Object_Goods.Id 
+                AND ObjectLink_Goods_Business.DescId = zc_ObjectLink_Goods_Business()
+          LEFT JOIN Object AS Object_Business ON Object_Business.Id = ObjectLink_Goods_Business.ChildObjectId              
+
   WHERE Object_Goods.DescId = zc_Object_Goods()
 -- and (ObjectBoolean_PartionCount.ValueData = true or ObjectBoolean_PartionSumm.ValueData = true)
   ;
@@ -110,6 +120,7 @@ ALTER FUNCTION gpSelect_Object_Goods (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 01.09.13                                        * add Business
  12.07.13                                        * add zc_ObjectBoolean_Goods_Partion...
  04.07.13          * + TradeMark             
  21.06.13          *              

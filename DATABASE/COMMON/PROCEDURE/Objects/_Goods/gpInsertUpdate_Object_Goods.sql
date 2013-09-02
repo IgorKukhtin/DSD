@@ -6,11 +6,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
  INOUT ioId                  Integer   , -- ключ объекта <Товар>
     IN inCode                Integer   , -- Код объекта <Товар>
     IN inName                TVarChar  , -- Название объекта <Товар>
+    IN inWeight              TFloat    , -- Вес
     IN inGoodsGroupId        Integer   , -- ссылка на группу Товаров
     IN inMeasureId           Integer   , -- ссылка на единицу измерения
     IN inTradeMarkId         Integer   , -- ссылка на Торговые марки
     IN inInfoMoneyId         Integer   , -- Управленческие аналитики
-    IN inWeight              TFloat    , -- Вес
+    IN inBusinessId          Integer   , -- Бизнесы
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -35,6 +36,8 @@ BEGIN
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Goods(), vbCode_calc, inName);
+   -- сохранили свойство <Вес>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_Weight(), ioId, inWeight);
    -- сохранили связь с <Группой товара>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_GoodsGroup(), ioId, inGoodsGroupId);
    -- сохранили связь с <Единицей измерения>
@@ -43,8 +46,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_TradeMark(), ioId, inTradeMarkId);   
    -- сохранили связь с <Управленческие аналитики>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_InfoMoney(), ioId, inInfoMoneyId);
-   -- сохранили свойство <Вес>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_Weight(), ioId, inWeight);
+   -- сохранили связь с <Бизнесы>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Business(), ioId, inBusinessId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -59,13 +62,12 @@ ALTER FUNCTION gpInsertUpdate_Object_Goods (Integer, Integer, TVarChar, Integer,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-               
+ 01.09.13                                        * add inBusinessId
  30.06.13                                        * add vb
  20.06.13          * vbCode_calc:=lpGet_ObjectCode (inCode, zc_Object_Goods());
  16.06.13                                        * IF COALESCE (inCode, 0) = 0  THEN Code_max := NULL ...
  11.06.13          *
  11.05.13                                        * rem lpCheckUnique_Object_ValueData
-
 */
 
 -- тест
