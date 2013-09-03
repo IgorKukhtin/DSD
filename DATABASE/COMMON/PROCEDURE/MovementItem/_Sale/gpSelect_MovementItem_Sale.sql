@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Sale(
     IN inShowAll     Boolean      , -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat, AmountPartner TFloat
+RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat, AmountPartner TFloat, ChangePercentAmount TFloat
              , Price TFloat, CountForPrice TFloat, HeadCount TFloat
              , PartionGoods TVarChar, GoodsKindName  TVarChar
              , AssetId Integer, AssetName TVarChar
@@ -36,6 +36,7 @@ BEGIN
 
            , CAST (NULL AS TFloat) AS Amount
            , CAST (NULL AS TFloat) AS AmountPartner
+           , CAST (NULL AS TFloat) AS ChangePercentAmount
 
            , CAST (lfObjectHistory_PriceListItem.ValuePrice AS TFloat) AS Price
            , CAST (1 AS TFloat) AS CountForPrice
@@ -82,7 +83,8 @@ BEGIN
            , Object_Goods.ObjectCode  AS GoodsCode
            , Object_Goods.ValueData   AS GoodsName
            , MovementItem.Amount
-           , MIFloat_AmountPartner.ValueData   AS AmountPartner
+           , MIFloat_AmountPartner.ValueData       AS AmountPartner
+           , MIFloat_ChangePercentAmount.ValueData AS ChangePercentAmount
 
            , MIFloat_Price.ValueData AS Price
            , MIFloat_CountForPrice.ValueData AS CountForPrice
@@ -108,6 +110,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                         ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                        AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentAmount
+                                        ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
+                                       AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
 
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -213,6 +218,7 @@ ALTER FUNCTION gpSelect_MovementItem_Sale (Integer, Boolean, TVarChar) OWNER TO 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.09.13                                        * add ChangePercentAmount
  21.07.13                                        * add lfSelect_ObjectHistory_PriceListItem
  18.07.13         * add Object_Asset               
  13.07.13         *

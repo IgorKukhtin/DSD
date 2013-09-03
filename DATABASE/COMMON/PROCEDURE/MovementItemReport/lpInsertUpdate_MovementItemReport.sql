@@ -5,23 +5,32 @@
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemReport(
     IN inMovementId              Integer               , -- ключ Документа
     IN inMovementItemId          Integer               ,
+    IN inActiveContainerId       Integer               ,
+    IN inPassiveContainerId      Integer               ,
+    IN inActiveAccountId         Integer               ,
+    IN inPassiveAccountId        Integer               ,
     IN inReportContainerId       Integer               ,
+    IN inChildReportContainerId  Integer               ,
     IN inAmount                  TFloat                ,
     IN inOperDate                TDateTime
 )
   RETURNS void AS
 $BODY$
 BEGIN
+     -- меняем параметр
+     IF inChildReportContainerId = 0 THEN inChildReportContainerId := NULL; END IF;
+     -- меняем параметр
+     inAmount := COALESCE (inAmount, 0);
 
      -- Проверка
      IF inAmount < 0 
      THEN
-         RAISE EXCEPTION 'Невозможно Сформировать проводку для отчета с inAmount<0 : "%", "%", "%", "%", "%"', inMovementId, inMovementItemId, inReportContainerId, inAmount, inOperDate;
+         RAISE EXCEPTION 'Невозможно Сформировать проводку для отчета с inAmount<0 : "%", "%", "%", "%", "%", "%", "%", "%", "%", "%"', inMovementId, inMovementItemId, inActiveContainerId, inPassiveContainerId, inActiveAccountId, inPassiveAccountId, inReportContainerId, inChildReportContainerId, inAmount, inOperDate;
      END IF;
 
      -- сохранили "Проводка для отчета"
-     INSERT INTO MovementItemReport (MovementId, MovementItemId, ReportContainerId, Amount, OperDate)
-                             VALUES (inMovementId, inMovementItemId, inReportContainerId, COALESCE (inAmount, 0), inOperDate);
+     INSERT INTO MovementItemReport (MovementId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId, Amount, OperDate)
+                             VALUES (inMovementId, inMovementItemId, inActiveContainerId, inPassiveContainerId, inActiveAccountId, inPassiveAccountId, inReportContainerId, inChildReportContainerId, inAmount, inOperDate);
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

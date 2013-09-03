@@ -49,11 +49,11 @@ BEGIN
      -- Определяются параметры для проводок по прибыли
      IF vbUnitId <> 0 AND EXISTS (SELECT lfObject_Unit_byProfitLossDirection.ProfitLossGroupId FROM lfGet_Object_Unit_byProfitLossDirection (vbUnitId) AS lfObject_Unit_byProfitLossDirection WHERE lfObject_Unit_byProfitLossDirection.ProfitLossGroupId = zc_Enum_ProfitLossGroup_40000()) -- 40000; "Расходы на сбыт"
      THEN
-         -- такие для Подразделения
+         -- такие для подразделения (по филиалу)
          vbProfitLossGroupId := zc_Enum_ProfitLossGroup_40000(); -- 40000 Расходы на сбыт
          vbProfitLossDirectionId := zc_Enum_ProfitDirection_40400(); -- 40400; "Прочие потери (Списание+инвентаризация)
      ELSE
-         -- такие для сотрудника
+         -- такие для сотрудника и подразделения (не филиал)
          vbProfitLossGroupId := zc_Enum_ProfitLossGroup_20000(); -- 20000; "Общепроизводственные расходы"
          vbProfitLossDirectionId := zc_Enum_ProfitDirection_20500(); -- 20500; "Прочие потери (Списание+инвентаризация)
      END IF;
