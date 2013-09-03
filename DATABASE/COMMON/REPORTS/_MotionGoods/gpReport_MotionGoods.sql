@@ -12,16 +12,16 @@ RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , PartionGoodsId Integer, PartionGoodsCode Integer, PartionGoodsName TVarChar
              , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar
              , AssetToId Integer, AssetToCode Integer, AssetToName TVarChar
-             , CountStart TFloat    , SummStart TFloat
-             , CountIncomePartner TFloat, SummIncomePartner TFloat
-             , CountSendIn TFloat   , SummSendIn TFloat
-             , CountSendOut TFloat  , SummSendOut TFloat
-             , CountSale TFloat     , SummSale TFloat
-             , CountReturnOut TFloat, SummReturnOut TFloat
-             , CountReturnIn TFloat , SummReturnIn TFloat
-             , CountLoss TFloat     , SummLoss TFloat
-             , CountInventory TFloat, SummInventory TFloat
-             , CountEnd TFloat      , SummEnd TFloat
+             , StartCount TFloat    , StartSumm TFloat
+             , IncomeCount TFloat   , IncomeSumm TFloat
+             , SendInCount TFloat   , SendInSumm TFloat
+             , SendOutCount TFloat  , SendOutSumm TFloat
+             , SaleCount TFloat     , SaleSumm TFloat
+             , ReturnOutCount TFloat, ReturnOutSumm TFloat
+             , ReturnInCount TFloat , ReturnInSumm TFloat
+             , LossCount TFloat     , LossSumm TFloat
+             , InventoryCount TFloat, InventorySumm TFloat
+             , EndCount_calc TFloat , EndSumm_calc TFloat
               )
 AS
 $BODY$BEGIN
@@ -38,16 +38,16 @@ $BODY$BEGIN
            , _tmp_All.AssetToId, Object_AssetTo.ObjectCode  AS AssetToCode, Object_AssetTo.ValueData  AS AssetToName
 
            
-           , SUM (CountStart)     AS CountStart      , SUM (SummStart)     AS SummStart
-           , SUM (CountIncomePartner) AS CountIncomePartner , SUM (SummIncomePartner) AS SummIncomePartner
-           , SUM (CountSendIn)    AS CountSendIn     , SUM (SummSendIn)    AS SummSendIn
-           , SUM (CountSendOut)   AS CountSendOut    , SUM (SummSendOut)   AS SummSendOut
-           , SUM (CountSale)      AS CountSale       , SUM (SummSale)      AS SummSale
-           , SUM (CountReturnOut) AS CountReturnOut  , SUM (SummReturnOut) AS SummReturnOut
-           , SUM (CountReturnIn)  AS CountReturnIn   , SUM (SummReturnIn)  AS SummReturnIn
-           , SUM (CountLoss)      AS CountLoss       , SUM (SummLoss)      AS SummLoss
-           , SUM (CountInventory) AS CountInventory  , SUM (SummInventory) AS SummInventory
-           , SUM (CountEnd)       AS CountEnd        , SUM (SummEnd)       AS SummEnd
+           , SUM (StartCount)     AS StartCount      , SUM (StartSumm)     AS StartSumm
+           , SUM (IncomeCount) AS IncomeCount , SUM (IncomeSumm) AS IncomeSumm
+           , SUM (SendInCount)    AS SendInCount     , SUM (SendInSumm)    AS SendInSumm
+           , SUM (SendOutCount)   AS SendOutCount    , SUM (SendOutSumm)   AS SendOutSumm
+           , SUM (SaleCount)      AS SaleCount       , SUM (SaleSumm)      AS SaleSumm
+           , SUM (ReturnOutCount) AS ReturnOutCount  , SUM (ReturnOutSumm) AS ReturnOutSumm
+           , SUM (ReturnInCount)  AS ReturnInCount   , SUM (ReturnInSumm)  AS ReturnInSumm
+           , SUM (LossCount)      AS LossCount       , SUM (LossSumm)      AS LossSumm
+           , SUM (InventoryCount) AS InventoryCount  , SUM (InventorySumm) AS InventorySumm
+           , SUM (EndCount_calc)       AS EndCount_calc        , SUM (EndSumm_calc)       AS EndSumm_calc
       FROM 
             (SELECT
                     ContainerLinkObject_Goods.ObjectId     AS GoodsId
@@ -56,40 +56,40 @@ $BODY$BEGIN
                   , ContainerLinkObject_GoodsKind.ObjectId AS GoodsKindId
                   , ContainerLinkObject_AssetTo.ObjectId   AS AssetToId
              
-                  , _tmpContainer.RemainsStart AS SummStart
-                  , _tmpContainer.SummIncomePartner
-                  , _tmpContainer.SummSendIn 
-                  , _tmpContainer.SummSendOut
-                  , _tmpContainer.SummSale
-                  , _tmpContainer.SummReturnOut
-                  , _tmpContainer.SummReturnIn                 
-                  , _tmpContainer.SummLoss
-                  , _tmpContainer.SummInventory
-                  ,(_tmpContainer.RemainsStart + _tmpContainer.SummIncomePartner + _tmpContainer.SummSendIn - _tmpContainer.SummSendOut + _tmpContainer.SummSale + _tmpContainer.SummReturnIn - _tmpContainer.SummReturnOut - _tmpContainer.SummLoss + _tmpContainer.SummInventory) AS SummEnd
+                  , _tmpContainer.RemainsStart AS StartSumm
+                  , _tmpContainer.IncomeSumm
+                  , _tmpContainer.SendInSumm 
+                  , _tmpContainer.SendOutSumm
+                  , _tmpContainer.SaleSumm
+                  , _tmpContainer.ReturnOutSumm
+                  , _tmpContainer.ReturnInSumm                 
+                  , _tmpContainer.LossSumm
+                  , _tmpContainer.InventorySumm
+                  ,(_tmpContainer.RemainsStart + _tmpContainer.IncomeSumm + _tmpContainer.SendInSumm - _tmpContainer.SendOutSumm + _tmpContainer.SaleSumm + _tmpContainer.ReturnInSumm - _tmpContainer.ReturnOutSumm - _tmpContainer.LossSumm + _tmpContainer.InventorySumm) AS EndSumm_calc
             
-                  , 0 AS CountStart
-                  , 0 AS CountIncomePartner 
-                  , 0 AS CountSendIn    
-                  , 0 AS CountSendOut   
-                  , 0 AS CountSale 
-                  , 0 AS CountReturnOut 
-                  , 0 AS CountReturnIn 
-                  , 0 AS CountLoss 
-                  , 0 AS CountInventory 
-                  , 0 AS CountEnd 
+                  , 0 AS StartCount
+                  , 0 AS IncomeCount 
+                  , 0 AS SendInCount    
+                  , 0 AS SendOutCount   
+                  , 0 AS SaleCount 
+                  , 0 AS ReturnOutCount 
+                  , 0 AS ReturnInCount 
+                  , 0 AS LossCount 
+                  , 0 AS InventoryCount 
+                  , 0 AS EndCount_calc 
 
                 FROM (
                       SELECT  Container.Id AS ContainerId                                 --счет
                             , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS RemainsStart
                             --, Container.Amount - (CASE WHEN MIContainer.OperDate > inEndDate THEN  COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END) AS RemainsEnd
-                            , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Income() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0)    AS SummIncomePartner
-                            , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Send() AND MIContainer.isActive = TRUE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0)  AS SummSendIn
-                            , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Send() AND MIContainer.isActive = FALSE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS SummSendOut
-                            , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Sale() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0)      AS SummSale
-                            , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnOut() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS SummReturnOut
-                            , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnIn() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0)  AS SummReturnIn
-                            , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Loss() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0)      AS SummLoss
-                            , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Inventory() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS SummInventory
+                            , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Income() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0)    AS IncomeSumm
+                            , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Send() AND MIContainer.isActive = TRUE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0)  AS SendInSumm
+                            , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Send() AND MIContainer.isActive = FALSE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS SendOutSumm
+                            , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Sale() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0)      AS SaleSumm
+                            , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnOut() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS ReturnOutSumm
+                            , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnIn() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0)  AS ReturnInSumm
+                            , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Loss() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0)      AS LossSumm
+                            , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Inventory() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS InventorySumm
                       FROM lfSelect_Object_Account_byAccountGroup (zc_Enum_AccountGroup_20000()) AS lfObject_Account -- -20000; "Запасы"     -- написать функцию lfGet_Object_Account_byAccountGroup
                            LEFT JOIN Container ON Container.ObjectId = lfObject_Account.AccountId
                                               AND Container.DescId = zc_Container_Summ() 
@@ -124,40 +124,40 @@ $BODY$BEGIN
                     , ContainerLinkObject_GoodsKind.ObjectId    AS GoodsKindId
                     , ContainerLinkObject_AssetTo.ObjectId      AS AssetToId
                     
-                    , 0 AS SummStart
-                    , 0 AS SummIncomePartner
-                    , 0 AS SummSendIn
-                    , 0 AS SummSendOut
-                    , 0 AS SummSale
-                    , 0 AS SummReturnOut
-                    , 0 AS SummReturnIn
-                    , 0 AS SummLoss
-                    , 0 AS SummInventory
-                    , 0 AS SummEnd
-                    , SUM (RemainsStart)     AS CountStart           
-                    , SUM (CountIncomePartner) AS CountIncomePartner 
-                    , SUM (CountSendIn)    AS CountSendIn    
-                    , SUM (CountSendOut)   AS CountSendOut   
-                    , SUM (CountSale)      AS CountSale      
-                    , SUM (CountReturnOut) AS CountReturnOut 
-                    , SUM (CountReturnIn)  AS CountReturnIn  
-                    , SUM (CountLoss)      AS CountLoss      
-                    , SUM (CountInventory) AS CountInventory 
-                    , SUM (_tmpContainer.RemainsStart + _tmpContainer.CountIncomePartner + _tmpContainer.CountSendIn - _tmpContainer.CountSendOut + _tmpContainer.CountSale + _tmpContainer.CountReturnIn - _tmpContainer.CountReturnOut - _tmpContainer.CountLoss + _tmpContainer.CountInventory) AS CountEnd
+                    , 0 AS StartSumm
+                    , 0 AS IncomeSumm
+                    , 0 AS SendInSumm
+                    , 0 AS SendOutSumm
+                    , 0 AS SaleSumm
+                    , 0 AS ReturnOutSumm
+                    , 0 AS ReturnInSumm
+                    , 0 AS LossSumm
+                    , 0 AS InventorySumm
+                    , 0 AS EndSumm_calc
+                    , SUM (RemainsStart)     AS StartCount           
+                    , SUM (IncomeCount) AS IncomeCount 
+                    , SUM (SendInCount)    AS SendInCount    
+                    , SUM (SendOutCount)   AS SendOutCount   
+                    , SUM (SaleCount)      AS SaleCount      
+                    , SUM (ReturnOutCount) AS ReturnOutCount 
+                    , SUM (ReturnInCount)  AS ReturnInCount  
+                    , SUM (LossCount)      AS LossCount      
+                    , SUM (InventoryCount) AS InventoryCount 
+                    , SUM (_tmpContainer.RemainsStart + _tmpContainer.IncomeCount + _tmpContainer.SendInCount - _tmpContainer.SendOutCount + _tmpContainer.SaleCount + _tmpContainer.ReturnInCount - _tmpContainer.ReturnOutCount - _tmpContainer.LossCount + _tmpContainer.InventoryCount) AS EndCount_calc
       
                FROM (
                      SELECT  Container.Id AS ContainerId
                            , Container.ObjectId AS GoodsId
                            , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS RemainsStart
                       
-                           , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Income() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0)    AS CountIncomePartner
-                           , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Send() AND MIContainer.isActive = TRUE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0)  AS CountSendIn
-                           , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Send() AND MIContainer.isActive = FALSE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS CountSendOut
-                           , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Sale() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0)      AS CountSale
-                           , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnOut() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS CountReturnOut
-                           , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnIn() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0)  AS CountReturnIn
-                           , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Loss() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0)      AS CountLoss
-                           , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Inventory() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS CountInventory
+                           , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Income() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0)    AS IncomeCount
+                           , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Send() AND MIContainer.isActive = TRUE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0)  AS SendInCount
+                           , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Send() AND MIContainer.isActive = FALSE AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS SendOutCount
+                           , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Sale() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0)      AS SaleCount
+                           , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnOut() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS ReturnOutCount
+                           , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnIn() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0)  AS ReturnInCount
+                           , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Loss() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0)      AS LossCount
+                           , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Inventory() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS InventoryCount
                       
                      FROM Container
                           LEFT JOIN MovementItemContainer AS MIContainer
@@ -220,4 +220,4 @@ ALTER FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, TVarChar) OWNER TO po
 */
 
 -- тест
--- SELECT * FROM gpReport_MotionGoods (inStartDate:= '01.01.2013', inEndDate:= '01.02.2013', inSession:= '2') where AccountGroupCode = 20000 and CountStart <> 0 
+-- SELECT * FROM gpReport_MotionGoods (inStartDate:= '01.01.2013', inEndDate:= '01.02.2013', inSession:= '2') where AccountGroupCode = 20000 and StartCount <> 0 

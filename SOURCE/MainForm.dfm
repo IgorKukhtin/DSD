@@ -11,6 +11,7 @@ object MainForm: TMainForm
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  Position = poDesigned
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
@@ -393,6 +394,11 @@ object MainForm: TMainForm
     object bbReportHistoryCost: TdxBarButton
       Action = actReport_HistoryCost
       Category = 0
+      OnClick = bbReportHistoryCostClick
+    end
+    object bbReport_MotionGoods: TdxBarButton
+      Action = actReport_MotionGoods
+      Category = 0
     end
     object bbReports: TdxBarSubItem
       Caption = #1054#1090#1095#1077#1090#1099
@@ -410,6 +416,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbReportHistoryCost'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_MotionGoods'
         end>
     end
     object bbBank: TdxBarButton
@@ -1033,6 +1043,16 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_MotionGoods: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+      FormName = 'TReport_MotionGoodsForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object Action1: TAction
+      Caption = 'Action1'
+    end
   end
   object cxLocalizer: TcxLocalizer
     StorageType = lstResource
@@ -1059,7 +1079,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.14'
+    Version = '4.12.2'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
