@@ -22,7 +22,8 @@ uses
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
-  cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit;
+  cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, dsdGuides,
+  cxButtonEdit;
 
 type
   TReport_MotionGoodsForm = class(TParentForm)

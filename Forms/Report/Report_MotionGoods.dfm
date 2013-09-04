@@ -1,4 +1,4 @@
-inherited TReport_MotionGoodsForm: TReport_MotionGoodsForm
+inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
   Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
   ClientHeight = 395
   ClientWidth = 1329
@@ -133,7 +133,7 @@ inherited TReport_MotionGoodsForm: TReport_MotionGoodsForm
         item
           Format = ',0.00'
           Kind = skSum
-          Column = IncomeCount
+          Column = EndCount_calc
         end
         item
           Format = ',0.00'
@@ -340,7 +340,6 @@ inherited TReport_MotionGoodsForm: TReport_MotionGoodsForm
     Width = 1329
     Height = 41
     Align = alTop
-    Caption = 'Panel1'
     TabOrder = 5
     object deStart: TcxDateEdit
       Left = 208
@@ -359,14 +358,14 @@ inherited TReport_MotionGoodsForm: TReport_MotionGoodsForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 96
-    Top = 96
+    Left = 88
+    Top = 24
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 96
-    Top = 144
+    Left = 88
+    Top = 184
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -390,8 +389,8 @@ inherited TReport_MotionGoodsForm: TReport_MotionGoodsForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 232
-    Top = 96
+    Left = 296
+    Top = 168
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -409,8 +408,8 @@ inherited TReport_MotionGoodsForm: TReport_MotionGoodsForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 152
-    Top = 88
+    Left = 144
+    Top = 24
     DockControlHeights = (
       0
       0
@@ -455,7 +454,7 @@ inherited TReport_MotionGoodsForm: TReport_MotionGoodsForm
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 232
-    Top = 144
+    Top = 160
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -500,15 +499,17 @@ inherited TReport_MotionGoodsForm: TReport_MotionGoodsForm
         Value = 41395d
       end>
     Left = 152
-    Top = 152
+    Top = 176
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <>
     View = cxGridDBTableView
+    ActionItemList = <>
     Left = 232
-    Top = 192
+    Top = 216
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 232
-    Top = 232
+    Left = 264
+    Top = 264
   end
 end

@@ -38,16 +38,16 @@ $BODY$BEGIN
            , _tmp_All.AssetToId, Object_AssetTo.ObjectCode  AS AssetToCode, Object_AssetTo.ValueData  AS AssetToName
 
            
-           , SUM (StartCount)     AS StartCount      , SUM (StartSumm)     AS StartSumm
-           , SUM (IncomeCount) AS IncomeCount , SUM (IncomeSumm) AS IncomeSumm
-           , SUM (SendInCount)    AS SendInCount     , SUM (SendInSumm)    AS SendInSumm
-           , SUM (SendOutCount)   AS SendOutCount    , SUM (SendOutSumm)   AS SendOutSumm
-           , SUM (SaleCount)      AS SaleCount       , SUM (SaleSumm)      AS SaleSumm
-           , SUM (ReturnOutCount) AS ReturnOutCount  , SUM (ReturnOutSumm) AS ReturnOutSumm
-           , SUM (ReturnInCount)  AS ReturnInCount   , SUM (ReturnInSumm)  AS ReturnInSumm
-           , SUM (LossCount)      AS LossCount       , SUM (LossSumm)      AS LossSumm
-           , SUM (InventoryCount) AS InventoryCount  , SUM (InventorySumm) AS InventorySumm
-           , SUM (EndCount_calc)       AS EndCount_calc        , SUM (EndSumm_calc)       AS EndSumm_calc
+           , CAST (SUM (_tmp_All.StartCount) AS TFloat)     AS StartCount      , CAST (SUM (_tmp_All.StartSumm) AS TFloat)     AS StartSumm
+           , CAST (SUM (_tmp_All.IncomeCount) AS TFloat)    AS IncomeCount     , CAST (SUM (_tmp_All.IncomeSumm) AS TFloat)    AS IncomeSumm
+           , CAST (SUM (_tmp_All.SendInCount) AS TFloat)    AS SendInCount     , CAST (SUM (_tmp_All.SendInSumm) AS TFloat)    AS SendInSumm
+           , CAST (SUM (_tmp_All.SendOutCount) AS TFloat)   AS SendOutCount    , CAST (SUM (_tmp_All.SendOutSumm) AS TFloat)   AS SendOutSumm
+           , CAST (SUM (_tmp_All.SaleCount) AS TFloat)      AS SaleCount       , CAST (SUM (_tmp_All.SaleSumm) AS TFloat)      AS SaleSumm
+           , CAST (SUM (_tmp_All.ReturnOutCount) AS TFloat) AS ReturnOutCount  , CAST (SUM (_tmp_All.ReturnOutSumm) AS TFloat) AS ReturnOutSumm
+           , CAST (SUM (_tmp_All.ReturnInCount) AS TFloat)  AS ReturnInCount   , CAST (SUM (_tmp_All.ReturnInSumm) AS TFloat)  AS ReturnInSumm
+           , CAST (SUM (_tmp_All.LossCount) AS TFloat)      AS LossCount       , CAST (SUM (_tmp_All.LossSumm) AS TFloat)      AS LossSumm
+           , CAST (SUM (_tmp_All.InventoryCount) AS TFloat) AS InventoryCount  , CAST (SUM (_tmp_All.InventorySumm) AS TFloat) AS InventorySumm
+           , CAST (SUM (_tmp_All.EndCount_calc) AS TFloat)  AS EndCount_calc   , CAST (SUM (_tmp_All.EndSumm_calc) AS TFloat)  AS EndSumm_calc
       FROM 
             (SELECT
                     ContainerLinkObject_Goods.ObjectId     AS GoodsId
@@ -134,15 +134,15 @@ $BODY$BEGIN
                     , 0 AS LossSumm
                     , 0 AS InventorySumm
                     , 0 AS EndSumm_calc
-                    , SUM (RemainsStart)     AS StartCount           
-                    , SUM (IncomeCount) AS IncomeCount 
-                    , SUM (SendInCount)    AS SendInCount    
-                    , SUM (SendOutCount)   AS SendOutCount   
-                    , SUM (SaleCount)      AS SaleCount      
-                    , SUM (ReturnOutCount) AS ReturnOutCount 
-                    , SUM (ReturnInCount)  AS ReturnInCount  
-                    , SUM (LossCount)      AS LossCount      
-                    , SUM (InventoryCount) AS InventoryCount 
+                    , SUM (RemainsStart)   AS StartCount           
+                    , SUM (_tmpContainer.IncomeCount)    AS IncomeCount 
+                    , SUM (_tmpContainer.SendInCount)    AS SendInCount    
+                    , SUM (_tmpContainer.SendOutCount)   AS SendOutCount   
+                    , SUM (_tmpContainer.SaleCount)      AS SaleCount      
+                    , SUM (_tmpContainer.ReturnOutCount) AS ReturnOutCount 
+                    , SUM (_tmpContainer.ReturnInCount)  AS ReturnInCount  
+                    , SUM (_tmpContainer.LossCount)      AS LossCount      
+                    , SUM (_tmpContainer.InventoryCount) AS InventoryCount 
                     , SUM (_tmpContainer.RemainsStart + _tmpContainer.IncomeCount + _tmpContainer.SendInCount - _tmpContainer.SendOutCount + _tmpContainer.SaleCount + _tmpContainer.ReturnInCount - _tmpContainer.ReturnOutCount - _tmpContainer.LossCount + _tmpContainer.InventoryCount) AS EndCount_calc
       
                FROM (
