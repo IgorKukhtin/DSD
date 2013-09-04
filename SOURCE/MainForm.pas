@@ -151,8 +151,6 @@ type
     bbReport_MotionGoods: TdxBarButton;
     Action1: TAction;
     procedure FormCreate(Sender: TObject);
-    procedure dxBarButton1Click(Sender: TObject);
-    procedure bbReportHistoryCostClick(Sender: TObject);
   private
     procedure OnException(Sender: TObject; E: Exception);
   public

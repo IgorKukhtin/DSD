@@ -394,7 +394,6 @@ object MainForm: TMainForm
     object bbReportHistoryCost: TdxBarButton
       Action = actReport_HistoryCost
       Category = 0
-      OnClick = bbReportHistoryCostClick
     end
     object bbReport_MotionGoods: TdxBarButton
       Action = actReport_MotionGoods

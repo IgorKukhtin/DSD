@@ -1,4 +1,4 @@
-inherited TReport_MotionGoodsForm: TTReport_MotionGoodsForm
+inherited TReport_MotionGoodsForm: TReport_MotionGoodsForm
   Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
   ClientHeight = 395
   ClientWidth = 1329

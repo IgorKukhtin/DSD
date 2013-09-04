@@ -478,7 +478,7 @@
 			<DCCReference Include="..\SOURCE\Objects\All\BusinessTest.pas"/>
 			<DCCReference Include="..\SOURCE\MovementItemReport\CommonMovementItemReportProcedureTest.pas"/>
 			<DCCReference Include="..\..\Forms\Report\Report_MotionGoods.pas">
-				<Form>TReport_MotionGoodsForm</Form>
+				<Form>Report_MotionGoodsForm</Form>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

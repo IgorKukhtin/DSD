@@ -25,7 +25,7 @@ uses
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit;
 
 type
-  TTReport_MotionGoodsForm = class(TParentForm)
+  TReport_MotionGoodsForm = class(TParentForm)
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
@@ -80,6 +80,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TTReport_MotionGoodsForm);
+  RegisterClass(TReport_MotionGoodsForm);
 
 end.
