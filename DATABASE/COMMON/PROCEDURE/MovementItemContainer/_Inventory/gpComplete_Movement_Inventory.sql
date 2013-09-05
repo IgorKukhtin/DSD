@@ -63,16 +63,18 @@ BEGIN
      CREATE TEMP TABLE _tmpContainer (DescId Integer, ObjectId Integer) ON COMMIT DROP;
      -- таблица - Аналитики <элемент с/с>
      CREATE TEMP TABLE _tmpObjectCost (DescId Integer, ObjectId Integer) ON COMMIT DROP;
+     -- таблица - Аналитики <Проводки для отчета>
+     CREATE TEMP TABLE _tmpChildReportContainer (AccountKindId Integer, ContainerId Integer, AccountId Integer) ON COMMIT DROP;
      -- таблица - 
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
 
      -- таблица - количественный остаток
      CREATE TEMP TABLE _tmpRemainsCount (MovementItemId Integer, ContainerId_Goods Integer, GoodsId Integer, OperCount TFloat) ON COMMIT DROP;
      -- таблица - суммовой остаток
-     CREATE TEMP TABLE _tmpRemainsSumm (ContainerId_Goods Integer, ContainerId Integer, GoodsId Integer, OperSumm TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpRemainsSumm (ContainerId_Goods Integer, ContainerId Integer, AccountId Integer, GoodsId Integer, OperSumm TFloat) ON COMMIT DROP;
 
      -- таблица - суммовые элементы документа, !!!без!!! свойств для формирования Аналитик в проводках (если ContainerId=0 тогда возьмем их из _tmpItem)
-     CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, MIContainerId Integer, ContainerId Integer, OperSumm TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_ProfitLoss Integer, ContainerId Integer, AccountId Integer, OperSumm TFloat) ON COMMIT DROP;
 
      -- таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer, MovementId Integer, OperDate TDateTime, UnitId Integer, PersonalId Integer, BranchId Integer
@@ -366,12 +368,14 @@ BEGIN
      ;
 
      -- заполняем таблицу - суммовой расчетный остаток на конец vbOperDate (ContainerId_Goods - значит в разрезе товарных остатков)
-     INSERT INTO _tmpRemainsSumm (ContainerId_Goods, ContainerId, GoodsId, OperSumm)
+     INSERT INTO _tmpRemainsSumm (ContainerId_Goods, ContainerId, AccountId, GoodsId, OperSumm)
         SELECT _tmpContainer.ContainerId_Goods
              , _tmpContainer.ContainerId
+             , _tmpContainer.AccountId
              , Container_Count.ObjectId
              , _tmpContainer.OperSumm
         FROM (SELECT _tmpContainerLinkObject_From.ContainerId
+                   , Container.ObjectId AS AccountId
                    , Container.ParentId AS ContainerId_Goods
                    , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS OperSumm
               FROM (SELECT ContainerLinkObject.ContainerId FROM ContainerLinkObject WHERE ContainerLinkObject.ObjectId =  vbUnitId AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Unit() AND vbUnitId <> 0
@@ -386,6 +390,7 @@ BEGIN
                                                    ON MIContainer.Containerid = Container.Id
                                                   AND MIContainer.OperDate > vbOperDate
               GROUP BY _tmpContainerLinkObject_From.ContainerId
+                     , Container.ObjectId
                      , Container.ParentId
                      , Container.Amount
               HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
@@ -491,14 +496,16 @@ BEGIN
 
 
      -- заполняем таблицу - суммовые элементы документа, !!!без!!! свойств для формирования Аналитик в проводках (если ContainerId=0 тогда возьмем их из _tmpItem)
-     INSERT INTO _tmpItemSumm (MovementItemId, MIContainerId, ContainerId, OperSumm)
+     INSERT INTO _tmpItemSumm (MovementItemId, ContainerId_ProfitLoss, ContainerId, AccountId, OperSumm)
         SELECT _tmp.MovementItemId
-             , 0 AS MIContainerId
+             , 0 AS ContainerId_ProfitLoss
              , _tmp.ContainerId
+             , _tmp.AccountId
              , SUM (_tmp.OperSumm)
         FROM  -- это введенные остатки
              (SELECT _tmpItem.MovementItemId
                    , COALESCE (Container_Summ.Id, 0) AS ContainerId
+                   , COALESCE (Container_Summ.ObjectId, 0) AS AccountId
                    , CASE WHEN Container_Summ.ParentId IS NULL THEN _tmpItem.OperSumm ELSE _tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) END AS OperSumm -- есть ошибка, вообще остатки по сумме должны быть загружены один раз, а потом расчитываться из HistoryCost
               FROM _tmpItem
                    LEFT JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_Goods
@@ -513,29 +520,55 @@ BEGIN
               -- это расчетные остатки (их надо вычесть)
               SELECT _tmpRemainsCount.MovementItemId
                    , _tmpRemainsSumm.ContainerId
-                   , -1 * _tmpRemainsSumm.OperSumm
+                   , _tmpRemainsSumm.AccountId
+                   , -1 * _tmpRemainsSumm.OperSumm AS OperSumm
               FROM _tmpRemainsSumm
                    LEFT JOIN _tmpRemainsCount ON _tmpRemainsCount.ContainerId_Goods = _tmpRemainsSumm.ContainerId_Goods
              ) AS _tmp
         GROUP BY _tmp.MovementItemId
-               , _tmp.ContainerId;
+               , _tmp.ContainerId
+               , _tmp.AccountId;
 
      -- для теста-2
-     -- RETURN QUERY SELECT CAST (vbProfitLossGroupId AS Integer) AS ProfitLossGroupId, CAST (vbProfitLossDirectionId AS Integer) AS ProfitLossDirectionId, _tmpItemSumm.MovementItemId, _tmpItemSumm.MIContainerId, _tmpItemSumm.ContainerId, _tmpItemSumm.OperSumm, _tmpItem.InfoMoneyDestinationId FROM _tmpItemSumm LEFT JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId;
+     -- RETURN QUERY SELECT CAST (vbProfitLossGroupId AS Integer) AS ProfitLossGroupId, CAST (vbProfitLossDirectionId AS Integer) AS ProfitLossDirectionId, _tmpItemSumm.MovementItemId, _tmpItemSumm.ContainerId_ProfitLoss, _tmpItemSumm.ContainerId, _tmpItemSumm.OperSumm, _tmpItem.InfoMoneyDestinationId FROM _tmpItemSumm LEFT JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId;
      -- return;
 
-     -- созаем контейнеры для суммового учета + Аналитика <элемент с/с>, причем !!!только!!! когда ContainerId=0 и !!!есть!!! разница по остатку
+     -- определяется Счет для проводок по суммовому учету
+     UPDATE _tmpItemSumm SET AccountId = _tmpItem_byAccount.AccountId
+     FROM _tmpItem
+          JOIN (SELECT lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы -- select * from gpSelect_Object_AccountGroup ('2') where Id = zc_Enum_AccountGroup_20000()
+                                                  , inAccountDirectionId     := _tmpItem_group.AccountDirectionId
+                                                  , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId_calc
+                                                  , inInfoMoneyId            := NULL
+                                                  , inUserId                 := vbUserId
+                                                   ) AS AccountId
+                     , _tmpItem_group.AccountDirectionId
+                     , _tmpItem_group.InfoMoneyDestinationId
+                FROM (SELECT _tmpItem.AccountDirectionId
+                           , _tmpItem.InfoMoneyDestinationId
+                           , CASE WHEN _tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() THEN zc_InfoMoneyDestination_WorkProgress() ELSE _tmpItem.InfoMoneyDestinationId END AS InfoMoneyDestinationId_calc
+                      FROM _tmpItem
+                           JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId
+                                            AND _tmpItemSumm.OperSumm <> 0 AND _tmpItemSumm.ContainerId = 0
+                                            AND zc_isHistoryCost() = TRUE 
+                      GROUP BY _tmpItem.AccountDirectionId
+                             , _tmpItem.InfoMoneyDestinationId
+                             , CASE WHEN _tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() THEN zc_InfoMoneyDestination_WorkProgress() ELSE _tmpItem.InfoMoneyDestinationId END
+                     ) AS _tmpItem_group
+               ) AS _tmpItem_byAccount ON _tmpItem_byAccount.AccountDirectionId = _tmpItem.AccountDirectionId
+                                      AND _tmpItem.InfoMoneyDestinationId = _tmpItem_byAccount.InfoMoneyDestinationId
+     WHERE _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId
+       AND _tmpItemSumm.OperSumm <> 0
+       AND _tmpItemSumm.ContainerId = 0
+       AND zc_isHistoryCost() = TRUE;
+
+     -- создаем контейнеры для суммового учета + Аналитика <элемент с/с>, причем !!!только!!! когда ContainerId=0 и !!!есть!!! разница по остатку
      UPDATE _tmpItemSumm SET ContainerId                         = CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение 2)Товар 3)!Партии товара! 4)Статьи назначения 5)Статьи назначения(детализация с/с)
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Сотрудник (МО или Эксп.) 2)Товар 3)!Партии товара! 4)Статьи назначения 5)Статьи назначения(детализация с/с)
                                                                            THEN lpInsertFind_Container (inContainerDescId:= zc_Container_Summ()
                                                                                                       , inParentId:= _tmpItem.ContainerId_Goods
-                                                                                                      , inObjectId:= lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы -- select * from gpSelect_Object_AccountGroup ('2') where Id = zc_Enum_AccountGroup_20000()
-                                                                                                                                                , inAccountDirectionId     := _tmpItem.AccountDirectionId
-                                                                                                                                                , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
-                                                                                                                                                , inInfoMoneyId            := NULL
-                                                                                                                                                , inUserId                 := vbUserId
-                                                                                                                                                 )
+                                                                                                      , inObjectId:= _tmpItemSumm.AccountId
                                                                                                       , inJuridicalId_basis:= _tmpItem.JuridicalId_basis
                                                                                                       , inBusinessId       := _tmpItem.BusinessId
                                                                                                       , inObjectCostDescId := zc_ObjectCost_Basis()
@@ -575,12 +608,7 @@ BEGIN
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Сотрудник (МО или Эксп.) 2)Товар 3)Основные средства(для которого закуплено ТМЦ) 4)Статьи назначения 5)Статьи назначения(детализация с/с)
                                                                            THEN lpInsertFind_Container (inContainerDescId:= zc_Container_Summ()
                                                                                                       , inParentId:= _tmpItem.ContainerId_Goods
-                                                                                                      , inObjectId:= lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы -- select * from gpSelect_Object_AccountGroup ('2') where Id = zc_Enum_AccountGroup_20000()
-                                                                                                                                                , inAccountDirectionId     := _tmpItem.AccountDirectionId
-                                                                                                                                                , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
-                                                                                                                                                , inInfoMoneyId            := NULL
-                                                                                                                                                , inUserId                 := vbUserId
-                                                                                                                                                 )
+                                                                                                      , inObjectId:= _tmpItemSumm.AccountId
                                                                                                       , inJuridicalId_basis:= _tmpItem.JuridicalId_basis
                                                                                                       , inBusinessId       := _tmpItem.BusinessId
                                                                                                       , inObjectCostDescId := zc_ObjectCost_Basis()
@@ -624,12 +652,7 @@ BEGIN
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Сотрудник (МО или Эксп.) 2)Товар 3)!!!Партии товара!!! 4)Виды товаров 5)Статьи назначения 6)Статьи назначения(детализация с/с)
                                                                            THEN lpInsertFind_Container (inContainerDescId:= zc_Container_Summ()
                                                                                                       , inParentId:= _tmpItem.ContainerId_Goods
-                                                                                                      , inObjectId:= lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы -- select * from gpSelect_Object_AccountGroup ('2') where Id = zc_Enum_AccountGroup_20000()
-                                                                                                                                                , inAccountDirectionId     := _tmpItem.AccountDirectionId
-                                                                                                                                                , inInfoMoneyDestinationId := CASE WHEN _tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() THEN zc_InfoMoneyDestination_WorkProgress() ELSE _tmpItem.InfoMoneyDestinationId END
-                                                                                                                                                , inInfoMoneyId            := NULL
-                                                                                                                                                , inUserId                 := vbUserId
-                                                                                                                                                 )
+                                                                                                      , inObjectId:= _tmpItemSumm.AccountId
                                                                                                       , inJuridicalId_basis:= _tmpItem.JuridicalId_basis
                                                                                                       , inBusinessId       := _tmpItem.BusinessId
                                                                                                       , inObjectCostDescId := zc_ObjectCost_Basis()
@@ -672,12 +695,7 @@ BEGIN
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Сотрудник (МО или Эксп.) 2)Товар 3)Статьи назначения 4)Статьи назначения(детализация с/с)
                                                                            ELSE lpInsertFind_Container (inContainerDescId:= zc_Container_Summ()
                                                                                                       , inParentId:= _tmpItem.ContainerId_Goods
-                                                                                                      , inObjectId:= lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы -- select * from gpSelect_Object_AccountGroup ('2') where Id = zc_Enum_AccountGroup_20000()
-                                                                                                                                                , inAccountDirectionId     := _tmpItem.AccountDirectionId
-                                                                                                                                                , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
-                                                                                                                                                , inInfoMoneyId            := NULL
-                                                                                                                                                , inUserId                 := vbUserId
-                                                                                                                                                 )
+                                                                                                      , inObjectId:= _tmpItemSumm.AccountId
                                                                                                       , inJuridicalId_basis:= _tmpItem.JuridicalId_basis
                                                                                                       , inBusinessId       := _tmpItem.BusinessId
                                                                                                       , inObjectCostDescId := zc_ObjectCost_Basis()
@@ -716,58 +734,132 @@ BEGIN
        AND zc_isHistoryCost() = TRUE;
 
      -- формируются Проводки для суммового учета !!!только!!! если есть разница по остатку
-     UPDATE _tmpItemSumm SET MIContainerId = lpInsertUpdate_MovementItemContainer (ioId:= 0
-                                                                                 , inDescId:= zc_MIContainer_Summ()
-                                                                                 , inMovementId:= inMovementId
-                                                                                 , inMovementItemId:= _tmpItemSumm.MovementItemId
-                                                                                 , inParentId:= NULL
-                                                                                 , inContainerId:= _tmpItemSumm.ContainerId
-                                                                                 , inAmount:= _tmpItemSumm.OperSumm
-                                                                                 , inOperDate:= vbOperDate
-                                                                                 , inIsActive:= TRUE
-                                                                                  )
-     WHERE _tmpItemSumm.OperSumm <> 0
-       AND zc_isHistoryCost() = TRUE;
-
-
-     -- формируются Проводки - Прибыль !!!только!!! если есть разница по остатку
-     PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
+       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, _tmpItemSumm.MovementItemId, _tmpItemSumm.ContainerId, 0 AS ParentId, _tmpItemSumm.OperSumm, vbOperDate, TRUE
+       FROM _tmpItemSumm
+       WHERE _tmpItemSumm.OperSumm <> 0
+         AND zc_isHistoryCost() = TRUE;
+     /*PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
                                                  , inDescId:= zc_MIContainer_Summ()
                                                  , inMovementId:= inMovementId
                                                  , inMovementItemId:= _tmpItemSumm.MovementItemId
-                                                 , inParentId:= _tmpItemSumm.MIContainerId -- это связь с суммовым элементом
-                                                 , inContainerId:= lpInsertFind_Container (inContainerDescId:= zc_Container_Summ()
-                                                                                         , inParentId:= NULL
-                                                                                         , inObjectId:= zc_Enum_Account_100301 () -- 100301; "прибыль текущего периода"
-                                                                                         , inJuridicalId_basis:= ContainerLinkObject_JuridicalBasis.ObjectId
-                                                                                         , inBusinessId       := ContainerLinkObject_Business.ObjectId
-                                                                                         , inObjectCostDescId := NULL
-                                                                                         , inObjectCostId     := NULL
-                                                                                         , inDescId_1   := zc_ContainerLinkObject_ProfitLoss()
-                                                                                         , inObjectId_1 := lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := vbProfitLossGroupId
-                                                                                                                                         , inProfitLossDirectionId  := vbProfitLossDirectionId
-                                                                                                                                         , inInfoMoneyDestinationId := lfObject_InfoMoney.InfoMoneyDestinationId
-                                                                                                                                         , inInfoMoneyId            := NULL
-                                                                                                                                         , inUserId                 := vbUserId
-                                                                                                                                          )
-                                                                                          )
-                                                 , inAmount:= -1 * _tmpItemSumm.OperSumm
+                                                 , inParentId:= NULL
+                                                 , inContainerId:= _tmpItemSumm.ContainerId
+                                                 , inAmount:= _tmpItemSumm.OperSumm
+                                                 , inOperDate:= vbOperDate
+                                                 , inIsActive:= TRUE
+                                                  )
+     FROM _tmpItemSumm
+     WHERE _tmpItemSumm.OperSumm <> 0
+       AND zc_isHistoryCost() = TRUE;*/
+
+
+     -- создаем контейнеры для Проводки - Прибыль !!!только!!! если есть разница по остатку
+     UPDATE _tmpItemSumm SET ContainerId_ProfitLoss = _tmpItem_byContainer.ContainerId_ProfitLoss
+     FROM (SELECT lpInsertFind_Container (inContainerDescId:= zc_Container_Summ()
+                                        , inParentId:= NULL
+                                        , inObjectId:= zc_Enum_Account_100301 () -- 100301; "прибыль текущего периода"
+                                        , inJuridicalId_basis:= _tmpItem_byProfitLoss.JuridicalId_basis
+                                        , inBusinessId       := _tmpItem_byProfitLoss.BusinessId
+                                        , inObjectCostDescId := NULL
+                                        , inObjectCostId     := NULL
+                                        , inDescId_1   := zc_ContainerLinkObject_ProfitLoss()
+                                        , inObjectId_1 := _tmpItem_byProfitLoss.ProfitLossId
+                                         ) AS ContainerId_ProfitLoss
+                , _tmpItem_byProfitLoss.ContainerId
+           FROM (SELECT lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := vbProfitLossGroupId
+                                                      , inProfitLossDirectionId  := vbProfitLossDirectionId
+                                                      , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId
+                                                      , inInfoMoneyId            := NULL
+                                                      , inUserId                 := vbUserId
+                                                       ) AS ProfitLossId
+                      , _tmpItem_group.ContainerId
+                      , _tmpItem_group.InfoMoneyDestinationId
+                      , ContainerLinkObject_JuridicalBasis.ObjectId AS JuridicalId_basis
+                      , ContainerLinkObject_Business.ObjectId AS BusinessId
+                 FROM (SELECT lfObject_InfoMoney.InfoMoneyDestinationId
+                            , _tmpItemSumm.ContainerId
+                       FROM _tmpItemSumm
+                            LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
+                                                          ON ContainerLinkObject_InfoMoney.ContainerId = _tmpItemSumm.ContainerId
+                                                         AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+                            LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ContainerLinkObject_InfoMoney.ObjectId
+                       WHERE _tmpItemSumm.OperSumm <> 0
+                       GROUP BY lfObject_InfoMoney.InfoMoneyDestinationId
+                              , _tmpItemSumm.ContainerId
+                      ) AS _tmpItem_group
+                      LEFT JOIN ContainerLinkObject AS ContainerLinkObject_JuridicalBasis
+                                                    ON ContainerLinkObject_JuridicalBasis.ContainerId = _tmpItem_group.ContainerId
+                                                     AND ContainerLinkObject_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
+                      LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Business
+                                                    ON ContainerLinkObject_Business.ContainerId = _tmpItem_group.ContainerId
+                                                   AND ContainerLinkObject_Business.DescId = zc_ContainerLinkObject_Business()
+                ) AS _tmpItem_byProfitLoss
+          ) AS _tmpItem_byContainer
+     WHERE _tmpItemSumm.ContainerId = _tmpItem_byContainer.ContainerId;
+
+     -- формируются Проводки - Прибыль !!!только!!! если есть разница по остатку
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
+       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0, _tmpItem_group.ContainerId_ProfitLoss, 0 AS ParentId, -1 * _tmpItem_group.OperSumm, vbOperDate, FALSE
+       FROM (SELECT _tmpItemSumm.ContainerId_ProfitLoss
+                  , SUM (_tmpItemSumm.OperSumm) AS OperSumm
+             FROM _tmpItemSumm
+             WHERE _tmpItemSumm.OperSumm <> 0
+             GROUP BY _tmpItemSumm.ContainerId_ProfitLoss
+            ) AS _tmpItem_group
+       WHERE zc_isHistoryCost() = TRUE;
+     /*PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
+                                                 , inDescId:= zc_MIContainer_Summ()
+                                                 , inMovementId:= inMovementId
+                                                 , inMovementItemId:= NULL
+                                                 , inParentId:= NULL
+                                                 , inContainerId:= _tmpItem_group.ContainerId_ProfitLoss
+                                                 , inAmount:= -1 * _tmpItem_group.OperSumm
                                                  , inOperDate:= vbOperDate
                                                  , inIsActive:= FALSE
                                                   )
-     FROM _tmpItemSumm
-          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_JuridicalBasis
-                                        ON ContainerLinkObject_JuridicalBasis.ContainerId = _tmpItemSumm.ContainerId
-                                       AND ContainerLinkObject_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
-          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Business
-                                        ON ContainerLinkObject_Business.ContainerId = _tmpItemSumm.ContainerId
-                                       AND ContainerLinkObject_Business.DescId = zc_ContainerLinkObject_Business()
-          LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
-                                        ON ContainerLinkObject_InfoMoney.ContainerId = _tmpItemSumm.ContainerId
-                                       AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-          LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ContainerLinkObject_InfoMoney.ObjectId
-     WHERE _tmpItemSumm.OperSumm <> 0
-       AND zc_isHistoryCost() = TRUE;
+     FROM (SELECT _tmpItemSumm.ContainerId_ProfitLoss
+                , SUM (_tmpItemSumm.OperSumm) AS OperSumm
+           FROM _tmpItemSumm
+           WHERE _tmpItemSumm.OperSumm <> 0
+           GROUP BY _tmpItemSumm.ContainerId_ProfitLoss
+          ) AS _tmpItem_group
+     WHERE zc_isHistoryCost() = TRUE;*/
+
+
+     -- формируются Проводки для отчета (Аналитики: Товар и ОПиУ)
+     PERFORM lpInsertUpdate_MovementItemReport (inMovementId := inMovementId
+                                              , inMovementItemId := _tmpItem_byProfitLoss.MovementItemId
+                                              , inActiveContainerId  := _tmpItem_byProfitLoss.ActiveContainerId
+                                              , inPassiveContainerId := _tmpItem_byProfitLoss.PassiveContainerId
+                                              , inActiveAccountId    := _tmpItem_byProfitLoss.ActiveAccountId
+                                              , inPassiveAccountId   := _tmpItem_byProfitLoss.PassiveAccountId
+                                              , inReportContainerId  := lpInsertFind_ReportContainer (inActiveContainerId  := _tmpItem_byProfitLoss.ActiveContainerId
+                                                                                                    , inPassiveContainerId := _tmpItem_byProfitLoss.PassiveContainerId
+                                                                                                    , inActiveAccountId    := _tmpItem_byProfitLoss.ActiveAccountId
+                                                                                                    , inPassiveAccountId   := _tmpItem_byProfitLoss.PassiveAccountId
+                                                                                                     )
+                                              , inChildReportContainerId := lpInsertFind_ChildReportContainer (inActiveContainerId  := _tmpItem_byProfitLoss.ActiveContainerId
+                                                                                                             , inPassiveContainerId := _tmpItem_byProfitLoss.PassiveContainerId
+                                                                                                             , inActiveAccountId    := _tmpItem_byProfitLoss.ActiveAccountId
+                                                                                                             , inPassiveAccountId   := _tmpItem_byProfitLoss.PassiveAccountId
+                                                                                                             , inAccountKindId_1    := NULL
+                                                                                                             , inContainerId_1      := NULL
+                                                                                                             , inAccountId_1        := NULL
+                                                                                                     )
+                                              , inAmount := _tmpItem_byProfitLoss.OperSumm
+                                              , inOperDate := vbOperDate
+                                               )
+     FROM (SELECT ABS (_tmpItemSumm.OperSumm) AS OperSumm
+                , CASE WHEN _tmpItemSumm.OperSumm > 0 THEN _tmpItemSumm.ContainerId            WHEN _tmpItemSumm.OperSumm < 0 THEN _tmpItemSumm.ContainerId_ProfitLoss END AS ActiveContainerId
+                , CASE WHEN _tmpItemSumm.OperSumm > 0 THEN _tmpItemSumm.ContainerId_ProfitLoss WHEN _tmpItemSumm.OperSumm < 0 THEN _tmpItemSumm.ContainerId            END AS PassiveContainerId
+                , CASE WHEN _tmpItemSumm.OperSumm > 0 THEN _tmpItemSumm.AccountId              WHEN _tmpItemSumm.OperSumm < 0 THEN zc_Enum_Account_100301 ()           END AS ActiveAccountId  -- 100301; "прибыль текущего периода"
+                , CASE WHEN _tmpItemSumm.OperSumm > 0 THEN zc_Enum_Account_100301 ()           WHEN _tmpItemSumm.OperSumm < 0 THEN _tmpItemSumm.AccountId              END AS PassiveAccountId -- 100301; "прибыль текущего периода"
+                , _tmpItemSumm.MovementItemId
+           FROM _tmpItemSumm
+           WHERE _tmpItemSumm.OperSumm <> 0
+           ) AS _tmpItem_byProfitLoss
+     WHERE zc_isHistoryCost() = TRUE;
 
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки

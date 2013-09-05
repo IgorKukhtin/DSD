@@ -562,8 +562,8 @@ BEGIN
            FROM (SELECT _tmpItem.AccountDirectionId, _tmpItem.InfoMoneyDestinationId FROM _tmpItem GROUP BY _tmpItem.AccountDirectionId, _tmpItem.InfoMoneyDestinationId
                 ) AS _tmpItem_group
           ) AS _tmpItem_byAccount
-      WHERE _tmpItem.AccountDirectionId = _tmpItem_byAccount.AccountDirectionId
-        AND _tmpItem.InfoMoneyDestinationId = _tmpItem_byAccount.InfoMoneyDestinationId;
+     WHERE _tmpItem.AccountDirectionId = _tmpItem_byAccount.AccountDirectionId
+       AND _tmpItem.InfoMoneyDestinationId = _tmpItem_byAccount.InfoMoneyDestinationId;
 
      -- 1.2.1. определяется ContainerId_Summ для проводок по суммовому учету + формируется Аналитика <элемент с/с>
      UPDATE _tmpItem SET ContainerId_Summ =                        CASE WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
