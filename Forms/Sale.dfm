@@ -4,8 +4,9 @@ inherited SaleForm: TSaleForm
   ClientWidth = 1074
   KeyPreview = True
   PopupMenu = PopupMenu
+  ExplicitLeft = -302
   ExplicitWidth = 1090
-  ExplicitHeight = 481
+  ExplicitHeight = 478
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -142,16 +143,15 @@ inherited SaleForm: TSaleForm
   end
   object cxPageControl1: TcxPageControl
     Left = 0
-    Top = 133
+    Top = 131
     Width = 1074
-    Height = 310
+    Height = 312
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 306
-    ClientRectLeft = 4
-    ClientRectRight = 1070
+    ClientRectBottom = 312
+    ClientRectRight = 1074
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -159,8 +159,8 @@ inherited SaleForm: TSaleForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1066
-        Height = 282
+        Width = 1074
+        Height = 288
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -248,13 +248,23 @@ inherited SaleForm: TSaleForm
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             HeaderAlignmentHorz = taCenter
-            Width = 80
+            Width = 60
+          end
+          object colAmount_byChangePercent: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+            DataBinding.FieldName = 'Amount_byChangePercent'
+            Width = 60
           end
           object colAmountPartner: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1082#1086#1085#1090#1088'.'
             DataBinding.FieldName = 'AmountPartner'
             HeaderAlignmentHorz = taCenter
-            Width = 80
+            Width = 60
+          end
+          object colChangePercentAmount: TcxGridDBColumn
+            Caption = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
+            DataBinding.FieldName = 'ChangePercentAmount'
+            Width = 45
           end
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -294,8 +304,8 @@ inherited SaleForm: TSaleForm
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 1066
-        Height = 282
+        Width = 1074
+        Height = 288
         Align = alClient
         TabOrder = 0
         object cxGridEntryDBTableView: TcxGridDBTableView
@@ -594,7 +604,7 @@ inherited SaleForm: TSaleForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar: TdxBar
       Caption = 'Custom'

@@ -3,8 +3,9 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1087#1086' '#1094#1077#1085#1077' '
   ClientHeight = 427
   ClientWidth = 1019
-  ExplicitWidth = 1027
-  ExplicitHeight = 454
+  ExplicitLeft = -230
+  ExplicitWidth = 1035
+  ExplicitHeight = 462
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -105,10 +106,14 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         Width = 140
       end
       object colTotalCount: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086
+        Caption = #1050#1086#1083'-'#1074#1086' ('#1086#1090#1087#1088#1072#1074#1083#1077#1085#1086')'
         DataBinding.FieldName = 'TotalCount'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
+      end
+      object colTotalCountPartner: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1086#1083#1091#1095#1077#1085#1086')'
+        DataBinding.FieldName = 'TotalCountPartner'
       end
       object colTotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1087#1086#1089#1090#1072#1074#1097'.'
@@ -260,8 +265,8 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

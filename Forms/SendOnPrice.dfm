@@ -5,7 +5,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
   KeyPreview = True
   PopupMenu = PopupMenu
   ExplicitWidth = 940
-  ExplicitHeight = 434
+  ExplicitHeight = 431
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -73,16 +73,15 @@ inherited SendOnPriceForm: TSendOnPriceForm
   end
   object cxPageControl1: TcxPageControl
     Left = 0
-    Top = 112
+    Top = 110
     Width = 924
-    Height = 284
+    Height = 286
     Align = alClient
     TabOrder = 5
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 280
-    ClientRectLeft = 4
-    ClientRectRight = 920
+    ClientRectBottom = 286
+    ClientRectRight = 924
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -90,8 +89,8 @@ inherited SendOnPriceForm: TSendOnPriceForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 916
-        Height = 256
+        Width = 924
+        Height = 262
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -183,14 +182,24 @@ inherited SendOnPriceForm: TSendOnPriceForm
             DataBinding.FieldName = 'Amount'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 60
+          end
+          object colAmount_byChangePercent: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+            DataBinding.FieldName = 'Amount_byChangePercent'
+            Width = 60
           end
           object colAmountPartner: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1082#1086#1085#1090#1088'.'
             DataBinding.FieldName = 'AmountPartner'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 60
+          end
+          object colChangePercentAmount: TcxGridDBColumn
+            Caption = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
+            DataBinding.FieldName = 'ChangePercentAmount'
+            Width = 40
           end
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -227,6 +236,9 @@ inherited SendOnPriceForm: TSendOnPriceForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -469,7 +481,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar: TdxBar
       Caption = 'Custom'
@@ -897,8 +909,10 @@ inherited SendOnPriceForm: TSendOnPriceForm
     Top = 72
   end
   object DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <>
     SortImages = dmMain.SortImageList
     View = cxGridDBTableView
+    ActionItemList = <>
     Left = 312
     Top = 120
   end
@@ -907,8 +921,10 @@ inherited SendOnPriceForm: TSendOnPriceForm
     Top = 176
   end
   object EntryDBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <>
     SortImages = dmMain.SortImageList
     View = cxGridEntryDBTableView
+    ActionItemList = <>
     Left = 392
     Top = 128
   end

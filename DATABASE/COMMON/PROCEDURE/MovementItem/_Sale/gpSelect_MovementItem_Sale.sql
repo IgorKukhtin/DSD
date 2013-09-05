@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Sale(
     IN inShowAll     Boolean      , -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat, AmountPartner TFloat, ChangePercentAmount TFloat
+RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat, Amount_byChangePercent TFloat, AmountPartner TFloat, ChangePercentAmount TFloat
              , Price TFloat, CountForPrice TFloat, HeadCount TFloat
              , PartionGoods TVarChar, GoodsKindName  TVarChar
              , AssetId Integer, AssetName TVarChar
@@ -35,6 +35,7 @@ BEGIN
            , Object_Goods.ValueData   AS GoodsName
 
            , CAST (NULL AS TFloat) AS Amount
+           , CAST (NULL AS TFloat) AS Amount_byChangePercent
            , CAST (NULL AS TFloat) AS AmountPartner
            , CAST (NULL AS TFloat) AS ChangePercentAmount
 
@@ -82,7 +83,9 @@ BEGIN
            , Object_Goods.Id          AS GoodsId
            , Object_Goods.ObjectCode  AS GoodsCode
            , Object_Goods.ValueData   AS GoodsName
+
            , MovementItem.Amount
+           , CAST (MovementItem.Amount * (1 - COALESCE (MIFloat_ChangePercentAmount.ValueData, 0) / 100) AS TFloat) AS Amount_byChangePercent
            , MIFloat_AmountPartner.ValueData       AS AmountPartner
            , MIFloat_ChangePercentAmount.ValueData AS ChangePercentAmount
 
@@ -150,8 +153,11 @@ BEGIN
            , Object_Goods.Id          AS GoodsId
            , Object_Goods.ObjectCode  AS GoodsCode
            , Object_Goods.ValueData   AS GoodsName
+
            , MovementItem.Amount
-           , MIFloat_AmountPartner.ValueData   AS AmountPartner
+           , CAST (MovementItem.Amount * (1 - COALESCE (MIFloat_ChangePercentAmount.ValueData, 0) / 100) AS TFloat) AS Amount_byChangePercent
+           , MIFloat_AmountPartner.ValueData       AS AmountPartner
+           , MIFloat_ChangePercentAmount.ValueData AS ChangePercentAmount
 
            , MIFloat_Price.ValueData AS Price
            , MIFloat_CountForPrice.ValueData AS CountForPrice
@@ -177,11 +183,13 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                         ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                        AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentAmount
+                                        ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
+                                       AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
 
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
-         
             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
@@ -226,5 +234,5 @@ ALTER FUNCTION gpSelect_MovementItem_Sale (Integer, Boolean, TVarChar) OWNER TO 
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_Sale (inMovementId:= 25173, inShowAll:= TRUE, inSession:= '2')
--- SELECT * FROM gpSelect_MovementItem_Sale (inMovementId:= 25173, inShowAll:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_Sale (inMovementId:= 4229, inShowAll:= TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_Sale (inMovementId:= 4229, inShowAll:= FALSE, inSession:= '2')

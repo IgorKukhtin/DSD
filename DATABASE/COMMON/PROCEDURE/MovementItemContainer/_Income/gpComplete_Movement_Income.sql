@@ -454,11 +454,19 @@ BEGIN
 
      -- заполняем таблицу - элементы по контрагенту, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem_SummPartner (MovementId, OperDate, JuridicalId_From, isCorporate, PersonalId_From, PaidKindId, ContractId, ContainerId, OperSumm_Partner, AccountId, InfoMoneyDestinationId, InfoMoneyId, InfoMoneyDestinationId_isCorporate, InfoMoneyId_isCorporate, JuridicalId_basis, BusinessId, PartionMovementId)
-        SELECT MovementId, OperDate, JuridicalId_From, isCorporate, PersonalId_From, PaidKindId, ContractId, 0 AS ContainerId, SUM (OperSumm_Partner), 0 AS AccountId, InfoMoneyDestinationId, InfoMoneyId, InfoMoneyDestinationId_isCorporate, InfoMoneyId_isCorporate, JuridicalId_basis, BusinessId, PartionMovementId FROM _tmpItem WHERE OperSumm_Partner <> 0 GROUP BY MovementId, OperDate, JuridicalId_From, isCorporate, PersonalId_From, PaidKindId, ContractId, InfoMoneyDestinationId, InfoMoneyId, InfoMoneyDestinationId_isCorporate, InfoMoneyId_isCorporate, JuridicalId_basis, BusinessId, PartionMovementId;
+        SELECT MovementId, OperDate, JuridicalId_From, isCorporate, PersonalId_From, PaidKindId, ContractId, 0 AS ContainerId, SUM (OperSumm_Partner), 0 AS AccountId, InfoMoneyDestinationId, InfoMoneyId, InfoMoneyDestinationId_isCorporate, InfoMoneyId_isCorporate, JuridicalId_basis, BusinessId, PartionMovementId
+        FROM _tmpItem
+        WHERE OperSumm_Partner <> 0
+          AND zc_isHistoryCost() = TRUE
+        GROUP BY MovementId, OperDate, JuridicalId_From, isCorporate, PersonalId_From, PaidKindId, ContractId, InfoMoneyDestinationId, InfoMoneyId, InfoMoneyDestinationId_isCorporate, InfoMoneyId_isCorporate, JuridicalId_basis, BusinessId, PartionMovementId;
 
      -- заполняем таблицу - элементы по заготовителю, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem_SummPacker (MovementId, OperDate, PersonalId_Packer, ContainerId, OperSumm_Packer, AccountId, InfoMoneyDestinationId, InfoMoneyId, JuridicalId_basis, BusinessId)
-        SELECT MovementId, OperDate, PersonalId_Packer, 0 AS ContainerId, SUM (OperSumm_Packer), 0 AS AccountId, InfoMoneyDestinationId, InfoMoneyId, JuridicalId_basis, BusinessId FROM _tmpItem WHERE OperSumm_Packer <> 0 GROUP BY MovementId, OperDate, PersonalId_Packer, InfoMoneyDestinationId, InfoMoneyId, JuridicalId_basis, BusinessId;
+        SELECT MovementId, OperDate, PersonalId_Packer, 0 AS ContainerId, SUM (OperSumm_Packer), 0 AS AccountId, InfoMoneyDestinationId, InfoMoneyId, JuridicalId_basis, BusinessId
+        FROM _tmpItem
+        WHERE OperSumm_Packer <> 0
+          AND zc_isHistoryCost() = TRUE
+        GROUP BY MovementId, OperDate, PersonalId_Packer, InfoMoneyDestinationId, InfoMoneyId, JuridicalId_basis, BusinessId;
 
 
      -- для теста
@@ -559,11 +567,12 @@ BEGIN
                                               ) AS AccountId
                 , _tmpItem_group.AccountDirectionId
                 , _tmpItem_group.InfoMoneyDestinationId
-           FROM (SELECT _tmpItem.AccountDirectionId, _tmpItem.InfoMoneyDestinationId FROM _tmpItem GROUP BY _tmpItem.AccountDirectionId, _tmpItem.InfoMoneyDestinationId
+           FROM (SELECT _tmpItem.AccountDirectionId, _tmpItem.InfoMoneyDestinationId FROM _tmpItem WHERE zc_isHistoryCost() = TRUE GROUP BY _tmpItem.AccountDirectionId, _tmpItem.InfoMoneyDestinationId
                 ) AS _tmpItem_group
           ) AS _tmpItem_byAccount
      WHERE _tmpItem.AccountDirectionId = _tmpItem_byAccount.AccountDirectionId
-       AND _tmpItem.InfoMoneyDestinationId = _tmpItem_byAccount.InfoMoneyDestinationId;
+       AND _tmpItem.InfoMoneyDestinationId = _tmpItem_byAccount.InfoMoneyDestinationId
+       AND zc_isHistoryCost() = TRUE;
 
      -- 1.2.1. определяется ContainerId_Summ для проводок по суммовому учету + формируется Аналитика <элемент с/с>
      UPDATE _tmpItem SET ContainerId_Summ =                        CASE WHEN InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()

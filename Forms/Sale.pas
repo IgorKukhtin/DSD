@@ -130,6 +130,8 @@ type
     dsdGuidesPersonal: TdsdGuides;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
+    colAmount_byChangePercent: TcxGridDBColumn;
+    colChangePercentAmount: TcxGridDBColumn;
   private
   public
   end;

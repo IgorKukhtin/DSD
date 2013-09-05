@@ -81,6 +81,7 @@ type
     dxBarStatic: TdxBarStatic;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
+    colTotalCountPartner: TcxGridDBColumn;
   private
   public
   end;

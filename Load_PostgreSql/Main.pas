@@ -3515,7 +3515,7 @@ begin
         Add('select BillItems.Id as ObjectId');
         Add('     , Bill.Id_Postgres as MovementId_Postgres');
         Add('     , Bill.BillDate');
-        Add('     , Bill.InvNumber');
+        Add('     , Bill.BillNumber');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , BillItems.OperCount as Amount');
         Add('     , Amount as AmountPartner');
@@ -3731,7 +3731,7 @@ begin
         Add('select BillItems.Id as ObjectId');
         Add('     , isnull (Bill_PartionStr_MB.Id_Postgres, Bill.Id_Postgres) as MovementId_Postgres');
         Add('     , Bill.BillDate');
-        Add('     , Bill.InvNumber');
+        Add('     , Bill.BillNumber');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , case when Bill_PartionStr_MB.Id is null then BillItems.OperCount else 0 end as Amount');
         Add('     , Amount as AmountPartner');
@@ -4004,7 +4004,7 @@ begin
         Add('select BillItems.Id as ObjectId');
         Add('     , Bill.Id_Postgres as MovementId_Postgres');
         Add('     , Bill.BillDate');
-        Add('     , Bill.InvNumber');
+        Add('     , Bill.BillNumber');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , -BillItems.OperCount as Amount');
         Add('     , BillItems.OperCount_Upakovka as inCount');
@@ -4318,10 +4318,14 @@ begin
         Add('select BillItems.Id as ObjectId');
         Add('     , Bill.Id_Postgres as MovementId_Postgres');
         Add('     , Bill.BillDate');
-        Add('     , Bill.InvNumber');
+        Add('     , Bill.BillNumber');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
-        Add('     , -BillItems.OperCount as Amount');
-        Add('     , Amount as AmountPartner');
+        Add('     , case when isnull(tmpBI_byDiscountWeight.DiscountWeight,0)<>0'
+           +'               then -1 * BillItems.OperCount / (1 - tmpBI_byDiscountWeight.DiscountWeight/100)'
+           +'            else -1 * BillItems.OperCount'
+           +'       end as Amount');
+        Add('     , -1 * BillItems.OperCount as AmountPartner');
+        Add('     , isnull(tmpBI_byDiscountWeight.DiscountWeight,0) as ChangePercentAmount');
         Add('     , BillItems.OperPrice as Price');
         Add('     , 1 as CountForPrice');
         Add('     , BillItems.OperCount_sh as HeadCount');
@@ -4339,6 +4343,23 @@ begin
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
         Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+
+        Add('     left outer join (select Bill.ToId, BillItems.GoodsPropertyId, BillItems.KindPackageId, max (isnull(ScaleHistory.DiscountWeight,ScaleHistory_byObvalka.DiscountWeight)) as DiscountWeight'
+           +'                      from dba.Bill'
+           +'                           left outer join dba.isUnit as isUnit_to on isUnit_to.UnitId = Bill.ToID'
+           +'                           left outer join dba.BillItems on BillItems.BillId=Bill.Id'
+           +'                           left outer join dba.ScaleHistory on ScaleHistory.Id = BillItems.ScaleHistoryId'
+           +'                           left outer join dba.ScaleHistory_byObvalka on ScaleHistory_byObvalka.Id = BillItems.ScaleHistoryId_byObvalka'
+           +'                      where  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)+2)
+           +'                         and Bill.BillKind in (zc_bkSaleToClient(), zc_bkSendUnitToUnit())'
+           +'                         and BillItems.OperCount <> 0'
+           +'                         and isnull(ScaleHistory.DiscountWeight,ScaleHistory_byObvalka.DiscountWeight) <> 0'
+           +'                         and isUnit_to.UnitId is null'
+           +'                      group by Bill.ToId, BillItems.GoodsPropertyId, BillItems.KindPackageId'
+           +'                      )as tmpBI_byDiscountWeight on tmpBI_byDiscountWeight.ToId = Bill.ToId'
+           +'                                                and tmpBI_byDiscountWeight.GoodsPropertyId = BillItems.GoodsPropertyId'
+           +'                                                and tmpBI_byDiscountWeight.KindPackageId = BillItems.KindPackageId');
+
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkSendUnitToUnit())'
 
@@ -4581,10 +4602,14 @@ begin
         Add('select BillItems.Id as ObjectId');
         Add('     , Bill.Id_Postgres as MovementId_Postgres');
         Add('     , Bill.BillDate');
-        Add('     , Bill.InvNumber');
+        Add('     , Bill.BillNumber');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
-        Add('     , -BillItems.OperCount as Amount');
-        Add('     , Amount as AmountPartner');
+        Add('     , case when isnull(tmpBI_byDiscountWeight.DiscountWeight,0)<>0'
+           +'               then -1 * BillItems.OperCount / (1 - tmpBI_byDiscountWeight.DiscountWeight/100)'
+           +'            else -1 * BillItems.OperCount'
+           +'       end as Amount');
+        Add('     , -1 * BillItems.OperCount as AmountPartner');
+        Add('     , isnull(tmpBI_byDiscountWeight.DiscountWeight,0) as ChangePercentAmount');
         Add('     , BillItems.OperPrice as Price');
         Add('     , 1 as CountForPrice');
         Add('     , BillItems.OperCount_sh as HeadCount');
@@ -4602,6 +4627,23 @@ begin
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
         Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+
+        Add('     left outer join (select Bill.ToId, BillItems.GoodsPropertyId, BillItems.KindPackageId, max (isnull(ScaleHistory.DiscountWeight,ScaleHistory_byObvalka.DiscountWeight)) as DiscountWeight'
+           +'                      from dba.Bill'
+           +'                           left outer join dba.isUnit as isUnit_to on isUnit_to.UnitId = Bill.ToID'
+           +'                           left outer join dba.BillItems on BillItems.BillId=Bill.Id'
+           +'                           left outer join dba.ScaleHistory on ScaleHistory.Id = BillItems.ScaleHistoryId'
+           +'                           left outer join dba.ScaleHistory_byObvalka on ScaleHistory_byObvalka.Id = BillItems.ScaleHistoryId_byObvalka'
+           +'                      where  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)+2)
+           +'                         and Bill.BillKind in (zc_bkSaleToClient(), zc_bkSendUnitToUnit())'
+           +'                         and BillItems.OperCount <> 0'
+           +'                         and isnull(ScaleHistory.DiscountWeight,ScaleHistory_byObvalka.DiscountWeight) <> 0'
+           +'                         and isUnit_to.UnitId is null'
+           +'                      group by Bill.ToId, BillItems.GoodsPropertyId, BillItems.KindPackageId'
+           +'                      )as tmpBI_byDiscountWeight on tmpBI_byDiscountWeight.ToId = Bill.ToId'
+           +'                                                and tmpBI_byDiscountWeight.GoodsPropertyId = BillItems.GoodsPropertyId'
+           +'                                                and tmpBI_byDiscountWeight.KindPackageId = BillItems.KindPackageId');
+
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkSendUnitToUnit())'
 // +' and Bill.Id_Postgres=3915'
@@ -4826,16 +4868,20 @@ begin
         Add('     , isnull(Bill_pg.BillNumber,Bill.BillNumber) as BillNumber');
         Add('     , isnull(Bill_pg.Id_Postgres,Bill.Id_Postgres) as MovementId_Postgres');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
-        Add('     , -BillItems.OperCount as Amount');
+        Add('     , case when isnull(tmpBI_byDiscountWeight.DiscountWeight,0)<>0'
+           +'               then -1 * BillItems.OperCount / (1 - tmpBI_byDiscountWeight.DiscountWeight/100)'
+           +'            else -1 * BillItems.OperCount'
+           +'       end as Amount');
         Add('     , case when fBill.BillId_byLoad is not null or fBill_two.BillId_byLoad is not null or fBillItems.BillItemsId_byLoad is not null'
            +'               then case when BillItems.GoodsPropertyId = isnull(GoodsProperty_Detail.GoodsPropertyId,0)'
            +'                          and (BillItems.KindPackageId = isnull(GoodsProperty_Detail.KindPackageId,0) or isnull(fBillItems.GoodsPropertyId,0)=1921)'
            +'                          and BillItems.OperPrice = isnull(fBillItems.OperPrice,0)'
-           +'                            then isnull(-fBillItems.OperCount,0)'
+           +'                            then isnull(-1 * fBillItems.OperCount,0)'
            +'                         else 0'
            +'                    end'
-           +'            else Amount'
+           +'            else -1 * BillItems.OperCount'
            +'       end as AmountPartner');
+        Add('     , isnull(tmpBI_byDiscountWeight.DiscountWeight,0) as ChangePercentAmount');
         Add('     , BillItems.OperPrice as Price');
         Add('     , 1 as CountForPrice');
         Add('     , BillItems.OperCount_sh as HeadCount');
@@ -4879,6 +4925,22 @@ begin
         Add('                                                     and fGoodsProperty_Detail_byLoad.KindPackageId = fBillItems.KindPackageId');
         Add('     left outer join dba.GoodsProperty_Detail on GoodsProperty_Detail.Id = fGoodsProperty_Detail_byLoad.Id_byLoad');
 
+        Add('     left outer join (select Bill.ToId, BillItems.GoodsPropertyId, BillItems.KindPackageId, max (isnull(ScaleHistory.DiscountWeight,ScaleHistory_byObvalka.DiscountWeight)) as DiscountWeight'
+           +'                      from dba.Bill'
+           +'                           left outer join dba.isUnit as isUnit_to on isUnit_to.UnitId = Bill.ToID'
+           +'                           left outer join dba.BillItems on BillItems.BillId=Bill.Id'
+           +'                           left outer join dba.ScaleHistory on ScaleHistory.Id = BillItems.ScaleHistoryId'
+           +'                           left outer join dba.ScaleHistory_byObvalka on ScaleHistory_byObvalka.Id = BillItems.ScaleHistoryId_byObvalka'
+           +'                      where  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)+2)
+           +'                         and Bill.BillKind in (zc_bkSaleToClient(), zc_bkSendUnitToUnit())'
+           +'                         and BillItems.OperCount <> 0'
+           +'                         and isnull(ScaleHistory.DiscountWeight,ScaleHistory_byObvalka.DiscountWeight) <> 0'
+           +'                         and isUnit_to.UnitId is null'
+           +'                      group by Bill.ToId, BillItems.GoodsPropertyId, BillItems.KindPackageId'
+           +'                      )as tmpBI_byDiscountWeight on tmpBI_byDiscountWeight.ToId = Bill.ToId'
+           +'                                                and tmpBI_byDiscountWeight.GoodsPropertyId = BillItems.GoodsPropertyId'
+           +'                                                and tmpBI_byDiscountWeight.KindPackageId = BillItems.KindPackageId');
+
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
@@ -4909,8 +4971,9 @@ begin
         Add('     , Bill.BillNumber as BillNumber');
         Add('     , isnull(Bill_find_two.Id_Postgres, isnull(Bill_find.Id_Postgres, Bill.Id_Postgres)) as MovementId_Postgres');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
-        Add('     , case when Bill.FromId=5 then 0 else -BillItems.OperCount end as Amount');
-        Add('     , -BillItems.OperCount as AmountPartner');
+        Add('     , case when Bill.FromId=5 then 0 else -1* BillItems.OperCount end as Amount');
+        Add('     , -1 * BillItems.OperCount as AmountPartner');
+        Add('     , 0 as ChangePercentAmount');
         Add('     , BillItems.OperPrice as Price');
         Add('     , 1 as CountForPrice');
         Add('     , BillItems.OperCount_sh as HeadCount');
@@ -4996,6 +5059,7 @@ begin
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
              toStoredProc.Params.ParamByName('inAmountPartner').Value:=FieldByName('AmountPartner').AsFloat;
+             toStoredProc.Params.ParamByName('inChangePercentAmount').Value:=FieldByName('ChangePercentAmount').AsFloat;
              toStoredProc.Params.ParamByName('inPrice').Value:=FieldByName('Price').AsFloat;
              toStoredProc.Params.ParamByName('inCountForPrice').Value:=FieldByName('CountForPrice').AsFloat;
              toStoredProc.Params.ParamByName('inHeadCount').Value:=FieldByName('HeadCount').AsFloat;
@@ -5197,7 +5261,7 @@ begin
         Add('select BillItems.Id as ObjectId');
         Add('     , Bill.Id_Postgres as MovementId_Postgres');
         Add('     , Bill.BillDate');
-        Add('     , Bill.InvNumber');
+        Add('     , Bill.BillNumber');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , BillItems.OperCount as Amount');
         Add('     , isnull(BillItems.isClosePartion,zc_rvNo()) as PartionClose');
@@ -5298,7 +5362,7 @@ begin
         Add('select BillItemsReceipt.Id as ObjectId');
         Add('     , Bill.Id_Postgres as MovementId_Postgres');
         Add('     , Bill.BillDate');
-        Add('     , Bill.InvNumber');
+        Add('     , Bill.BillNumber');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , -BillItemsReceipt.OperReceiptCount as Amount');
         Add('     , BillItems.Id_Postgres as ParentId_Postgres');
@@ -5547,7 +5611,7 @@ begin
         Add('select BillItems.Id as ObjectId');
         Add('     , Bill.Id_Postgres as MovementId_Postgres');
         Add('     , Bill.BillDate');
-        Add('     , Bill.InvNumber');
+        Add('     , Bill.BillNumber');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , -BillItems.OperCount as Amount');
         Add('     , BillItems.OperCount_sh as HeadCount');
@@ -5624,7 +5688,7 @@ begin
         Add('select BillItems.Id as ObjectId');
         Add('     , Bill.Id_Postgres as MovementId_Postgres');
         Add('     , Bill.BillDate');
-        Add('     , Bill.InvNumber');
+        Add('     , Bill.BillNumber');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , BillItems.OperCount as Amount');
         Add('     , 0 as ParentId_Postgres');

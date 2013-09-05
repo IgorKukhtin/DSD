@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_SendOnPrice(
     IN inShowAll     Boolean      , -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat, AmountPartner TFloat
+RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat, Amount_byChangePercent TFloat, AmountPartner TFloat, ChangePercentAmount TFloat
              , Price TFloat, CountForPrice TFloat,  HeadCount TFloat
              , PartionGoods TVarChar, GoodsKindName  TVarChar
              , AmountSumm TFloat, isErased Boolean
@@ -29,8 +29,11 @@ BEGIN
            , Object_Goods.Id          AS GoodsId
            , Object_Goods.ObjectCode  AS GoodsCode
            , Object_Goods.ValueData   AS GoodsName
+
            , CAST (NULL AS TFloat) AS Amount
+           , CAST (NULL AS TFloat) AS Amount_byChangePercent
            , CAST (NULL AS TFloat) AS AmountPartner
+           , CAST (NULL AS TFloat) AS ChangePercentAmount
 
            , CAST (NULL AS TFloat) AS Price
            , CAST (NULL AS TFloat) AS CountForPrice
@@ -65,8 +68,11 @@ BEGIN
            , Object_Goods.Id          AS GoodsId
            , Object_Goods.ObjectCode  AS GoodsCode
            , Object_Goods.ValueData   AS GoodsName
+
            , MovementItem.Amount
-           , MIFloat_AmountPartner.ValueData   AS AmountPartner
+           , CAST (MovementItem.Amount * (1 - COALESCE (MIFloat_ChangePercentAmount.ValueData, 0) / 100) AS TFloat) AS Amount_byChangePercent
+           , MIFloat_AmountPartner.ValueData       AS AmountPartner
+           , MIFloat_ChangePercentAmount.ValueData AS ChangePercentAmount
 
            , MIFloat_Price.ValueData AS Price
            , MIFloat_CountForPrice.ValueData AS CountForPrice
@@ -89,6 +95,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                         ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                        AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentAmount
+                                        ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
+                                       AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
 
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -121,8 +130,11 @@ BEGIN
            , Object_Goods.Id          AS GoodsId
            , Object_Goods.ObjectCode  AS GoodsCode
            , Object_Goods.ValueData   AS GoodsName
+
            , MovementItem.Amount
-           , MIFloat_AmountPartner.ValueData   AS AmountPartner
+           , CAST (MovementItem.Amount * (1 - COALESCE (MIFloat_ChangePercentAmount.ValueData, 0) / 100) AS TFloat) AS Amount_byChangePercent
+           , MIFloat_AmountPartner.ValueData       AS AmountPartner
+           , MIFloat_ChangePercentAmount.ValueData AS ChangePercentAmount
 
            , MIFloat_Price.ValueData AS Price
            , MIFloat_CountForPrice.ValueData AS CountForPrice
@@ -145,11 +157,13 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                         ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                        AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentAmount
+                                        ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
+                                       AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
 
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
-         
             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
@@ -182,7 +196,7 @@ ALTER FUNCTION gpSelect_MovementItem_SendOnPrice (Integer, Boolean, TVarChar) OW
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 
+ 05.09.13                                        * add ChangePercentAmount
  15.07.13         * SendOnPrice              
  12.07.13         *
 

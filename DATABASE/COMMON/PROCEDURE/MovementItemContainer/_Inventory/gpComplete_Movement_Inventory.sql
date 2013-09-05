@@ -525,6 +525,7 @@ BEGIN
               FROM _tmpRemainsSumm
                    LEFT JOIN _tmpRemainsCount ON _tmpRemainsCount.ContainerId_Goods = _tmpRemainsSumm.ContainerId_Goods
              ) AS _tmp
+        WHERE  zc_isHistoryCost() = TRUE
         GROUP BY _tmp.MovementItemId
                , _tmp.ContainerId
                , _tmp.AccountId;
@@ -550,7 +551,6 @@ BEGIN
                       FROM _tmpItem
                            JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId
                                             AND _tmpItemSumm.OperSumm <> 0 AND _tmpItemSumm.ContainerId = 0
-                                            AND zc_isHistoryCost() = TRUE 
                       GROUP BY _tmpItem.AccountDirectionId
                              , _tmpItem.InfoMoneyDestinationId
                              , CASE WHEN _tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() THEN zc_InfoMoneyDestination_WorkProgress() ELSE _tmpItem.InfoMoneyDestinationId END
@@ -559,8 +559,7 @@ BEGIN
                                       AND _tmpItem.InfoMoneyDestinationId = _tmpItem_byAccount.InfoMoneyDestinationId
      WHERE _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId
        AND _tmpItemSumm.OperSumm <> 0
-       AND _tmpItemSumm.ContainerId = 0
-       AND zc_isHistoryCost() = TRUE;
+       AND _tmpItemSumm.ContainerId = 0;
 
      -- создаем контейнеры для суммового учета + Аналитика <элемент с/с>, причем !!!только!!! когда ContainerId=0 и !!!есть!!! разница по остатку
      UPDATE _tmpItemSumm SET ContainerId                         = CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
@@ -730,15 +729,13 @@ BEGIN
      FROM _tmpItem
      WHERE _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId
        AND _tmpItemSumm.OperSumm <> 0
-       AND _tmpItemSumm.ContainerId = 0
-       AND zc_isHistoryCost() = TRUE;
+       AND _tmpItemSumm.ContainerId = 0;
 
      -- формируются Проводки для суммового учета !!!только!!! если есть разница по остатку
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
        SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, _tmpItemSumm.MovementItemId, _tmpItemSumm.ContainerId, 0 AS ParentId, _tmpItemSumm.OperSumm, vbOperDate, TRUE
        FROM _tmpItemSumm
-       WHERE _tmpItemSumm.OperSumm <> 0
-         AND zc_isHistoryCost() = TRUE;
+       WHERE _tmpItemSumm.OperSumm <> 0;
      /*PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
                                                  , inDescId:= zc_MIContainer_Summ()
                                                  , inMovementId:= inMovementId
@@ -750,8 +747,7 @@ BEGIN
                                                  , inIsActive:= TRUE
                                                   )
      FROM _tmpItemSumm
-     WHERE _tmpItemSumm.OperSumm <> 0
-       AND zc_isHistoryCost() = TRUE;*/
+     WHERE _tmpItemSumm.OperSumm <> 0;*/
 
 
      -- создаем контейнеры для Проводки - Прибыль !!!только!!! если есть разница по остатку
@@ -807,7 +803,7 @@ BEGIN
              WHERE _tmpItemSumm.OperSumm <> 0
              GROUP BY _tmpItemSumm.ContainerId_ProfitLoss
             ) AS _tmpItem_group
-       WHERE zc_isHistoryCost() = TRUE;
+       ;
      /*PERFORM lpInsertUpdate_MovementItemContainer (ioId:= 0
                                                  , inDescId:= zc_MIContainer_Summ()
                                                  , inMovementId:= inMovementId
@@ -823,8 +819,7 @@ BEGIN
            FROM _tmpItemSumm
            WHERE _tmpItemSumm.OperSumm <> 0
            GROUP BY _tmpItemSumm.ContainerId_ProfitLoss
-          ) AS _tmpItem_group
-     WHERE zc_isHistoryCost() = TRUE;*/
+          ) AS _tmpItem_group;*/
 
 
      -- формируются Проводки для отчета (Аналитики: Товар и ОПиУ)
@@ -859,7 +854,7 @@ BEGIN
            FROM _tmpItemSumm
            WHERE _tmpItemSumm.OperSumm <> 0
            ) AS _tmpItem_byProfitLoss
-     WHERE zc_isHistoryCost() = TRUE;
+     ;
 
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
