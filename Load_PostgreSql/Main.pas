@@ -4356,9 +4356,11 @@ begin
            +'                         and isnull(ScaleHistory.DiscountWeight,ScaleHistory_byObvalka.DiscountWeight) <> 0'
            +'                         and isUnit_to.UnitId is null'
            +'                      group by Bill.ToId, BillItems.GoodsPropertyId, BillItems.KindPackageId'
-           +'                      )as tmpBI_byDiscountWeight on tmpBI_byDiscountWeight.ToId = Bill.ToId'
-           +'                                                and tmpBI_byDiscountWeight.GoodsPropertyId = BillItems.GoodsPropertyId'
-           +'                                                and tmpBI_byDiscountWeight.KindPackageId = BillItems.KindPackageId');
+           +'                      )as tmpBI_byDiscountWeight on tmpBI_byDiscountWeight.GoodsPropertyId = GoodsProperty.Id'
+           +'                                                and tmpBI_byDiscountWeight.ToId = UnitTo.Id'
+           +'                                                and tmpBI_byDiscountWeight.KindPackageId = BillItems.KindPackageId'
+           +'                                                and 1=1'
+           );
 
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkSendUnitToUnit())'
@@ -4397,6 +4399,7 @@ begin
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, '');
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmountPartner',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inChangePercentAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inPrice',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inCountForPrice',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inHeadCount',ftFloat,ptInput, 0);
@@ -4414,6 +4417,7 @@ begin
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
              toStoredProc.Params.ParamByName('inAmountPartner').Value:=FieldByName('AmountPartner').AsFloat;
+             toStoredProc.Params.ParamByName('inChangePercentAmount').Value:=FieldByName('ChangePercentAmount').AsFloat;
              toStoredProc.Params.ParamByName('inPrice').Value:=FieldByName('Price').AsFloat;
              toStoredProc.Params.ParamByName('inCountForPrice').Value:=FieldByName('CountForPrice').AsFloat;
              toStoredProc.Params.ParamByName('inHeadCount').Value:=FieldByName('HeadCount').AsFloat;
@@ -4714,6 +4718,7 @@ begin
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, '');
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmountPartner',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inChangePercentAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inPrice',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inCountForPrice',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inHeadCount',ftFloat,ptInput, 0);
@@ -4731,6 +4736,7 @@ begin
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
              toStoredProc.Params.ParamByName('inAmountPartner').Value:=FieldByName('AmountPartner').AsFloat;
+             toStoredProc.Params.ParamByName('inChangePercentAmount').Value:=FieldByName('ChangePercentAmount').AsFloat;
              toStoredProc.Params.ParamByName('inPrice').Value:=FieldByName('Price').AsFloat;
              toStoredProc.Params.ParamByName('inCountForPrice').Value:=FieldByName('CountForPrice').AsFloat;
              toStoredProc.Params.ParamByName('inHeadCount').Value:=FieldByName('HeadCount').AsFloat;

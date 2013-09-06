@@ -63,14 +63,14 @@ BEGIN
            INTO vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                   ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
-                  AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                                    ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
+                                   AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
           LEFT JOIN MovementFloat AS MovementFloat_VATPercent
-                   ON MovementFloat_VATPercent.MovementId = Movement.Id
-                  AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+                                  ON MovementFloat_VATPercent.MovementId = Movement.Id
+                                 AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
           LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
-                 ON MovementFloat_ChangePercent.MovementId = Movement.Id
-                AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+                                  ON MovementFloat_ChangePercent.MovementId = Movement.Id
+                                 AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
      WHERE Movement.Id = inMovementId
        AND Movement.DescId = zc_Movement_Income()
        AND Movement.StatusId = zc_Enum_Status_UnComplete();
@@ -509,8 +509,6 @@ BEGIN
                                                                                  )
                                                   WHEN InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20700()  -- Товары    -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20700()
                                                                                 , zc_Enum_InfoMoneyDestination_20900()  -- Ирна      -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
-                                                                                , zc_Enum_InfoMoneyDestination_21000()  -- Чапли     -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21000()
-                                                                                , zc_Enum_InfoMoneyDestination_21100()  -- Дворкин   -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21100()
                                                                                 , zc_Enum_InfoMoneyDestination_30100()) -- Продукция -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()
                                                           -- 0)Товар 1)Подразделение 2)Вид товара 3)!!!Партия товара!!!
                                                      THEN lpInsertFind_Container (inContainerDescId:= zc_Container_Count()
@@ -653,8 +651,6 @@ BEGIN
                                                                                                        )
                                                                         WHEN InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20700()  -- Товары    -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20700()
                                                                                                       , zc_Enum_InfoMoneyDestination_20900()  -- Ирна      -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
-                                                                                                      , zc_Enum_InfoMoneyDestination_21000()  -- Чапли     -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21000()
-                                                                                                      , zc_Enum_InfoMoneyDestination_21100()  -- Дворкин   -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21100()
                                                                                                       , zc_Enum_InfoMoneyDestination_30100()) -- Продукция -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение 2)Товар 3)!!!Партии товара!!! 4)Виды товаров 5)Статьи назначения 6)Статьи назначения(детализация с/с)
                                                                            THEN lpInsertFind_Container (inContainerDescId:= zc_Container_Summ()

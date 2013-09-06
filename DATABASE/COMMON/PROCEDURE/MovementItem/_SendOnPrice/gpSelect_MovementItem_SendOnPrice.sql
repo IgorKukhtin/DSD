@@ -19,8 +19,6 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_SendOnPrice());
 
-     inShowAll:= TRUE;
-
      IF inShowAll THEN 
 
      RETURN QUERY 
@@ -203,5 +201,5 @@ ALTER FUNCTION gpSelect_MovementItem_SendOnPrice (Integer, Boolean, TVarChar) OW
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_Send (inMovementId:= 25173, inShowAll:= TRUE, inSession:= '2')
--- SELECT * FROM gpSelect_MovementItem_Send (inMovementId:= 25173, inShowAll:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_SendOnPrice (inMovementId:= 25173, inShowAll:= TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_SendOnPrice (inMovementId:= 25173, inShowAll:= FALSE, inSession:= '2')
