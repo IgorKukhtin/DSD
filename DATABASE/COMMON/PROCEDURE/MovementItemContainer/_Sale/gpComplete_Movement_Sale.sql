@@ -29,11 +29,14 @@ $BODY$
   DECLARE vbUnitId_From Integer;
   DECLARE vbPersonalId_From Integer;
   DECLARE vbBranchId_From Integer;
+
   DECLARE vbJuridicalId_To Integer;
   DECLARE vbIsCorporate Boolean;
   DECLARE vbPersonalId_To Integer;
   DECLARE vbInfoMoneyDestinationId_isCorporate Integer;
   DECLARE vbInfoMoneyId_isCorporate Integer;
+  DECLARE vbInfoMoneyDestinationId_Contract Integer;
+  DECLARE vbInfoMoneyId_Contract Integer;
   DECLARE vbPaidKindId Integer;
   DECLARE vbContractId Integer;
   DECLARE vbJuridicalId_basis Integer;
@@ -64,6 +67,11 @@ BEGIN
          , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0)
          , COALESCE (MovementLinkObject_Contract.ObjectId, 0)
 
+           -- Статьи назначения (если наши компании)
+         , COALESCE (ObjectLink_Juridical_InfoMoney.ObjectId, 0)
+           -- Статьи назначения (если по договору)
+         , COALESCE (ObjectLink_Contract_InfoMoney.ObjectId, 0)
+
          , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN ObjectLink_UnitFrom_Juridical.ChildObjectId WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalFrom_Juridical.ChildObjectId ELSE 0 END, 0)
          , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN ObjectLink_UnitFrom_Business.ChildObjectId WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalFrom_Business.ChildObjectId ELSE 0 END, 0)
 
@@ -71,6 +79,7 @@ BEGIN
               , vbUnitId_From, vbPersonalId_From, vbBranchId_From
               , vbJuridicalId_To, vbIsCorporate, vbPersonalId_To
               , vbPaidKindId, vbContractId
+              , vbInfoMoneyId_isCorporate, vbInfoMoneyId_Contract
               , vbJuridicalId_basis, vbBusinessId
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
@@ -125,6 +134,7 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                              AND Object_To.DescId = zc_Object_Partner()
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_InfoMoney
                                ON ObjectLink_Juridical_InfoMoney.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                               AND ObjectLink_Juridical_InfoMoney.DescId = zc_ObjectLink_Juridical_InfoMoney()
@@ -148,12 +158,11 @@ BEGIN
      SELECT
             -- Управленческие назначения (если наши компании)
             COALESCE (lfObject_InfoMoney_isCorporate.InfoMoneyDestinationId, 0)
-            -- Статьи назначения (если наши компании)
-          , COALESCE (lfObject_InfoMoney_isCorporate.InfoMoneyId, 0)
-            INTO vbInfoMoneyDestinationId_isCorporate, vbInfoMoneyId_isCorporate
-     FROM lfGet_Object_InfoMoney (vbJuridicalId_To) AS lfObject_InfoMoney_isCorporate
+            INTO vbInfoMoneyDestinationId_isCorporate
+     FROM lfGet_Object_InfoMoney (vbInfoMoneyId_isCorporate) AS lfObject_InfoMoney_isCorporate
      WHERE vbIsCorporate = TRUE;
 
+(если по договору)
 
      -- для теста - Заголовок
      -- RETURN QUERY SELECT CAST (vbOperSumm_Partner_byItem AS TFloat) AS OperSumm_Partner_byItem, CAST (vbOperSumm_Partner AS TFloat) AS OperSumm_Partner, CAST (vbOperSumm_Partner_byChangePercent_byItem AS TFloat) AS OperSumm_Partner_byChangePercent_byItem, CAST (vbOperSumm_Partner_byChangePercent AS TFloat) AS OperSumm_Partner_byChangePercent, CAST (vbPriceWithVAT AS Boolean) AS PriceWithVAT, CAST (vbVATPercent AS TFloat) AS VATPercent, CAST (vbDiscountPercent AS TFloat) AS DiscountPercent, CAST (vbExtraChargesPercent AS TFloat) AS ExtraChargesPercent, CAST (vbUnitId_From AS Integer) AS UnitId_From, CAST (vbPersonalId_From AS Integer) AS PersonalId_From, CAST (vbBranchId_From AS Integer) AS BranchId_From, CAST (vbJuridicalId_To AS Integer) AS JuridicalId_To, CAST (vbIsCorporate AS Boolean) AS IsCorporate, CAST (vbPersonalId_To AS Integer) AS PersonalId_To, CAST (vbInfoMoneyDestinationId_isCorporate AS Integer) AS InfoMoneyDestinationId_isCorporate, CAST (vbInfoMoneyId_isCorporate AS Integer) AS InfoMoneyId_isCorporate, CAST (vbPaidKindId AS Integer) AS PaidKindId, CAST (vbContractId AS Integer) AS ContractId, CAST (vbJuridicalId_basis AS Integer) AS JuridicalId_basis, CAST (vbBusinessId AS Integer) AS BusinessId;
@@ -176,7 +185,7 @@ BEGIN
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer, MovementId Integer, OperDate TDateTime
                                , ContainerId_Goods Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
                                , OperCount TFloat, tmpOperSumm_byPriceList TFloat, OperSumm_byPriceList TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, tmpOperSumm_Partner_byChangePercent TFloat, OperSumm_Partner_byChangePercent TFloat
-                               , AccountId_Partner Integer, AccountDirectionId_Partner Integer, InfoMoneyDestinationId_Partner Integer, InfoMoneyId_Partner Integer
+                               , AccountId_Partner Integer, InfoMoneyDestinationId_Partner Integer, InfoMoneyId_Partner Integer
                                , isPartionCount Boolean, isPartionSumm Boolean, isPartionDate Boolean
                                , PartionGoodsId Integer) ON COMMIT DROP;
      -- заполняем таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
