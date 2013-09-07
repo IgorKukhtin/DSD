@@ -29,6 +29,28 @@ $BODY$BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_MotionGoods());
 
+     -- таблица - Аналитики остатка
+     CREATE TEMP TABLE tmpGoods (GoodsId Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE tmpLocationObject (LocationObjectId Integer) ON COMMIT DROP;
+
+
+    IF inUnitGroupId <> 0 
+    then 
+       insert tmpLocationObject (LocationObjectId)
+          select UnitId
+          from  gpSelect_Object_Unit_byUnitGoup (inUnitGroupId)
+    else IF inUnitId <> 0 
+         then 
+             insert tmpLocationObject (LocationObjectId)
+              select inUnitId
+         else 
+             insert tmpLocationObject (LocationObjectId)
+              select Id from Object where DescId = zc_Object_Unit()
+             union
+              select Id from Object where DescId = zc_Object_Personal()
+    end if;
+
+
      RETURN QUERY 
 
       SELECT _tmp_All.GoodsId, Object_Goods.ObjectCode AS GoodsCode, Object_Goods.ValueData AS GoodsName  
@@ -91,8 +113,21 @@ $BODY$BEGIN
                             , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Loss() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0)      AS LossSumm
                             , COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Inventory() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS InventorySumm
                       FROM lfSelect_Object_Account_byAccountGroup (zc_Enum_AccountGroup_20000()) AS lfObject_Account -- -20000; "Запасы"     -- написать функцию lfGet_Object_Account_byAccountGroup
-                           LEFT JOIN Container ON Container.ObjectId = lfObject_Account.AccountId
-                                              AND Container.DescId = zc_Container_Summ() 
+                           LEFT JOIN (SELECT tmpContainer.ContainerId, tmpContainer.AccountId, GoodsId, tmpContainer.UnitId, tmpContainer.Amount
+                                      FROM tmpGoods 
+                                           join ContainerLinkObject AS ContainerLinkObject_Goods ON  ContainerLinkObject_Goods.ObjectId = = tmpGoods .GoodsId
+                                                                                                 AND ContainerLinkObject_Goods.DescId = zc_ContainerLinkObject_Goods()
+                                           join  (SELECT Container.Id AS ContainerId, Container.ObjectId AS AccountId, UnitId, Container.Amount
+                                                  from tmpUnit
+                                                        LEFT JOIN  ContainerLinkObject AS ContainerLinkObject_Unit ON ContainerLinkObject_Unit.Objectid = tmpUnit.UnitId
+                                                                                                             AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                                        LEFT JOIN  ContainerLinkObject AS ContainerLinkObject_Personal ON ContainerLinkObject_Personal.Objectid = tmpUnit.UnitId
+                                                                                                                      AND ContainerLinkObject_Personal.DescId = zc_ContainerLinkObject_Unit()
+                                                        JOIN  Container ON Container.Id =  COALESCE (ContainerLinkObject_Unit.ContainerId, ContainerLinkObject_Personal.ContainerId)
+                                                                       AND Container.DescId = zc_Container_Summ() 
+                                                 ) AS  t1 on t1.ContainerId = ContainerLinkObject_Goods.ContainerId
+                                     ) AS tmpContainer ON tmpContainer.AccountId = lfObject_Account.AccountId
+                                              AND 
                            LEFT JOIN MovementItemContainer AS MIContainer
                                                            ON MIContainer.Containerid = Container.Id
                                                           AND MIContainer.OperDate >= inStartDate
@@ -105,10 +140,6 @@ $BODY$BEGIN
                       ) AS _tmpContainer
                  
                  
-                      LEFT JOIN  ContainerLinkObject AS ContainerLinkObject_Goods ON ContainerLinkObject_Goods.ContainerId = _tmpContainer.ContainerId
-                                                    AND ContainerLinkObject_Goods.DescId = zc_ContainerLinkObject_Goods()
-                      LEFT JOIN  ContainerLinkObject AS ContainerLinkObject_Unit ON ContainerLinkObject_Unit.Containerid = _tmpContainer.ContainerId
-                                                    AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
                       LEFT JOIN  ContainerLinkObject AS ContainerLinkObject_PartionGoods ON ContainerLinkObject_PartionGoods.Containerid = _tmpContainer.ContainerId
                                                     AND ContainerLinkObject_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
                       LEFT JOIN  ContainerLinkObject AS ContainerLinkObject_GoodsKind ON ContainerLinkObject_GoodsKind.Containerid = _tmpContainer.ContainerId
