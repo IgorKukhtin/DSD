@@ -157,7 +157,7 @@ type
   private
     function InsertDefault: integer; override;
   public
-    function InsertUpdatePriceList(const Id, Code: Integer; Name: string): integer;
+    function InsertUpdatePriceList(const Id, Code: Integer; Name: string;PriceWithVAT:Boolean;VATPercent:Double): integer;
     constructor Create; override;
   end;
 
@@ -1072,16 +1072,17 @@ end;
 
 function TPriceListTest.InsertDefault: integer;
 begin
-  result := InsertUpdatePriceList(0, -1, 'Прайс-лист');
+  result := InsertUpdatePriceList(0, -1, 'Прайс-лист',false,20);
 end;
 
-function TPriceListTest.InsertUpdatePriceList(const Id, Code: Integer;
-  Name: string): integer;
+function TPriceListTest.InsertUpdatePriceList(const Id, Code: Integer;Name: string;PriceWithVAT:Boolean;VATPercent:Double): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inCode', ftInteger, ptInput, Code);
   FParams.AddParam('inName', ftString, ptInput, Name);
+  FParams.AddParam('inPriceWithVAT', ftBoolean, ptInput, PriceWithVAT);
+  FParams.AddParam('inVATPercent', ftFloat, ptInput, VATPercent);
   result := InsertUpdate(FParams);
 end;
 

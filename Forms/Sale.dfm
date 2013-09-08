@@ -4,7 +4,6 @@ inherited SaleForm: TSaleForm
   ClientWidth = 1074
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitLeft = -302
   ExplicitWidth = 1090
   ExplicitHeight = 478
   PixelsPerInch = 96
@@ -250,9 +249,9 @@ inherited SaleForm: TSaleForm
             HeaderAlignmentHorz = taCenter
             Width = 60
           end
-          object colAmount_byChangePercent: TcxGridDBColumn
+          object colAmountChangePercent: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
-            DataBinding.FieldName = 'Amount_byChangePercent'
+            DataBinding.FieldName = 'AmountChangePercent'
             Width = 60
           end
           object colAmountPartner: TcxGridDBColumn
@@ -301,6 +300,9 @@ inherited SaleForm: TSaleForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -326,10 +328,9 @@ inherited SaleForm: TSaleForm
           DataController.Summary.SummaryGroups = <>
           OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
-          object colDebetAccountGroupCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1044' '#1043#1088#1091#1087#1087#1072' '#1082#1086#1076
-            DataBinding.FieldName = 'DebetAccountGroupCode'
-            Visible = False
+          object colAccountCode: TcxGridDBColumn
+            Caption = #1057#1095#1077#1090' '#1082#1086#1076
+            DataBinding.FieldName = 'AccountCode'
             HeaderAlignmentHorz = taCenter
             Width = 40
           end
@@ -340,13 +341,6 @@ inherited SaleForm: TSaleForm
             HeaderAlignmentHorz = taCenter
             Width = 90
           end
-          object colDebetAccountDirectionCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1044' '#1053#1072#1087#1088#1072#1074#1083' '#1082#1086#1076
-            DataBinding.FieldName = 'DebetAccountDirectionCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            Width = 40
-          end
           object colDebetAccountDirectionName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1044' '#1053#1072#1087#1088#1072#1074#1083
             DataBinding.FieldName = 'DebetAccountDirectionName'
@@ -354,24 +348,11 @@ inherited SaleForm: TSaleForm
             HeaderAlignmentHorz = taCenter
             Width = 90
           end
-          object colDebetAccountCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1044' '#1082#1086#1076
-            DataBinding.FieldName = 'DebetAccountCode'
-            HeaderAlignmentHorz = taCenter
-            Width = 40
-          end
           object colDebetAccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1044
             DataBinding.FieldName = 'DebetAccountName'
             HeaderAlignmentHorz = taCenter
             Width = 120
-          end
-          object colKreditAccountGroupCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1050' '#1043#1088#1091#1087#1087#1072' '#1082#1086#1076
-            DataBinding.FieldName = 'KreditAccountGroupCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            Width = 40
           end
           object colKreditAccountGroupName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1050' '#1043#1088#1091#1087#1087#1072
@@ -380,25 +361,12 @@ inherited SaleForm: TSaleForm
             HeaderAlignmentHorz = taCenter
             Width = 80
           end
-          object colKreditAccountDirectionCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1050' '#1053#1072#1087#1088#1072#1074#1083' '#1082#1086#1076
-            DataBinding.FieldName = 'KreditAccountDirectionCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            Width = 40
-          end
           object colKreditAccountDirectionName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1050' '#1053#1072#1087#1088#1072#1074#1083
             DataBinding.FieldName = 'KreditAccountDirectionName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             Width = 80
-          end
-          object colKreditAccountCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1050' '#1082#1086#1076
-            DataBinding.FieldName = 'KreditAccountCode'
-            HeaderAlignmentHorz = taCenter
-            Width = 40
           end
           object colKreditAccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1050

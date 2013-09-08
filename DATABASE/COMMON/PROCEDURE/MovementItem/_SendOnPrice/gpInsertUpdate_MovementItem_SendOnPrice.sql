@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SendOnPrice(
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
     IN inAmountPartner       TFloat    , -- Количество у контрагента
+    IN inAmountChangePercent TFloat    , -- Количество c учетом % скидки
     IN inChangePercentAmount TFloat    , -- % скидки для кол-ва
     IN inPrice               TFloat    , -- Цена
     IN inCountForPrice       TFloat    , -- Цена за количество
@@ -30,6 +31,8 @@ BEGIN
    
      -- сохранили свойство <Количество у контрагента>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), ioId, inAmountPartner);
+     -- сохранили свойство <Количество c учетом % скидки>
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountChangePercent(), ioId, inAmountChangePercent);
      -- сохранили свойство <% скидки для кол-ва>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercentAmount(), ioId, inChangePercentAmount);
 
@@ -62,6 +65,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.09.13                                        * add zc_MIFloat_AmountChangePercent
  05.09.13                                        * add zc_MIFloat_ChangePercentAmount
  12.07.13          * 
 */

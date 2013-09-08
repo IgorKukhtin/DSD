@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Sale(
     IN inShowAll     Boolean      , -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat, Amount_byChangePercent TFloat, AmountPartner TFloat, ChangePercentAmount TFloat
+RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat, AmountChangePercent TFloat, AmountPartner TFloat, ChangePercentAmount TFloat
              , Price TFloat, CountForPrice TFloat, HeadCount TFloat
              , PartionGoods TVarChar, GoodsKindName  TVarChar
              , AssetId Integer, AssetName TVarChar
@@ -35,7 +35,7 @@ BEGIN
            , Object_Goods.ValueData   AS GoodsName
 
            , CAST (NULL AS TFloat) AS Amount
-           , CAST (NULL AS TFloat) AS Amount_byChangePercent
+           , CAST (NULL AS TFloat) AS AmountChangePercent
            , CAST (NULL AS TFloat) AS AmountPartner
            , CAST (NULL AS TFloat) AS ChangePercentAmount
 
@@ -85,7 +85,7 @@ BEGIN
            , Object_Goods.ValueData   AS GoodsName
 
            , MovementItem.Amount
-           , CAST (MovementItem.Amount * (1 - COALESCE (MIFloat_ChangePercentAmount.ValueData, 0) / 100) AS TFloat) AS Amount_byChangePercent
+           , MIFloat_AmountChangePercent.ValueData AS AmountChangePercent
            , MIFloat_AmountPartner.ValueData       AS AmountPartner
            , MIFloat_ChangePercentAmount.ValueData AS ChangePercentAmount
 
@@ -113,6 +113,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                         ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                        AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountChangePercent
+                                        ON MIFloat_AmountChangePercent.MovementItemId = MovementItem.Id
+                                       AND MIFloat_AmountChangePercent.DescId = zc_MIFloat_AmountChangePercent()
             LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentAmount
                                         ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
                                        AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
@@ -155,7 +158,7 @@ BEGIN
            , Object_Goods.ValueData   AS GoodsName
 
            , MovementItem.Amount
-           , CAST (MovementItem.Amount * (1 - COALESCE (MIFloat_ChangePercentAmount.ValueData, 0) / 100) AS TFloat) AS Amount_byChangePercent
+           , MIFloat_AmountChangePercent.ValueData AS AmountChangePercent
            , MIFloat_AmountPartner.ValueData       AS AmountPartner
            , MIFloat_ChangePercentAmount.ValueData AS ChangePercentAmount
 
@@ -183,6 +186,9 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                         ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                        AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountChangePercent
+                                        ON MIFloat_AmountChangePercent.MovementItemId = MovementItem.Id
+                                       AND MIFloat_AmountChangePercent.DescId = zc_MIFloat_AmountChangePercent()
             LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentAmount
                                         ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
                                        AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
@@ -226,6 +232,7 @@ ALTER FUNCTION gpSelect_MovementItem_Sale (Integer, Boolean, TVarChar) OWNER TO 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.09.13                                        * add AmountChangePercent
  03.09.13                                        * add ChangePercentAmount
  21.07.13                                        * add lfSelect_ObjectHistory_PriceListItem
  18.07.13         * add Object_Asset               

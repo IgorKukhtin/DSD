@@ -14,7 +14,9 @@ $BODY$
    DECLARE Code_calc Integer;   
  
 BEGIN
- 
+    -- !!! это временно !!!
+   ioId := (SELECT Id FROM Object WHERE ObjectCode=inCode AND DescId =zc_Object_ProfitLossDirection());
+
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ProfitLossDirection());
    UserId := inSession;
@@ -44,10 +46,10 @@ ALTER FUNCTION gpInsertUpdate_Object_ProfitLossDirection (Integer, Integer, TVar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.09.13                                        * !!! это временно !!!
  21.06.13          *   Code_calc      
  19.06.13                                        * rem lpCheckUnique_Object_ValueData
  18.06.13          *
-
 */
 
 -- тест

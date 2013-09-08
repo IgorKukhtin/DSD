@@ -1,5 +1,5 @@
 create PROCEDURE "DBA"."_pgSelect_Bill_Sale" (in @inStartDate date, in @inEndDate date)
-result(ObjectId Integer, BillId Integer, InvNumber TVarCharLongLong, OperDate Date, OperDatePartner Date, PriceWithVAT smallint, VATPercent TSumm, ChangePercent  TSumm, FromId_Postgres Integer, ToId_Postgres Integer
+result(ObjectId Integer, BillId Integer, OperDate Date, InvNumber TVarCharLongLong, OperDatePartner Date, PriceWithVAT smallint, VATPercent TSumm, ChangePercent  TSumm, FromId_Postgres Integer, ToId_Postgres Integer
      , PaidKindId_Postgres Integer, ContractId Integer, CarId Integer, PersonalDriverId Integer, RouteId Integer, RouteSortingId_Postgres Integer, PersonalId_Postgres Integer
      , isFl smallint, zc_rvYes smallint, Id_Postgres integer)
 begin
@@ -188,8 +188,8 @@ where Bill.BillDate between @inStartDate and @inEndDate
    -- result
    select isnull(_tmpList2.ObjectId, _tmpList.ObjectId)as ObjectId
         , ifnull(_tmpList2.ObjectId, _tmpList.ObjectId, 0) as BillId
-        , isnull(_tmpList2.InvNumber_all, _tmpList.InvNumber_all) as InvNumber
         , isnull(_tmpList2.OperDate, _tmpList.OperDate)as OperDate
+        , isnull(_tmpList2.InvNumber_all, _tmpList.InvNumber_all) as InvNumber
         , isnull(_tmpList2.OperDatePartner, _tmpList.OperDatePartner)as OperDatePartner
         , isnull(_tmpList2.PriceWithVAT, _tmpList.PriceWithVAT)as PriceWithVAT
         , isnull(_tmpList2.VATPercent, _tmpList.VATPercent)as VATPercent
@@ -209,7 +209,7 @@ where Bill.BillDate between @inStartDate and @inEndDate
    from _tmpList left outer join _tmpList as _tmpList2 on _tmpList2.ObjectId = _tmpList.BillId_pg
    group by ObjectId, BillId, InvNumber, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, PaidKindId_Postgres
           , ContractId, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, isFl, Id_Postgres
-   order by 4, 3, 1
+   order by 3, 4, 1
    ;
 
 end

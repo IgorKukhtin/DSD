@@ -184,9 +184,9 @@ inherited SendOnPriceForm: TSendOnPriceForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colAmount_byChangePercent: TcxGridDBColumn
+          object colAmountChangePercent: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
-            DataBinding.FieldName = 'Amount_byChangePercent'
+            DataBinding.FieldName = 'AmountChangePercent'
             Width = 60
           end
           object colAmountPartner: TcxGridDBColumn

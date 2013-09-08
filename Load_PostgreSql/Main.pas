@@ -2229,6 +2229,7 @@ begin
         Add('     , PriceList_byHistory.PriceListName as ObjectName');
         Add('     , case when PriceList_byHistory.Id = 2 then zc_rvYes() else zc_rvNo() end as zc_PriceList_Basis');
         Add('     , case when PriceList_byHistory.Id = zc_def_PriceList_onRecalcProduction() then zc_rvYes() else zc_rvNo() end as zc_PriceList_ProductionSeparate');
+        Add('     , 20 as VATPercent');
         Add('     , zc_rvYes() as zc_rvYes');
         Add('     , PriceList_byHistory.Id_Postgres as Id_Postgres');
         Add('from dba.PriceList_byHistory');
@@ -2247,6 +2248,8 @@ begin
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inPriceWithVAT',ftBoolean,ptInput, FALSE);
+        toStoredProc.Params.AddParam ('inVATPercent',ftFloat,ptInput, 0);
         //
         while not EOF do
         begin
@@ -2256,6 +2259,8 @@ begin
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inPriceWithVAT').Value:=FALSE;
+             toStoredProc.Params.ParamByName('inVATPercent').Value:=FieldByName('VATPercent').AsFloat;
              //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
@@ -4325,6 +4330,7 @@ begin
            +'            else -1 * BillItems.OperCount'
            +'       end as Amount');
         Add('     , -1 * BillItems.OperCount as AmountPartner');
+        Add('     , -1 * BillItems.OperCount as AmountChangePercent');
         Add('     , isnull(tmpBI_byDiscountWeight.DiscountWeight,0) as ChangePercentAmount');
         Add('     , BillItems.OperPrice as Price');
         Add('     , 1 as CountForPrice');
@@ -4399,6 +4405,7 @@ begin
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, '');
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmountPartner',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmountChangePercent',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inChangePercentAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inPrice',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inCountForPrice',ftFloat,ptInput, 0);
@@ -4417,6 +4424,7 @@ begin
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
              toStoredProc.Params.ParamByName('inAmountPartner').Value:=FieldByName('AmountPartner').AsFloat;
+             toStoredProc.Params.ParamByName('inAmountChangePercent').Value:=FieldByName('AmountChangePercent').AsFloat;
              toStoredProc.Params.ParamByName('inChangePercentAmount').Value:=FieldByName('ChangePercentAmount').AsFloat;
              toStoredProc.Params.ParamByName('inPrice').Value:=FieldByName('Price').AsFloat;
              toStoredProc.Params.ParamByName('inCountForPrice').Value:=FieldByName('CountForPrice').AsFloat;
@@ -4613,6 +4621,7 @@ begin
            +'            else -1 * BillItems.OperCount'
            +'       end as Amount');
         Add('     , -1 * BillItems.OperCount as AmountPartner');
+        Add('     , -1 * BillItems.OperCount as AmountChangePercent');
         Add('     , isnull(tmpBI_byDiscountWeight.DiscountWeight,0) as ChangePercentAmount');
         Add('     , BillItems.OperPrice as Price');
         Add('     , 1 as CountForPrice');
@@ -4718,6 +4727,7 @@ begin
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, '');
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmountPartner',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmountChangePercent',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inChangePercentAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inPrice',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inCountForPrice',ftFloat,ptInput, 0);
@@ -4736,6 +4746,7 @@ begin
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
              toStoredProc.Params.ParamByName('inAmountPartner').Value:=FieldByName('AmountPartner').AsFloat;
+             toStoredProc.Params.ParamByName('inAmountChangePercent').Value:=FieldByName('AmountChangePercent').AsFloat;
              toStoredProc.Params.ParamByName('inChangePercentAmount').Value:=FieldByName('ChangePercentAmount').AsFloat;
              toStoredProc.Params.ParamByName('inPrice').Value:=FieldByName('Price').AsFloat;
              toStoredProc.Params.ParamByName('inCountForPrice').Value:=FieldByName('CountForPrice').AsFloat;
@@ -4887,6 +4898,7 @@ begin
            +'                    end'
            +'            else -1 * BillItems.OperCount'
            +'       end as AmountPartner');
+        Add('     , -1 * BillItems.OperCount as AmountChangePercent');
         Add('     , isnull(tmpBI_byDiscountWeight.DiscountWeight,0) as ChangePercentAmount');
         Add('     , BillItems.OperPrice as Price');
         Add('     , 1 as CountForPrice');
@@ -4979,6 +4991,7 @@ begin
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , case when Bill.FromId=5 then 0 else -1* BillItems.OperCount end as Amount');
         Add('     , -1 * BillItems.OperCount as AmountPartner');
+        Add('     , -1 * BillItems.OperCount as AmountChangePercent');
         Add('     , 0 as ChangePercentAmount');
         Add('     , BillItems.OperPrice as Price');
         Add('     , 1 as CountForPrice');
@@ -5040,6 +5053,7 @@ begin
         toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, '');
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmountPartner',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmountChangePercent',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inChangePercentAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inPrice',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inCountForPrice',ftFloat,ptInput, 0);
@@ -5065,6 +5079,7 @@ begin
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
              toStoredProc.Params.ParamByName('inAmountPartner').Value:=FieldByName('AmountPartner').AsFloat;
+             toStoredProc.Params.ParamByName('inAmountChangePercent').Value:=FieldByName('AmountChangePercent').AsFloat;
              toStoredProc.Params.ParamByName('inChangePercentAmount').Value:=FieldByName('ChangePercentAmount').AsFloat;
              toStoredProc.Params.ParamByName('inPrice').Value:=FieldByName('Price').AsFloat;
              toStoredProc.Params.ParamByName('inCountForPrice').Value:=FieldByName('CountForPrice').AsFloat;
