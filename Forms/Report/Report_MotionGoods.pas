@@ -72,6 +72,16 @@ type
     LossSumm: TcxGridDBColumn;
     InventoryCount: TcxGridDBColumn;
     InventorySumm: TcxGridDBColumn;
+    StartWeight: TcxGridDBColumn;
+    IncomeWeight: TcxGridDBColumn;
+    SendInWeight: TcxGridDBColumn;
+    SendOutWeight: TcxGridDBColumn;
+    SaleWeight: TcxGridDBColumn;
+    ReturnOutWeight: TcxGridDBColumn;
+    ReturnInWeight: TcxGridDBColumn;
+    LossWeight: TcxGridDBColumn;
+    InventoryWeight: TcxGridDBColumn;
+    EndWeight_calc: TcxGridDBColumn;
   private
   public
   end;
