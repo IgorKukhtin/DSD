@@ -909,7 +909,7 @@ begin
   try
     // Получение данных о маршруте
     with ObjectTest.GetRecord(Id) do
-      Check((FieldByName('Name').AsString = 'Маршрут'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+      Check((FieldByName('Name').AsString = 'Маршрут'), 'Не сходятся данные Id = ' + IntToStr(Id));
 
   finally
     ObjectTest.Delete(Id);
@@ -929,7 +929,7 @@ begin
   try
     // Получение данных о сортировке маршрута
     with ObjectTest.GetRecord(Id) do
-      Check((FieldByName('Name').AsString = 'Сортировка маршрутов'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+      Check((FieldByName('Name').AsString = 'Сортировка маршрутов'), 'Не сходятся данные Id = ' + IntToStr(Id));
 
   finally
     ObjectTest.Delete(Id);
@@ -1996,7 +1996,7 @@ begin
   try
     // Получение данных
     with ObjectTest.GetRecord(Id) do
-      Check((FieldByName('Code').AsInteger = -3), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+      Check((FieldByName('Code').AsInteger = -3), 'Не сходятся данные Id = ' + IntToStr(Id));
   finally
     ObjectTest.Delete(Id);
   end;

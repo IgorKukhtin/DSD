@@ -17,11 +17,9 @@ $BODY$BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , MAX (Object.ObjectCode) + 1 AS Code
+           , lfGet_ObjectCode(0, zc_Object_Route()) AS Code
            , CAST ('' as TVarChar)  AS Name
-           , CAST (NULL AS Boolean) AS isErased
-       FROM Object 
-       WHERE Object.DescId = zc_Object_Route();
+           , CAST (NULL AS Boolean) AS isErased;
    ELSE
        RETURN QUERY 
        SELECT

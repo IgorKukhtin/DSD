@@ -49,8 +49,6 @@ type
   TMovementIncomeTest = class(TMovementTest)
   private
     function InsertDefault: integer; override;
-  protected
-    procedure SetDataSetParam; override;
   public
     function InsertUpdateMovementIncome(Id: Integer; InvNumber: String; OperDate: TDateTime;
              OperDatePartner: TDateTime; InvNumberPartner: String; PriceWithVAT: Boolean;
@@ -63,8 +61,6 @@ type
   TMovementProductionUnionTest = class(TMovementTest)
   private
     function InsertDefault: integer; override;
-  protected
-    procedure SetDataSetParam; override;
   public
     function InsertUpdateMovementProductionUnion(Id: Integer; InvNumber: String;
              OperDate: TDateTime; FromId, ToId: Integer): integer;
@@ -74,8 +70,6 @@ type
   TMovementProductionSeparateTest = class(TMovementTest)
   private
     function InsertDefault: integer; override;
-  protected
-    procedure SetDataSetParam; override;
   public
     function InsertUpdateMovementProductionSeparate(Id: Integer; InvNumber: String;
              OperDate: TDateTime; PartionGoods: String; FromId, ToId: Integer): integer;
@@ -85,8 +79,6 @@ type
   TMovementSendOnPriceTest = class(TMovementTest)
   private
     function InsertDefault: integer; override;
-  protected
-    procedure SetDataSetParam; override;
   public
     function InsertUpdateMovementSendOnPrice(Id: Integer; InvNumber: String; OperDate: TDateTime;
              OperDatePartner: TDateTime; PriceWithVAT: Boolean;
@@ -99,8 +91,6 @@ type
   TMovementSaleTest = class(TMovementTest)
   private
     function InsertDefault: integer; override;
-  protected
-    procedure SetDataSetParam; override;
   public
     function InsertUpdateMovementSale(Id: Integer; InvNumber: String; OperDate: TDateTime;
              OperDatePartner: TDateTime; PriceWithVAT: Boolean;
@@ -113,8 +103,6 @@ type
   TMovementReturnOutTest = class(TMovementTest)
   private
     function InsertDefault: integer; override;
-  protected
-    procedure SetDataSetParam; override;
   public
     function InsertUpdateMovementReturnOut(Id: Integer; InvNumber: String; OperDate: TDateTime;
              OperDatePartner: TDateTime; PriceWithVAT: Boolean;
@@ -127,8 +115,6 @@ type
   TMovementReturnInTest = class(TMovementTest)
   private
     function InsertDefault: integer; override;
-  protected
-    procedure SetDataSetParam; override;
   public
     function InsertUpdateMovementReturnIn(Id: Integer; InvNumber: String; OperDate: TDateTime;
              OperDatePartner: TDateTime; PriceWithVAT: Boolean;
@@ -141,8 +127,6 @@ type
   TMovementSendTest = class(TMovementTest)
   private
     function InsertDefault: integer; override;
-  protected
-    procedure SetDataSetParam; override;
   public
     function InsertUpdateMovementSend(Id: Integer; InvNumber: String; OperDate: TDateTime;
              FromId, ToId: Integer): integer;
@@ -152,8 +136,6 @@ type
   TMovementLossTest = class(TMovementTest)
   private
     function InsertDefault: integer; override;
-  protected
-    procedure SetDataSetParam; override;
   public
     function InsertUpdateMovementLoss(Id: Integer; InvNumber: String; OperDate: TDateTime;
              FromId, ToId: Integer): integer;
@@ -163,8 +145,6 @@ type
   TMovementInventoryTest = class(TMovementTest)
   private
     function InsertDefault: integer; override;
-  protected
-    procedure SetDataSetParam; override;
   public
     function InsertUpdateMovementInventory(Id: Integer; InvNumber: String; OperDate: TDateTime;
              FromId, ToId: Integer): integer;
@@ -174,8 +154,6 @@ type
   TMovementZakazExternalTest = class(TMovementTest)
   private
     function InsertDefault: integer; override;
-  protected
-    procedure SetDataSetParam; override;
   public
     function InsertUpdateMovementZakazExternal(Id: Integer; InvNumber: String; OperDate: TDateTime;
              OperDatePartner, OperDateMark: TDateTime; InvNumberPartner: String;
@@ -187,8 +165,6 @@ type
   TMovementZakazInternalTest = class(TMovementTest)
   private
     function InsertDefault: integer; override;
-  protected
-    procedure SetDataSetParam; override;
   public
     function InsertUpdateMovementZakazInternal(Id: Integer; InvNumber: String; OperDate: TDateTime;
              FromId, ToId: Integer): integer;
@@ -480,13 +456,6 @@ begin
   result := InsertUpdate(FParams);
 end;
 
-procedure TMovementIncomeTest.SetDataSetParam;
-begin
-  inherited;
-  FParams.AddParam('inStartDate', ftDateTime, ptInput, Date);
-  FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
-end;
-
 { TMovementProductionUnionTest }
 
 constructor TMovementProductionUnionTest.Create;
@@ -513,13 +482,6 @@ begin
   FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
   FParams.AddParam('inToId', ftInteger, ptInput, ToId);
   result := InsertUpdate(FParams);
-end;
-
-procedure TMovementProductionUnionTest.SetDataSetParam;
-begin
-  inherited;
-  FParams.AddParam('inStartDate', ftDateTime, ptInput, Date);
-  FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
 end;
 
 
@@ -549,13 +511,6 @@ begin
   FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
   FParams.AddParam('inToId', ftInteger, ptInput, ToId);
   result := InsertUpdate(FParams);
-end;
-
-procedure TMovementProductionSeparateTest.SetDataSetParam;
-begin
-  inherited;
-  FParams.AddParam('inStartDate', ftDateTime, ptInput, Date);
-  FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
 end;
 
 
@@ -625,13 +580,6 @@ begin
   FParams.AddParam('inRouteSortingId', ftInteger, ptInput, RouteSortingId);
 
   result := InsertUpdate(FParams);
-end;
-
-procedure TMovementSendOnPriceTest.SetDataSetParam;
-begin
-  inherited;
-  FParams.AddParam('inStartDate', ftDateTime, ptInput, Date);
-  FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
 end;
 
 { TMovementSale }
@@ -711,13 +659,6 @@ begin
   result := InsertUpdate(FParams);
 end;
 
-procedure TMovementSaleTest.SetDataSetParam;
-begin
-  inherited;
-  FParams.AddParam('inStartDate', ftDateTime, ptInput, Date);
-  FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
-end;
-
 { TMovementReturnOut }
 constructor TMovementReturnOutTest.Create;
 begin
@@ -779,13 +720,6 @@ begin
   FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
 
   result := InsertUpdate(FParams);
-end;
-
-procedure TMovementReturnOutTest.SetDataSetParam;
-begin
-  inherited;
-  FParams.AddParam('inStartDate', ftDateTime, ptInput, Date);
-  FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
 end;
 
 { TMovementReturnIn }
@@ -857,13 +791,6 @@ begin
   result := InsertUpdate(FParams);
 end;
 
-procedure TMovementReturnInTest.SetDataSetParam;
-begin
-  inherited;
-  FParams.AddParam('inStartDate', ftDateTime, ptInput, Date);
-  FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
-end;
-
 { TMovementSend }
 constructor TMovementSendTest.Create;
 begin
@@ -905,13 +832,6 @@ begin
   result := InsertUpdate(FParams);
 end;
 
-procedure TMovementSendTest.SetDataSetParam;
-begin
-  inherited;
-  FParams.AddParam('inStartDate', ftDateTime, ptInput, Date);
-  FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
-end;
-
 { TMovementLoss }
 constructor TMovementLossTest.Create;
 begin
@@ -951,13 +871,6 @@ begin
   result := InsertUpdate(FParams);
 end;
 
-procedure TMovementLossTest.SetDataSetParam;
-begin
-  inherited;
-  FParams.AddParam('inStartDate', ftDateTime, ptInput, Date);
-  FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
-end;
-
 { TMovementInventory }
 constructor TMovementInventoryTest.Create;
 begin
@@ -995,13 +908,6 @@ begin
   FParams.AddParam('inToId', ftInteger, ptInput, ToId);
 
   result := InsertUpdate(FParams);
-end;
-
-procedure TMovementInventoryTest.SetDataSetParam;
-begin
-  inherited;
-  FParams.AddParam('inStartDate', ftDateTime, ptInput, Date);
-  FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
 end;
 
 { TMovementZakazExternal }
@@ -1061,13 +967,6 @@ begin
   result := InsertUpdate(FParams);
 end;
 
-procedure TMovementZakazExternalTest.SetDataSetParam;
-begin
-  inherited;
-  FParams.AddParam('inStartDate', ftDateTime, ptInput, Date);
-  FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
-end;
-
 { TMovementZakazInternal }
 constructor TMovementZakazInternalTest.Create;
 begin
@@ -1108,14 +1007,6 @@ begin
 
   result := InsertUpdate(FParams);
 end;
-
-procedure TMovementZakazInternalTest.SetDataSetParam;
-begin
-  inherited;
-  FParams.AddParam('inStartDate', ftDateTime, ptInput, Date);
-  FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
-end;
-
 
 { TMovementTest }
 

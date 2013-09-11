@@ -24,6 +24,11 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Partner());
    vbUserId := inSession;
+
+   -- Проверка установки значений
+   IF COALESCE (inJuridicalId, 0) = 0  THEN
+      RAISE EXCEPTION 'Не установлено юридическое лицо!';
+   END IF;
    
    -- !!! Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
    -- !!! vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Partner());

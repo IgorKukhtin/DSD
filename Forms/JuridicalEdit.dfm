@@ -2,8 +2,8 @@
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1075#1086' '#1083#1080#1094#1072
   ClientHeight = 332
   ClientWidth = 367
-  ExplicitWidth = 383
-  ExplicitHeight = 370
+  ExplicitWidth = 375
+  ExplicitHeight = 359
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -25,7 +25,7 @@
     Action = InsertUpdateGuides
     Default = True
     ModalResult = 8
-    TabOrder = 2
+    TabOrder = 6
   end
   object cxButton2: TcxButton
     Left = 216
@@ -36,7 +36,7 @@
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 8
-    TabOrder = 3
+    TabOrder = 7
   end
   object Код: TcxLabel
     Left = 40
@@ -48,7 +48,7 @@
     Top = 25
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    TabOrder = 5
+    TabOrder = 8
     Width = 273
   end
   object cxLabel2: TcxLabel
@@ -59,14 +59,14 @@
   object edGLNCode: TcxTextEdit
     Left = 40
     Top = 115
-    TabOrder = 7
+    TabOrder = 1
     Width = 153
   end
   object cbisCorporate: TcxCheckBox
     Left = 202
     Top = 115
     Caption = #1053#1072#1096#1077' '#1102#1088'. '#1083#1080#1094#1086
-    TabOrder = 8
+    TabOrder = 2
     Width = 111
   end
   object cxLabel3: TcxLabel
@@ -87,7 +87,7 @@
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 11
+    TabOrder = 3
     Width = 273
   end
   object ceGoodsProperty: TcxButtonEdit
@@ -98,7 +98,7 @@
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 12
+    TabOrder = 4
     Width = 273
   end
   object cxLabel5: TcxLabel
@@ -114,7 +114,7 @@
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 14
+    TabOrder = 5
     Width = 273
   end
   object ActionList: TActionList
@@ -220,6 +220,22 @@
         DataType = ftInteger
         ParamType = ptInputOutput
         Value = '0'
+      end
+      item
+        Name = 'GroupId'
+        Component = JuridicalGroupGuides
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'GroupName'
+        Component = JuridicalGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
       end>
     Left = 240
     Top = 8

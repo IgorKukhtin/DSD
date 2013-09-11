@@ -2,7 +2,7 @@ unit dsdComponentEditor;
 
 interface
 
-uses Classes, DesignEditors, DesignIntf;
+uses Classes, DesignEditors, DesignIntf, dsdAddOn;
 
 type
 
@@ -32,12 +32,13 @@ type
 implementation
 
 uses dsdDB, TypInfo, Db, dsdGuides, cxTextEdit, cxCurrencyEdit, cxCheckBox,
-     cxCalendar, cxButtonEdit, dsdAction;
+     cxCalendar, cxButtonEdit, dsdAction, ChoicePeriod;
 
 procedure Register;
 begin
    RegisterPropertyEditor(TypeInfo(String), TdsdParam, 'ComponentItem', TComponentItemTextProperty);
    RegisterPropertyEditor(TypeInfo(TComponent), TdsdParam, 'Component', TdsdParamComponentProperty);
+   RegisterPropertyEditor(TypeInfo(TComponent), TComponentListItem, 'Component', TdsdParamComponentProperty);
 end;
 
 
@@ -52,6 +53,7 @@ begin
   Designer.GetComponentNames(GetTypeData(TypeInfo(TDataSet)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TdsdFormParams)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TdsdGuides)), Proc);
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TPeriodChoice)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxCheckBox)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TBooleanStoredProcAction)), Proc);
 end;

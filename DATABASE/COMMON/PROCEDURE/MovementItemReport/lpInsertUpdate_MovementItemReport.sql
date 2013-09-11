@@ -34,7 +34,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION lpInsertUpdate_MovementItemReport (Integer, Integer, Integer, TFloat, TDateTime) OWNER TO postgres;
+ALTER FUNCTION lpInsertUpdate_MovementItemReport (Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TFloat, TDateTime) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

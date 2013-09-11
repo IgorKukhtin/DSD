@@ -4,7 +4,6 @@ inherited IncomeForm: TIncomeForm
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitLeft = -300
   ExplicitWidth = 1036
   ExplicitHeight = 423
   PixelsPerInch = 96
@@ -20,6 +19,8 @@ inherited IncomeForm: TIncomeForm
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 27
+      Enabled = False
+      Properties.ReadOnly = True
       TabOrder = 0
       Width = 121
     end
@@ -31,6 +32,8 @@ inherited IncomeForm: TIncomeForm
     object edOperDate: TcxDateEdit
       Left = 156
       Top = 27
+      Properties.SaveTime = False
+      Properties.ShowTime = False
       TabOrder = 2
       Width = 121
     end
@@ -529,6 +532,8 @@ inherited IncomeForm: TIncomeForm
   object edOperDatePartner: TcxDateEdit
     Left = 155
     Top = 71
+    Properties.SaveTime = False
+    Properties.ShowTime = False
     TabOrder = 4
     Width = 121
   end
@@ -599,6 +604,7 @@ inherited IncomeForm: TIncomeForm
       26
       0)
     object dxBarManagerBar: TdxBar
+      AllowClose = False
       Caption = 'Custom'
       CaptionButtons = <>
       DockedDockingStyle = dsTop
@@ -613,6 +619,10 @@ inherited IncomeForm: TIncomeForm
         item
           Visible = True
           ItemName = 'bbBooleanAction'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdateMovement'
         end
         item
           BeginGroup = True
@@ -664,6 +674,10 @@ inherited IncomeForm: TIncomeForm
     end
     object bbEntryToGrid: TdxBarButton
       Action = dsdEntryToExcel
+      Category = 0
+    end
+    object bbInsertUpdateMovement: TdxBarButton
+      Action = actInsertUpdateMovement
       Category = 0
     end
   end
@@ -780,6 +794,18 @@ inherited IncomeForm: TIncomeForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
+    end
+    object actInsertUpdateMovement: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = spInsertUpdateMovement
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end>
+      Caption = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 14
+      ShortCut = 113
     end
   end
   object DataSource: TDataSource
@@ -953,10 +979,14 @@ inherited IncomeForm: TIncomeForm
     Top = 112
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
-    OnDblClickActionList = <>
-    SortImages = dmMain.SortImageList
     View = cxGridDBTableView
-    ActionItemList = <>
+    OnDblClickActionList = <
+      item
+      end>
+    ActionItemList = <
+      item
+      end>
+    SortImages = dmMain.SortImageList
     Left = 248
     Top = 232
   end
@@ -965,10 +995,10 @@ inherited IncomeForm: TIncomeForm
     Top = 304
   end
   object EntryViewAddOn: TdsdDBViewAddOn
-    OnDblClickActionList = <>
-    SortImages = dmMain.SortImageList
     View = cxGridEntryDBTableView
+    OnDblClickActionList = <>
     ActionItemList = <>
+    SortImages = dmMain.SortImageList
     Left = 368
     Top = 240
   end
@@ -1084,6 +1114,11 @@ inherited IncomeForm: TIncomeForm
     Top = 72
   end
   object HeaderSaver: THeaderSaver
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    IdParam.DataType = ftInteger
+    IdParam.ParamType = ptOutput
+    IdParam.Value = '0'
     StoredProc = spInsertUpdateMovement
     ControlList = <
       item
@@ -1228,5 +1263,25 @@ inherited IncomeForm: TIncomeForm
     FormParams = 'FormParams'
     Left = 680
     Top = 8
+  end
+  object GuidesFiller: TGuidesFiller
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    IdParam.DataType = ftInteger
+    IdParam.ParamType = ptOutput
+    IdParam.Value = '0'
+    GuidesList = <
+      item
+        Guides = dsdGuidesFrom
+      end
+      item
+        Guides = dsdGuidesTo
+      end>
+    ActionItemList = <
+      item
+        Action = actInsertUpdateMovement
+      end>
+    Left = 248
+    Top = 96
   end
 end

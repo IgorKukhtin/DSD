@@ -20,8 +20,14 @@ inherited JuridicalGroupForm: TJuridicalGroupForm
     DataController.KeyField = 'Id'
     Images = dmMain.TreeImageList
     Navigator.Buttons.CustomButtons = <>
-    OptionsSelection.InvertSelect = False
+    OptionsBehavior.IncSearch = True
+    OptionsCustomizing.ColumnHiding = True
+    OptionsCustomizing.ColumnsQuickCustomization = True
+    OptionsData.Editing = False
+    OptionsData.Deleting = False
     OptionsView.ColumnAutoWidth = True
+    OptionsView.HeaderAutoHeight = True
+    OptionsView.Indicator = True
     RootValue = -1
     Styles.StyleSheet = dmMain.cxTreeListStyleSheet
     TabOrder = 4
@@ -211,7 +217,7 @@ inherited JuridicalGroupForm: TJuridicalGroupForm
           ParamType = ptOutput
           Value = '0'
         end>
-      isShowModal = True
+      isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
@@ -229,7 +235,7 @@ inherited JuridicalGroupForm: TJuridicalGroupForm
           DataType = ftInteger
           ParamType = ptInput
         end>
-      isShowModal = True
+      isShowModal = False
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
@@ -288,6 +294,7 @@ inherited JuridicalGroupForm: TJuridicalGroupForm
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
+      DataSource = DataSource
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -306,8 +313,23 @@ inherited JuridicalGroupForm: TJuridicalGroupForm
     Top = 248
   end
   object dsdDBTreeAddOn: TdsdDBTreeAddOn
+    OnDblClickActionList = <
+      item
+        Action = actChoiceGuides
+      end
+      item
+        Action = actUpdate
+      end>
+    ActionItemList = <
+      item
+        Action = actChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
     SortImages = dmMain.SortImageList
-    isLeafFieldName = 'isLeaf'
     DBTreeList = cxDBTreeList
     Left = 48
     Top = 160
@@ -326,23 +348,5 @@ inherited JuridicalGroupForm: TJuridicalGroupForm
       end>
     Left = 160
     Top = 168
-  end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
-    OnDblClickActionList = <
-      item
-      end
-      item
-        Action = actUpdate
-      end>
-    SortImages = dmMain.SortImageList
-    ActionItemList = <
-      item
-        ShortCut = 13
-      end
-      item
-        ShortCut = 13
-      end>
-    Left = 176
-    Top = 216
   end
 end

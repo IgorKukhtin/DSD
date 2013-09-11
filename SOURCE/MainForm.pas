@@ -149,10 +149,8 @@ type
     bbBankAccount: TdxBarButton;
     actReport_MotionGoods: TdsdOpenForm;
     bbReport_MotionGoods: TdxBarButton;
-    Action1: TAction;
+    Action2: TAction;
     procedure FormCreate(Sender: TObject);
-    procedure dxBarButton1Click(Sender: TObject);
-    procedure bbReportHistoryCostClick(Sender: TObject);
   private
     procedure OnException(Sender: TObject; E: Exception);
   public
@@ -175,14 +173,14 @@ begin
   // Локализуем сообщения DevExpress
   cxLocalizer.Active:= True;
   cxLocalizer.Locale:= 1049;
- // Application.OnException := OnException;
+//  Application.OnException := OnException;
 end;
 
 procedure TMainForm.OnException(Sender: TObject; E: Exception);
 begin
   if E is ESortException then
   else
-     raise E;
+     ShowMessage(E.Message);
 end;
 
 end.

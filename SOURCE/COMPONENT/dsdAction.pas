@@ -160,6 +160,7 @@ type
   protected
     procedure BeforeExecute(Form: TParentForm); virtual;
     procedure OnFormClose(Params: TdsdParams); virtual;
+    function ShowForm: integer;
   public
     function Execute: boolean; override;
     constructor Create(AOwner: TComponent); override;
@@ -180,9 +181,7 @@ type
   private
     FActionDataLink: TDataSetDataLink;
     FdsdDataSetRefresh: TdsdDataSetRefresh;
-    FForm: TParentForm;
     FActionType: TDataSetAcionType;
-    FFormClose: TCloseEvent;
     function GetDataSource: TDataSource;
     procedure SetDataSource(const Value: TDataSource);
   protected
@@ -207,12 +206,17 @@ type
   // ƒействие выбора значени€ из справочника
   // «аполн€ет параметры формы указанными параметрами. ѕараметры заполн€ютс€ по имени
   // и закрывает форму
-  TdsdChoiceGuides = class(TdsdCustomAction)
+  TdsdChoiceGuides = class(TdsdCustomAction, IDataSetAction)
   private
+    FActionDataLink: TDataSetDataLink;
     FParams: TdsdParams;
     FGuides: TdsdGuides;
+    function GetDataSource: TDataSource;
+    procedure SetDataSource(const Value: TDataSource);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    procedure DataSetChanged;
+    procedure UpdateData;
   public
     function Execute: boolean; override;
     constructor Create(AOwner: TComponent); override;
@@ -224,6 +228,7 @@ type
     property ShortCut;
     property ImageIndex;
     property SecondaryShortCuts;
+    property DataSource: TDataSource read GetDataSource write SetDataSource;
   end;
 
   TdsdGridToExcel = class (TdsdCustomAction)
@@ -393,21 +398,27 @@ begin
 end;
 
 function TdsdOpenForm.Execute: boolean;
+begin
+  ShowForm
+end;
+
+procedure TdsdOpenForm.OnFormClose(Params: TdsdParams);
+begin
+
+end;
+
+function TdsdOpenForm.ShowForm: integer;
 var
   Form: TParentForm;
 begin
   Form := TdsdFormStorageFactory.GetStorage.Load(FormName);
   BeforeExecute(Form);
   Form.Execute(Self, FParams);
+  result := mrNone;
   if isShowModal then
-     Form.ShowModal
+     result := Form.ShowModal
   else
      Form.Show
-end;
-
-procedure TdsdOpenForm.OnFormClose(Params: TdsdParams);
-begin
-
 end;
 
 { TdsdFormClose }
@@ -582,31 +593,51 @@ end;
 constructor TdsdChoiceGuides.Create(AOwner: TComponent);
 begin
   inherited;
+  FActionDataLink := TDataSetDataLink.Create(Self);
   FParams := TdsdParams.Create(TdsdParam);
   Caption := '¬ыбор из справочника';
   Hint := '¬ыбор из справочника';
 end;
 
-function TdsdChoiceGuides.Execute: boolean;
-var ParentId: string;
+procedure TdsdChoiceGuides.DataSetChanged;
 begin
-  if Assigned(FParams.ParamByName('ParentId')) then
-     ParentId := FParams.ParamByName('ParentId').AsString
-  else
-     ParentId := '';
+  Enabled := false;
+  // ≈сли инициализирован выбор
+  if Assigned(DataSource) and Assigned(FGuides) then
+     if Assigned(DataSource.DataSet) then
+        Enabled := (DataSource.DataSet.RecordCount <> 0)
+end;
+
+function TdsdChoiceGuides.Execute: boolean;
+begin
   if Assigned(FParams.ParamByName('Key')) and Assigned(FParams.ParamByName('TextValue')) then
-     Guides.AfterChoice(FParams.ParamByName('Key').AsString, FParams.ParamByName('TextValue').AsString, ParentId)
+     Guides.AfterChoice(FParams)
   else
      raise Exception.Create('Ќе определены параметры возврата значений при выборе из справочника');
   TForm(Owner).Close;
+end;
+
+function TdsdChoiceGuides.GetDataSource: TDataSource;
+begin
+  result := FActionDataLink.DataSource
 end;
 
 procedure TdsdChoiceGuides.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited Notification(AComponent, Operation);
- // if (Operation = opRemove) and (AComponent = FormParams) then
-   //  FormParams := nil;
+  if (Operation = opRemove) and (AComponent = DataSource) then
+     DataSource := nil;
+end;
+
+procedure TdsdChoiceGuides.SetDataSource(const Value: TDataSource);
+begin
+  FActionDataLink.DataSource := Value;
+end;
+
+procedure TdsdChoiceGuides.UpdateData;
+begin
+
 end;
 
 { TdsdChangeMovementStatus }
@@ -720,7 +751,6 @@ end;
 { TdsdInsertUpdateGuides }
 
 function TdsdInsertUpdateGuides.Execute: boolean;
-var Action: TCloseAction;
 begin
   inherited;
   TParentForm(Owner).Close(Self);
@@ -743,7 +773,7 @@ end;
 function TBooleanStoredProcAction.Execute: boolean;
 begin
   Value := not Value;
-  inherited;
+  result := inherited;
 end;
 
 procedure TBooleanStoredProcAction.SetCaptionFalse(const Value: String);
@@ -831,8 +861,9 @@ end;
 
 function TdsdStoredProcItem.GetDisplayName: string;
 begin
-//  if Assigned(FStoredProc) then
-  //   result := FStoredProc.Name + ' \ ' + FStoredProc.StoredProcName
+  result := inherited;
+  if Assigned(FStoredProc) then
+     result := FStoredProc.Name + ' \ ' + FStoredProc.StoredProcName
 end;
 
 end.

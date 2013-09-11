@@ -45,13 +45,14 @@ type
     bbSetErased: TdxBarButton;
     bbSetUnErased: TdxBarButton;
     cxDBTreeList: TcxDBTreeList;
-    dsdDBTreeAddOn: TdsdDBTreeAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     bbChoiceGuides: TdxBarButton;
     dxBarStatic1: TdxBarStatic;
     cxDBTreeListcxDBTreeListColumn1: TcxDBTreeListColumn;
     cxDBTreeListcxDBTreeListColumn2: TcxDBTreeListColumn;
     spErasedUnErased: TdsdStoredProc;
+    dsdDBTreeAddOn: TdsdDBTreeAddOn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
   private
     { Private declarations }
   public

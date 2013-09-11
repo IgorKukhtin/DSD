@@ -123,6 +123,9 @@ type
     bbGridToExel: TdxBarButton;
     dsdEntryToExcel: TdsdGridToExcel;
     bbEntryToGrid: TdxBarButton;
+    GuidesFiller: TGuidesFiller;
+    actInsertUpdateMovement: TdsdExecStoredProc;
+    bbInsertUpdateMovement: TdxBarButton;
   private
   public
   end;

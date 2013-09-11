@@ -1,63 +1,62 @@
 ﻿inherited GoodsGroupEditForm: TGoodsGroupEditForm
   Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074
-  ClientHeight = 202
-  ClientWidth = 371
-  ExplicitWidth = 387
+  ClientHeight = 192
+  ClientWidth = 295
+  ExplicitWidth = 303
+  ExplicitHeight = 219
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
-    Left = 40
-    Top = 76
+    Left = 8
+    Top = 78
     TabOrder = 1
     Width = 273
   end
   object cxLabel1: TcxLabel
-    Left = 40
-    Top = 53
+    Left = 8
+    Top = 55
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1075#1088#1091#1087#1087#1099
   end
   object cxButton1: TcxButton
-    Left = 72
-    Top = 148
+    Left = 40
+    Top = 156
     Width = 75
     Height = 25
-    Action = dsdInsertUpdateGuides1
+    Action = dsdInsertUpdateGuides
     Default = True
-    ModalResult = 1
     TabOrder = 3
   end
   object cxButton2: TcxButton
-    Left = 216
-    Top = 148
+    Left = 184
+    Top = 156
     Width = 75
     Height = 25
-    Action = dsdFormClose1
+    Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
-    ModalResult = 8
     TabOrder = 4
   end
   object cxLabel2: TcxLabel
-    Left = 40
-    Top = 98
+    Left = 8
+    Top = 100
     Caption = #1043#1088#1091#1087#1087#1072' '#1088#1086#1076#1080#1090#1077#1083#1100
   end
   object ceCode: TcxCurrencyEdit
-    Left = 40
-    Top = 26
+    Left = 8
+    Top = 28
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 0
     Width = 273
   end
   object Код: TcxLabel
-    Left = 40
-    Top = 3
+    Left = 8
+    Top = 5
     Caption = #1050#1086#1076
   end
   object ceParentGroup: TcxButtonEdit
-    Left = 40
-    Top = 121
+    Left = 8
+    Top = 123
     Properties.Buttons = <
       item
         Default = True
@@ -67,8 +66,8 @@
     Width = 273
   end
   object ActionList: TActionList
-    Left = 328
-    Top = 72
+    Left = 208
+    Top = 56
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spGet
@@ -82,9 +81,10 @@
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
     end
-    object dsdFormClose1: TdsdFormClose
+    object dsdFormClose: TdsdFormClose
+      Category = 'DSDLib'
     end
-    object dsdInsertUpdateGuides1: TdsdInsertUpdateGuides
+    object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       StoredProc = spInsertUpdate
       StoredProcList = <
@@ -123,12 +123,12 @@
       end
       item
         Name = 'inParentId'
-        Component = dsdGoodsGroupGuides
+        Component = GoodsGroupGuides
         DataType = ftInteger
         ParamType = ptInput
         Value = '0'
       end>
-    Left = 256
+    Left = 208
     Top = 8
   end
   object dsdFormParams: TdsdFormParams
@@ -139,8 +139,8 @@
         ParamType = ptInputOutput
         Value = '0'
       end>
-    Left = 184
-    Top = 24
+    Left = 152
+    Top = 8
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_GoodsGroup'
@@ -171,7 +171,7 @@
       end
       item
         Name = 'ParentId'
-        Component = dsdGoodsGroupGuides
+        Component = GoodsGroupGuides
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
@@ -179,21 +179,41 @@
       end
       item
         Name = 'ParentName'
-        Component = dsdGoodsGroupGuides
+        Component = GoodsGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptOutput
         Value = ''
       end>
-    Left = 328
-    Top = 16
+    Left = 160
+    Top = 48
   end
-  object dsdGoodsGroupGuides: TdsdGuides
+  object GoodsGroupGuides: TdsdGuides
     Key = '0'
     LookupControl = ceParentGroup
+    FormName = 'TGoodsGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <>
-    Left = 296
-    Top = 112
+    Left = 216
+    Top = 96
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 104
+    Top = 8
+  end
+  object cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
+    StorageName = 'cxPropertiesStore'
+    StorageType = stStream
+    Left = 64
+    Top = 8
   end
 end

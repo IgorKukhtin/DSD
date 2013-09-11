@@ -2,15 +2,15 @@ inherited InfoMoneyGroupForm: TInfoMoneyGroupForm
   Caption = #1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1081
   ClientHeight = 365
   ClientWidth = 464
-  ExplicitWidth = 480
-  ExplicitHeight = 403
+  ExplicitWidth = 472
+  ExplicitHeight = 392
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
+    Top = 26
     Width = 464
-    Height = 337
+    Height = 339
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
@@ -92,8 +92,8 @@ inherited InfoMoneyGroupForm: TInfoMoneyGroupForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -110,7 +110,7 @@ inherited InfoMoneyGroupForm: TInfoMoneyGroupForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -231,7 +231,7 @@ inherited InfoMoneyGroupForm: TInfoMoneyGroupForm
           ParamType = ptOutput
           Value = '0'
         end>
-      isShowModal = True
+      isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
@@ -249,7 +249,7 @@ inherited InfoMoneyGroupForm: TInfoMoneyGroupForm
           DataType = ftInteger
           ParamType = ptInput
         end>
-      isShowModal = True
+      isShowModal = False
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
@@ -307,8 +307,8 @@ inherited InfoMoneyGroupForm: TInfoMoneyGroupForm
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
       ImageIndex = 7
+      DataSource = DataSource
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -343,7 +343,24 @@ inherited InfoMoneyGroupForm: TInfoMoneyGroupForm
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     View = cxGridDBTableView
-    Left = 384
-    Top = 184
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+        Action = actUpdate
+      end>
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    Left = 360
+    Top = 192
   end
 end

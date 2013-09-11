@@ -35,7 +35,7 @@ type
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     cxPropertiesStore: TcxPropertiesStore;
-    dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
   private
     { Private declarations }

@@ -24,7 +24,7 @@ BEGIN
                                 AND ObjectLink_Account_AccountDirection.ChildObjectId = inAccountDirectionId 
 
        WHERE ObjectLink_Account_InfoMoneyDestination.DescId = zc_ObjectLink_Account_InfoMoneyDestination()
-         AND ObjectLink_Account_InfoMoneyDestination.ChildObjectId = inInfoMoneyDestinationId;
+         AND ObjectLink_Account_InfoMoneyDestination.ChildObjectId = inInfoMoneyDestinationId);
 
 END;
 $BODY$

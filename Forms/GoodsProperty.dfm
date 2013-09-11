@@ -289,6 +289,7 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ShortCut = 13
       ImageIndex = 7
+      DataSource = DataSource
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -315,8 +316,10 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
     Top = 152
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
-    SortImages = dmMain.SortImageList
     View = cxGridDBTableView
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
     Left = 224
     Top = 232
   end

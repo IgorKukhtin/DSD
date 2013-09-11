@@ -1,25 +1,25 @@
 ﻿inherited InfoMoneyDestinationEditForm: TInfoMoneyDestinationEditForm
-  Caption = #1053#1086#1074#1086#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
-  ClientHeight = 168
-  ClientWidth = 392
-  ExplicitWidth = 408
-  ExplicitHeight = 206
+  Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1086#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+  ClientHeight = 145
+  ClientWidth = 292
+  ExplicitWidth = 300
+  ExplicitHeight = 172
   PixelsPerInch = 96
   TextHeight = 13
   object edMeasureName: TcxTextEdit
-    Left = 48
-    Top = 86
+    Left = 10
+    Top = 73
     TabOrder = 0
     Width = 273
   end
   object cxLabel1: TcxLabel
-    Left = 48
-    Top = 63
+    Left = 10
+    Top = 50
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 80
-    Top = 120
+    Left = 42
+    Top = 107
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -28,8 +28,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 224
-    Top = 120
+    Left = 186
+    Top = 107
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -39,21 +39,21 @@
     TabOrder = 3
   end
   object Код: TcxLabel
-    Left = 48
-    Top = 19
+    Left = 10
+    Top = 6
     Caption = #1050#1086#1076
   end
   object ceCode: TcxCurrencyEdit
-    Left = 48
-    Top = 42
+    Left = 10
+    Top = 29
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
     Width = 273
   end
   object ActionList: TActionList
-    Left = 320
-    Top = 104
+    Left = 168
+    Top = 48
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spGet
@@ -95,7 +95,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
@@ -104,7 +104,7 @@
         ParamType = ptInput
         Value = ''
       end>
-    Left = 336
+    Left = 128
     Top = 40
   end
   object dsdFormParams: TdsdFormParams
@@ -115,8 +115,8 @@
         ParamType = ptInputOutput
         Value = '0'
       end>
-    Left = 152
-    Top = 120
+    Left = 112
+    Top = 88
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_InfoMoneyDestination'
@@ -136,7 +136,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'Name'
@@ -163,7 +163,7 @@
     Left = 40
     Top = 80
   end
-  object dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 184
   end
 end

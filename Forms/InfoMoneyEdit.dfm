@@ -1,49 +1,48 @@
 ﻿inherited InfoMoneyEditForm: TInfoMoneyEditForm
-  Caption = #1053#1086#1074#1072#1103' '#1089#1090#1072#1090#1100#1103
-  ClientHeight = 298
-  ClientWidth = 362
-  ExplicitWidth = 378
-  ExplicitHeight = 336
+  Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1072#1103' '#1089#1090#1072#1090#1100#1103
+  ClientHeight = 269
+  ClientWidth = 303
+  ExplicitWidth = 311
+  ExplicitHeight = 296
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
-    Left = 40
+    Left = 16
     Top = 71
     TabOrder = 0
     Width = 273
   end
   object cxLabel1: TcxLabel
-    Left = 40
+    Left = 16
     Top = 48
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 64
-    Top = 249
+    Left = 40
+    Top = 224
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
-    ModalResult = 8
-    TabOrder = 2
-  end
-  object cxButton2: TcxButton
-    Left = 222
-    Top = 249
-    Width = 75
-    Height = 25
-    Cancel = True
-    Caption = #1054#1090#1084#1077#1085#1072
-    ModalResult = 8
     TabOrder = 3
   end
+  object cxButton2: TcxButton
+    Left = 198
+    Top = 224
+    Width = 75
+    Height = 25
+    Action = dsdFormClose
+    Cancel = True
+    Caption = #1054#1090#1084#1077#1085#1072
+    TabOrder = 4
+  end
   object Код: TcxLabel
-    Left = 40
+    Left = 16
     Top = 3
     Caption = #1050#1086#1076
   end
   object ceCode: TcxCurrencyEdit
-    Left = 40
+    Left = 16
     Top = 26
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
@@ -51,35 +50,35 @@
     Width = 273
   end
   object cxLabel3: TcxLabel
-    Left = 40
+    Left = 16
     Top = 103
     Caption = #1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1081
   end
   object cxLabel2: TcxLabel
-    Left = 40
+    Left = 16
     Top = 159
     Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
   object ceInfoMoneyGroup: TcxButtonEdit
-    Left = 40
+    Left = 16
     Top = 128
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 8
+    TabOrder = 1
     Width = 273
   end
   object ceInfoMoneyDestination: TcxButtonEdit
-    Left = 40
+    Left = 16
     Top = 182
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 9
+    TabOrder = 2
     Width = 273
   end
   object ActionList: TActionList
@@ -98,15 +97,6 @@
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
     end
-    object dsdExecStoredProc: TdsdExecStoredProc
-      Category = 'DSDLib'
-      StoredProc = spInsertUpdate
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdate
-        end>
-      Caption = 'Ok'
-    end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       StoredProc = spInsertUpdate
@@ -115,6 +105,9 @@
           StoredProc = spInsertUpdate
         end>
       Caption = #1054#1082
+    end
+    object dsdFormClose: TdsdFormClose
+      Category = 'DSDLib'
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -135,7 +128,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
@@ -197,12 +190,12 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'InfoMoneyGroupId'
         Component = dsdInfoMoneyGroupGuides
-        ComponentItem = 'Id'
+        ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
         Value = ''
@@ -210,7 +203,7 @@
       item
         Name = 'InfoMoneyGroupName'
         Component = dsdInfoMoneyGroupGuides
-        ComponentItem = 'Name'
+        ComponentItem = 'TextValue'
         DataType = ftInteger
         ParamType = ptOutput
         Value = ''
@@ -237,6 +230,7 @@
     LookupControl = ceInfoMoneyGroup
     FormName = 'TInfoMoneyGroupForm'
     PositionDataSet = 'ClientDataSet'
+    Params = <>
     Left = 328
     Top = 125
   end
@@ -244,6 +238,7 @@
     LookupControl = ceInfoMoneyDestination
     FormName = 'TInfoMoneyDestinationForm'
     PositionDataSet = 'ClientDataSet'
+    Params = <>
     Left = 328
     Top = 173
   end

@@ -28,7 +28,6 @@ inherited MeasureForm: TMeasureForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -295,12 +294,13 @@ inherited MeasureForm: TMeasureForm
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
-          DataType = ftInteger
+          DataType = ftString
           ParamType = ptOutput
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
+      DataSource = DataSource
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -342,6 +342,7 @@ inherited MeasureForm: TMeasureForm
     Top = 200
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    View = cxGridDBTableView
     OnDblClickActionList = <
       item
         Action = dsdChoiceGuides
@@ -349,8 +350,6 @@ inherited MeasureForm: TMeasureForm
       item
         Action = actUpdate
       end>
-    SortImages = dmMain.SortImageList
-    View = cxGridDBTableView
     ActionItemList = <
       item
         Action = dsdChoiceGuides
@@ -360,6 +359,7 @@ inherited MeasureForm: TMeasureForm
         Action = actUpdate
         ShortCut = 13
       end>
+    SortImages = dmMain.SortImageList
     Left = 136
     Top = 224
   end

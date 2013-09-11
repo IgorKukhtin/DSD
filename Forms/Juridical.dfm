@@ -22,6 +22,7 @@ inherited JuridicalForm: TJuridicalForm
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GridDS
+      DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
@@ -349,6 +350,7 @@ inherited JuridicalForm: TJuridicalForm
     Top = 184
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    View = cxGridDBTableView
     OnDblClickActionList = <
       item
         Action = dsdChoiceGuides
@@ -356,8 +358,6 @@ inherited JuridicalForm: TJuridicalForm
       item
         Action = actUpdate
       end>
-    SortImages = dmMain.SortImageList
-    View = cxGridDBTableView
     ActionItemList = <
       item
         Action = dsdChoiceGuides
@@ -367,6 +367,7 @@ inherited JuridicalForm: TJuridicalForm
         Action = actUpdate
         ShortCut = 13
       end>
+    SortImages = dmMain.SortImageList
     Left = 208
     Top = 184
   end

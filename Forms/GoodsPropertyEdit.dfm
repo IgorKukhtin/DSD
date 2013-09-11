@@ -9,7 +9,7 @@
   object edName: TcxTextEdit
     Left = 40
     Top = 71
-    TabOrder = 1
+    TabOrder = 0
     Width = 273
   end
   object cxLabel1: TcxLabel
@@ -25,7 +25,7 @@
     Action = InsertUpdateGuides
     Default = True
     ModalResult = 8
-    TabOrder = 3
+    TabOrder = 1
   end
   object cxButton2: TcxButton
     Left = 216
@@ -36,7 +36,7 @@
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 8
-    TabOrder = 5
+    TabOrder = 2
   end
   object Код: TcxLabel
     Left = 40
@@ -48,7 +48,7 @@
     Top = 26
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    TabOrder = 0
+    TabOrder = 3
     Width = 273
   end
   object ActionList: TActionList
@@ -96,7 +96,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
@@ -144,7 +144,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = 0.000000000000000000
       end>
     Left = 192
     Top = 88

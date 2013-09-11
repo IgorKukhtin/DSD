@@ -65,7 +65,6 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -294,8 +293,22 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
           DataType = ftInteger
           ParamType = ptOutput
           Value = '0'
+        end
+        item
+          Name = 'GroupId'
+          Component = TreeDataSet
+          ComponentItem = 'Id'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end
+        item
+          Name = 'GroupName'
+          Component = TreeDataSet
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptOutput
         end>
-      isShowModal = True
+      isShowModal = False
       DataSource = GridDS
       DataSetRefresh = actRefresh
     end
@@ -313,7 +326,7 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
           DataType = ftInteger
           ParamType = ptInput
         end>
-      isShowModal = True
+      isShowModal = False
       ActionType = acUpdate
       DataSource = GridDS
       DataSetRefresh = actRefresh
@@ -366,6 +379,7 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ShortCut = 13
       ImageIndex = 7
+      DataSource = GridDS
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -391,12 +405,6 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
     Params = <>
     Left = 136
     Top = 216
-  end
-  object dsdDBTreeAddOn: TdsdDBTreeAddOn
-    isLeafFieldName = 'isLeaf'
-    DBTreeList = cxDBTreeList
-    Left = 80
-    Top = 208
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 336
@@ -444,6 +452,7 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
     Top = 216
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    View = cxGridDBTableView
     OnDblClickActionList = <
       item
         Action = dsdChoiceGuides
@@ -451,8 +460,6 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
       item
         Action = actUpdate
       end>
-    SortImages = dmMain.SortImageList
-    View = cxGridDBTableView
     ActionItemList = <
       item
         Action = dsdChoiceGuides
@@ -462,7 +469,28 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
         Action = actUpdate
         ShortCut = 13
       end>
+    SortImages = dmMain.SortImageList
     Left = 312
     Top = 280
+  end
+  object dsdDBTreeAddOn: TdsdDBTreeAddOn
+    OnDblClickActionList = <
+      item
+      end
+      item
+        Action = actUpdate
+      end>
+    ActionItemList = <
+      item
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    DBTreeList = cxDBTreeList
+    Left = 48
+    Top = 160
   end
 end

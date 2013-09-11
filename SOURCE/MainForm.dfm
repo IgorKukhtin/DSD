@@ -394,7 +394,6 @@ object MainForm: TMainForm
     object bbReportHistoryCost: TdxBarButton
       Action = actReport_HistoryCost
       Category = 0
-      OnClick = bbReportHistoryCostClick
     end
     object bbReport_MotionGoods: TdxBarButton
       Action = actReport_MotionGoods
@@ -1050,8 +1049,9 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object Action1: TAction
-      Caption = 'Action1'
+    object Action2: TAction
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1090#1086#1074#1072#1088#1085#1099#1077
+      Caption = 'Action2'
     end
   end
   object cxLocalizer: TcxLocalizer
@@ -1079,7 +1079,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.12.2'
+    Version = '4.14'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

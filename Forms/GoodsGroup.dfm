@@ -2,15 +2,15 @@ inherited GoodsGroupForm: TGoodsGroupForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1075#1088#1091#1087#1087' '#1090#1086#1074#1072#1088#1086#1074
   ClientHeight = 376
   ClientWidth = 390
-  ExplicitWidth = 406
-  ExplicitHeight = 414
+  ExplicitWidth = 398
+  ExplicitHeight = 403
   PixelsPerInch = 96
   TextHeight = 13
   object cxDBTreeList: TcxDBTreeList
     Left = 0
-    Top = 28
+    Top = 26
     Width = 390
-    Height = 348
+    Height = 350
     Align = alClient
     Bands = <
       item
@@ -21,10 +21,15 @@ inherited GoodsGroupForm: TGoodsGroupForm
     Images = dmMain.TreeImageList
     Navigator.Buttons.CustomButtons = <>
     OptionsBehavior.IncSearch = True
+    OptionsCustomizing.ColumnHiding = True
+    OptionsCustomizing.ColumnsQuickCustomization = True
     OptionsData.Editing = False
     OptionsData.Deleting = False
     OptionsView.ColumnAutoWidth = True
+    OptionsView.HeaderAutoHeight = True
+    OptionsView.Indicator = True
     RootValue = -1
+    Styles.StyleSheet = dmMain.cxTreeListStyleSheet
     TabOrder = 4
     object cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn
       Caption.Text = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -70,12 +75,6 @@ inherited GoodsGroupForm: TGoodsGroupForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = cxDBTreeList1cxDBTreeListColumn2
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder')
-      end
-      item
         Component = Owner
         Properties.Strings = (
           'Height'
@@ -84,14 +83,15 @@ inherited GoodsGroupForm: TGoodsGroupForm
           'Width')
       end>
     StorageName = 'cxPropertiesStore'
+    StorageType = stStream
     Left = 232
     Top = 96
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -108,7 +108,7 @@ inherited GoodsGroupForm: TGoodsGroupForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -224,7 +224,7 @@ inherited GoodsGroupForm: TGoodsGroupForm
           ParamType = ptOutput
           Value = '0'
         end>
-      isShowModal = True
+      isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
@@ -241,7 +241,7 @@ inherited GoodsGroupForm: TGoodsGroupForm
           DataType = ftInteger
           ParamType = ptInput
         end>
-      isShowModal = True
+      isShowModal = False
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
@@ -277,20 +277,20 @@ inherited GoodsGroupForm: TGoodsGroupForm
           Name = 'Key'
           Component = ClientDataSet
           ComponentItem = 'Id'
-          DataType = ftInteger
+          DataType = ftString
           ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
-          DataType = ftInteger
+          DataType = ftString
           ParamType = ptOutput
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
       ImageIndex = 7
+      DataSource = DataSource
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -303,12 +303,6 @@ inherited GoodsGroupForm: TGoodsGroupForm
     Params = <>
     Left = 152
     Top = 152
-  end
-  object dsdDBTreeAddOn: TdsdDBTreeAddOn
-    isLeafFieldName = 'isLeaf'
-    DBTreeList = cxDBTreeList
-    Left = 152
-    Top = 208
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -324,5 +318,31 @@ inherited GoodsGroupForm: TGoodsGroupForm
       end>
     Left = 288
     Top = 208
+  end
+  object dsdDBTreeAddOn: TdsdDBTreeAddOn
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+        Action = actUpdate
+      end>
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    DBTreeList = cxDBTreeList
+    Left = 48
+    Top = 160
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 288
+    Top = 112
   end
 end

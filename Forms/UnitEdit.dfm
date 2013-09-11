@@ -1,9 +1,9 @@
 ﻿inherited UnitEditForm: TUnitEditForm
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
-  ClientHeight = 281
+  ClientHeight = 300
   ClientWidth = 497
   ExplicitWidth = 505
-  ExplicitHeight = 308
+  ExplicitHeight = 327
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -19,7 +19,7 @@
   end
   object cxButton1: TcxButton
     Left = 118
-    Top = 232
+    Top = 267
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -28,7 +28,7 @@
   end
   object cxButton2: TcxButton
     Left = 312
-    Top = 232
+    Top = 267
     Width = 75
     Height = 25
     Action = FormClose
@@ -145,6 +145,13 @@
     TabOrder = 17
     Width = 209
   end
+  object cbPartionDate: TcxCheckBox
+    Left = 200
+    Top = 232
+    Caption = #1055#1072#1088#1090#1080#1080' '#1076#1072#1090#1099' '#1074' '#1091#1095#1077#1090#1077
+    TabOrder = 18
+    Width = 157
+  end
   object ActionList: TActionList
     Left = 48
     Top = 216
@@ -202,6 +209,13 @@
         DataType = ftString
         ParamType = ptInput
         Value = ''
+      end
+      item
+        Name = 'inPartionDate'
+        Component = cbPartionDate
+        DataType = ftBoolean
+        ParamType = ptInput
+        Value = 'False'
       end
       item
         Name = 'inParentId'

@@ -45,7 +45,7 @@ inherited MemberForm: TMemberForm
         Width = 61
       end
       object clName: TcxGridDBColumn
-        Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+        Caption = #1060#1048#1054
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Width = 214
@@ -306,6 +306,7 @@ inherited MemberForm: TMemberForm
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
+      DataSource = DataSource
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -347,6 +348,7 @@ inherited MemberForm: TMemberForm
     Top = 208
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    View = cxGridDBTableView
     OnDblClickActionList = <
       item
         Action = dsdChoiceGuides
@@ -354,8 +356,6 @@ inherited MemberForm: TMemberForm
       item
         Action = actUpdate
       end>
-    SortImages = dmMain.SortImageList
-    View = cxGridDBTableView
     ActionItemList = <
       item
         Action = dsdChoiceGuides
@@ -365,6 +365,7 @@ inherited MemberForm: TMemberForm
         Action = actUpdate
         ShortCut = 13
       end>
+    SortImages = dmMain.SortImageList
     Left = 328
     Top = 264
   end

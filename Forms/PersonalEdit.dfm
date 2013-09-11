@@ -3,7 +3,7 @@
   ClientHeight = 271
   ClientWidth = 607
   ExplicitWidth = 615
-  ExplicitHeight = 305
+  ExplicitHeight = 298
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
@@ -231,15 +231,17 @@
       end
       item
         Name = 'inDateIn'
+        Component = edDateIn
         DataType = ftDateTime
         ParamType = ptInput
-        Value = Null
+        Value = 0d
       end
       item
         Name = 'inDateOut'
+        Component = edDateOut
         DataType = ftDateTime
         ParamType = ptInput
-        Value = Null
+        Value = 0d
       end>
     Left = 504
     Top = 40
@@ -279,14 +281,14 @@
         Name = 'MemberId'
         Component = MemberGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
+        DataType = ftString
         ParamType = ptOutput
         Value = ''
       end
       item
         Name = 'MemberName'
         Component = MemberGuides
-        ComponentItem = 'Name'
+        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptOutput
         Value = ''
@@ -295,7 +297,7 @@
         Name = 'PositionId'
         Component = PositionGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
+        DataType = ftString
         ParamType = ptOutput
         Value = ''
       end
@@ -303,7 +305,7 @@
         Name = 'PositionName'
         Component = PositionGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
+        DataType = ftString
         ParamType = ptOutput
         Value = ''
       end
@@ -311,7 +313,7 @@
         Name = 'UnitId'
         Component = UnitGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
+        DataType = ftString
         ParamType = ptOutput
         Value = ''
       end
@@ -319,7 +321,7 @@
         Name = 'UnitName'
         Component = UnitGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
+        DataType = ftString
         ParamType = ptOutput
         Value = ''
       end
@@ -327,7 +329,7 @@
         Name = 'JuridicalId'
         Component = JuridicalGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
+        DataType = ftString
         ParamType = ptOutput
         Value = ''
       end
@@ -335,7 +337,7 @@
         Name = 'JuridicalName'
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
+        DataType = ftString
         ParamType = ptOutput
         Value = ''
       end
@@ -343,7 +345,7 @@
         Name = 'BusinessId'
         Component = BusinessGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
+        DataType = ftString
         ParamType = ptOutput
         Value = ''
       end
@@ -351,21 +353,21 @@
         Name = 'BusinessName'
         Component = BusinessGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
+        DataType = ftString
         ParamType = ptOutput
         Value = ''
       end
       item
         Name = 'DateIn'
         Component = edDateIn
-        DataType = ftInteger
+        DataType = ftDateTime
         ParamType = ptOutput
         Value = 0d
       end
       item
         Name = 'DateOut'
         Component = edDateOut
-        DataType = ftInteger
+        DataType = ftDateTime
         ParamType = ptOutput
         Value = 0d
       end>

@@ -22,7 +22,7 @@ uses
 
 type
   TRouteSortingEditForm = class(TParentForm)
-    edMeasureName: TcxTextEdit;
+    edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
     cxButton2: TcxButton;
@@ -35,7 +35,7 @@ type
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     cxPropertiesStore: TcxPropertiesStore;
-    dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
   private
     { Private declarations }

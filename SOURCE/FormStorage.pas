@@ -29,7 +29,7 @@ type
     procedure SaveUserFormSettings(FormName: String; Data: String);
     function LoadUserFormSettings(FormName: String): String;
     class function NewInstance: TObject; override;
-    destructor Destroy;
+    destructor Destroy; override;
   end;
 
   TdsdFormStorageFactory = class
@@ -174,7 +174,6 @@ begin
 end;
 
 procedure TdsdFormStorage.Save(Form: TComponent);
-var XMLData: string;
 begin
   MemoryStream.Clear;
   MemoryStream.WriteComponent(Form);

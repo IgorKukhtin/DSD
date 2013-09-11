@@ -53,7 +53,6 @@ type
     bbSetEnerased: TdxBarButton;
     dxBarStatic1: TdxBarStatic;
     bbChoiceGuide: TdxBarButton;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
   private
     { Private declarations }
   public

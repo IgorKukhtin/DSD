@@ -2,15 +2,15 @@ inherited GoodsTreeForm: TGoodsTreeForm
   Caption = #1058#1086#1074#1072#1088#1099
   ClientHeight = 473
   ClientWidth = 874
-  ExplicitWidth = 890
-  ExplicitHeight = 511
+  ExplicitWidth = 882
+  ExplicitHeight = 500
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 185
-    Top = 28
+    Top = 26
     Width = 689
-    Height = 445
+    Height = 447
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
@@ -91,13 +91,14 @@ inherited GoodsTreeForm: TGoodsTreeForm
   end
   object cxDBTreeList: TcxDBTreeList
     Left = 0
-    Top = 28
+    Top = 26
     Width = 185
-    Height = 445
+    Height = 447
     Align = alLeft
     Bands = <
       item
       end>
+    DataController.DataSource = TreeDS
     DataController.ParentField = 'ParentId'
     DataController.KeyField = 'Id'
     Images = dmMain.TreeImageList
@@ -134,6 +135,10 @@ inherited GoodsTreeForm: TGoodsTreeForm
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
+    IndexFieldNames = 'GoodsGroupId'
+    MasterFields = 'Id'
+    MasterSource = TreeDS
+    PacketRecords = 0
     Params = <>
     Left = 488
     Top = 176
@@ -161,8 +166,8 @@ inherited GoodsTreeForm: TGoodsTreeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -179,7 +184,7 @@ inherited GoodsTreeForm: TGoodsTreeForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -257,7 +262,7 @@ inherited GoodsTreeForm: TGoodsTreeForm
       Category = 0
     end
     object bbGridToExcel: TdxBarButton
-      Action = dsdGridToExcel1
+      Action = dsdGridToExcel
       Category = 0
     end
     object dxBarStatic1: TdxBarStatic
@@ -281,6 +286,9 @@ inherited GoodsTreeForm: TGoodsTreeForm
       StoredProcList = <
         item
           StoredProc = dsdStoredProc
+        end
+        item
+          StoredProc = spTree
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -300,7 +308,7 @@ inherited GoodsTreeForm: TGoodsTreeForm
           ParamType = ptOutput
           Value = '0'
         end>
-      isShowModal = True
+      isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
@@ -318,7 +326,7 @@ inherited GoodsTreeForm: TGoodsTreeForm
           DataType = ftInteger
           ParamType = ptInput
         end>
-      isShowModal = True
+      isShowModal = False
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
@@ -369,11 +377,12 @@ inherited GoodsTreeForm: TGoodsTreeForm
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
       ImageIndex = 7
+      DataSource = DataSource
     end
-    object dsdGridToExcel1: TdsdGridToExcel
+    object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -412,6 +421,8 @@ inherited GoodsTreeForm: TGoodsTreeForm
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     View = cxGridDBTableView
+    OnDblClickActionList = <>
+    ActionItemList = <>
     Left = 336
     Top = 184
   end
@@ -438,10 +449,23 @@ inherited GoodsTreeForm: TGoodsTreeForm
     Top = 136
   end
   object dsdDBTreeAddOn: TdsdDBTreeAddOn
+    OnDblClickActionList = <
+      item
+      end
+      item
+        Action = actUpdate
+      end>
+    ActionItemList = <
+      item
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
     SortImages = dmMain.SortImageList
-    isLeafFieldName = 'isLeaf'
     DBTreeList = cxDBTreeList
-    Left = 88
-    Top = 216
+    Left = 48
+    Top = 160
   end
 end

@@ -27,9 +27,6 @@ uses
 
 type
   TReport_BalanceForm = class(TParentForm)
-    cxGridDBTableView: TcxGridDBTableView;
-    cxGridLevel: TcxGridLevel;
-    cxGrid: TcxGrid;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -39,24 +36,8 @@ type
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
     dsdStoredProc: TdsdStoredProc;
-    RootName: TcxGridDBColumn;
-    AccountGroupName: TcxGridDBColumn;
-    AccountDirectionName: TcxGridDBColumn;
-    AccountCode: TcxGridDBColumn;
-    AccountName: TcxGridDBColumn;
-    AmountDebetStart: TcxGridDBColumn;
-    AmountKreditStart: TcxGridDBColumn;
-    AmountDebet: TcxGridDBColumn;
     actExportToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
-    AmountKredit: TcxGridDBColumn;
-    AmountDebetEnd: TcxGridDBColumn;
-    AmountKreditEnd: TcxGridDBColumn;
-    InfoMoneyCode: TcxGridDBColumn;
-    InfoMoneyName: TcxGridDBColumn;
-    InfoMoneyCode_Detail: TcxGridDBColumn;
-    InfoMoneyName_Detail: TcxGridDBColumn;
-    AccountOnComplete: TcxGridDBColumn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     Panel1: TPanel;

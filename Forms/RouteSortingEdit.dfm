@@ -1,12 +1,12 @@
 ﻿inherited RouteSortingEditForm: TRouteSortingEditForm
-  Caption = #1053#1086#1074#1072#1103' '#1089#1086#1088#1090#1080#1088#1086#1074#1082#1072
+  Caption = 'C'#1086#1088#1090#1080#1088#1086#1074#1082#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
   ClientHeight = 167
   ClientWidth = 365
-  ExplicitWidth = 381
-  ExplicitHeight = 205
+  ExplicitWidth = 373
+  ExplicitHeight = 194
   PixelsPerInch = 96
   TextHeight = 13
-  object edMeasureName: TcxTextEdit
+  object edName: TcxTextEdit
     Left = 32
     Top = 86
     TabOrder = 0
@@ -95,11 +95,11 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
-        Component = edMeasureName
+        Component = edName
         DataType = ftString
         ParamType = ptInput
         Value = ''
@@ -133,13 +133,13 @@
       item
         Name = 'Code'
         Component = ceCode
-        DataType = ftInteger
+        DataType = ftString
         ParamType = ptOutput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'Name'
-        Component = edMeasureName
+        Component = edName
         DataType = ftString
         ParamType = ptOutput
         Value = ''
@@ -161,7 +161,7 @@
     Left = 24
     Top = 80
   end
-  object dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 168
   end
 end

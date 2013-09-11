@@ -21,6 +21,7 @@ type
     SortImageList: TImageList;
     cxTreeListStyleSheet: TcxTreeListStyleSheet;
     cxFooterStyle: TcxStyle;
+    cxSelection: TcxStyle;
   end;
 
 var dmMain: TdmMain;

@@ -5,45 +5,28 @@ interface
 uses Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView,
      cxTextEdit, DB, dsdAction, cxGridTableView,
      VCL.Graphics, cxGraphics, cxStyles, Forms, Controls,
-     VCL.ActnList, SysUtils, dsdDB, Contnrs;
+     SysUtils, dsdDB, Contnrs, cxGridCustomTableView, dsdGuides, VCL.ActnList;
 
 type
 
-  TActionItem = class(TCollectionItem)
+  TCustomDBControlAddOn = class(TComponent)
   private
-    FSecondaryShortCuts: TShortCutList;
-    FShortCut: TShortCut;
-    FAction: TCustomAction;
-    procedure SetAction(const Value: TCustomAction);
-    procedure SetShortCut(const Value: TShortCut);
-    function GetSecondaryShortCuts: TShortCutList;
-    procedure SetSecondaryShortCuts(const Value: TShortCutList);
-    function IsSecondaryShortCutsStored: Boolean;
+    FImages: TImageList;
+    FOnDblClickActionList: TActionItemList;
+    FActionItemList: TActionItemList;
+    procedure OnDblClick(Sender: TObject);
+    procedure OnKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   protected
-    function GetDisplayName: string; override;
+    property OnDblClickActionList: TActionItemList read FOnDblClickActionList write FOnDblClickActionList;
+    property ActionItemList: TActionItemList read FActionItemList write FActionItemList;
+    property SortImages: TImageList read FImages write FImages;
   public
-    constructor Create(Collection: TCollection); override;
-  published
-    property Action: TCustomAction read FAction write SetAction;
-    property ShortCut: TShortCut read FShortCut write SetShortCut default 0;
-    property SecondaryShortCuts: TShortCutList read GetSecondaryShortCuts
-       write SetSecondaryShortCuts stored IsSecondaryShortCutsStored;
-    end;
-
-  TActionItemList = class(TCollection)
-  private
-    function GetItem(Index: Integer): TActionItem;
-    procedure SetItem(Index: Integer; const Value: TActionItem);
-  public
-    function Add: TActionItem;
-    property Items[Index: Integer]: TActionItem read GetItem write SetItem; default;
+    constructor Create(AOwner: TComponent); override;
   end;
 
-  TdsdDBTreeAddOn = class(TComponent)
+  TdsdDBTreeAddOn = class(TCustomDBControlAddOn)
   private
     FDBTreeList: TcxDBTreeList;
-    FisLeafFieldName: String;
-    FImages: TImageList;
     procedure SetDBTreeList(const Value: TcxDBTreeList);
     // сотируем при нажатых Ctrl, Shift или Alt
     procedure onColumnHeaderClick(Sender: TcxCustomTreeList; AColumn: TcxTreeListColumn);
@@ -51,15 +34,18 @@ type
     procedure onCustomDrawHeaderCell(Sender: TcxCustomTreeList;
        ACanvas: TcxCanvas; AViewInfo: TcxTreeListHeaderCellViewInfo;
        var ADone: Boolean);
+    // рисуем свой цвет у выделенной ячейки
+    procedure onCustomDrawDataCell(Sender: TcxCustomTreeList;
+       ACanvas: TcxCanvas; AViewInfo: TcxTreeListEditCellViewInfo;
+       var ADone: Boolean);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure onGetNodeImageIndex(Sender: TcxCustomTreeList; ANode: TcxTreeListNode;
               AIndexType: TcxTreeListImageIndexType; var AIndex: TImageIndex);
-  public
-    constructor Create(AOwner: TComponent); override;
   published
-    property SortImages: TImageList read FImages write FImages;
-    property isLeafFieldName: String read FisLeafFieldName write FisLeafFieldName;
+    property OnDblClickActionList;
+    property ActionItemList;
+    property SortImages;
     property DBTreeList: TcxDBTreeList read FDBTreeList write SetDBTreeList;
   end;
 
@@ -70,17 +56,12 @@ type
   // Добавляет ряд функционала на GridView
   // 1. Быстрая установка фильтров
   // 2. Рисование иконок сортировки
-  TdsdDBViewAddOn = class(TComponent)
+  TdsdDBViewAddOn = class(TCustomDBControlAddOn)
   private
     FBackGroundStyle: TcxStyle;
     FView: TcxGridDBTableView;
     // контрол для ввода условия фильтра
     edFilter: TcxTextEdit;
-    FImages: TImageList;
-    FOnDblClickActionList: TActionItemList;
-    FActionItemList: TActionItemList;
-    procedure OnDblClick(Sender: TObject);
-    procedure OnKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure OnKeyPress(Sender: TObject; var Key: Char);
     procedure SetView(const Value: TcxGridDBTableView);
     procedure edFilterExit(Sender: TObject);
@@ -95,6 +76,9 @@ type
     procedure OnCustomDrawColumnHeader(Sender: TcxGridTableView;
      ACanvas: TcxCanvas; AViewInfo: TcxGridColumnHeaderViewInfo;
      var ADone: Boolean);
+    // рисуем свой цвет у выделенной ячейки
+    procedure OnCustomDrawCell(Sender: TcxCustomGridTableView; ACanvas: TcxCanvas;
+      AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
     // поменять цвет грида в случае установки фильтра
     procedure onFilterChanged(Sender: TObject);
   protected
@@ -102,10 +86,10 @@ type
   public
     constructor Create(AOwner: TComponent); override;
   published
-    property OnDblClickActionList: TActionItemList read FOnDblClickActionList write FOnDblClickActionList;
-    property SortImages: TImageList read FImages write FImages;
     property View: TcxGridDBTableView read FView write SetView;
-    property ActionItemList: TActionItemList read FActionItemList write FActionItemList;
+    property OnDblClickActionList;
+    property ActionItemList;
+    property SortImages;
   end;
 
   TdsdUserSettingsStorageAddOn = class(TComponent)
@@ -150,11 +134,16 @@ type
     FControlList: TControlList;
     FStoredProc: TdsdStoredProc;
     FEnterValue: TStringList;
+    FOnAfterShow: TNotifyEvent;
+    FParam: TdsdParam;
     procedure OnEnter(Sender: TObject);
     procedure OnExit(Sender: TObject);
+    // процедура вызывается после открытия формы и заполняет FEnterValue начальными параметрами
+    procedure OnAfterShow(Sender: TObject);
   public
     constructor Create(AOwner: TComponent); override;
   published
+    property IdParam: TdsdParam read FParam write FParam;
     property StoredProc: TdsdStoredProc read FStoredProc write FStoredProc;
     property ControlList: TControlList read FControlList write FControlList;
   end;
@@ -176,6 +165,56 @@ type
     property FormParams: string read FFormParams write FFormParams;
   end;
 
+  TComponentListItem = class(TCollectionItem)
+  private
+    FComponent: TComponent;
+    FOnChange: TNotifyEvent;
+    procedure SetComponent(const Value: TComponent);
+    procedure OnChange(Sender: TObject);
+  protected
+    function GetDisplayName: string; override;
+  published
+    property Component: TComponent read FComponent write SetComponent;
+  end;
+
+  TComponentCollection = class(TCollection)
+    FOwner: TPersistent;
+    function GetOwner: TPersistent; override;
+    constructor Create(ItemClass: TCollectionItemClass; Owner: TComponent);
+  end;
+
+  TExecuteDialog = class;
+
+  TRefreshDispatcher = class(TComponent)
+  private
+    FRefreshAction: TdsdDataSetRefresh;
+    FComponentList: TCollection;
+    FShowDialogAction: TExecuteDialog;
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+  public
+    procedure OnComponentChange(Sender: TObject);
+    constructor Create(AOwner: TComponent); override;
+  published
+    property RefreshAction: TdsdDataSetRefresh read FRefreshAction write FRefreshAction;
+    property ShowDialogAction: TExecuteDialog read FShowDialogAction write FShowDialogAction;
+    property ComponentList: TCollection read FComponentList write FComponentList;
+  end;
+
+  // событие работы с диалогами установки параметров
+  TExecuteDialog = class (TdsdOpenForm)
+  private
+    FRefreshDispatcher: TRefreshDispatcher;
+    // Прячем свойство модальности - она всегда модальна
+    property isShowModal;
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+  public
+    function Execute: boolean; override;
+    property RefreshDispatcher: TRefreshDispatcher read FRefreshDispatcher write FRefreshDispatcher;
+  end;
+
+
   procedure Register;
 
 implementation
@@ -184,7 +223,7 @@ uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf, Windows,
      cxFilter, cxClasses, cxLookAndFeelPainters, cxCustomData,
      cxGridCommon, math, cxPropertiesStore, cxGridCustomView, UtilConst, cxStorage,
      cxGeometry, cxCalendar, cxCheckBox, dxBar, cxButtonEdit, cxCurrencyEdit,
-     VCL.Menus, ParentForm;
+     VCL.Menus, ParentForm, ChoicePeriod;
 
 type
 
@@ -197,15 +236,11 @@ begin
    RegisterComponents('DSDComponent', [TdsdDBViewAddOn]);
    RegisterComponents('DSDComponent', [TdsdUserSettingsStorageAddOn]);
    RegisterComponents('DSDComponent', [TRefreshAddOn]);
+   RegisterComponents('DSDComponent', [TRefreshDispatcher]);
+   RegisterActions('DSDLib', [TExecuteDialog], TExecuteDialog);
 end;
 
 { TdsdDBTreeAddOn }
-
-constructor TdsdDBTreeAddOn.Create(AOwner: TComponent);
-begin
-  inherited;
-  isLeafFieldName := 'isLeaf';
-end;
 
 procedure TdsdDBTreeAddOn.Notification(AComponent: TComponent;
   Operation: TOperation);
@@ -223,11 +258,20 @@ begin
      raise ESortException.Create('');
 end;
 
+procedure TdsdDBTreeAddOn.onCustomDrawDataCell(Sender: TcxCustomTreeList;
+  ACanvas: TcxCanvas; AViewInfo: TcxTreeListEditCellViewInfo;
+  var ADone: Boolean);
+begin
+  if AViewInfo.Focused then begin
+     ACanvas.Brush.Color := clHighlight;
+     ACanvas.Font.Color := clHighlightText;
+  end;
+end;
+
 procedure TdsdDBTreeAddOn.onCustomDrawHeaderCell(Sender: TcxCustomTreeList;
   ACanvas: TcxCanvas; AViewInfo: TcxTreeListHeaderCellViewInfo;
   var ADone: Boolean);
 var
-  I: Integer;
   R: TRect;
   ASortingImageSize: Integer;
   ASortingImageIndex: Integer;
@@ -243,6 +287,7 @@ begin
       ViewParams.Color, nil);
    end;
 
+   ASortingImageSize := 0;
    if Assigned(SortImages) then
       ASortingImageSize := SortImages.Width;
 
@@ -270,19 +315,20 @@ procedure TdsdDBTreeAddOn.onGetNodeImageIndex(Sender: TcxCustomTreeList;
 begin
   // Устанавливаем индексы картинок
   if Assigned(FDBTreeList) then
+    // Если раскрыта, то всегда изображение раскрытой папки!
     if ANode.Expanded then
        AIndex := 1
     else
-       if ANode.CanExpand then
-          AIndex := 0
-       else
-          AIndex := 2;
+       AIndex := 0;
 end;
 
 procedure TdsdDBTreeAddOn.SetDBTreeList(const Value: TcxDBTreeList);
 begin
   FDBTreeList := Value;
   if Assigned(FDBTreeList) then begin
+     FDBTreeList.OnKeyDown := OnKeyDown;
+     FDBTreeList.OnDblClick := OnDblClick;
+     FDBTreeList.onCustomDrawDataCell := onCustomDrawDataCell;
      FDBTreeList.OnGetNodeImageIndex := OnGetNodeImageIndex;
      FDBTreeList.OnColumnHeaderClick := OnColumnHeaderClick;
      FDBTreeList.OnCustomDrawHeaderCell := OnCustomDrawHeaderCell;
@@ -294,9 +340,6 @@ end;
 constructor TdsdDBViewAddOn.Create(AOwner: TComponent);
 begin
   inherited;
-  ActionItemList := TActionItemList.Create(TActionItem);
-  OnDblClickActionList := TActionItemList.Create(TActionItem);
-
   edFilter := TcxTextEdit.Create(Self);
   edFilter.OnKeyDown := edFilterKeyDown;
   edFilter.Visible := false;
@@ -314,6 +357,16 @@ begin
      Abort;
 end;
 
+procedure TdsdDBViewAddOn.OnCustomDrawCell(Sender: TcxCustomGridTableView;
+  ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
+  var ADone: Boolean);
+begin
+  if AViewInfo.Focused then begin
+     ACanvas.Brush.Color := clHighlight;
+     ACanvas.Font.Color := clHighlightText;
+  end;
+end;
+
 procedure TdsdDBViewAddOn.OnCustomDrawColumnHeader(
   Sender: TcxGridTableView; ACanvas: TcxCanvas;
   AViewInfo: TcxGridColumnHeaderViewInfo; var ADone: Boolean);
@@ -323,6 +376,7 @@ var
   ASortingImageSize: Integer;
   ASortingImageIndex: Integer;
 begin
+  ASortingImageSize := 0;
   if Assigned(SortImages) then
      ASortingImageSize := SortImages.Width;
   with AViewInfo do
@@ -360,20 +414,6 @@ begin
     end;
     ADone := True;
   end;
-end;
-
-procedure TdsdDBViewAddOn.OnDblClick(Sender: TObject);
-var i: integer;
-begin
-  // Выполняем События на DblClick
-  for I := 0 to FOnDblClickActionList.Count - 1 do
-    if Assigned(FOnDblClickActionList[i].Action) then
-       if OnDblClickActionList[i].Action.Enabled then begin
-          // Выполнили первое действие в списке
-          OnDblClickActionList[i].Action.Execute;
-          // И сразу вышли!!!
-          exit;
-       end;
 end;
 
 procedure TdsdDBViewAddOn.onFilterChanged(Sender: TObject);
@@ -458,22 +498,6 @@ begin
      FView := nil;
 end;
 
-procedure TdsdDBViewAddOn.OnKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-var i: integer;
-begin
-  // Сначала проверим все action
-  // и если там нет ничего, то тогда идем дальше
-  for I := 0 to ActionItemList.Count - 1 do
-      if ShortCut(Key, Shift) = ActionItemList[i].ShortCut then begin
-         if ActionItemList[i].Action.Enabled then begin
-            ActionItemList[i].Action.Execute;
-            Key := 0;
-            Shift := [];
-         end;
-      end;
-end;
-
 procedure TdsdDBViewAddOn.OnKeyPress(Sender: TObject; var Key: Char);
 begin
   // если колонка не редактируема и введена буква или BackSpace то обрабатываем установку фильтра
@@ -486,12 +510,15 @@ end;
 procedure TdsdDBViewAddOn.SetView(const Value: TcxGridDBTableView);
 begin
   FView := Value;
-  FView.OnKeyDown := OnKeyDown;
-  FView.OnKeyPress := OnKeyPress;
-  FView.OnCustomDrawColumnHeader := OnCustomDrawColumnHeader;
-  FView.DataController.Filter.OnChanged := onFilterChanged;
-  FView.OnColumnHeaderClick := OnColumnHeaderClick;
-  FView.OnDblClick := OnDblClick;
+  if Assigned(FView) then begin
+    FView.OnKeyDown := OnKeyDown;
+    FView.OnKeyPress := OnKeyPress;
+    FView.OnCustomDrawColumnHeader := OnCustomDrawColumnHeader;
+    FView.DataController.Filter.OnChanged := onFilterChanged;
+    FView.OnColumnHeaderClick := OnColumnHeaderClick;
+    FView.OnDblClick := OnDblClick;
+    FView.OnCustomDrawCell := OnCustomDrawCell
+  end;
 end;
 
 { TdsdUserSettingsStorageAddOn }
@@ -512,7 +539,7 @@ procedure TdsdUserSettingsStorageAddOn.OnShow(Sender: TObject);
 begin
   LoadUserSettings;
   if Assigned(FOnShow) then
-     OnShow(Sender)
+     FOnShow(Sender)
 end;
 
 procedure TdsdUserSettingsStorageAddOn.OnClose(Sender: TObject;
@@ -583,7 +610,7 @@ end;
 procedure TdsdUserSettingsStorageAddOn.SaveUserSettings;
 var
   TempStream: TStringStream;
-  i, j: integer;
+  i: integer;
   xml: string;
   FormName: string;
 begin
@@ -637,8 +664,22 @@ end;
 constructor THeaderSaver.Create(AOwner: TComponent);
 begin
   inherited;
+  FParam := TdsdParam.Create(nil);
   FControlList := TControlList.Create(Self);
   FEnterValue := TStringList.Create;
+  if Self.Owner is TParentForm then begin
+     FOnAfterShow := TParentForm(Owner).onAfterShow;
+     TParentForm(Owner).onAfterShow := onAfterShow;
+  end;
+end;
+
+procedure THeaderSaver.OnAfterShow(Sender: TObject);
+var i: integer;
+begin
+  if Assigned(FOnAfterShow) then
+     FOnAfterShow(Sender);
+  for I := 0 to ControlList.Count - 1 do
+      onEnter(ControlList[i].Control)
 end;
 
 procedure THeaderSaver.OnEnter(Sender: TObject);
@@ -658,6 +699,10 @@ end;
 procedure THeaderSaver.OnExit(Sender: TObject);
 var isChanged: boolean;
 begin
+  if not Assigned(IdParam) then
+     raise Exception.Create('Не установлено свойство IdParam');
+  if (IdParam.Value = 0) then
+      exit;
   if Sender is TcxTextEdit then
      isChanged := FEnterValue.Values[TComponent(Sender).Name] <> (Sender as TcxTextEdit).Text;
   if Sender is TcxButtonEdit then
@@ -761,66 +806,132 @@ begin
          end;
 end;
 
-{ TActionItem }
+{ TCustomDBControlAddOn }
 
-constructor TActionItem.Create(Collection: TCollection);
+constructor TCustomDBControlAddOn.Create(AOwner: TComponent);
 begin
   inherited;
-
+  ActionItemList := TActionItemList.Create(TShortCutActionItem);
+  OnDblClickActionList := TActionItemList.Create(TActionItem);
 end;
 
-procedure TActionItem.SetAction(const Value: TCustomAction);
+procedure TCustomDBControlAddOn.OnDblClick(Sender: TObject);
+var i: integer;
 begin
-  FAction := Value;
+  // Выполняем События на DblClick
+  for I := 0 to FOnDblClickActionList.Count - 1 do
+    if Assigned(FOnDblClickActionList[i].Action) then
+       if OnDblClickActionList[i].Action.Enabled then begin
+          // Выполнили первое действие в списке
+          OnDblClickActionList[i].Action.Execute;
+          // И сразу вышли!!!
+          exit;
+       end;
 end;
 
-function TActionItem.GetDisplayName: string;
+procedure TCustomDBControlAddOn.OnKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+var i: integer;
 begin
-  if Assigned(Action) then
-     result := Action.Name
-  else
-     result := inherited;
+  // Сначала проверим все action
+  // и если там нет ничего, то тогда идем дальше
+  for I := 0 to ActionItemList.Count - 1 do
+      if ShortCut(Key, Shift) = TShortCutActionItem(ActionItemList[i]).ShortCut then begin
+         if ActionItemList[i].Action.Enabled then begin
+            // Выполнили первое действие в списке
+            ActionItemList[i].Action.Execute;
+            Key := 0;
+            Shift := [];
+            // И сразу вышли!!!
+            exit;
+         end;
+      end;
 end;
 
-function TActionItem.GetSecondaryShortCuts: TShortCutList;
+{ TRefreshDispatcher }
+
+constructor TRefreshDispatcher.Create(AOwner: TComponent);
 begin
-  if FSecondaryShortCuts = nil then
-    FSecondaryShortCuts := TShortCutList.Create;
-  Result := FSecondaryShortCuts;
+  inherited;
+  ComponentList := TComponentCollection.Create(TComponentListItem, Self);
 end;
 
-procedure TActionItem.SetSecondaryShortCuts(const Value: TShortCutList);
+procedure TRefreshDispatcher.Notification(AComponent: TComponent;
+  Operation: TOperation);
 begin
-  if FSecondaryShortCuts = nil then
-    FSecondaryShortCuts := TShortCutList.Create;
-  FSecondaryShortCuts.Assign(Value);
+  inherited Notification(AComponent, Operation);
+  if (Operation = opRemove) and (AComponent = FRefreshAction) then
+     FRefreshAction := nil;
+  if (Operation = opRemove) and (AComponent = FShowDialogAction) then
+     FShowDialogAction := nil;
 end;
 
-function TActionItem.IsSecondaryShortCutsStored: Boolean;
+procedure TRefreshDispatcher.OnComponentChange(Sender: TObject);
 begin
-  Result := Assigned(FSecondaryShortCuts) and (FSecondaryShortCuts.Count > 0);
+  if Assigned(FRefreshAction) then
+  // перечитываем запросы только если форма загружена
+     if Assigned(Self.Owner) and (Self.Owner is TParentForm)
+        and TParentForm(Self.Owner).isAfterShow then
+            FRefreshAction.Execute
 end;
 
-procedure TActionItem.SetShortCut(const Value: TShortCut);
+{ TComponentListItem }
+
+function TComponentListItem.GetDisplayName: string;
 begin
-  FShortCut := Value;
+  result := inherited;
+  if Assigned(FComponent) then
+     result := FComponent.Name
 end;
 
-{ TActionItemList }
-
-function TActionItemList.Add: TActionItem;
+procedure TComponentListItem.OnChange(Sender: TObject);
 begin
-  result := TActionItem(inherited Add);
+  // Вызываем onChange если был
+  if Assigned(FOnChange) then
+     FOnChange(Sender);
+  // Перечитываем запросы
+  if Assigned(TRefreshDispatcher(Collection.Owner)) then
+     TRefreshDispatcher(Collection.Owner).OnComponentChange(Sender);
 end;
 
-function TActionItemList.GetItem(Index: Integer): TActionItem;
+procedure TComponentListItem.SetComponent(const Value: TComponent);
 begin
-  Result := TActionItem(inherited GetItem(Index));
+  FComponent := Value;
+  if Assigned(FComponent) then begin
+     if FComponent is TPeriodChoice then
+        FOnChange := TPeriodChoice(FComponent).onChange;
+        TPeriodChoice(FComponent).onChange := OnChange;
+  end;
 end;
 
-procedure TActionItemList.SetItem(Index: Integer; const Value: TActionItem);
+{ TComponentCollection }
+
+constructor TComponentCollection.Create(ItemClass: TCollectionItemClass;
+  Owner: TComponent);
 begin
-  inherited SetItem(Index, Value);
+  inherited Create(ItemClass);
+  FOwner := Owner;
+end;
+
+function TComponentCollection.GetOwner: TPersistent;
+begin
+  result := FOwner;
+end;
+
+{ TExecuteDialog }
+
+function TExecuteDialog.Execute: boolean;
+begin
+  //if ShowForm = mrOk then
+    // RefreshDispatcher.
+end;
+
+procedure TExecuteDialog.Notification(AComponent: TComponent;
+  Operation: TOperation);
+begin
+  inherited Notification(AComponent, Operation);
+  if (Operation = opRemove) and (AComponent = FRefreshDispatcher) then
+     FRefreshDispatcher := nil;
 end;
 
 end.

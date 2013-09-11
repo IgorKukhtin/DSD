@@ -2,14 +2,14 @@
   Caption = #1041#1080#1079#1085#1077#1089#1099
   ClientHeight = 142
   ClientWidth = 349
-  ExplicitWidth = 365
-  ExplicitHeight = 180
+  ExplicitWidth = 357
+  ExplicitHeight = 169
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
     Left = 40
     Top = 71
-    TabOrder = 1
+    TabOrder = 0
     Width = 273
   end
   object cxLabel1: TcxLabel
@@ -49,7 +49,7 @@
     Top = 26
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    TabOrder = 0
+    TabOrder = 1
     Width = 273
   end
   object spInsertUpdate: TdsdStoredProc
@@ -70,7 +70,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
@@ -118,7 +118,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = 0.000000000000000000
       end>
     Left = 192
     Top = 88

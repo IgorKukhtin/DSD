@@ -21,7 +21,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, cxButtonEdit, dsdAddOn;
 
 type
   TPartnerEditForm = class(TParentForm)
@@ -34,31 +34,30 @@ type
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     dsdDataSetRefresh: TdsdDataSetRefresh;
-    dsdFormClose1: TdsdFormClose;
+    dsdFormClose: TdsdFormClose;
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
     cxLabel2: TcxLabel;
     edGLNCode: TcxTextEdit;
     cxLabel3: TcxLabel;
-    ceJuridical: TcxLookupComboBox;
-    JuridicalDataSet: TClientDataSet;
-    spGetJuridical: TdsdStoredProc;
-    JuridicalDS: TDataSource;
+    ceJuridical: TcxButtonEdit;
     dsdJuridicalGuides: TdsdGuides;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
     cxLabel4: TcxLabel;
-    edPrepareDayCount: TcxTextEdit;
-    edDocumentDayCount: TcxTextEdit;
     cxLabel5: TcxLabel;
     cxLabel6: TcxLabel;
-    ceRoute: TcxLookupComboBox;
+    ceRoute: TcxButtonEdit;
     cxLabel7: TcxLabel;
-    ceRouteSorting: TcxLookupComboBox;
+    ceRouteSorting: TcxButtonEdit;
     cxLabel8: TcxLabel;
-    cePersonalTake: TcxLookupComboBox;
-    dsdPersonalTakeGuides: TdsdGuides;
+    cePersonalTake: TcxButtonEdit;
+    dsdPersonalGuides: TdsdGuides;
     dsdRouteSortingGuides: TdsdGuides;
     dsdRouteGuides: TdsdGuides;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    cxPropertiesStore: TcxPropertiesStore;
+    cePrepareDayCount: TcxCurrencyEdit;
+    ceDocumentDayCount: TcxCurrencyEdit;
 
   private
     { Private declarations }

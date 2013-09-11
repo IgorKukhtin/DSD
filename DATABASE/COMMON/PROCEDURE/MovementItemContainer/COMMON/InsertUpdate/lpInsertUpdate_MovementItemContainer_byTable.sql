@@ -16,7 +16,7 @@ BEGIN
      -- сохранили проводки
      INSERT INTO MovementItemContainer (DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
         SELECT DescId, MovementId, CASE WHEN MovementItemId = 0 THEN NULL ELSE MovementItemId END, ContainerId, CASE WHEN ParentId = 0 THEN NULL ELSE ParentId END, COALESCE (Amount, 0), OperDate, IsActive FROM _tmpMIContainer_insert;
-
+     
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

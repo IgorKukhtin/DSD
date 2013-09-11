@@ -24,7 +24,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dxBarExtItems, cxCurrencyEdit;
+  dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs;
 
 type
   TIncomeJournalForm = class(TParentForm)
@@ -79,11 +79,13 @@ type
     colPersonalPackerName: TcxGridDBColumn;
     colTotalSummPacker: TcxGridDBColumn;
     colTotalSummSpending: TcxGridDBColumn;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
     bbStatic: TdxBarStatic;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
+    PeriodChoice: TPeriodChoice;
+    RefreshDispatcher: TRefreshDispatcher;
   private
   public
   end;

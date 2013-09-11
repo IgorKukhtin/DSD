@@ -13,9 +13,6 @@ inherited PartnerForm: TPartnerForm
     Height = 447
     Align = alClient
     TabOrder = 4
-    ExplicitLeft = 8
-    ExplicitWidth = 704
-    ExplicitHeight = 379
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -80,7 +77,15 @@ inherited PartnerForm: TPartnerForm
     Top = 144
   end
   object cxPropertiesStore: TcxPropertiesStore
-    Components = <>
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
     StorageName = 'cxPropertiesStore'
     Left = 232
     Top = 96
@@ -227,7 +232,7 @@ inherited PartnerForm: TPartnerForm
           ParamType = ptOutput
           Value = '0'
         end>
-      isShowModal = True
+      isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
@@ -245,7 +250,7 @@ inherited PartnerForm: TPartnerForm
           DataType = ftInteger
           ParamType = ptInput
         end>
-      isShowModal = True
+      isShowModal = False
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
@@ -271,10 +276,25 @@ inherited PartnerForm: TPartnerForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
-      Params = <>
+      Params = <
+        item
+          Name = 'Key'
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          DataType = ftString
+          ParamType = ptOutput
+        end
+        item
+          Name = 'TextValue'
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptOutput
+        end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
+      DataSource = DataSource
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -331,5 +351,9 @@ inherited PartnerForm: TPartnerForm
       end>
     Left = 328
     Top = 264
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 336
+    Top = 200
   end
 end

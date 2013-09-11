@@ -406,8 +406,9 @@ inherited UnitTreeForm: TUnitTreeForm
     Top = 160
   end
   object dsdDBTreeAddOn: TdsdDBTreeAddOn
+    OnDblClickActionList = <>
+    ActionItemList = <>
     SortImages = dmMain.SortImageList
-    isLeafFieldName = 'isLeaf'
     DBTreeList = cxDBTreeList
     Left = 192
     Top = 240
@@ -436,6 +437,7 @@ inherited UnitTreeForm: TUnitTreeForm
     Top = 280
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    View = cxGridDBTableView
     OnDblClickActionList = <
       item
         Action = dsdChoiceGuides
@@ -443,8 +445,6 @@ inherited UnitTreeForm: TUnitTreeForm
       item
         Action = actUpdate
       end>
-    SortImages = dmMain.SortImageList
-    View = cxGridDBTableView
     ActionItemList = <
       item
         Action = dsdChoiceGuides
@@ -454,6 +454,7 @@ inherited UnitTreeForm: TUnitTreeForm
         Action = actUpdate
         ShortCut = 13
       end>
+    SortImages = dmMain.SortImageList
     Left = 432
     Top = 240
   end

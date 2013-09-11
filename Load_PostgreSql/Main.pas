@@ -19,7 +19,9 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, cxTextEdit, cxMaskEdit, cxDropDownEdit,
-  cxCalendar, dsdDB,UtilConst;
+  cxCalendar, dsdDB,UtilConst, cxStyles, cxCustomData, cxFilter, cxData,
+  cxDataStorage, cxDBData, cxClasses, cxGridCustomTableView, cxGridTableView,
+  cxGridDBTableView, cxGridLevel, cxGridCustomView, cxGrid;
 
 type
   TMainForm = class(TForm)
@@ -110,6 +112,10 @@ type
     fromQuery_two: TADOQuery;
     ToZConnection: TZConnection;
     cbCompleteInventory: TCheckBox;
+    cxStyleRepository1: TcxStyleRepository;
+    cxStyle1: TcxStyle;
+    cxStyleRepository2: TcxStyleRepository;
+    cxStyle2: TcxStyle;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -122,6 +128,8 @@ type
     procedure cbUnCompleteClick(Sender: TObject);
     procedure cbCompleteIncomeClick(Sender: TObject);
     procedure OKCompleteDocumentButtonClick(Sender: TObject);
+    procedure cxGrid1DBTableView1InitEdit(Sender: TcxCustomGridTableView;
+      AItem: TcxCustomGridTableItem; AEdit: TcxCustomEdit);
   private
     fStop:Boolean;
     procedure EADO_EngineErrorMsg(E:EADOError);
@@ -251,6 +259,12 @@ begin
      //
      if fStop then Close;
 end;
+procedure TMainForm.cxGrid1DBTableView1InitEdit(Sender: TcxCustomGridTableView;
+  AItem: TcxCustomGridTableItem; AEdit: TcxCustomEdit);
+begin
+
+end;
+
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fGetSession:String;
 begin Result:='1005'; end;

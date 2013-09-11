@@ -15,7 +15,7 @@
   object cxLabel1: TcxLabel
     Left = 32
     Top = 63
-    Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+    Caption = #1060#1048#1054
   end
   object cxButton1: TcxButton
     Left = 64
@@ -106,7 +106,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
@@ -154,7 +154,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'Name'

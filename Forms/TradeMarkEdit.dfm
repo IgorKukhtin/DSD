@@ -1,59 +1,57 @@
 ﻿inherited TradeMarkEditForm: TTradeMarkEditForm
-  Caption = #1053#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
-  ClientHeight = 160
-  ClientWidth = 369
-  ExplicitWidth = 385
-  ExplicitHeight = 198
+  Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
+  ClientHeight = 149
+  ClientWidth = 294
+  ExplicitWidth = 302
+  ExplicitHeight = 176
   PixelsPerInch = 96
   TextHeight = 13
   object edMeasureName: TcxTextEdit
-    Left = 48
-    Top = 86
+    Left = 9
+    Top = 74
     TabOrder = 0
     Width = 273
   end
   object cxLabel1: TcxLabel
-    Left = 48
-    Top = 63
+    Left = 9
+    Top = 51
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 80
-    Top = 120
+    Left = 41
+    Top = 108
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
-    ModalResult = 8
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 224
-    Top = 120
+    Left = 185
+    Top = 108
     Width = 75
     Height = 25
-    Action = dsdFormClose1
+    Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
-    ModalResult = 8
     TabOrder = 3
   end
   object Код: TcxLabel
-    Left = 48
-    Top = 19
+    Left = 9
+    Top = 7
     Caption = #1050#1086#1076
   end
   object ceCode: TcxCurrencyEdit
-    Left = 48
-    Top = 42
+    Left = 9
+    Top = 30
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
     Width = 273
   end
   object ActionList: TActionList
-    Left = 320
-    Top = 104
+    Left = 120
+    Top = 120
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spGet
@@ -65,7 +63,8 @@
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
     end
-    object dsdFormClose1: TdsdFormClose
+    object dsdFormClose: TdsdFormClose
+      Category = 'DSDLib'
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
@@ -95,7 +94,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
@@ -104,8 +103,8 @@
         ParamType = ptInput
         Value = ''
       end>
-    Left = 336
-    Top = 40
+    Left = 136
+    Top = 56
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -136,7 +135,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'Name'
@@ -163,7 +162,7 @@
     Left = 40
     Top = 80
   end
-  object dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 184
   end
 end

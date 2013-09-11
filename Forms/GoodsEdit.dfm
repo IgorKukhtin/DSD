@@ -2,8 +2,8 @@
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
   ClientHeight = 361
   ClientWidth = 352
-  ExplicitWidth = 368
-  ExplicitHeight = 399
+  ExplicitWidth = 360
+  ExplicitHeight = 388
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -32,7 +32,7 @@
     Top = 320
     Width = 75
     Height = 25
-    Action = dsdFormClose1
+    Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 8
@@ -62,17 +62,17 @@
     Caption = #1045#1076'. '#1080#1079#1084#1077#1088#1077#1085#1080#1103
   end
   object cxLabel2: TcxLabel
-    Left = 192
+    Left = 264
     Top = 254
     Caption = #1042#1077#1089
   end
   object ceWeight: TcxCurrencyEdit
-    Left = 192
+    Left = 264
     Top = 277
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 9
-    Width = 121
+    Width = 49
   end
   object ceParentGroup: TcxButtonEdit
     Left = 40
@@ -94,7 +94,7 @@
         Kind = bkEllipsis
       end>
     TabOrder = 11
-    Width = 129
+    Width = 77
   end
   object сеTradeMark: TcxButtonEdit
     Left = 40
@@ -128,6 +128,22 @@
     Top = 210
     Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
   end
+  object cxLabel7: TcxLabel
+    Left = 131
+    Top = 254
+    Caption = #1041#1080#1079#1085#1077#1089
+  end
+  object ceBusiness: TcxButtonEdit
+    Left = 131
+    Top = 277
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 17
+    Width = 127
+  end
   object ActionList: TActionList
     Left = 320
     Top = 72
@@ -146,7 +162,7 @@
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
     end
-    object dsdFormClose1: TdsdFormClose
+    object dsdFormClose: TdsdFormClose
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
@@ -186,6 +202,13 @@
         Value = ''
       end
       item
+        Name = 'inWeight'
+        Component = ceWeight
+        DataType = ftFloat
+        ParamType = ptInput
+        Value = 0.000000000000000000
+      end
+      item
         Name = 'inGoodsGroupId'
         Component = dsdGoodsGroupGuides
         DataType = ftInteger
@@ -214,11 +237,12 @@
         Value = '0'
       end
       item
-        Name = 'inWeight'
-        Component = ceWeight
-        DataType = ftFloat
+        Name = 'inBusinessId'
+        Component = BusinessGuides
+        ComponentItem = 'Key'
+        DataType = ftInteger
         ParamType = ptInput
-        Value = 0.000000000000000000
+        Value = ''
       end>
     Left = 232
     Top = 48
@@ -349,8 +373,8 @@
     FormName = 'TMeasureForm'
     PositionDataSet = 'ClientDataSet'
     Params = <>
-    Left = 128
-    Top = 272
+    Left = 32
+    Top = 256
   end
   object dsdTradeMarkGuides: TdsdGuides
     Key = '0'
@@ -369,5 +393,32 @@
     Params = <>
     Left = 312
     Top = 219
+  end
+  object cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
+    StorageName = 'cxPropertiesStore'
+    StorageType = stStream
+    Left = 280
+    Top = 312
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 304
+    Top = 256
+  end
+  object BusinessGuides: TdsdGuides
+    LookupControl = ceBusiness
+    FormName = 'TBusinessForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <>
+    Left = 176
+    Top = 272
   end
 end

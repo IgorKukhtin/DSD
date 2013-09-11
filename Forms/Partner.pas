@@ -57,6 +57,7 @@ type
     cxGridLevel: TcxGridLevel;
     ceName: TcxGridDBColumn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
   private
     { Private declarations }
   public

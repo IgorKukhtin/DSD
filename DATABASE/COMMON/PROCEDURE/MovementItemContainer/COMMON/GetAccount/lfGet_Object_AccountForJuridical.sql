@@ -37,6 +37,8 @@ BEGIN
            THEN
                 outAccountGroupId := zc_Enum_AccountGroup_90000(); -- Расчеты с бюджетом;
                 outAccountDirectionId := zc_Enum_AccountDirection_90200();  -- "Налоговые платежи (прочие)"
+           ELSE
+                RAISE EXCEPTION 'Не определен счет по управленческой статье "%"', inInfoMoneyDestinationId;
       END CASE;
    ELSE
       -- Выбираем по управленческой статье
@@ -63,6 +65,8 @@ BEGIN
            THEN
                 outAccountGroupId := zc_Enum_AccountGroup_30000(); -- Дебиторы
                 outAccountDirectionId := zc_Enum_AccountDirection_30200();  -- Прочие дебиторы
+           ELSE
+                RAISE EXCEPTION 'Не определен счет по управленческой статье "%"', inInfoMoneyDestinationId;
       END CASE;
    END IF;
 END;

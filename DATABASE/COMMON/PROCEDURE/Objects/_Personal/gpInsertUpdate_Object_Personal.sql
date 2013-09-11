@@ -5,7 +5,6 @@
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Personal(
  INOUT ioId                  Integer   , -- ключ объекта <Сотрудники>
     IN inCode                Integer   , -- Код объекта 
-    IN inName                TVarChar   , -- 
     IN inMemberId            Integer   , -- ссылка на Физ.лица 
     IN inPositionId          Integer   , -- ссылка на Должность
     IN inUnitId              Integer   , -- ссылка на Подразделение
@@ -28,14 +27,12 @@ BEGIN
    --  Если код не установлен, определяем его как последний+1 
    vbCode:=lfGet_ObjectCode (inCode, zc_Object_Personal());
    
-   -- проверка уникальности <Наименование>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Personal(), inName);
    -- проверка уникальности <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Personal(), vbCode);
 
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Personal(), vbCode, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Personal(), vbCode, '');
    -- сохранили связь с <физ.лицом>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_Member(), ioId, inMemberId);
    -- сохранили связь с <должностью>
@@ -58,12 +55,13 @@ END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Personal (Integer, Integer, TVarChar, Integer, Integer,Integer,Integer,Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer,Integer,Integer,Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
   
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.09.13                         * inName - УБРАЛ. Не нашел для него применения
  24.07.13                                        * inName - БЫТЬ !!! или хотя бы vbMemberName
  01.07.13          * 
  19.07.13                         * 

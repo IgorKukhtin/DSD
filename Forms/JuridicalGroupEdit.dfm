@@ -1,34 +1,33 @@
 ﻿inherited JuridicalGroupEditForm: TJuridicalGroupEditForm
   Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
-  ClientHeight = 202
-  ClientWidth = 371
-  ExplicitWidth = 379
-  ExplicitHeight = 229
+  ClientHeight = 198
+  ClientWidth = 303
+  ExplicitWidth = 311
+  ExplicitHeight = 225
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
-    Left = 40
+    Left = 15
     Top = 76
-    TabOrder = 1
+    TabOrder = 0
     Width = 273
   end
   object cxLabel1: TcxLabel
-    Left = 40
+    Left = 15
     Top = 53
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1075#1088#1091#1087#1087#1099
   end
   object cxButton1: TcxButton
-    Left = 72
+    Left = 47
     Top = 160
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
     Default = True
-    ModalResult = 1
-    TabOrder = 3
+    TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 216
+    Left = 191
     Top = 160
     Width = 75
     Height = 25
@@ -36,40 +35,40 @@
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 8
-    TabOrder = 4
+    TabOrder = 3
   end
   object cxLabel2: TcxLabel
-    Left = 40
+    Left = 15
     Top = 98
     Caption = #1043#1088#1091#1087#1087#1072' '#1088#1086#1076#1080#1090#1077#1083#1100
   end
   object ceCode: TcxCurrencyEdit
-    Left = 40
+    Left = 15
     Top = 26
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    TabOrder = 0
+    TabOrder = 4
     Width = 273
   end
   object Код: TcxLabel
-    Left = 40
+    Left = 15
     Top = 3
     Caption = #1050#1086#1076
   end
   object ceParentGroup: TcxButtonEdit
-    Left = 40
+    Left = 15
     Top = 121
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 7
+    TabOrder = 1
     Width = 273
   end
   object ActionList: TActionList
-    Left = 328
-    Top = 72
+    Left = 224
+    Top = 64
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spGet
@@ -114,7 +113,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
@@ -162,7 +161,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'Name'
@@ -194,12 +193,29 @@
     LookupControl = ceParentGroup
     FormName = 'TJuridicalGroupForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 328
-    Top = 128
+    Params = <
+      item
+        Name = 'Key'
+        Component = JuridicalGroupGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'TextValue'
+        Component = JuridicalGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptOutput
+        Value = ''
+      end>
+    Left = 224
+    Top = 120
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 320
-    Top = 48
+    Left = 216
+    Top = 40
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -212,7 +228,7 @@
           'Width')
       end>
     StorageName = 'cxPropertiesStore'
-    Left = 328
-    Top = 16
+    Left = 224
+    Top = 8
   end
 end

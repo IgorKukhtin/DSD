@@ -8,11 +8,10 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Partner(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                GLNCode TVarChar, PrepareDayCount TFloat, DocumentDayCount TFloat,
-               JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, 
-               RouteId Integer, RouteCode Integer, RouteName TVarChar,
-               RouteSortingId Integer, RouteSortingCode Integer, RouteSortingName TVarChar,
-               PersonalTakeId Integer, PersonalTakeCode Integer, PersonalTakeName TVarChar,
-               isErased boolean) AS
+               JuridicalId Integer, JuridicalName TVarChar, 
+               RouteId Integer, RouteName TVarChar,
+               RouteSortingId Integer, RouteSortingName TVarChar,
+               PersonalTakeId Integer, PersonalTakeName TVarChar) AS
 $BODY$
 BEGIN
 
@@ -24,33 +23,25 @@ BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , COALESCE (MAX (Object.ObjectCode), 0) + 1 AS Code
+           , lfGet_ObjectCode(0, zc_Object_Partner()) AS Code
            , CAST ('' as TVarChar)  AS NAME
            
            , CAST ('' as TVarChar)  AS GLNCode
            
-           , CAST ('' as TFloat)  AS PrepareDayCount
-           , CAST ('' as TFloat)  AS DocumentDayCount
+           , CAST (0 as TFloat)  AS PrepareDayCount
+           , CAST (0 as TFloat)  AS DocumentDayCount
            
            , CAST (0 as Integer)    AS JuridicalId
-           , CAST (0 as Integer)    AS JuridicalCode
            , CAST ('' as TVarChar)  AS JuridicalName
        
            , CAST (0 as Integer)    AS RouteId
-           , CAST (0 as Integer)    AS RouteCode
            , CAST ('' as TVarChar)  AS RouteName
 
            , CAST (0 as Integer)    AS RouteSortingId
-           , CAST (0 as Integer)    AS RouteSortingCode
            , CAST ('' as TVarChar)  AS RouteSortingName
            
            , CAST (0 as Integer)    AS PersonalTakeId
-           , CAST (0 as Integer)    AS PersonalTakeCode
-           , CAST ('' as TVarChar)  AS PersonalTakeName
-                      
-           , CAST (NULL AS Boolean) AS isErased
-       FROM Object 
-       WHERE Object.DescId = zc_Object_Partner();
+           , CAST ('' as TVarChar)  AS PersonalTakeName;
    ELSE
        RETURN QUERY 
        SELECT 
@@ -63,23 +54,17 @@ BEGIN
            , Partner_DocumentDayCount.ValueData AS DocumentDayCount
            
            , Object_Juridical.Id         AS JuridicalId
-           , Object_Juridical.ObjectCode AS JuridicalCode
            , Object_Juridical.ValueData  AS JuridicalName
            
            , Object_Route.Id           AS RouteId
-           , Object_Route.ObjectCode   AS RouteCode
            , Object_Route.ValueData    AS RouteName
 
            , Object_RouteSorting.Id         AS RouteSortingId
-           , Object_RouteSorting.ObjectCode AS RouteSortingCode
            , Object_RouteSorting.ValueData  AS RouteSortingName
            
            , Object_PersonalTake.Id         AS PersonalTakeId
-           , Object_PersonalTake.ObjectCode AS PersonalTakeCode
            , Object_PersonalTake.ValueData  AS PersonalTakeName
 
-           , Object_Partner.isErased   AS isErased
-           
        FROM OBJECT AS Object_Partner
            LEFT JOIN ObjectString AS Partner_GLNCode 
                                   ON Partner_GLNCode.ObjectId = Object_Partner.Id
@@ -128,6 +113,7 @@ ALTER FUNCTION gpGet_Object_Partner(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.09.13                        *
  29.07.13          *  + PersonalTakeId, PrepareDayCount, DocumentDayCount                
  03.07.13          *  + Route, RouteSorting             
  13.06.13          *

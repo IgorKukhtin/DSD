@@ -59,13 +59,13 @@ type
     ceJuridicalName: TcxGridDBColumn;
     ceisErased: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
-    dsdDBTreeAddOn: TdsdDBTreeAddOn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     GridDS: TDataSource;
     GridDataSet: TClientDataSet;
     GridStoredProc: TdsdStoredProc;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    dsdDBTreeAddOn: TdsdDBTreeAddOn;
   private
     { Private declarations }
   public

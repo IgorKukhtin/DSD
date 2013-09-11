@@ -92,7 +92,7 @@ type
   public
     function InsertUpdateMovementItemSale
       (Id, MovementId, GoodsId: Integer;
-       Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
+       Amount, AmountPartner, ChangePercentAmount, Price, CountForPrice, HeadCount: double;
        PartionGoods:String; GoodsKindId, AssetId: Integer): integer;
     constructor Create; override;
   end;
@@ -418,7 +418,7 @@ end;
 
 function TMovementItemSaleTest.InsertDefault: integer;
 var Id, MovementId, GoodsId: Integer;
-    Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
+    Amount, AmountPartner, Price, CountForPrice, HeadCount, ChangePercentAmount: double;
     PartionGoods:String;
     GoodsKindId, AssetId: Integer;
 begin
@@ -427,6 +427,7 @@ begin
   GoodsId:=TGoodsTest.Create.GetDefault;
   Amount:=10;
   AmountPartner:=11;
+  ChangePercentAmount := 10;
   Price:=2.34;
   CountForPrice:=1;
   HeadCount:=5;
@@ -435,13 +436,13 @@ begin
   AssetId:=0;
   //
   result := InsertUpdateMovementItemSale(Id, MovementId, GoodsId,
-                              Amount, AmountPartner, Price, CountForPrice, HeadCount,
+                              Amount, AmountPartner, ChangePercentAmount, Price, CountForPrice, HeadCount,
                               PartionGoods, GoodsKindId, AssetId);
 end;
 
 function TMovementItemSaleTest.InsertUpdateMovementItemSale
   (Id, MovementId, GoodsId: Integer;
-       Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
+       Amount, AmountPartner, ChangePercentAmount, Price, CountForPrice, HeadCount: double;
        PartionGoods:String; GoodsKindId, AssetId: Integer): integer;
 begin
   FParams.Clear;
@@ -450,6 +451,7 @@ begin
   FParams.AddParam('inGoodsId', ftInteger, ptInput, GoodsId);
   FParams.AddParam('inAmount', ftFloat, ptInput, Amount);
   FParams.AddParam('inAmountPartner', ftFloat, ptInput, AmountPartner);
+  FParams.AddParam('inChangePercentAmount', ftFloat, ptInput, ChangePercentAmount);
   FParams.AddParam('inPrice', ftFloat, ptInput, Price);
   FParams.AddParam('inCountForPrice', ftFloat, ptInput, CountForPrice);
   FParams.AddParam('inHeadCount', ftFloat, ptInput, HeadCount);

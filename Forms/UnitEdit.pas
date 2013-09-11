@@ -56,6 +56,7 @@ type
     ceProfitLossDirection: TcxButtonEdit;
     AccountDirectionGuides: TdsdGuides;
     ProfitLossDirectionGuides: TdsdGuides;
+    cbPartionDate: TcxCheckBox;
   private
     { Private declarations }
   public

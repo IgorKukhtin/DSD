@@ -6,6 +6,9 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.ActnList, Vcl.Forms, Vcl.Dialogs, dsdDB, cxPropertiesStore, frxClass;
 
+const
+  MY_MESSAGE = WM_USER + 1;
+
 type
   TParentForm = class(TForm)
   private
@@ -14,11 +17,14 @@ type
     //  ласс, который вызвал данную форму
     FSender: TComponent;
     FFormClassName: string;
+    FonAfterShow: TNotifyEvent;
+    FisAfterShow: boolean;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormShow(Sender: TObject);
     procedure SetSender(const Value: TComponent);
     property FormSender: TComponent read FSender write SetSender;
-    procedure AfterShow(var a : TWMSHOWWINDOW); message WM_SHOWWINDOW;
+    procedure AfterShow(var a : TWMSHOWWINDOW); message MY_MESSAGE;
   public
     { Public declarations }
     constructor CreateNew(AOwner: TComponent; Dummy: Integer = 0); override;
@@ -26,6 +32,10 @@ type
     procedure Execute(Sender: TComponent; Params: TdsdParams);
     procedure Close(Sender: TObject);
     property FormClassName: string read FFormClassName write FFormClassName;
+    property onAfterShow: TNotifyEvent read FonAfterShow write FonAfterShow;
+    //   сожалению приходитс€ использовать данное свойство что бы не перечитывать
+    // запросы при подгрузке данных!!!
+    property isAfterShow: boolean read FisAfterShow default false;
   end;
 
 implementation
@@ -37,7 +47,7 @@ uses
   StdActns, cxDBTL, cxCurrencyEdit, cxDropDownEdit, dsdGuides,
   cxDBLookupComboBox, DBGrids, cxCheckBox, cxCalendar, ExtCtrls, dsdAddOn,
   cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, dsdAction, frxDBSet, dxBarExtItems,
-  cxDBPivotGrid;
+  cxDBPivotGrid, ChoicePeriod;
 
 {$R *.dfm}
 
@@ -50,6 +60,10 @@ begin
     if Components[i] is TdsdDataSetRefresh then
        (Components[i] as TdsdDataSetRefresh).Execute;
   end;
+  if Assigned(FonAfterShow) then
+     FonAfterShow(Self);
+  // форма отрисована и показана и все данные загружены
+  FisAfterShow := true;
 end;
 
 procedure TParentForm.Close(Sender: TObject);
@@ -68,6 +82,7 @@ begin
   inherited;
   onKeyDown := FormKeyDown;
   onClose := FormClose;
+  onShow := FormShow;
   KeyPreview := true;
 end;
 
@@ -84,7 +99,6 @@ begin
     if Components[i] is TdsdChoiceGuides then
        FChoiceAction := Components[i] as TdsdChoiceGuides;
   end;
-
   FormSender := Sender;
 end;
 
@@ -107,6 +121,11 @@ begin
            else
              ShowMessage('—н€т режим отладки');
       end;
+end;
+
+procedure TParentForm.FormShow(Sender: TObject);
+begin
+  PostMessage(Handle, MY_MESSAGE, 0, 0);
 end;
 
 procedure TParentForm.SetSender(const Value: TComponent);
@@ -183,7 +202,11 @@ initialization
   RegisterClass (TdsdUpdateDataSet);
   RegisterClass (TdsdUpdateErased);
   RegisterClass (TdsdUserSettingsStorageAddOn);
+  RegisterClass (TExecuteDialog);
+  RegisterClass (TGuidesFiller);
   RegisterClass (THeaderSaver);
+  RegisterClass (TPeriodChoice);
   RegisterClass (TRefreshAddOn);
+  RegisterClass (TRefreshDispatcher);
 
 end.
