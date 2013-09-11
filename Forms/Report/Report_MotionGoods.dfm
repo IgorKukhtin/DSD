@@ -3,7 +3,7 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
   ClientHeight = 395
   ClientWidth = 1329
   ExplicitWidth = 1337
-  ExplicitHeight = 429
+  ExplicitHeight = 422
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -387,14 +387,14 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
     Align = alTop
     TabOrder = 5
     object deStart: TcxDateEdit
-      Left = 208
+      Left = 16
       Top = 8
       EditValue = 41395d
       TabOrder = 0
       Width = 121
     end
     object deEnd: TcxDateEdit
-      Left = 352
+      Left = 176
       Top = 8
       EditValue = 41395d
       TabOrder = 1
@@ -547,8 +547,8 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
     Top = 176
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
-    OnDblClickActionList = <>
     View = cxGridDBTableView
+    OnDblClickActionList = <>
     ActionItemList = <>
     Left = 232
     Top = 216
@@ -556,5 +556,20 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 264
     Top = 264
+  end
+  object dsdGuides1: TdsdGuides
+    Params = <>
+    Left = 312
+    Top = 64
+  end
+  object dsdGuides2: TdsdGuides
+    Params = <>
+    Left = 384
+    Top = 64
+  end
+  object dsdGuides3: TdsdGuides
+    Params = <>
+    Left = 464
+    Top = 64
   end
 end

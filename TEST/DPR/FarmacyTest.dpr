@@ -29,7 +29,8 @@ uses
   GoodsEdit in '..\..\FarmacyForms\GoodsEdit.pas' {GoodsEditForm},
   Units in '..\..\FarmacyForms\Units.pas' {UnitForm},
   UnitEdit in '..\..\FarmacyForms\UnitEdit.pas' {UnitEditForm},
-  dbTest in '..\SOURCE\dbTest.pas';
+  dbTest in '..\SOURCE\dbTest.pas',
+  ChoicePeriod in '..\..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm};
 
 {$R *.res}
 

@@ -13,7 +13,8 @@ uses
   dsdAction in '..\..\SOURCE\COMPONENT\dsdAction.pas',
   dsdAddOn in '..\..\SOURCE\COMPONENT\dsdAddOn.pas',
   dsdDB in '..\..\SOURCE\COMPONENT\dsdDB.pas',
-  dsdGuides in '..\..\SOURCE\COMPONENT\dsdGuides.pas';
+  dsdGuides in '..\..\SOURCE\COMPONENT\dsdGuides.pas',
+  ChoicePeriod in '..\..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm};
 
 {$R *.res}
 

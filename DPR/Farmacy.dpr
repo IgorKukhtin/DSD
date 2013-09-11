@@ -14,7 +14,8 @@ uses
   CommonData in '..\SOURCE\CommonData.pas',
   Authentication in '..\SOURCE\Authentication.pas',
   ParentForm in '..\SOURCE\ParentForm.pas' {ParentForm},
-  FormStorage in '..\SOURCE\FormStorage.pas';
+  FormStorage in '..\SOURCE\FormStorage.pas',
+  ChoicePeriod in '..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm};
 
 {$R *.res}
 

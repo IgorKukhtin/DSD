@@ -82,6 +82,9 @@ type
     LossWeight: TcxGridDBColumn;
     InventoryWeight: TcxGridDBColumn;
     EndWeight_calc: TcxGridDBColumn;
+    dsdGuides1: TdsdGuides;
+    dsdGuides2: TdsdGuides;
+    dsdGuides3: TdsdGuides;
   private
   public
   end;

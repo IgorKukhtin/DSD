@@ -13,7 +13,8 @@ uses
   ParentForm in '..\SOURCE\ParentForm.pas' {ParentForm},
   dsdAction in '..\SOURCE\COMPONENT\dsdAction.pas',
   FormStorage in '..\SOURCE\FormStorage.pas',
-  dsdAddOn in '..\SOURCE\COMPONENT\dsdAddOn.pas';
+  dsdAddOn in '..\SOURCE\COMPONENT\dsdAddOn.pas',
+  ChoicePeriod in '..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm};
 
 {$R *.res}
 
