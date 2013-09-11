@@ -252,25 +252,6 @@ CREATE OR REPLACE FUNCTION zc_Enum_ProfitDirection_70300() RETURNS Integer AS $B
 -- 70400; "Списание кредиторской задолженности
 CREATE OR REPLACE FUNCTION zc_Enum_ProfitDirection_70400() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ProfitDirection_70400' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
--- 10000; "Результат основной деятельности" 10100; "Сумма реализации" 10101; "Продукция"
--- 10000; "Результат основной деятельности" 10100; "Сумма реализации" 10102; "Ирна"
--- 10000; "Результат основной деятельности" 10200; "Скидка за вес" 10201; "Продукция"
--- 10000; "Результат основной деятельности" 10200; "Скидка за вес" 10202; "Ирна"
--- 10000; "Результат основной деятельности" 10300; "Скидка по акциям" 10301; "Продукция"
--- 10000; "Результат основной деятельности" 10300; "Скидка по акциям" 10302; "Ирна"
--- 10000; "Результат основной деятельности" 10400; "Скидка дополнительная" 10401; "Продукция"
--- 10000; "Результат основной деятельности" 10400; "Скидка дополнительная" 10401; "Ирна"
--- 10000; "Результат основной деятельности" 10500; Себестоимость реализации 10501; "Продукция"
-CREATE OR REPLACE FUNCTION zc_Enum_ProfitLoss_10501() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ProfitLoss_10501' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
--- 10000; "Результат основной деятельности" 10500; Себестоимость реализации 10502; "Ирна"
-CREATE OR REPLACE FUNCTION zc_Enum_ProfitLoss_10502() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ProfitLoss_10502' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
--- 10000; "Результат основной деятельности" 10700; "Сумма возвратов" 10701; "Продукция"
--- 10000; "Результат основной деятельности" 10700; "Сумма возвратов" 10702; "Ирна"
--- 10000; "Результат основной деятельности" 10800; "Себестоимость возвратов" 10801; "Продукция"
--- 10000; "Результат основной деятельности" 10800; "Себестоимость возвратов" 10802; "Ирна"
--- 10000; "Результат основной деятельности" 10900; "Утилизация возвратов" 10901; "Продукция"
--- 10000; "Результат основной деятельности" 11100; "Маркетинг" 11101; "Продукция"
-
 -- !!! 
 -- !!! ОПиУ: Статья (1+2+3 уровень)
 -- !!! 
@@ -308,6 +289,9 @@ CREATE OR REPLACE FUNCTION zc_Enum_ProfitLoss_10802() RETURNS Integer AS $BODY$B
 CREATE OR REPLACE FUNCTION zc_Enum_ProfitLoss_10901() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ProfitLoss_10901' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 -- 10000; "Результат основной деятельности" 11100; "Маркетинг" 11101; "Продукция"
 CREATE OR REPLACE FUNCTION zc_Enum_ProfitLoss_11101() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ProfitLoss_11101' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+
+-- 40000; "Расходы на сбыт" 40200; "Содержание филиалов" 40209; "Разница в весе"
+CREATE OR REPLACE FUNCTION zc_Enum_ProfitLoss_40209() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_ProfitLoss_40209' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
 
 /*-------------------------------------------------------------------------------*/
