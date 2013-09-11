@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_SendOnPrice(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
-             , TotalCountKg TFloat, TotalCountSh TFloat, TotalCountTare TFloat, TotalCount TFloat
+             , TotalCountKg TFloat, TotalCountSh TFloat, TotalCountTare TFloat, TotalCount TFloat, TotalCountPartner TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , CarId Integer, CarName TVarChar, PersonalDriverId Integer, PersonalDriverName TVarChar
@@ -43,7 +43,9 @@ BEGIN
            , MovementFloat_TotalCountKg.ValueData        AS TotalCountKg
            , MovementFloat_TotalCountSh.ValueData        AS TotalCountSh
            , MovementFloat_TotalCountTare.ValueData      AS TotalCountTare
+
            , MovementFloat_TotalCount.ValueData          AS TotalCount
+           , MovementFloat_TotalCountPartner.ValueData   AS TotalCountPartner
           
            , MovementFloat_TotalSummMVAT.ValueData       AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData       AS TotalSummPVAT
@@ -96,6 +98,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountPartner
+                                    ON MovementFloat_TotalCountPartner.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCountPartner.DescId = zc_MovementFloat_TotalCountPartner()
                                    
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
                                     ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
@@ -150,7 +155,7 @@ ALTER FUNCTION gpSelect_Movement_SendOnPrice (TDateTime, TDateTime, TVarChar) OW
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
-               
+ 05.09.13                                        * add TotalCountPartner               
  12.07.13          *
 
 */

@@ -22,10 +22,11 @@ uses
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
-  cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit;
+  cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, dsdGuides,
+  cxButtonEdit;
 
 type
-  TTReport_MotionGoodsForm = class(TParentForm)
+  TReport_MotionGoodsForm = class(TParentForm)
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
@@ -71,6 +72,16 @@ type
     LossSumm: TcxGridDBColumn;
     InventoryCount: TcxGridDBColumn;
     InventorySumm: TcxGridDBColumn;
+    StartWeight: TcxGridDBColumn;
+    IncomeWeight: TcxGridDBColumn;
+    SendInWeight: TcxGridDBColumn;
+    SendOutWeight: TcxGridDBColumn;
+    SaleWeight: TcxGridDBColumn;
+    ReturnOutWeight: TcxGridDBColumn;
+    ReturnInWeight: TcxGridDBColumn;
+    LossWeight: TcxGridDBColumn;
+    InventoryWeight: TcxGridDBColumn;
+    EndWeight_calc: TcxGridDBColumn;
   private
   public
   end;
@@ -80,6 +91,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TTReport_MotionGoodsForm);
+  RegisterClass(TReport_MotionGoodsForm);
 
 end.

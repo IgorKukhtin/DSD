@@ -3,13 +3,14 @@
 -- DROP FUNCTION lfSelect_Object_Account_byAccountGroup (Integer);
 
 CREATE OR REPLACE FUNCTION lfSelect_Object_Account_byAccountGroup (IN inAccountGroupId Integer)
-RETURNS Integer
+RETURNS TABLE  (AccountId Integer)  
 AS
 $BODY$
 BEGIN
 
      -- Выбираем данные для справочника счетов (на самом деле это три справочника)
-     RETURN (SELECT ObjectId FROM ObjectLink WHERE ChildObjectId = inAccountGroupId AND DescId = zc_ObjectLink_Account_AccountGroup());
+     RETURN QUERY
+     SELECT ObjectId AS AccountId FROM ObjectLink WHERE ChildObjectId = inAccountGroupId AND DescId = zc_ObjectLink_Account_AccountGroup();
 
 END;
 $BODY$

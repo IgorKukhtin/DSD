@@ -109,6 +109,8 @@ type
     bbGridToExcel: TdxBarButton;
     bbEntryToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
+    colAmountChangePercent: TcxGridDBColumn;
+    colChangePercentAmount: TcxGridDBColumn;
   private
   public
   end;

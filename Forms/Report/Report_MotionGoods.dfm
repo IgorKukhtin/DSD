@@ -1,4 +1,4 @@
-inherited TReport_MotionGoodsForm: TTReport_MotionGoodsForm
+inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
   Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
   ClientHeight = 395
   ClientWidth = 1329
@@ -133,7 +133,7 @@ inherited TReport_MotionGoodsForm: TTReport_MotionGoodsForm
         item
           Format = ',0.00'
           Kind = skSum
-          Column = IncomeCount
+          Column = EndCount_calc
         end
         item
           Format = ',0.00'
@@ -215,7 +215,7 @@ inherited TReport_MotionGoodsForm: TTReport_MotionGoodsForm
       object GoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
         DataBinding.FieldName = 'GoodsName'
-        Width = 55
+        Width = 70
       end
       object GoodsKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -230,33 +230,49 @@ inherited TReport_MotionGoodsForm: TTReport_MotionGoodsForm
       object AssetName: TcxGridDBColumn
         Caption = #1054#1057' ('#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1058#1052#1062')'
         DataBinding.FieldName = 'AssetName'
-        Width = 50
+        Width = 75
+      end
+      object StartWeight: TcxGridDBColumn
+        Caption = 'StartWeight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        HeaderAlignmentHorz = taRightJustify
+        Width = 75
       end
       object StartCount: TcxGridDBColumn
         DataBinding.FieldName = 'StartCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
-        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentHorz = taRightJustify
         Width = 75
       end
       object StartSumm: TcxGridDBColumn
         DataBinding.FieldName = 'StartSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
+        HeaderAlignmentHorz = taRightJustify
         Width = 75
+      end
+      object IncomeWeight: TcxGridDBColumn
+        Caption = 'IncomeWeight'
+        HeaderAlignmentHorz = taRightJustify
+        Width = 50
       end
       object IncomeCount: TcxGridDBColumn
         DataBinding.FieldName = 'IncomeCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taCenter
-        Width = 75
+        Width = 50
       end
       object IncomeSumm: TcxGridDBColumn
         DataBinding.FieldName = 'IncomeSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         Width = 75
+      end
+      object SendInWeight: TcxGridDBColumn
+        Caption = 'SendInWeight'
+        FooterAlignmentHorz = taRightJustify
       end
       object SendInCount: TcxGridDBColumn
         Caption = 'SendInCount'
@@ -267,6 +283,11 @@ inherited TReport_MotionGoodsForm: TTReport_MotionGoodsForm
       object SendInSumm: TcxGridDBColumn
         Caption = 'SendInSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        Width = 75
+      end
+      object SendOutWeight: TcxGridDBColumn
+        Caption = 'SendOutWeight'
+        HeaderAlignmentHorz = taRightJustify
         Width = 50
       end
       object SendOutCount: TcxGridDBColumn
@@ -275,6 +296,10 @@ inherited TReport_MotionGoodsForm: TTReport_MotionGoodsForm
       end
       object SendOutSumm: TcxGridDBColumn
         Caption = 'SendOutSumm'
+        Width = 75
+      end
+      object SaleWeight: TcxGridDBColumn
+        Caption = 'SaleWeight'
         Width = 50
       end
       object SaleCount: TcxGridDBColumn
@@ -283,6 +308,10 @@ inherited TReport_MotionGoodsForm: TTReport_MotionGoodsForm
       end
       object SaleSumm: TcxGridDBColumn
         Caption = 'SaleSumm'
+        Width = 75
+      end
+      object ReturnOutWeight: TcxGridDBColumn
+        Caption = 'ReturnOutWeight'
         Width = 50
       end
       object ReturnOutCount: TcxGridDBColumn
@@ -291,6 +320,10 @@ inherited TReport_MotionGoodsForm: TTReport_MotionGoodsForm
       end
       object ReturnOutSumm: TcxGridDBColumn
         Caption = 'ReturnOutSumm'
+        Width = 75
+      end
+      object ReturnInWeight: TcxGridDBColumn
+        Caption = 'ReturnInWeight'
         Width = 50
       end
       object ReturnInCount: TcxGridDBColumn
@@ -299,6 +332,10 @@ inherited TReport_MotionGoodsForm: TTReport_MotionGoodsForm
       end
       object ReturnInSumm: TcxGridDBColumn
         Caption = 'ReturnInSumm'
+        Width = 75
+      end
+      object LossWeight: TcxGridDBColumn
+        Caption = 'LossWeight'
         Width = 50
       end
       object LossCount: TcxGridDBColumn
@@ -307,6 +344,10 @@ inherited TReport_MotionGoodsForm: TTReport_MotionGoodsForm
       end
       object LossSumm: TcxGridDBColumn
         Caption = 'LossSumm'
+        Width = 75
+      end
+      object InventoryWeight: TcxGridDBColumn
+        Caption = 'InventoryWeight'
         Width = 50
       end
       object InventoryCount: TcxGridDBColumn
@@ -315,7 +356,11 @@ inherited TReport_MotionGoodsForm: TTReport_MotionGoodsForm
       end
       object InventorySumm: TcxGridDBColumn
         Caption = 'InventorySumm'
-        Width = 50
+        Width = 75
+      end
+      object EndWeight_calc: TcxGridDBColumn
+        Caption = 'EndWeight_calc'
+        Width = 75
       end
       object EndCount_calc: TcxGridDBColumn
         DataBinding.FieldName = 'EndCount_calc'
@@ -340,7 +385,6 @@ inherited TReport_MotionGoodsForm: TTReport_MotionGoodsForm
     Width = 1329
     Height = 41
     Align = alTop
-    Caption = 'Panel1'
     TabOrder = 5
     object deStart: TcxDateEdit
       Left = 208
@@ -359,14 +403,14 @@ inherited TReport_MotionGoodsForm: TTReport_MotionGoodsForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 96
-    Top = 96
+    Left = 88
+    Top = 24
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 96
-    Top = 144
+    Left = 88
+    Top = 184
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -390,8 +434,8 @@ inherited TReport_MotionGoodsForm: TTReport_MotionGoodsForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 232
-    Top = 96
+    Left = 296
+    Top = 168
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -409,8 +453,8 @@ inherited TReport_MotionGoodsForm: TTReport_MotionGoodsForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 152
-    Top = 88
+    Left = 144
+    Top = 24
     DockControlHeights = (
       0
       0
@@ -455,7 +499,7 @@ inherited TReport_MotionGoodsForm: TTReport_MotionGoodsForm
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 232
-    Top = 144
+    Top = 160
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -500,15 +544,17 @@ inherited TReport_MotionGoodsForm: TTReport_MotionGoodsForm
         Value = 41395d
       end>
     Left = 152
-    Top = 152
+    Top = 176
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <>
     View = cxGridDBTableView
+    ActionItemList = <>
     Left = 232
-    Top = 192
+    Top = 216
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 232
-    Top = 232
+    Left = 264
+    Top = 264
   end
 end

@@ -36,13 +36,13 @@ BEGIN
    END IF;
 
 
-   -- Находим Управленческий счет по <Управленческие назначения> или <Статьи назначения>
+   -- Находим статью ОПиУ по <Управленческие назначения> или <Статьи назначения>
    IF inInfoMoneyDestinationId <> 0 THEN vbProfitLossId := lfGet_Object_ProfitLoss_byInfoMoneyDestination (inProfitLossGroupId, inProfitLossDirectionId, inInfoMoneyDestinationId);
                                     ELSE vbProfitLossId := lfGet_Object_ProfitLoss_byInfoMoney (inProfitLossGroupId, inProfitLossDirectionId, inInfoMoneyId);
    END IF;
 
 
-   -- Создаем новый счет
+   -- Создаем новую статью ОПиУ
    IF COALESCE (vbProfitLossId, 0) = 0 
    THEN
        -- Определяем Id 2-ий уровень по <Группа ОПиУ> и <Аналитика ОПиУ - направление>
@@ -70,13 +70,13 @@ BEGIN
        END IF;
 
 
-       -- Еще раз находим Управленческий счет по <Управленческие назначения> или <Статьи назначения> (но здесь другой vbProfitLossDirectionId)
+       -- Еще раз находим статью ОПиУ по <Управленческие назначения> или <Статьи назначения> (но здесь другой vbProfitLossDirectionId)
        IF inInfoMoneyDestinationId <> 0 
           THEN vbProfitLossId := lfGet_Object_ProfitLoss_byInfoMoneyDestination (inProfitLossGroupId, vbProfitLossDirectionId, inInfoMoneyDestinationId);
           ELSE vbProfitLossId := lfGet_Object_ProfitLoss_byInfoMoney (inProfitLossGroupId, vbProfitLossDirectionId, inInfoMoneyId);
        END IF;
 
-       -- Создаем новый счет
+       -- Создаем новую статью ОПиУ
        IF COALESCE (vbProfitLossId, 0) = 0 
        THEN
            -- Определяем название 3-ий уровень по <Управленческие назначения> или <Статьи назначения>

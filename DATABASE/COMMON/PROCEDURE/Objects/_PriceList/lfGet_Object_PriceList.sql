@@ -1,16 +1,13 @@
--- Function: gpSelect_Object_PriceList (TVarChar)
+-- Function: lfGet_Object_PriceList (Integer)
 
--- DROP FUNCTION gpSelect_Object_PriceList (TVarChar);
+-- DROP FUNCTION lfGet_Object_PriceList (Integer);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_PriceList(
-    IN inSession        TVarChar         -- сессия пользователя
+CREATE OR REPLACE FUNCTION lfGet_Object_PriceList(
+    IN inId          Integer        -- ключ объекта <Прайс лист> 
 )
   RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, PriceWithVAT Boolean, VATPercent TFloat, isErased Boolean) AS
 $BODY$
 BEGIN
-
-     -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight(inSession, zc_Enum_Process_PriceList());
 
      RETURN QUERY 
        SELECT 
@@ -27,12 +24,12 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_VATPercent
                                   ON ObjectFloat_VATPercent.ObjectId = Object_PriceList.Id
                                  AND ObjectFloat_VATPercent.DescId = zc_ObjectFloat_PriceList_VATPercent()
-       WHERE Object_PriceList.DescId = zc_Object_PriceList();
-  
+       WHERE Object_PriceList.Id = inId;
+    
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_PriceList (TVarChar) OWNER TO postgres;
+ALTER FUNCTION lfGet_Object_PriceList (Integer) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
@@ -40,9 +37,7 @@ ALTER FUNCTION gpSelect_Object_PriceList (TVarChar) OWNER TO postgres;
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  07.09.13                                        * add PriceWithVAT and VATPercent
- 00.06.13          
-
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_PriceList ('2')
+-- SELECT * FROM lfGet_Object_PriceList (1)

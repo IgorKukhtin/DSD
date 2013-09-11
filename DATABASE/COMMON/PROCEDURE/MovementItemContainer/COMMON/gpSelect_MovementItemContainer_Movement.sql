@@ -99,6 +99,9 @@ BEGIN
 
                  LEFT JOIN ContainerObjectCost ON ContainerObjectCost.ContainerId = MovementItemContainer.ContainerId
                                               AND ContainerObjectCost.ObjectCostDescId = zc_ObjectCost_Basis()
+                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_ProfitLoss
+                                               ON ContainerLinkObject_ProfitLoss.ContainerId = MovementItemContainer.ContainerId
+                                              AND ContainerLinkObject_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss()
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Juridical
                                                ON ContainerLinkObject_Juridical.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
                                               AND ContainerLinkObject_Juridical.DescId = zc_ContainerLinkObject_Juridical()
@@ -108,7 +111,7 @@ BEGIN
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Unit
                                                ON ContainerLinkObject_Unit.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
                                               AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
-                 LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (ContainerLinkObject_Juridical.ObjectId, COALESCE (ContainerLinkObject_Personal.ObjectId, ContainerLinkObject_Unit.ObjectId))
+                 LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (ContainerLinkObject_ProfitLoss.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, COALESCE (ContainerLinkObject_Personal.ObjectId, ContainerLinkObject_Unit.ObjectId)))
 
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
                                                ON ContainerLinkObject_InfoMoney.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
@@ -189,6 +192,7 @@ ALTER FUNCTION gpSelect_MovementItemContainer_Movement (Integer, TVarChar) OWNER
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.09.13                                        * add zc_ContainerLinkObject_ProfitLoss
  02.09.13                        * убрал коды счетов
  25.08.13                                        * add zc_Enum_AccountKind_Active
  10.08.13                                        * add isActive

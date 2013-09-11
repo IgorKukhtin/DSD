@@ -48,7 +48,7 @@ $BODY$BEGIN
       FROM lfSelect_Object_ProfitLoss() AS lfObject_ProfitLoss
            LEFT JOIN (SELECT tmpMIContainer.ContainerId
                            , tmpMIContainer.ContainerId_Parent
-                           , tmpMIContainer.Amount
+                           , -1 * tmpMIContainer.Amount
                            , ContainerLinkObject_ProfitLoss.ObjectId AS ProfitLossId
                       FROM (SELECT Container.Id AS ContainerId
                                  , MIContainer_Parent.ContainerId AS ContainerId_Parent

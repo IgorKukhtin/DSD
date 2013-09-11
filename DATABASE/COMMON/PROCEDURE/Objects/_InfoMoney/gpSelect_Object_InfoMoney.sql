@@ -1,9 +1,9 @@
-п»ї-- Function: gpSelect_Object_InfoMoney(TVarChar)
+-- Function: gpSelect_Object_InfoMoney(TVarChar)
 
 --DROP FUNCTION gpSelect_Object_InfoMoney (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_InfoMoney(
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar,
@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                isErased boolean) AS
 $BODY$BEGIN
      
-     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹ 
+     -- проверка прав пользователя на вызов процедуры 
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_InfoMoney());
      RETURN QUERY 
      SELECT 
@@ -49,12 +49,12 @@ ALTER FUNCTION gpSelect_Object_InfoMoney (TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
- 21.06.13          *    + РІСЃРµ РїРѕР»СЏ          
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.06.13          *    + все поля          
  00.05.13                                        
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpSelect_Object_InfoMoney('2')

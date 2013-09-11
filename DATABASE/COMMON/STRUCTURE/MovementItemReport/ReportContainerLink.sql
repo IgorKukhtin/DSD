@@ -23,6 +23,7 @@ CREATE TABLE ReportContainerLink(
 /*                                  »Ì‰ÂÍÒ˚                                      */
 CREATE INDEX idx_ReportContainerLink_ReportContainerId  ON ReportContainerLink (ReportContainerId);
 CREATE INDEX idx_ReportContainerLink_AccountId_AccountKindId ON ReportContainerLink (AccountId, AccountKindId);
+CREATE INDEX idx_ReportContainerLink_ContainerId_AccountKindId  ON ReportContainerLink (ContainerId, AccountKindId);
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

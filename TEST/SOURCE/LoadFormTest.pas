@@ -69,6 +69,7 @@ type
     procedure LoadCarModelFormTest;
     procedure LoadZakazExternalFormTest;
     procedure LoadZakazInternalFormTest;
+
   end;
 
 implementation
@@ -336,6 +337,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_ProfitLossForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_HistoryCostForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_HistoryCostForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsForm');
 end;
 
 procedure TLoadFormTest.LoadUnitFormTest;

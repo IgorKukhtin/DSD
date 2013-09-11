@@ -67,16 +67,11 @@ type
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     frxDBDataset: TfrxDBDataset;
-    colDebetAccountGroupCode: TcxGridDBColumn;
     colDebetAccountGroupName: TcxGridDBColumn;
-    colDebetAccountDirectionCode: TcxGridDBColumn;
     colDebetAccountDirectionName: TcxGridDBColumn;
-    colDebetAccountCode: TcxGridDBColumn;
-    colKreditAccountGroupCode: TcxGridDBColumn;
+    colAccountCode: TcxGridDBColumn;
     colKreditAccountGroupName: TcxGridDBColumn;
-    colKreditAccountDirectionCode: TcxGridDBColumn;
     colKreditAccountDirectionName: TcxGridDBColumn;
-    colKreditAccountCode: TcxGridDBColumn;
     colGoodsGroupName: TcxGridDBColumn;
     colByObjectCode: TcxGridDBColumn;
     colByObjectName: TcxGridDBColumn;
@@ -130,6 +125,8 @@ type
     dsdGuidesPersonal: TdsdGuides;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
+    colAmountChangePercent: TcxGridDBColumn;
+    colChangePercentAmount: TcxGridDBColumn;
   private
   public
   end;
