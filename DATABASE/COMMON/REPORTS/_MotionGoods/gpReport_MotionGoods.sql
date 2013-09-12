@@ -168,10 +168,10 @@ $BODY$BEGIN
                                            join ContainerLinkObject AS ContainerLinkObject_Goods ON  ContainerLinkObject_Goods.ObjectId = tmpGoods .GoodsId
                                                                                                  AND ContainerLinkObject_Goods.DescId = zc_ContainerLinkObject_Goods()
                                            join  (SELECT Container.Id AS ContainerId, Container.ObjectId AS AccountId, UnitId, Container.Amount
-                                                  FROM tmpUnit
-                                                        LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Unit ON ContainerLinkObject_Unit.Objectid = tmpUnit.UnitId
+                                                  FROM tmpLocationObject
+                                                        LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Unit ON ContainerLinkObject_Unit.Objectid = tmpLocationObject.UnitId
                                                                                                                  AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
-                                                        LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Personal ON ContainerLinkObject_Personal.Objectid = tmpUnit.UnitId
+                                                        LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Personal ON ContainerLinkObject_Personal.Objectid = tmpLocationObject.UnitId
                                                                                                                      AND ContainerLinkObject_Personal.DescId = zc_ContainerLinkObject_Unit()
                                                         JOIN  Container ON Container.Id = COALESCE (ContainerLinkObject_Unit.ContainerId, ContainerLinkObject_Personal.ContainerId)
                                                                        AND Container.DescId = zc_Container_Summ() 
@@ -244,8 +244,8 @@ $BODY$BEGIN
                           join ContainerLinkObject AS ContainerLinkObject_Goods ON  ContainerLinkObject_Goods.ObjectId = tmpGoods .GoodsId
                                                                                AND ContainerLinkObject_Goods.DescId = zc_ContainerLinkObject_Goods()
                           join  (SELECT Container.Id AS ContainerId, Container.ObjectId AS GoodsId, UnitId, Container.Amount
-                                 FROM tmpUnit
-                                      LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Unit ON ContainerLinkObject_Unit.Objectid = tmpUnit.UnitId
+                                 FROM tmpLocationObject
+                                      LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Unit ON ContainerLinkObject_Unit.Objectid = tmpLocationObject.UnitId
                                                                                                AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
                                                         
                                            JOIN  Container ON Container.Id = ContainerLinkObject_Unit.ContainerId
