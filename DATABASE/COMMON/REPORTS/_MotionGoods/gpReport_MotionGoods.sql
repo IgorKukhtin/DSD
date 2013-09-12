@@ -5,7 +5,7 @@
 CREATE OR REPLACE FUNCTION gpReport_MotionGoods(
     IN inStartDate    TDateTime , -- 
     IN inEndDate      TDateTime , --
-    IN inUnitGroupId  Integer,    -- группа подразделений
+--    IN inUnitGroupId  Integer,    -- группа подразделений
     IN inUnitId       Integer,    -- подразделение
     IN inGoodsGroupId Integer,    -- группа товара 
     IN inGoodsId      Integer,    -- товар
@@ -55,22 +55,17 @@ $BODY$BEGIN
          END IF;
     END IF;
 
-    IF inUnitGroupId <> 0 
-    THEN 
-       INSERT INTO tmpLocationObject (LocationObjectId)
-          SELECT UnitId
-          FROM  lfSELECT_Object_Unit_byUnitGroup (inUnitGroupId);
-    ELSE IF inUnitId <> 0 
-         THEN 
-             INSERT INTO tmpLocationObject (LocationObjectId)
-              SELECT inUnitId;
-         ELSE 
-             INSERT INTO tmpLocationObject (LocationObjectId)
-              SELECT Id FROM Object WHERE DescId = zc_Object_Unit()
-             UNION all
-              SELECT Id FROM Object WHERE DescId = zc_Object_Personal();
-         END IF;
-    END IF;
+   IF inUnitId <> 0 
+   THEN 
+      INSERT INTO tmpLocationObject (LocationObjectId)
+         SELECT UnitId
+         FROM  lfSELECT_Object_Unit_byUnit (inUnitId);
+   ELSE 
+      INSERT INTO tmpLocationObject (LocationObjectId)
+         SELECT Id FROM Object WHERE DescId = zc_Object_Unit()
+         UNION all
+         SELECT Id FROM Object WHERE DescId = zc_Object_Personal();
+   END IF;
 
      RETURN QUERY 
 
