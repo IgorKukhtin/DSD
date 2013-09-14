@@ -1,8 +1,8 @@
--- Function: lfSelect_Object_Unit_byUnitGroup (Integer)
+-- Function: lfSelect_Object_Unit_List (Integer)
 
--- DROP FUNCTION lfSelect_Object_Unit_byUnitGroup (Integer);
+-- DROP FUNCTION lfSelect_Object_Unit_List (Integer);
 
-CREATE OR REPLACE FUNCTION lfSelect_Object_Unit_byUnit (IN inUnitId Integer)
+CREATE OR REPLACE FUNCTION lfSelect_Object_Unit_List (IN inUnitId Integer)
 RETURNS TABLE  (UnitId Integer)  
 AS
 $BODY$
@@ -27,7 +27,7 @@ END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION lfSelect_Object_Unit_byUnit (Integer) OWNER TO postgres;
+ALTER FUNCTION lfSelect_Object_Unit_List (Integer) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
@@ -38,4 +38,4 @@ ALTER FUNCTION lfSelect_Object_Unit_byUnit (Integer) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM lfSelect_Object_Unit_byUnitGroup (zc_Enum_UnitGroup_20000())
+-- SELECT * FROM lfSelect_Object_Unit_List (zc_Enum_UnitGroup_20000())
