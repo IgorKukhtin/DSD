@@ -108,9 +108,9 @@ type
     toStoredProc_two: TdsdStoredProc;
     cbLastComplete: TCheckBox;
     fromQuery_two: TADOQuery;
-    ToZConnection: TZConnection;
     cbCompleteInventory: TCheckBox;
     cbCompleteSale: TCheckBox;
+    toZConnection: TZConnection;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -708,6 +708,7 @@ begin
         Add('select Measure.Id as ObjectId');
         Add('     , 0 as ObjectCode');
         Add('     , Measure.MeasureName as ObjectName');
+        Add('     , case when Measure.Id = zc_measure_Sht() then zc_rvYes() else zc_rvNo() end as zc_Measure_Sh');
         Add('     , Measure.Id_Postgres');
         Add('from dba.Measure');
         Add('order by ObjectId');
@@ -739,6 +740,9 @@ begin
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.Measure set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             if FieldByName('zc_Measure_Sh').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then fExecSqToQuery ('CREATE OR REPLACE FUNCTION zc_Measure_Sh() RETURNS Integer AS $BODY$BEGIN RETURN ('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;');
              //
              Next;
              Application.ProcessMessages;

@@ -48,6 +48,7 @@ $BODY$
   DECLARE vbPaidKindId Integer;
   DECLARE vbContractId Integer;
   DECLARE vbJuridicalId_basis Integer;
+  DECLARE vbBusinessId_From Integer;
 
 BEGIN
 
@@ -89,6 +90,7 @@ BEGIN
           , COALESCE (ObjectLink_Contract_InfoMoney.ChildObjectId, 0)
 
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN ObjectLink_UnitFrom_Juridical.ChildObjectId WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalFrom_Juridical.ChildObjectId ELSE 0 END, 0)
+          , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN ObjectLink_UnitFrom_Business.ChildObjectId WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalFrom_Business.ChildObjectId ELSE 0 END, 0)
 
             INTO vbOperDate
                , vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
@@ -96,7 +98,7 @@ BEGIN
                , vbJuridicalId_To, vbIsCorporate, vbPersonalId_To
                , vbPaidKindId, vbContractId
                , vbAccountDirectionId_From, vbInfoMoneyId_isCorporate, vbInfoMoneyId_Contract
-               , vbJuridicalId_basis
+               , vbJuridicalId_basis, vbBusinessId_From
      FROM Movement
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                    ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
@@ -122,6 +124,10 @@ BEGIN
                                ON ObjectLink_UnitFrom_Juridical.ObjectId = MovementLinkObject_From.ObjectId
                               AND ObjectLink_UnitFrom_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
                               AND Object_From.DescId = zc_Object_Unit()
+          LEFT JOIN ObjectLink AS ObjectLink_UnitFrom_Business
+                               ON ObjectLink_UnitFrom_Business.ObjectId = MovementLinkObject_From.ObjectId
+                              AND ObjectLink_UnitFrom_Business.DescId = zc_ObjectLink_Unit_Business()
+                              AND Object_From.DescId = zc_Object_Unit()
           LEFT JOIN ObjectLink AS ObjectLink_UnitFrom_Branch
                                ON ObjectLink_UnitFrom_Branch.ObjectId = MovementLinkObject_From.ObjectId
                               AND ObjectLink_UnitFrom_Branch.DescId = zc_ObjectLink_Unit_Branch()
@@ -142,6 +148,10 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_UnitPersonalFrom_Juridical
                                ON ObjectLink_UnitPersonalFrom_Juridical.ObjectId = ObjectLink_PersonalFrom_Unit.ChildObjectId
                               AND ObjectLink_UnitPersonalFrom_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                              AND Object_From.DescId = zc_Object_Personal()
+          LEFT JOIN ObjectLink AS ObjectLink_UnitPersonalFrom_Business
+                               ON ObjectLink_UnitPersonalFrom_Business.ObjectId = ObjectLink_PersonalFrom_Unit.ChildObjectId
+                              AND ObjectLink_UnitPersonalFrom_Business.DescId = zc_ObjectLink_Unit_Business()
                               AND Object_From.DescId = zc_Object_Personal()
           LEFT JOIN ObjectLink AS ObjectLink_UnitPersonalFrom_Branch
                                ON ObjectLink_UnitPersonalFrom_Branch.ObjectId = ObjectLink_PersonalFrom_Unit.ChildObjectId
@@ -320,7 +330,7 @@ BEGIN
                     -- Статьи назначения
                   , COALESCE (lfObject_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
 
-                  , COALESCE (ObjectLink_Goods_Business.ChildObjectId, 0) AS BusinessId
+                  , COALESCE (ObjectLink_Goods_Business.ChildObjectId, vbBusinessId_From) AS BusinessId -- Берем Бизнес из товара или Подраделения/Сотрудника
 
                   , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE)      AS isPartionCount
                   , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)       AS isPartionSumm
@@ -572,7 +582,7 @@ BEGIN
                                   AND _tmpItem.OperDate BETWEEN HistoryCost.StartDate AND HistoryCost.EndDate
         WHERE zc_isHistoryCost() = TRUE
           AND (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) <> 0                -- !!!
-            OR _tmpItem.OperCount_ChangePercent * COALESCE (HistoryCost.Price, 0) <> 0  -- здесь !!!НЕ НУЖНЫ!!! нули
+            OR _tmpItem.OperCount_ChangePercent * COALESCE (HistoryCost.Price, 0) <> 0  -- здесь нули !!!НЕ НУЖНЫ!!! 
             OR _tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, 0) <> 0)       -- !!!
         GROUP BY _tmpItem.MovementItemId
                , Container_Summ.Id
@@ -1287,6 +1297,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.09.13                                        * add vbBusinessId_From
  09.09.13                                        * add lpInsertUpdate_MovementItemContainer_byTable
 */
 
