@@ -38,8 +38,9 @@ BEGIN
                                        ON MovementLinkObject_From.MovementId = Movement.Id
                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
           LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-
-     WHERE Movement.Id = inMovementId;
+     WHERE Movement.Id = inMovementId
+       AND Movement.DescId = zc_Movement_Inventory()
+       AND Movement.StatusId = zc_Enum_Status_UnComplete();
 
 
      -- !!!Если документ не проведен - остаемся, иначе - выход!!!
@@ -164,7 +165,8 @@ BEGIN
                   , COALESCE (lfObject_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
 
                   , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN ObjectLink_UnitFrom_Juridical.ChildObjectId WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalFrom_Juridical.ChildObjectId ELSE 0 END, 0) AS JuridicalId_basis
-                  , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN ObjectLink_UnitFrom_Business.ChildObjectId WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalFrom_Business.ChildObjectId ELSE 0 END, 0) AS BusinessId
+                    -- Берем Бизнес из товара или Подраделения/Сотрудника
+                  , COALESCE (ObjectLink_Goods_Business.ChildObjectId, COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN ObjectLink_UnitFrom_Business.ChildObjectId WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalFrom_Business.ChildObjectId ELSE 0 END, 0)) AS BusinessId
 
                   , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE)      AS isPartionCount
                   , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)       AS isPartionSumm
@@ -241,6 +243,9 @@ BEGIN
                                            ON ObjectBoolean_PartionSumm.ObjectId = MovementItem.ObjectId
                                           AND ObjectBoolean_PartionSumm.DescId = zc_ObjectBoolean_Goods_PartionSumm()
 
+                   LEFT JOIN ObjectLink AS ObjectLink_Goods_Business
+                                        ON ObjectLink_Goods_Business.ObjectId = MovementItem.ObjectId
+                                       AND ObjectLink_Goods_Business.DescId = zc_ObjectLink_Goods_Business()
                    LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                         ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
                                        AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
@@ -504,7 +509,8 @@ BEGIN
              (SELECT _tmpItem.MovementItemId
                    , COALESCE (Container_Summ.Id, 0) AS ContainerId
                    , COALESCE (Container_Summ.ObjectId, 0) AS AccountId
-                   , CASE WHEN Container_Summ.ParentId IS NULL THEN _tmpItem.OperSumm ELSE _tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) END AS OperSumm -- есть ошибка, вообще остатки по сумме должны быть загружены один раз, а потом расчитываться из HistoryCost
+                     -- есть ошибка, вообще остатки по сумме должны быть загружены один раз, а потом расчитываться из HistoryCost
+                   , CASE WHEN Container_Summ.ParentId IS NULL THEN _tmpItem.OperSumm ELSE _tmpItem.OperCount * COALESCE (HistoryCost.Price, 0) END AS OperSumm
               FROM _tmpItem
                    LEFT JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_Goods
                                                         AND Container_Summ.DescId = zc_Container_Summ()
@@ -536,7 +542,10 @@ BEGIN
      UPDATE _tmpItemSumm SET AccountId = _tmpItem_byAccount.AccountId
      FROM _tmpItem
           JOIN (SELECT lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы -- select * from gpSelect_Object_AccountGroup ('2') where Id = zc_Enum_AccountGroup_20000()
-                                                  , inAccountDirectionId     := _tmpItem_group.AccountDirectionId
+                                                  , inAccountDirectionId     := CASE WHEN _tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- 20500; "Оборотная тара"
+                                                                                          THEN zc_Enum_AccountDirection_20900() -- 20900; "Оборотная тара"
+                                                                                     ELSE _tmpItem_group.AccountDirectionId
+                                                                                END
                                                   , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId_calc
                                                   , inInfoMoneyId            := NULL
                                                   , inUserId                 := vbUserId
@@ -548,7 +557,8 @@ BEGIN
                            , CASE WHEN _tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() THEN zc_InfoMoneyDestination_WorkProgress() ELSE _tmpItem.InfoMoneyDestinationId END AS InfoMoneyDestinationId_calc
                       FROM _tmpItem
                            JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId
-                                            AND _tmpItemSumm.OperSumm <> 0 AND _tmpItemSumm.ContainerId = 0
+                                            AND _tmpItemSumm.OperSumm <> 0
+                                            AND _tmpItemSumm.ContainerId = 0
                       GROUP BY _tmpItem.AccountDirectionId
                              , _tmpItem.InfoMoneyDestinationId
                              , CASE WHEN _tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() THEN zc_InfoMoneyDestination_WorkProgress() ELSE _tmpItem.InfoMoneyDestinationId END
@@ -685,6 +695,40 @@ BEGIN
                                                                                                       , inObjectId_5 := _tmpItem.InfoMoneyId
                                                                                                       , inDescId_6   := zc_ContainerLinkObject_InfoMoneyDetail()
                                                                                                       , inObjectId_6 := CASE WHEN zc_isHistoryCost_byInfoMoneyDetail() THEN _tmpItem.InfoMoneyId ELSE 0 END -- !!!для введенного остатка мы не знаем InfoMoneyId_Detail!!!
+                                                                                                       )
+                                                                        WHEN _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500()) -- 20500; "Оборотная тара" -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500()
+                                                                                -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Товар 2)Статьи назначения 3)Статьи назначения(детализация с/с)
+                                                                           THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                                                                      , inParentId          := NULL -- !!!Суммовая проводка не связана с количественной!!!
+                                                                                                      , inObjectId          := _tmpItemSumm.AccountId
+                                                                                                      , inJuridicalId_basis := _tmpItem.JuridicalId_basis
+                                                                                                      , inBusinessId        := _tmpItem.BusinessId
+                                                                                                      , inObjectCostDescId  := zc_ObjectCost_Basis()
+                                                                                                                               -- <элемент с/с>: 1.)Главное Юр лицо 2.)Бизнес 3)Товар 4)Статьи назначения 5)Статьи назначения(детализация с/с)
+                                                                                                      , inObjectCostId      := lpInsertFind_ObjectCost (inObjectCostDescId:= zc_ObjectCost_Basis()
+                                                                                                                                                      , inDescId_1   := zc_ObjectCostLink_JuridicalBasis()
+                                                                                                                                                      , inObjectId_1 := _tmpItem.JuridicalId_basis
+                                                                                                                                                      , inDescId_2   := zc_ObjectCostLink_Business()
+                                                                                                                                                      , inObjectId_2 := _tmpItem.BusinessId
+                                                                                                                                                      , inDescId_3   := zc_ObjectCostLink_Branch()
+                                                                                                                                                      , inObjectId_3 := NULL
+                                                                                                                                                      , inDescId_4   := zc_ObjectCostLink_Unit()
+                                                                                                                                                      , inObjectId_4 := NULL
+                                                                                                                                                      , inDescId_5   := zc_ObjectCostLink_Goods()
+                                                                                                                                                      , inObjectId_5 := _tmpItem.GoodsId
+                                                                                                                                                      , inDescId_6   := zc_ObjectCostLink_InfoMoney()
+                                                                                                                                                      , inObjectId_6 := _tmpItem.InfoMoneyId
+                                                                                                                                                      , inDescId_7   := zc_ObjectCostLink_InfoMoneyDetail()
+                                                                                                                                                      , inObjectId_7 := CASE WHEN zc_isHistoryCost_byInfoMoneyDetail() THEN _tmpItem.InfoMoneyId ELSE 0 END
+                                                                                                                                                       )
+                                                                                                      , inDescId_1   := zc_ContainerLinkObject_Unit()
+                                                                                                      , inObjectId_1 := NULL
+                                                                                                      , inDescId_2   := zc_ContainerLinkObject_Goods()
+                                                                                                      , inObjectId_2 := _tmpItem.GoodsId
+                                                                                                      , inDescId_4   := zc_ContainerLinkObject_InfoMoney()
+                                                                                                      , inObjectId_4 := _tmpItem.InfoMoneyId
+                                                                                                      , inDescId_5   := zc_ContainerLinkObject_InfoMoneyDetail()
+                                                                                                      , inObjectId_5 := CASE WHEN zc_isHistoryCost_byInfoMoneyDetail() THEN _tmpItem.InfoMoneyId ELSE 0 END
                                                                                                        )
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение 2)Товар 3)Статьи назначения 4)Статьи назначения(детализация с/с)
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Сотрудник (МО или Эксп.) 2)Товар 3)Статьи назначения 4)Статьи назначения(детализация с/с)
@@ -867,6 +911,8 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.09.13                                        * add zc_Enum_InfoMoneyDestination_20500
+ 14.09.13                                        * add zc_ObjectLink_Goods_Business
  02.09.13                                        * add lpInsertUpdate_MovementItemContainer_byTable
  01.09.13                                        * change isActive
  26.08.13                                        * add zc_InfoMoneyDestination_WorkProgress

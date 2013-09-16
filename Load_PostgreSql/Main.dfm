@@ -937,7 +937,7 @@ object MainForm: TMainForm
     Top = 304
   end
   object toSqlQuery: TZQuery
-    Connection = ToZConnection
+    Connection = toZConnection
     SQL.Strings = (
       'select  * from Object')
     Params = <>
@@ -967,11 +967,10 @@ object MainForm: TMainForm
     Left = 312
     Top = 384
   end
-  object ToZConnection: TZConnection
+  object toZConnection: TZConnection
     ControlsCodePage = cCP_UTF16
     UTF8StringsAsWideField = True
     Catalog = 'public'
-    Connected = True
     DesignConnection = True
     HostName = 'localhost'
     Port = 0

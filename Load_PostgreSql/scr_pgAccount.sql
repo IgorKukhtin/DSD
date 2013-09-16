@@ -1,3 +1,10 @@
+/* !!! ЭТО ДЛЯ POSTGRES, ВЫПОЛНЯТЬ НАДО !!!АККУРАТНО!!!
+UPDATE ObjectLink set ChildObjectId = null where DescId = zc_ObjectLink_Account_AccountGroup();
+UPDATE ObjectLink set ChildObjectId = null where DescId = zc_ObjectLink_Account_AccountDirection();
+UPDATE ObjectLink set ChildObjectId = null where DescId = zc_ObjectLink_Account_InfoMoneyDestination();
+UPDATE ObjectLink set ChildObjectId = null where DescId = zc_ObjectLink_Account_InfoMoney();
+*/
+
 drop table dba._pgAccount;
 
 create table dba._pgAccount (Id integer not null default autoincrement, ObjectCode Integer not null, Name1 TVarCharMedium not null, Name2 TVarCharMedium not null, Name3 TVarCharMedium not null, Id1_Postgres integer null, Id2_Postgres integer null, Id3_Postgres integer null, PRIMARY KEY (ObjectCode));
@@ -19,43 +26,38 @@ select '10401', 'Необоротные активы', 'НМА', 'НМА' union all
 select '20101', 'Запасы', 'на складах ГП', 'Продукция' union all
 select '20102', 'Запасы', 'на складах ГП', 'Товары' union all
 select '20103', 'Запасы', 'на складах ГП', 'Прочие материалы' union all
-select '20104', 'Запасы', 'на складах ГП', 'Оборотная тара' union all
-select '20105', 'Запасы', 'на складах ГП', 'Переработка' union all
+select '20104', 'Запасы', 'на складах ГП', 'Переработка' union all
 select '20201', 'Запасы', 'на складах ', 'Мясное сырье' union all
 select '20202', 'Запасы', 'на складах ', 'Прочее сырье' union all
 select '20203', 'Запасы', 'на складах ', 'Запчасти и Ремонты' union all
 select '20204', 'Запасы', 'на складах ', 'Прочие ТМЦ' union all
 select '20205', 'Запасы', 'на складах ', 'ГСМ' union all
-select '20206', 'Запасы', 'на складах ', 'Оборотная тара' union all
-select '20207', 'Запасы', 'на складах ', 'Прочие материалы' union all
-select '20208', 'Запасы', 'на складах ', 'Переработка' union all
+select '20206', 'Запасы', 'на складах ', 'Прочие материалы' union all
+select '20207', 'Запасы', 'на складах ', 'Переработка' union all
 select '20301', 'Запасы', 'на хранении', 'Прочее сырье' union all
 select '20401', 'Запасы', 'на производстве', 'Мясное сырье' union all
 select '20402', 'Запасы', 'на производстве', 'Прочее сырье' union all
-select '20403', 'Запасы', 'на производстве', 'Оборотная тара' union all
-select '20404', 'Запасы', 'на производстве', 'Прочие материалы' union all
-select '20405', 'Запасы', 'на производстве', 'Незавершенное производство' union all
-select '20406', 'Запасы', 'на производстве', 'Переработка' union all
+select '20403', 'Запасы', 'на производстве', 'Прочие материалы' union all
+select '20404', 'Запасы', 'на производстве', 'Незавершенное производство' union all
+select '20405', 'Запасы', 'на производстве', 'Переработка' union all
 select '20501', 'Запасы', 'сотрудники (МО)', 'Запчасти и Ремонты' union all
 select '20502', 'Запасы', 'сотрудники (МО)', 'Прочие ТМЦ' union all
 select '20503', 'Запасы', 'сотрудники (МО)', 'ГСМ' union all
 select '20601', 'Запасы', 'сотрудники (экспедиторы)', 'Мясное сырье' union all
-select '20602', 'Запасы', 'сотрудники (экспедиторы)', 'Оборотная тара' union all
-select '20603', 'Запасы', 'сотрудники (экспедиторы)', 'Прочие материалы' union all
-select '20604', 'Запасы', 'сотрудники (экспедиторы)', 'Продукция' union all
-select '20605', 'Запасы', 'сотрудники (экспедиторы)', 'Товары' union all
+select '20602', 'Запасы', 'сотрудники (экспедиторы)', 'Прочие материалы' union all
+select '20603', 'Запасы', 'сотрудники (экспедиторы)', 'Продукция' union all
+select '20604', 'Запасы', 'сотрудники (экспедиторы)', 'Товары' union all
 select '20701', 'Запасы', 'на филиалах', 'Запчасти и Ремонты' union all
 select '20702', 'Запасы', 'на филиалах', 'Прочие ТМЦ' union all
 select '20703', 'Запасы', 'на филиалах', 'ГСМ' union all
-select '20704', 'Запасы', 'на филиалах', 'Оборотная тара' union all
-select '20705', 'Запасы', 'на филиалах', 'Прочие материалы' union all
-select '20706', 'Запасы', 'на филиалах', 'Продукция' union all
-select '20707', 'Запасы', 'на филиалах', 'Товары' union all
+select '20704', 'Запасы', 'на филиалах', 'Прочие материалы' union all
+select '20705', 'Запасы', 'на филиалах', 'Продукция' union all
+select '20706', 'Запасы', 'на филиалах', 'Товары' union all
 select '20801', 'Запасы', 'на упаковке', 'Прочее сырье' union all
-select '20802', 'Запасы', 'на упаковке', 'Оборотная тара' union all
-select '20803', 'Запасы', 'на упаковке', 'Прочие материалы' union all
-select '20804', 'Запасы', 'на упаковке', 'Продукция' union all
-select '20805', 'Запасы', 'на упаковке', 'Товары' union all
+select '20802', 'Запасы', 'на упаковке', 'Прочие материалы' union all
+select '20803', 'Запасы', 'на упаковке', 'Продукция' union all
+select '20804', 'Запасы', 'на упаковке', 'Товары' union all
+select '20901', 'Запасы', 'Оборотная тара', 'Оборотная тара' union all
 select '30101', 'Дебиторы', 'покупатели ', 'Мясное сырье' union all
 select '30102', 'Дебиторы', 'покупатели ', 'Прочее сырье' union all
 select '30103', 'Дебиторы', 'покупатели ', 'Запчасти и Ремонты' union all
@@ -146,7 +148,7 @@ select '90401', 'Расчеты с бюджетом', 'штрафы в бюджет', 'штрафы в бюджет' union
 select '100101', 'Собственный капитал', 'Первоначальный капитал', 'Первоначальный капитал' union all
 select '100201', 'Собственный капитал', 'Дополнительный капитал', 'Дополнительный капитал' union all
 select '100301', 'Собственный капитал', 'прибыль текущего периода', 'прибыль текущего периода' union all
-select '100401', 'Собственный капитал', 'Расчеты с участниками', 'Расчеты с участниками'
+select '100401', 'Собственный капитал', 'Расчеты с участниками', 'Расчеты с участниками';
 
 -- update _pgAccount set Id = 5000+Id;
 

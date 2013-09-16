@@ -8,16 +8,16 @@
 
 CREATE TABLE MovementItemReport(
    Id                      SERIAL NOT NULL PRIMARY KEY, 
-   MovementId              Integer,
-   MovementItemId          Integer,
-   ActiveContainerId       Integer,
-   PassiveContainerId      Integer,
-   ActiveAccountId         Integer,
-   PassiveAccountId        Integer,
-   ReportContainerId       Integer,
-   ChildReportContainerId  Integer,
-   Amount                  TFloat, 
-   OperDate                TDateTime,
+   MovementId              Integer NOT NULL,
+   MovementItemId          Integer NOT NULL,
+   ActiveContainerId       Integer NOT NULL,
+   PassiveContainerId      Integer NOT NULL,
+   ActiveAccountId         Integer NOT NULL,
+   PassiveAccountId        Integer NOT NULL
+   ReportContainerId       Integer NOT NULL,
+   ChildReportContainerId  Integer NOT NULL,
+   Amount                  TFloat NOT NULL, 
+   OperDate                TDateTime NOT NULL,
 
    CONSTRAINT fk_MovementItemReport_MovementId FOREIGN KEY (MovementId) REFERENCES Movement (Id),
    CONSTRAINT fk_MovementItemReport_MovementItemId FOREIGN KEY (MovementItemId) REFERENCES MovementItem (Id),
@@ -38,5 +38,6 @@ CREATE INDEX Idx_MovementItemReport_PassiveAccountId_OperDate_Amount ON Movement
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 13.09.13                                        * NOT NULL
  03.09.13                                        *
 */
