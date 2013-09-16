@@ -8,11 +8,13 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 67
+    Top = 113
     Width = 1329
-    Height = 328
+    Height = 282
     Align = alClient
     TabOrder = 0
+    ExplicitTop = 67
+    ExplicitHeight = 328
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -86,13 +88,13 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
           Format = ',0.00'
           Kind = skSum
           Position = spFooter
-          Column = EndCount_calc
+          Column = EndCount
         end
         item
           Format = ',0.00'
           Kind = skSum
           Position = spFooter
-          Column = EndSumm_calc
+          Column = EndSumm
         end
         item
           Format = ',0.00'
@@ -133,7 +135,7 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
         item
           Format = ',0.00'
           Kind = skSum
-          Column = EndCount_calc
+          Column = EndCount
         end
         item
           Format = ',0.00'
@@ -168,12 +170,12 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
         item
           Format = ',0.00'
           Kind = skSum
-          Column = EndCount_calc
+          Column = EndCount
         end
         item
           Format = ',0.00'
           Kind = skSum
-          Column = EndSumm_calc
+          Column = EndSumm
         end
         item
           Format = ',0.00'
@@ -252,8 +254,8 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
         HeaderAlignmentHorz = taRightJustify
         Width = 75
       end
-      object IncomeWeight: TcxGridDBColumn
-        Caption = 'IncomeWeight'
+      object IncomeCount_Sh: TcxGridDBColumn
+        Caption = 'IncomeCount_Sh'
         HeaderAlignmentHorz = taRightJustify
         Width = 50
       end
@@ -270,8 +272,8 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
         Properties.DisplayFormat = ',0.00;-,0.00'
         Width = 75
       end
-      object SendInWeight: TcxGridDBColumn
-        Caption = 'SendInWeight'
+      object SendInCount_Sh: TcxGridDBColumn
+        Caption = 'SendInCount_Sh'
         FooterAlignmentHorz = taRightJustify
       end
       object SendInCount: TcxGridDBColumn
@@ -285,8 +287,8 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Width = 75
       end
-      object SendOutWeight: TcxGridDBColumn
-        Caption = 'SendOutWeight'
+      object SendOutCount_Sh: TcxGridDBColumn
+        Caption = 'SendOutCount_Sh'
         HeaderAlignmentHorz = taRightJustify
         Width = 50
       end
@@ -298,8 +300,8 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
         Caption = 'SendOutSumm'
         Width = 75
       end
-      object SaleWeight: TcxGridDBColumn
-        Caption = 'SaleWeight'
+      object SaleCount_Sh: TcxGridDBColumn
+        Caption = 'SaleCount_Sh'
         Width = 50
       end
       object SaleCount: TcxGridDBColumn
@@ -310,8 +312,8 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
         Caption = 'SaleSumm'
         Width = 75
       end
-      object ReturnOutWeight: TcxGridDBColumn
-        Caption = 'ReturnOutWeight'
+      object ReturnOutCount_Sh: TcxGridDBColumn
+        Caption = 'ReturnOutCount_Sh'
         Width = 50
       end
       object ReturnOutCount: TcxGridDBColumn
@@ -322,8 +324,8 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
         Caption = 'ReturnOutSumm'
         Width = 75
       end
-      object ReturnInWeight: TcxGridDBColumn
-        Caption = 'ReturnInWeight'
+      object ReturnInCount_Sh: TcxGridDBColumn
+        Caption = 'ReturnInCount_Sh'
         Width = 50
       end
       object ReturnInCount: TcxGridDBColumn
@@ -334,8 +336,8 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
         Caption = 'ReturnInSumm'
         Width = 75
       end
-      object LossWeight: TcxGridDBColumn
-        Caption = 'LossWeight'
+      object LossCount_Sh: TcxGridDBColumn
+        Caption = 'LossCount_Sh'
         Width = 50
       end
       object LossCount: TcxGridDBColumn
@@ -346,8 +348,8 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
         Caption = 'LossSumm'
         Width = 75
       end
-      object InventoryWeight: TcxGridDBColumn
-        Caption = 'InventoryWeight'
+      object InventoryCount_Sh: TcxGridDBColumn
+        Caption = 'InventoryCount_Sh'
         Width = 50
       end
       object InventoryCount: TcxGridDBColumn
@@ -358,17 +360,19 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
         Caption = 'InventorySumm'
         Width = 75
       end
-      object EndWeight_calc: TcxGridDBColumn
-        Caption = 'EndWeight_calc'
+      object EndCount_Sh: TcxGridDBColumn
+        Caption = 'EndCount_Sh'
         Width = 75
       end
-      object EndCount_calc: TcxGridDBColumn
+      object EndCount: TcxGridDBColumn
+        Caption = 'EndCount'
         DataBinding.FieldName = 'EndCount_calc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         Width = 75
       end
-      object EndSumm_calc: TcxGridDBColumn
+      object EndSumm: TcxGridDBColumn
+        Caption = 'EndSumm'
         DataBinding.FieldName = 'EndSumm_calc'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
@@ -383,11 +387,11 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
     Left = 0
     Top = 26
     Width = 1329
-    Height = 41
+    Height = 87
     Align = alTop
     TabOrder = 5
     object deStart: TcxDateEdit
-      Left = 208
+      Left = 217
       Top = 8
       EditValue = 41395d
       TabOrder = 0
@@ -399,6 +403,70 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
       EditValue = 41395d
       TabOrder = 1
       Width = 121
+    end
+    object edUnit: TcxButtonEdit
+      Left = 610
+      Top = 8
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 2
+      Width = 137
+    end
+    object cxLabel3: TcxLabel
+      Left = 504
+      Top = 8
+      Caption = #1043#1088'.'#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+    end
+    object edGoodsGroup: TcxButtonEdit
+      Left = 898
+      Top = 7
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 4
+      Width = 137
+    end
+    object cxLabel1: TcxLabel
+      Left = 828
+      Top = 8
+      Caption = #1043#1088'.'#1090#1086#1074#1072#1088#1072
+    end
+    object cxLabel2: TcxLabel
+      Left = 850
+      Top = 48
+      Caption = #1058#1086#1074#1072#1088
+    end
+    object edGoods: TcxButtonEdit
+      Left = 898
+      Top = 48
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 7
+      Width = 137
+    end
+    object edLocation: TcxButtonEdit
+      Left = 610
+      Top = 48
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 8
+      Width = 137
+    end
+    object cxLabel4: TcxLabel
+      Left = 520
+      Top = 48
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
     end
   end
   object DataSource: TDataSource
@@ -542,6 +610,30 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataType = ftDateTime
         ParamType = ptInput
         Value = 41395d
+      end
+      item
+        Name = 'inUnitGroupId'
+        Component = edUnit
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'inLocationId'
+        Component = edLocation
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsGroupId'
+        Component = edGoodsGroup
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Component = edGoods
+        DataType = ftInteger
+        ParamType = ptInput
       end>
     Left = 152
     Top = 176
@@ -556,5 +648,37 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 264
     Top = 264
+  end
+  object dsdGuidesUnitGroup: TdsdGuides
+    LookupControl = edUnit
+    FormName = 'TUnitForm'
+    PositionDataSet = 'GridDataSet'
+    Params = <>
+    Left = 672
+    Top = 16
+  end
+  object dsdGuidesGoodsGroup: TdsdGuides
+    LookupControl = edGoodsGroup
+    FormName = 'TGoodsGroupForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <>
+    Left = 952
+    Top = 16
+  end
+  object dsdGuidesGoods: TdsdGuides
+    LookupControl = edGoods
+    FormName = 'TGoodsForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <>
+    Left = 944
+    Top = 64
+  end
+  object dsdGuidesUnit: TdsdGuides
+    LookupControl = edLocation
+    FormName = 'TUnitForm'
+    PositionDataSet = 'GridDataSet'
+    Params = <>
+    Left = 664
+    Top = 72
   end
 end
