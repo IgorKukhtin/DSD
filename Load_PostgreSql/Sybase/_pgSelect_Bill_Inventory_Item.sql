@@ -133,7 +133,7 @@ begin
          , GoodsProperty.Id_Postgres as GoodsId
          , sum (EndCount) as Amount
          , _tmpList_Remains_byKindPackage.PartionDate as PartionGoodsDate
-         , sum (EndSummIn) as Summ
+         , sum (case when Goods.ParentId=686 and inEndDate>='2013-01-01' then 0 else EndSummIn end) as Summ
          , 0 as HeadCount
          , 0 as myCount
          , '' as PartionGoods

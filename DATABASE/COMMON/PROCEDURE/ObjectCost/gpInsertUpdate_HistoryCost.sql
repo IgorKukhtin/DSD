@@ -42,12 +42,15 @@ BEGIN
              , SUM (tmpContainer.OutSumm)
         FROM (SELECT Container.Id AS ContainerId
                    , Container.DescId
+                   , Container.ObjectId
                    , CASE WHEN Container.DescId = zc_Container_Count() THEN Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END AS StartCount
                    , CASE WHEN Container.DescId = zc_Container_Summ()  THEN Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END AS StartSumm
                    , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN Movement.DescId NOT IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS IncomeCount
                    , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN Movement.DescId NOT IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS IncomeSumm
 
-                   , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS CalcCount
+                   , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
+                   + CASE WHEN Container.DescId = zc_Container_CountSupplier() THEN Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) + COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Income() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END
+                     AS CalcCount
                    , CASE WHEN Container.DescId = zc_Container_Summ()  THEN COALESCE (SUM (CASE WHEN Movement.DescId IN (zc_Movement_Send(), zc_Movement_ProductionUnion(), zc_Movement_ProductionSeparate()) AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS CalcSumm
 
                    , CASE WHEN Container.DescId = zc_Container_Count() THEN COALESCE (SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount < 0 THEN -MIContainer.Amount ELSE 0 END), 0) ELSE 0 END AS OutCount
@@ -61,6 +64,7 @@ BEGIN
               -- where 1=0
               GROUP BY Container.Id
                      , Container.DescId
+                     , Container.ObjectId
                      , Container.Amount
               HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
                   OR (COALESCE (SUM (CASE WHEN MIContainer.OperDate BETWEEN inStartDate AND inEndDate AND MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END), 0) <> 0)
@@ -69,8 +73,23 @@ BEGIN
              LEFT JOIN Container AS Container_Summ
                                  ON Container_Summ.ParentId = tmpContainer.ContainerId
                                 AND Container_Summ.DescId = zc_Container_Summ()
+                                AND Container_Summ.ObjectId <> zc_Enum_Account_20901() -- "Œ·ÓÓÚÌ‡ˇ Ú‡‡"
                                 AND tmpContainer.DescId = zc_Container_Count()
-             LEFT JOIN ContainerObjectCost ON ContainerObjectCost.ContainerId = COALESCE (Container_Summ.Id, tmpContainer.ContainerId)
+             LEFT JOIN ContainerLinkObject AS ContainerLinkObject_JuridicalBasis
+                                           ON ContainerLinkObject_JuridicalBasis.ContainerId = tmpContainer.ContainerId
+                                          AND ContainerLinkObject_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
+                                          AND tmpContainer.DescId = zc_Container_Count()
+             LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Business
+                                           ON ContainerLinkObject_Business.ContainerId = tmpContainer.ContainerId
+                                          AND ContainerLinkObject_Business.DescId = zc_ContainerLinkObject_Business()
+                                          AND tmpContainer.DescId = zc_Container_Count()
+             LEFT JOIN lfSelect_ContainerSumm_byAccount (zc_Enum_Account_20901()) AS lfContainerSumm_20901
+                                                                                  ON lfContainerSumm_20901.GoodsId = tmpContainer.ObjectId
+                                                                                 AND lfContainerSumm_20901.JuridicalId_basis = COALESCE (ContainerLinkObject_JuridicalBasis.ObjectId, 0)
+                                                                                 AND lfContainerSumm_20901.BusinessId = COALESCE (ContainerLinkObject_Business.ObjectId, 0)
+                                                                                 AND tmpContainer.DescId = zc_Container_Count()
+
+             LEFT JOIN ContainerObjectCost ON ContainerObjectCost.ContainerId = COALESCE (lfContainerSumm_20901.ContainerId, COALESCE (Container_Summ.Id, tmpContainer.ContainerId))
                                           AND ContainerObjectCost.ObjectCostDescId = zc_ObjectCost_Basis()
         GROUP BY ContainerObjectCost.ObjectCostId;
 
@@ -267,14 +286,6 @@ END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
 
-
-/*
- »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
-               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 13.07.13                                        * add JOIN Container
- 10.07.13                                        *
-*/
-
 /*
      INSERT INTO _tmpMaster (ObjectCostId, StartCount, StartSumm, IncomeCount, IncomeSumm , CalcCount, CalcSumm)
         SELECT CAST (1 AS Integer) AS ObjectCostId, CAST (30 AS TFloat) AS StartCount, CAST (280 AS TFloat) AS StartSumm, CAST (0 AS TFloat) AS IncomeCount, CAST (0 AS TFloat) AS IncomeSumm, CAST (0 AS TFloat) AS CalcCount, CAST (0 AS TFloat) AS CalcSumm
@@ -331,6 +342,15 @@ LANGUAGE PLPGSQL VOLATILE;
        ;
 
 */
+
+/*
+ »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
+               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 15.09.13                                        * add zc_Container_CountSupplier and zc_Enum_Account_20901
+ 13.07.13                                        * add JOIN Container
+ 10.07.13                                        *
+*/
+
 
 -- select 'zc_isHistoryCost', zc_isHistoryCost()union all select 'zc_isHistoryCost_byInfoMoneyDetail', zc_isHistoryCost_byInfoMoneyDetail() order by 1;
 -- SELECT MIN (MovementItemContainer.OperDate), MAX (MovementItemContainer.OperDate), Count(*), MovementDesc.Code FROM MovementItemContainer left join Movement on Movement.Id = MovementId left join MovementDesc on MovementDesc.Id = Movement.DescId where MovementItemContainer.OperDate between '01.01.2013' and '31.01.2013' group by MovementDesc.Code;

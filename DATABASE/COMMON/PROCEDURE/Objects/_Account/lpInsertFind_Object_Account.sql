@@ -36,6 +36,11 @@ BEGIN
        RAISE EXCEPTION 'Невозможно определить Счет т.к. не установлено <Управленческое назначение> : "%", "%", "%", "%"', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
    END IF;
 
+   IF COALESCE (inInfoMoneyDestinationId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Невозможно определить Счет т.к. не установлено <Управленческое назначение> : "%", "%", "%", "%"', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
+   END IF;
+
 
    -- Находим Управленческий счет по <Управленческие назначения> или <Статьи назначения>
    IF inInfoMoneyDestinationId <> 0 THEN vbAccountId := lfGet_Object_Account_byInfoMoneyDestination (inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId);

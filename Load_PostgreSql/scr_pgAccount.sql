@@ -1,3 +1,10 @@
+/* !!! ЭТО ДЛЯ POSTGRES, ВЫПОЛНЯТЬ НАДО !!!АККУРАТНО!!!
+UPDATE ObjectLink set ChildObjectId = null where DescId = zc_ObjectLink_Account_AccountGroup();
+UPDATE ObjectLink set ChildObjectId = null where DescId = zc_ObjectLink_Account_AccountDirection();
+UPDATE ObjectLink set ChildObjectId = null where DescId = zc_ObjectLink_Account_InfoMoneyDestination();
+UPDATE ObjectLink set ChildObjectId = null where DescId = zc_ObjectLink_Account_InfoMoney();
+*/
+
 drop table dba._pgAccount;
 
 create table dba._pgAccount (Id integer not null default autoincrement, ObjectCode Integer not null, Name1 TVarCharMedium not null, Name2 TVarCharMedium not null, Name3 TVarCharMedium not null, Id1_Postgres integer null, Id2_Postgres integer null, Id3_Postgres integer null, PRIMARY KEY (ObjectCode));
@@ -141,7 +148,7 @@ select '90401', 'Расчеты с бюджетом', 'штрафы в бюджет', 'штрафы в бюджет' union
 select '100101', 'Собственный капитал', 'Первоначальный капитал', 'Первоначальный капитал' union all
 select '100201', 'Собственный капитал', 'Дополнительный капитал', 'Дополнительный капитал' union all
 select '100301', 'Собственный капитал', 'прибыль текущего периода', 'прибыль текущего периода' union all
-select '100401', 'Собственный капитал', 'Расчеты с участниками', 'Расчеты с участниками'
+select '100401', 'Собственный капитал', 'Расчеты с участниками', 'Расчеты с участниками';
 
 -- update _pgAccount set Id = 5000+Id;
 
