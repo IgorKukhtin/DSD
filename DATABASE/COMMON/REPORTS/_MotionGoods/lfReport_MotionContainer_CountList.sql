@@ -67,7 +67,9 @@ CREATE TEMP TABLE _tmpLocation (LocationId Integer) ON COMMIT DROP;
 INSERT INTO _tmpGoods (GoodsId) SELECT Id FROM Object WHERE DescId = zc_Object_Goods();
 INSERT INTO _tmpLocation (LocationId) SELECT Id FROM Object WHERE DescId = zc_Object_Unit() UNION ALL SELECT Id FROM Object WHERE DescId = zc_Object_Personal();
 
-SELECT * FROM lfReport_MotionContainer_CountList (inStartDate:='2013-01-01', inEndDate :='2013-01-01');
+SELECT * FROM lfReport_MotionContainer_CountList (inStartDate:='2013-01-01', inEndDate :='2013-01-01') as lfMotionContainer_CountList
+left join object as object_Goods on object_Goods.Id = lfMotionContainer_CountList.GoodsId 
+left join object as object_Location on object_Location.Id = lfMotionContainer_CountList.LocationId ;
 
 
 */
