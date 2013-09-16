@@ -27,6 +27,11 @@ type
     procedure GetValues(Proc: TGetStrProc); override;
   end;
 
+  TDataTypeProperty = class(TEnumProperty)
+  public
+    procedure GetValues(Proc: TGetStrProc); override;
+  end;
+
   procedure Register;
 
 implementation
@@ -37,8 +42,10 @@ uses dsdDB, TypInfo, Db, dsdGuides, cxTextEdit, cxCurrencyEdit, cxCheckBox,
 procedure Register;
 begin
    RegisterPropertyEditor(TypeInfo(String), TdsdParam, 'ComponentItem', TComponentItemTextProperty);
+   RegisterPropertyEditor(TypeInfo(TFieldType), TdsdParam, 'DataType', TDataTypeProperty);
    RegisterPropertyEditor(TypeInfo(TComponent), TdsdParam, 'Component', TdsdParamComponentProperty);
    RegisterPropertyEditor(TypeInfo(TComponent), TComponentListItem, 'Component', TdsdParamComponentProperty);
+   RegisterPropertyEditor(TypeInfo(boolean),TExecuteDialog,'isShowModal',nil);
 end;
 
 
@@ -99,6 +106,16 @@ begin
   // Отображаем только те компоненты, с которыми умеет работать TdsdGuides
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxButtonEdit)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxDateEdit)), Proc);
+end;
+
+{ TDataTypeProperty }
+
+procedure TDataTypeProperty.GetValues(Proc: TGetStrProc);
+begin
+ // inherited;
+  Proc('ftDateTime');
+  Proc('ftInteger');
+  Proc('ftString');
 end;
 
 end.

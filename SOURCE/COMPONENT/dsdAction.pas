@@ -11,13 +11,14 @@ type
   TdsdStoredProcItem = class(TCollectionItem)
   private
     FStoredProc: TdsdStoredProc;
+    procedure SetStoredProc(const Value: TdsdStoredProc);
   protected
     function GetDisplayName: string; override;
   published
-    property StoredProc: TdsdStoredProc read FStoredProc write FStoredProc;
+    property StoredProc: TdsdStoredProc read FStoredProc write SetStoredProc;
   end;
 
-  TdsdStoredProcList = class(TCollection)
+  TdsdStoredProcList = class(TOwnedCollection)
   private
     function GetItem(Index: Integer): TdsdStoredProcItem;
     procedure SetItem(Index: Integer; const Value: TdsdStoredProcItem);
@@ -57,7 +58,10 @@ type
   TDataSetDataLink = class(TDataLink)
   private
     FAction: IDataSetAction;
+    // вешаем флаг, потому что UpdateData срабатывает ДВАЖДЫ!!!
+    FModified: boolean;
   protected
+    procedure EditingChanged; override;
     procedure DataSetChanged; override;
     procedure UpdateData; override;
   public
@@ -72,9 +76,11 @@ type
   protected
     procedure DataSetChanged; virtual;
     procedure UpdateData;     virtual;
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
     function Execute: boolean; override;
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
   published
     property StoredProc: TdsdStoredProc read GetStoredProc write SetStoredProc;
     property StoredProcList: TdsdStoredProcList read FStoredProcList write FStoredProcList;
@@ -94,6 +100,8 @@ type
   TdsdInsertUpdateGuides = class (TdsdCustomDataSetAction)
   private
     FInsertUpdateAction: TCustomAction;
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
     function Execute: boolean; override;
     property InsertUpdateAction: TCustomAction read FInsertUpdateAction write FInsertUpdateAction;
@@ -112,6 +120,7 @@ type
     procedure UpdateData; override;
   public
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
   published
     property DataSource: TDataSource read GetDataSource write SetDataSource;
   end;
@@ -126,6 +135,7 @@ type
     procedure DataSetChanged; override;
   public
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
     function Execute: boolean; override;
   published
     property DataSource: TDataSource read GetDataSource write SetDataSource;
@@ -147,6 +157,7 @@ type
     procedure DataSetChanged; override;
     function Execute: boolean; override;
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
   published
     property isSetErased: boolean read FisSetErased write SetisSetErased default true;
     property DataSource: TDataSource read GetDataSource write SetDataSource;
@@ -160,10 +171,12 @@ type
   protected
     procedure BeforeExecute(Form: TParentForm); virtual;
     procedure OnFormClose(Params: TdsdParams); virtual;
-    function ShowForm: integer;
+    function ShowForm: TParentForm;
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
     function Execute: boolean; override;
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
   published
     property Caption;
     property Hint;
@@ -191,6 +204,7 @@ type
     procedure OnFormClose(Params: TdsdParams); override;
   public
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
   published
     property ActionType: TDataSetAcionType read FActionType write FActionType default acInsert;
     property DataSource: TDataSource read GetDataSource write SetDataSource;
@@ -220,6 +234,7 @@ type
   public
     function Execute: boolean; override;
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
     property Guides: TdsdGuides read FGuides write FGuides;
   published
     property Params: TdsdParams read FParams write FParams;
@@ -252,9 +267,12 @@ type
   private
     FReportName: String;
     FParams: TdsdParams;
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
     function Execute: boolean; override;
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
   published
     property Params: TdsdParams read FParams write FParams;
     property ReportName: String read FReportName write FReportName;
@@ -322,12 +340,19 @@ end;
 constructor TdsdCustomDataSetAction.Create(AOwner: TComponent);
 begin
   inherited;
-  FStoredProcList := TdsdStoredProcList.Create(TdsdStoredProcItem);
+  FStoredProcList := TdsdStoredProcList.Create(Self, TdsdStoredProcItem);
 end;
 
 procedure TdsdCustomDataSetAction.DataSetChanged;
 begin
 
+end;
+
+destructor TdsdCustomDataSetAction.Destroy;
+begin
+  FStoredProcList.Free;
+  FStoredProcList := nil;
+  inherited;
 end;
 
 function TdsdCustomDataSetAction.Execute: boolean;
@@ -351,6 +376,21 @@ begin
   end
   else
      result := nil
+end;
+
+procedure TdsdCustomDataSetAction.Notification(AComponent: TComponent;
+  Operation: TOperation);
+var i: integer;
+begin
+  inherited;
+  if csDesigning in ComponentState then
+    if (Operation = opRemove) and (AComponent is TdsdStoredProc) and Assigned(StoredProcList) then begin
+       for i := 0 to StoredProcList.Count - 1 do
+           if StoredProcList[i].StoredProc = AComponent then
+              StoredProcList[i].StoredProc := nil;
+       if StoredProc = AComponent then
+          StoredProc := nil
+    end;
 end;
 
 procedure TdsdCustomDataSetAction.SetStoredProc(const Value: TdsdStoredProc);
@@ -394,7 +434,14 @@ end;
 constructor TdsdOpenForm.Create(AOwner: TComponent);
 begin
   inherited;
-  FParams := TdsdParams.Create(TdsdParam);
+  FParams := TdsdParams.Create(Self, TdsdParam);
+end;
+
+destructor TdsdOpenForm.Destroy;
+begin
+  FParams.Free;
+  FParams := nil;
+  inherited;
 end;
 
 function TdsdOpenForm.Execute: boolean;
@@ -402,23 +449,34 @@ begin
   ShowForm
 end;
 
+procedure TdsdOpenForm.Notification(AComponent: TComponent;
+  Operation: TOperation);
+var i: integer;
+begin
+  inherited;
+  if csDesigning in ComponentState then
+    if (Operation = opRemove) and Assigned(FParams) then
+       for i := 0 to GuiParams.Count - 1 do
+           if GuiParams[i].Component = AComponent then
+              GuiParams[i].Component := nil;
+end;
+
 procedure TdsdOpenForm.OnFormClose(Params: TdsdParams);
 begin
 
 end;
 
-function TdsdOpenForm.ShowForm: integer;
-var
-  Form: TParentForm;
+function TdsdOpenForm.ShowForm: TParentForm;
 begin
-  Form := TdsdFormStorageFactory.GetStorage.Load(FormName);
-  BeforeExecute(Form);
-  Form.Execute(Self, FParams);
-  result := mrNone;
-  if isShowModal then
-     result := Form.ShowModal
+  Result := TdsdFormStorageFactory.GetStorage.Load(FormName);
+  BeforeExecute(Result);
+  if Result.Execute(Self, FParams) then
+    if isShowModal then
+       Result.ShowModal
+    else
+       Result.Show
   else
-     Form.Show
+    Result.Free
 end;
 
 { TdsdFormClose }
@@ -445,6 +503,12 @@ begin
         Enabled := (ActionType = acInsert) or (DataSource.DataSet.RecordCount <> 0)
 end;
 
+destructor TdsdInsertUpdateAction.Destroy;
+begin
+  FActionDataLink.Free;
+  inherited;
+end;
+
 function TdsdInsertUpdateAction.GetDataSource: TDataSource;
 begin
   result := FActionDataLink.DataSource
@@ -453,9 +517,10 @@ end;
 procedure TdsdInsertUpdateAction.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
-  inherited Notification(AComponent, Operation);
-  if (Operation = opRemove) and (AComponent = DataSource) then
-     DataSource := nil;
+  inherited;
+  if csDesigning in ComponentState then
+    if (Operation = opRemove) and (AComponent = DataSource) then
+       DataSource := nil;
 end;
 
 procedure TdsdInsertUpdateAction.OnFormClose(Params: TdsdParams);
@@ -496,11 +561,19 @@ begin
      FAction.DataSetChanged;
 end;
 
+procedure TDataSetDataLink.EditingChanged;
+begin
+  inherited;
+  if DataSource.State = dsEdit then
+     FModified := true;
+end;
+
 procedure TDataSetDataLink.UpdateData;
 begin
   inherited;
-  if Assigned(FAction) then
+  if Assigned(FAction) and FModified then
      FAction.UpdateData;
+  FModified := false;
 end;
 
 { TdsdUpdateErased }
@@ -526,6 +599,12 @@ begin
               Enabled := DataSource.DataSet.FieldByName('isErased').AsBoolean
 end;
 
+destructor TdsdUpdateErased.Destroy;
+begin
+  FActionDataLink.Free;
+  inherited;
+end;
+
 function TdsdUpdateErased.Execute: boolean;
 begin
   result := inherited Execute;
@@ -544,9 +623,10 @@ end;
 procedure TdsdUpdateErased.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
-  inherited Notification(AComponent, Operation);
-  if (Operation = opRemove) and (AComponent = DataSource) then
-     DataSource := nil;
+  inherited;
+  if csDesigning in ComponentState then
+    if (Operation = opRemove) and (AComponent = DataSource) then
+       DataSource := nil;
 end;
 
 procedure TdsdUpdateErased.SetDataSource(const Value: TDataSource);
@@ -594,7 +674,7 @@ constructor TdsdChoiceGuides.Create(AOwner: TComponent);
 begin
   inherited;
   FActionDataLink := TDataSetDataLink.Create(Self);
-  FParams := TdsdParams.Create(TdsdParam);
+  FParams := TdsdParams.Create(Self, TdsdParam);
   Caption := 'Выбор из справочника';
   Hint := 'Выбор из справочника';
 end;
@@ -606,6 +686,13 @@ begin
   if Assigned(DataSource) and Assigned(FGuides) then
      if Assigned(DataSource.DataSet) then
         Enabled := (DataSource.DataSet.RecordCount <> 0)
+end;
+
+destructor TdsdChoiceGuides.Destroy;
+begin
+  FActionDataLink.Free;
+  FreeAndNil(FParams);
+  inherited;
 end;
 
 function TdsdChoiceGuides.Execute: boolean;
@@ -624,10 +711,18 @@ end;
 
 procedure TdsdChoiceGuides.Notification(AComponent: TComponent;
   Operation: TOperation);
+var i: integer;
 begin
-  inherited Notification(AComponent, Operation);
-  if (Operation = opRemove) and (AComponent = DataSource) then
-     DataSource := nil;
+  inherited;
+  if csDesigning in ComponentState then
+    if (Operation = opRemove) then begin
+       if Assigned(Params) then
+         for i := 0 to Params.Count - 1 do
+             if Params[i].Component = AComponent then
+                Params[i].Component := nil;
+       if (AComponent = DataSource) then
+           DataSource := nil;
+    end;
 end;
 
 procedure TdsdChoiceGuides.SetDataSource(const Value: TDataSource);
@@ -653,6 +748,12 @@ procedure TdsdChangeMovementStatus.DataSetChanged;
 begin
   Enabled := (DataSource.DataSet.RecordCount > 0)
     and (DataSource.DataSet.FieldByName('StatusCode').AsInteger <> (Integer(Status) + 1));
+end;
+
+destructor TdsdChangeMovementStatus.Destroy;
+begin
+  FActionDataLink.Free;
+  inherited;
 end;
 
 function TdsdChangeMovementStatus.Execute: boolean;
@@ -681,6 +782,12 @@ constructor TdsdUpdateDataSet.Create(AOwner: TComponent);
 begin
   inherited;
   FDataSetDataLink := TDataSetDataLink.Create(Self);
+end;
+
+destructor TdsdUpdateDataSet.Destroy;
+begin
+  FDataSetDataLink.Free;
+  inherited;
 end;
 
 function TdsdUpdateDataSet.GetDataSource: TDataSource;
@@ -717,9 +824,10 @@ end;
 procedure TdsdGridToExcel.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
-  inherited Notification(AComponent, Operation);
-  if (Operation = opRemove) and (AComponent = FGrid) then
-     FGrid := nil;
+  inherited;
+  if csDesigning in ComponentState then
+    if (Operation = opRemove) and (AComponent = FGrid) then
+       FGrid := nil;
 end;
 
 { TdsdPrintAction }
@@ -728,7 +836,13 @@ end;
 constructor TdsdPrintAction.Create(AOwner: TComponent);
 begin
   inherited;
-  FParams := TdsdParams.Create(TdsdParam);
+  FParams := TdsdParams.Create(Self, TdsdParam);
+end;
+
+destructor TdsdPrintAction.Destroy;
+begin
+  FreeAndNil(FParams);
+  inherited;
 end;
 
 function TdsdPrintAction.Execute: boolean;
@@ -748,12 +862,33 @@ begin
   end;
 end;
 
+procedure TdsdPrintAction.Notification(AComponent: TComponent;
+  Operation: TOperation);
+var i: integer;
+begin
+  inherited;
+  if csDesigning in ComponentState then
+    if (Operation = opRemove) and Assigned(Params) then
+       for i := 0 to Params.Count - 1 do
+           if Params[i].Component = AComponent then
+              Params[i].Component := nil;
+end;
+
 { TdsdInsertUpdateGuides }
 
 function TdsdInsertUpdateGuides.Execute: boolean;
 begin
   inherited;
   TParentForm(Owner).Close(Self);
+end;
+
+procedure TdsdInsertUpdateGuides.Notification(AComponent: TComponent;
+  Operation: TOperation);
+begin
+  inherited;
+  if csDesigning in ComponentState then
+    if (Operation = opRemove) and (FInsertUpdateAction = AComponent) then
+       FInsertUpdateAction := nil
 end;
 
 { TBooleanStoredProcAction }
@@ -832,9 +967,10 @@ end;
 procedure TdsdCustomAction.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
-  inherited Notification(AComponent, Operation);
-  if (Operation = opRemove) and (AComponent = TabSheet) then
-     TabSheet := nil;
+  inherited;
+  if csDesigning in ComponentState then
+    if (Operation = opRemove) and (AComponent = TabSheet) then
+       TabSheet := nil;
 end;
 
 procedure TdsdCustomAction.OnPageChanging(Sender: TObject; NewPage: TcxTabSheet;
@@ -864,6 +1000,15 @@ begin
   result := inherited;
   if Assigned(FStoredProc) then
      result := FStoredProc.Name + ' \ ' + FStoredProc.StoredProcName
+end;
+
+procedure TdsdStoredProcItem.SetStoredProc(const Value: TdsdStoredProc);
+begin
+  if FStoredProc <> Value then begin
+     if Assigned(Collection) and Assigned(Value) then
+        Value.FreeNotification(TComponent(Collection.Owner));
+     FStoredProc := Value;
+  end;
 end;
 
 end.

@@ -20,6 +20,7 @@ type
     property OnDblClickActionList: TActionItemList read FOnDblClickActionList write FOnDblClickActionList;
     property ActionItemList: TActionItemList read FActionItemList write FActionItemList;
     property SortImages: TImageList read FImages write FImages;
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
     constructor Create(AOwner: TComponent); override;
   end;
@@ -117,13 +118,11 @@ type
 
   THeaderSaver = class;
 
-  TControlList = class(TCollection)
+  TControlList = class(TOwnedCollection)
   private
     function GetItem(Index: Integer): TControlListItem;
     procedure SetItem(Index: Integer; const Value: TControlListItem);
   public
-    HeaderSaver: THeaderSaver;
-    constructor Create(HeaderSaver: THeaderSaver);
     function Add: TControlListItem;
     property Items[Index: Integer]: TControlListItem read GetItem write SetItem; default;
   end;
@@ -140,8 +139,11 @@ type
     procedure OnExit(Sender: TObject);
     // процедура вызывается после открытия формы и заполняет FEnterValue начальными параметрами
     procedure OnAfterShow(Sender: TObject);
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
   published
     property IdParam: TdsdParam read FParam write FParam;
     property StoredProc: TdsdStoredProc read FStoredProc write FStoredProc;
@@ -158,6 +160,7 @@ type
     procedure OnClose(Sender: TObject; var Action: TCloseAction);
   public
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
   published
     property FormName: string read FFormName write FFormName;
     property DataSet: string read FDataSet write FDataSet;
@@ -177,12 +180,6 @@ type
     property Component: TComponent read FComponent write SetComponent;
   end;
 
-  TComponentCollection = class(TCollection)
-    FOwner: TPersistent;
-    function GetOwner: TPersistent; override;
-    constructor Create(ItemClass: TCollectionItemClass; Owner: TComponent);
-  end;
-
   TExecuteDialog = class;
 
   TRefreshDispatcher = class(TComponent)
@@ -190,14 +187,16 @@ type
     FRefreshAction: TdsdDataSetRefresh;
     FComponentList: TCollection;
     FShowDialogAction: TExecuteDialog;
+    procedure SetShowDialogAction(const Value: TExecuteDialog);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
     procedure OnComponentChange(Sender: TObject);
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
   published
     property RefreshAction: TdsdDataSetRefresh read FRefreshAction write FRefreshAction;
-    property ShowDialogAction: TExecuteDialog read FShowDialogAction write FShowDialogAction;
+    property ShowDialogAction: TExecuteDialog read FShowDialogAction write SetShowDialogAction;
     property ComponentList: TCollection read FComponentList write FComponentList;
   end;
 
@@ -205,13 +204,18 @@ type
   TExecuteDialog = class (TdsdOpenForm)
   private
     FRefreshDispatcher: TRefreshDispatcher;
+    FOpenBeforeShow: boolean;
     // Прячем свойство модальности - она всегда модальна
-    property isShowModal;
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
+    // данное свойство нужно только в случае открытия диалога ДО формы. Что бы не быдо 2-х перечитываний запроса
+    RefreshAllow: boolean;
     function Execute: boolean; override;
     property RefreshDispatcher: TRefreshDispatcher read FRefreshDispatcher write FRefreshDispatcher;
+    constructor Create(AOwner: TComponent); override;
+  published
+    property OpenBeforeShow: boolean read FOpenBeforeShow write FOpenBeforeShow;
   end;
 
 
@@ -245,9 +249,10 @@ end;
 procedure TdsdDBTreeAddOn.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
-  inherited Notification(AComponent, Operation);
-  if (Operation = opRemove) and (AComponent = DBTreeList) then
-     DBTreeList := nil;
+  inherited;
+  if csDesigning in ComponentState then
+    if (Operation = opRemove) and (AComponent = DBTreeList) then
+       DBTreeList := nil;
 end;
 
 procedure TdsdDBTreeAddOn.onColumnHeaderClick(Sender: TcxCustomTreeList;
@@ -493,9 +498,10 @@ end;
 procedure TdsdDBViewAddOn.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
-  inherited Notification(AComponent, Operation);
-  if (Operation = opRemove) and (AComponent = FView) then
-     FView := nil;
+  inherited;
+  if csDesigning in ComponentState then
+    if (Operation = opRemove) and (AComponent = FView) then
+       FView := nil;
 end;
 
 procedure TdsdDBViewAddOn.OnKeyPress(Sender: TObject; var Key: Char);
@@ -665,12 +671,39 @@ constructor THeaderSaver.Create(AOwner: TComponent);
 begin
   inherited;
   FParam := TdsdParam.Create(nil);
-  FControlList := TControlList.Create(Self);
+  FControlList := TControlList.Create(Self, TControlListItem);
   FEnterValue := TStringList.Create;
   if Self.Owner is TParentForm then begin
      FOnAfterShow := TParentForm(Owner).onAfterShow;
      TParentForm(Owner).onAfterShow := onAfterShow;
   end;
+end;
+
+destructor THeaderSaver.Destroy;
+begin
+  FParam.Free;
+  FControlList.Free;
+  FEnterValue.Free;
+  if Self.Owner is TParentForm then
+     TParentForm(Owner).onAfterShow := FOnAfterShow;
+  inherited;
+end;
+
+procedure THeaderSaver.Notification(AComponent: TComponent;
+  Operation: TOperation);
+var i: integer;
+begin
+  inherited;
+  if csDesigning in ComponentState then
+    if (Operation = opRemove) then begin
+      if AComponent is TControl then begin
+         for i := 0 to ControlList.Count - 1 do
+            if ControlList[i].Control = AComponent then
+               ControlList[i].Control := nil;
+      end;
+      if AComponent = StoredProc then
+         AComponent := nil
+    end;
 end;
 
 procedure THeaderSaver.OnAfterShow(Sender: TObject);
@@ -724,12 +757,6 @@ begin
   result := TControlListItem(inherited Add);
 end;
 
-constructor TControlList.Create(HeaderSaver: THeaderSaver);
-begin
-  inherited Create(TControlListItem);
-  Self.HeaderSaver := HeaderSaver;
-end;
-
 function TControlList.GetItem(Index: Integer): TControlListItem;
 begin
   Result := TControlListItem(inherited GetItem(Index));
@@ -752,26 +779,33 @@ end;
 
 procedure TControlListItem.SetControl(const Value: TControl);
 begin
-  FControl := Value;
-  if FControl is TcxTextEdit then begin
-     (FControl as TcxTextEdit).OnEnter := TControlList(Collection).HeaderSaver.OnEnter;
-     (FControl as TcxTextEdit).OnExit := TControlList(Collection).HeaderSaver.OnExit;
-  end;
-  if FControl is TcxDateEdit then begin
-     (FControl as TcxDateEdit).OnEnter := TControlList(Collection).HeaderSaver.OnEnter;
-     (FControl as TcxDateEdit).OnExit := TControlList(Collection).HeaderSaver.OnExit;
-  end;
-  if FControl is TcxButtonEdit then begin
-     (FControl as TcxButtonEdit).OnEnter := TControlList(Collection).HeaderSaver.OnEnter;
-     (FControl as TcxButtonEdit).OnExit := TControlList(Collection).HeaderSaver.OnExit;
-  end;
-  if FControl is TcxCheckBox then begin
-     (FControl as TcxCheckBox).OnEnter := TControlList(Collection).HeaderSaver.OnEnter;
-     (FControl as TcxCheckBox).OnExit := TControlList(Collection).HeaderSaver.OnExit;
-  end;
-  if FControl is TcxCurrencyEdit then begin
-     (FControl as TcxCurrencyEdit).OnEnter := TControlList(Collection).HeaderSaver.OnEnter;
-     (FControl as TcxCurrencyEdit).OnExit := TControlList(Collection).HeaderSaver.OnExit;
+  if FControl <> Value then begin
+    FControl := Value;
+    if Assigned(Value) and Assigned(Collection) then begin
+       Value.FreeNotification(TComponent(Collection.Owner));
+       if (Collection.Owner is THeaderSaver) then begin
+          if FControl is TcxTextEdit then begin
+             (FControl as TcxTextEdit).OnEnter := THeaderSaver(Collection.Owner).OnEnter;
+             (FControl as TcxTextEdit).OnExit := THeaderSaver(Collection.Owner).OnExit;
+          end;
+          if FControl is TcxDateEdit then begin
+             (FControl as TcxDateEdit).OnEnter := THeaderSaver(Collection.Owner).OnEnter;
+             (FControl as TcxDateEdit).OnExit := THeaderSaver(Collection.Owner).OnExit;
+          end;
+          if FControl is TcxButtonEdit then begin
+             (FControl as TcxButtonEdit).OnEnter := THeaderSaver(Collection.Owner).OnEnter;
+             (FControl as TcxButtonEdit).OnExit := THeaderSaver(Collection.Owner).OnExit;
+          end;
+          if FControl is TcxCheckBox then begin
+             (FControl as TcxCheckBox).OnEnter := THeaderSaver(Collection.Owner).OnEnter;
+             (FControl as TcxCheckBox).OnExit := THeaderSaver(Collection.Owner).OnExit;
+          end;
+          if FControl is TcxCurrencyEdit then begin
+             (FControl as TcxCurrencyEdit).OnEnter := THeaderSaver(Collection.Owner).OnEnter;
+             (FControl as TcxCurrencyEdit).OnExit := THeaderSaver(Collection.Owner).OnExit;
+          end;
+       end;
+    end;
   end;
 end;
 
@@ -787,6 +821,13 @@ begin
      FOnClose := (AOwner as TForm).OnClose;
      (AOwner as TForm).OnClose := Self.OnClose;
   end;
+end;
+
+destructor TRefreshAddOn.Destroy;
+begin
+  if Owner is TForm then
+     TForm(Owner).OnClose := FOnClose;
+  inherited;
 end;
 
 procedure TRefreshAddOn.OnClose(Sender: TObject; var Action: TCloseAction);
@@ -811,8 +852,28 @@ end;
 constructor TCustomDBControlAddOn.Create(AOwner: TComponent);
 begin
   inherited;
-  ActionItemList := TActionItemList.Create(TShortCutActionItem);
-  OnDblClickActionList := TActionItemList.Create(TActionItem);
+  ActionItemList := TActionItemList.Create(Self, TShortCutActionItem);
+  OnDblClickActionList := TActionItemList.Create(Self, TActionItem);
+end;
+
+procedure TCustomDBControlAddOn.Notification(AComponent: TComponent;
+  Operation: TOperation);
+var i: integer;
+begin
+  inherited;
+  if csDesigning in ComponentState then
+    if (Operation = opRemove) then begin
+      if AComponent is TCustomAction then begin
+         for i := 0 to ActionItemList.Count - 1 do
+            if ActionItemList[i].Action = AComponent then
+               ActionItemList[i].Action := nil;
+         for i := 0 to OnDblClickActionList.Count - 1 do
+            if OnDblClickActionList[i].Action = AComponent then
+               OnDblClickActionList[i].Action := nil;
+      end;
+      if AComponent = SortImages then
+         AComponent := nil
+    end;
 end;
 
 procedure TCustomDBControlAddOn.OnDblClick(Sender: TObject);
@@ -853,17 +914,30 @@ end;
 constructor TRefreshDispatcher.Create(AOwner: TComponent);
 begin
   inherited;
-  ComponentList := TComponentCollection.Create(TComponentListItem, Self);
+  ComponentList := TOwnedCollection.Create(Self, TComponentListItem);
+end;
+
+destructor TRefreshDispatcher.Destroy;
+begin
+  ComponentList.Free;
+  inherited;
 end;
 
 procedure TRefreshDispatcher.Notification(AComponent: TComponent;
   Operation: TOperation);
+var i: integer;
 begin
-  inherited Notification(AComponent, Operation);
-  if (Operation = opRemove) and (AComponent = FRefreshAction) then
-     FRefreshAction := nil;
-  if (Operation = opRemove) and (AComponent = FShowDialogAction) then
-     FShowDialogAction := nil;
+  inherited;
+  if csDesigning in ComponentState then
+    if (Operation = opRemove) then begin
+      if AComponent = FRefreshAction then
+         FRefreshAction := nil;
+      if AComponent = FShowDialogAction then
+         FShowDialogAction := nil;
+      for i := 0 to ComponentList.Count - 1 do
+         if TComponentListItem(ComponentList.Items[i]).Component = AComponent then
+            TComponentListItem(ComponentList.Items[i]).Component := nil;
+    end;
 end;
 
 procedure TRefreshDispatcher.OnComponentChange(Sender: TObject);
@@ -873,6 +947,17 @@ begin
      if Assigned(Self.Owner) and (Self.Owner is TParentForm)
         and TParentForm(Self.Owner).isAfterShow then
             FRefreshAction.Execute
+end;
+
+procedure TRefreshDispatcher.SetShowDialogAction(const Value: TExecuteDialog);
+begin
+  if FShowDialogAction <> Value then begin
+     if Assigned(Value) then
+        Value.RefreshDispatcher := Self;
+     if Assigned(FShowDialogAction) then
+        FShowDialogAction.RefreshDispatcher := nil;
+     FShowDialogAction := Value;
+  end;
 end;
 
 { TComponentListItem }
@@ -898,40 +983,49 @@ procedure TComponentListItem.SetComponent(const Value: TComponent);
 begin
   FComponent := Value;
   if Assigned(FComponent) then begin
-     if FComponent is TPeriodChoice then
+     if Assigned(Collection) then
+        FComponent.FreeNotification(TComponent(Collection.Owner));
+     if FComponent is TPeriodChoice then begin
         FOnChange := TPeriodChoice(FComponent).onChange;
         TPeriodChoice(FComponent).onChange := OnChange;
+     end;
+     if FComponent is TdsdGuides then begin
+        FOnChange := TdsdGuides(FComponent).onChange;
+        TdsdGuides(FComponent).onChange := OnChange;
+     end;
   end;
-end;
-
-{ TComponentCollection }
-
-constructor TComponentCollection.Create(ItemClass: TCollectionItemClass;
-  Owner: TComponent);
-begin
-  inherited Create(ItemClass);
-  FOwner := Owner;
-end;
-
-function TComponentCollection.GetOwner: TPersistent;
-begin
-  result := FOwner;
 end;
 
 { TExecuteDialog }
 
+constructor TExecuteDialog.Create(AOwner: TComponent);
+begin
+  inherited;
+  isShowModal := true;
+  OpenBeforeShow := true;
+  RefreshAllow := true;
+end;
+
 function TExecuteDialog.Execute: boolean;
 begin
-  //if ShowForm = mrOk then
-    // RefreshDispatcher.
+  result := false;
+  with ShowForm do
+    if ModalResult = mrOk then begin
+       result := true;
+       Self.GuiParams.AssignParams(Params);
+       if Assigned(RefreshDispatcher) and Assigned(RefreshDispatcher.RefreshAction) and RefreshAllow then
+          RefreshDispatcher.RefreshAction.Execute;// OnComponentChange(Self);
+       RefreshAllow := true;
+    end;
 end;
 
 procedure TExecuteDialog.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
-  inherited Notification(AComponent, Operation);
-  if (Operation = opRemove) and (AComponent = FRefreshDispatcher) then
-     FRefreshDispatcher := nil;
+  inherited;
+  if csDesigning in ComponentState then
+     if (Operation = opRemove) and (AComponent = FRefreshDispatcher) then
+        FRefreshDispatcher := nil;
 end;
 
 end.

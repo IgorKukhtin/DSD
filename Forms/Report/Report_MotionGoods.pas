@@ -23,7 +23,7 @@ uses
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, dsdGuides,
-  cxButtonEdit;
+  cxButtonEdit, ChoicePeriod;
 
 type
   TReport_MotionGoodsForm = class(TParentForm)
@@ -46,8 +46,6 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     Panel1: TPanel;
-    deStart: TcxDateEdit;
-    deEnd: TcxDateEdit;
     UnitName: TcxGridDBColumn;
     GoodsCode: TcxGridDBColumn;
     GoodsName: TcxGridDBColumn;
@@ -82,9 +80,17 @@ type
     LossWeight: TcxGridDBColumn;
     InventoryWeight: TcxGridDBColumn;
     EndWeight_calc: TcxGridDBColumn;
-    dsdGuides1: TdsdGuides;
-    dsdGuides2: TdsdGuides;
-    dsdGuides3: TdsdGuides;
+    GoodsGroupGuides: TdsdGuides;
+    UnitGuides: TdsdGuides;
+    edGoodsGroup: TcxButtonEdit;
+    edUnit: TcxButtonEdit;
+    PeriodChoice: TPeriodChoice;
+    bbDialogForm: TdxBarButton;
+    edGoods: TcxButtonEdit;
+    GoodsGuides: TdsdGuides;
+    RefreshDispatcher: TRefreshDispatcher;
+    deStart: TcxDateEdit;
+    deEnd: TcxDateEdit;
   private
   public
   end;

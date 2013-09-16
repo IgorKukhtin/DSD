@@ -1,9 +1,10 @@
 object PeriodChoiceForm: TPeriodChoiceForm
   Left = 0
   Top = 0
+  BorderStyle = bsDialog
   Caption = #1042#1099#1073#1086#1088' '#1087#1077#1088#1080#1086#1076#1072
-  ClientHeight = 231
-  ClientWidth = 325
+  ClientHeight = 233
+  ClientWidth = 327
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -138,5 +139,17 @@ object PeriodChoiceForm: TPeriodChoiceForm
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 2
     TabOrder = 14
+  end
+  object cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Left'
+          'Top')
+      end>
+    StorageName = 'cxPropertiesStore'
+    Left = 120
+    Top = 144
   end
 end

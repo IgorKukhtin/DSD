@@ -4,6 +4,8 @@ inherited IncomeForm: TIncomeForm
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
+  ExplicitLeft = -141
+  ExplicitTop = -42
   ExplicitWidth = 1036
   ExplicitHeight = 423
   PixelsPerInch = 96
@@ -292,8 +294,10 @@ inherited IncomeForm: TIncomeForm
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00;'
+            Properties.ReadOnly = False
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 91
           end
           object colLiveWeight: TcxGridDBColumn
@@ -823,14 +827,46 @@ inherited IncomeForm: TIncomeForm
     LookupControl = edFrom
     FormName = 'TPartnerForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Component = dsdGuidesFrom
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'TextValue'
+        Component = dsdGuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end>
     Left = 352
   end
   object dsdGuidesTo: TdsdGuides
     LookupControl = edTo
     FormName = 'TUnitForm'
     PositionDataSet = 'GridDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Component = dsdGuidesTo
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'TextValue'
+        Component = dsdGuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end>
     Left = 472
     Top = 8
   end

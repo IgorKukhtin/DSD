@@ -396,7 +396,23 @@
     LookupControl = ceJuridical
     FormName = 'TJuridicalForm'
     PositionDataSet = 'GridDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Component = dsdJuridicalGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        Value = '0'
+      end
+      item
+        Name = 'TextValue'
+        Component = dsdJuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end>
     Left = 240
     Top = 80
   end
@@ -405,7 +421,23 @@
     LookupControl = cePersonalTake
     FormName = 'TPersonalForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Component = dsdPersonalGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        Value = '0'
+      end
+      item
+        Name = 'TextValue'
+        Component = dsdPersonalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end>
     Left = 336
     Top = 256
   end
@@ -414,7 +446,23 @@
     LookupControl = ceRouteSorting
     FormName = 'TRouteSortingForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Component = dsdRouteSortingGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        Value = '0'
+      end
+      item
+        Name = 'TextValue'
+        Component = dsdRouteSortingGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end>
     Left = 312
     Top = 216
   end
@@ -423,7 +471,23 @@
     LookupControl = ceRoute
     FormName = 'TRouteForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Component = dsdRouteGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        Value = '0'
+      end
+      item
+        Name = 'TextValue'
+        Component = dsdRouteGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end>
     Left = 280
     Top = 176
   end

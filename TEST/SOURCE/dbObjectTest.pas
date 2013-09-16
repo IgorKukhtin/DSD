@@ -393,7 +393,7 @@ uses ZDbcIntfs, SysUtils, Storage, DBClient, XMLDoc, CommonData, Forms,
 constructor TObjectTest.Create;
 begin
   FdsdStoredProc := TdsdStoredProc.Create(nil);
-  FParams := TdsdParams.Create(TdsdParam);
+  FParams := TdsdParams.Create(nil, TdsdParam);
 end;
 
 procedure TObjectTest.DeleteRecord(Id: Integer);

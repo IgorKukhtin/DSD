@@ -182,9 +182,10 @@ uses
   BankAccountTest in '..\SOURCE\Objects\All\BankAccountTest.pas',
   BusinessTest in '..\SOURCE\Objects\All\BusinessTest.pas',
   CommonMovementItemReportProcedureTest in '..\SOURCE\MovementItemReport\CommonMovementItemReportProcedureTest.pas',
-  Report_MotionGoods in '..\..\Forms\Report\Report_MotionGoods.pas' {Report_MotionGoodsForm},
   TradeMarkTest in '..\SOURCE\Objects\All\TradeMarkTest.pas',
-  ChoicePeriod in '..\..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm};
+  ChoicePeriod in '..\..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm},
+  Report_MotionGoodsDialog in '..\..\Forms\Report\Report_MotionGoodsDialog.pas' {Report_MotionGoodsDialogForm},
+  Report_MotionGoods in '..\..\Forms\Report\Report_MotionGoods.pas' {Report_MotionGoodsForm};
 
 {$R *.RES}
 

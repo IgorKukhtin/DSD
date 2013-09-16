@@ -33,6 +33,7 @@ begin
 //  edDate.Free;
   edDate := nil;
   s := param.Value;
+  s := param.Component.Name;
 end;
 
 

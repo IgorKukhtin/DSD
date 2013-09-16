@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxGroupBox, cxRadioGroup, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar,
-  cxLabel, cxSpinEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons;
+  cxLabel, cxSpinEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxPropertiesStore;
 
 const
   pcDay = 0;
@@ -57,6 +57,7 @@ type
     cxLabel6: TcxLabel;
     bbOk: TcxButton;
     bbCancel: TcxButton;
+    cxPropertiesStore: TcxPropertiesStore;
     procedure FormCreate(Sender: TObject);
     procedure cxRadioGroupClick(Sender: TObject);
     procedure seYearPropertiesChange(Sender: TObject);
@@ -175,16 +176,19 @@ procedure TPeriodChoice.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited;
-  if (Operation = opRemove) and (AComponent = DateStart) then begin
-     FDateStartDblClick := nil;
-     FDateStartChange := nil;
-     DateStart := nil;
-  end;
-  if (Operation = opRemove) and (AComponent = DateEnd) then begin
-     FDateEndDblClick := nil;
-     FDateEndChange := nil;
-     DateEnd := nil;
-  end;
+  if csDesigning in ComponentState then
+    if Operation = opRemove then begin
+      if AComponent = DateStart then begin
+         FDateStartDblClick := nil;
+         FDateStartChange := nil;
+         DateStart := nil;
+      end;
+      if AComponent = DateEnd then begin
+         FDateEndDblClick := nil;
+         FDateEndChange := nil;
+         DateEnd := nil;
+      end;
+    end;
 end;
 
 procedure TPeriodChoice.OnDateEditChange(Sender: TObject);

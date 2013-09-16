@@ -1,9 +1,9 @@
 ﻿inherited InfoMoneyEditForm: TInfoMoneyEditForm
   Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1072#1103' '#1089#1090#1072#1090#1100#1103
-  ClientHeight = 269
-  ClientWidth = 303
-  ExplicitWidth = 311
-  ExplicitHeight = 296
+  ClientHeight = 273
+  ClientWidth = 306
+  ExplicitWidth = 314
+  ExplicitHeight = 300
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -82,8 +82,8 @@
     Width = 273
   end
   object ActionList: TActionList
-    Left = 296
-    Top = 72
+    Left = 232
+    Top = 64
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spGet
@@ -230,16 +230,48 @@
     LookupControl = ceInfoMoneyGroup
     FormName = 'TInfoMoneyGroupForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
-    Left = 328
-    Top = 125
+    Params = <
+      item
+        Name = 'Key'
+        Component = dsdInfoMoneyGroupGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'TextValue'
+        Component = dsdInfoMoneyGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end>
+    Left = 240
+    Top = 117
   end
   object dsdInfoMoneyDestinationGuides: TdsdGuides
     LookupControl = ceInfoMoneyDestination
     FormName = 'TInfoMoneyDestinationForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
-    Left = 328
+    Params = <
+      item
+        Name = 'Key'
+        Component = dsdInfoMoneyDestinationGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'TextValue'
+        Component = dsdInfoMoneyDestinationGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end>
+    Left = 248
     Top = 173
   end
   object cxPropertiesStore: TcxPropertiesStore

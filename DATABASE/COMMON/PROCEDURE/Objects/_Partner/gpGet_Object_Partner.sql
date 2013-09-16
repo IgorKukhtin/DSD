@@ -62,8 +62,8 @@ BEGIN
            , Object_RouteSorting.Id         AS RouteSortingId
            , Object_RouteSorting.ValueData  AS RouteSortingName
            
-           , Object_PersonalTake.Id         AS PersonalTakeId
-           , Object_PersonalTake.ValueData  AS PersonalTakeName
+           , ObjectLink_Partner_PersonalTake.ChildObjectId         AS PersonalTakeId
+           , Object_Member.ValueData  AS PersonalTakeName
 
        FROM OBJECT AS Object_Partner
            LEFT JOIN ObjectString AS Partner_GLNCode 
@@ -96,8 +96,12 @@ BEGIN
            LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTake
                                 ON ObjectLink_Partner_PersonalTake.ObjectId = Object_Partner.Id 
                                AND ObjectLink_Partner_PersonalTake.DescId = zc_ObjectLink_Partner_PersonalTake()
-           LEFT JOIN Object AS Object_PersonalTake ON Object_PersonalTake.Id = ObjectLink_Partner_PersonalTake.ChildObjectId
-           
+
+           LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                 ON ObjectLink_Personal_Member.ObjectId = ObjectLink_Partner_PersonalTake.ChildObjectId
+                AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+          LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_Personal_Member.ChildObjectId
+          
          
        WHERE Object_Partner.Id = inId;
        

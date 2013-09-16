@@ -35,7 +35,7 @@ type
     property Value: Variant read GetValue write SetValue;
   end;
 
-  TdsdParams = class (TCollection)
+  TdsdParams = class (TOwnedCollection)
   private
     function GetItem(Index: Integer): TdsdParam;
     procedure SetItem(Index: Integer; const Value: TdsdParam);
@@ -50,9 +50,12 @@ type
   TdsdFormParams = class (TComponent)
   private
     FParams: TdsdParams;
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
     function ParamByName(const Value: string): TdsdParam;
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
   published
     property Params: TdsdParams read FParams write FParams;
   end;
@@ -60,11 +63,12 @@ type
   TdsdDataSetLink = class (TCollectionItem)
   private
     FDataSet: TClientDataSet;
+    procedure SetDataSet(const Value: TClientDataSet);
   published
-    property DataSet: TClientDataSet read FDataSet write FDataSet;
+    property DataSet: TClientDataSet read FDataSet write SetDataSet;
   end;
 
-  TdsdDataSets = class (TCollection)
+  TdsdDataSets = class (TOwnedCollection)
   private
     function GetItem(Index: Integer): TdsdDataSetLink;
     procedure SetItem(Index: Integer; const Value: TdsdDataSetLink);
@@ -92,6 +96,7 @@ type
     function Execute: string;
     function ParamByName(const Value: string): TdsdParam;
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
   published
     // Название процедуры на сервере
     property StoredProcName: String read FStoredProcName write FStoredProcName;
@@ -142,8 +147,8 @@ end;
 constructor TdsdStoredProc.Create(AOwner: TComponent);
 begin
   inherited;
-  FDataSets := TdsdDataSets.Create(TdsdDataSetLink);
-  FParams := TdsdParams.Create(TdsdParam);
+  FDataSets := TdsdDataSets.Create(Self, TdsdDataSetLink);
+  FParams := TdsdParams.Create(Self, TdsdParam);
   OutputType := otDataSet;
 end;
 
@@ -166,6 +171,13 @@ begin
         DataSets[0].DataSet.FreeBookmark(B);
      end;
    end;
+end;
+
+destructor TdsdStoredProc.Destroy;
+begin
+  FreeAndNil(FDataSets);
+  FreeAndNil(FParams);
+  inherited;
 end;
 
 function TdsdStoredProc.Execute;
@@ -281,10 +293,22 @@ end;
 
 procedure TdsdStoredProc.Notification(AComponent: TComponent;
   Operation: TOperation);
+var i: integer;
 begin
-  inherited Notification(AComponent, Operation);
-  if (Operation = opRemove) and (AComponent = DataSet) then
-     DataSet := nil;
+  inherited;
+  if csDesigning in ComponentState then
+    if (Operation = opRemove) then begin
+       if Assigned(Params) then
+          for i := 0 to Params.Count - 1 do
+             if Params[i].Component = AComponent then
+                Params[i].Component := nil;
+          if (AComponent is TDataSet) and Assigned(DataSets) then
+             for i := 0 to DataSets.Count - 1 do
+                 if DataSets[i].DataSet = AComponent then
+                    DataSets[i].DataSet := nil;
+       if AComponent = DataSet then
+          DataSet := nil;
+    end;
 end;
 
 function TdsdStoredProc.ParamByName(const Value: string): TdsdParam;
@@ -453,8 +477,17 @@ begin
      // В зависимости от типа компонента Value содержится в разных property
      if Component is TcxTextEdit then
         Result := (Component as TcxTextEdit).Text;
-     if (Component is TDataSet) and (Component as TDataSet).Active then
+     if (Component is TDataSet) and (Component as TDataSet).Active then begin
         Result := (Component as TDataSet).FieldByName(ComponentItem).Value;
+        if VarIsNull(Result) then
+        case DataType of
+          ftString: Result := '';
+          ftInteger: Result := 0;
+          ftBoolean: Result := false;
+          ftFloat: Result := 0;
+          ftDateTime: Result := Now;
+        end;
+     end;
      if (Component is TdsdFormParams) then
         if Assigned((Component as TdsdFormParams).ParamByName(ComponentItem)) then
            Result := (Component as TdsdFormParams).ParamByName(ComponentItem).Value
@@ -490,6 +523,8 @@ begin
   if Value <> FComponent then begin
      if FComponent <> nil then
         ComponentItem := '';
+     if Assigned(Collection) and Assigned(Value) then
+        Value.FreeNotification(TComponent(Collection.Owner));
      FComponent := Value;
   end
 end;
@@ -499,6 +534,11 @@ begin
   FValue := Value;
   // передаем значение параметра дальше по цепочке
   if Assigned(FComponent) then begin
+     if (Component is TDataSet) and (Component as TDataSet).Active then begin
+        if TDataSet(Component).State <> dsEdit then
+           TDataSet(Component).Edit;
+        TDataSet(Component).FieldByName(ComponentItem).Value := Value;
+     end;
      if Component is TcxTextEdit then
         (Component as TcxTextEdit).Text := FValue;
      if Component is TdsdFormParams then
@@ -510,13 +550,16 @@ begin
      if Component is TcxCheckBox then
         (Component as TcxCheckBox).Checked := StrToBool(FValue);
      if Component is TcxDateEdit then
-        with TXSDateTime.Create() do
-        try
-          XSToNative(FValue); // convert from WideString
-          (Component as TcxDateEdit).Date := AsDateTime; // convert to TDateTime
-        finally
-          Free;
-        end;
+        if VarType(FValue) = vtObject then
+          (Component as TcxDateEdit).Date := FValue
+        else
+          with TXSDateTime.Create() do
+          try
+            XSToNative(FValue); // convert from WideString
+            (Component as TcxDateEdit).Date := AsDateTime; // convert to TDateTime
+          finally
+            Free;
+          end;
      if Component is TdsdGuides then
         if LowerCase(ComponentItem) = 'textvalue' then begin
            (Component as TdsdGuides).TextValue := FValue
@@ -533,7 +576,26 @@ end;
 constructor TdsdFormParams.Create(AOwner: TComponent);
 begin
   inherited;
-  FParams := TdsdParams.Create(TdsdParam);
+  FParams := TdsdParams.Create(Self, TdsdParam);
+end;
+
+destructor TdsdFormParams.Destroy;
+begin
+  FParams.Free;
+  FParams := nil;
+  inherited;
+end;
+
+procedure TdsdFormParams.Notification(AComponent: TComponent;
+  Operation: TOperation);
+var i: integer;
+begin
+  inherited;
+  if csDesigning in ComponentState then
+    if (Operation = opRemove) and Assigned(Params) then
+       for I := 0 to Params.Count - 1 do
+           if Params[i].Component = AComponent then
+              Params[i].Component := nil;
 end;
 
 function TdsdFormParams.ParamByName(const Value: string): TdsdParam;
@@ -555,6 +617,17 @@ begin
     SetLength(FalseBoolStrs, 2);
     FalseBoolStrs[0] := DefaultFalseBoolStr;
     FalseBoolStrs[1] := 'f';
+  end;
+end;
+
+{ TdsdDataSetLink }
+
+procedure TdsdDataSetLink.SetDataSet(const Value: TClientDataSet);
+begin
+  if FDataSet <> Value then begin
+     if Assigned(Collection) and Assigned(Value) then
+        Value.FreeNotification(TComponent(Collection.Owner));
+     FDataSet := Value;
   end;
 end;
 

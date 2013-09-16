@@ -29,7 +29,7 @@ type
     { Public declarations }
     constructor CreateNew(AOwner: TComponent; Dummy: Integer = 0); override;
     property Params: TdsdParams read FParams;
-    procedure Execute(Sender: TComponent; Params: TdsdParams);
+    function Execute(Sender: TComponent; Params: TdsdParams): boolean;
     procedure Close(Sender: TObject);
     property FormClassName: string read FFormClassName write FFormClassName;
     property onAfterShow: TNotifyEvent read FonAfterShow write FonAfterShow;
@@ -55,15 +55,18 @@ procedure TParentForm.AfterShow(var a : TWMSHOWWINDOW);
 var
   i: integer;
 begin
-  for I := 0 to ComponentCount - 1 do begin
-    // ѕеречитывает видимые компоненты
-    if Components[i] is TdsdDataSetRefresh then
-       (Components[i] as TdsdDataSetRefresh).Execute;
+  try
+    for I := 0 to ComponentCount - 1 do begin
+      // ѕеречитывает видимые компоненты
+      if Components[i] is TdsdDataSetRefresh then
+         (Components[i] as TdsdDataSetRefresh).Execute;
+    end;
+    if Assigned(FonAfterShow) then
+       FonAfterShow(Self);
+  finally
+    // форма отрисована и показана и все данные загружены
+    FisAfterShow := true;
   end;
-  if Assigned(FonAfterShow) then
-     FonAfterShow(Self);
-  // форма отрисована и показана и все данные загружены
-  FisAfterShow := true;
 end;
 
 procedure TParentForm.Close(Sender: TObject);
@@ -86,10 +89,12 @@ begin
   KeyPreview := true;
 end;
 
-procedure TParentForm.Execute(Sender: TComponent; Params: TdsdParams);
+function TParentForm.Execute(Sender: TComponent; Params: TdsdParams): boolean;
 var
   i: integer;
+  ExecuteDialog: TExecuteDialog;
 begin
+  result := true;
   // «аполн€ет параметры формы переданными параметрами
   for I := 0 to ComponentCount - 1 do begin
     if Components[i] is TdsdFormParams then begin
@@ -98,6 +103,12 @@ begin
     end;
     if Components[i] is TdsdChoiceGuides then
        FChoiceAction := Components[i] as TdsdChoiceGuides;
+    if Components[i] is TExecuteDialog then
+       ExecuteDialog := Components[i] as TExecuteDialog;
+  end;
+  if Assigned(ExecuteDialog) and ExecuteDialog.OpenBeforeShow then begin
+     ExecuteDialog.RefreshAllow := false; // „то бы не было двух перечитываний.
+     result := ExecuteDialog.Execute;
   end;
   FormSender := Sender;
 end;

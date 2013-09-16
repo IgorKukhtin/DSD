@@ -36,7 +36,7 @@ type
     end;
 
 
-  TActionItemList = class(TCollection)
+  TActionItemList = class(TOwnedCollection)
   private
     function GetItem(Index: Integer): TActionItem;
     procedure SetItem(Index: Integer; const Value: TActionItem);
@@ -44,8 +44,6 @@ type
     function Add: TActionItem;
     property Items[Index: Integer]: TActionItem read GetItem write SetItem; default;
   end;
-
-
 
   // Компонент работает со справочниками. Выбирает значение из элементов управления или форм
   TdsdGuides = class(TComponent)
@@ -60,6 +58,7 @@ type
     FParams: TdsdParams;
     FPopupMenu: TPopupMenu;
     FOnAfterChoice: TNotifyEvent;
+    FOnChange: TNotifyEvent;
     function GetKey: String;
     function GetTextValue: String;
     procedure SetKey(const Value: String);
@@ -72,6 +71,7 @@ type
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
+    property OnChange: TNotifyEvent read FOnChange write FOnChange;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     // Вызыввем процедуру после выбора элемента из справочника
@@ -106,13 +106,11 @@ type
 
   TGuidesFiller = class;
 
-  TGuidesList = class(TCollection)
+  TGuidesList = class(TOwnedCollection)
   private
     function GetItem(Index: Integer): TGuidesListItem;
     procedure SetItem(Index: Integer; const Value: TGuidesListItem);
   public
-    GuidesFiller: TGuidesFiller;
-    constructor Create(GuidesFiller: TGuidesFiller);
     function Add: TGuidesListItem;
     property Items[Index: Integer]: TGuidesListItem read GetItem write SetItem; default;
   end;
@@ -127,8 +125,11 @@ type
     FActionItemList: TActionItemList;
     procedure OnAfterShow(Sender: TObject);
     procedure OnAfterChoice(Sender: TObject);
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
   published
     property IdParam: TdsdParam read FParam write FParam;
     property GuidesList: TGuidesList read FGuidesList write FGuidesList;
@@ -157,13 +158,15 @@ begin
   Self.Params.AssignParams(Params);
   if Assigned(FOnAfterChoice) then
      FOnAfterChoice(Self);
+  if Assigned(FOnChange) then
+     FOnChange(Self)
 end;
 
 constructor TdsdGuides.Create(AOwner: TComponent);
 var MenuItem: TMenuItem;
 begin
   inherited;
-  FParams := TdsdParams.Create(TdsdParam);
+  FParams := TdsdParams.Create(Self, TdsdParam);
   FPopupMenu := TPopupMenu.Create(nil);
   MenuItem := TMenuItem.Create(FPopupMenu);
   with MenuItem do begin
@@ -176,8 +179,8 @@ end;
 
 destructor TdsdGuides.Destroy;
 begin
-  FParams.Free;
-  FPopupMenu.Free;
+  FreeAndNil(FParams);
+  FreeAndNil(FPopupMenu);
   inherited;
 end;
 
@@ -203,10 +206,18 @@ end;
 
 procedure TdsdGuides.Notification(AComponent: TComponent;
   Operation: TOperation);
+var i: integer;
 begin
-  inherited Notification(AComponent, Operation);
-  if (Operation = opRemove) and (AComponent = FLookupControl) then
-     FLookupControl := nil;
+  inherited;
+  if csDesigning in ComponentState then
+    if (Operation = opRemove) then begin
+      if Assigned(Params) then
+         for i := 0 to Params.Count - 1 do
+            if Params[i].Component = AComponent then
+               Params[i].Component := nil;
+      if (AComponent = FLookupControl) then
+         FLookupControl := nil;
+    end;
 end;
 
 procedure TdsdGuides.OnButtonClick(Sender: TObject; AButtonIndex: Integer);
@@ -223,6 +234,8 @@ procedure TdsdGuides.OnPopupClick(Sender: TObject);
 begin
   Key := '0';
   TextValue := '';
+  if Assigned(FOnChange) then
+     FOnChange(Self)
 end;
 
 procedure TdsdGuides.OpenGuides;
@@ -300,10 +313,13 @@ end;
 
 procedure TGuidesListItem.SetGuides(const Value: TdsdGuides);
 begin
-  FGuides := Value;
-  if Assigned(FGuides) then begin
-     FGuides.OnAfterChoice := TGuidesList(Self.Collection).GuidesFiller.OnAfterChoice;
+  if Assigned(Value) then begin
+    if Assigned(Collection) then
+        Value.FreeNotification(TComponent(Collection.Owner));
+    if Collection.Owner is TGuidesFiller then
+       Value.OnAfterChoice := TGuidesFiller(Self.Collection.Owner).OnAfterChoice;
   end;
+  FGuides := Value;
 end;
 
 { TGuidesList }
@@ -311,12 +327,6 @@ end;
 function TGuidesList.Add: TGuidesListItem;
 begin
   result := TGuidesListItem(inherited Add);
-end;
-
-constructor TGuidesList.Create(GuidesFiller: TGuidesFiller);
-begin
-  inherited Create(TGuidesListItem);
-  Self.GuidesFiller := GuidesFiller;
 end;
 
 function TGuidesList.GetItem(Index: Integer): TGuidesListItem;
@@ -334,13 +344,41 @@ end;
 constructor TGuidesFiller.Create(AOwner: TComponent);
 begin
   inherited;
-  GuidesList := TGuidesList.Create(Self);
+  GuidesList := TGuidesList.Create(Self, TGuidesListItem);
   FParam := TdsdParam.Create(nil);
-  FActionItemList := TActionItemList.Create(TActionItem);
+  FActionItemList := TActionItemList.Create(Self, TActionItem);
   if AOwner is TCustomForm then begin
      FOnAfterShow := TParentForm(AOwner).OnAfterShow;
      TParentForm(AOwner).OnAfterShow := Self.OnAfterShow;
   end;
+end;
+
+destructor TGuidesFiller.Destroy;
+begin
+  FreeAndNil(FGuidesList);
+  FreeAndNil(FParam);
+  FreeAndNil(FActionItemList);
+  if Owner is TCustomForm then
+     TParentForm(Owner).OnAfterShow := FOnAfterShow;
+  inherited;
+end;
+
+procedure TGuidesFiller.Notification(AComponent: TComponent;
+  Operation: TOperation);
+var i: integer;
+begin
+  inherited;
+  if csDesigning in ComponentState then
+    if (Operation = opRemove) then begin
+      if (AComponent is TdsdGuides) and Assigned(GuidesList) then
+         for i := 0 to GuidesList.Count - 1 do
+            if GuidesList[i].Guides = AComponent then
+               GuidesList[i].Guides := nil;
+      if (AComponent is TCustomAction) and Assigned(ActionItemList) then
+         for i := 0 to ActionItemList.Count - 1 do
+            if ActionItemList[i].Action = AComponent then
+               ActionItemList[i].Action := nil;
+    end;
 end;
 
 procedure TGuidesFiller.OnAfterChoice(Sender: TObject);
@@ -373,7 +411,11 @@ end;
 
 procedure TActionItem.SetAction(const Value: TCustomAction);
 begin
-  FAction := Value;
+  if FAction <> Value then begin
+     if Assigned(Collection) and Assigned(Value) then
+        Value.FreeNotification(TComponent(Collection.Owner));
+     FAction := Value;
+  end;
 end;
 
 function TActionItem.GetDisplayName: string;

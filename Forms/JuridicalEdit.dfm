@@ -1,9 +1,9 @@
 ﻿inherited JuridicalEditForm: TJuridicalEditForm
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1075#1086' '#1083#1080#1094#1072
-  ClientHeight = 332
-  ClientWidth = 367
-  ExplicitWidth = 375
-  ExplicitHeight = 359
+  ClientHeight = 333
+  ClientWidth = 356
+  ExplicitWidth = 364
+  ExplicitHeight = 360
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -336,7 +336,23 @@
     LookupControl = ceJuridicalGroup
     FormName = 'TJuridicalGroupForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Component = JuridicalGroupGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'TextValue'
+        Component = JuridicalGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end>
     Left = 224
     Top = 152
   end
@@ -344,7 +360,23 @@
     LookupControl = ceGoodsProperty
     FormName = 'TGoodsPropertyForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Component = GoodsPropertyGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'TextValue'
+        Component = GoodsPropertyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end>
     Left = 288
     Top = 192
   end
@@ -352,7 +384,23 @@
     LookupControl = ceInfoMoney
     FormName = 'TInfoMoneyForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'TextValue'
+        Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end>
     Left = 288
     Top = 240
   end

@@ -386,18 +386,53 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
     Height = 41
     Align = alTop
     TabOrder = 5
+    object edGoodsGroup: TcxButtonEdit
+      Left = 446
+      Top = 8
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 0
+      Width = 121
+    end
+    object edUnit: TcxButtonEdit
+      Left = 576
+      Top = 8
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 1
+      Width = 121
+    end
+    object edGoods: TcxButtonEdit
+      Left = 313
+      Top = 8
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 2
+      Width = 121
+    end
     object deStart: TcxDateEdit
       Left = 16
       Top = 8
       EditValue = 41395d
-      TabOrder = 0
+      Properties.ShowTime = False
+      TabOrder = 3
       Width = 121
     end
     object deEnd: TcxDateEdit
       Left = 176
       Top = 8
       EditValue = 41395d
-      TabOrder = 1
+      Properties.ShowTime = False
+      TabOrder = 4
       Width = 121
     end
   end
@@ -414,16 +449,6 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
-      item
-        Component = deEnd
-        Properties.Strings = (
-          'Date')
-      end
-      item
-        Component = deStart
-        Properties.Strings = (
-          'Date')
-      end
       item
         Component = Owner
         Properties.Strings = (
@@ -474,6 +499,10 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbDialogForm'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -493,6 +522,10 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
     end
     object bbToExcel: TdxBarButton
       Action = actExportToExcel
+      Category = 0
+    end
+    object bbDialogForm: TdxBarButton
+      Action = ExecuteDialog
       Category = 0
     end
   end
@@ -520,6 +553,46 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object ExecuteDialog: TExecuteDialog
+      Category = 'DSDLib'
+      Caption = #1044#1080#1072#1083#1086#1075' '#1091#1089#1090#1072#1085#1086#1074#1082#1080' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074
+      Hint = #1044#1080#1072#1083#1086#1075' '#1091#1089#1090#1072#1085#1086#1074#1082#1080' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074
+      ImageIndex = 35
+      FormName = 'TReport_MotionGoodsDialogForm'
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+          Value = 41395d
+        end
+        item
+          Name = 'EndDate'
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+          Value = 41395d
+        end
+        item
+          Name = 'GoodsId'
+          Component = GoodsGuides
+          ComponentItem = 'Key'
+          DataType = ftString
+          ParamType = ptInput
+          Value = ''
+        end
+        item
+          Name = 'GoodsName'
+          Component = GoodsGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          Value = ''
+        end>
+      isShowModal = True
+      OpenBeforeShow = True
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpReport_MotionGoods'
@@ -531,17 +604,35 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
     Params = <
       item
         Name = 'inStartDate'
-        Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
         Value = 41395d
       end
       item
         Name = 'inEndDate'
-        Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
         Value = 41395d
+      end
+      item
+        Name = 'inUnitId'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = '0'
+      end
+      item
+        Name = 'inGoodsGroupId'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = '0'
+      end
+      item
+        Name = 'inGoodsId'
+        Component = GoodsGuides
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = ''
       end>
     Left = 152
     Top = 176
@@ -557,19 +648,54 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
     Left = 264
     Top = 264
   end
-  object dsdGuides1: TdsdGuides
+  object GoodsGroupGuides: TdsdGuides
+    LookupControl = edGoodsGroup
+    FormName = 'TGoodsGroupForm'
+    PositionDataSet = 'TreeDataSet'
     Params = <>
-    Left = 312
+    Left = 392
+    Top = 48
+  end
+  object UnitGuides: TdsdGuides
+    LookupControl = edUnit
+    FormName = 'TUnitForm'
+    PositionDataSet = 'GridDataSet'
+    ParentDataSet = 'TreeDataSet'
+    Params = <>
+    Left = 456
+    Top = 56
+  end
+  object PeriodChoice: TPeriodChoice
+    DateStart = deStart
+    DateEnd = deEnd
+    Left = 200
     Top = 64
   end
-  object dsdGuides2: TdsdGuides
+  object GoodsGuides: TdsdGuides
+    LookupControl = edGoods
+    FormName = 'TGoodsForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <>
-    Left = 384
-    Top = 64
+    Left = 328
+    Top = 35
   end
-  object dsdGuides3: TdsdGuides
-    Params = <>
-    Left = 464
-    Top = 64
+  object RefreshDispatcher: TRefreshDispatcher
+    RefreshAction = actRefresh
+    ShowDialogAction = ExecuteDialog
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = GoodsGuides
+      end
+      item
+        Component = GoodsGroupGuides
+      end
+      item
+        Component = UnitGuides
+      end>
+    Left = 304
+    Top = 72
   end
 end
