@@ -27,8 +27,8 @@ BEGIN
           , CAST (COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnIn() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS TFloat)  AS ReturnInSumm
           , CAST (COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Loss() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS TFloat)      AS LossSumm
           , CAST (COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Inventory() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS TFloat) AS InventorySumm
-          , CAST (_Container_ListSumm.Amount - (CASE WHEN MIContainer.OperDate > inEndDate THEN  COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END) AS TFloat) AS EndSumm
-
+          , CAST (_Container_ListSumm.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) AS TFloat) AS EndSumm
+          
     FROM lfSELECT_Object_Account_byAccountGroup (zc_Enum_AccountGroup_20000()) AS lfObject_Account -- -20000; "Запасы"     -- написать функцию lfGet_Object_Account_byAccountGroup
         
         LEFT JOIN lfRepor_Container_SummList () AS _Container_ListSumm ON _Container_ListSumm.AccountId = lfObject_Account.AccountId
@@ -41,7 +41,6 @@ BEGIN
                , _Container_ListSumm.LocationId
                , _Container_ListSumm.ContainerId_Goods
                , _Container_ListSumm.GoodsId
-               , MIContainer.OperDate
         HAVING (_Container_ListSumm.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
             OR (COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) <> 0)
             OR (COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -MIContainer.Amount ELSE 0 END), 0) <> 0);
