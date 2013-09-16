@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION lfReport_MotionContainer_List (
     IN inStartDate    TDateTime ,  
     IN inEndDate      TDateTime
 )
-RETURNS TABLE  (ContainerId_Goods Integer, LocationId Integer, GoodsId INTEGER
+RETURNS TABLE  (ContainerId_Goods Integer, LocationId Integer, GoodsId Integer
               , StartSumm TFloat, IncomeSumm TFloat, SendInSumm TFloat, SendOutSumm TFloat, SaleSumm TFloat, ReturnOutSumm TFloat, ReturnInSumm TFloat, LossSumm TFloat , InventorySumm TFloat, EndSumm TFloat
               , StartCount TFloat, IncomeCount TFloat, SendInCount TFloat, SendOutCount TFloat, SaleCount TFloat, ReturnOutCount TFloat, ReturnInCount TFloat, LossCount TFloat , InventoryCount TFloat, EndCount TFloat
               )  
@@ -17,9 +17,8 @@ BEGIN
     RETURN QUERY   
 
     SELECT _tmpContainerAll.ContainerId_Goods
-		 , _tmpContainerAll.GoodsId
 		 , _tmpContainerAll.LocationId
-
+		 , _tmpContainerAll.GoodsId
          , CAST (SUM(_tmpContainerAll.StartSumm) AS TFloat)
          , CAST (SUM(_tmpContainerAll.IncomeSumm) AS TFloat)
          , CAST (SUM(_tmpContainerAll.SendInSumm) AS TFloat) 
@@ -57,18 +56,18 @@ BEGIN
 			  , lfMotionContainer_SummList.InventorySumm
 			  , lfMotionContainer_SummList.EndSumm
             
-              , CAST (0 as TFloat)  AS StartWeight
-			  , CAST (0 as TFloat)  AS IncomeWeight
-			  , CAST (0 as TFloat)  AS SendInWeight
-			  , CAST (0 as TFloat)  AS SendOutWeight
-			  , CAST (0 as TFloat)  AS SaleWeight
-			  , CAST (0 as TFloat)  AS ReturnOutWeight
-			  , CAST (0 as TFloat)  AS ReturnInWeight
-			  , CAST (0 as TFloat)  AS LossWeight
-              , CAST (0 as TFloat)  AS InventoryWeight
-              , CAST (0 as TFloat)  AS EndWeight
+              , CAST (0 as TFloat)  AS StartCount
+			  , CAST (0 as TFloat)  AS IncomeCount
+			  , CAST (0 as TFloat)  AS SendInCount
+			  , CAST (0 as TFloat)  AS SendOutCount
+			  , CAST (0 as TFloat)  AS SaleCount
+			  , CAST (0 as TFloat)  AS ReturnOutCount
+			  , CAST (0 as TFloat)  AS ReturnInCount
+			  , CAST (0 as TFloat)  AS LossCount
+              , CAST (0 as TFloat)  AS InventoryCount
+              , CAST (0 as TFloat)  AS EndCount
               
-         FROM lfRepor_MotionContainer_SummList(inStartDate, inEndDate) AS lfMotionContainer_SummList
+         FROM lfReport_MotionContainer_SummList(inStartDate, inEndDate) AS lfMotionContainer_SummList
         UNION ALL
          SELECT lfMotionContainer_CountList.ContainerId_Goods
               , lfMotionContainer_CountList.GoodsId 
@@ -129,7 +128,9 @@ CREATE TEMP TABLE _tmpLocation (LocationId Integer) ON COMMIT DROP;
 INSERT INTO _tmpGoods (GoodsId) SELECT  Id FROM Object WHERE DescId = zc_Object_Goods() and id = 3009; 
 INSERT INTO _tmpLocation (LocationId) SELECT  Id FROM Object WHERE DescId = zc_Object_Unit() UNION ALL SELECT Id FROM Object WHERE DescId = zc_Object_Personal() and id =0;
 
-SELECT * FROM lfReport_MotionContainer_List (inStartDate:= '10.01.2013', inEndDate:= '10.01.2013');
+SELECT * FROM lfReport_MotionContainer_List (inStartDate:='2013-01-01', inEndDate :='2013-01-01') as lfMotionContainer_List
+left join object as object_Goods on object_Goods.Id = lfMotionContainer_List.GoodsId 
+left join object as object_Location on object_Location.Id = lfMotionContainer_List.LocationId ;
 
 
 */

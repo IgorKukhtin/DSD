@@ -532,7 +532,7 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
       Caption = 'Custom'
       CaptionButtons = <>
       DockedDockingStyle = dsTop
-      DockedLeft = 0
+      DockedLeft = 2
       DockedTop = 0
       DockingStyle = dsTop
       FloatLeft = 671
