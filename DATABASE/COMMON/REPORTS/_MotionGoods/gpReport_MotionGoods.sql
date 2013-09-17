@@ -150,11 +150,11 @@ $BODY$BEGIN
                    
             FROM lfReport_MotionContainer_List (inStartDate, inEndDate) AS lfMotionContainer_List
              
-                LEFT JOIN  ContainerLinkObject AS ContainerLinkObject_PartionGoods ON ContainerLinkObject_PartionGoods.Containerid = lfMotionContainer_List.ContainerId_Goods
+                LEFT JOIN  ContainerLinkObject AS ContainerLinkObject_PartionGoods ON ContainerLinkObject_PartionGoods.Containerid = lfMotionContainer_List.GoodsId
                                               AND ContainerLinkObject_PartionGoods.DescId = zc_ContainerLinkObject_PartionGoods()
-                LEFT JOIN  ContainerLinkObject AS ContainerLinkObject_GoodsKind ON ContainerLinkObject_GoodsKind.Containerid = lfMotionContainer_List.ContainerId_Goods
+                LEFT JOIN  ContainerLinkObject AS ContainerLinkObject_GoodsKind ON ContainerLinkObject_GoodsKind.Containerid = lfMotionContainer_List.GoodsId
                                               AND ContainerLinkObject_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-                LEFT JOIN  ContainerLinkObject AS ContainerLinkObject_AssetTo ON ContainerLinkObject_AssetTo.Containerid = lfMotionContainer_List.ContainerId_Goods
+                LEFT JOIN  ContainerLinkObject AS ContainerLinkObject_AssetTo ON ContainerLinkObject_AssetTo.Containerid = lfMotionContainer_List.GoodsId
                                               AND ContainerLinkObject_AssetTo.DescId = zc_ContainerLinkObject_AssetTo() 
                                                
            ) AS _tmp_All

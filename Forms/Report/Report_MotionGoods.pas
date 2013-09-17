@@ -23,7 +23,7 @@ uses
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, dsdGuides,
-  cxButtonEdit, ChoicePeriod;
+  cxButtonEdit, ChoicePeriod, cxLabel;
 
 type
   TReport_MotionGoodsForm = class(TParentForm)
@@ -54,8 +54,8 @@ type
     AssetName: TcxGridDBColumn;
     StartSumm: TcxGridDBColumn;
     IncomeSumm: TcxGridDBColumn;
-    EndCount_calc: TcxGridDBColumn;
-    EndSumm_calc: TcxGridDBColumn;
+    EndCount: TcxGridDBColumn;
+    EndSumm: TcxGridDBColumn;
     SendInCount: TcxGridDBColumn;
     SendInSumm: TcxGridDBColumn;
     SendOutCount: TcxGridDBColumn;
@@ -71,26 +71,32 @@ type
     InventoryCount: TcxGridDBColumn;
     InventorySumm: TcxGridDBColumn;
     StartWeight: TcxGridDBColumn;
-    IncomeWeight: TcxGridDBColumn;
-    SendInWeight: TcxGridDBColumn;
-    SendOutWeight: TcxGridDBColumn;
-    SaleWeight: TcxGridDBColumn;
-    ReturnOutWeight: TcxGridDBColumn;
-    ReturnInWeight: TcxGridDBColumn;
-    LossWeight: TcxGridDBColumn;
-    InventoryWeight: TcxGridDBColumn;
-    EndWeight_calc: TcxGridDBColumn;
     GoodsGroupGuides: TdsdGuides;
     UnitGuides: TdsdGuides;
     edGoodsGroup: TcxButtonEdit;
-    edUnit: TcxButtonEdit;
+    edUnitGroup: TcxButtonEdit;
     PeriodChoice: TPeriodChoice;
     bbDialogForm: TdxBarButton;
     edGoods: TcxButtonEdit;
-    GoodsGuides: TdsdGuides;
     RefreshDispatcher: TRefreshDispatcher;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
+    IncomeCount_Sh: TcxGridDBColumn;
+    SendInCount_Sh: TcxGridDBColumn;
+    SendOutCount_Sh: TcxGridDBColumn;
+    SaleCount_Sh: TcxGridDBColumn;
+    ReturnOutCount_Sh: TcxGridDBColumn;
+    ReturnInCount_Sh: TcxGridDBColumn;
+    LossCount_Sh: TcxGridDBColumn;
+    InventoryCount_Sh: TcxGridDBColumn;
+    EndCount_Sh: TcxGridDBColumn;
+    cxLabel3: TcxLabel;
+    UnitGroupGuides: TdsdGuides;
+    cxLabel1: TcxLabel;
+    cxLabel2: TcxLabel;
+    GoodsGuides: TdsdGuides;
+    edLocation: TcxButtonEdit;
+    cxLabel4: TcxLabel;
   private
   public
   end;
@@ -98,6 +104,8 @@ type
 implementation
 
 {$R *.dfm}
+
+
 
 initialization
   RegisterClass(TReport_MotionGoodsForm);

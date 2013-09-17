@@ -28,7 +28,7 @@ BEGIN
           , CAST (COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnIn() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS TFloat)  AS ReturnInCount
           , CAST (COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Loss() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS TFloat)      AS LossCount
           , CAST (COALESCE (SUM (CASE WHEN Movement.DescId = zc_Movement_Inventory() AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS TFloat) AS InventoryCount
-          , CAST (lfMotionContainer_List.Amount - (CASE WHEN MIContainer.OperDate > inEndDate THEN  COALESCE (SUM (MIContainer.Amount), 0) ELSE 0 END) AS TFloat) AS EndCount
+          , CAST (lfMotionContainer_List.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS TFloat) AS EndCount
                       
     FROM lfReport_Container_CountList () AS lfMotionContainer_List               
         LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = lfMotionContainer_List.ContainerId_Goods
@@ -39,7 +39,6 @@ BEGIN
            , lfMotionContainer_List.ContainerId_Goods 
            , lfMotionContainer_List.GoodsId
            , lfMotionContainer_List.LocationId
-           , MIContainer.OperDate
     HAVING (lfMotionContainer_List.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
         OR (COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) <> 0)
         OR (COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -MIContainer.Amount ELSE 0 END), 0) <> 0);
@@ -68,7 +67,9 @@ CREATE TEMP TABLE _tmpLocation (LocationId Integer) ON COMMIT DROP;
 INSERT INTO _tmpGoods (GoodsId) SELECT Id FROM Object WHERE DescId = zc_Object_Goods();
 INSERT INTO _tmpLocation (LocationId) SELECT Id FROM Object WHERE DescId = zc_Object_Unit() UNION ALL SELECT Id FROM Object WHERE DescId = zc_Object_Personal();
 
-SELECT * FROM lfReport_MotionContainer_CountList (inStartDate:='2013-01-01', inEndDate :='2013-01-01');
+SELECT * FROM lfReport_MotionContainer_CountList (inStartDate:='2013-01-01', inEndDate :='2013-01-01') as lfMotionContainer_CountList
+left join object as object_Goods on object_Goods.Id = lfMotionContainer_CountList.GoodsId 
+left join object as object_Location on object_Location.Id = lfMotionContainer_CountList.LocationId ;
 
 
 */

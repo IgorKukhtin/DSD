@@ -1,46 +1,44 @@
--- Function: lfRepor_Container_SummList ()
+-- Function: lfReport_Container_SummList ()
 
--- DROP FUNCTION lfRepor_Container_SummList ();
+-- DROP FUNCTION lfReport_Container_SummList ();
 
-CREATE OR REPLACE FUNCTION lfRepor_Container_SummList ()
-RETURNS TABLE  (ContainerId Integer, AccountId Integer, LocationId Integer, ContainerId_Goods Integer, GoodsId Integer, Amount TFloat)  
+CREATE OR REPLACE FUNCTION lfReport_Container_SummList ()
+RETURNS TABLE  (AccountId Integer, ContainerId_Goods Integer, LocationId Integer, GoodsId Integer, Amount TFloat)  
 AS
 $BODY$
 BEGIN
 
     RETURN QUERY
-                                    -- список суммовых контейнеров (добавили ограниечение ТОВАРЫ)
-    SELECT tmpObject.ContainerId
-         , tmpObject.AccountId
-         , tmpObject.LocationId
-         , tmpObject.ContainerId_Goods
-         , _tmpGoods.GoodsId
-         , tmpObject.Amount
-    FROM _tmpGoods 
-        JOIN ContainerLinkObject AS ContainerLinkObject_Goods ON  ContainerLinkObject_Goods.ObjectId = _tmpGoods .GoodsId
-                                                             AND ContainerLinkObject_Goods.DescId = zc_ContainerLinkObject_Goods()
-                                                  -- список суммовых контейнеров (начали с ограниечения LocationId)
-        JOIN  (SELECT Container.Id AS ContainerId
-					, Container.ParentId AS ContainerId_Goods
-                    , Container.ObjectId AS AccountId
-                    , COALESCE (ContainerLinkObject_Unit.ContainerId, ContainerLinkObject_Personal.ContainerId) AS LocationId
-                    , Container.Amount
-               FROM _tmpLocation
-                   LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Unit ON ContainerLinkObject_Unit.Objectid = _tmpLocation.LocationId
-                                                                            AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
-                   LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Personal ON ContainerLinkObject_Personal.Objectid = _tmpLocation.LocationId
-                                                                                AND ContainerLinkObject_Personal.DescId = zc_ContainerLinkObject_Personal()
-                   JOIN Container ON Container.Id = COALESCE (ContainerLinkObject_Unit.ContainerId, ContainerLinkObject_Personal.ContainerId)
-                                  AND Container.DescId = zc_Container_Summ() 
-                   LEFT JOIN Container AS Container_Goods ON Container_Goods.Id = Container.ParentId               
-               ) AS  tmpObject on tmpObject.ContainerId = ContainerLinkObject_Goods.ContainerId;
-                                  
+                                    
+    -- список количественных контейнеров (добавили ограниечение LocationId)
+    SELECT tmpContainerGoods.AccountId
+         , tmpContainerGoods.ContainerId_Goods
+         , tmpContainerLocation.LocationId
+         , tmpContainerGoods.GoodsId
+         , tmpContainerGoods.Amount
+    FROM (SELECT ContainerLinkObject_Location.ContainerId, _tmpLocation.LocationId
+          FROM _tmpLocation 
+              JOIN ContainerLinkObject AS ContainerLinkObject_Location ON ContainerLinkObject_Location.ObjectId = _tmpLocation.LocationId
+              JOIN (SELECT zc_ContainerLinkObject_Unit() AS DescId 
+                    UNION ALL
+                    SELECT zc_ContainerLinkObject_Personal() AS DescId
+                    ) AS tmpDesc ON tmpDesc.DescId = ContainerLinkObject_Location.DescId
+         ) AS tmpContainerLocation
+                                -- список количественных контейнеров (начали с ограниечения ТОВАРЫ)
+         JOIN (SELECT Container.ParentId AS ContainerId_Goods, Container.Id AS ContainerId, Container.ObjectId AS AccountId, ContainerLinkObject_Goods.ObjectId AS GoodsId, Container.Amount
+               FROM _tmpGoods
+                    JOIN ContainerLinkObject AS ContainerLinkObject_Goods ON ContainerLinkObject_Goods.ObjectId = _tmpGoods.GoodsId
+                                                                           AND ContainerLinkObject_Goods.DescId = zc_ContainerLinkObject_Goods()
+                   JOIN Container ON Container.Id = ContainerLinkObject_Goods.ContainerId
+                                 AND Container.DescId = zc_Container_Summ()
+               ) AS tmpContainerGoods ON tmpContainerGoods.ContainerId = tmpContainerLocation.ContainerId;
+
 END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
 
-ALTER FUNCTION lfRepor_Container_SummList () OWNER TO postgres;
+ALTER FUNCTION lfReport_Container_SummList () OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
@@ -50,13 +48,15 @@ ALTER FUNCTION lfRepor_Container_SummList () OWNER TO postgres;
 */
 -- тест
 /*
-
 CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
 CREATE TEMP TABLE _tmpLocation (LocationId Integer) ON COMMIT DROP;
 
 INSERT INTO _tmpGoods (GoodsId) SELECT Id FROM Object WHERE DescId = zc_Object_Goods();
 INSERT INTO _tmpLocation (LocationId) SELECT Id FROM Object WHERE DescId = zc_Object_Unit() UNION ALL SELECT Id FROM Object WHERE DescId = zc_Object_Personal();
 
-SELECT * FROM lfRepor_Container_SummList ();
+SELECT * FROM lfReport_Container_SummList () as lfContainer_SummList
+left join object as object_Goods on object_Goods.Id = lfContainer_SummList.GoodsId 
+left join object as object_Location on object_Location.Id = lfContainer_SummList.LocationId ;
+
 
 */
