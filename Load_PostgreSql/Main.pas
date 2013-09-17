@@ -19,9 +19,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, cxTextEdit, cxMaskEdit, cxDropDownEdit,
-  cxCalendar, dsdDB,UtilConst, cxStyles, cxCustomData, cxFilter, cxData,
-  cxDataStorage, cxDBData, cxClasses, cxGridCustomTableView, cxGridTableView,
-  cxGridDBTableView, cxGridLevel, cxGridCustomView, cxGrid;
+  cxCalendar, dsdDB,UtilConst;
 
 type
   TMainForm = class(TForm)
@@ -111,10 +109,6 @@ type
     cbLastComplete: TCheckBox;
     fromQuery_two: TADOQuery;
     cbCompleteInventory: TCheckBox;
-    cxStyleRepository1: TcxStyleRepository;
-    cxStyle1: TcxStyle;
-    cxStyleRepository2: TcxStyleRepository;
-    cxStyle2: TcxStyle;
     cbCompleteSale: TCheckBox;
     toZConnection: TZConnection;
     procedure OKGuideButtonClick(Sender: TObject);
@@ -129,8 +123,6 @@ type
     procedure cbUnCompleteClick(Sender: TObject);
     procedure cbCompleteIncomeClick(Sender: TObject);
     procedure OKCompleteDocumentButtonClick(Sender: TObject);
-    procedure cxGrid1DBTableView1InitEdit(Sender: TcxCustomGridTableView;
-      AItem: TcxCustomGridTableItem; AEdit: TcxCustomEdit);
   private
     fStop:Boolean;
     procedure EADO_EngineErrorMsg(E:EADOError);
@@ -155,6 +147,7 @@ type
     procedure pCompleteDocument_Income(isLastComplete:Boolean);
     procedure pCompleteDocument_Send(isLastComplete:Boolean);
     procedure pCompleteDocument_SendOnPrice(isLastComplete:Boolean);
+    procedure pCompleteDocument_Sale(isLastComplete:Boolean);
     procedure pCompleteDocument_ProductionUnion(isLastComplete:Boolean);
     procedure pCompleteDocument_ProductionSeparate(isLastComplete:Boolean);
     procedure pCompleteDocument_Inventory(isLastComplete:Boolean);
@@ -260,12 +253,6 @@ begin
      //
      if fStop then Close;
 end;
-procedure TMainForm.cxGrid1DBTableView1InitEdit(Sender: TcxCustomGridTableView;
-  AItem: TcxCustomGridTableItem; AEdit: TcxCustomEdit);
-begin
-
-end;
-
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fGetSession:String;
 begin Result:='1005'; end;
@@ -637,6 +624,7 @@ begin
           if not fStop then pCompleteDocument_Income(FALSE);
           if not fStop then pCompleteDocument_Send(FALSE);
           if not fStop then pCompleteDocument_SendOnPrice(FALSE);
+          if not fStop then pCompleteDocument_Sale(FALSE);
           if not fStop then pCompleteDocument_ProductionUnion(FALSE);
           if not fStop then pCompleteDocument_ProductionSeparate(FALSE);
           if not fStop then pCompleteDocument_Inventory(FALSE);
@@ -647,6 +635,7 @@ begin
      if(not fStop)and(not ((cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled)))then pCompleteDocument_Income(cbLastComplete.Checked);
      if not fStop then pCompleteDocument_Send(cbLastComplete.Checked);
      if not fStop then pCompleteDocument_SendOnPrice(cbLastComplete.Checked);
+     if not fStop then pCompleteDocument_Sale(cbLastComplete.Checked);
      if not fStop then pCompleteDocument_ProductionUnion(cbLastComplete.Checked);
      if not fStop then pCompleteDocument_ProductionSeparate(cbLastComplete.Checked);
      if not fStop then pCompleteDocument_Inventory(cbLastComplete.Checked);
@@ -882,7 +871,8 @@ begin
         Add('     left outer join dba.Goods as Goods_parent on Goods_parent.Id = Goods.ParentId');
         Add('     left outer join dba.Measure on Measure.Id = GoodsProperty.MeasureId');
         Add('     left outer join dba.GoodsProperty_Detail on GoodsProperty_Detail.GoodsPropertyId = GoodsProperty.Id');
-        Add('     left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = case when fCheckGoodsParentID(1491,Goods.ParentId) =zc_rvYes() then 20701'); // АГРОСЕЛЬПРОМ  - 20701	Общефирменные Товары	Прочие товары
+        Add('     left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = case when Goods.Id in (1063) then 30101'); // !!!колбаса в ассортименте!!! - 30101	Доходы	Продукция	Готовая продукция
+        Add('                                                                        when fCheckGoodsParentID(1491,Goods.ParentId) =zc_rvYes() then 20701'); // АГРОСЕЛЬПРОМ  - 20701	Общефирменные Товары	Прочие товары
         Add('                                                                        when fCheckGoodsParentID(338, Goods.ParentId) =zc_rvYes() then 20901'); // ц.ИРНА      - 20901	Общефирменные	Ирна Ирна
         Add('                                                                        when fCheckGoodsParentID(5,   Goods.ParentId) =zc_rvYes() then 30101'); // ГП            - 30101	Доходы	Продукция	Готовая продукция
         Add('                                                                        when fCheckGoodsParentID(5306,Goods.ParentId) =zc_rvYes() then 30101'); // ПЕРЕПАК       - 30101	Доходы	Продукция	Готовая продукция
@@ -4172,6 +4162,7 @@ begin
         toStoredProc_two.OutputType := otResult;
         toStoredProc_two.Params.Clear;
         toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inIsLastComplete',ftBoolean, ptInput, 0);
         //
         while not EOF do
         begin
@@ -4186,6 +4177,7 @@ begin
              if cbComplete.Checked then
              begin
                   toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  toStoredProc_two.Params.ParamByName('inIsLastComplete').Value:=isLastComplete;
                   if not myExecToStoredProc_two then ;//exit;
              end;
              //
@@ -4336,6 +4328,8 @@ begin
      //
      myEnabledCB(cbSendPersonal);
      //
+     fExecSqFromQuery('call dba._pgInsertClient_byScaleDiscountWeight ('+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+','+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))+')');
+     //
      with fromQuery,Sql do begin
         Close;
         Clear;
@@ -4369,22 +4363,10 @@ begin
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
         Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
 
-        Add('     left outer join (select Bill.ToId, BillItems.GoodsPropertyId, BillItems.KindPackageId, max (isnull(ScaleHistory.DiscountWeight,ScaleHistory_byObvalka.DiscountWeight)) as DiscountWeight'
-           +'                      from dba.Bill'
-           +'                           left outer join dba.isUnit as isUnit_to on isUnit_to.UnitId = Bill.ToID'
-           +'                           left outer join dba.BillItems on BillItems.BillId=Bill.Id'
-           +'                           left outer join dba.ScaleHistory on ScaleHistory.Id = BillItems.ScaleHistoryId'
-           +'                           left outer join dba.ScaleHistory_byObvalka on ScaleHistory_byObvalka.Id = BillItems.ScaleHistoryId_byObvalka'
-           +'                      where  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)+2)
-           +'                         and Bill.BillKind in (zc_bkSaleToClient(), zc_bkSendUnitToUnit())'
-           +'                         and BillItems.OperCount <> 0'
-           +'                         and isnull(ScaleHistory.DiscountWeight,ScaleHistory_byObvalka.DiscountWeight) <> 0'
-           +'                         and isUnit_to.UnitId is null'
-           +'                      group by Bill.ToId, BillItems.GoodsPropertyId, BillItems.KindPackageId'
-           +'                      )as tmpBI_byDiscountWeight on tmpBI_byDiscountWeight.GoodsPropertyId = GoodsProperty.Id'
-           +'                                                and tmpBI_byDiscountWeight.ToId = UnitTo.Id'
-           +'                                                and tmpBI_byDiscountWeight.KindPackageId = BillItems.KindPackageId'
-           +'                                                and 1=1'
+        Add('     left outer join dba._Client_byDiscountWeight as tmpBI_byDiscountWeight on tmpBI_byDiscountWeight.GoodsPropertyId = BillItems.GoodsPropertyId'
+           +'                                                                           and tmpBI_byDiscountWeight.KindPackageId = BillItems.KindPackageId'
+           +'                                                                           and tmpBI_byDiscountWeight.ToId = Bill.ToId'
+           +'                                                                           and 1=1'
            );
 
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
@@ -4627,6 +4609,8 @@ begin
      //
      myEnabledCB(cbSendUnitBranch);
      //
+     fExecSqFromQuery('call dba._pgInsertClient_byScaleDiscountWeight ('+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+','+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))+')');
+     //
      with fromQuery,Sql do begin
         Close;
         Clear;
@@ -4660,21 +4644,10 @@ begin
         Add('     left outer join dba.KindPackage on KindPackage.Id = BillItems.KindPackageId');
         Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
 
-        Add('     left outer join (select Bill.ToId, BillItems.GoodsPropertyId, BillItems.KindPackageId, max (isnull(ScaleHistory.DiscountWeight,ScaleHistory_byObvalka.DiscountWeight)) as DiscountWeight'
-           +'                      from dba.Bill'
-           +'                           left outer join dba.isUnit as isUnit_to on isUnit_to.UnitId = Bill.ToID'
-           +'                           left outer join dba.BillItems on BillItems.BillId=Bill.Id'
-           +'                           left outer join dba.ScaleHistory on ScaleHistory.Id = BillItems.ScaleHistoryId'
-           +'                           left outer join dba.ScaleHistory_byObvalka on ScaleHistory_byObvalka.Id = BillItems.ScaleHistoryId_byObvalka'
-           +'                      where  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)+2)
-           +'                         and Bill.BillKind in (zc_bkSaleToClient(), zc_bkSendUnitToUnit())'
-           +'                         and BillItems.OperCount <> 0'
-           +'                         and isnull(ScaleHistory.DiscountWeight,ScaleHistory_byObvalka.DiscountWeight) <> 0'
-           +'                         and isUnit_to.UnitId is null'
-           +'                      group by Bill.ToId, BillItems.GoodsPropertyId, BillItems.KindPackageId'
-           +'                      )as tmpBI_byDiscountWeight on tmpBI_byDiscountWeight.ToId = Bill.ToId'
-           +'                                                and tmpBI_byDiscountWeight.GoodsPropertyId = BillItems.GoodsPropertyId'
-           +'                                                and tmpBI_byDiscountWeight.KindPackageId = BillItems.KindPackageId');
+        Add('     left outer join dba._Client_byDiscountWeight as tmpBI_byDiscountWeight on tmpBI_byDiscountWeight.GoodsPropertyId = BillItems.GoodsPropertyId'
+           +'                                                                           and tmpBI_byDiscountWeight.KindPackageId = BillItems.KindPackageId'
+           +'                                                                           and tmpBI_byDiscountWeight.ToId = Bill.ToId'
+           +'                                                                           and 1=1');
 
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkSendUnitToUnit())'
@@ -4787,6 +4760,73 @@ begin
      myDisabledCB(cbSendUnitBranch);
 end;
 //--------------------------------------------------------------------------*--------------------------------------------------------------------------
+procedure TMainForm.pCompleteDocument_Sale(isLastComplete:Boolean);
+begin
+     if (not cbCompleteSale.Checked)or(not cbCompleteSale.Enabled) then exit;
+     //
+     myEnabledCB(cbCompleteSale);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Bill.ObjectId');
+        Add('     , Bill.OperDate');
+        Add('     , Bill.InvNumber');
+        Add('     , Bill.Id_Postgres as Id_Postgres');
+        Add('from dba._pgSelect_Bill_Sale('+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+','+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))+')');
+        Add('     as Bill');
+        Add('order by OperDate,InvNumber,ObjectId');
+        Open;
+        cbCompleteSale.Caption:='3.1. ('+IntToStr(RecordCount)+') Продажа покупателю';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpUnComplete_Movement';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        //
+        toStoredProc_two.StoredProcName:='gpComplete_Movement_Sale';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inIsLastComplete',ftBoolean, ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             if cbUnComplete.Checked then
+             begin
+                  toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  if not myExecToStoredProc then ;//exit;
+             end;
+             if cbComplete.Checked then
+             begin
+                  toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  toStoredProc_two.Params.ParamByName('inIsLastComplete').Value:=isLastComplete;
+                  if not myExecToStoredProc_two then ;//exit;
+             end;
+             //
+             Next;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbCompleteSale);
+end;
+//--------------------------------------------------------------------------*--------------------------------------------------------------------------
 function TMainForm.pLoadDocument_Sale:Integer;
 begin
      Result:=0;
@@ -4896,6 +4936,8 @@ begin
      //
      myEnabledCB(cbSale);
      //
+     fExecSqFromQuery('call dba._pgInsertClient_byScaleDiscountWeight ('+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+','+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))+')');
+     //
      with fromQuery,Sql do begin
         Close;
         Clear;
@@ -4962,21 +5004,10 @@ begin
         Add('                                                     and fGoodsProperty_Detail_byLoad.KindPackageId = fBillItems.KindPackageId');
         Add('     left outer join dba.GoodsProperty_Detail on GoodsProperty_Detail.Id = fGoodsProperty_Detail_byLoad.Id_byLoad');
 
-        Add('     left outer join (select Bill.ToId, BillItems.GoodsPropertyId, BillItems.KindPackageId, max (isnull(ScaleHistory.DiscountWeight,ScaleHistory_byObvalka.DiscountWeight)) as DiscountWeight'
-           +'                      from dba.Bill'
-           +'                           left outer join dba.isUnit as isUnit_to on isUnit_to.UnitId = Bill.ToID'
-           +'                           left outer join dba.BillItems on BillItems.BillId=Bill.Id'
-           +'                           left outer join dba.ScaleHistory on ScaleHistory.Id = BillItems.ScaleHistoryId'
-           +'                           left outer join dba.ScaleHistory_byObvalka on ScaleHistory_byObvalka.Id = BillItems.ScaleHistoryId_byObvalka'
-           +'                      where  Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)+2)
-           +'                         and Bill.BillKind in (zc_bkSaleToClient(), zc_bkSendUnitToUnit())'
-           +'                         and BillItems.OperCount <> 0'
-           +'                         and isnull(ScaleHistory.DiscountWeight,ScaleHistory_byObvalka.DiscountWeight) <> 0'
-           +'                         and isUnit_to.UnitId is null'
-           +'                      group by Bill.ToId, BillItems.GoodsPropertyId, BillItems.KindPackageId'
-           +'                      )as tmpBI_byDiscountWeight on tmpBI_byDiscountWeight.ToId = Bill.ToId'
-           +'                                                and tmpBI_byDiscountWeight.GoodsPropertyId = BillItems.GoodsPropertyId'
-           +'                                                and tmpBI_byDiscountWeight.KindPackageId = BillItems.KindPackageId');
+        Add('     left outer join dba._Client_byDiscountWeight as tmpBI_byDiscountWeight on tmpBI_byDiscountWeight.GoodsPropertyId = BillItems.GoodsPropertyId'
+           +'                                                                           and tmpBI_byDiscountWeight.KindPackageId = BillItems.KindPackageId'
+           +'                                                                           and tmpBI_byDiscountWeight.ToId = Bill.ToId'
+           +'                                                                           and 1=1');
 
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');
         Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
@@ -5010,7 +5041,7 @@ begin
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , case when Bill.FromId=5 then 0 else -1* BillItems.OperCount end as Amount');
         Add('     , -1 * BillItems.OperCount as AmountPartner');
-        Add('     , -1 * BillItems.OperCount as AmountChangePercent');
+        Add('     , 0 as AmountChangePercent');
         Add('     , 0 as ChangePercentAmount');
         Add('     , BillItems.OperPrice as Price');
         Add('     , 1 as CountForPrice');
@@ -6226,7 +6257,6 @@ alter table dba.PriceListItems_byHistory add Id_Postgres integer null;
 alter table dba.Bill add Id_Postgres integer null;
 alter table dba.BillItems add Id_Postgres integer null;
 alter table dba.BillItemsReceipt add Id_Postgres integer null;
-
 ok
 }
 

@@ -913,11 +913,11 @@ object MainForm: TMainForm
     Top = 192
   end
   object fromADOConnection: TADOConnection
-    Connected = True
     ConnectionString = 
       'Provider=MSDASQL.1;Password=qazqazint;Persist Security Info=True' +
       ';User ID=dba;Data Source=v9_tmpProfiMeatingDS'
     LoginPrompt = False
+    Provider = 'MSDASQL.1'
     Left = 344
     Top = 248
   end
@@ -980,21 +980,5 @@ object MainForm: TMainForm
     Protocol = 'postgresql-9'
     Left = 144
     Top = 360
-  end
-  object cxStyleRepository1: TcxStyleRepository
-    PixelsPerInch = 96
-    object cxStyle1: TcxStyle
-      AssignedValues = [svColor, svTextColor]
-      Color = clSilver
-      TextColor = clFuchsia
-    end
-  end
-  object cxStyleRepository2: TcxStyleRepository
-    PixelsPerInch = 96
-    object cxStyle2: TcxStyle
-      AssignedValues = [svColor, svTextColor]
-      Color = clHotLight
-      TextColor = clAqua
-    end
   end
 end
