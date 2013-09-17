@@ -200,7 +200,7 @@ BEGIN
                                , OperCount TFloat, OperCount_ChangePercent TFloat, OperCount_Partner TFloat, tmpOperSumm_PriceList TFloat, OperSumm_PriceList TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, OperSumm_Partner_ChangePercent TFloat
                                , ContainerId_ProfitLoss_10100 Integer, ContainerId_ProfitLoss_10400 Integer, ContainerId_ProfitLoss_10500 Integer
                                , ContainerId_Partner Integer, AccountId_Partner Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                               , BusinessId Integer
+                               , BusinessId_From Integer
                                , isPartionCount Boolean, isPartionSumm Boolean, isTareReturning Boolean
                                , PartionGoodsId Integer) ON COMMIT DROP;
      -- заполняем таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
@@ -209,7 +209,7 @@ BEGIN
                          , OperCount, OperCount_ChangePercent, OperCount_Partner, tmpOperSumm_PriceList, OperSumm_PriceList, tmpOperSumm_Partner, OperSumm_Partner, OperSumm_Partner_ChangePercent
                          , ContainerId_ProfitLoss_10100, ContainerId_ProfitLoss_10400, ContainerId_ProfitLoss_10500
                          , ContainerId_Partner, AccountId_Partner, InfoMoneyDestinationId, InfoMoneyId
-                         , BusinessId
+                         , BusinessId_From
                          , isPartionCount, isPartionSumm, isTareReturning
                          , PartionGoodsId)
         SELECT
@@ -283,7 +283,8 @@ BEGIN
               -- Статьи назначения
             , _tmp.InfoMoneyId
 
-            , _tmp.BusinessId
+              -- значение Бизнес !!!выбирается!!! из Товара или Подраделения/Сотрудника
+            , CASE WHEN _tmp.BusinessId_From = 0 THEN vbBusinessId_From ELSE _tmp.BusinessId_From END AS BusinessId_From
 
             , _tmp.isPartionCount
             , _tmp.isPartionSumm 
@@ -328,7 +329,8 @@ BEGIN
                     -- Статьи назначения
                   , COALESCE (lfObject_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
 
-                  , COALESCE (ObjectLink_Goods_Business.ChildObjectId, vbBusinessId_From) AS BusinessId -- Берем Бизнес из товара или Подраделения/Сотрудника
+                    -- Бизнес из Товара
+                  , COALESCE (ObjectLink_Goods_Business.ChildObjectId, 0) AS BusinessId_From
 
                   , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE)      AS isPartionCount
                   , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)       AS isPartionSumm
@@ -478,7 +480,7 @@ BEGIN
      -- для теста - Заголовок
      -- RETURN QUERY SELECT CAST (vbOperSumm_Partner_byItem AS TFloat) AS OperSumm_Partner_byItem, CAST (vbOperSumm_Partner AS TFloat) AS OperSumm_Partner, CAST (vbOperSumm_Partner_ChangePercent_byItem AS TFloat) AS OperSumm_Partner_ChangePercent_byItem, CAST (vbOperSumm_Partner_ChangePercent AS TFloat) AS OperSumm_Partner_ChangePercent, CAST (vbPriceWithVAT AS Boolean) AS PriceWithVAT, CAST (vbVATPercent AS TFloat) AS VATPercent, CAST (vbDiscountPercent AS TFloat) AS DiscountPercent, CAST (vbExtraChargesPercent AS TFloat) AS ExtraChargesPercent, CAST (vbUnitId_From AS Integer) AS UnitId_From, CAST (vbPersonalId_From AS Integer) AS PersonalId_From, CAST (vbBranchId_From AS Integer) AS BranchId_From, CAST (vbAccountDirectionId_From AS Integer) AS AccountDirectionId_From, CAST (vbIsPartionDate_Unit AS Boolean) AS isPartionDate, CAST (vbJuridicalId_To AS Integer) AS JuridicalId_To, CAST (vbIsCorporate_To AS Boolean) AS IsCorporate_To, CAST (vbPersonalId_To AS Integer) AS PersonalId_To, CAST (vbInfoMoneyDestinationId_isCorporate AS Integer) AS InfoMoneyDestinationId_isCorporate, CAST (vbInfoMoneyId_isCorporate AS Integer) AS InfoMoneyId_isCorporate, CAST (vbInfoMoneyDestinationId_Contract AS Integer) AS InfoMoneyDestinationId_Contract, CAST (vbInfoMoneyId_Contract AS Integer) AS InfoMoneyId_Contract, CAST (vbPaidKindId AS Integer) AS PaidKindId, CAST (vbContractId AS Integer) AS ContractId, CAST (vbJuridicalId_Basis_From AS Integer) AS JuridicalId_Basis_From;
      -- для теста
-     -- RETURN QUERY SELECT _tmpItem.MovementItemId, inMovementId, vbOperDate, _tmpItem.ContainerId_Goods, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.AssetId, _tmpItem.PartionGoods, _tmpItem.PartionGoodsDate, _tmpItem.OperCount, _tmpItem.tmpOperSumm_PriceList, _tmpItem.OperSumm_PriceList, _tmpItem.tmpOperSumm_Partner, _tmpItem.OperSumm_Partner, _tmpItem.OperSumm_Partner_ChangePercent, _tmpItem.AccountId_Partner, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId, _tmpItem.BusinessId, _tmpItem.isPartionCount, _tmpItem.isPartionSumm, _tmpItem.PartionGoodsId FROM _tmpItem;
+     -- RETURN QUERY SELECT _tmpItem.MovementItemId, inMovementId, vbOperDate, _tmpItem.ContainerId_Goods, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.AssetId, _tmpItem.PartionGoods, _tmpItem.PartionGoodsDate, _tmpItem.OperCount, _tmpItem.tmpOperSumm_PriceList, _tmpItem.OperSumm_PriceList, _tmpItem.tmpOperSumm_Partner, _tmpItem.OperSumm_Partner, _tmpItem.OperSumm_Partner_ChangePercent, _tmpItem.AccountId_Partner, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId, _tmpItem.BusinessId_From, _tmpItem.isPartionCount, _tmpItem.isPartionSumm, _tmpItem.PartionGoodsId FROM _tmpItem;
      -- return;
 
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -508,68 +510,16 @@ BEGIN
 
 
      -- 1.2.1. определяется ContainerId_Goods для количественного учета
-     UPDATE _tmpItem SET ContainerId_Goods = CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
-                                                          -- 0)Товар 1)Подразделение 2)!Партия товара!
-                                                          -- 0)Товар 1)Сотрудник (МО или Эксп.) 2)!Партия товара!
-                                                     THEN lpInsertFind_Container (inContainerDescId:= zc_Container_Count()
-                                                                                , inParentId:= NULL
-                                                                                , inObjectId:= _tmpItem.GoodsId
-                                                                                , inJuridicalId_basis:= NULL
-                                                                                , inBusinessId       := NULL
-                                                                                , inObjectCostDescId := NULL
-                                                                                , inObjectCostId     := NULL
-                                                                                , inDescId_1   := CASE WHEN vbPersonalId_From <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Unit() END
-                                                                                , inObjectId_1 := CASE WHEN vbPersonalId_From <> 0 THEN vbPersonalId_From ELSE vbUnitId_From END
-                                                                                , inDescId_2   := zc_ContainerLinkObject_PartionGoods()
-                                                                                , inObjectId_2 := CASE WHEN _tmpItem.isPartionCount THEN _tmpItem.PartionGoodsId ELSE NULL END
-                                                                                 )
-                                                  WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100()
-                                                          -- 0)Товар 1)Подразделение 2)Основные средства(для которого закуплено ТМЦ)
-                                                          -- 0)Товар 1)Сотрудник (МО или Эксп.) 2)Основные средства(для которого закуплено ТМЦ)
-                                                     THEN lpInsertFind_Container (inContainerDescId:= zc_Container_Count()
-                                                                                , inParentId:= NULL
-                                                                                , inObjectId:= _tmpItem.GoodsId
-                                                                                , inJuridicalId_basis:= NULL
-                                                                                , inBusinessId       := NULL
-                                                                                , inObjectCostDescId := NULL
-                                                                                , inObjectCostId     := NULL
-                                                                                , inDescId_1   := CASE WHEN vbPersonalId_From <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Unit() END
-                                                                                , inObjectId_1 := CASE WHEN vbPersonalId_From <> 0 THEN vbPersonalId_From ELSE vbUnitId_From END
-                                                                                , inDescId_2   := zc_ContainerLinkObject_AssetTo()
-                                                                                , inObjectId_2 := _tmpItem.AssetId
-                                                                                 )
-                                                  WHEN _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20700()  -- Товары    -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20700()
-                                                                                         , zc_Enum_InfoMoneyDestination_20900()  -- Ирна      -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
-                                                                                         , zc_Enum_InfoMoneyDestination_30100()) -- Продукция -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()
-                                                          -- 0)Товар 1)Подразделение 2)Вид товара 3)!!!Партия товара!!!
-                                                          -- 0)Товар 1)Сотрудник (МО или Эксп.) 2)Вид товара 3)!!!Партия товара!!!
-                                                     THEN lpInsertFind_Container (inContainerDescId:= zc_Container_Count()
-                                                                                , inParentId:= NULL
-                                                                                , inObjectId:= _tmpItem.GoodsId
-                                                                                , inJuridicalId_basis:= NULL
-                                                                                , inBusinessId       := NULL
-                                                                                , inObjectCostDescId := NULL
-                                                                                , inObjectCostId     := NULL
-                                                                                , inDescId_1   := CASE WHEN vbPersonalId_From <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Unit() END
-                                                                                , inObjectId_1 := CASE WHEN vbPersonalId_From <> 0 THEN vbPersonalId_From ELSE vbUnitId_From END
-                                                                                , inDescId_2   := zc_ContainerLinkObject_GoodsKind()
-                                                                                , inObjectId_2 := _tmpItem.GoodsKindId
-                                                                                , inDescId_3   := CASE WHEN _tmpItem.PartionGoodsId <> 0 THEN zc_ContainerLinkObject_PartionGoods() ELSE NULL END
-                                                                                , inObjectId_3 := CASE WHEN _tmpItem.PartionGoodsId <> 0 THEN _tmpItem.PartionGoodsId ELSE NULL END
-                                                                                 )
-                                                          -- 0)Товар 1)Подразделение
-                                                     ELSE lpInsertFind_Container (inContainerDescId:= zc_Container_Count()
-                                                                                , inParentId:= NULL
-                                                                                , inObjectId:= _tmpItem.GoodsId
-                                                                                , inJuridicalId_basis:= NULL
-                                                                                , inBusinessId       := NULL
-                                                                                , inObjectCostDescId := NULL
-                                                                                , inObjectCostId     := NULL
-                                                                                , inDescId_1   := CASE WHEN vbPersonalId_From <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Unit() END
-                                                                                , inObjectId_1 := CASE WHEN vbPersonalId_From <> 0 THEN vbPersonalId_From ELSE vbUnitId_From END
-                                                                                 )
-                                             END;
-
+     UPDATE _tmpItem SET ContainerId_Goods = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
+                                                                                , inUnitId                 := vbUnitId_From
+                                                                                , inPersonalId             := vbPersonalId_From
+                                                                                , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
+                                                                                , inGoodsId                := _tmpItem.GoodsId
+                                                                                , inGoodsKindId            := _tmpItem.GoodsKindId
+                                                                                , inIsPartionCount         := _tmpItem.isPartionCount
+                                                                                , inPartionGoodsId         := _tmpItem.PartionGoodsId
+                                                                                , inAssetId                := _tmpItem.AssetId
+                                                                                 );
      -- 1.2.2. формируются Проводки для количественного учета
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
        SELECT 0, zc_MIContainer_Count() AS DescId, inMovementId, MovementItemId, ContainerId_Goods, 0 AS ParentId, -1 * OperCount, vbOperDate, TRUE
@@ -594,11 +544,11 @@ BEGIN
         FROM _tmpItem
              -- так находим для тары
              LEFT JOIN lfSelect_ContainerSumm_byAccount (zc_Enum_Account_20901()) AS lfContainerSumm_20901
-                                                                                  ON lfContainerSumm_20901.GoodsId = _tmpItem.GoodsId
+                                                                                  ON lfContainerSumm_20901.GoodsId           = _tmpItem.GoodsId
                                                                                  AND lfContainerSumm_20901.JuridicalId_basis = vbJuridicalId_Basis_From
-                                                                                 AND lfContainerSumm_20901.BusinessId = _tmpItem.BusinessId
-                                                                                 AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- 20500; "Оборотная тара"
-                                                                                 AND _tmpItem.isTareReturning = FALSE
+                                                                                 AND lfContainerSumm_20901.BusinessId        = _tmpItem.BusinessId_From
+                                                                                 AND _tmpItem.InfoMoneyDestinationId         = zc_Enum_InfoMoneyDestination_20500() -- 20500; "Оборотная тара"
+                                                                                 AND _tmpItem.isTareReturning                = FALSE
              -- так находим для остальных
              LEFT JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_Goods
                                                   AND Container_Summ.DescId = zc_Container_Summ()
@@ -634,7 +584,7 @@ BEGIN
                                         , inParentId          := NULL
                                         , inObjectId          := zc_Enum_Account_100301 () -- 100301; "прибыль текущего периода"
                                         , inJuridicalId_basis := vbJuridicalId_Basis_From
-                                        , inBusinessId        := _tmpItem_byProfitLoss.BusinessId
+                                        , inBusinessId        := _tmpItem_byProfitLoss.BusinessId_From
                                         , inObjectCostDescId  := NULL
                                         , inObjectCostId      := NULL
                                         , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
@@ -645,7 +595,7 @@ BEGIN
                                         , inParentId          := NULL
                                         , inObjectId          := zc_Enum_Account_100301 () -- 100301; "прибыль текущего периода"
                                         , inJuridicalId_basis := vbJuridicalId_Basis_From
-                                        , inBusinessId        := _tmpItem_byProfitLoss.BusinessId
+                                        , inBusinessId        := _tmpItem_byProfitLoss.BusinessId_From
                                         , inObjectCostDescId  := NULL
                                         , inObjectCostId      := NULL
                                         , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
@@ -656,7 +606,7 @@ BEGIN
                                         , inParentId          := NULL
                                         , inObjectId          := zc_Enum_Account_100301 () -- 100301; "прибыль текущего периода"
                                         , inJuridicalId_basis := vbJuridicalId_Basis_From
-                                        , inBusinessId        := _tmpItem_byProfitLoss.BusinessId
+                                        , inBusinessId        := _tmpItem_byProfitLoss.BusinessId_From
                                         , inObjectCostDescId  := NULL
                                         , inObjectCostId      := NULL
                                         , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
@@ -706,7 +656,7 @@ BEGIN
                         END AS ProfitLossId_Partner
 
                       , _tmpItem_group.InfoMoneyDestinationId
-                      , _tmpItem_group.BusinessId
+                      , _tmpItem_group.BusinessId_From
                  FROM (SELECT CASE WHEN vbPersonalId_To = 0
                                     AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100())  -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                         THEN zc_Enum_ProfitLossGroup_10000() -- 10000; "Результат основной деятельности"
@@ -731,20 +681,20 @@ BEGIN
 
                             , _tmpItem.InfoMoneyDestinationId_calc
                             , _tmpItem.InfoMoneyDestinationId
-                            , _tmpItem.BusinessId
+                            , _tmpItem.BusinessId_From
                        FROM (SELECT  _tmpItem.InfoMoneyDestinationId
-                                   , _tmpItem.BusinessId
+                                   , _tmpItem.BusinessId_From
                                    , _tmpItem.GoodsKindId
                                    , CASE WHEN _tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() THEN zc_InfoMoneyDestination_WorkProgress() ELSE _tmpItem.InfoMoneyDestinationId END AS InfoMoneyDestinationId_calc
                              FROM _tmpItemSumm
                                   JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId
                              GROUP BY _tmpItem.InfoMoneyDestinationId
-                                    , _tmpItem.BusinessId
+                                    , _tmpItem.BusinessId_From
                                     , _tmpItem.GoodsKindId
                             ) AS _tmpItem
                        GROUP BY _tmpItem.InfoMoneyDestinationId_calc
                               , _tmpItem.InfoMoneyDestinationId
-                              , _tmpItem.BusinessId
+                              , _tmpItem.BusinessId_From
                       ) AS _tmpItem_group
                 ) AS _tmpItem_byProfitLoss
           ) AS _tmpItem_byDestination ON _tmpItem_byDestination.InfoMoneyDestinationId = _tmpItem.InfoMoneyDestinationId
@@ -820,7 +770,7 @@ BEGIN
                                                        , inParentId          := NULL
                                                        , inObjectId          := _tmpItem_group.AccountId_Partner
                                                        , inJuridicalId_basis := vbJuridicalId_Basis_From
-                                                       , inBusinessId        := _tmpItem_group.BusinessId
+                                                       , inBusinessId        := _tmpItem_group.BusinessId_From
                                                        , inObjectCostDescId  := NULL
                                                        , inObjectCostId      := NULL
                                                        , inDescId_1          := CASE WHEN vbPersonalId_To <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Juridical() END
@@ -838,7 +788,7 @@ BEGIN
                                                   , inParentId          := NULL
                                                   , inObjectId          := _tmpItem_group.AccountId_Partner
                                                   , inJuridicalId_basis := vbJuridicalId_Basis_From
-                                                  , inBusinessId        := _tmpItem_group.BusinessId
+                                                  , inBusinessId        := _tmpItem_group.BusinessId_From
                                                   , inObjectCostDescId  := NULL
                                                   , inObjectCostId      := NULL
                                                   , inDescId_1          := zc_ContainerLinkObject_Juridical()
@@ -854,7 +804,7 @@ BEGIN
                 , _tmpItem_group.InfoMoneyId
            FROM (SELECT _tmpItem.AccountId_Partner
                       , _tmpItem.InfoMoneyId
-                      , _tmpItem.BusinessId
+                      , _tmpItem.BusinessId_From
                       , CASE WHEN vbInfoMoneyId_To <> 0
                                   THEN vbInfoMoneyId_To
                              ELSE _tmpItem.InfoMoneyId -- иначе берем по товару
@@ -862,7 +812,7 @@ BEGIN
                  FROM _tmpItem
                  GROUP BY _tmpItem.AccountId_Partner
                         , _tmpItem.InfoMoneyId
-                        , _tmpItem.BusinessId
+                        , _tmpItem.BusinessId_From
                 ) AS _tmpItem_group
           ) AS _tmpItem_byInfoMoney
      WHERE _tmpItem.InfoMoneyId = _tmpItem_byInfoMoney.InfoMoneyId
@@ -885,7 +835,7 @@ BEGIN
                                         , inParentId          := NULL
                                         , inObjectId          := zc_Enum_Account_100301 () -- 100301; "прибыль текущего периода"
                                         , inJuridicalId_basis := vbJuridicalId_Basis_From
-                                        , inBusinessId        := _tmpItem_byProfitLoss.BusinessId
+                                        , inBusinessId        := _tmpItem_byProfitLoss.BusinessId_From
                                         , inObjectCostDescId  := NULL
                                         , inObjectCostId      := NULL
                                         , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
@@ -896,7 +846,7 @@ BEGIN
                                         , inParentId          := NULL
                                         , inObjectId          := zc_Enum_Account_100301 () -- 100301; "прибыль текущего периода"
                                         , inJuridicalId_basis := vbJuridicalId_Basis_From
-                                        , inBusinessId        := _tmpItem_byProfitLoss.BusinessId
+                                        , inBusinessId        := _tmpItem_byProfitLoss.BusinessId_From
                                         , inObjectCostDescId  := NULL
                                         , inObjectCostId      := NULL
                                         , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
@@ -907,7 +857,7 @@ BEGIN
                                         , inParentId          := NULL
                                         , inObjectId          := zc_Enum_Account_100301 () -- 100301; "прибыль текущего периода"
                                         , inJuridicalId_basis := vbJuridicalId_Basis_From
-                                        , inBusinessId        := _tmpItem_byProfitLoss.BusinessId
+                                        , inBusinessId        := _tmpItem_byProfitLoss.BusinessId_From
                                         , inObjectCostDescId  := NULL
                                         , inObjectCostId      := NULL
                                         , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
@@ -954,7 +904,7 @@ BEGIN
                                                                  )
                         END AS ProfitLossId_ChangePercent
                       , _tmpItem_group.InfoMoneyDestinationId
-                      , _tmpItem_group.BusinessId
+                      , _tmpItem_group.BusinessId_From
                  FROM (SELECT -- здесь !!!тоже!!! что и для с/с (но из с/с нельзя брать т.к. нет данных для с/с=0)
                               CASE WHEN vbPersonalId_To = 0
                                     AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100())  -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
@@ -981,19 +931,19 @@ BEGIN
 
                             , _tmpItem.InfoMoneyDestinationId_calc
                             , _tmpItem.InfoMoneyDestinationId
-                            , _tmpItem.BusinessId
+                            , _tmpItem.BusinessId_From
                        FROM (SELECT  _tmpItem.InfoMoneyDestinationId
-                                   , _tmpItem.BusinessId
+                                   , _tmpItem.BusinessId_From
                                    , _tmpItem.GoodsKindId
                                    , CASE WHEN _tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() THEN zc_InfoMoneyDestination_WorkProgress() ELSE _tmpItem.InfoMoneyDestinationId END AS InfoMoneyDestinationId_calc
                              FROM _tmpItem
                              GROUP BY _tmpItem.InfoMoneyDestinationId
-                                    , _tmpItem.BusinessId
+                                    , _tmpItem.BusinessId_From
                                     , _tmpItem.GoodsKindId
                             ) AS _tmpItem
                        GROUP BY _tmpItem.InfoMoneyDestinationId_calc
                               , _tmpItem.InfoMoneyDestinationId
-                              , _tmpItem.BusinessId
+                              , _tmpItem.BusinessId_From
                       ) AS _tmpItem_group
                 ) AS _tmpItem_byProfitLoss
           ) AS _tmpItem_byDestination
@@ -1321,6 +1271,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.09.13                                        * add lpInsertUpdate_ContainerCount_Goods
  15.09.13                                        * add zc_Enum_Account_20901
  14.09.13                                        * add vbBusinessId_From
  09.09.13                                        * add lpInsertUpdate_MovementItemContainer_byTable
