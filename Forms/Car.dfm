@@ -2,21 +2,20 @@ inherited CarForm: TCarForm
   Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1080
   ClientHeight = 367
   ClientWidth = 549
-  ExplicitWidth = 565
-  ExplicitHeight = 405
+  ExplicitWidth = 557
+  ExplicitHeight = 394
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
+    Top = 26
     Width = 549
-    Height = 339
+    Height = 341
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 463
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -105,8 +104,8 @@ inherited CarForm: TCarForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -123,7 +122,7 @@ inherited CarForm: TCarForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -315,6 +314,7 @@ inherited CarForm: TCarForm
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ShortCut = 13
       ImageIndex = 7
+      DataSource = DataSource
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -342,6 +342,9 @@ inherited CarForm: TCarForm
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     View = cxGridDBTableView
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
     Left = 168
     Top = 216
   end

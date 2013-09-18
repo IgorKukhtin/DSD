@@ -23,7 +23,8 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  ChoicePeriod, cxLabel, dxBarExtItems;
 
 type
   TReturnOutJournalForm = class(TParentForm)
@@ -76,6 +77,11 @@ type
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    PeriodChoice: TPeriodChoice;
+    RefreshDispatcher: TRefreshDispatcher;
+    cxLabel1: TcxLabel;
+    cxLabel2: TcxLabel;
+    dxBarStatic1: TdxBarStatic;
   private
   public
   end;

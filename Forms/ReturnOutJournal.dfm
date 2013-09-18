@@ -12,21 +12,30 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     Width = 1240
     Height = 41
     Align = alTop
-    Caption = 'Panel1'
     TabOrder = 1
     object deStart: TcxDateEdit
-      Left = 208
-      Top = 8
+      Left = 107
+      Top = 9
       EditValue = 41395d
       TabOrder = 0
-      Width = 121
+      Width = 85
     end
     object deEnd: TcxDateEdit
-      Left = 352
-      Top = 8
+      Left = 321
+      Top = 10
       EditValue = 41760d
       TabOrder = 1
-      Width = 121
+      Width = 85
+    end
+    object cxLabel1: TcxLabel
+      Left = 9
+      Top = 10
+      Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
+    end
+    object cxLabel2: TcxLabel
+      Left = 210
+      Top = 10
+      Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
   end
   object cxGrid: TcxGrid
@@ -44,13 +53,69 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
       DataController.Filter.TranslateBetween = True
       DataController.Filter.TranslateIn = True
       DataController.Filter.TranslateLike = True
-      DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.DefaultGroupSummaryItems = <
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalCount
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = colTotalSumm
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = colTotalSummVAT
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = colTotalSummMVAT
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = colTotalSummPVAT
+        end>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalCount
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = colTotalSumm
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = colTotalSummVAT
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = colTotalSummMVAT
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = colTotalSummPVAT
+        end>
       DataController.Summary.SummaryGroups = <>
+      OptionsCustomize.ColumnHiding = True
+      OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsView.ColumnAutoWidth = True
+      OptionsView.Footer = True
+      OptionsView.HeaderAutoHeight = True
+      OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object colStatus: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
@@ -73,74 +138,113 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
             ImageIndex = 13
             Value = 3
           end>
+        HeaderAlignmentVert = vaCenter
       end
       object colInvNumber: TcxGridDBColumn
         Caption = #1053#1086#1084#1077#1088
         DataBinding.FieldName = 'InvNumber'
+        HeaderAlignmentVert = vaCenter
         Width = 41
       end
       object colOperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
+        HeaderAlignmentVert = vaCenter
         Width = 47
       end
       object colFromName: TcxGridDBColumn
         Caption = #1054#1090' '#1082#1086#1075#1086
         DataBinding.FieldName = 'FromName'
+        HeaderAlignmentVert = vaCenter
         Width = 140
       end
       object colToName: TcxGridDBColumn
         Caption = #1050#1086#1084#1091
         DataBinding.FieldName = 'ToName'
+        HeaderAlignmentVert = vaCenter
         Width = 140
+      end
+      object colPaidKindName: TcxGridDBColumn
+        Caption = #1042#1080#1076
+        DataBinding.FieldName = 'CarName'
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
       object colTotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'TotalCount'
+        FooterAlignmentHorz = taRightJustify
+        GroupSummaryAlignment = taRightJustify
+        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentVert = vaCenter
       end
       object colTotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1087#1086#1089#1090#1072#1074#1097'.'
         DataBinding.FieldName = 'TotalSumm'
+        FooterAlignmentHorz = taRightJustify
+        GroupSummaryAlignment = taRightJustify
+        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentVert = vaCenter
         Width = 80
       end
       object colChangePercent: TcxGridDBColumn
         Caption = '(-)% '#1057#1082', (+)% '#1053#1072#1094
         DataBinding.FieldName = 'ChangePercent'
+        FooterAlignmentHorz = taRightJustify
+        GroupSummaryAlignment = taRightJustify
+        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentVert = vaCenter
         Width = 90
       end
       object colPriceWithVAT: TcxGridDBColumn
         Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' '
         DataBinding.FieldName = 'PriceWithVAT'
+        FooterAlignmentHorz = taRightJustify
+        GroupSummaryAlignment = taRightJustify
+        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentVert = vaCenter
       end
       object colVATPercent: TcxGridDBColumn
         Caption = '% '#1053#1044#1057
         DataBinding.FieldName = 'VATPercent'
+        FooterAlignmentHorz = taRightJustify
+        GroupSummaryAlignment = taRightJustify
+        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentVert = vaCenter
         Width = 45
       end
       object colTotalSummVAT: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSummVAT'
+        FooterAlignmentHorz = taRightJustify
+        GroupSummaryAlignment = taRightJustify
+        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentVert = vaCenter
         Width = 60
       end
       object colTotalSummMVAT: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSummMVAT'
         Visible = False
+        FooterAlignmentHorz = taRightJustify
+        GroupSummaryAlignment = taRightJustify
+        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentVert = vaCenter
         Width = 80
       end
       object colTotalSummPVAT: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSummPVAT'
+        FooterAlignmentHorz = taRightJustify
+        GroupSummaryAlignment = taRightJustify
+        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentVert = vaCenter
         Width = 70
-      end
-      object colPaidKindName: TcxGridDBColumn
-        Caption = #1042#1080#1076#1099' '#1092#1086#1088#1084' '#1086#1087#1083#1072#1090#1099
-        DataBinding.FieldName = 'CarName'
-        Width = 55
       end
       object colContractName: TcxGridDBColumn
         Caption = #1044#1086#1075#1086#1074#1086#1088
         DataBinding.FieldName = 'PersonalDriverName'
+        HeaderAlignmentVert = vaCenter
         Width = 55
       end
     end
@@ -162,41 +266,6 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = colFromName
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Width')
-      end
-      item
-        Component = colInvNumber
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Width')
-      end
-      item
-        Component = colOperDate
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Width')
-      end
-      item
-        Component = colStatus
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Width')
-      end
-      item
-        Component = colToName
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Width')
-      end
-      item
         Component = Owner
         Properties.Strings = (
           'Height'
@@ -207,7 +276,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 8
-    Top = 32
+    Top = 64
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -226,13 +295,14 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     ShowShortCutInHint = True
     UseSystemFont = True
     Left = 40
-    Top = 32
+    Top = 64
     DockControlHeights = (
       0
       0
       26
       0)
     object dxBarManagerBar: TdxBar
+      AllowClose = False
       Caption = 'Custom'
       CaptionButtons = <>
       DockedDockingStyle = dsTop
@@ -255,6 +325,10 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbComplete'
         end
         item
@@ -264,6 +338,10 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         item
           Visible = True
           ItemName = 'bbDelete'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
         end
         item
           BeginGroup = True
@@ -310,11 +388,16 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
       Action = dsdGridToExcel
       Category = 0
     end
+    object dxBarStatic1: TdxBarStatic
+      Caption = '     '
+      Category = 0
+      Visible = ivAlways
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 72
-    Top = 32
+    Top = 64
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -457,7 +540,7 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
     Left = 104
-    Top = 32
+    Top = 64
     object N1: TMenuItem
       Action = actComplete
     end
@@ -500,15 +583,30 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     Top = 320
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
-    OnDblClickActionList = <>
-    SortImages = dmMain.SortImageList
     View = cxGridDBTableView
+    OnDblClickActionList = <>
     ActionItemList = <
       item
         Action = actUpdate
         ShortCut = 13
       end>
+    SortImages = dmMain.SortImageList
     Left = 176
     Top = 160
+  end
+  object PeriodChoice: TPeriodChoice
+    DateStart = deStart
+    DateEnd = deEnd
+    Left = 488
+    Top = 24
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end>
+    Left = 576
+    Top = 24
   end
 end

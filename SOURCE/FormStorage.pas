@@ -48,8 +48,8 @@ var i: integer;
 begin
   result := '';
   for I := 1 to Length(S) do
-    if (s[i] < #32) then
-      result := result + '&amp;#' + FormatFloat('00', byte(s[i])) + ';'
+    if (s[i] < #32) or (s[i] = #$0098) then
+      result := result + '&amp;#' + IntToHex(byte(s[i]),2) + ';'
     else
       result := result + gfStrToXmlStr(s[i]);
 end;
@@ -60,7 +60,7 @@ begin
   i := 1;
   while i <= Length(S) do begin
       if (s[i] = '&') and (s[i+1] = '#') and (s[i+4] = ';') then begin
-         result := result + char(StrToInt(s[i+2] + s[i+3]));
+         result := result + char(StrToInt('$' + s[i+2] + s[i+3]));
          i := i + 4;
       end
       else

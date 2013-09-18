@@ -131,10 +131,11 @@ function TStorage.ExecuteProc(pData: String): Variant;
 var
   ResultType: String;
 begin
-  if gc_isDebugMode then
+  if gc_isDebugMode then begin
      ShowMessage(pData);
+  end;
   FSendList.Clear;
-  FSendList.Add('XML=' + '<?xml version="1.0" encoding="windows-1251"?>' + pData);
+  FSendList.Add('XML=' + '<?xml version="1.1" encoding="windows-1251"?>' + pData);
   FReceiveStream.Clear;
   idHTTP.Post(FConnection, FSendList, FReceiveStream, TIdTextEncoding.GetEncoding(1251));
   // Определяем тип возвращаемого результата

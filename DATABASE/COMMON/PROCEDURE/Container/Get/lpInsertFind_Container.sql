@@ -70,26 +70,9 @@ BEGIN
 
      -- определяем количество Аналитик
      SELECT COUNT(*) INTO vbRecordCount FROM _tmpContainer;
-
-     -- Проверка
-     IF EXISTS (SELECT COUNT(*)
-                FROM (SELECT Container.Id
-                      FROM Container
-                           JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
-                           JOIN _tmpContainer ON _tmpContainer.ObjectId = ContainerLinkObject.ObjectId
-                                             AND _tmpContainer.DescId = ContainerLinkObject.DescId
-                      WHERE Container.ObjectId = inObjectId
-                        AND Container.DescId = inContainerDescId
-                      GROUP BY Container.Id
-                      HAVING COUNT(*) = vbRecordCount
-                     ) AS _tmpCheck
-                HAVING COUNT(*) > 1)
-     THEN 
-         RAISE EXCEPTION 'Счет не уникален : vbRecordCount = "%", inContainerDescId = "%", inParentId = "%", inObjectId = "%", inJuridicalId_basis = "%", inBusinessId = "%", inObjectCostDescId = "%", inObjectCostId = "%", inDescId_1 = "%", inObjectId_1 = "%", inDescId_2 = "%", inObjectId_2 = "%", inDescId_3 = "%", inObjectId_3 = "%", inDescId_4 = "%", inObjectId_4 = "%", inDescId_5 = "%", inObjectId_5 = "%", inDescId_6 = "%", inObjectId_6 = "%", inDescId_7 = "%", inObjectId_7 = "%"', vbRecordCount, inContainerDescId, inParentId, inObjectId, inJuridicalId_basis, inBusinessId, inObjectCostDescId, inObjectCostId, inDescId_1, inObjectId_1, inDescId_2, inObjectId_2, inDescId_3, inObjectId_3, inDescId_4, inObjectId_4, inDescId_5, inObjectId_5, inDescId_6, inObjectId_6, inDescId_7, inObjectId_7;
-     END IF;
-
-
      -- находим
+     BEGIN
+     	IF inParentId IS NULL THEN
      vbContainerId:= (SELECT Container.Id
                       FROM Container
                            JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
@@ -99,7 +82,24 @@ BEGIN
                         AND Container.DescId = inContainerDescId
                       GROUP BY Container.Id
                       HAVING COUNT(*) = vbRecordCount);
-
+          ELSE            
+          	    vbContainerId:= (SELECT Container.Id
+                      FROM Container
+                           JOIN ContainerLinkObject ON ContainerLinkObject.ContainerId = Container.Id
+                           JOIN _tmpContainer ON _tmpContainer.ObjectId = ContainerLinkObject.ObjectId
+                                             AND _tmpContainer.DescId = ContainerLinkObject.DescId
+                      WHERE Container.ObjectId = inObjectId
+                        AND Container.DescId = inContainerDescId
+                        AND Container.ParentId = inParentId
+                      GROUP BY Container.Id
+                      HAVING COUNT(*) = vbRecordCount);
+     	END IF;
+     EXCEPTION
+        WHEN invalid_row_count_in_limit_clause THEN
+            RAISE EXCEPTION 'Счет не уникален : vbRecordCount = "%", inContainerDescId = "%", inParentId = "%", inObjectId = "%", inJuridicalId_basis = "%", inBusinessId = "%", inObjectCostDescId = "%", inObjectCostId = "%", inDescId_1 = "%", inObjectId_1 = "%", inDescId_2 = "%", inObjectId_2 = "%", inDescId_3 = "%", inObjectId_3 = "%", inDescId_4 = "%", inObjectId_4 = "%", inDescId_5 = "%", inObjectId_5 = "%", inDescId_6 = "%", inObjectId_6 = "%", inDescId_7 = "%", inObjectId_7 = "%"', vbRecordCount, inContainerDescId, inParentId, inObjectId, inJuridicalId_basis, inBusinessId, inObjectCostDescId, inObjectCostId, inDescId_1, inObjectId_1, inDescId_2, inObjectId_2, inDescId_3, inObjectId_3, inDescId_4, inObjectId_4, inDescId_5, inObjectId_5, inDescId_6, inObjectId_6, inDescId_7, inObjectId_7;
+     END;
+          
+     RETURN (vbContainerId);
 
      -- просто тест
      -- drop TABLE _test CREATE TABLE _test(   DescId                INTEGER,    ObjectId Integer, inObjectId Integer, vbContainerId Integer)
@@ -136,7 +136,6 @@ BEGIN
          END IF;  
      END IF;  
 
-
      -- Возвращаем значение
      RETURN (vbContainerId);
 
@@ -151,6 +150,7 @@ ALTER FUNCTION lpInsertFind_Container (Integer, Integer, Integer, Integer, Integ
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.09.13                        *  Чуть ускорил
  02.09.13                                        * add Проверка
  11.07.13                                        * add inObjectCostDescId and inObjectCostId
  11.07.13                                        * add inParentId

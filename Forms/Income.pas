@@ -126,6 +126,21 @@ type
     GuidesFiller: TGuidesFiller;
     actInsertUpdateMovement: TdsdExecStoredProc;
     bbInsertUpdateMovement: TdxBarButton;
+    cxLabel9: TcxLabel;
+    edContract: TcxButtonEdit;
+    cxLabel10: TcxLabel;
+    edPaidKind: TcxButtonEdit;
+    ContractGuides: TdsdGuides;
+    PaidKindGuides: TdsdGuides;
+    cxLabel11: TcxLabel;
+    edCar: TcxButtonEdit;
+    CarGuides: TdsdGuides;
+    cxLabel12: TcxLabel;
+    edDriver: TcxButtonEdit;
+    DriverGuides: TdsdGuides;
+    cxLabel13: TcxLabel;
+    edPacker: TcxButtonEdit;
+    PackerGuides: TdsdGuides;
   private
   public
   end;

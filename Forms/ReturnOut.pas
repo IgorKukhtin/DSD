@@ -8,7 +8,7 @@ uses
   cxLookAndFeels, cxLookAndFeelPainters, cxStyles, cxCustomData, cxFilter,
   cxData, cxDataStorage, cxEdit, Data.DB, cxDBData, dsdDB, cxGridLevel,
   cxClasses, cxGridCustomView, cxGridCustomTableView, cxGridTableView,
-  cxGridDBTableView, cxGrid, Datasnap.DBClient, Vcl.ActnList, dsdAction,
+  cxGridDBTableView, cxGrid, Datasnap.DBClient, Vcl.ActnList, DataModul, dsdAction,
   cxPropertiesStore, dxBar, Vcl.ExtCtrls, cxContainer, cxLabel, cxTextEdit,
   Vcl.ComCtrls, dxCore, cxDateUtils, cxButtonEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, dsdGuides, Vcl.Menus, cxPCdxBarPopupMenu, cxPC, frxClass, frxDBSet,
@@ -23,18 +23,13 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  cxCurrencyEdit, cxCheckBox;
+  cxCurrencyEdit, cxCheckBox, dxBarExtItems;
 
 type
   TReturnOutForm = class(TParentForm)
     dsdFormParams: TdsdFormParams;
     spSelectMovementItem: TdsdStoredProc;
-    dxBarManager: TdxBarManager;
-    dxBarManagerBar: TdxBar;
-    bbRefresh: TdxBarButton;
     cxPropertiesStore: TcxPropertiesStore;
-    ActionList: TActionList;
-    actRefresh: TdsdDataSetRefresh;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     DataPanel: TPanel;
@@ -62,41 +57,15 @@ type
     colAmountSumm: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     spSelectMovementContainerItem: TdsdStoredProc;
-    cxGridEntryDBTableView: TcxGridDBTableView;
-    cxGridEntryLevel: TcxGridLevel;
-    cxGridEntry: TcxGrid;
-    colDebetAccountName: TcxGridDBColumn;
-    colDebetAmount: TcxGridDBColumn;
     EntryCDS: TClientDataSet;
     EntryDS: TDataSource;
-    colKreditAccountName: TcxGridDBColumn;
-    colKreditAmount: TcxGridDBColumn;
-    actUpdateDataSet: TdsdUpdateDataSet;
     spInsertUpdateMovementItem: TdsdStoredProc;
-    actPrint: TdsdPrintAction;
-    bbPrint: TdxBarButton;
     frxDBDataset: TfrxDBDataset;
-    colDebetAccountGroupCode: TcxGridDBColumn;
-    colDebetAccountGroupName: TcxGridDBColumn;
-    colDebetAccountDirectionCode: TcxGridDBColumn;
-    colDebetAccountDirectionName: TcxGridDBColumn;
-    colDebetAccountCode: TcxGridDBColumn;
-    colKreditAccountGroupCode: TcxGridDBColumn;
-    colKreditAccountGroupName: TcxGridDBColumn;
-    colKreditAccountDirectionCode: TcxGridDBColumn;
-    colKreditAccountDirectionName: TcxGridDBColumn;
-    colKreditAccountCode: TcxGridDBColumn;
-    colGoodsGroupName: TcxGridDBColumn;
-    colByObjectCode: TcxGridDBColumn;
-    colByObjectName: TcxGridDBColumn;
-    colGoodsName: TcxGridDBColumn;
     colAmountPartner: TcxGridDBColumn;
     colCountForPrice: TcxGridDBColumn;
     colHeadCount: TcxGridDBColumn;
     colPartionGoods: TcxGridDBColumn;
     colGoodsKindName: TcxGridDBColumn;
-    colGoodsKindName_comlete: TcxGridDBColumn;
-    colAccountOnComplete: TcxGridDBColumn;
     colAssetName: TcxGridDBColumn;
     cxLabel5: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
@@ -105,16 +74,54 @@ type
     edPriceWithVAT: TcxCheckBox;
     edContract: TcxButtonEdit;
     cxLabel9: TcxLabel;
-    dsdGuidesContract: TdsdGuides;
-    dsdGuidesPaidKind: TdsdGuides;
+    ContractGuides: TdsdGuides;
+    PaidKindGuides: TdsdGuides;
     edVATPercent: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
     cxCurrencyEdit2: TcxCurrencyEdit;
     cxLabel8: TcxLabel;
     InsertUpdateMovement: TdsdStoredProc;
     spGet: TdsdStoredProc;
+    dxBarManager: TdxBarManager;
+    dxBarManagerBar: TdxBar;
+    bbRefresh: TdxBarButton;
+    bbPrint: TdxBarButton;
+    bbBooleanAction: TdxBarButton;
+    bbStatic: TdxBarStatic;
+    bbGridToExel: TdxBarButton;
+    bbEntryToGrid: TdxBarButton;
+    bbInsertUpdateMovement: TdxBarButton;
+    ActionList: TActionList;
+    actRefresh: TdsdDataSetRefresh;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    actPrint: TdsdPrintAction;
+    BooleanStoredProcAction: TBooleanStoredProcAction;
     dsdGridToExcel: TdsdGridToExcel;
-    bbGridToExcel: TdxBarButton;
+    dsdEntryToExcel: TdsdGridToExcel;
+    actInsertUpdateMovement: TdsdExecStoredProc;
+    cxGridEntry: TcxGrid;
+    cxGridEntryDBTableView: TcxGridDBTableView;
+    colAccountCode: TcxGridDBColumn;
+    colDebetAccountGroupName: TcxGridDBColumn;
+    colDebetAccountDirectionName: TcxGridDBColumn;
+    colDebetAccountName: TcxGridDBColumn;
+    colKreditAccountGroupName: TcxGridDBColumn;
+    colKreditAccountDirectionName: TcxGridDBColumn;
+    colKreditAccountName: TcxGridDBColumn;
+    colByObjectCode: TcxGridDBColumn;
+    colByObjectName: TcxGridDBColumn;
+    colGoodsGroupName: TcxGridDBColumn;
+    colGoodsCode: TcxGridDBColumn;
+    colGoodsName: TcxGridDBColumn;
+    colGoodsKindName_comlete: TcxGridDBColumn;
+    colAccountOnComplete: TcxGridDBColumn;
+    colDebetAmount: TcxGridDBColumn;
+    colKreditAmount: TcxGridDBColumn;
+    colPrice_comlete: TcxGridDBColumn;
+    colInfoMoneyName: TcxGridDBColumn;
+    colInfoMoneyName_Detail: TcxGridDBColumn;
+    colObjectCostId: TcxGridDBColumn;
+    cxGridEntryLevel: TcxGridLevel;
   private
   public
   end;

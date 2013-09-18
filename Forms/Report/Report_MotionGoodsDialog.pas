@@ -8,7 +8,7 @@ uses
   cxLookAndFeelPainters, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxControls,
   cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod,
   dsdGuides, cxDropDownEdit, cxCalendar, cxTextEdit, cxMaskEdit, cxButtonEdit,
-  cxPropertiesStore, dsdAddOn, dsdDB, JclDebug, cxLabel;
+  cxPropertiesStore, dsdAddOn, dsdDB, cxLabel;
 
 type
   TReport_MotionGoodsDialogForm = class(TParentForm)

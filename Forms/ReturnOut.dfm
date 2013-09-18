@@ -4,8 +4,8 @@ inherited ReturnOutForm: TReturnOutForm
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1044
-  ExplicitHeight = 434
+  ExplicitWidth = 1036
+  ExplicitHeight = 423
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -57,7 +57,7 @@ inherited ReturnOutForm: TReturnOutForm
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 5
+      TabOrder = 9
       Width = 145
     end
     object cxLabel3: TcxLabel
@@ -70,19 +70,90 @@ inherited ReturnOutForm: TReturnOutForm
       Top = 4
       Caption = #1050#1086#1084#1091
     end
+    object cxLabel5: TcxLabel
+      Left = 8
+      Top = 54
+      Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+    end
+    object edInvNumberPartner: TcxTextEdit
+      Left = 8
+      Top = 77
+      TabOrder = 3
+      Width = 121
+    end
+    object edPaidKind: TcxButtonEdit
+      Left = 724
+      Top = 27
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 5
+      Width = 121
+    end
+    object cxLabel6: TcxLabel
+      Left = 724
+      Top = 4
+      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+    end
+    object edPriceWithVAT: TcxCheckBox
+      Left = 288
+      Top = 77
+      Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+      TabOrder = 6
+      Width = 137
+    end
+    object edContract: TcxButtonEdit
+      Left = 600
+      Top = 27
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 8
+      Width = 113
+    end
+    object cxLabel9: TcxLabel
+      Left = 600
+      Top = 4
+      Caption = #1044#1086#1075#1086#1074#1086#1088
+    end
+    object edVATPercent: TcxCurrencyEdit
+      Left = 440
+      Top = 77
+      TabOrder = 10
+      Width = 65
+    end
+    object cxLabel7: TcxLabel
+      Left = 440
+      Top = 54
+      Caption = '% '#1053#1044#1057
+    end
+    object cxCurrencyEdit2: TcxCurrencyEdit
+      Left = 520
+      Top = 77
+      TabOrder = 15
+      Width = 129
+    end
+    object cxLabel8: TcxLabel
+      Left = 520
+      Top = 54
+      Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
+    end
   end
   object cxPageControl1: TcxPageControl
     Left = 0
-    Top = 134
+    Top = 132
     Width = 1028
-    Height = 262
+    Height = 264
     Align = alClient
-    TabOrder = 2
+    TabOrder = 1
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 258
-    ClientRectLeft = 4
-    ClientRectRight = 1024
+    ClientRectBottom = 264
+    ClientRectRight = 1028
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -90,8 +161,8 @@ inherited ReturnOutForm: TReturnOutForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1020
-        Height = 234
+        Width = 1028
+        Height = 240
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -151,66 +222,76 @@ inherited ReturnOutForm: TReturnOutForm
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsView.ColumnAutoWidth = True
+          OptionsView.Footer = True
+          OptionsView.HeaderAutoHeight = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
-            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 58
           end
           object colName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsName'
-            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 200
           end
           object colGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
-            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 100
           end
           object colPartionGoods: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103
             DataBinding.FieldName = 'PartionGoods'
-            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 120
           end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
-            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object colAmountPartner: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1082#1086#1085#1090#1088'.'
             DataBinding.FieldName = 'AmountPartner'
-            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object colPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
-            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object colCountForPrice: TcxGridDBColumn
             Caption = #1050#1086#1083' '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
-            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
           end
           object colAmountSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
-            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
             Width = 91
           end
           object colHeadCount: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
-            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
           end
           object colAssetName: TcxGridDBColumn
             Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072
+            HeaderAlignmentVert = vaCenter
           end
         end
         object cxGridLevel: TcxGridLevel
@@ -224,10 +305,11 @@ inherited ReturnOutForm: TReturnOutForm
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 1020
-        Height = 234
+        Width = 1028
+        Height = 240
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 248
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -244,138 +326,163 @@ inherited ReturnOutForm: TReturnOutForm
               Column = colDebetAmount
             end>
           DataController.Summary.SummaryGroups = <>
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
+          OptionsData.Inserting = False
           OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
-          object colDebetAccountGroupCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1044' '#1043#1088#1091#1087#1087#1072' '#1082#1086#1076
-            DataBinding.FieldName = 'DebetAccountGroupCode'
-            Visible = False
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object colAccountCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'AccountCode'
             HeaderAlignmentHorz = taCenter
-            Width = 40
+            HeaderAlignmentVert = vaCenter
+            Width = 73
           end
           object colDebetAccountGroupName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1044' '#1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'DebetAccountGroupName'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 90
-          end
-          object colDebetAccountDirectionCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1044' '#1053#1072#1087#1088#1072#1074#1083' '#1082#1086#1076
-            DataBinding.FieldName = 'DebetAccountDirectionCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            Width = 40
           end
           object colDebetAccountDirectionName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1044' '#1053#1072#1087#1088#1072#1074#1083
             DataBinding.FieldName = 'DebetAccountDirectionName'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object colDebetAccountCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1044' '#1082#1086#1076
-            DataBinding.FieldName = 'DebetAccountCode'
-            HeaderAlignmentHorz = taCenter
-            Width = 40
-          end
           object colDebetAccountName: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1044
+            Caption = #1057#1095#1077#1090' '#1044#1077#1073#1077#1090
             DataBinding.FieldName = 'DebetAccountName'
             HeaderAlignmentHorz = taCenter
-            Width = 120
-          end
-          object colKreditAccountGroupCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1050' '#1043#1088#1091#1087#1087#1072' '#1082#1086#1076
-            DataBinding.FieldName = 'KreditAccountGroupCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            Width = 40
+            HeaderAlignmentVert = vaCenter
+            Width = 90
           end
           object colKreditAccountGroupName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1050' '#1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'KreditAccountGroupName'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 80
-          end
-          object colKreditAccountDirectionCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1050' '#1053#1072#1087#1088#1072#1074#1083' '#1082#1086#1076
-            DataBinding.FieldName = 'KreditAccountDirectionCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            Width = 40
           end
           object colKreditAccountDirectionName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1050' '#1053#1072#1087#1088#1072#1074#1083
             DataBinding.FieldName = 'KreditAccountDirectionName'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colKreditAccountCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1050' '#1082#1086#1076
-            DataBinding.FieldName = 'KreditAccountCode'
-            HeaderAlignmentHorz = taCenter
-            Width = 40
-          end
           object colKreditAccountName: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1050
+            Caption = #1057#1095#1077#1090' '#1050#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'KreditAccountName'
             HeaderAlignmentHorz = taCenter
-            Width = 120
+            HeaderAlignmentVert = vaCenter
+            Width = 88
           end
           object colByObjectCode: TcxGridDBColumn
             Caption = #1054#1073'.'#1082#1086#1076
             DataBinding.FieldName = 'ByObjectCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 40
           end
           object colByObjectName: TcxGridDBColumn
             Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'ByObjectName'
             HeaderAlignmentHorz = taCenter
-            Width = 80
+            HeaderAlignmentVert = vaCenter
+            Width = 98
           end
           object colGoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsGroupName'
             Visible = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object colGoodsCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1090#1086#1074'.'
+            DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentVert = vaCenter
+            Width = 50
           end
           object colGoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object colGoodsKindName_comlete: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 60
           end
           object colAccountOnComplete: TcxGridDBColumn
             Caption = '***'
             DataBinding.FieldName = 'AccountOnComplete'
             HeaderAlignmentHorz = taCenter
-            Width = 25
+            HeaderAlignmentVert = vaCenter
+            Width = 32
           end
           object colDebetAmount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1076#1077#1073#1077#1090
             DataBinding.FieldName = 'DebetAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
-            Width = 70
+            HeaderAlignmentVert = vaCenter
+            Width = 66
           end
           object colKreditAmount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1082#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'KreditAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; ;'
+            Properties.Nullable = False
             HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 75
+          end
+          object colPrice_comlete: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;,0.00##; ;'
+            HeaderAlignmentVert = vaCenter
+            Width = 58
+          end
+          object colInfoMoneyName: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName'
+            HeaderAlignmentVert = vaCenter
+            Width = 93
+          end
+          object colInfoMoneyName_Detail: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1100#1103' '#1076#1077#1090#1072#1083#1100#1085#1086
+            DataBinding.FieldName = 'InfoMoneyName_Detail'
+            HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object colObjectCostId: TcxGridDBColumn
+            DataBinding.FieldName = 'ObjectCostId'
+            HeaderAlignmentVert = vaCenter
+            Width = 81
           end
         end
         object cxGridEntryLevel: TcxGridLevel
@@ -383,78 +490,6 @@ inherited ReturnOutForm: TReturnOutForm
         end
       end
     end
-  end
-  object cxLabel5: TcxLabel
-    Left = 899
-    Top = 3
-    Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-  end
-  object edInvNumberPartner: TcxTextEdit
-    Left = 899
-    Top = 26
-    TabOrder = 3
-    Width = 121
-  end
-  object edPaidKind: TcxButtonEdit
-    Left = 752
-    Top = 27
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    TabOrder = 5
-    Width = 121
-  end
-  object cxLabel6: TcxLabel
-    Left = 752
-    Top = 4
-    Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-  end
-  object edPriceWithVAT: TcxCheckBox
-    Left = 551
-    Top = 85
-    Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
-    TabOrder = 6
-    Width = 137
-  end
-  object edContract: TcxButtonEdit
-    Left = 616
-    Top = 27
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    TabOrder = 8
-    Width = 113
-  end
-  object cxLabel9: TcxLabel
-    Left = 616
-    Top = 4
-    Caption = #1044#1086#1075#1086#1074#1086#1088
-  end
-  object edVATPercent: TcxCurrencyEdit
-    Left = 335
-    Top = 78
-    TabOrder = 10
-    Width = 65
-  end
-  object cxLabel7: TcxLabel
-    Left = 335
-    Top = 55
-    Caption = '% '#1053#1044#1057
-  end
-  object cxCurrencyEdit2: TcxCurrencyEdit
-    Left = 416
-    Top = 79
-    TabOrder = 15
-    Width = 129
-  end
-  object cxLabel8: TcxLabel
-    Left = 416
-    Top = 56
-    Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -464,8 +499,8 @@ inherited ReturnOutForm: TReturnOutForm
         ParamType = ptInputOutput
         Value = '0'
       end>
-    Left = 176
-    Top = 256
+    Left = 80
+    Top = 152
   end
   object spSelectMovementItem: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_ReturnOut'
@@ -492,72 +527,6 @@ inherited ReturnOutForm: TReturnOutForm
     Left = 88
     Top = 280
   end
-  object dxBarManager: TdxBarManager
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
-    Font.Style = []
-    Categories.Strings = (
-      'Default')
-    Categories.ItemsVisibles = (
-      2)
-    Categories.Visibles = (
-      True)
-    ImageOptions.Images = dmMain.ImageList
-    PopupMenuLinks = <>
-    ShowShortCutInHint = True
-    UseSystemFont = True
-    Left = 136
-    Top = 224
-    DockControlHeights = (
-      0
-      0
-      28
-      0)
-    object dxBarManagerBar: TdxBar
-      Caption = 'Custom'
-      CaptionButtons = <>
-      DockedDockingStyle = dsTop
-      DockedLeft = 0
-      DockedTop = 0
-      DockingStyle = dsTop
-      FloatLeft = 671
-      FloatTop = 8
-      FloatClientWidth = 51
-      FloatClientHeight = 71
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGridToExcel'
-        end>
-      OneOnRow = True
-      Row = 0
-      UseOwnFont = False
-      Visible = True
-      WholeRow = False
-    end
-    object bbRefresh: TdxBarButton
-      Action = actRefresh
-      Category = 0
-    end
-    object bbPrint: TdxBarButton
-      Action = actPrint
-      Category = 0
-    end
-    object bbGridToExcel: TdxBarButton
-      Action = dsdGridToExcel
-      Category = 0
-    end
-  end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
@@ -570,14 +539,6 @@ inherited ReturnOutForm: TReturnOutForm
       end
       item
         Component = colCode
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
-      item
-        Component = colDebetAccountName
         Properties.Strings = (
           'SortIndex'
           'SortOrder'
@@ -617,56 +578,8 @@ inherited ReturnOutForm: TReturnOutForm
           'Width')
       end>
     StorageName = 'cxPropertiesStore'
-    Left = 280
-    Top = 304
-  end
-  object ActionList: TActionList
-    Images = dmMain.ImageList
-    Left = 376
-    Top = 216
-    object actRefresh: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      StoredProcList = <
-        item
-        end
-        item
-          StoredProc = spSelectMovementItem
-        end
-        item
-          StoredProc = spSelectMovementContainerItem
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
-      ShortCut = 116
-    end
-    object actUpdateDataSet: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      StoredProc = spInsertUpdateMovementItem
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdateMovementItem
-        end>
-      Caption = 'actUpdateDataSet'
-      DataSource = DataSource
-    end
-    object actPrint: TdsdPrintAction
-      Category = 'DSDLib'
-      StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
-      ImageIndex = 3
-      ShortCut = 16464
-      Params = <>
-      ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-    end
-    object dsdGridToExcel: TdsdGridToExcel
-      Category = 'DSDLib'
-      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      ImageIndex = 6
-      ShortCut = 16472
-    end
+    Left = 112
+    Top = 152
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -676,8 +589,8 @@ inherited ReturnOutForm: TReturnOutForm
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 104
-    Top = 104
+    Left = 64
+    Top = 208
   end
   object dsdGuidesFrom: TdsdGuides
     LookupControl = edFrom
@@ -700,7 +613,10 @@ inherited ReturnOutForm: TReturnOutForm
     Left = 384
     Top = 312
     object N1: TMenuItem
-      Action = actRefresh
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
     end
   end
   object spSelectMovementContainerItem: TdsdStoredProc
@@ -815,21 +731,21 @@ inherited ReturnOutForm: TReturnOutForm
     Left = 232
     Top = 216
   end
-  object dsdGuidesContract: TdsdGuides
+  object ContractGuides: TdsdGuides
     LookupControl = edContract
     FormName = 'TContractForm'
     PositionDataSet = 'ClientDataSet'
     Params = <>
     Left = 656
-    Top = 16
+    Top = 40
   end
-  object dsdGuidesPaidKind: TdsdGuides
+  object PaidKindGuides: TdsdGuides
     LookupControl = edPaidKind
     FormName = 'TPaidKindForm'
     PositionDataSet = 'ClientDataSet'
     Params = <>
-    Left = 800
-    Top = 16
+    Left = 736
+    Top = 48
   end
   object InsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_ReturnOut'
@@ -910,8 +826,8 @@ inherited ReturnOutForm: TReturnOutForm
         ParamType = ptInput
         Value = Null
       end>
-    Left = 848
-    Top = 80
+    Left = 248
+    Top = 112
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ReturnOut'
@@ -1041,5 +957,226 @@ inherited ReturnOutForm: TReturnOutForm
       end>
     Left = 152
     Top = 128
+  end
+  object dxBarManager: TdxBarManager
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    Categories.Strings = (
+      'Default')
+    Categories.ItemsVisibles = (
+      2)
+    Categories.Visibles = (
+      True)
+    ImageOptions.Images = dmMain.ImageList
+    PopupMenuLinks = <>
+    ShowShortCutInHint = True
+    UseSystemFont = True
+    Left = 16
+    Top = 144
+    DockControlHeights = (
+      0
+      0
+      26
+      0)
+    object dxBarManagerBar: TdxBar
+      AllowClose = False
+      Caption = 'Custom'
+      CaptionButtons = <>
+      DockedDockingStyle = dsTop
+      DockedLeft = 0
+      DockedTop = 0
+      DockingStyle = dsTop
+      FloatLeft = 671
+      FloatTop = 8
+      FloatClientWidth = 51
+      FloatClientHeight = 71
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbBooleanAction'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdateMovement'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEntryToGrid'
+        end>
+      OneOnRow = True
+      Row = 0
+      UseOwnFont = False
+      Visible = True
+      WholeRow = False
+    end
+    object bbRefresh: TdxBarButton
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Category = 0
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Visible = ivAlways
+      ImageIndex = 4
+      ShortCut = 116
+    end
+    object bbPrint: TdxBarButton
+      Caption = #1055#1077#1095#1072#1090#1100
+      Category = 0
+      Hint = #1055#1077#1095#1072#1090#1100
+      Visible = ivAlways
+      ImageIndex = 3
+      ShortCut = 16464
+    end
+    object bbBooleanAction: TdxBarButton
+      Action = BooleanStoredProcAction
+      Category = 0
+    end
+    object bbStatic: TdxBarStatic
+      Caption = '     '
+      Category = 0
+      Visible = ivAlways
+    end
+    object bbGridToExel: TdxBarButton
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Category = 0
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Visible = ivAlways
+      ImageIndex = 6
+      ShortCut = 16472
+    end
+    object bbEntryToGrid: TdxBarButton
+      Action = dsdEntryToExcel
+      Category = 0
+    end
+    object bbInsertUpdateMovement: TdxBarButton
+      Action = actInsertUpdateMovement
+      Category = 0
+    end
+  end
+  object ActionList: TActionList
+    Images = dmMain.ImageList
+    Left = 48
+    Top = 144
+    object actRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      StoredProc = spGet
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spSelectMovementItem
+        end
+        item
+          StoredProc = spSelectMovementContainerItem
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+    end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      StoredProc = spInsertUpdateMovementItem
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovementItem
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
+    end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+      ShortCut = 16464
+      Params = <
+        item
+          Name = 'InvNumber'
+          Component = edInvNumber
+          DataType = ftString
+          ParamType = ptInput
+          Value = ''
+        end
+        item
+          Name = 'From'
+          Component = dsdGuidesFrom
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+          Value = ''
+        end
+        item
+          Name = 'OperDate'
+          Component = edOperDate
+          DataType = ftDateTime
+          ParamType = ptInput
+          Value = 0d
+        end>
+      ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+    end
+    object BooleanStoredProcAction: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      StoredProc = spSelectMovementItem
+      StoredProcList = <
+        item
+          StoredProc = spSelectMovementItem
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 26
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 25
+      ImageIndexFalse = 26
+    end
+    object dsdGridToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      TabSheet = cxTabSheet1
+      Grid = cxGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
+    end
+    object dsdEntryToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      TabSheet = cxTabSheet2
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
+    end
+    object actInsertUpdateMovement: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 14
+      ShortCut = 113
+    end
   end
 end

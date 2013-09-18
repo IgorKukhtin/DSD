@@ -4,8 +4,6 @@ inherited IncomeForm: TIncomeForm
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitLeft = -141
-  ExplicitTop = -42
   ExplicitWidth = 1036
   ExplicitHeight = 423
   PixelsPerInch = 96
@@ -36,7 +34,7 @@ inherited IncomeForm: TIncomeForm
       Top = 27
       Properties.SaveTime = False
       Properties.ShowTime = False
-      TabOrder = 2
+      TabOrder = 1
       Width = 121
     end
     object cxLabel2: TcxLabel
@@ -52,7 +50,7 @@ inherited IncomeForm: TIncomeForm
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 4
+      TabOrder = 3
       Width = 137
     end
     object edTo: TcxButtonEdit
@@ -63,7 +61,7 @@ inherited IncomeForm: TIncomeForm
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 5
+      TabOrder = 2
       Width = 145
     end
     object cxLabel3: TcxLabel
@@ -77,41 +75,145 @@ inherited IncomeForm: TIncomeForm
       Caption = #1050#1086#1084#1091
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 288
+      Left = 377
       Top = 71
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
-      TabOrder = 8
+      TabOrder = 9
       Width = 137
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 431
-      Top = 70
+      Left = 520
+      Top = 71
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
-      TabOrder = 9
+      TabOrder = 10
       Width = 65
     end
+    object cxLabel5: TcxLabel
+      Left = 8
+      Top = 49
+      Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+    end
+    object cxLabel6: TcxLabel
+      Left = 155
+      Top = 50
+      Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+    end
+    object edOperDatePartner: TcxDateEdit
+      Left = 155
+      Top = 71
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 7
+      Width = 121
+    end
+    object edInvNumberPartner: TcxTextEdit
+      Left = 8
+      Top = 71
+      TabOrder = 6
+      Width = 121
+    end
     object edChangePercent: TcxCurrencyEdit
-      Left = 512
-      Top = 70
+      Left = 288
+      Top = 71
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 3
       Properties.DisplayFormat = ',0.###'
-      TabOrder = 10
-      Width = 144
+      TabOrder = 8
+      Width = 73
     end
     object cxLabel7: TcxLabel
-      Left = 431
-      Top = 48
+      Left = 520
+      Top = 50
       Caption = '% '#1053#1044#1057
     end
     object cxLabel8: TcxLabel
-      Left = 512
-      Top = 49
+      Left = 288
+      Top = 50
       Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
+    end
+    object cxLabel9: TcxLabel
+      Left = 600
+      Top = 4
+      Caption = #1044#1086#1075#1086#1074#1086#1088
+    end
+    object edContract: TcxButtonEdit
+      Left = 600
+      Top = 27
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 4
+      Width = 113
+    end
+    object cxLabel10: TcxLabel
+      Left = 724
+      Top = 4
+      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+    end
+    object edPaidKind: TcxButtonEdit
+      Left = 724
+      Top = 27
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 5
+      Width = 121
+    end
+    object cxLabel11: TcxLabel
+      Left = 600
+      Top = 50
+      Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
+    end
+    object edCar: TcxButtonEdit
+      Left = 600
+      Top = 71
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 11
+      Width = 113
+    end
+    object cxLabel12: TcxLabel
+      Left = 724
+      Top = 50
+      Caption = #1042#1086#1076#1080#1090#1077#1083#1100
+    end
+    object edDriver: TcxButtonEdit
+      Left = 724
+      Top = 71
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 12
+      Width = 113
+    end
+    object cxLabel13: TcxLabel
+      Left = 847
+      Top = 50
+      Caption = #1047#1072#1075#1086#1090#1086#1074#1080#1090#1077#1083#1100
+    end
+    object edPacker: TcxButtonEdit
+      Left = 847
+      Top = 71
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 13
+      Width = 113
     end
   end
   object cxPageControl: TcxPageControl
@@ -207,7 +309,6 @@ inherited IncomeForm: TIncomeForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = False
-          OptionsSelection.InvertSelect = False
           OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
           OptionsView.HeaderAutoHeight = True
@@ -334,6 +435,9 @@ inherited IncomeForm: TIncomeForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -363,7 +467,6 @@ inherited IncomeForm: TIncomeForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsData.Inserting = False
-          OptionsSelection.InvertSelect = False
           OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
           OptionsView.HeaderAutoHeight = True
@@ -523,30 +626,6 @@ inherited IncomeForm: TIncomeForm
       end
     end
   end
-  object cxLabel5: TcxLabel
-    Left = 8
-    Top = 49
-    Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-  end
-  object cxLabel6: TcxLabel
-    Left = 155
-    Top = 48
-    Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-  end
-  object edOperDatePartner: TcxDateEdit
-    Left = 155
-    Top = 71
-    Properties.SaveTime = False
-    Properties.ShowTime = False
-    TabOrder = 4
-    Width = 121
-  end
-  object edInvNumberPartner: TcxTextEdit
-    Left = 8
-    Top = 71
-    TabOrder = 9
-    Width = 121
-  end
   object FormParams: TdsdFormParams
     Params = <
       item
@@ -581,8 +660,8 @@ inherited IncomeForm: TIncomeForm
         ParamType = ptInput
         Value = False
       end>
-    Left = 48
-    Top = 256
+    Left = 64
+    Top = 272
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -894,19 +973,19 @@ inherited IncomeForm: TIncomeForm
         ParamType = ptInput
         Value = '0'
       end>
-    Left = 704
-    Top = 128
+    Left = 536
+    Top = 256
   end
   object EntryCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 560
-    Top = 128
+    Left = 576
+    Top = 240
   end
   object EntryDS: TDataSource
     DataSet = EntryCDS
     Left = 608
-    Top = 160
+    Top = 240
   end
   object spInsertUpdateMovementItem: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Income'
@@ -1011,8 +1090,8 @@ inherited IncomeForm: TIncomeForm
     CloseDataSource = False
     DataSet = ClientDataSet
     BCDToCurrency = False
-    Left = 320
-    Top = 112
+    Left = 360
+    Top = 88
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     View = cxGridDBTableView
@@ -1023,8 +1102,8 @@ inherited IncomeForm: TIncomeForm
       item
       end>
     SortImages = dmMain.SortImageList
-    Left = 248
-    Top = 232
+    Left = 96
+    Top = 248
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 232
@@ -1035,8 +1114,8 @@ inherited IncomeForm: TIncomeForm
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
-    Left = 368
-    Top = 240
+    Left = 480
+    Top = 256
   end
   object spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Income'
@@ -1118,36 +1197,44 @@ inherited IncomeForm: TIncomeForm
       end
       item
         Name = 'inPaidKindId'
+        Component = PaidKindGuides
         DataType = ftInteger
         ParamType = ptInput
-        Value = Null
+        Value = ''
       end
       item
         Name = 'inContractId'
+        Component = ContractGuides
         DataType = ftInteger
         ParamType = ptInput
-        Value = Null
+        Value = ''
       end
       item
         Name = 'inCarId'
+        Component = CarGuides
+        ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptInput
-        Value = Null
+        Value = ''
       end
       item
         Name = 'inPersonalDriverId'
+        Component = DriverGuides
+        ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptInput
-        Value = Null
+        Value = ''
       end
       item
         Name = 'inPersonalPackerId'
+        Component = PackerGuides
+        ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptInput
-        Value = Null
+        Value = ''
       end>
-    Left = 696
-    Top = 72
+    Left = 728
+    Top = 112
   end
   object HeaderSaver: THeaderSaver
     IdParam.Component = FormParams
@@ -1183,6 +1270,21 @@ inherited IncomeForm: TIncomeForm
       end
       item
         Control = edChangePercent
+      end
+      item
+        Control = edContract
+      end
+      item
+        Control = edPaidKind
+      end
+      item
+        Control = edCar
+      end
+      item
+        Control = edDriver
+      end
+      item
+        Control = edPacker
       end>
     Left = 544
     Top = 80
@@ -1288,17 +1390,97 @@ inherited IncomeForm: TIncomeForm
         DataType = ftFloat
         ParamType = ptOutput
         Value = 0.000000000000000000
+      end
+      item
+        Name = 'ContractId'
+        Component = ContractGuides
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'ContarctName'
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'PaidKindId'
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'PaidKindName'
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'CarId'
+        Component = CarGuides
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'CarName'
+        Component = CarGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'PersonalDriverId'
+        Component = DriverGuides
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'PersonalDriverName'
+        Component = DriverGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'PersonalPackerId'
+        Component = PackerGuides
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'PersonalPackerName'
+        Component = PackerGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptOutput
+        Value = ''
       end>
     Left = 136
-    Top = 72
+    Top = 64
   end
   object RefreshAddOn: TRefreshAddOn
     FormName = 'IncomeJournalForm'
     DataSet = 'ClientDataSet'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
-    Left = 680
-    Top = 8
+    Left = 584
+    Top = 88
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Component = FormParams
@@ -1319,5 +1501,124 @@ inherited IncomeForm: TIncomeForm
       end>
     Left = 248
     Top = 96
+  end
+  object ContractGuides: TdsdGuides
+    LookupControl = edContract
+    FormName = 'TContractForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Component = ContractGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'TextValue'
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end>
+    Left = 664
+    Top = 8
+  end
+  object PaidKindGuides: TdsdGuides
+    LookupControl = edPaidKind
+    FormName = 'TPaidKindForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'TextValue'
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end>
+    Left = 792
+  end
+  object CarGuides: TdsdGuides
+    LookupControl = edCar
+    FormName = 'TCarForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Component = CarGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'TextValue'
+        Component = CarGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end>
+    Left = 648
+    Top = 96
+  end
+  object DriverGuides: TdsdGuides
+    LookupControl = edDriver
+    FormName = 'TPersonalForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Component = DriverGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'TextValue'
+        Component = DriverGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end>
+    Left = 736
+    Top = 72
+  end
+  object PackerGuides: TdsdGuides
+    LookupControl = edPacker
+    FormName = 'TPersonalForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Component = PackerGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'TextValue'
+        Component = PackerGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end>
+    Left = 848
+    Top = 104
   end
 end
