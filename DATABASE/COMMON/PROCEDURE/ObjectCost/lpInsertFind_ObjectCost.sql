@@ -30,6 +30,18 @@ $BODY$
   DECLARE vbObjectCostId Integer;
 BEGIN
 
+     inObjectCostDescId := COALESCE (inObjectCostDescId, 0);
+     inObjectId_1       := COALESCE (inObjectId_1, 0);
+     inObjectId_2       := COALESCE (inObjectId_2, 0);
+     inObjectId_3       := COALESCE (inObjectId_3, 0);
+     inObjectId_4       := COALESCE (inObjectId_4, 0);
+     inObjectId_5       := COALESCE (inObjectId_5, 0);
+     inObjectId_6       := COALESCE (inObjectId_6, 0);
+     inObjectId_7       := COALESCE (inObjectId_7, 0);
+     inObjectId_8       := COALESCE (inObjectId_8, 0);
+     inObjectId_9       := COALESCE (inObjectId_9, 0);
+     inObjectId_10      := COALESCE (inObjectId_10, 0);
+
      BEGIN
 
      -- находим
@@ -365,7 +377,7 @@ ALTER FUNCTION lpInsertFind_ObjectCost (Integer, Integer, Integer, Integer, Inte
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 18.07.13                                        * optimize
+ 19.09.13                                        * optimize
  10.07.13                                        *
 */
 

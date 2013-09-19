@@ -675,12 +675,12 @@ BEGIN
                                                                                                       , inObjectCostId      := NULL
                                                                                                       , inDescId_1          := CASE WHEN vbPersonalId_From <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Juridical() END
                                                                                                       , inObjectId_1        := CASE WHEN vbPersonalId_From <> 0 THEN vbPersonalId_From ELSE vbJuridicalId_From END
-                                                                                                      , inDescId_2          := CASE WHEN vbPersonalId_From <> 0 THEN NULL ELSE zc_ContainerLinkObject_PaidKind() END
-                                                                                                      , inObjectId_2        := vbPaidKindId
+                                                                                                      , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
+                                                                                                      , inObjectId_2        := _tmpItem_SummPartner.InfoMoneyId
                                                                                                       , inDescId_3          := CASE WHEN vbPersonalId_From <> 0 THEN NULL ELSE zc_ContainerLinkObject_Contract() END
                                                                                                       , inObjectId_3        := vbContractId
-                                                                                                      , inDescId_4          := zc_ContainerLinkObject_InfoMoney()
-                                                                                                      , inObjectId_4        := _tmpItem_SummPartner.InfoMoneyId
+                                                                                                      , inDescId_4          := CASE WHEN vbPersonalId_From <> 0 THEN NULL ELSE zc_ContainerLinkObject_PaidKind() END
+                                                                                                      , inObjectId_4        := vbPaidKindId
                                                                                                        )
                                                                    END;
 

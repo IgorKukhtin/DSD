@@ -20,7 +20,8 @@ CREATE TABLE ObjectCostLink(
 
 /*                                  Индексы                                      */
 
-CREATE INDEX idx_ObjectCostLink_ObjectId_DescId  ON ObjectCostLink(ObjectId, DescId);
+CREATE INDEX idx_ObjectCostLink_ObjectId_DescId_ObjectCostDescId  ON ObjectCostLink (ObjectId, DescId, ObjectCostDescId);
+CREATE INDEX idx_ObjectCostLink_ObjectCostDescId_ObjectId_DescId  ON ObjectCostLink (ObjectCostDescId, ObjectId, DescId);
 
 /*
  ПРИМЕЧАНИЯ:
@@ -28,6 +29,7 @@ CREATE INDEX idx_ObjectCostLink_ObjectId_DescId  ON ObjectCostLink(ObjectId, Des
  ДАТА         АВТОР
  ----------------
                  Климентьев К.И.   Кухтин И.В.
+19.09.02              * chage index
 14.07.13              * rem fk_ObjectCostLink_ObjectId
 11.07.13                               *       
 */
