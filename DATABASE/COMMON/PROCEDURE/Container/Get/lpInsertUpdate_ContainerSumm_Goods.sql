@@ -38,29 +38,29 @@ BEGIN
                                                                           -- <элемент с/с>: 1.)Главное Юр лицо 2.)Бизнес 3)Филиал 4)!Подразделение! 5)Товар 6)!Партии товара! 7)Статьи назначения 8)Статьи назначения(детализация с/с)
                                                                           -- <элемент с/с>: 1.)Главное Юр лицо 2.)Бизнес 3)Филиал 4)Сотрудник (МО) 5)Товар 6)!Партии товара! 7)Статьи назначения 8)Статьи назначения(детализация с/с)
                                                  , inObjectCostId      := lpInsertFind_ObjectCost (inObjectCostDescId:= zc_ObjectCost_Basis()
-                                                                                                 , inDescId_1   := zc_ObjectCostLink_JuridicalBasis()
-                                                                                                 , inObjectId_1 := inJuridicalId_basis
-                                                                                                 , inDescId_2   := zc_ObjectCostLink_Business()
-                                                                                                 , inObjectId_2 := inBusinessId
-                                                                                                 , inDescId_3   := zc_ObjectCostLink_Branch()
-                                                                                                 , inObjectId_3 := inBranchId
-                                                                                                 , inDescId_4   := CASE WHEN inPersonalId <> 0 THEN zc_ObjectCostLink_Personal() ELSE zc_ObjectCostLink_Unit() END
-                                                                                                 , inObjectId_4 := CASE WHEN inPersonalId <> 0 AND inOperDate >= zc_DateStart_ObjectCostOnUnit() THEN inPersonalId WHEN inOperDate >= zc_DateStart_ObjectCostOnUnit() THEN inUnitId ELSE NULL END
-                                                                                                 , inDescId_5   := zc_ObjectCostLink_Goods()
-                                                                                                 , inObjectId_5 := inGoodsId
-                                                                                                 , inDescId_6   := zc_ObjectCostLink_PartionGoods()
-                                                                                                 , inObjectId_6 := CASE WHEN inIsPartionSumm THEN inPartionGoodsId ELSE NULL END
-                                                                                                 , inDescId_7   := zc_ObjectCostLink_InfoMoney()
-                                                                                                 , inObjectId_7 := inInfoMoneyId
-                                                                                                 , inDescId_8   := zc_ObjectCostLink_InfoMoneyDetail()
-                                                                                                 , inObjectId_8 := inInfoMoneyId_Detail
+                                                                                                 , inDescId_1   := zc_ObjectCostLink_Goods()
+                                                                                                 , inObjectId_1 := inGoodsId
+                                                                                                 , inDescId_2   := zc_ObjectCostLink_PartionGoods()
+                                                                                                 , inObjectId_2 := CASE WHEN inIsPartionSumm THEN inPartionGoodsId ELSE 0 END
+                                                                                                 , inDescId_3   := CASE WHEN inPersonalId <> 0 THEN zc_ObjectCostLink_Personal() ELSE zc_ObjectCostLink_Unit() END
+                                                                                                 , inObjectId_3 := CASE WHEN inPersonalId <> 0 AND inOperDate >= zc_DateStart_ObjectCostOnUnit() THEN inPersonalId WHEN inOperDate >= zc_DateStart_ObjectCostOnUnit() THEN inUnitId ELSE 0 END
+                                                                                                 , inDescId_4   := zc_ObjectCostLink_InfoMoney()
+                                                                                                 , inObjectId_4 := inInfoMoneyId
+                                                                                                 , inDescId_5   := zc_ObjectCostLink_InfoMoneyDetail()
+                                                                                                 , inObjectId_5 := inInfoMoneyId_Detail
+                                                                                                 , inDescId_6   := zc_ObjectCostLink_Branch()
+                                                                                                 , inObjectId_6 := inBranchId
+                                                                                                 , inDescId_7   := zc_ObjectCostLink_Business()
+                                                                                                 , inObjectId_7 := inBusinessId
+                                                                                                 , inDescId_8   := zc_ObjectCostLink_JuridicalBasis()
+                                                                                                 , inObjectId_8 := inJuridicalId_basis
                                                                                                   )
                                                  , inDescId_1   := CASE WHEN inPersonalId <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Unit() END
                                                  , inObjectId_1 := CASE WHEN inPersonalId <> 0 THEN inPersonalId ELSE inUnitId END
                                                  , inDescId_2   := zc_ContainerLinkObject_Goods()
                                                  , inObjectId_2 := inGoodsId
                                                  , inDescId_3   := zc_ContainerLinkObject_PartionGoods()
-                                                 , inObjectId_3 := CASE WHEN inIsPartionSumm THEN inPartionGoodsId ELSE NULL END
+                                                 , inObjectId_3 := CASE WHEN inIsPartionSumm THEN inPartionGoodsId ELSE 0 END
                                                  , inDescId_4   := zc_ContainerLinkObject_InfoMoney()
                                                  , inObjectId_4 := inInfoMoneyId
                                                  , inDescId_5   := zc_ContainerLinkObject_InfoMoneyDetail()
@@ -79,22 +79,22 @@ BEGIN
                                                                           -- <элемент с/с>: 1.)Главное Юр лицо 2.)Бизнес 3)Филиал 4)!Подразделение! 5)Товар 6)Основные средства(для которого закуплено ТМЦ) 7)Статьи назначения 8)Статьи назначения(детализация с/с)
                                                                           -- <элемент с/с>: 1.)Главное Юр лицо 2.)Бизнес 3)Филиал 4)Сотрудник (МО) 5)Товар 6)Основные средства(для которого закуплено ТМЦ) 7)Статьи назначения 8)Статьи назначения(детализация с/с)
                                                  , inObjectCostId      := lpInsertFind_ObjectCost (inObjectCostDescId:= zc_ObjectCost_Basis()
-                                                                                                 , inDescId_1   := zc_ObjectCostLink_JuridicalBasis()
-                                                                                                 , inObjectId_1 := inJuridicalId_basis
-                                                                                                 , inDescId_2   := zc_ObjectCostLink_Business()
-                                                                                                 , inObjectId_2 := inBusinessId
-                                                                                                 , inDescId_3   := zc_ObjectCostLink_Branch()
-                                                                                                 , inObjectId_3 := inBranchId
-                                                                                                 , inDescId_4   := CASE WHEN inPersonalId <> 0 THEN zc_ObjectCostLink_Personal() ELSE zc_ObjectCostLink_Unit() END
-                                                                                                 , inObjectId_4 := CASE WHEN inPersonalId <> 0 AND inOperDate >= zc_DateStart_ObjectCostOnUnit() THEN inPersonalId WHEN inOperDate >= zc_DateStart_ObjectCostOnUnit() THEN inUnitId ELSE NULL END
-                                                                                                 , inDescId_5   := zc_ObjectCostLink_Goods()
-                                                                                                 , inObjectId_5 := inGoodsId
-                                                                                                 , inDescId_6   := zc_ObjectCostLink_AssetTo()
-                                                                                                 , inObjectId_6 := inAssetId
-                                                                                                 , inDescId_7   := zc_ObjectCostLink_InfoMoney()
-                                                                                                 , inObjectId_7 := inInfoMoneyId
-                                                                                                 , inDescId_8   := zc_ObjectCostLink_InfoMoneyDetail()
-                                                                                                 , inObjectId_8 := inInfoMoneyId_Detail
+                                                                                                 , inDescId_1   := zc_ObjectCostLink_Goods()
+                                                                                                 , inObjectId_1 := inGoodsId
+                                                                                                 , inDescId_2   := zc_ObjectCostLink_AssetTo()
+                                                                                                 , inObjectId_2 := inAssetId
+                                                                                                 , inDescId_3   := CASE WHEN inPersonalId <> 0 THEN zc_ObjectCostLink_Personal() ELSE zc_ObjectCostLink_Unit() END
+                                                                                                 , inObjectId_3 := CASE WHEN inPersonalId <> 0 AND inOperDate >= zc_DateStart_ObjectCostOnUnit() THEN inPersonalId WHEN inOperDate >= zc_DateStart_ObjectCostOnUnit() THEN inUnitId ELSE 0 END
+                                                                                                 , inDescId_4   := zc_ObjectCostLink_InfoMoney()
+                                                                                                 , inObjectId_4 := inInfoMoneyId
+                                                                                                 , inDescId_5   := zc_ObjectCostLink_InfoMoneyDetail()
+                                                                                                 , inObjectId_5 := inInfoMoneyId_Detail
+                                                                                                 , inDescId_6   := zc_ObjectCostLink_Branch()
+                                                                                                 , inObjectId_6 := inBranchId
+                                                                                                 , inDescId_7   := zc_ObjectCostLink_Business()
+                                                                                                 , inObjectId_7 := inBusinessId
+                                                                                                 , inDescId_8   := zc_ObjectCostLink_JuridicalBasis()
+                                                                                                 , inObjectId_8 := inJuridicalId_basis
                                                                                                   )
                                                  , inDescId_1   := CASE WHEN inPersonalId <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Unit() END
                                                  , inObjectId_1 := CASE WHEN inPersonalId <> 0 THEN inPersonalId ELSE inUnitId END
@@ -121,38 +121,58 @@ BEGIN
                                                  , inObjectCostDescId  := zc_ObjectCost_Basis()
                                                                           -- <элемент с/с>: 1.)Главное Юр лицо 2.)Бизнес 3)Филиал 4)Подразделение 5)Товар 6)!!!Партии товара!!! 7)Виды товаров 8)Статьи назначения 9)Статьи назначения(детализация с/с)
                                                                           -- <элемент с/с>: 1.)Главное Юр лицо 2.)Бизнес 3)Филиал 4)Сотрудник (МО) 5)Товар 6)!!!Партии товара!!! 7)Виды товаров 8)Статьи назначения 9)Статьи назначения(детализация с/с)
-                                                 , inObjectCostId      := lpInsertFind_ObjectCost (inObjectCostDescId:= zc_ObjectCost_Basis()
-                                                                                                 , inDescId_1   := zc_ObjectCostLink_JuridicalBasis()
-                                                                                                 , inObjectId_1 := inJuridicalId_basis
-                                                                                                 , inDescId_2   := zc_ObjectCostLink_Business()
-                                                                                                 , inObjectId_2 := inBusinessId
-                                                                                                 , inDescId_3   := zc_ObjectCostLink_Branch()
-                                                                                                 , inObjectId_3 := inBranchId
-                                                                                                 , inDescId_4   := CASE WHEN inPersonalId <> 0 THEN zc_ObjectCostLink_Personal() ELSE zc_ObjectCostLink_Unit() END
-                                                                                                 , inObjectId_4 := CASE WHEN inPersonalId <> 0 THEN inPersonalId ELSE inUnitId END
-                                                                                                 , inDescId_5   := zc_ObjectCostLink_Goods()
-                                                                                                 , inObjectId_5 := inGoodsId
-                                                                                                 , inDescId_6   := CASE WHEN inPartionGoodsId <> 0 THEN zc_ObjectCostLink_PartionGoods() ELSE NULL END
-                                                                                                 , inObjectId_6 := CASE WHEN inPartionGoodsId <> 0 THEN inPartionGoodsId ELSE NULL END
-                                                                                                 , inDescId_7   := zc_ObjectCostLink_GoodsKind()
-                                                                                                 , inObjectId_7 := inGoodsKindId
-                                                                                                 , inDescId_8   := zc_ObjectCostLink_InfoMoney()
-                                                                                                 , inObjectId_8 := inInfoMoneyId
-                                                                                                 , inDescId_9   := zc_ObjectCostLink_InfoMoneyDetail()
-                                                                                                 , inObjectId_9 := inInfoMoneyId_Detail
-                                                                                                  )
+                                                 , inObjectCostId      := CASE WHEN inPartionGoodsId <> 0
+                                                                                    THEN lpInsertFind_ObjectCost (inObjectCostDescId:= zc_ObjectCost_Basis()
+                                                                                                                , inDescId_1   := zc_ObjectCostLink_Goods()
+                                                                                                                , inObjectId_1 := inGoodsId
+                                                                                                                , inDescId_2   := zc_ObjectCostLink_PartionGoods()
+                                                                                                                , inObjectId_2 := inPartionGoodsId
+                                                                                                                , inDescId_3   := CASE WHEN inPersonalId <> 0 THEN zc_ObjectCostLink_Personal() ELSE zc_ObjectCostLink_Unit() END
+                                                                                                                , inObjectId_3 := CASE WHEN inPersonalId <> 0 THEN inPersonalId ELSE inUnitId END
+                                                                                                                , inDescId_4   := zc_ObjectCostLink_InfoMoney()
+                                                                                                                , inObjectId_4 := inInfoMoneyId
+                                                                                                                , inDescId_5   := zc_ObjectCostLink_InfoMoneyDetail()
+                                                                                                                , inObjectId_5 := inInfoMoneyId_Detail
+                                                                                                                , inDescId_6   := zc_ObjectCostLink_GoodsKind()
+                                                                                                                , inObjectId_6 := inGoodsKindId
+                                                                                                                , inDescId_7   := zc_ObjectCostLink_Branch()
+                                                                                                                , inObjectId_7 := inBranchId
+                                                                                                                , inDescId_8   := zc_ObjectCostLink_Business()
+                                                                                                                , inObjectId_8 := inBusinessId
+                                                                                                                , inDescId_9   := zc_ObjectCostLink_JuridicalBasis()
+                                                                                                                , inObjectId_9 := inJuridicalId_basis
+                                                                                                            )
+                                                                               ELSE lpInsertFind_ObjectCost (inObjectCostDescId:= zc_ObjectCost_Basis()
+                                                                                                           , inDescId_1   := zc_ObjectCostLink_Goods()
+                                                                                                           , inObjectId_1 := inGoodsId
+                                                                                                           , inDescId_2   := zc_ObjectCostLink_GoodsKind()
+                                                                                                           , inObjectId_2 := inGoodsKindId
+                                                                                                           , inDescId_3   := CASE WHEN inPersonalId <> 0 THEN zc_ObjectCostLink_Personal() ELSE zc_ObjectCostLink_Unit() END
+                                                                                                           , inObjectId_3 := CASE WHEN inPersonalId <> 0 THEN inPersonalId ELSE inUnitId END
+                                                                                                           , inDescId_4   := zc_ObjectCostLink_InfoMoney()
+                                                                                                           , inObjectId_4 := inInfoMoneyId
+                                                                                                           , inDescId_5   := zc_ObjectCostLink_InfoMoneyDetail()
+                                                                                                           , inObjectId_5 := inInfoMoneyId_Detail
+                                                                                                           , inDescId_6   := zc_ObjectCostLink_Branch()
+                                                                                                           , inObjectId_6 := inBranchId
+                                                                                                           , inDescId_7   := zc_ObjectCostLink_Business()
+                                                                                                           , inObjectId_7 := inBusinessId
+                                                                                                           , inDescId_8   := zc_ObjectCostLink_JuridicalBasis()
+                                                                                                           , inObjectId_8 := inJuridicalId_basis
+                                                                                                            )
+                                                                          END
                                                  , inDescId_1   := CASE WHEN inPersonalId <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Unit() END
                                                  , inObjectId_1 := CASE WHEN inPersonalId <> 0 THEN inPersonalId ELSE inUnitId END
                                                  , inDescId_2   := zc_ContainerLinkObject_Goods()
                                                  , inObjectId_2 := inGoodsId
-                                                 , inDescId_3   := CASE WHEN inPartionGoodsId <> 0 THEN zc_ContainerLinkObject_PartionGoods() ELSE NULL END
-                                                 , inObjectId_3 := CASE WHEN inPartionGoodsId <> 0 THEN inPartionGoodsId ELSE NULL END
-                                                 , inDescId_4   := zc_ContainerLinkObject_GoodsKind()
-                                                 , inObjectId_4 := inGoodsKindId
-                                                 , inDescId_5   := zc_ContainerLinkObject_InfoMoney()
-                                                 , inObjectId_5 := inInfoMoneyId
-                                                 , inDescId_6   := zc_ContainerLinkObject_InfoMoneyDetail()
-                                                 , inObjectId_6 := inInfoMoneyId_Detail
+                                                 , inDescId_3   := zc_ContainerLinkObject_GoodsKind()
+                                                 , inObjectId_3 := inGoodsKindId
+                                                 , inDescId_4   := zc_ContainerLinkObject_InfoMoney()
+                                                 , inObjectId_4 := inInfoMoneyId
+                                                 , inDescId_5   := zc_ContainerLinkObject_InfoMoneyDetail()
+                                                 , inObjectId_5 := inInfoMoneyId_Detail
+                                                 , inDescId_6   := CASE WHEN inPartionGoodsId <> 0 THEN zc_ContainerLinkObject_PartionGoods() ELSE NULL END
+                                                 , inObjectId_6 := CASE WHEN inPartionGoodsId <> 0 THEN inPartionGoodsId ELSE 0 END
                                                   );
      ELSE
      IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500()) -- 20500; "Оборотная тара" -- select * from lfSelect_Object_InfoMoney() where inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500()
@@ -165,23 +185,23 @@ BEGIN
                                                  , inObjectCostDescId  := zc_ObjectCost_Basis()
                                                                           -- <элемент с/с>: 1.)Главное Юр лицо 2.)Бизнес 3)Товар 4)Статьи назначения 5)Статьи назначения(детализация с/с)
                                                  , inObjectCostId      := lpInsertFind_ObjectCost (inObjectCostDescId:= zc_ObjectCost_Basis()
-                                                                                                 , inDescId_1   := zc_ObjectCostLink_JuridicalBasis()
-                                                                                                 , inObjectId_1 := inJuridicalId_basis
-                                                                                                 , inDescId_2   := zc_ObjectCostLink_Business()
-                                                                                                 , inObjectId_2 := inBusinessId
-                                                                                                 , inDescId_3   := zc_ObjectCostLink_Branch()
-                                                                                                 , inObjectId_3 := NULL
+                                                                                                 , inDescId_1   := zc_ObjectCostLink_Goods()
+                                                                                                 , inObjectId_1 := inGoodsId
+                                                                                                 , inDescId_2   := zc_ObjectCostLink_InfoMoney()
+                                                                                                 , inObjectId_2 := inInfoMoneyId
+                                                                                                 , inDescId_3   := zc_ObjectCostLink_InfoMoneyDetail()
+                                                                                                 , inObjectId_3 := inInfoMoneyId_Detail
                                                                                                  , inDescId_4   := zc_ObjectCostLink_Unit()
-                                                                                                 , inObjectId_4 := NULL
-                                                                                                 , inDescId_5   := zc_ObjectCostLink_Goods()
-                                                                                                 , inObjectId_5 := inGoodsId
-                                                                                                 , inDescId_6   := zc_ObjectCostLink_InfoMoney()
-                                                                                                 , inObjectId_6 := inInfoMoneyId
-                                                                                                 , inDescId_7   := zc_ObjectCostLink_InfoMoneyDetail()
-                                                                                                 , inObjectId_7 := inInfoMoneyId_Detail
+                                                                                                 , inObjectId_4 := 0
+                                                                                                 , inDescId_5   := zc_ObjectCostLink_Branch()
+                                                                                                 , inObjectId_5 := 0
+                                                                                                 , inDescId_6   := zc_ObjectCostLink_Business()
+                                                                                                 , inObjectId_6 := inBusinessId
+                                                                                                 , inDescId_7   := zc_ObjectCostLink_JuridicalBasis()
+                                                                                                 , inObjectId_7 := inJuridicalId_basis
                                                                                                   )
                                                  , inDescId_1   := zc_ContainerLinkObject_Unit()
-                                                 , inObjectId_1 := NULL
+                                                 , inObjectId_1 := 0
                                                  , inDescId_2   := zc_ContainerLinkObject_Goods()
                                                  , inObjectId_2 := inGoodsId
                                                  , inDescId_4   := zc_ContainerLinkObject_InfoMoney()
@@ -200,21 +220,21 @@ BEGIN
                                                                           -- <элемент с/с>: 1.)Главное Юр лицо 2.)Бизнес 3)Филиал 4)!Подразделение! 5)Товар 6)Статьи назначения 7)Статьи назначения(детализация с/с)
                                                                           -- <элемент с/с>: 1.)Главное Юр лицо 2.)Бизнес 3)Филиал 4)Сотрудник (МО) 5)Товар 6)Статьи назначения 7)Статьи назначения(детализация с/с)
                                                  , inObjectCostId      := lpInsertFind_ObjectCost (inObjectCostDescId:= zc_ObjectCost_Basis()
-                                                                                , inDescId_1   := zc_ObjectCostLink_JuridicalBasis()
-                                                                                , inObjectId_1 := inJuridicalId_basis
-                                                                                , inDescId_2   := zc_ObjectCostLink_Business()
-                                                                                , inObjectId_2 := inBusinessId
-                                                                                , inDescId_3   := zc_ObjectCostLink_Branch()
-                                                                                , inObjectId_3 := inBranchId
-                                                                                , inDescId_4   := CASE WHEN inPersonalId <> 0 THEN zc_ObjectCostLink_Personal() ELSE zc_ObjectCostLink_Unit() END
-                                                                                , inObjectId_4 := CASE WHEN inPersonalId <> 0 AND inOperDate >= zc_DateStart_ObjectCostOnUnit() THEN inPersonalId WHEN inOperDate >= zc_DateStart_ObjectCostOnUnit() THEN inUnitId ELSE NULL END
-                                                                                , inDescId_5   := zc_ObjectCostLink_Goods()
-                                                                                , inObjectId_5 := inGoodsId
-                                                                                , inDescId_6   := zc_ObjectCostLink_InfoMoney()
-                                                                                , inObjectId_6 := inInfoMoneyId
-                                                                                , inDescId_7   := zc_ObjectCostLink_InfoMoneyDetail()
-                                                                                , inObjectId_7 := inInfoMoneyId_Detail
-                                                                                 )
+                                                                                                 , inDescId_1   := zc_ObjectCostLink_Goods()
+                                                                                                 , inObjectId_1 := inGoodsId
+                                                                                                 , inDescId_2   := CASE WHEN inPersonalId <> 0 THEN zc_ObjectCostLink_Personal() ELSE zc_ObjectCostLink_Unit() END
+                                                                                                 , inObjectId_2 := CASE WHEN inPersonalId <> 0 AND inOperDate >= zc_DateStart_ObjectCostOnUnit() THEN inPersonalId WHEN inOperDate >= zc_DateStart_ObjectCostOnUnit() THEN inUnitId ELSE 0 END
+                                                                                                 , inDescId_3   := zc_ObjectCostLink_InfoMoney()
+                                                                                                 , inObjectId_3 := inInfoMoneyId
+                                                                                                 , inDescId_4   := zc_ObjectCostLink_InfoMoneyDetail()
+                                                                                                 , inObjectId_4 := inInfoMoneyId_Detail
+                                                                                                 , inDescId_5   := zc_ObjectCostLink_Branch()
+                                                                                                 , inObjectId_5 := inBranchId
+                                                                                                 , inDescId_6   := zc_ObjectCostLink_Business()
+                                                                                                 , inObjectId_6 := inBusinessId
+                                                                                                 , inDescId_7   := zc_ObjectCostLink_JuridicalBasis()
+                                                                                                 , inObjectId_7 := inJuridicalId_basis
+                                                                                                  )
                                                  , inDescId_1   := CASE WHEN inPersonalId <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Unit() END
                                                  , inObjectId_1 := CASE WHEN inPersonalId <> 0 THEN inPersonalId ELSE inUnitId END
                                                  , inDescId_2   := zc_ContainerLinkObject_Goods()
