@@ -52,8 +52,6 @@ BEGIN
      -- Создаем администратора
      UserId := lpInsertUpdate_Object(0, zc_Object_User(), 0, 'Админ');
 
-     PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_Login(), UserId, 'Админ');
-
      PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_Password(), UserId, 'Админ');
    END IF;
 
