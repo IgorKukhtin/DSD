@@ -24,9 +24,9 @@ BEGIN
      vbReportContainerId:=(SELECT ReportContainerLink_Active.ReportContainerId
                            FROM ReportContainerLink  AS ReportContainerLink_Active
                                 JOIN ReportContainerLink  AS ReportContainerLink_Passive
-                                                          ON ReportContainerLink_Passive.ContainerId = inPassiveContainerId
+                                                          ON ReportContainerLink_Passive.ReportContainerId = ReportContainerLink_Active.ReportContainerId
+                                                         AND ReportContainerLink_Passive.ContainerId = inPassiveContainerId
                                                          AND ReportContainerLink_Passive.AccountKindId = zc_Enum_AccountKind_Passive()
-                                                         AND ReportContainerLink_Passive.ReportContainerId = ReportContainerLink_Active.ReportContainerId
                            WHERE ReportContainerLink_Active.ContainerId = inActiveContainerId
                              AND ReportContainerLink_Active.AccountKindId = zc_Enum_AccountKind_Active()
                           );
@@ -59,6 +59,7 @@ ALTER FUNCTION lpInsertFind_ReportContainer (Integer, Integer, Integer, Integer)
 /*
  ÈÑÒÎĞÈß ĞÀÇĞÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎĞ
                Ôåëîíşê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 19.09.13                                        * optimize
  29.08.13                                        *
 */
 

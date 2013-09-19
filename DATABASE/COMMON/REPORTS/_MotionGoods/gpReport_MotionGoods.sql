@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpReport_MotionGoods(
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-             , LocationId Integer, UnitCode Integer, UnitName TVarChar
+             , LocationId Integer, LocationCode Integer, LocationName TVarChar
              , PartionGoodsId Integer, PartionGoodsCode Integer, PartionGoodsName TVarChar
              , GoodsKindId Integer, GoodsKindCode Integer, GoodsKindName TVarChar
              , AssetToId Integer, AssetToCode Integer, AssetToName TVarChar
@@ -36,14 +36,14 @@ $BODY$BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_MotionGoods());
 
      -- таблица - 
-     CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmpLocation (LocationId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpLocation (LocationId Integer) ON COMMIT DROP;
 
     IF inGoodsGroupId <> 0 
     THEN 
        INSERT INTO _tmpGoods (GoodsId)
-          SELECT GoodsId
-          FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId);
+          SELECT lfObject_Goods_byGoodsGroup.GoodsId
+          FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup;
     ELSE IF inGoodsId <> 0 
          THEN 
              INSERT INTO _tmpGoods (GoodsId)
@@ -57,8 +57,8 @@ $BODY$BEGIN
    IF inUnitGroupId <> 0 
    THEN 
       INSERT INTO _tmpLocation (LocationId)
-         SELECT LocationId
-         FROM  lfSELECT_Object_Unit_List (inUnitGroupId);
+         SELECT lfObject_Unit_List.LocationId
+         FROM  lfSELECT_Object_Unit_List (inUnitGroupId) AS lfObject_Unit_List;
    ELSE 
        IF inLocationId <> 0 
        THEN 
@@ -75,7 +75,7 @@ $BODY$BEGIN
      RETURN QUERY 
 
       SELECT _tmp_All.GoodsId, Object_Goods.ObjectCode AS GoodsCode, Object_Goods.ValueData AS GoodsName  
-           , _tmp_All.LocationId , Object_Unit.ObjectCode  AS UnitCode, Object_Unit.ValueData  AS UnitName
+           , _tmp_All.LocationId , Object_Location.ObjectCode  AS LocationCode, Object_Location.ValueData  AS LocationName
            , _tmp_All.PartionGoodsId, Object_PartionGoods.ObjectCode AS PartionGoodsCode, Object_PartionGoods.ValueData AS PartionGoodsName
            , _tmp_All.GoodsKindId, Object_GoodsKind.ObjectCode  AS GoodsKindCode, Object_GoodsKind.ValueData  AS GoodsKindName
            , _tmp_All.AssetToId, Object_AssetTo.ObjectCode  AS AssetToCode, Object_AssetTo.ValueData  AS AssetToName
@@ -168,13 +168,13 @@ $BODY$BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_Weight ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
                                AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
      
-          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = _tmp_All.LocationId
+          LEFT JOIN Object AS Object_Location ON Object_Location.Id = _tmp_All.LocationId
           LEFT JOIN Object AS Object_PartionGoods ON Object_PartionGoods.Id = _tmp_All.PartionGoodsId
           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = _tmp_All.GoodsKindId
           LEFT JOIN Object AS Object_AssetTo ON Object_AssetTo.Id = _tmp_All.AssetToId
       
       GROUP BY _tmp_All.GoodsId, Object_Goods.ObjectCode, Object_Goods.ValueData
-           , _tmp_All.LocationId , Object_Unit.ObjectCode, Object_Unit.ValueData
+           , _tmp_All.LocationId , Object_Location.ObjectCode, Object_Location.ValueData
            , _tmp_All.PartionGoodsId, Object_PartionGoods.ObjectCode, Object_PartionGoods.ValueData
            , _tmp_All.GoodsKindId, Object_GoodsKind.ObjectCode, Object_GoodsKind.ValueData
            , _tmp_All.AssetToId, Object_AssetTo.ObjectCode, Object_AssetTo.ValueData 

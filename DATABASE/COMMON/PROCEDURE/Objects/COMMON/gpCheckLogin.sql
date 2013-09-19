@@ -8,13 +8,14 @@ IN inUserPassword TVarChar,
 INOUT Session TVarChar)
   RETURNS tvarchar AS
 $BODY$BEGIN
-   SELECT UserLogin.ObjectId INTO Session 
-     FROM ObjectString UserLogin
+   SELECT UserLogin.Id INTO Session 
+     FROM Object AS UserLogin
      JOIN ObjectString UserPassword
-       ON UserLogin.ValueData = inUserLogin
-      AND UserLogin.DescId = zc_ObjectString_User_Login() 
-      AND UserLogin.ObjectId = UserPassword.ObjectId
-    WHERE UserPassword.ValueData = inUserPassword AND UserPassword.DescId = zc_ObjectString_User_Password();
+       ON UserPassword.ValueData = inUserPassword 
+      AND UserPassword.DescId = zc_ObjectString_User_Password()
+      AND UserPassword.ObjectId = UserLogin.Id
+    WHERE UserLogin.ValueData = inUserLogin
+      AND UserLogin.DescId = zc_Object_User();
 
     IF NOT found THEN
        RAISE EXCEPTION 'Неправильный логин или пароль';

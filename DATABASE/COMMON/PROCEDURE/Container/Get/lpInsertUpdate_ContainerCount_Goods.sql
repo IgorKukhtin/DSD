@@ -29,10 +29,10 @@ BEGIN
                                                  , inBusinessId        := NULL
                                                  , inObjectCostDescId  := NULL
                                                  , inObjectCostId      := NULL
-                                                 , inDescId_1          := CASE WHEN COALESCE (inPersonalId, 0) <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Unit() END
-                                                 , inObjectId_1        := CASE WHEN COALESCE (inPersonalId, 0) <> 0 THEN inPersonalId ELSE COALESCE (inUnitId, 0) END
-                                                 , inDescId_2          := zc_ContainerLinkObject_PartionGoods()
-                                                 , inObjectId_2        := CASE WHEN inIsPartionCount THEN inPartionGoodsId ELSE NULL END
+                                                 , inDescId_1          := zc_ContainerLinkObject_PartionGoods()
+                                                 , inObjectId_1        := CASE WHEN inIsPartionCount THEN inPartionGoodsId ELSE 0 END
+                                                 , inDescId_2          := CASE WHEN COALESCE (inPersonalId, 0) <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Unit() END
+                                                 , inObjectId_2        := CASE WHEN COALESCE (inPersonalId, 0) <> 0 THEN inPersonalId ELSE COALESCE (inUnitId, 0) END
                                                    );
      ELSE
      IF inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты -- select * from lfSelect_Object_InfoMoney() where inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100()
@@ -52,24 +52,38 @@ BEGIN
                                                    );
      ELSE
      IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20700()  -- Товары    -- select * from lfSelect_Object_InfoMoney() where inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20700()
-                                                   , zc_Enum_InfoMoneyDestination_20900()  -- Ирна      -- select * from lfSelect_Object_InfoMoney() where inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
-                                                   , zc_Enum_InfoMoneyDestination_30100()) -- Продукция -- select * from lfSelect_Object_InfoMoney() where inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()
+                                   , zc_Enum_InfoMoneyDestination_20900()  -- Ирна      -- select * from lfSelect_Object_InfoMoney() where inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
+                                   , zc_Enum_InfoMoneyDestination_30100()) -- Продукция -- select * from lfSelect_Object_InfoMoney() where inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()
           -- 0)Товар 1)Подразделение 2)Вид товара 3)!!!Партия товара!!!
           -- 0)Товар 1)Сотрудник (МО) 2)Вид товара 3)!!!Партия товара!!!
-     THEN vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
-                                                 , inParentId          := NULL
-                                                 , inObjectId          := inGoodsId
-                                                 , inJuridicalId_basis := NULL
-                                                 , inBusinessId        := NULL
-                                                 , inObjectCostDescId  := NULL
-                                                 , inObjectCostId      := NULL
-                                                 , inDescId_1          := CASE WHEN COALESCE (inPersonalId, 0) <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Unit() END
-                                                 , inObjectId_1        := CASE WHEN COALESCE (inPersonalId, 0) <> 0 THEN inPersonalId ELSE COALESCE (inUnitId, 0) END
-                                                 , inDescId_2          := zc_ContainerLinkObject_GoodsKind()
-                                                 , inObjectId_2        := inGoodsKindId
-                                                 , inDescId_3          := CASE WHEN inPartionGoodsId <> 0 THEN zc_ContainerLinkObject_PartionGoods() ELSE NULL END
-                                                 , inObjectId_3        := CASE WHEN inPartionGoodsId <> 0 THEN inPartionGoodsId ELSE NULL END
-                                                   );
+     THEN vbContainerId := CASE WHEN inPartionGoodsId <> 0
+                                     THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
+                                                                , inParentId          := NULL
+                                                                , inObjectId          := inGoodsId
+                                                                , inJuridicalId_basis := NULL
+                                                                , inBusinessId        := NULL
+                                                                , inObjectCostDescId  := NULL
+                                                                , inObjectCostId      := NULL
+                                                                , inDescId_1          := zc_ContainerLinkObject_PartionGoods()
+                                                                , inObjectId_1        := inPartionGoodsId
+                                                                , inDescId_2          := CASE WHEN COALESCE (inPersonalId, 0) <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Unit() END
+                                                                , inObjectId_2        := CASE WHEN COALESCE (inPersonalId, 0) <> 0 THEN inPersonalId ELSE COALESCE (inUnitId, 0) END
+                                                                , inDescId_3          := zc_ContainerLinkObject_GoodsKind()
+                                                                , inObjectId_3        := inGoodsKindId
+                                                                 )
+                                ELSE lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
+                                                           , inParentId          := NULL
+                                                           , inObjectId          := inGoodsId
+                                                           , inJuridicalId_basis := NULL
+                                                           , inBusinessId        := NULL
+                                                           , inObjectCostDescId  := NULL
+                                                           , inObjectCostId      := NULL
+                                                           , inDescId_1          := CASE WHEN COALESCE (inPersonalId, 0) <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Unit() END
+                                                           , inObjectId_1        := CASE WHEN COALESCE (inPersonalId, 0) <> 0 THEN inPersonalId ELSE COALESCE (inUnitId, 0) END
+                                                           , inDescId_2          := zc_ContainerLinkObject_GoodsKind()
+                                                           , inObjectId_2        := inGoodsKindId
+                                                            )
+                           END ;
           -- 0)Товар 1)Подразделение
           -- 0)Товар 1)Сотрудник (МО)
      ELSE vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
@@ -98,6 +112,7 @@ ALTER FUNCTION lpInsertUpdate_ContainerCount_Goods (TDateTime, Integer, Integer,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.09.13                                        * sort by optimize
  17.09.13                                        * CASE -> IF
  16.09.13                                        *
 */

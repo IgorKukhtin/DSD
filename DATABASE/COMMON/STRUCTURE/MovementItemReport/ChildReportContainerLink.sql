@@ -21,12 +21,16 @@ CREATE TABLE ChildReportContainerLink(
 
 /*-------------------------------------------------------------------------------*/
 /*                                  Индексы                                      */
-CREATE INDEX idx_ChildReportContainerLink_ChildReportContainerId ON ChildReportContainerLink (ChildReportContainerId);
-CREATE INDEX idx_ChildReportContainerLink_AccountId_AccountKindId ON ChildReportContainerLink (AccountId, AccountKindId);
-CREATE INDEX idx_ChildReportContainerLink_ContainerId_AccountKindId ON ChildReportContainerLink (ContainerId, AccountKindId);
+-- CREATE INDEX idx_ChildReportContainerLink_ChildReportContainerId ON ChildReportContainerLink (ChildReportContainerId);
+-- CREATE INDEX idx_ChildReportContainerLink_AccountId_AccountKindId ON ChildReportContainerLink (AccountId, AccountKindId);
+
+CREATE INDEX idx_ChildReportContainerLink_ContainerId_AccountKindId_ChildReportContainerId  ON ChildReportContainerLink (ContainerId, AccountKindId, ChildReportContainerId);
+CREATE INDEX idx_ChildReportContainerLink_ChildReportContainerId_ContainerId_AccountKindId  ON ChildReportContainerLink (ChildReportContainerId, ContainerId, AccountKindId);
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 03.09.13                                        *
+19.09.02                                         * chage index
+03.09.13                                         *
 */

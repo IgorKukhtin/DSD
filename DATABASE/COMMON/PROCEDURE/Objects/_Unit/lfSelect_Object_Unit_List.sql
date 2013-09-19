@@ -3,13 +3,13 @@
 -- DROP FUNCTION lfSelect_Object_Unit_List (Integer);
 
 CREATE OR REPLACE FUNCTION lfSelect_Object_Unit_List (IN inUnitId Integer)
-RETURNS TABLE  (UnitId Integer)  
+RETURNS TABLE  (LocationId Integer)  
 AS
 $BODY$
 BEGIN
 
     RETURN QUERY
-    WITH RecurObjectLink (ObjectId, ChildObjectId, Code) AS
+    WITH RECURSIVE RecurObjectLink (ObjectId, ChildObjectId) AS
     (
     	SELECT sc.ObjectId, sc.ChildObjectId FROM ObjectLink sc 
     	UNION ALL
@@ -17,7 +17,7 @@ BEGIN
     		INNER JOIN RecurObjectLink rs ON rs.ChildObjectId = sc.ObjectId
     	WHERE sc.DescId = zc_ObjectLink_Unit_Parent()
     )
-     SELECT ObjectLink_0.ObjectId AS UnitId 
+     SELECT ObjectLink.ObjectId AS LocationId 
      FROM ObjectLink 
         LEFT JOIN RecurObjectLink ON ObjectLink.ChildObjectId = RecurObjectLink.ObjectId  
                                  AND RecurObjectLink.ChildObjectId = inUnitId

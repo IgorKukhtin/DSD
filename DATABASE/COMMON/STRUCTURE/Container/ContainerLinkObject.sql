@@ -20,7 +20,9 @@ CREATE TABLE ContainerLinkObject(
 /*-------------------------------------------------------------------------------*/
 /*                                  Индексы                                      */
 
-CREATE UNIQUE INDEX idx_ContainerLinkObject_ContainerId_DescId_ObjectId ON ContainerLinkObject(ContainerId, DescId, ObjectId);
+CREATE UNIQUE INDEX idx_ContainerLinkObject_ContainerId_ObjectId_DescId ON ContainerLinkObject (ContainerId, ObjectId, DescId);
+CREATE        INDEX idx_ContainerLinkObject_ContainerId_DescId_ObjectId ON ContainerLinkObject (ContainerId, DescId, ObjectId);
+CREATE        INDEX idx_ContainerLinkObject_ObjectId_DescId_ContainerId ON ContainerLinkObject (ObjectId, DescId, ContainerId);
 
 /*
  ПРИМЕЧАНИЯ:
@@ -28,6 +30,6 @@ CREATE UNIQUE INDEX idx_ContainerLinkObject_ContainerId_DescId_ObjectId ON Conta
  ДАТА         АВТОР
  ----------------
                  Климентьев К.И.   Кухтин И.В.   
-
- 03.07.13             * del CONSTRAINT fk_ContainerLinkObject_Object
+19.09.02              * chage index
+03.07.13              * del CONSTRAINT fk_ContainerLinkObject_Object
 */

@@ -775,12 +775,12 @@ BEGIN
                                                        , inObjectCostId      := NULL
                                                        , inDescId_1          := CASE WHEN vbPersonalId_To <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Juridical() END
                                                        , inObjectId_1        := CASE WHEN vbPersonalId_To <> 0 THEN vbPersonalId_To ELSE vbJuridicalId_To END
-                                                       , inDescId_2          := CASE WHEN vbPersonalId_To <> 0 THEN NULL ELSE zc_ContainerLinkObject_PaidKind() END
-                                                       , inObjectId_2        := vbPaidKindId
+                                                       , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
+                                                       , inObjectId_2        := _tmpItem_group.InfoMoneyId
                                                        , inDescId_3          := CASE WHEN vbPersonalId_To <> 0 THEN NULL ELSE zc_ContainerLinkObject_Contract() END
                                                        , inObjectId_3        := vbContractId
-                                                       , inDescId_4          := zc_ContainerLinkObject_InfoMoney()
-                                                       , inObjectId_4        := _tmpItem_group.InfoMoneyId
+                                                       , inDescId_4          := CASE WHEN vbPersonalId_To <> 0 THEN NULL ELSE zc_ContainerLinkObject_PaidKind() END
+                                                       , inObjectId_4        := vbPaidKindId
                                                         )
 
                             -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения
@@ -975,7 +975,6 @@ BEGIN
              GROUP BY _tmpItem.ContainerId_ProfitLoss_10500
             ) AS _tmpItem_group
        ;
-
 
      -- 5.1.1. формируются Проводки для отчета (Аналитики: Товар и ОПиУ - разнице в весе)
      PERFORM lpInsertUpdate_MovementItemReport (inMovementId         := inMovementId
