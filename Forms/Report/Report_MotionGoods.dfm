@@ -3,7 +3,7 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
   ClientHeight = 395
   ClientWidth = 1329
   ExplicitWidth = 1337
-  ExplicitHeight = 422
+  ExplicitHeight = 429
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -202,9 +202,9 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
       OptionsView.Footer = True
       OptionsView.GroupFooters = gfAlwaysVisible
       OptionsView.HeaderAutoHeight = True
-      object UnitName: TcxGridDBColumn
+      object LocationName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'UnitName'
+        DataBinding.FieldName = 'LocationName'
         Width = 70
       end
       object GoodsCode: TcxGridDBColumn
@@ -564,8 +564,8 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 232
-    Top = 160
+    Left = 256
+    Top = 232
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -735,12 +735,12 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
-    Left = 232
-    Top = 216
+    Left = 216
+    Top = 264
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 264
-    Top = 264
+    Left = 344
+    Top = 272
   end
   object GoodsGroupGuides: TdsdGuides
     LookupControl = edGoodsGroup
@@ -787,8 +787,8 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
         ParamType = ptInput
         Value = ''
       end>
-    Left = 488
-    Top = 88
+    Left = 472
+    Top = 72
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -864,7 +864,7 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
       item
         Component = GoodsGuides
       end>
-    Left = 304
+    Left = 288
     Top = 64
   end
 end

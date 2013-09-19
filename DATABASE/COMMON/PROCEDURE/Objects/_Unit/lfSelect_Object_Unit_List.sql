@@ -9,7 +9,7 @@ $BODY$
 BEGIN
 
     RETURN QUERY
-    WITH RecurObjectLink (ObjectId, ChildObjectId, Code) AS
+    WITH RECURSIVE RecurObjectLink (ObjectId, ChildObjectId) AS
     (
     	SELECT sc.ObjectId, sc.ChildObjectId FROM ObjectLink sc 
     	UNION ALL
@@ -17,7 +17,7 @@ BEGIN
     		INNER JOIN RecurObjectLink rs ON rs.ChildObjectId = sc.ObjectId
     	WHERE sc.DescId = zc_ObjectLink_Unit_Parent()
     )
-     SELECT ObjectLink_0.ObjectId AS UnitId 
+     SELECT ObjectLink.ObjectId AS UnitId 
      FROM ObjectLink 
         LEFT JOIN RecurObjectLink ON ObjectLink.ChildObjectId = RecurObjectLink.ObjectId  
                                  AND RecurObjectLink.ChildObjectId = inUnitId

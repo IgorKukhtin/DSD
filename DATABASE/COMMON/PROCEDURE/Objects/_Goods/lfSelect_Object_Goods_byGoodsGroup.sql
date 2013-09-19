@@ -10,7 +10,23 @@ BEGIN
 
      -- Выбираем данные для справочника счетов (на самом деле это три справочника)
      RETURN QUERY
-     SELECT ObjectLink_0.ObjectId AS GoodsId 
+
+     WITH RECURSIVE RecurObjectLink (ObjectId, ChildObjectId) AS
+    (
+    	SELECT sc.ObjectId, sc.ChildObjectId FROM ObjectLink sc 
+    	UNION ALL
+    	SELECT sc.ObjectId, sc.ChildObjectId FROM ObjectLink sc 
+    		INNER JOIN RecurObjectLink rs ON rs.ChildObjectId = sc.ObjectId
+    	WHERE sc.DescId = zc_ObjectLink_Goods_GoodsGroup()
+    )
+
+     SELECT ObjectLink.ObjectId AS GoodsId 
+     FROM ObjectLink 
+         JOIN RecurObjectLink ON ObjectLink.ChildObjectId = RecurObjectLink.ObjectId  
+                             AND RecurObjectLink.ChildObjectId = inGoodsGroupId
+     WHERE ObjectLink.DescId = zc_ObjectLink_Goods_GoodsGroup();
+     
+  /* SELECT ObjectLink_0.ObjectId AS GoodsId 
      FROM ObjectLink AS ObjectLink_0
           LEFT JOIN ObjectLink AS ObjectLink_1 ON ObjectLink_0.ChildObjectId = ObjectLink_1.ObjectId  
           LEFT JOIN ObjectLink AS ObjectLink_2 ON ObjectLink_1.ChildObjectId = ObjectLink_2.ObjectId
@@ -33,7 +49,7 @@ BEGIN
          OR (ObjectLink_7.ChildObjectId = inGoodsGroupId)
          OR (ObjectLink_8.ChildObjectId = inGoodsGroupId)
          OR (ObjectLink_9.ChildObjectId = inGoodsGroupId)
-           ) ;
+           ) ;*/
 
 END;
 $BODY$
