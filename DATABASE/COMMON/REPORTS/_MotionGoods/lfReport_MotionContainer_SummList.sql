@@ -33,7 +33,7 @@ BEGIN
         
         LEFT JOIN lfReport_Container_SummList () AS lfContainer_SummList ON lfContainer_SummList.AccountId = lfObject_Account.AccountId
                                              
-        LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = lfContainer_SummList.ContainerId_Goods
+        LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = lfContainer_SummList.ContainerId
                                                       AND MIContainer.OperDate >= inStartDate
         LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
                            

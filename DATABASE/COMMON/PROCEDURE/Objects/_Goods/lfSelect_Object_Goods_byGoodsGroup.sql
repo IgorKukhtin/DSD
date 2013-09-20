@@ -10,48 +10,28 @@ BEGIN
 
      -- Выбираем данные для справочника счетов (на самом деле это три справочника)
      RETURN QUERY
-
-     WITH RECURSIVE RecurObjectLink (ObjectId, ChildObjectId) AS
-    (
-    	SELECT sc.ObjectId, sc.ChildObjectId FROM ObjectLink sc 
-    	UNION ALL
-    	SELECT sc.ObjectId, sc.ChildObjectId FROM ObjectLink sc 
-    		INNER JOIN RecurObjectLink rs ON rs.ChildObjectId = sc.ObjectId
-    	WHERE sc.DescId = zc_ObjectLink_Goods_GoodsGroup()
-    )
-
-     SELECT ObjectLink.ObjectId AS GoodsId 
-     FROM ObjectLink 
-         JOIN RecurObjectLink ON ObjectLink.ChildObjectId = RecurObjectLink.ObjectId  
-                             AND RecurObjectLink.ChildObjectId = inGoodsGroupId
-     WHERE ObjectLink.DescId = zc_ObjectLink_Goods_GoodsGroup();
      
-  /* SELECT ObjectLink_0.ObjectId AS GoodsId 
-     FROM ObjectLink AS ObjectLink_0
-          LEFT JOIN ObjectLink AS ObjectLink_1 ON ObjectLink_0.ChildObjectId = ObjectLink_1.ObjectId  
-          LEFT JOIN ObjectLink AS ObjectLink_2 ON ObjectLink_1.ChildObjectId = ObjectLink_2.ObjectId
-          LEFT JOIN ObjectLink AS ObjectLink_3 ON ObjectLink_2.ChildObjectId = ObjectLink_3.ObjectId
-          LEFT JOIN ObjectLink AS ObjectLink_4 ON ObjectLink_3.ChildObjectId = ObjectLink_4.ObjectId
-          LEFT JOIN ObjectLink AS ObjectLink_5 ON ObjectLink_4.ChildObjectId = ObjectLink_5.ObjectId
-          LEFT JOIN ObjectLink AS ObjectLink_6 ON ObjectLink_5.ChildObjectId = ObjectLink_6.ObjectId
-          LEFT JOIN ObjectLink AS ObjectLink_7 ON ObjectLink_6.ChildObjectId = ObjectLink_7.ObjectId
-          LEFT JOIN ObjectLink AS ObjectLink_8 ON ObjectLink_7.ChildObjectId = ObjectLink_8.ObjectId
-          LEFT JOIN ObjectLink AS ObjectLink_9 ON ObjectLink_8.ChildObjectId = ObjectLink_9.ObjectId
-          LEFT JOIN ObjectLink AS ObjectLink_10 ON ObjectLink_9.ChildObjectId = ObjectLink_10.ObjectId
-     WHERE ObjectLink_0.DescId = zc_ObjectLink_Goods_GoodsGroup() 
-       AND ((ObjectLink_0.ChildObjectId = inGoodsGroupId)
-         OR (ObjectLink_1.ChildObjectId = inGoodsGroupId)
-         OR (ObjectLink_2.ChildObjectId = inGoodsGroupId)
-         OR (ObjectLink_3.ChildObjectId = inGoodsGroupId)
-         OR (ObjectLink_4.ChildObjectId = inGoodsGroupId)
-         OR (ObjectLink_5.ChildObjectId = inGoodsGroupId)
-         OR (ObjectLink_6.ChildObjectId = inGoodsGroupId)
-         OR (ObjectLink_7.ChildObjectId = inGoodsGroupId)
-         OR (ObjectLink_8.ChildObjectId = inGoodsGroupId)
-         OR (ObjectLink_9.ChildObjectId = inGoodsGroupId)
-           ) ;*/
+     WITH RECURSIVE RecurObjectLink (ObjectId, GroupId) AS
+    (
+    	SELECT ObjectLink.ObjectId, ObjectLink.ChildObjectId AS GroupId
+    	FROM ObjectLink
+	    WHERE ObjectLink.ChildObjectId=inGoodsGroupId OR ObjectLink.ObjectId=inGoodsGroupId 
+	      AND ObjectLink.DescId =  zc_ObjectLink_GoodsGroup_Parent()
+     UNION
+    	SELECT ObjectLink.ObjectId, ObjectLink.ChildObjectId AS GroupId
+    	FROM ObjectLink
+    	    inner join RecurObjectLink ON RecurObjectLink.ObjectId = ObjectLink.ChildObjectId
+    	                              AND ObjectLink.DescId = zc_ObjectLink_GoodsGroup_Parent()
+    ) 
 
-END;
+    SELECT Object_Goods.Id AS GoodsId
+    FROM Object AS Object_Goods
+         JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                                       AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+                                                       AND ObjectLink_Goods_GoodsGroup.ChildObjectId IN (SELECT ObjectId FROM RecurObjectLink)
+    WHERE Object_Goods.DescId = zc_Object_Goods();
+     
+ END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
@@ -61,6 +41,7 @@ ALTER FUNCTION lfSelect_Object_Goods_byGoodsGroup (Integer) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.09.13         * вроде работает правильно)))             
  09.09.13         *
 */
 
