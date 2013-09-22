@@ -92,7 +92,7 @@ $BODY$BEGIN
            , CAST (SUM (_tmp_All.ReturnInSumm) AS TFloat)  AS ReturnInSumm
            , CAST (SUM (_tmp_All.LossSumm) AS TFloat)      AS LossSumm
            , CAST (SUM (_tmp_All.InventorySumm) AS TFloat) AS InventorySumm
-           , CAST (SUM (_tmp_All.EndSumm) AS TFloat)  AS EndSumm
+           , CAST (SUM (_tmp_All.EndSumm) AS TFloat)       AS EndSumm
 
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN SUM (_tmp_All.StartCount) ELSE 0 END AS TFloat) AS StartCount_Sh
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN SUM (_tmp_All.IncomeCount) ELSE 0 END AS TFloat) AS IncomeCount_Sh   
@@ -122,19 +122,19 @@ $BODY$BEGIN
                   , lfMotionContainer_List.LocationId   
                   , ContainerLinkObject_PartionGoods.ObjectId   AS PartionGoodsId
                   , lfMotionContainer_List.ContainerId_Goods
-				  , ContainerLinkObject_GoodsKind.ObjectId      AS GoodsKindId
+                  , ContainerLinkObject_GoodsKind.ObjectId      AS GoodsKindId
                   , ContainerLinkObject_AssetTo.ObjectId        AS AssetToId
                   
                   , lfMotionContainer_List.StartSumm 
-				  , lfMotionContainer_List.IncomeSumm
-				  , lfMotionContainer_List.SendInSumm 
-				  , lfMotionContainer_List.SendOutSumm
-				  , lfMotionContainer_List.SaleSumm
-				  , lfMotionContainer_List.ReturnOutSumm
-				  , lfMotionContainer_List.ReturnInSumm                 
-				  , lfMotionContainer_List.LossSumm
-				  , lfMotionContainer_List.InventorySumm
-				  , lfMotionContainer_List.EndSumm 
+		  , lfMotionContainer_List.IncomeSumm
+                  , lfMotionContainer_List.SendInSumm 
+                  , lfMotionContainer_List.SendOutSumm
+                  , lfMotionContainer_List.SaleSumm
+                  , lfMotionContainer_List.ReturnOutSumm
+                  , lfMotionContainer_List.ReturnInSumm                 
+                  , lfMotionContainer_List.LossSumm
+                  , lfMotionContainer_List.InventorySumm
+                  , lfMotionContainer_List.EndSumm 
             
                   , lfMotionContainer_List.StartCount     AS StartCount           
                   , lfMotionContainer_List.IncomeCount    AS IncomeCount 
@@ -174,13 +174,13 @@ $BODY$BEGIN
           LEFT JOIN Object AS Object_AssetTo ON Object_AssetTo.Id = _tmp_All.AssetToId
       
       GROUP BY _tmp_All.GoodsId, Object_Goods.ObjectCode, Object_Goods.ValueData
-           , _tmp_All.LocationId , Object_Location.ObjectCode, Object_Location.ValueData
-           , _tmp_All.PartionGoodsId, Object_PartionGoods.ObjectCode, Object_PartionGoods.ValueData
-           , _tmp_All.GoodsKindId, Object_GoodsKind.ObjectCode, Object_GoodsKind.ValueData
-           , _tmp_All.AssetToId, Object_AssetTo.ObjectCode, Object_AssetTo.ValueData 
-           , Object_Measure.ValueData 
-           , Object_Measure.Id
-           , ObjectFloat_Weight.ValueData;
+             , _tmp_All.LocationId , Object_Location.ObjectCode, Object_Location.ValueData
+             , _tmp_All.PartionGoodsId, Object_PartionGoods.ObjectCode, Object_PartionGoods.ValueData
+             , _tmp_All.GoodsKindId, Object_GoodsKind.ObjectCode, Object_GoodsKind.ValueData
+             , _tmp_All.AssetToId, Object_AssetTo.ObjectCode, Object_AssetTo.ValueData 
+             , Object_Measure.ValueData 
+             , Object_Measure.Id
+            , ObjectFloat_Weight.ValueData;
 
 END;
 $BODY$
