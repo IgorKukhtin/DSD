@@ -1,12 +1,12 @@
-п»ї-- Function: gpInsertUpdate_Object_InfoMoneyDestination()
+-- Function: gpInsertUpdate_Object_InfoMoneyDestination()
 
 -- DROP FUNCTION gpInsertUpdate_Object_InfoMoneyDestination();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_InfoMoneyDestination(
- INOUT ioId	         Integer   ,   	-- РєР»СЋС‡  РЈРїСЂР°РІР»РµРЅС‡РµСЃРєРёРµ Р°РЅР°Р»РёС‚РёРєРё - РЅР°Р·РЅР°С‡РµРЅРёРµ
-    IN inCode        Integer   ,    -- РєРѕРґ
-    IN inName        TVarChar  ,    -- РќР°РёРјРµРЅРѕРІР°РЅРёРµ
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+ INOUT ioId	         Integer   ,   	-- ключ  Управленческие аналитики - назначение
+    IN inCode        Integer   ,    -- код
+    IN inName        TVarChar  ,    -- Наименование
+    IN inSession     TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
@@ -14,23 +14,25 @@ $BODY$
    DECLARE Code_calc Integer;   
 
 BEGIN
+   -- !!! это временно !!!
+   ioId := (SELECT Id FROM Object WHERE ObjectCode=inCode AND DescId = zc_Object_InfoMoneyDestination());
 
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_InfoMoneyDestination());
    UserId := inSession;
 
-   -- Р•СЃР»Рё РєРѕРґ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ, РѕРїСЂРµРґРµР»СЏРµРј РµРіРѕ РєР°Рє РїРѕСЃР»РµРґРЅРёР№+1
+   -- Если код не установлен, определяем его как последний+1
    Code_calc:=lfGet_ObjectCode (inCode, zc_Object_InfoMoneyDestination()); 
 
-   -- !!! РїСЂРѕРІРµСЂРєР° РїСЂР°РІ СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё <РќР°РёРјРµРЅРѕРІР°РЅРёРµ>
+   -- !!! проверка прав уникальности <Наименование>
    -- !!! PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_InfoMoneyDestination(), inName);
-   -- РїСЂРѕРІРµСЂРєР° СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё РґР»СЏ СЃРІРѕР№СЃС‚РІР° <РљРѕРґ>
+   -- проверка уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_InfoMoneyDestination(), Code_calc);
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё <РћР±СЉРµРєС‚>
+   -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_InfoMoneyDestination(), Code_calc, inName);
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё РїСЂРѕС‚РѕРєРѕР»
+   -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, UserId);
 
 END;$BODY$
@@ -41,12 +43,13 @@ ALTER FUNCTION gpInsertUpdate_Object_InfoMoneyDestination (Integer, Integer, TVa
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.09.13                                        * !!! это временно !!!
  21.06.13          * gpInsertUpdate_Object_InfoMoneyDestination(); Code_calc
  19.06.13                                        * rem lpCheckUnique_Object_ValueData
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpInsertUpdate_Object_Contract()

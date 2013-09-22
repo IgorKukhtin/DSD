@@ -280,7 +280,7 @@ BEGIN
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-     -- определяется для количественного учета
+     -- 1.1.1. определяется для количественного учета
      UPDATE _tmpItem SET ContainerId_GoodsFrom = lpInsertUpdate_ContainerCount_Goods (inOperDate               := _tmpItem.OperDate
                                                                                     , inUnitId                 := _tmpItem.UnitId_From
                                                                                     , inPersonalId             := _tmpItem.PersonalId_From
@@ -302,7 +302,24 @@ BEGIN
                                                                                     , inAssetId                := _tmpItem.AssetId
                                                                                      );
 
-     -- самое интересное: заполняем таблицу - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках !!!(кроме Тары)!!!
+     -- 1.1.2. формируются Проводки для количественного учета - Кому + определяется MIContainer.Id (количественный)
+     UPDATE _tmpItem SET MIContainerId_To = lpInsertUpdate_MovementItemContainer (ioId             := 0
+                                                                                , inDescId         := zc_MIContainer_Count()
+                                                                                , inMovementId     := MovementId
+                                                                                , inMovementItemId := MovementItemId
+                                                                                , inParentId       := NULL
+                                                                                , inContainerId    := ContainerId_GoodsTo -- был опеределен выше
+                                                                                , inAmount         := OperCount
+                                                                                , inOperDate       := OperDate
+                                                                                , inIsActive       := TRUE
+                                                                                 );
+     -- 1.1.3. формируются Проводки для количественного учета - От кого
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
+       SELECT 0, zc_MIContainer_Count() AS DescId, MovementId, MovementItemId, ContainerId_GoodsFrom, MIContainerId_To AS ParentId, -1 * OperCount, OperDate, FALSE
+       FROM _tmpItem;
+
+
+     -- 1.2. самое интересное: заполняем таблицу - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках !!!(кроме Тары)!!!
      INSERT INTO _tmpItemSumm (MovementItemId, MIContainerId_To, ContainerId_To, AccountId_To, ContainerId_From, AccountId_From, InfoMoneyId_Detail_From, OperSumm)
         SELECT
               _tmpItem.MovementItemId
@@ -334,28 +351,13 @@ BEGIN
                , ContainerLinkObject_InfoMoneyDetail.ObjectId
         ;
 
+
      -- для теста
      -- RETURN QUERY SELECT _tmpItemSumm.MovementItemId, _tmpItemSumm.MIContainerId_To, _tmpItemSumm.ContainerId_From, _tmpItemSumm.InfoMoneyId_Detail_From, _tmpItemSumm.OperSumm FROM _tmpItemSumm;
      -- return;
 
-     -- формируются Проводки для количественного учета - Кому + определяется MIContainer.Id (количественный)
-     UPDATE _tmpItem SET MIContainerId_To = lpInsertUpdate_MovementItemContainer (ioId             := 0
-                                                                                , inDescId         := zc_MIContainer_Count()
-                                                                                , inMovementId     := MovementId
-                                                                                , inMovementItemId := MovementItemId
-                                                                                , inParentId       := NULL
-                                                                                , inContainerId    := ContainerId_GoodsTo -- был опеределен выше
-                                                                                , inAmount         := OperCount
-                                                                                , inOperDate       := OperDate
-                                                                                , inIsActive       := TRUE
-                                                                                 );
-     -- формируются Проводки для количественного учета - От кого
-     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
-       SELECT 0, zc_MIContainer_Count() AS DescId, MovementId, MovementItemId, ContainerId_GoodsFrom, MIContainerId_To AS ParentId, -1 * OperCount, OperDate, FALSE
-       FROM _tmpItem;
 
-
-     -- определяется Счет для проводок по суммовому учету - Кому
+     -- 1.3.1. определяется Счет для проводок по суммовому учету - Кому
      UPDATE _tmpItemSumm SET AccountId_To = _tmpItem_byAccount.AccountId
      FROM _tmpItem
           JOIN (SELECT lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы -- select * from gpSelect_Object_AccountGroup ('2') where Id = zc_Enum_AccountGroup_20000()
@@ -379,7 +381,7 @@ BEGIN
                                       AND _tmpItem_byAccount.InfoMoneyDestinationId = _tmpItem.InfoMoneyDestinationId
      WHERE _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId;
 
-     -- определяется ContainerId для проводок по суммовому учету - Кому  + формируется Аналитика <элемент с/с>
+     -- 1.3.2. определяется ContainerId для проводок по суммовому учету - Кому  + формируется Аналитика <элемент с/с>
      UPDATE _tmpItemSumm SET ContainerId_To = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := _tmpItem.OperDate
                                                                                 , inUnitId                 := _tmpItem.UnitId_To
                                                                                 , inPersonalId             := _tmpItem.PersonalId_To
@@ -400,14 +402,28 @@ BEGIN
      FROM _tmpItem
      WHERE _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId;
 
-     -- формируются Проводки для суммового учета - От кого
+     -- 1.3.3. формируются Проводки для суммового учета - Кому + определяется MIContainer.Id
+     UPDATE _tmpItemSumm SET MIContainerId_To = lpInsertUpdate_MovementItemContainer (ioId:= 0
+                                                                                    , inDescId:= zc_MIContainer_Summ()
+                                                                                    , inMovementId:= MovementId
+                                                                                    , inMovementItemId:= _tmpItem.MovementItemId 
+                                                                                    , inParentId:= NULL
+                                                                                    , inContainerId:= _tmpItemSumm.ContainerId_To
+                                                                                    , inAmount:= OperSumm
+                                                                                    , inOperDate:= OperDate
+                                                                                    , inIsActive:= TRUE
+                                                                                     )
+     FROM _tmpItem
+     WHERE _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId;
+
+     -- 1.3.4. формируются Проводки для суммового учета - От кого
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
        SELECT 0, zc_MIContainer_Summ() AS DescId, MovementId, _tmpItem.MovementItemId, ContainerId_From, _tmpItemSumm.MIContainerId_To AS ParentId, -1 * OperSumm, OperDate, FALSE
        FROM _tmpItem
             JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId;
 
 
-     -- формируются Проводки для отчета (Аналитики: Товар расход и Товар приход)
+     -- 2. формируются Проводки для отчета (Аналитики: Товар расход и Товар приход)
      PERFORM lpInsertUpdate_MovementItemReport (inMovementId := _tmpItem.MovementId
                                               , inMovementItemId := _tmpItemSumm.MovementItemId
                                               , inActiveContainerId  := _tmpItemSumm.ContainerId_To

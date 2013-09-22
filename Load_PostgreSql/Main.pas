@@ -1724,6 +1724,8 @@ begin
         Add('select _pgUnit.Id as ObjectId');
         Add('     , 0 as ObjectCode');
         Add('     , _pgUnit.Name3 as ObjectName');
+        Add('     , case when _pgUnit.ObjectCode in (102) then zc_rvYes() else zc_rvNo() end as zc_Branch_Basis');
+        Add('     , zc_rvYes() as zc_rvYes');
         Add('     , _pgUnit.Id_Postgres_Branch as Id_Postgres');
 //        Add('     , 0 as JuridicalId_pg');
         Add('from dba._pgUnit');
@@ -1758,6 +1760,9 @@ begin
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba._pgUnit set Id_Postgres_Branch='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             if FieldByName('zc_Branch_Basis').AsInteger=FieldByName('zc_rvYes').AsInteger
+             then fExecSqToQuery ('CREATE OR REPLACE FUNCTION zc_Branch_Basis() RETURNS Integer AS $BODY$BEGIN RETURN ('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;');
              //
              Next;
              Application.ProcessMessages;
@@ -4123,10 +4128,37 @@ begin
         Add('     left outer join dba._pgPersonal as pgPersonalTo on pgPersonalTo.Id=UnitTo.PersonalId_Postgres'
            +'                                                      and pgPersonalTo.Id2_Postgres>0'
            +'                                                      and UnitTo.ParentId=4137'); // ÃŒ À»÷¿-¬—≈
-        Add('zzz where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'  and Bill.BillKind in (zc_bkSendUnitToUnit())'
-           +'  and  (('
-           +'  and isnull(UnitFrom.ParentId,0)<>4137' // ÃŒ À»÷¿-¬—≈
+
+           +' AND (('
+           +'      isnull(UnitFrom.ParentId,0)<>4137' // ÃŒ À»÷¿-¬—≈
+           +'  and isnull(UnitTo.ParentId,0)<>4137' // ÃŒ À»÷¿-¬—≈
+
+           +'  and ((UnitFrom.pgUnitId is not null'
+           +'    and UnitTo.pgUnitId is null'
+           +'    and UnitTo.PersonalId_Postgres is not null)'
+
+           +'    or (UnitTo.pgUnitId is not null'
+           +'    and UnitFrom.pgUnitId is null'
+           +'    and UnitFrom.PersonalId_Postgres is not null))'
+
+           +'  and pgUnitFrom.Id_Postgres_Branch is null'
+           +'  and pgUnitTo.Id_Postgres_Branch is null'
+           +'  )'
+           );
+        Add(
+            '  OR ('
+
+           +'      not ('
+           +'      (UnitFrom.pgUnitId is not null or UnitFrom.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
+           +'  and (UnitTo.pgUnitId is not null or UnitTo.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
+           +'  and (pgUnitFrom.Id_Postgres_Branch is null or UnitFrom.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
+           +'  and (pgUnitTo.Id_Postgres_Branch is null or UnitTo.ParentId=4137)' // ÃŒ À»÷¿-¬—≈
+           +'          )'
+
+           +'  and not ('
+           +'      isnull(UnitFrom.ParentId,0)<>4137' // ÃŒ À»÷¿-¬—≈
            +'  and isnull(UnitTo.ParentId,0)<>4137' // ÃŒ À»÷¿-¬—≈
 
            +'  and ((UnitFrom.pgUnitId is not null'
@@ -4140,8 +4172,25 @@ begin
            +'  and pgUnitFrom.Id_Postgres_Branch is null'
            +'  and pgUnitTo.Id_Postgres_Branch is null'
            +'          )'
-           +'     or ('
-           +'       ))'
+
+           +'  and not ('
+           +'       ((UnitFrom.pgUnitId is not null'
+           +'     or UnitFrom.PersonalId_Postgres is not null'
+           +'     or pgUnitFrom.Id_Postgres_Branch is not null)'
+           +'    and (UnitTo.pgUnitId is null'
+           +'     and UnitTo.PersonalId_Postgres is null'
+           +'     and pgUnitTo.Id_Postgres_Branch is null))'
+           +'          )'
+           +'  and not ('
+           +'       ((UnitTo.pgUnitId is not null'
+           +'     or UnitTo.PersonalId_Postgres is not null'
+           +'     or pgUnitTo.Id_Postgres_Branch is not null)'
+           +'    and (UnitFrom.pgUnitId is null'
+           +'     and UnitFrom.PersonalId_Postgres is null'
+           +'     and pgUnitFrom.Id_Postgres_Branch is null))'
+           +'          )'
+           +'  ))'
+
            );
         Add('order by OperDate,ObjectId');
         Open;
