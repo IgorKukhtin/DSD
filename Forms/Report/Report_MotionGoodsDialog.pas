@@ -8,7 +8,8 @@ uses
   cxLookAndFeelPainters, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxControls,
   cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils, ChoicePeriod,
   dsdGuides, cxDropDownEdit, cxCalendar, cxTextEdit, cxMaskEdit, cxButtonEdit,
-  cxPropertiesStore, dsdAddOn, dsdDB, cxLabel;
+  cxPropertiesStore, dsdAddOn, dsdDB, cxLabel, dxSkinsCore,
+  dxSkinsDefaultPainters;
 
 type
   TReport_MotionGoodsDialogForm = class(TParentForm)
@@ -22,10 +23,10 @@ type
     FormParams: TdsdFormParams;
     edGoods: TcxButtonEdit;
     edGoodsGroup: TcxButtonEdit;
-    edUnit: TcxButtonEdit;
+    edLocation: TcxButtonEdit;
     GoodsGuides: TdsdGuides;
     GoodsGroupGuides: TdsdGuides;
-    UnitGuides: TdsdGuides;
+    LocationGuides: TdsdGuides;
     edUnitGroup: TcxButtonEdit;
     cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;

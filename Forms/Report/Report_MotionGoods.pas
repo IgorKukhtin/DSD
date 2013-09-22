@@ -72,7 +72,7 @@ type
     InventorySumm: TcxGridDBColumn;
     StartWeight: TcxGridDBColumn;
     GoodsGroupGuides: TdsdGuides;
-    UnitGuides: TdsdGuides;
+    LocationGuides: TdsdGuides;
     edGoodsGroup: TcxButtonEdit;
     edUnitGroup: TcxButtonEdit;
     PeriodChoice: TPeriodChoice;

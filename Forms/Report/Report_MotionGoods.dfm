@@ -2,8 +2,8 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
   Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
   ClientHeight = 395
   ClientWidth = 1329
-  ExplicitWidth = 1337
-  ExplicitHeight = 429
+  ExplicitWidth = 1345
+  ExplicitHeight = 433
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -466,7 +466,7 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
     object cxLabel4: TcxLabel
       Left = 332
       Top = 50
-      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+      Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082#1080
     end
   end
   object DataSource: TDataSource
@@ -498,8 +498,8 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -657,7 +657,7 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
         end
         item
           Name = 'UnitId'
-          Component = UnitGuides
+          Component = LocationGuides
           ComponentItem = 'Key'
           DataType = ftInteger
           ParamType = ptOutput
@@ -665,7 +665,7 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
         end
         item
           Name = 'UnitName'
-          Component = UnitGuides
+          Component = LocationGuides
           ComponentItem = 'Key'
           DataType = ftString
           ParamType = ptOutput
@@ -685,12 +685,14 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
     Params = <
       item
         Name = 'inStartDate'
+        Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
         Value = 41395d
       end
       item
         Name = 'inEndDate'
+        Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
         Value = 41395d
@@ -705,7 +707,7 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
       end
       item
         Name = 'inLocationId'
-        Component = UnitGuides
+        Component = LocationGuides
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptInput
@@ -766,14 +768,14 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
     Left = 776
     Top = 32
   end
-  object UnitGuides: TdsdGuides
+  object LocationGuides: TdsdGuides
     LookupControl = edLocation
-    FormName = 'TUnitForm'
+    FormName = 'TPersonalForm'
     PositionDataSet = 'GridDataSet'
     Params = <
       item
         Name = 'Key'
-        Component = UnitGuides
+        Component = LocationGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -781,7 +783,7 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
       end
       item
         Name = 'TextValue'
-        Component = UnitGuides
+        Component = LocationGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -856,7 +858,7 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
         Component = UnitGroupGuides
       end
       item
-        Component = UnitGuides
+        Component = LocationGuides
       end
       item
         Component = GoodsGroupGuides

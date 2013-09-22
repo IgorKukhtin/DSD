@@ -4,7 +4,7 @@ inherited Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
   ClientHeight = 206
   ClientWidth = 313
   ExplicitWidth = 319
-  ExplicitHeight = 231
+  ExplicitHeight = 234
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
@@ -64,7 +64,7 @@ inherited Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
     TabOrder = 5
     Width = 121
   end
-  object edUnit: TcxButtonEdit
+  object edLocation: TcxButtonEdit
     Left = 16
     Top = 117
     Properties.Buttons = <
@@ -89,12 +89,12 @@ inherited Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
   object cxLabel3: TcxLabel
     Left = 16
     Top = 44
-    Caption = #1043#1088'.'#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   object cxLabel4: TcxLabel
     Left = 16
     Top = 94
-    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
   end
   object cxLabel1: TcxLabel
     Left = 177
@@ -204,23 +204,23 @@ inherited Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
         Value = ''
       end
       item
-        Name = 'UnitId'
-        Component = UnitGuides
+        Name = 'LocationId'
+        Component = LocationGuides
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
         Value = ''
       end
       item
-        Name = 'UnitName'
-        Component = UnitGuides
+        Name = 'LocationName'
+        Component = LocationGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptOutput
         Value = ''
       end>
-    Left = 40
-    Top = 128
+    Left = 32
+    Top = 112
   end
   object GoodsGuides: TdsdGuides
     LookupControl = edGoods
@@ -270,14 +270,14 @@ inherited Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
     Left = 240
     Top = 48
   end
-  object UnitGuides: TdsdGuides
-    LookupControl = edUnit
-    FormName = 'TUnitForm'
+  object LocationGuides: TdsdGuides
+    LookupControl = edLocation
+    FormName = 'TPersonalForm'
     PositionDataSet = 'GridDataSet'
     Params = <
       item
         Name = 'Key'
-        Component = UnitGuides
+        Component = LocationGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -285,7 +285,7 @@ inherited Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
       end
       item
         Name = 'TextValue'
-        Component = UnitGuides
+        Component = LocationGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
