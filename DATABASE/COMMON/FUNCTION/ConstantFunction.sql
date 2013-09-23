@@ -8,14 +8,21 @@ CREATE OR REPLACE FUNCTION zc_DateStart_PartionGoods() RETURNS TDateTime AS $BOD
 
 CREATE OR REPLACE FUNCTION zc_DateStart_ObjectCostOnUnit() RETURNS TDateTime AS $BODY$BEGIN RETURN ('01.09.2013'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 
--- CREATE OR REPLACE FUNCTION zc_PriceList_ProductionSeparate() RETURNS Integer AS $BODY$BEGIN RETURN (19183); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE; -- select Id_Postgres from PriceList_byHistory where Id = zc_def_PriceList_onRecalcProduction();
-
--- CREATE OR REPLACE FUNCTION zc_PriceList_Basis() RETURNS Integer AS $BODY$BEGIN RETURN (19134); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE; -- select Id_Postgres from PriceList_byHistory where Id = 2;
+/*
+-- Значения для эти ф-ций будут сформированы в Load_PostgreSql, или !!!руками значения =0!!!
+CREATE OR REPLACE FUNCTION zc_Measure_Sh() RETURNS Integer AS $BODY$BEGIN RETURN (0); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_GoodsKind_WorkProgress() RETURNS Integer AS $BODY$BEGIN RETURN (0); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_PriceList_Basis() RETURNS Integer AS $BODY$BEGIN RETURN (0); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_PriceList_ProductionSeparate() RETURNS Integer AS $BODY$BEGIN RETURN (0); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_InfoMoneyDestination_WorkProgress() RETURNS Integer AS $BODY$BEGIN RETURN (0); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Branch_Basis() RETURNS Integer AS $BODY$BEGIN RETURN (0); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+*/
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 09.08.13                                        * del zc_PriceList_ProductionSeparate and zc_PriceList_Basis, эти ф-ции создадутся при зугрузке данных (Load_PostgreSql.exe)
+ 22.09.13                                        * add rem zc_Branch_Basis
+ 09.08.13                                        * rem zc_PriceList_ProductionSeparate and zc_PriceList_Basis, эти ф-ции создадутся при зугрузке данных (Load_PostgreSql.exe)
  09.08.13                                        * add zc_isHistoryCost and zc_isHistoryCost_byInfoMoneyDetail
  06.08.13                                        * ? как сделать что б некоторые ф-ции определялись после загрузки данных (а не при нинициализации БД)
  21.07.13                                        * add zc_PriceList_ProductionSeparate and zc_PriceList_Basis

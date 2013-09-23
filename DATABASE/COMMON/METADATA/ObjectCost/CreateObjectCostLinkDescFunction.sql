@@ -42,11 +42,16 @@ CREATE OR REPLACE FUNCTION zc_ObjectCostLink_AssetTo() RETURNS Integer AS $BODY$
 INSERT INTO ObjectCostLinkDesc (Code, ItemName, ObjectDescId)
   SELECT 'zc_ObjectCostLink_AssetTo', 'Основные средства(для которого закуплено ТМЦ)', zc_Object_Branch() WHERE NOT EXISTS (SELECT * FROM ObjectCostLinkDesc WHERE Code = 'zc_ObjectCostLink_AssetTo');
 
+CREATE OR REPLACE FUNCTION zc_ObjectCostLink_Account() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ObjectCostLinkDesc WHERE Code = 'zc_ObjectCostLink_Account'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectCostLinkDesc (Code, ItemName, ObjectDescId)
+  SELECT 'zc_ObjectCostLink_Account', 'Счет', zc_Object_Branch() WHERE NOT EXISTS (SELECT * FROM ObjectCostLinkDesc WHERE Code = 'zc_ObjectCostLink_Account');
+
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.09.13                                        * add zc_ObjectCostLink_Account
  16.07.13                                        * add zc_ObjectCostLink_Personal and zc_ObjectCostLink_AssetTo
  11.07.13                                        *
 */

@@ -333,33 +333,30 @@ BEGIN
      -- Если не нашли, добавляем
      IF COALESCE (vbObjectCostId, 0) = 0
      THEN
-         -- удаляем предыдущие
-         DELETE FROM _tmpObjectCost;
-
          -- определяем новый ObjectCostId
          SELECT NEXTVAL ('objectcost_id_seq') INTO vbObjectCostId;
 
          -- добавили Аналитики
          INSERT INTO ObjectCostLink (DescId, ObjectCostDescId, ObjectCostId, ObjectId)
-            SELECT inDescId_1, inObjectId_1 WHERE inDescId_1 <> 0
+            SELECT inDescId_1, inObjectCostDescId, vbObjectCostId, inObjectId_1 WHERE inDescId_1 <> 0
            UNION ALL
-            SELECT inDescId_2, inObjectId_2 WHERE inDescId_2 <> 0
+            SELECT inDescId_2, inObjectCostDescId, vbObjectCostId, inObjectId_2 WHERE inDescId_2 <> 0
            UNION ALL
-            SELECT inDescId_3, inObjectId_3 WHERE inDescId_3 <> 0
+            SELECT inDescId_3, inObjectCostDescId, vbObjectCostId, inObjectId_3 WHERE inDescId_3 <> 0
            UNION ALL
-            SELECT inDescId_4, inObjectId_4 WHERE inDescId_4 <> 0
+            SELECT inDescId_4, inObjectCostDescId, vbObjectCostId, inObjectId_4 WHERE inDescId_4 <> 0
            UNION ALL
-            SELECT inDescId_5, inObjectId_5 WHERE inDescId_5 <> 0
+            SELECT inDescId_5, inObjectCostDescId, vbObjectCostId, inObjectId_5 WHERE inDescId_5 <> 0
            UNION ALL
-            SELECT inDescId_6, inObjectId_6 WHERE inDescId_6 <> 0
+            SELECT inDescId_6, inObjectCostDescId, vbObjectCostId, inObjectId_6 WHERE inDescId_6 <> 0
            UNION ALL
-            SELECT inDescId_7, inObjectId_7 WHERE inDescId_7 <> 0
+            SELECT inDescId_7, inObjectCostDescId, vbObjectCostId, inObjectId_7 WHERE inDescId_7 <> 0
            UNION ALL
-            SELECT inDescId_8, inObjectId_8 WHERE inDescId_8 <> 0
+            SELECT inDescId_8, inObjectCostDescId, vbObjectCostId, inObjectId_8 WHERE inDescId_8 <> 0
            UNION ALL
-            SELECT inDescId_9, inObjectId_9 WHERE inDescId_9 <> 0
+            SELECT inDescId_9, inObjectCostDescId, vbObjectCostId, inObjectId_9 WHERE inDescId_9 <> 0
            UNION ALL
-            SELECT inDescId_10, inObjectId_10 WHERE inDescId_10 <> 0;
+            SELECT inDescId_10, inObjectCostDescId, vbObjectCostId, inObjectId_10 WHERE inDescId_10 <> 0;
 
      END IF;  
 

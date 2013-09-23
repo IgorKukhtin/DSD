@@ -48,12 +48,14 @@ BEGIN
                                                                                                  , inObjectId_4 := inInfoMoneyId_Detail
                                                                                                  , inDescId_5   := zc_ObjectCostLink_InfoMoney()
                                                                                                  , inObjectId_5 := inInfoMoneyId
-                                                                                                 , inDescId_6   := zc_ObjectCostLink_Branch()
-                                                                                                 , inObjectId_6 := inBranchId
-                                                                                                 , inDescId_7   := zc_ObjectCostLink_Business()
-                                                                                                 , inObjectId_7 := inBusinessId
-                                                                                                 , inDescId_8   := zc_ObjectCostLink_JuridicalBasis()
-                                                                                                 , inObjectId_8 := inJuridicalId_basis
+                                                                                                 , inDescId_6   := zc_ObjectCostLink_Account()
+                                                                                                 , inObjectId_6 := inAccountId
+                                                                                                 , inDescId_7   := zc_ObjectCostLink_Branch()
+                                                                                                 , inObjectId_7 := inBranchId
+                                                                                                 , inDescId_8   := zc_ObjectCostLink_Business()
+                                                                                                 , inObjectId_8 := inBusinessId
+                                                                                                 , inDescId_9   := zc_ObjectCostLink_JuridicalBasis()
+                                                                                                 , inObjectId_9 := inJuridicalId_basis
                                                                                                   )
                                                  , inDescId_1   := zc_ContainerLinkObject_Goods()
                                                  , inObjectId_1 := inGoodsId
@@ -89,12 +91,14 @@ BEGIN
                                                                                                  , inObjectId_4 := inInfoMoneyId_Detail
                                                                                                  , inDescId_5   := zc_ObjectCostLink_InfoMoney()
                                                                                                  , inObjectId_5 := inInfoMoneyId
-                                                                                                 , inDescId_6   := zc_ObjectCostLink_Branch()
-                                                                                                 , inObjectId_6 := inBranchId
-                                                                                                 , inDescId_7   := zc_ObjectCostLink_Business()
-                                                                                                 , inObjectId_7 := inBusinessId
-                                                                                                 , inDescId_8   := zc_ObjectCostLink_JuridicalBasis()
-                                                                                                 , inObjectId_8 := inJuridicalId_basis
+                                                                                                 , inDescId_6   := zc_ObjectCostLink_Account()
+                                                                                                 , inObjectId_6 := inAccountId
+                                                                                                 , inDescId_7   := zc_ObjectCostLink_Branch()
+                                                                                                 , inObjectId_7 := inBranchId
+                                                                                                 , inDescId_8   := zc_ObjectCostLink_Business()
+                                                                                                 , inObjectId_8 := inBusinessId
+                                                                                                 , inDescId_9   := zc_ObjectCostLink_JuridicalBasis()
+                                                                                                 , inObjectId_9 := inJuridicalId_basis
                                                                                                   )
                                                  , inDescId_1   := zc_ContainerLinkObject_Goods()
                                                  , inObjectId_1 := inGoodsId
@@ -135,12 +139,14 @@ BEGIN
                                                                                                                 , inObjectId_5 := inGoodsKindId
                                                                                                                 , inDescId_6   := zc_ObjectCostLink_InfoMoney()
                                                                                                                 , inObjectId_6 := inInfoMoneyId
-                                                                                                                , inDescId_7   := zc_ObjectCostLink_Branch()
-                                                                                                                , inObjectId_7 := inBranchId
-                                                                                                                , inDescId_8   := zc_ObjectCostLink_Business()
-                                                                                                                , inObjectId_8 := inBusinessId
-                                                                                                                , inDescId_9   := zc_ObjectCostLink_JuridicalBasis()
-                                                                                                                , inObjectId_9 := inJuridicalId_basis
+                                                                                                                , inDescId_7   := zc_ObjectCostLink_Account()
+                                                                                                                , inObjectId_7 := inAccountId
+                                                                                                                , inDescId_8   := zc_ObjectCostLink_Branch()
+                                                                                                                , inObjectId_8 := inBranchId
+                                                                                                                , inDescId_9   := zc_ObjectCostLink_Business()
+                                                                                                                , inObjectId_9 := inBusinessId
+                                                                                                                , inDescId_10  := zc_ObjectCostLink_JuridicalBasis()
+                                                                                                                , inObjectId_10:= inJuridicalId_basis
                                                                                                             )
                                                                 , inDescId_1   := zc_ContainerLinkObject_Goods()
                                                                 , inObjectId_1 := inGoodsId
@@ -174,12 +180,14 @@ BEGIN
                                                                                                            , inObjectId_4 := inInfoMoneyId_Detail
                                                                                                            , inDescId_5   := zc_ObjectCostLink_InfoMoney()
                                                                                                            , inObjectId_5 := inInfoMoneyId
-                                                                                                           , inDescId_6   := zc_ObjectCostLink_Branch()
-                                                                                                           , inObjectId_6 := inBranchId
-                                                                                                           , inDescId_7   := zc_ObjectCostLink_Business()
-                                                                                                           , inObjectId_7 := inBusinessId
-                                                                                                           , inDescId_8   := zc_ObjectCostLink_JuridicalBasis()
-                                                                                                           , inObjectId_8 := inJuridicalId_basis
+                                                                                                           , inDescId_6   := zc_ObjectCostLink_Account()
+                                                                                                           , inObjectId_6 := inAccountId
+                                                                                                           , inDescId_7   := zc_ObjectCostLink_Branch()
+                                                                                                           , inObjectId_7 := inBranchId
+                                                                                                           , inDescId_8   := zc_ObjectCostLink_Business()
+                                                                                                           , inObjectId_8 := inBusinessId
+                                                                                                           , inDescId_9   := zc_ObjectCostLink_JuridicalBasis()
+                                                                                                           , inObjectId_9 := inJuridicalId_basis
                                                                                                             )
                                                            , inDescId_1   := zc_ContainerLinkObject_Goods()
                                                            , inObjectId_1 := inGoodsId
@@ -210,14 +218,16 @@ BEGIN
                                                                                                  , inObjectId_2 := inInfoMoneyId_Detail
                                                                                                  , inDescId_3   := zc_ObjectCostLink_InfoMoney()
                                                                                                  , inObjectId_3 := inInfoMoneyId
-                                                                                                 , inDescId_4   := zc_ObjectCostLink_Unit()
-                                                                                                 , inObjectId_4 := 0
-                                                                                                 , inDescId_5   := zc_ObjectCostLink_Branch()
+                                                                                                 , inDescId_4   := zc_ObjectCostLink_Account()
+                                                                                                 , inObjectId_4 := inAccountId
+                                                                                                 , inDescId_5   := zc_ObjectCostLink_Unit()
                                                                                                  , inObjectId_5 := 0
-                                                                                                 , inDescId_6   := zc_ObjectCostLink_Business()
-                                                                                                 , inObjectId_6 := inBusinessId
-                                                                                                 , inDescId_7   := zc_ObjectCostLink_JuridicalBasis()
-                                                                                                 , inObjectId_7 := inJuridicalId_basis
+                                                                                                 , inDescId_6   := zc_ObjectCostLink_Branch()
+                                                                                                 , inObjectId_6 := 0
+                                                                                                 , inDescId_7   := zc_ObjectCostLink_Business()
+                                                                                                 , inObjectId_7 := inBusinessId
+                                                                                                 , inDescId_8   := zc_ObjectCostLink_JuridicalBasis()
+                                                                                                 , inObjectId_8 := inJuridicalId_basis
                                                                                                   )
                                                  , inDescId_1   := zc_ContainerLinkObject_Goods()
                                                  , inObjectId_1 := inGoodsId
@@ -247,12 +257,14 @@ BEGIN
                                                                                                  , inObjectId_3 := inInfoMoneyId_Detail
                                                                                                  , inDescId_4   := zc_ObjectCostLink_InfoMoney()
                                                                                                  , inObjectId_4 := inInfoMoneyId
-                                                                                                 , inDescId_5   := zc_ObjectCostLink_Branch()
-                                                                                                 , inObjectId_5 := inBranchId
-                                                                                                 , inDescId_6   := zc_ObjectCostLink_Business()
-                                                                                                 , inObjectId_6 := inBusinessId
-                                                                                                 , inDescId_7   := zc_ObjectCostLink_JuridicalBasis()
-                                                                                                 , inObjectId_7 := inJuridicalId_basis
+                                                                                                 , inDescId_5   := zc_ObjectCostLink_Account()
+                                                                                                 , inObjectId_5 := inAccountId
+                                                                                                 , inDescId_6   := zc_ObjectCostLink_Branch()
+                                                                                                 , inObjectId_6 := inBranchId
+                                                                                                 , inDescId_7   := zc_ObjectCostLink_Business()
+                                                                                                 , inObjectId_7 := inBusinessId
+                                                                                                 , inDescId_8   := zc_ObjectCostLink_JuridicalBasis()
+                                                                                                 , inObjectId_8 := inJuridicalId_basis
                                                                                                   )
                                                  , inDescId_1   := zc_ContainerLinkObject_Goods()
                                                  , inObjectId_1 := inGoodsId
@@ -280,6 +292,7 @@ ALTER FUNCTION lpInsertUpdate_ContainerSumm_Goods (TDateTime, Integer, Integer, 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 20.09.13                                        * add zc_ObjectCostLink_Account
  19.09.13                                        * sort by optimize
  17.09.13                                        * CASE -> IF
  16.09.13                                        *

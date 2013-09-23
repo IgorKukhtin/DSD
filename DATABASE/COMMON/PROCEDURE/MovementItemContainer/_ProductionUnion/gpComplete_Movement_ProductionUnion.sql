@@ -643,7 +643,7 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+LANGUAGE plpgsql VOLATILE;
 
 /*
  хярнпхъ пюгпюанрйх: дюрю, юбрнп
