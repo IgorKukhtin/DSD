@@ -8,12 +8,13 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Transport(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , WorkTime TDateTime
-             , MorningOdometre TFloat, EveningOdometre TFloat
-             , Distance TFloat, Cold TFloat, Norm TFloat
+             , StartRunPlan TDateTime, EndRunPlan TDateTime, StartRun TDateTime, EndRun TDateTime
+             , HoursWork TFloat, HoursAdd TFloat, StartOdometre TFloat, EndOdometre TFloat, Distance TFloat
+             , Comment TVarChar
              , CarId Integer, CarName TVarChar
-             , MemberId Integer, MemberName TVarChar
-             , RouteId Integer, RouteName TVarChar
+             , CarTrailerId Integer, CarTrailerName TVarChar
+             , PersonalDriverId Integer, PersonalDriverName TVarChar
+             , UnitForwardingId Integer, UnitForwardingName TVarChar
              )
 AS
 $BODY$
@@ -30,64 +31,89 @@ BEGIN
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
            
-           , MovementDate_WorkTime.ValueData AS WorkTime           
+           , MovementDate_StartRunPlan.ValueData AS StartRunPlan 
+           , MovementDate_EndRunPlan.ValueData   AS EndRunPlan 
+           , MovementDate_StartRun.ValueData     AS StartRun 
+           , MovementDate_EndRun.ValueData       AS EndRun           
           
-           , MovementFloat_MorningOdometre.ValueData AS MorningOdometre
-           , MovementFloat_EveningOdometre.ValueData AS EveningOdometre
-           , MovementFloat_Distance.ValueData        AS Distance
-           , MovementFloat_Cold.ValueData            AS Cold
-           , MovementFloat_Norm.ValueData            AS Norm
+           , MovementFloat_HoursWork.ValueData     AS HoursWork
+           , MovementFloat_HoursAdd.ValueData      AS HoursAdd
+           , MovementFloat_StartOdometre.ValueData AS StartOdometre
+           , MovementFloat_EndOdometre.ValueData   AS EndOdometre
+           , MovementFloat_Distance.ValueData      AS Distance
+                      
+           , MovementString_Comment.ValueData      AS Comment
 
-           , Object_Car.Id                     AS CarId
-           , Object_Car.ValueData              AS CarName
-           
-           , Object_Member.Id             AS MemberId
-           , Object_Member.ValueData      AS MemberName
+           , Object_Car.Id            AS CarId
+           , Object_Car.ValueData     AS CarName
 
-           , Object_Route.Id               AS RouteId
-           , Object_Route.ValueData        AS RouteName
+           , Object_CarTrailer.Id        AS CarTrailerId
+           , Object_CarTrailer.ValueData AS CarTrailerName
+
+           , Object_PersonalDriver.Id        AS PersonalDriverId
+           , Object_PersonalDriver.ValueData AS PersonalDriverName
+
+           , Object_UnitForwarding.Id        AS UnitForwardingId
+           , Object_UnitForwarding.ValueData AS UnitForwardingName
    
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-            LEFT JOIN MovementDate AS MovementDate_WorkTime
-                                   ON MovementDate_WorkTime.MovementId = Movement.Id
-                                  AND MovementDate_WorkTime.DescId = zc_MovementDate_WorkTime()
+            LEFT JOIN MovementDate AS MovementDate_StartRunPlan
+                                   ON MovementDate_StartRunPlan.MovementId = Movement.Id
+                                  AND MovementDate_StartRunPlan.DescId = zc_MovementDate_StartRunPlan()
 
-            LEFT JOIN MovementFloat AS MovementFloat_MorningOdometre
-                                    ON MovementFloat_MorningOdometre.MovementId =  Movement.Id
-                                   AND MovementFloat_MorningOdometre.DescId = zc_MovementFloat_MorningOdometre()
+            LEFT JOIN MovementDate AS MovementDate_EndRunPlan
+                                   ON MovementDate_EndRunPlan.MovementId = Movement.Id
+                                  AND MovementDate_EndRunPlan.DescId = zc_MovementDate_EndRunPlan()
+
+            LEFT JOIN MovementDate AS MovementDate_StartRun
+                                   ON MovementDate_StartRun.MovementId = Movement.Id
+                                  AND MovementDate_StartRun.DescId = zc_MovementDate_StartRun()
+
+            LEFT JOIN MovementDate AS MovementDate_EndRun
+                                   ON MovementDate_EndRun.MovementId = Movement.Id
+                                  AND MovementDate_EndRun.DescId = zc_MovementDate_EndRun()
+
+            LEFT JOIN MovementFloat AS MovementFloat_HoursWork
+                                    ON MovementFloat_HoursWork.MovementId =  Movement.Id
+                                   AND MovementFloat_HoursWork.DescId = zc_MovementFloat_HoursWork()
             
-            LEFT JOIN MovementFloat AS MovementFloat_EveningOdometre
-                                    ON MovementFloat_EveningOdometre.MovementId =  Movement.Id
-                                   AND MovementFloat_EveningOdometre.DescId = zc_MovementFloat_EveningOdometre()
+            LEFT JOIN MovementFloat AS MovementFloat_HoursAdd
+                                    ON MovementFloat_HoursAdd.MovementId =  Movement.Id
+                                   AND MovementFloat_HoursAdd.DescId = zc_MovementFloat_HoursAdd()
+
+            LEFT JOIN MovementFloat AS MovementFloat_StartOdometre
+                                    ON MovementFloat_StartOdometre.MovementId =  Movement.Id
+                                   AND MovementFloat_StartOdometre.DescId = zc_MovementFloat_StartOdometre()
+
+            LEFT JOIN MovementFloat AS MovementFloat_EndOdometre
+                                    ON MovementFloat_EndOdometre.MovementId =  Movement.Id
+                                   AND MovementFloat_EndOdometre.DescId = zc_MovementFloat_EndOdometre()
 
             LEFT JOIN MovementFloat AS MovementFloat_Distance
                                     ON MovementFloat_Distance.MovementId =  Movement.Id
                                    AND MovementFloat_Distance.DescId = zc_MovementFloat_Distance()
 
-            LEFT JOIN MovementFloat AS MovementFloat_Cold
-                                    ON MovementFloat_Cold.MovementId =  Movement.Id
-                                   AND MovementFloat_Cold.DescId = zc_MovementFloat_Cold()
-
-            LEFT JOIN MovementFloat AS MovementFloat_Norm
-                                    ON MovementFloat_Norm.MovementId =  Movement.Id
-                                   AND MovementFloat_Norm.DescId = zc_MovementFloat_Norm()
-
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
                                          ON MovementLinkObject_Car.MovementId = Movement.Id
                                         AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
-            
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Member
-                                         ON MovementLinkObject_Member.MovementId = Movement.Id
-                                        AND MovementLinkObject_Member.DescId = zc_MovementLinkObject_Member()
-            LEFT JOIN Object AS Object_Member ON Object_Member.Id = MovementLinkObject_Member.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
-                                         ON MovementLinkObject_Route.MovementId = Movement.Id
-                                        AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
-            LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementLinkObject_Route.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CarTrailer
+                                         ON MovementLinkObject_CarTrailer.MovementId = Movement.Id
+                                        AND MovementLinkObject_CarTrailer.DescId = zc_MovementLinkObject_CarTrailer()
+            LEFT JOIN Object AS Object_CarTrailer ON Object_CarTrailer.Id = MovementLinkObject_CarTrailer.ObjectId
+            
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
+                                         ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
+                                        AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
+            LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
+                                         ON MovementLinkObject_UnitForwarding.MovementId = Movement.Id
+                                        AND MovementLinkObject_UnitForwarding.DescId = zc_MovementLinkObject_UnitForwarding()
+            LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = MovementLinkObject_UnitForwarding.ObjectId
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Transport();
@@ -101,7 +127,7 @@ ALTER FUNCTION gpGet_Movement_Transport (Integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
-               
+ 25.09.13         * changes in wiki              
  20.08.13         *
 
 */
