@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_RateFuel(
     IN inId          Integer,       -- ключ объекта <Автомобиль>
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, 
+RETURNS TABLE (Id Integer 
              , Amount TFloat, AmountСoldHour TFloat, AmountСoldDistance TFloat
              , CarId integer, CarCode integer, CarName TVarChar
              , RouteKindId integer, RouteKindCode integer, RouteKindName TVarChar

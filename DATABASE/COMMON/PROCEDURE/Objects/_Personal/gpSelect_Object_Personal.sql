@@ -1,6 +1,6 @@
 ﻿-- Function: gpSelect_Object_Personal()
 
--- DROP FUNCTION gpSelect_Object_Personal();
+-- DROP FUNCTION gpSelect_Object_Personal(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Personal(
     IN inSession     TVarChar       -- сессия пользователя
@@ -9,8 +9,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                MemberId Integer, MemberCode Integer, MemberName TVarChar, 
                PositionId Integer, PositionCode Integer, PositionName TVarChar,
                UnitId Integer, UnitCode Integer, UnitName TVarChar,
-               JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar,
-               BusinessId Integer, BusinessCode Integer, BusinessName TVarChar,
+               PersonalGroupId Integer, PersonalGroupCode Integer, PersonalGroupName TVarChar,
                DateIn TDateTime, DateOut TDateTime,
                isErased boolean) AS
 $BODY$
@@ -37,17 +36,15 @@ BEGIN
          , Object_Unit.ObjectCode  AS UnitCode
          , Object_Unit.ValueData   AS UnitName
 
-         , Object_Juridical.Id         AS JuridicalId
-         , Object_Juridical.ObjectCode AS JuridicalCode
-         , Object_Juridical.ValueData  AS JuridicalName
-
-         , Object_Business.Id          AS BusinessId
-         , Object_Business.ObjectCode  AS BusinessCode
-         , Object_Business.ValueData   AS BusinessName
-
+         , Object_PersonalGroup.Id         AS PersonalGroupId
+         , Object_PersonalGroup.ObjectCode AS PersonalGroupCode
+         , Object_PersonalGroup.ValueData  AS PersonalGroupName
+ 
          , ObjectDate_DateIn.ValueData   AS DateIn
          , ObjectDate_DateOut.ValueData  AS DateOut
+         
          , Object_Personal.isErased      AS isErased
+ 
      FROM OBJECT AS Object_Personal
           LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                  ON ObjectLink_Personal_Member.ObjectId = Object_Personal.Id
@@ -64,15 +61,10 @@ BEGIN
                 AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
 
-          LEFT JOIN ObjectLink AS ObjectLink_Personal_Juridical
-                 ON ObjectLink_Personal_Juridical.ObjectId = Object_Personal.Id
-                AND ObjectLink_Personal_Juridical.DescId = zc_ObjectLink_Personal_Juridical()
-          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Personal_Juridical.ChildObjectId
-           
-          LEFT JOIN ObjectLink AS ObjectLink_Personal_Business
-                 ON ObjectLink_Personal_Business.ObjectId = Object_Personal.Id
-                AND ObjectLink_Personal_Business.DescId = zc_ObjectLink_Personal_Business()
-          LEFT JOIN Object AS Object_Business ON Object_Business.Id = ObjectLink_Personal_Business.ChildObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
+                 ON ObjectLink_Personal_PersonalGroup.ObjectId = Object_Personal.Id
+                AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
+          LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
            
           LEFT JOIN ObjectDate AS ObjectDate_DateIn ON ObjectDate_DateIn.ObjectId = Object_Personal.Id 
                 AND ObjectDate_DateIn.DescId = zc_ObjectDate_Personal_In()
@@ -93,6 +85,7 @@ ALTER FUNCTION gpSelect_Object_Personal (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.09.13         * add _PersonalGroup; remove _Juridical, _Business             
  19.07.13         *    rename zc_ObjectDate...               
  06.07.13                                        * error zc_ObjectLink_Personal_Juridical
  01.07.13         *              

@@ -5,7 +5,7 @@
 CREATE OR REPLACE FUNCTION gpSelect_Object_RateFuel(
     IN inSession     TVarChar       -- ñåññèÿ ïîëüçîâàòåëÿ
 )
-RETURNS TABLE (Id Integer, 
+RETURNS TABLE (Id Integer
              , Amount TFloat, AmountÑoldHour TFloat, AmountÑoldDistance TFloat
              , CarId integer, CarCode integer, CarName TVarChar
              , RouteKindId integer, RouteKindCode integer, RouteKindName TVarChar

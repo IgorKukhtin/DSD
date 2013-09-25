@@ -1,6 +1,6 @@
--- Function: gpSelect_Object_Car()
+-- Function: gpSelect_Object_Car(TVarChar)
 
---DROP FUNCTION gpSelect_Object_Car();
+--DROP FUNCTION gpSelect_Object_Car(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Car(
     IN inSession     TVarChar       -- сессия пользователя
