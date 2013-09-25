@@ -1,12 +1,12 @@
 ﻿-- Function: gpGet_Object_User()
 
---DROP FUNCTION gpGet_Object_User();
+--DROP FUNCTION gpGet_Object_User(Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_User(
     IN inId          Integer,       -- пользователь 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Login TVarChar, Password TVarChar, isErased boolean) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Password TVarChar, MemberId Integer, MemberName TVarChar) AS
 $BODY$BEGIN
 
    -- проверка прав пользователя на вызов процедуры
@@ -17,30 +17,29 @@ $BODY$BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , MAX (Object.ObjectCode) + 1 AS Code
+           , lfGet_ObjectCode(0, zc_Object_User()) AS Code
            , CAST ('' as TVarChar)  AS NAME
-           , CAST ('' as TVarChar)  AS LOGIN
            , CAST ('' as TVarChar)  AS Password
-           , CAST (NULL AS Boolean) AS isErased
-       FROM Object 
-       WHERE Object.DescId = zc_Object_User();
+           , 0 AS MemberId 
+           , CAST ('' as TVarChar)  AS MemberName;
    ELSE
       RETURN QUERY 
       SELECT 
-            Object.Id
-          , Object.ObjectCode
-          , Object.ValueData
-          , ObjectString_UserLogin.ValueData
+            Object_User.Id
+          , Object_User.ObjectCode
+          , Object_User.ValueData
           , ObjectString_UserPassword.ValueData
-          , Object.isErased
-      FROM Object
-   LEFT JOIN ObjectString AS ObjectString_UserLogin 
-          ON ObjectString_UserLogin.DescId = zc_ObjectString_User_Login() 
-         AND ObjectString_UserLogin.ObjectId = Object.Id
+          , Object_Member.Id AS MemberId
+          , Object_Member.ValueData AS MemberName
+      FROM Object AS Object_User
    LEFT JOIN ObjectString AS ObjectString_UserPassword 
           ON ObjectString_UserPassword.DescId = zc_ObjectString_User_Password() 
-         AND ObjectString_UserPassword.ObjectId = Object.Id
-      WHERE Object.Id = inId;
+         AND ObjectString_UserPassword.ObjectId = Object_User.Id
+   LEFT JOIN ObjectLink AS ObjectLink_User_Member
+          ON ObjectLink_User_Member.ObjectId = Object_User.Id
+         AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+   LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
+      WHERE Object_User.Id = inId;
    END IF;
   
 END;$BODY$

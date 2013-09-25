@@ -81,6 +81,7 @@
 				<MainSource>MainSource</MainSource>
 			</DelphiCompile>
 			<DCCReference Include="..\SOURCE\STRUCTURE\dbCreateStructureTest.pas"/>
+			<DCCReference Include="..\SOURCE\View\dbCreateViewTest.pas"/>
 			<DCCReference Include="..\SOURCE\Metadata\dbMetadataTest.pas"/>
 			<DCCReference Include="..\SOURCE\dbProcedureTest.pas"/>
 			<DCCReference Include="..\SOURCE\dbEnumTest.pas"/>
@@ -450,26 +451,21 @@
 			<DCCReference Include="..\SOURCE\Movement\All\TransportTest.pas"/>
 			<DCCReference Include="..\..\Forms\PersonalServiceEdit.pas">
 				<Form>PersonalServiceEditForm</Form>
-				<FormType>dfm</FormType>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\PersonalService.pas">
 				<Form>PersonalServiceForm</Form>
-				<FormType>dfm</FormType>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Service.pas">
 				<Form>ServiceForm</Form>
-				<FormType>dfm</FormType>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\ServiceEdit.pas">
 				<Form>ServiceEditForm</Form>
-				<FormType>dfm</FormType>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Goods.pas">
 				<Form>GoodsForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Units.pas">
 				<Form>UnitForm</Form>
-				<FormType>dfm</FormType>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\JuridicalTree.pas">
 				<Form>JuridicalTreeForm</Form>
@@ -486,6 +482,28 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_MotionGoods.pas">
 				<Form>Report_MotionGoodsForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\ActionTest.pas"/>
+			<DCCReference Include="..\..\SOURCE\MainForm.pas">
+				<Form>MainForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Role.pas">
+				<Form>RoleForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\RoleEdit.pas">
+				<Form>RoleEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Action.pas">
+				<Form>ActionForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\User.pas">
+				<Form>UserForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\UserEdit.pas">
+				<Form>UserEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Process.pas">
+				<Form>ProcessForm</Form>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

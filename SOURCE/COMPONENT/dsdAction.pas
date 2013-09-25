@@ -188,6 +188,13 @@ type
     property isShowModal: boolean read FisShowModal write FisShowModal;
   end;
 
+  // Откываем форму для выбора значения из справочника
+  TOpenChoiceForm = class(TdsdOpenForm, IChoiceCaller)
+  private
+    // Вызыввем процедуру после выбора элемента из справочника
+    procedure AfterChoice(Params: TdsdParams);
+  end;
+
   // Данный класс дополняет поведение класса TdsdOpenForm по работе со справочниками
   // К сожалению наследование самое удобное пока
   TdsdInsertUpdateAction = class (TdsdOpenForm, IDataSetAction, IFormAction)
@@ -224,7 +231,7 @@ type
   private
     FActionDataLink: TDataSetDataLink;
     FParams: TdsdParams;
-    FGuides: TdsdGuides;
+    FChoiceCaller: IChoiceCaller;
     function GetDataSource: TDataSource;
     procedure SetDataSource(const Value: TDataSource);
   protected
@@ -232,10 +239,10 @@ type
     procedure DataSetChanged;
     procedure UpdateData;
   public
+    property ChoiceCaller: IChoiceCaller read FChoiceCaller write FChoiceCaller;
     function Execute: boolean; override;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    property Guides: TdsdGuides read FGuides write FGuides;
   published
     property Params: TdsdParams read FParams write FParams;
     property Caption;
@@ -320,6 +327,7 @@ uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
 
 procedure Register;
 begin
+  RegisterActions('DSDLib', [TBooleanStoredProcAction], TBooleanStoredProcAction);
   RegisterActions('DSDLib', [TdsdChangeMovementStatus], TdsdChangeMovementStatus);
   RegisterActions('DSDLib', [TdsdChoiceGuides],   TdsdChoiceGuides);
   RegisterActions('DSDLib', [TdsdDataSetRefresh], TdsdDataSetRefresh);
@@ -332,7 +340,7 @@ begin
   RegisterActions('DSDLib', [TdsdPrintAction],    TdsdPrintAction);
   RegisterActions('DSDLib', [TdsdUpdateErased], TdsdUpdateErased);
   RegisterActions('DSDLib', [TdsdUpdateDataSet], TdsdUpdateDataSet);
-  RegisterActions('DSDLib', [TBooleanStoredProcAction], TBooleanStoredProcAction);
+  RegisterActions('DSDLib', [TOpenChoiceForm], TOpenChoiceForm);
 end;
 
 { TdsdCustomDataSetAction }
@@ -564,7 +572,7 @@ end;
 procedure TDataSetDataLink.EditingChanged;
 begin
   inherited;
-  if DataSource.State = dsEdit then
+  if DataSource.State in [dsEdit, dsInsert] then
      FModified := true;
 end;
 
@@ -683,7 +691,7 @@ procedure TdsdChoiceGuides.DataSetChanged;
 begin
   Enabled := false;
   // Если инициализирован выбор
-  if Assigned(DataSource) and Assigned(FGuides) then
+  if Assigned(DataSource) and Assigned(FChoiceCaller) then
      if Assigned(DataSource.DataSet) then
         Enabled := (DataSource.DataSet.RecordCount <> 0)
 end;
@@ -698,7 +706,7 @@ end;
 function TdsdChoiceGuides.Execute: boolean;
 begin
   if Assigned(FParams.ParamByName('Key')) and Assigned(FParams.ParamByName('TextValue')) then
-     Guides.AfterChoice(FParams)
+     FChoiceCaller.AfterChoice(FParams)
   else
      raise Exception.Create('Не определены параметры возврата значений при выборе из справочника');
   TForm(Owner).Close;
@@ -1009,6 +1017,14 @@ begin
         Value.FreeNotification(TComponent(Collection.Owner));
      FStoredProc := Value;
   end;
+end;
+
+{ TOpenChoiceForm }
+
+procedure TOpenChoiceForm.AfterChoice(Params: TdsdParams);
+begin
+  // Расставляем параметры по местам
+  Self.GuiParams.AssignParams(Params);
 end;
 
 end.

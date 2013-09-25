@@ -16,7 +16,9 @@ type
     // возвращаем данные для тестирования
     procedure TearDown; override;
   published
+    procedure MainFormTest;
     procedure UserFormSettingsTest;
+    procedure LoadRoleFormTest;
     procedure LoadBankFormTest;
     procedure LoadBankAccountFormTest;
     procedure LoadJuridicalGroupFormTest;
@@ -27,7 +29,6 @@ type
     procedure LoadContractFormTest;
     procedure LoadBusinessFormTest;
     procedure LoadBranchFormTest;
-    //procedure LoadUnitGroupFormTest;
     procedure LoadUnitFormTest;
     procedure LoadGoodsGroupFormTest;
     procedure LoadGoodsFormTest;
@@ -69,13 +70,14 @@ type
     procedure LoadCarModelFormTest;
     procedure LoadZakazExternalFormTest;
     procedure LoadZakazInternalFormTest;
-
+    procedure LoadServiceFormTest;
   end;
 
 implementation
 
 uses CommonData, Storage, FormStorage, Classes,
-     Authentication, SysUtils, cxPropertiesStore, cxStorage;
+     dsdDB, Authentication, SysUtils, cxPropertiesStore,
+     cxStorage, DBClient, MainForm, ActionTest;
 
 { TLoadFormTest }
 
@@ -214,6 +216,18 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSendOnPriceJournalForm');
 end;
 
+procedure TLoadFormTest.LoadServiceFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TActionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TActionForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProcessForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProcessForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUserForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUserEditForm');
+end;
+
 procedure TLoadFormTest.LoadSaleFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleForm'));
@@ -250,6 +264,36 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TZakazInternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TZakazInternalJournalForm');
 end;
+
+procedure TLoadFormTest.MainFormTest;
+var ActionDataSet: TClientDataSet;
+    StoredProc: TdsdStoredProc;
+    i: integer;
+    Action: ActionTest.TAction;
+begin
+  // Здесь мы заполняем справочник Action
+  // Получаем все Action из базы
+  ActionDataSet := TClientDataSet.Create(nil);
+  StoredProc := TdsdStoredProc.Create(nil);
+  MainFormInstance := TMainForm.Create(nil);
+  Action := ActionTest.TAction.Create;
+  try
+    StoredProc.DataSet := ActionDataSet;
+    StoredProc.StoredProcName := 'gpSelect_Object_Action';
+    StoredProc.Execute;
+    // добавим тех, что нет
+    with MainFormInstance.ActionList do
+      for I := 0 to ActionCount - 1 do
+          if not ActionDataSet.Locate('Name', Actions[i].Name, []) then
+             Action.InsertUpdateAction(0, 0, Actions[i].Name);
+  finally
+    Action.Free;
+    StoredProc.Free;
+    ActionDataSet.Free;
+    MainFormInstance.Free;
+  end;
+end;
+
 procedure TLoadFormTest.LoadLossFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossForm'));
@@ -448,6 +492,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TAssetForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetEditForm');
+end;
+
+procedure TLoadFormTest.LoadRoleFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRoleForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRoleEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRoleEditForm');
 end;
 
 procedure TLoadFormTest.LoadRouteFormTest;

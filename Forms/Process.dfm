@@ -1,18 +1,22 @@
-inherited PaidKindForm: TPaidKindForm
-  Caption = #1058#1080#1087#1099' '#1086#1087#1083#1072#1090
-  ClientHeight = 376
-  ClientWidth = 349
-  ExplicitWidth = 357
-  ExplicitHeight = 403
+inherited ProcessForm: TProcessForm
+  Caption = #1055#1088#1086#1094#1077#1089#1089#1099
+  ClientHeight = 357
+  ClientWidth = 372
+  ExplicitWidth = 380
+  ExplicitHeight = 384
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 349
-    Height = 350
+    Width = 372
+    Height = 331
     Align = alClient
     TabOrder = 0
+    ExplicitLeft = -23
+    ExplicitTop = -111
+    ExplicitWidth = 478
+    ExplicitHeight = 324
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -33,7 +37,7 @@ inherited PaidKindForm: TPaidKindForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object clName: TcxGridDBColumn
-        Caption = #1058#1080#1087' '#1086#1087#1083#1072#1090#1099
+        Caption = #1055#1088#1086#1094#1077#1089#1089#1099
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -171,7 +175,7 @@ inherited PaidKindForm: TPaidKindForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_PaidKind'
+    StoredProcName = 'gpSelect_Object_Process'
     DataSet = ClientDataSet
     DataSets = <
       item

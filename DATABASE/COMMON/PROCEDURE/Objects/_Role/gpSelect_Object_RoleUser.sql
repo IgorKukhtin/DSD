@@ -1,11 +1,11 @@
--- Function: gpSelect_Object_Role()
+-- Function: gpSelect_Object_RoleUser()
 
---DROP FUNCTION gpSelect_Object_Role();
+--DROP FUNCTION gpSelect_Object_RoleUser(TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_Role(
+CREATE OR REPLACE FUNCTION gpSelect_Object_RoleUser(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, RoleId Integer, UserRoleId Integer) AS
 $BODY$BEGIN
    
    -- проверка прав пользователя на вызов процедуры
@@ -13,18 +13,23 @@ $BODY$BEGIN
 
    RETURN QUERY 
    SELECT 
-     Object.Id         AS Id 
-   , Object.ObjectCode AS Code
-   , Object.ValueData  AS Name
-   , Object.isErased   AS isErased
-   FROM Object
-   WHERE Object.DescId = zc_Object_Role();
+     ObjectUser.Id         AS Id 
+   , ObjectUser.ObjectCode AS Code
+   , ObjectUser.ValueData  AS Name
+   , ObjectLink_UserRole_Role.ChildObjectId AS RoleId
+   , ObjectLink_UserRole_User.ObjectId      AS UserRoleId
+   FROM ObjectLink AS ObjectLink_UserRole_Role
+   JOIN ObjectLink AS ObjectLink_UserRole_User ON ObjectLink_UserRole_User.ObjectId = ObjectLink_UserRole_Role.ObjectId
+    AND ObjectLink_UserRole_User.DescId = zc_ObjectLink_UserRole_User()
+
+   JOIN Object AS ObjectUser ON ObjectUser.Id = ObjectLink_UserRole_User.ChildObjectId
+   WHERE ObjectLink_UserRole_Role.DescId = zc_ObjectLink_UserRole_Role();        
   
 END;$BODY$
 
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Role(TVarChar)
+ALTER FUNCTION gpSelect_Object_RoleUser(TVarChar)
   OWNER TO postgres;
 
 

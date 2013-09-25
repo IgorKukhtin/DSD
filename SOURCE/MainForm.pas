@@ -17,7 +17,8 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dxSkinsdxBarPainter, dsdAddOn, cxPropertiesStore, frxClass;
+  dxSkinXmas2008Blue, dxSkinsdxBarPainter, dsdAddOn, cxPropertiesStore, frxClass,
+  dsdDB, Data.DB, Datasnap.DBClient;
 
 type
   TMainForm = class(TForm)
@@ -150,7 +151,19 @@ type
     actReport_MotionGoods: TdsdOpenForm;
     bbReport_MotionGoods: TdxBarButton;
     Action2: TAction;
+    actRole: TdsdOpenForm;
+    bbRole: TdxBarButton;
+    bbService: TdxBarSubItem;
+    actAction: TdsdOpenForm;
+    bbAction: TdxBarButton;
+    actUser: TdsdOpenForm;
+    bbUser: TdxBarButton;
+    actProcess: TdsdOpenForm;
+    bbProcess: TdxBarButton;
+    StoredProc: TdsdStoredProc;
+    ClientDataSet: TClientDataSet;
     procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     procedure OnException(Sender: TObject; E: Exception);
   public
@@ -162,7 +175,7 @@ var
 
 implementation
 
-uses ParentForm, dsdDB, Storage, CommonData;
+uses ParentForm, Storage, CommonData;
 
 {$R DevExpressRus.res}
 
@@ -174,6 +187,23 @@ begin
   cxLocalizer.Active:= True;
   cxLocalizer.Locale:= 1049;
 //  Application.OnException := OnException;
+end;
+
+procedure TMainForm.FormShow(Sender: TObject);
+var i: integer;
+begin
+  StoredProc.Execute;
+  ClientDataSet.IndexFieldNames := 'ActionName';
+  for I := 0 to ActionList.ActionCount - 1 do
+      // Проверяем только открытие формы
+      if ActionList.Actions[i] is TdsdOpenForm then
+         if not ClientDataSet.Locate('ActionName', ActionList.Actions[i].Name, []) then begin
+            TCustomAction(ActionList.Actions[i]).Enabled := false;
+            TCustomAction(ActionList.Actions[i]).Visible := false;
+         end;
+
+  ClientDataSet.EmptyDataSet;
+  // Отображаем видимые пункты меню
 end;
 
 procedure TMainForm.OnException(Sender: TObject; E: Exception);

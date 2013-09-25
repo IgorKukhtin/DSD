@@ -5,7 +5,7 @@
 CREATE OR REPLACE FUNCTION gpSelect_Object_User(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Login TVarChar, Password TVarChar, isErased boolean) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, MemberId Integer, MemberName TVarChar) AS
 $BODY$BEGIN
 
    -- проверка прав пользователя на вызов процедуры
@@ -13,20 +13,18 @@ $BODY$BEGIN
 
    RETURN QUERY 
    SELECT 
-         Object.Id
-       , Object.ObjectCode
-       , Object.ValueData
-       , ObjectString_UserLogin.ValueData
-       , ObjectString_UserPassword.ValueData
-       , Object.isErased
-   FROM Object
-   LEFT JOIN ObjectString AS ObjectString_UserLogin 
-          ON ObjectString_UserLogin.DescId = zc_ObjectString_User_Login() 
-         AND ObjectString_UserLogin.ObjectId = Object.Id
-   LEFT JOIN ObjectString AS ObjectString_UserPassword 
-          ON ObjectString_UserPassword.DescId = zc_ObjectString_User_Password() 
-         AND ObjectString_UserPassword.ObjectId = Object.Id
-   WHERE Object.DescId = zc_Object_User();
+         Object_User.Id
+       , Object_User.ObjectCode
+       , Object_User.ValueData
+       , Object_User.isErased
+       , Object_Member.Id AS MemberId
+       , Object_Member.ValueData AS MemberName
+   FROM Object AS Object_User
+        LEFT JOIN ObjectLink AS ObjectLink_User_Member
+                             ON ObjectLink_User_Member.ObjectId = Object_User.Id
+                            AND ObjectLink_User_Member.DescId = zc_ObjectLink_User_Member()
+        LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
+   WHERE Object_User.DescId = zc_Object_User();
   
 END;$BODY$
   LANGUAGE plpgsql VOLATILE

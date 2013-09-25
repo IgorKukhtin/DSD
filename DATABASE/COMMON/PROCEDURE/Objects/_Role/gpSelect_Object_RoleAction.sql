@@ -1,30 +1,35 @@
--- Function: gpSelect_Object_Role()
+-- Function: gpSelect_Object_RoleAction()
 
---DROP FUNCTION gpSelect_Object_Role();
+--DROP FUNCTION gpSelect_Object_RoleAction();
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_Role(
+CREATE OR REPLACE FUNCTION gpSelect_Object_RoleAction(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, RoleId Integer, RoleActionId Integer) AS
 $BODY$BEGIN
    
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Action());
 
    RETURN QUERY 
    SELECT 
-     Object.Id         AS Id 
-   , Object.ObjectCode AS Code
-   , Object.ValueData  AS Name
-   , Object.isErased   AS isErased
-   FROM Object
-   WHERE Object.DescId = zc_Object_Role();
+     ObjectAction.Id         AS Id 
+   , ObjectAction.ObjectCode AS Code
+   , ObjectAction.ValueData  AS Name
+   , ObjectLink_RoleAction_Role.ChildObjectId AS RoleId
+   , ObjectLink_RoleAction_Action.ObjectId AS RoleActionId
+   FROM ObjectLink AS ObjectLink_RoleAction_Role
+   JOIN ObjectLink AS ObjectLink_RoleAction_Action ON ObjectLink_RoleAction_Action.ObjectId = ObjectLink_RoleAction_Role.ObjectId
+    AND ObjectLink_RoleAction_Action.DescId = zc_ObjectLink_RoleAction_Action()
+
+   JOIN Object AS ObjectAction ON ObjectAction.Id = ObjectLink_RoleAction_Action.ChildObjectId
+   WHERE ObjectLink_RoleAction_Role.DescId = zc_ObjectLink_RoleAction_Role();        
   
 END;$BODY$
 
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Role(TVarChar)
+ALTER FUNCTION gpSelect_Object_RoleAction(TVarChar)
   OWNER TO postgres;
 
 

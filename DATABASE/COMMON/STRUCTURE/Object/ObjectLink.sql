@@ -21,6 +21,7 @@ CREATE TABLE ObjectLink(
 
 CREATE UNIQUE INDEX idx_ObjectLink_ObjectId_DescId_ChildObjectId  ON ObjectLink(ObjectId, DescId, ChildObjectId);
 CREATE UNIQUE INDEX idx_ObjectLink_ChildObjectId_DescId_ObjectId  ON ObjectLink(ChildObjectId, DescId, ObjectId);
+CREATE INDEX idx_ObjectLink_DescId ON ObjectLink(DescId);
 
 /*
  œ–»Ã≈◊¿Õ»ﬂ:

@@ -45,8 +45,14 @@ type
     property Items[Index: Integer]: TActionItem read GetItem write SetItem; default;
   end;
 
+  // имплементирующий данный класс вызывает форму для выбора из справочника
+  IChoiceCaller = interface
+    ['{879D5206-590F-43CB-B992-26B096342EC2}']
+    procedure AfterChoice(Params: TdsdParams);
+  end;
+
   // Компонент работает со справочниками. Выбирает значение из элементов управления или форм
-  TdsdGuides = class(TComponent)
+  TdsdGuides = class(TComponent, IChoiceCaller)
   private
     FFormName: string;
     FLookupControl: TWinControl;
@@ -68,14 +74,14 @@ type
     procedure OnDblClick(Sender: TObject);
     procedure OnPopupClick(Sender: TObject);
     procedure OnButtonClick(Sender: TObject; AButtonIndex: Integer);
+    // Вызыввем процедуру после выбора элемента из справочника
+    procedure AfterChoice(Params: TdsdParams);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    // Вызыввем процедуру после выбора элемента из справочника
-    procedure AfterChoice(Params: TdsdParams);
   published
     // ID записи
     property Key: String read GetKey write SetKey;

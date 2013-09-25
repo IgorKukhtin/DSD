@@ -5,9 +5,11 @@ IN inOperDate date DEFAULT current_date)
 RETURNS integer AS
 $BODY$  
 DECLARE 
+  UserId Integer;
   UserName TVarChar;
   ProcessName TVarChar;
 BEGIN
+  UserId := lpGetUserBySession(inSession);
   IF NOT EXISTS (SELECT 1
 	  FROM ObjectLink Object_UserRole_User -- Связь пользователя с объектом роли пользователя
 	  JOIN ObjectLink Object_UserRole_Role -- Связь ролей с объектом роли пользователя
@@ -20,14 +22,14 @@ BEGIN
 	    ON RoleRight_Process.ObjectId = RoleRight_Role.ObjectId 
 	   AND RoleRight_Process.DescId = zc_ObjectLink_RoleRight_Process()
 	 WHERE Object_UserRole_User.DescId = zc_ObjectLink_UserRole_User()
-	   AND Object_UserRole_User.ChildObjectId = to_number(inSession, '00000000000')
+	   AND Object_UserRole_User.ChildObjectId = UserId
 	   AND RoleRight_Process.ChildObjectId = inProcessId) 
   THEN
-     SELECT ValueData INTO UserName FROM Object WHERE Id = to_number(inSession, '00000000000');
+     SELECT ValueData INTO UserName FROM Object WHERE Id = UserId;
      SELECT ValueData INTO ProcessName FROM Object WHERE Id = inProcessId;
      RAISE EXCEPTION 'Пользователь "%" не имеет прав на операцию "%" ' ,UserName, ProcessName;
   ELSE
-     RETURN to_number(inSession, '00000000000');   
+     RETURN UserId;   
   END IF;  
   
 END;$BODY$

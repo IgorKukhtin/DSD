@@ -13,6 +13,7 @@ object MainForm: TMainForm
   OldCreateOrder = False
   Position = poDesigned
   OnCreate = FormCreate
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object dxBarManager: TdxBarManager
@@ -68,6 +69,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbReports'
+        end
+        item
+          Visible = True
+          ItemName = 'bbService'
         end
         item
           Visible = True
@@ -608,6 +613,44 @@ object MainForm: TMainForm
       Action = actBankAccount
       Category = 0
     end
+    object bbRole: TdxBarButton
+      Action = actRole
+      Category = 0
+    end
+    object bbService: TdxBarSubItem
+      Caption = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbAction'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProcess'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUser'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRole'
+        end>
+    end
+    object bbAction: TdxBarButton
+      Action = actAction
+      Category = 0
+    end
+    object bbUser: TdxBarButton
+      Action = actUser
+      Category = 0
+    end
+    object bbProcess: TdxBarButton
+      Action = actProcess
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Left = 192
@@ -623,6 +666,14 @@ object MainForm: TMainForm
       Category = #1054#1090#1095#1077#1090#1099
       Caption = #1054#1090#1095#1077#1090' '#1086' '#1055#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1059#1073#1099#1090#1082#1072#1093
       FormName = 'TReport_ProfitLossForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actProcess: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      Caption = #1055#1088#1086#1094#1077#1089#1089#1099
+      Hint = #1055#1088#1086#1094#1077#1089#1089#1099
+      FormName = 'TProcessForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -1053,6 +1104,29 @@ object MainForm: TMainForm
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1090#1086#1074#1072#1088#1085#1099#1077
       Caption = 'Action2'
     end
+    object actRole: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      Caption = #1056#1086#1083#1080' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
+      FormName = 'TRoleForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actAction: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      Caption = #1044#1077#1081#1089#1090#1074#1080#1103
+      Hint = #1044#1077#1081#1089#1090#1074#1080#1103
+      FormName = 'TActionForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actUser: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
+      Hint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
+      FormName = 'TUserForm'
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object cxLocalizer: TcxLocalizer
     StorageType = lstResource
@@ -1226,5 +1300,22 @@ object MainForm: TMainForm
         end
       end
     end
+  end
+  object StoredProc: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_ActionByUser'
+    DataSet = ClientDataSet
+    DataSets = <
+      item
+        DataSet = ClientDataSet
+      end>
+    Params = <>
+    Left = 168
+    Top = 152
+  end
+  object ClientDataSet: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 192
+    Top = 168
   end
 end

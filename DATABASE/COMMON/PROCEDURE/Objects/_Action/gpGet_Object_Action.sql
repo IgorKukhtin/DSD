@@ -1,12 +1,12 @@
-﻿-- Function: gpGet_Object_CarModel()
+﻿-- Function: gpGet_Object_Action()
 
---DROP FUNCTION gpGet_Object_CarModel();
+--DROP FUNCTION gpGet_Object_Action();
 
-CREATE OR REPLACE FUNCTION gpGet_Object_CarModel(
+CREATE OR REPLACE FUNCTION gpGet_Object_Action(
     IN inId          Integer,       -- ключ объекта <Марки Автомобиля>
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
+RETURNS TABLE (Code Integer, Name TVarChar) AS
 $BODY$
 BEGIN
 
@@ -17,18 +17,14 @@ BEGIN
    THEN
        RETURN QUERY 
        SELECT
-             CAST (0 as Integer)    AS Id
-           , lfGet_ObjectCode(0, zc_Object_CarModel()) AS Code
+             lfGet_ObjectCode(0, zc_Object_Action()) AS Code
            , COALESCE (MAX (Object.ObjectCode), 0) + 1 AS Code
-           , CAST ('' as TVarChar)  AS Name
-           , CAST (NULL AS Boolean) AS isErased;
+           , CAST ('' as TVarChar)  AS Name;
    ELSE
        RETURN QUERY 
        SELECT 
-             Object.Id         AS Id
-           , Object.ObjectCode AS Code
+             Object.ObjectCode AS Code
            , Object.ValueData  AS Name
-           , Object.isErased   AS isErased
        FROM Object
        WHERE Object.Id = inId;
    END IF; 
@@ -37,16 +33,15 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_CarModel(integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Object_Action(integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 10.06.13          *
- 03.06.13          
+ 23.09.13                         *
 
 */
 
 -- тест
--- SELECT * FROM gpSelect_CarModel('2')
+-- SELECT * FROM gpSelect_Action('2')

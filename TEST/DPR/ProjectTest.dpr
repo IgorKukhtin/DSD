@@ -17,6 +17,7 @@ program ProjectTest;
 uses
   DUnitTestRunner,
   dbCreateStructureTest in '..\SOURCE\STRUCTURE\dbCreateStructureTest.pas',
+  dbCreateViewTest in '..\SOURCE\View\dbCreateViewTest.pas',
   dbMetadataTest in '..\SOURCE\Metadata\dbMetadataTest.pas',
   dbProcedureTest in '..\SOURCE\dbProcedureTest.pas',
   dbEnumTest in '..\SOURCE\dbEnumTest.pas',
@@ -185,7 +186,15 @@ uses
   TradeMarkTest in '..\SOURCE\Objects\All\TradeMarkTest.pas',
   ChoicePeriod in '..\..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm},
   Report_MotionGoodsDialog in '..\..\Forms\Report\Report_MotionGoodsDialog.pas' {Report_MotionGoodsDialogForm},
-  Report_MotionGoods in '..\..\Forms\Report\Report_MotionGoods.pas' {Report_MotionGoodsForm};
+  Report_MotionGoods in '..\..\Forms\Report\Report_MotionGoods.pas' {Report_MotionGoodsForm},
+  ActionTest in '..\SOURCE\Objects\All\ActionTest.pas',
+  MainForm in '..\..\SOURCE\MainForm.pas' {MainForm},
+  Role in '..\..\Forms\Role.pas' {RoleForm},
+  RoleEdit in '..\..\Forms\RoleEdit.pas' {RoleEditForm},
+  Action in '..\..\Forms\Action.pas' {ActionForm},
+  User in '..\..\Forms\User.pas' {UserForm},
+  UserEdit in '..\..\Forms\UserEdit.pas' {UserEditForm},
+  Process in '..\..\Forms\Process.pas' {ProcessForm};
 
 {$R *.RES}
 

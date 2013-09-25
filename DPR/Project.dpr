@@ -30,7 +30,7 @@ begin
   with TLoginForm.Create(Application) do
     //≈сли все хорошо создаем главную форму Application.CreateForm();
     if ShowModal = mrOk then begin
-       Application.CreateForm(TMainForm, MainFormInstance);
+       Application.CreateForm(TMainFormInstance, MainFormInstance);
   Application.CreateForm(TdmMain, dmMain);
   end;
   Application.Run;

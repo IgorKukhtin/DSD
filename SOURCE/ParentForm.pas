@@ -146,11 +146,11 @@ begin
 
   // Если вызывали для выбора, то делаем видимой кнопку выбора
   if Assigned(FChoiceAction) then begin
-     FChoiceAction.Visible := Assigned(FSender) and (FSender is TdsdGuides);
+     FChoiceAction.Visible := Assigned(FSender) and Supports(FSender, IChoiceCaller);
      FChoiceAction.Enabled := FChoiceAction.Visible;
-     if FSender is TdsdGuides then
+     if Supports(FSender, IChoiceCaller) then
         // объединили вызывающий справочник и кнопку выбора!!!
-        TdsdChoiceGuides(FChoiceAction).Guides := TdsdGuides(FSender);
+        TdsdChoiceGuides(FChoiceAction).ChoiceCaller := FSender as IChoiceCaller;
   end;
 end;
 
@@ -216,6 +216,7 @@ initialization
   RegisterClass (TExecuteDialog);
   RegisterClass (TGuidesFiller);
   RegisterClass (THeaderSaver);
+  RegisterClass (TOpenChoiceForm);
   RegisterClass (TPeriodChoice);
   RegisterClass (TRefreshAddOn);
   RegisterClass (TRefreshDispatcher);
