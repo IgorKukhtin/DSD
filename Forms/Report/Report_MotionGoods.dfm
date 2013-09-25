@@ -232,8 +232,8 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'AssetName'
         Width = 75
       end
-      object StartWeight: TcxGridDBColumn
-        Caption = 'StartWeight'
+      object StartCount_Sh: TcxGridDBColumn
+        Caption = 'StartCount_Sh'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         HeaderAlignmentHorz = taRightJustify
         Width = 75
@@ -466,13 +466,13 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
     object cxLabel4: TcxLabel
       Left = 332
       Top = 50
-      Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082#1080
+      Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
     end
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 88
-    Top = 24
+    Left = 56
+    Top = 64
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
@@ -771,7 +771,7 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
   object LocationGuides: TdsdGuides
     LookupControl = edLocation
     FormName = 'TPersonalForm'
-    PositionDataSet = 'GridDataSet'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'

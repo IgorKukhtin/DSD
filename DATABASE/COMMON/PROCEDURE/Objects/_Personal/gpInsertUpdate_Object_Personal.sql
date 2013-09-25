@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_Personal()
 
--- DROP FUNCTION gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer,Integer,Integer,Integer, TDateTime, TDateTime, TVarChar);
+-- DROP FUNCTION gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer,Integer,Integer, TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Personal(
  INOUT ioId                  Integer   , -- ключ объекта <Сотрудники>
@@ -8,8 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Personal(
     IN inMemberId            Integer   , -- ссылка на Физ.лица 
     IN inPositionId          Integer   , -- ссылка на Должность
     IN inUnitId              Integer   , -- ссылка на Подразделение
-    IN inJuridicalId         Integer   , -- ссылка на Юр.лицо
-    IN inBusinessId          Integer   , -- ссылка на Бизнес
+    IN inPersonalGroupId     Integer   , -- Группировки Сотрудников
     IN inDateIn              TDateTime , -- Дата принятия
     IN inDateOut             TDateTime , -- Дата увольнения
     IN inSession             TVarChar    -- сессия пользователя
@@ -39,10 +38,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_Position(), ioId, inPositionId);
    -- сохранили связь с <подразделением>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_Unit(), ioId, inUnitId);
-      -- сохранили связь с <Юр.лицом>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_Juridical(), ioId, inJuridicalId);
-   -- сохранили связь с <Бизнесом>
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_Business(), ioId, inBusinessId);
+      -- сохранили связь с <Группировки Сотрудников>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_PersonalGroup(), ioId, inPersonalGroupId);
    -- сохранили свойство <Дата принятия>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Personal_In(), ioId, inDateIn);
    -- сохранили свойство <Дата увольнения>
@@ -55,12 +52,13 @@ END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer,Integer,Integer,Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer,Integer,Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
   
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.09.13         * add _PersonalGroup; remove _Juridical, _Business              
  06.09.13                         * inName - УБРАЛ. Не нашел для него применения
  24.07.13                                        * inName - БЫТЬ !!! или хотя бы vbMemberName
  01.07.13          * 

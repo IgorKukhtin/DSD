@@ -70,7 +70,7 @@ type
     LossSumm: TcxGridDBColumn;
     InventoryCount: TcxGridDBColumn;
     InventorySumm: TcxGridDBColumn;
-    StartWeight: TcxGridDBColumn;
+    StartCount_Sh: TcxGridDBColumn;
     GoodsGroupGuides: TdsdGuides;
     LocationGuides: TdsdGuides;
     edGoodsGroup: TcxButtonEdit;

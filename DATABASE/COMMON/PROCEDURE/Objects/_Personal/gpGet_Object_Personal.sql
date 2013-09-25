@@ -10,8 +10,7 @@ RETURNS TABLE (Code Integer, Name TVarChar,
                MemberId Integer, MemberName TVarChar, 
                PositionId Integer, PositionName TVarChar,
                UnitId Integer, UnitName TVarChar,
-               JuridicalId Integer, JuridicalName TVarChar,
-               BusinessId Integer, BusinessName TVarChar,
+               PersonalGroupId Integer, PersonalGroupName TVarChar,
                DateIn TDateTime, DateOut TDateTime) AS
 $BODY$
 BEGIN
@@ -35,11 +34,8 @@ BEGIN
            , CAST (0 as Integer)   AS UnitId
            , CAST ('' as TVarChar) AS UnitName
 
-           , CAST (0 as Integer)   AS JuridicalId
-           , CAST ('' as TVarChar) AS JuridicalName
-
-           , CAST (0 as Integer)   AS BusinessId
-           , CAST ('' as TVarChar) AS BusinessName
+           , CAST (0 as Integer)   AS PersonalGroupId
+           , CAST ('' as TVarChar) AS PersonalGroupName
 
            , CAST (CURRENT_TIMESTAMP as TDateTime)   AS DateIn
            , CAST (CURRENT_TIMESTAMP as TDateTime)   AS DateOut;
@@ -58,11 +54,8 @@ BEGIN
          , Object_Unit.Id          AS UnitId
          , Object_Unit.ValueData   AS UnitName
 
-         , Object_Juridical.Id         AS JuridicalId
-         , Object_Juridical.ValueData  AS JuridicalName
-
-         , Object_Business.Id          AS BusinessId
-         , Object_Business.ValueData   AS BusinessName
+         , Object_PersonalGroup.Id         AS PersonalGroupId
+         , Object_PersonalGroup.ValueData  AS PersonalGroupName
 
          , ObjectDate_DateIn.ValueData   AS DateIn
          , ObjectDate_DateOut.ValueData  AS DateOut
@@ -82,15 +75,10 @@ BEGIN
                 AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
 
-          LEFT JOIN ObjectLink AS ObjectLink_Personal_Juridical
-                 ON ObjectLink_Personal_Juridical.ObjectId = Object_Personal.Id
-                AND ObjectLink_Personal_Juridical.DescId = zc_ObjectLink_Personal_Juridical()
-          LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Personal_Juridical.ChildObjectId
-           
-          LEFT JOIN ObjectLink AS ObjectLink_Personal_Business
-                 ON ObjectLink_Personal_Business.ObjectId = Object_Personal.Id
-                AND ObjectLink_Personal_Business.DescId = zc_ObjectLink_Personal_Business()
-          LEFT JOIN Object AS Object_Business ON Object_Business.Id = ObjectLink_Personal_Business.ChildObjectId
+          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
+                 ON ObjectLink_Personal_PersonalGroup.ObjectId = Object_Personal.Id
+                AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
+          LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
            
           LEFT JOIN ObjectDate AS ObjectDate_DateIn ON ObjectDate_DateIn.ObjectId = Object_Personal.Id 
                 AND ObjectDate_DateIn.DescId = zc_ObjectDate_Personal_In()
@@ -112,6 +100,7 @@ ALTER FUNCTION gpGet_Object_Personal(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.09.13         * add _PersonalGroup; remove _Juridical, _Business
  03.09.14                        *                                
  19.07.13         *    rename zc_ObjectDate...
  01.07.13         *              

@@ -52,8 +52,6 @@ BEGIN
      -- Создаем администратора
      UserId := lpInsertUpdate_Object(0, zc_Object_User(), 0, 'Админ');
 
-     PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_Login(), UserId, 'Админ');
-
      PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_Password(), UserId, 'Админ');
    END IF;
 
@@ -90,6 +88,13 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountKind_Active(), inDescId:= zc_Object_AccountKind(), inCode:= 1, inName:= 'Активный', inEnumName:= 'zc_Enum_AccountKind_Active');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountKind_Passive(), inDescId:= zc_Object_AccountKind(), inCode:= 1, inName:= 'Пассивный', inEnumName:= 'zc_Enum_AccountKind_Passive');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_AccountKind_All(), inDescId:= zc_Object_AccountKind(), inCode:= 1, inName:= 'Активно/Пассивный', inEnumName:= 'zc_Enum_AccountKind_All');
+     -- !!! Типы норм для топлива
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_RateFuelKind_Summer(), inDescId:= zc_Object_RateFuelKind), inCode:= 1, inName:= 'Лето', inEnumName:= 'zc_Enum_RateFuelKind_Summer');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_RateFuelKind_Winter(), inDescId:= zc_Object_RateFuelKind(), inCode:= 1, inName:= 'Зима', inEnumName:= 'zc_Enum_RateFuelKind_Winter');
+     -- !!! Типы маршрутов
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_RouteKind_Internal(), inDescId:= zc_Object_RouteKind(), inCode:= 1, inName:= 'Город', inEnumName:= 'zc_Enum_RouteKind_Internal');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_RouteKind_External(), inDescId:= zc_Object_RouteKind(), inCode:= 1, inName:= 'Межгород', inEnumName:= 'zc_Enum_RouteKind_External');
+
 
      -- !!! 
      -- !!! Баланс: 1-уровень Управленческих Счетов

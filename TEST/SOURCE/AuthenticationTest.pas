@@ -32,7 +32,7 @@ begin
     on E: Exception do
        ErrorMessage := E.Message;
   end;
-  Check(ErrorMessage = 'Неправильный логин или пароль', 'Ошибка ' + ErrorMessage);
+  Check(Pos('Неправильный логин или пароль', ErrorMessage) <> -1, 'Ошибка ' + ErrorMessage);
 
   try
     TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Admin', 'Admin1', lUser);
@@ -41,7 +41,7 @@ begin
     on E: Exception do
        ErrorMessage := E.Message;
   end;
-  Check(ErrorMessage = 'Неправильный логин или пароль', 'Ошибка ' + ErrorMessage);
+  Check(Pos('Неправильный логин или пароль', ErrorMessage) <> -1, 'Ошибка ' + ErrorMessage);
 
   Check(TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', lUser), 'Проверка пользователя');
 end;

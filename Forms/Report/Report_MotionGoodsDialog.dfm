@@ -273,7 +273,7 @@ inherited Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
   object LocationGuides: TdsdGuides
     LookupControl = edLocation
     FormName = 'TPersonalForm'
-    PositionDataSet = 'GridDataSet'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
