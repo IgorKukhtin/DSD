@@ -1,50 +1,50 @@
-п»ї-- Function: gpInsertUpdate_Object_Role()
+-- Function: gpInsertUpdate_Object_Role()
 
 -- DROP FUNCTION gpInsertUpdate_Object_Role();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Role(
- INOUT ioId	        Integer   ,     -- РєР»СЋС‡ РѕР±СЉРµРєС‚Р° <Р”РµР№СЃС‚РІРёСЏ> 
-    IN inCode           Integer   ,     -- РљРѕРґ РѕР±СЉРµРєС‚Р° <Р”РµР№СЃС‚РІРёСЏ> 
-    IN inName           TVarChar  ,     -- РќР°Р·РІР°РЅРёРµ РѕР±СЉРµРєС‚Р° <Р”РµР№СЃС‚РІРёСЏ>
-    IN inSession        TVarChar        -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+ INOUT ioId	        Integer   ,     -- ключ объекта <Действия> 
+    IN inCode           Integer   ,     -- Код объекта <Действия> 
+    IN inName           TVarChar  ,     -- Название объекта <Действия>
+    IN inSession        TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
    DECLARE UserId Integer;
 BEGIN
    
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Role());
 
    UserId := inSession;
 
-   -- Р•СЃР»Рё РєРѕРґ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ, РѕРїСЂРµРґРµР»СЏРµРј РµРіРѕ РєР°Рё РїРѕСЃР»РµРґРЅРёР№+1
+   -- Если код не установлен, определяем его каи последний+1
    inCode := lfGet_ObjectCode(inCode, zc_Object_Role()); 
    
-   -- РїСЂРѕРІРµСЂРєР° СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё РґР»СЏ СЃРІРѕР№СЃС‚РІР° <РќР°РёРјРµРЅРѕРІР°РЅРёРµ Р”РµР№СЃС‚РІРёСЏ>
+   -- проверка уникальности для свойства <Наименование Действия>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Role(), inName);
-   -- РїСЂРѕРІРµСЂРєР° СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё РґР»СЏ СЃРІРѕР№СЃС‚РІР° <РљРѕРґ РњР°СЂРєРё Р”РµР№СЃС‚РІРёСЏ>
+   -- проверка уникальности для свойства <Код Марки Действия>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Role(), inCode);
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё <РћР±СЉРµРєС‚>
+   -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Role(), inCode, inName);
    
-   -- СЃРѕС…СЂР°РЅРёР»Рё РїСЂРѕС‚РѕРєРѕР»
+   -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, UserId);
    
-END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpInsertUpdate_Object_Role (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  23.09.13                         *
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpInsertUpdate_Object_Role()

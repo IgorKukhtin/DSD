@@ -1,6 +1,6 @@
--- Function: gpGet_Object_Car(Integer,TVarChar)
+-- Function: gpGet_Object_Car (Integer,TVarChar)
 
--- DROP FUNCTION gpGet_Object_Car(Integer,TVarChar);
+-- DROP FUNCTION gpGet_Object_Car (Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Car(
     IN inId          Integer,       -- ключ объекта <Автомобиль>

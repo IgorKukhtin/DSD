@@ -1,10 +1,10 @@
-п»ї-- Function: gpGet_Object_Cash()
+-- Function: gpGet_Object_Cash (Integer, TVarChar)
 
---DROP FUNCTION gpGet_Object_Cash();
+-- DROP FUNCTION gpGet_Object_Cash (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Cash(
-    IN inId          Integer,       -- РљР°СЃСЃР° 
-    IN inSession     TVarChar       -- С‚РµРєСѓС‰РёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ 
+    IN inId          Integer,       -- Касса 
+    IN inSession     TVarChar       -- текущий пользователь 
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
                CurrencyId Integer, CurrencyName TVarChar, BranchId Integer, BranchName TVarChar, 
@@ -69,16 +69,16 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_Cash(integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Object_Cash (Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  11.06.13          *
  03.06.13
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpSelect_Cash(1,'2')

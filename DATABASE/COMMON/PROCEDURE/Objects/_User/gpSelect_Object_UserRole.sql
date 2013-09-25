@@ -1,12 +1,14 @@
--- Function: gpSelect_Object_UserRole()
+-- Function: gpSelect_Object_UserRole (TVarChar)
 
---DROP FUNCTION gpSelect_Object_UserRole(TVarChar);
+-- DROP FUNCTION gpSelect_Object_UserRole (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_UserRole(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, UserId Integer, UserRoleId Integer) AS
-$BODY$BEGIN
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, UserId Integer, UserRoleId Integer)
+AS
+$BODY$
+BEGIN
    
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
@@ -25,12 +27,10 @@ $BODY$BEGIN
    JOIN Object AS ObjectRole ON ObjectRole.Id = ObjectLink_UserRole_Role.ChildObjectId
    WHERE ObjectLink_UserRole_Role.DescId = zc_ObjectLink_UserRole_Role();        
   
-END;$BODY$
-
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_UserRole(TVarChar)
-  OWNER TO postgres;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpSelect_Object_UserRole (TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
@@ -38,5 +38,5 @@ ALTER FUNCTION gpSelect_Object_UserRole(TVarChar)
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  23.09.13                         *
-
 */
+-- SELECT * FROM gpSelect_Object_UserRole ('2')

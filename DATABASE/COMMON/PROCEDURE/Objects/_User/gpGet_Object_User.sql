@@ -1,15 +1,15 @@
-п»ї-- Function: gpGet_Object_User()
+-- Function: gpGet_Object_User()
 
---DROP FUNCTION gpGet_Object_User(Integer, TVarChar);
+-- DROP FUNCTION gpGet_Object_User (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_User(
-    IN inId          Integer,       -- РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ 
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inId          Integer,       -- пользователь 
+    IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Password TVarChar, MemberId Integer, MemberName TVarChar) AS
 $BODY$BEGIN
 
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
 --   PERFORM lpCheckRight(inSession, zc_Object_Process_User());
    
    IF COALESCE (inId, 0) = 0
@@ -43,20 +43,17 @@ $BODY$BEGIN
    END IF;
   
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 1000;
-ALTER FUNCTION gpGet_Object_User(integer, TVarChar)
-  OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpGet_Object_User (Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  03.06.13          *
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpSelect_User('2')

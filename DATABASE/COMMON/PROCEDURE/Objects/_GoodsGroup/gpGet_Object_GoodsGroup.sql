@@ -1,16 +1,17 @@
-п»ї-- Function: gpGet_Object_GoodsGroup()
+-- Function: gpGet_Object_GoodsGroup (Integer, TVarChar)
 
---DROP FUNCTION gpGet_Object_GoodsGroup();
+--DROP FUNCTION gpGet_Object_GoodsGroup (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_GoodsGroup(
-    IN inId          Integer,       -- Р“СЂСѓРїРїР° С‚РѕРІР°СЂРѕРІ 
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inId          Integer,       -- Группа товаров 
+    IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ParentId Integer, ParentName TVarChar) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ParentId Integer, ParentName TVarChar)
+AS
 $BODY$
 BEGIN
    
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
    
    IF COALESCE (inId, 0) = 0
@@ -40,19 +41,18 @@ BEGIN
    
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_GoodsGroup(integer, TVarChar) OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpGet_Object_GoodsGroup (Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  06.09.13                         *
  12.06.13          *
  03.06.13          
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpSelect_GoodsGroup('2')

@@ -1,48 +1,48 @@
-п»ї-- Function: gpInsertUpdate_Object_UserRole()
+-- Function: gpInsertUpdate_Object_UserRole (Integer, Integer, Integer, TVarChar)
 
--- DROP FUNCTION gpInsertUpdate_Object_UserRole();
+-- DROP FUNCTION gpInsertUpdate_Object_UserRole (Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_UserRole(
- INOUT ioId	        Integer   ,     -- РєР»СЋС‡ РѕР±СЉРµРєС‚Р° СЃРІСЏР·Рё 
-    IN inUserId         Integer   ,     -- РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ
-    IN inRoleId         Integer   ,     -- Р РѕР»СЊ
-    IN inSession        TVarChar        -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+ INOUT ioId	        Integer   ,     -- ключ объекта связи 
+    IN inUserId         Integer   ,     -- Пользователь
+    IN inRoleId         Integer   ,     -- Роль
+    IN inSession        TVarChar        -- сессия пользователя
 )
-  RETURNS integer AS
+  RETURNS Integer AS
 $BODY$
    DECLARE UserId Integer;
 BEGIN
    
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_UserRole());
 
    UserId := inSession;
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё <РћР±СЉРµРєС‚>
+   -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_UserRole(), 0, '');
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІСЏР·СЊ СЃ <РџРѕР»СЊР·РѕРІР°С‚РµР»РµРј>
+   -- сохранили связь с <Пользователем>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_UserRole_User(), ioId, inUserId);
-   -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІСЏР·СЊ СЃ <Р РѕР»СЊСЋ>
+   -- сохранили связь с <Ролью>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_UserRole_Role(), ioId, inRoleId);
 
    
-   -- СЃРѕС…СЂР°РЅРёР»Рё РїСЂРѕС‚РѕРєРѕР»
+   -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, UserId);
    
-END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_UserRole (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpInsertUpdate_Object_UserRole (Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  23.09.13                         *
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpInsertUpdate_Object_UserRole()

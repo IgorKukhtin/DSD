@@ -1,14 +1,15 @@
-п»ї-- Function: gpSelect_Object_User()
+-- Function: gpSelect_Object_User (TVarChar)
 
---DROP FUNCTION gpSelect_Object_User();
+-- DROP FUNCTION gpSelect_Object_User (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_User(
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, MemberId Integer, MemberName TVarChar) AS
-$BODY$BEGIN
+$BODY$
+BEGIN
 
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
 --   PERFORM lpCheckRight(inSession, zc_Object_Process_User());
 
    RETURN QUERY 
@@ -26,11 +27,16 @@ $BODY$BEGIN
         LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_User_Member.ChildObjectId
    WHERE Object_User.DescId = zc_Object_User();
   
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 1000;
-ALTER FUNCTION gpSelect_Object_User(TVarChar)
-  OWNER TO postgres;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpSelect_Object_User (TVarChar) OWNER TO postgres;
 
--- SELECT * FROM gpSelect_Object_User('2')
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.09.13                                        *
+*/
+
+-- SELECT * FROM gpSelect_Object_User ('2')
