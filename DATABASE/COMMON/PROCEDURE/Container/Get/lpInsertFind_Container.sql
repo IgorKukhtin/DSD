@@ -59,6 +59,7 @@ BEGIN
           
           IF inParentId IS NOT NULL AND inContainerDescId = zc_Container_Summ()
           THEN
+-- insert into _tmp2 (ContainerId) select 1;
               IF inDescId_10 IS NOT NULL -- Это Суммовой учет для Товаров
               THEN vbContainerId := (SELECT Container.Id
                                      FROM Container

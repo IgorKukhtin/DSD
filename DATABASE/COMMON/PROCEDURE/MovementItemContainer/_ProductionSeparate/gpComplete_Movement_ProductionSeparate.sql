@@ -603,25 +603,75 @@ BEGIN
      WHERE _tmpItemSummChild.MovementItemId = _tmpItemChild.MovementItemId;
 
      -- определяется ContainerId для проводок по суммовому учету - Кому  + формируется Аналитика <элемент с/с>
-     UPDATE _tmpItemSummChild SET ContainerId_To = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
-                                                                                     , inUnitId                 := vbUnitId_To
-                                                                                     , inPersonalId             := vbPersonalId_To
-                                                                                     , inBranchId               := vbBranchId_To
-                                                                                     , inJuridicalId_basis      := vbJuridicalId_Basis_To
-                                                                                     , inBusinessId             := _tmpItemChild.BusinessId_To
-                                                                                     , inAccountId              := _tmpItemSummChild.AccountId_To
-                                                                                     , inInfoMoneyDestinationId := _tmpItemChild.InfoMoneyDestinationId
-                                                                                     , inInfoMoneyId            := _tmpItemChild.InfoMoneyId
-                                                                                     , inInfoMoneyId_Detail     := _tmpItemSummChild.InfoMoneyId_Detail_To
-                                                                                     , inContainerId_Goods      := _tmpItemChild.ContainerId_GoodsTo
-                                                                                     , inGoodsId                := _tmpItemChild.GoodsId
-                                                                                     , inGoodsKindId            := _tmpItemChild.GoodsKindId
-                                                                                     , inIsPartionSumm          := _tmpItemChild.isPartionSumm
-                                                                                     , inPartionGoodsId         := _tmpItemChild.PartionGoodsId
-                                                                                     , inAssetId                := _tmpItemChild.AssetId
-                                                                                      )
+     UPDATE _tmpItemSummChild SET ContainerId_To = _tmpItem_byContainer.ContainerId
      FROM _tmpItemChild
+          JOIN _tmpItemSummChild AS _tmpItemSummChild_find ON _tmpItemSummChild_find.MovementItemId = _tmpItemChild.MovementItemId
+          JOIN (SELECT lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
+                                                         , inUnitId                 := vbUnitId_To
+                                                         , inPersonalId             := vbPersonalId_To
+                                                         , inBranchId               := vbBranchId_To
+                                                         , inJuridicalId_basis      := vbJuridicalId_Basis_To
+                                                         , inBusinessId             := _tmpItem_group.BusinessId_To
+                                                         , inAccountId              := _tmpItem_group.AccountId_To
+                                                         , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId
+                                                         , inInfoMoneyId            := _tmpItem_group.InfoMoneyId
+                                                         , inInfoMoneyId_Detail     := _tmpItem_group.InfoMoneyId_Detail_To
+                                                         , inContainerId_Goods      := _tmpItem_group.ContainerId_GoodsTo
+                                                         , inGoodsId                := _tmpItem_group.GoodsId
+                                                         , inGoodsKindId            := _tmpItem_group.GoodsKindId
+                                                         , inIsPartionSumm          := _tmpItem_group.isPartionSumm
+                                                         , inPartionGoodsId         := _tmpItem_group.PartionGoodsId
+                                                         , inAssetId                := _tmpItem_group.AssetId
+                                                          ) AS ContainerId
+                     , _tmpItem_group.BusinessId_To
+                     , _tmpItem_group.AccountId_To
+                     , _tmpItem_group.InfoMoneyDestinationId
+                     , _tmpItem_group.InfoMoneyId
+                     , _tmpItem_group.InfoMoneyId_Detail_To
+                     , _tmpItem_group.ContainerId_GoodsTo
+                     , _tmpItem_group.GoodsId
+                     , _tmpItem_group.GoodsKindId
+                     , _tmpItem_group.isPartionSumm
+                     , _tmpItem_group.PartionGoodsId
+                     , _tmpItem_group.AssetId
+                FROM (SELECT _tmpItemChild.BusinessId_To
+                           , _tmpItemSummChild.AccountId_To
+                           , _tmpItemChild.InfoMoneyDestinationId
+                           , _tmpItemChild.InfoMoneyId
+                           , _tmpItemSummChild.InfoMoneyId_Detail_To
+                           , _tmpItemChild.ContainerId_GoodsTo
+                           , _tmpItemChild.GoodsId
+                           , _tmpItemChild.GoodsKindId
+                           , _tmpItemChild.isPartionSumm
+                           , _tmpItemChild.PartionGoodsId
+                           , _tmpItemChild.AssetId
+                      FROM _tmpItemSummChild
+                           JOIN _tmpItemChild ON _tmpItemChild.MovementItemId = _tmpItemSummChild.MovementItemId
+                      GROUP BY _tmpItemChild.BusinessId_To
+                             , _tmpItemSummChild.AccountId_To
+                             , _tmpItemChild.InfoMoneyDestinationId
+                             , _tmpItemChild.InfoMoneyId
+                             , _tmpItemSummChild.InfoMoneyId_Detail_To
+                             , _tmpItemChild.ContainerId_GoodsTo
+                             , _tmpItemChild.GoodsId
+                             , _tmpItemChild.GoodsKindId
+                             , _tmpItemChild.isPartionSumm
+                             , _tmpItemChild.PartionGoodsId
+                             , _tmpItemChild.AssetId
+                     ) AS _tmpItem_group
+               ) AS _tmpItem_byContainer ON _tmpItem_byContainer.BusinessId_To          = _tmpItemChild.BusinessId_To
+                                        AND _tmpItem_byContainer.AccountId_To           = _tmpItemSummChild_find.AccountId_To
+                                        AND _tmpItem_byContainer.InfoMoneyDestinationId = _tmpItemChild.InfoMoneyDestinationId
+                                        AND _tmpItem_byContainer.InfoMoneyId            = _tmpItemChild.InfoMoneyId
+                                        AND _tmpItem_byContainer.InfoMoneyId_Detail_To  = _tmpItemSummChild_find.InfoMoneyId_Detail_To
+                                        AND _tmpItem_byContainer.ContainerId_GoodsTo    = _tmpItemChild.ContainerId_GoodsTo
+                                        AND _tmpItem_byContainer.GoodsId                = _tmpItemChild.GoodsId
+                                        AND _tmpItem_byContainer.GoodsKindId            = _tmpItemChild.GoodsKindId
+                                        AND _tmpItem_byContainer.isPartionSumm          = _tmpItemChild.isPartionSumm
+                                        AND _tmpItem_byContainer.PartionGoodsId         = _tmpItemChild.PartionGoodsId
+                                        AND _tmpItem_byContainer.AssetId                = _tmpItemChild.AssetId
      WHERE _tmpItemSummChild.MovementItemId = _tmpItemChild.MovementItemId;
+
 
      -- формируются Проводки для суммового учета - Кому + определяется MIContainer.Id
      UPDATE _tmpItemSummChild SET MIContainerId_To =
@@ -654,32 +704,56 @@ BEGIN
      -- RETURN;
 
      -- формируются Проводки для отчета (Аналитики: Товар расход и Товар приход)
-     PERFORM lpInsertUpdate_MovementItemReport (inMovementId         := inMovementId
-                                              , inMovementItemId     := _tmpItemSumm.MovementItemId
-                                              , inActiveContainerId  := _tmpItemSummChild.ContainerId_To
-                                              , inPassiveContainerId := _tmpItemSumm.ContainerId_From
-                                              , inActiveAccountId    := _tmpItemSummChild.AccountId_To
-                                              , inPassiveAccountId   := _tmpItemSumm.AccountId_From
-                                              , inReportContainerId  := lpInsertFind_ReportContainer (inActiveContainerId  := _tmpItemSummChild.ContainerId_To
-                                                                                                    , inPassiveContainerId := _tmpItemSumm.ContainerId_From
-                                                                                                    , inActiveAccountId    := _tmpItemSummChild.AccountId_To
-                                                                                                    , inPassiveAccountId   := _tmpItemSumm.AccountId_From
-                                                                                                     )
-                                              , inChildReportContainerId := lpInsertFind_ChildReportContainer (inActiveContainerId  := _tmpItemSummChild.ContainerId_To
-                                                                                                             , inPassiveContainerId := _tmpItemSumm.ContainerId_From
-                                                                                                             , inActiveAccountId    := _tmpItemSummChild.AccountId_To
-                                                                                                             , inPassiveAccountId   := _tmpItemSumm.AccountId_From
-                                                                                                             , inAccountKindId_1    := NULL
-                                                                                                             , inContainerId_1      := NULL
-                                                                                                             , inAccountId_1        := NULL
-                                                                                                     )
-                                              , inAmount   := _tmpItemSummChild.OperSumm
-                                              , inOperDate := vbOperDate
+     PERFORM lpInsertUpdate_MovementItemReport (inMovementId             := inMovementId
+                                              , inMovementItemId         := _tmpItemSumm.MovementItemId
+                                              , inActiveContainerId      := _tmpItemSummChild.ContainerId_To
+                                              , inPassiveContainerId     := _tmpItemSumm.ContainerId_From
+                                              , inActiveAccountId        := _tmpItemSummChild.AccountId_To
+                                              , inPassiveAccountId       := _tmpItemSumm.AccountId_From
+                                              , inReportContainerId      := _tmpItem_byReportContainer.ReportContainerId
+                                              , inChildReportContainerId := _tmpItem_byReportContainer.ChildReportContainerId
+                                              , inAmount                 := _tmpItemSummChild.OperSumm
+                                              , inOperDate               := vbOperDate
                                                )
      FROM _tmpItem
           JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId
           JOIN _tmpItemSummChild ON _tmpItemSummChild.MovementItemId_Parent = _tmpItemSumm.MovementItemId
-                                AND _tmpItemSummChild.ContainerId_From = _tmpItemSumm.ContainerId_From
+                                AND _tmpItemSummChild.ContainerId_From      = _tmpItemSumm.ContainerId_From
+
+          JOIN (SELECT lpInsertFind_ReportContainer (inActiveContainerId  := _tmpItem_group.ContainerId_To
+                                                   , inPassiveContainerId := _tmpItem_group.ContainerId_From
+                                                   , inActiveAccountId    := _tmpItem_group.AccountId_To
+                                                   , inPassiveAccountId   := _tmpItem_group.AccountId_From
+                                                    ) AS ReportContainerId
+                     , lpInsertFind_ChildReportContainer (inActiveContainerId  := _tmpItem_group.ContainerId_To
+                                                        , inPassiveContainerId := _tmpItem_group.ContainerId_From
+                                                        , inActiveAccountId    := _tmpItem_group.AccountId_To
+                                                        , inPassiveAccountId   := _tmpItem_group.AccountId_From
+                                                        , inAccountKindId_1    := NULL
+                                                        , inContainerId_1      := NULL
+                                                        , inAccountId_1        := NULL
+                                                         ) AS ChildReportContainerId
+                     , _tmpItem_group.ContainerId_To
+                     , _tmpItem_group.ContainerId_From
+                     , _tmpItem_group.AccountId_To
+                     , _tmpItem_group.AccountId_From
+                FROM (SELECT _tmpItemSummChild.ContainerId_To
+                           , _tmpItemSumm.ContainerId_From
+                           , _tmpItemSummChild.AccountId_To
+                           , _tmpItemSumm.AccountId_From
+                      FROM _tmpItem
+                           JOIN _tmpItemSumm ON _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId
+                           JOIN _tmpItemSummChild ON _tmpItemSummChild.MovementItemId_Parent = _tmpItemSumm.MovementItemId
+                                                 AND _tmpItemSummChild.ContainerId_From      = _tmpItemSumm.ContainerId_From
+                      GROUP BY _tmpItemSummChild.ContainerId_To
+                             , _tmpItemSumm.ContainerId_From
+                             , _tmpItemSummChild.AccountId_To
+                             , _tmpItemSumm.AccountId_From
+                     ) AS _tmpItem_group
+               ) AS _tmpItem_byReportContainer ON _tmpItem_byReportContainer.ContainerId_To   = _tmpItemSummChild.ContainerId_To
+                                              AND _tmpItem_byReportContainer.ContainerId_From = _tmpItemSumm.ContainerId_From
+                                              AND _tmpItem_byReportContainer.AccountId_To     = _tmpItemSummChild.AccountId_To
+                                              AND _tmpItem_byReportContainer.AccountId_From   = _tmpItemSumm.AccountId_From
      ;
 
 
@@ -697,6 +771,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.09.13                                        * optimize
  17.09.13                                        * add lpInsertUpdate_ContainerCount_Goods and lpInsertUpdate_ContainerSumm_Goods
  14.09.13                                        * add zc_ObjectLink_Goods_Business
  02.09.13                                        * add lpInsertUpdate_MovementItemContainer_byTable
@@ -711,6 +786,6 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpUnComplete_Movement (inMovementId:= 14257, inSession:= '2')
--- SELECT * FROM gpComplete_Movement_ProductionSeparate (inMovementId:= 14257, inIsLastComplete:= FALSE, inSession:= '2')
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 14257, inSession:= '2')
+-- SELECT * FROM gpUnComplete_Movement (inMovementId:= 14101, inSession:= '2')
+-- SELECT * FROM gpComplete_Movement_ProductionSeparate (inMovementId:= 14101, inIsLastComplete:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 14101, inSession:= '2')
