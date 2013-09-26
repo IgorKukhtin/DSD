@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Fuel(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
              , Ratio TFloat
+             , RateFuelKindId Integer, RateFuelKindCode Integer, RateFuelKindName TVarChar
              , isErased boolean
              ) AS
 $BODY$
@@ -26,6 +27,10 @@ BEGIN
            
            , CAST (0 as TFloat)     AS Ratio
 
+           , CAST (0 as Integer)   AS RateFuelKindId
+           , CAST (0 as Integer)   AS RateFuelKindCode
+           , CAST ('' as TVarChar) AS RateFuelKindName
+
            , CAST (NULL AS Boolean) AS isErased
 
        FROM Object AS Object_Fuel
@@ -38,13 +43,21 @@ BEGIN
            , Object_Fuel.ValueData   AS Name
            
            , ObjectFloat_Ratio.ValueData AS Ratio
- 
+
+           , Object_RateFuelKind.ObjectId    AS RateFuelKindId
+           , Object_RateFuelKind.ObjectCode  AS RateFuelKindCode
+           , Object_RateFuelKind.ValueData   AS RateFuelKindName
+
            , Object.isErased AS isErased
            
        FROM Object AS Object_Fuel
        
            LEFT JOIN ObjectFloat AS ObjectFloat_Ratio ON ObjectFloat_Ratio.ObjectId = Object_Fuel.Id 
                                                      AND ObjectFloat_Ratio.DescId = zc_ObjectFloat_Fuel_Ratio()
+         
+           LEFT JOIN ObjectLink AS ObjectLink_Fuel_RateFuelKind ON ObjectLink_Fuel_RateFuelKind.ObjectId = Object_Fuel.Id 
+                                                               AND ObjectLink_Fuel_RateFuelKind.DescId = zc_ObjectLink_Fuel_RateFuelKind()
+           LEFT JOIN Object AS Object_RateFuelKind ON Object_RateFuelKind.Id = ObjectLink_Fuel_RateFuelKind.ChildObjectId              
 
        WHERE Object_Fuel.Id = inId;
       
@@ -59,6 +72,7 @@ ALTER FUNCTION gpGet_Object_Fuel(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 25.09.13          *  add  RateFuelKind              
  24.09.13          * 
 
 */

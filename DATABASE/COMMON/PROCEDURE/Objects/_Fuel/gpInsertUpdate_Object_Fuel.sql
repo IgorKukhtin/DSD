@@ -1,12 +1,13 @@
 -- Function: gpInsertUpdate_Object_Fuel (Integer,Integer,TVarChar, TFloat,TVarChar)
 
--- DROP FUNCTION gpInsertUpdate_Object_Fuel (Integer,Integer,TVarChar, TFloat,TVarChar);
+-- DROP FUNCTION gpInsertUpdate_Object_Fuel (Integer,Integer,TVarChar, TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Fuel(
  INOUT ioId              Integer   ,    -- ключ объекта <Виды топлива>
     IN inCode            Integer   ,    -- Код объекта <Виды топлива>
     IN inName            TVarChar  ,    -- Название объекта <Виды топлива>
     IN inRatio           TFloat    ,    -- Коэффициент перевода нормы
+    IN inRateFuelKindId  Integer   ,    -- Виды норм для топлива
     IN inSession         TVarChar       -- сессия пользователя
 )
  RETURNS Integer AS
@@ -34,17 +35,20 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Fuel_Ratio(), ioId, inRatio);
 
+   -- сохранили связь с <Группой товара>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Fuel_RateFuelKind(), ioId, inRateFuelKindId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$ LANGUAGE plpgsql;
-ALTER FUNCTION gpInsertUpdate_Object_Fuel(Integer,Integer,TVarChar, TFloat,TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Fuel(Integer,Integer,TVarChar, TFloat, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.09.13          *  add  RateFuelKind
  24.09.13          * 
 
 */

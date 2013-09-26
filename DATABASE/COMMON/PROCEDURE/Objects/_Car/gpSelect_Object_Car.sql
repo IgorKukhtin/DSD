@@ -6,13 +6,12 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Car(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
-             , RegistrationCertificate TVarChar, StartDateRate TDateTime, EndDateRate TDateTime
+             , RegistrationCertificate TVarChar
              , CarModelId Integer, CarModelCode Integer, CarModelName TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
              , PersonalDriverId Integer, PersonalDriverCode Integer, PersonalDriverName TVarChar
              , FuelMasterId Integer, FuelMasterCode Integer, FuelMasterName TVarChar
              , FuelChildId Integer, FuelChildCode Integer, FuelChildName TVarChar
-             , RateFuelKindId Integer, RateFuelKindCode Integer, RateFuelKindName TVarChar
              , isErased boolean
              ) AS
 $BODY$BEGIN
@@ -26,9 +25,6 @@ $BODY$BEGIN
            , Object_Car.ValueData   AS Name
            
            , RegistrationCertificate.ValueData  AS RegistrationCertificate
-           
-           , ObjectDate_Car_StartRate.ValueData AS StartDateRate
-           , ObjectDate_Car_EndRate.ValueData   AS EndDateRate
            
            , Object_CarModel.Id         AS CarModelId
            , Object_CarModel.ObjectCode AS CarModelCode
@@ -50,10 +46,6 @@ $BODY$BEGIN
            , Object_FuelChild.ObjectCode  AS FuelChildCode
            , Object_FuelChild.ValueData   AS FuelChildName
            
-           , Object_RateFuelKind.Id          AS RateFuelKindId
-           , Object_RateFuelKind.ObjectCode  AS RateFuelKindCode
-           , Object_RateFuelKind.ValueData   AS RateFuelKindName
- 
            , Object.isErased    AS isErased
            
        FROM Object AS Object_Car
@@ -61,12 +53,6 @@ $BODY$BEGIN
             LEFT JOIN ObjectString AS RegistrationCertificate ON RegistrationCertificate.ObjectId = Object_Car.Id 
                                                              AND RegistrationCertificate.DescId = zc_ObjectString_Car_RegistrationCertificate()
                                                              
-            LEFT JOIN ObjectDate AS ObjectDate_Car_StartRate ON ObjectDate_Car_StartRate.ObjectId = Object_Car.Id 
-                                                            AND ObjectDate_Car_StartRate.DescId = zc_ObjectDate_Car_StartDateRate()
-                
-            LEFT JOIN ObjectDate AS ObjectDate_Car_EndRate ON ObjectDate_Car_EndRate.ObjectId = Object_Car.Id 
-                                                          AND ObjectDate_Car_EndRate.DescId = zc_ObjectDate_Car_EndDateRate()          
-       
             LEFT JOIN ObjectLink AS Car_CarModel ON Car_CarModel.ObjectId = Object_Car.Id
                                                 AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
@@ -87,10 +73,6 @@ $BODY$BEGIN
                                                             AND ObjectLink_Car_FuelChild.DescId = zc_ObjectLink_Car_FuelChild()
             LEFT JOIN Object AS Object_FuelChild ON Object_FuelChild.Id = ObjectLink_Car_FuelChild.ChildObjectId
 
-            LEFT JOIN ObjectLink AS ObjectLink_Car_RateFuelKind ON ObjectLink_Car_RateFuelKind.ObjectId = Object_Car.Id
-                                                               AND ObjectLink_Car_RateFuelKind.DescId = zc_ObjectLink_Car_RateFuelKind()
-            LEFT JOIN Object AS Object_RateFuelKind ON Object_RateFuelKind.Id = ObjectLink_Car_RateFuelKind.ChildObjectId
-       
      WHERE Object_Car.DescId = zc_Object_Car();
   
 END;
@@ -103,6 +85,7 @@ ALTER FUNCTION gpSelect_Object_Car(TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.09.13          * del StartDateRate, EndDateRate, RateFuelKind               
  24.09.13          * add StartDateRate, EndDateRate, Unit, PersonalDriver, FuelMaster, FuelChild, RateFuelKind               
  10.06.13          * 
  03.06.13          

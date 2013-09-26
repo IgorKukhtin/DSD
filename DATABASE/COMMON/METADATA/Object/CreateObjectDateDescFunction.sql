@@ -44,19 +44,11 @@ INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Contract(), 'zc_ObjectDate_Contract_End', 'Дата до которой действует договор' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Contract_End');
 
 
-CREATE OR REPLACE FUNCTION zc_ObjectDate_Car_StartDateRate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Car_StartDateRate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
-  SELECT zc_Object_Car(), 'zc_ObjectDate_Car_StartDateRate', 'Начальная дата для Типа нормы' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Car_StartDateRate');
-
-
-CREATE OR REPLACE FUNCTION zc_ObjectDate_Car_EndDateRate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Car_EndDateRate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
-  SELECT zc_Object_Car(), 'zc_ObjectDate_Car_EndDateRate', 'Начальная дата для Типа нормы' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Car_EndDateRate');
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+25.09.13          * del Car_StartDateRate, Car_EndDateRate              
 19.07.13          * rename zc_ObjectDate_
 01.07.13          * 
 */

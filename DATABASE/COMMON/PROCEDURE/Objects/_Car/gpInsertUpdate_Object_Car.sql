@@ -7,14 +7,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Car(
     IN inCode                     Integer   ,    -- Код объекта <Автомобиль>
     IN inName                     TVarChar  ,    -- Название объекта <Автомобиль>
     IN inRegistrationCertificate  TVarChar  ,    -- Техпаспорт объекта <Автомобиль>
-    IN inStartDateRate            TDateTime ,    -- Начальная дата для Типа нормы
-    IN inEndDateRate              TDateTime ,    -- Конечная дата для Типа нормы
     IN inCarModelId               Integer   ,    -- Модель авто          
     IN inUnitId                   Integer   ,    -- Подразделение
     IN inPersonalDriverId         Integer   ,    -- Сотрудник (водитель)
     IN inFuelMasterId             Integer   ,    -- Вид топлива (основной)
     IN inFuelChildId              Integer   ,    -- Вид топлива (дополнительный)
-    IN inRateFuelKindId           Integer   ,    -- Типы норм для топлива
     IN inSession                  TVarChar       -- сессия пользователя
 )
  RETURNS Integer AS
@@ -43,11 +40,6 @@ BEGIN
    -- сохранили св-во <Техпаспорт>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Car_RegistrationCertificate(), ioId, inRegistrationCertificate);
 
-   -- сохранили свойство <Начальная дата для Типа нормы>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Car_StartDateRate(), ioId, inStartDateRate);
-   -- сохранили свойство <Конечная дата для Типа нормы>
-   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Car_EndDateRate(), ioId, inEndDateRate);
-
    -- сохранили связь с <Модель авто>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Car_CarModel(), ioId, inCarModelId);
    -- сохранили связь с <подразделением>
@@ -58,19 +50,18 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Car_FuelMaster(), ioId, inFuelMasterId);
    -- сохранили связь с <Вид топлива (дополнительный)>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Car_FuelChild(), ioId, inFuelChildId);
-   -- сохранили связь с <Типы норм для топлива>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Car_RateFuelKind(), ioId, inRateFuelKindId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$ LANGUAGE plpgsql;
-ALTER FUNCTION gpInsertUpdate_Object_Car(Integer,Integer,TVarChar,TVarChar,TDateTime,TDateTime,Integer,Integer,Integer,Integer,Integer,Integer,TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Car (Integer,Integer,TVarChar,TVarChar,Integer,Integer,Integer,Integer,Integer,TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.09.13          * del StartDateRate, EndDateRate, RateFuelKind 
  24.09.13          * add StartDateRate, EndDateRate, Unit, PersonalDriver, FuelMaster, FuelChild, RateFuelKind
  10.06.13          *
  05.06.13          
