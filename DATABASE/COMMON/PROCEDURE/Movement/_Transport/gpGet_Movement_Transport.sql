@@ -9,11 +9,12 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Transport(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , StartRunPlan TDateTime, EndRunPlan TDateTime, StartRun TDateTime, EndRun TDateTime
-             , HoursWork TFloat, HoursAdd TFloat, StartOdometre TFloat, EndOdometre TFloat, Distance TFloat
+             , HoursWork TFloat, HoursAdd TFloat
              , Comment TVarChar
              , CarId Integer, CarName TVarChar
              , CarTrailerId Integer, CarTrailerName TVarChar
              , PersonalDriverId Integer, PersonalDriverName TVarChar
+             , PersonalDriverMoreId Integer, PersonalDriverMoreName TVarChar
              , UnitForwardingId Integer, UnitForwardingName TVarChar
              )
 AS
@@ -22,6 +23,48 @@ BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Transport());
+
+     IF COALESCE (inMovementId, 0) = 0
+     THEN
+
+     RETURN QUERY 
+       SELECT
+             0 AS Id
+           , CAST (COALESCE (tmpMovement_InvNumber.InvNumber, 0) + 1 as TVarChar) AS InvNumber
+           , CAST (CURRENT_TIMESTAMP as TDateTime) AS OperDate
+           , lfObject_Status.Code                  AS StatusCode
+           , lfObject_Status.Name                  AS StatusName
+           
+           , CAST (CURRENT_TIMESTAMP as TDateTime) AS StartRunPlan 
+           , CAST (CURRENT_TIMESTAMP as TDateTime) AS EndRunPlan 
+           , CAST (CURRENT_TIMESTAMP as TDateTime) AS StartRun 
+           , CAST (CURRENT_TIMESTAMP as TDateTime) AS EndRun           
+          
+           , CAST (0 as TFloat)                    AS HoursWork
+           , CAST (0 as TFloat)                    AS HoursAdd
+                      
+           , CAST ('' as TVarChar) AS Comment
+
+           , 0                     AS CarId
+           , CAST ('' as TVarChar) AS CarName
+
+           , 0                     AS CarTrailerId
+           , CAST ('' as TVarChar) AS CarTrailerName
+
+           , 0                     AS PersonalDriverId
+           , CAST ('' as TVarChar) AS PersonalDriverName
+
+           , 0                     AS PersonalDriverMoreId
+           , CAST ('' as TVarChar) AS PersonalDriverMoreName
+
+           , Object_UnitForwarding.Id        AS UnitForwardingId
+           , Object_UnitForwarding.ValueData AS UnitForwardingName
+   
+          FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
+               LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = 5
+               LEFT JOIN (SELECT CAST (MAX (Movement.InvNumber) AS Integer) AS InvNumber FROM Movement WHERE Movement.DescId = zc_Movement_Transport()) AS tmpMovement_InvNumber ON 1 = 1;
+
+     ELSE
 
      RETURN QUERY 
        SELECT
@@ -38,9 +81,6 @@ BEGIN
           
            , MovementFloat_HoursWork.ValueData     AS HoursWork
            , MovementFloat_HoursAdd.ValueData      AS HoursAdd
-           , MovementFloat_StartOdometre.ValueData AS StartOdometre
-           , MovementFloat_EndOdometre.ValueData   AS EndOdometre
-           , MovementFloat_Distance.ValueData      AS Distance
                       
            , MovementString_Comment.ValueData      AS Comment
 
@@ -52,6 +92,9 @@ BEGIN
 
            , Object_PersonalDriver.Id        AS PersonalDriverId
            , Object_PersonalDriver.ValueData AS PersonalDriverName
+
+           , Object_PersonalDriverMore.Id        AS PersonalDriverMoreId
+           , Object_PersonalDriverMore.ValueData AS PersonalDriverMoreName
 
            , Object_UnitForwarding.Id        AS UnitForwardingId
            , Object_UnitForwarding.ValueData AS UnitForwardingName
@@ -83,17 +126,9 @@ BEGIN
                                     ON MovementFloat_HoursAdd.MovementId =  Movement.Id
                                    AND MovementFloat_HoursAdd.DescId = zc_MovementFloat_HoursAdd()
 
-            LEFT JOIN MovementFloat AS MovementFloat_StartOdometre
-                                    ON MovementFloat_StartOdometre.MovementId =  Movement.Id
-                                   AND MovementFloat_StartOdometre.DescId = zc_MovementFloat_StartOdometre()
-
-            LEFT JOIN MovementFloat AS MovementFloat_EndOdometre
-                                    ON MovementFloat_EndOdometre.MovementId =  Movement.Id
-                                   AND MovementFloat_EndOdometre.DescId = zc_MovementFloat_EndOdometre()
-
-            LEFT JOIN MovementFloat AS MovementFloat_Distance
-                                    ON MovementFloat_Distance.MovementId =  Movement.Id
-                                   AND MovementFloat_Distance.DescId = zc_MovementFloat_Distance()
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId =  Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
                                          ON MovementLinkObject_Car.MovementId = Movement.Id
@@ -110,6 +145,11 @@ BEGIN
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
             LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriverMore
+                                         ON MovementLinkObject_PersonalDriverMore.MovementId = Movement.Id
+                                        AND MovementLinkObject_PersonalDriverMore.DescId = zc_MovementLinkObject_PersonalDriverMore()
+            LEFT JOIN Object AS Object_PersonalDriverMore ON Object_PersonalDriverMore.Id = MovementLinkObject_PersonalDriverMore.ObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
                                          ON MovementLinkObject_UnitForwarding.MovementId = Movement.Id
                                         AND MovementLinkObject_UnitForwarding.DescId = zc_MovementLinkObject_UnitForwarding()
@@ -117,6 +157,8 @@ BEGIN
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Transport();
+
+     END IF;
   
 END;
 $BODY$
@@ -127,10 +169,10 @@ ALTER FUNCTION gpGet_Movement_Transport (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.09.13                                        * changes in wiki
  25.09.13         * changes in wiki              
  20.08.13         *
-
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Transport (inMovementId:= 1, inSession:= '2')
+ SELECT * FROM gpGet_Movement_Transport (inMovementId:= 0, inSession:= '2')

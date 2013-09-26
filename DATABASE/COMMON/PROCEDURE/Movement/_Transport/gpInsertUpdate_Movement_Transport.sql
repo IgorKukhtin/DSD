@@ -13,23 +13,21 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Transport(
     IN inEndRun              TDateTime , -- Дата/Время возвращения факт
 
     IN inHoursAdd            TFloat    , -- Кол-во добавленных рабочих часов
-    IN inStartOdometre       TFloat    , -- Спидометр начальное показание, км
-    IN inEndOdometre         TFloat    , -- Спидометр конечное показание, км
-    
-    IN inComment             TVarChar  , -- Затраты топлива на охлаждение
-    
-    IN inCarId               Integer   , -- Автомобиль 	
-    IN inCarTrailerId        Integer   , -- Автомобиль (прицеп)
-    IN inPersonalDriverId    Integer   , -- Сотрудник (водитель)
-    IN inUnitForwardingId    Integer   , -- Подразделение (Место отправки)
 
-    IN inSession             TVarChar    -- сессия пользователя
+    IN inComment             TVarChar  , -- Примечание
+    
+    IN inCarId                Integer   , -- Автомобиль
+    IN inCarTrailerId         Integer   , -- Автомобиль (прицеп)
+    IN inPersonalDriverId     Integer   , -- Сотрудник (водитель)
+    IN inPersonalDriverMoreId Integer   , -- Сотрудник (водитель, дополнительный)
+    IN inUnitForwardingId     Integer   , -- Подразделение (Место отправки)
+
+    IN inSession              TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbHoursWork TFloat;
-   DECLARE vbDistance TFloat;
 BEGIN
 
 
@@ -40,43 +38,35 @@ BEGIN
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Transport(), inInvNumber, inOperDate, NULL);
 
-     -- сохранили связь с <Дата >
+     -- сохранили связь с <Дата/Время выезда план>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartRunPlan(), ioId, inStartRunPlan);
-     -- сохранили связь с <Дата >
+     -- сохранили связь с <Дата/Время возвращения план>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndRunPlan(), ioId, inEndRunPlan);
-     -- сохранили связь с <Дата >
+     -- сохранили связь с <Дата/Время выезда факт>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartRun(), ioId, inStartRun);
-     -- сохранили связь с <Дата >
+     -- сохранили связь с <Дата/Время возвращения факт>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndRun(), ioId, inEndRun);
 
+     -- расчитали свойство <Кол-во рабочих часов>
+     vbHoursWork:= ROUND ((inEndRun - inStartRun) * 24));
      -- сохранили свойство <Кол-во рабочих часов>
-     vbHoursWork:= round((inEndRun - inStartRun)*24));
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_HoursWork(), ioId, vbHoursWork);
 
      -- сохранили свойство <Кол-во добавленных рабочих часов>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_HoursAdd(), ioId, inHoursAdd);
 
-     -- сохранили свойство <Одометр нач.показания>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_StartOdometre(), ioId, inStartOdometre);
-
-     -- сохранили свойство <Одометр кон.показания>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_EndOdometre(), ioId, inEndOdometre);
-     
-     -- сохранили свойство <Пробег>
-     vbDistance:= inEndOdometre-inStartOdometre;
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Distance(), ioId, vbDistance);
-
      -- сохранили свойство <Примечание>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
-
 
      -- сохранили связь с <Автомобиль>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Car(), ioId, inCarId);
      -- сохранили связь с <Автомобиль (прицеп)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CarTrailer(), ioId, inCarTrailerId);
 
-     -- сохранили связь с <Сотрудники>
+     -- сохранили связь с <Сотрудник (водитель)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalDriver(), ioId, inPersonalDriverId);
+     -- сохранили связь с <Сотрудник (водитель, дополнительный)>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalDriverMore(), ioId, inPersonalDriverMoreId);
      
      -- сохранили связь с <Подразделение (Место отправки)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_UnitForwarding(), ioId, inUnitForwardingId);
@@ -86,15 +76,15 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.09.13                                        * changes in wiki                 
  25.09.13         * changes in wiki                 
  20.08.13         *
-
 */
 
 -- тест

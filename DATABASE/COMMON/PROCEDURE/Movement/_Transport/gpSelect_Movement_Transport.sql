@@ -10,12 +10,13 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Transport(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , StartRunPlan TDateTime, EndRunPlan TDateTime, StartRun TDateTime, EndRun TDateTime
-             , HoursWork TFloat, HoursAdd TFloat, StartOdometre TFloat, EndOdometre TFloat, Distance TFloat
+             , HoursWork TFloat, HoursAdd TFloat
              , Comment TVarChar
-             , CarId Integer, CarName TVarChar
-             , CarTrailerId Integer, CarTrailerName TVarChar
-             , PersonalDriverId Integer, PersonalDriverName TVarChar
-             , UnitForwardingId Integer, UnitForwardingName TVarChar
+             , CarName TVarChar
+             , CarTrailerName TVarChar
+             , PersonalDriverName TVarChar
+             , PersonalDriverMoreName TVarChar
+             , UnitForwardingName TVarChar
               )
 AS
 $BODY$
@@ -42,22 +43,15 @@ BEGIN
           
            , MovementFloat_HoursWork.ValueData     AS HoursWork
            , MovementFloat_HoursAdd.ValueData      AS HoursAdd
-           , MovementFloat_StartOdometre.ValueData AS StartOdometre
-           , MovementFloat_EndOdometre.ValueData   AS EndOdometre
-           , MovementFloat_Distance.ValueData      AS Distance
                       
            , MovementString_Comment.ValueData      AS Comment
 
-           , Object_Car.Id            AS CarId
-           , Object_Car.ValueData     AS CarName
-
-           , Object_CarTrailer.Id        AS CarTrailerId
+           , Object_Car.ValueData        AS CarName
            , Object_CarTrailer.ValueData AS CarTrailerName
 
-           , Object_PersonalDriver.Id        AS PersonalDriverId
            , Object_PersonalDriver.ValueData AS PersonalDriverName
+           , Object_PersonalDriver.ValueData AS PersonalDriverMoreName
 
-           , Object_UnitForwarding.Id        AS UnitForwardingId
            , Object_UnitForwarding.ValueData AS UnitForwardingName
    
        FROM Movement
@@ -87,17 +81,9 @@ BEGIN
                                     ON MovementFloat_HoursAdd.MovementId =  Movement.Id
                                    AND MovementFloat_HoursAdd.DescId = zc_MovementFloat_HoursAdd()
 
-            LEFT JOIN MovementFloat AS MovementFloat_StartOdometre
-                                    ON MovementFloat_StartOdometre.MovementId =  Movement.Id
-                                   AND MovementFloat_StartOdometre.DescId = zc_MovementFloat_StartOdometre()
-
-            LEFT JOIN MovementFloat AS MovementFloat_EndOdometre
-                                    ON MovementFloat_EndOdometre.MovementId =  Movement.Id
-                                   AND MovementFloat_EndOdometre.DescId = zc_MovementFloat_EndOdometre()
-
-            LEFT JOIN MovementFloat AS MovementFloat_Distance
-                                    ON MovementFloat_Distance.MovementId =  Movement.Id
-                                   AND MovementFloat_Distance.DescId = zc_MovementFloat_Distance()
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId =  Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
                                          ON MovementLinkObject_Car.MovementId = Movement.Id
@@ -113,6 +99,11 @@ BEGIN
                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
             LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriverMore
+                                         ON MovementLinkObject_PersonalDriverMore.MovementId = Movement.Id
+                                        AND MovementLinkObject_PersonalDriverMore.DescId = zc_MovementLinkObject_PersonalDriverMore()
+            LEFT JOIN Object AS Object_PersonalDriverMore ON Object_PersonalDriverMore.Id = MovementLinkObject_PersonalDriverMore.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
                                          ON MovementLinkObject_UnitForwarding.MovementId = Movement.Id
@@ -131,7 +122,8 @@ ALTER FUNCTION gpSelect_Movement_Transport (TDateTime, TDateTime, TVarChar) OWNE
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 25.09.13         * changes in wiki              
+ 26.09.13                                        * changes in wiki
+ 25.09.13         * changes in wiki
  20.08.13         *
 */
 
