@@ -10,7 +10,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, ToParentId Integer
-             , PaidKindId Integer, PaidKindName TVarChar, ContractId Integer, ContractName TVarChar, CarId Integer, CarName TVarChar
+             , PaidKindId Integer, PaidKindName TVarChar, ContractId Integer, ContractName TVarChar
              , PersonalDriverId Integer, PersonalDriverName TVarChar, PersonalPackerId Integer, PersonalPackerName TVarChar
               )
 AS
@@ -45,8 +45,6 @@ BEGIN
              , CAST ('' as TVarChar) AS PaidKindName
              , 0                     AS ContractId
              , CAST ('' as TVarChar) AS ContractName
-             , 0                     AS CarId
-             , CAST ('' as TVarChar) AS CarName
              , 0                     AS PersonalDriverId
              , CAST ('' as TVarChar) AS PersonalDriverName
              , 0                     AS PersonalPackerId
@@ -77,8 +75,6 @@ BEGIN
              , Object_PaidKind.ValueData         AS PaidKindName
              , Object_Contract.Id                AS ContractId
              , Object_Contract.ValueData         AS ContractName
-             , Object_Car.Id                     AS CarId
-             , Object_Car.ValueData              AS CarName
              , Object_PersonalDriver.Id          AS PersonalDriverId
              , Object_PersonalDriver.ValueData   AS PersonalDriverName
              , Object_PersonalPacker.Id          AS PersonalPackerId
@@ -123,11 +119,6 @@ BEGIN
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
-                                         ON MovementLinkObject_Car.MovementId = Movement.Id
-                                        AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
-            LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
-
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
@@ -150,6 +141,7 @@ ALTER FUNCTION gpGet_Movement_Income (Integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 27.09.13                                        * del zc_MovementLinkObject_Car
  04.09.13                       *              
  30.07.13                       * ToParentId Integer
  09.07.13                                        *  ‡ÒÓÚ‡

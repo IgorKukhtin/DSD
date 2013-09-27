@@ -46,7 +46,7 @@ type
     actIncome: TdsdOpenForm;
     bbIncome: TdxBarButton;
     bbPartner: TdxBarButton;
-    dxBarSeparator1: TdxBarSeparator;
+    bbGuides_Separator: TdxBarSeparator;
     actPaidKind: TdsdOpenForm;
     actContractKind: TdsdOpenForm;
     actUnit: TdsdOpenForm;
@@ -68,7 +68,7 @@ type
     bbReportBalance: TdxBarButton;
     bbReports: TdxBarSubItem;
     bbBank: TdxBarButton;
-    actPrisceList: TdsdOpenForm;
+    actPriceList: TdsdOpenForm;
     bbPriceList: TdxBarButton;
     bbCash: TdxBarButton;
     bbCurrency: TdxBarButton;
@@ -100,7 +100,6 @@ type
     actPersonal: TdsdOpenForm;
     actCar: TdsdOpenForm;
     actCarModel: TdsdOpenForm;
-    dxBarSubItem1: TdxBarSubItem;
     bbCar: TdxBarButton;
     bbCarModel: TdxBarButton;
     bbPersonal: TdxBarButton;
@@ -168,6 +167,29 @@ type
     actFuel: TdsdOpenForm;
     actRateFuelKind: TdsdOpenForm;
     bbRateFuelKind: TdxBarButton;
+    actIncomeFuel: TdsdOpenForm;
+    bbIncomeFuel: TdxBarButton;
+    bbTransportDocuments_Separator: TdxBarSeparator;
+    actPersonalSendCash: TdsdOpenForm;
+    bbPersonalSendCash: TdxBarButton;
+    bbRateFuel: TdxBarButton;
+    actRateFuel: TdsdOpenForm;
+    bbFreight: TdxBarButton;
+    actFreight: TdsdOpenForm;
+    bbReport_Fuel: TdxBarButton;
+    bbtReport_Transport: TdxBarButton;
+    actReport_Transport: TdsdOpenForm;
+    actReport_Fuel: TdsdOpenForm;
+    actPersonalGroup: TdsdOpenForm;
+    actWorkTimeKind: TdsdOpenForm;
+    actSheetWorkTime: TdsdOpenForm;
+    actPersonalService: TdsdOpenForm;
+    bbPersonalDocuments: TdxBarSubItem;
+    bbWorkTimeKind: TdxBarButton;
+    bbPersonalGroup: TdxBarButton;
+    bbPersonalDocuments_Separator: TdxBarSeparator;
+    bbSheetWorkTime: TdxBarButton;
+    bbPersonalService: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

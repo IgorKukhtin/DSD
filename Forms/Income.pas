@@ -132,8 +132,6 @@ type
     edPaidKind: TcxButtonEdit;
     ContractGuides: TdsdGuides;
     PaidKindGuides: TdsdGuides;
-    cxLabel11: TcxLabel;
-    edCar: TcxButtonEdit;
     CarGuides: TdsdGuides;
     cxLabel12: TcxLabel;
     edDriver: TcxButtonEdit;

@@ -4,8 +4,8 @@ inherited IncomeForm: TIncomeForm
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1036
-  ExplicitHeight = 423
+  ExplicitWidth = 1044
+  ExplicitHeight = 431
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -167,12 +167,12 @@ inherited IncomeForm: TIncomeForm
       TabOrder = 5
       Width = 121
     end
-    object cxLabel11: TcxLabel
+    object cxLabel12: TcxLabel
       Left = 600
       Top = 50
-      Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
+      Caption = #1042#1086#1076#1080#1090#1077#1083#1100
     end
-    object edCar: TcxButtonEdit
+    object edDriver: TcxButtonEdit
       Left = 600
       Top = 71
       Properties.Buttons = <
@@ -183,12 +183,12 @@ inherited IncomeForm: TIncomeForm
       TabOrder = 11
       Width = 113
     end
-    object cxLabel12: TcxLabel
+    object cxLabel13: TcxLabel
       Left = 724
       Top = 50
-      Caption = #1042#1086#1076#1080#1090#1077#1083#1100
+      Caption = #1047#1072#1075#1086#1090#1086#1074#1080#1090#1077#1083#1100
     end
-    object edDriver: TcxButtonEdit
+    object edPacker: TcxButtonEdit
       Left = 724
       Top = 71
       Properties.Buttons = <
@@ -197,23 +197,7 @@ inherited IncomeForm: TIncomeForm
           Kind = bkEllipsis
         end>
       TabOrder = 12
-      Width = 113
-    end
-    object cxLabel13: TcxLabel
-      Left = 847
-      Top = 50
-      Caption = #1047#1072#1075#1086#1090#1086#1074#1080#1090#1077#1083#1100
-    end
-    object edPacker: TcxButtonEdit
-      Left = 847
-      Top = 71
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      TabOrder = 13
-      Width = 113
+      Width = 121
     end
   end
   object cxPageControl: TcxPageControl
@@ -435,9 +419,6 @@ inherited IncomeForm: TIncomeForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -666,8 +647,8 @@ inherited IncomeForm: TIncomeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1210,14 +1191,6 @@ inherited IncomeForm: TIncomeForm
         Value = ''
       end
       item
-        Name = 'inCarId'
-        Component = CarGuides
-        ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptInput
-        Value = ''
-      end
-      item
         Name = 'inPersonalDriverId'
         Component = DriverGuides
         ComponentItem = 'Key'
@@ -1278,7 +1251,6 @@ inherited IncomeForm: TIncomeForm
         Control = edPaidKind
       end
       item
-        Control = edCar
       end
       item
         Control = edDriver
@@ -1286,8 +1258,8 @@ inherited IncomeForm: TIncomeForm
       item
         Control = edPacker
       end>
-    Left = 544
-    Top = 80
+    Left = 384
+    Top = 152
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Income'
@@ -1424,22 +1396,6 @@ inherited IncomeForm: TIncomeForm
         Value = ''
       end
       item
-        Name = 'CarId'
-        Component = CarGuides
-        ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
-      end
-      item
-        Name = 'CarName'
-        Component = CarGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptOutput
-        Value = ''
-      end
-      item
         Name = 'PersonalDriverId'
         Component = DriverGuides
         ComponentItem = 'Key'
@@ -1550,7 +1506,6 @@ inherited IncomeForm: TIncomeForm
     Left = 792
   end
   object CarGuides: TdsdGuides
-    LookupControl = edCar
     FormName = 'TCarForm'
     PositionDataSet = 'ClientDataSet'
     Params = <

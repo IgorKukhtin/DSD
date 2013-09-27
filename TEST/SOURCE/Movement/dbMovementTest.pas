@@ -53,7 +53,7 @@ type
     function InsertUpdateMovementIncome(Id: Integer; InvNumber: String; OperDate: TDateTime;
              OperDatePartner: TDateTime; InvNumberPartner: String; PriceWithVAT: Boolean;
              VATPercent, ChangePercent: double;
-             FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId, PersonalPackerId: Integer
+             FromId, ToId, PaidKindId, ContractId, PersonalDriverId, PersonalPackerId: Integer
              ): integer;
     constructor Create; override;
   end;
@@ -401,7 +401,7 @@ var Id: Integer;
     InvNumberPartner: String;
     PriceWithVAT: Boolean;
     VATPercent, ChangePercent: double;
-    FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId, PersonalPackerId: Integer;
+    FromId, ToId, PaidKindId, ContractId, PersonalDriverId, PersonalPackerId: Integer;
 begin
   Id:=0;
   InvNumber:='1';
@@ -418,20 +418,19 @@ begin
   ToId := TUnit.Create.GetDefault;
   PaidKindId:=0;
   ContractId:=0;
-  CarId:=0;
   PersonalDriverId:=0;
   PersonalPackerId:=0;
   //
   result := InsertUpdateMovementIncome(Id, InvNumber, OperDate,
              OperDatePartner, InvNumberPartner, PriceWithVAT,
              VATPercent, ChangePercent,
-             FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId, PersonalPackerId);
+             FromId, ToId, PaidKindId, ContractId, PersonalDriverId, PersonalPackerId);
 end;
 
 function TMovementIncomeTest.InsertUpdateMovementIncome(Id: Integer; InvNumber: String; OperDate: TDateTime;
              OperDatePartner: TDateTime; InvNumberPartner: String; PriceWithVAT: Boolean;
              VATPercent, ChangePercent: double;
-             FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId, PersonalPackerId: Integer):Integer;
+             FromId, ToId, PaidKindId, ContractId, PersonalDriverId, PersonalPackerId: Integer):Integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -449,7 +448,6 @@ begin
   FParams.AddParam('inToId', ftInteger, ptInput, ToId);
   FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
   FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
-  FParams.AddParam('inCarId', ftInteger, ptInput, CarId);
   FParams.AddParam('inPersonalDriverId', ftInteger, ptInput, PersonalDriverId);
   FParams.AddParam('inPersonalPackerId', ftInteger, ptInput, PersonalPackerId);
 

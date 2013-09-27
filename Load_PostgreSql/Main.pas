@@ -415,6 +415,22 @@ begin
      Gauge.Visible:=false;
      Gauge.Progress:=0;
      //
+     if ParamCount > 0 then
+     with toZConnection do begin
+        Active:=false;
+        HostName:='integer-srv.alan.dp.ua';
+        User:='admin';
+        Password:='vas6ok';
+     end
+     else
+     with toZConnection do begin
+        Active:=false;
+        HostName:='localhost';
+        User:='postgres';
+        Password:='postgres';
+     end
+
+     //
      //cbAllGuide.Checked:=true;
      //
      fStop:=true;

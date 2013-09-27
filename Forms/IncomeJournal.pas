@@ -74,7 +74,6 @@ type
     colTotalSummVAT: TcxGridDBColumn;
     colPaidKindName: TcxGridDBColumn;
     colContractName: TcxGridDBColumn;
-    colCarName: TcxGridDBColumn;
     colPersonalDriverName: TcxGridDBColumn;
     colPersonalPackerName: TcxGridDBColumn;
     colTotalSummPacker: TcxGridDBColumn;
