@@ -52,7 +52,7 @@ $BODY$BEGIN
 
            , Object_RouteKind.Id         AS RouteKindId 
            , Object_RouteKind.ObjectCode AS RouteKindCode
-           , Object_URouteKind.ValueData AS RouteKindName
+           , Object_RouteKind.ValueData AS RouteKindName
 
            , Object_Freight.Id         AS FreightId 
            , Object_Freight.ObjectCode AS FreightCode

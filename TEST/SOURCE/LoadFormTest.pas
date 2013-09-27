@@ -49,6 +49,7 @@ type
     procedure LoadInventoryFormTest;
     procedure LoadProductionUnionFormTest;
     procedure LoadProductionSeparateFormTest;
+    procedure LoadTransportFormTest;
     procedure LoadReportFormTest;
     procedure LoadInfoMoneyGroupFormTest;
     procedure LoadInfoMoneyDestinationFormTest;
@@ -67,10 +68,12 @@ type
     procedure LoadPositionFormTest;
     procedure LoadPersonalFormTest;
     procedure LoadCarFormTest;
+    procedure LoadFuelFormTest;
     procedure LoadCarModelFormTest;
     procedure LoadZakazExternalFormTest;
     procedure LoadZakazInternalFormTest;
     procedure LoadServiceFormTest;
+    procedure LoadRateFuelKindFormTest;
   end;
 
 implementation
@@ -331,6 +334,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionJournalForm');
 end;
+procedure TLoadFormTest.LoadTransportFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTransportForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTransportJournalForm');
+end;
+
 procedure TLoadFormTest.LoadJuridicalGroupFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalGroupForm'));
@@ -549,6 +560,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCarEditForm');
 end;
 
+procedure TLoadFormTest.LoadFuelFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFuelForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFuelForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFuelEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFuelEditForm');
+
+end;
+
 procedure TLoadFormTest.LoadCarModelFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarModelForm'));
@@ -557,6 +577,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCarModelEditForm');
 end;
 
+procedure TLoadFormTest.LoadRateFuelKindFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRateFuelKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRateFuelKindForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRateFuelKindEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRateFuelKindEditForm');
+end;
 
 procedure TLoadFormTest.SetUp;
 begin

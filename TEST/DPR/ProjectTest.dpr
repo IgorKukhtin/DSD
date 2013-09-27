@@ -194,7 +194,13 @@ uses
   Action in '..\..\Forms\Action.pas' {ActionForm},
   User in '..\..\Forms\User.pas' {UserForm},
   UserEdit in '..\..\Forms\UserEdit.pas' {UserEditForm},
-  Process in '..\..\Forms\Process.pas' {ProcessForm};
+  Process in '..\..\Forms\Process.pas' {ProcessForm},
+  Transport in '..\..\Forms\Transport.pas' {TransportForm},
+  TransportJournal in '..\..\Forms\TransportJournal.pas' {TransportJournalForm},
+  FuelEdit in '..\..\Forms\FuelEdit.pas' {FuelEditForm},
+  RateFuelKindEdit in '..\..\Forms\RateFuelKindEdit.pas' {RateFuelKindEditForm},
+  RateFuelKind in '..\..\Forms\RateFuelKind.pas' {RateFuelKindForm},
+  Fuel in '..\..\Forms\Fuel.pas' {FuelForm};
 
 {$R *.RES}
 

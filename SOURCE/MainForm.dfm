@@ -13,7 +13,6 @@ object MainForm: TMainForm
   OldCreateOrder = False
   Position = poDesigned
   OnCreate = FormCreate
-  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object dxBarManager: TdxBarManager
@@ -57,6 +56,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbFinanceDocuments'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTransportDocuments'
         end
         item
           Visible = True
@@ -532,6 +535,7 @@ object MainForm: TMainForm
           ItemName = 'bbCar'
         end
         item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbCarModel'
         end
@@ -542,6 +546,14 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbRouteSorting'
+        end
+        item
+          Visible = True
+          ItemName = 'bbFuel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRateFuelKind'
         end>
     end
     object bbCar: TdxBarButton
@@ -570,6 +582,10 @@ object MainForm: TMainForm
     end
     object bbAsset: TdxBarButton
       Action = actAsset
+      Category = 0
+    end
+    object bbFuel: TdxBarButton
+      Action = actFuel
       Category = 0
     end
     object bbPosition: TdxBarButton
@@ -651,6 +667,24 @@ object MainForm: TMainForm
       Action = actProcess
       Category = 0
     end
+    object bbTransportDocuments: TdxBarSubItem
+      Caption = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbTransport'
+        end>
+    end
+    object bbTransport: TdxBarButton
+      Action = actTransport
+      Category = 0
+    end
+    object bbRateFuelKind: TdxBarButton
+      Action = actRateFuelKind
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Left = 192
@@ -712,18 +746,18 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actSendOnPrice: TdsdOpenForm
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1090#1086#1074#1072#1088#1085#1099#1077
-      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077
-      FormName = 'TSendOnPriceJournalForm'
-      GuiParams = <>
-      isShowModal = False
-    end
     object actBank: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       Caption = #1041#1072#1085#1082#1080
       Hint = #1041#1072#1085#1082#1080
       FormName = 'TBankForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actSendOnPrice: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1090#1086#1074#1072#1088#1085#1099#1077
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077
+      FormName = 'TSendOnPriceJournalForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -1015,6 +1049,21 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actFuel: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1042#1080#1076#1099' '#1090#1086#1087#1083#1080#1074#1072
+      Hint = #1042#1080#1076#1099' '#1090#1086#1087#1083#1080#1074#1072
+      FormName = 'TFuelForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actRateFuelKind: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1042#1080#1076#1099' '#1085#1086#1088#1084' '#1090#1086#1087#1083#1080#1074#1072
+      FormName = 'TRateFuelKindForm'
+      GuiParams = <>
+      isShowModal = False
+    end
     object actSend: TdsdOpenForm
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1090#1086#1074#1072#1088#1085#1099#1077
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
@@ -1100,10 +1149,6 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object Action2: TAction
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1090#1086#1074#1072#1088#1085#1099#1077
-      Caption = 'Action2'
-    end
     object actRole: TdsdOpenForm
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       Caption = #1056#1086#1083#1080' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
@@ -1124,6 +1169,13 @@ object MainForm: TMainForm
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
       Hint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
       FormName = 'TUserForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actTransport: TdsdOpenForm
+      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      Caption = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
+      FormName = 'TTransportJournalForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -1153,7 +1205,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.14'
+    Version = '4.12.2'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
@@ -1309,7 +1361,7 @@ object MainForm: TMainForm
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 168
+    Left = 128
     Top = 152
   end
   object ClientDataSet: TClientDataSet

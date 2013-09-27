@@ -58,6 +58,10 @@ type
     dsdChoiceGuides: TdsdChoiceGuides;
     clErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
+    clUnit: TcxGridDBColumn;
+    clPersonalDriverName: TcxGridDBColumn;
+    clFuelMasterName: TcxGridDBColumn;
+    clFuelChildName: TcxGridDBColumn;
   private
     { Private declarations }
   public

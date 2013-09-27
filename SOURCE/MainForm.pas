@@ -150,7 +150,6 @@ type
     bbBankAccount: TdxBarButton;
     actReport_MotionGoods: TdsdOpenForm;
     bbReport_MotionGoods: TdxBarButton;
-    Action2: TAction;
     actRole: TdsdOpenForm;
     bbRole: TdxBarButton;
     bbService: TdxBarSubItem;
@@ -162,6 +161,13 @@ type
     bbProcess: TdxBarButton;
     StoredProc: TdsdStoredProc;
     ClientDataSet: TClientDataSet;
+    bbTransportDocuments: TdxBarSubItem;
+    bbTransport: TdxBarButton;
+    bbFuel: TdxBarButton;
+    actTransport: TdsdOpenForm;
+    actFuel: TdsdOpenForm;
+    actRateFuelKind: TdsdOpenForm;
+    bbRateFuelKind: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

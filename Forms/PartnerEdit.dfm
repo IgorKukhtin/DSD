@@ -3,7 +3,7 @@
   ClientHeight = 333
   ClientWidth = 371
   ExplicitWidth = 379
-  ExplicitHeight = 360
+  ExplicitHeight = 367
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit

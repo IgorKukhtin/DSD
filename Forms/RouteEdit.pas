@@ -18,7 +18,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus, dsdAddOn, cxPropertiesStore,
   dsdDB, dsdAction, Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons,
-  cxLabel, cxTextEdit;
+  cxLabel, cxTextEdit, dsdGuides, cxMaskEdit, cxButtonEdit;
 
 type
   TRouteEditForm = class(TParentForm)
@@ -37,6 +37,15 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
+    ceUnit: TcxButtonEdit;
+    cxLabel7: TcxLabel;
+    UnitGuides: TdsdGuides;
+    cxLabel2: TcxLabel;
+    ceRouteKind: TcxButtonEdit;
+    RouteKindGuides: TdsdGuides;
+    cxLabel3: TcxLabel;
+    ceFreight: TcxButtonEdit;
+    FreightGuides: TdsdGuides;
 
   private
     { Private declarations }

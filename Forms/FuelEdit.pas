@@ -1,4 +1,4 @@
-unit MeasureEdit;
+unit FuelEdit;
 
 interface
 
@@ -7,11 +7,13 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxPropertiesStore,
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
   cxEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit, Vcl.ActnList,
-  Vcl.StdActns, ParentForm, dsdDB, dsdAction, cxCurrencyEdit, dsdAddOn,
-  dxSkinsCore, dxSkinsDefaultPainters;
+  Vcl.StdActns, cxCurrencyEdit, cxCheckBox,
+  Data.DB, Datasnap.DBClient, cxMaskEdit, cxDropDownEdit,
+  cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox, ParentForm, dsdGuides,
+  dsdDB, dsdAction, cxButtonEdit, dsdAddOn, dxSkinsCore, dxSkinsDefaultPainters;
 
 type
-  TMeasureEditForm = class(TParentForm)
+  TFuelEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -23,21 +25,26 @@ type
     dsdDataSetRefresh: TdsdDataSetRefresh;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
     dsdFormClose: TdsdFormClose;
+    Код: TcxLabel;
+    ceCode: TcxCurrencyEdit;
     cxLabel2: TcxLabel;
-    edCode: TcxCurrencyEdit;
-    cxPropertiesStore: TcxPropertiesStore;
+    edRatio: TcxTextEdit;
+    edRateFuelKind: TcxButtonEdit;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    cxPropertiesStore: TcxPropertiesStore;
   private
     { Private declarations }
   public
     { Public declarations }
   end;
 
+
 implementation
 
 {$R *.dfm}
 
 initialization
-  RegisterClass(TMeasureEditForm);
+  RegisterClass(TFuelEditForm);
 
 end.
+       
