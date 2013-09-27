@@ -1961,7 +1961,7 @@ begin
         Close;
         Clear;
         Add('select _pgUnit.Id as ObjectId');
-        Add('     , 0 as ObjectCode');
+        Add('     , _pgUnit.ObjectCode as ObjectCode');
         Add('     , _pgUnit.Name3 as ObjectName');
         Add('     , case when _pgUnit.ObjectCode in (3,5) then zc_rvYes() else zc_rvNo() end as isPartionDate');
         Add('     , _pgUnit_parent.Id_Postgres as ParentId_Postgres');
