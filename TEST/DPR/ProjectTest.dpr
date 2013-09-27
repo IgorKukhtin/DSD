@@ -194,7 +194,9 @@ uses
   Action in '..\..\Forms\Action.pas' {ActionForm},
   User in '..\..\Forms\User.pas' {UserForm},
   UserEdit in '..\..\Forms\UserEdit.pas' {UserEditForm},
-  Process in '..\..\Forms\Process.pas' {ProcessForm};
+  Process in '..\..\Forms\Process.pas' {ProcessForm},
+  ComponentAddOnTest in '..\SOURCE\Component\ComponentAddOnTest.pas',
+  DefaultsTest in '..\SOURCE\Defaults\DefaultsTest.pas';
 
 {$R *.RES}
 

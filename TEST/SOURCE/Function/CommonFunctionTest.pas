@@ -19,7 +19,6 @@ uses UtilConst, TestFramework;
 
 procedure TFunction.ProcedureLoad;
 begin
-  inherited;
   ScriptDirectory := FunctionPath;
   inherited;
 end;

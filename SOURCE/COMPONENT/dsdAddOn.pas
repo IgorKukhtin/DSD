@@ -218,6 +218,18 @@ type
     property OpenBeforeShow: boolean read FOpenBeforeShow write FOpenBeforeShow;
   end;
 
+  {Возвращает ключ для дефолтных значений}
+  TDefaultKeyAddOn = class(TComponent)
+  private
+    FParam: TdsdParam;
+  public
+    function Key: string;
+    function JSONKey: string;
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property Param: TdsdParam read FParam write FParam;
+  end;
 
   procedure Register;
 
@@ -1026,6 +1038,41 @@ begin
   if csDesigning in ComponentState then
      if (Operation = opRemove) and (AComponent = FRefreshDispatcher) then
         FRefreshDispatcher := nil;
+end;
+
+{ TDefaultKeyAddOn }
+
+constructor TDefaultKeyAddOn.Create(AOwner: TComponent);
+begin
+  inherited;
+  FParam := TdsdParam.Create(nil);
+end;
+
+destructor TDefaultKeyAddOn.Destroy;
+begin
+  FParam.Free;
+  inherited;
+end;
+
+function TDefaultKeyAddOn.JSONKey: string;
+var FormClass: string;
+begin
+  if Assigned(Owner) then
+     FormClass := Owner.ClassName
+  else
+     FormClass := '';
+  result := '{"FormClass":"' + FormClass + '",' +
+            ' "Param":"' + Param.Value + '"' +
+            '}';
+end;
+
+function TDefaultKeyAddOn.Key: string;
+begin
+  result := '';
+  if Assigned(Owner) then
+     result := Owner.ClassName;
+  if Param.Value <> '' then
+     result := result + ';' + Param.Value
 end;
 
 end.

@@ -24,11 +24,7 @@ CREATE TABLE Container(
 /*                                  Индексы                                      */
 
 
--- CREATE INDEX idx_Container_DescId ON Container (DescId); 
--- CREATE INDEX idx_Container_ParentId ON Container (ParentId); 
 CREATE INDEX idx_Container_ObjectId_DescId_Id ON Container (ObjectId, DescId, Id);
-
-
 CREATE INDEX idx_Container_ParentId_ObjectId_DescId_Id ON Container (ParentId, ObjectId, DescId, Id); 
 CREATE INDEX idx_Container_Id_ObjectId_DescId ON Container (Id, ObjectId, DescId);
 
