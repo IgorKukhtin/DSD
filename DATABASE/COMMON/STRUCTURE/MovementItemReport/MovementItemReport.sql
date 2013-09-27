@@ -13,7 +13,7 @@ CREATE TABLE MovementItemReport(
    ActiveContainerId       Integer NOT NULL,
    PassiveContainerId      Integer NOT NULL,
    ActiveAccountId         Integer NOT NULL,
-   PassiveAccountId        Integer NOT NULL
+   PassiveAccountId        Integer NOT NULL,
    ReportContainerId       Integer NOT NULL,
    ChildReportContainerId  Integer NOT NULL,
    Amount                  TFloat NOT NULL, 
