@@ -200,7 +200,9 @@ uses
   FuelEdit in '..\..\Forms\FuelEdit.pas' {FuelEditForm},
   RateFuelKindEdit in '..\..\Forms\RateFuelKindEdit.pas' {RateFuelKindEditForm},
   RateFuelKind in '..\..\Forms\RateFuelKind.pas' {RateFuelKindForm},
-  Fuel in '..\..\Forms\Fuel.pas' {FuelForm};
+  Fuel in '..\..\Forms\Fuel.pas' {FuelForm},
+  IncomeFuel in '..\..\Forms\IncomeFuel.pas' {IncomeFuelForm},
+  IncomeFuelJournal in '..\..\Forms\IncomeFuelJournal.pas' {IncomeFuelJournalForm};
 
 {$R *.RES}
 
