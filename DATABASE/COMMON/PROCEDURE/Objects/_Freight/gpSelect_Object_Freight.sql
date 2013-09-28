@@ -18,7 +18,7 @@ $BODY$BEGIN
            , Object_Freight.ObjectCode  AS Code
            , Object_Freight.ValueData   AS Name
            
-           , Object.isErased AS isErased
+           , Object_Freight.isErased AS isErased
            
        FROM Object AS Object_Freight
        WHERE Object_Freight.DescId = zc_Object_Freight();

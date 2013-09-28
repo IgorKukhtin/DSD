@@ -74,6 +74,7 @@ type
     procedure LoadZakazInternalFormTest;
     procedure LoadServiceFormTest;
     procedure LoadRateFuelKindFormTest;
+    procedure LoadFreightFormTest;
   end;
 
 implementation
@@ -583,6 +584,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TRateFuelKindForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRateFuelKindEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRateFuelKindEditForm');
+end;
+
+procedure TLoadFormTest.LoadFreightFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFreightForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFreightForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFreightEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFreightForm');
 end;
 
 procedure TLoadFormTest.SetUp;
