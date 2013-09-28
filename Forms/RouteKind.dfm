@@ -1,5 +1,5 @@
-inherited FreightForm: TFreightForm
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1085#1072#1079#1074#1072#1085#1080#1081' '#1075#1088#1091#1079#1072
+inherited RouteKindForm: TRouteKindForm
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1090#1080#1087#1086#1074' '#1084#1072#1088#1096#1088#1091#1090#1086#1074
   ClientHeight = 376
   ClientWidth = 390
   ExplicitWidth = 398
@@ -82,8 +82,8 @@ inherited FreightForm: TFreightForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 344
-    Top = 128
+    Left = 224
+    Top = 144
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -221,7 +221,7 @@ inherited FreightForm: TFreightForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TFreightEditForm'
+      FormName = 'TRouteKindEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -239,7 +239,7 @@ inherited FreightForm: TFreightForm
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TFreightEditForm'
+      FormName = 'TRouteKindEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -312,7 +312,7 @@ inherited FreightForm: TFreightForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Freight'
+    StoredProcName = 'gpSelect_Object_RouteKind'
     DataSet = ClientDataSet
     DataSets = <
       item

@@ -18,8 +18,8 @@ object MainForm: TMainForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1324,7 +1324,7 @@ object MainForm: TMainForm
       Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
       Caption = #1053#1072#1079#1074#1072#1085#1080#1103' '#1075#1088#1091#1079#1086#1074
       Hint = #1053#1072#1079#1074#1072#1085#1080#1103' '#1075#1088#1091#1079#1086#1074
-      FormName = 'TRateFreightForm'
+      FormName = 'TFreightForm'
       GuiParams = <>
       isShowModal = False
     end
