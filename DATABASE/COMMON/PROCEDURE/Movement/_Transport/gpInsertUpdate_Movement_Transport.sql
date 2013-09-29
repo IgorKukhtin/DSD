@@ -70,7 +70,8 @@ BEGIN
      
      -- сохранили связь с <Подразделение (Место отправки)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_UnitForwarding(), ioId, inUnitForwardingId);
-    
+
+
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 

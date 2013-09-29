@@ -10,8 +10,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Master(
     IN inWeight	             TFloat    , -- Вес груза
     IN inStartOdometre       TFloat    , -- Спидометр начальное показание, км
     IN inEndOdometre         TFloat    , -- Спидометр конечное показание, км
---    IN inFreightId           Integer   , -- Название груза
---    IN inRouteKindId         Integer   , -- Типы маршрутов
+    IN inFreightId           Integer   , -- Название груза
+    IN inRouteKindId         Integer   , -- Типы маршрутов
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer
@@ -38,10 +38,10 @@ BEGIN
    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inRouteId, inMovementId, inAmount, NULL);
   
    -- сохранили связь с <Название груза>
-   -- PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_Freight(), ioId, inFreightId);
+   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_Freight(), ioId, inFreightId);
    
    -- сохранили связь с <Типы маршрутов>
-   -- PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_RouteKind(), ioId, inRouteKindId);
+   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_RouteKind(), ioId, inRouteKindId);
   
    -- сохранили свойство <Вес груза>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Weight(), ioId, inWeight);
