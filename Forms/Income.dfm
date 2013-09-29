@@ -4,8 +4,8 @@ inherited IncomeForm: TIncomeForm
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1044
-  ExplicitHeight = 431
+  ExplicitWidth = 1036
+  ExplicitHeight = 430
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -647,8 +647,8 @@ inherited IncomeForm: TIncomeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -954,19 +954,19 @@ inherited IncomeForm: TIncomeForm
         ParamType = ptInput
         Value = '0'
       end>
-    Left = 536
-    Top = 256
+    Left = 512
+    Top = 240
   end
   object EntryCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 576
-    Top = 240
+    Left = 608
+    Top = 296
   end
   object EntryDS: TDataSource
     DataSet = EntryCDS
-    Left = 608
-    Top = 240
+    Left = 656
+    Top = 256
   end
   object spInsertUpdateMovementItem: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Income'
@@ -1063,8 +1063,8 @@ inherited IncomeForm: TIncomeForm
         ParamType = ptInput
         Value = '0'
       end>
-    Left = 56
-    Top = 320
+    Left = 80
+    Top = 328
   end
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'
@@ -1095,7 +1095,7 @@ inherited IncomeForm: TIncomeForm
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
-    Left = 480
+    Left = 424
     Top = 256
   end
   object spInsertUpdateMovement: TdsdStoredProc

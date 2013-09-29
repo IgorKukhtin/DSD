@@ -5,7 +5,7 @@
 CREATE OR REPLACE FUNCTION gpSelect_Object_RateFuel(
     IN inSession     TVarChar       -- ÒÂÒÒËˇ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ
 )
-RETURNS TABLE (RateFuelId_Internal integer, RateFuelId_External integer,
+RETURNS TABLE (RateFuelId_Internal integer, RateFuelId_External integer
              , CarId integer, CarCode integer, CarName TVarChar
              , Amount_Internal TFloat, Amount—oldHour_Internal TFloat, Amount—oldDistance_Internal TFloat
              , Amount_External TFloat, Amount—oldHour_External TFloat, Amount—oldDistance_External TFloat
@@ -17,37 +17,37 @@ $BODY$BEGIN
 
      RETURN QUERY 
        SELECT 
-             tmpRateFuel.RateFuelId_Internal  AS RateFuelId_Internal
-           , tmpRateFuel.RateFuelId_External  AS RateFuelId_External
+             Cast(tmpRateFuel.RateFuelId_Internal as integer)  AS RateFuelId_Internal
+           , Cast(tmpRateFuel.RateFuelId_External as integer)   AS RateFuelId_External
 
            , Object_Car.Id         AS CarId
            , Object_Car.ObjectCode AS CarCode
            , Object_Car.ValueData  AS CarName
  
-           , tmpRateFuel.Amount_Internal             AS Amount_Internal
-           , tmpRateFuel.Amount—oldHour_Internal     AS Amount—oldHour_Internal
-           , tmpRateFuel.Amount—oldDistance_Internal AS Amount—oldDistance_Internal
+           , Cast(tmpRateFuel.Amount_Internal as TFloat)              AS Amount_Internal
+           , Cast(tmpRateFuel.Amount—oldHour_Internal as TFloat)     AS Amount—oldHour_Internal
+           , Cast(tmpRateFuel.Amount—oldDistance_Internal as TFloat) AS Amount—oldDistance_Internal
  
  
-           , tmpRateFuel.Amount_External             AS Amount_External
-           , tmpRateFuel.Amount—oldHour_External     AS Amount—oldHour_External
-           , tmpRateFuel.Amount—oldDistance_External AS Amount—oldDistance_External
+           , Cast(tmpRateFuel.Amount_External as TFloat)             AS Amount_External
+           , Cast(tmpRateFuel.Amount—oldHour_External as TFloat)     AS Amount—oldHour_External
+           , Cast(tmpRateFuel.Amount—oldDistance_External as TFloat) AS Amount—oldDistance_External
 
-           , Object.isErased AS isErased
+           , Object_Car.isErased AS isErased
            
        FROM Object AS Object_Car
             
             LEFT JOIN ( SELECT ObjectLink_RateFuel_Car.ChildObjectId AS CarId
-                              , MAX(CASE when ObjectLink_RateFuel_RouteKind	= zc_Enum_RouteKind_Internal() THEN Object_RateFuel.Id ELSE 0 END) AS RateFuelId_Internal
-                              , MAX(CASE when ObjectLink_RateFuel_RouteKind	= zc_Enum_RouteKind_External() THEN Object_RateFuel.Id ELSE 0 END) AS RateFuelId_External
+                              , MAX(CASE when ObjectLink_RateFuel_RouteKind.ChildObjectId	= zc_Enum_RouteKind_Internal() THEN Object_RateFuel.Id ELSE 0 END) AS RateFuelId_Internal
+                              , MAX(CASE when ObjectLink_RateFuel_RouteKind.ChildObjectId	= zc_Enum_RouteKind_External() THEN Object_RateFuel.Id ELSE 0 END) AS RateFuelId_External
                               
-                              , sum(CASE when ObjectLink_RateFuel_RouteKind	= zc_Enum_RouteKind_Internal() THEN ObjectFloat_Amount.ValueData ELSE 0 END) AS Amount_Internal
-							  , sum(CASE when ObjectLink_RateFuel_RouteKind	= zc_Enum_RouteKind_Internal() THEN ObjectFloat_Amount—oldHour.ValueData ELSE 0 END) AS Amount—oldHour_Internal
-							  , sum(CASE when ObjectLink_RateFuel_RouteKind	= zc_Enum_RouteKind_Internal() THEN ObjectFloat_Amount—oldDistance.ValueData ELSE 0 END) AS Amount—oldDistance_Internal
+                              , sum(CASE when ObjectLink_RateFuel_RouteKind.ChildObjectId	= zc_Enum_RouteKind_Internal() THEN ObjectFloat_Amount.ValueData ELSE 0 END) AS Amount_Internal
+							  , sum(CASE when ObjectLink_RateFuel_RouteKind.ChildObjectId	= zc_Enum_RouteKind_Internal() THEN ObjectFloat_Amount—oldHour.ValueData ELSE 0 END) AS Amount—oldHour_Internal
+							  , sum(CASE when ObjectLink_RateFuel_RouteKind.ChildObjectId	= zc_Enum_RouteKind_Internal() THEN ObjectFloat_Amount—oldDistance.ValueData ELSE 0 END) AS Amount—oldDistance_Internal
 
-							  , sum(CASE when ObjectLink_RateFuel_RouteKind	= zc_Enum_RouteKind_External() THEN ObjectFloat_Amount.ValueData ELSE 0 END) AS Amount_External
-							  , sum(CASE when ObjectLink_RateFuel_RouteKind	= zc_Enum_RouteKind_External() THEN ObjectFloat_Amount—oldHour.ValueData ELSE 0 END) AS Amount—oldHour_External
-							  , sum(CASE when ObjectLink_RateFuel_RouteKind	= zc_Enum_RouteKind_External() THEN ObjectFloat_Amount—oldDistance.ValueData ELSE 0 END) AS Amount—oldDistance_External
+							  , sum(CASE when ObjectLink_RateFuel_RouteKind.ChildObjectId	= zc_Enum_RouteKind_External() THEN ObjectFloat_Amount.ValueData ELSE 0 END) AS Amount_External
+							  , sum(CASE when ObjectLink_RateFuel_RouteKind.ChildObjectId	= zc_Enum_RouteKind_External() THEN ObjectFloat_Amount—oldHour.ValueData ELSE 0 END) AS Amount—oldHour_External
+							  , sum(CASE when ObjectLink_RateFuel_RouteKind.ChildObjectId	= zc_Enum_RouteKind_External() THEN ObjectFloat_Amount—oldDistance.ValueData ELSE 0 END) AS Amount—oldDistance_External
 							  
                         FROM Object AS Object_RateFuel
                              LEFT JOIN ObjectLink AS ObjectLink_RateFuel_Car
@@ -85,4 +85,4 @@ ALTER FUNCTION gpSelect_Object_RateFuel(TVarChar) OWNER TO postgres;
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Object_RateFuel('2')
+ --SELECT * FROM gpSelect_Object_RateFuel('2')

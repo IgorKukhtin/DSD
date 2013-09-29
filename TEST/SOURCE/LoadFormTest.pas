@@ -528,6 +528,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TRouteSortingForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteSortingEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRouteSortingEditForm');
+  // типы маршрутов
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRouteKindForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteKindEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRouteKindForm');
 end;
 
 procedure TLoadFormTest.LoadMemberFormTest;
@@ -567,6 +572,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TFuelForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TFuelEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TFuelEditForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRateFuelForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRateFuelForm');
 
 end;
 

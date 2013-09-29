@@ -206,7 +206,8 @@ uses
   Freight in '..\..\Forms\Freight.pas' {FreightForm},
   FreightEdit in '..\..\Forms\FreightEdit.pas' {FreightEditForm},
   RouteKind in '..\..\Forms\RouteKind.pas' {RouteKindForm},
-  RouteKindEdit in '..\..\Forms\RouteKindEdit.pas' {RouteKindEditForm};
+  RouteKindEdit in '..\..\Forms\RouteKindEdit.pas' {RouteKindEditForm},
+  RateFuel in '..\..\Forms\RateFuel.pas' {RateFuelForm};
 
 {$R *.RES}
 

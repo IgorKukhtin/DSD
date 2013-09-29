@@ -541,6 +541,9 @@
 			<DCCReference Include="..\..\Forms\RouteKindEdit.pas">
 				<Form>RouteKindEditForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\RateFuel.pas">
+				<Form>RateFuelForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
