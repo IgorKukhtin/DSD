@@ -1,16 +1,16 @@
-inherited RouteForm: TRouteForm
-  Caption = #1052#1072#1088#1096#1088#1091#1090#1099
-  ClientHeight = 395
-  ClientWidth = 703
-  ExplicitWidth = 711
-  ExplicitHeight = 429
+inherited PersonalGroupForm: TPersonalGroupForm
+  Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1080' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074
+  ClientHeight = 367
+  ClientWidth = 853
+  ExplicitWidth = 861
+  ExplicitHeight = 401
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 703
-    Height = 369
+    Width = 853
+    Height = 341
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -32,7 +32,6 @@ inherited RouteForm: TRouteForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -42,31 +41,25 @@ inherited RouteForm: TRouteForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 61
+        Width = 52
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 277
+        Width = 181
+      end
+      object clWorkHours: TcxGridDBColumn
+        Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1095#1072#1089#1086#1074
+        DataBinding.FieldName = 'WorkHours'
+        HeaderAlignmentVert = vaCenter
+        Width = 85
       end
       object clUnit: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentVert = vaCenter
-        Width = 137
-      end
-      object clRouteKind: TcxGridDBColumn
-        Caption = #1058#1080#1087' '#1084#1072#1088#1096#1088#1091#1090#1072
-        DataBinding.FieldName = 'RouteKindName'
-        HeaderAlignmentVert = vaCenter
-        Width = 102
-      end
-      object clFreight: TcxGridDBColumn
-        Caption = #1043#1088#1091#1079
-        DataBinding.FieldName = 'FreightName'
-        HeaderAlignmentVert = vaCenter
-        Width = 56
+        Width = 91
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -74,7 +67,8 @@ inherited RouteForm: TRouteForm
         PropertiesClassName = 'TcxCheckBoxProperties'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 54
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 72
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -83,14 +77,14 @@ inherited RouteForm: TRouteForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 48
-    Top = 96
+    Left = 56
+    Top = 104
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 40
-    Top = 152
+    Left = 48
+    Top = 160
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -104,8 +98,8 @@ inherited RouteForm: TRouteForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 280
-    Top = 96
+    Left = 288
+    Top = 104
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -123,8 +117,8 @@ inherited RouteForm: TRouteForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 160
-    Top = 96
+    Left = 168
+    Top = 104
     DockControlHeights = (
       0
       0
@@ -222,8 +216,8 @@ inherited RouteForm: TRouteForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 280
-    Top = 152
+    Left = 288
+    Top = 160
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -241,7 +235,7 @@ inherited RouteForm: TRouteForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TRouteEditForm'
+      FormName = 'TPersonalGroupEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -249,7 +243,7 @@ inherited RouteForm: TRouteForm
           ParamType = ptOutput
           Value = '0'
         end>
-      isShowModal = False
+      isShowModal = True
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
@@ -258,7 +252,7 @@ inherited RouteForm: TRouteForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TRouteEditForm'
+      FormName = 'TPersonalGroupEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -267,7 +261,7 @@ inherited RouteForm: TRouteForm
           DataType = ftInteger
           ParamType = ptInput
         end>
-      isShowModal = False
+      isShowModal = True
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
@@ -313,11 +307,12 @@ inherited RouteForm: TRouteForm
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
-          DataType = ftString
+          DataType = ftInteger
           ParamType = ptOutput
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ShortCut = 13
       ImageIndex = 7
       DataSource = DataSource
     end
@@ -331,19 +326,27 @@ inherited RouteForm: TRouteForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Route'
+    StoredProcName = 'gpSelect_Object_PersonalGroup'
     DataSet = ClientDataSet
     DataSets = <
       item
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 40
-    Top = 208
+    Left = 48
+    Top = 216
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 160
-    Top = 152
+    Left = 168
+    Top = 160
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    View = cxGridDBTableView
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    Left = 168
+    Top = 216
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -359,27 +362,5 @@ inherited RouteForm: TRouteForm
       end>
     Left = 288
     Top = 208
-  end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
-    View = cxGridDBTableView
-    OnDblClickActionList = <
-      item
-        Action = dsdChoiceGuides
-      end
-      item
-        Action = actUpdate
-      end>
-    ActionItemList = <
-      item
-        Action = dsdChoiceGuides
-        ShortCut = 13
-      end
-      item
-        Action = actUpdate
-        ShortCut = 13
-      end>
-    SortImages = dmMain.SortImageList
-    Left = 160
-    Top = 216
   end
 end

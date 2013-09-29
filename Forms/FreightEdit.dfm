@@ -15,7 +15,7 @@ inherited FreightEditForm: TFreightEditForm
   object cxLabel1: TcxLabel
     Left = 10
     Top = 49
-    Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1079#1088#1091#1079#1072
+    Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1075#1088#1091#1079#1072
   end
   object cxButton1: TcxButton
     Left = 41

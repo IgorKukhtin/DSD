@@ -207,7 +207,9 @@ uses
   FreightEdit in '..\..\Forms\FreightEdit.pas' {FreightEditForm},
   RouteKind in '..\..\Forms\RouteKind.pas' {RouteKindForm},
   RouteKindEdit in '..\..\Forms\RouteKindEdit.pas' {RouteKindEditForm},
-  RateFuel in '..\..\Forms\RateFuel.pas' {RateFuelForm};
+  RateFuel in '..\..\Forms\RateFuel.pas' {RateFuelForm},
+  PersonalGroup in '..\..\Forms\PersonalGroup.pas' {PersonalGroupForm},
+  PersonalGroupEdit in '..\..\Forms\PersonalGroupEdit.pas' {PersonalGroupEditForm};
 
 {$R *.RES}
 

@@ -562,6 +562,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPersonalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalEditForm');
+  // группировки сотрудников
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalGroupEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalGroupEditForm');
 end;
 procedure TLoadFormTest.LoadCarFormTest;
 begin

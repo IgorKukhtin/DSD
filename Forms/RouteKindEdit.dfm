@@ -15,7 +15,7 @@ inherited RouteKindEditForm: TRouteKindEditForm
   object cxLabel1: TcxLabel
     Left = 10
     Top = 49
-    Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1079#1088#1091#1079#1072
+    Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1090#1080#1087#1072' '#1084#1072#1088#1096#1088#1091#1090#1072
   end
   object cxButton1: TcxButton
     Left = 41
@@ -102,8 +102,8 @@ inherited RouteKindEditForm: TRouteKindEditForm
         ParamType = ptInput
         Value = ''
       end>
-    Left = 96
-    Top = 48
+    Left = 104
+    Top = 56
   end
   object dsdFormParams: TdsdFormParams
     Params = <

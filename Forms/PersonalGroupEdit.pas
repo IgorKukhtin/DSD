@@ -1,4 +1,4 @@
-unit RouteEdit;
+unit PersonalGroupEdit;
 
 interface
 
@@ -16,13 +16,15 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus, dsdAddOn, cxPropertiesStore,
-  dsdDB, dsdAction, Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons,
-  cxLabel, cxTextEdit, dsdGuides, cxMaskEdit, cxButtonEdit;
+  dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus, dsdGuides, Data.DB,
+  Datasnap.DBClient, cxMaskEdit, cxDropDownEdit, cxLookupEdit, cxDBLookupEdit,
+  cxDBLookupComboBox, dsdAddOn, cxPropertiesStore, dsdDB, dsdAction,
+  Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit,
+  cxButtonEdit;
 
 type
-  TRouteEditForm = class(TParentForm)
-    edRouteName: TcxTextEdit;
+  TPersonalGroupEditForm = class(TParentForm)
+    edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
     cxButton2: TcxButton;
@@ -30,23 +32,18 @@ type
     ceCode: TcxCurrencyEdit;
     ActionList: TActionList;
     dsdDataSetRefresh: TdsdDataSetRefresh;
+    dsdExecStoredProc: TdsdExecStoredProc;
     dsdFormClose1: TdsdFormClose;
     spInsertUpdate: TdsdStoredProc;
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn;
-    dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
-    ceUnit: TcxButtonEdit;
-    cxLabel7: TcxLabel;
-    UnitGuides: TdsdGuides;
     cxLabel2: TcxLabel;
-    ceRouteKind: TcxButtonEdit;
-    RouteKindGuides: TdsdGuides;
-    cxLabel3: TcxLabel;
-    ceFreight: TcxButtonEdit;
-    FreightGuides: TdsdGuides;
-
+    ceWorkHours: TcxTextEdit;
+    cxLabel7: TcxLabel;
+    ceUnit: TcxButtonEdit;
+    UnitGuides: TdsdGuides;
   private
     { Private declarations }
   public
@@ -57,8 +54,6 @@ type
 implementation
 
 {$R *.dfm}
-
-initialization
-  RegisterClass(TRouteEditForm);
-
+ initialization
+  RegisterClass(TPersonalGroupEditForm);
 end.
