@@ -204,7 +204,9 @@ uses
   IncomeFuel in '..\..\Forms\IncomeFuel.pas' {IncomeFuelForm},
   IncomeFuelJournal in '..\..\Forms\IncomeFuelJournal.pas' {IncomeFuelJournalForm},
   Freight in '..\..\Forms\Freight.pas' {FreightForm},
-  FreightEdit in '..\..\Forms\FreightEdit.pas' {FreightEditForm};
+  FreightEdit in '..\..\Forms\FreightEdit.pas' {FreightEditForm},
+  RouteKind in '..\..\Forms\RouteKind.pas' {RouteKindForm},
+  RouteKindEdit in '..\..\Forms\RouteKindEdit.pas' {RouteKindEditForm};
 
 {$R *.RES}
 
