@@ -1,21 +1,22 @@
 ﻿inherited TransportForm: TTransportForm
   Caption = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
-  ClientHeight = 442
-  ClientWidth = 995
+  ClientHeight = 489
+  ClientWidth = 1010
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1011
-  ExplicitHeight = 477
+  ExplicitWidth = 1026
+  ExplicitHeight = 524
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 995
+    Width = 1010
     Height = 84
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 995
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 20
@@ -209,25 +210,31 @@
   object cxPageControl1: TcxPageControl
     Left = 0
     Top = 110
-    Width = 995
-    Height = 332
+    Width = 1010
+    Height = 379
     Align = alClient
     TabOrder = 5
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 332
-    ClientRectRight = 995
+    ExplicitWidth = 995
+    ExplicitHeight = 332
+    ClientRectBottom = 379
+    ClientRectRight = 1010
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 995
+      ExplicitHeight = 308
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 995
-        Height = 152
+        Width = 1010
+        Height = 199
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 995
+        ExplicitHeight = 152
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -337,11 +344,13 @@
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 160
-        Width = 995
+        Top = 207
+        Width = 1010
         Height = 148
         Align = alBottom
         TabOrder = 1
+        ExplicitTop = 160
+        ExplicitWidth = 995
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -455,23 +464,29 @@
       end
       object cxSplitterChild: TcxSplitter
         Left = 0
-        Top = 152
-        Width = 995
+        Top = 199
+        Width = 1010
         Height = 8
         AlignSplitter = salBottom
         Control = cxGridChild
+        ExplicitTop = 152
+        ExplicitWidth = 995
       end
     end
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitWidth = 995
+      ExplicitHeight = 308
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 995
-        Height = 308
+        Width = 1010
+        Height = 355
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 995
+        ExplicitHeight = 308
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
