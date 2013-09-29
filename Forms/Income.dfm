@@ -4,8 +4,8 @@ inherited IncomeForm: TIncomeForm
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1036
-  ExplicitHeight = 430
+  ExplicitWidth = 1044
+  ExplicitHeight = 431
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -620,10 +620,10 @@ inherited IncomeForm: TIncomeForm
   end
   object spSelectMovementItem: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Income'
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
     Params = <
       item
@@ -647,8 +647,8 @@ inherited IncomeForm: TIncomeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -873,11 +873,11 @@ inherited IncomeForm: TIncomeForm
     end
   end
   object DataSource: TDataSource
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     Left = 48
     Top = 200
   end
-  object ClientDataSet: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 136
@@ -909,7 +909,7 @@ inherited IncomeForm: TIncomeForm
   object dsdGuidesTo: TdsdGuides
     LookupControl = edTo
     FormName = 'TUnitForm'
-    PositionDataSet = 'GridDataSet'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -975,7 +975,7 @@ inherited IncomeForm: TIncomeForm
     Params = <
       item
         Name = 'ioId'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         DataType = ftInteger
         ParamType = ptInputOutput
@@ -990,63 +990,63 @@ inherited IncomeForm: TIncomeForm
       end
       item
         Name = 'inGoodsId'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'GoodsId'
         DataType = ftInteger
         ParamType = ptInput
       end
       item
         Name = 'inAmount'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inAmountPartner'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'AmountPartner'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inAmountPacker'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'AmountPacker'
         DataType = ftInteger
         ParamType = ptInput
       end
       item
         Name = 'inPrice'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inCountForPrice'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inLiveWeight'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'LiveWeight'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inHeadCount'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'HeadCount'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inPartionGoods'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'PartionGoods'
         DataType = ftString
         ParamType = ptInput
@@ -1069,7 +1069,7 @@ inherited IncomeForm: TIncomeForm
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'
     CloseDataSource = False
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     BCDToCurrency = False
     Left = 360
     Top = 88

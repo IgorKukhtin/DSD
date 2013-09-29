@@ -2,8 +2,8 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
   Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
   ClientHeight = 473
   ClientWidth = 691
-  ExplicitWidth = 699
-  ExplicitHeight = 500
+  ExplicitWidth = 707
+  ExplicitHeight = 508
   PixelsPerInch = 96
   TextHeight = 13
   object cxDBTreeList: TcxDBTreeList
@@ -152,8 +152,8 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -321,7 +321,7 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
       GuiParams = <
         item
           Name = 'Id'
-          Component = GridDataSet
+          Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftInteger
           ParamType = ptInput
@@ -363,14 +363,14 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
       Params = <
         item
           Name = 'Key'
-          Component = GridDataSet
+          Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
           ParamType = ptOutput
         end
         item
           Name = 'TextValue'
-          Component = GridDataSet
+          Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptOutput
@@ -411,11 +411,11 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
     Top = 208
   end
   object GridDS: TDataSource
-    DataSet = GridDataSet
+    DataSet = ClientDataSet
     Left = 336
     Top = 104
   end
-  object GridDataSet: TClientDataSet
+  object ClientDataSet: TClientDataSet
     Aggregates = <>
     IndexFieldNames = 'JuridicalGroupId'
     MasterFields = 'Id'
@@ -427,10 +427,10 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
   end
   object GridStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Juridical'
-    DataSet = GridDataSet
+    DataSet = ClientDataSet
     DataSets = <
       item
-        DataSet = GridDataSet
+        DataSet = ClientDataSet
       end>
     Params = <>
     Left = 392
@@ -443,7 +443,7 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
     Params = <
       item
         Name = 'inObjectId'
-        Component = GridDataSet
+        Component = ClientDataSet
         ComponentItem = 'Id'
         DataType = ftInteger
         ParamType = ptInput

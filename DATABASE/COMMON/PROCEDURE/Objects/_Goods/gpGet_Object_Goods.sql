@@ -6,13 +6,16 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Goods(
     IN inId          Integer,       -- Товар 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
-               Weight TFloat,
-               GoodsGroupId Integer, GoodsGroupName TVarChar, 
-               MeasureId Integer,  MeasureName TVarChar,
-               TradeMarkId Integer,  TradeMarkName TVarChar, 
-               InfoMoneyId Integer, InfoMoneyName TVarChar,
-               BusinessId Integer, BusinessName TVarChar) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , Weight TFloat
+             , GoodsGroupId Integer, GoodsGroupName TVarChar
+             , MeasureId Integer,  MeasureName TVarChar
+             , TradeMarkId Integer,  TradeMarkName TVarChar
+             , InfoMoneyId Integer, InfoMoneyName TVarChar
+             , BusinessId Integer, BusinessName TVarChar
+             , FuelId Integer, FuelName TVarChar
+              )
+AS
 $BODY$
 BEGIN
 
@@ -41,7 +44,11 @@ BEGIN
            , CAST ('' as TVarChar) AS InfoMoneyName
            
            , CAST (0 as Integer)   AS BusinessId
-           , CAST ('' as TVarChar) AS BusinessName;
+           , CAST ('' as TVarChar) AS BusinessName
+
+           , CAST (0 as Integer)   AS FuelId
+           , CAST ('' as TVarChar) AS FuelName
+       ;
    ELSE
        RETURN QUERY 
        SELECT 
@@ -64,7 +71,11 @@ BEGIN
          
            , Object_Business.Id           AS BusinessId
            , Object_Business.ValueData    AS BusinessName
-       FROM OBJECT AS Object_Goods
+
+           , Object_Fuel.Id           AS FuelId
+           , Object_Fuel.ValueData    AS FuelName
+
+       FROM Object AS Object_Goods
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                               AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
@@ -94,6 +105,11 @@ BEGIN
                               AND ObjectLink_Goods_Business.DescId = zc_ObjectLink_Goods_Business()
           LEFT JOIN Object AS Object_Business ON Object_Business.Id = ObjectLink_Goods_Business.ChildObjectId    
           
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Fuel
+                               ON ObjectLink_Goods_Fuel.ObjectId = Object_Goods.Id 
+                              AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
+          LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = ObjectLink_Goods_Fuel.ChildObjectId    
+
        WHERE Object_Goods.Id = inId;
 
    END IF;
@@ -109,6 +125,7 @@ ALTER FUNCTION gpGet_Object_Goods (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.09.13                                        * add zc_ObjectLink_Goods_Fuel
  06.09.13                          *              
  02.07.13          * + TradeMark             
  02.07.13                                        * 1251Cyr

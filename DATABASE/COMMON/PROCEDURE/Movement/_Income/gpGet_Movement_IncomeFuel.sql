@@ -23,7 +23,7 @@ BEGIN
          RETURN QUERY 
          SELECT
                0 AS Id
-             , CAST ('' as TVarChar)                 AS InvNumber
+             , CAST (lfGet_InvNumber (0, zc_Movement_Income()) as TVarChar) AS InvNumber
              , CAST (CURRENT_TIMESTAMP as TDateTime) AS OperDate
              , Object_Status.Code                    AS StatusCode
              , Object_Status.Name                    AS StatusName
@@ -112,6 +112,7 @@ ALTER FUNCTION gpGet_Movement_IncomeFuel (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.09.13                                        * add lfGet_InvNumber
  27.09.13                                        *
 */
 

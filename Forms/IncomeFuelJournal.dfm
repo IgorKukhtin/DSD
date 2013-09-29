@@ -1,18 +1,19 @@
 inherited IncomeFuelJournalForm: TIncomeFuelJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1087#1088#1080#1093#1086#1076#1072
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1087#1088#1080#1093#1086#1076#1072' ('#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086')'
   ClientHeight = 427
-  ClientWidth = 1240
-  ExplicitWidth = 1256
+  ClientWidth = 1189
+  ExplicitWidth = 1205
   ExplicitHeight = 462
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
     Top = 26
-    Width = 1240
+    Width = 1189
     Height = 41
     Align = alTop
     TabOrder = 1
+    ExplicitWidth = 1240
     object deStart: TcxDateEdit
       Left = 106
       Top = 10
@@ -37,11 +38,12 @@ inherited IncomeFuelJournalForm: TIncomeFuelJournalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 67
-    Width = 1240
+    Width = 1189
     Height = 360
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 1240
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -181,19 +183,19 @@ inherited IncomeFuelJournalForm: TIncomeFuelJournalForm
         Width = 118
       end
       object colToName: TcxGridDBColumn
-        Caption = #1050#1086#1084#1091
+        Caption = #1050#1086#1084#1091' ('#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100')'
         DataBinding.FieldName = 'ToName'
         HeaderAlignmentVert = vaCenter
         Width = 119
       end
       object colPersonalDriverName: TcxGridDBColumn
-        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1074#1086#1076#1080#1090#1077#1083#1100')'
+        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
         DataBinding.FieldName = 'PersonalDriverName'
         HeaderAlignmentVert = vaCenter
         Width = 81
       end
       object colPaidKindName: TcxGridDBColumn
-        Caption = #1042#1080#1076
+        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'PaidKindName'
         HeaderAlignmentVert = vaCenter
         Width = 36
@@ -224,7 +226,7 @@ inherited IncomeFuelJournalForm: TIncomeFuelJournalForm
         Width = 67
       end
       object colPriceWithVAT: TcxGridDBColumn
-        Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' '
+        Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072')'
         DataBinding.FieldName = 'PriceWithVAT'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
@@ -447,7 +449,7 @@ inherited IncomeFuelJournalForm: TIncomeFuelJournalForm
       Category = 'DSDLib'
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
-      FormName = 'TIncomeForm'
+      FormName = 'TIncomeFuelForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -463,7 +465,7 @@ inherited IncomeFuelJournalForm: TIncomeFuelJournalForm
       Category = 'DSDLib'
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      FormName = 'TIncomeForm'
+      FormName = 'TIncomeFuelForm'
       GuiParams = <
         item
           Name = 'Id'

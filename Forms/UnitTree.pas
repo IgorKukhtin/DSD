@@ -51,7 +51,7 @@ type
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     GridDS: TDataSource;
-    GridDataSet: TClientDataSet;
+    ClientDataSet: TClientDataSet;
     spGrid: TdsdStoredProc;
     ceCode: TcxGridDBColumn;
     ceName: TcxGridDBColumn;

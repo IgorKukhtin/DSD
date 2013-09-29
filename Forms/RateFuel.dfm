@@ -1,9 +1,9 @@
-﻿inherited RateFuelForm: TRateFuelForm
+inherited RateFuelForm: TRateFuelForm
   Caption = #1053#1086#1088#1084#1099' '#1090#1086#1087#1083#1080#1074#1072
   ClientHeight = 367
   ClientWidth = 853
-  ExplicitWidth = 861
-  ExplicitHeight = 401
+  ExplicitWidth = 869
+  ExplicitHeight = 402
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -55,15 +55,15 @@
         HeaderAlignmentVert = vaCenter
         Width = 85
       end
-      object clAmountСoldHour_Internal: TcxGridDBColumn
+      object clAmountColdHour_Internal: TcxGridDBColumn
         Caption = #1061#1086#1083#1086#1076', '#1050#1086#1083'-'#1074#1086' '#1085#1086#1088#1084#1072' '#1074' '#1095#1072#1089'('#1083#1077#1090#1086')'
-        DataBinding.FieldName = 'Amount'#1057'oldHour_Internal'
+        DataBinding.FieldName = 'AmountColdHour_Internal'
         HeaderAlignmentVert = vaCenter
         Width = 92
       end
-      object clAmountСoldDistance_Internal: TcxGridDBColumn
+      object clAmountColdDistance_Internal: TcxGridDBColumn
         Caption = #1061#1086#1083#1086#1076', '#1050#1086#1083'-'#1074#1086' '#1085#1086#1088#1084#1072' '#1085#1072' 100 '#1082#1084'('#1083#1077#1090#1086')'
-        DataBinding.FieldName = 'Amount'#1057'oldDistance_Internal'
+        DataBinding.FieldName = 'AmountColdDistance_Internal'
         HeaderAlignmentVert = vaCenter
         Width = 90
       end
@@ -73,15 +73,15 @@
         HeaderAlignmentVert = vaCenter
         Width = 88
       end
-      object clAmountСoldHour_External: TcxGridDBColumn
+      object clAmountColdHour_External: TcxGridDBColumn
         Caption = #1061#1086#1083#1086#1076', '#1050#1086#1083'-'#1074#1086' '#1085#1086#1088#1084#1072' '#1074' '#1095#1072#1089'('#1079#1080#1084#1072')'
-        DataBinding.FieldName = 'Amount'#1057'oldHour_External'
+        DataBinding.FieldName = 'AmountColdHour_External'
         HeaderAlignmentVert = vaCenter
         Width = 91
       end
-      object clAmountСoldDistance_External: TcxGridDBColumn
+      object clAmountColdDistance_External: TcxGridDBColumn
         Caption = #1061#1086#1083#1086#1076', '#1050#1086#1083'-'#1074#1086' '#1085#1086#1088#1084#1072' '#1085#1072' 100 '#1082#1084'('#1079#1080#1084#1072')'
-        DataBinding.FieldName = 'Amount'#1057'oldDistance_External'
+        DataBinding.FieldName = 'AmountColdDistance_External'
         HeaderAlignmentVert = vaCenter
         Width = 87
       end
@@ -128,8 +128,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -419,16 +419,16 @@
         ParamType = ptInput
       end
       item
-        Name = 'inAmount'#1057'oldHour_Internal'
+        Name = 'inAmountColdHour_Internal'
         Component = ClientDataSet
-        ComponentItem = 'Amount'#1057'oldHour_Internal'
+        ComponentItem = 'AmountColdHour_Internal'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
-        Name = 'inAmount'#1057'oldDistance_Internal'
+        Name = 'inAmountColdDistance_Internal'
         Component = ClientDataSet
-        ComponentItem = 'Amount'#1057'oldDistance_Internal'
+        ComponentItem = 'AmountColdDistance_Internal'
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -440,16 +440,16 @@
         ParamType = ptInput
       end
       item
-        Name = 'inAmount'#1057'oldHour_External'
+        Name = 'inAmountColdHour_External'
         Component = ClientDataSet
-        ComponentItem = 'Amount'#1057'oldHour_External'
+        ComponentItem = 'AmountColdHour_External'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
-        Name = 'inAmount'#1057'oldDistance_External'
+        Name = 'inAmountColdDistance_External'
         Component = ClientDataSet
-        ComponentItem = 'Amount'#1057'oldDistance_External'
+        ComponentItem = 'AmountColdDistance_External'
         DataType = ftFloat
         ParamType = ptInput
       end>

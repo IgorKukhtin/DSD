@@ -7,11 +7,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_RateFuel(
     IN inRateFuelId_Internal            Integer   ,    -- ключ Нормы топлива город
     IN inRateFuelId_External            Integer   ,    -- ключ Нормы топлива межгород
     IN inAmount_Internal                TFloat    ,    -- Кол-во норма на 100 км
-    IN inAmountСoldHour_Internal        TFloat    ,    -- Холод, Кол-во норма в час
-    IN inAmountСoldDistance_Internal    TFloat    ,    -- Холод, Кол-во норма на 100 км
+    IN inAmountColdHour_Internal        TFloat    ,    -- Холод, Кол-во норма в час
+    IN inAmountColdDistance_Internal    TFloat    ,    -- Холод, Кол-во норма на 100 км
     IN inAmount_External                TFloat    ,    -- Кол-во норма на 100 км
-    IN inAmountСoldHour_External        TFloat    ,    -- Холод, Кол-во норма в час
-    IN inAmountСoldDistance_External    TFloat    ,    -- Холод, Кол-во норма на 100 км
+    IN inAmountColdHour_External        TFloat    ,    -- Холод, Кол-во норма в час
+    IN inAmountColdDistance_External    TFloat    ,    -- Холод, Кол-во норма на 100 км
     IN inSession                        TVarChar       -- сессия пользователя
 )
  RETURNS Integer AS
@@ -51,9 +51,9 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_RateFuel_Amount(), inRateFuelId_External, inAmount_External);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_RateFuel_AmountСoldHour(), inRateFuelId_External, inAmountСoldHour_External);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_RateFuel_AmountColdHour(), inRateFuelId_External, inAmountColdHour_External);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_RateFuel_AmountСoldDistance(), inRateFuelId_External, inAmountСoldDistance_External);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_RateFuel_AmountColdDistance(), inRateFuelId_External, inAmountColdDistance_External);
 
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_RateFuel_Car(), inRateFuelId_External, ioId);
@@ -67,9 +67,9 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_RateFuel_Amount(), inRateFuelId_Internal, inAmount_Internal);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_RateFuel_AmountСoldHour(), inRateFuelId_Internal, inAmountСoldHour_Internal);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_RateFuel_AmountColdHour(), inRateFuelId_Internal, inAmountColdHour_Internal);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_RateFuel_AmountСoldDistance(), inRateFuelId_Internal, inAmountСoldDistance_Internal);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_RateFuel_AmountColdDistance(), inRateFuelId_Internal, inAmountColdDistance_Internal);
 
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_RateFuel_Car(), inRateFuelId_Internal, ioId);
@@ -86,6 +86,7 @@ ALTER FUNCTION gpInsertUpdate_Object_RateFuel (Integer, Integer, Integer, TFloat
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.09.13                                        * 
  24.09.13          * 
 
 */

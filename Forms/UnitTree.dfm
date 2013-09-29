@@ -2,8 +2,8 @@ inherited UnitTreeForm: TUnitTreeForm
   Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
   ClientHeight = 403
   ClientWidth = 768
-  ExplicitWidth = 776
-  ExplicitHeight = 430
+  ExplicitWidth = 784
+  ExplicitHeight = 438
   PixelsPerInch = 96
   TextHeight = 13
   object cxDBTreeList: TcxDBTreeList
@@ -162,8 +162,8 @@ inherited UnitTreeForm: TUnitTreeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -311,7 +311,7 @@ inherited UnitTreeForm: TUnitTreeForm
       GuiParams = <
         item
           Name = 'Id'
-          Component = GridDataSet
+          Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftInteger
           ParamType = ptInput
@@ -334,14 +334,14 @@ inherited UnitTreeForm: TUnitTreeForm
       Params = <
         item
           Name = 'Key'
-          Component = GridDataSet
+          Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
           ParamType = ptOutput
         end
         item
           Name = 'TextValue'
-          Component = GridDataSet
+          Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptOutput
@@ -380,11 +380,11 @@ inherited UnitTreeForm: TUnitTreeForm
     Top = 152
   end
   object GridDS: TDataSource
-    DataSet = GridDataSet
+    DataSet = ClientDataSet
     Left = 360
     Top = 104
   end
-  object GridDataSet: TClientDataSet
+  object ClientDataSet: TClientDataSet
     Aggregates = <>
     IndexFieldNames = 'ParentId'
     MasterFields = 'Id'
@@ -396,10 +396,10 @@ inherited UnitTreeForm: TUnitTreeForm
   end
   object spGrid: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Unit'
-    DataSet = GridDataSet
+    DataSet = ClientDataSet
     DataSets = <
       item
-        DataSet = GridDataSet
+        DataSet = ClientDataSet
       end>
     Params = <>
     Left = 416
@@ -417,14 +417,14 @@ inherited UnitTreeForm: TUnitTreeForm
     Params = <
       item
         Name = 'Key'
-        Component = GridDataSet
+        Component = ClientDataSet
         ComponentItem = 'Id'
         DataType = ftString
         ParamType = ptOutput
       end
       item
         Name = 'TextValue'
-        Component = GridDataSet
+        Component = ClientDataSet
         ComponentItem = 'Name'
         DataType = ftString
         ParamType = ptOutput

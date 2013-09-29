@@ -2,8 +2,8 @@
   Caption = #1053#1086#1074#1099#1081' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1100
   ClientHeight = 424
   ClientWidth = 354
-  ExplicitWidth = 362
-  ExplicitHeight = 458
+  ExplicitWidth = 370
+  ExplicitHeight = 459
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -178,7 +178,7 @@
         Component = dsdFormParams
         ComponentItem = 'Id'
         DataType = ftInteger
-        ParamType = ptInput
+        ParamType = ptInputOutput
         Value = '0'
       end
       item
@@ -391,7 +391,7 @@
     Key = '0'
     LookupControl = ceUnit
     FormName = 'TUnitForm'
-    PositionDataSet = 'GridDataSet'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'

@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     IN inTradeMarkId         Integer   , -- ссылка на Торговые марки
     IN inInfoMoneyId         Integer   , -- Управленческие аналитики
     IN inBusinessId          Integer   , -- Бизнесы
+    IN inFuelId              Integer   , -- Вид топлива
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -48,6 +49,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_InfoMoney(), ioId, inInfoMoneyId);
    -- сохранили связь с <Бизнесы>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Business(), ioId, inBusinessId);
+   -- сохранили связь с <Вид топлива>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Goods_Fuel(), ioId, inFuelId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -62,7 +65,8 @@ ALTER FUNCTION gpInsertUpdate_Object_Goods (Integer, Integer, TVarChar, TFloat, 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 01.09.13                                        * add inBusinessId
+ 29.09.13                                        * add zc_ObjectLink_Goods_Fuel
+ 01.09.13                                        * add zc_ObjectLink_Goods_Business
  30.06.13                                        * add vb
  20.06.13          * vbCode_calc:=lpGet_ObjectCode (inCode, zc_Object_Goods());
  16.06.13                                        * IF COALESCE (inCode, 0) = 0  THEN Code_max := NULL ...

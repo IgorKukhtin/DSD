@@ -1,31 +1,31 @@
 ﻿inherited PersonalEditForm: TPersonalEditForm
   Caption = 'C'#1086#1090#1088#1091#1076#1085#1080#1082
-  ClientHeight = 271
-  ClientWidth = 607
-  ExplicitWidth = 615
-  ExplicitHeight = 298
+  ClientHeight = 275
+  ClientWidth = 372
+  ExplicitWidth = 388
+  ExplicitHeight = 310
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 168
-    Top = 238
+    Left = 72
+    Top = 239
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
     ModalResult = 8
-    TabOrder = 8
+    TabOrder = 6
   end
   object cxButton2: TcxButton
-    Left = 365
-    Top = 235
+    Left = 176
+    Top = 239
     Width = 75
     Height = 25
     Action = dsdFormClose1
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 8
-    TabOrder = 9
+    TabOrder = 7
   end
   object Код: TcxLabel
     Left = 16
@@ -34,121 +34,105 @@
   end
   object ceCode: TcxCurrencyEdit
     Left = 16
-    Top = 26
+    Top = 20
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 0
-    Width = 273
+    Width = 73
   end
   object cxLabel3: TcxLabel
-    Left = 168
-    Top = 167
-    Caption = #1044#1072#1090#1072' '#1087#1088#1080#1085#1103#1090#1080#1103
+    Left = 16
+    Top = 175
+    Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
   end
   object cxLabel2: TcxLabel
-    Left = 319
-    Top = 167
+    Left = 136
+    Top = 175
     Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
   end
   object cxLabel5: TcxLabel
     Left = 16
-    Top = 117
+    Top = 132
     Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
   end
   object cxLabel6: TcxLabel
-    Left = 15
-    Top = 63
-    Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
+    Left = 95
+    Top = 3
+    Caption = #1060#1048#1054
   end
   object cxLabel7: TcxLabel
-    Left = 319
-    Top = 3
-    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
-  end
-  object cxLabel8: TcxLabel
-    Left = 319
-    Top = 63
-    Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
-  end
-  object cxLabel9: TcxLabel
-    Left = 319
-    Top = 121
-    Caption = #1041#1080#1079#1085#1077#1089
+    Left = 16
+    Top = 46
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   object cePosition: TcxButtonEdit
     Left = 16
-    Top = 140
+    Top = 149
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 2
-    Width = 273
+    Width = 305
   end
   object ceUnit: TcxButtonEdit
-    Left = 319
-    Top = 26
+    Left = 16
+    Top = 63
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 3
-    Width = 273
-  end
-  object ceJuridical: TcxButtonEdit
-    Left = 319
-    Top = 86
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    TabOrder = 4
-    Width = 273
-  end
-  object ceBusiness: TcxButtonEdit
-    Left = 319
-    Top = 140
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    TabOrder = 5
-    Width = 273
+    Width = 305
   end
   object ceMember: TcxButtonEdit
-    Left = 15
-    Top = 86
+    Left = 95
+    Top = 20
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 1
-    Width = 273
+    Width = 226
   end
   object edDateIn: TcxDateEdit
-    Left = 168
-    Top = 192
+    Left = 16
+    Top = 195
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 6
-    Width = 121
+    TabOrder = 4
+    Width = 100
   end
   object edDateOut: TcxDateEdit
-    Left = 319
-    Top = 192
+    Left = 136
+    Top = 195
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 7
-    Width = 121
+    TabOrder = 5
+    Width = 100
+  end
+  object cePersonalGroup: TcxButtonEdit
+    Left = 16
+    Top = 106
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 14
+    Width = 305
+  end
+  object cxLabel1: TcxLabel
+    Left = 16
+    Top = 89
+    Caption = ' '#1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1080' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074' '
   end
   object ActionList: TActionList
-    Left = 296
-    Top = 40
+    Left = 72
+    Top = 216
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spGet
@@ -196,38 +180,27 @@
       end
       item
         Name = 'inMemberId '
-        Component = MemberGuides
+        Component = ceMember
         DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inPositionId'
-        Component = PositionGuides
+        Component = cePosition
         DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inUnitId'
-        Component = UnitGuides
+        Component = ceUnit
         DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
-        Name = 'inJuridicalId'
-        Component = JuridicalGuides
+        Name = 'inPersonalGroupId'
+        Component = cePersonalGroup
         DataType = ftInteger
         ParamType = ptInput
-        Value = ''
-      end
-      item
-        Name = 'inBusinessId'
-        Component = BusinessGuides
-        DataType = ftInteger
-        ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inDateIn'
@@ -243,8 +216,8 @@
         ParamType = ptInput
         Value = 0d
       end>
-    Left = 504
-    Top = 40
+    Left = 323
+    Top = 184
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -254,8 +227,8 @@
         ParamType = ptInputOutput
         Value = '0'
       end>
-    Left = 224
-    Top = 16
+    Left = 304
+    Top = 232
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Personal'
@@ -279,83 +252,59 @@
       end
       item
         Name = 'MemberId'
-        Component = MemberGuides
-        ComponentItem = 'Key'
-        DataType = ftString
+        Component = ceMember
+        ComponentItem = 'key'
+        DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'MemberName'
-        Component = MemberGuides
+        Component = ceMember
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'PositionId'
-        Component = PositionGuides
-        ComponentItem = 'Key'
-        DataType = ftString
+        Component = cePosition
+        ComponentItem = 'key'
+        DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'PositionName'
-        Component = PositionGuides
+        Component = cePosition
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'UnitId'
-        Component = UnitGuides
-        ComponentItem = 'Key'
-        DataType = ftString
+        Component = ceUnit
+        ComponentItem = 'key'
+        DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'UnitName'
-        Component = UnitGuides
+        Component = ceUnit
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptOutput
-        Value = ''
       end
       item
-        Name = 'JuridicalId'
-        Component = JuridicalGuides
-        ComponentItem = 'Key'
-        DataType = ftString
+        Name = 'PersonalGroupId'
+        Component = cePersonalGroup
+        ComponentItem = 'key'
+        DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
       end
       item
-        Name = 'JuridicalName'
-        Component = JuridicalGuides
+        Name = 'PersonalGroupName'
+        Component = cePersonalGroup
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptOutput
-        Value = ''
-      end
-      item
-        Name = 'BusinessId'
-        Component = BusinessGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptOutput
-        Value = ''
-      end
-      item
-        Name = 'BusinessName'
-        Component = BusinessGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'DateIn'
@@ -371,8 +320,8 @@
         ParamType = ptOutput
         Value = 0d
       end>
-    Left = 472
-    Top = 168
+    Left = 248
+    Top = 184
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -386,51 +335,111 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 136
-    Top = 40
+    Left = 24
+    Top = 216
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 512
-    Top = 184
+    Left = 120
+    Top = 216
+  end
+  object UnitGuides: TdsdGuides
+    Key = '0'
+    LookupControl = ceUnit
+    FormName = 'TUnitForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        Value = '0'
+      end
+      item
+        Name = 'TextValue'
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end>
+    Left = 328
+    Top = 55
   end
   object MemberGuides: TdsdGuides
+    Key = '0'
     LookupControl = ceMember
     FormName = 'TMemberForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
-    Left = 296
-    Top = 93
+    Params = <
+      item
+        Name = 'Key'
+        Component = MemberGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        Value = '0'
+      end
+      item
+        Name = 'TextValue'
+        Component = MemberGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end>
+    Left = 325
+    Top = 8
+  end
+  object PersonalGroupGuides: TdsdGuides
+    Key = '0'
+    LookupControl = cePersonalGroup
+    FormName = 'TPersonalGroupForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Component = PersonalGroupGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        Value = '0'
+      end
+      item
+        Name = 'TextValue'
+        Component = PersonalGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end>
+    Left = 327
+    Top = 96
   end
   object PositionGuides: TdsdGuides
+    Key = '0'
     LookupControl = cePosition
     FormName = 'TPositionForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
-    Left = 288
-    Top = 165
-  end
-  object UnitGuides: TdsdGuides
-    LookupControl = ceUnit
-    FormName = 'TUnitForm'
-    PositionDataSet = 'GridDataSet'
-    Params = <>
-    Left = 487
-    Top = 7
-  end
-  object JuridicalGuides: TdsdGuides
-    LookupControl = ceJuridical
-    FormName = 'TJuridicalForm'
-    PositionDataSet = 'GridDataSet'
-    Params = <>
-    Left = 559
-    Top = 65
-  end
-  object BusinessGuides: TdsdGuides
-    LookupControl = ceBusiness
-    FormName = 'TBusinessForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <>
-    Left = 527
-    Top = 113
+    Params = <
+      item
+        Name = 'Key'
+        Component = PositionGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        Value = '0'
+      end
+      item
+        Name = 'TextValue'
+        Component = PositionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end>
+    Left = 327
+    Top = 144
   end
 end

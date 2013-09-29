@@ -1,6 +1,6 @@
--- Function: gpGet_Object_RateFuelKind()
+-- Function: gpGet_Object_RateFuelKind (Integer, TVarChar)
 
--- DROP FUNCTION gpGet_Object_RateFuelKind();
+-- DROP FUNCTION gpGet_Object_RateFuelKind (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_RateFuelKind(
     IN inId          Integer,       -- ÍÎ˛˜ Ó·˙ÂÍÚ‡ <¿‚ÚÓÏÓ·ËÎ¸>
@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_RateFuelKind(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Tax TFloat
              , isErased Boolean
-             ) AS
+              )
+AS
 $BODY$
 BEGIN
 
@@ -21,39 +22,33 @@ BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , COALESCE (MAX (Object_RateFuelKind.ObjectCode), 0) + 1 AS Code
-           , CAST ('' as TVarChar)  AS NAME
-           
+           , lfGet_ObjectCode(0, zc_Object_RateFuelKind()) AS Code
+           , CAST ('' as TVarChar)  AS Name
            , CAST (0 as TFloat)     AS Tax
-
            , CAST (NULL AS Boolean) AS isErased
-
-       FROM Object AS Object_RateFuelKind
-       WHERE Object_RateFuelKind.DescId = zc_Object_RateFuelKind();
+       ;
    ELSE
        RETURN QUERY 
        SELECT 
               Object_RateFuelKind.Id         AS Id 
             , Object_RateFuelKind.ObjectCode AS Code
-            , Object_RateFuelKind.ValueData  AS NAME
+            , Object_RateFuelKind.ValueData  AS Name
       
             , ObjectFloat_Tax.ValueData      AS Tax
        
             , Object_RateFuelKind.isErased   AS isErased
       
-        FROM OBJECT AS Object_RateFuelKind
+        FROM Object AS Object_RateFuelKind
              LEFT JOIN ObjectFloat AS ObjectFloat_Tax ON ObjectFloat_Tax.ObjectId = Object_RateFuelKind.Id 
                                                      AND ObjectFloat_Tax.DescId = zc_ObjectFloat_RateFuelKind_Tax()
-
-       WHERE Object_Fuel.Id = inId;
+       WHERE Object_RateFuelKind.Id = inId;
       
    END IF;
   
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_RateFuelKind(integer, TVarChar) OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpGet_Object_RateFuelKind (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

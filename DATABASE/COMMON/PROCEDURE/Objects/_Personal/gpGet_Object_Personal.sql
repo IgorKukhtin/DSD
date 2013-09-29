@@ -1,10 +1,10 @@
-п»ї-- Function: gpGet_Object_Personal(integer, TVarChar)
+-- Function: gpGet_Object_Personal(integer, TVarChar)
 
 --DROP FUNCTION gpGet_Object_Personal(integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Personal(
-    IN inId          Integer,       -- РЎРѕС‚СЂСѓРґРЅРёРєРё 
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inId          Integer,       -- Сотрудники 
+    IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Code Integer, Name TVarChar,
                MemberId Integer, MemberName TVarChar, 
@@ -15,7 +15,7 @@ RETURNS TABLE (Code Integer, Name TVarChar,
 $BODY$
 BEGIN
 
-     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+     -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_Personal());
   
    IF COALESCE (inId, 0) = 0
@@ -98,8 +98,8 @@ ALTER FUNCTION gpGet_Object_Personal(integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  25.09.13         * add _PersonalGroup; remove _Juridical, _Business
  03.09.14                        *                                
  19.07.13         *    rename zc_ObjectDate...
@@ -107,5 +107,5 @@ ALTER FUNCTION gpGet_Object_Personal(integer, TVarChar) OWNER TO postgres;
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpGet_Object_Personal (100, '2')

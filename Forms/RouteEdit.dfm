@@ -2,8 +2,8 @@
   Caption = #1053#1086#1074#1099#1081' '#1084#1072#1088#1096#1088#1091#1090
   ClientHeight = 332
   ClientWidth = 380
-  ExplicitWidth = 388
-  ExplicitHeight = 366
+  ExplicitWidth = 396
+  ExplicitHeight = 367
   PixelsPerInch = 96
   TextHeight = 13
   object edMeasureName: TcxTextEdit
@@ -236,7 +236,7 @@
     Key = '0'
     LookupControl = ceUnit
     FormName = 'TUnitForm'
-    PositionDataSet = 'GridDataSet'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'

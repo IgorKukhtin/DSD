@@ -36,7 +36,7 @@ type
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
     DataSource: TDataSource;
-    ClientDataSet: TClientDataSet;
+    MasterCDS: TClientDataSet;
     DataPanel: TPanel;
     edInvNumber: TcxTextEdit;
     cxLabel1: TcxLabel;

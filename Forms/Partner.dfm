@@ -1,9 +1,9 @@
 inherited PartnerForm: TPartnerForm
-  Caption = #1055#1072#1088#1090#1085#1077#1088#1099
+  Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
   ClientHeight = 473
   ClientWidth = 750
-  ExplicitWidth = 758
-  ExplicitHeight = 500
+  ExplicitWidth = 766
+  ExplicitHeight = 508
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -93,8 +93,8 @@ inherited PartnerForm: TPartnerForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -331,6 +331,7 @@ inherited PartnerForm: TPartnerForm
     Top = 208
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    View = cxGridDBTableView
     OnDblClickActionList = <
       item
         Action = dsdChoiceGuides
@@ -338,8 +339,6 @@ inherited PartnerForm: TPartnerForm
       item
         Action = actUpdate
       end>
-    SortImages = dmMain.SortImageList
-    View = cxGridDBTableView
     ActionItemList = <
       item
         Action = dsdChoiceGuides
@@ -349,6 +348,7 @@ inherited PartnerForm: TPartnerForm
         Action = actUpdate
         ShortCut = 13
       end>
+    SortImages = dmMain.SortImageList
     Left = 328
     Top = 264
   end

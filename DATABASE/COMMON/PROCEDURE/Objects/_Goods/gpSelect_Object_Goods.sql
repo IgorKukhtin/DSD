@@ -5,15 +5,18 @@
 CREATE OR REPLACE FUNCTION gpSelect_Object_Goods(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
-               GoodsGroupId Integer, GoodsGroupCode Integer, GoodsGroupName TVarChar,
-               MeasureId Integer, MeasureCode Integer, MeasureName TVarChar,
-               TradeMarkId Integer,  TradeMarkCode Integer, TradeMarkName TVarChar, 
-               InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar,
-               InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar,
-               InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar,
-               BusinessId Integer,  BusinessCode Integer, BusinessName TVarChar, 
-               Weight TFloat, isPartionCount Boolean, isPartionSumm Boolean, isErased Boolean) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , GoodsGroupName TVarChar
+             , MeasureName TVarChar
+             , TradeMarkName TVarChar
+             , InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , InfoMoneyGroupName TVarChar
+             , InfoMoneyDestinationName TVarChar
+             , BusinessName TVarChar
+             , FuelName TVarChar
+             , Weight TFloat, isPartionCount Boolean, isPartionSumm Boolean, isErased Boolean
+              )
+AS
 $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
@@ -24,41 +27,30 @@ BEGIN
            Object_Goods.Id             AS Id
          , Object_Goods.ObjectCode     AS Code
          , Object_Goods.ValueData      AS Name
-         
-         , Object_GoodsGroup.Id         AS GoodsGroupId
-         , Object_GoodsGroup.ObjectCode AS GoodsGroupCode
+
          , Object_GoodsGroup.ValueData  AS GoodsGroupName 
 
-         , Object_Measure.Id            AS MeasureId
-         , Object_Measure.ObjectCode    AS MeasureCode
          , Object_Measure.ValueData     AS MeasureName
 
-         , Object_TradeMark.Id         AS TradeMarkId
-         , Object_TradeMark.ObjectCode AS TradeMarkCode
          , Object_TradeMark.ValueData  AS TradeMarkName
-         
-         , Object_InfoMoney.Id         AS InfoMoneyId
+
          , Object_InfoMoney.ObjectCode AS InfoMoneyCode
          , Object_InfoMoney.ValueData  AS InfoMoneyName
-         
-         , Object_InfoMoneyGroup.Id         AS InfoMoneyGroupId
-         , Object_InfoMoneyGroup.ObjectCode AS InfoMoneyGroupCode
+
          , Object_InfoMoneyGroup.ValueData  AS InfoMoneyGroupName
 
-         , Object_InfoMoneyDestination.Id         AS InfoMoneyDestinationId
-         , Object_InfoMoneyDestination.ObjectCode AS InfoMoneyDestinationCode
          , Object_InfoMoneyDestination.ValueData  AS InfoMoneyDestinationName
-         
-         , Object_Business.Id         AS BusinessId
-         , Object_Business.ObjectCode AS BusinessCode
+
          , Object_Business.ValueData  AS BusinessName
+
+         , Object_Fuel.ValueData    AS FuelName
 
          , ObjectFloat_Weight.ValueData AS Weight
          , ObjectBoolean_PartionCount.ValueData AS isPartionCount
          , ObjectBoolean_PartionSumm.ValueData  AS isPartionSumm
          , Object_Goods.isErased       AS isErased
          
-     FROM OBJECT AS Object_Goods
+     FROM Object AS Object_Goods
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                  ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
@@ -105,6 +97,11 @@ BEGIN
                 AND ObjectLink_Goods_Business.DescId = zc_ObjectLink_Goods_Business()
           LEFT JOIN Object AS Object_Business ON Object_Business.Id = ObjectLink_Goods_Business.ChildObjectId              
 
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Fuel
+                               ON ObjectLink_Goods_Fuel.ObjectId = Object_Goods.Id 
+                              AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
+          LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = ObjectLink_Goods_Fuel.ChildObjectId    
+
   WHERE Object_Goods.DescId = zc_Object_Goods()
 -- and (ObjectBoolean_PartionCount.ValueData = true or ObjectBoolean_PartionSumm.ValueData = true)
   ;
@@ -120,7 +117,8 @@ ALTER FUNCTION gpSelect_Object_Goods (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 01.09.13                                        * add Business
+ 29.09.13                                        * add zc_ObjectLink_Goods_Fuel
+ 01.09.13                                        * add zc_ObjectLink_Goods_Business
  12.07.13                                        * add zc_ObjectBoolean_Goods_Partion...
  04.07.13          * + TradeMark             
  21.06.13          *              

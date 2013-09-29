@@ -61,7 +61,7 @@ type
     cxGridLevel: TcxGridLevel;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     GridDS: TDataSource;
-    GridDataSet: TClientDataSet;
+    ClientDataSet: TClientDataSet;
     GridStoredProc: TdsdStoredProc;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;

@@ -204,6 +204,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeFuelForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeFuelForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeFuelJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeFuelJournalForm');
 end;
 procedure TLoadFormTest.LoadSendFormTest;
 begin

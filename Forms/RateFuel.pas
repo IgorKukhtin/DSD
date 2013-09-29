@@ -54,14 +54,14 @@ type
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clAmount—oldHour_Internal: TcxGridDBColumn;
+    clAmountColdHour_Internal: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     clErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
-    clAmount—oldDistance_Internal: TcxGridDBColumn;
+    clAmountColdDistance_Internal: TcxGridDBColumn;
     clAmount_External: TcxGridDBColumn;
-    clAmount—oldHour_External: TcxGridDBColumn;
-    clAmount—oldDistance_External: TcxGridDBColumn;
+    clAmountColdHour_External: TcxGridDBColumn;
+    clAmountColdDistance_External: TcxGridDBColumn;
     spInsertUpdateObject: TdsdStoredProc;
   private
     { Private declarations }

@@ -62,13 +62,13 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_RateFuel_Amount() RETURNS Integer AS $
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_RateFuel(), 'zc_ObjectFloat_RateFuel_Amount', ' ÓÎ-‚Ó ÌÓÏ‡ Ì‡ 100 ÍÏ' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RateFuel_Amount');  
 
-CREATE OR REPLACE FUNCTION zc_ObjectFloat_RateFuel_Amount—oldHour() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RateFuel_Amount—oldHour'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_RateFuel_AmountColdHour() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RateFuel_AmountColdHour'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
-  SELECT zc_Object_RateFuel(), 'zc_ObjectFloat_RateFuel_Amount—oldHour', '’ÓÎÓ‰,  ÓÎ-‚Ó ÌÓÏ‡ ‚ ˜‡Ò' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RateFuel_Amount—oldHour'); 
+  SELECT zc_Object_RateFuel(), 'zc_ObjectFloat_RateFuel_AmountColdHour', '’ÓÎÓ‰,  ÓÎ-‚Ó ÌÓÏ‡ ‚ ˜‡Ò' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RateFuel_AmountColdHour'); 
 
-CREATE OR REPLACE FUNCTION zc_ObjectFloat_RateFuel_Amount—oldDistance() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RateFuel_Amount—oldDistance'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_RateFuel_AmountColdDistance() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RateFuel_AmountColdDistance'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
-  SELECT zc_Object_RateFuel(), 'zc_ObjectFloat_RateFuel_Amount—oldDistance', '’ÓÎÓ‰,  ÓÎ-‚Ó ÌÓÏ‡ Ì‡ 100 ÍÏ' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RateFuel_Amount—oldDistance'); 
+  SELECT zc_Object_RateFuel(), 'zc_ObjectFloat_RateFuel_AmountColdDistance', '’ÓÎÓ‰,  ÓÎ-‚Ó ÌÓÏ‡ Ì‡ 100 ÍÏ' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RateFuel_AmountColdDistance'); 
 
 CREATE OR REPLACE FUNCTION zc_ObjectFloat_RateFuelKind_Tax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_RateFuelKind_Tax'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
@@ -79,7 +79,7 @@ INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
  27.09.13         * add   zc_ObjectFloat_RateFuelKind_Tax           
- 24.09.13         * add  _Fuel_Ratio, _RateFuel_Amount—oldHour, _RateFuel_Amount, _RateFuel_Amount—oldDistance
+ 24.09.13         * add  _Fuel_Ratio, _RateFuel_AmountColdHour, _RateFuel_Amount, _RateFuel_AmountColdDistance
  07.09.13                                        * add zc_ObjectFloat_PriceList_VATPercent
  15.08.13                         *  œÂÂÌÂÒ ‚ÒÂ ËÁ InsertUpdateObjectFloat             
  29.07.13         * add zc_ObjectFloat_Partner_PrepareDayCount, zc_ObjectFloat_Partner_DocumentDayCount             

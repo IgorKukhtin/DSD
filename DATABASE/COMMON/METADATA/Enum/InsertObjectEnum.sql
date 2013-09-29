@@ -6,6 +6,12 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_Object_User() RETURNS In
 DO $$
 BEGIN
 
+   -- Это Виды норм для топлива, не Enum, но нужны
+   IF NOT EXISTS (SELECT * FROM Object where DescId = zc_Object_RateFuelKind())
+   THEN
+       lpInsertUpdate_Object (0, zc_Object_RateFuelKind(), 1, 'Лето');
+   END IF;
+
    -- сохраняются элементы справочника (zc_Object_Process)
    PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_Object_User(), inDescId:= zc_Object_Process(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Process_Select_Object_User'), inName:= 'Проверка получения данных', inEnumName:= 'zc_Enum_Process_Select_Object_User');
    PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Get_Object_User(), inDescId:= zc_Object_Process(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Process_Get_Object_User'), inName:= 'Проверка выборки данных', inEnumName:= 'zc_Enum_Process_Get_Object_User');
@@ -39,6 +45,7 @@ BEGIN
      PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_RoleRight_Role(), ioId, zc_Enum_Role_Admin());
      PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_RoleRight_Process(), ioId, zc_Enum_Process_InsertUpdate_Object_User());
    END IF;
+
 END $$;
 
 DO $$
@@ -256,6 +263,7 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.09.13                                        * add zc_Object_RateFuelKind
  27.09.13                                        * add zc_Enum_InfoMoney_20401
  26.09.13         * del zc_Enum_RateFuelKind_Summer, zc_Enum_RateFuelKind_Winter               
  24.09.13         * add zc_Enum_RateFuelKind_Summer, zc_Enum_RateFuelKind_Winter, zc_Enum_RouteKind_Internal, zc_Enum_RouteKind_External

@@ -2,8 +2,8 @@ inherited PersonalForm: TPersonalForm
   Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082#1080
   ClientHeight = 358
   ClientWidth = 864
-  ExplicitWidth = 872
-  ExplicitHeight = 385
+  ExplicitWidth = 880
+  ExplicitHeight = 393
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -41,49 +41,42 @@ inherited PersonalForm: TPersonalForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 72
+        Width = 50
+      end
+      object clMember: TcxGridDBColumn
+        Caption = #1060#1048#1054
+        DataBinding.FieldName = 'MemberName'
+        HeaderAlignmentVert = vaCenter
+        Width = 90
+      end
+      object clPosition: TcxGridDBColumn
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+        DataBinding.FieldName = 'PositionName'
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object clPersonalGroupName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
+        DataBinding.FieldName = 'PersonalGroupName'
+        Width = 80
+      end
+      object clUnit: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentVert = vaCenter
+        Width = 100
       end
       object clDateIn: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1087#1088#1080#1085#1103#1090#1080#1103
+        Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
         DataBinding.FieldName = 'DateIn'
         HeaderAlignmentVert = vaCenter
-        Width = 96
+        Width = 60
       end
       object clDateOut: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
         DataBinding.FieldName = 'DateOut'
         HeaderAlignmentVert = vaCenter
-        Width = 108
-      end
-      object clMember: TcxGridDBColumn
-        Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
-        DataBinding.FieldName = 'MemberName'
-        HeaderAlignmentVert = vaCenter
-        Width = 87
-      end
-      object clPosition: TcxGridDBColumn
-        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1080
-        DataBinding.FieldName = 'PositionName'
-        HeaderAlignmentVert = vaCenter
-        Width = 89
-      end
-      object clUnit: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
-        DataBinding.FieldName = 'UnitName'
-        HeaderAlignmentVert = vaCenter
-        Width = 112
-      end
-      object clJuridical: TcxGridDBColumn
-        Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
-        DataBinding.FieldName = 'JuridicalName'
-        HeaderAlignmentVert = vaCenter
-        Width = 114
-      end
-      object clBusiness: TcxGridDBColumn
-        Caption = #1041#1080#1079#1085#1077#1089#1099
-        DataBinding.FieldName = 'BusinessName'
-        HeaderAlignmentVert = vaCenter
-        Width = 64
+        Width = 60
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -91,6 +84,7 @@ inherited PersonalForm: TPersonalForm
         PropertiesClassName = 'TcxCheckBoxProperties'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 35
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -126,8 +120,8 @@ inherited PersonalForm: TPersonalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

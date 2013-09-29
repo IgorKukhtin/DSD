@@ -1,24 +1,25 @@
 inherited IncomeFuelForm: TIncomeFuelForm
-  Caption = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+  Caption = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086')'
   ClientHeight = 396
-  ClientWidth = 1028
+  ClientWidth = 773
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1044
+  ExplicitWidth = 789
   ExplicitHeight = 431
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1028
-    Height = 98
+    Width = 773
+    Height = 89
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 968
     object edInvNumber: TcxTextEdit
       Left = 8
-      Top = 27
+      Top = 25
       Enabled = False
       Properties.ReadOnly = True
       TabOrder = 0
@@ -26,64 +27,64 @@ inherited IncomeFuelForm: TIncomeFuelForm
     end
     object cxLabel1: TcxLabel
       Left = 8
-      Top = 5
+      Top = 8
       Caption = #1053#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
     object edOperDate: TcxDateEdit
-      Left = 156
-      Top = 27
+      Left = 142
+      Top = 25
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
       Width = 121
     end
     object cxLabel2: TcxLabel
-      Left = 156
-      Top = 4
+      Left = 142
+      Top = 7
       Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
     object edFrom: TcxButtonEdit
       Left = 288
-      Top = 27
+      Top = 25
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 3
-      Width = 137
+      Width = 150
     end
     object edTo: TcxButtonEdit
       Left = 440
-      Top = 27
+      Top = 25
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 2
-      Width = 145
+      Width = 150
     end
     object cxLabel3: TcxLabel
       Left = 288
-      Top = 4
+      Top = 7
       Caption = #1054#1090' '#1082#1086#1075#1086
     end
     object cxLabel4: TcxLabel
       Left = 440
-      Top = 4
-      Caption = #1050#1086#1084#1091
+      Top = 7
+      Caption = #1050#1086#1084#1091' ('#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100')'
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 377
-      Top = 71
-      Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+      Left = 142
+      Top = 66
+      Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072')'
       TabOrder = 6
-      Width = 137
+      Width = 130
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 520
-      Top = 71
+      Left = 288
+      Top = 66
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 0
@@ -92,81 +93,88 @@ inherited IncomeFuelForm: TIncomeFuelForm
       Width = 65
     end
     object cxLabel7: TcxLabel
-      Left = 520
-      Top = 50
+      Left = 288
+      Top = 51
       Caption = '% '#1053#1044#1057
     end
     object cxLabel9: TcxLabel
       Left = 600
-      Top = 4
+      Top = 7
       Caption = #1044#1086#1075#1086#1074#1086#1088
     end
     object edContract: TcxButtonEdit
       Left = 600
-      Top = 27
+      Top = 25
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 4
-      Width = 113
+      Width = 150
     end
     object cxLabel10: TcxLabel
-      Left = 724
-      Top = 4
+      Left = 600
+      Top = 49
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKind: TcxButtonEdit
-      Left = 724
-      Top = 27
+      Left = 600
+      Top = 66
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 121
+      Width = 150
     end
     object cxLabel12: TcxLabel
-      Left = 600
-      Top = 50
-      Caption = #1042#1086#1076#1080#1090#1077#1083#1100
+      Left = 440
+      Top = 51
+      Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
     end
     object edDriver: TcxButtonEdit
-      Left = 600
-      Top = 71
+      Left = 440
+      Top = 66
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 8
-      Width = 113
+      Width = 150
     end
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 124
-    Width = 1028
-    Height = 272
+    Top = 115
+    Width = 773
+    Height = 281
     Align = alClient
     TabOrder = 2
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 272
-    ClientRectRight = 1028
+    ExplicitTop = 124
+    ExplicitWidth = 1028
+    ExplicitHeight = 272
+    ClientRectBottom = 281
+    ClientRectRight = 773
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 1028
+      ExplicitHeight = 248
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1028
-        Height = 248
+        Width = 773
+        Height = 257
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1028
+        ExplicitHeight = 248
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource
@@ -297,13 +305,17 @@ inherited IncomeFuelForm: TIncomeFuelForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitWidth = 1028
+      ExplicitHeight = 248
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 1028
-        Height = 248
+        Width = 773
+        Height = 257
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1028
+        ExplicitHeight = 248
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -498,10 +510,10 @@ inherited IncomeFuelForm: TIncomeFuelForm
   end
   object spSelectMovementItem: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_IncomeFuel'
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
     Params = <
       item
@@ -751,11 +763,11 @@ inherited IncomeFuelForm: TIncomeFuelForm
     end
   end
   object DataSource: TDataSource
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     Left = 48
     Top = 200
   end
-  object ClientDataSet: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 136
@@ -787,7 +799,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
   object dsdGuidesTo: TdsdGuides
     LookupControl = edTo
     FormName = 'TCarForm'
-    PositionDataSet = 'GridDataSet'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -805,8 +817,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
         ParamType = ptInput
         Value = ''
       end>
-    Left = 472
-    Top = 8
+    Left = 488
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -853,7 +864,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
     Params = <
       item
         Name = 'ioId'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         DataType = ftInteger
         ParamType = ptInputOutput
@@ -868,28 +879,28 @@ inherited IncomeFuelForm: TIncomeFuelForm
       end
       item
         Name = 'inGoodsId'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'GoodsId'
         DataType = ftInteger
         ParamType = ptInput
       end
       item
         Name = 'inAmount'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inPrice'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inCountForPrice'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
         ParamType = ptInput
@@ -900,7 +911,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'
     CloseDataSource = False
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     BCDToCurrency = False
     Left = 360
     Top = 88
@@ -1008,8 +1019,8 @@ inherited IncomeFuelForm: TIncomeFuelForm
         ParamType = ptInput
         Value = ''
       end>
-    Left = 728
-    Top = 112
+    Left = 664
+    Top = 192
   end
   object HeaderSaver: THeaderSaver
     IdParam.Component = FormParams
@@ -1188,8 +1199,8 @@ inherited IncomeFuelForm: TIncomeFuelForm
         ParamType = ptOutput
         Value = ''
       end>
-    Left = 136
-    Top = 64
+    Left = 176
+    Top = 120
   end
   object RefreshAddOn: TRefreshAddOn
     FormName = 'IncomeJournalForm'
@@ -1240,8 +1251,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
         ParamType = ptInput
         Value = ''
       end>
-    Left = 664
-    Top = 8
+    Left = 648
   end
   object PaidKindGuides: TdsdGuides
     LookupControl = edPaidKind
@@ -1264,7 +1274,8 @@ inherited IncomeFuelForm: TIncomeFuelForm
         ParamType = ptInput
         Value = ''
       end>
-    Left = 792
+    Left = 656
+    Top = 72
   end
   object DriverGuides: TdsdGuides
     LookupControl = edDriver
@@ -1287,7 +1298,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
         ParamType = ptInput
         Value = ''
       end>
-    Left = 736
-    Top = 72
+    Left = 488
+    Top = 80
   end
 end

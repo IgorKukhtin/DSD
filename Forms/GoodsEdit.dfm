@@ -2,8 +2,8 @@
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
   ClientHeight = 361
   ClientWidth = 352
-  ExplicitWidth = 360
-  ExplicitHeight = 388
+  ExplicitWidth = 368
+  ExplicitHeight = 396
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -243,6 +243,12 @@
         DataType = ftInteger
         ParamType = ptInput
         Value = ''
+      end
+      item
+        Name = 'inFuelId'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = Null
       end>
     Left = 232
     Top = 48

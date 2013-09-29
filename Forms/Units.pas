@@ -51,7 +51,7 @@ type
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdSetUnErased: TdsdUpdateErased;
     GridDS: TDataSource;
-    GridDataSet: TClientDataSet;
+    ClientDataSet: TClientDataSet;
     spGrid: TdsdStoredProc;
     dsdFormParams: TdsdFormParams;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;

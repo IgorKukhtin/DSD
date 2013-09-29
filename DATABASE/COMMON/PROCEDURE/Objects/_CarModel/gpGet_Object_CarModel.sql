@@ -1,16 +1,16 @@
-п»ї-- Function: gpGet_Object_CarModel()
+-- Function: gpGet_Object_CarModel()
 
 --DROP FUNCTION gpGet_Object_CarModel();
 
 CREATE OR REPLACE FUNCTION gpGet_Object_CarModel(
-    IN inId          Integer,       -- РєР»СЋС‡ РѕР±СЉРµРєС‚Р° <РњР°СЂРєРё РђРІС‚РѕРјРѕР±РёР»СЏ>
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inId          Integer,       -- ключ объекта <Марки Автомобиля>
+    IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
 $BODY$
 BEGIN
 
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
    IF COALESCE (inId, 0) = 0
@@ -19,7 +19,6 @@ BEGIN
        SELECT
              CAST (0 as Integer)    AS Id
            , lfGet_ObjectCode(0, zc_Object_CarModel()) AS Code
-           , COALESCE (MAX (Object.ObjectCode), 0) + 1 AS Code
            , CAST ('' as TVarChar)  AS Name
            , CAST (NULL AS Boolean) AS isErased;
    ELSE
@@ -41,12 +40,13 @@ ALTER FUNCTION gpGet_Object_CarModel(integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.09.13                                        *
  10.06.13          *
  03.06.13          
 
 */
 
--- С‚РµСЃС‚
--- SELECT * FROM gpSelect_CarModel('2')
+-- тест
+-- SELECT * FROM gpGet_Object_CarModel (0, '2')

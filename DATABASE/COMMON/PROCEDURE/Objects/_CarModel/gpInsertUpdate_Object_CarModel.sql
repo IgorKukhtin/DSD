@@ -1,12 +1,12 @@
-п»ї-- Function: gpInsertUpdate_Object_CarModel()
+-- Function: gpInsertUpdate_Object_CarModel()
 
 -- DROP FUNCTION gpInsertUpdate_Object_CarModel();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CarModel(
- INOUT ioId	            Integer   ,     -- РєР»СЋС‡ РѕР±СЉРµРєС‚Р° < РњР°СЂРєРё РђРІС‚РѕРјРѕР±РёР»СЏ> 
-    IN inCode           Integer   ,     -- РљРѕРґ РѕР±СЉРµРєС‚Р° <РњР°СЂРєРё РђРІС‚РѕРјРѕР±РёР»СЏ> 
-    IN inName           TVarChar  ,     -- РќР°Р·РІР°РЅРёРµ РѕР±СЉРµРєС‚Р° <РњР°СЂРєРё РђРІС‚РѕРјРѕР±РёР»СЏ>
-    IN inSession        TVarChar        -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+ INOUT ioId	            Integer   ,     -- ключ объекта < Марки Автомобиля> 
+    IN inCode           Integer   ,     -- Код объекта <Марки Автомобиля> 
+    IN inName           TVarChar  ,     -- Название объекта <Марки Автомобиля>
+    IN inSession        TVarChar        -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
@@ -15,12 +15,12 @@ $BODY$
    
 BEGIN
    
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_CarModel());
 
    UserId := inSession;
 
-   -- Р•СЃР»Рё РєРѕРґ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ, РѕРїСЂРµРґРµР»СЏРµРј РµРіРѕ РєР°Рё РїРѕСЃР»РµРґРЅРёР№+1
+   -- Если код не установлен, определяем его каи последний+1
    IF COALESCE (inCode, 0) = 0
    THEN 
        SELECT MAX (ObjectCode) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_CarModel();
@@ -28,15 +28,15 @@ BEGIN
        Code_max := inCode;
    END IF; 
    
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё РґР»СЏ СЃРІРѕР№СЃС‚РІР° <РќР°РёРјРµРЅРѕРІР°РЅРёРµ РњР°СЂРєРё РђРІС‚РѕРјРѕР±РёР»СЏ>
+   -- проверка прав уникальности для свойства <Наименование Марки Автомобиля>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_CarModel(), inName);
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё РґР»СЏ СЃРІРѕР№СЃС‚РІР° <РљРѕРґ РњР°СЂРєРё РђРІС‚РѕРјРѕР±РёР»СЏ>
+   -- проверка прав уникальности для свойства <Код Марки Автомобиля>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_CarModel(), Code_max);
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё <РћР±СЉРµРєС‚>
+   -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_CarModel(), Code_max, inName);
    
-   -- СЃРѕС…СЂР°РЅРёР»Рё РїСЂРѕС‚РѕРєРѕР»
+   -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, UserId);
    
 END;$BODY$
@@ -47,12 +47,12 @@ ALTER FUNCTION gpInsertUpdate_Object_CarModel (Integer, Integer, TVarChar, TVarC
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  10.06.13          *
  03.06.13          
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpInsertUpdate_Object_CarModel()

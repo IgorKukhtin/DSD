@@ -39,23 +39,20 @@ type
     spGet: TdsdStoredProc;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    MemberGuides: TdsdGuides;
-    PositionGuides: TdsdGuides;
     cxLabel6: TcxLabel;
-    UnitGuides: TdsdGuides;
     cxLabel7: TcxLabel;
-    cxLabel8: TcxLabel;
-    JuridicalGuides: TdsdGuides;
-    BusinessGuides: TdsdGuides;
-    cxLabel9: TcxLabel;
     cePosition: TcxButtonEdit;
     ceUnit: TcxButtonEdit;
-    ceJuridical: TcxButtonEdit;
-    ceBusiness: TcxButtonEdit;
     ceMember: TcxButtonEdit;
     edDateIn: TcxDateEdit;
     edDateOut: TcxDateEdit;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
+    cePersonalGroup: TcxButtonEdit;
+    cxLabel1: TcxLabel;
+    UnitGuides: TdsdGuides;
+    MemberGuides: TdsdGuides;
+    PersonalGroupGuides: TdsdGuides;
+    PositionGuides: TdsdGuides;
   private
     { Private declarations }
   public
