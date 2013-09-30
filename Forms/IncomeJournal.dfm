@@ -2,9 +2,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1087#1088#1080#1093#1086#1076#1072
   ClientHeight = 427
   ClientWidth = 1240
-  ExplicitLeft = -258
-  ExplicitWidth = 1256
-  ExplicitHeight = 462
+  ExplicitWidth = 1248
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -33,6 +32,11 @@ inherited IncomeJournalForm: TIncomeJournalForm
       Left = 210
       Top = 10
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
+    end
+    object cxLabel1: TcxLabel
+      Left = 9
+      Top = 10
+      Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
     end
   end
   object cxGrid: TcxGrid
@@ -310,11 +314,6 @@ inherited IncomeJournalForm: TIncomeJournalForm
       GridView = cxGridDBTableView
     end
   end
-  object cxLabel1: TcxLabel
-    Left = 9
-    Top = 36
-    Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
-  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 24
@@ -354,8 +353,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')

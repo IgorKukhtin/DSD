@@ -1,9 +1,9 @@
 ﻿inherited PersonalEditForm: TPersonalEditForm
   Caption = 'C'#1086#1090#1088#1091#1076#1085#1080#1082
   ClientHeight = 275
-  ClientWidth = 372
-  ExplicitWidth = 388
-  ExplicitHeight = 310
+  ClientWidth = 340
+  ExplicitWidth = 348
+  ExplicitHeight = 302
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
@@ -180,27 +180,35 @@
       end
       item
         Name = 'inMemberId '
-        Component = ceMember
+        Component = MemberGuides
+        ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptInput
+        Value = '0'
       end
       item
         Name = 'inPositionId'
-        Component = cePosition
+        Component = PositionGuides
+        ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptInput
+        Value = '0'
       end
       item
         Name = 'inUnitId'
-        Component = ceUnit
+        Component = UnitGuides
+        ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptInput
+        Value = '0'
       end
       item
         Name = 'inPersonalGroupId'
-        Component = cePersonalGroup
+        Component = PersonalGroupGuides
+        ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptInput
+        Value = '0'
       end
       item
         Name = 'inDateIn'
@@ -216,7 +224,7 @@
         ParamType = ptInput
         Value = 0d
       end>
-    Left = 323
+    Left = 275
     Top = 184
   end
   object dsdFormParams: TdsdFormParams
@@ -364,7 +372,7 @@
         ParamType = ptInput
         Value = ''
       end>
-    Left = 328
+    Left = 280
     Top = 55
   end
   object MemberGuides: TdsdGuides
@@ -389,7 +397,7 @@
         ParamType = ptInput
         Value = ''
       end>
-    Left = 325
+    Left = 277
     Top = 8
   end
   object PersonalGroupGuides: TdsdGuides
@@ -414,7 +422,7 @@
         ParamType = ptInput
         Value = ''
       end>
-    Left = 327
+    Left = 279
     Top = 96
   end
   object PositionGuides: TdsdGuides
@@ -439,7 +447,7 @@
         ParamType = ptInput
         Value = ''
       end>
-    Left = 327
+    Left = 279
     Top = 144
   end
 end

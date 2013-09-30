@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_Goods()
 
--- DROP FUNCTION gpSelect_Object_Goods (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Goods (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Goods(
     IN inSession     TVarChar       -- сессия пользователя

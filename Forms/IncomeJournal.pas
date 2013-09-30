@@ -85,8 +85,8 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
-    cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
+    cxLabel1: TcxLabel;
   private
   public
   end;

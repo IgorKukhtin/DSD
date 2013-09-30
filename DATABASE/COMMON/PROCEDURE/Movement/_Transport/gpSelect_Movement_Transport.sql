@@ -1,6 +1,6 @@
 -- Function: gpSelect_Movement_Transport()
 
--- DROP FUNCTION gpSelect_Movement_Transport (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Transport (TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Transport(
     IN inStartDate   TDateTime , --
@@ -50,7 +50,7 @@ BEGIN
            , Object_CarTrailer.ValueData AS CarTrailerName
 
            , Object_PersonalDriver.ValueData AS PersonalDriverName
-           , Object_PersonalDriver.ValueData AS PersonalDriverMoreName
+           , Object_PersonalDriverMore.ValueData AS PersonalDriverMoreName
 
            , Object_UnitForwarding.ValueData AS UnitForwardingName
    
@@ -98,12 +98,12 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
-            LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
+            LEFT JOIN PersonalMember_View AS Object_PersonalDriver ON Object_PersonalDriver.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriverMore
                                          ON MovementLinkObject_PersonalDriverMore.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalDriverMore.DescId = zc_MovementLinkObject_PersonalDriverMore()
-            LEFT JOIN Object AS Object_PersonalDriverMore ON Object_PersonalDriverMore.Id = MovementLinkObject_PersonalDriverMore.ObjectId
+            LEFT JOIN PersonalMember_View AS Object_PersonalDriverMore ON Object_PersonalDriverMore.PersonalId = MovementLinkObject_PersonalDriverMore.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
                                          ON MovementLinkObject_UnitForwarding.MovementId = Movement.Id

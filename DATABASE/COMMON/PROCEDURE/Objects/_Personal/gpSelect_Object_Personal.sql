@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_Personal()
 
--- DROP FUNCTION gpSelect_Object_Personal(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Personal(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Personal(
     IN inSession     TVarChar       -- сессия пользователя

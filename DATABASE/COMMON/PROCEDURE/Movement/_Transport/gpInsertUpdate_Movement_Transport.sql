@@ -48,7 +48,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndRun(), ioId, inEndRun);
 
      -- расчитали свойство < ол-во рабочих часов>
-     vbHoursWork:= ROUND ((inEndRun - inStartRun) * 24));
+     vbHoursWork:= ROUND ((inEndRun - inStartRun) * 24);
      -- сохранили свойство < ол-во рабочих часов>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_HoursWork(), ioId, vbHoursWork);
 

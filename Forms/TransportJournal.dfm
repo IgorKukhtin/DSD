@@ -3,8 +3,8 @@ inherited TransportJournalForm: TTransportJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
   ClientHeight = 427
   ClientWidth = 1276
-  ExplicitWidth = 1292
-  ExplicitHeight = 462
+  ExplicitWidth = 1284
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -14,20 +14,29 @@ inherited TransportJournalForm: TTransportJournalForm
     Height = 41
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 579
     object deStart: TcxDateEdit
-      Left = 208
+      Left = 110
       Top = 8
       EditValue = 41395d
       TabOrder = 0
-      Width = 121
+      Width = 86
     end
     object deEnd: TcxDateEdit
-      Left = 352
+      Left = 328
       Top = 8
       EditValue = 41395d
       TabOrder = 1
-      Width = 121
+      Width = 92
+    end
+    object cxLabel1: TcxLabel
+      Left = 9
+      Top = 10
+      Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
+    end
+    object cxLabel2: TcxLabel
+      Left = 210
+      Top = 10
+      Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
   end
   object cxGrid: TcxGrid
@@ -38,7 +47,6 @@ inherited TransportJournalForm: TTransportJournalForm
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
-    ExplicitWidth = 579
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -56,7 +64,8 @@ inherited TransportJournalForm: TTransportJournalForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
-      OptionsView.HeaderHeight = 40
+      OptionsView.HeaderAutoHeight = True
+      OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object colStatus: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
@@ -91,69 +100,86 @@ inherited TransportJournalForm: TTransportJournalForm
       object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 47
       end
       object CarName: TcxGridDBColumn
         Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
-        DataBinding.FieldName = 'FromName'
+        DataBinding.FieldName = 'CarName'
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
       object CarTrailerName: TcxGridDBColumn
         Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' ('#1087#1088#1080#1094#1077#1087')'
-        DataBinding.FieldName = 'ToName'
+        DataBinding.FieldName = 'CarTrailerName'
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
       object PersonalDriver: TcxGridDBColumn
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100
         DataBinding.FieldName = 'PersonalDriverName'
+        HeaderAlignmentVert = vaCenter
         Width = 70
       end
       object PersonalDriverMoreName: TcxGridDBColumn
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100', '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081
         DataBinding.FieldName = 'PersonalDriverMoreName'
+        HeaderAlignmentVert = vaCenter
         Width = 70
       end
       object UnitForwardingName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1052#1077#1089#1090#1086' '#1086#1090#1087#1088#1072#1074#1082#1080')'
         DataBinding.FieldName = 'UnitForwardingName'
+        HeaderAlignmentVert = vaCenter
         Width = 60
       end
       object StartRunPlan: TcxGridDBColumn
         Caption = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1074#1099#1077#1079#1076#1072' '#1087#1083#1072#1085
         DataBinding.FieldName = 'StartRunPlan'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 45
       end
       object EndRunPlan: TcxGridDBColumn
         Caption = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1074#1086#1079#1074#1088#1072#1097#1077#1085#1080#1103' '#1087#1083#1072#1085
         DataBinding.FieldName = 'EndRunPlan'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 45
       end
       object StartRun: TcxGridDBColumn
         Caption = ' '#1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1074#1099#1077#1079#1076#1072' '#1092#1072#1082#1090
         DataBinding.FieldName = 'StartRun'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 45
       end
       object EndRun: TcxGridDBColumn
         Caption = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1074#1086#1079#1074#1088#1072#1097#1077#1085#1080#1103' '#1092#1072#1082#1090
         DataBinding.FieldName = 'EndRun'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 45
       end
       object HoursWork: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1095#1072#1089#1086#1074
         DataBinding.FieldName = 'HoursWork'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 45
       end
       object HoursAdd: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1073#1072#1074#1083#1077#1085#1085#1099#1093' '#1095#1072#1089#1086#1074
         DataBinding.FieldName = 'HoursAdd'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 45
       end
       object Comment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
+        HeaderAlignmentVert = vaCenter
         Width = 70
       end
     end
@@ -187,87 +213,21 @@ inherited TransportJournalForm: TTransportJournalForm
       item
         Component = Owner
         Properties.Strings = (
-          'Action'
-          'ActiveControl'
-          'Align'
-          'AlignWithMargins'
-          'AlphaBlend'
-          'AlphaBlendValue'
-          'Anchors'
-          'AutoScroll'
-          'AutoSize'
-          'BiDiMode'
-          'BorderIcons'
-          'BorderStyle'
-          'BorderWidth'
-          'Caption'
-          'ClientHeight'
-          'ClientWidth'
-          'Color'
-          'Constraints'
-          'Ctl3D'
-          'Cursor'
-          'CustomHint'
-          'DefaultMonitor'
-          'DockSite'
-          'DoubleBuffered'
-          'DragKind'
-          'DragMode'
-          'Enabled'
-          'Font'
-          'FormStyle'
-          'GlassFrame'
           'Height'
-          'HelpContext'
-          'HelpFile'
-          'HelpKeyword'
-          'HelpType'
-          'Hint'
-          'HorzScrollBar'
-          'Icon'
-          'KeyPreview'
           'Left'
-          'Margins'
-          'Menu'
-          'Name'
-          'ObjectMenuItem'
-          'OldCreateOrder'
-          'Padding'
-          'ParentBiDiMode'
-          'ParentCustomHint'
-          'ParentFont'
-          'PixelsPerInch'
-          'PopupMenu'
-          'PopupMode'
-          'PopupParent'
-          'Position'
-          'PrintScale'
-          'Scaled'
-          'ScreenSnap'
-          'ShowHint'
-          'SnapBuffer'
-          'Tag'
           'Top'
-          'Touch'
-          'TransparentColor'
-          'TransparentColorValue'
-          'UseDockManager'
-          'VertScrollBar'
-          'Visible'
-          'Width'
-          'WindowMenu'
-          'WindowState')
+          'Width')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 8
-    Top = 32
+    Top = 56
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -280,7 +240,7 @@ inherited TransportJournalForm: TTransportJournalForm
     ShowShortCutInHint = True
     UseSystemFont = True
     Left = 40
-    Top = 32
+    Top = 48
     DockControlHeights = (
       0
       0
@@ -379,7 +339,7 @@ inherited TransportJournalForm: TTransportJournalForm
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 72
-    Top = 32
+    Top = 56
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -519,7 +479,7 @@ inherited TransportJournalForm: TTransportJournalForm
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
     Left = 104
-    Top = 32
+    Top = 56
     object N1: TMenuItem
       Action = actComplete
     end
@@ -567,7 +527,10 @@ inherited TransportJournalForm: TTransportJournalForm
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     View = cxGridDBTableView
-    OnDblClickActionList = <>
+    OnDblClickActionList = <
+      item
+        Action = actUpdate
+      end>
     ActionItemList = <
       item
         Action = actUpdate
@@ -576,5 +539,11 @@ inherited TransportJournalForm: TTransportJournalForm
     SortImages = dmMain.SortImageList
     Left = 160
     Top = 200
+  end
+  object PeriodChoice: TPeriodChoice
+    DateStart = deStart
+    DateEnd = deEnd
+    Left = 512
+    Top = 32
   end
 end

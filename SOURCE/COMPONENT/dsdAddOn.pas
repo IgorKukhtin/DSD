@@ -127,7 +127,7 @@ type
     property Items[Index: Integer]: TControlListItem read GetItem write SetItem; default;
   end;
 
-  // Вызывает процедуру
+  // Вызывает процедуру сохранения для СОХРАНЕННОГО документа в случае изменения значений
   THeaderSaver = class(TComponent)
   private
     FControlList: TControlList;
@@ -832,8 +832,6 @@ end;
 procedure TRefreshAddOn.OnClose(Sender: TObject; var Action: TCloseAction);
 var i: integer;
 begin
-  if Assigned(FOnClose) then
-     FOnClose(Sender, Action);
   // Перечитываем и позиционируемся
   // Только сначала находим форму указанного типа
   for I := 0 to Screen.FormCount - 1 do
@@ -841,9 +839,11 @@ begin
          with Screen.Forms[i] do begin
            if Assigned(FindComponent(RefreshAction)) then
               TdsdDataSetRefresh(FindComponent(RefreshAction)).Execute;
-           if Assigned(FindComponent(DataSet)) and Assigned(FindComponent(FormParams)) then
-              TDataSet(FindComponent(DataSet)).Locate('Id', TdsdFormParams(FindComponent(FormParams)).ParamByName('Id').AsString, []);
+           if Assigned(FindComponent(DataSet)) and Assigned(Self.Owner.FindComponent(FormParams)) then
+              TDataSet(FindComponent(DataSet)).Locate('Id', TdsdFormParams(Self.Owner.FindComponent(FormParams)).ParamByName('Id').AsString, []);
          end;
+  if Assigned(FOnClose) then
+     FOnClose(Sender, Action);
 end;
 
 { TCustomDBControlAddOn }

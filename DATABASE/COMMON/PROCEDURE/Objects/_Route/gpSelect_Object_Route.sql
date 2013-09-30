@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_Route (TVarChar)
 
--- DROP FUNCTION gpSelect_Object_Route (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Route (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Route(
     IN inSession        TVarChar       -- сессия пользователя

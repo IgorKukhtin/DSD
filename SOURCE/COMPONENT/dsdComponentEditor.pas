@@ -113,7 +113,9 @@ end;
 procedure TDataTypeProperty.GetValues(Proc: TGetStrProc);
 begin
  // inherited;
+  Proc('ftBoolean');
   Proc('ftDateTime');
+  Proc('ftFloat');
   Proc('ftInteger');
   Proc('ftString');
 end;

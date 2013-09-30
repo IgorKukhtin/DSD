@@ -18,7 +18,8 @@ uses
   FormStorage in '..\SOURCE\FormStorage.pas',
   dsdAddOn in '..\SOURCE\COMPONENT\dsdAddOn.pas',
   MainForm in '..\SOURCE\MainForm.pas' {MainForm},
-  ChoicePeriod in '..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm};
+  ChoicePeriod in '..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm},
+  Defaults in '..\SOURCE\COMPONENT\Defaults.pas';
 
 {$R *.res}
 

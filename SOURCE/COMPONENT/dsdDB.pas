@@ -558,7 +558,7 @@ begin
           with TXSDateTime.Create() do
           try
             XSToNative(FValue); // convert from WideString
-            (Component as TcxDateEdit).Date := AsDateTime; // convert to TDateTime
+            (Component as TcxDateEdit).EditValue := AsDateTime;//AsDateTime; // convert to TDateTime
           finally
             Free;
           end;

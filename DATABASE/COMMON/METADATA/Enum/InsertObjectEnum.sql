@@ -9,7 +9,7 @@ BEGIN
    -- Ёто ¬иды норм дл€ топлива, не Enum, но нужны
    IF NOT EXISTS (SELECT * FROM Object where DescId = zc_Object_RateFuelKind())
    THEN
-       lpInsertUpdate_Object (0, zc_Object_RateFuelKind(), 1, 'Ћето');
+       PERFORM lpInsertUpdate_Object (0, zc_Object_RateFuelKind(), 1, 'Ћето');
    END IF;
 
    -- сохран€ютс€ элементы справочника (zc_Object_Process)

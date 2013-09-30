@@ -14,11 +14,18 @@
      $res .= '</FIELDS></METADATA><ROWDATA>';
 
      // Заполняем дата сет
-     while ($line = pg_fetch_array($dataset, null, PGSQL_ASSOC)) {
+     while ($line = pg_fetch_row($dataset)) {
         $i = 0;
         $res .= '<ROW';
         foreach ($line as $col_value) {
-           $res .= ' '.$fieldname[$i].'="'.str_replace('"', '&quot;', $col_value).'"'; 
+           if (pg_field_type($dataset, $i) == 'timestamptz')
+           {
+              $res .= ' '.$fieldname[$i].'="'.str_replace(' ', 'T', $col_value).'"';
+           }
+           else
+           {
+              $res .= ' '.$fieldname[$i].'="'.str_replace('"', '&quot;', $col_value).'"';
+           }; 
            $i++;
         }
         $res .= '/>';

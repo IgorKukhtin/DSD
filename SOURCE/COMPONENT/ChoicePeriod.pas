@@ -18,6 +18,7 @@ const
 
 type
 
+  // Компонент выбора периода
   TPeriodChoice = class(TComponent)
   private
     FDateStart: TcxDateEdit;
@@ -33,12 +34,12 @@ type
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
+    property onChange: TNotifyEvent read FonChange write FonChange;
+    procedure Execute;
     constructor Create(AOwner: TComponent); override;
   published
     property DateStart: TcxDateEdit read FDateStart write SetDateStart;
     property DateEnd: TcxDateEdit read FDateEnd write SetDateEnd;
-    property onChange: TNotifyEvent read FonChange write FonChange;
-    procedure Execute;
   end;
 
   TPeriodChoiceForm = class(TForm)

@@ -2,8 +2,8 @@ inherited CarForm: TCarForm
   Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1080
   ClientHeight = 367
   ClientWidth = 853
-  ExplicitWidth = 869
-  ExplicitHeight = 402
+  ExplicitWidth = 861
+  ExplicitHeight = 394
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -128,8 +128,8 @@ inherited CarForm: TCarForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -325,13 +325,27 @@ inherited CarForm: TCarForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
-          ParamType = ptOutput
+          ParamType = ptInput
         end
         item
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'DriverId'
+          Component = ClientDataSet
+          ComponentItem = 'PersonalDriverId'
           DataType = ftInteger
+          ParamType = ptOutput
+        end
+        item
+          Name = 'DriverName'
+          Component = ClientDataSet
+          ComponentItem = 'PersonalDriverName'
+          DataType = ftString
           ParamType = ptOutput
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

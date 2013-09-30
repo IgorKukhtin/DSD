@@ -24,7 +24,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dxBarExtItems;
+  dxBarExtItems, ChoicePeriod, cxLabel;
 
 type
   TTransportJournalForm = class(TParentForm)
@@ -79,6 +79,9 @@ type
     Comment: TcxGridDBColumn;
     PersonalDriverMoreName: TcxGridDBColumn;
     UnitForwardingName: TcxGridDBColumn;
+    PeriodChoice: TPeriodChoice;
+    cxLabel1: TcxLabel;
+    cxLabel2: TcxLabel;
   private
   public
   end;

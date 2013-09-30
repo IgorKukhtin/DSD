@@ -1,6 +1,6 @@
 -- Function: gpGet_Object_Route (Integer, TVarChar)
 
--- DROP FUNCTION gpGet_Object_Route (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_Route (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Route(
     IN inId             Integer,       -- ключ объекта <Маршрут>

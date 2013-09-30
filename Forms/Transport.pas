@@ -23,15 +23,12 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  cxSplitter, cxCurrencyEdit;
+  cxSplitter, cxCurrencyEdit, DataModul, dsdAddOn, dxBarExtItems;
 
 type
   TTransportForm = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMovementItem: TdsdStoredProc;
-    dxBarManager: TdxBarManager;
-    dxBarManagerBar: TdxBar;
-    bbRefresh: TdxBarButton;
     cxPropertiesStore: TcxPropertiesStore;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
@@ -72,7 +69,6 @@ type
     actUpdateDataSet: TdsdUpdateDataSet;
     spInsertUpdateMIMaster: TdsdStoredProc;
     actPrint: TdsdPrintAction;
-    bbPrint: TdxBarButton;
     frxDBDataset: TfrxDBDataset;
     colDebetAccountGroupCode: TcxGridDBColumn;
     colDebetAccountGroupName: TcxGridDBColumn;
@@ -119,7 +115,6 @@ type
     colObjectCostId: TcxGridDBColumn;
     colPrice_comlete: TcxGridDBColumn;
     dsdGridToExcel: TdsdGridToExcel;
-    bbGridToExcel: TdxBarButton;
     edPersonalDriver: TcxButtonEdit;
     cxLabel5: TcxLabel;
     edPersonalDriverMore: TcxButtonEdit;
@@ -151,6 +146,20 @@ type
     colñhAmountColdDistance: TcxGridDBColumn;
     colñhAmountFuel: TcxGridDBColumn;
     spInsertUpdateMIChild: TdsdStoredProc;
+    GuidesFiller: TGuidesFiller;
+    HeaderSaver: THeaderSaver;
+    BooleanStoredProcAction: TBooleanStoredProcAction;
+    actInsertUpdateMovement: TdsdExecStoredProc;
+    dxBarManager: TdxBarManager;
+    dxBarManagerBar: TdxBar;
+    bbRefresh: TdxBarButton;
+    bbPrint: TdxBarButton;
+    bbBooleanAction: TdxBarButton;
+    bbStatic: TdxBarStatic;
+    bbGridToExel: TdxBarButton;
+    bbEntryToGrid: TdxBarButton;
+    bbInsertUpdateMovement: TdxBarButton;
+    RefreshAddOn: TRefreshAddOn;
   private
   public
   end;

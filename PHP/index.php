@@ -74,8 +74,15 @@ else
     $i = 0;
     while ($line = pg_fetch_array($result, null, PGSQL_ASSOC)) {
         foreach ($line as $col_value) {
-            $res .=  ' ' . pg_field_name($result, $i) . '="' . $col_value . '"';
-            $i = $i + 1;
+           if (pg_field_type($result, $i) == 'timestamptz')
+           {
+              $res .=  ' ' . pg_field_name($result, $i) . '="' . str_replace(' ', 'T', $col_value) . '"';
+           }
+           else
+           {
+              $res .=  ' ' . pg_field_name($result, $i) . '="' . htmlspecialchars($col_value, ENT_COMPAT, 'WIN-1251') . '"';
+           };
+           $i = $i + 1;
         }
     }
     $res .= "/>";

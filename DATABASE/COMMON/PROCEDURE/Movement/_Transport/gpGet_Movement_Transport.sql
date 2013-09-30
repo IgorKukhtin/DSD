@@ -1,6 +1,6 @@
 -- Function: gpGet_Movement_Transport()
 
--- DROP FUNCTION gpGet_Movement_Transport (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Transport (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Transport(
     IN inMovementId        Integer  , -- ключ Документа
@@ -62,7 +62,8 @@ BEGIN
    
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
                LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = 5
-               LEFT JOIN (SELECT CAST (MAX (Movement.InvNumber) AS Integer) AS InvNumber FROM Movement WHERE Movement.DescId = zc_Movement_Transport()) AS tmpMovement_InvNumber ON 1 = 1;
+               LEFT JOIN (SELECT CAST (MAX (Movement.InvNumber) AS Integer) AS InvNumber 
+                         FROM Movement WHERE Movement.DescId = zc_Movement_Transport()) AS tmpMovement_InvNumber ON 1 = 1;
 
      ELSE
 
@@ -90,10 +91,10 @@ BEGIN
            , Object_CarTrailer.Id        AS CarTrailerId
            , Object_CarTrailer.ValueData AS CarTrailerName
 
-           , Object_PersonalDriver.Id        AS PersonalDriverId
+           , Object_PersonalDriver.PersonalId        AS PersonalDriverId
            , Object_PersonalDriver.ValueData AS PersonalDriverName
 
-           , Object_PersonalDriverMore.Id        AS PersonalDriverMoreId
+           , Object_PersonalDriverMore.PersonalId        AS PersonalDriverMoreId
            , Object_PersonalDriverMore.ValueData AS PersonalDriverMoreName
 
            , Object_UnitForwarding.Id        AS UnitForwardingId
@@ -143,12 +144,12 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
-            LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
+            LEFT JOIN PersonalMember_View AS Object_PersonalDriver ON Object_PersonalDriver.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriverMore
                                          ON MovementLinkObject_PersonalDriverMore.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalDriverMore.DescId = zc_MovementLinkObject_PersonalDriverMore()
-            LEFT JOIN Object AS Object_PersonalDriverMore ON Object_PersonalDriverMore.Id = MovementLinkObject_PersonalDriverMore.ObjectId
+            LEFT JOIN PersonalMember_View AS Object_PersonalDriverMore ON Object_PersonalDriverMore.PersonalId = MovementLinkObject_PersonalDriverMore.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
                                          ON MovementLinkObject_UnitForwarding.MovementId = Movement.Id

@@ -1,22 +1,21 @@
 ﻿inherited TransportForm: TTransportForm
   Caption = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
   ClientHeight = 489
-  ClientWidth = 1010
+  ClientWidth = 996
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1026
-  ExplicitHeight = 524
+  ExplicitWidth = 1004
+  ExplicitHeight = 516
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1010
+    Width = 996
     Height = 84
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 995
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 20
@@ -32,7 +31,7 @@
     object edOperDate: TcxDateEdit
       Left = 8
       Top = 56
-      TabOrder = 2
+      TabOrder = 1
       Width = 101
     end
     object cxLabel2: TcxLabel
@@ -48,7 +47,7 @@
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 4
+      TabOrder = 12
       Width = 182
     end
     object edCar: TcxButtonEdit
@@ -59,7 +58,7 @@
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 5
+      TabOrder = 2
       Width = 145
     end
     object cxLabel3: TcxLabel
@@ -80,7 +79,7 @@
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 8
+      TabOrder = 3
       Width = 145
     end
     object cxLabel5: TcxLabel
@@ -96,7 +95,7 @@
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 10
+      TabOrder = 11
       Width = 145
     end
     object cxLabel6: TcxLabel
@@ -112,7 +111,7 @@
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 12
+      TabOrder = 10
       Width = 145
     end
     object cxLabel7: TcxLabel
@@ -123,7 +122,10 @@
     object edStartRunPlan: TcxDateEdit
       Left = 275
       Top = 20
-      TabOrder = 14
+      Properties.DateButtons = [btnClear, btnToday]
+      Properties.InputKind = ikMask
+      Properties.Kind = ckDateTime
+      TabOrder = 4
       Width = 145
     end
     object cxLabel8: TcxLabel
@@ -134,7 +136,8 @@
     object edEndRunPlan: TcxDateEdit
       Left = 275
       Top = 56
-      TabOrder = 16
+      Properties.Kind = ckDateTime
+      TabOrder = 5
       Width = 145
     end
     object cxLabel9: TcxLabel
@@ -150,7 +153,9 @@
     object edStartRun: TcxDateEdit
       Left = 426
       Top = 20
-      TabOrder = 19
+      Properties.InputKind = ikMask
+      Properties.Kind = ckDateTime
+      TabOrder = 6
       Width = 147
     end
     object cxLabel11: TcxLabel
@@ -161,13 +166,14 @@
     object edEndRun: TcxDateEdit
       Left = 426
       Top = 56
-      TabOrder = 21
+      Properties.Kind = ckDateTime
+      TabOrder = 7
       Width = 147
     end
     object edComment: TcxTextEdit
       Left = 812
       Top = 56
-      TabOrder = 22
+      TabOrder = 13
       Width = 182
     end
     object cxLabel12: TcxLabel
@@ -183,7 +189,7 @@
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
-      TabOrder = 24
+      TabOrder = 8
       Width = 71
     end
     object cxLabel13: TcxLabel
@@ -198,7 +204,7 @@
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
-      TabOrder = 26
+      TabOrder = 9
       Width = 71
     end
     object cxLabel14: TcxLabel
@@ -210,31 +216,25 @@
   object cxPageControl1: TcxPageControl
     Left = 0
     Top = 110
-    Width = 1010
+    Width = 996
     Height = 379
     Align = alClient
-    TabOrder = 5
+    TabOrder = 1
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 995
-    ExplicitHeight = 332
     ClientRectBottom = 379
-    ClientRectRight = 1010
+    ClientRectRight = 996
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 995
-      ExplicitHeight = 308
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1010
-        Height = 199
+        Width = 996
+        Height = 210
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 995
-        ExplicitHeight = 152
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -290,52 +290,61 @@
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsView.ColumnAutoWidth = True
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object colRouteCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'RouteCode'
             HeaderAlignmentHorz = taCenter
-            Width = 40
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object colRouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090
             DataBinding.FieldName = 'RouteName'
-            HeaderAlignmentHorz = taCenter
-            Width = 120
+            HeaderAlignmentVert = vaCenter
+            Width = 125
           end
           object colAmount: TcxGridDBColumn
             Caption = #1055#1088#1086#1073#1077#1075', '#1082#1084
             DataBinding.FieldName = 'Amount'
-            HeaderAlignmentHorz = taCenter
-            Width = 70
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
+            Width = 136
           end
           object colStartOdometre: TcxGridDBColumn
             Caption = #1057#1087#1080#1076#1086#1084#1077#1090#1088' '#1085#1072#1095#1072#1083#1100#1085#1086#1077' '#1087#1086#1082#1072#1079#1072#1085#1080#1077', '#1082#1084
             DataBinding.FieldName = 'StartOdometre'
-            Width = 90
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
+            Width = 176
           end
           object colEndOdometre: TcxGridDBColumn
             Caption = #1057#1087#1080#1076#1086#1084#1077#1090#1088' '#1082#1086#1085#1077#1095#1085#1086#1077' '#1087#1086#1082#1072#1079#1072#1085#1080#1077', '#1082#1084
             DataBinding.FieldName = 'EndOdometre'
-            HeaderAlignmentHorz = taCenter
-            Width = 90
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
+            Width = 175
           end
           object colWeight: TcxGridDBColumn
             Caption = #1042#1077#1089' '#1075#1088#1091#1079#1072', '#1082#1075
             DataBinding.FieldName = 'Weight'
-            HeaderAlignmentHorz = taCenter
-            Width = 50
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
+            Width = 97
           end
           object colFreightName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1079#1072
             DataBinding.FieldName = 'FreightName'
-            HeaderAlignmentHorz = taCenter
-            Width = 56
+            HeaderAlignmentVert = vaCenter
+            Width = 110
           end
           object colRouteKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1084#1072#1088#1096#1088#1091#1090#1072
             DataBinding.FieldName = 'RouteKindName'
-            HeaderAlignmentHorz = taCenter
-            Width = 55
+            HeaderAlignmentVert = vaCenter
+            Width = 107
           end
         end
         object cxGridLevel: TcxGridLevel
@@ -344,13 +353,11 @@
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 207
-        Width = 1010
-        Height = 148
+        Top = 215
+        Width = 996
+        Height = 140
         Align = alBottom
         TabOrder = 1
-        ExplicitTop = 160
-        ExplicitWidth = 995
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -402,60 +409,82 @@
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsView.ColumnAutoWidth = True
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object colсhFuelCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'FuelCode'
-            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 56
           end
           object colсhFuelName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
             DataBinding.FieldName = 'FuelName'
-            HeaderAlignmentHorz = taCenter
-            Width = 150
+            HeaderAlignmentVert = vaCenter
+            Width = 144
           end
           object colсhAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' '#1092#1072#1082#1090#1091' '
             DataBinding.FieldName = 'Amount'
-            HeaderAlignmentHorz = taCenter
-            Width = 84
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
+            Width = 88
           end
           object colсhAmount_calc: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1095#1077#1090
             DataBinding.FieldName = 'Amount_calc'
-            HeaderAlignmentHorz = taCenter
-            Width = 70
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
+            Width = 79
           end
           object colсhCalculated: TcxGridDBColumn
             Caption = #1055#1086' '#1085#1086#1088#1084#1077'('#1076#1072')'
             DataBinding.FieldName = 'Calculated'
-            HeaderAlignmentHorz = taCenter
-            Width = 50
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
+            Width = 75
           end
           object colсhRateFuelKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1085#1086#1088#1084#1099' '#1076#1083#1103' '#1090#1086#1087#1083#1080#1074#1072
             DataBinding.FieldName = 'RateFuelKindName'
-            Width = 50
+            HeaderAlignmentVert = vaCenter
+            Width = 75
           end
           object colсhColdHour: TcxGridDBColumn
             Caption = #1061#1086#1083#1086#1076', '#1092#1072#1082#1090' '#1095#1072#1089#1086#1074
             DataBinding.FieldName = 'ColdHour'
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
+            Width = 95
           end
           object colсhColdDistance: TcxGridDBColumn
             Caption = #1061#1086#1083#1086#1076', '#1092#1072#1082#1090' '#1082#1084
             DataBinding.FieldName = 'ColdDistance'
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
+            Width = 97
           end
           object colсhAmountColdHour: TcxGridDBColumn
             Caption = #1061#1086#1083#1086#1076', '#1085#1086#1088#1084#1072' '#1074' '#1095#1072#1089
             DataBinding.FieldName = 'AmountColdHour'
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
+            Width = 96
           end
           object colсhAmountColdDistance: TcxGridDBColumn
             Caption = #1061#1086#1083#1086#1076', '#1085#1086#1088#1084#1072' '#1085#1072' 100 '#1082#1084
             DataBinding.FieldName = 'AmountColdDistance'
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
+            Width = 95
           end
           object colсhAmountFuel: TcxGridDBColumn
             Caption = #1056#1072#1089#1093#1086#1076', '#1085#1086#1088#1084#1072' '#1085#1072' 100 '#1082#1084
             DataBinding.FieldName = 'AmountFuel'
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
+            Width = 96
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -464,29 +493,23 @@
       end
       object cxSplitterChild: TcxSplitter
         Left = 0
-        Top = 199
-        Width = 1010
-        Height = 8
+        Top = 210
+        Width = 996
+        Height = 5
         AlignSplitter = salBottom
         Control = cxGridChild
-        ExplicitTop = 152
-        ExplicitWidth = 995
       end
     end
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitWidth = 995
-      ExplicitHeight = 308
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 1010
+        Width = 996
         Height = 355
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 995
-        ExplicitHeight = 308
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -734,72 +757,6 @@
     Left = 225
     Top = 191
   end
-  object dxBarManager: TdxBarManager
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
-    Font.Style = []
-    Categories.Strings = (
-      'Default')
-    Categories.ItemsVisibles = (
-      2)
-    Categories.Visibles = (
-      True)
-    ImageOptions.Images = dmMain.ImageList
-    PopupMenuLinks = <>
-    ShowShortCutInHint = True
-    UseSystemFont = True
-    Left = 184
-    Top = 250
-    DockControlHeights = (
-      0
-      0
-      26
-      0)
-    object dxBarManagerBar: TdxBar
-      Caption = 'Custom'
-      CaptionButtons = <>
-      DockedDockingStyle = dsTop
-      DockedLeft = 0
-      DockedTop = 0
-      DockingStyle = dsTop
-      FloatLeft = 671
-      FloatTop = 8
-      FloatClientWidth = 51
-      FloatClientHeight = 71
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGridToExcel'
-        end>
-      OneOnRow = True
-      Row = 0
-      UseOwnFont = False
-      Visible = True
-      WholeRow = False
-    end
-    object bbRefresh: TdxBarButton
-      Action = actRefresh
-      Category = 0
-    end
-    object bbPrint: TdxBarButton
-      Action = actPrint
-      Category = 0
-    end
-    object bbGridToExcel: TdxBarButton
-      Action = dsdGridToExcel
-      Category = 0
-    end
-  end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
@@ -868,6 +825,36 @@
       ImageIndex = 6
       ShortCut = 16472
     end
+    object BooleanStoredProcAction: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      StoredProc = spSelectMovementItem
+      StoredProcList = <
+        item
+          StoredProc = spSelectMovementItem
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 26
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 25
+      ImageIndexFalse = 26
+    end
+    object actInsertUpdateMovement: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = spInsertUpdateMovement
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end>
+      Caption = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 14
+      ShortCut = 113
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -887,23 +874,41 @@
     Params = <
       item
         Name = 'Key'
-        Component = edCar
+        Component = GuidesCar
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'TextValue'
-        Component = edCar
+        Component = GuidesCar
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'DriverId'
+        Component = GuidesPersonalDriver
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'DriverName'
+        Component = GuidesPersonalDriver
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptOutput
+        Value = ''
       end>
-    Left = 218
-    Top = 11
+    Left = 250
+    Top = 35
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_ProductionUnion'
+    StoredProcName = 'gpGet_Movement_Transport'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -947,48 +952,64 @@
       end
       item
         Name = 'CarTrailerId'
+        Component = GuidesCarTrailer
+        ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
         Value = ''
       end
       item
         Name = 'CarTrailerName'
+        Component = GuidesCarTrailer
+        ComponentItem = 'TextValue'
         DataType = ftInteger
         ParamType = ptOutput
         Value = ''
       end
       item
         Name = 'PersonalDriverId'
+        Component = GuidesPersonalDriver
+        ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
         Value = ''
       end
       item
         Name = 'PersonalDriverName'
+        Component = GuidesPersonalDriver
+        ComponentItem = 'TextValue'
         DataType = ftInteger
         ParamType = ptOutput
         Value = ''
       end
       item
         Name = 'PersonalDriverMoreId'
+        Component = GuidesPersonalDriverMore
+        ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
         Value = ''
       end
       item
         Name = 'PersonalDriverMoreName'
+        Component = GuidesPersonalDriverMore
+        ComponentItem = 'TextValue'
         DataType = ftInteger
         ParamType = ptOutput
         Value = ''
       end
       item
         Name = 'UnitForwardingId'
+        Component = GuidesUnitForwarding
+        ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
         Value = ''
       end
       item
         Name = 'UnitForwardingName'
+        Component = GuidesUnitForwarding
+        ComponentItem = 'TextValue'
         DataType = ftInteger
         ParamType = ptOutput
         Value = ''
@@ -1024,21 +1045,21 @@
       item
         Name = 'HoursWork'
         Component = edHoursWork
-        DataType = ftInteger
+        DataType = ftFloat
         ParamType = ptOutput
         Value = 0.000000000000000000
       end
       item
         Name = 'HoursAdd'
         Component = edHoursAdd
-        DataType = ftInteger
+        DataType = ftFloat
         ParamType = ptOutput
         Value = 0.000000000000000000
       end
       item
         Name = 'Comment'
         Component = edComment
-        DataType = ftInteger
+        DataType = ftString
         ParamType = ptOutput
         Value = ''
       end>
@@ -1171,12 +1192,12 @@
     PacketRecords = 0
     Params = <>
     Left = 16
-    Top = 361
+    Top = 345
   end
   object ChildDS: TDataSource
     DataSet = ChildCDS
     Left = 44
-    Top = 362
+    Top = 346
   end
   object spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Transport'
@@ -1206,63 +1227,58 @@
         Value = 0d
       end
       item
-        Name = 'inOperDatePartner'
+        Name = 'inStartRunPlan'
+        Component = edStartRunPlan
         DataType = ftDateTime
         ParamType = ptInput
         Value = 0d
       end
       item
-        Name = 'inInvNumberPartner'
+        Name = 'inEndRunPlan'
+        Component = edEndRunPlan
+        DataType = ftDateTime
+        ParamType = ptInput
+        Value = 0d
+      end
+      item
+        Name = 'inStartRun'
+        Component = edStartRun
+        DataType = ftDateTime
+        ParamType = ptInput
+        Value = 0d
+      end
+      item
+        Name = 'inEndRun'
+        Component = edEndRun
+        DataType = ftDateTime
+        ParamType = ptInput
+        Value = 0d
+      end
+      item
+        Name = 'inHoursAdd'
+        Component = edHoursAdd
+        DataType = ftFloat
+        ParamType = ptInput
+        Value = 0.000000000000000000
+      end
+      item
+        Name = 'inComment'
+        Component = edComment
         DataType = ftString
         ParamType = ptInput
         Value = ''
       end
       item
-        Name = 'inPriceWithVAT'
-        DataType = ftBoolean
-        ParamType = ptInput
-        Value = 'False'
-      end
-      item
-        Name = 'inVATPercent'
-        DataType = ftFloat
-        ParamType = ptInput
-        Value = 0.000000000000000000
-      end
-      item
-        Name = 'inChangePercent'
-        DataType = ftFloat
-        ParamType = ptInput
-        Value = 0.000000000000000000
-      end
-      item
-        Name = 'inFromId'
-        ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptInput
-        Value = ''
-      end
-      item
-        Name = 'inToId'
-        ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptInput
-        Value = ''
-      end
-      item
-        Name = 'inPaidKindId'
-        DataType = ftInteger
-        ParamType = ptInput
-        Value = ''
-      end
-      item
-        Name = 'inContractId'
-        DataType = ftInteger
-        ParamType = ptInput
-        Value = ''
-      end
-      item
         Name = 'inCarId'
+        Component = GuidesCar
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'inCarTrailerId'
+        Component = GuidesCarTrailer
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptInput
@@ -1270,13 +1286,23 @@
       end
       item
         Name = 'inPersonalDriverId'
+        Component = GuidesPersonalDriver
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptInput
         Value = ''
       end
       item
-        Name = 'inPersonalPackerId'
+        Name = 'inPersonalDriverMoreId'
+        Component = GuidesPersonalDriverMore
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'inUnitForwardingId'
+        Component = GuidesUnitForwarding
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptInput
@@ -1292,17 +1318,19 @@
     Params = <
       item
         Name = 'Key'
-        Component = edCarTrailer
+        Component = GuidesCarTrailer
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'TextValue'
-        Component = edCarTrailer
+        Component = GuidesCarTrailer
         ComponentItem = 'TextValue'
-        DataType = ftInteger
+        DataType = ftString
         ParamType = ptInput
+        Value = ''
       end>
     Left = 730
     Top = 3
@@ -1314,17 +1342,19 @@
     Params = <
       item
         Name = 'Key'
-        Component = edPersonalDriver
+        Component = GuidesPersonalDriver
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'TextValue'
-        Component = edPersonalDriver
+        Component = GuidesPersonalDriver
         ComponentItem = 'TextValue'
-        DataType = ftInteger
+        DataType = ftString
         ParamType = ptInput
+        Value = ''
       end>
     Left = 178
     Top = 43
@@ -1336,17 +1366,19 @@
     Params = <
       item
         Name = 'Key'
-        Component = edPersonalDriverMore
+        Component = GuidesPersonalDriverMore
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'TextValue'
-        Component = edPersonalDriverMore
+        Component = GuidesPersonalDriverMore
         ComponentItem = 'TextValue'
-        DataType = ftInteger
+        DataType = ftString
         ParamType = ptInput
+        Value = ''
       end>
     Left = 674
     Top = 59
@@ -1358,17 +1390,19 @@
     Params = <
       item
         Name = 'Key'
-        Component = edUnitForwarding
+        Component = GuidesUnitForwarding
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'TextValue'
-        Component = edUnitForwarding
+        Component = GuidesUnitForwarding
         ComponentItem = 'TextValue'
-        DataType = ftInteger
+        DataType = ftString
         ParamType = ptInput
+        Value = ''
       end>
     Left = 818
     Top = 83
@@ -1463,7 +1497,183 @@
         DataType = ftInteger
         ParamType = ptOutput
       end>
-    Left = 86
-    Top = 376
+    Left = 78
+    Top = 352
+  end
+  object GuidesFiller: TGuidesFiller
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    IdParam.DataType = ftInteger
+    IdParam.ParamType = ptOutput
+    IdParam.Value = '0'
+    GuidesList = <
+      item
+        Guides = GuidesCar
+      end
+      item
+        Guides = GuidesPersonalDriver
+      end
+      item
+        Guides = GuidesUnitForwarding
+      end>
+    ActionItemList = <
+      item
+        Action = actInsertUpdateMovement
+      end>
+    Left = 288
+    Top = 80
+  end
+  object HeaderSaver: THeaderSaver
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    IdParam.DataType = ftInteger
+    IdParam.ParamType = ptOutput
+    IdParam.Value = '0'
+    StoredProc = spInsertUpdateMovement
+    ControlList = <
+      item
+        Control = edCar
+      end
+      item
+        Control = edOperDate
+      end
+      item
+        Control = edStartRun
+      end
+      item
+        Control = edStartRunPlan
+      end
+      item
+        Control = edEndRun
+      end
+      item
+        Control = edEndRunPlan
+      end
+      item
+        Control = edPersonalDriver
+      end
+      item
+        Control = edPersonalDriverMore
+      end
+      item
+        Control = edUnitForwarding
+      end
+      item
+        Control = edComment
+      end
+      item
+        Control = edCarTrailer
+      end>
+    Left = 376
+    Top = 104
+  end
+  object dxBarManager: TdxBarManager
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    Categories.Strings = (
+      'Default')
+    Categories.ItemsVisibles = (
+      2)
+    Categories.Visibles = (
+      True)
+    ImageOptions.Images = dmMain.ImageList
+    PopupMenuLinks = <>
+    ShowShortCutInHint = True
+    UseSystemFont = True
+    Left = 16
+    Top = 144
+    DockControlHeights = (
+      0
+      0
+      26
+      0)
+    object dxBarManagerBar: TdxBar
+      AllowClose = False
+      Caption = 'Custom'
+      CaptionButtons = <>
+      DockedDockingStyle = dsTop
+      DockedLeft = 0
+      DockedTop = 0
+      DockingStyle = dsTop
+      FloatLeft = 671
+      FloatTop = 8
+      FloatClientWidth = 51
+      FloatClientHeight = 71
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbBooleanAction'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdateMovement'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEntryToGrid'
+        end>
+      OneOnRow = True
+      Row = 0
+      UseOwnFont = False
+      Visible = True
+      WholeRow = False
+    end
+    object bbRefresh: TdxBarButton
+      Action = actRefresh
+      Category = 0
+    end
+    object bbPrint: TdxBarButton
+      Action = actPrint
+      Category = 0
+    end
+    object bbBooleanAction: TdxBarButton
+      Action = BooleanStoredProcAction
+      Category = 0
+    end
+    object bbStatic: TdxBarStatic
+      Caption = '     '
+      Category = 0
+      Visible = ivAlways
+    end
+    object bbGridToExel: TdxBarButton
+      Action = dsdGridToExcel
+      Category = 0
+    end
+    object bbEntryToGrid: TdxBarButton
+      Category = 0
+      Visible = ivAlways
+    end
+    object bbInsertUpdateMovement: TdxBarButton
+      Action = actInsertUpdateMovement
+      Category = 0
+    end
+  end
+  object RefreshAddOn: TRefreshAddOn
+    FormName = 'TransportJournalForm'
+    DataSet = 'ClientDataSet'
+    RefreshAction = 'actRefresh'
+    FormParams = 'FormParams'
+    Left = 584
+    Top = 88
   end
 end
