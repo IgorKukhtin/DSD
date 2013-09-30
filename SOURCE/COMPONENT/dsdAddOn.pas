@@ -506,7 +506,8 @@ end;
 procedure TdsdDBViewAddOn.OnKeyPress(Sender: TObject; var Key: Char);
 begin
   // если колонка не редактируема и введена буква или BackSpace то обрабатываем установку фильтра
-  if {TcxGridDBColumn(FView.Controller.FocusedColumn).Properties.ReadOnly and} (Key > #31) then begin
+  if ((Assigned(TcxGridDBColumn(FView.Controller.FocusedColumn).Properties) and TcxGridDBColumn(FView.Controller.FocusedColumn).Properties.ReadOnly)
+     or not TcxGridDBColumn(FView.Controller.FocusedColumn).Options.Editing) and (Key > #31) then begin
      lpSetEdFilterPos(Char(Key));
      Key := #0;
   end;

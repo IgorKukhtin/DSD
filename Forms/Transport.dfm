@@ -5,7 +5,7 @@
   KeyPreview = True
   PopupMenu = PopupMenu
   ExplicitLeft = -103
-  ExplicitTop = -32
+  ExplicitTop = -141
   ExplicitWidth = 1004
   ExplicitHeight = 516
   PixelsPerInch = 96
@@ -432,6 +432,12 @@
               Kind = skSum
             end>
           DataController.Summary.SummaryGroups = <>
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Inserting = False
           OptionsView.ColumnAutoWidth = True
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
@@ -774,9 +780,10 @@
       end
       item
         Name = 'inShowAll'
+        Component = BooleanStoredProcAction
         DataType = ftBoolean
         ParamType = ptInput
-        Value = 'False'
+        Value = False
       end>
     Left = 225
     Top = 191
@@ -965,6 +972,16 @@
           ParamType = ptOutput
         end>
       isShowModal = True
+    end
+    object UpdateChildDS: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      StoredProc = spInsertUpdateMIChild
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIChild
+        end>
+      Caption = 'UpdateChildDS'
+      DataSource = ChildDS
     end
   end
   object MasterDS: TDataSource
@@ -1563,7 +1580,7 @@
         Name = 'inCalculated'
         Component = ChildCDS
         ComponentItem = 'Calculated'
-        DataType = ftInteger
+        DataType = ftBoolean
         ParamType = ptInput
       end
       item
@@ -1599,21 +1616,21 @@
         Component = ChildCDS
         ComponentItem = 'AmountColdDistance'
         DataType = ftFloat
-        ParamType = ptOutput
+        ParamType = ptInput
       end
       item
         Name = 'inAmountFuel'
         Component = ChildCDS
         ComponentItem = 'AmountFuel'
         DataType = ftFloat
-        ParamType = ptOutput
+        ParamType = ptInput
       end
       item
         Name = 'inRateFuelKindId'
         Component = ChildCDS
         ComponentItem = 'RateFuelKindId'
         DataType = ftInteger
-        ParamType = ptOutput
+        ParamType = ptInput
       end>
     Left = 78
     Top = 352
@@ -1808,5 +1825,13 @@
     SortImages = dmMain.SortImageList
     Left = 312
     Top = 280
+  end
+  object ChildViewAddOn: TdsdDBViewAddOn
+    View = cxGridDBTableView1
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    Left = 224
+    Top = 440
   end
 end

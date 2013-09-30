@@ -164,6 +164,8 @@ type
     RouteChoiceForm: TOpenChoiceForm;
     MasterViewAddOn: TdsdDBViewAddOn;
     FreightChoiceForm: TOpenChoiceForm;
+    ChildViewAddOn: TdsdDBViewAddOn;
+    UpdateChildDS: TdsdUpdateDataSet;
   private
   public
   end;

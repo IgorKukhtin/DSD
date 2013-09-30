@@ -93,6 +93,7 @@ BEGIN
             , tmpRateFuel.AmountColdDistance * (1 + COALESCE (ObjectFloat_Tax.ValueData, 0) / 100) AS AmountColdDistance
             , tmpRateFuel.AmountFuel         * (1 + COALESCE (ObjectFloat_Tax.ValueData, 0) / 100) AS AmountFuel
             
+            , Object_RateFuelKind.Id         AS RateFuelKindId
             , Object_RateFuelKind.ValueData  AS RateFuelKindName
 
             , FALSE isErased
@@ -182,6 +183,7 @@ BEGIN
             , MIFloat_AmountColdDistance.ValueData  AS AmountColdDistance
             , MIFloat_AmountFuel.ValueData          AS AmountFuel
             
+            , Object_RateFuelKind.Id         AS RateFuelKindId
             , Object_RateFuelKind.ValueData  AS RateFuelKindName
 
             , MovementItem.isErased
