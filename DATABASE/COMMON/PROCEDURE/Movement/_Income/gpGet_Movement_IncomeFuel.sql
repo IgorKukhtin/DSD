@@ -1,6 +1,6 @@
--- Function: gpGet_Movement_IncomeFuel()
+-- Function: gpGet_Movement_IncomeFuel (Integer, TVarChar)
 
--- DROP FUNCTION gpGet_Movement_IncomeFuel (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_IncomeFuel (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_IncomeFuel(
     IN inMovementId        Integer  , -- ключ Документа
@@ -64,8 +64,8 @@ BEGIN
              , Object_PaidKind.ValueData         AS PaidKindName
              , Object_Contract.Id                AS ContractId
              , Object_Contract.ValueData         AS ContractName
-             , Object_PersonalDriver.Id          AS PersonalDriverId
-             , Object_PersonalDriver.ValueData   AS PersonalDriverName
+             , View_PersonalDriver.PersonalId    AS PersonalDriverId
+             , View_PersonalDriver.PersonalName  AS PersonalDriverName
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -98,7 +98,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
-            LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
+            LEFT JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Income();
@@ -112,6 +112,7 @@ ALTER FUNCTION gpGet_Movement_IncomeFuel (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.09.13                                        * add Object_Personal_View
  29.09.13                                        * add lfGet_InvNumber
  27.09.13                                        *
 */

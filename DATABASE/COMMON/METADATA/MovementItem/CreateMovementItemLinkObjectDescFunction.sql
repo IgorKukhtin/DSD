@@ -42,7 +42,7 @@ INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
 
 CREATE OR REPLACE FUNCTION zc_MILinkObject_Car() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Car'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
-  SELECT 'zc_MILinkObject_Car', ' Автомобиль ' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Car');
+  SELECT 'zc_MILinkObject_Car', 'Автомобиль' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Car');
 
 
 /*-------------------------------------------------------------------------------

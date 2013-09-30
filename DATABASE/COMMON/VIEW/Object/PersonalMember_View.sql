@@ -1,7 +1,7 @@
 -- View: PersonalMember_View
 
--- DROP VIEW PersonalMember_View;
-
+DROP VIEW IF EXISTS PersonalMember_View;
+/*
 CREATE OR REPLACE VIEW PersonalMember_View AS 
       SELECT ObjectMember.*,
              ObjectLink_Personal_Member.ObjectId AS PersonalId
@@ -13,3 +13,14 @@ CREATE OR REPLACE VIEW PersonalMember_View AS
 
 ALTER TABLE PersonalMember_View
   OWNER TO postgres;
+*/
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.09.13                                        *
+*/
+
+-- тест
+-- SELECT * FROM PersonalMember_View

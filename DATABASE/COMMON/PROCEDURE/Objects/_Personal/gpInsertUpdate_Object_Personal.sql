@@ -31,7 +31,7 @@ BEGIN
 
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Personal(), vbCode, '');
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Personal(), 0, '');
    -- сохранили связь с <физ.лицом>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_Member(), ioId, inMemberId);
    -- сохранили связь с <должностью>
@@ -58,6 +58,7 @@ ALTER FUNCTION gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Intege
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.09.13                                         * zc_Object_Personal - not ObjectCode
  25.09.13         * add _PersonalGroup; remove _Juridical, _Business              
  06.09.13                         * inName - УБРАЛ. Не нашел для него применения
  24.07.13                                        * inName - БЫТЬ !!! или хотя бы vbMemberName

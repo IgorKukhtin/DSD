@@ -1,6 +1,6 @@
 -- Function: gpGet_Object_Car (Integer,TVarChar)
 
--- DROP FUNCTION gpGet_Object_Car (Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_Car (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Car(
     IN inId          Integer,       -- ключ объекта <Автомобиль>
@@ -72,9 +72,9 @@ BEGIN
            , Object_Unit.ObjectCode  AS UnitCode
            , Object_Unit.ValueData   AS UnitName
 
-           , Object_PersonalDriver.Id          AS PersonalDriverId
-           , Object_PersonalDriver.ObjectCode  AS PersonalDriverCode
-           , Object_PersonalDriver.ValueData   AS PersonalDriverName
+           , View_PersonalDriver.PersonalId   AS PersonalDriverId
+           , View_PersonalDriver.PersonalCode AS PersonalDriverCode
+           , View_PersonalDriver.PersonalName AS PersonalDriverName
 
            , Object_FuelMaster.Id          AS FuelMasterId
            , Object_FuelMaster.ObjectCode  AS FuelMasterCode
@@ -101,7 +101,7 @@ BEGIN
             
             LEFT JOIN ObjectLink AS ObjectLink_Car_PersonalDriver ON ObjectLink_Car_PersonalDriver.ObjectId = Object_Car.Id
                                                                  AND ObjectLink_Car_PersonalDriver.DescId = zc_ObjectLink_Car_PersonalDriver()
-            LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = ObjectLink_Car_PersonalDriver.ChildObjectId
+            LEFT JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = ObjectLink_Car_PersonalDriver.ChildObjectId
             
             LEFT JOIN ObjectLink AS ObjectLink_Car_FuelMaster ON ObjectLink_Car_FuelMaster.ObjectId = Object_Car.Id
                                                              AND ObjectLink_Car_FuelMaster.DescId = zc_ObjectLink_Car_FuelMaster()
@@ -117,18 +117,17 @@ BEGIN
   
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_Car(integer, TVarChar) OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpGet_Object_Car (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.09.13                                        * add Object_Personal_View
  26.09.13          * del StartDateRate, EndDateRate, RateFuelKind               
  24.09.13          * add StartDateRate, EndDateRate, Unit, PersonalDriver, FuelMaster, FuelChild, RateFuelKind               
  10.06.13          *
  03.06.13          
-
 */
 
 -- тест

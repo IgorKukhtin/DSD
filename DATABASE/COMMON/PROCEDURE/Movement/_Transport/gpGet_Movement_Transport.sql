@@ -61,7 +61,7 @@ BEGIN
            , Object_UnitForwarding.ValueData AS UnitForwardingName
    
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
-               LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = 5
+               LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = 1000
                LEFT JOIN (SELECT CAST (MAX (Movement.InvNumber) AS Integer) AS InvNumber 
                          FROM Movement WHERE Movement.DescId = zc_Movement_Transport()) AS tmpMovement_InvNumber ON 1 = 1;
 
@@ -91,11 +91,11 @@ BEGIN
            , Object_CarTrailer.Id        AS CarTrailerId
            , Object_CarTrailer.ValueData AS CarTrailerName
 
-           , Object_PersonalDriver.PersonalId        AS PersonalDriverId
-           , Object_PersonalDriver.ValueData AS PersonalDriverName
+           , View_PersonalDriver.PersonalId   AS PersonalDriverId
+           , View_PersonalDriver.PersonalName AS PersonalDriverName
 
-           , Object_PersonalDriverMore.PersonalId        AS PersonalDriverMoreId
-           , Object_PersonalDriverMore.ValueData AS PersonalDriverMoreName
+           , View_PersonalDriverMore.PersonalId   AS PersonalDriverMoreId
+           , View_PersonalDriverMore.PersonalName AS PersonalDriverMoreName
 
            , Object_UnitForwarding.Id        AS UnitForwardingId
            , Object_UnitForwarding.ValueData AS UnitForwardingName
@@ -144,12 +144,12 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
-            LEFT JOIN PersonalMember_View AS Object_PersonalDriver ON Object_PersonalDriver.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
+            LEFT JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriverMore
                                          ON MovementLinkObject_PersonalDriverMore.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalDriverMore.DescId = zc_MovementLinkObject_PersonalDriverMore()
-            LEFT JOIN PersonalMember_View AS Object_PersonalDriverMore ON Object_PersonalDriverMore.PersonalId = MovementLinkObject_PersonalDriverMore.ObjectId
+            LEFT JOIN Object_Personal_View AS View_PersonalDriverMore ON View_PersonalDriverMore.PersonalId = MovementLinkObject_PersonalDriverMore.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
                                          ON MovementLinkObject_UnitForwarding.MovementId = Movement.Id
@@ -170,6 +170,7 @@ ALTER FUNCTION gpGet_Movement_Transport (Integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 30.09.13                                        * add Object_Personal_View
  26.09.13                                        * changes in wiki
  25.09.13         * changes in wiki              
  20.08.13         *
@@ -177,4 +178,4 @@ ALTER FUNCTION gpGet_Movement_Transport (Integer, TVarChar) OWNER TO postgres;
 
 
 -- ÚÂÒÚ
- SELECT * FROM gpGet_Movement_Transport (inMovementId:= 0, inSession:= '2')
+-- SELECT * FROM gpGet_Movement_Transport (inMovementId:= 0, inSession:= '2')

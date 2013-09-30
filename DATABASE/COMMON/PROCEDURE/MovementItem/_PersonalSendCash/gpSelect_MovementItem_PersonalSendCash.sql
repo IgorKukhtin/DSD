@@ -1,6 +1,6 @@
 -- Function: gpSelect_MovementItem_PersonalSendCash()
 
--- DROP FUNCTION gpSelect_MovementItem_PersonalSendCash (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_PersonalSendCash (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PersonalSendCash(
     IN inMovementId  Integer      , -- ключ Документа
@@ -22,9 +22,9 @@ BEGIN
 
      RETURN QUERY 
        SELECT
-             Object_Personal.Id          AS PersonalId
-           , Object_Personal.ObjectCode  AS PersonalCode
-           , Object_Personal.ValueData   AS PersonalName
+             tmpMovementItem.PersonalId
+           , View_Personal.PersonalCode
+           , View_Personal.PersonalName
          
            , CAST (tmpMovementItem.Amount_20401 AS TFloat) AS Amount_20401
            , CAST (tmpMovementItem.Amount_21201 AS TFloat) AS Amount_21201
@@ -60,7 +60,7 @@ BEGIN
                     , MILinkObject_Route.ObjectId
                     , MILinkObject_Car.ObjectId
             ) AS tmpMovementItem
-            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = tmpMovementItem.PersonalId
+            LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = tmpMovementItem.PersonalId
             LEFT JOIN Object AS Object_Route ON Object_Route.Id = tmpMovementItem.RouteId
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpMovementItem.CarId
       ;

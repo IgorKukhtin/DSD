@@ -1,10 +1,10 @@
-п»ї-- Function: gpGet_Object_Partner()
+-- Function: gpGet_Object_Partner()
 
---DROP FUNCTION gpGet_Object_Partner(Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_Partner (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Partner(
-    IN inId          Integer,        -- РљРѕРЅС‚СЂР°РіРµРЅС‚С‹ 
-    IN inSession     TVarChar        -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inId          Integer,        -- Контрагенты 
+    IN inSession     TVarChar        -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                GLNCode TVarChar, PrepareDayCount TFloat, DocumentDayCount TFloat,
@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
 $BODY$
 BEGIN
 
-     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+     -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_Partner());
 
    IF COALESCE (inId, 0) = 0
@@ -62,10 +62,10 @@ BEGIN
            , Object_RouteSorting.Id         AS RouteSortingId
            , Object_RouteSorting.ValueData  AS RouteSortingName
            
-           , ObjectLink_Partner_PersonalTake.ChildObjectId         AS PersonalTakeId
-           , Object_Member.ValueData  AS PersonalTakeName
+           , View_PersonalTake.PersonalId   AS PersonalTakeId
+           , View_PersonalTake.PersonalName AS PersonalTakeName
 
-       FROM OBJECT AS Object_Partner
+       FROM Object AS Object_Partner
            LEFT JOIN ObjectString AS Partner_GLNCode 
                                   ON Partner_GLNCode.ObjectId = Object_Partner.Id
                                  AND Partner_GLNCode.DescId = zc_ObjectString_Partner_GLNCode()
@@ -96,12 +96,7 @@ BEGIN
            LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTake
                                 ON ObjectLink_Partner_PersonalTake.ObjectId = Object_Partner.Id 
                                AND ObjectLink_Partner_PersonalTake.DescId = zc_ObjectLink_Partner_PersonalTake()
-
-           LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
-                 ON ObjectLink_Personal_Member.ObjectId = ObjectLink_Partner_PersonalTake.ChildObjectId
-                AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
-          LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_Personal_Member.ChildObjectId
-          
+           LEFT JOIN Object_Personal_View AS View_PersonalTake ON View_PersonalTake.PersonalId = ObjectLink_Partner_PersonalTake.ChildObjectId
          
        WHERE Object_Partner.Id = inId;
        
@@ -115,8 +110,9 @@ ALTER FUNCTION gpGet_Object_Partner(integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.09.13                                        * add Object_Personal_View
  03.09.13                        *
  29.07.13          *  + PersonalTakeId, PrepareDayCount, DocumentDayCount                
  03.07.13          *  + Route, RouteSorting             
@@ -125,5 +121,5 @@ ALTER FUNCTION gpGet_Object_Partner(integer, TVarChar) OWNER TO postgres;
 
 */
 
--- С‚РµСЃС‚
--- SELECT * FROM gpSelect_Partner('2')
+-- тест
+-- SELECT * FROM gpGet_Object_Partner (1, '2')
