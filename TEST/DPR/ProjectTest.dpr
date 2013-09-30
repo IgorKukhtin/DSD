@@ -209,7 +209,9 @@ uses
   RouteKindEdit in '..\..\Forms\RouteKindEdit.pas' {RouteKindEditForm},
   RateFuel in '..\..\Forms\RateFuel.pas' {RateFuelForm},
   PersonalGroup in '..\..\Forms\PersonalGroup.pas' {PersonalGroupForm},
-  PersonalGroupEdit in '..\..\Forms\PersonalGroupEdit.pas' {PersonalGroupEditForm};
+  PersonalGroupEdit in '..\..\Forms\PersonalGroupEdit.pas' {PersonalGroupEditForm},
+  PersonalSendCash in '..\..\Forms\PersonalSendCash.pas' {PersonalSendCashForm},
+  PersonalSendCashJournal in '..\..\Forms\PersonalSendCashJournal.pas' {PersonalSendCashJournalForm};
 
 {$R *.RES}
 

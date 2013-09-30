@@ -1,5 +1,5 @@
 inherited IncomeFuelJournalForm: TIncomeFuelJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1087#1088#1080#1093#1086#1076#1072' ('#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086')'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1055#1088#1080#1093#1086#1076' ('#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086')'
   ClientHeight = 427
   ClientWidth = 1189
   ExplicitWidth = 1205
@@ -13,7 +13,6 @@ inherited IncomeFuelJournalForm: TIncomeFuelJournalForm
     Height = 41
     Align = alTop
     TabOrder = 1
-    ExplicitWidth = 1240
     object deStart: TcxDateEdit
       Left = 106
       Top = 10
@@ -43,7 +42,6 @@ inherited IncomeFuelJournalForm: TIncomeFuelJournalForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 1240
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource

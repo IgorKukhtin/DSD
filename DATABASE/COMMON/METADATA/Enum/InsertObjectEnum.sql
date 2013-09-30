@@ -9,7 +9,7 @@ BEGIN
    -- Это Виды норм для топлива, не Enum, но нужны
    IF NOT EXISTS (SELECT * FROM Object where DescId = zc_Object_RateFuelKind())
    THEN
-       lpInsertUpdate_Object (0, zc_Object_RateFuelKind(), 1, 'Лето');
+       PERFORM lpInsertUpdate_Object (0, zc_Object_RateFuelKind(), 1, 'Лето');
    END IF;
 
    -- сохраняются элементы справочника (zc_Object_Process)
@@ -190,6 +190,7 @@ BEGIN
      -- !!! УП: Управленческие Аналитики (1+2+3 уровень)
      -- !!! 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20401, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_20401');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 21201, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_21201');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 80401, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_80401');
 
      -- !!! 
@@ -263,6 +264,7 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.09.13                                        * add zc_Enum_InfoMoney_21201
  29.09.13                                        * add zc_Object_RateFuelKind
  27.09.13                                        * add zc_Enum_InfoMoney_20401
  26.09.13         * del zc_Enum_RateFuelKind_Summer, zc_Enum_RateFuelKind_Winter               

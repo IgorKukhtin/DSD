@@ -550,6 +550,12 @@
 			<DCCReference Include="..\..\Forms\PersonalGroupEdit.pas">
 				<Form>PersonalGroupEditForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\PersonalSendCash.pas">
+				<Form>PersonalSendCashForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\PersonalSendCashJournal.pas">
+				<Form>PersonalSendCashJournalForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

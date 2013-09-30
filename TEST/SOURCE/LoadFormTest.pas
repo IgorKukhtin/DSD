@@ -39,6 +39,7 @@ type
     procedure LoadGoodsPropertyValueFormTest;
     procedure LoadCashFormTest;
     procedure LoadCurrencyFormTest;
+    procedure LoadPersonalSendCashFormTest;
     procedure LoadIncomeFormTest;
     procedure LoadSendFormTest;
     procedure LoadSendOnPriceFormTest;
@@ -196,6 +197,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyValueForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPropertyValueEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyValueEditForm');
+end;
+
+procedure TLoadFormTest.LoadPersonalSendCashFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalSendCashForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalSendCashForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalSendCashJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalSendCashJournalForm');
 end;
 
 procedure TLoadFormTest.LoadIncomeFormTest;
