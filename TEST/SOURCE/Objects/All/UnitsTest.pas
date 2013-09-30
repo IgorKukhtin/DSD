@@ -131,7 +131,7 @@ end;
 
 function TUnit.InsertDefault: integer;
 begin
-  result := InsertUpdateUnit(0, 1, 'Подразделение',true, 0, BranchTest.GetDefault, 0, 0, 0, 0);
+  result := InsertUpdateUnit(0, -100, 'Подразделение',true, 0, BranchTest.GetDefault, 0, 0, 0, 0);
   inherited;
 end;
 

@@ -133,9 +133,6 @@ type
     ContractGuides: TdsdGuides;
     PaidKindGuides: TdsdGuides;
     CarGuides: TdsdGuides;
-    cxLabel12: TcxLabel;
-    edDriver: TcxButtonEdit;
-    DriverGuides: TdsdGuides;
     cxLabel13: TcxLabel;
     edPacker: TcxButtonEdit;
     PackerGuides: TdsdGuides;

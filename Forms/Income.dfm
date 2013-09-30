@@ -4,8 +4,8 @@ inherited IncomeForm: TIncomeForm
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1036
-  ExplicitHeight = 430
+  ExplicitWidth = 1044
+  ExplicitHeight = 431
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -93,7 +93,7 @@ inherited IncomeForm: TIncomeForm
     end
     object cxLabel5: TcxLabel
       Left = 8
-      Top = 49
+      Top = 50
       Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
     end
     object cxLabel6: TcxLabel
@@ -167,12 +167,12 @@ inherited IncomeForm: TIncomeForm
       TabOrder = 5
       Width = 121
     end
-    object cxLabel12: TcxLabel
+    object cxLabel13: TcxLabel
       Left = 600
       Top = 50
-      Caption = #1042#1086#1076#1080#1090#1077#1083#1100
+      Caption = #1047#1072#1075#1086#1090#1086#1074#1080#1090#1077#1083#1100
     end
-    object edDriver: TcxButtonEdit
+    object edPacker: TcxButtonEdit
       Left = 600
       Top = 71
       Properties.Buttons = <
@@ -181,23 +181,7 @@ inherited IncomeForm: TIncomeForm
           Kind = bkEllipsis
         end>
       TabOrder = 11
-      Width = 113
-    end
-    object cxLabel13: TcxLabel
-      Left = 724
-      Top = 50
-      Caption = #1047#1072#1075#1086#1090#1086#1074#1080#1090#1077#1083#1100
-    end
-    object edPacker: TcxButtonEdit
-      Left = 724
-      Top = 71
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      TabOrder = 12
-      Width = 121
+      Width = 245
     end
   end
   object cxPageControl: TcxPageControl
@@ -419,9 +403,6 @@ inherited IncomeForm: TIncomeForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -650,8 +631,8 @@ inherited IncomeForm: TIncomeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1194,14 +1175,6 @@ inherited IncomeForm: TIncomeForm
         Value = ''
       end
       item
-        Name = 'inPersonalDriverId'
-        Component = DriverGuides
-        ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptInput
-        Value = ''
-      end
-      item
         Name = 'inPersonalPackerId'
         Component = PackerGuides
         ComponentItem = 'Key'
@@ -1256,7 +1229,6 @@ inherited IncomeForm: TIncomeForm
       item
       end
       item
-        Control = edDriver
       end
       item
         Control = edPacker
@@ -1399,22 +1371,6 @@ inherited IncomeForm: TIncomeForm
         Value = ''
       end
       item
-        Name = 'PersonalDriverId'
-        Component = DriverGuides
-        ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
-      end
-      item
-        Name = 'PersonalDriverName'
-        Component = DriverGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptOutput
-        Value = ''
-      end
-      item
         Name = 'PersonalPackerId'
         Component = PackerGuides
         ComponentItem = 'Key'
@@ -1530,30 +1486,6 @@ inherited IncomeForm: TIncomeForm
       end>
     Left = 648
     Top = 96
-  end
-  object DriverGuides: TdsdGuides
-    LookupControl = edDriver
-    FormName = 'TPersonalForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Component = DriverGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        Value = ''
-      end
-      item
-        Name = 'TextValue'
-        Component = DriverGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        Value = ''
-      end>
-    Left = 736
-    Top = 72
   end
   object PackerGuides: TdsdGuides
     LookupControl = edPacker
