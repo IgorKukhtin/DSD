@@ -116,7 +116,7 @@ implementation
 
 uses Storage, CommonData, TypInfo, UtilConvert, SysUtils, cxTextEdit, VCL.Forms,
      XMLDoc, XMLIntf, StrUtils, cxCurrencyEdit, dsdGuides, cxCheckBox, cxCalendar,
-     Variants, XSBuiltIns, UITypes, dsdAction, dsdAddOn;
+     Variants, XSBuiltIns, UITypes, dsdAction, Defaults;
 
 procedure Register;
 begin
@@ -513,8 +513,8 @@ begin
      end;
      if Component is TBooleanStoredProcAction then
         Result := (Component as TBooleanStoredProcAction).Value;
-     if Component is TDefaultKeyAddOn then
-        Result := (Component as TDefaultKeyAddOn).Key;
+     if Component is TDefaultKey then
+        Result := (Component as TDefaultKey).Key;
   end
   else
     Result := FValue

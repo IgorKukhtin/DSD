@@ -202,7 +202,9 @@ uses
   FuelEdit in '..\..\Forms\FuelEdit.pas' {FuelEditForm},
   RateFuelKindEdit in '..\..\Forms\RateFuelKindEdit.pas' {RateFuelKindEditForm},
   RateFuelKind in '..\..\Forms\RateFuelKind.pas' {RateFuelKindForm},
-  Fuel in '..\..\Forms\Fuel.pas' {FuelForm};
+  Fuel in '..\..\Forms\Fuel.pas' {FuelForm},
+  RoleTest in '..\SOURCE\Objects\All\RoleTest.pas',
+  Defaults in '..\..\SOURCE\COMPONENT\Defaults.pas';
 
 {$R *.RES}
 

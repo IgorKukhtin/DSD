@@ -16,26 +16,26 @@ type
 
 implementation
 
-uses dsdDB, DBXJSON, dsdAddOn, Forms;
+uses dsdDB, DBXJSON, Defaults, Forms;
 
 { TComponentAddOnTest }
 
 procedure TComponentAddOnTest.DefaultsKeyTest;
-var DefaultKeyAddOn: TDefaultKeyAddOn;
+var DefaultKey: TDefaultKey;
     Param: TdsdParam;
     KeyParam: TdsdParam;
     FJSONObject: TJSONObject;
 begin
-  DefaultKeyAddOn := TDefaultKeyAddOn.Create(TForm.Create(nil));
+  DefaultKey := TDefaultKey.Create(TForm.Create(nil));
   // Проверяем результат создания ключа и JSON
-  DefaultKeyAddOn.Param.Value := 'miIncome';
+  DefaultKey.Param.Value := 'miIncome';
 
   KeyParam := TdsdParam.Create(nil);
-  KeyParam.Component := DefaultKeyAddOn;
+  KeyParam.Component := DefaultKey;
 
   Check(KeyParam.Value = 'TForm;miIncome', 'Значение KeyParam.Value = "' + KeyParam.Value + '" вместо "TForm;miIncome"');
 
-  FJSONObject := TJSONObject.ParseJSONValue(DefaultKeyAddOn.JSONKey) as TJSONObject;
+  FJSONObject := TJSONObject.ParseJSONValue(DefaultKey.JSONKey) as TJSONObject;
   if not Assigned(FJSONObject) then
      Check(false, 'FJSONObject = nil');
   if not Assigned(FJSONObject.Get('FormClass')) then
