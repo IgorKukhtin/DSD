@@ -2,8 +2,8 @@ inherited CarForm: TCarForm
   Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1080
   ClientHeight = 367
   ClientWidth = 853
-  ExplicitWidth = 861
-  ExplicitHeight = 401
+  ExplicitWidth = 869
+  ExplicitHeight = 402
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -128,8 +128,8 @@ inherited CarForm: TCarForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

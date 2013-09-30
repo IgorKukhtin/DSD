@@ -4,8 +4,8 @@ inherited ReturnOutForm: TReturnOutForm
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1036
-  ExplicitHeight = 423
+  ExplicitWidth = 1044
+  ExplicitHeight = 431
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -309,7 +309,6 @@ inherited ReturnOutForm: TReturnOutForm
         Height = 240
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 248
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -504,10 +503,10 @@ inherited ReturnOutForm: TReturnOutForm
   end
   object spSelectMovementItem: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_ReturnOut'
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
     Params = <
       item
@@ -582,11 +581,11 @@ inherited ReturnOutForm: TReturnOutForm
     Top = 152
   end
   object DataSource: TDataSource
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     Left = 32
     Top = 208
   end
-  object ClientDataSet: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 64
@@ -656,7 +655,7 @@ inherited ReturnOutForm: TReturnOutForm
     Params = <
       item
         Name = 'ioId'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         DataType = ftInteger
         ParamType = ptInputOutput
@@ -671,14 +670,14 @@ inherited ReturnOutForm: TReturnOutForm
       end
       item
         Name = 'inGoodsId'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'GoodsId'
         DataType = ftInteger
         ParamType = ptInput
       end
       item
         Name = 'inAmount'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
@@ -691,7 +690,7 @@ inherited ReturnOutForm: TReturnOutForm
       end
       item
         Name = 'inPrice'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
@@ -726,7 +725,7 @@ inherited ReturnOutForm: TReturnOutForm
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'
     CloseDataSource = False
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     BCDToCurrency = False
     Left = 232
     Top = 216
@@ -961,8 +960,8 @@ inherited ReturnOutForm: TReturnOutForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

@@ -620,10 +620,10 @@ inherited IncomeForm: TIncomeForm
   end
   object spSelectMovementItem: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Income'
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
     Params = <
       item
@@ -873,11 +873,11 @@ inherited IncomeForm: TIncomeForm
     end
   end
   object DataSource: TDataSource
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     Left = 48
     Top = 200
   end
-  object ClientDataSet: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 136
@@ -909,7 +909,7 @@ inherited IncomeForm: TIncomeForm
   object dsdGuidesTo: TdsdGuides
     LookupControl = edTo
     FormName = 'TUnitForm'
-    PositionDataSet = 'GridDataSet'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
@@ -954,19 +954,19 @@ inherited IncomeForm: TIncomeForm
         ParamType = ptInput
         Value = '0'
       end>
-    Left = 536
-    Top = 256
+    Left = 512
+    Top = 240
   end
   object EntryCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 576
-    Top = 240
+    Left = 608
+    Top = 296
   end
   object EntryDS: TDataSource
     DataSet = EntryCDS
-    Left = 608
-    Top = 240
+    Left = 656
+    Top = 256
   end
   object spInsertUpdateMovementItem: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Income'
@@ -975,7 +975,7 @@ inherited IncomeForm: TIncomeForm
     Params = <
       item
         Name = 'ioId'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         DataType = ftInteger
         ParamType = ptInputOutput
@@ -990,63 +990,63 @@ inherited IncomeForm: TIncomeForm
       end
       item
         Name = 'inGoodsId'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'GoodsId'
         DataType = ftInteger
         ParamType = ptInput
       end
       item
         Name = 'inAmount'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inAmountPartner'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'AmountPartner'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inAmountPacker'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'AmountPacker'
         DataType = ftInteger
         ParamType = ptInput
       end
       item
         Name = 'inPrice'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inCountForPrice'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inLiveWeight'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'LiveWeight'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inHeadCount'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'HeadCount'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inPartionGoods'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'PartionGoods'
         DataType = ftString
         ParamType = ptInput
@@ -1063,13 +1063,13 @@ inherited IncomeForm: TIncomeForm
         ParamType = ptInput
         Value = '0'
       end>
-    Left = 56
-    Top = 320
+    Left = 80
+    Top = 328
   end
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'
     CloseDataSource = False
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     BCDToCurrency = False
     Left = 360
     Top = 88
@@ -1095,7 +1095,7 @@ inherited IncomeForm: TIncomeForm
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
-    Left = 480
+    Left = 424
     Top = 256
   end
   object spInsertUpdateMovement: TdsdStoredProc

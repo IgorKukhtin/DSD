@@ -6,9 +6,9 @@
   ExplicitHeight = 366
   PixelsPerInch = 96
   TextHeight = 13
-  object edMeasureName: TcxTextEdit
+  object edRouteName: TcxTextEdit
     Left = 32
-    Top = 86
+    Top = 88
     TabOrder = 0
     Width = 273
   end
@@ -147,28 +147,31 @@
       end
       item
         Name = 'inName'
-        Component = edMeasureName
+        Component = edRouteName
         DataType = ftString
         ParamType = ptInput
         Value = ''
       end
       item
         Name = 'inUnit'
-        Component = ceUnit
+        Component = UnitGuides
         DataType = ftInteger
         ParamType = ptInput
+        Value = '0'
       end
       item
         Name = 'inRouteKind'
-        Component = ceRouteKind
+        Component = RouteKindGuides
         DataType = ftInteger
         ParamType = ptInput
+        Value = '0'
       end
       item
         Name = 'inFreight'
-        Component = ceFreight
+        Component = FreightGuides
         DataType = ftInteger
         ParamType = ptInput
+        Value = '0'
       end>
     Left = 320
     Top = 40
@@ -206,7 +209,55 @@
       end
       item
         Name = 'Name'
-        Component = edMeasureName
+        Component = edRouteName
+        DataType = ftString
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'UnitId'
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = '0'
+      end
+      item
+        Name = 'UnitName'
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'RouteKindId'
+        Component = RouteKindGuides
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = '0'
+      end
+      item
+        Name = 'RouteKindName'
+        Component = RouteKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'FreightId'
+        Component = FreightGuides
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = '0'
+      end
+      item
+        Name = 'FreightName'
+        Component = FreightGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptOutput
         Value = ''
@@ -236,7 +287,7 @@
     Key = '0'
     LookupControl = ceUnit
     FormName = 'TUnitForm'
-    PositionDataSet = 'GridDataSet'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'

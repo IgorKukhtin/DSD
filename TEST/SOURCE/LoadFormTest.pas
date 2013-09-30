@@ -74,6 +74,7 @@ type
     procedure LoadZakazInternalFormTest;
     procedure LoadServiceFormTest;
     procedure LoadRateFuelKindFormTest;
+    procedure LoadFreightFormTest;
   end;
 
 implementation
@@ -203,6 +204,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeFuelForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeFuelForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeFuelJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeFuelJournalForm');
 end;
 procedure TLoadFormTest.LoadSendFormTest;
 begin
@@ -527,6 +533,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TRouteSortingForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteSortingEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRouteSortingEditForm');
+  // типы маршрутов
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRouteKindForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRouteKindEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRouteKindForm');
 end;
 
 procedure TLoadFormTest.LoadMemberFormTest;
@@ -551,6 +562,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPersonalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalEditForm');
+  // группировки сотрудников
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalGroupEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalGroupEditForm');
 end;
 procedure TLoadFormTest.LoadCarFormTest;
 begin
@@ -566,6 +582,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TFuelForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TFuelEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TFuelEditForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRateFuelForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRateFuelForm');
 
 end;
 
@@ -583,6 +602,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TRateFuelKindForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRateFuelKindEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRateFuelKindEditForm');
+end;
+
+procedure TLoadFormTest.LoadFreightFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFreightForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFreightForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFreightEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFreightForm');
 end;
 
 procedure TLoadFormTest.SetUp;

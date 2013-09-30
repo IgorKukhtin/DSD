@@ -432,6 +432,21 @@ object MainForm: TMainForm
       Caption = '3.4. '#1057#1086#1088#1090#1080#1088#1086#1074#1082#1080' '#1052#1072#1088#1096#1088#1091#1090#1086#1074
       TabOrder = 30
     end
+    object cbFuel: TCheckBox
+      Tag = 10
+      Left = 151
+      Top = 61
+      Width = 135
+      Height = 17
+      Caption = '1.6. '#1042#1080#1076#1099' '#1058#1086#1087#1083#1080#1074#1072
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 31
+    end
   end
   object DocumentPanel: TPanel
     Left = 783

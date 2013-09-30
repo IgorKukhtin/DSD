@@ -22,7 +22,7 @@ uses
 
 type
   TRouteEditForm = class(TParentForm)
-    edMeasureName: TcxTextEdit;
+    edRouteName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
     cxButton2: TcxButton;

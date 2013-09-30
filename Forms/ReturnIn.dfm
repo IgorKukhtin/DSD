@@ -5,7 +5,7 @@ inherited ReturnInForm: TReturnInForm
   KeyPreview = True
   PopupMenu = PopupMenu
   ExplicitWidth = 1044
-  ExplicitHeight = 434
+  ExplicitHeight = 431
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -155,16 +155,15 @@ inherited ReturnInForm: TReturnInForm
   end
   object cxPageControl1: TcxPageControl
     Left = 0
-    Top = 141
+    Top = 139
     Width = 1028
-    Height = 255
+    Height = 257
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 251
-    ClientRectLeft = 4
-    ClientRectRight = 1024
+    ClientRectBottom = 257
+    ClientRectRight = 1028
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -172,8 +171,8 @@ inherited ReturnInForm: TReturnInForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1020
-        Height = 227
+        Width = 1028
+        Height = 233
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -306,8 +305,8 @@ inherited ReturnInForm: TReturnInForm
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 1020
-        Height = 227
+        Width = 1028
+        Height = 233
         Align = alClient
         TabOrder = 0
         object cxGridEntryDBTableView: TcxGridDBTableView
@@ -501,10 +500,10 @@ inherited ReturnInForm: TReturnInForm
   end
   object spSelectMovementItem: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_ReturnIn'
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
     Params = <
       item
@@ -545,7 +544,7 @@ inherited ReturnInForm: TReturnInForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar: TdxBar
       Caption = 'Custom'
@@ -701,15 +700,15 @@ inherited ReturnInForm: TReturnInForm
     end
   end
   object DataSource: TDataSource
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     Left = 32
     Top = 208
   end
-  object ClientDataSet: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 72
-    Top = 56
+    Left = 16
+    Top = 264
   end
   object dsdGuidesFrom: TdsdGuides
     LookupControl = edFrom
@@ -772,7 +771,7 @@ inherited ReturnInForm: TReturnInForm
     Params = <
       item
         Name = 'ioId'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         DataType = ftInteger
         ParamType = ptInputOutput
@@ -787,14 +786,14 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'inGoodsId'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'GoodsId'
         DataType = ftInteger
         ParamType = ptInput
       end
       item
         Name = 'inAmount'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
@@ -807,7 +806,7 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'inPrice'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
@@ -842,7 +841,7 @@ inherited ReturnInForm: TReturnInForm
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'
     CloseDataSource = False
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     BCDToCurrency = False
     Left = 232
     Top = 216

@@ -204,7 +204,16 @@ uses
   RateFuelKind in '..\..\Forms\RateFuelKind.pas' {RateFuelKindForm},
   Fuel in '..\..\Forms\Fuel.pas' {FuelForm},
   RoleTest in '..\SOURCE\Objects\All\RoleTest.pas',
-  Defaults in '..\..\SOURCE\COMPONENT\Defaults.pas';
+  Defaults in '..\..\SOURCE\COMPONENT\Defaults.pas',
+  IncomeFuel in '..\..\Forms\IncomeFuel.pas' {IncomeFuelForm},
+  IncomeFuelJournal in '..\..\Forms\IncomeFuelJournal.pas' {IncomeFuelJournalForm},
+  Freight in '..\..\Forms\Freight.pas' {FreightForm},
+  FreightEdit in '..\..\Forms\FreightEdit.pas' {FreightEditForm},
+  RouteKind in '..\..\Forms\RouteKind.pas' {RouteKindForm},
+  RouteKindEdit in '..\..\Forms\RouteKindEdit.pas' {RouteKindEditForm},
+  RateFuel in '..\..\Forms\RateFuel.pas' {RateFuelForm},
+  PersonalGroup in '..\..\Forms\PersonalGroup.pas' {PersonalGroupForm},
+  PersonalGroupEdit in '..\..\Forms\PersonalGroupEdit.pas' {PersonalGroupEditForm};
 
 {$R *.RES}
 

@@ -527,6 +527,33 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\RoleTest.pas"/>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\Defaults.pas"/>
+			<DCCReference Include="..\..\Forms\IncomeFuel.pas">
+				<Form>IncomeFuelForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\IncomeFuelJournal.pas">
+				<Form>IncomeFuelJournalForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Freight.pas">
+				<Form>FreightForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\FreightEdit.pas">
+				<Form>FreightEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\RouteKind.pas">
+				<Form>RouteKindForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\RouteKindEdit.pas">
+				<Form>RouteKindEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\RateFuel.pas">
+				<Form>RateFuelForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\PersonalGroup.pas">
+				<Form>PersonalGroupForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\PersonalGroupEdit.pas">
+				<Form>PersonalGroupEditForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

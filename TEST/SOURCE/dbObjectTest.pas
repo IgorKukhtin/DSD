@@ -113,7 +113,7 @@ type
   public
     function InsertUpdateGoods(Id, Code: Integer; Name: String;
                                Weight: Double;
-                               GoodsGroupId, MeasureId, TradeMarkId,ItemInfoMoneyId,BusinessId: Integer): integer;
+                               GoodsGroupId, MeasureId, TradeMarkId,ItemInfoMoneyId,BusinessId,FuelId: Integer): integer;
     constructor Create; override;
   end;
 
@@ -998,12 +998,12 @@ end;
 
 function TGoodsTest.InsertDefault: integer;
 begin
-  result := InsertUpdateGoods(0, -1, 'Товар 1', 1.0, 0, 0, 0, 0, 0)
+  result := InsertUpdateGoods(0, -1, 'Товар 1', 1.0, 0, 0, 0, 0, 0, 0)
 end;
 
 function TGoodsTest.InsertUpdateGoods(Id, Code: Integer; Name: String;
                                       Weight: Double;
-                                      GoodsGroupId, MeasureId, TradeMarkId,ItemInfoMoneyId,BusinessId: Integer): integer;
+                                      GoodsGroupId, MeasureId, TradeMarkId,ItemInfoMoneyId,BusinessId,FuelId: Integer): integer;
 
 begin
   FParams.Clear;
@@ -1016,6 +1016,7 @@ begin
   FParams.AddParam('inTradeMarkId', ftInteger, ptInput, TradeMarkId);
   FParams.AddParam('inItemInfoMoneyId', ftInteger, ptInput, ItemInfoMoneyId);
   FParams.AddParam('inBusinessId', ftInteger, ptInput, BusinessId);
+  FParams.AddParam('inFuelId', ftInteger, ptInput, FuelId);
   result := InsertUpdate(FParams);
 end;
 

@@ -56,12 +56,11 @@ type
     clMember: TcxGridDBColumn;
     clPosition: TcxGridDBColumn;
     clUnit: TcxGridDBColumn;
-    clJuridical: TcxGridDBColumn;
-    clBusiness: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     clErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    clPersonalGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1,9 +1,9 @@
 ﻿inherited PartnerEditForm: TPartnerEditForm
-  Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+  Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
   ClientHeight = 333
   ClientWidth = 371
-  ExplicitWidth = 379
-  ExplicitHeight = 367
+  ExplicitWidth = 387
+  ExplicitHeight = 368
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -395,7 +395,7 @@
     Key = '0'
     LookupControl = ceJuridical
     FormName = 'TJuridicalForm'
-    PositionDataSet = 'GridDataSet'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
