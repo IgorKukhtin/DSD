@@ -37,13 +37,13 @@ inherited PersonalForm: TPersonalForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object clMemberCode: TcxGridDBColumn
         Caption = #1050#1086#1076
-        DataBinding.FieldName = 'Code'
+        DataBinding.FieldName = 'MemberCode'
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
-      object clMember: TcxGridDBColumn
+      object clMemberName: TcxGridDBColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'MemberName'
         HeaderAlignmentVert = vaCenter

@@ -16,9 +16,8 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdateTransport(const Id: integer; InvNumber: String;
-        OperDate, WorkTime: TDateTime; MorningOdometre, EveningOdometre, Distance,
-        Cold, Norm: Double;
-        CarId, MemberId, RouteId: integer): integer;
+        OperDate, StartRunPlan, EndRunPlan, StartRun, EndRun: TDateTime; HoursAdd : Double;
+        Comment:String; CarId, CarTrailerId, PersonalDriverId, PersonalDriverMoreId, UnitForwardingId: integer): integer;
     constructor Create; override;
   end;
 
@@ -39,47 +38,52 @@ end;
 function TTransport.InsertDefault: integer;
 var Id: Integer;
     InvNumber: String;
-    OperDate, WorkTime: TDateTime;
-    MorningOdometre, EveningOdometre, Distance,Cold, Norm: Double;
-    CarId, MemberId, RouteId: Integer;
+    OperDate, StartRunPlan, EndRunPlan, StartRun, EndRun: TDateTime;
+    HoursAdd: Double;
+    Comment:String;
+    CarId, CarTrailerId, PersonalDriverId, PersonalDriverMoreId, UnitForwardingId: Integer;
 begin
   Id:=0;
   InvNumber:='1';
-  WorkTime:= Date;
-  OperDate:= Date;
-  MorningOdometre := 45654;
-  EveningOdometre := 45859;
-  Distance := 205;
-  Cold := 5;
-  Norm := 100;
+  OperDate    := Date;
+  StartRunPlan:= Date;
+  EndRunPlan  := Date;
+  StartRun    := Date;
+  EndRun      := Date;
+  HoursAdd := 45654;
+  Comment:='';
   CarId := TCarTest.Create.GetDefault;
-  MemberId := 0;
-  RouteId := TRouteTest.Create.GetDefault;
-  result := InsertUpdateTransport(Id, InvNumber, OperDate, WorkTime, MorningOdometre,
-              EveningOdometre, Distance, Cold, Norm,
-              CarId, MemberId, RouteId);
+  CarTrailerId:=0;
+  PersonalDriverId := 0;
+  PersonalDriverMoreId := 0;
+  UnitForwardingId := 0;
+
+  result := InsertUpdateTransport(Id, InvNumber, OperDate, StartRunPlan, EndRunPlan, StartRun, EndRun,
+              HoursAdd, Comment,
+              CarId, CarTrailerId, PersonalDriverId, PersonalDriverMoreId, UnitForwardingId);
 end;
 
 function TTransport.InsertUpdateTransport(const Id: integer; InvNumber: String;
-        OperDate, WorkTime: TDateTime; MorningOdometre, EveningOdometre, Distance,
-        Cold, Norm: Double;
-        CarId, MemberId, RouteId: integer): integer;
+        OperDate, StartRunPlan, EndRunPlan, StartRun, EndRun: TDateTime; HoursAdd : Double;
+        Comment:String; CarId, CarTrailerId, PersonalDriverId, PersonalDriverMoreId, UnitForwardingId: integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
   FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
-  FParams.AddParam('inWorkTime', ftDateTime, ptInput, WorkTime);
+  FParams.AddParam('inStartRunPlan', ftDateTime, ptInput, StartRunPlan);
+  FParams.AddParam('inEndRunPlan', ftDateTime, ptInput, EndRunPlan);
+  FParams.AddParam('inStartRun', ftDateTime, ptInput, StartRun);
+  FParams.AddParam('inEndRun', ftDateTime, ptInput, EndRun);
 
-  FParams.AddParam('inMorningOdometre', ftFloat, ptInput, MorningOdometre);
-  FParams.AddParam('inEveningOdometre', ftFloat, ptInput, EveningOdometre);
-  FParams.AddParam('inDistance', ftFloat, ptInput, Distance);
-  FParams.AddParam('inCold', ftFloat, ptInput, Cold);
-  FParams.AddParam('inNorm', ftFloat, ptInput, Norm);
+  FParams.AddParam('inHoursAdd', ftFloat, ptInput, HoursAdd);
+  FParams.AddParam('inComment', ftString, ptInput, Comment);
 
   FParams.AddParam('inCarId', ftInteger, ptInput, CarId);
-  FParams.AddParam('inMemberId', ftInteger, ptInput, MemberId);
-  FParams.AddParam('inRouteId', ftInteger, ptInput, RouteId);
+  FParams.AddParam('inCarTrailerId', ftInteger, ptInput, CarTrailerId);
+  FParams.AddParam('inPersonalDriverId', ftInteger, ptInput, PersonalDriverId);
+  FParams.AddParam('inPersonalDriverMoreId', ftInteger, ptInput, PersonalDriverMoreId);
+  FParams.AddParam('inUnitForwardingId', ftInteger, ptInput, UnitForwardingId);
 
   result := InsertUpdate(FParams);
 

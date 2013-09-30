@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Personal (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_Personal(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
+RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar,
                PositionId Integer, PositionCode Integer, PositionName TVarChar,
                UnitId Integer, UnitCode Integer, UnitName TVarChar,
                PersonalGroupId Integer, PersonalGroupCode Integer, PersonalGroupName TVarChar,
@@ -20,8 +20,8 @@ BEGIN
    RETURN QUERY 
      SELECT 
            View_Personal.PersonalId   AS Id
-         , View_Personal.PersonalCode AS Code
-         , View_Personal.PersonalName AS Name
+         , View_Personal.PersonalCode AS MemberCode
+         , View_Personal.PersonalName AS MemberName
 
          , Object_Position.Id         AS PositionId
          , Object_Position.ObjectCode AS PositionCode

@@ -27,7 +27,7 @@ type
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     Код: TcxLabel;
-    ceCode: TcxCurrencyEdit;
+    ceMemberCode: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
     cxLabel2: TcxLabel;
     cxLabel5: TcxLabel;
