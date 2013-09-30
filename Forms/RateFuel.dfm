@@ -2,8 +2,8 @@ inherited RateFuelForm: TRateFuelForm
   Caption = #1053#1086#1088#1084#1099' '#1090#1086#1087#1083#1080#1074#1072
   ClientHeight = 367
   ClientWidth = 853
-  ExplicitWidth = 869
-  ExplicitHeight = 402
+  ExplicitWidth = 861
+  ExplicitHeight = 401
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -28,10 +28,9 @@ inherited RateFuelForm: TRateFuelForm
       OptionsBehavior.IncSearchItem = clCarName
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsData.Appending = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
-      OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -41,6 +40,7 @@ inherited RateFuelForm: TRateFuelForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'CarCode'
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 52
       end
       object clCarName: TcxGridDBColumn
@@ -128,8 +128,8 @@ inherited RateFuelForm: TRateFuelForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -212,8 +212,11 @@ inherited RateFuelForm: TRateFuelForm
       Category = 0
     end
     object bbEdit: TdxBarButton
-      Action = actUpdate
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Category = 0
+      Visible = ivAlways
+      ImageIndex = 1
+      ShortCut = 115
     end
     object bbErased: TdxBarButton
       Action = dsdSetErased
@@ -270,23 +273,15 @@ inherited RateFuelForm: TRateFuelForm
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
-    object actUpdate: TdsdInsertUpdateAction
+    object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      ShortCut = 115
-      ImageIndex = 1
-      GuiParams = <
+      StoredProc = spInsertUpdateObject
+      StoredProcList = <
         item
-          Name = 'Id'
-          Component = ClientDataSet
-          ComponentItem = 'Id'
-          DataType = ftInteger
-          ParamType = ptInput
+          StoredProc = spInsertUpdateObject
         end>
-      isShowModal = True
-      ActionType = acUpdate
+      Caption = 'actUpdateDataSet'
       DataSource = DataSource
-      DataSetRefresh = actRefresh
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -354,7 +349,12 @@ inherited RateFuelForm: TRateFuelForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
+      end>
     Left = 48
     Top = 216
   end
@@ -401,20 +401,20 @@ inherited RateFuelForm: TRateFuelForm
         Name = 'inRateFuelId_Internal'
         Component = ClientDataSet
         ComponentItem = 'RateFuelId_Internal'
-        DataType = ftFloat
+        DataType = ftInteger
         ParamType = ptInput
       end
       item
         Name = 'inRateFuelId_External'
         Component = ClientDataSet
         ComponentItem = 'RateFuelId_External'
-        DataType = ftFloat
+        DataType = ftInteger
         ParamType = ptInput
       end
       item
         Name = 'inAmount_Internal '
         Component = ClientDataSet
-        ComponentItem = 'Amount_Internal '
+        ComponentItem = 'Amount_Internal'
         DataType = ftFloat
         ParamType = ptInput
       end

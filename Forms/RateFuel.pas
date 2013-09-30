@@ -47,7 +47,6 @@ type
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
     actInsert: TdsdInsertUpdateAction;
-    actUpdate: TdsdInsertUpdateAction;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
@@ -63,6 +62,7 @@ type
     clAmountColdHour_External: TcxGridDBColumn;
     clAmountColdDistance_External: TcxGridDBColumn;
     spInsertUpdateObject: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
