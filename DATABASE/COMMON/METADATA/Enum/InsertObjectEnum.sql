@@ -99,6 +99,14 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_RouteKind_Internal(), inDescId:= zc_Object_RouteKind(), inCode:= 1, inName:= 'Город', inEnumName:= 'zc_Enum_RouteKind_Internal');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_RouteKind_External(), inDescId:= zc_Object_RouteKind(), inCode:= 2, inName:= 'Межгород', inEnumName:= 'zc_Enum_RouteKind_External');
 
+     -- !!! Типы рабочего времени
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_Work(),    inDescId:= zc_Object_WorkTimeKind(), inCode:= 1, inName:= 'Рабочие часы', inEnumName:= 'zc_Enum_WorkTimeKind_Work');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_Holiday(), inDescId:= zc_Object_WorkTimeKind(), inCode:= 2, inName:= 'Отпуск',       inEnumName:= 'zc_Enum_WorkTimeKind_Holiday');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_Hospital(), inDescId:= zc_Object_WorkTimeKind(), inCode:= 3, inName:= 'Больничный',  inEnumName:= 'zc_Enum_WorkTimeKind_Hospital');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_Skip(),    inDescId:= zc_Object_WorkTimeKind(), inCode:= 4, inName:= 'Прогул',       inEnumName:= 'zc_Enum_WorkTimeKind_Skip');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_Trainee(), inDescId:= zc_Object_WorkTimeKind(), inCode:= 5, inName:= 'Стажер',       inEnumName:= 'zc_Enum_WorkTimeKind_Trainee');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_DayOff(),  inDescId:= zc_Object_WorkTimeKind(), inCode:= 6, inName:= 'Выходной',     inEnumName:= 'zc_Enum_WorkTimeKind_DayOff');
+
 
      -- !!! 
      -- !!! Баланс: 1-уровень Управленческих Счетов
@@ -264,6 +272,7 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.10.13         * add Типы рабочего времени (6 шт)
  30.09.13                                        * add zc_Enum_InfoMoney_21201
  29.09.13                                        * add zc_Object_RateFuelKind
  27.09.13                                        * add zc_Enum_InfoMoney_20401
