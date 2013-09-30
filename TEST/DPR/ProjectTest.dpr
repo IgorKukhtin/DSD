@@ -216,7 +216,8 @@ uses
   PersonalGroupEdit in '..\..\Forms\PersonalGroupEdit.pas' {PersonalGroupEditForm},
   PersonalSendCash in '..\..\Forms\PersonalSendCash.pas' {PersonalSendCashForm},
   PersonalSendCashJournal in '..\..\Forms\PersonalSendCashJournal.pas' {PersonalSendCashJournalForm},
-  PersonalSendCashTest in '..\SOURCE\Movement\All\PersonalSendCashTest.pas';
+  PersonalSendCashTest in '..\SOURCE\Movement\All\PersonalSendCashTest.pas' {$R *.RES},
+  WorkTimeKind in '..\..\Forms\WorkTimeKind.pas' {WorkTimeKindForm};
 
 {$R *.RES}
 

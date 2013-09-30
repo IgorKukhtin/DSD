@@ -76,6 +76,7 @@ type
     procedure LoadServiceFormTest;
     procedure LoadRateFuelKindFormTest;
     procedure LoadFreightFormTest;
+    procedure LoadWorkTimeKindFormTest;
   end;
 
 implementation
@@ -555,6 +556,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMemberForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMemberEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMemberEditForm');
+end;
+
+procedure TLoadFormTest.LoadWorkTimeKindFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKindForm');
 end;
 
 procedure TLoadFormTest.LoadPositionFormTest;
