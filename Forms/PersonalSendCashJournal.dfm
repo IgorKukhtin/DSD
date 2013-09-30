@@ -1,18 +1,19 @@
-inherited IncomeFuelJournalForm: TIncomeFuelJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1055#1088#1080#1093#1086#1076' ('#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086')'
+inherited PersonalSendCashJournalForm: TPersonalSendCashJournalForm
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1056#1072#1089#1093#1086#1076' '#1076#1077#1085#1077#1075' '#1089' '#1087#1086#1076#1086#1090#1095#1077#1090#1072' '#1085#1072' '#1087#1086#1076#1086#1090#1095#1077#1090
   ClientHeight = 427
-  ClientWidth = 1189
-  ExplicitWidth = 1205
+  ClientWidth = 711
+  ExplicitWidth = 727
   ExplicitHeight = 462
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
     Top = 26
-    Width = 1189
+    Width = 711
     Height = 41
     Align = alTop
     TabOrder = 1
+    ExplicitWidth = 1189
     object deStart: TcxDateEdit
       Left = 106
       Top = 10
@@ -37,11 +38,12 @@ inherited IncomeFuelJournalForm: TIncomeFuelJournalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 67
-    Width = 1189
+    Width = 711
     Height = 360
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 1189
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -74,28 +76,23 @@ inherited IncomeFuelJournalForm: TIncomeFuelJournalForm
         item
           Format = ',0.00'
           Kind = skSum
-          Column = colTotalSummVAT
         end
         item
           Format = ',0.00'
           Kind = skSum
-          Column = colTotalSummMVAT
         end
         item
           Format = ',0.00'
           Kind = skSum
-          Column = colTotalSummPVAT
         end
         item
           Format = ',0.###;-,0.###; ;'
           Kind = skSum
-          Column = colTotalCount
         end>
       DataController.Summary.FooterSummaryItems = <
         item
           Format = ',0.###;-,0.###; ;'
           Kind = skSum
-          Column = colTotalCount
         end
         item
           Format = ',0.00'
@@ -113,17 +110,14 @@ inherited IncomeFuelJournalForm: TIncomeFuelJournalForm
         item
           Format = ',0.00'
           Kind = skSum
-          Column = colTotalSummVAT
         end
         item
           Format = ',0.00'
           Kind = skSum
-          Column = colTotalSummMVAT
         end
         item
           Format = ',0.00'
           Kind = skSum
-          Column = colTotalSummPVAT
         end>
       DataController.Summary.SummaryGroups = <>
       OptionsCustomize.ColumnHiding = True
@@ -174,96 +168,20 @@ inherited IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
-      object colFromName: TcxGridDBColumn
-        Caption = #1054#1090' '#1082#1086#1075#1086
-        DataBinding.FieldName = 'FromName'
+      object colPersonalName: TcxGridDBColumn
+        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1054#1090' '#1082#1086#1075#1086')'
+        DataBinding.FieldName = 'PersonalName'
         HeaderAlignmentVert = vaCenter
-        Width = 118
-      end
-      object colToName: TcxGridDBColumn
-        Caption = #1050#1086#1084#1091' ('#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100')'
-        DataBinding.FieldName = 'ToName'
-        HeaderAlignmentVert = vaCenter
-        Width = 119
-      end
-      object colPersonalDriverName: TcxGridDBColumn
-        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
-        DataBinding.FieldName = 'PersonalDriverName'
-        HeaderAlignmentVert = vaCenter
-        Width = 81
-      end
-      object colPaidKindName: TcxGridDBColumn
-        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-        DataBinding.FieldName = 'PaidKindName'
-        HeaderAlignmentVert = vaCenter
-        Width = 36
-      end
-      object colContractName: TcxGridDBColumn
-        Caption = #1044#1086#1075#1086#1074#1086#1088
-        DataBinding.FieldName = 'ContractName'
-        HeaderAlignmentVert = vaCenter
-        Width = 58
-      end
-      object colTotalCount: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086
-        DataBinding.FieldName = 'TotalCount'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 3
-        Properties.DisplayFormat = ',0.###;-,0.###;;'
-        HeaderAlignmentHorz = taRightJustify
-        HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 150
       end
       object colTotalSumm: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1087#1086#1089#1090#1072#1074#1097'.'
+        Caption = #1057#1091#1084#1084#1072
         DataBinding.FieldName = 'TotalSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 67
-      end
-      object colPriceWithVAT: TcxGridDBColumn
-        Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072')'
-        DataBinding.FieldName = 'PriceWithVAT'
-        HeaderAlignmentHorz = taRightJustify
-        HeaderAlignmentVert = vaCenter
-        Width = 62
-      end
-      object colVATPercent: TcxGridDBColumn
-        Caption = '% '#1053#1044#1057
-        DataBinding.FieldName = 'VATPercent'
-        HeaderAlignmentHorz = taRightJustify
-        HeaderAlignmentVert = vaCenter
-        Width = 42
-      end
-      object colTotalSummVAT: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
-        DataBinding.FieldName = 'TotalSummVAT'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
-        HeaderAlignmentHorz = taRightJustify
-        HeaderAlignmentVert = vaCenter
-        Width = 56
-      end
-      object colTotalSummMVAT: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
-        DataBinding.FieldName = 'TotalSummMVAT'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
-        Visible = False
-        HeaderAlignmentHorz = taRightJustify
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object colTotalSummPVAT: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
-        DataBinding.FieldName = 'TotalSummPVAT'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
-        HeaderAlignmentHorz = taRightJustify
-        HeaderAlignmentVert = vaCenter
-        Width = 37
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -447,7 +365,7 @@ inherited IncomeFuelJournalForm: TIncomeFuelJournalForm
       Category = 'DSDLib'
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
-      FormName = 'TIncomeFuelForm'
+      FormName = 'TPersonalSendCashForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -463,7 +381,7 @@ inherited IncomeFuelJournalForm: TIncomeFuelJournalForm
       Category = 'DSDLib'
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      FormName = 'TIncomeFuelForm'
+      FormName = 'TPersonalSendCashForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -526,7 +444,7 @@ inherited IncomeFuelJournalForm: TIncomeFuelJournalForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_IncomeFuel'
+    StoredProcName = 'gpSelect_Movement_PersonalSendCash'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -551,7 +469,7 @@ inherited IncomeFuelJournalForm: TIncomeFuelJournalForm
     Top = 176
   end
   object spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_Income'
+    StoredProcName = 'gpComplete_Movement_PersonalSendCash'
     DataSets = <>
     OutputType = otResult
     Params = <

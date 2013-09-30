@@ -1,9 +1,9 @@
 ﻿inherited PersonalEditForm: TPersonalEditForm
   Caption = 'C'#1086#1090#1088#1091#1076#1085#1080#1082
   ClientHeight = 275
-  ClientWidth = 340
-  ExplicitWidth = 348
-  ExplicitHeight = 302
+  ClientWidth = 372
+  ExplicitWidth = 380
+  ExplicitHeight = 309
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
@@ -260,59 +260,67 @@
       end
       item
         Name = 'MemberId'
-        Component = ceMember
-        ComponentItem = 'key'
+        Component = MemberGuides
+        ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
+        Value = '0'
       end
       item
         Name = 'MemberName'
-        Component = ceMember
+        Component = MemberGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'PositionId'
-        Component = cePosition
-        ComponentItem = 'key'
+        Component = PositionGuides
+        ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
+        Value = '0'
       end
       item
         Name = 'PositionName'
-        Component = cePosition
+        Component = PositionGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'UnitId'
-        Component = ceUnit
-        ComponentItem = 'key'
+        Component = UnitGuides
+        ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
+        Value = '0'
       end
       item
         Name = 'UnitName'
-        Component = ceUnit
+        Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'PersonalGroupId'
-        Component = cePersonalGroup
-        ComponentItem = 'key'
+        Component = PersonalGroupGuides
+        ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
+        Value = '0'
       end
       item
         Name = 'PersonalGroupName'
-        Component = cePersonalGroup
+        Component = PersonalGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptOutput
+        Value = ''
       end
       item
         Name = 'DateIn'

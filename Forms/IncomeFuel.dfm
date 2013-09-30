@@ -1,5 +1,5 @@
 inherited IncomeFuelForm: TIncomeFuelForm
-  Caption = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086')'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1055#1088#1080#1093#1086#1076' ('#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086')'
   ClientHeight = 396
   ClientWidth = 773
   KeyPreview = True
@@ -16,7 +16,6 @@ inherited IncomeFuelForm: TIncomeFuelForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 968
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 25
@@ -155,17 +154,12 @@ inherited IncomeFuelForm: TIncomeFuelForm
     TabOrder = 2
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 124
-    ExplicitWidth = 1028
-    ExplicitHeight = 272
     ClientRectBottom = 281
     ClientRectRight = 773
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 1028
-      ExplicitHeight = 248
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -173,8 +167,6 @@ inherited IncomeFuelForm: TIncomeFuelForm
         Height = 257
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1028
-        ExplicitHeight = 248
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource
@@ -305,6 +297,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitTop = 0
       ExplicitWidth = 1028
       ExplicitHeight = 248
       object cxGridEntry: TcxGrid

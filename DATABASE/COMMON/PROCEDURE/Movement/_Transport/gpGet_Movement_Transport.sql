@@ -175,5 +175,6 @@ ALTER FUNCTION gpGet_Movement_Transport (Integer, TVarChar) OWNER TO postgres;
  20.08.13         *
 */
 
+
 -- тест
  SELECT * FROM gpGet_Movement_Transport (inMovementId:= 0, inSession:= '2')

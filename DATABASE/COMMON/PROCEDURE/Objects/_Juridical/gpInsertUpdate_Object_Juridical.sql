@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
     IN inisCorporate         Boolean   ,    -- Признак наша ли собственность это юридическое лицо
     IN inJuridicalGroupId    Integer   ,    -- Группы юридических лиц
     IN inGoodsPropertyId     Integer   ,    -- Классификаторы свойств товаров
-    IN inInfoMoneyId         Integer   ,    -- Управленческие аналитики
+    IN inInfoMoneyId         Integer   ,    -- Статьи назначения
     IN inSession             TVarChar       -- текущий пользователь
 )
   RETURNS integer AS

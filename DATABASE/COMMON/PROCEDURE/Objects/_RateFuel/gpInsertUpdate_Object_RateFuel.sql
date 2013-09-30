@@ -30,8 +30,8 @@ BEGIN
        FROM Object AS Object_Car
             
             JOIN ( SELECT ObjectLink_RateFuel_Car.ChildObjectId AS CarId
-                              , MAX(CASE when ObjectLink_RateFuel_RouteKind	= zc_Enum_RouteKind_Internal() THEN Object_RateFuel.Id ELSE 0 END) AS RateFuelId_Internal
-                              , MAX(CASE when ObjectLink_RateFuel_RouteKind	= zc_Enum_RouteKind_External() THEN Object_RateFuel.Id ELSE 0 END) AS RateFuelId_External
+                              , MAX(CASE when ObjectLink_RateFuel_RouteKind.ChildObjectId = zc_Enum_RouteKind_Internal() THEN Object_RateFuel.Id ELSE 0 END) AS RateFuelId_Internal
+                              , MAX(CASE when ObjectLink_RateFuel_RouteKind.ChildObjectId = zc_Enum_RouteKind_External() THEN Object_RateFuel.Id ELSE 0 END) AS RateFuelId_External
 							  
                         FROM Object AS Object_RateFuel
                              LEFT JOIN ObjectLink AS ObjectLink_RateFuel_Car
