@@ -115,7 +115,8 @@ BEGIN
              LEFT JOIN ObjectFloat AS ObjectFloat_Tax ON ObjectFloat_Tax.ObjectId = ObjectLink_Fuel_RateFuelKind.ChildObjectId
                                                      AND ObjectFloat_Tax.DescId = zc_ObjectFloat_RateFuelKind_Tax()
              -- выбрали все маршруты
-             LEFT JOIN MovementItem AS MovementItem_Master ON 1 = 1
+             LEFT JOIN MovementItem AS MovementItem_Master ON MovementItem_Master.MovementId = inMovementId
+                                                          AND MovementItem_Master.DescId = zc_MI_Master()
              -- выбрали у маршрута - Тип маршрута
              LEFT JOIN MovementItemLinkObject AS MILinkObject_RouteKind
                                               ON MILinkObject_RouteKind.MovementItemId = MovementItem_Master.Id 

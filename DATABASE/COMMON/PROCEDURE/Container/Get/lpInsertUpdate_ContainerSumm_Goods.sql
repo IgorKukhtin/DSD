@@ -5,6 +5,7 @@
 CREATE OR REPLACE FUNCTION lpInsertUpdate_ContainerSumm_Goods (
     IN inOperDate               TDateTime, 
     IN inUnitId                 Integer , 
+    IN inCarId                  Integer , 
     IN inPersonalId             Integer , 
     IN inBranchId               Integer , 
     IN inJuridicalId_basis      Integer , 
@@ -83,8 +84,8 @@ BEGIN
                                                  , inObjectCostId      := lpInsertFind_ObjectCost (inObjectCostDescId:= zc_ObjectCost_Basis()
                                                                                                  , inDescId_1   := zc_ObjectCostLink_Goods()
                                                                                                  , inObjectId_1 := inGoodsId
-                                                                                                 , inDescId_2   := CASE WHEN inPersonalId <> 0 THEN zc_ObjectCostLink_Personal() ELSE zc_ObjectCostLink_Unit() END
-                                                                                                 , inObjectId_2 := CASE WHEN inPersonalId <> 0 AND inOperDate >= zc_DateStart_ObjectCostOnUnit() THEN inPersonalId WHEN inOperDate >= zc_DateStart_ObjectCostOnUnit() THEN inUnitId ELSE 0 END
+                                                                                                 , inDescId_2   := CASE WHEN COALESCE (inCarId, 0) <> 0 THEN zc_ContainerLinkObject_Car() WHEN inPersonalId <> 0 THEN zc_ObjectCostLink_Personal() ELSE zc_ObjectCostLink_Unit() END
+                                                                                                 , inObjectId_2 := CASE WHEN COALESCE (inCarId, 0) <> 0 THEN inCarId WHEN inPersonalId <> 0 AND inOperDate >= zc_DateStart_ObjectCostOnUnit() THEN inPersonalId WHEN inOperDate >= zc_DateStart_ObjectCostOnUnit() THEN inUnitId ELSE 0 END
                                                                                                  , inDescId_3   := zc_ObjectCostLink_AssetTo()
                                                                                                  , inObjectId_3 := inAssetId
                                                                                                  , inDescId_4   := zc_ObjectCostLink_InfoMoneyDetail()
@@ -292,6 +293,7 @@ ALTER FUNCTION lpInsertUpdate_ContainerSumm_Goods (TDateTime, Integer, Integer, 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 30.09.13                                        * add inCarId
  20.09.13                                        * add zc_ObjectCostLink_Account
  19.09.13                                        * sort by optimize
  17.09.13                                        * CASE -> IF

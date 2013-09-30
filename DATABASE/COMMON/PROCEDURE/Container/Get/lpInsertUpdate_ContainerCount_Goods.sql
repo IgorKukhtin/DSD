@@ -5,6 +5,7 @@
 CREATE OR REPLACE FUNCTION lpInsertUpdate_ContainerCount_Goods (
     IN inOperDate               TDateTime, 
     IN inUnitId                 Integer , 
+    IN inCarId                  Integer , 
     IN inPersonalId             Integer , 
     IN inInfoMoneyDestinationId Integer , 
     IN inGoodsId                Integer , 
@@ -45,8 +46,8 @@ BEGIN
                                                  , inBusinessId        := NULL
                                                  , inObjectCostDescId  := NULL
                                                  , inObjectCostId      := NULL
-                                                 , inDescId_1          := CASE WHEN COALESCE (inPersonalId, 0) <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Unit() END
-                                                 , inObjectId_1        := CASE WHEN COALESCE (inPersonalId, 0) <> 0 THEN inPersonalId ELSE COALESCE (inUnitId, 0) END
+                                                 , inDescId_1          := CASE WHEN COALESCE (inCarId, 0) <> 0 THEN zc_ContainerLinkObject_Car() WHEN COALESCE (inPersonalId, 0) <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Unit() END
+                                                 , inObjectId_1        := CASE WHEN COALESCE (inCarId, 0) <> 0 THEN inCarId WHEN COALESCE (inPersonalId, 0) <> 0 THEN inPersonalId ELSE COALESCE (inUnitId, 0) END
                                                  , inDescId_2          := zc_ContainerLinkObject_AssetTo()
                                                  , inObjectId_2        := inAssetId
                                                    );
@@ -112,6 +113,7 @@ ALTER FUNCTION lpInsertUpdate_ContainerCount_Goods (TDateTime, Integer, Integer,
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 30.09.13                                        * add inCarId
  19.09.13                                        * sort by optimize
  17.09.13                                        * CASE -> IF
  16.09.13                                        *
