@@ -1,9 +1,9 @@
 ﻿inherited AccountEditForm: TAccountEditForm
   Caption = #1053#1086#1074#1099#1081' '#1089#1095#1077#1090
   ClientHeight = 350
-  ClientWidth = 381
+  ClientWidth = 389
   ExplicitWidth = 397
-  ExplicitHeight = 388
+  ExplicitHeight = 384
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -161,7 +161,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptInput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
@@ -237,7 +237,7 @@
         Component = ceCode
         DataType = ftInteger
         ParamType = ptOutput
-        Value = ''
+        Value = 0.000000000000000000
       end
       item
         Name = 'AccountGroupId'
@@ -310,6 +310,7 @@
     LookupControl = ceAccountGroup
     FormName = 'TInfoMoneyGroupForm'
     PositionDataSet = 'ClientDataSet'
+    Params = <>
     Left = 328
     Top = 125
   end
@@ -317,6 +318,7 @@
     LookupControl = ceAccountDirection
     FormName = 'TAccountDirectionForm'
     PositionDataSet = 'ClientDataSet'
+    Params = <>
     Left = 328
     Top = 173
   end
@@ -336,21 +338,23 @@
     Top = 40
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 384
-    Top = 280
+    Left = 344
+    Top = 48
   end
   object InfoMoneyDestinationGuides: TdsdGuides
     LookupControl = ceInfoMoneyDestination
     FormName = 'TInfoMoneyDestinationForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 368
-    Top = 237
+    Params = <>
+    Left = 336
+    Top = 229
   end
   object InfoMoneyGuides: TdsdGuides
     LookupControl = ceInfoMoney
     FormName = 'TInfoMoneyForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 328
-    Top = 293
+    Params = <>
+    Left = 336
+    Top = 269
   end
 end

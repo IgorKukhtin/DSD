@@ -3,7 +3,7 @@ object MainForm: TMainForm
   Top = 0
   Caption = 'MainForm'
   ClientHeight = 350
-  ClientWidth = 657
+  ClientWidth = 838
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,14 +13,13 @@ object MainForm: TMainForm
   OldCreateOrder = False
   Position = poDesigned
   OnCreate = FormCreate
-  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -60,6 +59,14 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbTransportDocuments'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPersonalDocuments'
+        end
+        item
+          Visible = True
           ItemName = 'bbHistory'
         end
         item
@@ -90,7 +97,7 @@ object MainForm: TMainForm
       Category = 0
     end
     object bbGoodsDocuments: TdxBarSubItem
-      Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1090#1086#1074#1072#1088#1085#1099#1077
+      Caption = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       Category = 0
       Visible = ivAlways
       ItemLinks = <
@@ -158,23 +165,15 @@ object MainForm: TMainForm
         end
         item
           Visible = True
-          ItemName = 'bbMember'
-        end
-        item
-          Visible = True
           ItemName = 'bbPartner'
         end
         item
           Visible = True
-          ItemName = 'bbPersonal'
+          ItemName = 'bbRouteSorting'
         end
         item
           Visible = True
-          ItemName = 'bbPosition'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarSeparator1'
+          ItemName = 'bbGuides_Separator'
         end
         item
           Visible = True
@@ -182,7 +181,7 @@ object MainForm: TMainForm
         end
         item
           Visible = True
-          ItemName = 'dxBarSeparator1'
+          ItemName = 'bbGuides_Separator'
         end
         item
           Visible = True
@@ -194,7 +193,7 @@ object MainForm: TMainForm
         end
         item
           Visible = True
-          ItemName = 'dxBarSeparator1'
+          ItemName = 'bbGuides_Separator'
         end
         item
           Visible = True
@@ -226,7 +225,11 @@ object MainForm: TMainForm
         end
         item
           Visible = True
-          ItemName = 'dxBarSeparator1'
+          ItemName = 'bbCurrency'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGuides_Separator'
         end
         item
           Visible = True
@@ -242,23 +245,7 @@ object MainForm: TMainForm
         end
         item
           Visible = True
-          ItemName = 'bbPriceList'
-        end
-        item
-          Visible = True
-          ItemName = 'bbTradeMark'
-        end
-        item
-          Visible = True
           ItemName = 'bbMeasure'
-        end
-        item
-          Visible = True
-          ItemName = 'bbCurrency'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarSeparator1'
         end
         item
           Visible = True
@@ -266,12 +253,27 @@ object MainForm: TMainForm
         end
         item
           Visible = True
-          ItemName = 'dxBarSubItem'
+          ItemName = 'bbTradeMark'
         end
         item
           Visible = True
-          ItemName = 'dxBarSubItem1'
+          ItemName = 'bbPriceList'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGuides_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSubItem'
         end>
+    end
+    object bbGuides_Separator: TdxBarSeparator
+      Caption = 'bbGuides_Separator'
+      Category = 0
+      Hint = 'bbGuides_Separator'
+      Visible = ivAlways
+      ShowCaption = False
     end
     object bbMeasure: TdxBarButton
       Action = actMeasure
@@ -348,11 +350,6 @@ object MainForm: TMainForm
     object bbPartner: TdxBarButton
       Action = actPartner
       Category = 0
-    end
-    object dxBarSeparator1: TdxBarSeparator
-      Category = 0
-      Visible = ivAlways
-      ShowCaption = False
     end
     object bbPaidKind: TdxBarButton
       Action = actPaidKind
@@ -431,7 +428,7 @@ object MainForm: TMainForm
       Category = 0
     end
     object bbPriceList: TdxBarButton
-      Action = actPrisceList
+      Action = actPriceList
       Category = 0
     end
     object bbCash: TdxBarButton
@@ -522,44 +519,6 @@ object MainForm: TMainForm
       Action = actProfitLoss
       Category = 0
     end
-    object dxBarSubItem1: TdxBarSubItem
-      Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1080
-      Category = 0
-      Visible = ivAlways
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbCar'
-        end
-        item
-          Visible = True
-          ItemName = 'bbCarModel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRoute'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRouteSorting'
-        end>
-    end
-    object bbCar: TdxBarButton
-      Action = actCar
-      Category = 0
-    end
-    object bbCarModel: TdxBarButton
-      Action = actCarModel
-      Category = 0
-    end
-    object bbPersonal: TdxBarButton
-      Action = actPersonal
-      Category = 0
-    end
-    object bbRoute: TdxBarButton
-      Action = actRoute
-      Category = 0
-    end
     object bbRouteSorting: TdxBarButton
       Action = actRouteSorting
       Category = 0
@@ -570,14 +529,6 @@ object MainForm: TMainForm
     end
     object bbAsset: TdxBarButton
       Action = actAsset
-      Category = 0
-    end
-    object bbPosition: TdxBarButton
-      Action = actPosition
-      Category = 0
-    end
-    object bbMember: TdxBarButton
-      Action = actMember
       Category = 0
     end
     object bbHistory: TdxBarSubItem
@@ -595,7 +546,7 @@ object MainForm: TMainForm
       Category = 0
     end
     object bbFinanceDocuments: TdxBarSubItem
-      Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1092#1080#1085#1072#1085#1089#1086#1074#1099#1077
+      Caption = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       Category = 0
       Hint = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1092#1080#1085#1072#1085#1089#1086#1074#1099#1077
       Visible = ivAlways
@@ -651,10 +602,296 @@ object MainForm: TMainForm
       Action = actProcess
       Category = 0
     end
+    object bbTransportDocuments: TdxBarSubItem
+      Caption = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbTransport'
+        end
+        item
+          Visible = True
+          ItemName = 'bbIncomeFuel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPersonalSendCash'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTransportDocuments_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCar'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRoute'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCarModel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbFreight'
+        end
+        item
+          Visible = True
+          ItemName = 'bbFuel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRateFuelKind'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRateFuel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTransportDocuments_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbtReport_Transport'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_Fuel'
+        end>
+    end
+    object bbTransport: TdxBarButton
+      Action = actTransport
+      Category = 0
+    end
+    object bbIncomeFuel: TdxBarButton
+      Action = actIncomeFuel
+      Category = 0
+    end
+    object bbPersonalSendCash: TdxBarButton
+      Action = actPersonalSendCash
+      Category = 0
+    end
+    object bbTransportDocuments_Separator: TdxBarSeparator
+      Caption = 'bbTransportDocuments_Separator'
+      Category = 0
+      Hint = 'bbTransportDocuments_Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbCar: TdxBarButton
+      Action = actCar
+      Category = 0
+    end
+    object bbRoute: TdxBarButton
+      Action = actRoute
+      Category = 0
+    end
+    object bbCarModel: TdxBarButton
+      Action = actCarModel
+      Category = 0
+    end
+    object bbFreight: TdxBarButton
+      Action = actFreight
+      Category = 0
+    end
+    object bbFuel: TdxBarButton
+      Action = actFuel
+      Category = 0
+    end
+    object bbRateFuelKind: TdxBarButton
+      Action = actRateFuelKind
+      Category = 0
+    end
+    object bbRateFuel: TdxBarButton
+      Action = actRateFuel
+      Category = 0
+    end
+    object bbtReport_Transport: TdxBarButton
+      Action = actReport_Transport
+      Category = 0
+    end
+    object bbReport_Fuel: TdxBarButton
+      Action = actReport_Fuel
+      Category = 0
+    end
+    object bbPersonalDocuments: TdxBarSubItem
+      Caption = #1055#1077#1088#1089#1086#1085#1072#1083
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPersonalGroup'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPersonal'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPosition'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMember'
+        end
+        item
+          Visible = True
+          ItemName = 'bbWorkTimeKind'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPersonalDocuments_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSheetWorkTime'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPersonalService'
+        end>
+    end
+    object bbPersonalGroup: TdxBarButton
+      Action = actPersonalGroup
+      Category = 0
+    end
+    object bbPersonal: TdxBarButton
+      Action = actPersonal
+      Category = 0
+    end
+    object bbPosition: TdxBarButton
+      Action = actPosition
+      Category = 0
+    end
+    object bbMember: TdxBarButton
+      Action = actMember
+      Category = 0
+    end
+    object bbWorkTimeKind: TdxBarButton
+      Action = actWorkTimeKind
+      Category = 0
+    end
+    object bbPersonalDocuments_Separator: TdxBarSeparator
+      Caption = 'bbPersonalDocuments_Separator'
+      Category = 0
+      Hint = 'bbPersonalDocuments_Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbSheetWorkTime: TdxBarButton
+      Action = actSheetWorkTime
+      Category = 0
+    end
+    object bbPersonalService: TdxBarButton
+      Action = actPersonalService
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Left = 192
     Top = 48
+    object actPersonalGroup: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1080' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074' '
+      Hint = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1080' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074' '
+      FormName = 'TPersonalGroupForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actPersonal: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082#1080' '
+      Hint = #1057#1086#1090#1088#1091#1076#1085#1080#1082#1080' '
+      FormName = 'TPersonalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actPosition: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1080' '
+      Hint = #1044#1086#1083#1078#1085#1086#1089#1090#1080' '
+      FormName = 'TPositionForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actMember: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
+      Hint = #1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
+      FormName = 'TMemberForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actTransport: TdsdOpenForm
+      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      Caption = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
+      Hint = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
+      FormName = 'TTransportJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actIncomeFuel: TdsdOpenForm
+      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1079#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086') '
+      Hint = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1079#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086') '
+      FormName = 'TIncomeFuelJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actPersonalSendCash: TdsdOpenForm
+      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      Caption = #1056#1072#1089#1093#1086#1076' '#1076#1077#1085#1077#1075' '#1089' '#1087#1086#1076#1086#1090#1095#1077#1090#1072' '#1085#1072' '#1087#1086#1076#1086#1090#1095#1077#1090
+      Hint = #1056#1072#1089#1093#1086#1076' '#1076#1077#1085#1077#1075' '#1089' '#1087#1086#1076#1086#1090#1095#1077#1090#1072' '#1085#1072' '#1087#1086#1076#1086#1090#1095#1077#1090
+      FormName = 'TPersonalSendCashJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actCar: TdsdOpenForm
+      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1080
+      Hint = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1080
+      FormName = 'TCarForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actRoute: TdsdOpenForm
+      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      Caption = #1052#1072#1088#1096#1088#1091#1090#1099
+      Hint = #1052#1072#1088#1096#1088#1091#1090#1099
+      FormName = 'TRouteForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actCarModel: TdsdOpenForm
+      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      Caption = #1052#1072#1088#1082#1080' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1077#1081
+      Hint = #1052#1072#1088#1082#1080' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1077#1081
+      FormName = 'TCarModelForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actFuel: TdsdOpenForm
+      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      Caption = #1042#1080#1076#1099' '#1090#1086#1087#1083#1080#1074#1072
+      Hint = #1042#1080#1076#1099' '#1090#1086#1087#1083#1080#1074#1072
+      FormName = 'TFuelForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actRateFuelKind: TdsdOpenForm
+      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      Caption = #1042#1080#1076#1099' '#1085#1086#1088#1084' '#1090#1086#1087#1083#1080#1074#1072
+      Hint = #1042#1080#1076#1099' '#1085#1086#1088#1084' '#1090#1086#1087#1083#1080#1074#1072
+      FormName = 'TRateFuelKindForm'
+      GuiParams = <>
+      isShowModal = False
+    end
     object actReport_Balance: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099
       Caption = #1041#1072#1083#1072#1085#1089
@@ -678,7 +915,7 @@ object MainForm: TMainForm
       isShowModal = False
     end
     object actIncome: TdsdOpenForm
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1090#1086#1074#1072#1088#1085#1099#1077
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       Caption = #1055#1088#1080#1093#1086#1076#1085#1099#1077' '#1085#1072#1082#1083#1072#1076#1085#1099#1077
       FormName = 'TIncomeJournalForm'
       GuiParams = <>
@@ -699,23 +936,16 @@ object MainForm: TMainForm
       ShortCut = 16472
     end
     object actInventory: TdsdOpenForm
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1090#1086#1074#1072#1088#1085#1099#1077
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
       FormName = 'TInventoryJournalForm'
       GuiParams = <>
       isShowModal = False
     end
     object actLoss: TdsdOpenForm
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1090#1086#1074#1072#1088#1085#1099#1077
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       Caption = #1057#1087#1080#1089#1072#1085#1080#1077
       FormName = 'TLossJournalForm'
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actSendOnPrice: TdsdOpenForm
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1090#1086#1074#1072#1088#1085#1099#1077
-      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077
-      FormName = 'TSendOnPriceJournalForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -724,6 +954,13 @@ object MainForm: TMainForm
       Caption = #1041#1072#1085#1082#1080
       Hint = #1041#1072#1085#1082#1080
       FormName = 'TBankForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actSendOnPrice: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077
+      FormName = 'TSendOnPriceJournalForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -863,7 +1100,7 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actPrisceList: TdsdOpenForm
+    object actPriceList: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090#1099
       Hint = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090#1099
@@ -959,14 +1196,6 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actRoute: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      Caption = #1052#1072#1088#1096#1088#1091#1090#1099
-      Hint = #1052#1072#1088#1096#1088#1091#1090#1099
-      FormName = 'TRouteForm'
-      GuiParams = <>
-      isShowModal = False
-    end
     object actRouteSorting: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1080' '#1084#1072#1088#1096#1088#1091#1090#1086#1074
@@ -975,90 +1204,50 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actMember: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
-      Hint = #1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
-      FormName = 'TMemberForm'
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actPosition: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1080' '
-      Hint = #1044#1086#1083#1078#1085#1086#1089#1090#1080' '
-      FormName = 'TPositionForm'
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actPersonal: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082#1080' '
-      Hint = #1057#1086#1090#1088#1091#1076#1085#1080#1082#1080' '
-      FormName = 'TPersonalForm'
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actCar: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1080
-      Hint = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1080
-      FormName = 'TCarForm'
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actCarModel: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      Caption = #1052#1072#1088#1082#1080' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1077#1081
-      Hint = #1052#1072#1088#1082#1080' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1077#1081
-      FormName = 'TCarModelForm'
-      GuiParams = <>
-      isShowModal = False
-    end
     object actSend: TdsdOpenForm
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1090#1086#1074#1072#1088#1085#1099#1077
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
       FormName = 'TSendJournalForm'
       GuiParams = <>
       isShowModal = False
     end
     object actSale: TdsdOpenForm
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1090#1086#1074#1072#1088#1085#1099#1077
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103
       FormName = 'TSaleJournalForm'
       GuiParams = <>
       isShowModal = False
     end
     object actReturnOut: TdsdOpenForm
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1090#1086#1074#1072#1088#1085#1099#1077
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
       FormName = 'TReturnOutJournalForm'
       GuiParams = <>
       isShowModal = False
     end
     object actReturnIn: TdsdOpenForm
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1090#1086#1074#1072#1088#1085#1099#1077
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
       FormName = 'TReturnInJournalForm'
       GuiParams = <>
       isShowModal = False
     end
     object actProductionSeparate: TdsdOpenForm
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1090#1086#1074#1072#1088#1085#1099#1077
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
       FormName = 'TProductionSeparateJournalForm'
       GuiParams = <>
       isShowModal = False
     end
     object actProductionUnion: TdsdOpenForm
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1090#1086#1074#1072#1088#1085#1099#1077
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
       FormName = 'TProductionUnionJournalForm'
       GuiParams = <>
       isShowModal = False
     end
     object actZakazExternal: TdsdOpenForm
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1090#1086#1074#1072#1088#1085#1099#1077
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       Caption = #1047#1072#1103#1074#1082#1072' ('#1089#1090#1086#1088#1086#1085#1085#1103#1103')'
       FormName = 'TZakazExternalJournalForm'
       GuiParams = <>
@@ -1073,21 +1262,21 @@ object MainForm: TMainForm
       isShowModal = False
     end
     object actZakazInternal: TdsdOpenForm
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1090#1086#1074#1072#1088#1085#1099#1077
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       Caption = #1047#1072#1103#1074#1082#1072' ('#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103')'
       FormName = 'TZakazInternalJournalForm'
       GuiParams = <>
       isShowModal = False
     end
     object actIncomeCash: TdsdOpenForm
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1092#1080#1085#1072#1085#1089#1086#1074#1099#1077
+      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       Caption = #1055#1088#1080#1093#1086#1076#1085#1099#1081' '#1082#1072#1089#1089#1086#1074#1099#1081' '#1086#1088#1076#1077#1088
       Hint = #1055#1088#1080#1093#1086#1076#1085#1099#1081' '#1082#1072#1089#1089#1086#1074#1099#1081' '#1086#1088#1076#1077#1088
       GuiParams = <>
       isShowModal = False
     end
     object actOutcomeCash: TdsdOpenForm
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1092#1080#1085#1072#1085#1089#1086#1074#1099#1077
+      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       Caption = #1056#1072#1089#1093#1086#1076#1085#1099#1081' '#1082#1072#1089#1089#1086#1074#1099#1081' '#1086#1088#1076#1077#1088
       Hint = #1056#1072#1089#1093#1086#1076#1085#1099#1081' '#1082#1072#1089#1089#1086#1074#1099#1081' '#1086#1088#1076#1077#1088
       GuiParams = <>
@@ -1099,10 +1288,6 @@ object MainForm: TMainForm
       FormName = 'TReport_MotionGoodsForm'
       GuiParams = <>
       isShowModal = False
-    end
-    object Action2: TAction
-      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1090#1086#1074#1072#1088#1085#1099#1077
-      Caption = 'Action2'
     end
     object actRole: TdsdOpenForm
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
@@ -1124,6 +1309,62 @@ object MainForm: TMainForm
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
       Hint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
       FormName = 'TUserForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actRateFuel: TdsdOpenForm
+      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      Caption = #1053#1086#1088#1084#1099' '#1090#1086#1087#1083#1080#1074#1072
+      Hint = #1053#1086#1088#1084#1099' '#1090#1086#1087#1083#1080#1074#1072
+      FormName = 'TRateFuelForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actFreight: TdsdOpenForm
+      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      Caption = #1053#1072#1079#1074#1072#1085#1080#1103' '#1075#1088#1091#1079#1086#1074
+      Hint = #1053#1072#1079#1074#1072#1085#1080#1103' '#1075#1088#1091#1079#1086#1074
+      FormName = 'TRateFreightForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_Transport: TdsdOpenForm
+      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1040#1074#1090#1086#1084#1086#1073#1080#1083#1103#1084
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1040#1074#1090#1086#1084#1086#1073#1080#1083#1103#1084
+      FormName = 'TReport_TransportForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_Fuel: TdsdOpenForm
+      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1088#1072#1089#1093#1086#1076#1072' '#1090#1086#1087#1083#1080#1074#1072
+      Hint = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1088#1072#1089#1093#1086#1076#1072' '#1090#1086#1087#1083#1080#1074#1072
+      FormName = 'TReport_FuelForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actWorkTimeKind: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      Caption = #1058#1080#1087#1099' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080
+      Hint = #1058#1080#1087#1099' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080
+      FormName = 'TWorkTimeKindForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actSheetWorkTime: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      Caption = #1058#1072#1073#1077#1083#1100' '#1091#1095#1077#1090#1072' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080
+      Hint = #1058#1072#1073#1077#1083#1100' '#1091#1095#1077#1090#1072' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080
+      FormName = 'TSheetWorkTimeForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actPersonalService: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099
+      Hint = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099
+      FormName = 'TPersonalServiceForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -1153,7 +1394,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.14'
+    Version = '4.12.2'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
@@ -1309,7 +1550,7 @@ object MainForm: TMainForm
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 168
+    Left = 128
     Top = 152
   end
   object ClientDataSet: TClientDataSet

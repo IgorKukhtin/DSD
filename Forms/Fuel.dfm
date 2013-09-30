@@ -1,21 +1,19 @@
-inherited CarForm: TCarForm
-  Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1080
-  ClientHeight = 367
-  ClientWidth = 853
-  ExplicitWidth = 861
-  ExplicitHeight = 401
+inherited FuelForm: TFuelForm
+  Caption = #1042#1080#1076#1099' '#1090#1086#1087#1083#1080#1074#1072
+  ClientHeight = 376
+  ClientWidth = 597
+  ExplicitWidth = 605
+  ExplicitHeight = 410
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 853
-    Height = 341
+    Width = 597
+    Height = 350
     Align = alClient
     TabOrder = 0
-    LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
-    LookAndFeel.SkinName = ''
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -32,67 +30,43 @@ inherited CarForm: TCarForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsView.CellAutoHeight = True
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
-      OptionsView.HeaderHeight = 40
+      OptionsView.HeaderHeight = 50
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 52
+        Width = 85
       end
       object clName: TcxGridDBColumn
-        Caption = #1043#1086#1089'.'#1085#1086#1084#1077#1088
+        Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Width = 181
       end
-      object clRegistrationCertificate: TcxGridDBColumn
-        Caption = #1058#1077#1093#1087#1072#1089#1087#1086#1088#1090
-        DataBinding.FieldName = 'RegistrationCertificate'
+      object clRatio: TcxGridDBColumn
+        Caption = #1050#1086#1101#1092#1092#1080#1094#1080#1077#1085#1090' '#1087#1077#1088#1077#1074#1086#1076#1072' '#1085#1086#1088#1084#1099
+        DataBinding.FieldName = 'Ratio'
         HeaderAlignmentVert = vaCenter
-        Width = 85
+        Width = 111
       end
-      object clCarModel: TcxGridDBColumn
-        Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
-        DataBinding.FieldName = 'CarModelName'
-        HeaderAlignmentVert = vaCenter
-        Width = 86
-      end
-      object clUnit: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'UnitName'
-        HeaderAlignmentVert = vaCenter
-        Width = 91
-      end
-      object clPersonalDriverName: TcxGridDBColumn
-        Caption = #1042#1086#1076#1080#1090#1077#1083#1100
-        DataBinding.FieldName = 'PersonalDriverName'
-        HeaderAlignmentVert = vaCenter
-        Width = 90
-      end
-      object clFuelMasterName: TcxGridDBColumn
-        Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1090#1086#1087#1083#1080#1074#1086
-        DataBinding.FieldName = 'FuelMasterName'
-        HeaderAlignmentVert = vaCenter
-        Width = 92
-      end
-      object clFuelChildName: TcxGridDBColumn
-        Caption = #1058#1086#1087#1083#1080#1074#1086' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1077
-        DataBinding.FieldName = 'FuelChildName'
-        HeaderAlignmentVert = vaCenter
-        Width = 88
+      object clRateFuelKind: TcxGridDBColumn
+        Caption = #1042#1080#1076#1099' '#1085#1086#1088#1084' '#1076#1083#1103' '#1090#1086#1087#1083#1080#1074#1072
+        DataBinding.FieldName = 'RateFuelKindName'
+        Width = 147
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
+        GroupSummaryAlignment = taCenter
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 72
+        Width = 59
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -101,17 +75,22 @@ inherited CarForm: TCarForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 56
-    Top = 104
+    Left = 64
+    Top = 56
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 48
-    Top = 160
+    Left = 72
+    Top = 120
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = clName
+        Properties.Strings = (
+          'Width')
+      end
       item
         Component = Owner
         Properties.Strings = (
@@ -122,8 +101,8 @@ inherited CarForm: TCarForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 288
-    Top = 104
+    Left = 320
+    Top = 96
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -141,8 +120,8 @@ inherited CarForm: TCarForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 168
-    Top = 104
+    Left = 152
+    Top = 88
     DockControlHeights = (
       0
       0
@@ -170,15 +149,15 @@ inherited CarForm: TCarForm
         end
         item
           Visible = True
-          ItemName = 'bbErased'
+          ItemName = 'bbSetErased'
         end
         item
           Visible = True
-          ItemName = 'bbUnErased'
+          ItemName = 'bbSetUnErased'
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'dxBarStatic1'
         end
         item
           BeginGroup = True
@@ -191,7 +170,7 @@ inherited CarForm: TCarForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
@@ -215,11 +194,11 @@ inherited CarForm: TCarForm
       Action = actUpdate
       Category = 0
     end
-    object bbErased: TdxBarButton
+    object bbSetErased: TdxBarButton
       Action = dsdSetErased
       Category = 0
     end
-    object bbUnErased: TdxBarButton
+    object bbSetUnErased: TdxBarButton
       Action = dsdSetUnErased
       Category = 0
     end
@@ -227,10 +206,10 @@ inherited CarForm: TCarForm
       Action = dsdGridToExcel
       Category = 0
     end
-    object dxBarStatic: TdxBarStatic
-      Caption = '     '
+    object dxBarStatic1: TdxBarStatic
+      Caption = '    '
       Category = 0
-      Hint = '     '
+      Hint = '    '
       Visible = ivAlways
     end
     object bbChoiceGuides: TdxBarButton
@@ -240,8 +219,8 @@ inherited CarForm: TCarForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 288
-    Top = 160
+    Left = 264
+    Top = 104
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -259,7 +238,7 @@ inherited CarForm: TCarForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TCarEditForm'
+      FormName = 'TFuelEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -267,7 +246,7 @@ inherited CarForm: TCarForm
           ParamType = ptOutput
           Value = '0'
         end>
-      isShowModal = True
+      isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
@@ -276,7 +255,7 @@ inherited CarForm: TCarForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TCarEditForm'
+      FormName = 'TFuelEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -285,7 +264,7 @@ inherited CarForm: TCarForm
           DataType = ftInteger
           ParamType = ptInput
         end>
-      isShowModal = True
+      isShowModal = False
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
@@ -331,18 +310,16 @@ inherited CarForm: TCarForm
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
-          DataType = ftInteger
+          DataType = ftString
           ParamType = ptOutput
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
       ImageIndex = 7
       DataSource = DataSource
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
-      Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -350,27 +327,19 @@ inherited CarForm: TCarForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Car'
+    StoredProcName = 'gpSelect_Object_Fuel'
     DataSet = ClientDataSet
     DataSets = <
       item
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 48
-    Top = 216
+    Left = 240
+    Top = 192
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 168
-    Top = 160
-  end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
-    View = cxGridDBTableView
-    OnDblClickActionList = <>
-    ActionItemList = <>
-    SortImages = dmMain.SortImageList
-    Left = 168
-    Top = 216
+    Left = 112
+    Top = 168
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -384,7 +353,29 @@ inherited CarForm: TCarForm
         DataType = ftInteger
         ParamType = ptInput
       end>
-    Left = 288
-    Top = 208
+    Left = 168
+    Top = 120
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    View = cxGridDBTableView
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+        Action = actUpdate
+      end>
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    Left = 304
+    Top = 152
   end
 end

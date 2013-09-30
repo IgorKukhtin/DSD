@@ -46,7 +46,7 @@ $BODY$BEGIN
            , Object_FuelChild.ObjectCode  AS FuelChildCode
            , Object_FuelChild.ValueData   AS FuelChildName
            
-           , Object.isErased    AS isErased
+           , Object_Car.isErased    AS isErased
            
        FROM Object AS Object_Car
        

@@ -1,6 +1,6 @@
 -- Function: gpGet_Object_Fuel()
 
--- DROP FUNCTION gpGet_Object_Fuel();
+-- DROP FUNCTION gpGet_Object_Fuel(Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Fuel(
     IN inId          Integer,       -- ключ объекта <Автомобиль>
@@ -44,11 +44,11 @@ BEGIN
            
            , ObjectFloat_Ratio.ValueData AS Ratio
 
-           , Object_RateFuelKind.ObjectId    AS RateFuelKindId
+           , Object_RateFuelKind.Id    AS RateFuelKindId
            , Object_RateFuelKind.ObjectCode  AS RateFuelKindCode
            , Object_RateFuelKind.ValueData   AS RateFuelKindName
 
-           , Object.isErased AS isErased
+           , Object_Fuel.isErased AS isErased
            
        FROM Object AS Object_Fuel
        

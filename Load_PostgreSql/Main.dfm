@@ -970,12 +970,13 @@ object MainForm: TMainForm
     ControlsCodePage = cCP_UTF16
     UTF8StringsAsWideField = True
     Catalog = 'public'
+    Connected = True
     DesignConnection = True
-    HostName = 'localhost'
+    HostName = 'integer-srv.alan.dp.ua'
     Port = 0
     Database = 'project'
-    User = 'postgres'
-    Password = 'postgres'
+    User = 'admin'
+    Password = 'vas6ok'
     Protocol = 'postgresql-9'
     Left = 144
     Top = 360

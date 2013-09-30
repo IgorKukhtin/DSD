@@ -10,6 +10,10 @@ $BODY$
    DECLARE vbPartionMovementId Integer;
 BEGIN
    
+   -- !!!будем без партий!!!
+   inMovementId:= 0;
+
+
    -- Находим 
    SELECT ObjectId INTO vbPartionMovementId FROM ObjectFloat WHERE ValueData = inMovementId AND DescId = zc_ObjectFloat_PartionMovement_MovementId();
 
@@ -35,6 +39,7 @@ ALTER FUNCTION lpInsertFind_Object_PartionMovement (Integer) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.09.13                                        * !!!будем без партий!!!
  02.07.13                                        * сначала Find, потом если надо Insert
  02.07.13          *
 */

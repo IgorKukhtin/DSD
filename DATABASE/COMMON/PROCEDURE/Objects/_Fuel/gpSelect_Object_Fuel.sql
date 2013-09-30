@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_Fuel()
 
---DROP FUNCTION gpSelect_Object_Fuel();
+--DROP FUNCTION gpSelect_Object_Fuel(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Fuel(
     IN inSession     TVarChar       -- сессия пользователя
@@ -22,11 +22,11 @@ $BODY$BEGIN
            
            , ObjectFloat_Ratio.ValueData AS Ratio
            
-           , Object_RateFuelKind.ObjectId    AS RateFuelKindId
+           , Object_RateFuelKind.Id          AS RateFuelKindId
            , Object_RateFuelKind.ObjectCode  AS RateFuelKindCode
            , Object_RateFuelKind.ValueData   AS RateFuelKindName
           
-           , Object.isErased AS isErased
+           , Object_Fuel.isErased AS isErased
            
        FROM Object AS Object_Fuel
        

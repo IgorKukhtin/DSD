@@ -1,21 +1,23 @@
 inherited RouteForm: TRouteForm
   Caption = #1052#1072#1088#1096#1088#1091#1090#1099
-  ClientHeight = 420
-  ClientWidth = 502
-  ExplicitWidth = 510
-  ExplicitHeight = 447
+  ClientHeight = 395
+  ClientWidth = 703
+  ExplicitWidth = 711
+  ExplicitHeight = 429
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 502
-    Height = 394
+    Width = 703
+    Height = 369
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 502
+    ExplicitHeight = 394
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -42,13 +44,28 @@ inherited RouteForm: TRouteForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 52
+        Width = 61
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 286
+        Width = 277
+      end
+      object clUnit: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        HeaderAlignmentVert = vaCenter
+        Width = 137
+      end
+      object clRouteKind: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1084#1072#1088#1096#1088#1091#1090#1072
+        HeaderAlignmentVert = vaCenter
+        Width = 102
+      end
+      object clFreight: TcxGridDBColumn
+        Caption = #1043#1088#1091#1079
+        HeaderAlignmentVert = vaCenter
+        Width = 56
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -56,6 +73,7 @@ inherited RouteForm: TRouteForm
         PropertiesClassName = 'TcxCheckBoxProperties'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 54
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -342,6 +360,7 @@ inherited RouteForm: TRouteForm
     Top = 208
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    View = cxGridDBTableView
     OnDblClickActionList = <
       item
         Action = dsdChoiceGuides
@@ -349,8 +368,6 @@ inherited RouteForm: TRouteForm
       item
         Action = actUpdate
       end>
-    SortImages = dmMain.SortImageList
-    View = cxGridDBTableView
     ActionItemList = <
       item
         Action = dsdChoiceGuides
@@ -360,6 +377,7 @@ inherited RouteForm: TRouteForm
         Action = actUpdate
         ShortCut = 13
       end>
+    SortImages = dmMain.SortImageList
     Left = 160
     Top = 216
   end

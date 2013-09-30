@@ -3,7 +3,7 @@ inherited MeasureForm: TMeasureForm
   ClientHeight = 376
   ClientWidth = 390
   ExplicitWidth = 398
-  ExplicitHeight = 403
+  ExplicitHeight = 410
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -62,7 +62,7 @@ inherited MeasureForm: TMeasureForm
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 40
-    Top = 104
+    Top = 96
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>

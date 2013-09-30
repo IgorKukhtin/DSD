@@ -1,4 +1,4 @@
-unit CarEdit;
+unit RateFuelKindEdit;
 
 interface
 
@@ -16,46 +16,30 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus, dsdGuides, Data.DB,
-  Datasnap.DBClient, cxMaskEdit, cxDropDownEdit, cxLookupEdit, cxDBLookupEdit,
-  cxDBLookupComboBox, dsdAddOn, cxPropertiesStore, dsdDB, dsdAction,
-  Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit,
-  cxButtonEdit;
+  dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus, dsdAddOn, cxPropertiesStore,
+  dsdDB, dsdAction, Vcl.ActnList, cxCurrencyEdit, cxLabel, Vcl.StdCtrls,
+  cxButtons, cxTextEdit, dsdGuides, Data.DB, Datasnap.DBClient, cxMaskEdit,
+  cxDropDownEdit, cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox, cxButtonEdit;
 
 type
-  TCarEditForm = class(TParentForm)
+  TRateFuelKindEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
+    cxLabel3: TcxLabel;
     ActionList: TActionList;
     dsdDataSetRefresh: TdsdDataSetRefresh;
-    dsdExecStoredProc: TdsdExecStoredProc;
-    dsdFormClose1: TdsdFormClose;
     spInsertUpdate: TdsdStoredProc;
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     cxPropertiesStore: TcxPropertiesStore;
-    dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn;
-    cxLabel5: TcxLabel;
-    cxLabel2: TcxLabel;
-    ceRegistrationCertificate: TcxTextEdit;
-    ceCarModel: TcxButtonEdit;
-    cxLabel7: TcxLabel;
-    ceUnit: TcxButtonEdit;
-    UnitGuides: TdsdGuides;
-    cxLabel3: TcxLabel;
-    cePersonalDriver: TcxButtonEdit;
-    PersonalGuides: TdsdGuides;
-    cxLabel4: TcxLabel;
-    ceFuelMaster: TcxButtonEdit;
-    FuelMasterGuides: TdsdGuides;
-    cxLabel6: TcxLabel;
-    ceFuelChild: TcxButtonEdit;
-    FuelChildGuides: TdsdGuides;
-    CarModelGuides: TdsdGuides;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
+    dsdFormClose: TdsdFormClose;
+    edTax: TcxTextEdit;
   private
     { Private declarations }
   public
@@ -66,6 +50,6 @@ type
 implementation
 
 {$R *.dfm}
- initialization
-  RegisterClass(TCarEditForm);
+  initialization
+  RegisterClass(TRateFuelKindEditForm);
 end.

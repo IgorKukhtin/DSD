@@ -1,4 +1,4 @@
-unit Route;
+unit RateFuelKind;
 
 interface
 
@@ -20,10 +20,11 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, dxSkinsdxBarPainter, dsdAddOn,
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox;
+  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
+  DataModul;
 
 type
-  TRouteForm = class(TParentForm)
+  TRateFuelKindForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     clCode: TcxGridDBColumn;
@@ -37,10 +38,10 @@ type
     bbRefresh: TdxBarButton;
     bbInsert: TdxBarButton;
     bbEdit: TdxBarButton;
-    bbErased: TdxBarButton;
-    bbUnErased: TdxBarButton;
+    bbSetErased: TdxBarButton;
+    bbSetUnErased: TdxBarButton;
     bbGridToExcel: TdxBarButton;
-    dxBarStatic: TdxBarStatic;
+    dxBarStatic1: TdxBarStatic;
     bbChoiceGuides: TdxBarButton;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
@@ -51,14 +52,11 @@ type
     dsdGridToExcel: TdsdGridToExcel;
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    dsdChoiceGuides: TdsdChoiceGuides;
-    clErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clUnit: TcxGridDBColumn;
-    clRouteKind: TcxGridDBColumn;
-    clFreight: TcxGridDBColumn;
-
+    clTax: TcxGridDBColumn;
+    dsdChoiceGuides: TdsdChoiceGuides;
+    clErased: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -69,7 +67,6 @@ type
 implementation
 
 {$R *.dfm}
-
-initialization
-  RegisterClass(TRouteForm);
+ initialization
+  RegisterClass(TRateFuelKindForm);
 end.

@@ -28,7 +28,7 @@ $BODY$BEGIN
 
        , Object_RouteKind.Id         AS RouteKindId 
        , Object_RouteKind.ObjectCode AS RouteKindCode
-       , Object_URouteKind.ValueData AS RouteKindName
+       , Object_RouteKind.ValueData AS RouteKindName
 
        , Object_Freight.Id         AS FreightId 
        , Object_Freight.ObjectCode AS FreightCode
@@ -49,7 +49,7 @@ $BODY$BEGIN
                                                         AND ObjectLink_Route_Freight.DescId = zc_ObjectLink_Route_Freight()
         LEFT JOIN Object AS Object_Freight ON Object_Freight.Id = ObjectLink_Route_Freight.ChildObjectId
    
-   WHERE Object.DescId = zc_Object_Route();
+   WHERE Object_Route.DescId = zc_Object_Route();
   
 END;$BODY$
 

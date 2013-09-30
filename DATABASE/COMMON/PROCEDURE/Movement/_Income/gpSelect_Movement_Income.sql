@@ -11,9 +11,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalCount TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummPacker TFloat, TotalSummSpending TFloat, TotalSummVAT TFloat
-             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
-             , PaidKindId Integer, PaidKindName TVarChar, ContractId Integer, ContractName TVarChar, CarId Integer, CarName TVarChar
-             , PersonalDriverId Integer, PersonalDriverName TVarChar, PersonalPackerId Integer, PersonalPackerName TVarChar
+             , FromName TVarChar, ToName TVarChar
+             , PaidKindName TVarChar, ContractName TVarChar
+             , PersonalDriverName TVarChar, PersonalPackerName TVarChar
               )
 AS
 $BODY$
@@ -49,19 +49,11 @@ BEGIN
            , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
 
 
-           , Object_From.Id                    AS FromId
            , Object_From.ValueData             AS FromName
-           , Object_To.Id                      AS ToId
            , Object_To.ValueData               AS ToName
-           , Object_PaidKind.Id                AS PaidKindId
            , Object_PaidKind.ValueData         AS PaidKindName
-           , Object_Contract.Id                AS ContractId
            , Object_Contract.ValueData         AS ContractName
-           , Object_Car.Id                     AS CarId
-           , Object_Car.ValueData              AS CarName
-           , Object_PersonalDriver.Id          AS PersonalDriverId
            , Object_PersonalDriver.ValueData   AS PersonalDriverName
-           , Object_PersonalPacker.Id          AS PersonalPackerId
            , Object_PersonalPacker.ValueData   AS PersonalPackerName
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -121,11 +113,6 @@ BEGIN
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
-                                         ON MovementLinkObject_Car.MovementId = Movement.Id
-                                        AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
-            LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
-
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
@@ -148,7 +135,7 @@ ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, TVarChar) OWNER T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
-               
+ 27.09.13                                        * del zc_MovementLinkObject_Car
  07.07.13                                        *
  30.06.13                                        *
 

@@ -507,6 +507,24 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Component\ComponentAddOnTest.pas"/>
 			<DCCReference Include="..\SOURCE\Defaults\DefaultsTest.pas"/>
+			<DCCReference Include="..\..\Forms\Transport.pas">
+				<Form>TransportForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\TransportJournal.pas">
+				<Form>TransportJournalForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\FuelEdit.pas">
+				<Form>FuelEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\RateFuelKindEdit.pas">
+				<Form>RateFuelKindEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\RateFuelKind.pas">
+				<Form>RateFuelKindForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Fuel.pas">
+				<Form>FuelForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

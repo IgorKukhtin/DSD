@@ -196,7 +196,13 @@ uses
   UserEdit in '..\..\Forms\UserEdit.pas' {UserEditForm},
   Process in '..\..\Forms\Process.pas' {ProcessForm},
   ComponentAddOnTest in '..\SOURCE\Component\ComponentAddOnTest.pas',
-  DefaultsTest in '..\SOURCE\Defaults\DefaultsTest.pas';
+  DefaultsTest in '..\SOURCE\Defaults\DefaultsTest.pas',
+  Transport in '..\..\Forms\Transport.pas' {TransportForm},
+  TransportJournal in '..\..\Forms\TransportJournal.pas' {TransportJournalForm},
+  FuelEdit in '..\..\Forms\FuelEdit.pas' {FuelEditForm},
+  RateFuelKindEdit in '..\..\Forms\RateFuelKindEdit.pas' {RateFuelKindEditForm},
+  RateFuelKind in '..\..\Forms\RateFuelKind.pas' {RateFuelKindForm},
+  Fuel in '..\..\Forms\Fuel.pas' {FuelForm};
 
 {$R *.RES}
 
