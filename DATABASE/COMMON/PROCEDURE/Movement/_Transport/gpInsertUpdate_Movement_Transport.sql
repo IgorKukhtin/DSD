@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Transport(
     IN inEndRun              TDateTime , -- Дата/Время возвращения факт
 
     IN inHoursAdd            TFloat    , -- Кол-во добавленных рабочих часов
+   OUT outHoursWork          TFloat    , -- Кол-во рабочих часов
 
     IN inComment             TVarChar  , -- Примечание
     
@@ -24,10 +25,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Transport(
 
     IN inSession              TVarChar    -- сессия пользователя
 )                              
-RETURNS Integer AS
+RETURNS record AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbHoursWork TFloat;
 BEGIN
 
 
@@ -48,9 +48,9 @@ BEGIN
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndRun(), ioId, inEndRun);
 
      -- расчитали свойство <Кол-во рабочих часов>
-     vbHoursWork:= ROUND ((inEndRun - inStartRun) * 24);
+     outHoursWork := extract(day from (inEndRun - inStartRun)) * 24 + extract(hour from (inEndRun - inStartRun));
      -- сохранили свойство <Кол-во рабочих часов>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_HoursWork(), ioId, vbHoursWork);
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_HoursWork(), ioId, outHoursWork);
 
      -- сохранили свойство <Кол-во добавленных рабочих часов>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_HoursAdd(), ioId, inHoursAdd);

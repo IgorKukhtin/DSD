@@ -160,6 +160,10 @@ type
     bbEntryToGrid: TdxBarButton;
     bbInsertUpdateMovement: TdxBarButton;
     RefreshAddOn: TRefreshAddOn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    RouteChoiceForm: TOpenChoiceForm;
+    MasterViewAddOn: TdsdDBViewAddOn;
+    FreightChoiceForm: TOpenChoiceForm;
   private
   public
   end;

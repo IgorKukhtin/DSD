@@ -3,7 +3,7 @@ inherited RouteForm: TRouteForm
   ClientHeight = 395
   ClientWidth = 703
   ExplicitWidth = 711
-  ExplicitHeight = 429
+  ExplicitHeight = 422
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -313,6 +313,41 @@ inherited RouteForm: TRouteForm
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptOutput
+        end
+        item
+          Name = 'Code'
+          Component = ClientDataSet
+          ComponentItem = 'Code'
+          DataType = ftString
+          ParamType = ptOutput
+        end
+        item
+          Name = 'RouteKindId'
+          Component = ClientDataSet
+          ComponentItem = 'RouteKindId'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end
+        item
+          Name = 'RouteKindName'
+          Component = ClientDataSet
+          ComponentItem = 'RouteKindName'
+          DataType = ftString
+          ParamType = ptOutput
+        end
+        item
+          Name = 'FreightId'
+          Component = ClientDataSet
+          ComponentItem = 'FreightId'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end
+        item
+          Name = 'FreightName'
+          Component = ClientDataSet
+          ComponentItem = 'FreightName'
           DataType = ftString
           ParamType = ptOutput
         end>
