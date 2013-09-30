@@ -4,6 +4,8 @@
   ClientWidth = 996
   KeyPreview = True
   PopupMenu = PopupMenu
+  ExplicitLeft = -103
+  ExplicitTop = -32
   ExplicitWidth = 1004
   ExplicitHeight = 516
   PixelsPerInch = 96
@@ -289,6 +291,12 @@
               Kind = skSum
             end>
           DataController.Summary.SummaryGroups = <>
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.Appending = True
           OptionsView.ColumnAutoWidth = True
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
@@ -298,11 +306,19 @@
             DataBinding.FieldName = 'RouteCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object colRouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090
             DataBinding.FieldName = 'RouteName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = RouteChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
             HeaderAlignmentVert = vaCenter
             Width = 125
           end
@@ -337,6 +353,13 @@
           object colFreightName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1079#1072
             DataBinding.FieldName = 'FreightName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = FreightChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
             HeaderAlignmentVert = vaCenter
             Width = 110
           end
@@ -344,6 +367,7 @@
             Caption = #1058#1080#1087' '#1084#1072#1088#1096#1088#1091#1090#1072
             DataBinding.FieldName = 'RouteKindName'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 107
           end
         end
@@ -760,6 +784,16 @@
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
+        Component = cxGrid
+        Properties.Strings = (
+          'Height')
+      end
+      item
+        Component = cxGridChild
+        Properties.Strings = (
+          'Height')
+      end
+      item
         Component = cxSplitterChild
         Properties.Strings = (
           'Top')
@@ -773,13 +807,14 @@
           'Width')
       end>
     StorageName = 'cxPropertiesStore'
-    Left = 377
-    Top = 190
+    StorageType = stStream
+    Left = 89
+    Top = 142
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 318
-    Top = 206
+    Left = 62
+    Top = 142
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spGet
@@ -854,6 +889,82 @@
       Hint = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 14
       ShortCut = 113
+    end
+    object RouteChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      FormName = 'TRouteForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'RouteId'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end
+        item
+          Name = 'Code'
+          Component = MasterCDS
+          ComponentItem = 'RouteCode'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'RouteName'
+          DataType = ftString
+          ParamType = ptOutput
+        end
+        item
+          Name = 'RouteKindId'
+          Component = MasterCDS
+          ComponentItem = 'RouteKindId'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end
+        item
+          Name = 'RouteKindName'
+          Component = MasterCDS
+          ComponentItem = 'RouteKindName'
+          DataType = ftString
+          ParamType = ptOutput
+        end
+        item
+          Name = 'FreightId'
+          Component = MasterCDS
+          ComponentItem = 'FreightId'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end
+        item
+          Name = 'FreightName'
+          Component = MasterCDS
+          ComponentItem = 'FreightName'
+          DataType = ftString
+          ParamType = ptOutput
+        end>
+      isShowModal = True
+    end
+    object FreightChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'FreightChoiceForm'
+      FormName = 'TFreightForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'FreightId'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'FreightName'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end>
+      isShowModal = True
     end
   end
   object MasterDS: TDataSource
@@ -1262,6 +1373,13 @@
         Value = 0.000000000000000000
       end
       item
+        Name = 'outHoursWork'
+        Component = edHoursWork
+        DataType = ftFloat
+        ParamType = ptOutput
+        Value = 0.000000000000000000
+      end
+      item
         Name = 'inComment'
         Component = edComment
         DataType = ftString
@@ -1583,7 +1701,7 @@
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 16
+    Left = 32
     Top = 144
     DockControlHeights = (
       0
@@ -1675,5 +1793,20 @@
     FormParams = 'FormParams'
     Left = 584
     Top = 88
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 128
+    Top = 136
+  end
+  object MasterViewAddOn: TdsdDBViewAddOn
+    View = cxGridDBTableView
+    OnDblClickActionList = <
+      item
+        Action = RouteChoiceForm
+      end>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    Left = 312
+    Top = 280
   end
 end
