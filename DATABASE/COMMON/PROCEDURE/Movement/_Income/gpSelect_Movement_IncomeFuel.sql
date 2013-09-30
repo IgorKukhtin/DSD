@@ -1,6 +1,6 @@
 -- Function: gpSelect_Movement_IncomeFuel()
 
--- DROP FUNCTION gpSelect_Movement_IncomeFuel (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_IncomeFuel (TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_IncomeFuel(
     IN inStartDate   TDateTime , --
@@ -43,7 +43,7 @@ BEGIN
            , Object_To.ValueData               AS ToName
            , Object_PaidKind.ValueData         AS PaidKindName
            , Object_Contract.ValueData         AS ContractName
-           , Object_PersonalDriver.ValueData   AS PersonalDriverName
+           , View_PersonalDriver.PersonalName  AS PersonalDriverName
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -89,7 +89,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
-            LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
+            LEFT JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
 
        WHERE Movement.DescId = zc_Movement_Income()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -104,8 +104,8 @@ ALTER FUNCTION gpSelect_Movement_IncomeFuel (TDateTime, TDateTime, TVarChar) OWN
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 30.09.13                                        * add Object_Personal_View
  27.09.13                                        *
-
 */
 
 -- ÚÂÒÚ

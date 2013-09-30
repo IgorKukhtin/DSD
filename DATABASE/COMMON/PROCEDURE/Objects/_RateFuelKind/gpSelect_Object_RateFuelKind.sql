@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_RateFuelKind (TVarChar)
 
--- DROP FUNCTION gpSelect_Object_RateFuelKind (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_RateFuelKind (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_RateFuelKind(
     IN inSession        TVarChar       -- сессия пользователя
@@ -31,8 +31,7 @@ $BODY$BEGIN
    WHERE Object_RateFuelKind.DescId = zc_Object_RateFuelKind();
   
 END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_RateFuelKind (TVarChar) OWNER TO postgres;
 
 

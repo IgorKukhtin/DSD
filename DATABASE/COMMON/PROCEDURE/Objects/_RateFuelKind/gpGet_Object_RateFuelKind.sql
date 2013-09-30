@@ -1,6 +1,6 @@
 -- Function: gpGet_Object_RateFuelKind (Integer, TVarChar)
 
--- DROP FUNCTION gpGet_Object_RateFuelKind (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_RateFuelKind (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_RateFuelKind(
     IN inId          Integer,       -- ключ объекта <Автомобиль>

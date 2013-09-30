@@ -1,6 +1,6 @@
 -- Function: gpGet_Movement_Cash()
 
--- DROP FUNCTION gpGet_Movement_Cash (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Cash (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Cash(
     IN inMovementId        Integer  , -- ключ Документа
@@ -82,16 +82,14 @@ BEGIN
   
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpGet_Movement_Cash (Integer, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-               
  09.08.13         *
-
 */
 
 -- тест

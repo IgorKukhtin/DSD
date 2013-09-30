@@ -1,6 +1,6 @@
 -- Function: gpSelect_Movement_Income()
 
--- DROP FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Income (TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Income(
     IN inStartDate   TDateTime , --
@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCount TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummPacker TFloat, TotalSummSpending TFloat, TotalSummVAT TFloat
              , FromName TVarChar, ToName TVarChar
              , PaidKindName TVarChar, ContractName TVarChar
-             , PersonalDriverName TVarChar, PersonalPackerName TVarChar
+             , PersonalPackerName TVarChar
               )
 AS
 $BODY$
@@ -53,8 +53,7 @@ BEGIN
            , Object_To.ValueData               AS ToName
            , Object_PaidKind.ValueData         AS PaidKindName
            , Object_Contract.ValueData         AS ContractName
-           , Object_PersonalDriver.ValueData   AS PersonalDriverName
-           , Object_PersonalPacker.ValueData   AS PersonalPackerName
+           , View_PersonalPacker.PersonalName  AS PersonalPackerName
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -113,15 +112,10 @@ BEGIN
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
-                                         ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
-                                        AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
-            LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
-
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalPacker
                                          ON MovementLinkObject_PersonalPacker.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalPacker.DescId = zc_MovementLinkObject_PersonalPacker()
-            LEFT JOIN Object AS Object_PersonalPacker ON Object_PersonalPacker.Id = MovementLinkObject_PersonalPacker.ObjectId
+            LEFT JOIN Object_Personal_View AS View_PersonalPacker ON View_PersonalPacker.PersonalId = MovementLinkObject_PersonalPacker.ObjectId
 
        WHERE Movement.DescId = zc_Movement_Income()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
@@ -135,6 +129,8 @@ ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, TVarChar) OWNER T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 30.09.13                                        * add Object_Personal_View
+ 30.09.13                                        * del zc_MovementLinkObject_PersonalDriver
  27.09.13                                        * del zc_MovementLinkObject_Car
  07.07.13                                        *
  30.06.13                                        *

@@ -4,7 +4,6 @@
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Personal(
  INOUT ioId                  Integer   , -- ключ объекта <Сотрудники>
-    IN inCode                Integer   , -- Код объекта 
     IN inMemberId            Integer   , -- ссылка на Физ.лица 
     IN inPositionId          Integer   , -- ссылка на Должность
     IN inUnitId              Integer   , -- ссылка на Подразделение
@@ -13,10 +12,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Personal(
     IN inDateOut             TDateTime , -- Дата увольнения
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode Integer;   
+   -- DECLARE vbCode Integer;   
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
@@ -24,14 +24,14 @@ BEGIN
    vbUserId := inSession;
    
    --  Если код не установлен, определяем его как последний+1 
-   vbCode:=lfGet_ObjectCode (inCode, zc_Object_Personal());
+   -- vbCode:=lfGet_ObjectCode (inCode, zc_Object_Personal());
    
    -- проверка уникальности <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Personal(), vbCode);
+   -- PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Personal(), vbCode);
 
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Personal(), vbCode, '');
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Personal(), 0, '');
    -- сохранили связь с <физ.лицом>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_Member(), ioId, inMemberId);
    -- сохранили связь с <должностью>
@@ -50,14 +50,14 @@ BEGIN
 
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer,Integer,Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+  LANGUAGE PLPGSQL VOLATILE;
+ALTER FUNCTION gpInsertUpdate_Object_Personal (Integer, Integer, Integer,Integer,Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
   
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.09.13                                         * del vbCode
  25.09.13         * add _PersonalGroup; remove _Juridical, _Business              
  06.09.13                         * inName - УБРАЛ. Не нашел для него применения
  24.07.13                                        * inName - БЫТЬ !!! или хотя бы vbMemberName

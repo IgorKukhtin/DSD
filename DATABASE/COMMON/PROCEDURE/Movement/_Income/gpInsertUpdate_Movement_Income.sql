@@ -18,7 +18,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
     IN inToId                Integer   , -- Кому (в документе)
     IN inPaidKindId          Integer   , -- Виды форм оплаты 
     IN inContractId          Integer   , -- Договора
-    IN inPersonalDriverId    Integer   , -- Сотрудник (водитель)
     IN inPersonalPackerId    Integer   , -- Сотрудник (заготовитель)
     IN inSession             TVarChar    -- сессия пользователя
 )                              
@@ -56,8 +55,6 @@ BEGIN
      -- сохранили связь с <Договора>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
 
-     -- сохранили связь с <Сотрудник (водитель)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalDriver(), ioId, inPersonalDriverId);
      -- сохранили связь с <Сотрудник (заготовитель)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalPacker(), ioId, inPersonalPackerId);
 
@@ -76,6 +73,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.09.13                                        * del zc_MovementLinkObject_PersonalDriver
  27.09.13                                        * del zc_MovementLinkObject_Car
  07.07.13                                        * rename zc_MovementFloat_ChangePercent
  30.06.13                                        *

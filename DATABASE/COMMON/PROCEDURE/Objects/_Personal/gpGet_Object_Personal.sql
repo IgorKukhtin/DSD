@@ -1,13 +1,12 @@
--- Function: gpGet_Object_Personal(integer, TVarChar)
+-- Function: gpGet_Object_Personal(Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpGet_Object_Personal(integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_Personal (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Personal(
     IN inId          Integer,       -- Сотрудники 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Code Integer, Name TVarChar,
-               MemberId Integer, MemberName TVarChar, 
+RETURNS TABLE (MemberId Integer, MemberCode Integer, MemberName TVarChar,
                PositionId Integer, PositionName TVarChar,
                UnitId Integer, UnitName TVarChar,
                PersonalGroupId Integer, PersonalGroupName TVarChar,
@@ -22,10 +21,8 @@ BEGIN
    THEN
        RETURN QUERY 
        SELECT
-             lfGet_ObjectCode(0, zc_Object_Personal()) AS Code
-           , CAST ('' as TVarChar)  AS Name
-           
-           , CAST (0 as Integer)   AS MemberId
+             CAST (0 as Integer)   AS MemberId
+           , CAST (0 as Integer)   AS MemberCode
            , CAST ('' as TVarChar) AS MemberName
 
            , CAST (0 as Integer)   AS PositionId
@@ -42,11 +39,9 @@ BEGIN
    ELSE
      RETURN QUERY 
      SELECT 
-           Object_Personal.ObjectCode AS Code
-         , Object_Personal.ValueData  AS NAME
-         
-         , Object_Member.Id         AS MemberId
-         , Object_Member.ValueData  AS MemberName
+           View_Personal.MemberId     AS MemberId
+         , View_Personal.PersonalCode AS MemberCode
+         , View_Personal.PersonalName AS MemberName
  
          , Object_Position.Id         AS PositionId
          , Object_Position.ValueData  AS PositionName
@@ -59,47 +54,43 @@ BEGIN
 
          , ObjectDate_DateIn.ValueData   AS DateIn
          , ObjectDate_DateOut.ValueData  AS DateOut
-     FROM OBJECT AS Object_Personal
-          LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
-                 ON ObjectLink_Personal_Member.ObjectId = Object_Personal.Id
-                AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
-          LEFT JOIN Object AS Object_Member ON Object_Member.Id = ObjectLink_Personal_Member.ChildObjectId
-           
+     FROM Object_Personal_View AS View_Personal
           LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
-                 ON ObjectLink_Personal_Position.ObjectId = Object_Personal.Id
-                AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+                               ON ObjectLink_Personal_Position.ObjectId = View_Personal.PersonalId
+                              AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
           LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Personal_Position.ChildObjectId
  
           LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
-                 ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
-                AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                               ON ObjectLink_Personal_Unit.ObjectId = View_Personal.PersonalId
+                              AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
-                 ON ObjectLink_Personal_PersonalGroup.ObjectId = Object_Personal.Id
-                AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
+                               ON ObjectLink_Personal_PersonalGroup.ObjectId = View_Personal.PersonalId
+                              AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
           LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
            
-          LEFT JOIN ObjectDate AS ObjectDate_DateIn ON ObjectDate_DateIn.ObjectId = Object_Personal.Id 
-                AND ObjectDate_DateIn.DescId = zc_ObjectDate_Personal_In()
+          LEFT JOIN ObjectDate AS ObjectDate_DateIn
+                               ON ObjectDate_DateIn.ObjectId = View_Personal.PersonalId
+                              AND ObjectDate_DateIn.DescId = zc_ObjectDate_Personal_In()
+          LEFT JOIN ObjectDate AS ObjectDate_DateOut
+                               ON ObjectDate_DateOut.ObjectId = View_Personal.PersonalId
+                              AND ObjectDate_DateOut.DescId = zc_ObjectDate_Personal_Out()          
                 
-          LEFT JOIN ObjectDate AS ObjectDate_DateOut ON ObjectDate_DateOut.ObjectId = Object_Personal.Id 
-                AND ObjectDate_DateOut.DescId = zc_ObjectDate_Personal_Out()
-                
-     WHERE Object_Personal.Id = inId;
+     WHERE View_Personal.PersonalId = inId;
+
   END IF;
   
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_Personal(integer, TVarChar) OWNER TO postgres;
-
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpGet_Object_Personal(Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.09.13                                        * add Object_Personal_View
  25.09.13         * add _PersonalGroup; remove _Juridical, _Business
  03.09.14                        *                                
  19.07.13         *    rename zc_ObjectDate...

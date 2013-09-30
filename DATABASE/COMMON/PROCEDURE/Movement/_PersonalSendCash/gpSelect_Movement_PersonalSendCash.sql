@@ -1,6 +1,6 @@
 -- Function: gpSelect_Movement_PersonalSendCash()
 
--- DROP FUNCTION gpSelect_Movement_PersonalSendCash (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalSendCash (TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalSendCash(
     IN inStartDate   TDateTime , --
@@ -32,7 +32,7 @@ BEGIN
 
            , MovementFloat_TotalSumm.ValueData AS TotalSumm
                       
-           , Object_Personal.ValueData AS PersonalName
+           , View_PersonalDriver.PersonalName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -44,7 +44,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
                                          ON MovementLinkObject_Personal.MovementId = Movement.Id
                                         AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
-            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
+            LEFT JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = MovementLinkObject_Personal.ObjectId
 
       WHERE Movement.DescId = zc_Movement_PersonalSendCash()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate;

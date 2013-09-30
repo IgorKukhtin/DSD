@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_RateFuel (TVarChar)
 
--- DROP FUNCTION gpSelect_Object_RateFuel (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_RateFuel (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_RateFuel(
     IN inSession     TVarChar       -- сессия пользователя

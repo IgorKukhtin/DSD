@@ -1,6 +1,6 @@
--- Function: gpGet_Movement_Income()
+-- Function: gpGet_Movement_Income (Integer, TVarChar)
 
--- DROP FUNCTION gpGet_Movement_Income (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Income (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Income(
     IN inMovementId        Integer  , -- ÍÎ˛˜ ƒÓÍÛÏÂÌÚ‡
@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, ToParentId Integer
              , PaidKindId Integer, PaidKindName TVarChar, ContractId Integer, ContractName TVarChar
-             , PersonalDriverId Integer, PersonalDriverName TVarChar, PersonalPackerId Integer, PersonalPackerName TVarChar
+             , PersonalPackerId Integer, PersonalPackerName TVarChar
               )
 AS
 $BODY$
@@ -45,8 +45,6 @@ BEGIN
              , CAST ('' as TVarChar) AS PaidKindName
              , 0                     AS ContractId
              , CAST ('' as TVarChar) AS ContractName
-             , 0                     AS PersonalDriverId
-             , CAST ('' as TVarChar) AS PersonalDriverName
              , 0                     AS PersonalPackerId
              , CAST ('' as TVarChar) AS PersonalPackerName
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
@@ -75,10 +73,8 @@ BEGIN
              , Object_PaidKind.ValueData         AS PaidKindName
              , Object_Contract.Id                AS ContractId
              , Object_Contract.ValueData         AS ContractName
-             , Object_PersonalDriver.Id          AS PersonalDriverId
-             , Object_PersonalDriver.ValueData   AS PersonalDriverName
-             , Object_PersonalPacker.Id          AS PersonalPackerId
-             , Object_PersonalPacker.ValueData   AS PersonalPackerName
+             , View_PersonalPacker.PersonalId    AS PersonalPackerId
+             , View_PersonalPacker.PersonalName  AS PersonalPackerName
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -119,28 +115,25 @@ BEGIN
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
-                                         ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
-                                        AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
-            LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
-
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalPacker
                                          ON MovementLinkObject_PersonalPacker.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalPacker.DescId = zc_MovementLinkObject_PersonalPacker()
-            LEFT JOIN Object AS Object_PersonalPacker ON Object_PersonalPacker.Id = MovementLinkObject_PersonalPacker.ObjectId
+            LEFT JOIN Object_Personal_View AS View_PersonalPacker ON View_PersonalPacker.PersonalId = MovementLinkObject_PersonalPacker.ObjectId
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Income();
      END IF;
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpGet_Movement_Income (Integer, TVarChar) OWNER TO postgres;
 
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 30.09.13                                        * add Object_Personal_View
+ 30.09.13                                        * del zc_MovementLinkObject_PersonalDriver
  29.09.13                                        * add lfGet_InvNumber
  27.09.13                                        * del zc_MovementLinkObject_Car
  04.09.13                       *              

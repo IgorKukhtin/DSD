@@ -27,7 +27,7 @@ type
   TPersonalForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
+    clMemberCode: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -53,7 +53,7 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     clDateIn: TcxGridDBColumn;
     clDateOut: TcxGridDBColumn;
-    clMember: TcxGridDBColumn;
+    clMemberName: TcxGridDBColumn;
     clPosition: TcxGridDBColumn;
     clUnit: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;

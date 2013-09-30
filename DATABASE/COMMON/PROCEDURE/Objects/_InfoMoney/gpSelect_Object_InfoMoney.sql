@@ -15,20 +15,20 @@ $BODY$BEGIN
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_InfoMoney());
      RETURN QUERY 
      SELECT 
-           InfoMoney_View.InfoMoneyId             AS Id
-         , InfoMoney_View.InfoMoneyCode           AS Code
-         , InfoMoney_View.InfoMoneyName           AS Name
+           Object_InfoMoney_View.InfoMoneyId             AS Id
+         , Object_InfoMoney_View.InfoMoneyCode           AS Code
+         , Object_InfoMoney_View.InfoMoneyName           AS Name
     
-         , InfoMoney_View.InfoMoneyGroupId
-         , InfoMoney_View.InfoMoneyGroupCode
-         , InfoMoney_View.InfoMoneyGroupName
+         , Object_InfoMoney_View.InfoMoneyGroupId
+         , Object_InfoMoney_View.InfoMoneyGroupCode
+         , Object_InfoMoney_View.InfoMoneyGroupName
         
-         , InfoMoney_View.InfoMoneyDestinationId
-         , InfoMoney_View.InfoMoneyDestinationCode
-         , InfoMoney_View.InfoMoneyDestinationName
+         , Object_InfoMoney_View.InfoMoneyDestinationId
+         , Object_InfoMoney_View.InfoMoneyDestinationCode
+         , Object_InfoMoney_View.InfoMoneyDestinationName
          
-         , InfoMoney_View.isErased
-      FROM InfoMoney_View;
+         , Object_InfoMoney_View.isErased
+      FROM Object_InfoMoney_View;
   
 END;$BODY$
 
@@ -40,7 +40,7 @@ ALTER FUNCTION gpSelect_Object_InfoMoney (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 30.09.13                                        * InfoMoney_View
+ 30.09.13                                        * Object_InfoMoney_View
  21.06.13          *    + все поля          
  00.05.13                                        
 

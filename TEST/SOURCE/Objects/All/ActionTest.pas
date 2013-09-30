@@ -45,7 +45,7 @@ begin
   try
     // Получение данных о Бизнесе
     with ObjectTest.GetRecord(Id) do
-         Check((FieldByName('Name').AsString = 'actExit'), 'Не сходятся данные Id = ' + IntToStr(Id));
+         Check((FieldByName('Name').AsString = 'actExit-test'), 'Не сходятся данные Id = ' + IntToStr(Id));
 
     Check(ObjectTest.GetDataSet.RecordCount = (RecordCount + 1), 'Количество записей не изменилось');
   finally
@@ -65,7 +65,7 @@ end;
 
 function TAction.InsertDefault: integer;
 begin
-  result := InsertUpdateAction(0, -1, 'actExit');
+  result := InsertUpdateAction(0, -1, 'actExit-test');
 end;
 
 function TAction.InsertUpdateAction;

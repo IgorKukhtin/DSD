@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_Partner()
 
---DROP FUNCTION gpSelect_Object_Partner(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Partner (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Partner(
     IN inSession           TVarChar            -- сессия пользователя
@@ -12,7 +12,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                RouteId Integer, RouteCode Integer, RouteName TVarChar,
                RouteSortingId Integer, RouteSortingCode Integer, RouteSortingName TVarChar,
                PersonalTakeId Integer, PersonalTakeCode Integer, PersonalTakeName TVarChar,
-               isErased BOOLEAN) AS
+               isErased Boolean
+              )
+AS
 $BODY$
 BEGIN
 
@@ -83,9 +85,9 @@ BEGIN
          , Object_RouteSorting.ObjectCode   AS RouteSortingCode
          , Object_RouteSorting.ValueData    AS RouteSortingName
          
-         , Object_PersonalTake.Id         AS PersonalTakeId
-         , Object_PersonalTake.ObjectCode AS PersonalTakeCode
-         , Object_PersonalTake.ValueData  AS PersonalTakeName
+         , View_PersonalTake.PersonalId   AS PersonalTakeId
+         , View_PersonalTake.PersonalCode AS PersonalTakeCode
+         , View_PersonalTake.PersonalName AS PersonalTakeName
                   
          , Object_Partner.isErased   AS isErased
          
@@ -124,24 +126,23 @@ BEGIN
          LEFT JOIN ObjectLink AS ObjectLink_Partner_PersonalTake
                               ON ObjectLink_Partner_PersonalTake.ObjectId = Object_Partner.Id 
                              AND ObjectLink_Partner_PersonalTake.DescId = zc_ObjectLink_Partner_PersonalTake()
-         LEFT JOIN Object AS Object_PersonalTake ON Object_PersonalTake.Id = ObjectLink_Partner_PersonalTake.ChildObjectId
+         LEFT JOIN Object_Personal_View AS View_PersonalTake ON View_PersonalTake.PersonalId = ObjectLink_Partner_PersonalTake.ChildObjectId
          
     WHERE Object_Partner.DescId = zc_Object_Partner();
   
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Partner(TVarChar) OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpSelect_Object_Partner (TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.09.13                                        * add Object_Personal_View
  29.07.13         *  + PersonalTakeId, PrepareDayCount, DocumentDayCount                      
  03.07.13         *  + Route,RouteSorting
- 00.
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Partner('2')
+-- SELECT * FROM gpSelect_Object_Partner ('2')
