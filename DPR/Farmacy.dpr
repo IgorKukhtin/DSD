@@ -15,7 +15,8 @@ uses
   Authentication in '..\SOURCE\Authentication.pas',
   ParentForm in '..\SOURCE\ParentForm.pas' {ParentForm},
   FormStorage in '..\SOURCE\FormStorage.pas',
-  ChoicePeriod in '..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm};
+  ChoicePeriod in '..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm},
+  Defaults in '..\SOURCE\COMPONENT\Defaults.pas';
 
 {$R *.res}
 

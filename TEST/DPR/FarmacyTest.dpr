@@ -30,7 +30,8 @@ uses
   Units in '..\..\FarmacyForms\Units.pas' {UnitForm},
   UnitEdit in '..\..\FarmacyForms\UnitEdit.pas' {UnitEditForm},
   dbTest in '..\SOURCE\dbTest.pas',
-  ChoicePeriod in '..\..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm};
+  ChoicePeriod in '..\..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm},
+  Defaults in '..\..\SOURCE\COMPONENT\Defaults.pas';
 
 {$R *.res}
 
