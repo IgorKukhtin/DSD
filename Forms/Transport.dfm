@@ -4,8 +4,8 @@
   ClientWidth = 996
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1004
-  ExplicitHeight = 516
+  ExplicitWidth = 1012
+  ExplicitHeight = 524
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -795,6 +795,13 @@
       item
         Name = 'inShowAll'
         Component = BooleanStoredProcAction
+        DataType = ftBoolean
+        ParamType = ptInput
+        Value = False
+      end
+      item
+        Name = 'inIsErased'
+        Component = ShowErasedAction
         DataType = ftBoolean
         ParamType = ptInput
         Value = False
