@@ -166,6 +166,8 @@ type
     FreightChoiceForm: TOpenChoiceForm;
     ChildViewAddOn: TdsdDBViewAddOn;
     UpdateChildDS: TdsdUpdateDataSet;
+    colchNumber: TcxGridDBColumn;
+    colchRateFuelKindTax: TcxGridDBColumn;
   private
   public
   end;

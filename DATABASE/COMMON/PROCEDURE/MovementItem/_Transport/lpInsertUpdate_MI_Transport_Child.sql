@@ -14,24 +14,34 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_Transport_Child(
     IN inAmountColdHour      TFloat    , -- Холод, Кол-во норма в час  
     IN inAmountColdDistance  TFloat    , -- Холод, Кол-во норма на 100 км 
     IN inAmountFuel          TFloat    , -- Кол-во норма на 100 км 
-    IN inRateFuelKindId      Integer     -- Типы норм для топлива          
+    IN inNumber              TFloat    , -- № по порядку
+    IN inRateFuelKindTax     TFloat    , -- % дополнительного расхода в связи с сезоном/температурой
+    IN inRateFuelKindId      Integer     -- Типы норм для топлива
 )                              
 RETURNS Integer AS
 $BODY$
 BEGIN
+
+   -- проверка
+   IF COALESCE (inParentId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Маршрут не установлен.';
+   END IF;
+
 
    IF inCalculated = TRUE
    THEN
        -- При определенных условиях, расчитываем inAmount - Количество по факту
        inAmount := (SELECT -- для "Основного" вида топлива расчитываем норму
                            CASE WHEN inFuelId = ObjectLink_Car_FuelMaster.ChildObjectId
-                                     THEN  -- для расстояния
-                                          (COALESCE (MovementItem_Master.Amount, 0) * COALESCE (inAmountFuel, 0)
-                                           -- для Холод, часов
-                                         + COALESCE (inColdHour, 0) * COALESCE (inAmountColdHour, 0)
-                                           -- для Холод, км
-                                         + COALESCE (inColdDistance, 0) * COALESCE (inAmountColdDistance, 0)
-                                          )
+                                     THEN zfCalc_RateFuelValue (inDistance           := MovementItem_Master.Amount
+                                                              , inAmountFuel         := inAmountFuel
+                                                              , inColdHour           := inColdHour
+                                                              , inAmountColdHour     := inAmountColdHour
+                                                              , inColdDistance       := inColdDistance
+                                                              , inAmountColdDistance := inAmountColdDistance
+                                                              , inRateFuelKindTax    := ObjectFloat_RateFuelKind_Tax.ValueData
+                                                               )
                                           -- !!!Коэффициент перевода нормы!!!
                                           -- * COALESCE (ObjectFloat_Ratio.ValueData, 0)
                                 ELSE 0
@@ -42,6 +52,8 @@ BEGIN
                                                      AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
                          LEFT JOIN ObjectLink AS ObjectLink_Car_FuelMaster ON ObjectLink_Car_FuelMaster.ObjectId = MovementLinkObject_Car.ObjectId
                                                                           AND ObjectLink_Car_FuelMaster.DescId = zc_ObjectLink_Car_FuelMaster()
+                         LEFT JOIN ObjectFloat AS ObjectFloat_RateFuelKind_Tax ON ObjectFloat_RateFuelKind_Tax.ObjectId =inRateFuelKindId
+                                                                              AND ObjectFloat_RateFuelKind_Tax.DescId = zc_ObjectFloat_RateFuelKind_Tax()
                          -- LEFT JOIN ObjectFloat AS ObjectFloat_Ratio ON ObjectFloat_Ratio.ObjectId = inFuelId
                          --                                           AND ObjectFloat_Ratio.DescId = zc_ObjectFloat_Fuel_Ratio()
                     WHERE MovementItem_Master.Id = inParentId
@@ -65,10 +77,15 @@ BEGIN
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountColdDistance(), ioId, inAmountColdDistance);
    -- сохранили свойство <Кол-во норма на 100 км>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountFuel(), ioId, inAmountFuel);
+   -- сохранили свойство <№ по порядку>
+   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Number(), ioId, inNumber);
+   -- сохранили свойство <% дополнительного расхода в связи с сезоном/температурой>
+   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_RateFuelKindTax(), ioId, inRateFuelKindTax);
    
    -- сохранили связь с <Типы норм для топлива>
    PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_RateFuelKind(), ioId, inRateFuelKindId);
-   
+
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -77,7 +94,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 29.07.13                                        *
+ 01.10.13                                        * add inRateFuelKindTax and zfCalc_RateFuelValue
+ 29.09.13                                        *
 */
 
 -- тест

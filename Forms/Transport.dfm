@@ -4,10 +4,8 @@
   ClientWidth = 996
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitLeft = -103
-  ExplicitTop = -141
-  ExplicitWidth = 1004
-  ExplicitHeight = 516
+  ExplicitWidth = 1012
+  ExplicitHeight = 524
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -237,6 +235,8 @@
         Height = 210
         Align = alClient
         TabOrder = 0
+        ExplicitLeft = -8
+        ExplicitTop = -24
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -442,6 +442,12 @@
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object colchNumber: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'Number'
+            HeaderAlignmentVert = vaCenter
+            Width = 40
+          end
           object colсhFuelCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'FuelCode'
@@ -453,6 +459,13 @@
             DataBinding.FieldName = 'FuelName'
             HeaderAlignmentVert = vaCenter
             Width = 144
+          end
+          object colсhCalculated: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090' '#1087#1086' '#1088#1072#1089#1095'. ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'Calculated'
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
+            Width = 75
           end
           object colсhAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' '#1092#1072#1082#1090#1091' '
@@ -467,19 +480,6 @@
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 79
-          end
-          object colсhCalculated: TcxGridDBColumn
-            Caption = #1055#1086' '#1085#1086#1088#1084#1077'('#1076#1072')'
-            DataBinding.FieldName = 'Calculated'
-            HeaderAlignmentHorz = taRightJustify
-            HeaderAlignmentVert = vaCenter
-            Width = 75
-          end
-          object colсhRateFuelKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1085#1086#1088#1084#1099' '#1076#1083#1103' '#1090#1086#1087#1083#1080#1074#1072
-            DataBinding.FieldName = 'RateFuelKindName'
-            HeaderAlignmentVert = vaCenter
-            Width = 75
           end
           object colсhColdHour: TcxGridDBColumn
             Caption = #1061#1086#1083#1086#1076', '#1092#1072#1082#1090' '#1095#1072#1089#1086#1074
@@ -515,6 +515,16 @@
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 96
+          end
+          object colсhRateFuelKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1085#1086#1088#1084#1099
+            DataBinding.FieldName = 'RateFuelKindName'
+            HeaderAlignmentVert = vaCenter
+            Width = 75
+          end
+          object colchRateFuelKindTax: TcxGridDBColumn
+            Caption = '% '#1089#1077#1079#1086#1085', '#1090#1077#1084#1087'.'
+            DataBinding.FieldName = 'RateFuelKindTax'
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -1626,6 +1636,20 @@
         ParamType = ptInput
       end
       item
+        Name = 'inNumber'
+        Component = ChildCDS
+        ComponentItem = 'Number'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inRateFuelKindTax'
+        Component = ChildCDS
+        ComponentItem = 'RateFuelKindTax'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
         Name = 'inRateFuelKindId'
         Component = ChildCDS
         ComponentItem = 'RateFuelKindId'
@@ -1705,8 +1729,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
