@@ -166,6 +166,16 @@ type
     FreightChoiceForm: TOpenChoiceForm;
     ChildViewAddOn: TdsdDBViewAddOn;
     UpdateChildDS: TdsdUpdateDataSet;
+    colchNumber: TcxGridDBColumn;
+    colchRateFuelKindTax: TcxGridDBColumn;
+    InsertRecord: TInsertRecord;
+    bbAddRoute: TdxBarButton;
+    SetErased: TdsdUpdateErased;
+    bbErased: TdxBarButton;
+    SetUnErased: TdsdUpdateErased;
+    bbUnErased: TdxBarButton;
+    ShowErasedAction: TBooleanStoredProcAction;
+    bbShowErased: TdxBarButton;
   private
   public
   end;

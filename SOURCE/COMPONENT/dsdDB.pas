@@ -283,7 +283,10 @@ begin
           B := DataSets[i].DataSet.GetBookmark;
        DataSets[i].DataSet.XMLData := XMLResult[i];
        if Assigned(B) then
-          DataSets[i].DataSet.GotoBookmark(B);
+          try
+            DataSets[i].DataSet.GotoBookmark(B);
+          except
+          end;
     end;
   finally
     if Assigned(B) then

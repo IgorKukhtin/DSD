@@ -216,9 +216,11 @@ initialization
   RegisterClass (TExecuteDialog);
   RegisterClass (TGuidesFiller);
   RegisterClass (THeaderSaver);
+  RegisterClass (TInsertRecord);
   RegisterClass (TOpenChoiceForm);
   RegisterClass (TPeriodChoice);
   RegisterClass (TRefreshAddOn);
   RegisterClass (TRefreshDispatcher);
+  RegisterClass (TUpdateRecord);
 
 end.

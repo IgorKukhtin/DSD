@@ -32,4 +32,4 @@ ALTER FUNCTION zfFormat_PartionGoods (TVarChar) OWNER TO postgres;
 
 -- עוסע
 -- SELECT * FROM zfFormat_PartionGoods ('asasa12-12-22-44')
-SELECT * FROM zfFormat_PartionGoods ('פûגפû72121פûגûפג')
+-- SELECT * FROM zfFormat_PartionGoods ('פûגפû72121פûגûפג')

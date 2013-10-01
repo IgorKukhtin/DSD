@@ -14,6 +14,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Child(
     IN inAmountColdHour      TFloat    , -- Холод, Кол-во норма в час  
     IN inAmountColdDistance  TFloat    , -- Холод, Кол-во норма на 100 км 
     IN inAmountFuel          TFloat    , -- Кол-во норма на 100 км 
+    IN inNumber              TFloat    , -- № по порядку
+    IN inRateFuelKindTax     TFloat    , -- % дополнительного расхода в связи с сезоном/температурой
     IN inRateFuelKindId      Integer   , -- Типы норм для топлива          
     IN inSession             TVarChar    -- сессия пользователя
 )                              
@@ -37,6 +39,8 @@ BEGIN
                                             , inAmountColdHour     := inAmountColdHour
                                             , inAmountColdDistance := inAmountColdDistance
                                             , inAmountFuel         := inAmountFuel
+                                            , inNumber             := inNumber
+                                            , inRateFuelKindTax    := inRateFuelKindTax
                                             , inRateFuelKindId     := inRateFuelKindId
                                              );
 
@@ -48,7 +52,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 29.07.13                                        *
+ 01.10.13                                        * add inRateFuelKindTax
+ 29.09.13                                        *
 */
 
 -- тест

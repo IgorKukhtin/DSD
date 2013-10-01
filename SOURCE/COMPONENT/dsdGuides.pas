@@ -393,10 +393,11 @@ begin
   if Assigned(FParam) then
      if FParam.Value = 0 then begin
         for I := 0 to GuidesList.Count - 1 do
-            if (GuidesList[i].Guides.Key = '0') or ((GuidesList[i].Guides.Key = '')) then begin
-               GuidesList[i].Guides.OpenGuides;
-               exit;
-            end;
+            if assigned(GuidesList[i].Guides) then
+              if (GuidesList[i].Guides.Key = '0') or ((GuidesList[i].Guides.Key = '')) then begin
+                 GuidesList[i].Guides.OpenGuides;
+                 exit;
+              end;
        // Прошли по всем справочникам и они заполнены
        // Выполняем все Action
        for I := 0 to FActionItemList.Count - 1 do

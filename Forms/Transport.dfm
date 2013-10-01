@@ -4,8 +4,6 @@
   ClientWidth = 996
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitLeft = -103
-  ExplicitTop = -141
   ExplicitWidth = 1004
   ExplicitHeight = 516
   PixelsPerInch = 96
@@ -237,6 +235,8 @@
         Height = 210
         Align = alClient
         TabOrder = 0
+        ExplicitLeft = -8
+        ExplicitTop = -24
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -297,6 +297,7 @@
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsCustomize.DataRowSizing = True
           OptionsData.Appending = True
+          OptionsData.CancelOnExit = False
           OptionsView.ColumnAutoWidth = True
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
@@ -320,6 +321,7 @@
                 Kind = bkEllipsis
               end>
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 125
           end
           object colAmount: TcxGridDBColumn
@@ -361,6 +363,7 @@
                 Kind = bkEllipsis
               end>
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 110
           end
           object colRouteKindName: TcxGridDBColumn
@@ -442,6 +445,12 @@
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object colchNumber: TcxGridDBColumn
+            Caption = #8470' '#1087'/'#1087
+            DataBinding.FieldName = 'Number'
+            HeaderAlignmentVert = vaCenter
+            Width = 40
+          end
           object colсhFuelCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'FuelCode'
@@ -453,6 +462,13 @@
             DataBinding.FieldName = 'FuelName'
             HeaderAlignmentVert = vaCenter
             Width = 144
+          end
+          object colсhCalculated: TcxGridDBColumn
+            Caption = #1060#1072#1082#1090' '#1087#1086' '#1088#1072#1089#1095'. ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'Calculated'
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
+            Width = 75
           end
           object colсhAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' '#1092#1072#1082#1090#1091' '
@@ -467,19 +483,6 @@
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 79
-          end
-          object colсhCalculated: TcxGridDBColumn
-            Caption = #1055#1086' '#1085#1086#1088#1084#1077'('#1076#1072')'
-            DataBinding.FieldName = 'Calculated'
-            HeaderAlignmentHorz = taRightJustify
-            HeaderAlignmentVert = vaCenter
-            Width = 75
-          end
-          object colсhRateFuelKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1085#1086#1088#1084#1099' '#1076#1083#1103' '#1090#1086#1087#1083#1080#1074#1072
-            DataBinding.FieldName = 'RateFuelKindName'
-            HeaderAlignmentVert = vaCenter
-            Width = 75
           end
           object colсhColdHour: TcxGridDBColumn
             Caption = #1061#1086#1083#1086#1076', '#1092#1072#1082#1090' '#1095#1072#1089#1086#1074
@@ -515,6 +518,16 @@
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 96
+          end
+          object colсhRateFuelKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1085#1086#1088#1084#1099
+            DataBinding.FieldName = 'RateFuelKindName'
+            HeaderAlignmentVert = vaCenter
+            Width = 75
+          end
+          object colchRateFuelKindTax: TcxGridDBColumn
+            Caption = '% '#1089#1077#1079#1086#1085', '#1090#1077#1084#1087'.'
+            DataBinding.FieldName = 'RateFuelKindTax'
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -756,7 +769,7 @@
         Value = '0'
       end>
     Left = 200
-    Top = 80
+    Top = 104
   end
   object spSelectMovementItem: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_Transport'
@@ -858,7 +871,7 @@
       ImageIndex = 3
       ShortCut = 16464
       Params = <>
-      ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportName = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -982,6 +995,52 @@
         end>
       Caption = 'UpdateChildDS'
       DataSource = ChildDS
+    end
+    object InsertRecord: TInsertRecord
+      Category = 'DSDLib'
+      View = cxGridDBTableView
+      Action = RouteChoiceForm
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1084#1072#1088#1096#1088#1091#1090
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1084#1072#1088#1096#1088#1091#1090
+      ShortCut = 45
+      ImageIndex = 0
+    end
+    object SetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ShortCut = 46
+      DataSource = MasterDS
+    end
+    object SetUnErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      isSetErased = False
+      DataSource = MasterDS
+    end
+    object ShowErasedAction: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      StoredProc = spSelectMovementItem
+      StoredProcList = <
+        item
+          StoredProc = spSelectMovementItem
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 13
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 12
+      ImageIndexFalse = 13
     end
   end
   object MasterDS: TDataSource
@@ -1191,8 +1250,8 @@
         ParamType = ptOutput
         Value = ''
       end>
-    Left = 152
-    Top = 80
+    Left = 168
+    Top = 104
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -1626,6 +1685,20 @@
         ParamType = ptInput
       end
       item
+        Name = 'inNumber'
+        Component = ChildCDS
+        ComponentItem = 'Number'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inRateFuelKindTax'
+        Component = ChildCDS
+        ComponentItem = 'RateFuelKindTax'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
         Name = 'inRateFuelKindId'
         Component = ChildCDS
         ComponentItem = 'RateFuelKindId'
@@ -1705,8 +1778,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1744,6 +1817,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertUpdateMovement'
         end
         item
@@ -1752,6 +1829,23 @@
           ItemName = 'bbStatic'
         end
         item
+          Visible = True
+          ItemName = 'bbAddRoute'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
         end
@@ -1800,6 +1894,22 @@
     end
     object bbInsertUpdateMovement: TdxBarButton
       Action = actInsertUpdateMovement
+      Category = 0
+    end
+    object bbAddRoute: TdxBarButton
+      Action = InsertRecord
+      Category = 0
+    end
+    object bbErased: TdxBarButton
+      Action = SetErased
+      Category = 0
+    end
+    object bbUnErased: TdxBarButton
+      Action = SetUnErased
+      Category = 0
+    end
+    object bbShowErased: TdxBarButton
+      Action = ShowErasedAction
       Category = 0
     end
   end
