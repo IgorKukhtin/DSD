@@ -535,6 +535,7 @@ begin
 end;
 
 procedure TdsdParam.SetValue(const Value: Variant);
+var Field: TField;
 begin
   FValue := Value;
   // передаем значение параметра дальше по цепочке
@@ -542,7 +543,18 @@ begin
      if (Component is TDataSet) and (Component as TDataSet).Active then begin
         if TDataSet(Component).State <> dsEdit then
            TDataSet(Component).Edit;
-        TDataSet(Component).FieldByName(ComponentItem).Value := Value;
+        Field := TDataSet(Component).FieldByName(ComponentItem);
+        if Assigned(Field) then begin
+           // в случае дробного числа и если строка, то надо конвертить
+           if Field.DataType in [ftFloat] then begin
+              if VarType(FValue) in [vtString, vtClass] then
+                 Field.Value := gfStrToFloat(FValue)
+              else
+                 Field.Value := FValue;
+           end
+           else
+              Field.Value := FValue;
+        end;
      end;
      if Component is TcxTextEdit then
         (Component as TcxTextEdit).Text := FValue;

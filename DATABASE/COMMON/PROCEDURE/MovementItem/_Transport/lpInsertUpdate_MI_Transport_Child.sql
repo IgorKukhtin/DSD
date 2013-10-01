@@ -65,7 +65,7 @@ BEGIN
 
 
    -- сохранили <Элемент документа>
-   ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inFuelId, inMovementId, inAmount, inParentId);
+   ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inFuelId, inMovementId, ioAmount, inParentId);
 
    -- сохранили свойство <Количество по факту рассчитыталось из нормы или вводилось>
    PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), ioId, inCalculated);

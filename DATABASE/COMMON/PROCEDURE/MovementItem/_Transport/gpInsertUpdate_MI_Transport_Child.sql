@@ -29,13 +29,13 @@ BEGIN
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Transport());
    vbUserId := inSession;
 
-   PERFORM lpInsertUpdate_MI_Transport_Child (ioId                 := ioId
+   SELECT ioId, ioAmount, outAmount_calc into ioId, ioAmount, outAmount_calc
+          FROM lpInsertUpdate_MI_Transport_Child (ioId                 := ioId
                                             , inMovementId         := inMovementId
                                             , inParentId           := inParentId
                                             , inFuelId             := inFuelId
                                             , inCalculated         := inCalculated
                                             , ioAmount             := ioAmount
-                                            , outAmount_calc       := outAmount_calc
                                             , inColdHour           := inColdHour
                                             , inColdDistance       := inColdDistance
                                             , inAmountColdHour     := inAmountColdHour
