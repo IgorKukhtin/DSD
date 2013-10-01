@@ -1648,11 +1648,18 @@
         ParamType = ptInput
       end
       item
-        Name = 'inAmount'
+        Name = 'ioAmount'
         Component = ChildCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'outAmount_calc'
+        Component = ChildCDS
+        ComponentItem = 'Amount_calc'
+        DataType = ftFloat
+        ParamType = ptOutput
       end
       item
         Name = 'inColdHour'

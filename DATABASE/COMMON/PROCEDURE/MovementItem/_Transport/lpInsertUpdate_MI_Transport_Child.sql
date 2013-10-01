@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_MI_Transport_Child()
 
--- DROP FUNCTION lpInsertUpdate_MI_Transport_Child();
+-- DROP FUNCTION lpInsertUpdate_MI_Transport_Child (Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_Transport_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_Transport_Child(
     IN inParentId            Integer   , -- Главный элемент документа
     IN inFuelId              Integer   , -- Вид топлива
     IN inCalculated          Boolean   , -- Количество по факту рассчитыталось из нормы или вводилось
-    IN inAmount              TFloat    , -- Количество по факту
+ INOUT ioAmount              TFloat    , -- Количество по факту
+   OUT outAmount_calc        TFloat    , -- Количество расчетное по норме
     IN inColdHour            TFloat    , -- Холод, Кол-во факт часов 
     IN inColdDistance        TFloat    , -- Холод, Кол-во факт км 
     IN inAmountColdHour      TFloat    , -- Холод, Кол-во норма в час  
@@ -18,7 +19,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_Transport_Child(
     IN inRateFuelKindTax     TFloat    , -- % дополнительного расхода в связи с сезоном/температурой
     IN inRateFuelKindId      Integer     -- Типы норм для топлива
 )                              
-RETURNS Integer AS
+RETURNS RECORD AS
 $BODY$
 BEGIN
 
@@ -28,36 +29,38 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Маршрут не установлен.';
    END IF;
 
+   -- Получаем расчетное значение по норме
+   outAmount_calc := (SELECT -- для "Основного" вида топлива расчитываем норму
+                             CASE WHEN inFuelId = ObjectLink_Car_FuelMaster.ChildObjectId
+                                       THEN zfCalc_RateFuelValue (inDistance           := MovementItem_Master.Amount
+                                                                , inAmountFuel         := inAmountFuel
+                                                                , inColdHour           := inColdHour
+                                                                , inAmountColdHour     := inAmountColdHour
+                                                                , inColdDistance       := inColdDistance
+                                                                , inAmountColdDistance := inAmountColdDistance
+                                                                , inRateFuelKindTax    := ObjecTFloat_RateFuelKind_Tax.ValueData
+                                                                 )
+                                            -- !!!Коэффициент перевода нормы!!!
+                                            -- * COALESCE (ObjecTFloat_Ratio.ValueData, 0)
+                                  ELSE 0
+                             END
+                      FROM MovementItem AS MovementItem_Master
+                           LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
+                                                        ON MovementLinkObject_Car.MovementId = inMovementId
+                                                       AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
+                           LEFT JOIN ObjectLink AS ObjectLink_Car_FuelMaster ON ObjectLink_Car_FuelMaster.ObjectId = MovementLinkObject_Car.ObjectId
+                                                                            AND ObjectLink_Car_FuelMaster.DescId = zc_ObjectLink_Car_FuelMaster()
+                           LEFT JOIN ObjecTFloat AS ObjecTFloat_RateFuelKind_Tax ON ObjecTFloat_RateFuelKind_Tax.ObjectId =inRateFuelKindId
+                                                                                AND ObjecTFloat_RateFuelKind_Tax.DescId = zc_ObjecTFloat_RateFuelKind_Tax()
+                           -- LEFT JOIN ObjecTFloat AS ObjecTFloat_Ratio ON ObjecTFloat_Ratio.ObjectId = inFuelId
+                           --                                           AND ObjecTFloat_Ratio.DescId = zc_ObjecTFloat_Fuel_Ratio()
+                      WHERE MovementItem_Master.Id = inParentId
+                     );
 
    IF inCalculated = TRUE
    THEN
-       -- При определенных условиях, расчитываем inAmount - Количество по факту
-       inAmount := (SELECT -- для "Основного" вида топлива расчитываем норму
-                           CASE WHEN inFuelId = ObjectLink_Car_FuelMaster.ChildObjectId
-                                     THEN zfCalc_RateFuelValue (inDistance           := MovementItem_Master.Amount
-                                                              , inAmountFuel         := inAmountFuel
-                                                              , inColdHour           := inColdHour
-                                                              , inAmountColdHour     := inAmountColdHour
-                                                              , inColdDistance       := inColdDistance
-                                                              , inAmountColdDistance := inAmountColdDistance
-                                                              , inRateFuelKindTax    := ObjectFloat_RateFuelKind_Tax.ValueData
-                                                               )
-                                          -- !!!Коэффициент перевода нормы!!!
-                                          -- * COALESCE (ObjectFloat_Ratio.ValueData, 0)
-                                ELSE 0
-                           END
-                    FROM MovementItem AS MovementItem_Master
-                         LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
-                                                      ON MovementLinkObject_Car.MovementId = inMovementId
-                                                     AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
-                         LEFT JOIN ObjectLink AS ObjectLink_Car_FuelMaster ON ObjectLink_Car_FuelMaster.ObjectId = MovementLinkObject_Car.ObjectId
-                                                                          AND ObjectLink_Car_FuelMaster.DescId = zc_ObjectLink_Car_FuelMaster()
-                         LEFT JOIN ObjectFloat AS ObjectFloat_RateFuelKind_Tax ON ObjectFloat_RateFuelKind_Tax.ObjectId =inRateFuelKindId
-                                                                              AND ObjectFloat_RateFuelKind_Tax.DescId = zc_ObjectFloat_RateFuelKind_Tax()
-                         -- LEFT JOIN ObjectFloat AS ObjectFloat_Ratio ON ObjectFloat_Ratio.ObjectId = inFuelId
-                         --                                           AND ObjectFloat_Ratio.DescId = zc_ObjectFloat_Fuel_Ratio()
-                    WHERE MovementItem_Master.Id = inParentId
-                   );
+       -- При определенных условиях, Количество по факту должно быть равно нолрме
+       ioAmount := outAmount_calc;
    END IF;
 
 
