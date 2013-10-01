@@ -1,10 +1,11 @@
 -- Function: gpSelect_MI_Transport()
 
--- DROP FUNCTION gpSelect_MI_Transport (Integer, Boolean, TVarChar);
+-- DROP FUNCTION gpSelect_MI_Transport (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MI_Transport(
     IN inMovementId  Integer      , -- ключ Документа
     IN inShowAll     Boolean      , -- 
+    IN inIsErased    Boolean      , -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS SETOF refcursor AS
@@ -255,7 +256,7 @@ END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MI_Transport (Integer, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_MI_Transport (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*

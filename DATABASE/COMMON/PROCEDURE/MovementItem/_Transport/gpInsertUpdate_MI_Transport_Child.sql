@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MI_Transport_Child()
 
--- DROP FUNCTION gpInsertUpdate_MI_Transport_Child();
+-- DROP FUNCTION gpInsertUpdate_MI_Transport_Child (Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Child(
     IN inParentId            Integer   , -- Главный элемент документа
     IN inFuelId              Integer   , -- Вид топлива
     IN inCalculated          Boolean   , -- Количество по факту рассчитыталось из нормы или вводилось
-    IN inAmount              TFloat    , -- Количество по факту
+ INOUT ioAmount              TFloat    , -- Количество по факту
+   OUT outAmount_calc        TFloat    , -- Количество расчетное по норме
     IN inColdHour            TFloat    , -- Холод, Кол-во факт часов 
     IN inColdDistance        TFloat    , -- Холод, Кол-во факт км 
     IN inAmountColdHour      TFloat    , -- Холод, Кол-во норма в час  
@@ -19,7 +20,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Child(
     IN inRateFuelKindId      Integer   , -- Типы норм для топлива          
     IN inSession             TVarChar    -- сессия пользователя
 )                              
-RETURNS Integer AS
+RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -33,7 +34,8 @@ BEGIN
                                             , inParentId           := inParentId
                                             , inFuelId             := inFuelId
                                             , inCalculated         := inCalculated
-                                            , inAmount             := inAmount
+                                            , ioAmount             := ioAmount
+                                            , outAmount_calc       := outAmount_calc
                                             , inColdHour           := inColdHour
                                             , inColdDistance       := inColdDistance
                                             , inAmountColdHour     := inAmountColdHour
