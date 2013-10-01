@@ -1,9 +1,9 @@
 ﻿inherited MemberEditForm: TMemberEditForm
   Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
-  ClientHeight = 200
-  ClientWidth = 338
-  ExplicitWidth = 346
-  ExplicitHeight = 227
+  ClientHeight = 322
+  ClientWidth = 339
+  ExplicitWidth = 347
+  ExplicitHeight = 356
   PixelsPerInch = 96
   TextHeight = 13
   object edMeasureName: TcxTextEdit
@@ -18,8 +18,8 @@
     Caption = #1060#1048#1054
   end
   object cxButton1: TcxButton
-    Left = 64
-    Top = 163
+    Left = 56
+    Top = 289
     Width = 75
     Height = 25
     Action = InsertUpdateGuides
@@ -28,8 +28,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 216
-    Top = 163
+    Left = 208
+    Top = 289
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -61,6 +61,28 @@
     Left = 32
     Top = 113
     Caption = #1048#1053#1053
+  end
+  object cxLabel3: TcxLabel
+    Left = 32
+    Top = 163
+    Caption = #1042#1086#1076#1080#1090#1077#1083#1100#1089#1082#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
+  end
+  object cxLabel4: TcxLabel
+    Left = 32
+    Top = 213
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+  end
+  object ceDriverCertificate: TcxTextEdit
+    Left = 32
+    Top = 186
+    TabOrder = 10
+    Width = 273
+  end
+  object ceComment: TcxTextEdit
+    Left = 32
+    Top = 236
+    TabOrder = 11
+    Width = 273
   end
   object ActionList: TActionList
     Left = 256
@@ -121,9 +143,23 @@
         DataType = ftString
         ParamType = ptInput
         Value = ''
+      end
+      item
+        Name = 'inDriverCertificate'
+        Component = ceDriverCertificate
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'inComment'
+        Component = ceComment
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
       end>
-    Left = 232
-    Top = 48
+    Left = 272
+    Top = 32
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -133,8 +169,8 @@
         ParamType = ptInputOutput
         Value = '0'
       end>
-    Left = 120
-    Top = 136
+    Left = 168
+    Top = 144
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Member'
@@ -166,12 +202,26 @@
       item
         Name = 'INN'
         Component = ceINN
-        DataType = ftInteger
+        DataType = ftString
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'DriverCertificate'
+        Component = ceDriverCertificate
+        DataType = ftString
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'Comment'
+        Component = ceComment
+        DataType = ftString
         ParamType = ptOutput
         Value = ''
       end>
-    Left = 192
-    Top = 104
+    Left = 248
+    Top = 136
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <

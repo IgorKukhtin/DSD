@@ -57,6 +57,8 @@ type
     clErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    clDriverCertificate: TcxGridDBColumn;
+    clComment: TcxGridDBColumn;
   private
     { Private declarations }
   public

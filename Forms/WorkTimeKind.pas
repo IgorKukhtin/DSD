@@ -35,7 +35,6 @@ type
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
     dsdStoredProc: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
@@ -57,6 +56,9 @@ type
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clShortName: TcxGridDBColumn;
+    spInsertUpdateObject: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    actInsert: TdsdInsertUpdateAction;
   private
     { Private declarations }
   public
