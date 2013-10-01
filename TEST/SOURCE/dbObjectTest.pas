@@ -325,8 +325,8 @@ type
   private
     function InsertDefault: integer; override;
   public
-   function InsertUpdatePersonal(const Id: integer; Code: Integer; Name: string;
-    MemberId, PositionId, UnitId, JuridicalId, BusinessId: integer; DateIn, DateOut: TDateTime): integer;
+   function InsertUpdatePersonal(const Id: integer;
+    MemberId, PositionId, UnitId, PersonalGroupId: integer; DateIn, DateOut: TDateTime): integer;
     constructor Create; override;
   end;
 
@@ -443,7 +443,7 @@ end;
 
 function TObjectTest.GetDefault: integer;
 begin
-  if GetDataSet.RecordCount > 0 then
+  if (1=0) and (GetDataSet.RecordCount > 0) then
      result := GetDataSet.FieldByName('Id').AsInteger
   else
      result := InsertDefault;
@@ -691,7 +691,7 @@ end;
 
 function TRouteTest.InsertDefault: integer;
 begin
-  result := InsertUpdateRoute(0, -1, 'Маршрут');
+  result := InsertUpdateRoute(0, -1, 'Маршрут-test');
 end;
 
 function TRouteTest.InsertUpdateRoute(const Id, Code: Integer;
@@ -909,7 +909,7 @@ begin
   try
     // Получение данных о маршруте
     with ObjectTest.GetRecord(Id) do
-      Check((FieldByName('Name').AsString = 'Маршрут'), 'Не сходятся данные Id = ' + IntToStr(Id));
+      Check((FieldByName('Name').AsString = 'Маршрут-test'), 'Не сходятся данные Id = ' + IntToStr(Id));
 
   finally
     ObjectTest.Delete(Id);
@@ -1958,28 +1958,24 @@ var
   MemberId: Integer;
   PositionId: Integer;
   UnitId: Integer;
-  JuridicalId: Integer;
-  BusinessId: Integer;
+  PersonalGroupId: Integer;
 begin
   MemberId := TMemberTest.Create.GetDefault;
   PositionId := TPositionTest.Create.GetDefault;
   UnitId := TUnit.Create.GetDefault;
-  JuridicalId := TJuridical.Create.GetDefault;
-  BusinessId := TBusiness.Create.GetDefault;
-  result := InsertUpdatePersonal(0, -3, 'Сотрудник', MemberId, PositionId, UnitId, JuridicalId, BusinessId, Date,Date);
+  PersonalGroupId:= 0;
+  result := InsertUpdatePersonal(0, MemberId, PositionId, UnitId, PersonalGroupId, Date,Date);
 end;
 
-function TPersonalTest.InsertUpdatePersonal;
+function TPersonalTest.InsertUpdatePersonal(const Id: integer;
+    MemberId, PositionId, UnitId, PersonalGroupId: integer; DateIn, DateOut: TDateTime): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
-  FParams.AddParam('inCode', ftInteger, ptInput, Code);
-  FParams.AddParam('inName', ftString, ptInput, Name);
   FParams.AddParam('inMemberId', ftInteger, ptInput, MemberId);
   FParams.AddParam('inPositionId', ftInteger, ptInput, PositionId);
   FParams.AddParam('inUnitId', ftInteger, ptInput, UnitId);
-  FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
-  FParams.AddParam('inBusinessId', ftInteger, ptInput, BusinessId);
+  FParams.AddParam('inPersonalGroupId', ftInteger, ptInput, PersonalGroupId);
   FParams.AddParam('inDateIn', ftDateTime, ptInput, DateIn);
   FParams.AddParam('inDateOut', ftDateTime, ptInput, DateOut);
   result := InsertUpdate(FParams);
@@ -1997,8 +1993,10 @@ begin
   Id := ObjectTest.InsertDefault;
   try
     // Получение данных
-    with ObjectTest.GetRecord(Id) do
-      Check((FieldByName('Code').AsInteger = -3), 'Не сходятся данные Id = ' + IntToStr(Id));
+    with ObjectTest.GetRecord(Id) do begin
+      Check((FieldByName('MemberCode').AsInteger = -1), 'Не сходятся данные Id = ' + IntToStr(Id));
+      Check((FieldByName('MemberName').AsString = 'Физические лица'), 'Не сходятся данные Id = ' + IntToStr(Id));
+    end;
   finally
     ObjectTest.Delete(Id);
   end;

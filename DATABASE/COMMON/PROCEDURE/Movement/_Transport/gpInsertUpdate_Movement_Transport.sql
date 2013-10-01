@@ -1,6 +1,6 @@
--- Function: gpInsertUpdate_Movement_Transport()
+-- Function: gpInsertUpdate_Movement_Transport (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar)
 
--- DROP FUNCTION gpInsertUpdate_Movement_Transport();
+-- DROP FUNCTION gpInsertUpdate_Movement_Transport (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Transport(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -24,8 +24,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Transport(
     IN inUnitForwardingId     Integer   , -- Подразделение (Место отправки)
 
     IN inSession              TVarChar    -- сессия пользователя
+
 )                              
-RETURNS record AS
+RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -48,7 +49,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndRun(), ioId, inEndRun);
 
      -- расчитали свойство <Кол-во рабочих часов>
-     outHoursWork := extract(day from (inEndRun - inStartRun)) * 24 + extract(hour from (inEndRun - inStartRun));
+     outHoursWork := EXTRACT (DAY FROM (inEndRun - inStartRun)) * 24 + EXTRACT (HOUR FROM (inEndRun - inStartRun));
      -- сохранили свойство <Кол-во рабочих часов>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_HoursWork(), ioId, outHoursWork);
 

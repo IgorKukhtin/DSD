@@ -81,8 +81,8 @@ end;
 
 procedure TdbMetaDataTest.InsertMovementItemDesc;
 begin
-  ExecFile(MetadataPath + 'MovementItem\InsertMovementItemLinkObjectDesc.sql', ZQuery);
-  ExecFile(MetadataPath + 'MovementItem\InsertMovementItemBooleanDesc.sql', ZQuery);
+  //ExecFile(MetadataPath + 'MovementItem\InsertMovementItemLinkObjectDesc.sql', ZQuery);
+  // ExecFile(MetadataPath + 'MovementItem\InsertMovementItemBooleanDesc.sql', ZQuery);
 end;
 
 procedure TdbMetaDataTest.CreateObjectDescFunction;
