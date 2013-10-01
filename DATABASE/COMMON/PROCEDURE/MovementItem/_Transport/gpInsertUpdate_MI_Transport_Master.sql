@@ -59,7 +59,6 @@ BEGIN
                                             , inFuelId             := MovementItem.ObjectId
                                             , inCalculated         := MIBoolean_Calculated.ValueData
                                             , ioAmount             := MovementItem.Amount
-                                            , outAmount_calc       := MovementItem.Amount
                                             , inColdHour           := MIFloat_ColdHour.ValueData
                                             , inColdDistance       := MIFloat_ColdDistance.ValueData
                                             , inAmountColdHour     := MIFloat_AmountColdHour.ValueData

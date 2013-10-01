@@ -4,8 +4,9 @@
   ClientWidth = 996
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1012
-  ExplicitHeight = 524
+  ExplicitTop = -133
+  ExplicitWidth = 1004
+  ExplicitHeight = 516
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -544,9 +545,6 @@
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -867,6 +865,9 @@
       StoredProcList = <
         item
           StoredProc = spInsertUpdateMIMaster
+        end
+        item
+          StoredProc = spSelectMovementItem
         end>
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS

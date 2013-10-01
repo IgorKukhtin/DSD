@@ -234,7 +234,7 @@ uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf, Windows,
      cxFilter, cxClasses, cxLookAndFeelPainters, cxCustomData,
      cxGridCommon, math, cxPropertiesStore, UtilConst, cxStorage,
      cxGeometry, cxCalendar, cxCheckBox, dxBar, cxButtonEdit, cxCurrencyEdit,
-     VCL.Menus, ParentForm, ChoicePeriod, cxGrid, cxDBData;
+     VCL.Menus, ParentForm, ChoicePeriod, cxGrid, cxDBData, Variants;
 
 type
 
@@ -380,7 +380,8 @@ begin
      ACanvas.Font.Color := clHighlightText;
   end;
   if FErasedIndex > -1 then
-     if AViewInfo.GridRecord.Values[FErasedIndex] then
+     if not VarIsNull(AViewInfo.GridRecord.Values[FErasedIndex])
+       and AViewInfo.GridRecord.Values[FErasedIndex] then
         ACanvas.Font.Color := clRed;
 end;
 
