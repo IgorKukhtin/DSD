@@ -6,7 +6,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member(
  INOUT ioId	                 Integer   ,   	-- ключ объекта <Физические лица> 
     IN inCode                Integer   ,    -- код объекта 
     IN inName                TVarChar  ,    -- Название объекта <
+
     IN inINN                 TVarChar  ,    -- Код ИНН
+    IN inDriverCertificate   TVarChar  ,    -- Водительское удостоверение 
+    IN inComment             TVarChar  ,    -- Примечание 
+  
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -30,8 +34,14 @@ BEGIN
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Member(), vbCode_calc, inName);
+
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_INN(), ioId, inINN);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_DriverCertificate(), ioId, inDriverCertificate);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_Comment(), ioId, inComment);
+
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -39,12 +49,13 @@ BEGIN
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Member(Integer, Integer, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Member(Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.10.13         *  add DriverCertificate, Comment              
  01.07.13          *
  
 */

@@ -38,6 +38,10 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLabel2: TcxLabel;
     ceINN: TcxTextEdit;
+    cxLabel3: TcxLabel;
+    cxLabel4: TcxLabel;
+    ceDriverCertificate: TcxTextEdit;
+    ceComment: TcxTextEdit;
   private
     { Private declarations }
   public

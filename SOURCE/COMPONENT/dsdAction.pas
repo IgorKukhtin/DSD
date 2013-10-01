@@ -3,7 +3,7 @@ unit dsdAction;
 interface
 
 uses VCL.ActnList, Forms, Classes, ParentForm, dsdDB, DB, DBClient, UtilConst,
-     cxGrid, dsdGuides, ImgList, cxPC;
+     cxGrid, dsdGuides, ImgList, cxPC, cxGridDBTableView;
 
 type
   TDataSetAcionType = (acInsert, acUpdate);
@@ -195,6 +195,37 @@ type
     procedure AfterChoice(Params: TdsdParams);
   end;
 
+  TDSAction = class(TCustomAction)
+  private
+    FAction: TCustomAction;
+    FView: TcxGridDBTableView;
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    procedure ChangeDSState; virtual; abstract;
+  public
+    function Execute: boolean; override;
+  published
+    property View: TcxGridDBTableView read FView write FView;
+    property Action: TCustomAction read FAction write FAction;
+    property Caption;
+    property Hint;
+    property ShortCut;
+    property ImageIndex;
+    property SecondaryShortCuts;
+  end;
+
+  // ƒобавл€ем запись
+  TInsertRecord = class(TDSAction)
+  protected
+    procedure ChangeDSState; override;
+  end;
+
+  // –едактируем запись
+  TUpdateRecord = class(TDSAction)
+  protected
+    procedure ChangeDSState; override;
+  end;
+
   // ƒанный класс дополн€ет поведение класса TdsdOpenForm по работе со справочниками
   //   сожалению наследование самое удобное пока
   TdsdInsertUpdateAction = class (TdsdOpenForm, IDataSetAction, IFormAction)
@@ -340,7 +371,9 @@ begin
   RegisterActions('DSDLib', [TdsdPrintAction],    TdsdPrintAction);
   RegisterActions('DSDLib', [TdsdUpdateErased], TdsdUpdateErased);
   RegisterActions('DSDLib', [TdsdUpdateDataSet], TdsdUpdateDataSet);
+  RegisterActions('DSDLib', [TInsertRecord], TInsertRecord);
   RegisterActions('DSDLib', [TOpenChoiceForm], TOpenChoiceForm);
+  RegisterActions('DSDLib', [TUpdateRecord], TUpdateRecord);
 end;
 
 { TdsdCustomDataSetAction }
@@ -855,18 +888,33 @@ end;
 
 function TdsdPrintAction.Execute: boolean;
 var i: integer;
+    Stream: TStringStream;
 begin
   inherited;
-  with TfrxReport.Create(nil) do begin
-    LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport(ReportName));
-    for i := 0 to Params.Count - 1 do
-        Variables[Params[i].Name] := chr(39) + Params[i].AsString + chr(39);
-    if ShiftDown then
-       DesignReport
-    else begin
-       PrepareReport;
-       ShowReport;
+  Stream := TStringStream.Create;
+  try
+    with TfrxReport.Create(nil) do begin
+      for i := 0 to Params.Count - 1 do
+          Variables[Params[i].Name] := chr(39) + Params[i].AsString + chr(39);
+      if ShiftDown then begin
+         try
+           LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport(ReportName));
+         except
+         end;
+         DesignReport;
+         Stream.Clear;
+         SaveToStream(Stream);
+         Stream.Position := 0;
+         TdsdFormStorageFactory.GetStorage.SaveReport(Stream, ReportName);
+      end
+      else begin
+         LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport(ReportName));
+         PrepareReport;
+         ShowReport;
+      end;
     end;
+  finally
+    Stream.Free
   end;
 end;
 
@@ -1025,6 +1073,59 @@ procedure TOpenChoiceForm.AfterChoice(Params: TdsdParams);
 begin
   // –асставл€ем параметры по местам
   Self.GuiParams.AssignParams(Params);
+end;
+
+{ TDataSetAction }
+
+function TDSAction.Execute: boolean;
+var i: integer;
+begin
+  inherited;
+  ChangeDSState;
+  if Assigned(FView.Owner)
+     and (FView.Owner is TForm) then
+        TForm(FView.Owner).ActiveControl := FView.Control;
+  // Ётот кусок кода написан как подарок  ост€нычу! :-)
+  for I := 0 to FView.ColumnCount - 1 do
+      if FView.Columns[i].Visible and FView.Columns[i].Editable then begin
+         FView.Columns[i].Focused := true;
+         break;
+      end;
+  // конец подарка
+  if Assigned(FAction) then
+     FAction.Execute;
+end;
+
+procedure TDSAction.Notification(AComponent: TComponent;
+  Operation: TOperation);
+begin
+  inherited;
+  if (Operation = opRemove) then begin
+    if AComponent = FView then
+       FView := nil;
+    if AComponent = FAction then
+       FAction := nil;
+  end;
+end;
+
+{ TInsertRecord }
+
+procedure TInsertRecord.ChangeDSState;
+begin
+  if Assigned(FView) then
+     if Assigned(FView.DataController.DataSource) then
+        if FView.DataController.DataSource.State = dsBrowse then
+           FView.DataController.DataSource.DataSet.Append;
+end;
+
+{ TUpdateRecord }
+
+procedure TUpdateRecord.ChangeDSState;
+begin
+  if Assigned(FView) then
+     if Assigned(FView.DataController.DataSource) then
+        if FView.DataController.DataSource.State = dsBrowse then
+           FView.DataController.DataSource.DataSet.Edit;
 end;
 
 end.

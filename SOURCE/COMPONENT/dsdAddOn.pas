@@ -5,7 +5,7 @@ interface
 uses Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView,
      cxTextEdit, DB, dsdAction, cxGridTableView,
      VCL.Graphics, cxGraphics, cxStyles, Forms, Controls,
-     SysUtils, dsdDB, Contnrs, cxGridCustomTableView, dsdGuides, VCL.ActnList;
+     SysUtils, dsdDB, Contnrs, cxGridCustomView, cxGridCustomTableView, dsdGuides, VCL.ActnList;
 
 type
 
@@ -14,6 +14,7 @@ type
     FImages: TImageList;
     FOnDblClickActionList: TActionItemList;
     FActionItemList: TActionItemList;
+    FOnKeyDown: TKeyEvent;
     procedure OnDblClick(Sender: TObject);
     procedure OnKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   protected
@@ -59,8 +60,10 @@ type
   // 2. Рисование иконок сортировки
   TdsdDBViewAddOn = class(TCustomDBControlAddOn)
   private
+    FErasedIndex: integer;
     FBackGroundStyle: TcxStyle;
     FView: TcxGridDBTableView;
+    FonExit: TNotifyEvent;
     // контрол для ввода условия фильтра
     edFilter: TcxTextEdit;
     procedure OnKeyPress(Sender: TObject; var Key: Char);
@@ -82,6 +85,8 @@ type
       AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
     // поменять цвет грида в случае установки фильтра
     procedure onFilterChanged(Sender: TObject);
+    // если при выходе из грида ДатаСет в Edit mode, то делаем Post
+    procedure OnExit(Sender: TObject);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
@@ -224,9 +229,9 @@ implementation
 
 uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf, Windows,
      cxFilter, cxClasses, cxLookAndFeelPainters, cxCustomData,
-     cxGridCommon, math, cxPropertiesStore, cxGridCustomView, UtilConst, cxStorage,
+     cxGridCommon, math, cxPropertiesStore, UtilConst, cxStorage,
      cxGeometry, cxCalendar, cxCheckBox, dxBar, cxButtonEdit, cxCurrencyEdit,
-     VCL.Menus, ParentForm, ChoicePeriod;
+     VCL.Menus, ParentForm, ChoicePeriod, cxGrid, cxDBData;
 
 type
 
@@ -344,6 +349,8 @@ end;
 constructor TdsdDBViewAddOn.Create(AOwner: TComponent);
 begin
   inherited;
+  FErasedIndex := -1;
+
   edFilter := TcxTextEdit.Create(Self);
   edFilter.OnKeyDown := edFilterKeyDown;
   edFilter.Visible := false;
@@ -369,7 +376,10 @@ begin
      ACanvas.Brush.Color := clHighlight;
      ACanvas.Font.Color := clHighlightText;
   end;
-end;
+{  if FErasedIndex > -1 then
+     if FView.Controller. Values[FErasedIndex] then
+        ACanvas.Font.Color := clRed;
+}end;
 
 procedure TdsdDBViewAddOn.OnCustomDrawColumnHeader(
   Sender: TcxGridTableView; ACanvas: TcxCanvas;
@@ -420,6 +430,16 @@ begin
   end;
 end;
 
+procedure TdsdDBViewAddOn.OnExit(Sender: TObject);
+begin
+  if Assigned(FonExit) then
+     FOnExit(Sender);
+  if Assigned(FView) then
+     if Assigned(TcxDBDataController(FView.DataController).DataSource) then
+        if TcxDBDataController(FView.DataController).DataSource.State in [dsEdit, dsInsert] then
+           TcxDBDataController(FView.DataController).DataSource.DataSet.Post;
+end;
+
 procedure TdsdDBViewAddOn.onFilterChanged(Sender: TObject);
 begin
   if FView.DataController.Filter.Root.Count > 0 then
@@ -453,7 +473,7 @@ begin
      // позиционируем контрол на место заголовка
      edFilter.Visible := true;
      edFilter.Parent := TWinControl(FView.GetParentComponent);
-     pRect := GridView.ViewInfo.HeaderViewInfo.Items[FocusedItemIndex].Bounds;
+     pRect := TcxGridTableView(GridView).ViewInfo.HeaderViewInfo.Items[FocusedItemIndex].Bounds;
      edFilter.Left := pRect.Left;
      edFilter.Top := pRect.Top;
      edFilter.Width := pRect.Right - pRect.Left + 1;
@@ -499,24 +519,34 @@ procedure TdsdDBViewAddOn.Notification(AComponent: TComponent;
 begin
   inherited;
   if csDesigning in ComponentState then
-    if (Operation = opRemove) and (AComponent = FView) then
+    if (Operation = opRemove) and (AComponent = FView) then begin
        FView := nil;
+       FonExit := nil;
+    end;
 end;
 
 procedure TdsdDBViewAddOn.OnKeyPress(Sender: TObject; var Key: Char);
 begin
   // если колонка не редактируема и введена буква или BackSpace то обрабатываем установку фильтра
-  if ((Assigned(TcxGridDBColumn(FView.Controller.FocusedColumn).Properties) and TcxGridDBColumn(FView.Controller.FocusedColumn).Properties.ReadOnly)
-     or not TcxGridDBColumn(FView.Controller.FocusedColumn).Options.Editing) and (Key > #31) then begin
+  if (not TcxGridDBColumn(FView.Controller.FocusedColumn).Editable) and (Key > #31) then begin
      lpSetEdFilterPos(Char(Key));
      Key := #0;
   end;
 end;
 
 procedure TdsdDBViewAddOn.SetView(const Value: TcxGridDBTableView);
+var i: integer;
 begin
   FView := Value;
   if Assigned(FView) then begin
+    if FView.Control is TcxGrid then begin
+       FOnExit := TcxGrid(FView.Control).OnExit;
+       TcxGrid(FView.Control).OnExit := OnExit;
+    end;
+    for i := 0 to FView.ColumnCount - 1 do
+        if TcxGridDBColumn(FView.Columns[i]).DataBinding.FieldName = 'isErased' then
+           FErasedIndex := i;
+    FOnKeyDown := FView.OnKeyDown;
     FView.OnKeyDown := OnKeyDown;
     FView.OnKeyPress := OnKeyPress;
     FView.OnCustomDrawColumnHeader := OnCustomDrawColumnHeader;
@@ -894,6 +924,8 @@ procedure TCustomDBControlAddOn.OnKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 var i: integer;
 begin
+  if Assigned(FOnKeyDown) then
+     FOnKeyDown(Sender, Key, Shift);
   // Сначала проверим все action
   // и если там нет ничего, то тогда идем дальше
   for I := 0 to ActionItemList.Count - 1 do

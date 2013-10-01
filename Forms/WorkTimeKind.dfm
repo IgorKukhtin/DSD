@@ -24,10 +24,9 @@ inherited WorkTimeKindForm: TWorkTimeKindForm
       Images = dmMain.SortImageList
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsData.Appending = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
-      OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -38,12 +37,14 @@ inherited WorkTimeKindForm: TWorkTimeKindForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 58
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 189
       end
       object clShortName: TcxGridDBColumn
@@ -73,8 +74,8 @@ inherited WorkTimeKindForm: TWorkTimeKindForm
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 24
-    Top = 144
+    Left = 40
+    Top = 160
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -88,8 +89,8 @@ inherited WorkTimeKindForm: TWorkTimeKindForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 224
-    Top = 144
+    Left = 216
+    Top = 88
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -107,8 +108,8 @@ inherited WorkTimeKindForm: TWorkTimeKindForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 264
-    Top = 80
+    Left = 128
+    Top = 96
     DockControlHeights = (
       0
       0
@@ -175,8 +176,12 @@ inherited WorkTimeKindForm: TWorkTimeKindForm
       Category = 0
     end
     object bbInsert: TdxBarButton
-      Action = actInsert
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Category = 0
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
+      Visible = ivAlways
+      ImageIndex = 0
+      ShortCut = 45
     end
     object bbEdit: TdxBarButton
       Action = actUpdate
@@ -207,8 +212,8 @@ inherited WorkTimeKindForm: TWorkTimeKindForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 328
-    Top = 120
+    Left = 240
+    Top = 160
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -224,7 +229,6 @@ inherited WorkTimeKindForm: TWorkTimeKindForm
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
       GuiParams = <
@@ -234,9 +238,19 @@ inherited WorkTimeKindForm: TWorkTimeKindForm
           ParamType = ptOutput
           Value = '0'
         end>
-      isShowModal = False
+      isShowModal = True
       DataSource = DataSource
       DataSetRefresh = actRefresh
+    end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      StoredProc = spInsertUpdateObject
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateObject
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -323,8 +337,8 @@ inherited WorkTimeKindForm: TWorkTimeKindForm
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 144
-    Top = 104
+    Left = 40
+    Top = 224
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -338,12 +352,12 @@ inherited WorkTimeKindForm: TWorkTimeKindForm
         DataType = ftInteger
         ParamType = ptInput
       end>
-    Left = 96
-    Top = 176
+    Left = 224
+    Top = 224
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 320
-    Top = 224
+    Left = 128
+    Top = 160
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     View = cxGridDBTableView
@@ -366,5 +380,27 @@ inherited WorkTimeKindForm: TWorkTimeKindForm
     SortImages = dmMain.SortImageList
     Left = 136
     Top = 224
+  end
+  object spInsertUpdateObject: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_WorkTimeKind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        DataType = ftInteger
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inShortName'
+        Component = ClientDataSet
+        ComponentItem = 'ShortName'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 128
+    Top = 288
   end
 end

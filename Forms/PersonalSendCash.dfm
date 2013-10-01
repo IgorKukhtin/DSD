@@ -4,8 +4,9 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
   ClientWidth = 773
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 789
-  ExplicitHeight = 431
+  ExplicitTop = -46
+  ExplicitWidth = 781
+  ExplicitHeight = 423
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -68,15 +69,12 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     TabOrder = 2
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 115
-    ExplicitHeight = 281
     ClientRectBottom = 318
     ClientRectRight = 773
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 257
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -84,7 +82,6 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         Height = 294
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 257
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource
@@ -156,11 +153,15 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
           object colRouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090
             DataBinding.FieldName = 'RouteName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object colCarName: TcxGridDBColumn
             Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
             DataBinding.FieldName = 'CarName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object colPersonalCode: TcxGridDBColumn
@@ -185,7 +186,6 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 80
           end
           object colAmount_20401: TcxGridDBColumn
@@ -207,7 +207,6 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitHeight = 257
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -215,7 +214,6 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         Height = 294
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 257
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -406,7 +404,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         Value = '0'
       end>
     Left = 48
-    Top = 144
+    Top = 168
   end
   object spSelectMovementItem: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_PersonalSendCash'
@@ -437,8 +435,8 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -451,7 +449,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     ShowShortCutInHint = True
     UseSystemFont = True
     Left = 16
-    Top = 144
+    Top = 168
     DockControlHeights = (
       0
       0
@@ -546,13 +544,13 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
           'Width')
       end>
     StorageName = 'cxPropertiesStore'
-    Left = 112
-    Top = 144
+    Left = 120
+    Top = 168
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 80
-    Top = 144
+    Top = 160
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spGet
@@ -660,6 +658,105 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       Hint = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 14
       ShortCut = 113
+    end
+    object OpenChoiceForm1: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'OpenChoiceForm1'
+      FormName = 'TRouteForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'RouteId'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end
+        item
+          Name = 'Code'
+          Component = MasterCDS
+          ComponentItem = 'RouteCode'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'RouteName'
+          DataType = ftString
+          ParamType = ptOutput
+        end
+        item
+          Name = 'RouteKindId'
+          Component = MasterCDS
+          ComponentItem = 'RouteKindId'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end
+        item
+          Name = 'RouteKindName'
+          Component = MasterCDS
+          ComponentItem = 'RouteKindName'
+          DataType = ftString
+          ParamType = ptOutput
+        end
+        item
+          Name = 'FreightId'
+          Component = MasterCDS
+          ComponentItem = 'FreightId'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end
+        item
+          Name = 'FreightName'
+          Component = MasterCDS
+          ComponentItem = 'FreightName'
+          DataType = ftString
+          ParamType = ptOutput
+        end>
+      isShowModal = True
+    end
+    object InsertRecord1: TInsertRecord
+      Category = 'DSDLib'
+      View = cxGridDBTableView
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1084#1072#1088#1096#1088#1091#1090
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1084#1072#1088#1096#1088#1091#1090
+      ShortCut = 45
+      ImageIndex = 0
+    end
+    object dsdUpdateErased1: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ShortCut = 46
+    end
+    object dsdUpdateErased2: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      isSetErased = False
+    end
+    object BooleanStoredProcAction1: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      StoredProc = spSelectMovementItem
+      StoredProcList = <
+        item
+          StoredProc = spSelectMovementItem
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 13
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 12
+      ImageIndexFalse = 13
     end
   end
   object DataSource: TDataSource
@@ -941,7 +1038,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         Value = ''
       end>
     Left = 176
-    Top = 120
+    Top = 144
   end
   object RefreshAddOn: TRefreshAddOn
     FormName = 'IncomeJournalForm'
@@ -967,7 +1064,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       item
         Action = actInsertUpdateMovement
       end>
-    Left = 248
-    Top = 96
+    Left = 256
+    Top = 128
   end
 end
