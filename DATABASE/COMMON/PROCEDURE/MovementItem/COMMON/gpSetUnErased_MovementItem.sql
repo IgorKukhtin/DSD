@@ -1,8 +1,8 @@
--- Function: gpSetErased_MovementItem (Integer, TVarChar)
+-- Function: gpSetUnErased_MovementItem (Integer, TVarChar)
 
--- DROP FUNCTION gpSetErased_MovementItem (Integer, TVarChar);
+-- DROP FUNCTION gpSetUnErased_MovementItem (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSetErased_MovementItem(
+CREATE OR REPLACE FUNCTION gpSetUnErased_MovementItem(
     IN inMovementItemId      Integer              , -- ключ объекта <Элемент документа>
     IN inSession             TVarChar               -- текущий пользователь
 )                              
@@ -13,12 +13,12 @@ BEGIN
   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_SetErased_MovementItem());
 
   -- Обязательно меняем 
-  UPDATE MovementItem SET isErased = TRUE WHERE Id = inMovementItemId;
+  UPDATE MovementItem SET isErased = FALSE WHERE Id = inMovementItemId;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSetErased_MovementItem (Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSetUnErased_MovementItem (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -27,4 +27,4 @@ ALTER FUNCTION gpSetErased_MovementItem (Integer, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSetErased_MovementItem (inMovementItemId:= 55, inSession:= '2')
+-- SELECT * FROM gpSetUnErased_MovementItem (inMovementItemId:= 55, inSession:= '2')
