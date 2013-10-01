@@ -58,7 +58,10 @@ BEGIN
                                              AND MILinkObject_RouteKind.DescId = zc_MILinkObject_RouteKind()
              LEFT JOIN Object AS Object_RouteKind ON Object_RouteKind.Id = MILinkObject_RouteKind.ObjectId
 
-       WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master();
+       WHERE MovementItem.MovementId = inMovementId
+         AND MovementItem.DescId = zc_MI_Master()
+         AND (MovementItem.isErased = inIsErased OR inIsErased = TRUE)
+      ;
     
     RETURN NEXT Cursor1;
 
@@ -248,7 +251,10 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_Car_FuelMaster ON ObjectLink_Car_FuelMaster.ObjectId = MovementLinkObject_Car.ObjectId
                                                               AND ObjectLink_Car_FuelMaster.DescId = zc_ObjectLink_Car_FuelMaster()
 
-       WHERE MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Child();
+       WHERE MovementItem.MovementId = inMovementId
+         AND MovementItem.DescId = zc_MI_Child()
+         AND (MovementItem.isErased = inIsErased OR inIsErased = TRUE)
+      ;
        
     RETURN NEXT Cursor2;
 
