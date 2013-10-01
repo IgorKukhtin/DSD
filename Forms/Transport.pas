@@ -166,6 +166,14 @@ type
     FreightChoiceForm: TOpenChoiceForm;
     ChildViewAddOn: TdsdDBViewAddOn;
     UpdateChildDS: TdsdUpdateDataSet;
+    InsertRecord: TInsertRecord;
+    bbAddRoute: TdxBarButton;
+    SetErased: TdsdUpdateErased;
+    bbErased: TdxBarButton;
+    SetUnErased: TdsdUpdateErased;
+    bbUnErased: TdxBarButton;
+    ShowErasedAction: TBooleanStoredProcAction;
+    bbShowErased: TdxBarButton;
   private
   public
   end;

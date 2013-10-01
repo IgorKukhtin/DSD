@@ -4,8 +4,6 @@
   ClientWidth = 996
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitLeft = -103
-  ExplicitTop = -141
   ExplicitWidth = 1004
   ExplicitHeight = 516
   PixelsPerInch = 96
@@ -297,6 +295,7 @@
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsCustomize.DataRowSizing = True
           OptionsData.Appending = True
+          OptionsData.CancelOnExit = False
           OptionsView.ColumnAutoWidth = True
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
@@ -320,6 +319,7 @@
                 Kind = bkEllipsis
               end>
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 125
           end
           object colAmount: TcxGridDBColumn
@@ -361,6 +361,7 @@
                 Kind = bkEllipsis
               end>
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 110
           end
           object colRouteKindName: TcxGridDBColumn
@@ -756,7 +757,7 @@
         Value = '0'
       end>
     Left = 200
-    Top = 80
+    Top = 104
   end
   object spSelectMovementItem: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_Transport'
@@ -858,7 +859,7 @@
       ImageIndex = 3
       ShortCut = 16464
       Params = <>
-      ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportName = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -982,6 +983,52 @@
         end>
       Caption = 'UpdateChildDS'
       DataSource = ChildDS
+    end
+    object InsertRecord: TInsertRecord
+      Category = 'DSDLib'
+      View = cxGridDBTableView
+      Action = RouteChoiceForm
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1084#1072#1088#1096#1088#1091#1090
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1084#1072#1088#1096#1088#1091#1090
+      ShortCut = 45
+      ImageIndex = 0
+    end
+    object SetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ShortCut = 46
+      DataSource = MasterDS
+    end
+    object SetUnErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      isSetErased = False
+      DataSource = MasterDS
+    end
+    object ShowErasedAction: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      StoredProc = spSelectMovementItem
+      StoredProcList = <
+        item
+          StoredProc = spSelectMovementItem
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 13
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 12
+      ImageIndexFalse = 13
     end
   end
   object MasterDS: TDataSource
@@ -1191,8 +1238,8 @@
         ParamType = ptOutput
         Value = ''
       end>
-    Left = 152
-    Top = 80
+    Left = 168
+    Top = 104
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -1744,6 +1791,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertUpdateMovement'
         end
         item
@@ -1752,6 +1803,23 @@
           ItemName = 'bbStatic'
         end
         item
+          Visible = True
+          ItemName = 'bbAddRoute'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
         end
@@ -1800,6 +1868,22 @@
     end
     object bbInsertUpdateMovement: TdxBarButton
       Action = actInsertUpdateMovement
+      Category = 0
+    end
+    object bbAddRoute: TdxBarButton
+      Action = InsertRecord
+      Category = 0
+    end
+    object bbErased: TdxBarButton
+      Action = SetErased
+      Category = 0
+    end
+    object bbUnErased: TdxBarButton
+      Action = SetUnErased
+      Category = 0
+    end
+    object bbShowErased: TdxBarButton
+      Action = ShowErasedAction
       Category = 0
     end
   end
