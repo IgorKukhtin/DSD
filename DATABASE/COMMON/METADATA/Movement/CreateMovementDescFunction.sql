@@ -91,10 +91,14 @@ CREATE OR REPLACE FUNCTION zc_Movement_PersonalSendCash() RETURNS Integer AS $BO
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_PersonalSendCash', 'Расход денег с подотчета на подотчет' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PersonalSendCash');
 
+CREATE OR REPLACE FUNCTION zc_Movement_SheetWorkTime() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_SheetWorkTime'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_SheetWorkTime', 'Табель учета рабочего времени' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_SheetWorkTime');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.10.13         * add  zc_Movement_SheetWorkTime            
  30.09.13                                        * add zc_Movement_PersonalSendCash
  20.08.13         * add  zc_Movement_Transport
  13.08.13         * add  zc_Movement_BankStatementItem            

@@ -79,8 +79,8 @@
     Width = 273
   end
   object ActionList: TActionList
-    Left = 296
-    Top = 72
+    Left = 304
+    Top = 56
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spGet
@@ -146,8 +146,8 @@
         ParamType = ptInput
         Value = ''
       end>
-    Left = 240
-    Top = 48
+    Left = 224
+    Top = 64
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -204,10 +204,11 @@
       end
       item
         Name = 'RateFuelKindName'
-        Component = edRateFuelKind
+        Component = RateFuelKindGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
+        DataType = ftString
         ParamType = ptOutput
+        Value = ''
       end>
     Left = 152
     Top = 112
@@ -233,8 +234,8 @@
         ParamType = ptInput
         Value = ''
       end>
-    Left = 112
-    Top = 165
+    Left = 128
+    Top = 173
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 248
