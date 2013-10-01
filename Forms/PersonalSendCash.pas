@@ -107,11 +107,15 @@ type
     bbInsertUpdateMovement: TdxBarButton;
     colRouteName: TcxGridDBColumn;
     colCarName: TcxGridDBColumn;
-    OpenChoiceForm1: TOpenChoiceForm;
-    InsertRecord1: TInsertRecord;
-    dsdUpdateErased1: TdsdUpdateErased;
-    dsdUpdateErased2: TdsdUpdateErased;
-    BooleanStoredProcAction1: TBooleanStoredProcAction;
+    PersonalChoiceForm: TOpenChoiceForm;
+    InsertRecord: TInsertRecord;
+    SetErased: TdsdUpdateErased;
+    SetUnErased: TdsdUpdateErased;
+    ShowErasedAction: TBooleanStoredProcAction;
+    bbInsert: TdxBarButton;
+    bbErased: TdxBarButton;
+    bbUnErased: TdxBarButton;
+    bbShowErased: TdxBarButton;
   private
   public
   end;

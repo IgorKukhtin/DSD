@@ -15,6 +15,7 @@ type
     FOnDblClickActionList: TActionItemList;
     FActionItemList: TActionItemList;
     FOnKeyDown: TKeyEvent;
+    FErasedFieldName: string;
     procedure OnDblClick(Sender: TObject);
     procedure OnKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   protected
@@ -24,6 +25,8 @@ type
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
     constructor Create(AOwner: TComponent); override;
+  published
+    property ErasedFieldName: string read FErasedFieldName write FErasedFieldName;
   end;
 
   TdsdDBTreeAddOn = class(TCustomDBControlAddOn)
@@ -376,10 +379,10 @@ begin
      ACanvas.Brush.Color := clHighlight;
      ACanvas.Font.Color := clHighlightText;
   end;
-{  if FErasedIndex > -1 then
-     if FView.Controller. Values[FErasedIndex] then
+  if FErasedIndex > -1 then
+     if AViewInfo.GridRecord.Values[FErasedIndex] then
         ACanvas.Font.Color := clRed;
-}end;
+end;
 
 procedure TdsdDBViewAddOn.OnCustomDrawColumnHeader(
   Sender: TcxGridTableView; ACanvas: TcxCanvas;
@@ -543,9 +546,8 @@ begin
        FOnExit := TcxGrid(FView.Control).OnExit;
        TcxGrid(FView.Control).OnExit := OnExit;
     end;
-    for i := 0 to FView.ColumnCount - 1 do
-        if TcxGridDBColumn(FView.Columns[i]).DataBinding.FieldName = 'isErased' then
-           FErasedIndex := i;
+    if Assigned(FView.GetColumnByFieldName(FErasedFieldName)) then
+       FErasedIndex := FView.GetColumnByFieldName(FErasedFieldName).Index;
     FOnKeyDown := FView.OnKeyDown;
     FView.OnKeyDown := OnKeyDown;
     FView.OnKeyPress := OnKeyPress;
@@ -882,6 +884,7 @@ end;
 constructor TCustomDBControlAddOn.Create(AOwner: TComponent);
 begin
   inherited;
+  FErasedFieldName := gcisErased;
   ActionItemList := TActionItemList.Create(Self, TShortCutActionItem);
   OnDblClickActionList := TActionItemList.Create(Self, TActionItem);
 end;

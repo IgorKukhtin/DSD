@@ -148,6 +148,7 @@ type
   private
     FActionDataLink: TDataSetDataLink;
     FisSetErased: boolean;
+    FErasedFieldName: string;
     function GetDataSource: TDataSource;
     procedure SetDataSource(const Value: TDataSource);
     procedure SetisSetErased(const Value: boolean);
@@ -159,6 +160,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
+    property ErasedFieldName: string read FErasedFieldName write FErasedFieldName;
     property isSetErased: boolean read FisSetErased write SetisSetErased default true;
     property DataSource: TDataSource read GetDataSource write SetDataSource;
   end;
@@ -622,6 +624,7 @@ end;
 constructor TdsdUpdateErased.Create(AOwner: TComponent);
 begin
   inherited;
+  FErasedFieldName := gcisErased;
   FActionDataLink := TDataSetDataLink.Create(Self);
   isSetErased := true;
 end;
@@ -635,9 +638,9 @@ begin
            Enabled := false
         else
            if FisSetErased then
-              Enabled := not DataSource.DataSet.FieldByName('isErased').AsBoolean
+              Enabled := not DataSource.DataSet.FieldByName(ErasedFieldName).AsBoolean
            else
-              Enabled := DataSource.DataSet.FieldByName('isErased').AsBoolean
+              Enabled := DataSource.DataSet.FieldByName(ErasedFieldName).AsBoolean
 end;
 
 destructor TdsdUpdateErased.Destroy;
@@ -651,7 +654,7 @@ begin
   result := inherited Execute;
   if result and Assigned(DataSource) and Assigned(DataSource.DataSet) then begin
      DataSource.DataSet.Edit;
-     DataSource.DataSet.FieldByName('isErased').AsBoolean := not DataSource.DataSet.FieldByName('isErased').AsBoolean;
+     DataSource.DataSet.FieldByName(ErasedFieldName).AsBoolean := not DataSource.DataSet.FieldByName(ErasedFieldName).AsBoolean;
      DataSource.DataSet.Post;
   end;
 end;

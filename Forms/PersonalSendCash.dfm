@@ -4,7 +4,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
   ClientWidth = 773
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitTop = -46
+  ExplicitTop = -125
   ExplicitWidth = 781
   ExplicitHeight = 423
   PixelsPerInch = 96
@@ -142,6 +142,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
           DataController.Summary.SummaryGroups = <>
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsData.Appending = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = False
@@ -174,6 +175,13 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
           object colPersonalName: TcxGridDBColumn
             Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
             DataBinding.FieldName = 'PersonalName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = PersonalChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
@@ -474,7 +482,28 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         end
         item
           Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertUpdateMovement'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErased'
         end
         item
           BeginGroup = True
@@ -530,6 +559,22 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     end
     object bbInsertUpdateMovement: TdxBarButton
       Action = actInsertUpdateMovement
+      Category = 0
+    end
+    object bbInsert: TdxBarButton
+      Action = InsertRecord
+      Category = 0
+    end
+    object bbErased: TdxBarButton
+      Action = SetErased
+      Category = 0
+    end
+    object bbUnErased: TdxBarButton
+      Action = SetUnErased
+      Category = 0
+    end
+    object bbShowErased: TdxBarButton
+      Action = ShowErasedAction
       Category = 0
     end
   end
@@ -659,10 +704,9 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       ImageIndex = 14
       ShortCut = 113
     end
-    object OpenChoiceForm1: TOpenChoiceForm
+    object PersonalChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
-      Caption = 'OpenChoiceForm1'
-      FormName = 'TRouteForm'
+      FormName = 'TPersonalForm'
       GuiParams = <
         item
           Name = 'Key'
@@ -715,32 +759,37 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         end>
       isShowModal = True
     end
-    object InsertRecord1: TInsertRecord
+    object InsertRecord: TInsertRecord
       Category = 'DSDLib'
       View = cxGridDBTableView
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1084#1072#1088#1096#1088#1091#1090
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1084#1072#1088#1096#1088#1091#1090
+      Action = PersonalChoiceForm
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
       ShortCut = 45
       ImageIndex = 0
     end
-    object dsdUpdateErased1: TdsdUpdateErased
+    object SetErased: TdsdUpdateErased
       Category = 'DSDLib'
       StoredProcList = <>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
       ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = DataSource
     end
-    object dsdUpdateErased2: TdsdUpdateErased
+    object SetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       StoredProcList = <>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 46
+      ErasedFieldName = 'isErased'
       isSetErased = False
+      DataSource = DataSource
     end
-    object BooleanStoredProcAction1: TBooleanStoredProcAction
+    object ShowErasedAction: TBooleanStoredProcAction
       Category = 'DSDLib'
       StoredProc = spSelectMovementItem
       StoredProcList = <
@@ -832,7 +881,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     Top = 240
   end
   object spInsertUpdateMovementItem: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_IncomeFuel'
+    StoredProcName = 'gpInsertUpdate_MovementItem_PersonalSendCash'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -891,6 +940,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     Top = 88
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
@@ -907,6 +957,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     Top = 304
   end
   object EntryViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = cxGridEntryDBTableView
     OnDblClickActionList = <>
     ActionItemList = <>
