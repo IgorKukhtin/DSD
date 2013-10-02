@@ -1,21 +1,21 @@
-unit PersonalSendCashTest;
+unit SheetWorkTimeTest;
 
 interface
 
 uses dbTest, dbMovementTest;
 
 type
-  TPersonalSendCashTest = class (TdbMovementTestNew)
+  TSheetWorkTimeTest = class (TdbMovementTestNew)
   published
     procedure ProcedureLoad; override;
     procedure Test; override;
   end;
 
-  TPersonalSendCash = class(TMovementTest)
+  TSheetWorkTime = class(TMovementTest)
   private
     function InsertDefault: integer; override;
   public
-    function InsertUpdatePersonalSendCash(const Id: integer): integer;
+    function InsertUpdateSheetWorkTime(const Id: integer): integer;
     constructor Create; override;
   end;
 
@@ -23,17 +23,17 @@ implementation
 
 uses UtilConst, JuridicalTest, dbObjectTest, SysUtils, Db, TestFramework;
 
-{ TPersonalSendCash }
+{ TSheetWorkTime }
 
-constructor TPersonalSendCash.Create;
+constructor TSheetWorkTime.Create;
 begin
   inherited;
-  spInsertUpdate := 'gpInsertUpdate_Movement_PersonalSendCash';
-  spSelect := 'gpSelect_Movement_PersonalSendCash';
-  spGet := 'gpGet_Movement_PersonalSendCash';
+  spInsertUpdate := 'gpInsertUpdate_Movement_SheetWorkTime';
+  spSelect := 'gpSelect_Movement_SheetWorkTime';
+  spGet := 'gpGet_Movement_SheetWorkTime';
 end;
 
-function TPersonalSendCash.InsertDefault: integer;
+function TSheetWorkTime.InsertDefault: integer;
 var Id: Integer;
     InvNumber: String;
     OperDate, StartRunPlan, EndRunPlan, StartRun, EndRun: TDateTime;
@@ -43,10 +43,10 @@ var Id: Integer;
 begin
   Id:=0;
 
-  result := InsertUpdatePersonalSendCash(Id);
+  result := InsertUpdateSheetWorkTime(Id);
 end;
 
-function TPersonalSendCash.InsertUpdatePersonalSendCash(const Id: integer): integer;
+function TSheetWorkTime.InsertUpdateSheetWorkTime(const Id: integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -70,26 +70,24 @@ begin
 }
 end;
 
-{ TPersonalSendCashTest }
+{ TSheetWorkTimeTest }
 
-procedure TPersonalSendCashTest.ProcedureLoad;
+procedure TSheetWorkTimeTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'Movement\_PersonalSendCash\';
+  ScriptDirectory := ProcedurePath + 'Movement\_SheetWorkTime\';
   inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItem\_PersonalSendCash\';
-  inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItemContainer\_PersonalSendCash\';
+  ScriptDirectory := ProcedurePath + 'MovementItem\_SheetWorkTime\';
   inherited;
 end;
 
-procedure TPersonalSendCashTest.Test;
-var MovementPersonalSendCash: TPersonalSendCash;
+procedure TSheetWorkTimeTest.Test;
+var MovementSheetWorkTime: TSheetWorkTime;
     Id: Integer;
 begin
   inherited;
   // Создаем документ
-  MovementPersonalSendCash := TPersonalSendCash.Create;
-  Id := MovementPersonalSendCash.InsertDefault;
+  MovementSheetWorkTime := TSheetWorkTime.Create;
+  Id := MovementSheetWorkTime.InsertDefault;
   // создание документа
   try
   // редактирование
@@ -99,6 +97,6 @@ end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TPersonalSendCashTest.Suite);
+  TestFramework.RegisterTest('Документы', TSheetWorkTimeTest.Suite);
 
 end.

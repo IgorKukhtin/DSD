@@ -4,8 +4,8 @@ inherited IncomeFuelForm: TIncomeFuelForm
   ClientWidth = 773
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 781
-  ExplicitHeight = 423
+  ExplicitWidth = 789
+  ExplicitHeight = 431
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -67,7 +67,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
     object cxLabel3: TcxLabel
       Left = 288
       Top = 7
-      Caption = #1054#1090' '#1082#1086#1075#1086
+      Caption = #1054#1090' '#1082#1086#1075#1086' ('#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090')'
     end
     object cxLabel4: TcxLabel
       Left = 440
@@ -297,9 +297,6 @@ inherited IncomeFuelForm: TIncomeFuelForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -528,8 +525,8 @@ inherited IncomeFuelForm: TIncomeFuelForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

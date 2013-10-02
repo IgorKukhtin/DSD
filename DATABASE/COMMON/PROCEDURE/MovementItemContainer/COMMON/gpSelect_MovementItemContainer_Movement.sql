@@ -1,7 +1,7 @@
 -- Запрос возвращает все проводки по документу
 -- Function: gpSelect_MovementItemContainer_Movement()
 
--- DROP FUNCTION gpSelect_MovementItemContainer_Movement (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItemContainer_Movement (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItemContainer_Movement(
     IN inMovementId  Integer      , -- ключ Документа
@@ -28,12 +28,12 @@ BEGIN
            , CAST (CASE WHEN tmpMovementItemContainer.isActive = TRUE THEN tmpMovementItemContainer.Amount ELSE 0 END AS TFloat) AS DebetAmount
            , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active() THEN lfObject_Account.AccountGroupName ELSE NULL END  AS TVarChar) AS DebetAccountGroupName
            , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active() THEN lfObject_Account.AccountDirectionName ELSE NULL END  AS TVarChar) AS DebetAccountDirectionName
-           , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active() THEN lfObject_Account.AccountName ELSE NULL END  AS TVarChar) AS DebetAccountName
+           , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active() THEN lfObject_Account.AccountGroupName || ' ' || lfObject_Account.AccountName ELSE NULL END  AS TVarChar) AS DebetAccountName
 
            , CAST (CASE WHEN tmpMovementItemContainer.isActive = FALSE THEN -1 * tmpMovementItemContainer.Amount ELSE 0 END AS TFloat) AS KreditAmount
            , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active() THEN lfObject_Account.AccountGroupName ELSE NULL END  AS TVarChar) AS KreditAccountGroupName
            , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active() THEN lfObject_Account.AccountDirectionName ELSE NULL END  AS TVarChar) AS KreditAccountDirectionName
-           , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active() THEN lfObject_Account.AccountName ELSE NULL END  AS TVarChar) AS KreditAccountName
+           , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active() THEN lfObject_Account.AccountGroupName || ' ' || lfObject_Account.AccountName ELSE NULL END  AS TVarChar) AS KreditAccountName
 
            , CAST (ABS(tmpMovementItemContainer.Price) AS TFloat) AS Price
            , lfObject_Account.onComplete AS AccountOnComplete
@@ -192,6 +192,7 @@ ALTER FUNCTION gpSelect_MovementItemContainer_Movement (Integer, TVarChar) OWNER
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.10.13                                        * calc DebetAccountName and KreditAccountName
  08.09.13                                        * add zc_ContainerLinkObject_ProfitLoss
  02.09.13                        * убрал коды счетов
  25.08.13                                        * add zc_Enum_AccountKind_Active

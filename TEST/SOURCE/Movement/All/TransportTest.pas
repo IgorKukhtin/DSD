@@ -95,6 +95,10 @@ procedure TTransportTest.ProcedureLoad;
 begin
   ScriptDirectory := ProcedurePath + 'Movement\_Transport\';
   inherited;
+  ScriptDirectory := ProcedurePath + 'MovementItem\_Transport\';
+  inherited;
+  ScriptDirectory := ProcedurePath + 'MovementItemContainer\_Transport\';
+  inherited;
 end;
 
 procedure TTransportTest.Test;

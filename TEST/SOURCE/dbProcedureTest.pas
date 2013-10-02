@@ -34,9 +34,13 @@ end;
 procedure TdbProcedureTest.CreateMovementItemContainerProcedure;
 begin
   ExecFile(ProcedurePath + 'MovementItemContainer\_Income\gpComplete_Movement_Income.sql', ZQuery);
-  ExecFile(ProcedurePath + 'MovementItemContainer\_Send\gpComplete_Movement_Send.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItemContainer\_Inventory\gpComplete_Movement_Inventory.sql.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItemContainer\_ProductionSeparate\gpComplete_Movement_ProductionSeparate.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItemContainer\_ProductionUnion\gpComplete_Movement_ProductionUnion.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItemContainer\_Sale\gpComplete_Movement_Sale.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItemContainer\_Send\gpComplete_Movement_Send.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItemContainer\_SendOnPrice\gpComplete_Movement_SendOnPrice.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItemContainer\_Loss\gpComplete_Movement_Loss.sql', ZQuery);
 end;
 
 procedure TdbProcedureTest.CreateMovementItemProcedure;

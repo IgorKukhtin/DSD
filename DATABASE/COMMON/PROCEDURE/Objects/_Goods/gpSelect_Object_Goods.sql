@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , GoodsGroupName TVarChar
+             , GoodsGroupId Integer, GoodsGroupName TVarChar
              , MeasureName TVarChar
              , TradeMarkName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar
@@ -28,6 +28,7 @@ BEGIN
          , Object_Goods.ObjectCode     AS Code
          , Object_Goods.ValueData      AS Name
 
+         , Object_GoodsGroup.Id         AS GoodsGroupId
          , Object_GoodsGroup.ValueData  AS GoodsGroupName 
 
          , Object_Measure.ValueData     AS MeasureName
@@ -103,7 +104,6 @@ BEGIN
           LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = ObjectLink_Goods_Fuel.ChildObjectId    
 
   WHERE Object_Goods.DescId = zc_Object_Goods()
--- and (ObjectBoolean_PartionCount.ValueData = true or ObjectBoolean_PartionSumm.ValueData = true)
   ;
   
 END;
@@ -117,6 +117,7 @@ ALTER FUNCTION gpSelect_Object_Goods (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.10.13                                        * add GoodsGroupId
  29.09.13                                        * add zc_ObjectLink_Goods_Fuel
  01.09.13                                        * add zc_ObjectLink_Goods_Business
  12.07.13                                        * add zc_ObjectBoolean_Goods_Partion...

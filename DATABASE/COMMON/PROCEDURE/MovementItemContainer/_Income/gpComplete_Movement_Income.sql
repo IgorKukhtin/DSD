@@ -1,7 +1,6 @@
 -- Function: gpComplete_Movement_Income()
 
--- DROP FUNCTION gpComplete_Movement_Income (Integer, TVarChar);
--- DROP FUNCTION gpComplete_Movement_Income (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_Income (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Income(
     IN inMovementId        Integer               , -- ключ Документа
@@ -189,7 +188,7 @@ BEGIN
                                     AND ObjectLink_UnitTo_Business.DescId = zc_ObjectLink_Unit_Business()
            WHERE Movement.Id = inMovementId
              AND Movement.DescId = zc_Movement_Income()
-             AND Movement.StatusId = zc_Enum_Status_UnComplete()
+             AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
           ) AS _tmp;
 
      -- определяется Управленческие назначения, параметр нужен для для формирования Аналитик в проводках
@@ -306,7 +305,7 @@ BEGIN
                    ELSE _tmp.InfoMoneyId -- Иначе УП берется по товару
                END AS InfoMoneyId_Detail
 
-              -- значение Бизнес !!!выбирается!!! из Товара или Подраделения
+              -- значение Бизнес !!!выбирается!!! из 1)Автомобиля или 2)Товара или 3)Подраделения
             , CASE WHEN _tmp.BusinessId = 0 THEN vbBusinessId_To ELSE _tmp.BusinessId END AS BusinessId 
 
             , _tmp.isPartionCount
@@ -323,8 +322,8 @@ BEGIN
 
         FROM (SELECT
                      MovementItem.Id AS MovementItemId
-
-                   , MovementItem.ObjectId AS GoodsId
+                     -- для Автомобиля это Вид топлива, иначе - Товар
+                   , CASE WHEN vbCarId <> 0 THEN COALESCE (ObjectLink_Goods_Fuel.ChildObjectId, 0) ELSE MovementItem.ObjectId END AS GoodsId
                    , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                    , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
                    , CASE WHEN COALESCE (MIString_PartionGoods.ValueData, '') <> '' THEN MIString_PartionGoods.ValueData
@@ -347,12 +346,18 @@ BEGIN
                      END AS tmpOperSumm_Packer
 
                     -- Управленческие назначения
-                  , COALESCE (lfObject_InfoMoney.InfoMoneyDestinationId, 0) AS InfoMoneyDestinationId
+                  , CASE WHEN vbCarId <> 0 THEN COALESCE (lfObject_InfoMoney_Car.InfoMoneyDestinationId, 0)
+                         ELSE COALESCE (lfObject_InfoMoney.InfoMoneyDestinationId, 0)
+                    END AS InfoMoneyDestinationId
                     -- Статьи назначения
-                  , COALESCE (lfObject_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
+                  , CASE WHEN vbCarId <> 0 THEN COALESCE (lfObject_InfoMoney_Car.InfoMoneyId, 0)
+                         ELSE COALESCE (lfObject_InfoMoney.InfoMoneyId, 0)
+                    END AS InfoMoneyId
 
-                     -- Бизнес из Товара
-                   , COALESCE (ObjectLink_Goods_Business.ChildObjectId, 0) AS BusinessId
+                     -- Бизнес для Автомобиля = 0, иначе из Товара
+                  , CASE WHEN vbCarId <> 0 THEN 0
+                         ELSE COALESCE (ObjectLink_Goods_Business.ChildObjectId, 0)
+                    END AS BusinessId
 
                    , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE) AS isPartionCount
                    , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)  AS isPartionSumm
@@ -404,11 +409,16 @@ BEGIN
                    LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                         ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
                                        AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                   LEFT JOIN ObjectLink AS ObjectLink_Goods_Fuel
+                                        ON ObjectLink_Goods_Fuel.ObjectId = MovementItem.ObjectId
+                                       AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
 
                    LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                                              AND vbCarId = 0
+                   LEFT JOIN lfGet_Object_InfoMoney (zc_Enum_InfoMoney_20401()) AS lfObject_InfoMoney_Car ON vbCarId <> 0
               WHERE Movement.Id = inMovementId
                 AND Movement.DescId = zc_Movement_Income()
-                AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
              ) AS _tmp
         ;
 
@@ -592,7 +602,8 @@ BEGIN
      -- 1.2.2. формируются Проводки для количественного учета
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
        SELECT 0, zc_MIContainer_Count() AS DescId, inMovementId, MovementItemId, ContainerId_Goods, 0 AS ParentId, OperCount, vbOperDate, TRUE
-       FROM _tmpItem;
+       FROM _tmpItem
+       WHERE OperCount <> 0;
 
 
      -- 1.3.1. определяется Счет(справочника) для проводок по суммовому учету
@@ -642,7 +653,8 @@ BEGIN
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
        SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, MovementItemId, ContainerId_Summ, 0 AS ParentId, OperSumm_Partner + OperSumm_Packer, vbOperDate, TRUE
        FROM _tmpItem
-       WHERE zc_isHistoryCost() = TRUE; -- !!!если нужны проводки!!!
+       WHERE OperSumm_Partner <> 0 OR OperSumm_Packer <> 0
+         AND zc_isHistoryCost() = TRUE; -- !!!если нужны проводки!!!
 
 
      -- 2.1. определяется Счет(справочника) для проводок по долг Поставщику или Сотруднику (подотчетные лица)
@@ -720,11 +732,13 @@ BEGIN
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
        SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, _tmpItem_SummPartner.ContainerId, 0 AS ParentId, -1 * _tmpItem_SummPartner.OperSumm_Partner, vbOperDate, FALSE
        FROM _tmpItem_SummPartner
+       WHERE _tmpItem_SummPartner.OperSumm_Partner <> 0
      UNION ALL
        -- это расчеты с поставщиком за счет водителя
        SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, _tmpItem_SummPartner.ContainerId, 0 AS ParentId, 1 * _tmpItem_SummPartner.OperSumm_Partner, vbOperDate, TRUE
        FROM _tmpItem_SummDriver
             JOIN _tmpItem_SummPartner ON _tmpItem_SummPartner.InfoMoneyId = _tmpItem_SummDriver.InfoMoneyId
+       WHERE _tmpItem_SummPartner.OperSumm_Partner <> 0
       ;
 
 
@@ -760,7 +774,8 @@ BEGIN
      -- 3.3. формируются Проводки - доплата Сотруднику (заготовитель)
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
        SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, ContainerId, 0 AS ParentId, -1 * OperSumm_Packer, vbOperDate, FALSE
-       FROM _tmpItem_SummPacker;
+       FROM _tmpItem_SummPacker
+       WHERE OperSumm_Packer <> 0;
 
 
      -- 4.1. определяется Счет(справочника) для проводок по расчетам с поставщиком Сотрудником (Водитель)
@@ -796,7 +811,8 @@ BEGIN
      -- 4.3. формируются Проводки -  расчеты с поставщиком Сотрудником (Водитель)
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
        SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, ContainerId, 0 AS ParentId, -1 * OperSumm_Driver, vbOperDate, FALSE
-       FROM _tmpItem_SummDriver;
+       FROM _tmpItem_SummDriver
+       WHERE OperSumm_Driver <> 0;
 
 
      -- 5.1. формируются Проводки для отчета (Аналитики: Товар и Поставщик или Сотрудник (подотчетные лица)) !!!связь по InfoMoneyId_Detail!!!
@@ -886,7 +902,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
 
      -- 5.2. ФИНИШ - Обязательно меняем статус документа
-     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_Income() AND StatusId = zc_Enum_Status_UnComplete();
+     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_Income() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
 
 END;
@@ -896,6 +912,8 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.10.13                                        * add StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+ 02.10.13                                        * add zc_ObjectLink_Goods_Fuel
  30.09.13                                        * add vbCarId and vbPersonalId_Driver
  17.09.13                                        * add lpInsertUpdate_ContainerCount_Goods and lpInsertUpdate_ContainerSumm_Goods
  15.09.13                                        * all
