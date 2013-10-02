@@ -29,7 +29,7 @@ BEGIN
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Transport());
    vbUserId := inSession;
 
-   SELECT ioId, ioAmount, outAmount_calc into ioId, ioAmount, outAmount_calc
+   SELECT f.ioId, f.ioAmount, f.outAmount_calc into ioId, ioAmount, outAmount_calc
           FROM lpInsertUpdate_MI_Transport_Child (ioId                 := ioId
                                             , inMovementId         := inMovementId
                                             , inParentId           := inParentId
@@ -44,7 +44,7 @@ BEGIN
                                             , inNumber             := inNumber
                                             , inRateFuelKindTax    := inRateFuelKindTax
                                             , inRateFuelKindId     := inRateFuelKindId
-                                             );
+                                             ) as f;
 
 END;
 $BODY$
