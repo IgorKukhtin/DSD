@@ -18,6 +18,7 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbUnitId Integer;
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
@@ -42,6 +43,9 @@ BEGIN
    
    -- сохранили связь с <Типы маршрутов>
    PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_RouteKind(), ioId, inRouteKindId);
+
+   -- сохранили связь с <Типы маршрутов>
+   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_Unit(), ioId, vbUnitId);
   
    -- сохранили свойство <Вес груза>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Weight(), ioId, inWeight);
