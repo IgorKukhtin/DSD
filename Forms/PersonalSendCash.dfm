@@ -4,7 +4,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
   ClientWidth = 773
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitTop = -125
+  ExplicitTop = -40
   ExplicitWidth = 781
   ExplicitHeight = 423
   PixelsPerInch = 96
@@ -154,15 +154,29 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
           object colRouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090
             DataBinding.FieldName = 'RouteName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = RoteChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 100
           end
           object colCarName: TcxGridDBColumn
             Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
             DataBinding.FieldName = 'CarName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = CarChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 60
           end
           object colPersonalCode: TcxGridDBColumn
@@ -182,8 +196,8 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 100
           end
           object colAmount_21201: TcxGridDBColumn
@@ -711,49 +725,21 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         item
           Name = 'Key'
           Component = MasterCDS
-          ComponentItem = 'RouteId'
+          ComponentItem = 'PersonalId'
           DataType = ftInteger
           ParamType = ptOutput
         end
         item
           Name = 'Code'
           Component = MasterCDS
-          ComponentItem = 'RouteCode'
+          ComponentItem = 'PersonalCode'
           DataType = ftInteger
           ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = MasterCDS
-          ComponentItem = 'RouteName'
-          DataType = ftString
-          ParamType = ptOutput
-        end
-        item
-          Name = 'RouteKindId'
-          Component = MasterCDS
-          ComponentItem = 'RouteKindId'
-          DataType = ftInteger
-          ParamType = ptOutput
-        end
-        item
-          Name = 'RouteKindName'
-          Component = MasterCDS
-          ComponentItem = 'RouteKindName'
-          DataType = ftString
-          ParamType = ptOutput
-        end
-        item
-          Name = 'FreightId'
-          Component = MasterCDS
-          ComponentItem = 'FreightId'
-          DataType = ftInteger
-          ParamType = ptOutput
-        end
-        item
-          Name = 'FreightName'
-          Component = MasterCDS
-          ComponentItem = 'FreightName'
+          ComponentItem = 'PersonalName'
           DataType = ftString
           ParamType = ptOutput
         end>
@@ -806,6 +792,46 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       ImageIndexTrue = 12
       ImageIndexFalse = 13
+    end
+    object CarChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      FormName = 'TCarForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'RouteId'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'RouteName'
+          DataType = ftString
+          ParamType = ptOutput
+        end>
+      isShowModal = True
+    end
+    object RoteChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      FormName = 'TRouteForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'RouteId'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'RouteName'
+          DataType = ftString
+          ParamType = ptOutput
+        end>
+      isShowModal = True
     end
   end
   object DataSource: TDataSource
