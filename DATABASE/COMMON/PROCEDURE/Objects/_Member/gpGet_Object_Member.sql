@@ -1,6 +1,6 @@
 ﻿-- Function: gpGet_Object_Member (Integer,TVarChar)
 
---DROP FUNCTION gpGet_Object_Member (Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_Member (Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Member(
     IN inId          Integer,        -- Физические лица 

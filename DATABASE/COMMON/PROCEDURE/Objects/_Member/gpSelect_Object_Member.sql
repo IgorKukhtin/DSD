@@ -1,6 +1,6 @@
 ﻿-- Function: gpSelect_Object_Member(TVarChar)
 
---DROP FUNCTION gpSelect_Object_Member(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Member(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Member(
     IN inSession     TVarChar       -- сессия пользователя
