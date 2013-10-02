@@ -2,8 +2,8 @@ inherited PersonalForm: TPersonalForm
   Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082#1080
   ClientHeight = 358
   ClientWidth = 864
-  ExplicitWidth = 880
-  ExplicitHeight = 393
+  ExplicitWidth = 872
+  ExplicitHeight = 385
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -120,8 +120,8 @@ inherited PersonalForm: TPersonalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -293,6 +293,7 @@ inherited PersonalForm: TPersonalForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
       ShortCut = 46
+      ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
     object dsdSetUnErased: TdsdUpdateErased
@@ -306,6 +307,7 @@ inherited PersonalForm: TPersonalForm
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 32776
+      ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
     end
@@ -317,6 +319,13 @@ inherited PersonalForm: TPersonalForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          ParamType = ptOutput
+        end
+        item
+          Name = 'Code'
+          Component = ClientDataSet
+          ComponentItem = 'MemberCode'
+          DataType = ftInteger
           ParamType = ptOutput
         end
         item
@@ -371,6 +380,7 @@ inherited PersonalForm: TPersonalForm
     Top = 208
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
       item

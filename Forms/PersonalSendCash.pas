@@ -116,6 +116,8 @@ type
     bbErased: TdxBarButton;
     bbUnErased: TdxBarButton;
     bbShowErased: TdxBarButton;
+    RoteChoiceForm: TOpenChoiceForm;
+    CarChoiceForm: TOpenChoiceForm;
   private
   public
   end;

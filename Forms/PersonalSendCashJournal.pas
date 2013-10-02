@@ -67,12 +67,12 @@ type
     bbStatic: TdxBarStatic;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
   private
   public
   end;
