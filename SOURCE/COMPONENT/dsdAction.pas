@@ -197,7 +197,7 @@ type
     procedure AfterChoice(Params: TdsdParams);
   end;
 
-  TDSAction = class(TCustomAction)
+  TDSAction = class(TdsdCustomAction)
   private
     FAction: TCustomAction;
     FView: TcxGridDBTableView;

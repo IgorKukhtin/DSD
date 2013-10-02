@@ -63,7 +63,6 @@ type
   // 2. Рисование иконок сортировки
   TdsdDBViewAddOn = class(TCustomDBControlAddOn)
   private
-    FErasedIndex: integer;
     FBackGroundStyle: TcxStyle;
     FView: TcxGridDBTableView;
     FonExit: TNotifyEvent;
@@ -352,8 +351,6 @@ end;
 constructor TdsdDBViewAddOn.Create(AOwner: TComponent);
 begin
   inherited;
-  FErasedIndex := -1;
-
   edFilter := TcxTextEdit.Create(Self);
   edFilter.OnKeyDown := edFilterKeyDown;
   edFilter.Visible := false;
@@ -374,14 +371,16 @@ end;
 procedure TdsdDBViewAddOn.OnCustomDrawCell(Sender: TcxCustomGridTableView;
   ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
   var ADone: Boolean);
+var Column: TcxGridDBColumn;
 begin
   if AViewInfo.Focused then begin
      ACanvas.Brush.Color := clHighlight;
      ACanvas.Font.Color := clHighlightText;
   end;
-  if FErasedIndex > -1 then
-     if not VarIsNull(AViewInfo.GridRecord.Values[FErasedIndex])
-       and AViewInfo.GridRecord.Values[FErasedIndex] then
+  Column := FView.GetColumnByFieldName(FErasedFieldName);
+  if Assigned(Column) then
+     if not VarIsNull(AViewInfo.GridRecord.Values[Column.Index])
+       and AViewInfo.GridRecord.Values[Column.Index] then
         ACanvas.Font.Color := clRed;
 end;
 
@@ -530,9 +529,13 @@ begin
 end;
 
 procedure TdsdDBViewAddOn.OnKeyPress(Sender: TObject; var Key: Char);
+var isReadOnly: boolean;
 begin
+  isReadOnly := false;
+  if Assigned(TcxGridDBColumn(FView.Controller.FocusedColumn).Properties) then
+     isReadOnly := TcxGridDBColumn(FView.Controller.FocusedColumn).Properties.ReadOnly;
   // если колонка не редактируема и введена буква или BackSpace то обрабатываем установку фильтра
-  if (not TcxGridDBColumn(FView.Controller.FocusedColumn).Editable) and (Key > #31) then begin
+  if (isReadOnly or  (not TcxGridDBColumn(FView.Controller.FocusedColumn).Editable)) and (Key > #31) then begin
      lpSetEdFilterPos(Char(Key));
      Key := #0;
   end;
@@ -547,8 +550,6 @@ begin
        FOnExit := TcxGrid(FView.Control).OnExit;
        TcxGrid(FView.Control).OnExit := OnExit;
     end;
-    if Assigned(FView.GetColumnByFieldName(FErasedFieldName)) then
-       FErasedIndex := FView.GetColumnByFieldName(FErasedFieldName).Index;
     FOnKeyDown := FView.OnKeyDown;
     FView.OnKeyDown := OnKeyDown;
     FView.OnKeyPress := OnKeyPress;

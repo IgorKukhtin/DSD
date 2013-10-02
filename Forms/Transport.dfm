@@ -4,7 +4,7 @@
   ClientWidth = 996
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitTop = -133
+  ExplicitTop = -104
   ExplicitWidth = 1004
   ExplicitHeight = 516
   PixelsPerInch = 96
@@ -239,6 +239,7 @@
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Kind = skSum
@@ -319,8 +320,8 @@
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 125
           end
           object colAmount: TcxGridDBColumn
@@ -361,8 +362,8 @@
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 110
           end
           object colRouteKindName: TcxGridDBColumn
