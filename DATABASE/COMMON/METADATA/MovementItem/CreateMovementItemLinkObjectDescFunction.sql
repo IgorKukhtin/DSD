@@ -62,9 +62,14 @@ CREATE OR REPLACE FUNCTION zc_MILinkObject_WorkTimeKind() RETURNS Integer AS $BO
 INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MILinkObject_WorkTimeKind', 'Типы рабочего времени' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_WorkTimeKind');
 
+CREATE OR REPLACE FUNCTION zc_MILinkObject_Unit() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Unit'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementItemLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MILinkObject_Unit', 'Подразделение' WHERE NOT EXISTS (SELECT * FROM MovementItemLinkObjectDesc WHERE Code = 'zc_MILinkObject_Unit');
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.10.13         *  add  zc_MILinkObject_Unit            
  01.10.13         *  add  PersonalGroup, Position, WorkTimeKind             
  01.10.13                                        * НОВАЯ СХЕМА
  30.09.13                                        * add for PersonalSendCash
