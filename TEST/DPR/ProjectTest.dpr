@@ -217,7 +217,8 @@ uses
   PersonalSendCash in '..\..\Forms\PersonalSendCash.pas' {PersonalSendCashForm},
   PersonalSendCashJournal in '..\..\Forms\PersonalSendCashJournal.pas' {PersonalSendCashJournalForm},
   PersonalSendCashTest in '..\SOURCE\Movement\All\PersonalSendCashTest.pas' {$R *.RES},
-  WorkTimeKind in '..\..\Forms\WorkTimeKind.pas' {WorkTimeKindForm};
+  WorkTimeKind in '..\..\Forms\WorkTimeKind.pas' {WorkTimeKindForm},
+  SheetWorkTimeTest in '..\SOURCE\Movement\All\SheetWorkTimeTest.pas';
 
 {$R *.RES}
 

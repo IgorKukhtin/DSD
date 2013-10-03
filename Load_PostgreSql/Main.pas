@@ -1236,9 +1236,8 @@ begin
              toStoredProc.Params.ParamByName('inRatio').Value:=FieldByName('Ratio').AsFloat;
              toStoredProc.Params.ParamByName('inRateFuelKindId').Value:=FieldByName('RateFuelKindId').AsInteger;
              //
-         if (FieldByName('Id_Postgres').AsInteger=0)or(1=1)
+         if (FieldByName('Id_Postgres').AsInteger=0)or(1=0)
          then begin
-
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
