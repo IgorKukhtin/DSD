@@ -34,12 +34,12 @@ BEGIN
                       AND MovementItem.DescId =  zc_MI_Master()
                    );
      -- Поиск элемента Статья назначения Коммандировочные
-     vbId_20401 := (SELECT MovementItem.Id
+     vbId_21201 := (SELECT MovementItem.Id
                     FROM MovementItem
                          JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                      ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                                     AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-                                                    AND MILinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_20401()
+                                                    AND MILinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_21201()
                     WHERE MovementItem.MovementId = inMovementId
                       AND MovementItem.ObjectId = inPersonalId
                       AND MovementItem.DescId =  zc_MI_Master()
@@ -59,7 +59,7 @@ BEGIN
      vbId_21201 := lpInsertUpdate_MovementItem_PersonalSendCash (ioId          := vbId_21201
                                                                , inMovementId  := inMovementId
                                                                , inPersonalId  := inPersonalId
-                                                               , inAmount      := vbId_21201
+                                                               , inAmount      := inAmount_21201
                                                                , inRouteId     := inRouteId
                                                                , inCarId       := inCarId
                                                                , inInfoMoneyId := zc_Enum_InfoMoney_21201()
@@ -79,6 +79,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.10.13                                        * err
  30.09.13                                        * 
 */
 
