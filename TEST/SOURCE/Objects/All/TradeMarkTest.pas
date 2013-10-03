@@ -66,6 +66,7 @@ end;
 function TTradeMark.InsertDefault: integer;
 begin
   result := InsertUpdateTradeMark(0, -1, 'Торговая марка');
+  inherited;
 end;
 
 function TTradeMark.InsertUpdateTradeMark;

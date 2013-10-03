@@ -72,6 +72,7 @@ begin
   BusinessId := TBranchTest.Create.GetDefault;
 
   result := InsertUpdateCash(0, -3, 'Главная касса', CurrencyId, BranchId, MainJuridicalId, BusinessId);
+  inherited;
 end;
 
 function TCash.InsertUpdateCash(const Id, Code : integer; CashName: string; CurrencyId: Integer;

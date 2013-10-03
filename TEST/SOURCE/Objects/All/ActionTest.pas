@@ -66,6 +66,7 @@ end;
 function TAction.InsertDefault: integer;
 begin
   result := InsertUpdateAction(0, -1, 'actExit-test');
+  inherited;
 end;
 
 function TAction.InsertUpdateAction;

@@ -69,6 +69,7 @@ begin
   AccountGroupId := TAccountGroupTest.Create.GetDefault;
   AccountDirectionId:= TAccountDirectionTest.Create.GetDefault;;
   result := InsertUpdateAccount(0, -3, 'Test - ”правленческие счет 1', AccountGroupId, AccountDirectionId, 1,1);
+  inherited;
 end;
 
 function TAccount.InsertUpdateAccount;

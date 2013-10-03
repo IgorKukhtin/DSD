@@ -411,8 +411,10 @@ var i: integer;
 begin
   TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Id]));
   for i := 0 to DefaultValueList.Count - 1 do
-      if DefaultValueList.Values[DefaultValueList.Names[i]] = IntToStr(Id) then
+      if DefaultValueList.Values[DefaultValueList.Names[i]] = IntToStr(Id) then begin
          DefaultValueList.Values[DefaultValueList.Names[i]] := '';
+         break;
+      end;
 end;
 
 procedure TObjectTest.Delete(Id: Integer);

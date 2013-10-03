@@ -18,7 +18,7 @@ BEGIN
      SELECT ObjectDesc.ItemName, ObjectStringDesc.ItemName INTO ObjectName, FieldName
      FROM ObjectDesc 
      JOIN ObjectStringDesc 
-       ON ObjectStringDesc.ObjectDescId = ObjectDesc.Id
+       ON ObjectStringDesc.DescId = ObjectDesc.Id
         WHERE ObjectStringDesc.Id = inDescId;
      RAISE EXCEPTION 'Значение "%" не уникально для поля "%" справочника "%"', inValueData, FieldName, ObjectName;
   END IF; 

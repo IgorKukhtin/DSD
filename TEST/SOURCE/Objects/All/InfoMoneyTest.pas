@@ -69,6 +69,7 @@ begin
   InfoMoneyGroupId := TInfoMoneyGroupTest.Create.GetDefault;
   InfoMoneyDestinationId:= TInfoMoneyDestinationTest.Create.GetDefault;;
   result := InsertUpdateInfoMoney(0, -3, 'Управленческие аналитики 1', InfoMoneyGroupId, InfoMoneyDestinationId);
+  inherited;
 end;
 
 function TInfoMoney.InsertUpdateInfoMoney;

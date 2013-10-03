@@ -9,7 +9,10 @@ IN Session tvarchar)
 $BODY$
 BEGIN
 
+  DELETE FROM MovementItemFloat WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
+  DELETE FROM MovementItemLinkObject WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
   DELETE FROM MovementLinkObject WHERE ObjectId = inId;
+  DELETE FROM MovementItem WHERE ObjectId = inId;
   DELETE FROM ObjectLink WHERE ObjectId = inId;
   DELETE FROM ObjectLink WHERE ChildObjectId = inId;
   DELETE FROM ObjectString WHERE ObjectId = inId;

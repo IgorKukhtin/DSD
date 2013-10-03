@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalSendCash(Integer, Integer, TFloat, TFloat, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalSendCash(
- INOUT inPersonalId          Integer   , -- Сотрудник
+    IN inPersonalId          Integer   , -- Сотрудник
     IN inMovementId          Integer   , -- ключ Документа
     IN inAmount_20401        TFloat    , -- Сумма - Статья назначения ГСМ
     IN inAmount_21201        TFloat    , -- Сумма - Статья назначения Коммандировочные

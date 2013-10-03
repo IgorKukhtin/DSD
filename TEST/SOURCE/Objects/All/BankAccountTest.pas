@@ -72,6 +72,7 @@ begin
   CurrencyId:= TCurrencyTest.Create.GetDefault;
 
   result := InsertUpdateBankAccount(0, -1, 'Расчетный счет', JuridicalId, BankId, CurrencyId);
+  inherited;
 end;
 
 function TBankAccount.InsertUpdateBankAccount;

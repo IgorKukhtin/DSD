@@ -66,6 +66,7 @@ end;
 function TBusiness.InsertDefault: integer;
 begin
   result := InsertUpdateBusiness(0, -1, 'Бизнес');
+  inherited;
 end;
 
 function TBusiness.InsertUpdateBusiness;

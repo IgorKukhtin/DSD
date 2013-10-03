@@ -793,7 +793,6 @@ begin
   FActionDataLink := TDataSetDataLink.Create(Self);
   Status := mtUncomplete;
   StatusCode := TdsdParam.Create(nil);
-  StatusCode.onChange := StatusCodeChange;
   StatusName := TdsdParam.Create(nil);
 end;
 
@@ -1097,11 +1096,15 @@ end;
 function TDSAction.Execute: boolean;
 var i: integer;
 begin
-  inherited;
-  ChangeDSState;
   if Assigned(FView.Owner)
      and (FView.Owner is TForm) then
         TForm(FView.Owner).ActiveControl := FView.Control;
+  if Assigned(FView) then
+     if Assigned(FView.DataController.DataSource) then
+        if FView.DataController.DataSource.State in [dsInsert, dsEdit] then
+           FView.DataController.DataSource.DataSet.Post;
+  inherited;
+  ChangeDSState;
   // Ётот кусок кода написан как подарок  ост€нычу! :-)
   for I := 0 to FView.ColumnCount - 1 do
       if FView.Columns[i].Visible and FView.Columns[i].Editable then begin

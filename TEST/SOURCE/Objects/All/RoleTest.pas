@@ -65,6 +65,7 @@ end;
 function TRole.InsertDefault: integer;
 begin
   result := InsertUpdateRole(0, -1, 'Роль');
+  inherited;
 end;
 
 function TRole.InsertUpdateRole(const Id, Code : integer; Name: string): integer;
