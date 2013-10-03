@@ -4,7 +4,6 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
   ClientWidth = 773
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitTop = -40
   ExplicitWidth = 781
   ExplicitHeight = 423
   PixelsPerInch = 96
@@ -97,7 +96,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
               Position = spFooter
             end
             item
-              Format = ',0.###;-,0.###; ;'
+              Format = ',0.00;-,0.00;'
               Kind = skSum
               Column = colAmount_20401
             end
@@ -127,7 +126,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
               Kind = skSum
             end
             item
-              Format = ',0.###;-,0.###; ;'
+              Format = ',0.00;-,0.00;'
               Kind = skSum
               Column = colAmount_20401
             end
@@ -140,6 +139,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
               Kind = skSum
             end>
           DataController.Summary.SummaryGroups = <>
+          OptionsBehavior.GoToNextCellOnEnter = True
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsData.Appending = True
@@ -214,8 +214,10 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
             Caption = #1057#1091#1084#1084#1072' '#1085#1072' '#1043#1057#1052
             DataBinding.FieldName = 'Amount_20401'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 3
-            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Properties.AssignedValues.EditFormat = True
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00;-,0.00;'
+            Properties.UseDisplayFormatWhenEditing = True
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -526,6 +528,23 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         end
         item
           Visible = True
+          ItemName = 'bbComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErased'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -589,6 +608,18 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     end
     object bbShowErased: TdxBarButton
       Action = ShowErasedAction
+      Category = 0
+    end
+    object bbComplete: TdxBarButton
+      Action = actComplete
+      Category = 0
+    end
+    object bbUnComplete: TdxBarButton
+      Action = actUnComplete
+      Category = 0
+    end
+    object bbSetErased: TdxBarButton
+      Action = actSetErased
       Category = 0
     end
   end
@@ -775,6 +806,30 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       isSetErased = False
       DataSource = DataSource
     end
+    object actComplete: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 12
+      Status = mtComplete
+    end
+    object actUnComplete: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 11
+      Status = mtUncomplete
+    end
+    object actSetErased: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      ImageIndex = 13
+      Status = mtDelete
+    end
     object ShowErasedAction: TBooleanStoredProcAction
       Category = 'DSDLib'
       StoredProc = spSelectMovementItem
@@ -784,14 +839,14 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndex = 13
+      ImageIndex = 54
       Value = False
       HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndexTrue = 12
-      ImageIndexFalse = 13
+      ImageIndexTrue = 52
+      ImageIndexFalse = 54
     end
     object CarChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -912,11 +967,11 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
+        Name = 'inPersonalId'
         Component = MasterCDS
-        ComponentItem = 'Id'
+        ComponentItem = 'PersonalId'
         DataType = ftInteger
-        ParamType = ptInputOutput
+        ParamType = ptInput
       end
       item
         Name = 'inMovementId'
@@ -927,31 +982,31 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         Value = '0'
       end
       item
-        Name = 'inGoodsId'
+        Name = 'inAmount_20401'
         Component = MasterCDS
-        ComponentItem = 'GoodsId'
+        ComponentItem = 'Amount_20401'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmount_21201'
+        Component = MasterCDS
+        ComponentItem = 'Amount_21201'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inRouteId'
+        Component = MasterCDS
+        ComponentItem = 'RouteId'
         DataType = ftInteger
         ParamType = ptInput
       end
       item
-        Name = 'inAmount'
+        Name = 'inCarId'
         Component = MasterCDS
-        ComponentItem = 'Amount'
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPrice'
-        Component = MasterCDS
-        ComponentItem = 'Price'
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inCountForPrice'
-        Component = MasterCDS
-        ComponentItem = 'CountForPrice'
-        DataType = ftFloat
+        ComponentItem = 'CarId'
+        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 80
@@ -1118,7 +1173,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     Top = 144
   end
   object RefreshAddOn: TRefreshAddOn
-    FormName = 'IncomeJournalForm'
+    FormName = 'PersonalSendCashJournalForm'
     DataSet = 'ClientDataSet'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
