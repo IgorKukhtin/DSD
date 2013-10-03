@@ -72,7 +72,7 @@ BEGIN
      -- сохранили связь с <Типы рабочего времени>
      --PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_WorkTimeKind(), vbMovementItemId_1, inWorkTimeKindId_1);
 
-     PERFORM lpInsertUpdate_MovementItem_SheetWorkTime (ioId:= vbMovementItemId_1, inOperDate = inStartDate, inMovementId:= vbMovementId_1
+     PERFORM lpInsertUpdate_MovementItem_SheetWorkTime (InMovementItemId:= vbMovementItemId_1, inOperDate = inStartDate, inMovementId:= vbMovementId_1
                                                       , inPersonalId:= ioPersonalId, inPositionId:= inPositionId, inPersonalGroupId=inPersonalGroupId, inUnitId=inUnitId
                                                       , inAmount:= inAmount_1, inWorkTimeKindId:= inWorkTimeKindId_1);
 
