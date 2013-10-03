@@ -8,6 +8,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementFloat_TotalSumm(
   RETURNS VOID AS
 --  RETURNS TABLE (vbOperCount_Master TFloat) AS
 $BODY$
+  DECLARE vbMovementDescId Integer;
+
   DECLARE vbOperCount_Master TFloat;
   DECLARE vbOperCount_Child TFloat;
   DECLARE vbOperCount_Partner TFloat;
@@ -25,23 +27,23 @@ $BODY$
 BEGIN
 
      -- Эти параметры нужны для расчета конечных сумм по Контрагенту и Заготовителю
-     SELECT
-           COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE)
-         , COALESCE (MovementFloat_VATPercent.ValueData, 0)
-         , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END
-         , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END
-           INTO vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
-     FROM Movement
-          LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                   ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
-                  AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
-          LEFT JOIN MovementFloat AS MovementFloat_VATPercent
-                   ON MovementFloat_VATPercent.MovementId = Movement.Id
-                  AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
-          LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
-                   ON MovementFloat_ChangePercent.MovementId = Movement.Id
-                  AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
-     WHERE Movement.Id = inMovementId;
+     SELECT Movement.DescId
+          , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE)
+          , COALESCE (MovementFloat_VATPercent.ValueData, 0)
+          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END
+          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END
+            INTO vbMovementDescId, vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
+      FROM Movement
+           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                    ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
+                   AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+           LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                    ON MovementFloat_VATPercent.MovementId = Movement.Id
+                   AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+           LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                    ON MovementFloat_ChangePercent.MovementId = Movement.Id
+                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+      WHERE Movement.Id = inMovementId;
 
 
      -- Расчет Итоговых суммы
@@ -164,20 +166,26 @@ BEGIN
      -- SELECT vbOperCount_Master;
      -- return;
 
-     -- Сохранили свойство <Итого количество("главные элементы")>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), inMovementId, vbOperCount_Master);
-     -- Сохранили свойство <Итого количество("подчиненные элементы")>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCountChild(), inMovementId, vbOperCount_Child);
-     -- Сохранили свойство <Итого количество у контрагента>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCountPartner(), inMovementId, vbOperCount_Partner + vbOperCount_Packer);
-     -- Сохранили свойство <Итого сумма по накладной (без НДС)>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummMVAT(), inMovementId, vbOperSumm_MVAT);
-     -- Сохранили свойство <Итого сумма по накладной (с НДС)>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPVAT(), inMovementId, vbOperSumm_PVAT);
-     -- Сохранили свойство <Итого сумма по накладной (с учетом НДС и скидки)>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, vbOperSumm_Partner + vbOperSumm_Inventory);
-     -- Сохранили свойство <Итого сумма заготовителю по накладной (с учетом НДС)>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPacker(), inMovementId, vbOperSumm_Packer);
+     IF vbMovementDescId = zc_Movement_PersonalSendCash()
+     THEN
+         -- Сохранили свойство <Итого сумма по накладной (с учетом НДС и скидки)>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, vbOperCount_Master);
+     ELSE
+         -- Сохранили свойство <Итого количество("главные элементы")>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCount(), inMovementId, vbOperCount_Master);
+         -- Сохранили свойство <Итого количество("подчиненные элементы")>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCountChild(), inMovementId, vbOperCount_Child);
+         -- Сохранили свойство <Итого количество у контрагента>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCountPartner(), inMovementId, vbOperCount_Partner + vbOperCount_Packer);
+         -- Сохранили свойство <Итого сумма по накладной (без НДС)>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummMVAT(), inMovementId, vbOperSumm_MVAT);
+         -- Сохранили свойство <Итого сумма по накладной (с НДС)>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPVAT(), inMovementId, vbOperSumm_PVAT);
+         -- Сохранили свойство <Итого сумма по накладной (с учетом НДС и скидки)>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, vbOperSumm_Partner + vbOperSumm_Inventory);
+         -- Сохранили свойство <Итого сумма заготовителю по накладной (с учетом НДС)>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummPacker(), inMovementId, vbOperSumm_Packer);
+     END IF;
 
 
 END;
@@ -190,6 +198,7 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.10.13                                        * add zc_Movement_PersonalSendCash
  22.08.13                                        * add vbOperSumm_Inventory
  13.08.13                                        * add vbOperCount_Master and vbOperCount_Child
  16.07.13                                        * add COALESCE (MIFloat_AmountPartner... and MIFloat_AmountPacker...
