@@ -1,6 +1,5 @@
 -- Function: gpComplete_Movement_Transport (Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpComplete_Movement_Transport (Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpComplete_Movement_Transport (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Transport(
