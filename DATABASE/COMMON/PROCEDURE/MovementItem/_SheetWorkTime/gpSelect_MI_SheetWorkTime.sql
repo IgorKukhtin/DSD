@@ -218,7 +218,7 @@ BEGIN
 		  , tmpMovementItem.WorkTimeKindId_31
 
       FROM (
-	        SELECT MILinkObject_Unit.ObjectId          AS UnitId
+	        SELECT MovementLinkObject_Unit.ObjectId    AS UnitId
 	             , MILinkObject_Position.ObjectId      AS PositionId
 	             , MILinkObject_PersonalGroup.ObjectId AS PersonalGroupId 
 	             , MovementItem.ObjectId               AS PersonalId
@@ -317,6 +317,9 @@ BEGIN
 	             , MAX (CASE WHEN Movement.inOperDate = vbStartDate+30 THEN MILinkObject_WorkTimeKind.ObjectId ELSE 0 END) AS WorkTimeKindId_31
 
 	        FROM Movement 
+	        	 JOIN MovementLinkObject AS MovementLinkObject_Unit ON MovementLinkObject_Unit.MovementItemId = MovementItem.Id
+			           					                           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()                
+
 	             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
 	                                   AND MovementItem.DescId =  zc_MI_Master()
 	                                                      
@@ -326,10 +329,6 @@ BEGIN
                                                   ON MILinkObject_PersonalGroup.MovementItemId = MovementItem.Id
                                                  AND MILinkObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup()
                  
-                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                                  ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                                 AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()                
-
                  LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
                                                   ON MILinkObject_Position.MovementItemId = MovementItem.Id
                                                  AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
@@ -342,7 +341,7 @@ BEGIN
                 where Movement.DescId = zc_Movement_SheetWorkTime()  
 	              AND Movement.inOperDate BETWEEN vbStartDate AND vbEndDate    
                     
-	         GROUP BY MILinkObject_Unit.ObjectId
+	         GROUP BY MovementLinkObject_Unit.ObjectId
 	                , MILinkObject_Position.ObjectId
 	                , MILinkObject_PersonalGroup.ObjectId
 	                , MovementItem.ObjectId    
