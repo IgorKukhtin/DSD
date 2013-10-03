@@ -1,9 +1,9 @@
 -- Function: gpInsertUpdate_MovementItem_PersonalSendCash()
 
--- DROP FUNCTION gpInsertUpdate_MovementItem_PersonalSendCash();
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalSendCash(Integer, Integer, TFloat, TFloat, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalSendCash(
- INOUT ioPersonalId          Integer   , -- Сотрудник
+ INOUT inPersonalId          Integer   , -- Сотрудник
     IN inMovementId          Integer   , -- ключ Документа
     IN inAmount_20401        TFloat    , -- Сумма - Статья назначения ГСМ
     IN inAmount_21201        TFloat    , -- Сумма - Статья назначения Коммандировочные
@@ -30,7 +30,7 @@ BEGIN
                                                     AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
                                                     AND MILinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_20401()
                     WHERE MovementItem.MovementId = inMovementId
-                      AND MovementItem.ObjectId = ioPersonalId
+                      AND MovementItem.ObjectId = inPersonalId
                       AND MovementItem.DescId =  zc_MI_Master()
                    );
      -- Поиск элемента Статья назначения Коммандировочные
@@ -41,7 +41,7 @@ BEGIN
                                                     AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
                                                     AND MILinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_20401()
                     WHERE MovementItem.MovementId = inMovementId
-                      AND MovementItem.ObjectId = ioPersonalId
+                      AND MovementItem.ObjectId = inPersonalId
                       AND MovementItem.DescId =  zc_MI_Master()
                    );
 
