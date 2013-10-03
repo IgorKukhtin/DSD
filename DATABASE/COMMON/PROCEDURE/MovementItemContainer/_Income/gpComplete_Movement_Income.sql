@@ -44,6 +44,7 @@ $BODY$
   DECLARE vbContractId Integer;
   DECLARE vbJuridicalId_Basis_To Integer;
   DECLARE vbBusinessId_To Integer;
+  DECLARE vbBusinessId_Route Integer;
 
 BEGIN
 
@@ -80,11 +81,11 @@ BEGIN
           , _tmp.OperDate, _tmp.JuridicalId_From, _tmp.isCorporate_From, _tmp.PartnerId_From, _tmp.PersonalId_From
           , _tmp.InfoMoneyId_From
           , _tmp.UnitId, _tmp.CarId, _tmp.PersonalDriverId, _tmp.BranchId_To, _tmp.AccountDirectionId_To, _tmp.isPartionDate_Unit
-          , _tmp.PersonalId_Packer, _tmp.PaidKindId, _tmp.ContractId, _tmp.JuridicalId_Basis_To, _tmp.BusinessId_To
+          , _tmp.PersonalId_Packer, _tmp.PaidKindId, _tmp.ContractId, _tmp.JuridicalId_Basis_To, _tmp.BusinessId_To, _tmp.BusinessId_Route
             INTO vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
                , vbOperDate, vbJuridicalId_From, vbIsCorporate_From, vbPartnerId_From, vbPersonalId_From, vbInfoMoneyId_From
                , vbUnitId, vbCarId, vbPersonalId_Driver, vbBranchId_To, vbAccountDirectionId_To, vbIsPartionDate_Unit
-               , vbPersonalId_Packer, vbPaidKindId, vbContractId, vbJuridicalId_Basis_To, vbBusinessId_To
+               , vbPersonalId_Packer, vbPaidKindId, vbContractId, vbJuridicalId_Basis_To, vbBusinessId_To, vbBusinessId_Route
 
      FROM (SELECT COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
                 , COALESCE (MovementFloat_VATPercent.ValueData, 0) AS VATPercent
@@ -116,6 +117,7 @@ BEGIN
 
                 , COALESCE (ObjectLink_UnitTo_Juridical.ChildObjectId, 0) AS JuridicalId_Basis_To
                 , COALESCE (ObjectLink_UnitTo_Business.ChildObjectId, 0) AS BusinessId_To
+                , COALESCE (ObjectLink_UnitRoute_Business.ChildObjectId, 0) AS BusinessId_Route
 
            FROM Movement
                 LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
@@ -186,6 +188,17 @@ BEGIN
                 LEFT JOIN ObjectLink AS ObjectLink_UnitTo_Business
                                      ON ObjectLink_UnitTo_Business.ObjectId = COALESCE (ObjectLink_CarTo_Unit.ChildObjectId, MovementLinkObject_To.ObjectId)
                                     AND ObjectLink_UnitTo_Business.DescId = zc_ObjectLink_Unit_Business()
+
+                LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
+                                             ON MovementLinkObject_Route.MovementId = Movement.Id
+                                            AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
+                LEFT JOIN ObjectLink AS ObjectLink_Route_Unit
+                                     ON ObjectLink_Route_Unit.ObjectId = MovementLinkObject_Route.ObjectId
+                                    AND ObjectLink_Route_Unit.DescId = zc_ObjectLink_Route_Unit()
+                LEFT JOIN ObjectLink AS ObjectLink_UnitRoute_Business
+                                     ON ObjectLink_UnitRoute_Business.ObjectId = ObjectLink_Route_Unit.ChildObjectId
+                                    AND ObjectLink_UnitRoute_Business.DescId = zc_ObjectLink_Unit_Business()
+
            WHERE Movement.Id = inMovementId
              AND Movement.DescId = zc_Movement_Income()
              AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
@@ -354,7 +367,7 @@ BEGIN
                          ELSE COALESCE (lfObject_InfoMoney.InfoMoneyId, 0)
                     END AS InfoMoneyId
 
-                     -- Бизнес для Автомобиля = 0, иначе из Товара
+                     -- Бизнес из Товара нужен только если не Автомобиль
                   , CASE WHEN vbCarId <> 0 THEN 0
                          ELSE COALESCE (ObjectLink_Goods_Business.ChildObjectId, 0)
                     END AS BusinessId
@@ -550,7 +563,9 @@ BEGIN
      -- !!!по таблице элементы по контрагенту!!! и !!!только если zc_Enum_PaidKind_SecondForm!!! и !!!только если Автомобиль!!
      INSERT INTO _tmpItem_SummDriver (ContainerId, AccountId, InfoMoneyDestinationId, InfoMoneyId, BusinessId, OperSumm_Driver)
         SELECT 0 AS ContainerId, 0 AS AccountId
-             , _tmpItem_SummPartner.InfoMoneyDestinationId, _tmpItem_SummPartner.InfoMoneyId, _tmpItem_SummPartner.BusinessId
+             , _tmpItem_SummPartner.InfoMoneyDestinationId, _tmpItem_SummPartner.InfoMoneyId
+               -- !!!для Сотрудник (Водитель) подставляем другой Бизнес!!!
+             , vbBusinessId_Route
              , _tmpItem_SummPartner.OperSumm_Partner
         FROM _tmpItem_SummPartner
         WHERE vbPaidKindId = zc_Enum_PaidKind_SecondForm()

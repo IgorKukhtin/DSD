@@ -34,7 +34,7 @@ BEGIN
                , vbCarId, vbBranchId
                , vbJuridicalId_Basis, vbBusinessId
      FROM (SELECT Movement.OperDate
-                , MovementLinkObject_Car.ObjectId AS CarId
+                , COALESCE (MovementLinkObject_Car.ObjectId, 0) AS CarId
                 , COALESCE (ObjectLink_UnitCar_Branch.ChildObjectId, 0)    AS BranchId
                 , COALESCE (ObjectLink_UnitCar_Juridical.ChildObjectId, 0) AS JuridicalId_Basis
                 , COALESCE (ObjectLink_UnitCar_Business.ChildObjectId, 0)  AS BusinessId
@@ -98,7 +98,7 @@ BEGIN
 
         FROM (SELECT
                      MovementItem.Id AS MovementItemId
-                   , ObjectLink_Route_Unit.ChildObjectId AS UnitId_ProfitLoss
+                   , COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0) AS UnitId_ProfitLoss
                      -- для Автомобиля это Вид топлива
                    , MovementItem.ObjectId AS GoodsId
                    , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
@@ -249,7 +249,7 @@ BEGIN
             ) AS _tmpItem_group;
 
 
-     -- 3. формируются Проводки для отчета (Аналитики: Товар и ОПиУ - разнице в весе)
+     -- 3. формируются Проводки для отчета (Аналитики: Товар и ОПиУ)
      PERFORM lpInsertUpdate_MovementItemReport (inMovementId         := inMovementId
                                               , inMovementItemId     := _tmpItem.MovementItemId
                                               , inActiveContainerId  := _tmpItemSumm.ContainerId_ProfitLoss
