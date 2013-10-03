@@ -38,6 +38,7 @@ ALTER TABLE MovementLinkObject
 -- DROP INDEX "idx_MovementLinkObject_MovementId_DescId_ObjectId";
 
 CREATE UNIQUE INDEX idx_MovementLinkObject_MovementId_DescId_ObjectId ON MovementLinkObject(MovementId, DescId, ObjectId);
+CREATE INDEX idx_MovementLinkObject_ObjectId ON MovementLinkObject(ObjectId); -- для констрейнта
 
 /*
  ПРИМЕЧАНИЯ:

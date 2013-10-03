@@ -28,6 +28,7 @@ CREATE TABLE MovementItem(
 
 CREATE INDEX idx_MovementItem_ParentId ON MovementItem (ParentId);
 CREATE INDEX idx_MovementItem_MovementId ON MovementItem (MovementId);
+CREATE INDEX idx_MovementItem_ObjectId ON MovementItem (ObjectId); -- констрейнт
 
 CLUSTER idx_MovementItem_MovementId ON MovementItem;
 

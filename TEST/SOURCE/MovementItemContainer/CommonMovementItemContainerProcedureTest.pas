@@ -20,7 +20,7 @@ uses UtilConst, TestFramework;
 procedure TCommonMovementItemContainerProcedure.ProcedureLoad;
 begin
   inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItemContainer\Common\';
+  ScriptDirectory := ProcedurePath + 'MovementItemContainer\';
   inherited;
 end;
 

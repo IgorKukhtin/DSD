@@ -10,6 +10,7 @@ type
     FspInsertUpdate: string;
     FspSelect: string;
     FspGet: string;
+    FIdentity: integer;
   protected
     FdsdStoredProc: TdsdStoredProc;
     FParams: TdsdParams;
@@ -245,7 +246,7 @@ type
   private
     function InsertDefault: integer; override;
   public
-    function InsertUpdateUser(const Id: integer; UserName, Login, Password: string): integer;
+    function InsertUpdateUser(const Id, Code: integer; UserName, Password: string; MemberId: Integer): integer;
     constructor Create; override;
   end;
 
@@ -376,8 +377,10 @@ type
   end;
 
   var
-      // Список добавленных Id
+    // Список добавленных Id
     InsertedIdObjectList: TStringList;
+    // Список добавленных дефолтов
+    DefaultValueList: TStringList;
 
 
  implementation
@@ -404,8 +407,12 @@ const
        '<inId DataType="ftInteger" Value="%d"/>' +
     '</lpDelete_Object>' +
   '</xml>';
+var i: integer;
 begin
-  TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Id]))
+  TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Id]));
+  for i := 0 to DefaultValueList.Count - 1 do
+      if DefaultValueList.Values[DefaultValueList.Names[i]] = IntToStr(Id) then
+         DefaultValueList.Values[DefaultValueList.Names[i]] := '';
 end;
 
 procedure TObjectTest.Delete(Id: Integer);
@@ -443,10 +450,9 @@ end;
 
 function TObjectTest.GetDefault: integer;
 begin
-  if (1=0) and (GetDataSet.RecordCount > 0) then
-     result := GetDataSet.FieldByName('Id').AsInteger
-  else
-     result := InsertDefault;
+   if DefaultValueList.Values[ClassName] = '' then
+      DefaultValueList.Values[ClassName] := IntToStr(InsertDefault);
+   result := StrToInt(DefaultValueList.Values[ClassName]);
 end;
 
 function TObjectTest.GetRecord(Id: integer): TDataSet;
@@ -464,6 +470,7 @@ end;
 
 function TObjectTest.InsertDefault: integer;
 begin
+  DefaultValueList.Values[ClassName] := IntToStr(FIdentity);
 end;
 
 function TObjectTest.InsertUpdate(dsdParams: TdsdParams): Integer;
@@ -475,6 +482,7 @@ begin
     Params.Assign(dsdParams);
     Execute;
     Result := StrToInt(ParamByName('ioId').Value);
+    FIdentity := Result;
     if OldId <> Result then
        InsertUpdateInList(Result)
   end;
@@ -553,7 +561,7 @@ begin
       Check((FieldByName('name').AsString = 'UserName'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
     // Проверка на дублируемость
     try
-      ObjectTest.InsertUpdateUser(0, 'UserName', 'Login', 'Password');
+      ObjectTest.InsertUpdateUser(0, -4, 'UserName', 'Password', 0);
       Check(false, 'Нет сообщения об ошибке InsertUpdate_Object_User Id=0');
     except
 
@@ -603,6 +611,7 @@ begin
   FParams.AddParam('inCurrencyName', ftString, ptInput, 'GRN');
   FParams.AddParam('inFullName', ftString, ptInput, 'Гривна');
   result := InsertUpdate(FParams);
+  inherited;
 end;
 
 { TUserTest }
@@ -617,16 +626,18 @@ end;
 
 function TUserTest.InsertDefault: integer;
 begin
-  result := InsertUpdateUser(0, 'UserName', 'Login', 'Password');
+  result := InsertUpdateUser(0, -4, 'UserName', 'Password', 0);
+  inherited;
 end;
 
-function TUserTest.InsertUpdateUser(const Id: integer; UserName, Login, Password: string): integer;
+function TUserTest.InsertUpdateUser(const Id, Code: integer; UserName, Password: string; MemberId: Integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
   FParams.AddParam('inUserName', ftString, ptInput, UserName);
-  FParams.AddParam('inLogin', ftString, ptInput, Login);
   FParams.AddParam('inPassword', ftString, ptInput, Password);
+  FParams.AddParam('inMemberId', ftInteger, ptInput, MemberId);
   result := InsertUpdate(FParams);
 end;
 
@@ -642,6 +653,7 @@ end;
 function TJuridicalGroupTest.InsertDefault: integer;
 begin
   result := InsertUpdateJuridicalGroup(0, -1, 'Группа юр лиц 1', 0);
+  inherited;
 end;
 
 function TJuridicalGroupTest.InsertUpdateJuridicalGroup(const Id, Code: Integer;
@@ -668,6 +680,7 @@ end;
 function TGoodsPropertyTest.InsertDefault: integer;
 begin
   result := InsertUpdateGoodsProperty(0, -1, 'Классификатор свойств товаров');
+  inherited;
 end;
 
 function TGoodsPropertyTest.InsertUpdateGoodsProperty(const Id, Code: Integer;
@@ -692,6 +705,7 @@ end;
 function TRouteTest.InsertDefault: integer;
 begin
   result := InsertUpdateRoute(0, -1, 'Маршрут-test');
+  inherited;
 end;
 
 function TRouteTest.InsertUpdateRoute(const Id, Code: Integer;
@@ -716,6 +730,7 @@ end;
 function TRouteSortingTest.InsertDefault: integer;
 begin
   result := InsertUpdateRouteSorting(0, -1, 'Сортировка маршрутов');
+  inherited;
 end;
 
 function TRouteSortingTest.InsertUpdateRouteSorting(const Id, Code: Integer;
@@ -742,7 +757,8 @@ var
   JuridicalId: Integer;
 begin
   JuridicalId := TJuridical.Create.GetDefault;
-  result := InsertUpdateBank(0, -1, 'Банк', 'МФО', JuridicalId)
+  result := InsertUpdateBank(0, -1, 'Банк', 'МФО', JuridicalId);
+  inherited;
 end;
 
 function TBankTest.InsertUpdateBank;
@@ -774,6 +790,7 @@ begin
   RouteSortingId := TRouteSortingTest.Create.GetDefault;
   PersonalTakeId := 0; //TPersonalTest.Create.GetDefault;
   result := InsertUpdatePartner(0, -6, 'Контрагенты', 'GLNCode', 15, 15, JuridicalId, RouteId, RouteSortingId, PersonalTakeId);
+  inherited;
 end;
 
 function TPartnerTest.InsertUpdatePartner;
@@ -968,6 +985,7 @@ end;
 function TContractTest.InsertDefault: integer;
 begin
   result := InsertUpdateContract(0, '123456', 'comment', date,date,date);
+  inherited;
 end;
 
 function TContractTest.InsertUpdateContract(const Id: integer; InvNumber,
@@ -998,7 +1016,8 @@ end;
 
 function TGoodsTest.InsertDefault: integer;
 begin
-  result := InsertUpdateGoods(0, -1, 'Товар 1', 1.0, 0, 0, 0, 0, 0, 0)
+  result := InsertUpdateGoods(0, -1, 'Товар 1', 1.0, 0, 0, 0, 0, 0, 0);
+  inherited;
 end;
 
 function TGoodsTest.InsertUpdateGoods(Id, Code: Integer; Name: String;
@@ -1038,7 +1057,8 @@ begin
   GoodsKindId := 0;
   result := InsertUpdateGoodsPropertyValue(0, 'GoodsPropertyValue', 10,
          'BarCode', 'Article', 'BarCodeGLN', 'ArticleGLN',
-         GoodsPropertyId, GoodsId, GoodsKindId)
+         GoodsPropertyId, GoodsId, GoodsKindId);
+  inherited;
 end;
 
 function TGoodsPropertyValueTest.InsertUpdateGoodsPropertyValue(
@@ -1074,6 +1094,7 @@ end;
 function TPriceListTest.InsertDefault: integer;
 begin
   result := InsertUpdatePriceList(0, -1, 'Прайс-лист',false,20);
+  inherited;
 end;
 
 function TPriceListTest.InsertUpdatePriceList(const Id, Code: Integer;Name: string;PriceWithVAT:Boolean;VATPercent:Double): integer;
@@ -1099,6 +1120,7 @@ end;
 function TPaidKindTest.InsertDefault: integer;
 begin
   result := InsertUpdatePaidKind(0, -3, 'Вид Формы оплаты');
+  inherited;
 end;
 
 function TPaidKindTest.InsertUpdatePaidKind;
@@ -1141,6 +1163,7 @@ end;
 function TContractKindTest.InsertDefault: integer;
 begin
   result := InsertUpdateContractKind(0, -1, 'Вид договора');
+  inherited;
 end;
 
 function TContractKindTest.InsertUpdateContractKind;
@@ -1183,7 +1206,7 @@ end;
 function TBranchTest.InsertDefault: integer;
 begin
   result := InsertUpdateBranch(0, -1, 'Филиал');
-  //FInsertedId := result;
+  inherited;
 end;
 
 function TBranchTest.InsertUpdateBranch;
@@ -1203,8 +1226,13 @@ begin
   ObjectTest := TBranchTest.Create;
   // Получим список
   RecordCount := GetRecordCount(ObjectTest);
-  // Вставка Филиала
-  Id := ObjectTest.InsertDefault;
+
+  if ObjectTest.GetDataSet.Locate('Name', 'Филиал', []) then
+     Id := ObjectTest.GetDataSet.FieldByName('Id').AsInteger
+  else
+     // Вставка Филиала
+     Id := ObjectTest.InsertDefault;
+
   try
     // Получение данных о Филиале
     with ObjectTest.GetRecord(Id) do
@@ -1229,6 +1257,7 @@ var
 begin
   ParentId:=0;
   result := InsertUpdateGoodsGroup(0, -1, 'Группа товара', ParentId);
+  inherited;
 end;
 
 function TGoodsGroupTest.InsertUpdateGoodsGroup;
@@ -1309,6 +1338,7 @@ end;
 function TGoodsKindTest.InsertDefault: integer;
 begin
   result := InsertUpdateGoodsKind(0, -1, 'Вид товара');
+  inherited;
 end;
 
 function TGoodsKindTest.InsertUpdateGoodsKind;
@@ -1350,7 +1380,8 @@ end;
 
 function TMeasureTest.InsertDefault: integer;
 begin
-  result := InsertUpdateMeasure(0, 1, 'Единица измерения');
+  result := InsertUpdateMeasure(0, -11, 'Единица измерения');
+  inherited;
 end;
 
 function TMeasureTest.InsertUpdateMeasure;
@@ -1414,6 +1445,7 @@ end;
 function TCarModelTest.InsertDefault: integer;
 begin
   result := InsertUpdateCarModel(0, -1, 'Марка автомобиля');
+  inherited;
 end;
 
 function TCarModelTest.InsertUpdateCarModel;
@@ -1459,6 +1491,7 @@ var
 begin
   CarModelId := TCarModelTest.Create.GetDefault;
   result := InsertUpdateCar(0, -1, 'Автомобиль', 'АЕ НЕ', CarModelId);
+  inherited;
 end;
 
 function TCarTest.InsertUpdateCar;
@@ -1503,6 +1536,7 @@ end;
 function TAccountGroupTest.InsertDefault: integer;
 begin
   result := InsertUpdateAccountGroup(0, -4, 'Группа управленческих счетов 1');
+  inherited;
 end;
 
 function TAccountGroupTest.InsertUpdateAccountGroup(const Id, Code: Integer;
@@ -1547,6 +1581,7 @@ end;
 function TAccountDirectionTest.InsertDefault: integer;
 begin
   result := InsertUpdateAccountDirection(0, -4, 'Аналитики управленческих счетов 1');
+  inherited;
 end;
 
 function TAccountDirectionTest.InsertUpdateAccountDirection(const Id, Code: Integer;
@@ -1590,6 +1625,7 @@ end;
 function TProfitLossGroupTest.InsertDefault: integer;
 begin
   result := InsertUpdateProfitLossGroup(0, -4, 'Группы статей отчета о прибылях и убытках 1');
+  inherited;
 end;
 
 function TProfitLossGroupTest.InsertUpdateProfitLossGroup(const Id, Code: Integer;
@@ -1634,6 +1670,7 @@ end;
 function TProfitLossDirectionTest.InsertDefault: integer;
 begin
   result := InsertUpdateProfitLossDirection(0, -1, 'Аналитики статей отчета о прибылях и убытках - направление 1');
+  inherited;
 end;
 
 function TProfitLossDirectionTest.InsertUpdateProfitLossDirection(const Id, Code: Integer;
@@ -1685,6 +1722,7 @@ begin
   ProfitLossGroupId := TProfitLossGroupTest.Create.GetDefault;
   ProfitLossDirectionId:= TProfitLossDirectionTest.Create.GetDefault;;
   result := InsertUpdateProfitLoss(0, -3, 'Управленческие счет 1', ProfitLossGroupId, ProfitLossDirectionId, 1, 1);
+  inherited;
 end;
 
 function TProfitLossTest.InsertUpdateProfitLoss;
@@ -1731,6 +1769,7 @@ end;
 function TInfoMoneyGroupTest.InsertDefault: integer;
 begin
   result := InsertUpdateInfoMoneyGroup(0, -4, 'Группы управленческих аналитик 1');
+  inherited;
 end;
 
 function TInfoMoneyGroupTest.InsertUpdateInfoMoneyGroup(const Id, Code: Integer;
@@ -1775,6 +1814,7 @@ end;
 function TInfoMoneyDestinationTest.InsertDefault: integer;
 begin
   result := InsertUpdateInfoMoneyDestination(0, -1, 'Управленческие аналитики - назначение');
+  inherited;
 end;
 
 function TInfoMoneyDestinationTest.InsertUpdateInfoMoneyDestination(const Id, Code: Integer;
@@ -1823,6 +1863,7 @@ begin
   InfoMoneyGroupId := TInfoMoneyGroupTest.Create.GetDefault;
   InfoMoneyDestinationId:= TInfoMoneyDestinationTest.Create.GetDefault;;
   result := InsertUpdateInfoMoney(0, -3, 'Управленческие аналитики 1', InfoMoneyGroupId, InfoMoneyDestinationId);
+  inherited;
 end;
 
 function TInfoMoneyTest.InsertUpdateInfoMoney;
@@ -2314,6 +2355,7 @@ end;
 initialization
   InsertedIdObjectList := TStringList.Create;
   InsertedIdObjectList.Sorted := true;
+  DefaultValueList := TStringList.Create;
 
   TestFramework.RegisterTest('Объекты', TdbObjectTest.Suite);
 

@@ -37,6 +37,7 @@ ALTER TABLE Movement
 -- DROP INDEX idx_Movement_OperDate_DescId;
 
 CREATE INDEX idx_Movement_OperDate_DescId ON Movement(OperDate, DescId);
+CREATE INDEX idx_Movement_StatusId ON Movement(StatusId); -- констрейнт
 
 
 /*-------------------------------------------------------------------------------*/

@@ -26,6 +26,8 @@ CREATE TABLE ChildReportContainerLink(
 
 CREATE INDEX idx_ChildReportContainerLink_ContainerId_AccountKindId_ChildReportContainerId  ON ChildReportContainerLink (ContainerId, AccountKindId, ChildReportContainerId);
 CREATE INDEX idx_ChildReportContainerLink_ChildReportContainerId_ContainerId_AccountKindId  ON ChildReportContainerLink (ChildReportContainerId, ContainerId, AccountKindId);
+CREATE INDEX idx_ChildReportContainerLink_AccountId  ON ChildReportContainerLink (AccountId); -- констрейнт
+CREATE INDEX idx_ChildReportContainerLink_AccountKindId  ON ChildReportContainerLink (AccountKindId); -- констрейнт
 
 
 /*-------------------------------------------------------------------------------

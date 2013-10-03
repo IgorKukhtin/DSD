@@ -17,34 +17,34 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     BevelOuter = bvNone
     TabOrder = 0
     object edInvNumber: TcxTextEdit
-      Left = 8
-      Top = 25
+      Left = 144
+      Top = 21
       Enabled = False
       Properties.ReadOnly = True
       TabOrder = 0
       Width = 121
     end
     object cxLabel1: TcxLabel
-      Left = 8
-      Top = 8
+      Left = 144
+      Top = 4
       Caption = #1053#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
     object edOperDate: TcxDateEdit
-      Left = 142
-      Top = 25
+      Left = 278
+      Top = 21
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
       Width = 121
     end
     object cxLabel2: TcxLabel
-      Left = 142
-      Top = 7
+      Left = 278
+      Top = 3
       Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
     object edPersonal: TcxButtonEdit
-      Left = 288
-      Top = 25
+      Left = 424
+      Top = 21
       Properties.Buttons = <
         item
           Default = True
@@ -54,8 +54,8 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       Width = 150
     end
     object cxLabel3: TcxLabel
-      Left = 288
-      Top = 7
+      Left = 424
+      Top = 3
       Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1054#1090' '#1082#1086#1075#1086')'
     end
   end
@@ -812,6 +812,14 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 12
+      StatusCode.Component = FormParams
+      StatusCode.ComponentItem = 'StatusCode'
+      StatusCode.DataType = ftInteger
+      StatusCode.ParamType = ptOutput
+      StatusCode.Value = '0'
+      StatusName.DataType = ftInteger
+      StatusName.ParamType = ptOutput
+      StatusName.Value = Null
       Status = mtComplete
     end
     object actUnComplete: TdsdChangeMovementStatus
@@ -820,6 +828,14 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 11
+      StatusCode.Component = FormParams
+      StatusCode.ComponentItem = 'StatusCode'
+      StatusCode.DataType = ftInteger
+      StatusCode.ParamType = ptOutput
+      StatusCode.Value = '0'
+      StatusName.DataType = ftInteger
+      StatusName.ParamType = ptOutput
+      StatusName.Value = Null
       Status = mtUncomplete
     end
     object actSetErased: TdsdChangeMovementStatus
@@ -828,6 +844,14 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       ImageIndex = 13
+      StatusCode.Component = FormParams
+      StatusCode.ComponentItem = 'StatusCode'
+      StatusCode.DataType = ftInteger
+      StatusCode.ParamType = ptOutput
+      StatusCode.Value = '0'
+      StatusName.DataType = ftInteger
+      StatusName.ParamType = ptOutput
+      StatusName.Value = Null
       Status = mtDelete
     end
     object ShowErasedAction: TBooleanStoredProcAction
@@ -1168,6 +1192,20 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         DataType = ftInteger
         ParamType = ptOutput
         Value = ''
+      end
+      item
+        Name = 'StatusCode'
+        Component = FormParams
+        ComponentItem = 'StatusCode'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = '0'
+      end
+      item
+        Name = 'StatusName'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = Null
       end>
     Left = 176
     Top = 144

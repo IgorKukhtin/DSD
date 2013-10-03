@@ -15,6 +15,7 @@ type
     FName: String;
     FComponentItem: String;
     FParamType: TParamType;
+    FonChange: TNotifyEvent;
     function GetValue: Variant;
     procedure SetValue(const Value: Variant);
     procedure SetComponent(const Value: TComponent);
@@ -22,6 +23,7 @@ type
     function GetDisplayName: string; override;
     procedure AssignParam(Param: TdsdParam);
   public
+    property onChange: TNotifyEvent read FonChange write FonChange;
     function AsString: string;
     procedure Assign(Source: TPersistent); override;
     constructor Create(Collection: TCollection); override;
@@ -560,7 +562,10 @@ begin
         (Component as TcxTextEdit).Text := FValue;
      if Component is TdsdFormParams then
         with (Component as TdsdFormParams) do begin
-          ParamByName(FComponentItem).Value := FValue
+          if Assigned(ParamByName(FComponentItem)) then
+             ParamByName(FComponentItem).Value := FValue
+          else
+             Params.AddParam(FComponentItem, ftString, ptInput, FValue);
         end;
      if Component is TcxCurrencyEdit then
         (Component as TcxCurrencyEdit).Value := gfStrToFloat(FValue);
@@ -585,7 +590,9 @@ begin
              (Component as TdsdGuides).ParentId := FValue
           else
              (Component as TdsdGuides).Key := FValue;
-  end
+  end;
+  if Assigned(FonChange) then
+     FonChange(Self);
 end;
 
 { TdsdFormParams }

@@ -26,11 +26,13 @@ CREATE TABLE ReportContainerLink(
 
 CREATE INDEX idx_ReportContainerLink_ContainerId_AccountKindId_ReportContainerId  ON ReportContainerLink (ContainerId, AccountKindId, ReportContainerId);
 CREATE INDEX idx_ReportContainerLink_ReportContainerId_ContainerId_AccountKindId  ON ReportContainerLink (ReportContainerId, ContainerId, AccountKindId);
-
+CREATE INDEX idx_ReportContainerLink_AccountId ON ReportContainerLink (AccountId); -- констрейнт
+CREATE INDEX idx_ReportContainerLink_AccountKindId ON ReportContainerLink (AccountKindId); -- констрейнт
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+03.09.13                         *               -- констрейнт
 19.09.02                                         * chage index
 03.09.13                                         *
 */
