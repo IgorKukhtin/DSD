@@ -243,7 +243,7 @@ BEGIN
 
               WHERE Movement.Id = inMovementId
                 AND Movement.DescId = zc_Movement_Send()
-                AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                AND Movement.StatusId IN (zc_Enum_Status_UnComplete())
              ) AS _tmp;
 
 
@@ -283,6 +283,7 @@ BEGIN
      -- 1.1.1. определяется для количественного учета
      UPDATE _tmpItem SET ContainerId_GoodsFrom = lpInsertUpdate_ContainerCount_Goods (inOperDate               := _tmpItem.OperDate
                                                                                     , inUnitId                 := _tmpItem.UnitId_From
+                                                                                    , inCarId                  := NULL
                                                                                     , inPersonalId             := _tmpItem.PersonalId_From
                                                                                     , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                                     , inGoodsId                := _tmpItem.GoodsId
@@ -293,6 +294,7 @@ BEGIN
                                                                                      )
                        , ContainerId_GoodsTo   = lpInsertUpdate_ContainerCount_Goods (inOperDate               := _tmpItem.OperDate
                                                                                     , inUnitId                 := _tmpItem.UnitId_To
+                                                                                    , inCarId                  := NULL
                                                                                     , inPersonalId             := _tmpItem.PersonalId_To
                                                                                     , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                                     , inGoodsId                := _tmpItem.GoodsId
@@ -384,6 +386,7 @@ BEGIN
      -- 1.3.2. определяется ContainerId для проводок по суммовому учету - Кому  + формируется Аналитика <элемент с/с>
      UPDATE _tmpItemSumm SET ContainerId_To = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := _tmpItem.OperDate
                                                                                 , inUnitId                 := _tmpItem.UnitId_To
+                                                                                , inCarId                  := NULL
                                                                                 , inPersonalId             := _tmpItem.PersonalId_To
                                                                                 , inBranchId               := _tmpItem.BranchId_To
                                                                                 , inJuridicalId_basis      := _tmpItem.JuridicalId_Basis_To
@@ -455,7 +458,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
 
      -- 5.2. ФИНИШ - Обязательно меняем статус документа
-     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_Send() AND StatusId = zc_Enum_Status_UnComplete();
+     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_Send() AND StatusId IN (zc_Enum_Status_UnComplete());
 
 
 END;
@@ -465,6 +468,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.10.13                                        * add inCarId := NULL
  17.09.13                                        * add lpInsertUpdate_ContainerCount_Goods and lpInsertUpdate_ContainerSumm_Goods
  15.09.13                                        * add zc_Enum_Account_20901
  14.09.13                                        * add zc_ObjectLink_Goods_Business

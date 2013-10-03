@@ -38,7 +38,7 @@ BEGIN
            , CAST (ABS(tmpMovementItemContainer.Price) AS TFloat) AS Price
            , lfObject_Account.onComplete AS AccountOnComplete
            , tmpMovementItemContainer.ByObjectCode
-           , tmpMovementItemContainer.ByObjectName
+           , CAST (tmpMovementItemContainer.ByObjectName AS TVarChar) AS ByObjectName
            , tmpMovementItemContainer.GoodsGroupCode
            , tmpMovementItemContainer.GoodsGroupName
            , tmpMovementItemContainer.GoodsCode
@@ -59,7 +59,12 @@ BEGIN
                 , MovementItemContainer.isActive
                 , Container.ObjectId
                 , Object_by.ObjectCode         AS ByObjectCode
-                , Object_by.ValueData          AS ByObjectName
+
+                , CASE WHEN Object_ProfitLossDirection.ValueData <> ''
+                            THEN CAST (Object_by.ObjectCode AS TVarChar) || ' ' || Object_ProfitLossDirection.ValueData || ' '
+                       ELSE ''
+                  END || Object_by.ValueData AS ByObjectName
+
                 , Object_GoodsGroup.ObjectCode AS GoodsGroupCode
                 , Object_GoodsGroup.ValueData  AS GoodsGroupName
                 , Object_Goods.ObjectCode      AS GoodsCode
@@ -113,6 +118,15 @@ BEGIN
                                               AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
                  LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (ContainerLinkObject_ProfitLoss.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, COALESCE (ContainerLinkObject_Personal.ObjectId, ContainerLinkObject_Unit.ObjectId)))
 
+                 LEFT JOIN ObjectLink AS ObjectLink_ProfitLoss_ProfitLossGroup
+                                      ON ObjectLink_ProfitLoss_ProfitLossGroup.ObjectId = ContainerLinkObject_ProfitLoss.ObjectId
+                                     AND ObjectLink_ProfitLoss_ProfitLossGroup.DescId = zc_ObjectLink_ProfitLoss_ProfitLossGroup()
+                 LEFT JOIN Object AS Object_ProfitLossGroup ON Object_ProfitLossGroup.Id = ObjectLink_ProfitLoss_ProfitLossGroup.ChildObjectId
+                 LEFT JOIN ObjectLink AS ObjectLink_ProfitLoss_ProfitLossDirection
+                                      ON ObjectLink_ProfitLoss_ProfitLossDirection.ObjectId = ContainerLinkObject_ProfitLoss.ObjectId
+                                     AND ObjectLink_ProfitLoss_ProfitLossDirection.DescId = zc_ObjectLink_ProfitLoss_ProfitLossDirection()
+                 LEFT JOIN Object AS Object_ProfitLossDirection ON Object_ProfitLossDirection.Id = ObjectLink_ProfitLoss_ProfitLossDirection.ChildObjectId
+
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
                                                ON ContainerLinkObject_InfoMoney.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
                                               AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
@@ -139,7 +153,7 @@ BEGIN
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_GoodsKind
                                                ON ContainerLinkObject_GoodsKind.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
                                               AND ContainerLinkObject_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-                                              -- AND 1=0
+                                              AND 1=0
                  LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ContainerLinkObject_GoodsKind.ObjectId
 
                  LEFT JOIN MovementItem ON MovementItem.Id = MovementItemContainer.MovementItemId
@@ -160,6 +174,8 @@ BEGIN
                    , MovementItemContainer.isActive
                    , Object_by.ObjectCode
                    , Object_by.ValueData
+                   , Object_ProfitLossGroup.ValueData
+                   , Object_ProfitLossDirection.ValueData
                    , Object_GoodsGroup.ObjectCode
                    , Object_GoodsGroup.ValueData
                    , Object_Goods.ObjectCode

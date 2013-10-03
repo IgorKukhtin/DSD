@@ -158,7 +158,7 @@ BEGIN
 
      WHERE Movement.Id = inMovementId
        AND Movement.DescId = zc_Movement_ProductionSeparate()
-       AND Movement.StatusId = zc_Enum_Status_UnComplete();
+       AND Movement.StatusId IN (zc_Enum_Status_UnComplete());
 
 
      -- таблица - Аналитики остатка
@@ -287,7 +287,7 @@ BEGIN
 
               WHERE Movement.Id = inMovementId
                 AND Movement.DescId = zc_Movement_ProductionSeparate()
-                AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                AND Movement.StatusId IN (zc_Enum_Status_UnComplete())
              ) AS _tmp;
 
 
@@ -378,7 +378,7 @@ BEGIN
 
               WHERE Movement.Id = inMovementId
                 AND Movement.DescId = zc_Movement_ProductionSeparate()
-                AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                AND Movement.StatusId IN (zc_Enum_Status_UnComplete())
              ) AS _tmp;
 
 
@@ -424,6 +424,7 @@ BEGIN
      -- определяется ContainerId_GoodsFrom для Master(расход)-элементы количественного учета
      UPDATE _tmpItem SET ContainerId_GoodsFrom = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
                                                                                     , inUnitId                 := vbUnitId_From
+                                                                                    , inCarId                  := NULL
                                                                                     , inPersonalId             := vbPersonalId_From
                                                                                     , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                                     , inGoodsId                := _tmpItem.GoodsId
@@ -436,6 +437,7 @@ BEGIN
      -- определяется ContainerId_GoodsTo для Child(приход)-элементы количественного учета
      UPDATE _tmpItemChild SET ContainerId_GoodsTo = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
                                                                                        , inUnitId                 := vbUnitId_To
+                                                                                       , inCarId                  := NULL
                                                                                        , inPersonalId             := vbPersonalId_To
                                                                                        , inInfoMoneyDestinationId := _tmpItemChild.InfoMoneyDestinationId
                                                                                        , inGoodsId                := _tmpItemChild.GoodsId
@@ -608,6 +610,7 @@ BEGIN
           JOIN _tmpItemSummChild AS _tmpItemSummChild_find ON _tmpItemSummChild_find.MovementItemId = _tmpItemChild.MovementItemId
           JOIN (SELECT lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
                                                          , inUnitId                 := vbUnitId_To
+                                                         , inCarId                  := NULL
                                                          , inPersonalId             := vbPersonalId_To
                                                          , inBranchId               := vbBranchId_To
                                                          , inJuridicalId_basis      := vbJuridicalId_Basis_To
@@ -761,7 +764,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
 
      -- 5.2. ФИНИШ - Обязательно меняем статус документа
-     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_ProductionSeparate() AND StatusId = zc_Enum_Status_UnComplete();
+     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_ProductionSeparate() AND StatusId IN (zc_Enum_Status_UnComplete());
 
 
 END;
@@ -771,6 +774,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.10.13                                        * add inCarId := NULL
  25.09.13                                        * optimize
  17.09.13                                        * add lpInsertUpdate_ContainerCount_Goods and lpInsertUpdate_ContainerSumm_Goods
  14.09.13                                        * add zc_ObjectLink_Goods_Business

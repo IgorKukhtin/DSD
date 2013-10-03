@@ -493,6 +493,7 @@ BEGIN
      -- 1.1.1. определяется для количественного учета
      UPDATE _tmpItem SET ContainerId_GoodsFrom = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
                                                                                     , inUnitId                 := vbUnitId_From
+                                                                                    , inCarId                  := NULL
                                                                                     , inPersonalId             := vbPersonalId_From
                                                                                     , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                                     , inGoodsId                := _tmpItem.GoodsId
@@ -503,6 +504,7 @@ BEGIN
                                                                                      )
                        , ContainerId_GoodsTo   = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
                                                                                     , inUnitId                 := vbUnitId_To
+                                                                                    , inCarId                  := NULL
                                                                                     , inPersonalId             := vbPersonalId_To
                                                                                     , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                                     , inGoodsId                := _tmpItem.GoodsId
@@ -653,6 +655,7 @@ BEGIN
      -- 1.3.2. определяется ContainerId для проводок по суммовому учету - Кому  + формируется Аналитика <элемент с/с>
      UPDATE _tmpItemSumm SET ContainerId_To = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
                                                                                 , inUnitId                 := vbUnitId_To
+                                                                                , inCarId                  := NULL
                                                                                 , inPersonalId             := vbPersonalId_To
                                                                                 , inBranchId               := vbBranchId_To
                                                                                 , inJuridicalId_basis      := vbJuridicalId_Basis_To
@@ -797,6 +800,7 @@ BEGIN
      -- 3.2. определяется ContainerId для проводок по "Прибыль будущих периодов"
      UPDATE _tmpItemSumm SET ContainerId_60000 = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
                                                                                    , inUnitId                 := vbUnitId_To
+                                                                                   , inCarId                  := NULL
                                                                                    , inPersonalId             := vbPersonalId_To
                                                                                    , inBranchId               := vbBranchId_To
                                                                                    , inJuridicalId_basis      := vbJuridicalId_Basis_To

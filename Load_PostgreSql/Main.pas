@@ -5166,6 +5166,7 @@ begin
            +'  and CheckBilNumber.BillNumber is null'
 // +'  and 1=0'
 // +'  and Bill.Id in (1262471, 1262480)'
+// +'  and MovementId_Postgres = 10154'
            +'  and (((UnitFrom.pgUnitId is not null'
            +'     or UnitFrom.PersonalId_Postgres is not null'
            +'     or pgUnitFrom.Id_Postgres_Branch is not null)'
@@ -5185,7 +5186,7 @@ begin
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , case when Bill.FromId=5 then 0 else -1* BillItems.OperCount end as Amount');
         Add('     , -1 * BillItems.OperCount as AmountPartner');
-        Add('     , 0 as AmountChangePercent');
+        Add('     , case when Bill.FromId=5 then 0 else -1* BillItems.OperCount end  as AmountChangePercent');
         Add('     , 0 as ChangePercentAmount');
         Add('     , BillItems.OperPrice as Price');
         Add('     , 1 as CountForPrice');
@@ -5220,7 +5221,7 @@ begin
 
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
 // +'  and 1=0'
-// +'  and MovementId_Postgres = 187814'
+// +'  and MovementId_Postgres = 10154'
            +'  and Bill.BillKind in (zc_bkSaleToClient())'
            +'  and Bill.FromId<>1022' // ÂÈÇÀÐÄ 1
            +'  and Bill.FromId<>1037' // ÂÈÇÀÐÄ 1037

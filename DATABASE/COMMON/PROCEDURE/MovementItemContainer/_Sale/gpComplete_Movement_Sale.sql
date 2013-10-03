@@ -175,7 +175,7 @@ BEGIN
 
      WHERE Movement.Id = inMovementId
        AND Movement.DescId = zc_Movement_Sale()
-       AND Movement.StatusId = zc_Enum_Status_UnComplete();
+       AND Movement.StatusId IN (zc_Enum_Status_UnComplete());
 
      
      -- определяется Управленческие назначения, параметр нужен для для формирования Аналитик в проводках
@@ -386,7 +386,7 @@ BEGIN
 
               WHERE Movement.Id = inMovementId
                 AND Movement.DescId = zc_Movement_Sale()
-                AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                AND Movement.StatusId IN (zc_Enum_Status_UnComplete())
              ) AS _tmp;
 
 
@@ -513,6 +513,7 @@ BEGIN
      -- 1.2.1. определяется ContainerId_Goods для количественного учета
      UPDATE _tmpItem SET ContainerId_Goods = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
                                                                                 , inUnitId                 := vbUnitId_From
+                                                                                , inCarId                  := NULL
                                                                                 , inPersonalId             := vbPersonalId_From
                                                                                 , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                                 , inGoodsId                := _tmpItem.GoodsId
@@ -523,8 +524,9 @@ BEGIN
                                                                                  );
      -- 1.2.2. формируются Проводки для количественного учета
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
-       SELECT 0, zc_MIContainer_Count() AS DescId, inMovementId, MovementItemId, ContainerId_Goods, 0 AS ParentId, -1 * OperCount, vbOperDate, TRUE
-       FROM _tmpItem;
+       SELECT 0, zc_MIContainer_Count() AS DescId, inMovementId, MovementItemId, ContainerId_Goods, 0 AS ParentId, -1 * OperCount, vbOperDate, FALSE
+       FROM _tmpItem
+       WHERE OperCount <> 0;
 
 
      -- 1.3.1. самое интересное: заполняем таблицу - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
@@ -570,8 +572,9 @@ BEGIN
 
      -- 1.3.2. формируются Проводки для суммового учета : с/с1
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
-       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, _tmpItemSumm.MovementItemId, _tmpItemSumm.ContainerId, 0 AS ParentId, -1 * _tmpItemSumm.OperSumm, vbOperDate, TRUE
-       FROM _tmpItemSumm;
+       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, _tmpItemSumm.MovementItemId, _tmpItemSumm.ContainerId, 0 AS ParentId, -1 * _tmpItemSumm.OperSumm, vbOperDate, FALSE
+       FROM _tmpItemSumm
+       WHERE _tmpItemSumm.OperSumm <> 0;
 
 
      -- 2.1. создаем контейнеры для Проводки - Прибыль
@@ -710,6 +713,7 @@ BEGIN
              FROM _tmpItemSumm
              GROUP BY _tmpItemSumm.ContainerId_ProfitLoss_40209
             ) AS _tmpItem_group
+       WHERE _tmpItem_group.OperSumm <> 0
       UNION ALL
        -- Проводки по скидкам в весе : с/с1 - с/с2
        SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, _tmpItem_group.ContainerId_ProfitLoss, 0 AS ParentId, _tmpItem_group.OperSumm, vbOperDate, FALSE
@@ -718,6 +722,7 @@ BEGIN
              FROM _tmpItemSumm
              GROUP BY _tmpItemSumm.ContainerId_ProfitLoss_10500
             ) AS _tmpItem_group
+       WHERE _tmpItem_group.OperSumm <> 0
       UNION ALL
        -- Проводки по себестоимости реализации : с/с3
        SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, _tmpItem_group.ContainerId_ProfitLoss, 0 AS ParentId, _tmpItem_group.OperSumm, vbOperDate, FALSE
@@ -726,6 +731,7 @@ BEGIN
              FROM _tmpItemSumm
              GROUP BY _tmpItemSumm.ContainerId_ProfitLoss_10400
             ) AS _tmpItem_group
+       WHERE _tmpItem_group.OperSumm <> 0
        ;
 
 
@@ -749,12 +755,18 @@ BEGIN
                                   THEN zc_Enum_AccountDirection_30100() -- покупатели -- select * from gpSelect_Object_AccountDirection ('2') where Id in (zc_Enum_AccountDirection_30100())
                             ELSE zc_Enum_AccountDirection_30400() -- Прочие дебиторы select * from gpSelect_Object_AccountDirection ('2') where Id in (zc_Enum_AccountDirection_30400())
                         END AS AccountDirectionId
+
                      , CASE WHEN vbInfoMoneyDestinationId_To <> 0
                                  THEN vbInfoMoneyDestinationId_To
+                            WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()  -- Ирна
+                                 THEN zc_Enum_InfoMoneyDestination_30100() -- Продукция
                             ELSE _tmpItem.InfoMoneyDestinationId -- иначе берем по товару
                        END AS InfoMoneyDestinationId_calc
+
                      , _tmpItem.InfoMoneyDestinationId
+
                  FROM _tmpItem
+                 -- WHERE _tmpItem.OperSumm_Partner_ChangePercent <> 0 !!!нельзя ограничивать, т.к. этот AccountId в проводках для отчета!!!
                  GROUP BY _tmpItem.InfoMoneyDestinationId
                 ) AS _tmpItem_group
           ) AS _tmpItem_byAccount
@@ -777,7 +789,7 @@ BEGIN
                                                        , inDescId_1          := CASE WHEN vbPersonalId_To <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Juridical() END
                                                        , inObjectId_1        := CASE WHEN vbPersonalId_To <> 0 THEN vbPersonalId_To ELSE vbJuridicalId_To END
                                                        , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
-                                                       , inObjectId_2        := _tmpItem_group.InfoMoneyId
+                                                       , inObjectId_2        := _tmpItem_group.InfoMoneyId_calc
                                                        , inDescId_3          := CASE WHEN vbPersonalId_To <> 0 THEN NULL ELSE zc_ContainerLinkObject_Contract() END
                                                        , inObjectId_3        := vbContractId
                                                        , inDescId_4          := CASE WHEN vbPersonalId_To <> 0 THEN NULL ELSE zc_ContainerLinkObject_PaidKind() END
@@ -799,7 +811,7 @@ BEGIN
                                                   , inDescId_3          := zc_ContainerLinkObject_Contract()
                                                   , inObjectId_3        := vbContractId
                                                   , inDescId_4          := zc_ContainerLinkObject_InfoMoney()
-                                                  , inObjectId_4        := _tmpItem_group.InfoMoneyId
+                                                  , inObjectId_4        := _tmpItem_group.InfoMoneyId_calc
                                                    )
                   END AS ContainerId
                 , _tmpItem_group.InfoMoneyId
@@ -808,9 +820,12 @@ BEGIN
                       , _tmpItem.BusinessId_From
                       , CASE WHEN vbInfoMoneyId_To <> 0
                                   THEN vbInfoMoneyId_To
+                             WHEN _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_20901 () -- -- 20901; "Ирна"
+                                  THEN zc_Enum_InfoMoney_30101 () -- 30101; "Готовая продукция"
                              ELSE _tmpItem.InfoMoneyId -- иначе берем по товару
                         END AS InfoMoneyId_calc
                  FROM _tmpItem
+                 -- WHERE _tmpItem.OperSumm_Partner_ChangePercent <> 0 !!!нельзя ограничивать, т.к. этот ContainerId в проводках для отчета!!!
                  GROUP BY _tmpItem.AccountId_Partner
                         , _tmpItem.InfoMoneyId
                         , _tmpItem.BusinessId_From
@@ -824,6 +839,7 @@ BEGIN
        SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, _tmpItem_group.ContainerId_Partner, 0 AS ParentId, _tmpItem_group.OperSumm, vbOperDate, TRUE
        FROM (SELECT _tmpItem.ContainerId_Partner, SUM (_tmpItem.OperSumm_Partner_ChangePercent) AS OperSumm FROM _tmpItem GROUP BY _tmpItem.ContainerId_Partner
             ) AS _tmpItem_group
+       WHERE _tmpItem_group.OperSumm <> 0
      ;
 
 
@@ -906,7 +922,7 @@ BEGIN
                         END AS ProfitLossId_ChangePercent
                       , _tmpItem_group.InfoMoneyDestinationId
                       , _tmpItem_group.BusinessId_From
-                 FROM (SELECT -- здесь !!!тоже!!! что и для с/с (но из с/с нельзя брать т.к. нет данных для с/с=0)
+                 FROM (SELECT -- здесь !!!тоже!!! что и для с/с (но из с/с нельзя брать т.к. может быть что с/с=0)
                               CASE WHEN vbPersonalId_To = 0
                                     AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100())  -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                         THEN zc_Enum_ProfitLossGroup_10000() -- 10000; "Результат основной деятельности"
@@ -938,6 +954,7 @@ BEGIN
                                    , _tmpItem.GoodsKindId
                                    , CASE WHEN _tmpItem.GoodsKindId = zc_GoodsKind_WorkProgress() THEN zc_InfoMoneyDestination_WorkProgress() ELSE _tmpItem.InfoMoneyDestinationId END AS InfoMoneyDestinationId_calc
                              FROM _tmpItem
+                             WHERE _tmpItem.OperSumm_PriceList <> 0 OR _tmpItem.OperSumm_Partner <> 0 OR _tmpItem.OperSumm_Partner_ChangePercent <> 0
                              GROUP BY _tmpItem.InfoMoneyDestinationId
                                     , _tmpItem.BusinessId_From
                                     , _tmpItem.GoodsKindId
@@ -959,6 +976,7 @@ BEGIN
              FROM _tmpItem
              GROUP BY _tmpItem.ContainerId_ProfitLoss_10100
             ) AS _tmpItem_group
+       WHERE _tmpItem_group.OperSumm <> 0
       UNION ALL
        -- Скидка по акциям
        SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, _tmpItem_group.ContainerId_ProfitLoss, 0 AS ParentId, _tmpItem_group.OperSumm, vbOperDate, FALSE
@@ -967,6 +985,7 @@ BEGIN
              FROM _tmpItem
              GROUP BY _tmpItem.ContainerId_ProfitLoss_10400
             ) AS _tmpItem_group
+       WHERE _tmpItem_group.OperSumm <> 0
       UNION ALL
        -- Скидка дополнительная
        SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, _tmpItem_group.ContainerId_ProfitLoss, 0 AS ParentId, _tmpItem_group.OperSumm, vbOperDate, FALSE
@@ -975,6 +994,7 @@ BEGIN
              FROM _tmpItem
              GROUP BY _tmpItem.ContainerId_ProfitLoss_10500
             ) AS _tmpItem_group
+       WHERE _tmpItem_group.OperSumm <> 0
        ;
 
      -- 5.1.1. формируются Проводки для отчета (Аналитики: Товар и ОПиУ - разнице в весе)
@@ -1261,7 +1281,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
 
      -- 6.2. ФИНИШ - Обязательно меняем статус документа
-     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_Sale() AND StatusId = zc_Enum_Status_UnComplete();
+     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_Sale() AND StatusId IN (zc_Enum_Status_UnComplete());
 
 
 END;
@@ -1271,6 +1291,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.10.13                                        * add inCarId := NULL
  17.09.13                                        * add lpInsertUpdate_ContainerCount_Goods
  15.09.13                                        * add zc_Enum_Account_20901
  14.09.13                                        * add vbBusinessId_From
@@ -1278,6 +1299,6 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpUnComplete_Movement (inMovementId:= 4778, inSession:= '2')
--- SELECT * FROM gpComplete_Movement_Sale (inMovementId:= 4778, inIsLastComplete:= FALSE, inSession:= '2')
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 4778, inSession:= '2')
+-- SELECT * FROM gpUnComplete_Movement (inMovementId:= 10154, inSession:= '2')
+-- SELECT * FROM gpComplete_Movement_Sale (inMovementId:= 10154, inIsLastComplete:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 10154, inSession:= '2')

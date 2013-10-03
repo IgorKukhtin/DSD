@@ -68,7 +68,7 @@ BEGIN
                                , ContainerId_Goods Integer, GoodsId Integer, AssetId Integer
                                , OperCount TFloat
                                , ProfitLossGroupId Integer, ProfitLossDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                               , BusinessId Integer, BusinessId_ProfitLoss Integer
+                               , BusinessId Integer, BusinessId_Route Integer
                                 ) ON COMMIT DROP;
      -- таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_ProfitLoss Integer, ContainerId Integer, AccountId Integer, OperSumm TFloat) ON COMMIT DROP;
@@ -78,7 +78,7 @@ BEGIN
                          , ContainerId_Goods, GoodsId, AssetId
                          , OperCount
                          , ProfitLossGroupId, ProfitLossDirectionId, InfoMoneyDestinationId, InfoMoneyId
-                         , BusinessId, BusinessId_ProfitLoss
+                         , BusinessId, BusinessId_Route
                           )
         SELECT
               _tmp.MovementItemId
@@ -93,8 +93,8 @@ BEGIN
             , _tmp.InfoMoneyId            -- Статьи назначения
               -- значение Бизнес !!!выбирается!!! из 1)Автомобиля
             , vbBusinessId AS BusinessId 
-              -- Бизнес для ОПиУ
-            , _tmp.BusinessId_ProfitLoss
+              -- Бизнес для Прибыль
+            , _tmp.BusinessId_Route
 
         FROM (SELECT
                      MovementItem.Id AS MovementItemId
@@ -111,8 +111,8 @@ BEGIN
                    , COALESCE (lfObject_InfoMoney.InfoMoneyDestinationId, 0) AS InfoMoneyDestinationId
                      -- Статьи назначения
                    , COALESCE (lfObject_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
-                     -- Бизнес для ОПиУ
-                   , COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0) AS BusinessId_ProfitLoss
+                     -- Бизнес для Прибыль
+                   , COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0) AS BusinessId_Route
 
               FROM Movement
                    JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Child() AND MovementItem.isErased = FALSE
@@ -202,7 +202,7 @@ BEGIN
                                         , inParentId          := NULL
                                         , inObjectId          := zc_Enum_Account_100301 () -- 100301; "прибыль текущего периода"
                                         , inJuridicalId_basis := vbJuridicalId_Basis
-                                        , inBusinessId        := _tmpItem_byProfitLoss.BusinessId_ProfitLoss
+                                        , inBusinessId        := _tmpItem_byProfitLoss.BusinessId_Route
                                         , inObjectCostDescId  := NULL
                                         , inObjectCostId      := NULL
                                         , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
@@ -210,7 +210,7 @@ BEGIN
                                          ) AS ContainerId_ProfitLoss
                 , _tmpItem_byProfitLoss.ProfitLossDirectionId
                 , _tmpItem_byProfitLoss.InfoMoneyDestinationId
-                , _tmpItem_byProfitLoss.BusinessId_ProfitLoss
+                , _tmpItem_byProfitLoss.BusinessId_Route
 
            FROM (SELECT lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := _tmpItem_group.ProfitLossGroupId
                                                       , inProfitLossDirectionId  := _tmpItem_group.ProfitLossDirectionId
@@ -220,23 +220,23 @@ BEGIN
                                                        ) AS ProfitLossId
                       , _tmpItem_group.ProfitLossDirectionId
                       , _tmpItem_group.InfoMoneyDestinationId
-                      , _tmpItem_group.BusinessId_ProfitLoss
+                      , _tmpItem_group.BusinessId_Route
 
                  FROM (SELECT _tmpItem.ProfitLossGroupId
                             , _tmpItem.ProfitLossDirectionId
                             , _tmpItem.InfoMoneyDestinationId
-                            , _tmpItem.BusinessId_ProfitLoss
+                            , _tmpItem.BusinessId_Route
                        FROM _tmpItemSumm
                             JOIN _tmpItem ON _tmpItem.MovementItemId = _tmpItemSumm.MovementItemId
                        GROUP BY _tmpItem.ProfitLossGroupId
                               , _tmpItem.ProfitLossDirectionId
                               , _tmpItem.InfoMoneyDestinationId
-                              , _tmpItem.BusinessId_ProfitLoss
+                              , _tmpItem.BusinessId_Route
                       ) AS _tmpItem_group
                 ) AS _tmpItem_byProfitLoss
           ) AS _tmpItem_byContainer ON _tmpItem_byContainer.ProfitLossDirectionId  = _tmpItem.ProfitLossDirectionId
                                    AND _tmpItem_byContainer.InfoMoneyDestinationId = _tmpItem.InfoMoneyDestinationId
-                                   AND _tmpItem_byContainer.BusinessId_ProfitLoss  = _tmpItem.BusinessId_ProfitLoss
+                                   AND _tmpItem_byContainer.BusinessId_Route       = _tmpItem.BusinessId_Route
      WHERE _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId;
 
      -- 2.2. формируются Проводки - Прибыль
@@ -249,7 +249,7 @@ BEGIN
             ) AS _tmpItem_group;
 
 
-     -- 3. формируются Проводки для отчета (Аналитики: Товар и ОПиУ)
+     -- 3. формируются Проводки для отчета (Аналитики: Товар и Прибыль)
      PERFORM lpInsertUpdate_MovementItemReport (inMovementId         := inMovementId
                                               , inMovementItemId     := _tmpItem.MovementItemId
                                               , inActiveContainerId  := _tmpItemSumm.ContainerId_ProfitLoss
@@ -291,6 +291,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.10.13                                        * add BusinessId_Route
  02.10.13                                        *
 */
 

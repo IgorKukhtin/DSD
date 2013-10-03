@@ -201,7 +201,7 @@ BEGIN
 
            WHERE Movement.Id = inMovementId
              AND Movement.DescId = zc_Movement_Income()
-             AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+             AND Movement.StatusId IN (zc_Enum_Status_UnComplete())
           ) AS _tmp;
 
      -- определяется Управленческие назначения, параметр нужен для для формирования Аналитик в проводках
@@ -431,7 +431,7 @@ BEGIN
                    LEFT JOIN lfGet_Object_InfoMoney (zc_Enum_InfoMoney_20401()) AS lfObject_InfoMoney_Car ON vbCarId <> 0
               WHERE Movement.Id = inMovementId
                 AND Movement.DescId = zc_Movement_Income()
-                AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+                AND Movement.StatusId IN (zc_Enum_Status_UnComplete())
              ) AS _tmp
         ;
 
@@ -724,7 +724,8 @@ BEGIN
                                                                                                       , inObjectId_5        := _tmpItem_SummPartner.PartionMovementId
                                                                                                        )
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения
-                                                                                -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Сотрудники(подотчетные лица) 2)NULL 3)NULL 4)Статьи назначения
+                                                                                -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Сотрудники(подотчетные лица) 2)NULL 3)NULL 4)Статьи назначения 5)Автомобиль
+                                                                                -- для Сотрудники(подотчетные лица) !!!имеено здесь последняя аналитика всегда значение = 0!!!
                                                                            ELSE lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                                                       , inParentId          := NULL
                                                                                                       , inObjectId          := _tmpItem_SummPartner.AccountId
@@ -736,8 +737,8 @@ BEGIN
                                                                                                       , inObjectId_1        := CASE WHEN vbPersonalId_From <> 0 THEN vbPersonalId_From ELSE vbJuridicalId_From END
                                                                                                       , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
                                                                                                       , inObjectId_2        := _tmpItem_SummPartner.InfoMoneyId
-                                                                                                      , inDescId_3          := CASE WHEN vbPersonalId_From <> 0 THEN NULL ELSE zc_ContainerLinkObject_Contract() END
-                                                                                                      , inObjectId_3        := vbContractId
+                                                                                                      , inDescId_3          := CASE WHEN vbPersonalId_From <> 0 THEN zc_ContainerLinkObject_Car() ELSE zc_ContainerLinkObject_Contract() END
+                                                                                                      , inObjectId_3        := CASE WHEN vbPersonalId_From <> 0 THEN 0 ELSE vbContractId END
                                                                                                       , inDescId_4          := CASE WHEN vbPersonalId_From <> 0 THEN NULL ELSE zc_ContainerLinkObject_PaidKind() END
                                                                                                       , inObjectId_4        := vbPaidKindId
                                                                                                        )
@@ -821,6 +822,8 @@ BEGIN
                                                                         , inObjectId_1        := vbPersonalId_Driver
                                                                         , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
                                                                         , inObjectId_2        := _tmpItem_SummDriver.InfoMoneyId
+                                                                        , inDescId_3          := zc_ContainerLinkObject_Car()
+                                                                        , inObjectId_3        := vbCarId
                                                                         );
 
      -- 4.3. формируются Проводки -  расчеты с поставщиком Сотрудником (Водитель)
@@ -917,7 +920,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
 
      -- 5.2. ФИНИШ - Обязательно меняем статус документа
-     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_Income() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
+     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_Income() AND StatusId IN (zc_Enum_Status_UnComplete());
 
 
 END;
@@ -927,7 +930,8 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 02.10.13                                        * add StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+ 03.10.13                                        * add vbBusinessId_Route
+ 02.10.13                                        * add StatusId IN (zc_Enum_Status_UnComplete())
  02.10.13                                        * add zc_ObjectLink_Goods_Fuel
  30.09.13                                        * add vbCarId and vbPersonalId_Driver
  17.09.13                                        * add lpInsertUpdate_ContainerCount_Goods and lpInsertUpdate_ContainerSumm_Goods
