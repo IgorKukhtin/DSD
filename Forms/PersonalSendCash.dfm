@@ -83,7 +83,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = DataSource
+          DataController.DataSource = MasterDS
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.00;-,0.00;'
@@ -455,9 +455,16 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         DataType = ftBoolean
         ParamType = ptInput
         Value = False
+      end
+      item
+        Name = 'inIsErased'
+        Component = ShowErasedAction
+        DataType = ftBoolean
+        ParamType = ptInput
+        Value = False
       end>
-    Left = 64
-    Top = 272
+    Left = 116
+    Top = 224
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -670,7 +677,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
           StoredProc = spInsertUpdateMovementItem
         end>
       Caption = 'actUpdateDataSet'
-      DataSource = DataSource
+      DataSource = MasterDS
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -796,7 +803,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
-      DataSource = DataSource
+      DataSource = MasterDS
     end
     object SetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -807,7 +814,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
-      DataSource = DataSource
+      DataSource = MasterDS
     end
     object actComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
@@ -916,16 +923,16 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       isShowModal = True
     end
   end
-  object DataSource: TDataSource
+  object MasterDS: TDataSource
     DataSet = MasterCDS
-    Left = 48
-    Top = 200
+    Left = 55
+    Top = 224
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 136
-    Top = 200
+    Left = 26
+    Top = 224
   end
   object GuidesPersonal: TdsdGuides
     LookupControl = edPersonal
@@ -1036,8 +1043,8 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         DataType = ftInteger
         ParamType = ptInput
       end>
-    Left = 80
-    Top = 320
+    Left = 86
+    Top = 224
   end
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'
@@ -1057,8 +1064,8 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       item
       end>
     SortImages = dmMain.SortImageList
-    Left = 96
-    Top = 248
+    Left = 216
+    Top = 232
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 232

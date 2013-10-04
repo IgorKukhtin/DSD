@@ -1,10 +1,12 @@
--- Function: gpSelect_MovementItem_PersonalSendCash()
+-- Function: gpSelect_MovementItem_PersonalSendCash (Integer, Boolean, Boolean, TVarChar)
 
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_PersonalSendCash (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_PersonalSendCash (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PersonalSendCash(
     IN inMovementId  Integer      , -- ключ Документа
     IN inShowAll     Boolean      , -- 
+    IN inIsErased    Boolean      , -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
@@ -43,7 +45,10 @@ BEGIN
                   , MILinkObject_Car.ObjectId   AS CarId
                   , SUM (CASE WHEN MILinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_20401() THEN MovementItem.Amount ELSE 0 END) AS Amount_20401
                   , SUM (CASE WHEN MILinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_21201() THEN MovementItem.Amount ELSE 0 END) AS Amount_21201
-             FROM MovementItem
+             FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+                  JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                   AND MovementItem.DescId     = zc_MI_Master()
+                                   AND MovementItem.isErased   = tmpIsErased.isErased
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                    ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
@@ -53,8 +58,6 @@ BEGIN
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Car
                                                    ON MILinkObject_Car.MovementItemId = MovementItem.Id
                                                   AND MILinkObject_Car.DescId = zc_MILinkObject_Route()
-              WHERE MovementItem.MovementId = inMovementId
-                AND MovementItem.DescId =  zc_MI_Master()
              GROUP BY MovementItem.ObjectId
                     , MovementItem.isErased
                     , MILinkObject_Route.ObjectId
@@ -64,20 +67,20 @@ BEGIN
             LEFT JOIN Object AS Object_Route ON Object_Route.Id = tmpMovementItem.RouteId
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpMovementItem.CarId
       ;
- 
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_PersonalSendCash (Integer, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_MovementItem_PersonalSendCash (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.10.13                                        * add inIsErased
  30.09.13                                        *
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_PersonalSendCash (inMovementId:= 25173, inShowAll:= TRUE, inSession:= '2')
--- SELECT * FROM gpSelect_MovementItem_PersonalSendCash (inMovementId:= 25173, inShowAll:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_PersonalSendCash (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_PersonalSendCash (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')

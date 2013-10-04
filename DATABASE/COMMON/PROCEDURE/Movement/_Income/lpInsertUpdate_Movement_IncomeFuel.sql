@@ -7,10 +7,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_IncomeFuel(
     IN inParentId            Integer   , -- Ключ Master <Документ>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
-
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , -- % НДС
-
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
     IN inPaidKindId          Integer   , -- Виды форм оплаты 

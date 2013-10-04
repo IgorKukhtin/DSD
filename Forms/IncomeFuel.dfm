@@ -185,7 +185,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = DataSource
+          DataController.DataSource = MasterDS
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.00;-,0.00;'
@@ -266,7 +266,12 @@ inherited IncomeFuelForm: TIncomeFuelForm
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 200
+            Width = 150
+          end
+          object colFuelName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
+            DataBinding.FieldName = 'FuelName'
+            Width = 150
           end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -541,9 +546,16 @@ inherited IncomeFuelForm: TIncomeFuelForm
         DataType = ftBoolean
         ParamType = ptInput
         Value = False
+      end
+      item
+        Name = 'inIsErased'
+        Component = ShowErasedAction
+        DataType = ftBoolean
+        ParamType = ptInput
+        Value = False
       end>
-    Left = 64
-    Top = 272
+    Left = 112
+    Top = 200
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -587,10 +599,26 @@ inherited IncomeFuelForm: TIncomeFuelForm
         end
         item
           Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertUpdateMovement'
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErased'
+        end
+        item
           Visible = True
           ItemName = 'bbStatic'
         end
@@ -645,6 +673,18 @@ inherited IncomeFuelForm: TIncomeFuelForm
       Action = actInsertUpdateMovement
       Category = 0
     end
+    object bbErased: TdxBarButton
+      Action = SetErased
+      Category = 0
+    end
+    object bbUnErased: TdxBarButton
+      Action = SetUnErased
+      Category = 0
+    end
+    object bbShowErased: TdxBarButton
+      Action = ShowErasedAction
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -691,7 +731,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
           StoredProc = spInsertUpdateMovementItem
         end>
       Caption = 'actUpdateDataSet'
-      DataSource = DataSource
+      DataSource = MasterDS
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -773,8 +813,47 @@ inherited IncomeFuelForm: TIncomeFuelForm
       ImageIndex = 14
       ShortCut = 113
     end
+    object SetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1069#1083#1077#1084#1077#1085#1090
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1069#1083#1077#1084#1077#1085#1090
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = MasterDS
+    end
+    object SetUnErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1069#1083#1077#1084#1077#1085#1090
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1069#1083#1077#1084#1077#1085#1090
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = MasterDS
+    end
+    object ShowErasedAction: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      StoredProc = spSelectMovementItem
+      StoredProcList = <
+        item
+          StoredProc = spSelectMovementItem
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
   end
-  object DataSource: TDataSource
+  object MasterDS: TDataSource
     DataSet = MasterCDS
     Left = 48
     Top = 200
@@ -782,7 +861,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
   object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 136
+    Left = 16
     Top = 200
   end
   object GuidesFrom: TdsdGuides
@@ -963,7 +1042,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
       end>
     SortImages = dmMain.SortImageList
     Left = 96
-    Top = 248
+    Top = 264
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 232
@@ -1067,8 +1146,8 @@ inherited IncomeFuelForm: TIncomeFuelForm
         ParamType = ptInput
         Value = ''
       end>
-    Left = 304
-    Top = 120
+    Left = 80
+    Top = 200
   end
   object HeaderSaver: THeaderSaver
     IdParam.Component = FormParams

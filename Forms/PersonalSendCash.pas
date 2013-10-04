@@ -35,7 +35,7 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
-    DataSource: TDataSource;
+    MasterDS: TDataSource;
     MasterCDS: TClientDataSet;
     DataPanel: TPanel;
     edInvNumber: TcxTextEdit;

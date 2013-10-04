@@ -1,6 +1,7 @@
--- Function: gpSelect_MI_Transport()
+-- Function: gpSelect_MI_Transport (Integer, Boolean, Boolean, TVarChar)
 
--- DROP FUNCTION gpSelect_MI_Transport (Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MI_Transport (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MI_Transport (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MI_Transport(
     IN inMovementId  Integer      , -- ключ Документа
@@ -8,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MI_Transport(
     IN inIsErased    Boolean      , -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS SETOF refcursor AS
+RETURNS SETOF refcursor
+AS
 $BODY$
   DECLARE Cursor1 refcursor;
   DECLARE Cursor2 refcursor;
@@ -35,7 +37,10 @@ BEGIN
  
             , MovementItem.isErased     AS isErased
             
-        FROM MovementItem
+        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+             JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                              AND MovementItem.DescId     = zc_MI_Master()
+                              AND MovementItem.isErased   = tmpIsErased.isErased
              LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementItem.ObjectId
              
              LEFT JOIN MovementItemFloat AS MIFloat_Weight
@@ -57,10 +62,6 @@ BEGIN
                                               ON MILinkObject_RouteKind.MovementItemId = MovementItem.Id 
                                              AND MILinkObject_RouteKind.DescId = zc_MILinkObject_RouteKind()
              LEFT JOIN Object AS Object_RouteKind ON Object_RouteKind.Id = MILinkObject_RouteKind.ObjectId
-
-       WHERE MovementItem.MovementId = inMovementId
-         AND MovementItem.DescId = zc_MI_Master()
-         AND (MovementItem.isErased = inIsErased OR inIsErased = TRUE)
       ;
     
     RETURN NEXT Cursor1;
@@ -129,12 +130,12 @@ BEGIN
              -- выбрали все маршруты
              LEFT JOIN MovementItem AS MovementItem_Master ON MovementItem_Master.MovementId = inMovementId
                                                           AND MovementItem_Master.DescId = zc_MI_Master()
-             -- этот нужен что б отбросить уже введенный вид топлива (если не удален)
+             -- этот нужен что б отбросить уже введенный вид топлива (если удален/не удален)
              LEFT JOIN MovementItem AS MovementItem_Find ON MovementItem_Find.MovementId = inMovementId
-                                                        AND MovementItem_Find.ParentId = MovementItem_Master.Id
-                                                        AND MovementItem_Find.ObjectId = ObjectLink_Car_FuelAll.ChildObjectId
-                                                        AND MovementItem_Find.DescId = zc_MI_Child()
-                                                        AND MovementItem_Find.isErased = FALSE
+                                                        AND MovementItem_Find.ParentId   = MovementItem_Master.Id
+                                                        AND MovementItem_Find.ObjectId   = ObjectLink_Car_FuelAll.ChildObjectId
+                                                        AND MovementItem_Find.DescId     = zc_MI_Child()
+                                                        -- AND MovementItem_Find.isErased = FALSE
 
              -- выбрали у маршрута - Тип маршрута
              LEFT JOIN MovementItemLinkObject AS MILinkObject_RouteKind
@@ -206,7 +207,10 @@ BEGIN
 
             , MovementItem.isErased
             
-        FROM MovementItem
+        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+             JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                              AND MovementItem.DescId     = zc_MI_Child()
+                              AND MovementItem.isErased   = tmpIsErased.isErased
              LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = MovementItem.ObjectId
 
              LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
@@ -250,29 +254,25 @@ BEGIN
                                          AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
              LEFT JOIN ObjectLink AS ObjectLink_Car_FuelMaster ON ObjectLink_Car_FuelMaster.ObjectId = MovementLinkObject_Car.ObjectId
                                                               AND ObjectLink_Car_FuelMaster.DescId = zc_ObjectLink_Car_FuelMaster()
-
-       WHERE MovementItem.MovementId = inMovementId
-         AND MovementItem.DescId = zc_MI_Child()
-         AND (MovementItem.isErased = inIsErased OR inIsErased = TRUE)
       ;
        
     RETURN NEXT Cursor2;
 
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_MI_Transport (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.10.13                                        * inIsErased
  01.10.13                                        * add zc_MIFloat_RateFuelKindTax and zfCalc_RateFuelValue
  29.09.13                                        *
  25.09.13         * add Cursor...; rename  TransportFuelOut- Transport             
 */
 
 -- тест
--- SELECT * FROM gpSelect_MI_Transport (inMovementId:= 25173, inShowAll:= TRUE, inSession:= '2')
--- SELECT * FROM gpSelect_MI_Transport (inMovementId:= 25173, inShowAll:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_MI_Transport (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_MI_Transport (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')

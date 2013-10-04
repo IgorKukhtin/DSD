@@ -222,7 +222,7 @@
     Height = 379
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheetEntry
+    Properties.ActivePage = cxTabSheetIncome
     Properties.CustomButtons.Buttons = <>
     ExplicitLeft = 8
     ClientRectBottom = 379
@@ -454,85 +454,86 @@
             Caption = #8470' '#1087'/'#1087
             DataBinding.FieldName = 'Number'
             HeaderAlignmentVert = vaCenter
-            Width = 40
+            Width = 36
           end
           object colсhFuelCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'FuelCode'
             HeaderAlignmentVert = vaCenter
-            Width = 56
+            Width = 50
           end
           object colсhFuelName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
             DataBinding.FieldName = 'FuelName'
             HeaderAlignmentVert = vaCenter
-            Width = 144
+            Width = 166
           end
           object colсhCalculated: TcxGridDBColumn
             Caption = #1060#1072#1082#1090' '#1087#1086' '#1088#1072#1089#1095'. ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'Calculated'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
-            Width = 75
+            Width = 64
           end
           object colсhAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' '#1092#1072#1082#1090#1091' '
             DataBinding.FieldName = 'Amount'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
-            Width = 88
+            Width = 75
           end
           object colсhAmount_calc: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1089#1095#1077#1090
             DataBinding.FieldName = 'Amount_calc'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
-            Width = 79
+            Width = 67
           end
           object colсhColdHour: TcxGridDBColumn
             Caption = #1061#1086#1083#1086#1076', '#1092#1072#1082#1090' '#1095#1072#1089#1086#1074
             DataBinding.FieldName = 'ColdHour'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
-            Width = 95
+            Width = 80
           end
           object colсhColdDistance: TcxGridDBColumn
             Caption = #1061#1086#1083#1086#1076', '#1092#1072#1082#1090' '#1082#1084
             DataBinding.FieldName = 'ColdDistance'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
-            Width = 97
+            Width = 75
           end
           object colсhAmountColdHour: TcxGridDBColumn
             Caption = #1061#1086#1083#1086#1076', '#1085#1086#1088#1084#1072' '#1074' '#1095#1072#1089
             DataBinding.FieldName = 'AmountColdHour'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
-            Width = 96
+            Width = 64
           end
           object colсhAmountColdDistance: TcxGridDBColumn
             Caption = #1061#1086#1083#1086#1076', '#1085#1086#1088#1084#1072' '#1085#1072' 100 '#1082#1084
             DataBinding.FieldName = 'AmountColdDistance'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
-            Width = 95
+            Width = 81
           end
           object colсhAmountFuel: TcxGridDBColumn
             Caption = #1056#1072#1089#1093#1086#1076', '#1085#1086#1088#1084#1072' '#1085#1072' 100 '#1082#1084
             DataBinding.FieldName = 'AmountFuel'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
-            Width = 96
+            Width = 74
           end
           object colсhRateFuelKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1085#1086#1088#1084#1099
             DataBinding.FieldName = 'RateFuelKindName'
             HeaderAlignmentVert = vaCenter
-            Width = 75
+            Width = 91
           end
           object colchRateFuelKindTax: TcxGridDBColumn
             Caption = '% '#1089#1077#1079#1086#1085', '#1090#1077#1084#1087'.'
             DataBinding.FieldName = 'RateFuelKindTax'
+            Width = 59
           end
         end
         object cxGridChildLevel: TcxGridLevel
@@ -1192,8 +1193,8 @@
     object SetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       StoredProcList = <>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1052#1072#1088#1096#1088#1091#1090
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1052#1072#1088#1096#1088#1091#1090
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -1536,7 +1537,7 @@
         DataType = ftInteger
         ParamType = ptInput
       end>
-    Left = 76
+    Left = 75
     Top = 200
   end
   object frxDBDataset: TfrxDBDataset
@@ -2140,8 +2141,8 @@
     Left = 45
     Top = 300
   end
-  object spSelectMIIncome: TdsdStoredProc
-    StoredProcName = 'gpSelect_MI_Transport_IncomeFuel'
+  object spSelectIncome: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_TransportIncome'
     DataSet = IncomeCDS
     DataSets = <
       item
@@ -2157,6 +2158,78 @@
         Value = '0'
       end>
     Left = 106
+    Top = 300
+  end
+  object spInsertUpdateIncome: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_TransportIncome'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        DataType = ftInteger
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inMovementId'
+        Component = FormParams
+        ComponentItem = 'Id'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = '0'
+      end
+      item
+        Name = 'inRouteId'
+        Component = MasterCDS
+        ComponentItem = 'RouteId'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmount'
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inWeight'
+        Component = MasterCDS
+        ComponentItem = 'Weight'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStartOdometre'
+        Component = MasterCDS
+        ComponentItem = 'StartOdometre'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndOdometre'
+        Component = MasterCDS
+        ComponentItem = 'EndOdometre'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inFreightId'
+        Component = MasterCDS
+        ComponentItem = 'FreightId'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'inRouteKindId'
+        Component = MasterCDS
+        ComponentItem = 'RouteKindId'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+    Left = 75
     Top = 300
   end
 end

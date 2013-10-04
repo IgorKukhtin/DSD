@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_IncomeFuel(
     IN inPrice               TFloat    , -- Цена
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Количество расчетное по норме
-    IN inUserId              Integer   , -- Пользователь
+    IN inUserId              Integer     -- Пользователь
 )                              
 RETURNS RECORD
 AS

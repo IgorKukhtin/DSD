@@ -35,7 +35,7 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
-    DataSource: TDataSource;
+    MasterDS: TDataSource;
     MasterCDS: TClientDataSet;
     DataPanel: TPanel;
     edInvNumber: TcxTextEdit;
@@ -136,6 +136,12 @@ type
     cxLabel13: TcxLabel;
     edPacker: TcxButtonEdit;
     PackerGuides: TdsdGuides;
+    SetErased: TdsdUpdateErased;
+    SetUnErased: TdsdUpdateErased;
+    ShowErasedAction: TBooleanStoredProcAction;
+    bbErased: TdxBarButton;
+    bbUnErased: TdxBarButton;
+    bbShowErased: TdxBarButton;
   private
   public
   end;

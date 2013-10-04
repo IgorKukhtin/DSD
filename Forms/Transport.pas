@@ -191,7 +191,8 @@ type
     cxGridIncomeLevel: TcxGridLevel;
     IncomeCDS: TClientDataSet;
     IncomeDS: TDataSource;
-    spSelectMIIncome: TdsdStoredProc;
+    spSelectIncome: TdsdStoredProc;
+    spInsertUpdateIncome: TdsdStoredProc;
   private
   public
   end;
