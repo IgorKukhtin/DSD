@@ -130,11 +130,8 @@ type
   private
     FStatus: TdsdMovementStatus;
     FActionDataLink: TDataSetDataLink;
-    FStatusName: TdsdParam;
-    FStatusCode: TdsdParam;
     procedure SetDataSource(const Value: TDataSource);
     function GetDataSource: TDataSource;
-    procedure StatusCodeChange(Sender: TObject);
   protected
     procedure DataSetChanged; override;
   public
@@ -142,8 +139,6 @@ type
     destructor Destroy; override;
     function Execute: boolean; override;
   published
-    property StatusCode: TdsdParam read FStatusCode write FStatusCode;
-    property StatusName: TdsdParam read FStatusName write FStatusName;
     property DataSource: TDataSource read GetDataSource write SetDataSource;
     property Status: TdsdMovementStatus read FStatus write FStatus;
   end;
@@ -687,17 +682,18 @@ end;
 procedure TdsdUpdateErased.SetisSetErased(const Value: boolean);
 begin
   FisSetErased := Value;
-  if FisSetErased then
-  begin
-    Caption := 'Удалить';
-    Hint:='Удалить данные';
-    ShortCut:=VK_DELETE
-  end
-  else
-  begin
-    Caption := 'Восстановить';
-    Hint:='Восстановить данные';
-  end;
+  if csDesigning in ComponentState then
+    if FisSetErased then
+    begin
+      Caption := 'Удалить';
+      Hint:='Удалить данные';
+      ShortCut:=VK_DELETE
+    end
+    else
+    begin
+      Caption := 'Восстановить';
+      Hint:='Восстановить данные';
+    end;
 end;
 
 { TdsdStoredProcList }
@@ -792,8 +788,6 @@ begin
   inherited;
   FActionDataLink := TDataSetDataLink.Create(Self);
   Status := mtUncomplete;
-  StatusCode := TdsdParam.Create(nil);
-  StatusName := TdsdParam.Create(nil);
 end;
 
 procedure TdsdChangeMovementStatus.DataSetChanged;
@@ -826,11 +820,6 @@ end;
 procedure TdsdChangeMovementStatus.SetDataSource(const Value: TDataSource);
 begin
   FActionDataLink.DataSource := Value;
-end;
-
-procedure TdsdChangeMovementStatus.StatusCodeChange(Sender: TObject);
-begin
-  Enabled := StatusCode.Value = (Integer(Status) + 1)
 end;
 
 { TdsdUpdateDataSet }

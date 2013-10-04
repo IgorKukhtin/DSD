@@ -188,8 +188,14 @@ const
        '<inId DataType="ftInteger" Value="%d"/>' +
     '</lpDelete_Movement>' +
   '</xml>';
+var i: integer;
 begin
-  TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Id]))
+  TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Id]));
+  for i := 0 to DefaultValueList.Count - 1 do
+      if DefaultValueList.Values[DefaultValueList.Names[i]] = IntToStr(Id) then begin
+         DefaultValueList.Values[DefaultValueList.Names[i]] := '';
+         break;
+      end;
 end;
 {------------------------------------------------------------------------------}
 procedure TdbMovementTest.MovementIncomeTest;
@@ -424,6 +430,7 @@ begin
              OperDatePartner, InvNumberPartner, PriceWithVAT,
              VATPercent, ChangePercent,
              FromId, ToId, PaidKindId, ContractId, PersonalPackerId);
+  inherited;
 end;
 
 function TMovementIncomeTest.InsertUpdateMovementIncome(Id: Integer; InvNumber: String; OperDate: TDateTime;
@@ -1032,8 +1039,14 @@ const
        '<inId DataType="ftInteger" Value="%d"/>' +
     '</lpDelete_Movement>' +
   '</xml>';
+var i: integer;
 begin
-  TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Id]))
+  TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Id]));
+  for i := 0 to DefaultValueList.Count - 1 do
+      if DefaultValueList.Values[DefaultValueList.Names[i]] = IntToStr(Id) then begin
+         DefaultValueList.Values[DefaultValueList.Names[i]] := '';
+         break;
+      end;
 end;
 
 procedure TMovementTest.DocumentComplete(Id: integer);

@@ -245,6 +245,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TUserForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStatusForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStatusForm');
 end;
 
 procedure TLoadFormTest.LoadSaleFormTest;

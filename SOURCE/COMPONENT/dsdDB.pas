@@ -302,18 +302,21 @@ var i: integer;
 begin
   inherited;
   if csDesigning in ComponentState then
-    if (Operation = opRemove) then begin
-       if Assigned(Params) then
-          for i := 0 to Params.Count - 1 do
-             if Params[i].Component = AComponent then
-                Params[i].Component := nil;
-          if (AComponent is TDataSet) and Assigned(DataSets) then
-             for i := 0 to DataSets.Count - 1 do
-                 if DataSets[i].DataSet = AComponent then
-                    DataSets[i].DataSet := nil;
-       if AComponent = DataSet then
-          DataSet := nil;
-    end;
+    if (Operation = opRemove) then
+       try
+         if Assigned(Params) then
+            for i := 0 to Params.Count - 1 do
+               if Params[i].Component = AComponent then
+                  Params[i].Component := nil;
+         if (AComponent is TDataSet) and Assigned(DataSets) then
+            for i := 0 to DataSets.Count - 1 do
+                if DataSets[i].DataSet = AComponent then
+                   DataSets[i].DataSet := nil;
+         if AComponent = DataSet then
+            DataSet := nil;
+       except
+         // запинали ухо!
+       end;
 end;
 
 function TdsdStoredProc.ParamByName(const Value: string): TdsdParam;
@@ -502,11 +505,11 @@ begin
           end;
      if Component is TcxCurrencyEdit then
         Result := (Component as TcxCurrencyEdit).Value;
-     if Component is TdsdGuides then begin
+     if Component is TCustomGuides then begin
         if LowerCase(ComponentItem) = 'textvalue'  then
-           Result := (Component as TdsdGuides).TextValue
+           Result := (Component as TCustomGuides).TextValue
         else
-           Result := (Component as TdsdGuides).Key;
+           Result := (Component as TCustomGuides).Key;
      end;
      if Component is TcxCheckBox then
         Result := BoolToStr((Component as TcxCheckBox).Checked, true);
@@ -556,7 +559,9 @@ begin
            end
            else
               Field.Value := FValue;
-        end;
+        end
+        else
+          raise Exception.Create('У дата сета "' + Component.Name + '" нет поля "' + ComponentItem + '"');
      end;
      if Component is TcxTextEdit then
         (Component as TcxTextEdit).Text := FValue;
@@ -582,14 +587,14 @@ begin
           finally
             Free;
           end;
-     if Component is TdsdGuides then
+     if Component is TCustomGuides then
         if LowerCase(ComponentItem) = 'textvalue' then begin
-           (Component as TdsdGuides).TextValue := FValue
+           (Component as TCustomGuides).TextValue := FValue
         end else
           if LowerCase(ComponentItem) = 'parentid' then
-             (Component as TdsdGuides).ParentId := FValue
+             (Component as TCustomGuides).ParentId := FValue
           else
-             (Component as TdsdGuides).Key := FValue;
+             (Component as TCustomGuides).Key := FValue;
   end;
   if Assigned(FonChange) then
      FonChange(Self);

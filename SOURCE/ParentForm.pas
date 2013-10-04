@@ -195,6 +195,7 @@ initialization
 
   // Собственнтые компоненты
   RegisterClass (TBooleanStoredProcAction);
+  RegisterClass (TChangeStatus);
   RegisterClass (TdsdChangeMovementStatus);
   RegisterClass (TdsdChoiceGuides);
   RegisterClass (TdsdDataSetRefresh);

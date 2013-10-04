@@ -63,7 +63,7 @@ uses
   GoodsTree in '..\..\Forms\GoodsTree.pas' {GoodsTreeForm},
   UnitEdit in '..\..\Forms\UnitEdit.pas' {UnitEditForm},
   MeasureEdit in '..\..\Forms\MeasureEdit.pas' {MeasureEditForm},
-  PaidKind in '..\..\Forms\PaidKind.pas' {PaidKindForm},
+  Status in '..\..\Forms\Status.pas' {StatusForm},
   Partner in '..\..\Forms\Partner.pas' {PartnerForm},
   CashEdit in '..\..\Forms\CashEdit.pas' {CashEditForm},
   Cash in '..\..\Forms\Cash.pas' {CashForm},
@@ -218,7 +218,8 @@ uses
   PersonalSendCashJournal in '..\..\Forms\PersonalSendCashJournal.pas' {PersonalSendCashJournalForm},
   PersonalSendCashTest in '..\SOURCE\Movement\All\PersonalSendCashTest.pas' {$R *.RES},
   WorkTimeKind in '..\..\Forms\WorkTimeKind.pas' {WorkTimeKindForm},
-  SheetWorkTimeTest in '..\SOURCE\Movement\All\SheetWorkTimeTest.pas';
+  SheetWorkTimeTest in '..\SOURCE\Movement\All\SheetWorkTimeTest.pas',
+  PaidKind in '..\..\Forms\PaidKind.pas' {PaidKindForm};
 
 {$R *.RES}
 

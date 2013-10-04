@@ -51,31 +51,61 @@ type
     procedure AfterChoice(Params: TdsdParams);
   end;
 
-  // Компонент работает со справочниками. Выбирает значение из элементов управления или форм
-  TdsdGuides = class(TComponent, IChoiceCaller)
+  TCustomGuides = class(TComponent, IChoiceCaller)
   private
-    FFormName: string;
-    FLookupControl: TWinControl;
     FKey: String;
+    FParentId: String;
     FTextValue: String;
     FPositionDataSet: string;
     FParentDataSet: string;
-    FParentId: String;
-    FParams: TdsdParams;
-    FPopupMenu: TPopupMenu;
-    FOnAfterChoice: TNotifyEvent;
-    FOnChange: TNotifyEvent;
+    FFormName: string;
+    FLookupControl: TWinControl;
+    FKeyField: string;
     function GetKey: String;
     function GetTextValue: String;
     procedure SetKey(const Value: String);
     procedure SetTextValue(const Value: String);
-    procedure SetLookupControl(const Value: TWinControl);
-    procedure OpenGuides;
+    procedure SetLookupControl(const Value: TWinControl); virtual;
     procedure OnDblClick(Sender: TObject);
-    procedure OnPopupClick(Sender: TObject);
+    procedure OpenGuides;
     procedure OnButtonClick(Sender: TObject; AButtonIndex: Integer);
+  protected
+    // имя формы
+    property FormName: string read FFormName write FFormName;
+    // Где позиционируемся по ParentId
+    property ParentDataSet: string read FParentDataSet write FParentDataSet;
+    // Где позиционируемся по ИД
+    property PositionDataSet: string read FPositionDataSet write FPositionDataSet;
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+  public
+    // ID записи
+    property Key: String read GetKey write SetKey;
+    // Текстовое значение
+    property TextValue: String read GetTextValue write SetTextValue;
+    // Родитель для древовидных справочников
+    property ParentId: String read FParentId write FParentId;
+    constructor Create(AOwner: TComponent); override;
+  protected
     // Вызыввем процедуру после выбора элемента из справочника
-    procedure AfterChoice(Params: TdsdParams);
+    procedure AfterChoice(Params: TdsdParams); virtual; abstract;
+  published
+    // ключевое поле
+    property KeyField: string read FKeyField write FKeyField;
+    // визуальный компонент
+    property LookupControl: TWinControl read FLookupControl write SetLookupControl;
+  end;
+
+  // Компонент работает со справочниками. Выбирает значение из элементов управления или форм
+  TdsdGuides = class(TCustomGuides)
+  private
+    FParams: TdsdParams;
+    FOnAfterChoice: TNotifyEvent;
+    FOnChange: TNotifyEvent;
+    FPopupMenu: TPopupMenu;
+    procedure OnPopupClick(Sender: TObject);
+    procedure SetLookupControl(const Value: TWinControl); override;
+    // Вызыввем процедуру после выбора элемента из справочника
+    procedure AfterChoice(Params: TdsdParams); override;
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
@@ -83,21 +113,36 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
+    property FormName;
     // ID записи
-    property Key: String read GetKey write SetKey;
+    property Key;
     // Текстовое значение
-    property TextValue: String read GetTextValue write SetTextValue;
+    property TextValue;
     // Родитель для древовидных справочников
-    property ParentId: String read FParentId write FParentId;
-    property LookupControl: TWinControl read FLookupControl write SetLookupControl;
-    property FormName: string read FFormName write FFormName;
+    property ParentId;
     // Где позиционируемся по ИД
-    property PositionDataSet: string read FPositionDataSet write FPositionDataSet;
+    property PositionDataSet;
     // Где позиционируемся по ParentId
-    property ParentDataSet: string read FParentDataSet write FParentDataSet;
+    property ParentDataSet;
     // данные, получаемые после выбора из справочника. Например для передачи в другие контролы
     property Params: TdsdParams read FParams write FParams;
     property OnAfterChoice: TNotifyEvent read FOnAfterChoice write FOnAfterChoice;
+  end;
+
+  TChangeStatus = class(TCustomGuides)
+  private
+    FProcedure: TdsdStoredProc;
+    FParam: TdsdParam;
+    function GetStoredProcName: string;
+    procedure SetStoredProcName(const Value: string);
+  protected
+    // Вызываем процедуру после выбора элемента из справочника
+    procedure AfterChoice(Params: TdsdParams); override;
+  public
+    constructor Create(AOwner: TComponent); override;
+  published
+    property IdParam: TdsdParam read FParam write FParam;
+    property StoredProcName: string read GetStoredProcName write SetStoredProcName;
   end;
 
   TGuidesListItem = class(TCollectionItem)
@@ -121,7 +166,6 @@ type
     property Items[Index: Integer]: TGuidesListItem read GetItem write SetItem; default;
   end;
 
-
   // Вызывает заполнение справочников при создании документа
   TGuidesFiller = class(TComponent)
   private
@@ -142,18 +186,18 @@ type
     property ActionItemList: TActionItemList read FActionItemList write FActionItemList;
   end;
 
-
   procedure Register;
 
 implementation
 
 uses cxDBLookupComboBox, cxButtonEdit, Variants, ParentForm, FormStorage, DB,
-     SysUtils, Forms;
+     SysUtils, Forms, Dialogs;
 
 procedure Register;
 begin
    RegisterComponents('DSDComponent', [TdsdGuides]);
    RegisterComponents('DSDComponent', [TGuidesFiller]);
+   RegisterComponents('DSDComponent', [TChangeStatus]);
 end;
 
 { TdsdGuides }
@@ -190,26 +234,6 @@ begin
   inherited;
 end;
 
-function TdsdGuides.GetKey: String;
-begin
-  if Assigned(LookupControl) then begin
-     if LookupControl is TcxLookupComboBox then begin
-        // Проверим выбран ли элемент
-        if VarisNull((LookupControl as TcxLookupComboBox).EditValue) then
-           Result := '0'
-        else
-           Result := (LookupControl as TcxLookupComboBox).EditValue;
-     end
-     else
-       Result := FKey;
-  end;
-end;
-
-function TdsdGuides.GetTextValue: String;
-begin
-  result := FTextValue
-end;
-
 procedure TdsdGuides.Notification(AComponent: TComponent;
   Operation: TOperation);
 var i: integer;
@@ -221,19 +245,7 @@ begin
          for i := 0 to Params.Count - 1 do
             if Params[i].Component = AComponent then
                Params[i].Component := nil;
-      if (AComponent = FLookupControl) then
-         FLookupControl := nil;
     end;
-end;
-
-procedure TdsdGuides.OnButtonClick(Sender: TObject; AButtonIndex: Integer);
-begin
-  OnDblClick(Sender);
-end;
-
-procedure TdsdGuides.OnDblClick(Sender: TObject);
-begin
-  OpenGuides;
 end;
 
 procedure TdsdGuides.OnPopupClick(Sender: TObject);
@@ -244,67 +256,13 @@ begin
      FOnChange(Self)
 end;
 
-procedure TdsdGuides.OpenGuides;
-var
-  Form: TParentForm;
-  DataSet: TDataSet;
-begin
-  Form := TdsdFormStorageFactory.GetStorage.Load(FormName);
-  // Открыли форму
-  Form.Execute(Self, nil);
-  // Спозиционировались на ParentData если он есть
-  if ParentDataSet <> '' then begin
-     DataSet := Form.FindComponent(ParentDataSet) as TDataSet;
-     if not Assigned(DataSet) then
-        raise Exception.Create('Не правильно установлено свойство ParentDataSet для формы ' + FormName);
-     if ParentId <> '' then
-        DataSet.Locate('Id', ParentId, []);
-  end;
-  // Спозиционировались на дата сете
-  DataSet := Form.FindComponent(PositionDataSet) as TDataSet;
-  if not Assigned(DataSet) then
-     raise Exception.Create('Не правильно установлено свойство PositionDataSet для формы ' + FormName);
-  Form.Show;
-  // Нужен что бы успели перечитаться датасеты.
-  Application.ProcessMessages;
-  if Key <> '' then
-     DataSet.Locate('Id', Key, []);
-end;
-
-procedure TdsdGuides.SetKey(const Value: String);
-begin
-  if Value = '' then
-     FKey := '0'
-  else
-     FKey := Value;
-  if Assigned(LookupControl) then begin
-     if LookupControl is TcxLookupComboBox then
-        (LookupControl as TcxLookupComboBox).EditValue := FKey
-  end;
-end;
-
 procedure TdsdGuides.SetLookupControl(const Value: TWinControl);
 begin
-  FLookupControl := Value;
-  TAccessControl(FLookupControl).OnDblClick := OnDblClick;
-  if FLookupControl is TcxButtonEdit then begin
-     (LookupControl as TcxButtonEdit).Properties.OnButtonClick := OnButtonClick;
+  inherited;
+  if FLookupControl is TcxButtonEdit then
      (LookupControl as TcxButtonEdit).PopupMenu := FPopupMenu;
-  end;
   if FLookupControl is TcxLookupComboBox then
      (LookupControl as TcxLookupComboBox).PopupMenu := FPopupMenu;
-end;
-
-procedure TdsdGuides.SetTextValue(const Value: String);
-begin
-  FTextValue := Value;
-  if Assigned(LookupControl) then begin
-
-     if LookupControl is TcxLookupComboBox then
-        (LookupControl as TcxLookupComboBox).Text := Value;
-     if LookupControl is TcxButtonEdit then
-        (LookupControl as TcxButtonEdit).Text := Value;
-  end;
 end;
 
 { TGuidesListItem }
@@ -474,7 +432,147 @@ begin
   inherited SetItem(Index, Value);
 end;
 
+{ TCustomGuides }
 
+procedure TCustomGuides.OnDblClick(Sender: TObject);
+begin
+  OpenGuides;
+end;
+
+procedure TCustomGuides.SetLookupControl(const Value: TWinControl);
+begin
+  FLookupControl := Value;
+  TAccessControl(FLookupControl).OnDblClick := OnDblClick;
+  if FLookupControl is TcxButtonEdit then
+     (LookupControl as TcxButtonEdit).Properties.OnButtonClick := OnButtonClick;
+end;
+
+procedure TCustomGuides.OnButtonClick(Sender: TObject; AButtonIndex: Integer);
+begin
+  OnDblClick(Sender);
+end;
+
+procedure TCustomGuides.OpenGuides;
+var
+  Form: TParentForm;
+  DataSet: TDataSet;
+begin
+  Form := TdsdFormStorageFactory.GetStorage.Load(FormName);
+  // Открыли форму
+  Form.Execute(Self, nil);
+  // Спозиционировались на ParentData если он есть
+  if ParentDataSet <> '' then begin
+     DataSet := Form.FindComponent(ParentDataSet) as TDataSet;
+     if not Assigned(DataSet) then
+        raise Exception.Create('Не правильно установлено свойство ParentDataSet для формы ' + FormName);
+     if ParentId <> '' then
+        DataSet.Locate('Id', ParentId, []);
+  end;
+  // Спозиционировались на дата сете
+  DataSet := Form.FindComponent(PositionDataSet) as TDataSet;
+  if not Assigned(DataSet) then
+     raise Exception.Create('Не правильно установлено свойство PositionDataSet для формы ' + FormName);
+  Form.Show;
+  // Нужен что бы успели перечитаться датасеты.
+  Application.ProcessMessages;
+  if Key <> '' then
+     DataSet.Locate(KeyField, Key, []);
+end;
+
+constructor TCustomGuides.Create(AOwner: TComponent);
+begin
+  inherited;
+  PositionDataSet := 'ClientDataSet';
+  KeyField := 'Id';
+end;
+
+function TCustomGuides.GetKey: String;
+begin
+  if Assigned(LookupControl) then begin
+     if LookupControl is TcxLookupComboBox then begin
+        // Проверим выбран ли элемент
+        if VarisNull((LookupControl as TcxLookupComboBox).EditValue) then
+           Result := '0'
+        else
+           Result := (LookupControl as TcxLookupComboBox).EditValue;
+     end
+     else
+       Result := FKey;
+  end;
+end;
+
+function TCustomGuides.GetTextValue: String;
+begin
+  result := FTextValue
+end;
+
+procedure TCustomGuides.Notification(AComponent: TComponent;
+  Operation: TOperation);
+begin
+  inherited;
+  if csDesigning in ComponentState then
+    if (Operation = opRemove) then begin
+      if (AComponent = FLookupControl) then
+         FLookupControl := nil;
+    end;
+end;
+
+procedure TCustomGuides.SetKey(const Value: String);
+begin
+  if Value = '' then
+     FKey := '0'
+  else
+     FKey := Value;
+  if Assigned(LookupControl) then begin
+     if LookupControl is TcxLookupComboBox then
+        (LookupControl as TcxLookupComboBox).EditValue := FKey
+  end;
+end;
+
+procedure TCustomGuides.SetTextValue(const Value: String);
+begin
+  FTextValue := Value;
+  if Assigned(LookupControl) then begin
+     if LookupControl is TcxLookupComboBox then
+        (LookupControl as TcxLookupComboBox).Text := Value;
+     if LookupControl is TcxButtonEdit then
+        (LookupControl as TcxButtonEdit).Text := Value;
+  end;
+end;
+
+{ TChangeStatus }
+
+procedure TChangeStatus.AfterChoice(Params: TdsdParams);
+begin
+  // Вот прямо тут вызываем процедуру и если отработала,
+  FProcedure.ParamByName('inMovementId').Value := IdParam.Value;
+  FProcedure.ParamByName('inStatusCode').Value := Params.ParamByName('Key').Value;
+  FProcedure.Execute;
+  // то меняем данные
+  Key := Params.ParamByName('Key').Value;
+  TextValue := Params.ParamByName('TextValue').Value;
+end;
+
+constructor TChangeStatus.Create(AOwner: TComponent);
+begin
+  inherited;
+  FFormName := 'TStatusForm';
+  FParam := TdsdParam.Create(nil);
+  FProcedure := TdsdStoredProc.Create(Self);
+  FProcedure.OutputType := otResult;
+  FProcedure.Params.AddParam('inMovementId', ftInteger, ptInput, 0);
+  FProcedure.Params.AddParam('inStatusCode', ftInteger, ptInput, 0);
+end;
+
+function TChangeStatus.GetStoredProcName: string;
+begin
+  result := FProcedure.StoredProcName;
+end;
+
+procedure TChangeStatus.SetStoredProcName(const Value: string);
+begin
+  FProcedure.StoredProcName := Value;
+end;
 
 initialization
   RegisterClass(TdsdGuides);

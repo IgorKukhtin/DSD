@@ -79,7 +79,8 @@ type
   public
     function InsertUpdateMovementItemSendOnPrice
       (Id, MovementId, GoodsId: Integer;
-       Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
+       Amount, AmountPartner, AmountChangePercent, ChangePercentAmount, Price,
+       CountForPrice, HeadCount: double;
        PartionGoods:String; GoodsKindId: Integer): integer;
     constructor Create; override;
   end;
@@ -92,7 +93,8 @@ type
   public
     function InsertUpdateMovementItemSale
       (Id, MovementId, GoodsId: Integer;
-       Amount, AmountPartner, ChangePercentAmount, Price, CountForPrice, HeadCount: double;
+       Amount, AmountPartner, AmountChangePercent, ChangePercentAmount,
+       Price, CountForPrice, HeadCount: double;
        PartionGoods:String; GoodsKindId, AssetId: Integer): integer;
     constructor Create; override;
   end;
@@ -361,29 +363,34 @@ end;
 
 function TMovementItemSendOnPriceTest.InsertDefault: integer;
 var Id, MovementId, GoodsId: Integer;
-    Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
+    Amount, AmountPartner, Price, CountForPrice, HeadCount,
+    AmountChangePercent, ChangePercentAmount: double;
     PartionGoods:String;
     GoodsKindId: Integer;
 begin
-  Id:=0;
-  MovementId:= TMovementSendOnPriceTest.Create.GetDefault;
-  GoodsId:=TGoodsTest.Create.GetDefault;
-  Amount:=10;
-  AmountPartner:=11;
-  Price:=2.34;
-  CountForPrice:=1;
-  HeadCount:=5;
-  PartionGoods:='';
-  GoodsKindId:=0;
+  Id := 0;
+  MovementId := TMovementSendOnPriceTest.Create.GetDefault;
+  GoodsId := TGoodsTest.Create.GetDefault;
+  Amount := 10;
+  AmountPartner := 11;
+  Price := 2.34;
+  CountForPrice := 1;
+  HeadCount := 5;
+  PartionGoods := '';
+  GoodsKindId := 0;
+  AmountChangePercent := 0;
+  ChangePercentAmount := 0;
   //
   result := InsertUpdateMovementItemSendOnPrice(Id, MovementId, GoodsId,
-                              Amount, AmountPartner, Price, CountForPrice, HeadCount,
+                              Amount, AmountPartner, AmountChangePercent, ChangePercentAmount,
+                              Price, CountForPrice, HeadCount,
                               PartionGoods, GoodsKindId);
 end;
 
 function TMovementItemSendOnPriceTest.InsertUpdateMovementItemSendOnPrice
   (Id, MovementId, GoodsId: Integer;
-       Amount, AmountPartner, Price, CountForPrice, HeadCount: double;
+       Amount, AmountPartner, AmountChangePercent, ChangePercentAmount, Price,
+       CountForPrice, HeadCount: double;
        PartionGoods:String;GoodsKindId: Integer): integer;
 begin
   FParams.Clear;
@@ -392,6 +399,8 @@ begin
   FParams.AddParam('inGoodsId', ftInteger, ptInput, GoodsId);
   FParams.AddParam('inAmount', ftFloat, ptInput, Amount);
   FParams.AddParam('inAmountPartner', ftFloat, ptInput, AmountPartner);
+  FParams.AddParam('inAmountChangePercent', ftFloat, ptInput, AmountChangePercent);
+  FParams.AddParam('inChangePercentAmount', ftFloat, ptInput, ChangePercentAmount);
   FParams.AddParam('inPrice', ftFloat, ptInput, Price);
   FParams.AddParam('inCountForPrice', ftFloat, ptInput, CountForPrice);
   FParams.AddParam('inHeadCount', ftFloat, ptInput, HeadCount);
@@ -418,7 +427,8 @@ end;
 
 function TMovementItemSaleTest.InsertDefault: integer;
 var Id, MovementId, GoodsId: Integer;
-    Amount, AmountPartner, Price, CountForPrice, HeadCount, ChangePercentAmount: double;
+    Amount, AmountPartner, Price, CountForPrice,
+    HeadCount, AmountChangePercent, ChangePercentAmount: double;
     PartionGoods:String;
     GoodsKindId, AssetId: Integer;
 begin
@@ -434,15 +444,18 @@ begin
   PartionGoods:='';
   GoodsKindId:=0;
   AssetId:=0;
+  AmountChangePercent := 0;
   //
   result := InsertUpdateMovementItemSale(Id, MovementId, GoodsId,
-                              Amount, AmountPartner, ChangePercentAmount, Price, CountForPrice, HeadCount,
+                              Amount, AmountPartner, AmountChangePercent, ChangePercentAmount,
+                              Price, CountForPrice, HeadCount,
                               PartionGoods, GoodsKindId, AssetId);
 end;
 
 function TMovementItemSaleTest.InsertUpdateMovementItemSale
   (Id, MovementId, GoodsId: Integer;
-       Amount, AmountPartner, ChangePercentAmount, Price, CountForPrice, HeadCount: double;
+       Amount, AmountPartner, AmountChangePercent, ChangePercentAmount, Price,
+       CountForPrice, HeadCount: double;
        PartionGoods:String; GoodsKindId, AssetId: Integer): integer;
 begin
   FParams.Clear;
@@ -451,6 +464,7 @@ begin
   FParams.AddParam('inGoodsId', ftInteger, ptInput, GoodsId);
   FParams.AddParam('inAmount', ftFloat, ptInput, Amount);
   FParams.AddParam('inAmountPartner', ftFloat, ptInput, AmountPartner);
+  FParams.AddParam('inAmountChangePercent', ftFloat, ptInput, AmountChangePercent);
   FParams.AddParam('inChangePercentAmount', ftFloat, ptInput, ChangePercentAmount);
   FParams.AddParam('inPrice', ftFloat, ptInput, Price);
   FParams.AddParam('inCountForPrice', ftFloat, ptInput, CountForPrice);
@@ -759,8 +773,14 @@ const
        '<inId DataType="ftInteger" Value="%d"/>' +
     '</lpDelete_MovementItem>' +
   '</xml>';
+var i: integer;
 begin
-  TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Id]))
+  TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Id]));
+  for i := 0 to DefaultValueList.Count - 1 do
+      if DefaultValueList.Values[DefaultValueList.Names[i]] = IntToStr(Id) then begin
+         DefaultValueList.Values[DefaultValueList.Names[i]] := '';
+         break;
+      end;
 end;
 
 procedure TMovementItemTest.InsertUpdateInList(Id: integer);

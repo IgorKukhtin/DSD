@@ -60,6 +60,7 @@ begin
   Designer.GetComponentNames(GetTypeData(TypeInfo(TDataSet)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TdsdFormParams)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TdsdGuides)), Proc);
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TChangeStatus)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TPeriodChoice)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxCheckBox)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TBooleanStoredProcAction)), Proc);
@@ -88,7 +89,7 @@ begin
               with Component as TdsdFormParams do
                 for i := 0 to Params.Count - 1 do
                   Proc(Params[i].Name);
-          if (Component is TdsdGuides) then
+          if (Component is TCustomGuides) then
           begin
             Proc('Key');
             Proc('TextValue');

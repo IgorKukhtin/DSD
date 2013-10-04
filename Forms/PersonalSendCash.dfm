@@ -25,7 +25,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       Width = 121
     end
     object cxLabel1: TcxLabel
-      Left = 144
+      Left = 146
       Top = 4
       Caption = #1053#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
@@ -57,6 +57,22 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       Left = 424
       Top = 3
       Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1054#1090' '#1082#1086#1075#1086')'
+    end
+    object ceStatus: TcxButtonEdit
+      Left = 8
+      Top = 21
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 6
+      Width = 129
+    end
+    object cxLabel4: TcxLabel
+      Left = 8
+      Top = 3
+      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
   end
   object cxPageControl: TcxPageControl
@@ -487,10 +503,10 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       DockedLeft = 0
       DockedTop = 0
       DockingStyle = dsTop
-      FloatLeft = 671
-      FloatTop = 8
+      FloatLeft = 520
+      FloatTop = 277
       FloatClientWidth = 51
-      FloatClientHeight = 71
+      FloatClientHeight = 163
       ItemLinks = <
         item
           Visible = True
@@ -520,23 +536,6 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         item
           Visible = True
           ItemName = 'bbUnErased'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetErased'
         end
         item
           BeginGroup = True
@@ -608,18 +607,6 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     end
     object bbShowErased: TdxBarButton
       Action = ShowErasedAction
-      Category = 0
-    end
-    object bbComplete: TdxBarButton
-      Action = actComplete
-      Category = 0
-    end
-    object bbUnComplete: TdxBarButton
-      Action = actUnComplete
-      Category = 0
-    end
-    object bbSetErased: TdxBarButton
-      Action = actSetErased
       Category = 0
     end
   end
@@ -806,54 +793,6 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       isSetErased = False
       DataSource = DataSource
     end
-    object actComplete: TdsdChangeMovementStatus
-      Category = 'DSDLib'
-      StoredProcList = <>
-      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 12
-      StatusCode.Component = FormParams
-      StatusCode.ComponentItem = 'StatusCode'
-      StatusCode.DataType = ftInteger
-      StatusCode.ParamType = ptOutput
-      StatusCode.Value = '0'
-      StatusName.DataType = ftInteger
-      StatusName.ParamType = ptOutput
-      StatusName.Value = Null
-      Status = mtComplete
-    end
-    object actUnComplete: TdsdChangeMovementStatus
-      Category = 'DSDLib'
-      StoredProcList = <>
-      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      ImageIndex = 11
-      StatusCode.Component = FormParams
-      StatusCode.ComponentItem = 'StatusCode'
-      StatusCode.DataType = ftInteger
-      StatusCode.ParamType = ptOutput
-      StatusCode.Value = '0'
-      StatusName.DataType = ftInteger
-      StatusName.ParamType = ptOutput
-      StatusName.Value = Null
-      Status = mtUncomplete
-    end
-    object actSetErased: TdsdChangeMovementStatus
-      Category = 'DSDLib'
-      StoredProcList = <>
-      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
-      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
-      ImageIndex = 13
-      StatusCode.Component = FormParams
-      StatusCode.ComponentItem = 'StatusCode'
-      StatusCode.DataType = ftInteger
-      StatusCode.ParamType = ptOutput
-      StatusCode.Value = '0'
-      StatusName.DataType = ftInteger
-      StatusName.ParamType = ptOutput
-      StatusName.Value = Null
-      Status = mtDelete
-    end
     object ShowErasedAction: TBooleanStoredProcAction
       Category = 'DSDLib'
       StoredProc = spSelectMovementItem
@@ -925,6 +864,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     Top = 200
   end
   object GuidesPersonal: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edPersonal
     FormName = 'TPersonalForm'
     PositionDataSet = 'ClientDataSet'
@@ -945,7 +885,8 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         ParamType = ptInput
         Value = ''
       end>
-    Left = 352
+    Left = 416
+    Top = 8
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -1195,17 +1136,19 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       end
       item
         Name = 'StatusCode'
-        Component = FormParams
-        ComponentItem = 'StatusCode'
-        DataType = ftInteger
+        Component = ChangeStatus
+        ComponentItem = 'Key'
+        DataType = ftString
         ParamType = ptOutput
-        Value = '0'
+        Value = ''
       end
       item
         Name = 'StatusName'
-        DataType = ftInteger
+        Component = ChangeStatus
+        ComponentItem = 'TextValue'
+        DataType = ftString
         ParamType = ptOutput
-        Value = Null
+        Value = ''
       end>
     Left = 176
     Top = 144
@@ -1236,5 +1179,17 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       end>
     Left = 256
     Top = 128
+  end
+  object ChangeStatus: TChangeStatus
+    KeyField = 'Code'
+    LookupControl = ceStatus
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    IdParam.DataType = ftInteger
+    IdParam.ParamType = ptOutput
+    IdParam.Value = '0'
+    StoredProcName = 'gpUpdate_Status_PersonalSendCash'
+    Left = 112
+    Top = 8
   end
 end

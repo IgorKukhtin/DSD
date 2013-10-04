@@ -163,8 +163,8 @@
 			<DCCReference Include="..\..\Forms\MeasureEdit.pas">
 				<Form>MeasureEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\PaidKind.pas">
-				<Form>PaidKindForm</Form>
+			<DCCReference Include="..\..\Forms\Status.pas">
+				<Form>StatusForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Partner.pas">
 				<Form>PartnerForm</Form>
@@ -567,6 +567,9 @@
 				<Form>WorkTimeKindForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\SheetWorkTimeTest.pas"/>
+			<DCCReference Include="..\..\Forms\PaidKind.pas">
+				<Form>PaidKindForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

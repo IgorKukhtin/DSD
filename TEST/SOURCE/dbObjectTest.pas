@@ -21,8 +21,8 @@ type
     procedure InsertUpdateInList(Id: integer); virtual;
     function InsertDefault: integer; virtual;
     procedure SetDataSetParam; virtual;
-    procedure DeleteRecord(Id: Integer); virtual;
   public
+    procedure DeleteRecord(Id: Integer); virtual;
     function GetDefault: integer;
     function GetDataSet: TDataSet; virtual;
     function GetRecord(Id: integer): TDataSet;

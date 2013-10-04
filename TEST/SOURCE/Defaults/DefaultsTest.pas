@@ -10,7 +10,10 @@ type
   private
     FStoredProc: TdsdStoredProc;
   protected
+    // подготавливаем данные для тестирования
     procedure SetUp; override;
+    // возвращаем данные для тестирования
+    procedure TearDown; override;
   published
     procedure ProcedureLoad; override;
     procedure Test; virtual;
@@ -19,7 +22,7 @@ type
 implementation
 
 uses UtilConst, TestFramework, Defaults, Forms, DB, Authentication, Storage,
-     CommonData, UtilConvert, RoleTest;
+     CommonData, UtilConvert, RoleTest, dbObjectTest, SysUtils;
 
 { TDefaults }
 
@@ -33,6 +36,17 @@ procedure TDefaults.SetUp;
 begin
   inherited;
   TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
+end;
+
+procedure TDefaults.TearDown;
+begin
+  inherited;
+  if Assigned(InsertedIdObjectList) then
+     with TObjectTest.Create do
+       while InsertedIdObjectList.Count > 0 do begin
+          DeleteRecord(StrToInt(InsertedIdObjectList[0]));
+          InsertedIdObjectList.Delete(0);
+       end;
 end;
 
 procedure TDefaults.Test;

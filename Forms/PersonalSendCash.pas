@@ -118,12 +118,9 @@ type
     bbShowErased: TdxBarButton;
     RoteChoiceForm: TOpenChoiceForm;
     CarChoiceForm: TOpenChoiceForm;
-    actUnComplete: TdsdChangeMovementStatus;
-    actComplete: TdsdChangeMovementStatus;
-    actSetErased: TdsdChangeMovementStatus;
-    bbComplete: TdxBarButton;
-    bbUnComplete: TdxBarButton;
-    bbSetErased: TdxBarButton;
+    ceStatus: TcxButtonEdit;
+    cxLabel4: TcxLabel;
+    ChangeStatus: TChangeStatus;
   private
   public
   end;

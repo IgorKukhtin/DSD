@@ -1,16 +1,16 @@
-inherited PaidKindForm: TPaidKindForm
-  Caption = #1058#1080#1087#1099' '#1086#1087#1083#1072#1090
-  ClientHeight = 376
-  ClientWidth = 349
-  ExplicitWidth = 357
-  ExplicitHeight = 403
+inherited StatusForm: TStatusForm
+  Caption = #1057#1090#1072#1090#1091#1089#1099' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+  ClientHeight = 194
+  ClientWidth = 362
+  ExplicitWidth = 370
+  ExplicitHeight = 221
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 349
-    Height = 350
+    Width = 362
+    Height = 168
     Align = alClient
     TabOrder = 0
     object cxGridDBTableView: TcxGridDBTableView
@@ -29,11 +29,17 @@ inherited PaidKindForm: TPaidKindForm
       OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
-      OptionsView.HeaderHeight = 40
+      OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object clCode: TcxGridDBColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'Code'
+        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentVert = vaCenter
+      end
       object clName: TcxGridDBColumn
-        Caption = #1058#1080#1087' '#1086#1087#1083#1072#1090#1099
+        Caption = #1057#1090#1072#1090#1091#1089#1099
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -156,7 +162,7 @@ inherited PaidKindForm: TPaidKindForm
         item
           Name = 'Key'
           Component = ClientDataSet
-          ComponentItem = 'Id'
+          ComponentItem = 'Code'
           DataType = ftString
           ParamType = ptOutput
         end
@@ -172,7 +178,7 @@ inherited PaidKindForm: TPaidKindForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_PaidKind'
+    StoredProcName = 'gpSelect_Object_Status'
     DataSet = ClientDataSet
     DataSets = <
       item
