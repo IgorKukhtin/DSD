@@ -222,7 +222,7 @@
     Height = 379
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheetMain
+    Properties.ActivePage = cxTabSheetIncome
     Properties.CustomButtons.Buttons = <>
     ExplicitLeft = 8
     ClientRectBottom = 379
@@ -2156,6 +2156,20 @@
         DataType = ftInteger
         ParamType = ptInput
         Value = '0'
+      end
+      item
+        Name = 'inShowAll'
+        Component = BooleanStoredProcAction
+        DataType = ftBoolean
+        ParamType = ptInput
+        Value = False
+      end
+      item
+        Name = 'inIsErased'
+        Component = ShowErasedAction
+        DataType = ftBoolean
+        ParamType = ptInput
+        Value = False
       end>
     Left = 106
     Top = 300

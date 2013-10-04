@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_IncomeFuel(
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, FuelCode Integer, FuelName TVarChar
              , Amount TFloat, Price TFloat, CountForPrice TFloat
-             , AmountSumm TFloat, isErased Boolean
+             , AmountSumm TFloat
+             , isErased Boolean
               )
 AS
 $BODY$
@@ -32,12 +33,12 @@ BEGIN
            , Object_Goods.ValueData   AS GoodsName
            , Object_Fuel.ObjectCode   AS FuelCode
            , Object_Fuel.ValueData    AS FuelName
-           , CAST (NULL AS TFloat) AS Amount
 
+           , CAST (NULL AS TFloat) AS Amount
            , CAST (NULL AS TFloat) AS Price
            , CAST (NULL AS TFloat) AS CountForPrice
-
            , CAST (NULL AS TFloat) AS AmountSumm
+
            , FALSE AS isErased
 
        FROM ObjectLink AS ObjectLink_Goods_InfoMoney
@@ -62,15 +63,15 @@ BEGIN
            , Object_Goods.ValueData   AS GoodsName
            , Object_Fuel.ObjectCode   AS FuelCode
            , Object_Fuel.ValueData    AS FuelName
-           , MovementItem.Amount
 
+           , MovementItem.Amount
            , MIFloat_Price.ValueData AS Price
            , MIFloat_CountForPrice.ValueData AS CountForPrice
-
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                            THEN CAST ( MovementItem.Amount * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
                         ELSE CAST ( MovementItem.Amount * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat) AS AmountSumm
+
            , MovementItem.isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -101,15 +102,15 @@ BEGIN
            , Object_Goods.ValueData   AS GoodsName
            , Object_Fuel.ObjectCode   AS FuelCode
            , Object_Fuel.ValueData    AS FuelName
+
            , MovementItem.Amount
-
-           , MIFloat_Price.ValueData AS Price
+           , MIFloat_Price.ValueData         AS Price
            , MIFloat_CountForPrice.ValueData AS CountForPrice
-
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                            THEN CAST ( MovementItem.Amount * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
                         ELSE CAST ( MovementItem.Amount * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat) AS AmountSumm
+
            , MovementItem.isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
