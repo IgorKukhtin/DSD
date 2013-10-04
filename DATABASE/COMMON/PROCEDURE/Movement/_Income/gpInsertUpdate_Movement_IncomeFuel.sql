@@ -18,7 +18,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_IncomeFuel(
     IN inPersonalDriverId    Integer   , -- Сотрудник (водитель)
     IN inSession             TVarChar    -- сессия пользователя
 )                              
-RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -29,38 +30,20 @@ BEGIN
      vbUserId := inSession;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Income(), inInvNumber, inOperDate, NULL);
-
-     -- сохранили свойство <Дата накладной у контрагента>
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDate);
-
-     -- сохранили свойство <Цена с НДС (да/нет)>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), ioId, inPriceWithVAT);
-     -- сохранили свойство <% НДС>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, inVATPercent);
-
-     -- сохранили связь с <От кого (в документе)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
-     -- сохранили связь с <Кому (в документе)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
-
-     -- сохранили связь с <Виды форм оплаты >
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
-     -- сохранили связь с <Договора>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
-
-     -- сохранили связь с <Маршрут>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Route(), ioId, inRouteId);
-     -- сохранили связь с <Сотрудник (водитель)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalDriver(), ioId, inPersonalDriverId);
-
-
-     -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
-
-     -- сохранили протокол
-     -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
-
+     ioId := lpInsertUpdate_Movement_IncomeFuel (ioId               := ioId
+                                               , inParentId         := NULL
+                                               , inInvNumber        := inInvNumber
+                                               , inOperDate         := inOperDate
+                                               , inPriceWithVAT     := inPriceWithVAT
+                                               , inVATPercent       := inVATPercent
+                                               , inFromId           := inFromId
+                                               , inToId             := inToId
+                                               , inPaidKindId       := inPaidKindId
+                                               , inContractId       := inContractId
+                                               , inRouteId          := inRouteId
+                                               , inPersonalDriverId := inPersonalDriverId
+                                               , inUserId           := vbUserId 
+                                                );
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
@@ -69,6 +52,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.10.13                                        * add lpInsertUpdate_Movement_IncomeFuel
  04.10.13                                        * add Route
  27.09.13                                        *
 */

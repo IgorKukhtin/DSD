@@ -48,9 +48,9 @@ type
     spGet: TdsdStoredProc;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
-    cxPageControl1: TcxPageControl;
-    cxTabSheet1: TcxTabSheet;
-    cxTabSheet2: TcxTabSheet;
+    cxPageControl: TcxPageControl;
+    cxTabSheetMain: TcxTabSheet;
+    cxTabSheetEntry: TcxTabSheet;
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     colRouteCode: TcxGridDBColumn;
@@ -101,13 +101,13 @@ type
     colGoodsName_Parent: TcxGridDBColumn;
     colGoodsKindName_Parent: TcxGridDBColumn;
     cxGridChild: TcxGrid;
-    cxGridDBTableView1: TcxGridDBTableView;
+    cxGridChildDBTableView: TcxGridDBTableView;
     colñhFuelCode: TcxGridDBColumn;
     colñhFuelName: TcxGridDBColumn;
     colñhAmount: TcxGridDBColumn;
     colñhAmount_calc: TcxGridDBColumn;
     colñhCalculated: TcxGridDBColumn;
-    cxGridLevel1: TcxGridLevel;
+    cxGridChildLevel: TcxGridLevel;
     ChildCDS: TClientDataSet;
     ChildDS: TDataSource;
     cxSplitterChild: TcxSplitter;
@@ -177,6 +177,21 @@ type
     bbUnErased: TdxBarButton;
     ShowErasedAction: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
+    cxTabSheetIncome: TcxTabSheet;
+    cxGridIncome: TcxGrid;
+    cxGridIncomeDBTableView: TcxGridDBTableView;
+    cxGridDBColumn1: TcxGridDBColumn;
+    cxGridDBColumn2: TcxGridDBColumn;
+    cxGridDBColumn3: TcxGridDBColumn;
+    cxGridDBColumn4: TcxGridDBColumn;
+    cxGridDBColumn5: TcxGridDBColumn;
+    cxGridDBColumn6: TcxGridDBColumn;
+    cxGridDBColumn7: TcxGridDBColumn;
+    cxGridDBColumn8: TcxGridDBColumn;
+    cxGridIncomeLevel: TcxGridLevel;
+    IncomeCDS: TClientDataSet;
+    IncomeDS: TDataSource;
+    spSelectMIIncome: TdsdStoredProc;
   private
   public
   end;

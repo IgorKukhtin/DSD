@@ -191,7 +191,7 @@ inherited IncomeForm: TIncomeForm
     Height = 272
     Align = alClient
     TabOrder = 2
-    Properties.ActivePage = cxTabSheet1
+    Properties.ActivePage = cxTabSheet2
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 272
     ClientRectRight = 1028
@@ -272,6 +272,7 @@ inherited IncomeForm: TIncomeForm
               Column = colAmountPacker
             end>
           DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsData.Deleting = False
@@ -426,6 +427,7 @@ inherited IncomeForm: TIncomeForm
               Column = colDebetAmount
             end>
           DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsData.Deleting = False

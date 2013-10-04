@@ -1,9 +1,8 @@
--- Function: gpInsertUpdate_MovementItem_IncomeFuel()
+-- Function: lpInsertUpdate_MovementItem_IncomeFuel()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_IncomeFuel (Integer, Integer, Integer, TFloat, TFloat, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_IncomeFuel (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_IncomeFuel (Integer, Integer, Integer, TFloat, TFloat, TFloat, Integer);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_IncomeFuel(
+CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_IncomeFuel(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
@@ -11,16 +10,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_IncomeFuel(
     IN inPrice               TFloat    , -- Цена
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Количество расчетное по норме
-    IN inSession             TVarChar    -- сессия пользователя
+    IN inUserId              Integer   , -- Пользователь
 )                              
-RETURNS RECORD AS
+RETURNS RECORD
+AS
 $BODY$
-   DECLARE vbUserId Integer;
 BEGIN
-
-     -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
-     vbUserId := inSession;
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
@@ -30,14 +25,14 @@ BEGIN
 
      -- сохранили свойство <Цена>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
-     -- сохранили свойство <Цена за количество>
+     -- расчитали/сохранили свойство <Цена за количество>
      IF COALESCE (ioCountForPrice, 0) = 0 THEN ioCountForPrice := 1; END IF;
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, ioCountForPrice);
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovemenTFloat_TotalSumm (inMovementId);
 
-     -- пересчитали сумму по элементу, для грида
+     -- расчитали сумму по элементу, для грида
      outAmountSumm := CASE WHEN ioCountForPrice > 0
                                 THEN CAST (inAmount * inPrice / ioCountForPrice AS NUMERIC (16, 2))
                            ELSE CAST (inAmount * inPrice AS NUMERIC (16, 2))
@@ -54,9 +49,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 29.09.13                                        * add zc_MIFloat_AmountPartner and recalc inCountForPrice
- 27.09.13                                        *
+ 04.10.13                                        *
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_IncomeFuel (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inAmountPacker:= 0, inPrice:= 1, inCountForPrice:= 1, inLiveWeight:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inAssetId:= 0, inSession:= '2')
+-- SELECT * FROM lpInsertUpdate_MovementItem_IncomeFuel (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inAmountPacker:= 0, inPrice:= 1, inCountForPrice:= 1, inLiveWeight:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inAssetId:= 0, inSession:= '2')

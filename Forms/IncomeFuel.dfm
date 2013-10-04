@@ -241,6 +241,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
               Kind = skSum
             end>
           DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = True
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
@@ -340,6 +341,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
               Column = colDebetAmount
             end>
           DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsData.Deleting = False
