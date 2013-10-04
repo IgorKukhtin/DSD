@@ -46,8 +46,8 @@ type
     edTo: TcxButtonEdit;
     cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
-    dsdGuidesFrom: TdsdGuides;
-    dsdGuidesTo: TdsdGuides;
+    GuidesFrom: TdsdGuides;
+    GuidesTo: TdsdGuides;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
     cxPageControl: TcxPageControl;
@@ -104,7 +104,6 @@ type
     colGoodsCode: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
     colInfoMoneyName_Detail: TcxGridDBColumn;
-    colObjectCostId: TcxGridDBColumn;
     colPrice_comlete: TcxGridDBColumn;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExel: TdxBarButton;
@@ -117,11 +116,14 @@ type
     edContract: TcxButtonEdit;
     cxLabel10: TcxLabel;
     edPaidKind: TcxButtonEdit;
-    ContractGuides: TdsdGuides;
-    PaidKindGuides: TdsdGuides;
+    GuidesContract: TdsdGuides;
+    GuidesPaidKind: TdsdGuides;
     cxLabel12: TcxLabel;
     edDriver: TcxButtonEdit;
-    DriverGuides: TdsdGuides;
+    GuidesPersonalDriver: TdsdGuides;
+    edRoute: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    GuidesRoute: TdsdGuides;
   private
   public
   end;

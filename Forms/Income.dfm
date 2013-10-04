@@ -4,8 +4,8 @@ inherited IncomeForm: TIncomeForm
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1036
-  ExplicitHeight = 423
+  ExplicitWidth = 1044
+  ExplicitHeight = 431
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -631,8 +631,8 @@ inherited IncomeForm: TIncomeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -815,16 +815,16 @@ inherited IncomeForm: TIncomeForm
         item
           StoredProc = spSelectMovementItem
         end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndex = 26
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
       Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndexTrue = 25
-      ImageIndexFalse = 26
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -1060,6 +1060,7 @@ inherited IncomeForm: TIncomeForm
     Top = 88
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
@@ -1076,6 +1077,7 @@ inherited IncomeForm: TIncomeForm
     Top = 304
   end
   object EntryViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = cxGridEntryDBTableView
     OnDblClickActionList = <>
     ActionItemList = <>

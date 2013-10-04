@@ -14,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_IncomeFuel(
     IN inToId                Integer   , -- Кому (в документе)
     IN inPaidKindId          Integer   , -- Виды форм оплаты 
     IN inContractId          Integer   , -- Договора
+    IN inRouteId             Integer   , -- Маршрут
     IN inPersonalDriverId    Integer   , -- Сотрудник (водитель)
     IN inSession             TVarChar    -- сессия пользователя
 )                              
@@ -48,6 +49,8 @@ BEGIN
      -- сохранили связь с <Договора>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
 
+     -- сохранили связь с <Маршрут>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Route(), ioId, inRouteId);
      -- сохранили связь с <Сотрудник (водитель)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalDriver(), ioId, inPersonalDriverId);
 
@@ -66,6 +69,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.10.13                                        * add Route
  27.09.13                                        *
 */
 

@@ -83,6 +83,7 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
+    colRouteName: TcxGridDBColumn;
   private
   public
   end;

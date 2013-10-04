@@ -4,8 +4,8 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
   ClientWidth = 773
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 781
-  ExplicitHeight = 423
+  ExplicitWidth = 789
+  ExplicitHeight = 431
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -459,8 +459,8 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -708,16 +708,16 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         item
           StoredProc = spSelectMovementItem
         end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndex = 26
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
       Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndexTrue = 25
-      ImageIndexFalse = 26
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -780,16 +780,16 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       Category = 'DSDLib'
       View = cxGridDBTableView
       Action = PersonalChoiceForm
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
       ShortCut = 45
       ImageIndex = 0
     end
     object SetErased: TdsdUpdateErased
       Category = 'DSDLib'
       StoredProcList = <>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -798,8 +798,8 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     object SetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       StoredProcList = <>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -825,8 +825,8 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     object actUnComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
       StoredProcList = <>
-      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 11
       StatusCode.Component = FormParams
       StatusCode.ComponentItem = 'StatusCode'
@@ -841,8 +841,8 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     object actSetErased: TdsdChangeMovementStatus
       Category = 'DSDLib'
       StoredProcList = <>
-      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
-      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 13
       StatusCode.Component = FormParams
       StatusCode.ComponentItem = 'StatusCode'
@@ -863,14 +863,14 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndex = 54
+      ImageIndex = 64
       Value = False
       HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndexTrue = 52
-      ImageIndexFalse = 54
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
     end
     object CarChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'

@@ -26,7 +26,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
     end
     object cxLabel1: TcxLabel
       Left = 8
-      Top = 8
+      Top = 7
       Caption = #1053#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
     object edOperDate: TcxDateEdit
@@ -43,7 +43,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
       Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
     object edFrom: TcxButtonEdit
-      Left = 288
+      Left = 276
       Top = 25
       Properties.Buttons = <
         item
@@ -54,8 +54,8 @@ inherited IncomeFuelForm: TIncomeFuelForm
       Width = 150
     end
     object edTo: TcxButtonEdit
-      Left = 440
-      Top = 25
+      Left = 276
+      Top = 66
       Properties.Buttons = <
         item
           Default = True
@@ -65,24 +65,24 @@ inherited IncomeFuelForm: TIncomeFuelForm
       Width = 150
     end
     object cxLabel3: TcxLabel
-      Left = 288
+      Left = 276
       Top = 7
       Caption = #1054#1090' '#1082#1086#1075#1086' ('#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090')'
     end
     object cxLabel4: TcxLabel
-      Left = 440
-      Top = 7
+      Left = 276
+      Top = 48
       Caption = #1050#1086#1084#1091' ('#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100')'
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 142
+      Left = 8
       Top = 66
-      Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072')'
+      Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 6
-      Width = 130
+      Width = 129
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 288
+      Left = 142
       Top = 66
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
@@ -92,7 +92,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
       Width = 65
     end
     object cxLabel7: TcxLabel
-      Left = 288
+      Left = 142
       Top = 51
       Caption = '% '#1053#1044#1057
     end
@@ -143,6 +143,22 @@ inherited IncomeFuelForm: TIncomeFuelForm
         end>
       TabOrder = 8
       Width = 150
+    end
+    object edRoute: TcxButtonEdit
+      Left = 440
+      Top = 25
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 17
+      Width = 150
+    end
+    object cxLabel5: TcxLabel
+      Left = 440
+      Top = 7
+      Caption = #1052#1072#1088#1096#1088#1091#1090
     end
   end
   object cxPageControl: TcxPageControl
@@ -225,6 +241,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
               Kind = skSum
             end>
           DataController.Summary.SummaryGroups = <>
+          OptionsBehavior.GoToNextCellOnEnter = True
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsData.Deleting = False
@@ -232,6 +249,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
           OptionsData.Inserting = False
           OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
+          OptionsView.GroupByBox = False
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -274,8 +292,10 @@ inherited IncomeFuelForm: TIncomeFuelForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 0
             Properties.DisplayFormat = '0;;'
+            Visible = False
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
           end
           object colAmountSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
@@ -410,18 +430,21 @@ inherited IncomeFuelForm: TIncomeFuelForm
           object colGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074'.'
             DataBinding.FieldName = 'GoodsCode'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
           object colGoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object colGoodsKindName_comlete: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -458,25 +481,23 @@ inherited IncomeFuelForm: TIncomeFuelForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;,0.00##; ;'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 58
           end
           object colInfoMoneyName: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 93
           end
           object colInfoMoneyName_Detail: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1100#1103' '#1076#1077#1090#1072#1083#1100#1085#1086
             DataBinding.FieldName = 'InfoMoneyName_Detail'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 70
-          end
-          object colObjectCostId: TcxGridDBColumn
-            DataBinding.FieldName = 'ObjectCostId'
-            HeaderAlignmentVert = vaCenter
-            Width = 81
           end
         end
         object cxGridEntryLevel: TcxGridLevel
@@ -687,7 +708,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
         end
         item
           Name = 'From'
-          Component = dsdGuidesFrom
+          Component = GuidesFrom
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
@@ -709,16 +730,16 @@ inherited IncomeFuelForm: TIncomeFuelForm
         item
           StoredProc = spSelectMovementItem
         end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndex = 26
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
       Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndexTrue = 25
-      ImageIndexFalse = 26
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -762,14 +783,14 @@ inherited IncomeFuelForm: TIncomeFuelForm
     Left = 136
     Top = 200
   end
-  object dsdGuidesFrom: TdsdGuides
+  object GuidesFrom: TdsdGuides
     LookupControl = edFrom
     FormName = 'TPartnerForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
-        Component = dsdGuidesFrom
+        Component = GuidesFrom
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -777,7 +798,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
       end
       item
         Name = 'TextValue'
-        Component = dsdGuidesFrom
+        Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -785,14 +806,14 @@ inherited IncomeFuelForm: TIncomeFuelForm
       end>
     Left = 352
   end
-  object dsdGuidesTo: TdsdGuides
+  object GuidesTo: TdsdGuides
     LookupControl = edTo
     FormName = 'TCarForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
-        Component = dsdGuidesTo
+        Component = GuidesTo
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -800,13 +821,30 @@ inherited IncomeFuelForm: TIncomeFuelForm
       end
       item
         Name = 'TextValue'
-        Component = dsdGuidesTo
+        Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
         Value = ''
+      end
+      item
+        Name = 'DriverId'
+        Component = GuidesPersonalDriver
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'DriverName'
+        Component = GuidesPersonalDriver
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptOutput
+        Value = ''
       end>
-    Left = 488
+    Left = 320
+    Top = 64
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -888,14 +926,21 @@ inherited IncomeFuelForm: TIncomeFuelForm
         ParamType = ptInput
       end
       item
-        Name = 'inCountForPrice'
+        Name = 'ioCountForPrice'
         Component = MasterCDS
         ComponentItem = 'CountForPrice'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'outAmountSumm'
+        Component = MasterCDS
+        ComponentItem = 'AmountSumm'
+        DataType = ftFloat
+        ParamType = ptOutput
       end>
-    Left = 56
-    Top = 320
+    Left = 272
+    Top = 216
   end
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'
@@ -974,7 +1019,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
       end
       item
         Name = 'inFromId'
-        Component = dsdGuidesFrom
+        Component = GuidesFrom
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptInput
@@ -982,7 +1027,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
       end
       item
         Name = 'inToId'
-        Component = dsdGuidesTo
+        Component = GuidesTo
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptInput
@@ -990,28 +1035,38 @@ inherited IncomeFuelForm: TIncomeFuelForm
       end
       item
         Name = 'inPaidKindId'
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
+        ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptInput
         Value = ''
       end
       item
         Name = 'inContractId'
-        Component = ContractGuides
+        Component = GuidesContract
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'inRouteId'
+        Component = GuidesRoute
+        ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptInput
         Value = ''
       end
       item
         Name = 'inPersonalDriverId'
-        Component = DriverGuides
+        Component = GuidesPersonalDriver
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptInput
         Value = ''
       end>
-    Left = 664
-    Top = 192
+    Left = 304
+    Top = 120
   end
   object HeaderSaver: THeaderSaver
     IdParam.Component = FormParams
@@ -1025,11 +1080,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
         Control = edInvNumber
       end
       item
-      end
-      item
         Control = edOperDate
-      end
-      item
       end
       item
         Control = edFrom
@@ -1038,12 +1089,10 @@ inherited IncomeFuelForm: TIncomeFuelForm
         Control = edTo
       end
       item
-        Control = edPriceWithVAT
+        Control = edRoute
       end
       item
-        Control = edVATPercent
-      end
-      item
+        Control = edDriver
       end
       item
         Control = edContract
@@ -1052,14 +1101,13 @@ inherited IncomeFuelForm: TIncomeFuelForm
         Control = edPaidKind
       end
       item
+        Control = edPriceWithVAT
       end
       item
-        Control = edDriver
-      end
-      item
+        Control = edVATPercent
       end>
-    Left = 384
-    Top = 152
+    Left = 408
+    Top = 200
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_IncomeFuel'
@@ -1090,7 +1138,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
       end
       item
         Name = 'FromId'
-        Component = dsdGuidesFrom
+        Component = GuidesFrom
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
@@ -1098,7 +1146,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
       end
       item
         Name = 'FromName'
-        Component = dsdGuidesFrom
+        Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftInteger
         ParamType = ptOutput
@@ -1106,7 +1154,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
       end
       item
         Name = 'ToId'
-        Component = dsdGuidesTo
+        Component = GuidesTo
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
@@ -1114,7 +1162,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
       end
       item
         Name = 'ToName'
-        Component = dsdGuidesTo
+        Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftInteger
         ParamType = ptOutput
@@ -1122,7 +1170,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
       end
       item
         Name = 'ToParentId'
-        Component = dsdGuidesTo
+        Component = GuidesTo
         ComponentItem = 'ParentId'
         DataType = ftString
         ParamType = ptOutput
@@ -1144,7 +1192,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
       end
       item
         Name = 'ContractId'
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
@@ -1152,7 +1200,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
       end
       item
         Name = 'ContarctName'
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptOutput
@@ -1160,7 +1208,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
       end
       item
         Name = 'PaidKindId'
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
@@ -1168,7 +1216,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
       end
       item
         Name = 'PaidKindName'
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptOutput
@@ -1176,7 +1224,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
       end
       item
         Name = 'PersonalDriverId'
-        Component = DriverGuides
+        Component = GuidesPersonalDriver
         ComponentItem = 'Key'
         DataType = ftInteger
         ParamType = ptOutput
@@ -1184,11 +1232,25 @@ inherited IncomeFuelForm: TIncomeFuelForm
       end
       item
         Name = 'PersonalDriverName'
-        Component = DriverGuides
+        Component = GuidesPersonalDriver
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptOutput
         Value = ''
+      end
+      item
+        Name = 'RouteId'
+        Component = edRoute
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptOutput
+      end
+      item
+        Name = 'RouteName'
+        Component = edRoute
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptOutput
       end>
     Left = 176
     Top = 120
@@ -1209,10 +1271,16 @@ inherited IncomeFuelForm: TIncomeFuelForm
     IdParam.Value = '0'
     GuidesList = <
       item
-        Guides = dsdGuidesFrom
+        Guides = GuidesFrom
       end
       item
-        Guides = dsdGuidesTo
+        Guides = GuidesRoute
+      end
+      item
+        Guides = GuidesTo
+      end
+      item
+        Guides = GuidesPaidKind
       end>
     ActionItemList = <
       item
@@ -1221,14 +1289,14 @@ inherited IncomeFuelForm: TIncomeFuelForm
     Left = 248
     Top = 96
   end
-  object ContractGuides: TdsdGuides
+  object GuidesContract: TdsdGuides
     LookupControl = edContract
     FormName = 'TContractForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1236,7 +1304,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
       end
       item
         Name = 'TextValue'
-        Component = ContractGuides
+        Component = GuidesContract
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1244,14 +1312,14 @@ inherited IncomeFuelForm: TIncomeFuelForm
       end>
     Left = 648
   end
-  object PaidKindGuides: TdsdGuides
+  object GuidesPaidKind: TdsdGuides
     LookupControl = edPaidKind
     FormName = 'TPaidKindForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1259,7 +1327,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
       end
       item
         Name = 'TextValue'
-        Component = PaidKindGuides
+        Component = GuidesPaidKind
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1268,14 +1336,14 @@ inherited IncomeFuelForm: TIncomeFuelForm
     Left = 656
     Top = 72
   end
-  object DriverGuides: TdsdGuides
+  object GuidesPersonalDriver: TdsdGuides
     LookupControl = edDriver
     FormName = 'TPersonalForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
-        Component = DriverGuides
+        Component = GuidesPersonalDriver
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1283,7 +1351,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
       end
       item
         Name = 'TextValue'
-        Component = DriverGuides
+        Component = GuidesPersonalDriver
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1291,5 +1359,29 @@ inherited IncomeFuelForm: TIncomeFuelForm
       end>
     Left = 488
     Top = 80
+  end
+  object GuidesRoute: TdsdGuides
+    LookupControl = edRoute
+    FormName = 'TRouteForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Component = GuidesRoute
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'TextValue'
+        Component = GuidesRoute
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end>
+    Left = 511
+    Top = 5
   end
 end
