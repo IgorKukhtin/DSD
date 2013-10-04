@@ -118,6 +118,7 @@ inherited PersonalSendCashJournalForm: TPersonalSendCashJournalForm
           Kind = skSum
         end>
       DataController.Summary.SummaryGroups = <>
+      Images = dmMain.SortImageList
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False

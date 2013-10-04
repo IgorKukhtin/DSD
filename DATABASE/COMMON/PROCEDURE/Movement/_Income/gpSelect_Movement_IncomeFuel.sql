@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCount TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummVAT TFloat
              , FromName TVarChar, ToName TVarChar
              , PaidKindName TVarChar, ContractName TVarChar
+             , RouteName TVarChar
              , PersonalDriverName TVarChar
               )
 AS
@@ -43,6 +44,7 @@ BEGIN
            , Object_To.ValueData               AS ToName
            , Object_PaidKind.ValueData         AS PaidKindName
            , Object_Contract.ValueData         AS ContractName
+           , Object_Route.ValueData            AS RouteName
            , View_PersonalDriver.PersonalName  AS PersonalDriverName
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -86,6 +88,11 @@ BEGIN
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
+                                         ON MovementLinkObject_Route.MovementId = Movement.Id
+                                        AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
+            LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementLinkObject_Route.ObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
@@ -104,6 +111,7 @@ ALTER FUNCTION gpSelect_Movement_IncomeFuel (TDateTime, TDateTime, TVarChar) OWN
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 04.10.13                                        * add Route
  30.09.13                                        * add Object_Personal_View
  27.09.13                                        *
 */

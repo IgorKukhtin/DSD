@@ -17,7 +17,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_Transport_Child(
     IN inAmountFuel          TFloat    , -- Кол-во норма на 100 км 
     IN inNumber              TFloat    , -- № по порядку
     IN inRateFuelKindTax     TFloat    , -- % дополнительного расхода в связи с сезоном/температурой
-    IN inRateFuelKindId      Integer     -- Типы норм для топлива
+    IN inRateFuelKindId      Integer   , -- Типы норм для топлива
+    IN inUserId              Integer     -- Пользователь
 )                              
 RETURNS RECORD AS
 $BODY$
@@ -88,6 +89,8 @@ BEGIN
    -- сохранили связь с <Типы норм для топлива>
    PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_RateFuelKind(), ioId, inRateFuelKindId);
 
+   -- сохранили протокол
+   -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
 
 END;
 $BODY$
@@ -97,6 +100,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.10.13                                        * add inUserId
  01.10.13                                        * add inRateFuelKindTax and zfCalc_RateFuelValue
  29.09.13                                        *
 */

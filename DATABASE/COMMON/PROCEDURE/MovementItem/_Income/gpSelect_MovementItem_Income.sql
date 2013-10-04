@@ -1,10 +1,12 @@
 -- Function: gpSelect_MovementItem_Income()
 
--- DROP FUNCTION gpSelect_MovementItem_Income (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_Income (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_Income (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Income(
     IN inMovementId  Integer      , -- ключ Документа
     IN inShowAll     Boolean      , -- 
+    IN inIsErased    Boolean      , -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat, AmountPartner TFloat, AmountPacker TFloat
@@ -89,7 +91,10 @@ BEGIN
                    END AS TFloat) AS AmountSumm
            , MovementItem.isErased
 
-       FROM MovementItem
+       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+            JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                             AND MovementItem.DescId     = zc_MI_Master()
+                             AND MovementItem.isErased   = tmpIsErased.isErased
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
@@ -126,9 +131,7 @@ BEGIN
                                              ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
-
-       WHERE MovementItem.MovementId = inMovementId
-         AND MovementItem.DescId =  zc_MI_Master();
+       ;
 
      ELSE
   
@@ -159,7 +162,10 @@ BEGIN
                    END AS TFloat) AS AmountSumm
            , MovementItem.isErased
 
-       FROM MovementItem
+       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+            JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                             AND MovementItem.DescId     = zc_MI_Master()
+                             AND MovementItem.isErased   = tmpIsErased.isErased
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
@@ -196,27 +202,24 @@ BEGIN
                                              ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
-
-       WHERE MovementItem.MovementId = inMovementId
-         AND MovementItem.DescId =  zc_MI_Master();
+       ;
  
      END IF;
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_Income (Integer, Boolean, TVarChar) OWNER TO postgres;
+  LANGUAGE PLPGSQL VOLATILE;
+ALTER FUNCTION gpSelect_MovementItem_Income (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-               
+ 04.10.13                                        * add inIsErased
  07.07.13                                        *
  30.06.13                                        *
-
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_Income (inMovementId:= 25173, inShowAll:= TRUE, inSession:= '2')
--- SELECT * FROM gpSelect_MovementItem_Income (inMovementId:= 25173, inShowAll:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_Income (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_Income (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')

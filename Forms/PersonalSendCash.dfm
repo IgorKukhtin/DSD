@@ -4,8 +4,8 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
   ClientWidth = 773
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 781
-  ExplicitHeight = 423
+  ExplicitWidth = 789
+  ExplicitHeight = 431
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -99,7 +99,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = DataSource
+          DataController.DataSource = MasterDS
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.00;-,0.00;'
@@ -155,6 +155,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
               Kind = skSum
             end>
           DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = True
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
@@ -255,6 +256,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         Align = alClient
         TabOrder = 0
         object cxGridEntryDBTableView: TcxGridDBTableView
+          PopupMenu = PopupMenu
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
           DataController.Summary.DefaultGroupSummaryItems = <>
@@ -270,6 +272,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
               Column = colDebetAmount
             end>
           DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsData.Deleting = False
@@ -468,15 +471,22 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         DataType = ftBoolean
         ParamType = ptInput
         Value = False
+      end
+      item
+        Name = 'inIsErased'
+        Component = ShowErasedAction
+        DataType = ftBoolean
+        ParamType = ptInput
+        Value = False
       end>
-    Left = 64
-    Top = 272
+    Left = 116
+    Top = 224
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -654,7 +664,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
           StoredProc = spInsertUpdateMovementItem
         end>
       Caption = 'actUpdateDataSet'
-      DataSource = DataSource
+      DataSource = MasterDS
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -695,16 +705,16 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         item
           StoredProc = spSelectMovementItem
         end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndex = 26
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
       Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndexTrue = 25
-      ImageIndexFalse = 26
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -767,20 +777,20 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       Category = 'DSDLib'
       View = cxGridDBTableView
       Action = PersonalChoiceForm
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
       ShortCut = 45
       ImageIndex = 0
     end
     object SetErased: TdsdUpdateErased
       Category = 'DSDLib'
       StoredProcList = <>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
-      DataSource = DataSource
+      DataSource = MasterDS
     end
     object SetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -791,7 +801,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
-      DataSource = DataSource
+      DataSource = MasterDS
     end
     object ShowErasedAction: TBooleanStoredProcAction
       Category = 'DSDLib'
@@ -802,14 +812,14 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndex = 54
+      ImageIndex = 64
       Value = False
       HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndexTrue = 52
-      ImageIndexFalse = 54
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
     end
     object CarChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -852,16 +862,16 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       isShowModal = True
     end
   end
-  object DataSource: TDataSource
+  object MasterDS: TDataSource
     DataSet = MasterCDS
-    Left = 48
-    Top = 200
+    Left = 55
+    Top = 224
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 136
-    Top = 200
+    Left = 26
+    Top = 224
   end
   object GuidesPersonal: TdsdGuides
     KeyField = 'Id'
@@ -974,8 +984,8 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         DataType = ftInteger
         ParamType = ptInput
       end>
-    Left = 80
-    Top = 320
+    Left = 86
+    Top = 224
   end
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'
@@ -995,8 +1005,8 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       item
       end>
     SortImages = dmMain.SortImageList
-    Left = 96
-    Top = 248
+    Left = 216
+    Top = 232
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 232

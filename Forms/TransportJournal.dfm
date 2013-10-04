@@ -57,6 +57,7 @@ inherited TransportJournalForm: TTransportJournalForm
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
+      Images = dmMain.SortImageList
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -526,6 +527,7 @@ inherited TransportJournalForm: TTransportJournalForm
     Top = 232
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
