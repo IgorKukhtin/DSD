@@ -4,8 +4,8 @@ inherited IncomeForm: TIncomeForm
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1036
-  ExplicitHeight = 423
+  ExplicitWidth = 1044
+  ExplicitHeight = 431
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -208,7 +208,7 @@ inherited IncomeForm: TIncomeForm
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = DataSource
+          DataController.DataSource = MasterDS
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.00;-,0.00;'
@@ -272,6 +272,7 @@ inherited IncomeForm: TIncomeForm
               Column = colAmountPacker
             end>
           DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsData.Deleting = False
@@ -426,6 +427,7 @@ inherited IncomeForm: TIncomeForm
               Column = colDebetAmount
             end>
           DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsData.Deleting = False
@@ -624,15 +626,22 @@ inherited IncomeForm: TIncomeForm
         DataType = ftBoolean
         ParamType = ptInput
         Value = False
+      end
+      item
+        Name = 'inIsErased'
+        Component = ShowErasedAction
+        DataType = ftBoolean
+        ParamType = ptInput
+        Value = False
       end>
-    Left = 64
-    Top = 272
+    Left = 112
+    Top = 232
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -670,10 +679,26 @@ inherited IncomeForm: TIncomeForm
         end
         item
           Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
           ItemName = 'bbInsertUpdateMovement'
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErased'
+        end
+        item
           Visible = True
           ItemName = 'bbStatic'
         end
@@ -728,6 +753,18 @@ inherited IncomeForm: TIncomeForm
       Action = actInsertUpdateMovement
       Category = 0
     end
+    object bbErased: TdxBarButton
+      Action = SetErased
+      Category = 0
+    end
+    object bbUnErased: TdxBarButton
+      Action = SetUnErased
+      Category = 0
+    end
+    object bbShowErased: TdxBarButton
+      Action = ShowErasedAction
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -774,7 +811,7 @@ inherited IncomeForm: TIncomeForm
           StoredProc = spInsertUpdateMovementItem
         end>
       Caption = 'actUpdateDataSet'
-      DataSource = DataSource
+      DataSource = MasterDS
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -815,16 +852,16 @@ inherited IncomeForm: TIncomeForm
         item
           StoredProc = spSelectMovementItem
         end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndex = 26
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
       Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndexTrue = 25
-      ImageIndexFalse = 26
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -856,17 +893,56 @@ inherited IncomeForm: TIncomeForm
       ImageIndex = 14
       ShortCut = 113
     end
+    object SetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1069#1083#1077#1084#1077#1085#1090
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1069#1083#1077#1084#1077#1085#1090
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = MasterDS
+    end
+    object SetUnErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1069#1083#1077#1084#1077#1085#1090
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1069#1083#1077#1084#1077#1085#1090
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = MasterDS
+    end
+    object ShowErasedAction: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      StoredProc = spSelectMovementItem
+      StoredProcList = <
+        item
+          StoredProc = spSelectMovementItem
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
   end
-  object DataSource: TDataSource
+  object MasterDS: TDataSource
     DataSet = MasterCDS
-    Left = 48
-    Top = 200
+    Left = 46
+    Top = 232
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 136
-    Top = 200
+    Left = 16
+    Top = 232
   end
   object dsdGuidesFrom: TdsdGuides
     LookupControl = edFrom
@@ -1048,8 +1124,8 @@ inherited IncomeForm: TIncomeForm
         ParamType = ptInput
         Value = '0'
       end>
-    Left = 80
-    Top = 328
+    Left = 78
+    Top = 232
   end
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'
@@ -1060,6 +1136,7 @@ inherited IncomeForm: TIncomeForm
     Top = 88
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
@@ -1068,7 +1145,7 @@ inherited IncomeForm: TIncomeForm
       item
       end>
     SortImages = dmMain.SortImageList
-    Left = 96
+    Left = 240
     Top = 248
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1076,6 +1153,7 @@ inherited IncomeForm: TIncomeForm
     Top = 304
   end
   object EntryViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = cxGridEntryDBTableView
     OnDblClickActionList = <>
     ActionItemList = <>

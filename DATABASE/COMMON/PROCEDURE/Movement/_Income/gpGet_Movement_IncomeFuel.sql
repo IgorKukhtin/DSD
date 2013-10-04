@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PriceWithVAT Boolean, VATPercent TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, ToParentId Integer
              , PaidKindId Integer, PaidKindName TVarChar, ContractId Integer, ContractName TVarChar
+             , RouteId Integer, RouteName TVarChar
              , PersonalDriverId Integer, PersonalDriverName TVarChar
               )
 AS
@@ -40,6 +41,8 @@ BEGIN
              , CAST ('' as TVarChar) AS PaidKindName
              , 0                     AS ContractId
              , CAST ('' as TVarChar) AS ContractName
+             , 0                     AS RouteId
+             , CAST ('' as TVarChar) AS RouteName
              , 0                     AS PersonalDriverId
              , CAST ('' as TVarChar) AS PersonalDriverName
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
@@ -64,6 +67,8 @@ BEGIN
              , Object_PaidKind.ValueData         AS PaidKindName
              , Object_Contract.Id                AS ContractId
              , Object_Contract.ValueData         AS ContractName
+             , Object_Route.Id                   AS RouteId
+             , Object_Route.ValueData            AS RouteName
              , View_PersonalDriver.PersonalId    AS PersonalDriverId
              , View_PersonalDriver.PersonalName  AS PersonalDriverName
        FROM Movement
@@ -95,6 +100,11 @@ BEGIN
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
+                                         ON MovementLinkObject_Route.MovementId = Movement.Id
+                                        AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
+            LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementLinkObject_Route.ObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                          ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
@@ -103,15 +113,17 @@ BEGIN
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Income();
      END IF;
+
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpGet_Movement_IncomeFuel (Integer, TVarChar) OWNER TO postgres;
 
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 04.10.13                                        * add Route
  30.09.13                                        * add Object_Personal_View
  29.09.13                                        * add lfGet_InvNumber
  27.09.13                                        *

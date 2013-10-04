@@ -25,26 +25,29 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
 
-   -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Transport());
-   vbUserId := inSession;
+     -- проверка прав пользователя на вызов процедуры
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Transport());
+     vbUserId := inSession;
 
-   SELECT f.ioId, f.ioAmount, f.outAmount_calc into ioId, ioAmount, outAmount_calc
-          FROM lpInsertUpdate_MI_Transport_Child (ioId                 := ioId
-                                            , inMovementId         := inMovementId
-                                            , inParentId           := inParentId
-                                            , inFuelId             := inFuelId
-                                            , inCalculated         := inCalculated
-                                            , ioAmount             := ioAmount
-                                            , inColdHour           := inColdHour
-                                            , inColdDistance       := inColdDistance
-                                            , inAmountColdHour     := inAmountColdHour
-                                            , inAmountColdDistance := inAmountColdDistance
-                                            , inAmountFuel         := inAmountFuel
-                                            , inNumber             := inNumber
-                                            , inRateFuelKindTax    := inRateFuelKindTax
-                                            , inRateFuelKindId     := inRateFuelKindId
-                                             ) as f;
+     -- сохранили <Элемент документа> и вернули параметры
+     SELECT tmp.ioId, tmp.ioAmount, tmp.outAmount_calc
+            INTO ioId, ioAmount, outAmount_calc
+     FROM lpInsertUpdate_MI_Transport_Child (ioId                 := ioId
+                                           , inMovementId         := inMovementId
+                                           , inParentId           := inParentId
+                                           , inFuelId             := inFuelId
+                                           , inCalculated         := inCalculated
+                                           , ioAmount             := ioAmount
+                                           , inColdHour           := inColdHour
+                                           , inColdDistance       := inColdDistance
+                                           , inAmountColdHour     := inAmountColdHour
+                                           , inAmountColdDistance := inAmountColdDistance
+                                           , inAmountFuel         := inAmountFuel
+                                           , inNumber             := inNumber
+                                           , inRateFuelKindTax    := inRateFuelKindTax
+                                           , inRateFuelKindId     := inRateFuelKindId
+                                           , inUserId             := vbUserId
+                                            ) AS tmp;
 
 END;
 $BODY$
@@ -54,6 +57,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.10.13                                        * add inUserId
  01.10.13                                        * add inRateFuelKindTax
  29.09.13                                        *
 */
