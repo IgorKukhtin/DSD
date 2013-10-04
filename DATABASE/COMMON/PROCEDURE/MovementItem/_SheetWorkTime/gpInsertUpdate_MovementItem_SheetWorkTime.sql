@@ -83,7 +83,7 @@ BEGIN
 
  	FROM (select Movement.Id AS MovementId 
 	      FROM Movement 
-	          JOIN MovementLinkObject AS MovementLinkObject_Unit ON MovementLinkObject_Unit.MovementItemId = MovementItem.Id
+	          JOIN MovementLinkObject AS MovementLinkObject_Unit ON MovementLinkObject_Unit.MovementId = Movement.Id
 			        					                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()                
 			        					                        AND MovementLinkObject_Unit.ObjectId  = inUnitId
           where Movement.DescId = zc_Movement_SheetWorkTime()  
@@ -93,7 +93,7 @@ BEGIN
 		 LEFT JOIN 
 		          (SELECT MovementItem.Id AS MovementItemId
 		           FROM Movement
-		                JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+		                JOIN MovementItem ON MovementItem.Id = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 							                                                       AND MovementItem.ObjectId = ioPersonalId
 	                                     
 					    JOIN MovementItemLinkObject AS MILinkObject_Personal ON MILinkObject_PersonalGroup.MovementItemId = MovementItem.Id
