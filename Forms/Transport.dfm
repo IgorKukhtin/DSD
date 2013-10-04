@@ -222,7 +222,7 @@
     Height = 379
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheetIncome
+    Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ExplicitLeft = 8
     ClientRectBottom = 379
