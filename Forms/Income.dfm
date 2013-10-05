@@ -209,17 +209,12 @@ inherited IncomeForm: TIncomeForm
     TabOrder = 2
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 124
-    ExplicitWidth = 1028
-    ExplicitHeight = 272
     ClientRectBottom = 336
     ClientRectRight = 971
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 1028
-      ExplicitHeight = 248
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -227,8 +222,6 @@ inherited IncomeForm: TIncomeForm
         Height = 312
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1028
-        ExplicitHeight = 248
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -303,6 +296,7 @@ inherited IncomeForm: TIncomeForm
           OptionsData.Inserting = False
           OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
+          OptionsView.GroupByBox = False
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -427,8 +421,6 @@ inherited IncomeForm: TIncomeForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitWidth = 1028
-      ExplicitHeight = 248
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -436,8 +428,6 @@ inherited IncomeForm: TIncomeForm
         Height = 312
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1028
-        ExplicitHeight = 248
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS

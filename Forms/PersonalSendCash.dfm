@@ -84,15 +84,12 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     TabOrder = 2
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 78
-    ExplicitHeight = 318
     ClientRectBottom = 310
     ClientRectRight = 773
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 294
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -100,7 +97,6 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         Height = 286
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 294
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -169,6 +165,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
           OptionsData.Inserting = False
           OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
+          OptionsView.GroupByBox = False
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -252,7 +249,6 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitHeight = 294
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -260,7 +256,6 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         Height = 286
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 294
         object cxGridEntryDBTableView: TcxGridDBTableView
           PopupMenu = PopupMenu
           Navigator.Buttons.CustomButtons = <>
