@@ -4,8 +4,9 @@
   ClientWidth = 996
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1012
-  ExplicitHeight = 524
+  ExplicitTop = -10
+  ExplicitWidth = 1004
+  ExplicitHeight = 516
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -222,7 +223,7 @@
     Height = 379
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheetIncome
+    Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 379
     ClientRectRight = 996
@@ -1122,6 +1123,9 @@
         end
         item
           StoredProc = spSelectMIContainer
+        end
+        item
+          StoredProc = spSelectIncome
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1203,8 +1207,8 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       StoredProcList = <>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1052#1072#1088#1096#1088#1091#1090
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1052#1072#1088#1096#1088#1091#1090
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -2069,14 +2073,15 @@
       item
         Control = edComment
       end>
-    Left = 299
-    Top = 211
+    GetStoredProc = spGet
+    Left = 376
+    Top = 104
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
