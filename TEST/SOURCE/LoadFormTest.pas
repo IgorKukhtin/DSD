@@ -414,6 +414,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_MotionGoodsDialogForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_MotionGoodsDialogForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_FuelForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_FuelForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_TransportForm');
 end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
