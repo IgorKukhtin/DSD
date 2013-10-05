@@ -4,21 +4,21 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
   ClientWidth = 773
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 781
-  ExplicitHeight = 423
+  ExplicitWidth = 789
+  ExplicitHeight = 431
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
     Left = 0
     Top = 0
     Width = 773
-    Height = 52
+    Height = 60
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
     object edInvNumber: TcxTextEdit
       Left = 144
-      Top = 21
+      Top = 23
       Enabled = False
       Properties.ReadOnly = True
       TabOrder = 0
@@ -26,12 +26,12 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     end
     object cxLabel1: TcxLabel
       Left = 146
-      Top = 4
-      Caption = #1053#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Top = 5
+      Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
     object edOperDate: TcxDateEdit
       Left = 278
-      Top = 21
+      Top = 23
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -39,12 +39,12 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     end
     object cxLabel2: TcxLabel
       Left = 278
-      Top = 3
-      Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Top = 5
+      Caption = #1044#1072#1090#1072
     end
     object edPersonal: TcxButtonEdit
       Left = 424
-      Top = 21
+      Top = 23
       Properties.Buttons = <
         item
           Default = True
@@ -55,48 +55,52 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     end
     object cxLabel3: TcxLabel
       Left = 424
-      Top = 3
+      Top = 5
       Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1054#1090' '#1082#1086#1075#1086')'
     end
     object ceStatus: TcxButtonEdit
       Left = 8
-      Top = 21
+      Top = 23
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 6
-      Width = 129
+      Width = 125
     end
     object cxLabel4: TcxLabel
       Left = 8
-      Top = 3
-      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Top = 5
+      Caption = #1057#1090#1072#1090#1091#1089
     end
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 78
+    Top = 86
     Width = 773
-    Height = 318
+    Height = 310
     Align = alClient
     TabOrder = 2
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 318
+    ExplicitTop = 78
+    ExplicitHeight = 318
+    ClientRectBottom = 310
     ClientRectRight = 773
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 294
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 773
-        Height = 294
+        Height = 286
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 294
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -248,16 +252,15 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitHeight = 294
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
         Width = 773
-        Height = 294
+        Height = 286
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 294
         object cxGridEntryDBTableView: TcxGridDBTableView
           PopupMenu = PopupMenu
           Navigator.Buttons.CustomButtons = <>
@@ -449,8 +452,8 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         ParamType = ptInputOutput
         Value = '0'
       end>
-    Left = 48
-    Top = 168
+    Left = 240
+    Top = 304
   end
   object spSelectMovementItem: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_PersonalSendCash'
@@ -488,8 +491,8 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -501,7 +504,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 16
+    Left = 24
     Top = 168
     DockControlHeights = (
       0
@@ -595,11 +598,11 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       Visible = ivAlways
     end
     object bbGridToExel: TdxBarButton
-      Action = dsdGridToExcel
+      Action = GridToExcel
       Category = 0
     end
     object bbEntryToGrid: TdxBarButton
-      Action = dsdEntryToExcel
+      Action = EntryToExcel
       Category = 0
     end
     object bbInsertUpdateMovement: TdxBarButton
@@ -634,13 +637,13 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
           'Width')
       end>
     StorageName = 'cxPropertiesStore'
-    Left = 120
+    Left = 88
     Top = 168
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 80
-    Top = 160
+    Left = 56
+    Top = 168
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spGet
@@ -719,7 +722,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
-    object dsdGridToExcel: TdsdGridToExcel
+    object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       TabSheet = cxTabSheet1
       Grid = cxGrid
@@ -728,7 +731,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object dsdEntryToExcel: TdsdGridToExcel
+    object EntryToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       TabSheet = cxTabSheet2
       Grid = cxGridEntry
@@ -898,13 +901,13 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         ParamType = ptInput
         Value = ''
       end>
-    Left = 416
-    Top = 8
+    Left = 464
+    Top = 56
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
-    Left = 456
-    Top = 120
+    Left = 240
+    Top = 256
     object N1: TMenuItem
       Action = actRefresh
     end
@@ -925,19 +928,19 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         ParamType = ptInput
         Value = '0'
       end>
-    Left = 536
-    Top = 256
+    Left = 88
+    Top = 296
   end
   object EntryCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 576
-    Top = 240
+    Left = 24
+    Top = 296
   end
   object EntryDS: TDataSource
     DataSet = EntryCDS
-    Left = 608
-    Top = 240
+    Left = 56
+    Top = 296
   end
   object spInsertUpdateMovementItem: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_PersonalSendCash'
@@ -995,10 +998,10 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     CloseDataSource = False
     DataSet = MasterCDS
     BCDToCurrency = False
-    Left = 360
-    Top = 88
+    Left = 144
+    Top = 224
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
+  object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
@@ -1008,12 +1011,12 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       item
       end>
     SortImages = dmMain.SortImageList
-    Left = 216
-    Top = 232
+    Left = 304
+    Top = 288
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 232
-    Top = 304
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 120
+    Top = 168
   end
   object EntryViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1021,8 +1024,8 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
-    Left = 480
-    Top = 256
+    Left = 368
+    Top = 272
   end
   object spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_PersonalSendCash'
@@ -1059,8 +1062,8 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         ParamType = ptInput
         Value = ''
       end>
-    Left = 664
-    Top = 192
+    Left = 387
+    Top = 177
   end
   object HeaderSaver: THeaderSaver
     IdParam.Component = FormParams
@@ -1101,8 +1104,8 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       end
       item
       end>
-    Left = 384
-    Top = 152
+    Left = 306
+    Top = 193
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_PersonalSendCash'
@@ -1163,16 +1166,16 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         ParamType = ptOutput
         Value = ''
       end>
-    Left = 176
-    Top = 144
+    Left = 216
+    Top = 168
   end
   object RefreshAddOn: TRefreshAddOn
     FormName = 'PersonalSendCashJournalForm'
     DataSet = 'ClientDataSet'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
-    Left = 584
-    Top = 88
+    Left = 427
+    Top = 253
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Component = FormParams
@@ -1190,8 +1193,8 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       item
         Action = actInsertUpdateMovement
       end>
-    Left = 256
-    Top = 128
+    Left = 258
+    Top = 178
   end
   object ChangeStatus: TChangeStatus
     KeyField = 'Code'
@@ -1202,7 +1205,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     IdParam.ParamType = ptOutput
     IdParam.Value = '0'
     StoredProcName = 'gpUpdate_Status_PersonalSendCash'
-    Left = 112
-    Top = 8
+    Left = 488
+    Top = 176
   end
 end

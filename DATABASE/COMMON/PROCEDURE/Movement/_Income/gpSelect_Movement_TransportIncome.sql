@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_TransportIncome(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+             , InvNumberPartner TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat
              , FromId Integer, FromCode Integer, FromName TVarChar, PaidKindId Integer, PaidKindName TVarChar
              , MovementItemId Integer
@@ -30,6 +31,8 @@ BEGIN
            , Movement.OperDate
            , Object_Status.ObjectCode          AS StatusCode
            , Object_Status.ValueData           AS StatusName
+
+           , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
 
            , MovementBoolean_PriceWithVAT.ValueData      AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData          AS VATPercent
@@ -62,6 +65,10 @@ BEGIN
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                     ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
@@ -124,6 +131,7 @@ ALTER FUNCTION gpSelect_Movement_TransportIncome (Integer, Boolean, Boolean, TVa
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.10.13                                        * add InvNumberPartner
  04.10.13                                        *
 */
 

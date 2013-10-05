@@ -12,118 +12,118 @@
     Left = 0
     Top = 0
     Width = 996
-    Height = 84
+    Height = 100
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
     object edInvNumber: TcxTextEdit
       Left = 8
-      Top = 20
+      Top = 23
       Enabled = False
       TabOrder = 0
-      Width = 101
+      Width = 95
     end
     object cxLabel1: TcxLabel
       Left = 8
-      Top = 4
-      Caption = #1053#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Top = 5
+      Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
     object edOperDate: TcxDateEdit
-      Left = 8
-      Top = 56
+      Left = 108
+      Top = 23
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
-      Width = 101
+      Width = 88
     end
     object cxLabel2: TcxLabel
-      Left = 8
-      Top = 40
-      Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Left = 110
+      Top = 5
+      Caption = #1044#1072#1090#1072
     end
     object edUnitForwarding: TcxButtonEdit
-      Left = 812
-      Top = 20
+      Left = 844
+      Top = 23
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 12
-      Width = 182
+      Width = 150
     end
     object edCar: TcxButtonEdit
-      Left = 121
-      Top = 20
+      Left = 201
+      Top = 23
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 2
-      Width = 145
+      Width = 100
     end
     object cxLabel3: TcxLabel
-      Left = 812
-      Top = 4
+      Left = 844
+      Top = 5
       Caption = #1052#1077#1089#1090#1086' '#1086#1090#1087#1088#1072#1074#1082#1080
     end
     object cxLabel4: TcxLabel
-      Left = 121
-      Top = 4
+      Left = 201
+      Top = 5
       Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' '
     end
     object edPersonalDriver: TcxButtonEdit
-      Left = 121
-      Top = 56
+      Left = 110
+      Top = 63
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 3
-      Width = 145
+      Width = 191
     end
     object cxLabel5: TcxLabel
-      Left = 121
-      Top = 40
+      Left = 110
+      Top = 45
       Caption = #1042#1086#1076#1080#1090#1077#1083#1100
     end
     object edPersonalDriverMore: TcxButtonEdit
-      Left = 659
-      Top = 56
+      Left = 691
+      Top = 63
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 11
-      Width = 145
+      Width = 147
     end
     object cxLabel6: TcxLabel
-      Left = 659
-      Top = 40
+      Left = 691
+      Top = 45
       Caption = #1042#1086#1076#1080#1090#1077#1083#1100', '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081
     end
     object edCarTrailer: TcxButtonEdit
-      Left = 659
-      Top = 20
+      Left = 691
+      Top = 23
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 10
-      Width = 145
+      Width = 147
     end
     object cxLabel7: TcxLabel
-      Left = 659
-      Top = 4
+      Left = 691
+      Top = 5
       Caption = #1055#1088#1080#1094#1077#1087
     end
     object edStartRunPlan: TcxDateEdit
-      Left = 275
-      Top = 20
+      Left = 307
+      Top = 23
       Properties.DateButtons = [btnClear, btnToday]
       Properties.InputKind = ikMask
       Properties.Kind = ckDateTime
@@ -131,61 +131,61 @@
       Width = 145
     end
     object cxLabel8: TcxLabel
-      Left = 275
-      Top = 4
+      Left = 307
+      Top = 5
       Caption = #1044#1072#1090#1072'/'#1042#1088'.'#1074#1099#1077#1079#1076#1072' '#1087#1083#1072#1085' '
     end
     object edEndRunPlan: TcxDateEdit
-      Left = 275
-      Top = 56
+      Left = 307
+      Top = 63
       Properties.Kind = ckDateTime
       TabOrder = 5
       Width = 145
     end
     object cxLabel9: TcxLabel
-      Left = 275
-      Top = 40
+      Left = 307
+      Top = 45
       Caption = #1044#1072#1090#1072'/'#1042#1088'.'#1074#1086#1079#1074#1088#1072#1097#1077#1085#1080#1103' '#1087#1083#1072#1085
     end
     object cxLabel10: TcxLabel
-      Left = 426
-      Top = 4
+      Left = 458
+      Top = 5
       Caption = #1044#1072#1090#1072'/'#1042#1088'.'#1074#1099#1077#1079#1076#1072' '#1092#1072#1082#1090
     end
     object edStartRun: TcxDateEdit
-      Left = 426
-      Top = 20
+      Left = 458
+      Top = 23
       Properties.InputKind = ikMask
       Properties.Kind = ckDateTime
       TabOrder = 6
       Width = 147
     end
     object cxLabel11: TcxLabel
-      Left = 426
-      Top = 40
+      Left = 458
+      Top = 45
       Caption = #1044#1072#1090#1072'/'#1042#1088'.'#1074#1086#1079#1074#1088#1072#1097#1077#1085#1080#1103' '#1092#1072#1082#1090
     end
     object edEndRun: TcxDateEdit
-      Left = 426
-      Top = 56
+      Left = 458
+      Top = 63
       Properties.Kind = ckDateTime
       TabOrder = 7
       Width = 147
     end
     object edComment: TcxTextEdit
-      Left = 812
-      Top = 56
+      Left = 844
+      Top = 63
       TabOrder = 13
-      Width = 182
+      Width = 150
     end
     object cxLabel12: TcxLabel
-      Left = 812
-      Top = 40
+      Left = 844
+      Top = 45
       Caption = ' '#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '
     end
     object edHoursWork: TcxCurrencyEdit
-      Left = 580
-      Top = 20
+      Left = 612
+      Top = 23
       Enabled = False
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
@@ -195,13 +195,13 @@
       Width = 71
     end
     object cxLabel13: TcxLabel
-      Left = 580
-      Top = 4
+      Left = 612
+      Top = 5
       Caption = #1050#1086#1083'-'#1074#1086' '#1095#1072#1089#1086#1074
     end
     object edHoursAdd: TcxCurrencyEdit
-      Left = 580
-      Top = 56
+      Left = 612
+      Top = 63
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 0
@@ -210,36 +210,53 @@
       Width = 71
     end
     object cxLabel14: TcxLabel
-      Left = 580
-      Top = 40
+      Left = 612
+      Top = 45
       Caption = #1044#1086#1087'. '#1095#1072#1089#1099
+    end
+    object ceStatus: TcxButtonEdit
+      Left = 8
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 28
+      Width = 95
+    end
+    object cxLabel15: TcxLabel
+      Left = 8
+      Top = 45
+      Caption = #1057#1090#1072#1090#1091#1089
     end
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 110
+    Top = 126
     Width = 996
-    Height = 345
+    Height = 329
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheetIncome
+    Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 379
-    ClientRectBottom = 345
+    ExplicitTop = 110
+    ExplicitHeight = 345
+    ClientRectBottom = 329
     ClientRectRight = 996
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 355
+      ExplicitHeight = 321
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 996
-        Height = 176
+        Height = 160
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 210
+        ExplicitHeight = 176
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -388,12 +405,12 @@
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 181
+        Top = 165
         Width = 996
         Height = 140
         Align = alBottom
         TabOrder = 1
-        ExplicitTop = 215
+        ExplicitTop = 181
         object cxGridChildDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -548,26 +565,26 @@
       end
       object cxSplitterChild: TcxSplitter
         Left = 0
-        Top = 176
+        Top = 160
         Width = 996
         Height = 5
         AlignSplitter = salBottom
         Control = cxGridChild
-        ExplicitTop = 210
+        ExplicitTop = 176
       end
     end
     object cxTabSheetIncome: TcxTabSheet
       Caption = #1055#1088#1080#1093#1086#1076#1099
       ImageIndex = 2
-      ExplicitHeight = 355
+      ExplicitHeight = 321
       object cxGridIncome: TcxGrid
         Left = 0
         Top = 0
         Width = 996
-        Height = 321
+        Height = 305
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 355
+        ExplicitHeight = 321
         object cxGridIncomeDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = IncomeDS
@@ -589,16 +606,21 @@
             item
               Kind = skSum
               Position = spFooter
-              Column = clincOperDate
             end
             item
               Kind = skSum
               Position = spFooter
-              Column = clincPaidKindName
+              Column = clincAmount
             end
             item
               Kind = skSum
               Position = spFooter
+              Column = clincAmountSumm
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+              Column = clincAmountSummTotal
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -613,14 +635,18 @@
             end
             item
               Kind = skSum
-              Column = clincOperDate
             end
             item
               Kind = skSum
-              Column = clincPaidKindName
+              Column = clincAmount
             end
             item
               Kind = skSum
+              Column = clincAmountSumm
+            end
+            item
+              Kind = skSum
+              Column = clincAmountSummTotal
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -632,6 +658,7 @@
           OptionsData.Appending = True
           OptionsData.CancelOnExit = False
           OptionsView.ColumnAutoWidth = True
+          OptionsView.Footer = True
           OptionsView.GroupByBox = False
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
@@ -769,15 +796,15 @@
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitHeight = 355
+      ExplicitHeight = 321
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
         Width = 996
-        Height = 321
+        Height = 305
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 355
+        ExplicitHeight = 321
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -797,6 +824,8 @@
           Images = dmMain.SortImageList
           OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
+          OptionsView.HeaderAutoHeight = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object colDebetAccountGroupCode: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1044' '#1043#1088#1091#1087#1087#1072' '#1082#1086#1076
             DataBinding.FieldName = 'DebetAccountGroupCode'
@@ -1150,7 +1179,7 @@
       Params = <>
       ReportName = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
     end
-    object dsdGridToExcel: TdsdGridToExcel
+    object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -1386,8 +1415,8 @@
         ParamType = ptOutput
         Value = ''
       end>
-    Left = 218
-    Top = 19
+    Left = 506
+    Top = 83
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Transport'
@@ -1544,9 +1573,25 @@
         DataType = ftString
         ParamType = ptOutput
         Value = ''
+      end
+      item
+        Name = 'StatusCode'
+        Component = ChangeStatus
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'StatusName'
+        Component = ChangeStatus
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptOutput
+        Value = ''
       end>
-    Left = 207
-    Top = 166
+    Left = 221
+    Top = 182
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -1797,8 +1842,8 @@
         ParamType = ptInput
         Value = ''
       end>
-    Left = 347
-    Top = 224
+    Left = 348
+    Top = 226
   end
   object GuidesCarTrailer: TdsdGuides
     KeyField = 'Id'
@@ -1822,8 +1867,8 @@
         ParamType = ptInput
         Value = ''
       end>
-    Left = 754
-    Top = 19
+    Left = 722
+    Top = 91
   end
   object GuidesPersonalDriver: TdsdGuides
     KeyField = 'Id'
@@ -1847,8 +1892,8 @@
         ParamType = ptInput
         Value = ''
       end>
-    Left = 178
-    Top = 35
+    Left = 418
+    Top = 91
   end
   object GuidesPersonalDriverMore: TdsdGuides
     KeyField = 'Id'
@@ -1872,8 +1917,8 @@
         ParamType = ptInput
         Value = ''
       end>
-    Left = 698
-    Top = 35
+    Left = 778
+    Top = 91
   end
   object GuidesUnitForwarding: TdsdGuides
     KeyField = 'Id'
@@ -1897,8 +1942,8 @@
         ParamType = ptInput
         Value = ''
       end>
-    Left = 938
-    Top = 19
+    Left = 898
+    Top = 83
   end
   object spInsertUpdateMIChild: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_Transport_Child'
@@ -2202,7 +2247,7 @@
       Visible = ivAlways
     end
     object bbGridToExel: TdxBarButton
-      Action = dsdGridToExcel
+      Action = GridToExcel
       Category = 0
     end
     object bbEntryToGrid: TdxBarButton
@@ -2239,10 +2284,10 @@
     DataSet = 'ClientDataSet'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
-    Left = 392
+    Left = 375
     Top = 288
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 111
     Top = 182
   end
@@ -2255,8 +2300,8 @@
       end>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
-    Left = 333
-    Top = 304
+    Left = 261
+    Top = 320
   end
   object ChildViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -2264,8 +2309,8 @@
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
-    Left = 264
-    Top = 320
+    Left = 320
+    Top = 304
   end
   object IncomeCDS: TClientDataSet
     Aggregates = <>
@@ -2405,5 +2450,17 @@
       end>
     Left = 75
     Top = 314
+  end
+  object ChangeStatus: TChangeStatus
+    KeyField = 'Code'
+    LookupControl = ceStatus
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    IdParam.DataType = ftInteger
+    IdParam.ParamType = ptOutput
+    IdParam.Value = '0'
+    StoredProcName = 'gpUpdate_Status_Transport'
+    Left = 449
+    Top = 208
   end
 end

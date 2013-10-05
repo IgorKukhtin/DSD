@@ -109,7 +109,7 @@ type
     ChildDS: TDataSource;
     cxSplitterChild: TcxSplitter;
     colñhRateFuelKindName: TcxGridDBColumn;
-    dsdGridToExcel: TdsdGridToExcel;
+    GridToExcel: TdsdGridToExcel;
     edPersonalDriver: TcxButtonEdit;
     cxLabel5: TcxLabel;
     edPersonalDriverMore: TcxButtonEdit;
@@ -155,7 +155,7 @@ type
     bbEntryToGrid: TdxBarButton;
     bbInsertUpdateMovement: TdxBarButton;
     RefreshAddOn: TRefreshAddOn;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     RouteChoiceForm: TOpenChoiceForm;
     MasterViewAddOn: TdsdDBViewAddOn;
     FreightChoiceForm: TOpenChoiceForm;
@@ -198,6 +198,9 @@ type
     IncomeChoiceForm: TOpenChoiceForm;
     bbAddIncome: TdxBarButton;
     actUpdateIncomeDS: TdsdUpdateDataSet;
+    ceStatus: TcxButtonEdit;
+    cxLabel15: TcxLabel;
+    ChangeStatus: TChangeStatus;
   private
   public
   end;

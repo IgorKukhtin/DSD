@@ -86,8 +86,8 @@ type
     bbBooleanAction: TdxBarButton;
     bbStatic: TdxBarStatic;
     BooleanStoredProcAction: TBooleanStoredProcAction;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    MasterViewAddOn: TdsdDBViewAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     EntryViewAddOn: TdsdDBViewAddOn;
     spInsertUpdateMovement: TdsdStoredProc;
     HeaderSaver: THeaderSaver;
@@ -98,9 +98,9 @@ type
     colInfoMoneyName_Detail: TcxGridDBColumn;
     colObjectCostId: TcxGridDBColumn;
     colPrice_comlete: TcxGridDBColumn;
-    dsdGridToExcel: TdsdGridToExcel;
+    GridToExcel: TdsdGridToExcel;
     bbGridToExel: TdxBarButton;
-    dsdEntryToExcel: TdsdGridToExcel;
+    EntryToExcel: TdsdGridToExcel;
     bbEntryToGrid: TdxBarButton;
     GuidesFiller: TGuidesFiller;
     actInsertUpdateMovement: TdsdExecStoredProc;

@@ -3,8 +3,8 @@ inherited TransportJournalForm: TTransportJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
   ClientHeight = 427
   ClientWidth = 1276
-  ExplicitWidth = 1284
-  ExplicitHeight = 454
+  ExplicitWidth = 1292
+  ExplicitHeight = 462
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -93,15 +93,14 @@ inherited TransportJournalForm: TTransportJournalForm
         Width = 55
       end
       object InvNumber: TcxGridDBColumn
-        Caption = #1053#1086#1084#1077#1088
+        Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentVert = vaCenter
-        Width = 45
+        Width = 50
       end
       object OperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
-        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 47
       end
@@ -138,42 +137,36 @@ inherited TransportJournalForm: TTransportJournalForm
       object StartRunPlan: TcxGridDBColumn
         Caption = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1074#1099#1077#1079#1076#1072' '#1087#1083#1072#1085
         DataBinding.FieldName = 'StartRunPlan'
-        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
       object EndRunPlan: TcxGridDBColumn
         Caption = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1074#1086#1079#1074#1088#1072#1097#1077#1085#1080#1103' '#1087#1083#1072#1085
         DataBinding.FieldName = 'EndRunPlan'
-        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
       object StartRun: TcxGridDBColumn
         Caption = ' '#1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1074#1099#1077#1079#1076#1072' '#1092#1072#1082#1090
         DataBinding.FieldName = 'StartRun'
-        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
       object EndRun: TcxGridDBColumn
         Caption = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1074#1086#1079#1074#1088#1072#1097#1077#1085#1080#1103' '#1092#1072#1082#1090
         DataBinding.FieldName = 'EndRun'
-        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
       object HoursWork: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1095#1072#1089#1086#1074
         DataBinding.FieldName = 'HoursWork'
-        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
       object HoursAdd: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1073#1072#1074#1083#1077#1085#1085#1099#1093' '#1095#1072#1089#1086#1074
         DataBinding.FieldName = 'HoursAdd'
-        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
@@ -227,8 +220,8 @@ inherited TransportJournalForm: TTransportJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

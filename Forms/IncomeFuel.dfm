@@ -12,177 +12,208 @@ inherited IncomeFuelForm: TIncomeFuelForm
     Left = 0
     Top = 0
     Width = 773
-    Height = 89
+    Height = 100
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
     object edInvNumber: TcxTextEdit
       Left = 8
-      Top = 25
+      Top = 23
       Enabled = False
       Properties.ReadOnly = True
       TabOrder = 0
-      Width = 121
+      Width = 95
     end
     object cxLabel1: TcxLabel
       Left = 8
-      Top = 7
-      Caption = #1053#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Top = 5
+      Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
     object edOperDate: TcxDateEdit
-      Left = 142
-      Top = 25
+      Left = 115
+      Top = 23
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
-      Width = 121
+      Width = 129
     end
     object cxLabel2: TcxLabel
-      Left = 142
-      Top = 7
-      Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Left = 115
+      Top = 5
+      Caption = #1044#1072#1090#1072
     end
     object edFrom: TcxButtonEdit
-      Left = 276
-      Top = 25
+      Left = 323
+      Top = 23
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 3
-      Width = 150
+      Width = 140
     end
     object edTo: TcxButtonEdit
-      Left = 276
-      Top = 66
+      Left = 323
+      Top = 63
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 2
-      Width = 150
+      Width = 140
     end
     object cxLabel3: TcxLabel
-      Left = 276
-      Top = 7
+      Left = 323
+      Top = 5
       Caption = #1054#1090' '#1082#1086#1075#1086' ('#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090')'
     end
     object cxLabel4: TcxLabel
-      Left = 276
-      Top = 48
+      Left = 323
+      Top = 45
       Caption = #1050#1086#1084#1091' ('#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100')'
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 8
-      Top = 66
+      Left = 115
+      Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 6
       Width = 129
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 142
-      Top = 66
+      Left = 254
+      Top = 63
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
       TabOrder = 7
-      Width = 65
+      Width = 60
     end
     object cxLabel7: TcxLabel
-      Left = 142
-      Top = 51
+      Left = 254
+      Top = 45
       Caption = '% '#1053#1044#1057
     end
     object cxLabel9: TcxLabel
-      Left = 600
-      Top = 7
+      Left = 626
+      Top = 5
       Caption = #1044#1086#1075#1086#1074#1086#1088
     end
     object edContract: TcxButtonEdit
-      Left = 600
-      Top = 25
+      Left = 626
+      Top = 23
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 4
-      Width = 150
+      Width = 140
     end
     object cxLabel10: TcxLabel
-      Left = 600
-      Top = 49
+      Left = 474
+      Top = 5
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKind: TcxButtonEdit
-      Left = 600
-      Top = 66
+      Left = 474
+      Top = 23
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 150
+      Width = 140
     end
     object cxLabel12: TcxLabel
-      Left = 440
-      Top = 51
+      Left = 626
+      Top = 45
       Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
     end
     object edDriver: TcxButtonEdit
-      Left = 440
-      Top = 66
+      Left = 626
+      Top = 63
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 8
-      Width = 150
+      Width = 140
     end
     object edRoute: TcxButtonEdit
-      Left = 440
-      Top = 25
+      Left = 474
+      Top = 63
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 17
-      Width = 150
+      Width = 140
     end
     object cxLabel5: TcxLabel
-      Left = 440
-      Top = 7
+      Left = 474
+      Top = 45
       Caption = #1052#1072#1088#1096#1088#1091#1090
+    end
+    object cxLabel6: TcxLabel
+      Left = 254
+      Top = 5
+      Caption = #8470' '#1095#1077#1082#1072
+    end
+    object edInvNumberPartner: TcxTextEdit
+      Left = 254
+      Top = 23
+      TabOrder = 20
+      Width = 58
+    end
+    object cxLabel8: TcxLabel
+      Left = 8
+      Top = 45
+      Caption = #1057#1090#1072#1090#1091#1089
+    end
+    object ceStatus: TcxButtonEdit
+      Left = 8
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 22
+      Width = 95
     end
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 115
+    Top = 126
     Width = 773
-    Height = 281
+    Height = 270
     Align = alClient
     TabOrder = 2
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 281
+    ExplicitTop = 115
+    ExplicitHeight = 281
+    ClientRectBottom = 270
     ClientRectRight = 773
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 257
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 773
-        Height = 257
+        Height = 246
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 257
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -323,13 +354,15 @@ inherited IncomeFuelForm: TIncomeFuelForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitHeight = 257
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
         Width = 773
-        Height = 257
+        Height = 246
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 257
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -521,8 +554,8 @@ inherited IncomeFuelForm: TIncomeFuelForm
         ParamType = ptInputOutput
         Value = '0'
       end>
-    Left = 48
-    Top = 144
+    Left = 216
+    Top = 296
   end
   object spSelectMovementItem: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_IncomeFuel'
@@ -554,8 +587,8 @@ inherited IncomeFuelForm: TIncomeFuelForm
         ParamType = ptInput
         Value = False
       end>
-    Left = 112
-    Top = 200
+    Left = 108
+    Top = 232
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -573,8 +606,8 @@ inherited IncomeFuelForm: TIncomeFuelForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 16
-    Top = 144
+    Left = 19
+    Top = 177
     DockControlHeights = (
       0
       0
@@ -662,11 +695,11 @@ inherited IncomeFuelForm: TIncomeFuelForm
       Visible = ivAlways
     end
     object bbGridToExel: TdxBarButton
-      Action = dsdGridToExcel
+      Action = GridToExcel
       Category = 0
     end
     object bbEntryToGrid: TdxBarButton
-      Action = dsdEntryToExcel
+      Action = EntryToExcel
       Category = 0
     end
     object bbInsertUpdateMovement: TdxBarButton
@@ -698,13 +731,13 @@ inherited IncomeFuelForm: TIncomeFuelForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 112
-    Top = 144
+    Left = 78
+    Top = 179
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 80
-    Top = 144
+    Left = 49
+    Top = 177
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spGet
@@ -783,7 +816,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
       ImageIndexTrue = 62
       ImageIndexFalse = 63
     end
-    object dsdGridToExcel: TdsdGridToExcel
+    object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       TabSheet = cxTabSheet1
       Grid = cxGrid
@@ -792,7 +825,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object dsdEntryToExcel: TdsdGridToExcel
+    object EntryToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       TabSheet = cxTabSheet2
       Grid = cxGridEntry
@@ -826,8 +859,8 @@ inherited IncomeFuelForm: TIncomeFuelForm
     object SetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       StoredProcList = <>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1069#1083#1077#1084#1077#1085#1090
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1069#1083#1077#1084#1077#1085#1090
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -856,15 +889,16 @@ inherited IncomeFuelForm: TIncomeFuelForm
   object MasterDS: TDataSource
     DataSet = MasterCDS
     Left = 48
-    Top = 200
+    Top = 232
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 16
-    Top = 200
+    Top = 232
   end
   object GuidesFrom: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edFrom
     FormName = 'TPartnerForm'
     PositionDataSet = 'ClientDataSet'
@@ -885,9 +919,11 @@ inherited IncomeFuelForm: TIncomeFuelForm
         ParamType = ptInput
         Value = ''
       end>
-    Left = 352
+    Left = 336
+    Top = 88
   end
   object GuidesTo: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edTo
     FormName = 'TCarForm'
     PositionDataSet = 'ClientDataSet'
@@ -924,13 +960,13 @@ inherited IncomeFuelForm: TIncomeFuelForm
         ParamType = ptOutput
         Value = ''
       end>
-    Left = 320
-    Top = 64
+    Left = 400
+    Top = 88
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
-    Left = 456
-    Top = 120
+    Left = 216
+    Top = 248
     object N1: TMenuItem
       Action = actRefresh
     end
@@ -951,19 +987,19 @@ inherited IncomeFuelForm: TIncomeFuelForm
         ParamType = ptInput
         Value = '0'
       end>
-    Left = 536
-    Top = 256
+    Left = 80
+    Top = 288
   end
   object EntryCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 576
-    Top = 240
+    Left = 17
+    Top = 288
   end
   object EntryDS: TDataSource
     DataSet = EntryCDS
-    Left = 608
-    Top = 240
+    Left = 48
+    Top = 288
   end
   object spInsertUpdateMovementItem: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_IncomeFuel'
@@ -1020,18 +1056,18 @@ inherited IncomeFuelForm: TIncomeFuelForm
         DataType = ftFloat
         ParamType = ptOutput
       end>
-    Left = 272
-    Top = 216
+    Left = 78
+    Top = 232
   end
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'
     CloseDataSource = False
     DataSet = MasterCDS
     BCDToCurrency = False
-    Left = 360
-    Top = 88
+    Left = 137
+    Top = 232
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
+  object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
@@ -1041,12 +1077,12 @@ inherited IncomeFuelForm: TIncomeFuelForm
       item
       end>
     SortImages = dmMain.SortImageList
-    Left = 96
-    Top = 264
+    Left = 280
+    Top = 280
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 232
-    Top = 304
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 108
+    Top = 178
   end
   object EntryViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1054,8 +1090,8 @@ inherited IncomeFuelForm: TIncomeFuelForm
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
-    Left = 480
-    Top = 256
+    Left = 352
+    Top = 264
   end
   object spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_IncomeFuel'
@@ -1073,6 +1109,13 @@ inherited IncomeFuelForm: TIncomeFuelForm
       item
         Name = 'inInvNumber'
         Component = edInvNumber
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'inInvNumberPartner'
+        Component = edInvNumberPartner
         DataType = ftString
         ParamType = ptInput
         Value = ''
@@ -1146,8 +1189,8 @@ inherited IncomeFuelForm: TIncomeFuelForm
         ParamType = ptInput
         Value = ''
       end>
-    Left = 80
-    Top = 200
+    Left = 378
+    Top = 189
   end
   object HeaderSaver: THeaderSaver
     IdParam.Component = FormParams
@@ -1164,31 +1207,34 @@ inherited IncomeFuelForm: TIncomeFuelForm
         Control = edOperDate
       end
       item
-        Control = edFrom
-      end
-      item
-        Control = edTo
-      end
-      item
-        Control = edRoute
-      end
-      item
-        Control = edDriver
-      end
-      item
-        Control = edContract
-      end
-      item
-        Control = edPaidKind
+        Control = edInvNumberPartner
       end
       item
         Control = edPriceWithVAT
       end
       item
         Control = edVATPercent
+      end
+      item
+        Control = edFrom
+      end
+      item
+        Control = edTo
+      end
+      item
+        Control = edPaidKind
+      end
+      item
+        Control = edContract
+      end
+      item
+        Control = edRoute
+      end
+      item
+        Control = edDriver
       end>
-    Left = 408
-    Top = 200
+    Left = 296
+    Top = 207
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_IncomeFuel'
@@ -1206,6 +1252,13 @@ inherited IncomeFuelForm: TIncomeFuelForm
       item
         Name = 'InvNumber'
         Component = edInvNumber
+        DataType = ftInteger
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'InvNumberPartner'
+        Component = edInvNumberPartner
         DataType = ftInteger
         ParamType = ptOutput
         Value = ''
@@ -1332,17 +1385,33 @@ inherited IncomeFuelForm: TIncomeFuelForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptOutput
+      end
+      item
+        Name = 'StatusCode'
+        Component = ChangeStatus
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptOutput
+        Value = ''
+      end
+      item
+        Name = 'StatusName'
+        Component = ChangeStatus
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptOutput
+        Value = ''
       end>
-    Left = 176
-    Top = 120
+    Left = 216
+    Top = 176
   end
   object RefreshAddOn: TRefreshAddOn
     FormName = 'IncomeJournalForm'
     DataSet = 'ClientDataSet'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
-    Left = 584
-    Top = 88
+    Left = 408
+    Top = 248
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Component = FormParams
@@ -1355,10 +1424,10 @@ inherited IncomeFuelForm: TIncomeFuelForm
         Guides = GuidesFrom
       end
       item
-        Guides = GuidesRoute
+        Guides = GuidesTo
       end
       item
-        Guides = GuidesTo
+        Guides = GuidesRoute
       end
       item
         Guides = GuidesPaidKind
@@ -1368,9 +1437,10 @@ inherited IncomeFuelForm: TIncomeFuelForm
         Action = actInsertUpdateMovement
       end>
     Left = 248
-    Top = 96
+    Top = 192
   end
   object GuidesContract: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edContract
     FormName = 'TContractForm'
     PositionDataSet = 'ClientDataSet'
@@ -1392,8 +1462,10 @@ inherited IncomeFuelForm: TIncomeFuelForm
         Value = ''
       end>
     Left = 648
+    Top = 88
   end
   object GuidesPaidKind: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edPaidKind
     FormName = 'TPaidKindForm'
     PositionDataSet = 'ClientDataSet'
@@ -1414,10 +1486,11 @@ inherited IncomeFuelForm: TIncomeFuelForm
         ParamType = ptInput
         Value = ''
       end>
-    Left = 656
-    Top = 72
+    Left = 712
+    Top = 88
   end
   object GuidesPersonalDriver: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edDriver
     FormName = 'TPersonalForm'
     PositionDataSet = 'ClientDataSet'
@@ -1438,10 +1511,11 @@ inherited IncomeFuelForm: TIncomeFuelForm
         ParamType = ptInput
         Value = ''
       end>
-    Left = 488
-    Top = 80
+    Left = 552
+    Top = 88
   end
   object GuidesRoute: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edRoute
     FormName = 'TRouteForm'
     PositionDataSet = 'ClientDataSet'
@@ -1462,7 +1536,19 @@ inherited IncomeFuelForm: TIncomeFuelForm
         ParamType = ptInput
         Value = ''
       end>
-    Left = 511
-    Top = 5
+    Left = 495
+    Top = 93
+  end
+  object ChangeStatus: TChangeStatus
+    KeyField = 'Code'
+    LookupControl = ceStatus
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    IdParam.DataType = ftInteger
+    IdParam.ParamType = ptOutput
+    IdParam.Value = '0'
+    StoredProcName = 'gpUpdate_Status_Income'
+    Left = 432
+    Top = 168
   end
 end

@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_IncomeFuel(
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+             , InvNumberPartner TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummVAT TFloat
              , FromName TVarChar, ToName TVarChar
@@ -30,6 +31,8 @@ BEGIN
            , Object_Status.ObjectCode          AS StatusCode
            , Object_Status.ValueData           AS StatusName
 
+           , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
+
            , MovementBoolean_PriceWithVAT.ValueData      AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData          AS VATPercent
 
@@ -48,6 +51,10 @@ BEGIN
            , View_PersonalDriver.PersonalName  AS PersonalDriverName
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                     ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id

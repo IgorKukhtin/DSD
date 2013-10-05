@@ -164,10 +164,16 @@ inherited IncomeFuelJournalForm: TIncomeFuelJournalForm
         Width = 60
       end
       object colInvNumber: TcxGridDBColumn
-        Caption = #1053#1086#1084#1077#1088
+        Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentVert = vaCenter
         Width = 50
+      end
+      object colInvNumberPartner: TcxGridDBColumn
+        Caption = #8470' '#1095#1077#1082#1072
+        DataBinding.FieldName = 'InvNumberPartner'
+        HeaderAlignmentVert = vaCenter
+        Width = 45
       end
       object colOperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
@@ -218,7 +224,6 @@ inherited IncomeFuelJournalForm: TIncomeFuelJournalForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 3
         Properties.DisplayFormat = ',0.###;-,0.###;;'
-        HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
@@ -227,7 +232,6 @@ inherited IncomeFuelJournalForm: TIncomeFuelJournalForm
         DataBinding.FieldName = 'TotalSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
-        HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
@@ -237,7 +241,6 @@ inherited IncomeFuelJournalForm: TIncomeFuelJournalForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         Visible = False
-        HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
@@ -247,7 +250,6 @@ inherited IncomeFuelJournalForm: TIncomeFuelJournalForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         Visible = False
-        HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
@@ -257,21 +259,18 @@ inherited IncomeFuelJournalForm: TIncomeFuelJournalForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         Visible = False
-        HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
       object colPriceWithVAT: TcxGridDBColumn
         Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
         DataBinding.FieldName = 'PriceWithVAT'
-        HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
       object colVATPercent: TcxGridDBColumn
         Caption = '% '#1053#1044#1057
         DataBinding.FieldName = 'VATPercent'
-        HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 40
       end

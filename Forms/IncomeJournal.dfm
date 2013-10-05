@@ -2,7 +2,6 @@ inherited IncomeJournalForm: TIncomeJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1055#1088#1080#1093#1086#1076
   ClientHeight = 427
   ClientWidth = 1240
-  ExplicitLeft = -258
   ExplicitWidth = 1256
   ExplicitHeight = 462
   PixelsPerInch = 96
@@ -176,10 +175,10 @@ inherited IncomeJournalForm: TIncomeJournalForm
         Width = 68
       end
       object colInvNumber: TcxGridDBColumn
-        Caption = #1053#1086#1084#1077#1088
+        Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentVert = vaCenter
-        Width = 50
+        Width = 60
       end
       object colOperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
@@ -223,7 +222,6 @@ inherited IncomeJournalForm: TIncomeJournalForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 3
         Properties.DisplayFormat = ',0.###;-,0.###;;'
-        HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
@@ -232,7 +230,6 @@ inherited IncomeJournalForm: TIncomeJournalForm
         DataBinding.FieldName = 'TotalSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
-        HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
@@ -241,7 +238,6 @@ inherited IncomeJournalForm: TIncomeJournalForm
         DataBinding.FieldName = 'TotalSummPacker'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
-        HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
@@ -251,7 +247,6 @@ inherited IncomeJournalForm: TIncomeJournalForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         Visible = False
-        HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 53
       end
@@ -260,21 +255,18 @@ inherited IncomeJournalForm: TIncomeJournalForm
         DataBinding.FieldName = 'ChangePercent'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.##;-,0.##; ;'#39
-        HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 56
       end
       object colPriceWithVAT: TcxGridDBColumn
         Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
         DataBinding.FieldName = 'PriceWithVAT'
-        HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 62
       end
       object colVATPercent: TcxGridDBColumn
         Caption = '% '#1053#1044#1057
         DataBinding.FieldName = 'VATPercent'
-        HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 42
       end
@@ -284,7 +276,6 @@ inherited IncomeJournalForm: TIncomeJournalForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         Visible = False
-        HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
@@ -294,7 +285,6 @@ inherited IncomeJournalForm: TIncomeJournalForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         Visible = False
-        HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
@@ -304,7 +294,6 @@ inherited IncomeJournalForm: TIncomeJournalForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         Visible = False
-        HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 60
       end

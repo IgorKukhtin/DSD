@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_IncomeFuel(
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+             , InvNumberPartner TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, ToParentId Integer
              , PaidKindId Integer, PaidKindName TVarChar, ContractId Integer, ContractName TVarChar
@@ -29,8 +30,10 @@ BEGIN
              , Object_Status.Code                    AS StatusCode
              , Object_Status.Name                    AS StatusName
 
-             , CAST (False as Boolean)               AS PriceWithVAT
-             , CAST (20 as TFloat)                   AS VATPercent
+             , CAST ('' as TVarChar) AS InvNumberPartner
+
+             , CAST (False as Boolean) AS PriceWithVAT
+             , CAST (20 as TFloat)     AS VATPercent
 
              , 0                     AS FromId
              , CAST ('' as TVarChar) AS FromName
@@ -55,6 +58,8 @@ BEGIN
              , Object_Status.ObjectCode          AS StatusCode
              , Object_Status.ValueData           AS StatusName
 
+             , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
+
              , MovementBoolean_PriceWithVAT.ValueData      AS PriceWithVAT
              , MovementFloat_VATPercent.ValueData          AS VATPercent
 
@@ -73,6 +78,10 @@ BEGIN
              , View_PersonalDriver.PersonalName  AS PersonalDriverName
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                     ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
@@ -123,6 +132,7 @@ ALTER FUNCTION gpGet_Movement_IncomeFuel (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.10.13                                        * add InvNumberPartner
  04.10.13                                        * add Route
  30.09.13                                        * add Object_Personal_View
  29.09.13                                        * add lfGet_InvNumber

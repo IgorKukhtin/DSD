@@ -91,8 +91,8 @@ type
     bbBooleanAction: TdxBarButton;
     bbStatic: TdxBarStatic;
     BooleanStoredProcAction: TBooleanStoredProcAction;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    MasterViewAddOn: TdsdDBViewAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     EntryViewAddOn: TdsdDBViewAddOn;
     spInsertUpdateMovement: TdsdStoredProc;
     edPriceWithVAT: TcxCheckBox;
@@ -105,9 +105,9 @@ type
     colInfoMoneyName: TcxGridDBColumn;
     colInfoMoneyName_Detail: TcxGridDBColumn;
     colPrice_comlete: TcxGridDBColumn;
-    dsdGridToExcel: TdsdGridToExcel;
+    GridToExcel: TdsdGridToExcel;
     bbGridToExel: TdxBarButton;
-    dsdEntryToExcel: TdsdGridToExcel;
+    EntryToExcel: TdsdGridToExcel;
     bbEntryToGrid: TdxBarButton;
     GuidesFiller: TGuidesFiller;
     actInsertUpdateMovement: TdsdExecStoredProc;
@@ -131,6 +131,11 @@ type
     bbErased: TdxBarButton;
     bbUnErased: TdxBarButton;
     bbShowErased: TdxBarButton;
+    cxLabel6: TcxLabel;
+    edInvNumberPartner: TcxTextEdit;
+    cxLabel8: TcxLabel;
+    ceStatus: TcxButtonEdit;
+    ChangeStatus: TChangeStatus;
   private
   public
   end;
