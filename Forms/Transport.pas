@@ -67,7 +67,7 @@ type
     EntryDS: TDataSource;
     colKreditAccountName: TcxGridDBColumn;
     colKreditAmount: TcxGridDBColumn;
-    actUpdateDataSet: TdsdUpdateDataSet;
+    actUpdateMasterDS: TdsdUpdateDataSet;
     spInsertUpdateMIMaster: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     frxDBDataset: TfrxDBDataset;
@@ -97,9 +97,6 @@ type
     colInfoMoneyName: TcxGridDBColumn;
     colInfoMoneyCode_Detail: TcxGridDBColumn;
     colInfoMoneyName_Detail: TcxGridDBColumn;
-    colGoodsCode_Parent: TcxGridDBColumn;
-    colGoodsName_Parent: TcxGridDBColumn;
-    colGoodsKindName_Parent: TcxGridDBColumn;
     cxGridChild: TcxGrid;
     cxGridChildDBTableView: TcxGridDBTableView;
     colñhFuelCode: TcxGridDBColumn;
@@ -112,9 +109,6 @@ type
     ChildDS: TDataSource;
     cxSplitterChild: TcxSplitter;
     colñhRateFuelKindName: TcxGridDBColumn;
-    colMIId_Parent: TcxGridDBColumn;
-    colObjectCostId: TcxGridDBColumn;
-    colPrice_comlete: TcxGridDBColumn;
     dsdGridToExcel: TdsdGridToExcel;
     edPersonalDriver: TcxButtonEdit;
     cxLabel5: TcxLabel;
@@ -166,7 +160,7 @@ type
     MasterViewAddOn: TdsdDBViewAddOn;
     FreightChoiceForm: TOpenChoiceForm;
     ChildViewAddOn: TdsdDBViewAddOn;
-    UpdateChildDS: TdsdUpdateDataSet;
+    actUpdateChildDS: TdsdUpdateDataSet;
     colchNumber: TcxGridDBColumn;
     colchRateFuelKindTax: TcxGridDBColumn;
     InsertRecord: TInsertRecord;
@@ -180,19 +174,30 @@ type
     cxTabSheetIncome: TcxTabSheet;
     cxGridIncome: TcxGrid;
     cxGridIncomeDBTableView: TcxGridDBTableView;
-    cxGridDBColumn1: TcxGridDBColumn;
-    cxGridDBColumn2: TcxGridDBColumn;
-    cxGridDBColumn3: TcxGridDBColumn;
-    cxGridDBColumn4: TcxGridDBColumn;
-    cxGridDBColumn5: TcxGridDBColumn;
-    cxGridDBColumn6: TcxGridDBColumn;
-    cxGridDBColumn7: TcxGridDBColumn;
-    cxGridDBColumn8: TcxGridDBColumn;
+    clincInvNumber: TcxGridDBColumn;
+    clincStatusCode: TcxGridDBColumn;
+    clincOperDate: TcxGridDBColumn;
+    clincFromName: TcxGridDBColumn;
+    clincPaidKindName: TcxGridDBColumn;
+    clincPriceWithVAT: TcxGridDBColumn;
+    clincVATPercent: TcxGridDBColumn;
+    clincGoodsCode: TcxGridDBColumn;
     cxGridIncomeLevel: TcxGridLevel;
     IncomeCDS: TClientDataSet;
     IncomeDS: TDataSource;
     spSelectIncome: TdsdStoredProc;
     spInsertUpdateIncome: TdsdStoredProc;
+    clincGoodsName: TcxGridDBColumn;
+    clincFuelName: TcxGridDBColumn;
+    clincAmount: TcxGridDBColumn;
+    clincPrice: TcxGridDBColumn;
+    clincCountForPrice: TcxGridDBColumn;
+    clincAmountSumm: TcxGridDBColumn;
+    clincAmountSummTotal: TcxGridDBColumn;
+    InsertRecordIncome: TInsertRecord;
+    IncomeChoiceForm: TOpenChoiceForm;
+    bbAddIncome: TdxBarButton;
+    actUpdateIncomeDS: TdsdUpdateDataSet;
   private
   public
   end;
