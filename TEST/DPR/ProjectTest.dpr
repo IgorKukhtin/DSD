@@ -219,7 +219,9 @@ uses
   PersonalSendCashTest in '..\SOURCE\Movement\All\PersonalSendCashTest.pas' {$R *.RES},
   WorkTimeKind in '..\..\Forms\WorkTimeKind.pas' {WorkTimeKindForm},
   SheetWorkTimeTest in '..\SOURCE\Movement\All\SheetWorkTimeTest.pas',
-  PaidKind in '..\..\Forms\PaidKind.pas' {PaidKindForm};
+  PaidKind in '..\..\Forms\PaidKind.pas' {PaidKindForm},
+  Report_Fuel in '..\..\Forms\Report\Report_Fuel.pas' {Report_FuelForm},
+  Report_Transport in '..\..\Forms\Report\Report_Transport.pas' {Report_TransportForm};
 
 {$R *.RES}
 
