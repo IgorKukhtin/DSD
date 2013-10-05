@@ -1,12 +1,11 @@
 ﻿inherited TransportForm: TTransportForm
   Caption = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
-  ClientHeight = 489
+  ClientHeight = 455
   ClientWidth = 996
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitTop = -10
-  ExplicitWidth = 1004
-  ExplicitHeight = 516
+  ExplicitWidth = 1012
+  ExplicitHeight = 490
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -220,24 +219,27 @@
     Left = 0
     Top = 110
     Width = 996
-    Height = 379
+    Height = 345
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheetMain
+    Properties.ActivePage = cxTabSheetIncome
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 379
+    ExplicitHeight = 379
+    ClientRectBottom = 345
     ClientRectRight = 996
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 355
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 996
-        Height = 210
+        Height = 176
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 210
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -386,11 +388,12 @@
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 215
+        Top = 181
         Width = 996
         Height = 140
         Align = alBottom
         TabOrder = 1
+        ExplicitTop = 215
         object cxGridChildDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -545,23 +548,26 @@
       end
       object cxSplitterChild: TcxSplitter
         Left = 0
-        Top = 210
+        Top = 176
         Width = 996
         Height = 5
         AlignSplitter = salBottom
         Control = cxGridChild
+        ExplicitTop = 210
       end
     end
     object cxTabSheetIncome: TcxTabSheet
       Caption = #1055#1088#1080#1093#1086#1076#1099
       ImageIndex = 2
+      ExplicitHeight = 355
       object cxGridIncome: TcxGrid
         Left = 0
         Top = 0
         Width = 996
-        Height = 355
+        Height = 321
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 355
         object cxGridIncomeDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = IncomeDS
@@ -763,13 +769,15 @@
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitHeight = 355
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
         Width = 996
-        Height = 355
+        Height = 321
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 355
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -2073,15 +2081,14 @@
       item
         Control = edComment
       end>
-    GetStoredProc = spGet
-    Left = 376
-    Top = 104
+    Left = 299
+    Top = 211
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

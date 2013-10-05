@@ -6,6 +6,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransportIncome(
     IN inParentId            Integer   , -- Ключ Master <Документ>
  INOUT ioMovementId          Integer   , -- Ключ объекта <Документ>
    OUT outInvNumber          TVarChar  , -- Номер документа
+    IN inInvNumberPartner    TVarChar  , -- Номер чека
     IN inOperDate            TDateTime , -- Дата документа
  INOUT ioPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
  INOUT ioVATPercent          TFloat    , -- % НДС
@@ -17,6 +18,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransportIncome(
     IN inPersonalDriverId    Integer   , -- Сотрудник (водитель)
     IN inSession             TVarChar    -- сессия пользователя
 )                              
+
+
+
+
 RETURNS RECORD
 AS
 $BODY$
@@ -28,16 +33,12 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Income());
      vbUserId := inSession;
 
-
-
-     -- попробуем найти документ
-     IF COALESCE (ioMovementId, 0) = 0 
-
-
      -- для нового документа надо расчитать и вернуть свойства
      IF COALESCE (ioMovementId, 0) = 0 
      THEN
          -- расчитали свойство <Номер документа>
+         outInvNumber := lfGet_InvNumber (0, zc_Movement_Income()
+         -- определили свойство из Default <Цена с НДС (да/нет)>
          outInvNumber := lfGet_InvNumber (0, zc_Movement_Income()
      END IF;
 
@@ -45,6 +46,7 @@ BEGIN
      ioId := lpInsertUpdate_Movement_IncomeFuel (ioId               := ioMovementId
                                                , inParentId         := inParentId
                                                , inInvNumber        := inInvNumber
+                                               , inInvNumberPartner := inInvNumberPartner
                                                , inOperDate         := inOperDate
                                                , inPriceWithVAT     := inPriceWithVAT
                                                , inVATPercent       := inVATPercent
