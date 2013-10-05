@@ -2,8 +2,9 @@ inherited IncomeJournalForm: TIncomeJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1055#1088#1080#1093#1086#1076
   ClientHeight = 427
   ClientWidth = 1240
-  ExplicitWidth = 1248
-  ExplicitHeight = 454
+  ExplicitLeft = -258
+  ExplicitWidth = 1256
+  ExplicitHeight = 462
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -227,13 +228,13 @@ inherited IncomeJournalForm: TIncomeJournalForm
         Width = 55
       end
       object colTotalSumm: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1087#1086#1089#1090#1072#1074#1097'.'
+        Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
         DataBinding.FieldName = 'TotalSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 67
+        Width = 60
       end
       object colTotalSummPacker: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1079#1072#1075#1086#1090#1086#1074'.'
@@ -242,13 +243,14 @@ inherited IncomeJournalForm: TIncomeJournalForm
         Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 67
+        Width = 60
       end
       object colTotalSummSpending: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1079#1072#1090#1088#1072#1090
         DataBinding.FieldName = 'TotalSummSpending'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
+        Visible = False
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 53
@@ -263,7 +265,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
         Width = 56
       end
       object colPriceWithVAT: TcxGridDBColumn
-        Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' '
+        Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
         DataBinding.FieldName = 'PriceWithVAT'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
@@ -281,9 +283,10 @@ inherited IncomeJournalForm: TIncomeJournalForm
         DataBinding.FieldName = 'TotalSummVAT'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
+        Visible = False
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 56
+        Width = 60
       end
       object colTotalSummMVAT: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
@@ -293,22 +296,17 @@ inherited IncomeJournalForm: TIncomeJournalForm
         Visible = False
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 60
       end
       object colTotalSummPVAT: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSummPVAT'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
+        Visible = False
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 37
-      end
-      object colPersonalDriverName: TcxGridDBColumn
-        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1074#1086#1076#1080#1090#1077#1083#1100')'
-        DataBinding.FieldName = 'PersonalDriverName'
-        HeaderAlignmentVert = vaCenter
-        Width = 81
+        Width = 60
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -354,8 +352,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
