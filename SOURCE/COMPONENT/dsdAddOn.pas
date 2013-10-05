@@ -142,6 +142,7 @@ type
     FEnterValue: TStringList;
     FOnAfterShow: TNotifyEvent;
     FParam: TdsdParam;
+    FGetStoredProc: TdsdStoredProc;
     procedure OnEnter(Sender: TObject);
     procedure OnExit(Sender: TObject);
     // процедура вызываетс€ после открыти€ формы и заполн€ет FEnterValue начальными параметрами
@@ -155,6 +156,7 @@ type
     property IdParam: TdsdParam read FParam write FParam;
     property StoredProc: TdsdStoredProc read FStoredProc write FStoredProc;
     property ControlList: TControlList read FControlList write FControlList;
+    property GetStoredProc: TdsdStoredProc read FGetStoredProc write FGetStoredProc;
   end;
 
   TRefreshAddOn = class(TComponent)
@@ -736,7 +738,9 @@ begin
                ControlList[i].Control := nil;
       end;
       if AComponent = StoredProc then
-         AComponent := nil
+         StoredProc := nil;
+      if AComponent = FGetStoredProc then
+         FGetStoredProc := nil;
     end;
 end;
 
@@ -780,8 +784,15 @@ begin
      isChanged := FEnterValue.Values[TComponent(Sender).Name] <> (Sender as TcxDateEdit).Text;
   if Sender is TcxCheckBox then
      isChanged := FEnterValue.Values[TComponent(Sender).Name] <> BoolToStr((Sender as TcxCheckBox).Checked);
-  if isChanged then
-     StoredProc.Execute;
+
+  try
+    if isChanged then
+       StoredProc.Execute;
+  // ≈сли в момент сохранени€ возникает ошибка, то вернем старое значение на гете
+  except
+    GetStoredProc.Execute;
+    raise;
+  end;
 end;
 
 { TControlList }

@@ -5,12 +5,17 @@ IN inInvNumber TVarChar,
 IN inOperDate TDateTime,
 IN inParentId Integer)
  AS
-$BODY$BEGIN
+$BODY$
+
+BEGIN
   IF COALESCE(ioId, 0) = 0 THEN
      INSERT INTO Movement (DescId, InvNumber, OperDate, StatusId, ParentId)
             VALUES (inDescId, inInvNumber, inOperDate, zc_Enum_Status_UnComplete(), inParentId) RETURNING Id INTO ioId;
   ELSE
-     UPDATE Movement SET InvNumber = inInvNumber, OperDate = inOperDate WHERE Id = ioId;
+     IF (UPDATE Movement SET InvNumber = inInvNumber, OperDate = inOperDate WHERE Id = ioId
+          RETURNING StatusId) <> zc_Enum_Status_Uncomplete() THEN
+          RAISE EXCEPTION 'Можно редактировать документ только в статусе "Не проведен"';
+     END IF;
      IF NOT found THEN
      INSERT INTO Movement (Id, DescId, InvNumber, OperDate, StatusId, ParentId)
             VALUES (ioId, inDescId, inInvNumber, inOperDate, zc_Enum_Status_UnComplete(), inParentId) RETURNING Id INTO ioId;
