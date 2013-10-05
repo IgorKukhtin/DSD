@@ -1545,8 +1545,8 @@
         ParamType = ptOutput
         Value = ''
       end>
-    Left = 223
-    Top = 182
+    Left = 207
+    Top = 166
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
