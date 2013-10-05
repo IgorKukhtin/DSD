@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_IncomeFuel(
     IN inAmount              TFloat    , -- Количество
     IN inPrice               TFloat    , -- Цена
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
-   OUT outAmountSumm         TFloat    , -- Количество расчетное по норме
+   OUT outAmountSumm         TFloat    , -- Сумма расчетная
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS RECORD AS

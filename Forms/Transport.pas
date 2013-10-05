@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   cxSplitter, cxCurrencyEdit, DataModul, dsdAddOn, dxBarExtItems,
-  cxGridBandedTableView, cxGridDBBandedTableView;
+  cxGridBandedTableView, cxGridDBBandedTableView, cxBlobEdit;
 
 type
   TTransportForm = class(TParentForm)
@@ -201,6 +201,8 @@ type
     ceStatus: TcxButtonEdit;
     cxLabel15: TcxLabel;
     ChangeStatus: TChangeStatus;
+    clincInvNumberPartner: TcxGridDBColumn;
+    clincRouteName: TcxGridDBColumn;
   private
   public
   end;

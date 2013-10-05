@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpSelect_Movement_TransportIncome (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_TransportIncome(
-    IN inMovementId  Integer      , -- ключ Документа
+    IN inParentId    Integer      , -- Ключ Master <Документ>
     IN inShowAll     Boolean      , -- 
     IN inIsErased    Boolean      , -- 
     IN inSession     TVarChar       -- сессия пользователя
@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_TransportIncome(
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , InvNumberPartner TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat
-             , FromId Integer, FromCode Integer, FromName TVarChar, PaidKindId Integer, PaidKindName TVarChar
+             , FromId Integer, FromCode Integer, FromName TVarChar, PaidKindId Integer, PaidKindName TVarChar, ContractId Integer, ContractName TVarChar
+             , RouteId Integer, RouteName TVarChar
              , MovementItemId Integer
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, FuelCode Integer, FuelName TVarChar
              , Amount TFloat, Price TFloat, CountForPrice TFloat, AmountSumm TFloat, AmountSummTotal TFloat
@@ -42,6 +43,10 @@ BEGIN
            , Object_From.ValueData             AS FromName
            , Object_PaidKind.Id                AS PaidKindId
            , Object_PaidKind.ValueData         AS PaidKindName
+           , Object_Contract.Id                AS ContractId
+           , Object_Contract.ValueData         AS ContractName
+           , Object_Route.Id                   AS RouteId
+           , Object_Route.ValueData            AS RouteName
 
            , MovementItem.Id          AS MovementItemId
            , Object_Goods.Id          AS GoodsId
@@ -58,7 +63,6 @@ BEGIN
                            THEN CAST ( MovementItem.Amount * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
                         ELSE CAST ( MovementItem.Amount * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat) AS AmountSumm
-
            , CAST (tmpMIContainer.Amount AS TFloat) AS AmountSummTotal
 
            , MovementItem.isErased
@@ -97,13 +101,26 @@ BEGIN
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                         ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
+                                         ON MovementLinkObject_Route.MovementId = Movement.Id
+                                        AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
+            LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementLinkObject_Route.ObjectId
+
             JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                              AND MovementItem.DescId     = zc_MI_Master()
 
             LEFT JOIN (SELECT MIContainer.MovementItemId, SUM (MIContainer.Amount) AS Amount
-                       FROM Movement
+                       FROM lfSelect_Object_Account_byAccountGroup (zc_Enum_AccountGroup_20000()) AS lfObject_Account -- 20000; "Запасы"
+                            JOIN Movement ON Movement.ParentId = inParentId
                             JOIN MovementItemContainer AS MIContainer ON MIContainer.MovementId = Movement.Id
-                       WHERE Movement.ParentId = inMovementId
+                                                                     AND MIContainer.DescId = zc_MIContainer_Summ()
+                            JOIN Container ON Container.Id = MIContainer.ContainerId
+                                          AND Container.ObjectId = lfObject_Account.AccountId
                        GROUP BY MIContainer.MovementItemId
                       ) AS tmpMIContainer ON tmpMIContainer.MovementItemId = MovementItem.Id
 
@@ -116,11 +133,14 @@ BEGIN
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
+            LEFT JOIN MovementItemContainer AS MIContainer_Count ON MIContainer_Count.MovementItemId = MovementItem.Id
+                                                                AND MIContainer_Count.DescId = zc_MIContainer_Count()
+            LEFT JOIN Container AS Container_Count ON Container_Count.Id = MIContainer_Count.ContainerId
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Fuel ON ObjectLink_Goods_Fuel.ObjectId = MovementItem.ObjectId
-                                                         AND ObjectLink_Goods_Fuel.ObjectId = zc_ObjectLink_Goods_Fuel()
-            LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = ObjectLink_Goods_Fuel.ChildObjectId
+                                                         AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
+            LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = COALESCE (Container_Count.ObjectId, ObjectLink_Goods_Fuel.ChildObjectId)
 
-       WHERE Movement.ParentId = inMovementId
+       WHERE Movement.ParentId = inParentId
          AND Movement.DescId = zc_Movement_Income();
   
 END;
@@ -136,4 +156,4 @@ ALTER FUNCTION gpSelect_Movement_TransportIncome (Integer, Boolean, Boolean, TVa
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_TransportIncome (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_TransportIncome (inParentId:= 25173, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= '2')

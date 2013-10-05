@@ -238,7 +238,7 @@
     Height = 329
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheetMain
+    Properties.ActivePage = cxTabSheetIncome
     Properties.CustomButtons.Buttons = <>
     ExplicitTop = 110
     ExplicitHeight = 345
@@ -338,11 +338,11 @@
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = RouteChoiceForm
+                Action = InsertRecord
                 Default = True
                 Kind = bkEllipsis
               end>
-            Properties.ReadOnly = True
+            Properties.ReadOnly = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 125
@@ -477,18 +477,21 @@
             Caption = #8470' '#1087'/'#1087
             DataBinding.FieldName = 'Number'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 36
           end
           object colсhFuelCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'FuelCode'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object colсhFuelName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
             DataBinding.FieldName = 'FuelName'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 166
           end
           object colсhCalculated: TcxGridDBColumn
@@ -510,6 +513,7 @@
             DataBinding.FieldName = 'Amount_calc'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 67
           end
           object colсhColdHour: TcxGridDBColumn
@@ -531,6 +535,7 @@
             DataBinding.FieldName = 'AmountColdHour'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 64
           end
           object colсhAmountColdDistance: TcxGridDBColumn
@@ -538,6 +543,7 @@
             DataBinding.FieldName = 'AmountColdDistance'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 81
           end
           object colсhAmountFuel: TcxGridDBColumn
@@ -545,17 +551,20 @@
             DataBinding.FieldName = 'AmountFuel'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 74
           end
           object colсhRateFuelKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1085#1086#1088#1084#1099
             DataBinding.FieldName = 'RateFuelKindName'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 91
           end
           object colchRateFuelKindTax: TcxGridDBColumn
             Caption = '% '#1089#1077#1079#1086#1085', '#1090#1077#1084#1087'.'
             DataBinding.FieldName = 'RateFuelKindTax'
+            Options.Editing = False
             Width = 59
           end
         end
@@ -665,7 +674,7 @@
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object clincStatusCode: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1091#1089
-            DataBinding.FieldName = 'StatusCode'
+            DataBinding.FieldName = 'StatusName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -674,43 +683,72 @@
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 50
-          end
-          object clincInvNumber: TcxGridDBColumn
-            Caption = #1053#1086#1084#1077#1088
-            DataBinding.FieldName = 'InvNumber'
-            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 50
           end
+          object clincInvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object clincInvNumberPartner: TcxGridDBColumn
+            Caption = #8470' '#1095#1077#1082#1072
+            DataBinding.FieldName = 'InvNumberPartner'
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
           object clincOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
-            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
           object clincFromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086' ('#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090')'
             DataBinding.FieldName = 'FromName'
-            HeaderAlignmentHorz = taCenter
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = InsertRecordIncome
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = False
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
           object clincPaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
-            HeaderAlignmentHorz = taCenter
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = False
             HeaderAlignmentVert = vaCenter
             Width = 60
+          end
+          object clincRouteName: TcxGridDBColumn
+            Caption = #1052#1072#1088#1096#1088#1091#1090
+            DataBinding.FieldName = 'RouteName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = False
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object clincGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
-            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
@@ -718,49 +756,52 @@
           object clincGoodsName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsName'
-            HeaderAlignmentHorz = taCenter
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = False
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
           object clincFuelName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
             DataBinding.FieldName = 'FuelName'
-            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object clincAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
-            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
           object clincPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
-            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
           object clincAmountSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
-            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object clincAmountSummTotal: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
             DataBinding.FieldName = 'AmountSummTotal'
-            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object clincPriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'PriceWithVAT'
-            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
@@ -775,7 +816,6 @@
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 40
           end
@@ -783,7 +823,6 @@
             Caption = #1050#1086#1083' '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             Visible = False
-            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
@@ -2377,18 +2416,25 @@
         ParamType = ptInputOutput
       end
       item
-        Name = 'outInvNumber'
+        Name = 'ioInvNumber'
         Component = IncomeCDS
         ComponentItem = 'InvNumber'
         DataType = ftString
-        ParamType = ptOutput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inOperDate'
+        Name = 'inInvNumberPartner'
+        Component = IncomeCDS
+        ComponentItem = 'InvNumberPartner'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioOperDate'
         Component = IncomeCDS
         ComponentItem = 'OperDate'
         DataType = ftDateTime
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
         Name = 'ioPriceWithVAT'
@@ -2402,7 +2448,7 @@
         Component = IncomeCDS
         ComponentItem = 'VATPercent'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
         Name = 'inFromId'
@@ -2427,6 +2473,13 @@
         ParamType = ptInputOutput
       end
       item
+        Name = 'ioPaidKindName'
+        Component = IncomeCDS
+        ComponentItem = 'PaidKindName'
+        DataType = ftString
+        ParamType = ptInputOutput
+      end
+      item
         Name = 'ioContractId'
         Component = IncomeCDS
         ComponentItem = 'ContractId'
@@ -2434,10 +2487,24 @@
         ParamType = ptInputOutput
       end
       item
+        Name = 'ioContractName'
+        Component = IncomeCDS
+        ComponentItem = 'ContractName'
+        DataType = ftString
+        ParamType = ptInputOutput
+      end
+      item
         Name = 'ioRouteId'
         Component = IncomeCDS
-        ComponentItem = 'ioRouteId'
+        ComponentItem = 'RouteId'
         DataType = ftInteger
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioRouteName'
+        Component = IncomeCDS
+        ComponentItem = 'RouteName'
+        DataType = ftString
         ParamType = ptInputOutput
       end
       item
@@ -2447,6 +2514,76 @@
         DataType = ftInteger
         ParamType = ptInput
         Value = ''
+      end
+      item
+        Name = 'ioMovementItemId'
+        Component = IncomeCDS
+        ComponentItem = 'MovementItemId'
+        DataType = ftInteger
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioGoodsId'
+        Component = IncomeCDS
+        ComponentItem = 'GoodsId'
+        DataType = ftInteger
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioGoodsCode'
+        Component = IncomeCDS
+        ComponentItem = 'GoodsCode'
+        DataType = ftInteger
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioGoodsName'
+        Component = IncomeCDS
+        ComponentItem = 'GoodsName'
+        DataType = ftString
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioFuelName'
+        Component = IncomeCDS
+        ComponentItem = 'FuelName'
+        DataType = ftString
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inAmount'
+        Component = IncomeCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPrice'
+        Component = IncomeCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioCountForPrice'
+        Component = IncomeCDS
+        ComponentItem = 'CountForPrice'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'outAmountSumm'
+        Component = IncomeCDS
+        ComponentItem = 'AmountSumm'
+        DataType = ftFloat
+        ParamType = ptOutput
+      end
+      item
+        Name = 'outAmountSummTotal'
+        Component = IncomeCDS
+        ComponentItem = 'AmountSummTotal'
+        DataType = ftFloat
+        ParamType = ptOutput
       end>
     Left = 75
     Top = 314
