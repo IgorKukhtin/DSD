@@ -1957,6 +1957,7 @@
       item
         Control = edCarTrailer
       end>
+    GetStoredProc = spGet
     Left = 376
     Top = 104
   end
