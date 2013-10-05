@@ -26,7 +26,7 @@ $BODY$BEGIN
 RETURN QUERY 
        SELECT cast (1 as integer) as  CarId, cast (1 as integer) as CarCode, cast ('Машина' as TVarChar) as CarName
             , cast (1 as integer) as FuelId, cast (1 as integer) as FuelCode, cast('Бензин' as TVarChar) as FuelName
-            , cast (120 as Tfloat) , cast (150 as Tfloat), cast (140 as Tfloat), cast (130 as Tfloat)
+            , cast (120 as Tfloat), cast (150 as Tfloat), cast (140 as Tfloat), cast (130 as Tfloat)
             , cast (400 as Tfloat), cast (500 as Tfloat), cast (450 as Tfloat), cast (480 as Tfloat) 
   ;   
 
