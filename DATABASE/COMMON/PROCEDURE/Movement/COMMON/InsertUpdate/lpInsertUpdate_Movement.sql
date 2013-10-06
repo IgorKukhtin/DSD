@@ -1,19 +1,19 @@
-﻿CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement(
-INOUT ioId Integer, 
-IN inDescId Integer, 
-IN inInvNumber TVarChar, 
-IN inOperDate TDateTime,
-IN inParentId Integer)
- AS
-$BODY$
+﻿-- Function: lpinsertupdate_movement(integer, integer, tvarchar, tdatetime, integer)
 
+-- DROP FUNCTION lpinsertupdate_movement(integer, integer, tvarchar, tdatetime, integer);
+
+CREATE OR REPLACE FUNCTION lpinsertupdate_movement(INOUT ioid integer, IN indescid integer, IN ininvnumber tvarchar, IN inoperdate tdatetime, IN inparentid integer)
+  RETURNS integer AS
+$BODY$
+DECLARE  vbStatusId INTEGER;
 BEGIN
   IF COALESCE(ioId, 0) = 0 THEN
      INSERT INTO Movement (DescId, InvNumber, OperDate, StatusId, ParentId)
             VALUES (inDescId, inInvNumber, inOperDate, zc_Enum_Status_UnComplete(), inParentId) RETURNING Id INTO ioId;
   ELSE
-     IF (UPDATE Movement SET InvNumber = inInvNumber, OperDate = inOperDate WHERE Id = ioId
-          RETURNING StatusId) <> zc_Enum_Status_Uncomplete() THEN
+     UPDATE Movement SET InvNumber = inInvNumber, OperDate = inOperDate WHERE Id = ioId
+          RETURNING StatusId INTO vbStatusId;
+     IF vbStatusId <> zc_Enum_Status_Uncomplete() THEN
           RAISE EXCEPTION 'Можно редактировать документ только в статусе "Не проведен"';
      END IF;
      IF NOT found THEN
@@ -24,5 +24,5 @@ BEGIN
 END;           $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
-ALTER FUNCTION lpInsertUpdate_Movement(integer, integer, TVarChar, TDateTime, Integer)
-  OWNER TO postgres; 
+ALTER FUNCTION lpinsertupdate_movement(integer, integer, tvarchar, tdatetime, integer)
+  OWNER TO postgres;
