@@ -60,6 +60,7 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    clFuelName: TcxGridDBColumn;
   private
     { Private declarations }
   public

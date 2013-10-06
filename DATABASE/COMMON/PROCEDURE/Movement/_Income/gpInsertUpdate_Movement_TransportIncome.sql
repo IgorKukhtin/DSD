@@ -84,47 +84,75 @@ BEGIN
          -- определили свойство из Default <% НДС>
          ioVATPercent := 20;
          -- определили свойство из Default <Виды форм оплаты>
-         ioPaidKindId := zc_Enum_PaidKind_FirstForm();
-         ioPaidKindName := lfGet_Object_ValueData (ioPaidKindId);
+         IF COALESCE (ioPaidKindId, 0) =0
+         THEN
+             ioPaidKindId := zc_Enum_PaidKind_FirstForm();
+             ioPaidKindName := lfGet_Object_ValueData (ioPaidKindId);
+         END IF;
          -- нашли свойство <Договора> у "Контрагента"
-         ioContractId := 0;
-         ioPaidKindName := lfGet_Object_ValueData (ioContractId);
+         IF COALESCE (ioContractId, 0) =0
+         THEN
+             ioContractId := 0;
+             ioContractName := lfGet_Object_ValueData (ioContractId);
+         END IF;
          -- нашли свойство <Маршрут> у Master <Документа>
-         ioRouteId := (SELECT MovementItem.ObjectId
-                       FROM (SELECT MIN (Id) AS Id FROM MovementItem WHERE MovementId = inParentId AND DescId = zc_MI_Master() AND isErased = FALSE
-                            ) AS tmpMI
-                            JOIN MovementItem ON MovementItem.Id = tmpMI.Id
-                      );
-         ioRouteName := lfGet_Object_ValueData (ioRouteId);
+         IF COALESCE (ioRouteId, 0) =0
+         THEN
+             ioRouteId := (SELECT MovementItem.ObjectId
+                           FROM (SELECT MIN (Id) AS Id FROM MovementItem WHERE MovementId = inParentId AND DescId = zc_MI_Master() AND isErased = FALSE
+                                ) AS tmpMI
+                                JOIN MovementItem ON MovementItem.Id = tmpMI.Id
+                          );
+             ioRouteName := lfGet_Object_ValueData (ioRouteId);
+         END IF;
          -- нашли свойство <Сотрудник (водитель)> у Master <Документа>
          inPersonalDriverId := (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inParentId AND DescId = zc_MovementLinkObject_PersonalDriver());
          --
          -- теперь для строки
          --
          -- нашли свойство <Товар> и <Вид топлива> для Автомобиля
-         SELECT Object_Goods.Id             AS GoodsId
-              , Object_Goods.ObjectCode     AS GoodsCode
-              , Object_Goods.ValueData      AS GoodsName
-              , Object_FuelMaster.ValueData AS FuelName
-                INTO ioGoodsId, ioGoodsCode, ioGoodsName, ioFuelName
-         FROM ObjectLink AS ObjectLink_Car_FuelMaster
-              LEFT JOIN Object AS Object_FuelMaster ON Object_FuelMaster.Id = ObjectLink_Car_FuelMaster.ChildObjectId
-              LEFT JOIN (SELECT ChildObjectId AS FuelId, MAX (ObjectId) AS GoodsId FROM ObjectLink WHERE DescId = zc_ObjectLink_Goods_Fuel() GROUP BY ChildObjectId
-                        ) AS tmpGoods ON tmpGoods.FuelId = ObjectLink_Car_FuelMaster.ChildObjectId
-              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoods.GoodsId
-         WHERE ObjectLink_Car_FuelMaster.ObjectId = inToId
-           AND ObjectLink_Car_FuelMaster.DescId = zc_ObjectLink_Car_FuelMaster();
-
-         -- проверка
-         IF COALESCE (ioFuelName, '') = ''
+         IF COALESCE (ioGoodsId, 0) =0
          THEN
-             RAISE EXCEPTION 'Ошибка.Не определен <Основной вид топлива> у <Автомобиля>.';
-         END IF;
+             SELECT Object_Goods.Id             AS GoodsId
+                  , Object_Goods.ObjectCode     AS GoodsCode
+                  , Object_Goods.ValueData      AS GoodsName
+                  , Object_FuelMaster.ValueData AS FuelName
+                    INTO ioGoodsId, ioGoodsCode, ioGoodsName, ioFuelName
+             FROM ObjectLink AS ObjectLink_Car_FuelMaster
+                  LEFT JOIN Object AS Object_FuelMaster ON Object_FuelMaster.Id = ObjectLink_Car_FuelMaster.ChildObjectId
+                  LEFT JOIN (SELECT ChildObjectId AS FuelId, MAX (ObjectId) AS GoodsId FROM ObjectLink WHERE DescId = zc_ObjectLink_Goods_Fuel() GROUP BY ChildObjectId
+                            ) AS tmpGoods ON tmpGoods.FuelId = ObjectLink_Car_FuelMaster.ChildObjectId
+                  LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGoods.GoodsId
+             WHERE ObjectLink_Car_FuelMaster.ObjectId = inToId
+               AND ObjectLink_Car_FuelMaster.DescId = zc_ObjectLink_Car_FuelMaster();
 
-         -- проверка
-         IF COALESCE (ioGoodsId, 0) = 0
-         THEN
-             RAISE EXCEPTION 'Ошибка.Не определен <Товар> для вида топлива <"%">.', ioFuelName;
+             -- проверка
+             IF COALESCE (ioFuelName, '') = ''
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Не определен <Основной вид топлива> у <Автомобиля>.';
+             END IF;
+
+             -- проверка
+             IF COALESCE (ioGoodsId, 0) = 0
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Не определен <Товар> для вида топлива <"%">.', ioFuelName;
+             END IF;
+
+         ELSE
+             -- нашли свойство <Вид топлива> для <Товар> (это что б проверить у товара должен быть вид топлива)
+             SELECT Object_Goods.ValueData AS GoodsName
+                  , Object_Fuel.ValueData  AS FuelName
+                    INTO ioGoodsName, ioFuelName
+             FROM ObjectLink AS ObjectLink_Goods_Fuel
+                  LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Fuel.ObjectId
+                  LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = ObjectLink_Goods_Fuel.ChildObjectId
+             WHERE ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
+                AND ObjectLink_Goods_Fuel.ObjectId = ioGoodsId;
+             -- проверка
+             IF COALESCE (ioFuelName, '') = ''
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Не определен <Вид топлива> у товара <"%">.', ioGoodsName;
+             END IF;
          END IF;
 
      ELSE
@@ -135,7 +163,7 @@ BEGIN
          FROM ObjectLink AS ObjectLink_Goods_Fuel
               LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Fuel.ObjectId
               LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = ObjectLink_Goods_Fuel.ChildObjectId
-         WHERE ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel() GROUP BY ChildObjectId
+         WHERE ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
             AND ObjectLink_Goods_Fuel.ObjectId = ioGoodsId;
          -- проверка
          IF COALESCE (ioFuelName, '') = ''

@@ -1,9 +1,9 @@
 inherited GoodsTreeForm: TGoodsTreeForm
-  Caption = #1058#1086#1074#1072#1088#1099
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <T'#1086#1074#1072#1088#1099'>'
   ClientHeight = 473
   ClientWidth = 874
-  ExplicitWidth = 882
-  ExplicitHeight = 500
+  ExplicitWidth = 890
+  ExplicitHeight = 508
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -42,47 +42,54 @@ inherited GoodsTreeForm: TGoodsTreeForm
         HeaderAlignmentVert = vaCenter
         Width = 58
       end
-      object clName: TcxGridDBColumn
-        Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
-        DataBinding.FieldName = 'Name'
-        HeaderAlignmentVert = vaCenter
-        Width = 226
-      end
-      object clWeight: TcxGridDBColumn
-        Caption = #1042#1077#1089' '#1090#1086#1074#1072#1088#1072
-        DataBinding.FieldName = 'Weight'
-        HeaderAlignmentVert = vaCenter
-        Width = 72
-      end
       object clGoodsGroup: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1099' '#1090#1086#1074#1072#1088#1086#1074
+        Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'GoodsGroupName'
         HeaderAlignmentVert = vaCenter
-        Width = 59
+        Width = 100
+      end
+      object clName: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'Name'
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
+      object clWeight: TcxGridDBColumn
+        Caption = #1042#1077#1089
+        DataBinding.FieldName = 'Weight'
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
       object clMeasure: TcxGridDBColumn
-        Caption = #1045#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
+        Caption = #1045#1076'. '#1080#1079#1084'.'
         DataBinding.FieldName = 'MeasureName'
         HeaderAlignmentVert = vaCenter
-        Width = 78
+        Width = 50
+      end
+      object clFuelName: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
+        DataBinding.FieldName = 'FuelName'
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object clTradeMark: TcxGridDBColumn
-        Caption = #1058#1086#1088#1075#1086#1074#1099#1077' '#1084#1072#1088#1082#1080
+        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
         DataBinding.FieldName = 'TradeMarkName'
+        HeaderAlignmentVert = vaCenter
         Width = 82
       end
       object clInfoMoney: TcxGridDBColumn
-        Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
+        Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
-        Width = 119
+        HeaderAlignmentVert = vaCenter
+        Width = 100
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
-        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 62
+        Width = 50
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -166,8 +173,8 @@ inherited GoodsTreeForm: TGoodsTreeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -342,6 +349,7 @@ inherited GoodsTreeForm: TGoodsTreeForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
       ShortCut = 46
+      ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
     object dsdSetUnErased: TdsdUpdateErased
@@ -355,6 +363,7 @@ inherited GoodsTreeForm: TGoodsTreeForm
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 32776
+      ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
     end
@@ -420,6 +429,7 @@ inherited GoodsTreeForm: TGoodsTreeForm
     Top = 240
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <>
     ActionItemList = <>
@@ -449,6 +459,7 @@ inherited GoodsTreeForm: TGoodsTreeForm
     Top = 136
   end
   object dsdDBTreeAddOn: TdsdDBTreeAddOn
+    ErasedFieldName = 'isErased'
     OnDblClickActionList = <
       item
       end

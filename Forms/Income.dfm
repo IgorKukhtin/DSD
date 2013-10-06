@@ -1,5 +1,5 @@
 inherited IncomeForm: TIncomeForm
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1055#1088#1080#1093#1086#1076
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 462
   ClientWidth = 971
   KeyPreview = True
@@ -421,6 +421,9 @@ inherited IncomeForm: TIncomeForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0

@@ -1,5 +1,5 @@
 inherited UnitTreeForm: TUnitTreeForm
-  Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
   ClientHeight = 403
   ClientWidth = 768
   ExplicitWidth = 784
@@ -327,6 +327,7 @@ inherited UnitTreeForm: TUnitTreeForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 46
+      ErasedFieldName = 'isErased'
       DataSource = TreeDS
     end
     object dsdChoiceGuides: TdsdChoiceGuides
@@ -364,6 +365,7 @@ inherited UnitTreeForm: TUnitTreeForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 32776
+      ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = TreeDS
     end
@@ -406,6 +408,7 @@ inherited UnitTreeForm: TUnitTreeForm
     Top = 160
   end
   object dsdDBTreeAddOn: TdsdDBTreeAddOn
+    ErasedFieldName = 'isErased'
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
@@ -437,6 +440,7 @@ inherited UnitTreeForm: TUnitTreeForm
     Top = 280
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
       item

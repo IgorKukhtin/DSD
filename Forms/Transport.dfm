@@ -1,5 +1,5 @@
 ﻿inherited TransportForm: TTransportForm
-  Caption = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090'>'
   ClientHeight = 455
   ClientWidth = 996
   KeyPreview = True
@@ -238,7 +238,7 @@
     Height = 329
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheetIncome
+    Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 329
     ClientRectRight = 996
@@ -602,11 +602,6 @@
             item
               Kind = skSum
               Position = spFooter
-              Column = clincPriceWithVAT
-            end
-            item
-              Kind = skSum
-              Position = spFooter
             end
             item
               Kind = skSum
@@ -629,10 +624,6 @@
             end
             item
               Kind = skSum
-            end
-            item
-              Kind = skSum
-              Column = clincPriceWithVAT
             end
             item
               Kind = skSum
@@ -748,7 +739,7 @@
             Width = 45
           end
           object clincGoodsName: TcxGridDBColumn
-            Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+            Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -803,14 +794,6 @@
           object clincVATPercent: TcxGridDBColumn
             Caption = '% '#1053#1044#1057
             DataBinding.FieldName = 'VATPercent'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = FreightChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
             Width = 40
           end

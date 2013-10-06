@@ -1,9 +1,9 @@
 inherited MemberForm: TMemberForm
-  Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
   ClientHeight = 384
   ClientWidth = 678
-  ExplicitWidth = 686
-  ExplicitHeight = 418
+  ExplicitWidth = 694
+  ExplicitHeight = 419
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -59,18 +59,19 @@ inherited MemberForm: TMemberForm
       object clDriverCertificate: TcxGridDBColumn
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100#1089#1082#1086#1077' '#1091#1076#1086#1089#1090#1086#1074#1077#1088#1077#1085#1080#1077
         DataBinding.FieldName = 'DriverCertificate'
+        HeaderAlignmentVert = vaCenter
         Width = 131
       end
       object clComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
+        HeaderAlignmentVert = vaCenter
         Width = 137
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
-        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 58
       end
@@ -108,8 +109,8 @@ inherited MemberForm: TMemberForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

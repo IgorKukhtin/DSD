@@ -1,9 +1,9 @@
 inherited FuelForm: TFuelForm
-  Caption = #1042#1080#1076#1099' '#1090#1086#1087#1083#1080#1074#1072
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1080#1076#1099' '#1090#1086#1087#1083#1080#1074#1072'>'
   ClientHeight = 376
   ClientWidth = 597
-  ExplicitWidth = 605
-  ExplicitHeight = 410
+  ExplicitWidth = 613
+  ExplicitHeight = 411
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -32,7 +32,6 @@ inherited FuelForm: TFuelForm
       OptionsData.Inserting = False
       OptionsView.CellAutoHeight = True
       OptionsView.ColumnAutoWidth = True
-      OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 50
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -43,7 +42,7 @@ inherited FuelForm: TFuelForm
         Width = 85
       end
       object clName: TcxGridDBColumn
-        Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Width = 181
@@ -57,6 +56,7 @@ inherited FuelForm: TFuelForm
       object clRateFuelKind: TcxGridDBColumn
         Caption = #1042#1080#1076#1099' '#1085#1086#1088#1084' '#1076#1083#1103' '#1090#1086#1087#1083#1080#1074#1072
         DataBinding.FieldName = 'RateFuelKindName'
+        HeaderAlignmentVert = vaCenter
         Width = 147
       end
       object clErased: TcxGridDBColumn
@@ -64,7 +64,6 @@ inherited FuelForm: TFuelForm
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
         GroupSummaryAlignment = taCenter
-        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
@@ -107,8 +106,8 @@ inherited FuelForm: TFuelForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -280,6 +279,7 @@ inherited FuelForm: TFuelForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
       ShortCut = 46
+      ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
     object dsdSetUnErased: TdsdUpdateErased
@@ -293,6 +293,7 @@ inherited FuelForm: TFuelForm
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 32776
+      ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
     end
@@ -357,6 +358,7 @@ inherited FuelForm: TFuelForm
     Top = 120
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
       item

@@ -68,6 +68,7 @@ type
     spTree: TdsdStoredProc;
     TreeDataSet: TClientDataSet;
     dsdDBTreeAddOn: TdsdDBTreeAddOn;
+    clFuelName: TcxGridDBColumn;
   private
     { Private declarations }
   public

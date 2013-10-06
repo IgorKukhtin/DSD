@@ -1,16 +1,16 @@
 inherited GoodsKindForm: TGoodsKindForm
-  Caption = #1042#1080#1076#1099' '#1090#1086#1074#1072#1088#1086#1074
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1080#1076#1099' '#1090#1086#1074#1072#1088#1072'>'
   ClientHeight = 376
   ClientWidth = 390
   ExplicitWidth = 406
-  ExplicitHeight = 414
+  ExplicitHeight = 411
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
+    Top = 26
     Width = 390
-    Height = 348
+    Height = 350
     Align = alClient
     TabOrder = 0
     object cxGridDBTableView: TcxGridDBTableView
@@ -40,7 +40,7 @@ inherited GoodsKindForm: TGoodsKindForm
         HeaderAlignmentVert = vaCenter
       end
       object clName: TcxGridDBColumn
-        Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Width = 252
@@ -103,7 +103,7 @@ inherited GoodsKindForm: TGoodsKindForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -260,6 +260,7 @@ inherited GoodsKindForm: TGoodsKindForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 46
+      ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
     object dsdSetUnErased: TdsdUpdateErased
@@ -272,6 +273,7 @@ inherited GoodsKindForm: TGoodsKindForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 32776
+      ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
     end
@@ -322,7 +324,10 @@ inherited GoodsKindForm: TGoodsKindForm
     Top = 120
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
+    OnDblClickActionList = <>
+    ActionItemList = <>
     Left = 296
     Top = 168
   end

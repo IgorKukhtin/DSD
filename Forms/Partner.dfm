@@ -1,5 +1,5 @@
 inherited PartnerForm: TPartnerForm
-  Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099'>'
   ClientHeight = 473
   ClientWidth = 750
   ExplicitWidth = 766
@@ -27,7 +27,6 @@ inherited PartnerForm: TPartnerForm
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
-      OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -37,19 +36,20 @@ inherited PartnerForm: TPartnerForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 54
+        Width = 60
       end
       object ceName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
+        Width = 150
       end
       object ceJuridicalName: TcxGridDBColumn
-        Caption = #1070#1088'. '#1083#1080#1094#1086
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1075#1086' '#1083#1080#1094#1072
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 509
+        Width = 150
       end
       object ceisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -58,7 +58,7 @@ inherited PartnerForm: TPartnerForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 76
+        Width = 50
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -262,6 +262,7 @@ inherited PartnerForm: TPartnerForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
       ShortCut = 46
+      ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
     object dsdSetUnErased: TdsdUpdateErased
@@ -271,6 +272,7 @@ inherited PartnerForm: TPartnerForm
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 32776
+      ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
     end
@@ -331,6 +333,7 @@ inherited PartnerForm: TPartnerForm
     Top = 208
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
       item

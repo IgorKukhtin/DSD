@@ -1,5 +1,5 @@
 inherited JuridicalForm: TJuridicalForm
-  Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
   ClientHeight = 405
   ClientWidth = 712
   ExplicitWidth = 728
@@ -34,7 +34,6 @@ inherited JuridicalForm: TJuridicalForm
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
-      OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -259,6 +258,7 @@ inherited JuridicalForm: TJuridicalForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
       ShortCut = 46
+      ErasedFieldName = 'isErased'
       DataSource = GridDS
     end
     object dsdSetUnErased: TdsdUpdateErased
@@ -272,6 +272,7 @@ inherited JuridicalForm: TJuridicalForm
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 32776
+      ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = GridDS
     end
@@ -350,6 +351,7 @@ inherited JuridicalForm: TJuridicalForm
     Top = 184
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
       item

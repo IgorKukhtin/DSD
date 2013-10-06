@@ -1,16 +1,16 @@
 inherited CarModelForm: TCarModelForm
-  Caption = #1052#1072#1088#1082#1080' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1077#1081
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1052#1072#1088#1082#1080' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103'>'
   ClientHeight = 436
   ClientWidth = 552
   ExplicitWidth = 568
-  ExplicitHeight = 474
+  ExplicitHeight = 471
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
+    Top = 26
     Width = 552
-    Height = 408
+    Height = 410
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -44,7 +44,7 @@ inherited CarModelForm: TCarModelForm
         Width = 61
       end
       object clName: TcxGridDBColumn
-        Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Width = 214
@@ -108,7 +108,7 @@ inherited CarModelForm: TCarModelForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -263,6 +263,7 @@ inherited CarModelForm: TCarModelForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
       ShortCut = 46
+      ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
     object dsdSetUnErased: TdsdUpdateErased
@@ -276,6 +277,7 @@ inherited CarModelForm: TCarModelForm
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 32776
+      ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
     end
@@ -326,7 +328,10 @@ inherited CarModelForm: TCarModelForm
     Top = 160
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
+    OnDblClickActionList = <>
+    ActionItemList = <>
     Left = 168
     Top = 216
   end

@@ -1,5 +1,5 @@
 inherited UnitForm: TUnitForm
-  Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
   ClientHeight = 420
   ClientWidth = 667
   ExplicitWidth = 683
@@ -252,6 +252,7 @@ inherited UnitForm: TUnitForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 46
+      ErasedFieldName = 'isErased'
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -288,6 +289,7 @@ inherited UnitForm: TUnitForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 32776
+      ErasedFieldName = 'isErased'
       isSetErased = False
     end
   end
@@ -340,6 +342,7 @@ inherited UnitForm: TUnitForm
     Top = 240
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
