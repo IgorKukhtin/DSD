@@ -577,7 +577,7 @@
       end
     end
     object cxTabSheetIncome: TcxTabSheet
-      Caption = #1055#1088#1080#1093#1086#1076#1099
+      Caption = #1055#1088#1080#1093#1086#1076
       ImageIndex = 2
       object cxGridIncome: TcxGrid
         Left = 0
@@ -1044,7 +1044,7 @@
     Left = 208
     Top = 336
   end
-  object spSelectMovementItem: TdsdStoredProc
+  object spSelectMI: TdsdStoredProc
     StoredProcName = 'gpSelect_MI_Transport'
     DataSet = MasterCDS
     DataSets = <
@@ -1115,42 +1115,6 @@
     Images = dmMain.ImageList
     Left = 53
     Top = 182
-    object BooleanStoredProcAction: TBooleanStoredProcAction
-      Category = 'DSDLib'
-      StoredProc = spSelectMovementItem
-      StoredProcList = <
-        item
-          StoredProc = spSelectMovementItem
-        end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 63
-      Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndexTrue = 62
-      ImageIndexFalse = 63
-    end
-    object ShowErasedAction: TBooleanStoredProcAction
-      Category = 'DSDLib'
-      StoredProc = spSelectMovementItem
-      StoredProcList = <
-        item
-          StoredProc = spSelectMovementItem
-        end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndex = 64
-      Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndexTrue = 65
-      ImageIndexFalse = 64
-    end
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
       StoredProc = spInsertUpdateMovement
@@ -1163,6 +1127,43 @@
       ImageIndex = 14
       ShortCut = 113
     end
+    object ShowErasedAction: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      StoredProc = spSelectMI
+      StoredProcList = <
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
+    object BooleanStoredProcAction: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
+      StoredProc = spSelectMI
+      StoredProcList = <
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spGet
@@ -1171,7 +1172,7 @@
           StoredProc = spGet
         end
         item
-          StoredProc = spSelectMovementItem
+          StoredProc = spSelectMI
         end
         item
           StoredProc = spSelectMIContainer
@@ -1209,7 +1210,7 @@
           StoredProc = spInsertUpdateMIMaster
         end
         item
-          StoredProc = spSelectMovementItem
+          StoredProc = spSelectMI
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
@@ -1239,17 +1240,21 @@
       TabSheet = cxTabSheetMain
       View = cxGridDBTableView
       Action = RouteChoiceForm
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1052#1072#1088#1096#1088#1091#1090
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1052#1072#1088#1096#1088#1091#1090
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090'>'
       ShortCut = 45
       ImageIndex = 0
     end
     object SetErased: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
-      StoredProcList = <>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1052#1072#1088#1096#1088#1091#1090
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1052#1072#1088#1096#1088#1091#1090
+      StoredProc = spErasedMIMaster
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIMaster
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090'>'
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -1258,7 +1263,11 @@
     object SetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
-      StoredProcList = <>
+      StoredProc = spUnErasedMIMaster
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIMaster
+        end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
@@ -1349,10 +1358,41 @@
       TabSheet = cxTabSheetIncome
       View = cxGridIncomeDBTableView
       Action = PartnerChoiceForm
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1088#1080#1093#1086#1076' ('#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086')>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1088#1080#1093#1086#1076' ('#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086')>'
       ShortCut = 45
       ImageIndex = 0
+    end
+    object SetErasedIncome: TdsdUpdateErased
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetIncome
+      StoredProc = spErasedMIIncome
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIIncome
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1088#1080#1093#1086#1076' ('#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086')>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1055#1088#1080#1093#1086#1076' ('#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086')>'
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = MasterDS
+    end
+    object SetUnErasedIncome: TdsdUpdateErased
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetIncome
+      StoredProc = spUnErasedMIIncome
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIIncome
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = MasterDS
     end
     object PartnerChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -2261,7 +2301,7 @@
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbBooleanAction'
+          ItemName = 'bbInsertUpdateMovement'
         end
         item
           Visible = True
@@ -2269,7 +2309,7 @@
         end
         item
           Visible = True
-          ItemName = 'bbInsertUpdateMovement'
+          ItemName = 'bbBooleanAction'
         end
         item
           BeginGroup = True
@@ -2295,6 +2335,14 @@
         item
           Visible = True
           ItemName = 'bbAddIncome'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErasedIncome'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErasedIncome'
         end
         item
           Visible = True
@@ -2370,6 +2418,14 @@
     end
     object bbAddIncome: TdxBarButton
       Action = InsertRecordIncome
+      Category = 0
+    end
+    object bbErasedIncome: TdxBarButton
+      Action = SetErasedIncome
+      Category = 0
+    end
+    object bbUnErasedIncome: TdxBarButton
+      Action = SetUnErasedIncome
       Category = 0
     end
   end
@@ -2654,5 +2710,93 @@
     StoredProcName = 'gpUpdate_Status_Transport'
     Left = 449
     Top = 208
+  end
+  object spErasedMIMaster: TdsdStoredProc
+    StoredProcName = 'gpSetErased_MovementItem'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'outIsErased'
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        ParamType = ptOutput
+      end>
+    Left = 614
+    Top = 208
+  end
+  object spUnErasedMIMaster: TdsdStoredProc
+    StoredProcName = 'gpSetUnErased_MovementItem'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'outIsErased'
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        ParamType = ptOutput
+      end>
+    Left = 678
+    Top = 224
+  end
+  object spErasedMIIncome: TdsdStoredProc
+    StoredProcName = 'gpSetErased_MovementItem'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = IncomeCDS
+        ComponentItem = 'MovementItemId'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'outIsErased'
+        Component = IncomeCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        ParamType = ptOutput
+      end>
+    Left = 614
+    Top = 272
+  end
+  object spUnErasedMIIncome: TdsdStoredProc
+    StoredProcName = 'gpSetErased_MovementItem'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementItemId'
+        Component = IncomeCDS
+        ComponentItem = 'MovementItemId'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'outIsErased'
+        Component = IncomeCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        ParamType = ptOutput
+      end>
+    Left = 686
+    Top = 288
   end
 end

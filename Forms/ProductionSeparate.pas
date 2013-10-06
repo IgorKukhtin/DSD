@@ -70,8 +70,8 @@ type
     EntryDS: TDataSource;
     colKreditAccountName: TcxGridDBColumn;
     colKreditAmount: TcxGridDBColumn;
-    actUpdateDataSet: TdsdUpdateDataSet;
-    spInsertUpdateMI: TdsdStoredProc;
+    actUpdateMasterDS: TdsdUpdateDataSet;
+    spInsertUpdateMIMaster: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     frxDBDataset: TfrxDBDataset;

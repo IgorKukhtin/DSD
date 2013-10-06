@@ -82,12 +82,12 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     Height = 310
     Align = alClient
     TabOrder = 2
-    Properties.ActivePage = cxTabSheet1
+    Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 310
     ClientRectRight = 773
     ClientRectTop = 24
-    object cxTabSheet1: TcxTabSheet
+    object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
       object cxGrid: TcxGrid
@@ -169,13 +169,20 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object colRouteName: TcxGridDBColumn
-            Caption = #1052#1072#1088#1096#1088#1091#1090
-            DataBinding.FieldName = 'RouteName'
+          object colPersonalCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'PersonalCode'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 40
+          end
+          object colPersonalName: TcxGridDBColumn
+            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
+            DataBinding.FieldName = 'PersonalName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = RoteChoiceForm
+                Action = PersonalChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -197,20 +204,13 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colPersonalCode: TcxGridDBColumn
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'PersonalCode'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 40
-          end
-          object colPersonalName: TcxGridDBColumn
-            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
-            DataBinding.FieldName = 'PersonalName'
+          object colRouteName: TcxGridDBColumn
+            Caption = #1052#1072#1088#1096#1088#1091#1090
+            DataBinding.FieldName = 'RouteName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = PersonalChoiceForm
+                Action = RoteChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -246,12 +246,9 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         end
       end
     end
-    object cxTabSheet2: TcxTabSheet
+    object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -453,7 +450,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     Left = 240
     Top = 304
   end
-  object spSelectMovementItem: TdsdStoredProc
+  object spSelectMI: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_PersonalSendCash'
     DataSet = MasterCDS
     DataSets = <
@@ -524,7 +521,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbBooleanAction'
+          ItemName = 'bbInsertUpdateMovement'
         end
         item
           Visible = True
@@ -532,7 +529,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertUpdateMovement'
+          ItemName = 'bbBooleanAction'
         end
         item
           BeginGroup = True
@@ -642,6 +639,66 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     Images = dmMain.ImageList
     Left = 56
     Top = 168
+    object actInsertUpdateMovement: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = spInsertUpdateMovement
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end>
+      Caption = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 14
+      ShortCut = 113
+    end
+    object ShowErasedAction: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
+      StoredProc = spSelectMI
+      StoredProcList = <
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
+    object BooleanStoredProcAction: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
+      StoredProc = spSelectMI
+      StoredProcList = <
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
+    object actUpdateMasterDS: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      StoredProc = spInsertUpdateMIMaster
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end>
+      Caption = 'actUpdateMasterDS'
+      DataSource = MasterDS
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spGet
@@ -650,7 +707,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
           StoredProc = spGet
         end
         item
-          StoredProc = spSelectMovementItem
+          StoredProc = spSelectMI
         end
         item
           StoredProc = spSelectMovementContainerItem
@@ -659,16 +716,6 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
-    end
-    object actUpdateDataSet: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      StoredProc = spInsertUpdateMovementItem
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdateMovementItem
-        end>
-      Caption = 'actUpdateDataSet'
-      DataSource = MasterDS
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -702,27 +749,9 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         end>
       ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
     end
-    object BooleanStoredProcAction: TBooleanStoredProcAction
-      Category = 'DSDLib'
-      StoredProc = spSelectMovementItem
-      StoredProcList = <
-        item
-          StoredProc = spSelectMovementItem
-        end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 63
-      Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndexTrue = 62
-      ImageIndexFalse = 63
-    end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
-      TabSheet = cxTabSheet1
+      TabSheet = cxTabSheetMain
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -731,24 +760,53 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     end
     object EntryToExcel: TdsdGridToExcel
       Category = 'DSDLib'
-      TabSheet = cxTabSheet2
+      TabSheet = cxTabSheetEntry
       Grid = cxGridEntry
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
     end
-    object actInsertUpdateMovement: TdsdExecStoredProc
+    object InsertRecord: TInsertRecord
       Category = 'DSDLib'
-      StoredProc = spInsertUpdateMovement
+      TabSheet = cxTabSheetMain
+      View = cxGridDBTableView
+      Action = PersonalChoiceForm
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1042#1086#1076#1080#1090#1077#1083#1100')>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1042#1086#1076#1080#1090#1077#1083#1100')>'
+      ShortCut = 45
+      ImageIndex = 0
+    end
+    object SetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
+      StoredProc = spErasedMIMaster
       StoredProcList = <
         item
-          StoredProc = spInsertUpdateMovement
+          StoredProc = spErasedMIMaster
         end>
-      Caption = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      Hint = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      ImageIndex = 14
-      ShortCut = 113
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1042#1086#1076#1080#1090#1077#1083#1100')>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1042#1086#1076#1080#1090#1077#1083#1100')>'
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = MasterDS
+    end
+    object SetUnErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
+      StoredProc = spUnErasedMIMaster
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIMaster
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = MasterDS
     end
     object PersonalChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -776,54 +834,6 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
           ParamType = ptOutput
         end>
       isShowModal = True
-    end
-    object InsertRecord: TInsertRecord
-      Category = 'DSDLib'
-      View = cxGridDBTableView
-      Action = PersonalChoiceForm
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
-      ShortCut = 45
-      ImageIndex = 0
-    end
-    object SetErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      StoredProcList = <>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
-      ImageIndex = 2
-      ShortCut = 46
-      ErasedFieldName = 'isErased'
-      DataSource = MasterDS
-    end
-    object SetUnErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      StoredProcList = <>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 46
-      ErasedFieldName = 'isErased'
-      isSetErased = False
-      DataSource = MasterDS
-    end
-    object ShowErasedAction: TBooleanStoredProcAction
-      Category = 'DSDLib'
-      StoredProc = spSelectMovementItem
-      StoredProcList = <
-        item
-          StoredProc = spSelectMovementItem
-        end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndex = 64
-      Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
-      ImageIndexTrue = 65
-      ImageIndexFalse = 64
     end
     object CarChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -940,7 +950,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     Left = 56
     Top = 296
   end
-  object spInsertUpdateMovementItem: TdsdStoredProc
+  object spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_PersonalSendCash'
     DataSets = <>
     OutputType = otResult
@@ -1205,5 +1215,65 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     StoredProcName = 'gpUpdate_Status_PersonalSendCash'
     Left = 488
     Top = 176
+  end
+  object spErasedMIMaster: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_PersonalSendCash_SetErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = FormParams
+        ComponentItem = 'Id'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = '0'
+      end
+      item
+        Name = 'inPersonalId'
+        Component = MasterCDS
+        ComponentItem = 'PersonalId'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'outIsErased'
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        ParamType = ptOutput
+      end>
+    Left = 574
+    Top = 200
+  end
+  object spUnErasedMIMaster: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_PersonalSendCash_SetUnErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = FormParams
+        ComponentItem = 'Id'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = '0'
+      end
+      item
+        Name = 'inPersonalId'
+        Component = MasterCDS
+        ComponentItem = 'PersonalId'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'outIsErased'
+        Component = MasterCDS
+        ComponentItem = 'isErased'
+        DataType = ftBoolean
+        ParamType = ptOutput
+      end>
+    Left = 630
+    Top = 224
   end
 end

@@ -28,7 +28,7 @@ uses
 type
   TPersonalSendCashForm = class(TParentForm)
     FormParams: TdsdFormParams;
-    spSelectMovementItem: TdsdStoredProc;
+    spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
     dxBarManagerBar: TdxBar;
     bbRefresh: TdxBarButton;
@@ -48,8 +48,8 @@ type
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
     cxPageControl: TcxPageControl;
-    cxTabSheet1: TcxTabSheet;
-    cxTabSheet2: TcxTabSheet;
+    cxTabSheetMain: TcxTabSheet;
+    cxTabSheetEntry: TcxTabSheet;
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     colPersonalCode: TcxGridDBColumn;
@@ -67,8 +67,8 @@ type
     EntryDS: TDataSource;
     colKreditAccountName: TcxGridDBColumn;
     colKreditAmount: TcxGridDBColumn;
-    actUpdateDataSet: TdsdUpdateDataSet;
-    spInsertUpdateMovementItem: TdsdStoredProc;
+    actUpdateMasterDS: TdsdUpdateDataSet;
+    spInsertUpdateMIMaster: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     frxDBDataset: TfrxDBDataset;
@@ -121,6 +121,8 @@ type
     ceStatus: TcxButtonEdit;
     cxLabel4: TcxLabel;
     ChangeStatus: TChangeStatus;
+    spErasedMIMaster: TdsdStoredProc;
+    spUnErasedMIMaster: TdsdStoredProc;
   private
   public
   end;

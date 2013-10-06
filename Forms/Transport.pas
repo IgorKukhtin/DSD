@@ -29,7 +29,7 @@ uses
 type
   TTransportForm = class(TParentForm)
     FormParams: TdsdFormParams;
-    spSelectMovementItem: TdsdStoredProc;
+    spSelectMI: TdsdStoredProc;
     cxPropertiesStore: TcxPropertiesStore;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
@@ -206,6 +206,14 @@ type
     PaidKindChoiceForm: TOpenChoiceForm;
     GoodsChoiceForm: TOpenChoiceForm;
     RouteIncomeChoiceForm: TOpenChoiceForm;
+    spErasedMIMaster: TdsdStoredProc;
+    spUnErasedMIMaster: TdsdStoredProc;
+    SetErasedIncome: TdsdUpdateErased;
+    SetUnErasedIncome: TdsdUpdateErased;
+    spErasedMIIncome: TdsdStoredProc;
+    spUnErasedMIIncome: TdsdStoredProc;
+    bbErasedIncome: TdxBarButton;
+    bbUnErasedIncome: TdxBarButton;
   private
   public
   end;

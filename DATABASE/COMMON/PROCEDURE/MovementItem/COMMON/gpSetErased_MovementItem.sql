@@ -1,19 +1,25 @@
 -- Function: gpSetErased_MovementItem (Integer, TVarChar)
 
--- DROP FUNCTION gpSetErased_MovementItem (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSetErased_MovementItem (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSetErased_MovementItem(
     IN inMovementItemId      Integer              , -- ключ объекта <Элемент документа>
+   OUT outIsErased           Boolean              , -- новое значение
     IN inSession             TVarChar               -- текущий пользователь
 )                              
-  RETURNS void AS
+  RETURNS Boolean
+AS
 $BODY$
 BEGIN
 
   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_SetErased_MovementItem());
 
+  -- устанавливаем новое значение
+  outIsErased := TRUE;
+
   -- Обязательно меняем 
-  UPDATE MovementItem SET isErased = TRUE WHERE Id = inMovementItemId;
+  UPDATE MovementItem SET isErased = outIsErased WHERE Id = inMovementItemId;
+
 
 END;
 $BODY$
@@ -23,6 +29,7 @@ ALTER FUNCTION gpSetErased_MovementItem (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.10.13                                        * add outIsErased
  01.10.13                                        *
 */
 

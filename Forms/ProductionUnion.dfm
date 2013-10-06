@@ -5,7 +5,7 @@
   KeyPreview = True
   PopupMenu = PopupMenu
   ExplicitWidth = 1044
-  ExplicitHeight = 434
+  ExplicitHeight = 431
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -19,6 +19,7 @@
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 27
+      Enabled = False
       TabOrder = 0
       Width = 121
     end
@@ -73,16 +74,15 @@
   end
   object cxPageControl1: TcxPageControl
     Left = 0
-    Top = 112
+    Top = 110
     Width = 1028
-    Height = 284
+    Height = 286
     Align = alClient
     TabOrder = 5
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 280
-    ClientRectLeft = 4
-    ClientRectRight = 1024
+    ClientRectBottom = 286
+    ClientRectRight = 1028
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -90,10 +90,11 @@
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1020
-        Height = 148
+        Width = 1028
+        Height = 154
         Align = alClient
         TabOrder = 0
+        ExplicitTop = 2
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -225,8 +226,8 @@
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 156
-        Width = 1020
+        Top = 162
+        Width = 1028
         Height = 100
         Align = alBottom
         TabOrder = 1
@@ -328,8 +329,8 @@
       end
       object cxSplitterChild: TcxSplitter
         Left = 0
-        Top = 148
-        Width = 1020
+        Top = 154
+        Width = 1028
         Height = 8
         AlignSplitter = salBottom
         Control = cxGridChild
@@ -341,8 +342,8 @@
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 1020
-        Height = 256
+        Width = 1028
+        Height = 262
         Align = alClient
         TabOrder = 0
         object cxGridEntryDBTableView: TcxGridDBTableView
@@ -613,7 +614,7 @@
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar: TdxBar
       Caption = 'Custom'
@@ -699,14 +700,14 @@
       ImageIndex = 4
       ShortCut = 116
     end
-    object actUpdateDataSet: TdsdUpdateDataSet
+    object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
-      StoredProc = spInsertUpdateMI
+      StoredProc = spInsertUpdateMIMaster
       StoredProcList = <
         item
-          StoredProc = spInsertUpdateMI
+          StoredProc = spInsertUpdateMIMaster
         end>
-      Caption = 'actUpdateDataSet'
+      Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
     end
     object actPrint: TdsdPrintAction
@@ -739,6 +740,7 @@
     Top = 200
   end
   object dsdGuidesFrom: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edFrom
     FormName = 'TJuridicalForm'
     PositionDataSet = 'GridDataSet'
@@ -747,6 +749,7 @@
     Top = 28
   end
   object dsdGuidesTo: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edTo
     FormName = 'TUnitForm'
     PositionDataSet = 'GridDataSet'
@@ -854,7 +857,7 @@
     Left = 493
     Top = 208
   end
-  object spInsertUpdateMI: TdsdStoredProc
+  object spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Sale'
     DataSets = <>
     OutputType = otResult

@@ -53,6 +53,7 @@ BEGIN
                                                                , inRouteId     := inRouteId
                                                                , inCarId       := inCarId
                                                                , inInfoMoneyId := zc_Enum_InfoMoney_20401()
+                                                               , inUserId      := vbUserId
                                                                 );
    
      -- сохранили Элемент для Статья назначения Коммандировочные
@@ -63,22 +64,20 @@ BEGIN
                                                                , inRouteId     := inRouteId
                                                                , inCarId       := inCarId
                                                                , inInfoMoneyId := zc_Enum_InfoMoney_21201()
+                                                               , inUserId      := vbUserId
                                                                 );
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
-
-     -- сохранили протокол
-     -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
-
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.10.13                                        * add inUserId
  03.10.13                                        * err
  30.09.13                                        * 
 */

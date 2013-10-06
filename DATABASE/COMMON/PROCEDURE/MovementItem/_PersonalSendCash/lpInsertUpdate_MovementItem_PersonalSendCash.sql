@@ -9,11 +9,32 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalSendCash(
     IN inAmount              TFloat    , -- Сумма
     IN inRouteId             Integer   , -- Маршрут
     IN inCarId               Integer   , -- Автомобиль
-    IN inInfoMoneyId         Integer     -- Статьи назначения
+    IN inInfoMoneyId         Integer   , -- Статьи назначения
+    IN inUserId              Integer     -- Пользователь
 )                              
 RETURNS Integer AS
 $BODY$
 BEGIN
+
+     -- проверка
+     IF COALESCE (inPersonalId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Сотрудник не установлен.';
+     END IF;
+     -- проверка
+     IF COALESCE (ioId, 0) = 0 AND EXISTS (SELECT ObjectId
+                                           FROM MovementItem 
+                                                JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                                                            ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                                                           AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                                                                           AND MILinkObject_InfoMoney.ObjectId = inInfoMoneyId
+                                           WHERE MovementItem.MovementId = inMovementId
+                                             AND MovementItem.ObjectId = inPersonalId
+                                             AND MovementItem.DescId = zc_MI_Master())
+     THEN
+         RAISE EXCEPTION 'Ошибка при добавлении.Сотрудник <"%"> уже есть в документе.', (SELECT ValueData FROM Object WHERE Id = inPersonalId);
+     END IF;
+
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inPersonalId, inMovementId, inAmount, NULL);
@@ -27,6 +48,9 @@ BEGIN
      -- сохранили связь с <Статьи назначения>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), ioId, inInfoMoneyId);
 
+     -- сохранили протокол
+     -- PERFORM lpInsert_MovementItemProtocol (ioId, inUserId);
+
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
@@ -35,6 +59,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.10.13                                        * add check
  30.09.13                                        * 
 */
 
