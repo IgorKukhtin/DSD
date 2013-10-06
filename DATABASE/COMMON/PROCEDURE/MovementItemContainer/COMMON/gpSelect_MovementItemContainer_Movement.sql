@@ -85,13 +85,15 @@ BEGIN
                           THEN -SUM (MovementItemContainer.Amount) / SUM (MovementItem.Amount)
                        ELSE 0
                   END AS Price
-            FROM MovementItemContainer
+            FROM (SELECT inMovementId AS MovementId UNION ALL SELECT Id AS MovementId FROM Movement WHERE ParentId = inMovementId) AS tmpMovement
+                 JOIN MovementItemContainer ON MovementItemContainer.MovementId = tmpMovement.MovementId
+                                           AND MovementItemContainer.DescId = zc_MIContainer_Summ()
                  LEFT JOIN Container ON Container.Id = MovementItemContainer.ContainerId
 
                  LEFT JOIN MovementItemContainer AS MIContainer_Parent ON MIContainer_Parent.Id = MovementItemContainer.ParentId
                                                                       AND Container.ObjectId = zc_Enum_Account_100301 () -- 100301; "прибыль текущего периода"
 
-                 LEFT JOIN Movement ON Movement.Id = inMovementId
+                 LEFT JOIN Movement ON Movement.Id = MovementItemContainer.MovementId
                  LEFT JOIN (SELECT MovementItemContainer.MovementItemId
                                  , CASE WHEN MovementItem.Amount <> 0 THEN SUM (CASE WHEN MovementItemContainer.isActive THEN 1 ELSE -1 END * MovementItemContainer.Amount) / MovementItem.Amount ELSE 0 END AS Price
                             FROM MovementItemContainer
@@ -167,8 +169,6 @@ BEGIN
                                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                  LEFT JOIN Object AS Object_GoodsKind_Parent ON Object_GoodsKind_Parent.Id = MILinkObject_GoodsKind.ObjectId
 
-            WHERE MovementItemContainer.MovementId = inMovementId
-              AND MovementItemContainer.DescId = zc_MIContainer_Summ()
             GROUP BY Container.ObjectId
                    , MovementItemContainer.Id
                    , MovementItemContainer.isActive
@@ -208,6 +208,7 @@ ALTER FUNCTION gpSelect_MovementItemContainer_Movement (Integer, TVarChar) OWNER
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.10.13                                        * add ParentId = inMovementId
  02.10.13                                        * calc DebetAccountName and KreditAccountName
  08.09.13                                        * add zc_ContainerLinkObject_ProfitLoss
  02.09.13                        * убрал коды счетов

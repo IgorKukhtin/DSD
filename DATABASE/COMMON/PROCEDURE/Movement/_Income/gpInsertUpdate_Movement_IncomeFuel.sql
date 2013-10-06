@@ -28,6 +28,10 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Income());
      vbUserId := inSession;
 
+
+     -- проверка - связанные документы Изменять нельзя
+     PERFORM lfCheck_Movement_Parent (inMovementId:= ioId, inComment:= 'изменение');
+
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement_IncomeFuel (ioId               := ioId
                                                , inParentId         := NULL
@@ -52,6 +56,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.10.13                                        * add lfCheck_Movement_Parent
  05.10.13                                        * add inInvNumberPartner
  04.10.13                                        * add lpInsertUpdate_Movement_IncomeFuel
  04.10.13                                        * add Route

@@ -238,7 +238,7 @@
     Height = 329
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheetMain
+    Properties.ActivePage = cxTabSheetEntry
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 329
     ClientRectRight = 996
@@ -1133,6 +1133,9 @@
       StoredProcList = <
         item
           StoredProc = spSelectMI
+        end
+        item
+          StoredProc = spSelectMIIncome
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
@@ -1175,10 +1178,10 @@
           StoredProc = spSelectMI
         end
         item
-          StoredProc = spSelectMIContainer
+          StoredProc = spSelectMIIncome
         end
         item
-          StoredProc = spSelectIncome
+          StoredProc = spSelectMIContainer
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1227,10 +1230,10 @@
     end
     object actUpdateIncomeDS: TdsdUpdateDataSet
       Category = 'DSDLib'
-      StoredProc = spInsertUpdateIncome
+      StoredProc = spInsertUpdateMIIncome
       StoredProcList = <
         item
-          StoredProc = spInsertUpdateIncome
+          StoredProc = spInsertUpdateMIIncome
         end>
       Caption = 'actUpdateIncomeDS'
       DataSource = IncomeDS
@@ -1376,7 +1379,7 @@
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
-      DataSource = MasterDS
+      DataSource = IncomeDS
     end
     object SetUnErasedIncome: TdsdUpdateErased
       Category = 'DSDLib'
@@ -1392,7 +1395,7 @@
       ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
-      DataSource = MasterDS
+      DataSource = IncomeDS
     end
     object PartnerChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -2473,7 +2476,7 @@
     Left = 45
     Top = 314
   end
-  object spSelectIncome: TdsdStoredProc
+  object spSelectMIIncome: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_TransportIncome'
     DataSet = IncomeCDS
     DataSets = <
@@ -2506,7 +2509,7 @@
     Left = 106
     Top = 314
   end
-  object spInsertUpdateIncome: TdsdStoredProc
+  object spInsertUpdateMIIncome: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TransportIncome'
     DataSets = <>
     OutputType = otResult

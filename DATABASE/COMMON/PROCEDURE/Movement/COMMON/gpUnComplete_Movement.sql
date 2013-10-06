@@ -1,25 +1,39 @@
 -- Function: gpUnComplete_Movement (Integer, TVarChar)
 
--- DROP FUNCTION gpUnComplete_Movement (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUnComplete_Movement (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUnComplete_Movement (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUnComplete_Movement(
-    IN inMovementId          Integer              , -- ключ объекта <Документ>
-    IN inSession             TVarChar               -- текущий пользователь
+    IN inMovementId Integer               , -- ключ объекта <Документ>
+--    IN inIsChild    Boolean  DEFAULT TRUE , -- есть ли у этого документа Подчиненные документы !!!ни в коем случае не ставить FALSE!!!
+    IN inSession    TVarChar DEFAULT ''     -- текущий пользователь
 )                              
-  RETURNS void AS
+  RETURNS void
+AS
 $BODY$
+  DECLARE vbUserId Integer;
 BEGIN
 
-  -- PERFORM lpCheckRight(inSession, zc_Enum_Process_UnComplete_Movement());
+     -- проверка прав пользователя на вызов процедуры
+     -- PERFORM lpCheckRight(inSession, zc_Enum_Process_UnComplete_Movement());
+     vbUserId:=2; -- CAST (inSession AS Integer);
 
-  -- Удаляем все проводки
-  PERFORM lpDelete_MovementItemContainer (inMovementId);
 
-  -- Удаляем все проводки для отчета
-  PERFORM lpDelete_MovementItemReport (inMovementId);
+     -- проверка - связанные документы Распроводить нельзя
+     PERFORM lfCheck_Movement_Parent (inMovementId:= inMovementId, inComment:= 'распровести');
 
-  -- Обязательно меняем статус документа
-  UPDATE Movement SET StatusId = zc_Enum_Status_UnComplete() WHERE Id = inMovementId;
+
+     -- Распроводим Документ
+     PERFORM lpUnComplete_Movement (inMovementId := inMovementId
+                                  , inUserId     := vbUserId);
+
+
+     -- Распроводим подчиненные Документы
+     PERFORM lpUnComplete_Movement (inMovementId := Movement.Id
+                                  , inUserId     := vbUserId)
+     FROM Movement
+     WHERE ParentId = inMovementId;
+
 
 END;
 $BODY$
@@ -29,9 +43,8 @@ ALTER FUNCTION gpUnComplete_Movement (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 29.08.13                                        * add lpDelete_MovementItemReport
- 08.07.13                                        * rename to zc_Enum_Status_UnComplete
+ 06.10.13                                        *
 */
 
 -- тест
--- SELECT * FROM gpUnComplete_Movement (inMovementId:= 55, inSession:= '2')
+-- SELECT * FROM gpUnComplete_Movement (inMovementId:= 55, inIsChild := TRUE, inSession:= '2')

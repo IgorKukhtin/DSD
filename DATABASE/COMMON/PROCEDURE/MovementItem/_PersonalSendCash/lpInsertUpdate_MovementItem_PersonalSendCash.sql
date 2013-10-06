@@ -32,7 +32,7 @@ BEGIN
                                              AND MovementItem.ObjectId = inPersonalId
                                              AND MovementItem.DescId = zc_MI_Master())
      THEN
-         RAISE EXCEPTION 'Ошибка при добавлении.Сотрудник <"%"> уже есть в документе.', (SELECT ValueData FROM Object WHERE Id = inPersonalId);
+         RAISE EXCEPTION 'Ошибка при добавлении.Сотрудник <%> уже есть в документе.', (SELECT ValueData FROM Object WHERE Id = inPersonalId);
      END IF;
 
 

@@ -67,7 +67,10 @@ BEGIN
 
            , MovementItem.isErased
 
-       FROM Movement
+       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+            JOIN Movement ON Movement.ParentId = inParentId
+                         AND Movement.DescId = zc_Movement_Income()
+                         -- AND Movement.isErased = tmpIsErased.isErased !!!убрал т.к. удаляются только элементы!!!
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
@@ -113,6 +116,7 @@ BEGIN
 
             JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                              AND MovementItem.DescId     = zc_MI_Master()
+                             AND MovementItem.isErased   = tmpIsErased.isErased
 
             LEFT JOIN (SELECT MIContainer.MovementItemId, SUM (MIContainer.Amount) AS Amount
                        FROM lfSelect_Object_Account_byAccountGroup (zc_Enum_AccountGroup_20000()) AS lfObject_Account -- 20000; "Запасы"
@@ -140,8 +144,7 @@ BEGIN
                                                          AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
             LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = COALESCE (Container_Count.ObjectId, ObjectLink_Goods_Fuel.ChildObjectId)
 
-       WHERE Movement.ParentId = inParentId
-         AND Movement.DescId = zc_Movement_Income();
+       ;
   
 END;
 $BODY$
@@ -156,4 +159,4 @@ ALTER FUNCTION gpSelect_Movement_TransportIncome (Integer, Boolean, Boolean, TVa
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_TransportIncome (inParentId:= 25173, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_TransportIncome (inParentId:= 149691, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= '2')

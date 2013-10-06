@@ -207,7 +207,7 @@ inherited IncomeForm: TIncomeForm
     Height = 336
     Align = alClient
     TabOrder = 2
-    Properties.ActivePage = cxTabSheetMain
+    Properties.ActivePage = cxTabSheetEntry
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 336
     ClientRectRight = 971
@@ -535,18 +535,21 @@ inherited IncomeForm: TIncomeForm
           object colGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074'.'
             DataBinding.FieldName = 'GoodsCode'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
           object colGoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object colGoodsKindName_comlete: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -583,25 +586,23 @@ inherited IncomeForm: TIncomeForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;,0.00##; ;'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 58
           end
           object colInfoMoneyName: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 93
           end
           object colInfoMoneyName_Detail: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1100#1103' '#1076#1077#1090#1072#1083#1100#1085#1086
             DataBinding.FieldName = 'InfoMoneyName_Detail'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 70
-          end
-          object colObjectCostId: TcxGridDBColumn
-            DataBinding.FieldName = 'ObjectCostId'
-            HeaderAlignmentVert = vaCenter
-            Width = 81
           end
         end
         object cxGridEntryLevel: TcxGridLevel

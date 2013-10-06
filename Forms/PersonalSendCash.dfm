@@ -82,7 +82,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     Height = 310
     Align = alClient
     TabOrder = 2
-    Properties.ActivePage = cxTabSheetMain
+    Properties.ActivePage = cxTabSheetEntry
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 310
     ClientRectRight = 773
@@ -426,11 +426,6 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
             DataBinding.FieldName = 'InfoMoneyName_Detail'
             HeaderAlignmentVert = vaCenter
             Width = 70
-          end
-          object colObjectCostId: TcxGridDBColumn
-            DataBinding.FieldName = 'ObjectCostId'
-            HeaderAlignmentVert = vaCenter
-            Width = 81
           end
         end
         object cxGridEntryLevel: TcxGridLevel

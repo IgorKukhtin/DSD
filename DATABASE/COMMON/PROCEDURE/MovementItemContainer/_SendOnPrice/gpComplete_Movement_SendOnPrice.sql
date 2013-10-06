@@ -192,7 +192,7 @@ BEGIN
 
      WHERE Movement.Id = inMovementId
        AND Movement.DescId = zc_Movement_SendOnPrice()
-       AND Movement.StatusId = zc_Enum_Status_UnComplete();
+       AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
      
      -- таблица - Аналитики <Проводки для отчета>
@@ -379,7 +379,7 @@ BEGIN
 
               WHERE Movement.Id = inMovementId
                 AND Movement.DescId = zc_Movement_SendOnPrice()
-                AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
              ) AS _tmp;
 
 
@@ -1112,7 +1112,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
 
      -- 6.2. ФИНИШ - Обязательно меняем статус документа
-     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_SendOnPrice() AND StatusId = zc_Enum_Status_UnComplete();
+     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_SendOnPrice() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
 
 END;
@@ -1122,6 +1122,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.10.13                                        * add StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
  17.09.13                                        * add lpInsertUpdate_ContainerCount_Goods
  15.09.13                                        * add zc_Enum_Account_20901
  14.09.13                                        * add vbBusinessId_From

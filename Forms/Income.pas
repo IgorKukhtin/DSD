@@ -117,7 +117,6 @@ type
     colGoodsCode: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
     colInfoMoneyName_Detail: TcxGridDBColumn;
-    colObjectCostId: TcxGridDBColumn;
     colPrice_comlete: TcxGridDBColumn;
     GridToExcel: TdsdGridToExcel;
     bbGridToExel: TdxBarButton;

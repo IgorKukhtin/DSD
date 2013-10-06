@@ -1,28 +1,45 @@
-п»ї-- Function: lpinsertupdate_movement(integer, integer, tvarchar, tdatetime, integer)
+-- Function: lpInsertUpdate_Movement (Integer, Integer, tvarchar, tdatetime, Integer)
 
--- DROP FUNCTION lpinsertupdate_movement(integer, integer, tvarchar, tdatetime, integer);
+-- DROP FUNCTION lpInsertUpdate_Movement (Integer, Integer, tvarchar, tdatetime, Integer);
 
-CREATE OR REPLACE FUNCTION lpinsertupdate_movement(INOUT ioid integer, IN indescid integer, IN ininvnumber tvarchar, IN inoperdate tdatetime, IN inparentid integer)
-  RETURNS integer AS
+CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement (INOUT ioId Integer, IN inDescId Integer, IN inInvNumber tvarchar, IN inOperDate tdatetime, IN inParentId Integer)
+  RETURNS Integer AS
 $BODY$
-DECLARE  vbStatusId INTEGER;
+  DECLARE vbStatusId Integer;
 BEGIN
   IF COALESCE(ioId, 0) = 0 THEN
      INSERT INTO Movement (DescId, InvNumber, OperDate, StatusId, ParentId)
             VALUES (inDescId, inInvNumber, inOperDate, zc_Enum_Status_UnComplete(), inParentId) RETURNING Id INTO ioId;
   ELSE
+     --
      UPDATE Movement SET InvNumber = inInvNumber, OperDate = inOperDate WHERE Id = ioId
-          RETURNING StatusId INTO vbStatusId;
-     IF vbStatusId <> zc_Enum_Status_Uncomplete() THEN
-          RAISE EXCEPTION 'РњРѕР¶РЅРѕ СЂРµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РґРѕРєСѓРјРµРЅС‚ С‚РѕР»СЊРєРѕ РІ СЃС‚Р°С‚СѓСЃРµ "РќРµ РїСЂРѕРІРµРґРµРЅ"';
+            RETURNING StatusId INTO vbStatusId;
+
+     --
+     IF vbStatusId <> zc_Enum_Status_UnComplete()
+     THEN
+         RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', (SELECT ValueData FROM Object WHERE Id = vbStatusId);
      END IF;
-     IF NOT found THEN
-     INSERT INTO Movement (Id, DescId, InvNumber, OperDate, StatusId, ParentId)
-            VALUES (ioId, inDescId, inInvNumber, inOperDate, zc_Enum_Status_UnComplete(), inParentId) RETURNING Id INTO ioId;
+
+     --
+     IF NOT FOUND
+     THEN
+         INSERT INTO Movement (Id, DescId, InvNumber, OperDate, StatusId, ParentId)
+                       VALUES (ioId, inDescId, inInvNumber, inOperDate, zc_Enum_Status_UnComplete(), inParentId) RETURNING Id INTO ioId;
      END IF;
+
   END IF;
-END;           $BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION lpinsertupdate_movement(integer, integer, tvarchar, tdatetime, integer)
-  OWNER TO postgres;
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION lpInsertUpdate_Movement(Integer, Integer, tvarchar, tdatetime, Integer) OWNER TO postgres;
+
+/*-------------------------------------------------------------------------------
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.10.13                                        * 1251Cyr
+*/
+
+-- тест
+-- 

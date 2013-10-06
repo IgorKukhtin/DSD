@@ -28,6 +28,9 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Income());
      vbUserId := inSession;
 
+     -- проверка - связанные документы Изменять нельзя
+     -- PERFORM lfCheck_Movement_Parent (inMovementId:= inMovementId, inComment:= 'изменение');
+
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
    
@@ -73,6 +76,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.10.13                                        * add lfCheck_Movement_Parent
  29.09.13                                        * add recalc inCountForPrice
  12.07.13          * lpInsertUpdate_MovementFloat_TotalSumm было lpInsertUpdate_MovementFloat_Income_TotalSumm    
  07.07.13                                        * add lpInsertUpdate_MovementFloat_Income_TotalSumm

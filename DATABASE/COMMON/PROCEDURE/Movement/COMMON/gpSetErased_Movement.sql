@@ -1,25 +1,37 @@
 -- Function: gpSetErased_Movement (Integer, TVarChar)
 
--- DROP FUNCTION gpSetErased_Movement (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSetErased_Movement (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSetErased_Movement (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSetErased_Movement(
-    IN inMovementId          Integer              , -- ключ объекта <Документ>
-    IN inSession             TVarChar               -- текущий пользователь
+    IN inMovementId Integer               , -- ключ объекта <Документ>
+--    IN inIsChild    Boolean  DEFAULT TRUE , -- есть ли у этого документа Подчиненные документы !!!ни в коем случае не ставить FALSE!!!
+    IN inSession    TVarChar DEFAULT ''     -- текущий пользователь
 )                              
-  RETURNS void AS
+  RETURNS void
+AS
 $BODY$
+  DECLARE vbUserId Integer;
 BEGIN
 
-  -- PERFORM lpCheckRight(inSession, zc_Enum_Process_SetErased_Movement());
+     -- проверка прав пользователя на вызов процедуры
+     -- PERFORM lpCheckRight(inSession, zc_Enum_Process_SetErased_Movement());
+     vbUserId:=2; -- CAST (inSession AS Integer);
 
-  -- Удаляем все проводки
-  PERFORM lpDelete_MovementItemContainer (inMovementId);
 
-  -- Удаляем все проводки для отчета
-  PERFORM lpDelete_MovementItemReport (inMovementId);
+     -- проверка - связанные документы Удалять нельзя
+     PERFORM lfCheck_Movement_Parent (inMovementId:= inMovementId, inComment:= 'удалить');
 
-  -- Обязательно меняем статус документа
-  UPDATE Movement SET StatusId = zc_Enum_Status_Erased() WHERE Id = inMovementId;
+     -- Удаляем Документ
+     PERFORM lpSetErased_Movement (inMovementId := inMovementId
+                                 , inUserId     := vbUserId);
+
+     -- Удаляем подчиненные Документы
+     PERFORM lpSetErased_Movement (inMovementId := Movement.Id
+                                 , inUserId     := vbUserId)
+     FROM Movement
+     WHERE ParentId = inMovementId;
+
 
 END;
 $BODY$
@@ -29,8 +41,8 @@ ALTER FUNCTION gpSetErased_Movement (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 01.09.13                                        * add lpDelete_MovementItemReport
+ 06.10.13                                        *
 */
 
 -- тест
--- SELECT * FROM gpSetErased_Movement (inMovementId:= 55, inSession:= '2')
+-- SELECT * FROM gpSetErased_Movement (inMovementId:= 55, inIsChild := TRUE, inSession:= '2')

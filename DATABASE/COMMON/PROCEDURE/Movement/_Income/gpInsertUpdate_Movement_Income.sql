@@ -30,6 +30,10 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Income());
      vbUserId := inSession;
 
+     -- проверка - связанные документы Изменять нельзя
+     PERFORM lfCheck_Movement_Parent (inMovementId:= ioId, inComment:= 'изменение');
+
+
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Income(), inInvNumber, inOperDate, NULL);
 
@@ -73,11 +77,11 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.10.13                                        * add lfCheck_Movement_Parent
  30.09.13                                        * del zc_MovementLinkObject_PersonalDriver
  27.09.13                                        * del zc_MovementLinkObject_Car
  07.07.13                                        * rename zc_MovementFloat_ChangePercent
  30.06.13                                        *
-
 */
 
 -- тест

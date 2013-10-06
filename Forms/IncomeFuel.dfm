@@ -195,7 +195,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
     Height = 270
     Align = alClient
     TabOrder = 2
-    Properties.ActivePage = cxTabSheetMain
+    Properties.ActivePage = cxTabSheetEntry
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 270
     ClientRectRight = 773
@@ -298,6 +298,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
           object colFuelName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
             DataBinding.FieldName = 'FuelName'
+            Options.Editing = False
             Width = 150
           end
           object colAmount: TcxGridDBColumn

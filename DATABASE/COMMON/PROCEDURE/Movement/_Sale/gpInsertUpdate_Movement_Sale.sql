@@ -35,7 +35,7 @@ BEGIN
      -- проверка - проведенный/удаленный документ не может корректироваться
      IF ioId <> 0 AND NOT EXISTS (SELECT Id FROM Movement WHERE Id = ioId AND StatusId = zc_Enum_Status_UnComplete())
      THEN
-         RAISE EXCEPTION 'Документ не может корректироваться т.к. он <"%">.', (SELECT Object_Status.ValueData FROM Movement JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId WHERE Movement.Id = ioId );
+         RAISE EXCEPTION 'Документ не может корректироваться т.к. он <%>.', (SELECT Object_Status.ValueData FROM Movement JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId WHERE Movement.Id = ioId );
      END IF;
 
      -- сохранили <Документ>

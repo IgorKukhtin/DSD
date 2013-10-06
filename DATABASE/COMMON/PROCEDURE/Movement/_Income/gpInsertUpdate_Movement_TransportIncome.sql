@@ -135,7 +135,7 @@ BEGIN
              -- проверка
              IF COALESCE (ioGoodsId, 0) = 0
              THEN
-                 RAISE EXCEPTION 'Ошибка.Не определен <Товар> для вида топлива <"%">.', ioFuelName;
+                 RAISE EXCEPTION 'Ошибка.Не определен <Товар> для вида топлива <%>.', ioFuelName;
              END IF;
 
          ELSE
@@ -151,7 +151,7 @@ BEGIN
              -- проверка
              IF COALESCE (ioFuelName, '') = ''
              THEN
-                 RAISE EXCEPTION 'Ошибка.Не определен <Вид топлива> у товара <"%">.', ioGoodsName;
+                 RAISE EXCEPTION 'Ошибка.Не определен <Вид топлива> у товара <%>.', ioGoodsName;
              END IF;
          END IF;
 
@@ -168,7 +168,7 @@ BEGIN
          -- проверка
          IF COALESCE (ioFuelName, '') = ''
          THEN
-             RAISE EXCEPTION 'Ошибка.Не определен <Вид топлива> у товара <"%">.', ioGoodsName;
+             RAISE EXCEPTION 'Ошибка.Не определен <Вид топлива> у товара <%>.', ioGoodsName;
          END IF;
      END IF;
 
