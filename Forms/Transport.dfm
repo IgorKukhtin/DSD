@@ -4,8 +4,8 @@
   ClientWidth = 996
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1012
-  ExplicitHeight = 490
+  ExplicitWidth = 1004
+  ExplicitHeight = 482
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -238,7 +238,7 @@
     Height = 329
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheetEntry
+    Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 329
     ClientRectRight = 996
@@ -2263,14 +2263,15 @@
       item
         Control = edComment
       end>
+    GetStoredProc = spGet
     Left = 299
     Top = 211
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')

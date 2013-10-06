@@ -790,7 +790,8 @@ begin
        StoredProc.Execute;
   // Если в момент сохранения возникает ошибка, то вернем старое значение на гете
   except
-    GetStoredProc.Execute;
+    if Assigned(GetStoredProc) then
+       GetStoredProc.Execute;
     raise;
   end;
 end;
