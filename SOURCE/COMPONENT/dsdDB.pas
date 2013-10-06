@@ -19,6 +19,7 @@ type
     function GetValue: Variant;
     procedure SetValue(const Value: Variant);
     procedure SetComponent(const Value: TComponent);
+    procedure SetInDataSet(const DataSet: TDataSet; const Value: Variant);
   protected
     function GetDisplayName: string; override;
     procedure AssignParam(Param: TdsdParam);
@@ -539,30 +540,43 @@ begin
   end
 end;
 
-procedure TdsdParam.SetValue(const Value: Variant);
+procedure TdsdParam.SetInDataSet(const DataSet: TDataSet; const Value: Variant);
 var Field: TField;
+begin
+  if DataSet.Active then begin
+    if DataSet.State <> dsEdit then
+       DataSet.Edit;
+    Field := DataSet.FieldByName(ComponentItem);
+    if Assigned(Field) then begin
+       // в случае дробного числа и если строка, то надо конвертить
+       if (Field.DataType in [ftFloat]) and (VarType(FValue) in [vtString, vtClass]) then
+           Field.Value := gfStrToFloat(FValue)
+       else
+         // в случае даты и если строка, то надо конвертить
+         if (Field.DataType in [ftDateTime, ftDate, ftTime]) and (VarType(FValue) in [vtString, vtClass]) then begin
+            with TXSDateTime.Create() do
+            try
+              XSToNative(FValue); // convert from WideString
+              Field.Value := AsDateTime;//AsDateTime; // convert to TDateTime
+            finally
+              Free;
+            end;
+         end
+         else
+            Field.Value := FValue;
+    end
+    else
+      raise Exception.Create('” дата сета "' + Component.Name + '" нет пол€ "' + ComponentItem + '"');
+  end;
+end;
+
+procedure TdsdParam.SetValue(const Value: Variant);
 begin
   FValue := Value;
   // передаем значение параметра дальше по цепочке
   if Assigned(FComponent) then begin
-     if (Component is TDataSet) and (Component as TDataSet).Active then begin
-        if TDataSet(Component).State <> dsEdit then
-           TDataSet(Component).Edit;
-        Field := TDataSet(Component).FieldByName(ComponentItem);
-        if Assigned(Field) then begin
-           // в случае дробного числа и если строка, то надо конвертить
-           if Field.DataType in [ftFloat] then begin
-              if VarType(FValue) in [vtString, vtClass] then
-                 Field.Value := gfStrToFloat(FValue)
-              else
-                 Field.Value := FValue;
-           end
-           else
-              Field.Value := FValue;
-        end
-        else
-          raise Exception.Create('” дата сета "' + Component.Name + '" нет пол€ "' + ComponentItem + '"');
-     end;
+     if (Component is TDataSet) then
+        SetInDataSet(TDataSet(Component), FValue);
      if Component is TcxTextEdit then
         (Component as TcxTextEdit).Text := FValue;
      if Component is TdsdFormParams then
