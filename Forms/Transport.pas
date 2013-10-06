@@ -205,6 +205,7 @@ type
     clincRouteName: TcxGridDBColumn;
     PaidKindChoiceForm: TOpenChoiceForm;
     GoodsChoiceForm: TOpenChoiceForm;
+    RouteIncomeChoiceForm: TOpenChoiceForm;
   private
   public
   end;

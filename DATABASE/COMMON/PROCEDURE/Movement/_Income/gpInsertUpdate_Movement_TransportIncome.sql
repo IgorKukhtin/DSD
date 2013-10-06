@@ -115,19 +115,35 @@ BEGIN
          WHERE ObjectLink_Car_FuelMaster.ObjectId = inToId
            AND ObjectLink_Car_FuelMaster.DescId = zc_ObjectLink_Car_FuelMaster();
 
+         -- проверка
+         IF COALESCE (ioFuelName, '') = ''
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не определен <Основной вид топлива> у <Автомобиля>.';
+         END IF;
+
+         -- проверка
+         IF COALESCE (ioGoodsId, 0) = 0
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не определен <Товар> для вида топлива <"%">.', ioFuelName;
+         END IF;
+
+     ELSE
+         -- нашли свойство <Вид топлива> для <Товар> (это что б проверить у товара должен быть вид топлива)
+         SELECT Object_Goods.ValueData AS GoodsName
+              , Object_Fuel.ValueData  AS FuelName
+                INTO ioGoodsName, ioFuelName
+         FROM ObjectLink AS ObjectLink_Goods_Fuel
+              LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Fuel.ObjectId
+              LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = ObjectLink_Goods_Fuel.ChildObjectId
+         WHERE ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel() GROUP BY ChildObjectId
+            AND ObjectLink_Goods_Fuel.ObjectId = ioGoodsId;
+         -- проверка
+         IF COALESCE (ioFuelName, '') = ''
+         THEN
+             RAISE EXCEPTION 'Ошибка.Не определен <Вид топлива> у товара <"%">.', ioGoodsName;
+         END IF;
      END IF;
 
-
-     -- проверка
-     IF COALESCE (ioFuelName, '') = ''
-     THEN
-         RAISE EXCEPTION 'Ошибка.Не определен <Основной вид топлива> у <Автомобиля>.';
-     END IF;
-     -- проверка
-     IF COALESCE (ioGoodsId, 0) = 0
-     THEN
-         RAISE EXCEPTION 'Ошибка.Не определен <Товар> для вида топлива <"%">.',ioFuelName;
-     END IF;
 
 
      -- сохранили <Документ>

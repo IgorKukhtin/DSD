@@ -732,7 +732,7 @@
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = RouteChoiceForm
+                Action = RouteIncomeChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -1407,21 +1407,14 @@
         item
           Name = 'Key'
           Component = IncomeCDS
-          ComponentItem = 'FromId'
-          DataType = ftInteger
-          ParamType = ptOutput
-        end
-        item
-          Name = 'Code'
-          Component = IncomeCDS
-          ComponentItem = 'FromCode'
+          ComponentItem = 'PaidKindId'
           DataType = ftInteger
           ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = IncomeCDS
-          ComponentItem = 'FromName'
+          ComponentItem = 'PaidKindName'
           DataType = ftString
           ParamType = ptOutput
         end>
@@ -1435,21 +1428,49 @@
         item
           Name = 'Key'
           Component = IncomeCDS
-          ComponentItem = 'FromId'
+          ComponentItem = 'GoodsId'
           DataType = ftInteger
           ParamType = ptOutput
         end
         item
           Name = 'Code'
           Component = IncomeCDS
-          ComponentItem = 'FromCode'
+          ComponentItem = 'GoodsCode'
           DataType = ftInteger
           ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = IncomeCDS
-          ComponentItem = 'FromName'
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+          ParamType = ptOutput
+        end
+        item
+          Name = 'FuelName'
+          Component = IncomeCDS
+          ComponentItem = 'FuelName'
+          DataType = ftString
+          ParamType = ptOutput
+        end>
+      isShowModal = True
+    end
+    object RouteIncomeChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'RouteChoiceForm'
+      FormName = 'TRouteForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = IncomeCDS
+          ComponentItem = 'RouteId'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end
+        item
+          Name = 'TextValue'
+          Component = IncomeCDS
+          ComponentItem = 'RouteName'
           DataType = ftString
           ParamType = ptOutput
         end>
