@@ -240,15 +240,12 @@
     TabOrder = 1
     Properties.ActivePage = cxTabSheetIncome
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 110
-    ExplicitHeight = 345
     ClientRectBottom = 329
     ClientRectRight = 996
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 321
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -256,7 +253,6 @@
         Height = 160
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 176
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -338,7 +334,7 @@
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = InsertRecord
+                Action = RouteChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -410,7 +406,6 @@
         Height = 140
         Align = alBottom
         TabOrder = 1
-        ExplicitTop = 181
         object cxGridChildDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -579,13 +574,11 @@
         Height = 5
         AlignSplitter = salBottom
         Control = cxGridChild
-        ExplicitTop = 176
       end
     end
     object cxTabSheetIncome: TcxTabSheet
       Caption = #1055#1088#1080#1093#1086#1076#1099
       ImageIndex = 2
-      ExplicitHeight = 321
       object cxGridIncome: TcxGrid
         Left = 0
         Top = 0
@@ -593,7 +586,6 @@
         Height = 305
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 321
         object cxGridIncomeDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = IncomeDS
@@ -712,7 +704,7 @@
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = InsertRecordIncome
+                Action = PartnerChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -726,6 +718,7 @@
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
+                Action = PaidKindChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -739,6 +732,7 @@
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
+                Action = RouteChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -759,6 +753,7 @@
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
+                Action = GoodsChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -835,7 +830,6 @@
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitHeight = 321
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -843,7 +837,6 @@
         Height = 305
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 321
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -1293,6 +1286,7 @@
     end
     object RouteChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      Caption = 'RouteChoiceForm'
       FormName = 'TRouteForm'
       GuiParams = <
         item
@@ -1371,15 +1365,72 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetIncome
       View = cxGridIncomeDBTableView
-      Action = IncomeChoiceForm
+      Action = PartnerChoiceForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086
       ShortCut = 45
       ImageIndex = 0
     end
-    object IncomeChoiceForm: TOpenChoiceForm
+    object PartnerChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      Caption = 'PartnerChoiceForm'
       FormName = 'TPartnerForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = IncomeCDS
+          ComponentItem = 'FromId'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end
+        item
+          Name = 'Code'
+          Component = IncomeCDS
+          ComponentItem = 'FromCode'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end
+        item
+          Name = 'TextValue'
+          Component = IncomeCDS
+          ComponentItem = 'FromName'
+          DataType = ftString
+          ParamType = ptOutput
+        end>
+      isShowModal = True
+    end
+    object PaidKindChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'PaidKindChoiceForm'
+      FormName = 'TPaidKindForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = IncomeCDS
+          ComponentItem = 'FromId'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end
+        item
+          Name = 'Code'
+          Component = IncomeCDS
+          ComponentItem = 'FromCode'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end
+        item
+          Name = 'TextValue'
+          Component = IncomeCDS
+          ComponentItem = 'FromName'
+          DataType = ftString
+          ParamType = ptOutput
+        end>
+      isShowModal = True
+    end
+    object GoodsChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'GoodsChoiceForm'
+      FormName = 'TGoodsForm'
       GuiParams = <
         item
           Name = 'Key'
