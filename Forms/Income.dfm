@@ -1146,15 +1146,17 @@ inherited IncomeForm: TIncomeForm
       end
       item
         Name = 'inGoodsKindId'
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
         DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inAssetId'
+        Component = MasterCDS
+        ComponentItem = 'AssetId'
         DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end>
     Left = 78
     Top = 303

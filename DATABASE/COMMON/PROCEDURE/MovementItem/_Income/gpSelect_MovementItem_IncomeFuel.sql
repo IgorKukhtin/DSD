@@ -27,7 +27,7 @@ BEGIN
 
      RETURN QUERY 
        SELECT
-             MovementItem.Id
+             0 AS Id
            , Object_Goods.Id          AS GoodsId
            , Object_Goods.ObjectCode  AS GoodsCode
            , Object_Goods.ValueData   AS GoodsName
@@ -41,20 +41,19 @@ BEGIN
 
            , FALSE AS isErased
 
-       FROM ObjectLink AS ObjectLink_Goods_InfoMoney
-            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
-            LEFT JOIN ObjectLink AS ObjectLink_Goods_Fuel ON ObjectLink_Goods_Fuel.ObjectId = ObjectLink_Goods_InfoMoney.ObjectId
-                                                         AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
+       FROM ObjectLink AS ObjectLink_Goods_Fuel
+            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Fuel.ObjectId
             LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = ObjectLink_Goods_Fuel.ChildObjectId
+            
+            LEFT JOIN (SELECT MovementItem.ObjectId AS GoodsId
+                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+                            JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                             AND MovementItem.DescId     =  zc_MI_Master()
+                                             AND MovementItem.isErased   =  tmpIsErased.isErased
+                      ) AS tmpMI ON tmpMI.GoodsId = ObjectLink_Goods_Fuel.ObjectId
 
-            LEFT JOIN MovementItem
-                   ON MovementItem.ObjectId = ObjectLink_Goods_InfoMoney.ObjectId
-                  AND MovementItem.MovementId = inMovementId
-                  AND MovementItem.DescId =  zc_MI_Master()
+       WHERE ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
 
-       WHERE ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-         AND ObjectLink_Goods_InfoMoney.ChildObjectId = zc_Enum_InfoMoney_20401()
-         AND MovementItem.MovementId IS NULL
       UNION ALL
        SELECT
              MovementItem.Id

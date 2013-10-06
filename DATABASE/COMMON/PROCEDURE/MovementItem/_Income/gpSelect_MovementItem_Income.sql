@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Income(
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat, AmountPartner TFloat, AmountPacker TFloat
              , Price TFloat, CountForPrice TFloat, LiveWeight TFloat, HeadCount TFloat
-             , PartionGoods TVarChar, GoodsKindName  TVarChar, AssetKindName  TVarChar
+             , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, AssetId  Integer, AssetName  TVarChar
              , AmountSumm TFloat, isErased Boolean
               )
 AS
@@ -27,10 +27,10 @@ BEGIN
 
      RETURN QUERY 
        SELECT
-             MovementItem.Id
-           , Object_Goods.Id          AS GoodsId
-           , Object_Goods.ObjectCode  AS GoodsCode
-           , Object_Goods.ValueData   AS GoodsName
+             0 AS Id
+           , tmpGoods.GoodsId
+           , tmpGoods.GoodsCode
+           , tmpGoods.GoodsName
            , CAST (NULL AS TFloat) AS Amount
            , CAST (NULL AS TFloat) AS AmountPartner
            , CAST (NULL AS TFloat) AS AmountPacker
@@ -43,27 +43,42 @@ BEGIN
 
            , CAST (NULL AS TVarChar) AS PartionGoods
 
+           , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
-           , CAST (NULL AS TVarChar) AS AssetKindName
+           , CAST (0 AS Integer)        AS AssetId
+           , CAST (NULL AS TVarChar)    AS AssetName
 
            , CAST (NULL AS TFloat) AS AmountSumm
            , FALSE AS isErased
 
-       FROM Object AS Object_Goods
-            LEFT JOIN lfSelect_Object_GoodsByGoodsKind() AS lfObject_GoodsByGoodsKind ON lfObject_GoodsByGoodsKind.GoodsId = Object_Goods.Id
-            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = lfObject_GoodsByGoodsKind.GoodsKindId
+       FROM (SELECT Object_Goods.Id                                                   AS GoodsId
+                  , Object_Goods.ObjectCode                                           AS GoodsCode
+                  , Object_Goods.ValueData                                            AS GoodsName
+                  , COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+             FROM Object AS Object_Goods
+                  LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                                       ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = Object_Goods.Id
+                                      AND ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
+                  LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
+                                       ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
+                                      AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
+             WHERE Object_Goods.DescId = zc_Object_Goods()
+            ) AS tmpGoods
+            LEFT JOIN (SELECT MovementItem.ObjectId AS GoodsId
+                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                       FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+                            JOIN MovementItem ON MovementItem.MovementId = inMovementId
+                                             AND MovementItem.DescId     = zc_MI_Master()
+                                             AND MovementItem.isErased   = tmpIsErased.isErased
+                            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                      ) AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
+                                AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
 
-            LEFT JOIN MovementItem
-                   ON MovementItem.ObjectId = Object_Goods.Id
-                  AND MovementItem.MovementId = inMovementId
-                  AND MovementItem.DescId =  zc_MI_Master()
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                                            AND MILinkObject_GoodsKind.ObjectId = lfObject_GoodsByGoodsKind.GoodsKindId
+       WHERE tmpMI.GoodsId IS NULL
 
-       WHERE Object_Goods.DescId = zc_Object_Goods()
-         AND (MILinkObject_GoodsKind.ObjectId IS NULL OR (MovementItem.MovementId IS NULL AND lfObject_GoodsByGoodsKind.GoodsId IS NULL))
       UNION ALL
        SELECT
              MovementItem.Id
@@ -82,8 +97,10 @@ BEGIN
 
            , MIString_PartionGoods.ValueData AS PartionGoods
 
+           , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
-           , Object_Asset.ValueData AS AssetKindName
+           , Object_Asset.Id            AS AssetId
+           , Object_Asset.ValueData     AS AssetName
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                            THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0) + COALESCE (MIFloat_AmountPacker.ValueData, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
@@ -153,8 +170,10 @@ BEGIN
 
            , MIString_PartionGoods.ValueData AS PartionGoods
 
+           , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
-           , Object_Asset.ValueData AS AssetKindName
+           , Object_Asset.Id            AS AssetId
+           , Object_Asset.ValueData     AS AssetName
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                            THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0) + COALESCE (MIFloat_AmountPacker.ValueData, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
