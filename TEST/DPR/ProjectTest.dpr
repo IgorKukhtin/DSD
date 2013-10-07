@@ -221,7 +221,8 @@ uses
   SheetWorkTimeTest in '..\SOURCE\Movement\All\SheetWorkTimeTest.pas',
   PaidKind in '..\..\Forms\PaidKind.pas' {PaidKindForm},
   Report_Fuel in '..\..\Forms\Report\Report_Fuel.pas' {Report_FuelForm},
-  Report_Transport in '..\..\Forms\Report\Report_Transport.pas' {Report_TransportForm};
+  Report_Transport in '..\..\Forms\Report\Report_Transport.pas' {Report_TransportForm},
+  Report_Account in '..\..\Forms\Report\Report_Account.pas' {Report_AccountForm};
 
 {$R *.RES}
 

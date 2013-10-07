@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_User (TVarChar)
 
--- DROP FUNCTION gpSelect_Object_User (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_User (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_User(
     IN inSession     TVarChar       -- сессия пользователя

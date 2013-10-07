@@ -1,6 +1,6 @@
 -- Function: lfReport_MotionContainer_SummList ()
 
--- DROP FUNCTION lfReport_MotionContainer_SummList ();
+DROP FUNCTION IF EXISTS  lfReport_MotionContainer_SummList ();
 
 CREATE OR REPLACE FUNCTION lfReport_MotionContainer_SummList (
     IN inStartDate    TDateTime ,  

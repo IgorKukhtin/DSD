@@ -1,6 +1,6 @@
 -- Function: gpGet_Object_User()
 
--- DROP FUNCTION gpGet_Object_User (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_User (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_User(
     IN inId          Integer,       -- пользователь 

@@ -1207,7 +1207,7 @@ end;
 
 function TBranchTest.InsertDefault: integer;
 begin
-  result := InsertUpdateBranch(0, -1, 'Филиал');
+  result := InsertUpdateBranch(0, -4, 'Филиал');
   inherited;
 end;
 
