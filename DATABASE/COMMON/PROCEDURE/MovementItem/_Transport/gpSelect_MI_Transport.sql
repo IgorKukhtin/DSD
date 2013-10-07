@@ -26,9 +26,10 @@ BEGIN
             , Object_Route.ValueData   AS RouteName
           
             , MovementItem.Amount
-            , MIFloat_Weight.ValueData        AS Weight
-            , MIFloat_StartOdometre.ValueData AS StartOdometre
-            , MIFloat_EndOdometre.ValueData   AS EndOdometre
+            , MIFloat_DistanceFuelChild.ValueData AS DistanceFuelChild
+            , MIFloat_Weight.ValueData            AS Weight
+            , MIFloat_StartOdometre.ValueData     AS StartOdometre
+            , MIFloat_EndOdometre.ValueData       AS EndOdometre
            
             , Object_Freight.Id           AS FreightId
             , Object_Freight.ValueData    AS FreightName
@@ -43,6 +44,10 @@ BEGIN
                               AND MovementItem.isErased   = tmpIsErased.isErased
              LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementItem.ObjectId
              
+             LEFT JOIN MovementItemFloat AS MIFloat_DistanceFuelChild
+                                         ON MIFloat_DistanceFuelChild.MovementItemId = MovementItem.Id
+                                        AND MIFloat_DistanceFuelChild.DescId = zc_MIFloat_DistanceFuelChild()
+
              LEFT JOIN MovementItemFloat AS MIFloat_Weight
                                          ON MIFloat_Weight.MovementItemId = MovementItem.Id
                                         AND MIFloat_Weight.DescId = zc_MIFloat_Weight()
@@ -51,7 +56,7 @@ BEGIN
                                         AND MIFloat_StartOdometre.DescId = zc_MIFloat_StartOdometre()
              LEFT JOIN MovementItemFloat AS MIFloat_EndOdometre
                                          ON MIFloat_EndOdometre.MovementItemId = MovementItem.Id
-                                        AND MIFloat_EndOdometre.DescId = zc_MIFloat_StartOdometre()
+                                        AND MIFloat_EndOdometre.DescId = zc_MIFloat_EndOdometre()
              
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Freight
                                               ON MILinkObject_Freight.MovementItemId = MovementItem.Id 
@@ -81,8 +86,9 @@ BEGIN
 
             , MovementItem_Master.Id     AS ParentId
             , 0                          AS Amount
-              -- для "Основного" вида топлива расчитываем норму
+              -- Расчитываем норму
             , CASE WHEN ObjectLink_Car_FuelAll.DescId = zc_ObjectLink_Car_FuelMaster()
+                             -- если "Основной" вид топлива
                         THEN zfCalc_RateFuelValue (inDistance           := MovementItem_Master.Amount
                                                  , inAmountFuel         := tmpRateFuel.AmountFuel
                                                  , inColdHour           := 0
@@ -91,15 +97,24 @@ BEGIN
                                                  , inAmountColdDistance := tmpRateFuel.AmountColdDistance
                                                  , inRateFuelKindTax    := ObjectFloat_RateFuelKind_Tax.ValueData
                                                   )
-                             -- !!!Коэффициент перевода нормы!!!
-                             -- * COALESCE (ObjectFloat_Ratio.ValueData, 0)
+                   WHEN ObjectLink_Car_FuelAll.DescId = zc_ObjectLink_Car_FuelChild()
+                             -- если "Дополнительный" вид топлива
+                        THEN zfCalc_RateFuelValue (inDistance           := MIFloat_DistanceFuelChild.ValueData
+                                                 , inAmountFuel         := tmpRateFuel.AmountFuel
+                                                 , inColdHour           := 0
+                                                 , inAmountColdHour     := tmpRateFuel.AmountColdHour
+                                                 , inColdDistance       := 0
+                                                 , inAmountColdDistance := tmpRateFuel.AmountColdDistance
+                                                 , inRateFuelKindTax    := ObjectFloat_RateFuelKind_Tax.ValueData
+                                                  )
                    ELSE 0
               END Amount_calc
 
               -- если нормы нет, тогда признак по умолчанию считаем FALSE
-            , CASE WHEN tmpRateFuel.AmountFuel = 0 THEN FALSE ELSE TRUE END AS Calculated
-            , 0            AS ColdHour
-            , 0            AS ColdDistance
+            , CASE WHEN (tmpRateFuel.AmountFuel = 0) AND (tmpRateFuel.AmountColdHour = 0) AND (tmpRateFuel.AmountColdDistance = 0) THEN FALSE ELSE TRUE END AS isCalculated
+            , CASE WHEN ObjectLink_Car_FuelAll.DescId = zc_ObjectLink_Car_FuelMaster() THEN TRUE ELSE FALSE END AS isMasterFuel
+            , 0 AS ColdHour
+            , 0 AS ColdDistance
             , tmpRateFuel.AmountColdHour     AS AmountColdHour
             , tmpRateFuel.AmountColdDistance AS AmountColdDistance
             , tmpRateFuel.AmountFuel         AS AmountFuel
@@ -112,12 +127,13 @@ BEGIN
             
         FROM (SELECT zc_ObjectLink_Car_FuelMaster() AS DescId UNION ALL SELECT zc_ObjectLink_Car_FuelChild() AS DescId) AS tmpDesc
              -- выбрали автомобиль (он один)
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
-                                         ON MovementLinkObject_Car.MovementId = inMovementId
-                                        AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
+             JOIN MovementLinkObject AS MovementLinkObject_Car
+                                     ON MovementLinkObject_Car.MovementId = inMovementId
+                                    AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
              -- выбрали у автомобиля - все Виды топлива
-             LEFT JOIN ObjectLink AS ObjectLink_Car_FuelAll ON ObjectLink_Car_FuelAll.ObjectId = MovementLinkObject_Car.ObjectId
-                                                           AND ObjectLink_Car_FuelAll.DescId = tmpDesc.DescId
+             JOIN ObjectLink AS ObjectLink_Car_FuelAll ON ObjectLink_Car_FuelAll.ObjectId = MovementLinkObject_Car.ObjectId
+                                                      AND ObjectLink_Car_FuelAll.DescId = tmpDesc.DescId
+                                                      AND ObjectLink_Car_FuelAll.ChildObjectId IS NOT NULL
              LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = ObjectLink_Car_FuelAll.ChildObjectId
 
              -- выбрали у Вида топлива - Вид норм для топлива
@@ -127,9 +143,13 @@ BEGIN
              -- выбрали у нормы для топлива - % дополнительного расхода в связи с сезоном/температурой
              LEFT JOIN ObjectFloat AS ObjectFloat_RateFuelKind_Tax ON ObjectFloat_RateFuelKind_Tax.ObjectId = ObjectLink_Fuel_RateFuelKind.ChildObjectId
                                                                   AND ObjectFloat_RateFuelKind_Tax.DescId = zc_ObjectFloat_RateFuelKind_Tax()
-             -- выбрали все маршруты
+             -- выбрали все маршруты (нужен Пробег, км (основной вид топлива))
              LEFT JOIN MovementItem AS MovementItem_Master ON MovementItem_Master.MovementId = inMovementId
                                                           AND MovementItem_Master.DescId = zc_MI_Master()
+             -- выбрали у маршрута свойство - Пробег, км (дополнительный вид топлива)
+             LEFT JOIN MovementItemFloat AS MIFloat_DistanceFuelChild
+                                         ON MIFloat_DistanceFuelChild.MovementItemId = MovementItem_Master.Id
+                                        AND MIFloat_DistanceFuelChild.DescId = zc_MIFloat_DistanceFuelChild()
              -- этот нужен что б отбросить уже введенный вид топлива (если удален/не удален)
              LEFT JOIN MovementItem AS MovementItem_Find ON MovementItem_Find.MovementId = inMovementId
                                                         AND MovementItem_Find.ParentId   = MovementItem_Master.Id
@@ -165,9 +185,6 @@ BEGIN
                        ) AS tmpRateFuel ON tmpRateFuel.CarId       = MovementLinkObject_Car.ObjectId
                                        AND tmpRateFuel.RouteKindId = MILinkObject_RouteKind.ObjectId
 
-             -- выбрали у Вида топлива - Коэффициент перевода нормы 
-             -- LEFT JOIN ObjectFloat AS ObjectFloat_Ratio ON ObjectFloat_Ratio.ObjectId = Object_Fuel.Id
-             --                                           AND ObjectFloat_Ratio.DescId = zc_ObjectFloat_Fuel_Ratio()
         WHERE MovementItem_Find.ObjectId IS NULL
       UNION ALL
         SELECT 
@@ -179,8 +196,9 @@ BEGIN
 
             , MovementItem.ParentId      AS ParentId
             , MovementItem.Amount        AS Amount
-              -- для "Основного" вида топлива расчитываем норму
-            , CASE WHEN MovementItem.ObjectId = ObjectLink_Car_FuelMaster.ChildObjectId
+              -- Расчитываем норму
+            , CASE WHEN COALESCE (MIBoolean_MasterFuel.ValueData, FALSE) = TRUE
+                             -- если "Основной" вид топлива
                         THEN zfCalc_RateFuelValue (inDistance           := MovementItem_Master.Amount
                                                  , inAmountFuel         := MIFloat_AmountFuel.ValueData
                                                  , inColdHour           := MIFloat_ColdHour.ValueData
@@ -189,12 +207,22 @@ BEGIN
                                                  , inAmountColdDistance := MIFloat_AmountColdDistance.ValueData
                                                  , inRateFuelKindTax    := MIFloat_RateFuelKindTax.ValueData
                                                   )
-                             -- !!!Коэффициент перевода нормы!!!
-                             -- * COALESCE (ObjectFloat_Ratio.ValueData, 0)
+                    WHEN COALESCE (MIBoolean_MasterFuel.ValueData, FALSE) = FALSE
+                             -- если "Дополнительный" вид топлива
+                        THEN zfCalc_RateFuelValue (inDistance           := MIFloat_DistanceFuelChild.ValueData
+                                                 , inAmountFuel         := MIFloat_AmountFuel.ValueData
+                                                 , inColdHour           := MIFloat_ColdHour.ValueData
+                                                 , inAmountColdHour     := MIFloat_AmountColdHour.ValueData
+                                                 , inColdDistance       := MIFloat_ColdDistance.ValueData
+                                                 , inAmountColdDistance := MIFloat_AmountColdDistance.ValueData
+                                                 , inRateFuelKindTax    := MIFloat_RateFuelKindTax.ValueData
+                                                  )
                    ELSE 0
               END Amount_calc
 
-            , COALESCE (MIBoolean_Calculated.ValueData, TRUE) AS Calculated
+            , COALESCE (MIBoolean_Calculated.ValueData, TRUE)  AS isCalculated
+            , COALESCE (MIBoolean_MasterFuel.ValueData, FALSE) AS isMasterFuel
+
             , MIFloat_ColdHour.ValueData            AS ColdHour
             , MIFloat_ColdDistance.ValueData        AS ColdDistance
             , MIFloat_AmountColdHour.ValueData      AS AmountColdHour
@@ -207,7 +235,7 @@ BEGIN
 
             , MovementItem.isErased
             
-        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
+        FROM (SELECT FALSE AS isErased UNION ALL SELECT TRUE AS isErased) AS tmpIsErased -- !!!Показываем Все!!!
              JOIN MovementItem ON MovementItem.MovementId = inMovementId
                               AND MovementItem.DescId     = zc_MI_Child()
                               AND MovementItem.isErased   = tmpIsErased.isErased
@@ -216,6 +244,10 @@ BEGIN
              LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
                                            ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
                                           AND MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
+             LEFT JOIN MovementItemBoolean AS MIBoolean_MasterFuel
+                                           ON MIBoolean_MasterFuel.MovementItemId = MovementItem.Id
+                                          AND MIBoolean_MasterFuel.DescId = zc_MIBoolean_MasterFuel()
+
              LEFT JOIN MovementItemFloat AS MIFloat_ColdHour
                                          ON MIFloat_ColdHour.MovementItemId = MovementItem.Id
                                         AND MIFloat_ColdHour.DescId = zc_MIFloat_ColdHour()
@@ -245,15 +277,11 @@ BEGIN
                                              AND MILinkObject_RateFuelKind.DescId = zc_MILinkObject_RateFuelKind()
              LEFT JOIN Object AS Object_RateFuelKind ON Object_RateFuelKind.Id = MILinkObject_RateFuelKind.ObjectId
 
-             -- LEFT JOIN ObjectFloat AS ObjectFloat_Ratio ON ObjectFloat_Ratio.ObjectId = MovementItem.ObjectId
-             --                                           AND ObjectFloat_Ratio.DescId = zc_ObjectFloat_Fuel_Ratio()
-
              LEFT JOIN MovementItem AS MovementItem_Master ON MovementItem_Master.Id = MovementItem.ParentId
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
-                                          ON MovementLinkObject_Car.MovementId = MovementItem.MovementId
-                                         AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
-             LEFT JOIN ObjectLink AS ObjectLink_Car_FuelMaster ON ObjectLink_Car_FuelMaster.ObjectId = MovementLinkObject_Car.ObjectId
-                                                              AND ObjectLink_Car_FuelMaster.DescId = zc_ObjectLink_Car_FuelMaster()
+             -- выбрали у маршрута свойство - Пробег, км (дополнительный вид топлива)
+             LEFT JOIN MovementItemFloat AS MIFloat_DistanceFuelChild
+                                         ON MIFloat_DistanceFuelChild.MovementItemId = MovementItem_Master.Id
+                                        AND MIFloat_DistanceFuelChild.DescId = zc_MIFloat_DistanceFuelChild()
       ;
        
     RETURN NEXT Cursor2;
@@ -267,6 +295,7 @@ ALTER FUNCTION gpSelect_MI_Transport (Integer, Boolean, Boolean, TVarChar) OWNER
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.10.13                                        * add DistanceFuelChild and isMasterFuel
  04.10.13                                        * inIsErased
  01.10.13                                        * add zc_MIFloat_RateFuelKindTax and zfCalc_RateFuelValue
  29.09.13                                        *

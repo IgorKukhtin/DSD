@@ -6,7 +6,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Master(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inRouteId             Integer   , -- Маршрут
-    IN inAmount	             TFloat    , -- Пробег, км
+    IN inAmount	             TFloat    , -- Пробег, км (основной вид топлива)
+    IN inDistanceFuelChild   TFloat    , -- Пробег, км (дополнительный вид топлива)
     IN inWeight	             TFloat    , -- Вес груза
     IN inStartOdometre       TFloat    , -- Спидометр начальное показание, км
     IN inEndOdometre         TFloat    , -- Спидометр конечное показание, км
@@ -18,20 +19,33 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbUnitId Integer;
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Transport());
    vbUserId := inSession;
 
-   -- При определенных условиях, расчитываем inAmount - Пробег, км
    IF COALESCE (inStartOdometre, 0) <> 0 OR COALESCE (inEndOdometre, 0) <> 0
    THEN
+       -- При определенных условиях, расчитываем inAmount - Пробег, км
        inAmount := ABS (COALESCE (inEndOdometre, 0) - COALESCE (inStartOdometre, 0));
+       -- уменьшаем inAmount на Пробег, км (дополнительный вид топлива)
+       inAmount := inAmount - COALESCE (inDistanceFuelChild, 0);
    ELSE
        -- иначе оставляем введенное значение
        inAmount := ABS (inAmount);
+   END IF;
+
+   -- проверка 
+   IF inAmount < 0
+   THEN 
+       RAISE EXCEPTION 'Ошибка.Неверное значение <Пробег, км (основной вид топлива)>.';
+   END IF;
+
+   -- проверка
+   IF inDistanceFuelChild < 0
+   THEN 
+       RAISE EXCEPTION 'Ошибка.Неверное значение <Пробег, км (дополнительный вид топлива)>.';
    END IF;
 
 
@@ -44,24 +58,25 @@ BEGIN
    -- сохранили связь с <Типы маршрутов>
    PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_RouteKind(), ioId, inRouteKindId);
 
-   -- сохранили связь с <Типы маршрутов>
-   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_Unit(), ioId, vbUnitId);
-  
+   -- сохранили свойство <Пробег, км (дополнительный вид топлива)>
+   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_DistanceFuelChild(), ioId, inDistanceFuelChild);
+
    -- сохранили свойство <Вес груза>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Weight(), ioId, inWeight);
 
    -- сохранили свойство <Спидометр начальное показание, км>
-   PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_Weight(), ioId, inStartOdometre);
+   PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_StartOdometre(), ioId, inStartOdometre);
 
    -- сохранили свойство <Спидометр конечное показание, км>
-   PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_Weight(), ioId, inEndOdometre);
+   PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_EndOdometre(), ioId, inEndOdometre);
 
    -- пересчитали Child для тех кому надо (MIBoolean_Calculated.ValueData = TRUE)
    PERFORM lpInsertUpdate_MI_Transport_Child (ioId                 := MovementItem.Id
                                             , inMovementId         := inMovementId
                                             , inParentId           := ioId
                                             , inFuelId             := MovementItem.ObjectId
-                                            , inCalculated         := MIBoolean_Calculated.ValueData
+                                            , inIsCalculated       := MIBoolean_Calculated.ValueData
+                                            , inIsMasterFuel       := MIBoolean_MasterFuel.ValueData
                                             , ioAmount             := MovementItem.Amount
                                             , inColdHour           := MIFloat_ColdHour.ValueData
                                             , inColdDistance       := MIFloat_ColdDistance.ValueData
@@ -71,12 +86,17 @@ BEGIN
                                             , inNumber             := MIFloat_Number.ValueData
                                             , inRateFuelKindTax    := MIFloat_RateFuelKindTax.ValueData
                                             , inRateFuelKindId     := MILinkObject_RateFuelKind.ObjectId
+                                            , inUserId             := vbUserId
                                              )
    FROM MovementItem
         JOIN MovementItemBoolean AS MIBoolean_Calculated
                                  ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
                                 AND MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
                                 AND MIBoolean_Calculated.ValueData = TRUE
+             LEFT JOIN MovementItemBoolean AS MIBoolean_MasterFuel
+                                           ON MIBoolean_MasterFuel.MovementItemId = MovementItem.Id
+                                          AND MIBoolean_MasterFuel.DescId = zc_MIBoolean_MasterFuel()
+
              LEFT JOIN MovementItemFloat AS MIFloat_ColdHour
                                          ON MIFloat_ColdHour.MovementItemId = MovementItem.Id
                                         AND MIFloat_ColdHour.DescId = zc_MIFloat_ColdHour()
@@ -117,6 +137,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.10.13                                        * add inDistanceFuelChild and inIsMasterFuel
  29.09.13                                        * 
  25.09.13         * 
 */

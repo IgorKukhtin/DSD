@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PersonalSendCash(
     IN inIsErased    Boolean      , -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
+RETURNS TABLE (MIId_20401 Integer, MIId_21201 Integer
+             , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , Amount_20401 TFloat, Amount_21201 TFloat
              , RouteId Integer, RouteName TVarChar 
              , CarId Integer, CarName TVarChar 
@@ -24,7 +25,9 @@ BEGIN
 
      RETURN QUERY 
        SELECT
-             tmpMovementItem.PersonalId
+             tmpMovementItem.MIId_20401
+           , tmpMovementItem.MIId_21201
+           , tmpMovementItem.PersonalId
            , View_Personal.PersonalCode
            , View_Personal.PersonalName
          
@@ -34,8 +37,8 @@ BEGIN
            , Object_Route.Id         AS RouteId
            , Object_Route.ValueData  AS RouteName
 
-           , Object_Route.Id         AS CarId
-           , Object_Route.ValueData  AS CarName
+           , Object_Car.Id         AS CarId
+           , Object_Car.ValueData  AS CarName
 
            , tmpMovementItem.isErased
 
@@ -43,6 +46,8 @@ BEGIN
                   , MovementItem.isErased       AS isErased
                   , MILinkObject_Route.ObjectId AS RouteId
                   , MILinkObject_Car.ObjectId   AS CarId
+                  , MAX (CASE WHEN MILinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_20401() THEN MovementItem.Id ELSE 0 END) AS MIId_20401
+                  , MAX (CASE WHEN MILinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_21201() THEN MovementItem.Id ELSE 0 END) AS MIId_21201
                   , SUM (CASE WHEN MILinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_20401() THEN MovementItem.Amount ELSE 0 END) AS Amount_20401
                   , SUM (CASE WHEN MILinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_21201() THEN MovementItem.Amount ELSE 0 END) AS Amount_21201
              FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -57,7 +62,7 @@ BEGIN
                                                   AND MILinkObject_Route.DescId = zc_MILinkObject_Route()
                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Car
                                                    ON MILinkObject_Car.MovementItemId = MovementItem.Id
-                                                  AND MILinkObject_Car.DescId = zc_MILinkObject_Route()
+                                                  AND MILinkObject_Car.DescId = zc_MILinkObject_Car()
              GROUP BY MovementItem.ObjectId
                     , MovementItem.isErased
                     , MILinkObject_Route.ObjectId
@@ -77,6 +82,7 @@ ALTER FUNCTION gpSelect_MovementItem_PersonalSendCash (Integer, Boolean, Boolean
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.10.13                                        * add MIId_20401 and MIId_21201
  04.10.13                                        * add inIsErased
  30.09.13                                        *
 */

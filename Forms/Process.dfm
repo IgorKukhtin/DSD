@@ -1,22 +1,18 @@
 inherited ProcessForm: TProcessForm
   Caption = #1055#1088#1086#1094#1077#1089#1089#1099
-  ClientHeight = 357
-  ClientWidth = 372
-  ExplicitWidth = 380
-  ExplicitHeight = 384
+  ClientHeight = 457
+  ClientWidth = 859
+  ExplicitWidth = 875
+  ExplicitHeight = 492
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 372
-    Height = 331
+    Width = 859
+    Height = 431
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = -23
-    ExplicitTop = -111
-    ExplicitWidth = 478
-    ExplicitHeight = 324
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -36,12 +32,29 @@ inherited ProcessForm: TProcessForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object clCode: TcxGridDBColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'Code'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 20
+      end
       object clName: TcxGridDBColumn
         Caption = #1055#1088#1086#1094#1077#1089#1089#1099
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
+      object clEnumName: TcxGridDBColumn
+        DataBinding.FieldName = 'EnumName'
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object clId: TcxGridDBColumn
+        DataBinding.FieldName = 'Id'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 252
+        Width = 30
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -73,8 +86,8 @@ inherited ProcessForm: TProcessForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -190,6 +203,7 @@ inherited ProcessForm: TProcessForm
     Top = 200
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
       item

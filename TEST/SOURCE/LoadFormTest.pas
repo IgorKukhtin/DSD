@@ -420,6 +420,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TransportForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AccountForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_AccountForm');
 end;
 
 procedure TLoadFormTest.LoadUnitFormTest;

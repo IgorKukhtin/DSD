@@ -39,7 +39,7 @@ BEGIN
   PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
 
   -- !!! ме онмърмн - онвелс мюдн бнгбпюыюрэ мюнанпнр!!!
-  outIsErased := FALSE;
+  -- outIsErased := FALSE;
 
 
 END;

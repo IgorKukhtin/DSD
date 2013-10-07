@@ -341,35 +341,42 @@
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 125
+            Width = 150
           end
           object colAmount: TcxGridDBColumn
-            Caption = #1055#1088#1086#1073#1077#1075', '#1082#1084
+            Caption = #1055#1088#1086#1073#1077#1075', '#1082#1084' ('#1086#1089#1085#1086#1074#1085#1086#1081')'
             DataBinding.FieldName = 'Amount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 136
+            Width = 100
+          end
+          object colDistanceFuelChild: TcxGridDBColumn
+            Caption = #1055#1088#1086#1073#1077#1075', '#1082#1084' ('#1076#1086#1087#1086#1083#1085#1080#1090'.)'
+            DataBinding.FieldName = 'DistanceFuelChild'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
           end
           object colStartOdometre: TcxGridDBColumn
-            Caption = #1057#1087#1080#1076#1086#1084#1077#1090#1088' '#1085#1072#1095#1072#1083#1100#1085#1086#1077' '#1087#1086#1082#1072#1079#1072#1085#1080#1077', '#1082#1084
+            Caption = #1057#1087#1080#1076#1086#1084#1077#1090#1088' '#1085#1072#1095'. '#1087#1086#1082#1072#1079#1072#1085#1080#1077', '#1082#1084
             DataBinding.FieldName = 'StartOdometre'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 176
+            Width = 110
           end
           object colEndOdometre: TcxGridDBColumn
-            Caption = #1057#1087#1080#1076#1086#1084#1077#1090#1088' '#1082#1086#1085#1077#1095#1085#1086#1077' '#1087#1086#1082#1072#1079#1072#1085#1080#1077', '#1082#1084
+            Caption = #1057#1087#1080#1076#1086#1084#1077#1090#1088' '#1082#1086#1085#1077#1095'. '#1087#1086#1082#1072#1079#1072#1085#1080#1077', '#1082#1084
             DataBinding.FieldName = 'EndOdometre'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 175
+            Width = 110
           end
           object colWeight: TcxGridDBColumn
             Caption = #1042#1077#1089' '#1075#1088#1091#1079#1072', '#1082#1075
             DataBinding.FieldName = 'Weight'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 97
+            Width = 70
           end
           object colFreightName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1079#1072
@@ -384,7 +391,7 @@
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 110
+            Width = 90
           end
           object colRouteKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1084#1072#1088#1096#1088#1091#1090#1072
@@ -392,7 +399,7 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 107
+            Width = 70
           end
           object colIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
@@ -400,6 +407,7 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 55
           end
         end
         object cxGridLevel: TcxGridLevel
@@ -478,13 +486,23 @@
           object colchNumber: TcxGridDBColumn
             Caption = #8470' '#1087'/'#1087
             DataBinding.FieldName = 'Number'
+            HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 36
           end
+          object colchIsMasterFuel: TcxGridDBColumn
+            Caption = #1054#1089#1085#1086#1074#1085#1086#1081' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isMasterFuel'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object colсhFuelCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'FuelCode'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 50
@@ -496,10 +514,10 @@
             Options.Editing = False
             Width = 166
           end
-          object colсhCalculated: TcxGridDBColumn
+          object colсhIsCalculated: TcxGridDBColumn
             Caption = #1060#1072#1082#1090' '#1087#1086' '#1088#1072#1089#1095'. ('#1076#1072'/'#1085#1077#1090')'
-            DataBinding.FieldName = 'Calculated'
-            HeaderAlignmentHorz = taRightJustify
+            DataBinding.FieldName = 'isCalculated'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 64
           end
@@ -566,6 +584,7 @@
           object colchRateFuelKindTax: TcxGridDBColumn
             Caption = '% '#1089#1077#1079#1086#1085', '#1090#1077#1084#1087'.'
             DataBinding.FieldName = 'RateFuelKindTax'
+            HeaderAlignmentHorz = taRightJustify
             Options.Editing = False
             Width = 59
           end
@@ -1503,7 +1522,7 @@
         Value = ''
       end
       item
-        Name = 'DriverId'
+        Name = 'PersonalDriverId'
         Component = GuidesPersonalDriver
         ComponentItem = 'Key'
         DataType = ftInteger
@@ -1511,7 +1530,7 @@
         Value = ''
       end
       item
-        Name = 'DriverName'
+        Name = 'PersonalDriverName'
         Component = GuidesPersonalDriver
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -1765,6 +1784,13 @@
         Name = 'inAmount'
         Component = MasterCDS
         ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDistanceFuelChild'
+        Component = MasterCDS
+        ComponentItem = 'DistanceFuelChild'
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -2083,9 +2109,16 @@
         ParamType = ptInput
       end
       item
-        Name = 'inCalculated'
+        Name = 'inIsCalculated'
         Component = ChildCDS
-        ComponentItem = 'Calculated'
+        ComponentItem = 'isCalculated'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsMasterFuel'
+        Component = ChildCDS
+        ComponentItem = 'isMasterFuel'
         DataType = ftBoolean
         ParamType = ptInput
       end

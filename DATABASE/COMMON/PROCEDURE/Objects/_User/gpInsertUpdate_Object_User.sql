@@ -1,40 +1,48 @@
-п»ї-- Function: gpInsertUpdate_Object_User()
+-- Function: gpInsertUpdate_Object_User()
 
 -- DROP FUNCTION gpInsertUpdate_Object_User();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_User(
- INOUT ioId	         Integer   ,   	-- РєР»СЋС‡ РѕР±СЉРµРєС‚Р° <РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ> 
-    IN inCode        Integer   , 
-    IN inUserName    TVarChar  ,    -- РіР»Р°РІРЅРѕРµ РќР°Р·РІР°РЅРёРµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РѕР±СЉРµРєС‚Р° <РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ> 
-    IN inPassword    TVarChar  ,    -- РїР°СЂРѕР»СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ 
-    IN inMemberId    Integer   ,    -- С„РёР·. Р»РёС†Рѕ
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+ INOUT ioId          Integer   ,    -- ключ объекта <Пользователь> 
+    IN inCode        Integer   ,    -- 
+    IN inUserName    TVarChar  ,    -- главное Название пользователя объекта <Пользователь> 
+    IN inPassword    TVarChar  ,    -- пароль пользователя 
+    IN inMemberId    Integer   ,    -- физ. лицо
+    IN inSession     TVarChar       -- сессия пользователя
 )
-  RETURNS integer 
-  AS
+  RETURNS Integer 
+AS
 $BODY$
-  DECLARE UserId Integer;
+  DECLARE vbUserId Integer;
   DECLARE Code_max Integer;  
-     
 BEGIN
-   UserId := lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_User());
 
-   -- РїСЂРѕРІРµСЂРєР° СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё РґР»СЏ СЃРІРѕР№СЃС‚РІР° <РќР°РёРјРµРЅРѕРІР°РЅРёРµ РџРѕР»СЊР·РѕРІР°С‚РµР»СЏ>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_User(), inUserName);
+   -- проверка прав пользователя на вызов процедуры
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_User());
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё <РћР±СЉРµРєС‚>
+   -- проверка уникальности для свойства <Наименование Пользователя>
+   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_User(), inUserName);
+
+   -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_User(), inCode, inUserName);
 
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_Password(), ioId, inPassword);
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_User_Member(), ioId, inMemberId);
 
 
-   -- Р’РµРґРµРЅРёРµ РїСЂРѕС‚РѕРєРѕР»Р°
-   PERFORM lpInsert_ObjectProtocol(ioId, UserId);
+   -- Ведение протокола
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
  
-END;$BODY$
-
-LANGUAGE plpgsql VOLATILE
-  COST 100;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
   
-                            
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.06.13                                        * lpCheckRight
+*/
+
+-- тест
+-- SELECT * FROM gpInsertUpdate_Object_User ('2')

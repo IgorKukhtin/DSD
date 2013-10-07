@@ -39,7 +39,7 @@ BEGIN
 
 
   -- !!! ме онмърмн - онвелс мюдн бнгбпюыюрэ мюнанпнр!!!
-  outIsErased := TRUE;
+  -- outIsErased := TRUE;
 
 
 END;

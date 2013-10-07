@@ -22,15 +22,17 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не установлен <Сотрудник>.';
      END IF;
      -- проверка
-     IF COALESCE (ioId, 0) = 0 AND EXISTS (SELECT MovementItem.ObjectId
-                                           FROM MovementItem 
-                                                JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
-                                                                            ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
-                                                                           AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-                                                                           AND MILinkObject_InfoMoney.ObjectId = inInfoMoneyId
-                                           WHERE MovementItem.MovementId = inMovementId
-                                             AND MovementItem.ObjectId = inPersonalId
-                                             AND MovementItem.DescId = zc_MI_Master())
+     IF EXISTS (SELECT MovementItem.ObjectId
+                FROM MovementItem 
+                     JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                                 ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                                                AND MILinkObject_InfoMoney.ObjectId = inInfoMoneyId
+                WHERE MovementItem.MovementId = inMovementId
+                  AND MovementItem.ObjectId = inPersonalId
+                  AND MovementItem.DescId = zc_MI_Master()
+                  AND MovementItem.Id <> COALESCE (ioId, 0)
+               )
      THEN
          RAISE EXCEPTION 'Ошибка при добавлении.Сотрудник <%> уже есть в документе.', (SELECT ValueData FROM Object WHERE Id = inPersonalId);
      END IF;

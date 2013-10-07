@@ -17,13 +17,12 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
               )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
 
--- inStartDate:= '01.01.2013';
--- inEndDate:= '01.01.2100';
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
+
 
      RETURN QUERY 
        SELECT
@@ -122,19 +121,19 @@ BEGIN
   
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.10.13                                        * add lpCheckRight
  30.09.13                                        * add Object_Personal_View
  30.09.13                                        * del zc_MovementLinkObject_PersonalDriver
  27.09.13                                        * del zc_MovementLinkObject_Car
  07.07.13                                        *
  30.06.13                                        *
-
 */
 
 -- тест

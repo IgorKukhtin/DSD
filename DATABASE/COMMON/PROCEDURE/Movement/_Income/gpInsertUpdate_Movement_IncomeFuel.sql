@@ -23,10 +23,8 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
 
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Income());
-     vbUserId := inSession;
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_IncomeFuel());
 
 
      -- проверка - связанные документы Изменять нельзя
@@ -56,6 +54,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.10.13                                        * add lpCheckRight
  06.10.13                                        * add lfCheck_Movement_Parent
  05.10.13                                        * add inInvNumberPartner
  04.10.13                                        * add lpInsertUpdate_Movement_IncomeFuel

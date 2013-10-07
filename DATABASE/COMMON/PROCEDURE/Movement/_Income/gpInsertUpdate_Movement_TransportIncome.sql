@@ -39,10 +39,8 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
 
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Income());
-     vbUserId := inSession;
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_TransportIncome());
 
      -- проверка
      IF COALESCE (inParentId, 0) = 0
@@ -209,6 +207,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.10.13                                        * add lpCheckRight
  05.10.13                                        *
 */
 

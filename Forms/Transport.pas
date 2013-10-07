@@ -96,7 +96,7 @@ type
     colñhFuelName: TcxGridDBColumn;
     colñhAmount: TcxGridDBColumn;
     colñhAmount_calc: TcxGridDBColumn;
-    colñhCalculated: TcxGridDBColumn;
+    colñhIsCalculated: TcxGridDBColumn;
     cxGridChildLevel: TcxGridLevel;
     ChildCDS: TClientDataSet;
     ChildDS: TDataSource;
@@ -211,6 +211,8 @@ type
     clincIsErased: TcxGridDBColumn;
     IncomeViewAddOn: TdsdDBViewAddOn;
     EntryViewAddOn: TdsdDBViewAddOn;
+    colchIsMasterFuel: TcxGridDBColumn;
+    colDistanceFuelChild: TcxGridDBColumn;
   private
   public
   end;

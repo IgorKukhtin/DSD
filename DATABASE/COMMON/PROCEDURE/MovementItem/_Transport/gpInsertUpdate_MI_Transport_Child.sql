@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Child(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inParentId            Integer   , -- Главный элемент документа
     IN inFuelId              Integer   , -- Вид топлива
-    IN inCalculated          Boolean   , -- Количество по факту рассчитыталось из нормы или вводилось
+    IN inIsCalculated        Boolean   , -- Количество по факту рассчитыталось из нормы или вводилось
+    IN inIsMasterFuel        Boolean   , -- Основной вид топлива (да/нет)
  INOUT ioAmount              TFloat    , -- Количество по факту
    OUT outAmount_calc        TFloat    , -- Количество расчетное по норме
     IN inColdHour            TFloat    , -- Холод, Кол-во факт часов 
@@ -36,7 +37,8 @@ BEGIN
                                            , inMovementId         := inMovementId
                                            , inParentId           := inParentId
                                            , inFuelId             := inFuelId
-                                           , inCalculated         := inCalculated
+                                           , inIsCalculated       := inIsCalculated
+                                           , inIsMasterFuel       := inIsMasterFuel
                                            , ioAmount             := ioAmount
                                            , inColdHour           := inColdHour
                                            , inColdDistance       := inColdDistance
@@ -57,6 +59,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.10.13                                        * add inIsMasterFuel
  04.10.13                                        * add inUserId
  01.10.13                                        * add inRateFuelKindTax
  29.09.13                                        *

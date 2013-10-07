@@ -1,17 +1,20 @@
 -- Function: gpGet_Object_User()
 
--- DROP FUNCTION gpGet_Object_User (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_User (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_User(
     IN inId          Integer,       -- пользователь 
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Password TVarChar, MemberId Integer, MemberName TVarChar) AS
-$BODY$BEGIN
+$BODY$
+  DECLARE vbUserId Integer;
+BEGIN
 
    -- проверка прав пользователя на вызов процедуры
---   PERFORM lpCheckRight(inSession, zc_Object_Process_User());
-   
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_Object_User());
+
+
    IF COALESCE (inId, 0) = 0
    THEN
        RETURN QUERY 
@@ -51,8 +54,8 @@ ALTER FUNCTION gpGet_Object_User (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.06.13                                        * lpCheckRight
  03.06.13          *
-
 */
 
 -- тест

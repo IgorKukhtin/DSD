@@ -169,6 +169,20 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object colCarName: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
+            DataBinding.FieldName = 'CarName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = CarChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
           object colPersonalCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'PersonalCode'
@@ -190,27 +204,13 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object colCarName: TcxGridDBColumn
-            Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
-            DataBinding.FieldName = 'CarName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = CarChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
           object colRouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090
             DataBinding.FieldName = 'RouteName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = RoteChoiceForm
+                Action = RouteChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -770,9 +770,9 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       View = cxGridDBTableView
-      Action = PersonalChoiceForm
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1042#1086#1076#1080#1090#1077#1083#1100')>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1042#1086#1076#1080#1090#1077#1083#1100')>'
+      Action = CarChoiceForm
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100'>'
       ShortCut = 45
       ImageIndex = 0
     end
@@ -784,8 +784,8 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         item
           StoredProc = spErasedMIMaster
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1042#1086#1076#1080#1090#1077#1083#1100')>'
-      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1042#1086#1076#1080#1090#1077#1083#1100')>'
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100'>'
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -841,20 +841,41 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         item
           Name = 'Key'
           Component = MasterCDS
-          ComponentItem = 'RouteId'
+          ComponentItem = 'CarId'
           DataType = ftInteger
           ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = MasterCDS
-          ComponentItem = 'RouteName'
+          ComponentItem = 'CarName'
+          DataType = ftString
+          ParamType = ptOutput
+        end
+        item
+          Name = 'PersonalDriverId'
+          Component = MasterCDS
+          ComponentItem = 'PersonalId'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end
+        item
+          Name = 'PersonalDriverCode'
+          Component = MasterCDS
+          ComponentItem = 'PersonalCode'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end
+        item
+          Name = 'PersonalDriverName'
+          Component = MasterCDS
+          ComponentItem = 'PersonalName'
           DataType = ftString
           ParamType = ptOutput
         end>
       isShowModal = True
     end
-    object RoteChoiceForm: TOpenChoiceForm
+    object RouteChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       FormName = 'TRouteForm'
       GuiParams = <
@@ -955,11 +976,18 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inPersonalId'
+        Name = 'ioMIId_20401'
         Component = MasterCDS
-        ComponentItem = 'PersonalId'
+        ComponentItem = 'MIId_20401'
         DataType = ftInteger
-        ParamType = ptInput
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioMIId_21201'
+        Component = MasterCDS
+        ComponentItem = 'MIId_21201'
+        DataType = ftInteger
+        ParamType = ptInputOutput
       end
       item
         Name = 'inMovementId'
@@ -968,6 +996,13 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         DataType = ftInteger
         ParamType = ptInput
         Value = '0'
+      end
+      item
+        Name = 'inPersonalId'
+        Component = MasterCDS
+        ComponentItem = 'PersonalId'
+        DataType = ftInteger
+        ParamType = ptInput
       end
       item
         Name = 'inAmount_20401'
@@ -1011,9 +1046,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
   object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
-    OnDblClickActionList = <
-      item
-      end>
+    OnDblClickActionList = <>
     ActionItemList = <
       item
       end>
