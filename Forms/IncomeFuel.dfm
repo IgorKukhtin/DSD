@@ -195,7 +195,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
     Height = 270
     Align = alClient
     TabOrder = 2
-    Properties.ActivePage = cxTabSheetEntry
+    Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 270
     ClientRectRight = 773
@@ -298,6 +298,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
           object colFuelName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
             DataBinding.FieldName = 'FuelName'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 150
           end
@@ -341,6 +342,14 @@ inherited IncomeFuelForm: TIncomeFuelForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 91
+          end
+          object colIsErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isErased'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
         end
         object cxGridLevel: TcxGridLevel
@@ -1240,6 +1249,7 @@ inherited IncomeFuelForm: TIncomeFuelForm
       item
         Control = edDriver
       end>
+    GetStoredProc = spGet
     Left = 296
     Top = 207
   end

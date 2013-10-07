@@ -96,7 +96,6 @@ type
     colGoodsCode: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
     colInfoMoneyName_Detail: TcxGridDBColumn;
-    colPrice_comlete: TcxGridDBColumn;
     GridToExcel: TdsdGridToExcel;
     bbGridToExel: TdxBarButton;
     EntryToExcel: TdsdGridToExcel;
@@ -122,6 +121,7 @@ type
     ChangeStatus: TChangeStatus;
     spErasedMIMaster: TdsdStoredProc;
     spUnErasedMIMaster: TdsdStoredProc;
+    colIsErased: TcxGridDBColumn;
   private
   public
   end;

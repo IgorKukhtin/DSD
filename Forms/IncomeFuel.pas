@@ -138,6 +138,7 @@ type
     ChangeStatus: TChangeStatus;
     spErasedMIMaster: TdsdStoredProc;
     spUnErasedMIMaster: TdsdStoredProc;
+    colIsErased: TcxGridDBColumn;
   private
   public
   end;

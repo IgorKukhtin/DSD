@@ -207,7 +207,7 @@ inherited IncomeForm: TIncomeForm
     Height = 336
     Align = alClient
     TabOrder = 2
-    Properties.ActivePage = cxTabSheetEntry
+    Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 336
     ClientRectRight = 971
@@ -411,6 +411,14 @@ inherited IncomeForm: TIncomeForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 100
+          end
+          object colIsErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isErased'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
         end
         object cxGridLevel: TcxGridLevel
@@ -1347,6 +1355,7 @@ inherited IncomeForm: TIncomeForm
       item
         Control = edPacker
       end>
+    GetStoredProc = spGet
     Left = 296
     Top = 257
   end

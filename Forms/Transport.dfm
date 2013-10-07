@@ -4,8 +4,8 @@
   ClientWidth = 996
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1004
-  ExplicitHeight = 482
+  ExplicitWidth = 1012
+  ExplicitHeight = 490
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -338,7 +338,7 @@
                 Default = True
                 Kind = bkEllipsis
               end>
-            Properties.ReadOnly = False
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 125
@@ -393,6 +393,13 @@
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 107
+          end
+          object colIsErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isErased'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
           end
         end
         object cxGridLevel: TcxGridLevel
@@ -699,7 +706,7 @@
                 Default = True
                 Kind = bkEllipsis
               end>
-            Properties.ReadOnly = False
+            Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
@@ -713,7 +720,7 @@
                 Default = True
                 Kind = bkEllipsis
               end>
-            Properties.ReadOnly = False
+            Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
@@ -727,7 +734,7 @@
                 Default = True
                 Kind = bkEllipsis
               end>
-            Properties.ReadOnly = False
+            Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
@@ -748,7 +755,7 @@
                 Default = True
                 Kind = bkEllipsis
               end>
-            Properties.ReadOnly = False
+            Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
@@ -804,6 +811,13 @@
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
+          object clincIsErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isErased'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
         end
         object cxGridIncomeLevel: TcxGridLevel
           GridView = cxGridIncomeDBTableView
@@ -820,6 +834,7 @@
         Height = 305
         Align = alClient
         TabOrder = 0
+        ExplicitLeft = 16
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -841,10 +856,9 @@
           OptionsView.Footer = True
           OptionsView.HeaderAutoHeight = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object colDebetAccountGroupCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1044' '#1043#1088#1091#1087#1087#1072' '#1082#1086#1076
-            DataBinding.FieldName = 'DebetAccountGroupCode'
-            Visible = False
+          object colAccountCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'AccountCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 40
@@ -857,14 +871,6 @@
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object colDebetAccountDirectionCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1044' '#1053#1072#1087#1088#1072#1074#1083' '#1082#1086#1076
-            DataBinding.FieldName = 'DebetAccountDirectionCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 40
-          end
           object colDebetAccountDirectionName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1044' '#1053#1072#1087#1088#1072#1074#1083
             DataBinding.FieldName = 'DebetAccountDirectionName'
@@ -873,27 +879,12 @@
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object colDebetAccountCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1044' '#1082#1086#1076
-            DataBinding.FieldName = 'DebetAccountCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 40
-          end
           object colDebetAccountName: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1044
+            Caption = #1057#1095#1077#1090' '#1044#1077#1073#1077#1090
             DataBinding.FieldName = 'DebetAccountName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 120
-          end
-          object colKreditAccountGroupCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1050' '#1043#1088#1091#1087#1087#1072' '#1082#1086#1076
-            DataBinding.FieldName = 'KreditAccountGroupCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 40
           end
           object colKreditAccountGroupName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1050' '#1043#1088#1091#1087#1087#1072
@@ -903,14 +894,6 @@
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colKreditAccountDirectionCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1050' '#1053#1072#1087#1088#1072#1074#1083' '#1082#1086#1076
-            DataBinding.FieldName = 'KreditAccountDirectionCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 40
-          end
           object colKreditAccountDirectionName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1050' '#1053#1072#1087#1088#1072#1074#1083
             DataBinding.FieldName = 'KreditAccountDirectionName'
@@ -919,15 +902,8 @@
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colKreditAccountCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1050' '#1082#1086#1076
-            DataBinding.FieldName = 'KreditAccountCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 40
-          end
           object colKreditAccountName: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1050
+            Caption = #1057#1095#1077#1090' '#1050#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'KreditAccountName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -936,7 +912,6 @@
           object colByObjectCode: TcxGridDBColumn
             Caption = #1054#1073'.'#1082#1086#1076
             DataBinding.FieldName = 'ByObjectCode'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 40
@@ -959,6 +934,7 @@
           object colGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074'.'
             DataBinding.FieldName = 'GoodsCode'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 40
@@ -966,6 +942,7 @@
           object colGoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -973,6 +950,7 @@
           object colGoodsKindName_comlete: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -998,30 +976,18 @@
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colInfoMoneyCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1089#1090'. '#1085#1072#1079#1085#1072#1095'.'
-            DataBinding.FieldName = 'InfoMoneyCode'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 40
-          end
           object colInfoMoneyName: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colInfoMoneyCode_Detail: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1089#1090'. '#1085#1072#1079#1085#1072#1095'.'#1076#1077#1090'.'
-            DataBinding.FieldName = 'InfoMoneyCode_Detail'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 40
-          end
           object colInfoMoneyName_Detail: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' '#1076#1077#1090#1072#1083#1100#1085#1086
             DataBinding.FieldName = 'InfoMoneyName_Detail'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
@@ -2270,8 +2236,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -2310,10 +2276,6 @@
         item
           Visible = True
           ItemName = 'bbShowErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbBooleanAction'
         end
         item
           BeginGroup = True
@@ -2386,6 +2348,7 @@
     object bbBooleanAction: TdxBarButton
       Action = BooleanStoredProcAction
       Category = 0
+      Enabled = False
     end
     object bbStatic: TdxBarStatic
       Caption = '     '
@@ -2438,8 +2401,8 @@
     DataSet = 'ClientDataSet'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
-    Left = 375
-    Top = 288
+    Left = 442
+    Top = 267
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 111
@@ -2735,7 +2698,7 @@
         ParamType = ptOutput
       end>
     Left = 614
-    Top = 208
+    Top = 185
   end
   object spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetUnErased_MovementItem'
@@ -2757,7 +2720,7 @@
         ParamType = ptOutput
       end>
     Left = 678
-    Top = 224
+    Top = 201
   end
   object spErasedMIIncome: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'
@@ -2778,11 +2741,11 @@
         DataType = ftBoolean
         ParamType = ptOutput
       end>
-    Left = 614
-    Top = 272
+    Left = 612
+    Top = 244
   end
   object spUnErasedMIIncome: TdsdStoredProc
-    StoredProcName = 'gpSetErased_MovementItem'
+    StoredProcName = 'gpSetUnErased_MovementItem'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -2800,7 +2763,28 @@
         DataType = ftBoolean
         ParamType = ptOutput
       end>
-    Left = 686
-    Top = 288
+    Left = 684
+    Top = 260
+  end
+  object IncomeViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridIncomeDBTableView
+    OnDblClickActionList = <
+      item
+        Action = PartnerChoiceForm
+      end>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    Left = 263
+    Top = 364
+  end
+  object EntryViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridEntryDBTableView
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    Left = 379
+    Top = 282
   end
 end

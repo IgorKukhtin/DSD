@@ -71,16 +71,11 @@ type
     spInsertUpdateMIMaster: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     frxDBDataset: TfrxDBDataset;
-    colDebetAccountGroupCode: TcxGridDBColumn;
     colDebetAccountGroupName: TcxGridDBColumn;
-    colDebetAccountDirectionCode: TcxGridDBColumn;
     colDebetAccountDirectionName: TcxGridDBColumn;
-    colDebetAccountCode: TcxGridDBColumn;
-    colKreditAccountGroupCode: TcxGridDBColumn;
+    colAccountCode: TcxGridDBColumn;
     colKreditAccountGroupName: TcxGridDBColumn;
-    colKreditAccountDirectionCode: TcxGridDBColumn;
     colKreditAccountDirectionName: TcxGridDBColumn;
-    colKreditAccountCode: TcxGridDBColumn;
     colGoodsGroupName: TcxGridDBColumn;
     colByObjectCode: TcxGridDBColumn;
     colByObjectName: TcxGridDBColumn;
@@ -93,9 +88,7 @@ type
     colFreightName: TcxGridDBColumn;
     colStartOdometre: TcxGridDBColumn;
     colGoodsCode: TcxGridDBColumn;
-    colInfoMoneyCode: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
-    colInfoMoneyCode_Detail: TcxGridDBColumn;
     colInfoMoneyName_Detail: TcxGridDBColumn;
     cxGridChild: TcxGrid;
     cxGridChildDBTableView: TcxGridDBTableView;
@@ -214,6 +207,10 @@ type
     spUnErasedMIIncome: TdsdStoredProc;
     bbErasedIncome: TdxBarButton;
     bbUnErasedIncome: TdxBarButton;
+    colIsErased: TcxGridDBColumn;
+    clincIsErased: TcxGridDBColumn;
+    IncomeViewAddOn: TdsdDBViewAddOn;
+    EntryViewAddOn: TdsdDBViewAddOn;
   private
   public
   end;

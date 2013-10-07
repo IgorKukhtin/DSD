@@ -82,7 +82,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     Height = 310
     Align = alClient
     TabOrder = 2
-    Properties.ActivePage = cxTabSheetEntry
+    Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 310
     ClientRectRight = 773
@@ -174,7 +174,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
             DataBinding.FieldName = 'PersonalCode'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 40
+            Width = 30
           end
           object colPersonalName: TcxGridDBColumn
             Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
@@ -216,7 +216,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Width = 80
           end
           object colAmount_21201: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1085#1072' '#1050#1086#1084#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1077
@@ -239,6 +239,14 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object colIsErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+            DataBinding.FieldName = 'isErased'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 40
           end
         end
         object cxGridLevel: TcxGridLevel
@@ -290,7 +298,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
             DataBinding.FieldName = 'AccountCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 73
+            Width = 60
           end
           object colDebetAccountGroupName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1044' '#1043#1088#1091#1087#1087#1072
@@ -313,7 +321,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
             DataBinding.FieldName = 'DebetAccountName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 90
+            Width = 150
           end
           object colKreditAccountGroupName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1050' '#1043#1088#1091#1087#1087#1072
@@ -336,7 +344,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
             DataBinding.FieldName = 'KreditAccountName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 88
+            Width = 150
           end
           object colByObjectCode: TcxGridDBColumn
             Caption = #1054#1073'.'#1082#1086#1076
@@ -364,18 +372,21 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
           object colGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074'.'
             DataBinding.FieldName = 'GoodsCode'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
           object colGoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object colGoodsKindName_comlete: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -385,7 +396,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
             DataBinding.FieldName = 'AccountOnComplete'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 32
+            Width = 20
           end
           object colDebetAmount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1076#1077#1073#1077#1090
@@ -394,7 +405,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 66
+            Width = 70
           end
           object colKreditAmount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1082#1088#1077#1076#1080#1090
@@ -404,26 +415,19 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
             Properties.Nullable = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 75
-          end
-          object colPrice_comlete: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072
-            DataBinding.FieldName = 'Price'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;,0.00##; ;'
-            HeaderAlignmentVert = vaCenter
-            Width = 58
+            Width = 70
           end
           object colInfoMoneyName: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 93
           end
           object colInfoMoneyName_Detail: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1100#1103' '#1076#1077#1090#1072#1083#1100#1085#1086
             DataBinding.FieldName = 'InfoMoneyName_Detail'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
@@ -1107,6 +1111,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       end
       item
       end>
+    GetStoredProc = spGet
     Left = 306
     Top = 193
   end

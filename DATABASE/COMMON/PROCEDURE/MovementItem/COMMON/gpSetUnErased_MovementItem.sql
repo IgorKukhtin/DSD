@@ -31,11 +31,15 @@ BEGIN
   -- проверка - проведенные/удаленные документы Изменять нельзя
   IF vbStatusId <> zc_Enum_Status_UnComplete()
   THEN
-      RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <"%"> не возможно.', (SELECT ValueData FROM Object WHERE Id = vbStatusId);
+      RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%>% не возможно.', lfGet_Object_ValueData (vbStatusId), vbStatusId;
   END IF;
 
   -- пересчитали Итоговые суммы по накладной
   PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
+
+
+  -- !!! НЕ ПОНЯТНО - ПОЧЕМУ НАДО ВОЗВРАЩАТЬ НАОБОРОТ!!!
+  outIsErased := TRUE;
 
 
 END;

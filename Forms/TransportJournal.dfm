@@ -3,6 +3,7 @@ inherited TransportJournalForm: TTransportJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090'>'
   ClientHeight = 427
   ClientWidth = 1276
+  ExplicitLeft = -294
   ExplicitWidth = 1292
   ExplicitHeight = 462
   PixelsPerInch = 96

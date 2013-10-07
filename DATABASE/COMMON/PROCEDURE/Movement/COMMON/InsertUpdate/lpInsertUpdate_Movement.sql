@@ -18,7 +18,7 @@ BEGIN
      --
      IF vbStatusId <> zc_Enum_Status_UnComplete()
      THEN
-         RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', (SELECT ValueData FROM Object WHERE Id = vbStatusId);
+         RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
      END IF;
 
      --

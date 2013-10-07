@@ -84,7 +84,7 @@ BEGIN
          -- определили свойство из Default <% НДС>
          ioVATPercent := 20;
          -- определили свойство из Default <Виды форм оплаты>
-         IF COALESCE (ioPaidKindId, 0) =0
+         IF COALESCE (ioPaidKindId, 0) = 0
          THEN
              ioPaidKindId := zc_Enum_PaidKind_FirstForm();
              ioPaidKindName := lfGet_Object_ValueData (ioPaidKindId);
@@ -114,7 +114,7 @@ BEGIN
          IF COALESCE (ioGoodsId, 0) =0
          THEN
              SELECT Object_Goods.Id             AS GoodsId
-                  , Object_Goods.ObjectCode     AS GoodsCode
+                  , COALESCE (Object_Goods.ObjectCode, 0) AS GoodsCode
                   , Object_Goods.ValueData      AS GoodsName
                   , Object_FuelMaster.ValueData AS FuelName
                     INTO ioGoodsId, ioGoodsCode, ioGoodsName, ioFuelName
@@ -171,8 +171,6 @@ BEGIN
              RAISE EXCEPTION 'Ошибка.Не определен <Вид топлива> у товара <%>.', ioGoodsName;
          END IF;
      END IF;
-
-
 
      -- сохранили <Документ>
      ioMovementId := lpInsertUpdate_Movement_IncomeFuel (ioId               := ioMovementId
