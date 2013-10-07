@@ -35,4 +35,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpUpdate_Status_PersonalSendCash (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inAmount:= 20, inFromId:= 1, inToId:= 1, inPaidKindId:= 1,  inInfoMoneyId:= 0, inUnitId:= 0, inServiceDate:= '01.01.2013', inSession:= '2')
+-- select  * from gpUpdate_Status_PersonalSendCash (inMovementId  := 149722, inStatusCode  := 2, inSession:= '2')

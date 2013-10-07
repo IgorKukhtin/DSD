@@ -11,9 +11,22 @@ CREATE OR REPLACE FUNCTION gpMovementItem_PersonalSendCash_SetUnErased(
   RETURNS Boolean
 AS
 $BODY$
+  DECLARE vbStatusId Integer;
 BEGIN
 
   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_SetErased_MovementItem());
+
+  -- определяем <Статус>
+  vbStatusId := (SELECT StatusId FROM Movement WHERE Id = inMovementId);
+  -- проверка - проведенные/удаленные документы Изменять нельзя
+  IF vbStatusId <> zc_Enum_Status_UnComplete()
+  THEN
+      RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <"%"> не возможно.', lfGet_Object_ValueData (vbStatusId);
+  END IF;
+
+  -- проверка - связанные документы Изменять нельзя
+  -- PERFORM lfCheck_Movement_Parent (inMovementId:= inMovementId, inComment:= 'изменение');
+
 
   -- устанавливаем новое значение
   outIsErased := FALSE;
@@ -24,6 +37,10 @@ BEGIN
     AND MovementItem.ObjectId = inPersonalId
     AND MovementItem.DescId = zc_MI_Master();
 
+  -- !!! НЕ ПОНЯТНО - ПОЧЕМУ НАДО ВОЗВРАЩАТЬ НАОБОРОТ!!!
+  outIsErased := TRUE;
+
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -32,6 +49,7 @@ ALTER FUNCTION gpMovementItem_PersonalSendCash_SetUnErased (Integer, Integer, TV
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.10.13                                        * add vbStatusId
  06.10.13                                        *
 */
 

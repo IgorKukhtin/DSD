@@ -19,10 +19,10 @@ BEGIN
      -- проверка
      IF COALESCE (inPersonalId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Сотрудник не установлен.';
+         RAISE EXCEPTION 'Ошибка.Не установлен <Сотрудник>.';
      END IF;
      -- проверка
-     IF COALESCE (ioId, 0) = 0 AND EXISTS (SELECT ObjectId
+     IF COALESCE (ioId, 0) = 0 AND EXISTS (SELECT MovementItem.ObjectId
                                            FROM MovementItem 
                                                 JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                                             ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
