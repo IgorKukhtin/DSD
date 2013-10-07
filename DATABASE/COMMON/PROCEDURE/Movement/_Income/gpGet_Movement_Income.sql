@@ -15,10 +15,12 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
               )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Income());
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Income());
+
      IF COALESCE (inMovementId, 0) = 0
      THEN
          RETURN QUERY 
@@ -132,6 +134,7 @@ ALTER FUNCTION gpGet_Movement_Income (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.10.13                                        * add lpCheckRight
  30.09.13                                        * add Object_Personal_View
  30.09.13                                        * del zc_MovementLinkObject_PersonalDriver
  29.09.13                                        * add lfGet_InvNumber

@@ -37,7 +37,7 @@ BEGIN
     AND MovementItem.DescId = zc_MI_Master();
 
   -- !!! ме онмърмн - онвелс мюдн бнгбпюыюрэ мюнанпнр!!!
-  outIsErased := FALSE;
+  -- outIsErased := FALSE;
 
 
 END;

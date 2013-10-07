@@ -20,10 +20,12 @@ RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, Statu
               )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_TransportIncome());
+
 
      RETURN QUERY 
        SELECT
@@ -154,6 +156,7 @@ ALTER FUNCTION gpSelect_Movement_TransportIncome (Integer, Boolean, Boolean, TVa
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.10.13                                        * add lpCheckRight
  05.10.13                                        * add InvNumberPartner
  04.10.13                                        *
 */

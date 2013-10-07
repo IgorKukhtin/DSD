@@ -9,7 +9,8 @@ uses
   cxData, cxDataStorage, cxEdit, Data.DB, cxDBData, dsdAddOn, dsdDB, dsdAction,
   Vcl.ActnList, dxBarExtItems, dxBar, cxClasses, cxPropertiesStore,
   Datasnap.DBClient, cxGridLevel, cxGridCustomTableView, cxGridTableView,
-  cxGridDBTableView, cxGridCustomView, cxGrid;
+  cxGridDBTableView, cxGridCustomView, cxGrid, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TProcessForm = class(TParentForm)
@@ -31,6 +32,9 @@ type
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    clEnumName: TcxGridDBColumn;
+    clCode: TcxGridDBColumn;
+    clId: TcxGridDBColumn;
   private
     { Private declarations }
   public

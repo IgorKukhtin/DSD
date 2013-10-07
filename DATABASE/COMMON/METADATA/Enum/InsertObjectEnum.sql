@@ -1,8 +1,4 @@
 -- создаются функции
-CREATE OR REPLACE FUNCTION zc_Enum_Process_Select_Object_User() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Select_Object_User' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
-CREATE OR REPLACE FUNCTION zc_Enum_Process_Get_Object_User() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Get_Object_User' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
-CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_Object_User() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_Object_User' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql;
-
 DO $$
 BEGIN
 
@@ -12,11 +8,6 @@ BEGIN
        PERFORM lpInsertUpdate_Object (0, zc_Object_RateFuelKind(), 1, 'Лето');
    END IF;
 
-   -- сохраняются элементы справочника (zc_Object_Process)
-   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_Object_User(), inDescId:= zc_Object_Process(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Process_Select_Object_User'), inName:= 'Проверка получения данных', inEnumName:= 'zc_Enum_Process_Select_Object_User');
-   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Get_Object_User(), inDescId:= zc_Object_Process(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Process_Get_Object_User'), inName:= 'Проверка выборки данных', inEnumName:= 'zc_Enum_Process_Get_Object_User');
-   PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_Object_User(), inDescId:= zc_Object_Process(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Process_InsertUpdate_Object_User'), inName:= 'Проверка сохранения данных', inEnumName:= 'zc_Enum_Process_InsertUpdate_Object_User');
-
    -- Добавляем роли
    PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_Admin(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_Admin'), inName:= 'Роль администратора', inEnumName:= 'zc_Enum_Role_Admin');
 
@@ -24,7 +15,7 @@ BEGIN
    PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidKind_FirstForm(),  inDescId:= zc_Object_PaidKind(), inCode:= 1, inName:= 'БН', inEnumName:= 'zc_Enum_PaidKind_FirstForm');
    PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidKind_SecondForm(), inDescId:= zc_Object_PaidKind(), inCode:= 2, inName:= 'Нал', inEnumName:= 'zc_Enum_PaidKind_SecondForm');
 END $$;
-
+/*
 DO $$
 DECLARE ioId integer;
 BEGIN
@@ -47,7 +38,7 @@ BEGIN
    END IF;
 
 END $$;
-
+*/
 DO $$
 DECLARE ioId integer;
 DECLARE UserId integer;
@@ -77,7 +68,7 @@ BEGIN
 
      -- Соединяем пользователя с ролью
      ioId := lpInsertUpdate_Object(ioId, zc_Object_UserRole(), 0, '');
-
+     
      PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_UserRole_Role(), ioId, zc_Enum_Role_Admin());
 
      PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_UserRole_User(), ioId, UserId);
@@ -274,6 +265,7 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.10.13                                        * role...
  03.10.13                                        * add zc_Enum_InfoMoney_20901, zc_Enum_InfoMoney_30101
  01.10.13         * add Типы рабочего времени (6 шт)
  30.09.13                                        * add zc_Enum_InfoMoney_21201

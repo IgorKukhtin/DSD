@@ -2,8 +2,8 @@ inherited RoleForm: TRoleForm
   Caption = #1056#1086#1083#1080' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
   ClientHeight = 370
   ClientWidth = 752
-  ExplicitWidth = 760
-  ExplicitHeight = 397
+  ExplicitWidth = 768
+  ExplicitHeight = 405
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -208,7 +208,12 @@ inherited RoleForm: TRoleForm
               Kind = bkEllipsis
             end>
           HeaderAlignmentVert = vaCenter
-          Width = 224
+          Width = 100
+        end
+        object clProcess_EnumName: TcxGridDBColumn
+          Caption = 'EnumName'
+          DataBinding.FieldName = 'Process_EnumName'
+          Width = 100
         end
       end
       object ProcessLevel: TcxGridLevel
@@ -266,8 +271,8 @@ inherited RoleForm: TRoleForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -451,6 +456,7 @@ inherited RoleForm: TRoleForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
       ShortCut = 46
+      ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
     object dsdSetUnErased: TdsdUpdateErased
@@ -464,6 +470,7 @@ inherited RoleForm: TRoleForm
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 32776
+      ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
     end
@@ -601,6 +608,7 @@ inherited RoleForm: TRoleForm
     Top = 104
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
@@ -657,6 +665,7 @@ inherited RoleForm: TRoleForm
     Top = 176
   end
   object ProcessAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = ProcessView
     OnDblClickActionList = <>
     ActionItemList = <>
@@ -691,6 +700,7 @@ inherited RoleForm: TRoleForm
     Top = 72
   end
   object ActionAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = ActionGridView
     OnDblClickActionList = <>
     ActionItemList = <>
@@ -736,6 +746,7 @@ inherited RoleForm: TRoleForm
     Top = 320
   end
   object UserAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = UserView
     OnDblClickActionList = <>
     ActionItemList = <>
