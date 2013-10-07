@@ -608,7 +608,7 @@ end;
 procedure TDataSetDataLink.EditingChanged;
 begin
   inherited;
-  if DataSource.State in [dsEdit, dsInsert] then
+  if Assigned(DataSource) and (DataSource.State in [dsEdit, dsInsert]) then
      FModified := true;
 end;
 
@@ -651,12 +651,20 @@ begin
 end;
 
 function TdsdUpdateErased.Execute: boolean;
+var lDataSet: TDataSet;
 begin
   result := inherited Execute;
   if result and Assigned(DataSource) and Assigned(DataSource.DataSet) then begin
-     DataSource.DataSet.Edit;
-     DataSource.DataSet.FieldByName(ErasedFieldName).AsBoolean := not DataSource.DataSet.FieldByName(ErasedFieldName).AsBoolean;
-     DataSource.DataSet.Post;
+     lDataSet := DataSource.DataSet;
+     // Что бы не вызывались события после на Post
+     DataSource.DataSet := nil;
+     try
+       lDataSet.Edit;
+       lDataSet.FieldByName(ErasedFieldName).AsBoolean := isSetErased;
+       lDataSet.Post;
+     finally
+       DataSource.DataSet := lDataSet;
+     end;
   end;
 end;
 
