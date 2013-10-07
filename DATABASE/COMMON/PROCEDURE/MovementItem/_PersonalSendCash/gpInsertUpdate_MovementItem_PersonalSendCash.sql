@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalSendCash(
     IN inCarId               Integer   , -- Автомобиль
     IN inSession             TVarChar    -- сессия пользователя
 )                              
-RETURNS Integer AS
+RETURNS void AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbId_20401 Integer;
