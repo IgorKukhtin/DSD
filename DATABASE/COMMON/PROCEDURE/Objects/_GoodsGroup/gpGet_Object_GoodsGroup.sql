@@ -1,6 +1,6 @@
 -- Function: gpGet_Object_GoodsGroup (Integer, TVarChar)
 
---DROP FUNCTION gpGet_Object_GoodsGroup (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_GoodsGroup (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_GoodsGroup(
     IN inId          Integer,       -- Группа товаров 

@@ -190,6 +190,8 @@ type
     bbPersonalDocuments_Separator: TdxBarSeparator;
     bbSheetWorkTime: TdxBarButton;
     bbPersonalService: TdxBarButton;
+    actReport_Account: TdsdOpenForm;
+    bbAccountReport: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

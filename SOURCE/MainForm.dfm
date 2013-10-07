@@ -662,6 +662,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbReport_Fuel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbAccountReport'
         end>
     end
     object bbTransport: TdxBarButton
@@ -790,6 +794,10 @@ object MainForm: TMainForm
     end
     object bbPersonalService: TdxBarButton
       Action = actPersonalService
+      Category = 0
+    end
+    object bbAccountReport: TdxBarButton
+      Action = actReport_Account
       Category = 0
     end
   end
@@ -1368,6 +1376,14 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_Account: TdsdOpenForm
+      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1091
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1091
+      FormName = 'TReport_AccountForm'
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object cxLocalizer: TcxLocalizer
     StorageType = lstResource
@@ -1394,7 +1410,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.14'
+    Version = '4.12.2'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
