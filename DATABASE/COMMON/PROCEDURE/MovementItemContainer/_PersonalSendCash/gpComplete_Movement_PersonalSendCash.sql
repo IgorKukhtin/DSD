@@ -1,10 +1,11 @@
--- Function: gpComplete_Movement_PersonalSendCash (Integer, Boolean, TVarChar)
+-- Function: gpComplete_Movement_PersonalSendCash (Integer, TVarChar)
 
+DROP FUNCTION IF EXISTS gpComplete_Movement_PersonalSendCash (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpComplete_Movement_PersonalSendCash (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_PersonalSendCash(
-    IN inMovementId        Integer               , -- ключ Документа
-    IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
+    IN inMovementId        Integer  , -- ключ Документа
+    IN inSession           TVarChar   -- сессия пользователя
 )                              
 RETURNS VOID
 AS
@@ -18,7 +19,7 @@ BEGIN
 
 
      -- проводим Документ
-     PERFORM gpComplete_Movement_PersonalSendCash (inMovementId := inMovementId
+     PERFORM lpComplete_Movement_PersonalSendCash (inMovementId := inMovementId
                                                  , inUserId     := vbUserId);
 
 
