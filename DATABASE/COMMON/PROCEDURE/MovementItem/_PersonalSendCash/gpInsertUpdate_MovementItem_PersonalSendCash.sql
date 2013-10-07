@@ -1,71 +1,49 @@
 -- Function: gpInsertUpdate_MovementItem_PersonalSendCash()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalSendCash(Integer, Integer, TFloat, TFloat, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalSendCash (Integer, Integer, TFloat, TFloat, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalSendCash (Integer, Integer, Integer, Integer, TFloat, TFloat, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalSendCash(
-    IN inPersonalId          Integer   , -- Сотрудник
+ INOUT ioMIId_20401          Integer   , -- ключ стоки - Статья назначения ГСМ
+ INOUT ioMIId_21201          Integer   , -- ключ стоки - Статья назначения Коммандировочные
     IN inMovementId          Integer   , -- ключ Документа
+    IN inPersonalId          Integer   , -- Сотрудник
     IN inAmount_20401        TFloat    , -- Сумма - Статья назначения ГСМ
     IN inAmount_21201        TFloat    , -- Сумма - Статья назначения Коммандировочные
     IN inRouteId             Integer   , -- Маршрут
     IN inCarId               Integer   , -- Автомобиль
     IN inSession             TVarChar    -- сессия пользователя
 )                              
-RETURNS void AS
+RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbId_20401 Integer;
-   DECLARE vbId_21201 Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_PersonalSendCash());
      vbUserId := inSession;
 
-     -- Поиск элемента Статья назначения ГСМ
-     vbId_20401 := (SELECT MovementItem.Id
-                    FROM MovementItem
-                         JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
-                                                     ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
-                                                    AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-                                                    AND MILinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_20401()
-                    WHERE MovementItem.MovementId = inMovementId
-                      AND MovementItem.ObjectId = inPersonalId
-                      AND MovementItem.DescId =  zc_MI_Master()
-                   );
-     -- Поиск элемента Статья назначения Коммандировочные
-     vbId_21201 := (SELECT MovementItem.Id
-                    FROM MovementItem
-                         JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
-                                                     ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
-                                                    AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-                                                    AND MILinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_21201()
-                    WHERE MovementItem.MovementId = inMovementId
-                      AND MovementItem.ObjectId = inPersonalId
-                      AND MovementItem.DescId =  zc_MI_Master()
-                   );
-
      -- сохранили Элемент для Статья назначения ГСМ
-     vbId_20401 := lpInsertUpdate_MovementItem_PersonalSendCash (ioId          := vbId_20401
-                                                               , inMovementId  := inMovementId
-                                                               , inPersonalId  := inPersonalId
-                                                               , inAmount      := inAmount_20401
-                                                               , inRouteId     := inRouteId
-                                                               , inCarId       := inCarId
-                                                               , inInfoMoneyId := zc_Enum_InfoMoney_20401()
-                                                               , inUserId      := vbUserId
+     ioMIId_20401 := lpInsertUpdate_MovementItem_PersonalSendCash (ioId          := ioMIId_20401
+                                                                 , inMovementId  := inMovementId
+                                                                 , inPersonalId  := inPersonalId
+                                                                 , inAmount      := inAmount_20401
+                                                                 , inRouteId     := inRouteId
+                                                                 , inCarId       := inCarId
+                                                                 , inInfoMoneyId := zc_Enum_InfoMoney_20401()
+                                                                 , inUserId      := vbUserId
                                                                 );
    
      -- сохранили Элемент для Статья назначения Коммандировочные
-     vbId_21201 := lpInsertUpdate_MovementItem_PersonalSendCash (ioId          := vbId_21201
-                                                               , inMovementId  := inMovementId
-                                                               , inPersonalId  := inPersonalId
-                                                               , inAmount      := inAmount_21201
-                                                               , inRouteId     := inRouteId
-                                                               , inCarId       := inCarId
-                                                               , inInfoMoneyId := zc_Enum_InfoMoney_21201()
-                                                               , inUserId      := vbUserId
-                                                                );
+     ioMIId_21201 := lpInsertUpdate_MovementItem_PersonalSendCash (ioId          := ioMIId_21201
+                                                                 , inMovementId  := inMovementId
+                                                                 , inPersonalId  := inPersonalId
+                                                                 , inAmount      := inAmount_21201
+                                                                 , inRouteId     := inRouteId
+                                                                 , inCarId       := inCarId
+                                                                 , inInfoMoneyId := zc_Enum_InfoMoney_21201()
+                                                                 , inUserId      := vbUserId
+                                                                  );
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
@@ -77,6 +55,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.10.13                                        * add ioMIId_20401 and ioMIId_21201
  06.10.13                                        * add inUserId
  03.10.13                                        * err
  30.09.13                                        * 

@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_Transport_Child(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inParentId            Integer   , -- Главный элемент документа
     IN inFuelId              Integer   , -- Вид топлива
-    IN inCalculated          Boolean   , -- Количество по факту рассчитыталось из нормы или вводилось
+    IN inIsCalculated        Boolean   , -- Количество по факту рассчитыталось из нормы или вводилось (да/нет)
+    IN inIsMasterFuel        Boolean   , -- Основной вид топлива (да/нет)
  INOUT ioAmount              TFloat    , -- Количество по факту
    OUT outAmount_calc        TFloat    , -- Количество расчетное по норме
     IN inColdHour            TFloat    , -- Холод, Кол-во факт часов 
@@ -30,9 +31,9 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Маршрут не установлен.';
    END IF;
 
-   -- Получаем расчетное значение по норме
-   outAmount_calc := (SELECT -- для "Основного" вида топлива расчитываем норму
-                             CASE WHEN inFuelId = ObjectLink_Car_FuelMaster.ChildObjectId
+   -- Расчитываем норму
+   outAmount_calc := (SELECT CASE WHEN inIsMasterFuel = TRUE
+                                            -- если "Основной" вид топлива
                                        THEN zfCalc_RateFuelValue (inDistance           := MovementItem_Master.Amount
                                                                 , inAmountFuel         := inAmountFuel
                                                                 , inColdHour           := inColdHour
@@ -41,24 +42,33 @@ BEGIN
                                                                 , inAmountColdDistance := inAmountColdDistance
                                                                 , inRateFuelKindTax    := ObjecTFloat_RateFuelKind_Tax.ValueData
                                                                  )
-                                            -- !!!Коэффициент перевода нормы!!!
-                                            -- * COALESCE (ObjecTFloat_Ratio.ValueData, 0)
+                                  WHEN inIsMasterFuel = FALSE
+                                            -- если "Дополнительный" вид топлива
+                                       THEN zfCalc_RateFuelValue (inDistance           := MIFloat_DistanceFuelChild.ValueData
+                                                                , inAmountFuel         := inAmountFuel
+                                                                , inColdHour           := inColdHour
+                                                                , inAmountColdHour     := inAmountColdHour
+                                                                , inColdDistance       := inColdDistance
+                                                                , inAmountColdDistance := inAmountColdDistance
+                                                                , inRateFuelKindTax    := ObjecTFloat_RateFuelKind_Tax.ValueData
+                                                                 )
                                   ELSE 0
                              END
                       FROM MovementItem AS MovementItem_Master
                            LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
                                                         ON MovementLinkObject_Car.MovementId = inMovementId
                                                        AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
+                           LEFT JOIN MovementItemFloat AS MIFloat_DistanceFuelChild
+                                                       ON MIFloat_DistanceFuelChild.MovementItemId = MovementItem_Master.Id
+                                                      AND MIFloat_DistanceFuelChild.DescId = zc_MIFloat_DistanceFuelChild()
                            LEFT JOIN ObjectLink AS ObjectLink_Car_FuelMaster ON ObjectLink_Car_FuelMaster.ObjectId = MovementLinkObject_Car.ObjectId
                                                                             AND ObjectLink_Car_FuelMaster.DescId = zc_ObjectLink_Car_FuelMaster()
                            LEFT JOIN ObjecTFloat AS ObjecTFloat_RateFuelKind_Tax ON ObjecTFloat_RateFuelKind_Tax.ObjectId =inRateFuelKindId
                                                                                 AND ObjecTFloat_RateFuelKind_Tax.DescId = zc_ObjecTFloat_RateFuelKind_Tax()
-                           -- LEFT JOIN ObjecTFloat AS ObjecTFloat_Ratio ON ObjecTFloat_Ratio.ObjectId = inFuelId
-                           --                                           AND ObjecTFloat_Ratio.DescId = zc_ObjecTFloat_Fuel_Ratio()
                       WHERE MovementItem_Master.Id = inParentId
                      );
 
-   IF inCalculated = TRUE
+   IF inIsCalculated = TRUE
    THEN
        -- При определенных условиях, Количество по факту должно быть равно нолрме
        ioAmount := outAmount_calc;
@@ -68,8 +78,10 @@ BEGIN
    -- сохранили <Элемент документа>
    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Child(), inFuelId, inMovementId, ioAmount, inParentId);
 
-   -- сохранили свойство <Количество по факту рассчитыталось из нормы или вводилось>
-   PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), ioId, inCalculated);
+   -- сохранили свойство <Количество по факту рассчитывалось из нормы или вводилось (да/нет)>
+   PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), ioId, inIsCalculated);
+   -- сохранили свойство <Основной вид топлива (да/нет)>
+   PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_MasterFuel(), ioId, inIsMasterFuel);
    
    -- сохранили свойство <Холод, Кол-во факт часов >
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ColdHour(), ioId, inColdHour);
@@ -100,6 +112,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.10.13                                        * add DistanceFuelChild and isMasterFuel
  04.10.13                                        * add inUserId
  01.10.13                                        * add inRateFuelKindTax and zfCalc_RateFuelValue
  29.09.13                                        *

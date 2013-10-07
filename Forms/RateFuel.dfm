@@ -50,37 +50,37 @@ inherited RateFuelForm: TRateFuelForm
         Width = 181
       end
       object clAmount_Internal: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1085#1086#1088#1084#1072' '#1085#1072' 100 '#1082#1084' ('#1083#1077#1090#1086')'
+        Caption = #1043#1086#1088#1086#1076' '#1050#1086#1083'-'#1074#1086' '#1085#1072' 100 '#1082#1084
         DataBinding.FieldName = 'Amount_Internal'
         HeaderAlignmentVert = vaCenter
         Width = 85
       end
       object clAmountColdHour_Internal: TcxGridDBColumn
-        Caption = #1061#1086#1083#1086#1076', '#1050#1086#1083'-'#1074#1086' '#1085#1086#1088#1084#1072' '#1074' '#1095#1072#1089'('#1083#1077#1090#1086')'
+        Caption = #1043#1086#1088#1086#1076' '#1061#1086#1083#1086#1076' '#1074' '#1095#1072#1089
         DataBinding.FieldName = 'AmountColdHour_Internal'
         HeaderAlignmentVert = vaCenter
         Width = 92
       end
       object clAmountColdDistance_Internal: TcxGridDBColumn
-        Caption = #1061#1086#1083#1086#1076', '#1050#1086#1083'-'#1074#1086' '#1085#1086#1088#1084#1072' '#1085#1072' 100 '#1082#1084'('#1083#1077#1090#1086')'
+        Caption = #1043#1086#1088#1086#1076' '#1061#1086#1083#1086#1076' '#1085#1072' 100 '#1082#1084
         DataBinding.FieldName = 'AmountColdDistance_Internal'
         HeaderAlignmentVert = vaCenter
         Width = 90
       end
       object clAmount_External: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1085#1086#1088#1084#1072' '#1085#1072' 100 '#1082#1084'('#1079#1080#1084#1072')'
+        Caption = #1052#1077#1078#1075#1086#1088#1086#1076'  '#1050#1086#1083'-'#1074#1086' '#1085#1072' 100 '#1082#1084
         DataBinding.FieldName = 'Amount_External'
         HeaderAlignmentVert = vaCenter
         Width = 88
       end
       object clAmountColdHour_External: TcxGridDBColumn
-        Caption = #1061#1086#1083#1086#1076', '#1050#1086#1083'-'#1074#1086' '#1085#1086#1088#1084#1072' '#1074' '#1095#1072#1089'('#1079#1080#1084#1072')'
+        Caption = #1052#1077#1078#1075#1086#1088#1086#1076' '#1061#1086#1083#1086#1076' '#1074' '#1095#1072#1089
         DataBinding.FieldName = 'AmountColdHour_External'
         HeaderAlignmentVert = vaCenter
         Width = 91
       end
       object clAmountColdDistance_External: TcxGridDBColumn
-        Caption = #1061#1086#1083#1086#1076', '#1050#1086#1083'-'#1074#1086' '#1085#1086#1088#1084#1072' '#1085#1072' 100 '#1082#1084'('#1079#1080#1084#1072')'
+        Caption = #1052#1077#1078#1075#1086#1088#1086#1076' '#1061#1086#1083#1086#1076' '#1085#1072' 100 '#1082#1084
         DataBinding.FieldName = 'AmountColdDistance_External'
         HeaderAlignmentVert = vaCenter
         Width = 87

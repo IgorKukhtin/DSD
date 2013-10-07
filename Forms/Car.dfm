@@ -327,24 +327,31 @@ inherited CarForm: TCarForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
-          ParamType = ptInput
+          ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
-          ParamType = ptInput
+          ParamType = ptOutput
         end
         item
-          Name = 'DriverId'
+          Name = 'PersonalDriverId'
           Component = ClientDataSet
           ComponentItem = 'PersonalDriverId'
           DataType = ftInteger
           ParamType = ptOutput
         end
         item
-          Name = 'DriverName'
+          Name = 'PersonalDriverCode'
+          Component = ClientDataSet
+          ComponentItem = 'PersonalDriverCode'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end
+        item
+          Name = 'PersonalDriverName'
           Component = ClientDataSet
           ComponentItem = 'PersonalDriverName'
           DataType = ftString

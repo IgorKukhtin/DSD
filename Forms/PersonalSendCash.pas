@@ -114,7 +114,7 @@ type
     bbErased: TdxBarButton;
     bbUnErased: TdxBarButton;
     bbShowErased: TdxBarButton;
-    RoteChoiceForm: TOpenChoiceForm;
+    RouteChoiceForm: TOpenChoiceForm;
     CarChoiceForm: TOpenChoiceForm;
     ceStatus: TcxButtonEdit;
     cxLabel4: TcxLabel;
