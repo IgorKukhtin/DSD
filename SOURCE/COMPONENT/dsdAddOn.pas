@@ -379,6 +379,7 @@ begin
      ACanvas.Brush.Color := clHighlight;
      ACanvas.Font.Color := clHighlightText;
   end;
+  // работаем со свойством Удален
   Column := FView.GetColumnByFieldName(FErasedFieldName);
   if Assigned(Column) then
      if not VarIsNull(AViewInfo.GridRecord.Values[Column.Index])
