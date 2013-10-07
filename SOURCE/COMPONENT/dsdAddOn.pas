@@ -69,7 +69,7 @@ type
     // контрол для ввода условия фильтра
     edFilter: TcxTextEdit;
     procedure OnKeyPress(Sender: TObject; var Key: Char);
-    procedure SetView(const Value: TcxGridDBTableView);
+    procedure SetView(const Value: TcxGridDBTableView); virtual;
     procedure edFilterExit(Sender: TObject);
     procedure edFilterKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     // процедура устанавливает контрол для внесения значения фильтра и позиционируется на заголовке колонки
@@ -98,6 +98,29 @@ type
     property OnDblClickActionList;
     property ActionItemList;
     property SortImages;
+  end;
+
+  TCrossDBViewAddOn = class(TdsdDBViewAddOn)
+  private
+    FHeaderDataSet: TDataSet;
+    FTemplateIndex: Integer;
+    FTemplateColumn: TcxGridDBColumn;
+    FHeaderColumnName: String;
+    FFirstOpen: boolean;
+    FBeforeOpen: TDataSetNotifyEvent;
+    procedure onBeforeOpen(DataSet: TDataSet);
+    procedure SetView(const Value: TcxGridDBTableView); override;
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+  public
+    constructor Create(AOwner: TComponent); override;
+  published
+    // Дата сет с названием колонок и другой необходимой для работы информацией.
+    property HeaderDataSet: TDataSet read FHeaderDataSet write FHeaderDataSet;
+    // Поле в HeaderDataSet с названиями колонок кроса
+    property HeaderColumnName: String read FHeaderColumnName write FHeaderColumnName;
+    // Шаблон для Cross колонок
+    property TemplateColumn: TcxGridDBColumn read FTemplateColumn write FTemplateColumn;
   end;
 
   TdsdUserSettingsStorageAddOn = class(TComponent)
@@ -243,6 +266,7 @@ type
 
 procedure Register;
 begin
+   RegisterComponents('DSDComponent', [TCrossDBViewAddOn]);
    RegisterComponents('DSDComponent', [THeaderSaver]);
    RegisterComponents('DSDComponent', [TdsdDBTreeAddOn]);
    RegisterComponents('DSDComponent', [TdsdDBViewAddOn]);
@@ -1076,6 +1100,64 @@ begin
   if csDesigning in ComponentState then
      if (Operation = opRemove) and (AComponent = FRefreshDispatcher) then
         FRefreshDispatcher := nil;
+end;
+
+{ TCrossDBViewAddOn }
+
+constructor TCrossDBViewAddOn.Create(AOwner: TComponent);
+begin
+  inherited;
+  FFirstOpen := false;
+end;
+
+procedure TCrossDBViewAddOn.Notification(AComponent: TComponent;
+  Operation: TOperation);
+begin
+  inherited;
+  if csDesigning in ComponentState then
+     if Operation = opRemove then begin
+        if AComponent = HeaderDataSet then
+           HeaderDataSet := nil;
+        if AComponent = FTemplateColumn then
+           FTemplateColumn := nil;
+     end;
+end;
+
+procedure TCrossDBViewAddOn.onBeforeOpen(DataSet: TDataSet);
+var NewColumnIndex: integer;
+begin
+  if Assigned(FBeforeOpen) then
+     FBeforeOpen(DataSet);
+  if not FFirstOpen then
+    try
+      // Заполняем заголовки колонок
+      if Assigned(HeaderDataSet) and HeaderDataSet.Active then begin
+         HeaderDataSet.First;
+         NewColumnIndex := 1;
+         while not HeaderDataSet.Eof do begin
+           with View.CreateColumn  do begin
+             Assign(TemplateColumn);
+             Caption := HeaderDataSet.FieldByName(HeaderColumnName).AsString;
+           end;
+           inc(NewColumnIndex);
+           HeaderDataSet.Next;
+         end;
+      end;
+      // И удаляем шаблон
+      if Assigned(TemplateColumn) then
+         TemplateColumn.Free;
+    finally
+      FFirstOpen := true;
+    end;
+end;
+
+procedure TCrossDBViewAddOn.SetView(const Value: TcxGridDBTableView);
+begin
+  inherited;
+  if Value <> nil then begin
+     FBeforeOpen := Value.DataController.DataSource.DataSet.BeforeOpen;
+     Value.DataController.DataSource.DataSet.BeforeOpen := onBeforeOpen;
+  end;
 end;
 
 end.

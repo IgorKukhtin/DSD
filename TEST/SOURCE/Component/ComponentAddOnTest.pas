@@ -12,13 +12,34 @@ type
   protected
   published
     procedure DefaultsKeyTest;
+    procedure CrossViewAddOnTest;
   end;
 
 implementation
 
-uses dsdDB, DBXJSON, Defaults, Forms;
+uses dsdDB, DBXJSON, Defaults, Forms, CrossAddOnViewTestForm, SysUtils;
 
 { TComponentAddOnTest }
+
+procedure TComponentAddOnTest.CrossViewAddOnTest;
+begin
+  with TCrossAddOnViewTest.Create(nil) do
+    try
+      Show;
+      Application.ProcessMessages;
+      Sleep(1000);
+      HorDS.CreateDataSet;
+      HorDS.Open;
+      HorDS.AppendRecord(['Супер поле  1', 1]);
+      HorDS.AppendRecord(['Супер поле 23', 2]);
+      DataDS.CreateDataSet;
+      DataDS.Open;
+      Application.ProcessMessages;
+      Sleep(1000);
+    finally
+      Free;
+    end;
+end;
 
 procedure TComponentAddOnTest.DefaultsKeyTest;
 var DefaultKey: TDefaultKey;
