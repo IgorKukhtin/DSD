@@ -23,20 +23,20 @@ BEGIN
 
      RETURN QUERY 
        SELECT
-             CAST (lfObject_Account.AccountCode AS Integer) AS AccountCode
+             CAST (Object_Account_View.AccountCode AS Integer) AS AccountCode
 
            , CAST (CASE WHEN tmpMovementItemContainer.isActive = TRUE THEN tmpMovementItemContainer.Amount ELSE 0 END AS TFloat) AS DebetAmount
-           , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active() THEN lfObject_Account.AccountGroupName ELSE NULL END  AS TVarChar) AS DebetAccountGroupName
-           , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active() THEN lfObject_Account.AccountDirectionName ELSE NULL END  AS TVarChar) AS DebetAccountDirectionName
-           , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active() THEN lfObject_Account.AccountGroupName || ' ' || lfObject_Account.AccountName ELSE NULL END  AS TVarChar) AS DebetAccountName
+           , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active() THEN Object_Account_View.AccountGroupName ELSE NULL END  AS TVarChar) AS DebetAccountGroupName
+           , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active() THEN Object_Account_View.AccountDirectionName ELSE NULL END  AS TVarChar) AS DebetAccountDirectionName
+           , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active() THEN Object_Account_View.AccountGroupName || ' ' || Object_Account_View.AccountName ELSE NULL END  AS TVarChar) AS DebetAccountName
 
            , CAST (CASE WHEN tmpMovementItemContainer.isActive = FALSE THEN -1 * tmpMovementItemContainer.Amount ELSE 0 END AS TFloat) AS KreditAmount
-           , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active() THEN lfObject_Account.AccountGroupName ELSE NULL END  AS TVarChar) AS KreditAccountGroupName
-           , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active() THEN lfObject_Account.AccountDirectionName ELSE NULL END  AS TVarChar) AS KreditAccountDirectionName
-           , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active() THEN lfObject_Account.AccountGroupName || ' ' || lfObject_Account.AccountName ELSE NULL END  AS TVarChar) AS KreditAccountName
+           , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active() THEN Object_Account_View.AccountGroupName ELSE NULL END  AS TVarChar) AS KreditAccountGroupName
+           , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active() THEN Object_Account_View.AccountDirectionName ELSE NULL END  AS TVarChar) AS KreditAccountDirectionName
+           , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active() THEN Object_Account_View.AccountGroupName || ' ' || Object_Account_View.AccountName ELSE NULL END  AS TVarChar) AS KreditAccountName
 
            , CAST (ABS(tmpMovementItemContainer.Price) AS TFloat) AS Price
-           , lfObject_Account.onComplete AS AccountOnComplete
+           , Object_Account_View.onComplete AS AccountOnComplete
            , tmpMovementItemContainer.ByObjectCode
            , CAST (tmpMovementItemContainer.ByObjectName AS TVarChar) AS ByObjectName
            , tmpMovementItemContainer.GoodsGroupCode
@@ -193,7 +193,7 @@ BEGIN
                    , Movement.DescId
                    , tmpSumm_ProductionSeparate.Price
            ) AS tmpMovementItemContainer
-           LEFT JOIN lfSelect_Object_Account() AS lfObject_Account ON lfObject_Account.AccountId = tmpMovementItemContainer.ObjectId
+           LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = tmpMovementItemContainer.ObjectId
            LEFT JOIN ObjectLink AS ObjectLink_AccountKind
                                 ON ObjectLink_AccountKind.ObjectId = tmpMovementItemContainer.ObjectId
                                AND ObjectLink_AccountKind.DescId = zc_ObjectLink_Account_AccountKind()

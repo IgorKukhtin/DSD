@@ -9,6 +9,7 @@ uses Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView,
 
 type
 
+  // 1. Обработка признака isErased
   TCustomDBControlAddOn = class(TComponent)
   private
     FImages: TImageList;
@@ -16,6 +17,8 @@ type
     FActionItemList: TActionItemList;
     FOnKeyDown: TKeyEvent;
     FErasedFieldName: string;
+    FAfterInsert: TDataSetNotifyEvent;
+    procedure OnAfterInsert(DataSet: TDataSet);
     procedure OnDblClick(Sender: TObject);
     procedure OnKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   protected
@@ -61,6 +64,7 @@ type
   // Добавляет ряд функционала на GridView
   // 1. Быстрая установка фильтров
   // 2. Рисование иконок сортировки
+  // 3. Обработка признака isErased
   TdsdDBViewAddOn = class(TCustomDBControlAddOn)
   private
     FBackGroundStyle: TcxStyle;
@@ -108,6 +112,9 @@ type
     FHeaderColumnName: String;
     FFirstOpen: boolean;
     FBeforeOpen: TDataSetNotifyEvent;
+    FEditing: TcxGridEditingEvent;
+    procedure onEditing(Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem;
+         var AAllow: Boolean);
     procedure onBeforeOpen(DataSet: TDataSet);
     procedure SetView(const Value: TcxGridDBTableView); override;
   protected
@@ -584,7 +591,12 @@ begin
     FView.DataController.Filter.OnChanged := onFilterChanged;
     FView.OnColumnHeaderClick := OnColumnHeaderClick;
     FView.OnDblClick := OnDblClick;
-    FView.OnCustomDrawCell := OnCustomDrawCell
+    FView.OnCustomDrawCell := OnCustomDrawCell;
+    if Assigned(FView.DataController.DataSource) then
+       if Assigned(FView.DataController.DataSource.DataSet) then begin
+          FAfterInsert := FView.DataController.DataSource.DataSet.AfterInsert;
+          FView.DataController.DataSource.DataSet.AfterInsert := OnAfterInsert;
+       end;
   end;
 end;
 
@@ -948,6 +960,14 @@ begin
     end;
 end;
 
+procedure TCustomDBControlAddOn.OnAfterInsert(DataSet: TDataSet);
+begin
+  if Assigned(FAfterInsert) then
+     FAfterInsert(DataSet);
+  if Assigned(DataSet.FieldByName(ErasedFieldName)) then
+     DataSet.FieldByName(ErasedFieldName).AsBoolean := false;
+end;
+
 procedure TCustomDBControlAddOn.OnDblClick(Sender: TObject);
 var i: integer;
 begin
@@ -1138,6 +1158,8 @@ begin
            with View.CreateColumn  do begin
              Assign(TemplateColumn);
              Caption := HeaderDataSet.FieldByName(HeaderColumnName).AsString;
+             DataBinding.FieldName := TemplateColumn.DataBinding.FieldName + '_' + IntToStr(NewColumnIndex);
+             Width := TemplateColumn.Width;
            end;
            inc(NewColumnIndex);
            HeaderDataSet.Next;
@@ -1151,12 +1173,23 @@ begin
     end;
 end;
 
+procedure TCrossDBViewAddOn.onEditing(Sender: TcxCustomGridTableView;
+  AItem: TcxCustomGridTableItem; var AAllow: Boolean);
+begin
+  if Assigned(FEditing) then
+     FEditing(Sender, AItem, AAllow);
+  if Assigned(HeaderDataSet) then
+     HeaderDataSet.Locate(HeaderColumnName, Aitem.Caption, []);
+end;
+
 procedure TCrossDBViewAddOn.SetView(const Value: TcxGridDBTableView);
 begin
   inherited;
   if Value <> nil then begin
      FBeforeOpen := Value.DataController.DataSource.DataSet.BeforeOpen;
      Value.DataController.DataSource.DataSet.BeforeOpen := onBeforeOpen;
+     FEditing := Value.OnEditing;
+     Value.OnEditing := onEditing;
   end;
 end;
 

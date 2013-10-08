@@ -34,10 +34,12 @@ begin
       HorDS.AppendRecord(['Супер поле 23', 2]);
       DataDS.CreateDataSet;
       DataDS.Open;
+      DataDS.AppendRecord(['Костя', 1, 4]);
+      DataDS.AppendRecord(['Игорь', 2, 6]);
       Application.ProcessMessages;
-      Sleep(1000);
+    //  Sleep(1000);
     finally
-      Free;
+  //    Free;
     end;
 end;
 

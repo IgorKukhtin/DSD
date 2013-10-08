@@ -65,11 +65,11 @@ object CrossAddOnViewTest: TCrossAddOnViewTest
       Size = 250
     end
     object DataDSTemplate1: TStringField
-      FieldName = 'Template1'
+      FieldName = 'Template_1'
       Size = 250
     end
     object DataDSTemplate2: TStringField
-      FieldName = 'Template2'
+      FieldName = 'Template_2'
       Size = 250
     end
   end
