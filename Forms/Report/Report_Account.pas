@@ -59,11 +59,11 @@ type
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
     cxLabel2: TcxLabel;
-    AccountGuides: TdsdGuides;
     InfoManeyCode: TcxGridDBColumn;
     InfoMoneyGroupName: TcxGridDBColumn;
     InfoMoneyDestinationName: TcxGridDBColumn;
     InfoManeyName: TcxGridDBColumn;
+    AccountGuides: TdsdGuides;
   private
   public
   end;
