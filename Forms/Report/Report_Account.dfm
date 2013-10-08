@@ -1,18 +1,21 @@
 inherited Report_AccountForm: TReport_AccountForm
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' c'#1095#1077#1090#1091
   ClientHeight = 395
-  ClientWidth = 1329
-  ExplicitWidth = 1337
+  ClientWidth = 1189
+  ExplicitWidth = 1197
   ExplicitHeight = 429
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 113
-    Width = 1329
+    Width = 1189
     Height = 282
     Align = alClient
     TabOrder = 0
+    ExplicitLeft = 16
+    ExplicitTop = 153
+    ExplicitWidth = 1329
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -200,39 +203,43 @@ inherited Report_AccountForm: TReport_AccountForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'PersonalCode'
         HeaderAlignmentVert = vaCenter
-        Width = 22
+        Width = 32
       end
       object PersonalName: TcxGridDBColumn
         Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
         DataBinding.FieldName = 'PersonalName'
         HeaderAlignmentVert = vaCenter
-        Width = 30
+        Width = 108
       end
       object InfoManeyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1089#1090#1072#1090#1100#1080
         DataBinding.FieldName = 'InfoManeyCode'
+        Width = 64
       end
       object InfoManeyName: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1100#1103
         DataBinding.FieldName = 'InfoManeyName'
+        Width = 119
       end
       object InfoMoneyGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' '#1091#1087'. '#1085#1072#1079#1085#1072#1095'.'
+        Caption = #1043#1088#1091#1087#1087#1072' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1080#1089#1082#1080#1093' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1081
         DataBinding.FieldName = 'InfoMoneyGroupName'
+        Width = 175
       end
       object InfoMoneyDestinationName: TcxGridDBColumn
-        Caption = #1059#1087'.'#1085#1072#1079#1085#1072#1095'.'
+        Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyDestinationName'
+        Width = 161
       end
       object CarCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'CarCode'
-        Width = 30
+        Width = 44
       end
       object CarName: TcxGridDBColumn
         Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
         DataBinding.FieldName = 'CarName'
-        Width = 42
+        Width = 124
       end
       object StartSumm: TcxGridDBColumn
         Caption = #1053#1072#1095'. '#1086#1089#1090'.  '#1089#1091#1084#1084#1072
@@ -241,7 +248,7 @@ inherited Report_AccountForm: TReport_AccountForm
         Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 44
+        Width = 82
       end
       object InSumm: TcxGridDBColumn
         Caption = #1055#1088#1080#1093#1086#1076' '#1089#1091#1084#1084#1072
@@ -249,14 +256,15 @@ inherited Report_AccountForm: TReport_AccountForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentVert = vaCenter
-        Width = 45
+        Width = 83
       end
       object OutSumm: TcxGridDBColumn
         Caption = #1056#1072#1089#1093#1086#1076' '#1089#1091#1084#1084#1072
         DataBinding.FieldName = 'OutSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentVert = vaCenter
-        Width = 45
+        Width = 93
       end
       object EndSumm: TcxGridDBColumn
         Caption = #1050#1086#1085'. '#1086#1089#1090'. '#1089#1091#1084#1084#1072
@@ -264,7 +272,7 @@ inherited Report_AccountForm: TReport_AccountForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentVert = vaCenter
-        Width = 45
+        Width = 90
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -274,14 +282,15 @@ inherited Report_AccountForm: TReport_AccountForm
   object Panel1: TPanel
     Left = 0
     Top = 26
-    Width = 1329
+    Width = 1189
     Height = 87
     Align = alTop
     TabOrder = 5
+    ExplicitWidth = 1329
     object deStart: TcxDateEdit
       Left = 16
       Top = 8
-      EditValue = 41395d
+      EditValue = 41548d
       Properties.ShowTime = False
       TabOrder = 0
       Width = 121
@@ -289,7 +298,7 @@ inherited Report_AccountForm: TReport_AccountForm
     object deEnd: TcxDateEdit
       Left = 176
       Top = 8
-      EditValue = 41395d
+      EditValue = 41557d
       Properties.ShowTime = False
       TabOrder = 1
       Width = 121
@@ -334,8 +343,8 @@ inherited Report_AccountForm: TReport_AccountForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 336
-    Top = 192
+    Left = 584
+    Top = 256
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -374,10 +383,6 @@ inherited Report_AccountForm: TReport_AccountForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbDialogForm'
-        end
-        item
-          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -409,8 +414,8 @@ inherited Report_AccountForm: TReport_AccountForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 256
-    Top = 232
+    Left = 232
+    Top = 240
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -445,17 +450,18 @@ inherited Report_AccountForm: TReport_AccountForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41395d
+        Value = 41548d
       end
       item
         Name = 'inEndDate'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41395d
+        Value = 41557d
       end
       item
         Name = 'inAccountId'
+        Component = AccountGuides
         DataType = ftInteger
         ParamType = ptInput
         Value = ''
@@ -469,43 +475,18 @@ inherited Report_AccountForm: TReport_AccountForm
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
-    Left = 304
-    Top = 296
+    Left = 312
+    Top = 264
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 440
-    Top = 240
+    Left = 432
+    Top = 232
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
     Left = 200
     Top = 64
-  end
-  object AccountGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edAccount
-    FormName = 'TAccountForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Component = AccountGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-        Value = ''
-      end
-      item
-        Name = 'TextValue'
-        Component = AccountGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-        Value = ''
-      end>
-    Left = 640
-    Top = 27
   end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefresh
@@ -520,9 +501,33 @@ inherited Report_AccountForm: TReport_AccountForm
       item
       end
       item
-        Component = AccountGuides
       end>
     Left = 328
     Top = 64
+  end
+  object AccountGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edAccount
+    FormName = 'TAccountForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Component = AccountGuides
+        ComponentItem = 'Key'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = ''
+      end
+      item
+        Name = 'TextValue'
+        Component = AccountGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+        Value = ''
+      end>
+    Left = 640
+    Top = 32
   end
 end
