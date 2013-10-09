@@ -79,6 +79,7 @@ object MainForm: TMainForm
       Width = 292
       Height = 17
       Caption = #1044#1083#1103' '#1087#1077#1088#1074#1086#1075#1086' '#1088#1072#1079#1072' set Sybase.'#1042#1057#1045#1052'.Id_Postgres = null'
+      Enabled = False
       TabOrder = 3
     end
     object cbOnlyOpen: TCheckBox
@@ -446,6 +447,24 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 31
+    end
+    object cbCar: TCheckBox
+      Tag = 10
+      Left = 184
+      Top = 251
+      Width = 115
+      Height = 17
+      Caption = '4.5. '#1040#1074#1090#1086#1084#1086#1073#1080#1083#1080
+      TabOrder = 32
+    end
+    object cbRoute: TCheckBox
+      Tag = 10
+      Left = 184
+      Top = 271
+      Width = 115
+      Height = 17
+      Caption = '4.5. '#1052#1072#1088#1096#1088#1091#1090#1099
+      TabOrder = 33
     end
   end
   object DocumentPanel: TPanel

@@ -18,12 +18,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Car(
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;   
-
 BEGIN
    
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Car());
    vbUserId := inSession;
+
+   -- пытаемся найти код
+   IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
 
    -- Если код не установлен, определяем его каи последний+1
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Car()); 
@@ -53,19 +55,21 @@ BEGIN
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
-
-END;$BODY$ LANGUAGE plpgsql;
-ALTER FUNCTION gpInsertUpdate_Object_Car (Integer,Integer,TVarChar,TVarChar,Integer,Integer,Integer,Integer,Integer,TVarChar) OWNER TO postgres;
+   
+END;
+$BODY$
+ LANGUAGE plpgsql VOLATILE;
+-- ALTER FUNCTION gpInsertUpdate_Object_Car (Integer,Integer,TVarChar,TVarChar,Integer,Integer,Integer,Integer,Integer,TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.10.13                                        * пытаемся найти код
  26.09.13          * del StartDateRate, EndDateRate, RateFuelKind 
  24.09.13          * add StartDateRate, EndDateRate, Unit, PersonalDriver, FuelMaster, FuelChild, RateFuelKind
  10.06.13          *
  05.06.13          
-
 */
 
 -- тест

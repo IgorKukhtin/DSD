@@ -12,12 +12,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Freight(
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;   
-
 BEGIN
    
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Freight());
    vbUserId := inSession;
+
+   -- пытаемся найти код
+   IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
 
    -- Если код не установлен, определяем его каи последний+1
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Freight()); 
@@ -40,8 +42,8 @@ ALTER FUNCTION gpInsertUpdate_Object_Freight(Integer,Integer,TVarChar, TVarChar)
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.10.13                                        * пытаемся найти код
  24.09.13          * 
-
 */
 
 -- тест

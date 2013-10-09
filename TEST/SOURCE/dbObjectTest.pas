@@ -717,6 +717,10 @@ begin
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inCode', ftInteger, ptInput, Code);
   FParams.AddParam('inName', ftString, ptInput, Name);
+  FParams.AddParam('inUnitId', ftInteger, ptInput, 0);
+  FParams.AddParam('inRouteKindId', ftInteger, ptInput, 0);
+  FParams.AddParam('inFreightId', ftInteger, ptInput, 0);
+
   result := InsertUpdate(FParams);
 end;
 
@@ -1504,6 +1508,10 @@ begin
   FParams.AddParam('inName', ftString, ptInput, Name);
   FParams.AddParam('RegistrationCertificateId', ftString, ptInput, RegistrationCertificateId);
   FParams.AddParam('inCarModelId', ftInteger, ptInput, CarModelId);
+  FParams.AddParam('inUnitId', ftInteger, ptInput, 0);
+  FParams.AddParam('inPersonalDriverId', ftInteger, ptInput, 0);
+  FParams.AddParam('inFuelMasterId', ftInteger, ptInput, 0);
+  FParams.AddParam('inFuelChildId', ftInteger, ptInput, 0);
   result := InsertUpdate(FParams);
 end;
 
@@ -1922,6 +1930,8 @@ begin
   FParams.AddParam('inCode', ftInteger, ptInput, Code);
   FParams.AddParam('inName', ftString, ptInput, Name);
   FParams.AddParam('inINN', ftString, ptInput, INN);
+  FParams.AddParam('inDriverCertificate', ftString, ptInput, '');
+  FParams.AddParam('inComment', ftString, ptInput, '');
   result := InsertUpdate(FParams);
 end;
 

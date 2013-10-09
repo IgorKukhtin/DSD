@@ -2,7 +2,7 @@
 
  DROP FUNCTION IF EXISTS lfSelect_Object_Account ();
 
-/*CREATE OR REPLACE FUNCTION lfSelect_Object_Account()
+CREATE OR REPLACE FUNCTION lfSelect_Object_Account()
 
 RETURNS TABLE (AccountGroupId Integer, AccountGroupCode Integer, AccountGroupName TVarChar, 
                AccountDirectionId Integer, AccountDirectionCode Integer, AccountDirectionName TVarChar, 
@@ -86,7 +86,7 @@ $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION lfSelect_Object_Account () OWNER TO postgres;
-*/
+
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

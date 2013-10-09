@@ -1,6 +1,6 @@
 -- View: Object_Account_View
 
-DROP VIEW IF EXISTS Object_Account_View;
+-- DROP VIEW IF EXISTS Object_Account_View;
 
 CREATE OR REPLACE VIEW Object_Account_View AS
          SELECT 

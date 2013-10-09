@@ -17,13 +17,15 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member(
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;   
- 
 BEGIN
    
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Member());
    vbUserId := inSession;
    
+   -- пытаемся найти код
+   IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
+
    -- Если код не установлен, определяем его как последний+1
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Member());
    
@@ -47,17 +49,16 @@ BEGIN
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpInsertUpdate_Object_Member(Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.10.13                                        * пытаемся найти код
  01.10.13         *  add DriverCertificate, Comment              
- 01.07.13          *
- 
+ 01.07.13         *
 */
 
 -- тест

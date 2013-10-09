@@ -19,6 +19,9 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Position());
    vbUserId := inSession;
    
+   -- пытаемся найти код
+   IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
+
    -- Если код не установлен, определяем его как последний+1
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Position());
    
@@ -42,8 +45,8 @@ ALTER FUNCTION gpInsertUpdate_Object_Position(Integer, Integer, TVarChar, TVarCh
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.10.13                                        * пытаемся найти код
  01.07.13          *
- 
 */
 
 -- тест

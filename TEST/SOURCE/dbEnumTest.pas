@@ -34,8 +34,6 @@ begin
   ExecFile(EnumPath + 'CreateObjectEnumFunction.sql', ZQuery);
   ExecFile(EnumPath + 'InsertObjectEnum.sql', ZQuery);
 
-  ExecFile(ProcedurePath + 'OBJECTS\_Goods\lpInsertUpdate_Object_Process_Goods.sql', ZQuery);
-
 end;
 
 procedure TdbEnumTest.SetUp;

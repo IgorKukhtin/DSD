@@ -1,8 +1,8 @@
 ﻿-- Function: lfSelect_Object_InfoMoneyDestination ()
 
-DROP FUNCTION IF EXISTS lfSelect_Object_InfoMoneyDestination ();
+-- DROP FUNCTION IF EXISTS lfSelect_Object_InfoMoneyDestination ();
 
-/*CREATE OR REPLACE FUNCTION lfSelect_Object_InfoMoneyDestination()
+CREATE OR REPLACE FUNCTION lfSelect_Object_InfoMoneyDestination()
 
 RETURNS TABLE (InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar, 
                InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar) AS
@@ -31,7 +31,7 @@ END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION lfSelect_Object_InfoMoneyDestination() OWNER TO postgres;
-*/
+
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

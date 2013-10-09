@@ -22,6 +22,9 @@ BEGIN
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Route());
    vbUserId := inSession;
 
+   -- пытаемся найти код
+   IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
+
    -- Если код не установлен, определяем его как последний+1
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Route());
 
@@ -54,9 +57,9 @@ ALTER FUNCTION gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Integer,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.10.13                                        * пытаемся найти код
  24.09.13          *  add Unit, RouteKind, Freight
  03.06.13          *
-
 */
 
 -- тест
