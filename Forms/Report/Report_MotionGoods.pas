@@ -97,6 +97,8 @@ type
     GoodsGuides: TdsdGuides;
     edLocation: TcxButtonEdit;
     cxLabel4: TcxLabel;
+    MeasureName: TcxGridDBColumn;
+    Weight: TcxGridDBColumn;
   private
   public
   end;

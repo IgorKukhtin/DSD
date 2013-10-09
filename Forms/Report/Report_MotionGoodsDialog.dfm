@@ -4,7 +4,7 @@ inherited Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
   ClientHeight = 206
   ClientWidth = 313
   ExplicitWidth = 319
-  ExplicitHeight = 234
+  ExplicitHeight = 238
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
@@ -223,6 +223,7 @@ inherited Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
     Top = 112
   end
   object GoodsGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edGoods
     FormName = 'TGoodsForm'
     PositionDataSet = 'ClientDataSet'
@@ -243,10 +244,11 @@ inherited Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
         ParamType = ptInput
         Value = ''
       end>
-    Left = 280
+    Left = 256
     Top = 91
   end
   object GoodsGroupGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edGoodsGroup
     FormName = 'TGoodsGroupForm'
     PositionDataSet = 'ClientDataSet'
@@ -271,6 +273,7 @@ inherited Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
     Top = 48
   end
   object LocationGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edLocation
     FormName = 'TPersonalForm'
     PositionDataSet = 'ClientDataSet'
@@ -295,9 +298,10 @@ inherited Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
     Top = 120
   end
   object UnitGroupGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edUnitGroup
     FormName = 'TUnitTreeForm'
-    PositionDataSet = 'GridDataSet'
+    PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'TreeDataSet'
     Params = <
       item
