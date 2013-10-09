@@ -2,8 +2,9 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
   Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
   ClientHeight = 395
   ClientWidth = 1329
-  ExplicitWidth = 1345
-  ExplicitHeight = 433
+  ExplicitLeft = -271
+  ExplicitWidth = 1337
+  ExplicitHeight = 429
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -232,8 +233,16 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataBinding.FieldName = 'AssetName'
         Width = 75
       end
+      object MeasureName: TcxGridDBColumn
+        Caption = #1045#1076'.'#1080#1079#1084'.'
+        DataBinding.FieldName = 'MeasureName'
+      end
+      object Weight: TcxGridDBColumn
+        Caption = #1042#1077#1089
+        DataBinding.FieldName = 'Weight'
+      end
       object StartCount_Sh: TcxGridDBColumn
-        Caption = 'StartCount_Sh'
+        DataBinding.FieldName = 'StartCount_Sh'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         HeaderAlignmentHorz = taRightJustify
         Width = 75
@@ -253,7 +262,7 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
         Width = 75
       end
       object IncomeCount_Sh: TcxGridDBColumn
-        Caption = 'IncomeCount_Sh'
+        DataBinding.FieldName = 'IncomeCount_Sh'
         HeaderAlignmentHorz = taRightJustify
         Width = 50
       end
@@ -271,107 +280,105 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
         Width = 75
       end
       object SendInCount_Sh: TcxGridDBColumn
-        Caption = 'SendInCount_Sh'
+        DataBinding.FieldName = 'SendInCount_Sh'
         FooterAlignmentHorz = taRightJustify
       end
       object SendInCount: TcxGridDBColumn
-        Caption = 'SendInCount'
+        DataBinding.FieldName = 'SendInCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.AssignedValues.DisplayFormat = True
         Width = 50
       end
       object SendInSumm: TcxGridDBColumn
-        Caption = 'SendInSumm'
+        DataBinding.FieldName = 'SendInSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Width = 75
       end
       object SendOutCount_Sh: TcxGridDBColumn
-        Caption = 'SendOutCount_Sh'
+        DataBinding.FieldName = 'SendOutCount_Sh'
         HeaderAlignmentHorz = taRightJustify
         Width = 50
       end
       object SendOutCount: TcxGridDBColumn
-        Caption = 'SendOutCount'
+        DataBinding.FieldName = 'SendOutCount'
         Width = 50
       end
       object SendOutSumm: TcxGridDBColumn
-        Caption = 'SendOutSumm'
+        DataBinding.FieldName = 'SendOutSumm'
         Width = 75
       end
       object SaleCount_Sh: TcxGridDBColumn
-        Caption = 'SaleCount_Sh'
+        DataBinding.FieldName = 'SaleCount_Sh'
         Width = 50
       end
       object SaleCount: TcxGridDBColumn
-        Caption = 'SaleCount'
+        DataBinding.FieldName = 'SaleCount'
         Width = 50
       end
       object SaleSumm: TcxGridDBColumn
-        Caption = 'SaleSumm'
+        DataBinding.FieldName = 'SaleSumm'
         Width = 75
       end
       object ReturnOutCount_Sh: TcxGridDBColumn
-        Caption = 'ReturnOutCount_Sh'
+        DataBinding.FieldName = 'ReturnOutCount_Sh'
         Width = 50
       end
       object ReturnOutCount: TcxGridDBColumn
-        Caption = 'ReturnOutCount'
+        DataBinding.FieldName = 'ReturnOutCount'
         Width = 50
       end
       object ReturnOutSumm: TcxGridDBColumn
-        Caption = 'ReturnOutSumm'
+        DataBinding.FieldName = 'ReturnOutSumm'
         Width = 75
       end
       object ReturnInCount_Sh: TcxGridDBColumn
-        Caption = 'ReturnInCount_Sh'
+        DataBinding.FieldName = 'ReturnInCount_Sh'
         Width = 50
       end
       object ReturnInCount: TcxGridDBColumn
-        Caption = 'ReturnInCount'
+        DataBinding.FieldName = 'ReturnInCount'
         Width = 50
       end
       object ReturnInSumm: TcxGridDBColumn
-        Caption = 'ReturnInSumm'
+        DataBinding.FieldName = 'ReturnInSumm'
         Width = 75
       end
       object LossCount_Sh: TcxGridDBColumn
-        Caption = 'LossCount_Sh'
+        DataBinding.FieldName = 'LossCount_Sh'
         Width = 50
       end
       object LossCount: TcxGridDBColumn
-        Caption = 'LossCount'
+        DataBinding.FieldName = 'LossCount'
         Width = 50
       end
       object LossSumm: TcxGridDBColumn
-        Caption = 'LossSumm'
+        DataBinding.FieldName = 'LossSumm'
         Width = 75
       end
       object InventoryCount_Sh: TcxGridDBColumn
-        Caption = 'InventoryCount_Sh'
+        DataBinding.FieldName = 'InventoryCount_Sh'
         Width = 50
       end
       object InventoryCount: TcxGridDBColumn
-        Caption = 'InventoryCount'
+        DataBinding.FieldName = 'InventoryCount'
         Width = 50
       end
       object InventorySumm: TcxGridDBColumn
-        Caption = 'InventorySumm'
+        DataBinding.FieldName = 'InventorySumm'
         Width = 75
       end
       object EndCount_Sh: TcxGridDBColumn
-        Caption = 'EndCount_Sh'
+        DataBinding.FieldName = 'EndCount_Sh'
         Width = 75
       end
       object EndCount: TcxGridDBColumn
-        Caption = 'EndCount'
-        DataBinding.FieldName = 'EndCount_calc'
+        DataBinding.FieldName = 'EndCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         Width = 75
       end
       object EndSumm: TcxGridDBColumn
-        Caption = 'EndSumm'
-        DataBinding.FieldName = 'EndSumm_calc'
+        DataBinding.FieldName = 'EndSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         Width = 75
@@ -492,14 +499,14 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 296
-    Top = 168
+    Left = 312
+    Top = 232
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -733,6 +740,7 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
     Top = 176
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <>
     ActionItemList = <>
@@ -745,6 +753,7 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
     Top = 272
   end
   object GoodsGroupGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edGoodsGroup
     FormName = 'TGoodsGroupForm'
     PositionDataSet = 'ClientDataSet'
@@ -769,6 +778,7 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
     Top = 32
   end
   object LocationGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edLocation
     FormName = 'TPersonalForm'
     PositionDataSet = 'ClientDataSet'
@@ -799,9 +809,10 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
     Top = 64
   end
   object UnitGroupGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edUnitGroup
     FormName = 'TUnitTreeForm'
-    PositionDataSet = 'GridDataSet'
+    PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'TreeDataSet'
     Params = <
       item
@@ -824,6 +835,7 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
     Top = 24
   end
   object GoodsGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edGoods
     FormName = 'TGoodsForm'
     PositionDataSet = 'ClientDataSet'

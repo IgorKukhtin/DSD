@@ -5582,7 +5582,7 @@ object dmMain: TdmMain
       000000000000}
   end
   object frxReport: TfrxReport
-    Version = '4.14'
+    Version = '4.12.2'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
