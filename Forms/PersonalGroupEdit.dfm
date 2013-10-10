@@ -3,7 +3,7 @@
   ClientHeight = 249
   ClientWidth = 354
   ExplicitWidth = 362
-  ExplicitHeight = 283
+  ExplicitHeight = 276
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -113,37 +113,29 @@
         Name = 'ioId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end
       item
         Name = 'inCode'
         Component = ceCode
-        DataType = ftInteger
         ParamType = ptInput
-        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
         Component = edName
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inWorkHours'
         Component = ceWorkHours
         DataType = ftFloat
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inUnitId '
         Component = UnitGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end>
     Left = 320
     Top = 32
@@ -152,9 +144,7 @@
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end>
     Left = 272
     Top = 176
@@ -168,46 +158,32 @@
         Name = 'Id'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'Code'
         Component = ceCode
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 0.000000000000000000
       end
       item
         Name = 'Name'
         Component = edName
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'WorkHours'
         Component = ceWorkHours
         DataType = ftFloat
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'UnitId'
         Component = UnitGuides
         ComponentItem = 'key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = '0'
       end
       item
         Name = 'UnitName'
         Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 72
     Top = 104
@@ -232,7 +208,7 @@
     Top = 65528
   end
   object UnitGuides: TdsdGuides
-    Key = '0'
+    KeyField = 'Id'
     LookupControl = ceUnit
     FormName = 'TUnitForm'
     PositionDataSet = 'ClientDataSet'
@@ -243,7 +219,6 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'TextValue'
@@ -251,7 +226,6 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 167
     Top = 159

@@ -3,7 +3,7 @@
   ClientHeight = 322
   ClientWidth = 339
   ExplicitWidth = 347
-  ExplicitHeight = 356
+  ExplicitHeight = 349
   PixelsPerInch = 96
   TextHeight = 13
   object edMeasureName: TcxTextEdit
@@ -119,44 +119,36 @@
         Name = 'ioId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end
       item
         Name = 'inCode'
         Component = ceCode
-        DataType = ftInteger
         ParamType = ptInput
-        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
         Component = edMeasureName
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inINN'
         Component = ceINN
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inDriverCertificate'
         Component = ceDriverCertificate
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inComment'
         Component = ceComment
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 272
     Top = 32
@@ -165,9 +157,7 @@
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end>
     Left = 168
     Top = 144
@@ -181,44 +171,31 @@
         Name = 'Id'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'Code'
         Component = ceCode
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 0.000000000000000000
       end
       item
         Name = 'Name'
         Component = edMeasureName
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'INN'
         Component = ceINN
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'DriverCertificate'
         Component = ceDriverCertificate
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'Comment'
         Component = ceComment
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 248
     Top = 136

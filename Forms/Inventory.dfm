@@ -41,7 +41,6 @@ inherited InventoryForm: TInventoryForm
     object edFrom: TcxButtonEdit
       Left = 288
       Top = 27
-      PopupMenu = PopupMenu
       Properties.Buttons = <
         item
           Default = True
@@ -223,6 +222,9 @@ inherited InventoryForm: TInventoryForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -413,9 +415,7 @@ inherited InventoryForm: TInventoryForm
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end>
     Left = 128
     Top = 56
@@ -432,15 +432,12 @@ inherited InventoryForm: TInventoryForm
         Name = 'inMovementId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inShowAll'
         DataType = ftBoolean
         ParamType = ptInput
-        Value = 'False'
       end>
     Left = 88
     Top = 280
@@ -626,6 +623,7 @@ inherited InventoryForm: TInventoryForm
     Top = 208
   end
   object dsdGuidesFrom: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edFrom
     FormName = 'TJuridicalForm'
     PositionDataSet = 'GridDataSet'
@@ -634,6 +632,7 @@ inherited InventoryForm: TInventoryForm
     Top = 56
   end
   object dsdGuidesTo: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edTo
     FormName = 'TUnitForm'
     PositionDataSet = 'GridDataSet'
@@ -650,55 +649,35 @@ inherited InventoryForm: TInventoryForm
         Name = 'inId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'InvNumber'
         Component = edInvNumber
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'OperDate'
         Component = edOperDate
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 0d
       end
       item
         Name = 'FromId'
         Component = dsdGuidesFrom
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'FromName'
         Component = dsdGuidesFrom
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'ToId'
         Component = dsdGuidesTo
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'ToName'
         Component = dsdGuidesTo
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 192
     Top = 56
@@ -723,9 +702,7 @@ inherited InventoryForm: TInventoryForm
         Name = 'inMovementId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end>
     Left = 128
     Top = 304
@@ -750,22 +727,18 @@ inherited InventoryForm: TInventoryForm
         Name = 'ioId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
       end
       item
         Name = 'inMovementId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inGoodsId'
         Component = ClientDataSet
         ComponentItem = 'GoodsId'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
@@ -779,7 +752,6 @@ inherited InventoryForm: TInventoryForm
         Name = 'inAmountPartner'
         DataType = ftFloat
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inPrice'
@@ -792,25 +764,20 @@ inherited InventoryForm: TInventoryForm
         Name = 'inCountForPrice'
         DataType = ftFloat
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inLiveWeight'
         DataType = ftFloat
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inHeadCount'
         DataType = ftFloat
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inGoodsKindId'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end>
     Left = 176
     Top = 320
@@ -828,16 +795,20 @@ inherited InventoryForm: TInventoryForm
     Top = 296
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
-    SortImages = dmMain.SortImageList
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
+    OnDblClickActionList = <>
     ActionItemList = <>
+    SortImages = dmMain.SortImageList
     Left = 296
     Top = 256
   end
   object EntryDBViewAddOn: TdsdDBViewAddOn
-    SortImages = dmMain.SortImageList
+    ErasedFieldName = 'isErased'
     View = cxGridEntryDBTableView
+    OnDblClickActionList = <>
     ActionItemList = <>
+    SortImages = dmMain.SortImageList
     Left = 464
     Top = 192
   end

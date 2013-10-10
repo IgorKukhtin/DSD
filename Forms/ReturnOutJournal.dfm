@@ -418,9 +418,6 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
       GuiParams = <
         item
           Name = 'Id'
-          DataType = ftInteger
-          ParamType = ptOutput
-          Value = '0'
         end>
       isShowModal = True
       DataSource = DataSource
@@ -436,7 +433,6 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
           Name = 'Id'
           Component = ClientDataSet
           ComponentItem = 'Id'
-          DataType = ftInteger
           ParamType = ptInput
         end>
       isShowModal = True
@@ -504,14 +500,12 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41395d
       end
       item
         Name = 'inEndDate'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41760d
       end>
     Left = 24
     Top = 176
@@ -525,14 +519,12 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         Name = 'inMovementId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
         Name = 'inIsLastComplete'
         DataType = ftBoolean
         ParamType = ptInput
-        Value = 'False'
       end>
     Left = 64
     Top = 232
@@ -557,7 +549,6 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         Name = 'inMovementId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 72
@@ -576,13 +567,13 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
         Name = 'inMovementId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 72
     Top = 320
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <>
     ActionItemList = <

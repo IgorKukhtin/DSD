@@ -2,8 +2,9 @@ inherited GoodsForm: TGoodsForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <T'#1086#1074#1072#1088#1099'>'
   ClientHeight = 404
   ClientWidth = 645
-  ExplicitWidth = 661
-  ExplicitHeight = 439
+  ExplicitTop = -87
+  ExplicitWidth = 653
+  ExplicitHeight = 431
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -17,6 +18,7 @@ inherited GoodsForm: TGoodsForm
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
+      DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
@@ -129,8 +131,8 @@ inherited GoodsForm: TGoodsForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -264,9 +266,6 @@ inherited GoodsForm: TGoodsForm
       GuiParams = <
         item
           Name = 'Id'
-          DataType = ftInteger
-          ParamType = ptOutput
-          Value = '0'
         end>
       isShowModal = True
       DataSource = DataSource
@@ -283,7 +282,6 @@ inherited GoodsForm: TGoodsForm
           Name = 'Id'
           Component = ClientDataSet
           ComponentItem = 'Id'
-          DataType = ftInteger
           ParamType = ptInput
         end>
       isShowModal = True
@@ -328,18 +326,14 @@ inherited GoodsForm: TGoodsForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
-          ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
-          DataType = ftInteger
-          ParamType = ptOutput
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
       ImageIndex = 7
     end
     object dsdGridToExcel1: TdsdGridToExcel
@@ -374,7 +368,6 @@ inherited GoodsForm: TGoodsForm
         Name = 'inObjectId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 160
@@ -383,8 +376,22 @@ inherited GoodsForm: TGoodsForm
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
-    OnDblClickActionList = <>
-    ActionItemList = <>
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+        Action = actUpdate
+      end>
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
     Left = 160
     Top = 184
   end

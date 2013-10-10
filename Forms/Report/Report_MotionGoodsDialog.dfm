@@ -4,7 +4,7 @@ inherited Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
   ClientHeight = 206
   ClientWidth = 313
   ExplicitWidth = 319
-  ExplicitHeight = 238
+  ExplicitHeight = 231
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
@@ -146,14 +146,12 @@ inherited Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41395d
       end
       item
         Name = 'EndDate'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41395d
       end
       item
         Name = 'GoodsId'
@@ -161,7 +159,6 @@ inherited Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'GoodsName'
@@ -169,55 +166,38 @@ inherited Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'GoodsGroupId'
         Component = GoodsGroupGuides
         ComponentItem = 'Key'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'GoodsGroupName'
         Component = GoodsGroupGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'UnitGroupId'
         Component = UnitGroupGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'UnitGroupName'
         Component = UnitGroupGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'LocationId'
         Component = LocationGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'LocationName'
         Component = LocationGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 32
     Top = 112
@@ -234,7 +214,6 @@ inherited Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
@@ -242,7 +221,6 @@ inherited Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 256
     Top = 91
@@ -259,7 +237,6 @@ inherited Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
@@ -267,7 +244,6 @@ inherited Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 240
     Top = 48
@@ -284,7 +260,6 @@ inherited Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
@@ -292,7 +267,6 @@ inherited Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 104
     Top = 120
@@ -310,7 +284,6 @@ inherited Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
@@ -318,7 +291,6 @@ inherited Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 88
     Top = 64

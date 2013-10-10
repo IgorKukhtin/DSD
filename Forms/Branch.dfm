@@ -2,8 +2,8 @@ inherited BranchForm: TBranchForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1083#1080#1072#1083#1099'>'
   ClientHeight = 374
   ClientWidth = 601
-  ExplicitWidth = 617
-  ExplicitHeight = 409
+  ExplicitWidth = 609
+  ExplicitHeight = 401
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -92,8 +92,8 @@ inherited BranchForm: TBranchForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -227,9 +227,6 @@ inherited BranchForm: TBranchForm
       GuiParams = <
         item
           Name = 'Id'
-          DataType = ftInteger
-          ParamType = ptOutput
-          Value = '0'
         end>
       isShowModal = True
       DataSource = DataSource
@@ -245,7 +242,6 @@ inherited BranchForm: TBranchForm
         item
           Name = 'Id'
           Component = ClientDataSet
-          DataType = ftInteger
           ParamType = ptInput
         end>
       isShowModal = True
@@ -297,14 +293,12 @@ inherited BranchForm: TBranchForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
-          ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
-          ParamType = ptOutput
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -335,7 +329,6 @@ inherited BranchForm: TBranchForm
         Name = 'inObjectId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 288

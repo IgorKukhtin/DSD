@@ -188,9 +188,6 @@ inherited GoodsPropertyValueForm: TGoodsPropertyValueForm
       GuiParams = <
         item
           Name = 'Id'
-          DataType = ftInteger
-          ParamType = ptOutput
-          Value = '0'
         end>
       isShowModal = True
       DataSource = DataSource
@@ -205,7 +202,6 @@ inherited GoodsPropertyValueForm: TGoodsPropertyValueForm
         item
           Name = 'Id'
           Component = ClientDataSet
-          DataType = ftInteger
           ParamType = ptInput
         end>
       isShowModal = True
@@ -219,6 +215,7 @@ inherited GoodsPropertyValueForm: TGoodsPropertyValueForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 46
+      ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
     object dsdSetUnErased: TdsdUpdateErased
@@ -227,6 +224,7 @@ inherited GoodsPropertyValueForm: TGoodsPropertyValueForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 32776
+      ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
     end

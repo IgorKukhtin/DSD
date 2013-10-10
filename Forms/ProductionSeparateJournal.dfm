@@ -330,9 +330,6 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
       GuiParams = <
         item
           Name = 'Id'
-          DataType = ftInteger
-          ParamType = ptOutput
-          Value = '0'
         end>
       isShowModal = False
       DataSource = DataSource
@@ -348,7 +345,6 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
           Name = 'Id'
           Component = ClientDataSet
           ComponentItem = 'Id'
-          DataType = ftInteger
           ParamType = ptInput
         end>
       isShowModal = False
@@ -416,14 +412,12 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41395d
       end
       item
         Name = 'inEndDate'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41395d
       end>
     Left = 40
     Top = 192
@@ -437,14 +431,12 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
         Name = 'inMovementId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
         Name = 'inIsLastComplete'
         DataType = ftBoolean
         ParamType = ptInput
-        Value = 'False'
       end>
     Left = 64
     Top = 232
@@ -469,7 +461,6 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
         Name = 'inMovementId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 72
@@ -488,7 +479,6 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
         Name = 'inMovementId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 72
@@ -499,14 +489,15 @@ inherited ProductionSeparateJournalForm: TProductionSeparateJournalForm
     Top = 216
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
-    OnDblClickActionList = <>
-    SortImages = dmMain.SortImageList
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
+    OnDblClickActionList = <>
     ActionItemList = <
       item
         Action = actUpdate
         ShortCut = 13
       end>
+    SortImages = dmMain.SortImageList
     Left = 176
     Top = 264
   end

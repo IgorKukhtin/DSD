@@ -152,53 +152,40 @@
         Name = 'ioId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end
       item
         Name = 'inCode'
         Component = ceCode
-        DataType = ftInteger
         ParamType = ptInput
-        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
         Component = edName
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inCurrencyId'
         Component = dsdCurrencyGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inBranchId'
         Component = dsdBranchGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inMainJuridicalId'
         Component = JuridicalGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inBusinessId'
         Component = BusinessGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end>
     Left = 240
     Top = 48
@@ -207,9 +194,7 @@
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end>
     Left = 240
     Top = 8
@@ -223,92 +208,65 @@
         Name = 'Id'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'Name'
         Component = edName
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'Code'
         Component = ceCode
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 0.000000000000000000
       end
       item
         Name = 'BranchId'
         Component = dsdBranchGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'BranchName'
         Component = dsdBranchGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'CurrencyId'
         Component = dsdCurrencyGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'CurrencyName'
         Component = dsdCurrencyGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'MainJuridicalId'
         Component = JuridicalGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'MainJuridicalName'
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'BusinessId'
         Component = BusinessGuides
         ComponentItem = 'Key'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'BusinessName'
         Component = BusinessGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 192
     Top = 88
   end
   object dsdBranchGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceBranch
     FormName = 'TBranchForm'
     PositionDataSet = 'ClientDataSet'
@@ -317,6 +275,7 @@
     Top = 109
   end
   object dsdCurrencyGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceCurrency
     FormName = 'TCurrencyForm'
     PositionDataSet = 'ClientDataSet'
@@ -344,6 +303,7 @@
     Top = 104
   end
   object BusinessGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceBusiness
     FormName = 'TBusinessForm'
     PositionDataSet = 'ClientDataSet'
@@ -352,6 +312,7 @@
     Top = 256
   end
   object JuridicalGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceJuridical
     FormName = 'TJuridicalForm'
     PositionDataSet = 'GridDataSet'

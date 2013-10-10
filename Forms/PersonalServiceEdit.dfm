@@ -2,8 +2,8 @@
   Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077
   ClientHeight = 328
   ClientWidth = 654
-  ExplicitWidth = 670
-  ExplicitHeight = 366
+  ExplicitWidth = 662
+  ExplicitHeight = 355
   PixelsPerInch = 96
   TextHeight = 13
   object cxLabel1: TcxLabel
@@ -208,16 +208,12 @@
         Name = 'ioId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end
       item
         Name = 'inCode'
         Component = ceInvNumber
-        DataType = ftInteger
         ParamType = ptInput
-        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
@@ -228,30 +224,21 @@
       item
         Name = 'inProfitLossGroupId '
         Component = PersonalGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inProfitLossDirectionId'
         Component = PaidKindGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inInfoMoneyDestinationId'
         Component = UnitGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inInfoMoneyId '
         Component = InfoMoneyGuides
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 264
     Top = 64
@@ -260,9 +247,7 @@
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end>
     Left = 312
     Top = 16
@@ -276,91 +261,62 @@
         Name = 'Id'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'Name'
         Component = cxLabel6
         DataType = ftString
-        ParamType = ptOutput
       end
       item
         Name = 'Code'
         Component = ceInvNumber
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 0.000000000000000000
       end
       item
         Name = 'ProfitLossGroupId'
         Component = PersonalGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'ProfitLossDirectionId'
         Component = PaidKindGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'ProfitLossGroupName'
         Component = PersonalGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'ProfitLossDirectionName'
         Component = PaidKindGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'InfoMoneyDestinationId'
         Component = UnitGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'InfoMoneyDestinationName'
         Component = UnitGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'InfoMoneyId'
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'InfoMoneyName'
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 192
     Top = 72
   end
   object PersonalGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = cePersonal
     FormName = 'TPersonalForm'
     PositionDataSet = 'ClientDataSet'
@@ -369,6 +325,7 @@
     Top = 117
   end
   object PaidKindGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = cePaidKind
     FormName = 'TPaidKindForm'
     PositionDataSet = 'ClientDataSet'
@@ -396,6 +353,7 @@
     Top = 24
   end
   object UnitGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceUnit
     FormName = 'TUnitForm'
     PositionDataSet = 'ClientDataSet'
@@ -404,6 +362,7 @@
     Top = 229
   end
   object InfoMoneyGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceInfoMoney
     FormName = 'TInfoMoneyForm'
     PositionDataSet = 'ClientDataSet'
@@ -412,6 +371,7 @@
     Top = 165
   end
   object StatusKindGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceStatusKind
     FormName = 'TStatusKindForm'
     PositionDataSet = 'ClientDataSet'
@@ -420,6 +380,7 @@
     Top = 57
   end
   object PositionGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = cePosition
     FormName = 'TPositionForm'
     PositionDataSet = 'ClientDataSet'

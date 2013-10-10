@@ -4,8 +4,8 @@ inherited SendForm: TSendForm
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1044
-  ExplicitHeight = 434
+  ExplicitWidth = 1036
+  ExplicitHeight = 423
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -73,16 +73,15 @@ inherited SendForm: TSendForm
   end
   object cxPageControl1: TcxPageControl
     Left = 0
-    Top = 112
+    Top = 110
     Width = 1028
-    Height = 284
+    Height = 286
     Align = alClient
     TabOrder = 5
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 280
-    ClientRectLeft = 4
-    ClientRectRight = 1024
+    ClientRectBottom = 286
+    ClientRectRight = 1028
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -90,8 +89,8 @@ inherited SendForm: TSendForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1020
-        Height = 256
+        Width = 1028
+        Height = 262
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -195,6 +194,9 @@ inherited SendForm: TSendForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -394,9 +396,7 @@ inherited SendForm: TSendForm
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end>
     Left = 40
     Top = 56
@@ -413,15 +413,12 @@ inherited SendForm: TSendForm
         Name = 'inMovementId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inShowAll'
         DataType = ftBoolean
         ParamType = ptInput
-        Value = 'False'
       end>
     Left = 88
     Top = 280
@@ -429,8 +426,8 @@ inherited SendForm: TSendForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -447,7 +444,7 @@ inherited SendForm: TSendForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar: TdxBar
       Caption = 'Custom'
@@ -600,6 +597,7 @@ inherited SendForm: TSendForm
     Top = 144
   end
   object dsdGuidesFrom: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edFrom
     FormName = 'TJuridicalForm'
     PositionDataSet = 'GridDataSet'
@@ -608,6 +606,7 @@ inherited SendForm: TSendForm
     Top = 56
   end
   object dsdGuidesTo: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edTo
     FormName = 'TUnitForm'
     PositionDataSet = 'GridDataSet'
@@ -624,55 +623,35 @@ inherited SendForm: TSendForm
         Name = 'inId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'InvNumber'
         Component = edInvNumber
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'OperDate'
         Component = edOperDate
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 0d
       end
       item
         Name = 'FromId'
         Component = dsdGuidesFrom
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'FromName'
         Component = dsdGuidesFrom
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'ToId'
         Component = dsdGuidesTo
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'ToName'
         Component = dsdGuidesTo
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 136
     Top = 72
@@ -697,9 +676,7 @@ inherited SendForm: TSendForm
         Name = 'inMovementId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end>
     Left = 560
     Top = 216
@@ -724,22 +701,18 @@ inherited SendForm: TSendForm
         Name = 'ioId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
       end
       item
         Name = 'inMovementId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inGoodsId'
         Component = ClientDataSet
         ComponentItem = 'GoodsId'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
@@ -753,7 +726,6 @@ inherited SendForm: TSendForm
         Name = 'inAmountPartner'
         DataType = ftFloat
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inPrice'
@@ -766,25 +738,20 @@ inherited SendForm: TSendForm
         Name = 'inCountForPrice'
         DataType = ftFloat
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inLiveWeight'
         DataType = ftFloat
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inHeadCount'
         DataType = ftFloat
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inGoodsKindId'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end>
     Left = 520
     Top = 120

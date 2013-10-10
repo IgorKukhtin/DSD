@@ -2,8 +2,8 @@ inherited RateFuelForm: TRateFuelForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1053#1086#1088#1084#1099' '#1090#1086#1087#1083#1080#1074#1072'>'
   ClientHeight = 367
   ClientWidth = 853
-  ExplicitWidth = 869
-  ExplicitHeight = 402
+  ExplicitWidth = 861
+  ExplicitHeight = 394
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -128,8 +128,8 @@ inherited RateFuelForm: TRateFuelForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -265,9 +265,6 @@ inherited RateFuelForm: TRateFuelForm
       GuiParams = <
         item
           Name = 'Id'
-          DataType = ftInteger
-          ParamType = ptOutput
-          Value = '0'
         end>
       isShowModal = True
       DataSource = DataSource
@@ -320,14 +317,11 @@ inherited RateFuelForm: TRateFuelForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
-          ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
-          DataType = ftInteger
-          ParamType = ptOutput
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -353,9 +347,6 @@ inherited RateFuelForm: TRateFuelForm
       end>
     Params = <
       item
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
       end>
     Left = 48
     Top = 216
@@ -382,7 +373,6 @@ inherited RateFuelForm: TRateFuelForm
         Name = 'inObjectId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 288
@@ -397,21 +387,18 @@ inherited RateFuelForm: TRateFuelForm
         Name = 'ioId'
         Component = ClientDataSet
         ComponentItem = 'CarId'
-        DataType = ftInteger
         ParamType = ptInputOutput
       end
       item
         Name = 'inRateFuelId_Internal'
         Component = ClientDataSet
         ComponentItem = 'RateFuelId_Internal'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
         Name = 'inRateFuelId_External'
         Component = ClientDataSet
         ComponentItem = 'RateFuelId_External'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item

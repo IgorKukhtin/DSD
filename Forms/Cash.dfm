@@ -14,7 +14,6 @@ inherited CashForm: TCashForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 544
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -253,9 +252,6 @@ inherited CashForm: TCashForm
       GuiParams = <
         item
           Name = 'Id'
-          DataType = ftInteger
-          ParamType = ptOutput
-          Value = '0'
         end>
       isShowModal = False
       DataSource = DataSource
@@ -272,7 +268,6 @@ inherited CashForm: TCashForm
           Name = 'Id'
           Component = ClientDataSet
           ComponentItem = 'Id'
-          DataType = ftInteger
           ParamType = ptInput
         end>
       isShowModal = False
@@ -287,6 +282,7 @@ inherited CashForm: TCashForm
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 32776
+      ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
     end
@@ -301,6 +297,7 @@ inherited CashForm: TCashForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
       ShortCut = 46
+      ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
     object dsdGridToExcel: TdsdGridToExcel
@@ -342,13 +339,14 @@ inherited CashForm: TCashForm
         Name = 'inObjectId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 288
     Top = 208
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView
     OnDblClickActionList = <
       item
         Action = dsdChoiceGuides
@@ -356,8 +354,6 @@ inherited CashForm: TCashForm
       item
         Action = actUpdate
       end>
-    SortImages = dmMain.SortImageList
-    View = cxGridDBTableView
     ActionItemList = <
       item
         Action = dsdChoiceGuides
@@ -367,6 +363,7 @@ inherited CashForm: TCashForm
         Action = actUpdate
         ShortCut = 13
       end>
+    SortImages = dmMain.SortImageList
     Left = 56
     Top = 240
   end

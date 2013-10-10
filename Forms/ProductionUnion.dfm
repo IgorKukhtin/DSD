@@ -4,8 +4,8 @@
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1044
-  ExplicitHeight = 431
+  ExplicitWidth = 1036
+  ExplicitHeight = 423
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -94,7 +94,6 @@
         Height = 154
         Align = alClient
         TabOrder = 0
-        ExplicitTop = 2
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -339,6 +338,9 @@
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -557,9 +559,7 @@
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end>
     Left = 288
     Top = 72
@@ -580,15 +580,12 @@
         Name = 'inMovementId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inShowAll'
         DataType = ftBoolean
         ParamType = ptInput
-        Value = 'False'
       end>
     Left = 73
     Top = 223
@@ -596,8 +593,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -766,55 +763,35 @@
         Name = 'inId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'InvNumber'
         Component = edInvNumber
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'OperDate'
         Component = edOperDate
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 0d
       end
       item
         Name = 'FromId'
         Component = dsdGuidesFrom
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'FromName'
         Component = dsdGuidesFrom
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'ToId'
         Component = dsdGuidesTo
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'ToName'
         Component = dsdGuidesTo
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 224
     Top = 64
@@ -839,9 +816,7 @@
         Name = 'inMovementId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end>
     Left = 522
     Top = 208
@@ -866,22 +841,18 @@
         Name = 'ioId'
         Component = MasterCDS
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
       end
       item
         Name = 'inMovementId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inGoodsId'
         Component = MasterCDS
         ComponentItem = 'GoodsId'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
@@ -895,7 +866,6 @@
         Name = 'inAmountPartner'
         DataType = ftFloat
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inPrice'
@@ -908,25 +878,20 @@
         Name = 'inCountForPrice'
         DataType = ftFloat
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inLiveWeight'
         DataType = ftFloat
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inHeadCount'
         DataType = ftFloat
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inGoodsKindId'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end>
     Left = 102
     Top = 200

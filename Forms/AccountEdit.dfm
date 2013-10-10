@@ -3,7 +3,7 @@
   ClientHeight = 350
   ClientWidth = 389
   ExplicitWidth = 397
-  ExplicitHeight = 384
+  ExplicitHeight = 377
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -152,51 +152,38 @@
         Name = 'ioId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end
       item
         Name = 'inCode'
         Component = ceCode
-        DataType = ftInteger
         ParamType = ptInput
-        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
         Component = edName
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inAccountGroupId'
         Component = AccountGroupGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inAccountDirectionId'
         Component = AccountDirectionnGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inInfoMoneyDestinationId'
         Component = InfoMoneyDestinationGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inInfoMoneyId'
         Component = InfoMoneyGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end>
     Left = 240
     Top = 48
@@ -205,9 +192,7 @@
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end>
     Left = 240
     Top = 8
@@ -221,92 +206,63 @@
         Name = 'Id'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'Name'
         Component = edName
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'Code'
         Component = ceCode
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 0.000000000000000000
       end
       item
         Name = 'AccountGroupId'
         Component = AccountGroupGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'AccountGroupName'
         Component = AccountGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'AccountDirectionId'
         Component = AccountDirectionnGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'AccountDirectionName'
         Component = AccountDirectionnGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'InfoMoneyDestinationId'
         Component = InfoMoneyDestinationGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'InfoMoneyDestinationName'
         Component = InfoMoneyDestinationGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'InfoMoneyId'
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'InfoMoneyName'
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 192
     Top = 88
   end
   object AccountGroupGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceAccountGroup
     FormName = 'TInfoMoneyGroupForm'
     PositionDataSet = 'ClientDataSet'
@@ -315,6 +271,7 @@
     Top = 125
   end
   object AccountDirectionnGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceAccountDirection
     FormName = 'TAccountDirectionForm'
     PositionDataSet = 'ClientDataSet'
@@ -342,6 +299,7 @@
     Top = 48
   end
   object InfoMoneyDestinationGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceInfoMoneyDestination
     FormName = 'TInfoMoneyDestinationForm'
     PositionDataSet = 'ClientDataSet'
@@ -350,6 +308,7 @@
     Top = 229
   end
   object InfoMoneyGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceInfoMoney
     FormName = 'TInfoMoneyForm'
     PositionDataSet = 'ClientDataSet'

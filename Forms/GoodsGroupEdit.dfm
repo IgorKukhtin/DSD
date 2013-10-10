@@ -103,30 +103,23 @@
         Name = 'ioId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end
       item
         Name = 'inCode'
         Component = ceCode
-        DataType = ftInteger
         ParamType = ptInput
-        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
         Component = edName
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inParentId'
         Component = GoodsGroupGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end>
     Left = 208
     Top = 8
@@ -135,9 +128,7 @@
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end>
     Left = 152
     Top = 8
@@ -151,51 +142,50 @@
         Name = 'Id'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'Code'
         Component = ceCode
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 0.000000000000000000
       end
       item
         Name = 'Name'
         Component = edName
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'ParentId'
         Component = GoodsGroupGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = '0'
       end
       item
         Name = 'ParentName'
         Component = GoodsGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 160
     Top = 48
   end
   object GoodsGroupGuides: TdsdGuides
-    Key = '0'
+    KeyField = 'Id'
     LookupControl = ceParentGroup
     FormName = 'TGoodsGroupForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
-    Left = 216
-    Top = 96
+    Params = <
+      item
+        Name = 'Key'
+        Component = GoodsGroupGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Component = GoodsGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 208
+    Top = 112
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 104

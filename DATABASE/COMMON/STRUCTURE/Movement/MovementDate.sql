@@ -16,10 +16,6 @@ CREATE TABLE MovementDate(
    CONSTRAINT fk_MovementDate_MovementId FOREIGN KEY(MovementId) REFERENCES Movement(Id) );
 
 /*-------------------------------------------------------------------------------*/
-/*                                  »Ì‰ÂÍÒ˚                                      */
-
-
-CREATE UNIQUE INDEX idx_MovementDate_MovementId_DescId_ValueData ON MovementDate(MovementId, DescId, ValueData); 
 
 /*
  œ–»Ã≈◊¿Õ»ﬂ:

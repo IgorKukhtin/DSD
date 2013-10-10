@@ -119,37 +119,28 @@
         Name = 'ioId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end
       item
         Name = 'inCode'
         Component = ceCode
-        DataType = ftInteger
         ParamType = ptInput
-        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
         Component = edName
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inInfoMoneyGroupId'
         Component = dsdInfoMoneyGroupGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inInfoMoneyDestinationId'
         Component = dsdInfoMoneyDestinationGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end>
     Left = 32
     Top = 120
@@ -158,9 +149,7 @@
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end>
     Left = 240
     Top = 8
@@ -174,59 +163,41 @@
         Name = 'Id'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'Name'
         Component = edName
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'Code'
         Component = ceCode
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 0.000000000000000000
       end
       item
         Name = 'InfoMoneyGroupId'
         Component = dsdInfoMoneyGroupGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'InfoMoneyGroupName'
         Component = dsdInfoMoneyGroupGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'InfoMoneyDestinationId'
         Component = dsdInfoMoneyDestinationGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'InfoMoneyDestinationName'
         Component = dsdInfoMoneyDestinationGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end>
     Top = 120
   end
   object dsdInfoMoneyGroupGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceInfoMoneyGroup
     FormName = 'TInfoMoneyGroupForm'
     PositionDataSet = 'ClientDataSet'
@@ -237,7 +208,6 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
@@ -245,12 +215,12 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 240
     Top = 117
   end
   object dsdInfoMoneyDestinationGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceInfoMoneyDestination
     FormName = 'TInfoMoneyDestinationForm'
     PositionDataSet = 'ClientDataSet'
@@ -261,7 +231,6 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
@@ -269,7 +238,6 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 248
     Top = 173

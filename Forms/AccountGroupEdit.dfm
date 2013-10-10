@@ -2,8 +2,8 @@
   Caption = #1053#1086#1074#1099#1081' '#1089#1095#1077#1090
   ClientHeight = 141
   ClientWidth = 375
-  ExplicitWidth = 391
-  ExplicitHeight = 179
+  ExplicitWidth = 383
+  ExplicitHeight = 168
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -87,23 +87,18 @@
         Name = 'ioId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end
       item
         Name = 'inCode'
         Component = ceCode
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inName'
         Component = edName
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 160
     Top = 16
@@ -112,9 +107,7 @@
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end>
     Left = 296
     Top = 8
@@ -128,23 +121,16 @@
         Name = 'Id'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'Name'
         Component = edName
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'Code'
         Component = ceCode
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 168
     Top = 96

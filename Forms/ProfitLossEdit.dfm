@@ -2,8 +2,8 @@
   Caption = #1053#1086#1074#1072#1103' '#1089#1090#1072#1090#1100#1103
   ClientHeight = 371
   ClientWidth = 348
-  ExplicitWidth = 364
-  ExplicitHeight = 409
+  ExplicitWidth = 356
+  ExplicitHeight = 398
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -152,51 +152,37 @@
         Name = 'ioId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end
       item
         Name = 'inCode'
         Component = ceCode
-        DataType = ftInteger
         ParamType = ptInput
-        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
         Component = edName
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inProfitLossGroupId '
         Component = ProfitLossGroupGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inProfitLossDirectionId'
         Component = ProfitLossDirectionGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inInfoMoneyDestinationId'
         Component = InfoMoneyDestinationGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inInfoMoneyId '
         Component = InfoMoneyGuides
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 264
     Top = 64
@@ -205,9 +191,7 @@
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end>
     Left = 216
     Top = 24
@@ -221,92 +205,62 @@
         Name = 'Id'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'Name'
         Component = edName
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'Code'
         Component = ceCode
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 0.000000000000000000
       end
       item
         Name = 'ProfitLossGroupId'
         Component = ProfitLossGroupGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'ProfitLossDirectionId'
         Component = ProfitLossDirectionGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'ProfitLossGroupName'
         Component = ProfitLossGroupGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'ProfitLossDirectionName'
         Component = ProfitLossDirectionGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'InfoMoneyDestinationId'
         Component = InfoMoneyDestinationGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'InfoMoneyDestinationName'
         Component = InfoMoneyDestinationGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'InfoMoneyId'
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'InfoMoneyName'
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 192
     Top = 72
   end
   object ProfitLossGroupGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceProfitLossGroup
     FormName = 'TProfitLossGroupForm'
     PositionDataSet = 'ClientDataSet'
@@ -315,6 +269,7 @@
     Top = 117
   end
   object ProfitLossDirectionGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceProfitLossDirection
     FormName = 'TProfitLossDirectionForm'
     PositionDataSet = 'ClientDataSet'
@@ -342,6 +297,7 @@
     Top = 24
   end
   object InfoMoneyDestinationGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceInfoMoneyDestination
     FormName = 'TInfoMoneyDestinationForm'
     PositionDataSet = 'ClientDataSet'
@@ -350,6 +306,7 @@
     Top = 229
   end
   object InfoMoneyGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceInfoMoney
     FormName = 'TInfoMoneyForm'
     PositionDataSet = 'ClientDataSet'

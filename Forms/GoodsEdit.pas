@@ -38,7 +38,6 @@ type
      Ó‰: TcxLabel;
     ceCode: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
-    dsdGoodsGroupGuides: TdsdGuides;
     cxLabel4: TcxLabel;
     dsdMeasureGuides: TdsdGuides;
     cxLabel2: TcxLabel;
@@ -48,7 +47,7 @@ type
     ceMeasure: TcxButtonEdit;
     ÒÂTradeMark: TcxButtonEdit;
     cxLabel5: TcxLabel;
-    dsdTradeMarkGuides: TdsdGuides;
+    TradeMarkGuides: TdsdGuides;
     ceInfoMoney: TcxButtonEdit;
     cxLabel6: TcxLabel;
     dsdInfoMoneyGuides: TdsdGuides;
@@ -57,6 +56,10 @@ type
     cxLabel7: TcxLabel;
     ceBusiness: TcxButtonEdit;
     BusinessGuides: TdsdGuides;
+    cxLabel8: TcxLabel;
+    edFuel: TcxButtonEdit;
+    FuelGuides: TdsdGuides;
+    GoodsGroupGuides: TdsdGuides;
   private
     { Private declarations }
   public

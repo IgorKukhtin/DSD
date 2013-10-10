@@ -192,78 +192,60 @@
         Name = 'ioId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end
       item
         Name = 'inCode'
         Component = ceCode
-        DataType = ftInteger
         ParamType = ptInput
-        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
         Component = edName
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inPartionDate'
         Component = cbPartionDate
         DataType = ftBoolean
         ParamType = ptInput
-        Value = 'False'
       end
       item
         Name = 'inParentId'
         Component = ParentGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inBranchId'
         Component = BranchGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inBusinessId'
         Component = BusinessGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inJuridicalId'
         Component = JuridicalGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inAccountDirectionId'
         Component = AccountDirectionGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inProfitLossDirectionId'
         Component = ProfitLossDirectionGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end>
     Left = 48
     Top = 248
@@ -272,9 +254,7 @@
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end>
     Left = 16
     Top = 216
@@ -288,166 +268,137 @@
         Name = 'Id'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'Name'
         Component = edName
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'Code'
         Component = ceCode
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 0.000000000000000000
       end
       item
         Name = 'ParentId'
         Component = ParentGuides
         ComponentItem = 'Id'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'ParentName'
         Component = ParentGuides
         ComponentItem = 'Name'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'BranchId'
         Component = BranchGuides
         ComponentItem = 'Id'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'BranchName'
         Component = BranchGuides
         ComponentItem = 'Name'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'BusinessId'
         Component = BusinessGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'BusinessName'
         Component = BusinessGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'JuridicalId'
         Component = JuridicalGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'JuridicalName'
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'AccountDirectionId'
         Component = AccountDirectionGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'AccountDirectionName'
         Component = AccountDirectionGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'ProfitLossDirectionId'
         Component = ProfitLossDirectionGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'ProfitLossDirectionName'
         Component = ProfitLossDirectionGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 16
     Top = 240
   end
   object ParentGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceParent
     FormName = 'TUnitForm'
+    PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'ClientDataSet'
     Params = <>
     Left = 160
     Top = 64
   end
   object BranchGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceBranch
     FormName = 'TBranchForm'
+    PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'ClientDataSet'
     Params = <>
     Left = 384
     Top = 64
   end
   object BusinessGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceBusiness
     FormName = 'TBusinessForm'
+    PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'ClientDataSet'
     Params = <>
     Left = 160
     Top = 120
   end
   object JuridicalGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceJuridical
     FormName = 'TJuridicalForm'
+    PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'GridDataSet'
     Params = <>
     Left = 384
     Top = 112
   end
   object AccountDirectionGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceAccountDirection
     FormName = 'TAccountDirectionForm'
+    PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'ClientDataSet'
     Params = <>
     Left = 160
     Top = 184
   end
   object ProfitLossDirectionGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceProfitLossDirection
     FormName = 'TProfitLossDirectionForm'
+    PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'ClientDataSet'
     Params = <>
     Left = 384

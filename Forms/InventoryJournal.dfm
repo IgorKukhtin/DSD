@@ -295,9 +295,6 @@ inherited InventoryJournalForm: TInventoryJournalForm
       GuiParams = <
         item
           Name = 'Id'
-          DataType = ftInteger
-          ParamType = ptOutput
-          Value = '0'
         end>
       isShowModal = False
       DataSource = DataSource
@@ -313,7 +310,6 @@ inherited InventoryJournalForm: TInventoryJournalForm
           Name = 'Id'
           Component = ClientDataSet
           ComponentItem = 'Id'
-          DataType = ftInteger
           ParamType = ptInput
         end>
       isShowModal = False
@@ -381,14 +377,12 @@ inherited InventoryJournalForm: TInventoryJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41395d
       end
       item
         Name = 'inEndDate'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41760d
       end>
     Left = 24
     Top = 176
@@ -402,14 +396,12 @@ inherited InventoryJournalForm: TInventoryJournalForm
         Name = 'inMovementId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
         Name = 'inIsLastComplete'
         DataType = ftBoolean
         ParamType = ptInput
-        Value = 'False'
       end>
     Left = 64
     Top = 232
@@ -434,7 +426,6 @@ inherited InventoryJournalForm: TInventoryJournalForm
         Name = 'inMovementId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 72
@@ -453,7 +444,6 @@ inherited InventoryJournalForm: TInventoryJournalForm
         Name = 'inMovementId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 72
@@ -464,14 +454,15 @@ inherited InventoryJournalForm: TInventoryJournalForm
     Top = 192
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
-    OnDblClickActionList = <>
-    SortImages = dmMain.SortImageList
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
+    OnDblClickActionList = <>
     ActionItemList = <
       item
         Action = actUpdate
         ShortCut = 13
       end>
+    SortImages = dmMain.SortImageList
     Left = 184
     Top = 248
   end

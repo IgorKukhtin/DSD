@@ -19,8 +19,6 @@ CREATE TABLE ObjectDate(
 /*                                  »Ì‰ÂÍÒ˚                                      */
 
 
-CREATE UNIQUE INDEX idx_ObjectDate_ObjectId_DescId_ValueData ON ObjectDate(ObjectId, DescId, ValueData); 
-
 /*
  œ–»Ã≈◊¿Õ»ﬂ:
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »:

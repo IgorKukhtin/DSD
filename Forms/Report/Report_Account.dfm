@@ -3,7 +3,7 @@ inherited Report_AccountForm: TReport_AccountForm
   ClientHeight = 395
   ClientWidth = 1189
   ExplicitWidth = 1197
-  ExplicitHeight = 429
+  ExplicitHeight = 422
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -13,9 +13,6 @@ inherited Report_AccountForm: TReport_AccountForm
     Height = 282
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = 16
-    ExplicitTop = 153
-    ExplicitWidth = 1329
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -286,7 +283,6 @@ inherited Report_AccountForm: TReport_AccountForm
     Height = 87
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 1329
     object deStart: TcxDateEdit
       Left = 16
       Top = 8
@@ -450,21 +446,17 @@ inherited Report_AccountForm: TReport_AccountForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41548d
       end
       item
         Name = 'inEndDate'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41557d
       end
       item
         Name = 'inAccountId'
         Component = AccountGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end>
     Left = 152
     Top = 248
@@ -515,9 +507,7 @@ inherited Report_AccountForm: TReport_AccountForm
         Name = 'Key'
         Component = AccountGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
@@ -525,7 +515,6 @@ inherited Report_AccountForm: TReport_AccountForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 640
     Top = 32

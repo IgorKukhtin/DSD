@@ -256,9 +256,7 @@ inherited PriceListItemForm: TPriceListItemForm
           Name = 'PriceListId'
           Component = PriceListGuides
           ComponentItem = 'Key'
-          DataType = ftInteger
           ParamType = ptInput
-          Value = ''
         end
         item
           Name = 'PriceListName'
@@ -266,13 +264,11 @@ inherited PriceListItemForm: TPriceListItemForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
-          Value = ''
         end
         item
           Name = 'GoodsId'
           Component = ClientDataSet
           ComponentItem = 'GoodsId'
-          DataType = ftInteger
           ParamType = ptInput
         end
         item
@@ -297,23 +293,23 @@ inherited PriceListItemForm: TPriceListItemForm
         Name = 'inPriceListId'
         Component = PriceListGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inOperDate'
         Component = edShowDate
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41275d
       end>
     Left = 144
     Top = 104
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
-    SortImages = dmMain.SortImageList
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
     Left = 184
     Top = 240
   end
@@ -322,9 +318,11 @@ inherited PriceListItemForm: TPriceListItemForm
     Top = 200
   end
   object PriceListGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edPriceList
     FormName = 'TPriceListForm'
     PositionDataSet = 'ClientDataSet'
+    Params = <>
     Left = 136
   end
 end

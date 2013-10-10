@@ -4,8 +4,9 @@ inherited SaleForm: TSaleForm
   ClientWidth = 1074
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1090
-  ExplicitHeight = 478
+  ExplicitTop = -56
+  ExplicitWidth = 1082
+  ExplicitHeight = 470
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -300,9 +301,6 @@ inherited SaleForm: TSaleForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -519,9 +517,7 @@ inherited SaleForm: TSaleForm
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end>
     Left = 176
     Top = 256
@@ -538,15 +534,13 @@ inherited SaleForm: TSaleForm
         Name = 'inMovementId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inShowAll'
+        Component = BooleanStoredProcAction1
         DataType = ftBoolean
         ParamType = ptInput
-        Value = 'False'
       end>
     Left = 88
     Top = 280
@@ -554,8 +548,8 @@ inherited SaleForm: TSaleForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -728,6 +722,18 @@ inherited SaleForm: TSaleForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object BooleanStoredProcAction1: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = 'BooleanStoredProcAction1'
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1090#1086#1074#1072#1088#1099' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = -1
+      ImageIndexFalse = -1
+    end
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -749,178 +755,102 @@ inherited SaleForm: TSaleForm
         Name = 'inId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'InvNumber'
         Component = cxLabel4
-        DataType = ftInteger
-        ParamType = ptOutput
       end
       item
         Name = 'OperDate'
         Component = edOperDate
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 0d
       end
       item
         Name = 'StatusCode'
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
       end
       item
         Name = 'OperDatePartner'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
       end
       item
         Name = 'InvNumberPartner'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
       end
       item
         Name = 'StatusName'
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
       end
       item
         Name = 'PriceWithVAT'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
       end
       item
         Name = 'VATPercent'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
       end
       item
         Name = 'ChangePercent'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
       end
       item
         Name = 'FromId'
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
       end
       item
         Name = 'FromName'
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
       end
       item
         Name = 'ToId'
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
       end
       item
         Name = 'PaidKindId'
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
       end
       item
         Name = 'ToName'
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
       end
       item
         Name = 'PaidKindName'
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
       end
       item
         Name = 'ContractId'
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
       end
       item
         Name = 'ContractName'
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
       end
       item
         Name = 'CarId'
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
       end
       item
         Name = 'CarName'
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
       end
       item
         Name = 'PersonalDriverId'
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
       end
       item
         Name = 'PersonalDriverName'
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
       end
       item
         Name = 'RouteId'
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
       end
       item
         Name = 'RouteName'
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
       end
       item
         Name = 'RouteSortingId'
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
       end
       item
         Name = 'RouteSortingName'
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
       end>
     Left = 152
     Top = 128
@@ -945,9 +875,7 @@ inherited SaleForm: TSaleForm
         Name = 'inMovementId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end>
     Left = 560
     Top = 216
@@ -972,22 +900,18 @@ inherited SaleForm: TSaleForm
         Name = 'ioId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
       end
       item
         Name = 'inMovementId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inGoodsId'
         Component = ClientDataSet
         ComponentItem = 'GoodsId'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
@@ -1001,7 +925,6 @@ inherited SaleForm: TSaleForm
         Name = 'inAmountPartner'
         DataType = ftFloat
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inPrice'
@@ -1014,25 +937,20 @@ inherited SaleForm: TSaleForm
         Name = 'inCountForPrice'
         DataType = ftFloat
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inLiveWeight'
         DataType = ftFloat
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inHeadCount'
         DataType = ftFloat
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inGoodsKindId'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end>
     Left = 520
     Top = 120
@@ -1054,104 +972,81 @@ inherited SaleForm: TSaleForm
         Name = 'ioId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end
       item
         Name = 'inInvNumber'
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inOperDate'
         Component = edOperDate
         DataType = ftDate
         ParamType = ptInput
-        Value = 0d
       end
       item
         Name = 'inOperDatePartner'
         DataType = ftDate
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inPriceWithVAT'
         Component = edPriceWithVAT
         DataType = ftBoolean
         ParamType = ptInput
-        Value = 'False'
       end
       item
         Name = 'inVATPercent'
         Component = edVATPercent
         DataType = ftFloat
         ParamType = ptInput
-        Value = 0.000000000000000000
       end
       item
         Name = 'inChangePercent'
         DataType = ftFloat
         ParamType = ptInput
-        Value = Null
       end
       item
         Name = 'inFromId'
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inToId'
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inPaidKindId'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = Null
       end
       item
         Name = 'inContractId'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = Null
       end
       item
         Name = 'inCarId'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = Null
       end
       item
         Name = 'inPersonalDriverId'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = Null
       end
       item
         Name = 'inRouteId'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = Null
       end
       item
         Name = 'inRouteSortingId'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = Null
       end>
     Left = 752
     Top = 112
   end
   object dsdGuidesFrom: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edFrom
     FormName = 'TJuridicalForm'
     PositionDataSet = 'GridDataSet'
@@ -1159,6 +1054,7 @@ inherited SaleForm: TSaleForm
     Left = 352
   end
   object dsdGuidesTo: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edTo
     FormName = 'TUnitForm'
     PositionDataSet = 'GridDataSet'
@@ -1167,6 +1063,7 @@ inherited SaleForm: TSaleForm
     Top = 8
   end
   object dsdGuidesPaidKind: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edPaidKind
     FormName = 'TPaidKindForm'
     PositionDataSet = 'ClientDataSet'
@@ -1175,6 +1072,7 @@ inherited SaleForm: TSaleForm
     Top = 48
   end
   object dsdGuidesContract: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edContract
     FormName = 'TContractForm'
     PositionDataSet = 'ClientDataSet'
@@ -1183,6 +1081,7 @@ inherited SaleForm: TSaleForm
     Top = 8
   end
   object dsdGuidesCar: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edCar
     FormName = 'TCarForm'
     PositionDataSet = 'ClientDataSet'
@@ -1191,6 +1090,7 @@ inherited SaleForm: TSaleForm
     Top = 72
   end
   object dsdGuidesPersonalDriver: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edPersonalDriver
     FormName = 'TPersonalForm'
     PositionDataSet = 'ClientDataSet'
@@ -1198,6 +1098,7 @@ inherited SaleForm: TSaleForm
     Left = 824
   end
   object dsdGuidesRoute: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edRoute
     FormName = 'TRouteForm'
     PositionDataSet = 'ClientDataSet'
@@ -1206,6 +1107,7 @@ inherited SaleForm: TSaleForm
     Top = 64
   end
   object dsdGuidesRouteSorting: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edRouteSorting
     FormName = 'TRouteSortingForm'
     PositionDataSet = 'ClientDataSet'
@@ -1214,6 +1116,7 @@ inherited SaleForm: TSaleForm
     Top = 72
   end
   object dsdGuidesPersonal: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edPersonal
     FormName = 'TPersonalForm'
     PositionDataSet = 'ClientDataSet'

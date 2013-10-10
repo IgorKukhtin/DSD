@@ -2,8 +2,8 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
   Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
   ClientHeight = 473
   ClientWidth = 691
-  ExplicitWidth = 707
-  ExplicitHeight = 508
+  ExplicitWidth = 699
+  ExplicitHeight = 500
   PixelsPerInch = 96
   TextHeight = 13
   object cxDBTreeList: TcxDBTreeList
@@ -152,8 +152,8 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -290,23 +290,17 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
       GuiParams = <
         item
           Name = 'Id'
-          DataType = ftInteger
-          ParamType = ptOutput
-          Value = '0'
         end
         item
           Name = 'GroupId'
           Component = TreeDataSet
           ComponentItem = 'Id'
-          DataType = ftInteger
-          ParamType = ptOutput
         end
         item
           Name = 'GroupName'
           Component = TreeDataSet
           ComponentItem = 'Name'
           DataType = ftString
-          ParamType = ptOutput
         end>
       isShowModal = False
       DataSource = GridDS
@@ -323,7 +317,6 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
           Name = 'Id'
           Component = ClientDataSet
           ComponentItem = 'Id'
-          DataType = ftInteger
           ParamType = ptInput
         end>
       isShowModal = False
@@ -342,6 +335,7 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
       ShortCut = 46
+      ErasedFieldName = 'isErased'
       DataSource = GridDS
     end
     object dsdSetUnErased: TdsdUpdateErased
@@ -355,6 +349,7 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 32776
+      ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = GridDS
     end
@@ -366,14 +361,12 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
-          ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
-          ParamType = ptOutput
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -445,13 +438,13 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
         Name = 'inObjectId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 288
     Top = 216
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
@@ -474,6 +467,7 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
     Top = 280
   end
   object dsdDBTreeAddOn: TdsdDBTreeAddOn
+    ErasedFieldName = 'isErased'
     OnDblClickActionList = <
       item
       end

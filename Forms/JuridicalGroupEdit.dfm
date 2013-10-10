@@ -104,30 +104,23 @@
         Name = 'ioId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end
       item
         Name = 'inCode'
         Component = ceCode
-        DataType = ftInteger
         ParamType = ptInput
-        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
         Component = edName
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inJuridicalGroupId'
         Component = JuridicalGroupGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end>
     Left = 128
     Top = 16
@@ -136,9 +129,7 @@
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end>
     Left = 72
     Top = 8
@@ -152,44 +143,33 @@
         Name = 'Id'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'Code'
         Component = ceCode
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 0.000000000000000000
       end
       item
         Name = 'Name'
         Component = edName
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'ParentId'
         Component = JuridicalGroupGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'ParentName'
         Component = JuridicalGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 184
     Top = 24
   end
   object JuridicalGroupGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceParentGroup
     FormName = 'TJuridicalGroupForm'
     PositionDataSet = 'ClientDataSet'
@@ -199,16 +179,12 @@
         Component = JuridicalGroupGuides
         ComponentItem = 'Key'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'TextValue'
         Component = JuridicalGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 224
     Top = 120

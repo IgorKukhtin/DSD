@@ -16,10 +16,6 @@ CREATE TABLE MovementFloat(
    CONSTRAINT fk_MovementFloat_MovementId FOREIGN KEY(MovementId) REFERENCES Movement(Id) );
 
 /*-------------------------------------------------------------------------------*/
-/*                                  »Ì‰ÂÍÒ˚                                      */
-
-
-CREATE UNIQUE INDEX idx_MovementFloat_MovementId_DescId_ValueData ON MovementFloat(MovementId, DescId, ValueData); 
 
 /*
  œ–»Ã≈◊¿Õ»ﬂ:

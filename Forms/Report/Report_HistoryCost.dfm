@@ -2,9 +2,8 @@ inherited Report_HistoryCostForm: TReport_HistoryCostForm
   Caption = #1057#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100
   ClientHeight = 395
   ClientWidth = 1329
-  ExplicitLeft = -539
-  ExplicitWidth = 1345
-  ExplicitHeight = 430
+  ExplicitWidth = 1337
+  ExplicitHeight = 422
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -516,8 +515,8 @@ inherited Report_HistoryCostForm: TReport_HistoryCostForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -610,20 +609,21 @@ inherited Report_HistoryCostForm: TReport_HistoryCostForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41395d
       end
       item
         Name = 'inEndDate'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41395d
       end>
     Left = 152
     Top = 152
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
+    OnDblClickActionList = <>
+    ActionItemList = <>
     Left = 232
     Top = 192
   end

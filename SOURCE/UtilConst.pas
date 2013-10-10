@@ -30,6 +30,7 @@ var
 const
 
   gc_isDebugMode: boolean = false; {режим отладки}
+  gc_isShowTimeMode: boolean = false; {режим отладки}
   gc_Minute : real = (1/24)/60;
   gc_Test : boolean = false; {константа - тест ли это}
   gc_NewFormTest : boolean = false; {вставлять ли формы по новому}
@@ -426,5 +427,6 @@ initialization
   end;
     {константы времени}
   gc_DateStart:=StrToDate('01.01.1900', FormatSettings);
-  gc_DateEnd:=StrToDate('01.01.2500', FormatSettings)
+  gc_DateEnd:=StrToDate('01.01.2500', FormatSettings);
+  gc_isShowTimeMode := false;
 end.

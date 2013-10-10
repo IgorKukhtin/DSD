@@ -2,8 +2,8 @@
   Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077
   ClientHeight = 328
   ClientWidth = 644
-  ExplicitWidth = 660
-  ExplicitHeight = 366
+  ExplicitWidth = 652
+  ExplicitHeight = 355
   PixelsPerInch = 96
   TextHeight = 13
   object cxLabel1: TcxLabel
@@ -197,72 +197,46 @@
         Name = 'ioId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end
       item
         Name = 'inInvNumber'
         Component = ceInvNumber
         DataType = ftString
-        ParamType = ptOutput
-        Value = 0.000000000000000000
       end
       item
         Name = 'inOperDate'
         Component = ceOperDate
         DataType = ftDateTime
-        ParamType = ptOutput
-        Value = 0d
       end
       item
         Name = 'inAmount'
         Component = ceAmount
         DataType = ftFloat
-        ParamType = ptOutput
-        Value = 0.000000000000000000
       end
       item
         Name = 'inJuridicalId'
         Component = JuridicalGuides
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'inMainJuridicalId'
         Component = MainJuridicalGuides
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'inBusinessId'
         Component = BusinessGuides
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'inPaidKindId'
         Component = PaidKindGuides
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'inInfoMoneyId'
         Component = InfoMoneyGuides
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'inUnitId'
         Component = UnitGuides
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 264
     Top = 64
@@ -271,9 +245,7 @@
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end>
     Left = 312
     Top = 16
@@ -287,45 +259,32 @@
         Name = 'Id'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'InvNumber'
         Component = ceInvNumber
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 0.000000000000000000
       end
       item
         Name = 'OperDate'
         Component = ceOperDate
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 0d
       end
       item
         Name = 'StatusCode'
-        DataType = ftInteger
-        ParamType = ptOutput
       end
       item
         Name = 'StatusName'
-        DataType = ftInteger
-        ParamType = ptOutput
       end
       item
         Name = 'Amount'
         Component = ceAmount
         DataType = ftFloat
-        ParamType = ptOutput
-        Value = 0.000000000000000000
       end>
     Left = 192
     Top = 72
   end
   object MainJuridicalGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceMainJuridical
     FormName = 'TJuridicalForm'
     PositionDataSet = 'ClientDataSet'
@@ -334,6 +293,7 @@
     Top = 61
   end
   object PaidKindGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = cePaidKind
     FormName = 'TPaidKindForm'
     PositionDataSet = 'ClientDataSet'
@@ -361,6 +321,7 @@
     Top = 24
   end
   object UnitGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceUnit
     FormName = 'TUnitForm'
     PositionDataSet = 'ClientDataSet'
@@ -369,6 +330,7 @@
     Top = 229
   end
   object InfoMoneyGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceInfoMoney
     FormName = 'TInfoMoneyForm'
     PositionDataSet = 'ClientDataSet'
@@ -377,6 +339,7 @@
     Top = 117
   end
   object BusinessGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceBusiness
     FormName = 'TBusinessForm'
     PositionDataSet = 'ClientDataSet'
@@ -385,6 +348,7 @@
     Top = 157
   end
   object JuridicalGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceJuridical
     FormName = 'TJuridicalForm'
     PositionDataSet = 'ClientDataSet'

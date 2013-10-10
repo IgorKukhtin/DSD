@@ -4,8 +4,8 @@ inherited IncomeForm: TIncomeForm
   ClientWidth = 971
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 987
-  ExplicitHeight = 497
+  ExplicitWidth = 979
+  ExplicitHeight = 489
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -429,6 +429,9 @@ inherited IncomeForm: TIncomeForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -623,9 +626,7 @@ inherited IncomeForm: TIncomeForm
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end>
     Left = 238
     Top = 359
@@ -642,23 +643,19 @@ inherited IncomeForm: TIncomeForm
         Name = 'inMovementId'
         Component = FormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inShowAll'
         Component = BooleanStoredProcAction
         DataType = ftBoolean
         ParamType = ptInput
-        Value = False
       end
       item
         Name = 'inIsErased'
         Component = ShowErasedAction
         DataType = ftBoolean
         ParamType = ptInput
-        Value = False
       end>
     Left = 112
     Top = 303
@@ -666,8 +663,8 @@ inherited IncomeForm: TIncomeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -902,7 +899,6 @@ inherited IncomeForm: TIncomeForm
           Component = edInvNumber
           DataType = ftString
           ParamType = ptInput
-          Value = ''
         end
         item
           Name = 'From'
@@ -910,14 +906,12 @@ inherited IncomeForm: TIncomeForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
-          Value = ''
         end
         item
           Name = 'OperDate'
           Component = edOperDate
           DataType = ftDateTime
           ParamType = ptInput
-          Value = 0d
         end>
       ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
     end
@@ -994,7 +988,6 @@ inherited IncomeForm: TIncomeForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
@@ -1002,7 +995,6 @@ inherited IncomeForm: TIncomeForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 344
     Top = 88
@@ -1019,7 +1011,6 @@ inherited IncomeForm: TIncomeForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
@@ -1027,7 +1018,6 @@ inherited IncomeForm: TIncomeForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 432
     Top = 88
@@ -1052,9 +1042,7 @@ inherited IncomeForm: TIncomeForm
         Name = 'inMovementId'
         Component = FormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end>
     Left = 75
     Top = 384
@@ -1079,22 +1067,18 @@ inherited IncomeForm: TIncomeForm
         Name = 'ioId'
         Component = MasterCDS
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
       end
       item
         Name = 'inMovementId'
         Component = FormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inGoodsId'
         Component = MasterCDS
         ComponentItem = 'GoodsId'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
@@ -1115,7 +1099,6 @@ inherited IncomeForm: TIncomeForm
         Name = 'inAmountPacker'
         Component = MasterCDS
         ComponentItem = 'AmountPacker'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
@@ -1157,14 +1140,12 @@ inherited IncomeForm: TIncomeForm
         Name = 'inGoodsKindId'
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
         Name = 'inAssetId'
         Component = MasterCDS
         ComponentItem = 'AssetId'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 78
@@ -1213,96 +1194,77 @@ inherited IncomeForm: TIncomeForm
         Name = 'ioId'
         Component = FormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end
       item
         Name = 'inInvNumber'
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inOperDate'
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 0d
       end
       item
         Name = 'inOperDatePartner'
         Component = edOperDatePartner
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 0d
       end
       item
         Name = 'inInvNumberPartner'
         Component = edInvNumberPartner
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inPriceWithVAT'
         Component = edPriceWithVAT
         DataType = ftBoolean
         ParamType = ptInput
-        Value = 'False'
       end
       item
         Name = 'inVATPercent'
         Component = edVATPercent
         DataType = ftFloat
         ParamType = ptInput
-        Value = 0.000000000000000000
       end
       item
         Name = 'inChangePercent'
         Component = edChangePercent
         DataType = ftFloat
         ParamType = ptInput
-        Value = 0.000000000000000000
       end
       item
         Name = 'inFromId'
         Component = dsdGuidesFrom
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inToId'
         Component = dsdGuidesTo
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inPaidKindId'
         Component = PaidKindGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inContractId'
         Component = ContractGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inPersonalPackerId'
         Component = PackerGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end>
     Left = 378
     Top = 240
@@ -1310,9 +1272,6 @@ inherited IncomeForm: TIncomeForm
   object HeaderSaver: THeaderSaver
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
-    IdParam.DataType = ftInteger
-    IdParam.ParamType = ptOutput
-    IdParam.Value = '0'
     StoredProc = spInsertUpdateMovement
     ControlList = <
       item
@@ -1368,162 +1327,109 @@ inherited IncomeForm: TIncomeForm
         Name = 'inId'
         Component = FormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'InvNumber'
         Component = edInvNumber
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'OperDate'
         Component = edOperDate
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 0d
       end
       item
         Name = 'OperDatePartner'
         Component = edOperDatePartner
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 0d
       end
       item
         Name = 'InvNumberPartner'
         Component = edInvNumberPartner
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'FromId'
         Component = dsdGuidesFrom
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'FromName'
         Component = dsdGuidesFrom
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'ToId'
         Component = dsdGuidesTo
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'ToName'
         Component = dsdGuidesTo
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'ToParentId'
         Component = dsdGuidesTo
         ComponentItem = 'ParentId'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'PriceWithVAT'
         Component = edPriceWithVAT
         DataType = ftBoolean
-        ParamType = ptOutput
-        Value = 'False'
       end
       item
         Name = 'VATPercent'
         Component = edVATPercent
         DataType = ftFloat
-        ParamType = ptOutput
-        Value = 0.000000000000000000
       end
       item
         Name = 'ChangePercent'
         Component = edChangePercent
         DataType = ftFloat
-        ParamType = ptOutput
-        Value = 0.000000000000000000
       end
       item
         Name = 'ContractId'
         Component = ContractGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'ContarctName'
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'PaidKindId'
         Component = PaidKindGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'PaidKindName'
         Component = PaidKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'PersonalPackerId'
         Component = PackerGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'PersonalPackerName'
         Component = PackerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'StatusCode'
         Component = ChangeStatus
         ComponentItem = 'Key'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'StatusName'
         Component = ChangeStatus
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 216
     Top = 224
@@ -1539,9 +1445,6 @@ inherited IncomeForm: TIncomeForm
   object GuidesFiller: TGuidesFiller
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
-    IdParam.DataType = ftInteger
-    IdParam.ParamType = ptOutput
-    IdParam.Value = '0'
     GuidesList = <
       item
         Guides = dsdGuidesFrom
@@ -1568,7 +1471,6 @@ inherited IncomeForm: TIncomeForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
@@ -1576,7 +1478,6 @@ inherited IncomeForm: TIncomeForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 712
     Top = 88
@@ -1593,7 +1494,6 @@ inherited IncomeForm: TIncomeForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
@@ -1601,7 +1501,6 @@ inherited IncomeForm: TIncomeForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 584
     Top = 88
@@ -1618,7 +1517,6 @@ inherited IncomeForm: TIncomeForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
@@ -1626,7 +1524,6 @@ inherited IncomeForm: TIncomeForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 784
     Top = 88
@@ -1636,9 +1533,6 @@ inherited IncomeForm: TIncomeForm
     LookupControl = ceStatus
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
-    IdParam.DataType = ftInteger
-    IdParam.ParamType = ptOutput
-    IdParam.Value = '0'
     StoredProcName = 'gpUpdate_Status_Income'
     Left = 480
     Top = 232
@@ -1652,7 +1546,6 @@ inherited IncomeForm: TIncomeForm
         Name = 'inMovementItemId'
         Component = MasterCDS
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
@@ -1660,7 +1553,6 @@ inherited IncomeForm: TIncomeForm
         Component = MasterCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
-        ParamType = ptOutput
       end>
     Left = 574
     Top = 232
@@ -1674,7 +1566,6 @@ inherited IncomeForm: TIncomeForm
         Name = 'inMovementItemId'
         Component = MasterCDS
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
@@ -1682,7 +1573,6 @@ inherited IncomeForm: TIncomeForm
         Component = MasterCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
-        ParamType = ptOutput
       end>
     Left = 638
     Top = 248

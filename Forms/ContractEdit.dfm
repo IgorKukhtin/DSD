@@ -3,7 +3,7 @@ inherited ContractEditForm: TContractEditForm
   ClientHeight = 309
   ClientWidth = 531
   ExplicitWidth = 539
-  ExplicitHeight = 343
+  ExplicitHeight = 336
   PixelsPerInch = 96
   TextHeight = 13
   object edInvNumber: TcxTextEdit
@@ -156,56 +156,42 @@ inherited ContractEditForm: TContractEditForm
         Name = 'ioId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end
       item
         Name = 'inInvNumber'
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inComment'
         Component = ceComment
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inContractKindId'
         Component = edContractKind
-        DataType = ftInteger
-        ParamType = ptOutput
       end
       item
         Name = 'inJuridicalId'
         Component = edJuridical
-        DataType = ftInteger
-        ParamType = ptOutput
       end
       item
         Name = 'inSigningDate'
         Component = edSigningDate
         DataType = ftDateTime
-        ParamType = ptOutput
-        Value = '30.12.1899'
       end
       item
         Name = 'inStartDate'
         Component = edStartDate
         DataType = ftDateTime
-        ParamType = ptOutput
-        Value = '30.12.1899'
       end
       item
         Name = 'inEndDate'
         Component = edEndDate
         DataType = ftDateTime
-        ParamType = ptOutput
-        Value = '30.12.1899'
       end>
     Left = 376
     Top = 8
@@ -214,9 +200,7 @@ inherited ContractEditForm: TContractEditForm
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end>
     Left = 304
     Top = 112
@@ -230,56 +214,40 @@ inherited ContractEditForm: TContractEditForm
         Name = 'Id'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inInvNumber'
         Component = edInvNumber
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'inComment'
         Component = ceComment
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'inContractKindId'
         Component = edContractKind
-        DataType = ftInteger
-        ParamType = ptOutput
       end
       item
         Name = 'inJuridicalId'
         Component = edJuridical
-        DataType = ftInteger
-        ParamType = ptOutput
       end
       item
         Name = 'inSigningDate'
         Component = edSigningDate
         DataType = ftDateTime
-        ParamType = ptOutput
-        Value = '30.12.1899'
       end
       item
         Name = 'inStartDate'
         Component = edStartDate
         DataType = ftDateTime
-        ParamType = ptOutput
-        Value = '30.12.1899'
       end
       item
         Name = 'inEndDate'
         Component = edStartDate
         DataType = ftDateTime
-        ParamType = ptOutput
-        Value = '30.12.1899'
       end>
     Left = 448
     Top = 8

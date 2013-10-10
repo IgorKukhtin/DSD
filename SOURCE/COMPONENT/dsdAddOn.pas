@@ -961,11 +961,13 @@ begin
 end;
 
 procedure TCustomDBControlAddOn.OnAfterInsert(DataSet: TDataSet);
+var Field: TField;
 begin
   if Assigned(FAfterInsert) then
      FAfterInsert(DataSet);
-  if Assigned(DataSet.FieldByName(ErasedFieldName)) then
-     DataSet.FieldByName(ErasedFieldName).AsBoolean := false;
+  Field := DataSet.FindField(ErasedFieldName);
+  if Assigned(Field) then
+     Field.AsBoolean := false;
 end;
 
 procedure TCustomDBControlAddOn.OnDblClick(Sender: TObject);

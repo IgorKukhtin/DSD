@@ -2,8 +2,8 @@ inherited GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
   Caption = #1047#1085#1072#1095#1077#1085#1080#1103' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
   ClientHeight = 277
   ClientWidth = 560
-  ExplicitWidth = 576
-  ExplicitHeight = 315
+  ExplicitWidth = 568
+  ExplicitHeight = 304
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -25,7 +25,7 @@ inherited GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
     Action = dsdInsertUpdateGuides
     Default = True
     ModalResult = 8
-    TabOrder = 11
+    TabOrder = 10
   end
   object cxButton2: TcxButton
     Left = 311
@@ -184,72 +184,58 @@ inherited GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         Name = 'ioId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end
       item
         Name = 'inName'
         Component = edName
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inAmount'
         Component = ceAmount
         DataType = ftFloat
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inBarCode'
         Component = edBarCode
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inArticle'
         Component = edArticle
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inBarCodeGLN'
         Component = edBarCodeGLN
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inArticleGLN'
         Component = edArticleGLN
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inGoodsPropertyId'
         Component = dsdGoodsPropertyGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inGoodsId'
         Component = dsdGoodsGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inGoodsKindId'
         Component = dsdGoodsKindGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end>
     Left = 16
     Top = 214
@@ -258,9 +244,7 @@ inherited GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end>
     Left = 504
     Top = 214
@@ -274,99 +258,64 @@ inherited GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         Name = 'Id'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'Name'
         Component = edName
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'Amount'
         Component = ceAmount
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'BarCode'
         Component = edBarCode
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'Article'
         Component = edArticle
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'BarCodeGLN'
         Component = edBarCodeGLN
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'ArticleGLN'
         Component = edArticleGLN
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'GoodsPropertyId'
         Component = dsdGoodsPropertyGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = '0'
       end
       item
         Name = 'GoodsPropertyName'
         Component = dsdGoodsPropertyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = '0'
       end
       item
         Name = 'GoodsId'
         Component = dsdGoodsGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = '0'
       end
       item
         Name = 'GoodsName'
         Component = dsdGoodsGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = '0'
       end
       item
         Name = 'GoodsKindId'
         Component = dsdGoodsKindGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = '0'
       end
       item
         Name = 'GoodsKindName'
         Component = dsdGoodsKindGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end>
     Left = 83
     Top = 214
@@ -394,9 +343,10 @@ inherited GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
     Top = 21
   end
   object dsdGoodsPropertyGuides: TdsdGuides
-    Key = '0'
+    KeyField = 'Id'
     LookupControl = ceGoodsProperty
     PositionDataSet = 'ClientDataSet'
+    Params = <>
     Left = 523
     Top = 21
   end
@@ -423,9 +373,10 @@ inherited GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
     Top = 69
   end
   object dsdGoodsGuides: TdsdGuides
-    Key = '0'
+    KeyField = 'Id'
     LookupControl = ceGoods
     PositionDataSet = 'ClientDataSet'
+    Params = <>
     Left = 267
     Top = 69
   end
@@ -452,9 +403,10 @@ inherited GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
     Top = 93
   end
   object dsdGoodsKindGuides: TdsdGuides
-    Key = '0'
+    KeyField = 'Id'
     LookupControl = ceGoodsKind
     PositionDataSet = 'ClientDataSet'
+    Params = <>
     Left = 499
     Top = 101
   end

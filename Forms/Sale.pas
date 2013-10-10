@@ -127,6 +127,7 @@ type
     bbGridToExcel: TdxBarButton;
     colAmountChangePercent: TcxGridDBColumn;
     colChangePercentAmount: TcxGridDBColumn;
+    BooleanStoredProcAction1: TBooleanStoredProcAction;
   private
   public
   end;

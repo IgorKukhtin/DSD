@@ -114,6 +114,7 @@ inherited UserForm: TUserForm
     Top = 26
     Width = 8
     Height = 331
+    Control = cxGrid
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -284,9 +285,6 @@ inherited UserForm: TUserForm
       GuiParams = <
         item
           Name = 'Id'
-          DataType = ftInteger
-          ParamType = ptOutput
-          Value = '0'
         end>
       isShowModal = False
       DataSource = DataSource
@@ -304,7 +302,6 @@ inherited UserForm: TUserForm
           Name = 'Id'
           Component = ClientDataSet
           ComponentItem = 'Id'
-          DataType = ftInteger
           ParamType = ptInput
         end>
       isShowModal = False
@@ -323,6 +320,7 @@ inherited UserForm: TUserForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
       ShortCut = 46
+      ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
     object dsdSetUnErased: TdsdUpdateErased
@@ -336,6 +334,7 @@ inherited UserForm: TUserForm
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
       ShortCut = 32776
+      ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = DataSource
     end
@@ -355,14 +354,12 @@ inherited UserForm: TUserForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
-          ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
-          ParamType = ptOutput
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -386,15 +383,12 @@ inherited UserForm: TUserForm
           Name = 'Key'
           Component = RoleCDS
           ComponentItem = 'Id'
-          DataType = ftInteger
-          ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = RoleCDS
           ComponentItem = 'Name'
           DataType = ftString
-          ParamType = ptOutput
         end>
       isShowModal = False
     end
@@ -411,6 +405,7 @@ inherited UserForm: TUserForm
     Top = 104
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
@@ -441,7 +436,6 @@ inherited UserForm: TUserForm
         Name = 'inObjectId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 72
@@ -452,6 +446,7 @@ inherited UserForm: TUserForm
     Top = 216
   end
   object RoleAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
@@ -478,21 +473,18 @@ inherited UserForm: TUserForm
         Name = 'ioId'
         Component = RoleCDS
         ComponentItem = 'UserRoleId'
-        DataType = ftInteger
         ParamType = ptInputOutput
       end
       item
         Name = 'inUserId'
         Component = RoleCDS
         ComponentItem = 'UserId'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
         Name = 'inRoleId'
         Component = RoleCDS
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 520

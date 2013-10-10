@@ -286,19 +286,18 @@ inherited Report_BalanceForm: TReport_BalanceForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41395d
       end
       item
         Name = 'inEndDate'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41395d
       end>
     Left = 152
     Top = 24
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     OnDblClickActionList = <>
     ActionItemList = <>
     Left = 552

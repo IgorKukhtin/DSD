@@ -115,37 +115,29 @@
         Name = 'ioId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end
       item
         Name = 'inCode'
         Component = ceCode
-        DataType = ftInteger
         ParamType = ptInput
-        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
         Component = edName
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inPassword'
         Component = edPassword
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inMemberId'
         Component = MemberGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end>
     Left = 213
     Top = 48
@@ -154,9 +146,7 @@
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end>
     Left = 213
     Top = 8
@@ -170,51 +160,38 @@
         Name = 'Id'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'Name'
         Component = edName
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'Code'
         Component = ceCode
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 0.000000000000000000
       end
       item
         Name = 'MemberId'
         Component = MemberGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'MemberName'
         Component = MemberGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'Password'
         Component = edPassword
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 165
     Top = 136
   end
   object MemberGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edMember
     FormName = 'TMemberForm'
     PositionDataSet = 'ClientDataSet'

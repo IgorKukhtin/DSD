@@ -3,9 +3,8 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103' '#1087#1086' '#1094#1077#1085#1077' '
   ClientHeight = 427
   ClientWidth = 1019
-  ExplicitLeft = -230
-  ExplicitWidth = 1035
-  ExplicitHeight = 462
+  ExplicitWidth = 1027
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -265,8 +264,8 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -401,9 +400,6 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
       GuiParams = <
         item
           Name = 'Id'
-          DataType = ftInteger
-          ParamType = ptOutput
-          Value = '0'
         end>
       isShowModal = False
       DataSource = DataSource
@@ -421,7 +417,6 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
           Name = 'Id'
           Component = ClientDataSet
           ComponentItem = 'Id'
-          DataType = ftInteger
           ParamType = ptInput
         end>
       isShowModal = False
@@ -490,14 +485,12 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41395d
       end
       item
         Name = 'inEndDate'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41395d
       end>
     Left = 24
     Top = 176
@@ -511,14 +504,12 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         Name = 'inMovementId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
         Name = 'inIsLastComplete'
         DataType = ftBoolean
         ParamType = ptInput
-        Value = 'False'
       end>
     Left = 64
     Top = 232
@@ -543,7 +534,6 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         Name = 'inMovementId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 72
@@ -562,7 +552,6 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
         Name = 'inMovementId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 72
@@ -573,10 +562,11 @@ inherited SendOnPriceJournalForm: TSendOnPriceJournalForm
     Top = 152
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
-    OnDblClickActionList = <>
-    SortImages = dmMain.SortImageList
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
+    OnDblClickActionList = <>
     ActionItemList = <>
+    SortImages = dmMain.SortImageList
     Left = 208
     Top = 200
   end

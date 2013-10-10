@@ -2,8 +2,8 @@ inherited UnitTreeForm: TUnitTreeForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
   ClientHeight = 403
   ClientWidth = 768
-  ExplicitWidth = 784
-  ExplicitHeight = 438
+  ExplicitWidth = 776
+  ExplicitHeight = 430
   PixelsPerInch = 96
   TextHeight = 13
   object cxDBTreeList: TcxDBTreeList
@@ -162,8 +162,8 @@ inherited UnitTreeForm: TUnitTreeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -295,9 +295,6 @@ inherited UnitTreeForm: TUnitTreeForm
       GuiParams = <
         item
           Name = 'Id'
-          DataType = ftInteger
-          ParamType = ptOutput
-          Value = '0'
         end>
       isShowModal = True
       DataSource = GridDS
@@ -313,7 +310,6 @@ inherited UnitTreeForm: TUnitTreeForm
           Name = 'Id'
           Component = ClientDataSet
           ComponentItem = 'Id'
-          DataType = ftInteger
           ParamType = ptInput
         end>
       isShowModal = True
@@ -338,21 +334,18 @@ inherited UnitTreeForm: TUnitTreeForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
-          ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
-          ParamType = ptOutput
         end
         item
           Name = 'ParentId'
           Component = TreeDataSet
           ComponentItem = 'Id'
           DataType = ftString
-          ParamType = ptOutput
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -423,14 +416,12 @@ inherited UnitTreeForm: TUnitTreeForm
         Component = ClientDataSet
         ComponentItem = 'Id'
         DataType = ftString
-        ParamType = ptOutput
       end
       item
         Name = 'TextValue'
         Component = ClientDataSet
         ComponentItem = 'Name'
         DataType = ftString
-        ParamType = ptOutput
       end>
     Left = 344
     Top = 232

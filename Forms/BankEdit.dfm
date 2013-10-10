@@ -114,37 +114,29 @@
         Name = 'ioId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end
       item
         Name = 'inCode'
         Component = ceCode
-        DataType = ftInteger
         ParamType = ptInput
-        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
         Component = edName
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inMFO'
         Component = edMFO
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inJuridicalId'
         Component = dsdJuridicalGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end>
     Left = 240
     Top = 48
@@ -153,9 +145,7 @@
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end>
     Left = 240
     Top = 8
@@ -169,51 +159,37 @@
         Name = 'Id'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'Name'
         Component = edName
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'Code'
         Component = ceCode
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 0.000000000000000000
       end
       item
         Name = 'JuridicalId'
         Component = dsdJuridicalGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'JuridicalName'
         Component = dsdJuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'MFO'
         Component = edMFO
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 192
     Top = 136
   end
   object dsdJuridicalGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edJuridical
     FormName = 'TJuridicalForm'
     PositionDataSet = 'GridDataSet'

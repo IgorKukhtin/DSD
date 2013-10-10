@@ -19,15 +19,6 @@ CREATE TABLE Container(
    CONSTRAINT fk_Container_ParentId_Container FOREIGN KEY(ParentId) REFERENCES Container(Id)
 );
 
-
-/*-------------------------------------------------------------------------------*/
-/*                                  »Ì‰ÂÍÒ˚                                      */
-
-
-CREATE INDEX idx_Container_ObjectId_DescId_Id ON Container (ObjectId, DescId, Id);
-CREATE INDEX idx_Container_ParentId_ObjectId_DescId_Id ON Container (ParentId, ObjectId, DescId, Id); 
-CREATE INDEX idx_Container_Id_ObjectId_DescId ON Container (Id, ObjectId, DescId);
-
 /*
  œ–»Ã≈◊¿Õ»ﬂ:
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »:

@@ -24,6 +24,7 @@ type
     function GetDisplayName: string; override;
     procedure AssignParam(Param: TdsdParam);
   public
+    property Value: Variant read GetValue write SetValue;
     property onChange: TNotifyEvent read FonChange write FonChange;
     function AsString: string;
     procedure Assign(Source: TPersistent); override;
@@ -33,9 +34,8 @@ type
     // Откуда считывать значение параметра
     property Component: TComponent read FComponent write SetComponent;
     property ComponentItem: String read FComponentItem write FComponentItem;
-    property DataType: TFieldType read FDataType write FDataType;
-    property ParamType: TParamType read FParamType write FParamType;
-    property Value: Variant read GetValue write SetValue;
+    property DataType: TFieldType read FDataType write FDataType default ftInteger;
+    property ParamType: TParamType read FParamType write FParamType default ptOutput;
   end;
 
   TdsdParams = class (TOwnedCollection)
@@ -119,7 +119,7 @@ implementation
 
 uses Storage, CommonData, TypInfo, UtilConvert, SysUtils, cxTextEdit, VCL.Forms,
      XMLDoc, XMLIntf, StrUtils, cxCurrencyEdit, dsdGuides, cxCheckBox, cxCalendar,
-     Variants, XSBuiltIns, UITypes, dsdAction, Defaults;
+     Variants, XSBuiltIns, UITypes, dsdAction, Defaults, UtilConst, Windows, Dialogs;
 
 procedure Register;
 begin
@@ -184,8 +184,11 @@ begin
 end;
 
 function TdsdStoredProc.Execute;
+var TickCount: cardinal;
 begin
   result := '';
+  if gc_isShowTimeMode then
+     TickCount := GetTickCount;
   Screen.Cursor := crHourGlass;
   try
     if (OutputType = otDataSet) then DataSetRefresh;
@@ -197,6 +200,8 @@ begin
   finally
     Screen.Cursor := crDefault;
   end;
+  if gc_isShowTimeMode then
+     ShowMessage('Время выполнения ' + StoredProcName + ' - ' + FloatToStr((GetTickCount - TickCount)/1000) + ' сек ' ); ;
 end;
 
 procedure TdsdStoredProc.FillOutputParams(XML: String);
@@ -675,7 +680,7 @@ begin
 end;
 
 initialization
-  RegisterClass(TdsdDataSets);
+  Classes.RegisterClass(TdsdDataSets);
   VerifyBoolStrArray;
 
 end.

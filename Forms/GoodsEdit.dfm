@@ -63,12 +63,12 @@
   end
   object cxLabel2: TcxLabel
     Left = 264
-    Top = 254
+    Top = 262
     Caption = #1042#1077#1089
   end
   object ceWeight: TcxCurrencyEdit
     Left = 264
-    Top = 277
+    Top = 285
     Properties.DecimalPlaces = 4
     Properties.DisplayFormat = ',0.####'
     TabOrder = 9
@@ -144,9 +144,25 @@
     TabOrder = 17
     Width = 154
   end
+  object cxLabel8: TcxLabel
+    Left = 39
+    Top = 262
+    Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
+  end
+  object edFuel: TcxButtonEdit
+    Left = 39
+    Top = 285
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 19
+    Width = 210
+  end
   object ActionList: TActionList
-    Left = 320
-    Top = 72
+    Left = 304
+    Top = 80
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spGet
@@ -183,72 +199,57 @@
         Name = 'ioId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end
       item
         Name = 'inCode'
         Component = ceCode
-        DataType = ftInteger
         ParamType = ptInput
-        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
         Component = edName
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inWeight'
         Component = ceWeight
         DataType = ftFloat
         ParamType = ptInput
-        Value = 0.000000000000000000
       end
       item
         Name = 'inGoodsGroupId'
-        Component = dsdGoodsGroupGuides
-        DataType = ftInteger
+        Component = GoodsGroupGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inMeasureId'
         Component = dsdMeasureGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inTradeMarkId'
-        Component = dsdTradeMarkGuides
-        DataType = ftInteger
+        Component = TradeMarkGuides
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inInfoMoneyId'
         Component = dsdInfoMoneyGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inBusinessId'
         Component = BusinessGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inFuelId'
-        DataType = ftInteger
+        Component = FuelGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
-        Value = Null
       end>
     Left = 232
     Top = 48
@@ -257,9 +258,7 @@
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end>
     Left = 240
   end
@@ -272,131 +271,148 @@
         Name = 'Id'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'Name'
         Component = edName
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'Code'
         Component = ceCode
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 0.000000000000000000
       end
       item
         Name = 'GoodsGroupId'
-        Component = dsdGoodsGroupGuides
+        Component = GoodsGroupGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = '0'
       end
       item
         Name = 'GoodsGroupName'
-        Component = dsdGoodsGroupGuides
+        Component = GoodsGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'MeasureId'
         Component = dsdMeasureGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = '0'
       end
       item
         Name = 'MeasureName'
         Component = dsdMeasureGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'TradeMarkId'
-        Component = dsdTradeMarkGuides
+        Component = TradeMarkGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = '0'
       end
       item
         Name = 'TradeMarkName'
-        Component = dsdTradeMarkGuides
+        Component = TradeMarkGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'InfoMoneyId'
         Component = dsdInfoMoneyGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = '0'
       end
       item
         Name = 'InfoMoneyName'
         Component = dsdInfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'Weight'
         Component = ceWeight
         DataType = ftCurrency
-        ParamType = ptOutput
-        Value = 0.000000000000000000
+      end
+      item
+        Name = 'FuelId'
+        Component = FuelGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'FuelName'
+        Component = FuelGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'BusinessId'
+        Component = BusinessGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'BusinessName'
+        Component = BusinessGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 192
     Top = 88
   end
-  object dsdGoodsGroupGuides: TdsdGuides
-    Key = '0'
-    LookupControl = ceParentGroup
-    FormName = 'TGoodsGroupForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <>
-    Left = 264
-    Top = 120
-  end
   object dsdMeasureGuides: TdsdGuides
-    Key = '0'
+    KeyField = 'Id'
     LookupControl = ceMeasure
     FormName = 'TMeasureForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
-    Left = 64
-    Top = 232
+    Params = <
+      item
+        Name = 'Key'
+        Component = dsdMeasureGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Component = dsdMeasureGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 40
+    Top = 224
   end
-  object dsdTradeMarkGuides: TdsdGuides
-    Key = '0'
+  object TradeMarkGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = сеTradeMark
     FormName = 'TTradeMarkForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Component = TradeMarkGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Component = TradeMarkGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
     Left = 88
     Top = 176
   end
   object dsdInfoMoneyGuides: TdsdGuides
-    Key = '0'
+    KeyField = 'Id'
     LookupControl = ceInfoMoney
     FormName = 'TInfoMoneyForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Component = dsdInfoMoneyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Component = dsdInfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
     Left = 224
     Top = 171
   end
@@ -419,11 +435,63 @@
     Left = 8
   end
   object BusinessGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceBusiness
     FormName = 'TBusinessForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Component = BusinessGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Component = BusinessGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
     Left = 192
     Top = 232
+  end
+  object FuelGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edFuel
+    FormName = 'TFuelForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Component = FuelGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Component = FuelGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 64
+    Top = 272
+  end
+  object GoodsGroupGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceParentGroup
+    FormName = 'TGoodsGroupForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Component = GoodsGroupGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Component = GoodsGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 208
+    Top = 112
   end
 end

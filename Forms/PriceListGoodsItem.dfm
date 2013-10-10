@@ -16,9 +16,6 @@ inherited PriceListGoodsItemForm: TPriceListGoodsItemForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitTop = 67
-    ExplicitWidth = 724
-    ExplicitHeight = 331
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -230,24 +227,23 @@ inherited PriceListGoodsItemForm: TPriceListGoodsItemForm
         Name = 'inPriceListId'
         Component = PriceListGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inGoodsId'
         Component = GoodsGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end>
     Left = 144
     Top = 104
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
-    SortImages = dmMain.SortImageList
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
     Left = 184
     Top = 240
   end
@@ -256,15 +252,19 @@ inherited PriceListGoodsItemForm: TPriceListGoodsItemForm
     Top = 200
   end
   object PriceListGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edPriceList
     FormName = 'TPriceListForm'
     PositionDataSet = 'ClientDataSet'
+    Params = <>
     Left = 136
   end
   object GoodsGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edGoods
     FormName = 'TGoodsForm'
     PositionDataSet = 'GridDataSet'
+    Params = <>
     Left = 344
   end
   object FormParams: TdsdFormParams
@@ -273,33 +273,23 @@ inherited PriceListGoodsItemForm: TPriceListGoodsItemForm
         Name = 'PriceListId'
         Component = PriceListGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'PriceListName'
         Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'GoodsId'
         Component = GoodsGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'GoodsName'
         Component = GoodsGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 264
   end

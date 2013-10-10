@@ -77,54 +77,8 @@ end;
 
 procedure TdbProcedureTest.CreateMovementProcedure;
 begin
-  ExecFile(ProcedurePath + 'Movement\_Income\gpInsertUpdate_Movement_Income.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\_Income\gpGet_Movement_Income.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\_Income\gpSelect_Movement_Income.sql', ZQuery);
-
-  ExecFile(ProcedurePath + 'Movement\_ProductionUnion\gpInsertUpdate_Movement_ProductionUnion.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\_ProductionUnion\gpGet_Movement_ProductionUnion.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\_ProductionUnion\gpSelect_Movement_ProductionUnion.sql', ZQuery);
-
-  ExecFile(ProcedurePath + 'Movement\_ProductionSeparate\gpInsertUpdate_Movement_ProductionSeparate.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\_ProductionSeparate\gpGet_Movement_ProductionSeparate.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\_ProductionSeparate\gpSelect_Movement_ProductionSeparate.sql', ZQuery);
-
-  ExecFile(ProcedurePath + 'Movement\_Send\gpInsertUpdate_Movement_Send.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\_Send\gpGet_Movement_Send.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\_Send\gpSelect_Movement_Send.sql', ZQuery);
-
-  ExecFile(ProcedurePath + 'Movement\_SendOnPrice\gpInsertUpdate_Movement_SendOnPrice.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\_SendOnPrice\gpGet_Movement_SendOnPrice.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\_SendOnPrice\gpSelect_Movement_SendOnPrice.sql', ZQuery);
-
-  ExecFile(ProcedurePath + 'Movement\_Sale\gpInsertUpdate_Movement_Sale.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\_Sale\gpGet_Movement_Sale.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\_Sale\gpSelect_Movement_Sale.sql', ZQuery);
-
-  ExecFile(ProcedurePath + 'Movement\_ReturnOut\gpInsertUpdate_Movement_ReturnOut.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\_ReturnOut\gpGet_Movement_ReturnOut.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\_ReturnOut\gpSelect_Movement_ReturnOut.sql', ZQuery);
-
-  ExecFile(ProcedurePath + 'Movement\_ReturnIn\gpInsertUpdate_Movement_ReturnIn.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\_ReturnIn\gpGet_Movement_ReturnIn.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\_ReturnIn\gpSelect_Movement_ReturnIn.sql', ZQuery);
-
-  ExecFile(ProcedurePath + 'Movement\_Loss\gpInsertUpdate_Movement_Loss.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\_Loss\gpGet_Movement_Loss.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\_Loss\gpSelect_Movement_Loss.sql', ZQuery);
-
-  ExecFile(ProcedurePath + 'Movement\_Inventory\gpInsertUpdate_Movement_Inventory.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\_Inventory\gpGet_Movement_Inventory.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\_Inventory\gpSelect_Movement_Inventory.sql', ZQuery);
-
-  ExecFile(ProcedurePath + 'Movement\_ZakazExternal\gpInsertUpdate_Movement_ZakazExternal.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\_ZakazExternal\gpGet_Movement_ZakazExternal.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\_ZakazExternal\gpSelect_Movement_ZakazExternal.sql', ZQuery);
-
-  ExecFile(ProcedurePath + 'Movement\_ZakazInternal\gpInsertUpdate_Movement_ZakazInternal.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\_ZakazInternal\gpGet_Movement_ZakazInternal.sql', ZQuery);
-  ExecFile(ProcedurePath + 'Movement\_ZakazInternal\gpSelect_Movement_ZakazInternal.sql', ZQuery);
-
+  ScriptDirectory := ProcedurePath + 'Movement\';
+  ProcedureLoad;
 end;
 
 procedure TdbProcedureTest.CreateObjectProcedure;

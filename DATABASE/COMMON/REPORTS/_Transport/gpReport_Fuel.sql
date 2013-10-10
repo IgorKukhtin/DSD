@@ -22,6 +22,9 @@ $BODY$BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
 
+     -- Один запрос, который считает остаток и движение. 
+     -- Главная задача - выбор контейнера
+
      -- таблица - 
 RETURN QUERY 
        SELECT cast (1 as integer) as  CarId, cast (1 as integer) as CarCode, cast ('Машина' as TVarChar) as CarName
@@ -40,6 +43,7 @@ ALTER FUNCTION gpReport_Fuel (TDateTime, TDateTime, Integer, Integer, TVarChar) 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.11.13                        * 
  05.10.13         *
 */
 

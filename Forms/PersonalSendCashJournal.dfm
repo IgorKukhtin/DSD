@@ -2,8 +2,8 @@ inherited PersonalSendCashJournalForm: TPersonalSendCashJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1072#1089#1093#1086#1076' '#1076#1077#1085#1077#1075' '#1089' '#1087#1086#1076#1086#1090#1095#1077#1090#1072' '#1085#1072' '#1087#1086#1076#1086#1090#1095#1077#1090'>'
   ClientHeight = 427
   ClientWidth = 711
-  ExplicitWidth = 727
-  ExplicitHeight = 462
+  ExplicitWidth = 719
+  ExplicitHeight = 454
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -230,8 +230,8 @@ inherited PersonalSendCashJournalForm: TPersonalSendCashJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -367,9 +367,6 @@ inherited PersonalSendCashJournalForm: TPersonalSendCashJournalForm
       GuiParams = <
         item
           Name = 'Id'
-          DataType = ftInteger
-          ParamType = ptOutput
-          Value = '0'
         end>
       isShowModal = False
       DataSource = DataSource
@@ -385,7 +382,6 @@ inherited PersonalSendCashJournalForm: TPersonalSendCashJournalForm
           Name = 'Id'
           Component = ClientDataSet
           ComponentItem = 'Id'
-          DataType = ftInteger
           ParamType = ptInput
         end>
       isShowModal = False
@@ -454,14 +450,12 @@ inherited PersonalSendCashJournalForm: TPersonalSendCashJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41395d
       end
       item
         Name = 'inEndDate'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41395d
       end>
     Left = 24
     Top = 176
@@ -475,14 +469,12 @@ inherited PersonalSendCashJournalForm: TPersonalSendCashJournalForm
         Name = 'inMovementId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
         Name = 'inIsLastComplete'
         DataType = ftBoolean
         ParamType = ptInput
-        Value = 'False'
       end>
     Left = 64
     Top = 232
@@ -507,7 +499,6 @@ inherited PersonalSendCashJournalForm: TPersonalSendCashJournalForm
         Name = 'inMovementId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 72
@@ -526,7 +517,6 @@ inherited PersonalSendCashJournalForm: TPersonalSendCashJournalForm
         Name = 'inMovementId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 72

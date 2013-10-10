@@ -2,8 +2,8 @@ inherited RoleForm: TRoleForm
   Caption = #1056#1086#1083#1080' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
   ClientHeight = 370
   ClientWidth = 752
-  ExplicitWidth = 768
-  ExplicitHeight = 405
+  ExplicitWidth = 760
+  ExplicitHeight = 397
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -271,8 +271,8 @@ inherited RoleForm: TRoleForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -417,9 +417,6 @@ inherited RoleForm: TRoleForm
       GuiParams = <
         item
           Name = 'Id'
-          DataType = ftInteger
-          ParamType = ptOutput
-          Value = '0'
         end>
       isShowModal = False
       DataSource = DataSource
@@ -437,7 +434,6 @@ inherited RoleForm: TRoleForm
           Name = 'Id'
           Component = ClientDataSet
           ComponentItem = 'Id'
-          DataType = ftInteger
           ParamType = ptInput
         end>
       isShowModal = False
@@ -490,14 +486,12 @@ inherited RoleForm: TRoleForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
-          ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
-          ParamType = ptOutput
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -512,15 +506,12 @@ inherited RoleForm: TRoleForm
           Name = 'Key'
           Component = UserCDS
           ComponentItem = 'Id'
-          DataType = ftInteger
-          ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = UserCDS
           ComponentItem = 'Name'
           DataType = ftString
-          ParamType = ptOutput
         end>
       isShowModal = False
     end
@@ -542,15 +533,12 @@ inherited RoleForm: TRoleForm
           Name = 'Key'
           Component = ProcessCDS
           ComponentItem = 'Id'
-          DataType = ftInteger
-          ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = ProcessCDS
           ComponentItem = 'Name'
           DataType = ftString
-          ParamType = ptOutput
         end>
       isShowModal = False
     end
@@ -563,15 +551,12 @@ inherited RoleForm: TRoleForm
           Name = 'Key'
           Component = ActionCDS
           ComponentItem = 'Id'
-          DataType = ftInteger
-          ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = ActionCDS
           ComponentItem = 'Name'
           DataType = ftString
-          ParamType = ptOutput
         end>
       isShowModal = False
     end
@@ -639,7 +624,6 @@ inherited RoleForm: TRoleForm
         Name = 'inObjectId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 72
@@ -763,21 +747,18 @@ inherited RoleForm: TRoleForm
         Name = 'ioId'
         Component = UserCDS
         ComponentItem = 'UserRoleId'
-        DataType = ftInteger
         ParamType = ptInputOutput
       end
       item
         Name = 'inUserId'
         Component = UserCDS
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
         Name = 'RoleId'
         Component = UserCDS
         ComponentItem = 'RoleId'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 520
@@ -792,21 +773,18 @@ inherited RoleForm: TRoleForm
         Name = 'ioId'
         Component = ActionCDS
         ComponentItem = 'RoleActionId'
-        DataType = ftInteger
         ParamType = ptInputOutput
       end
       item
         Name = 'inRoleId'
         Component = ActionCDS
         ComponentItem = 'RoleId'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
         Name = 'inActionId'
         Component = ActionCDS
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 520
@@ -821,21 +799,18 @@ inherited RoleForm: TRoleForm
         Name = 'ioId'
         Component = ProcessCDS
         ComponentItem = 'RoleProcessId'
-        DataType = ftInteger
         ParamType = ptInputOutput
       end
       item
         Name = 'inRoleId'
         Component = ProcessCDS
         ComponentItem = 'RoleId'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
         Name = 'inProcessId'
         Component = ProcessCDS
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 544

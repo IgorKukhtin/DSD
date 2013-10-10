@@ -13,7 +13,7 @@ inherited Report_ProfitLossForm: TReport_ProfitLossForm
     Height = 41
     Align = alTop
     Caption = 'Panel1'
-    TabOrder = 4
+    TabOrder = 3
     object deStart: TcxDateEdit
       Left = 208
       Top = 8
@@ -38,8 +38,6 @@ inherited Report_ProfitLossForm: TReport_ProfitLossForm
     DataSource = DataSource
     Groups = <>
     TabOrder = 5
-    ExplicitTop = 75
-    ExplicitHeight = 194
     object clProfitLossGroupCode: TcxDBPivotGridField
       AreaIndex = 0
       IsCaptionAssigned = True
@@ -261,14 +259,12 @@ inherited Report_ProfitLossForm: TReport_ProfitLossForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41275d
       end
       item
         Name = 'inEndDate'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41640d
       end>
     Left = 152
     Top = 152

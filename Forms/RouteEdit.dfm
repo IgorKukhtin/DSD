@@ -3,7 +3,7 @@
   ClientHeight = 332
   ClientWidth = 380
   ExplicitWidth = 388
-  ExplicitHeight = 366
+  ExplicitHeight = 359
   PixelsPerInch = 96
   TextHeight = 13
   object edRouteName: TcxTextEdit
@@ -134,44 +134,33 @@
         Name = 'ioId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end
       item
         Name = 'inCode'
         Component = ceCode
-        DataType = ftInteger
         ParamType = ptInput
-        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
         Component = edRouteName
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inUnit'
         Component = UnitGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inRouteKind'
         Component = RouteKindGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inFreight'
         Component = FreightGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end>
     Left = 320
     Top = 40
@@ -180,9 +169,7 @@
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end>
     Left = 168
     Top = 72
@@ -196,71 +183,49 @@
         Name = 'Id'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'Code'
         Component = ceCode
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 0.000000000000000000
       end
       item
         Name = 'Name'
         Component = edRouteName
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'UnitId'
         Component = UnitGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = '0'
       end
       item
         Name = 'UnitName'
         Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'RouteKindId'
         Component = RouteKindGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = '0'
       end
       item
         Name = 'RouteKindName'
         Component = RouteKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'FreightId'
         Component = FreightGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = '0'
       end
       item
         Name = 'FreightName'
         Component = FreightGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 224
     Top = 88
@@ -284,7 +249,7 @@
     Left = 128
   end
   object UnitGuides: TdsdGuides
-    Key = '0'
+    KeyField = 'Id'
     LookupControl = ceUnit
     FormName = 'TUnitForm'
     PositionDataSet = 'ClientDataSet'
@@ -295,7 +260,6 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'TextValue'
@@ -303,13 +267,12 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 127
     Top = 135
   end
   object RouteKindGuides: TdsdGuides
-    Key = '0'
+    KeyField = 'Id'
     LookupControl = ceRouteKind
     FormName = 'TRouteKindForm'
     PositionDataSet = 'ClientDataSet'
@@ -320,7 +283,6 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'TextValue'
@@ -328,13 +290,12 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 175
     Top = 183
   end
   object FreightGuides: TdsdGuides
-    Key = '0'
+    KeyField = 'Id'
     LookupControl = ceFreight
     FormName = 'TFreightForm'
     PositionDataSet = 'ClientDataSet'
@@ -345,7 +306,6 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'TextValue'
@@ -353,7 +313,6 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 167
     Top = 239

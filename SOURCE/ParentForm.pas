@@ -124,14 +124,22 @@ end;
 procedure TParentForm.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  if (ssShift in Shift) and (ssCtrl in Shift)
-      and (Key in [byte('s'), byte('S')]) then begin
+  if (ssShift in Shift) and (ssCtrl in Shift) then begin
+      if (Key in [byte('s'), byte('S')]) then begin
           gc_isDebugMode := not gc_isDebugMode;
           if gc_isDebugMode then
              ShowMessage('Установлен режим отладки')
            else
              ShowMessage('Снят режим отладки');
       end;
+      if (Key in [byte('t'), byte('T')]) then begin
+          gc_isShowTimeMode := not gc_isShowTimeMode;
+          if gc_isShowTimeMode then
+             ShowMessage('Установлен режим проверки времени')
+           else
+             ShowMessage('Снят режим проверки времени');
+      end;
+  end;
 end;
 
 procedure TParentForm.FormShow(Sender: TObject);

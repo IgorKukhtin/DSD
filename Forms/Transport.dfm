@@ -4,8 +4,6 @@
   ClientWidth = 996
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitLeft = -201
-  ExplicitTop = -154
   ExplicitWidth = 1004
   ExplicitHeight = 482
   PixelsPerInch = 96
@@ -1030,9 +1028,7 @@
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end>
     Left = 208
     Top = 336
@@ -1053,23 +1049,19 @@
         Name = 'inMovementId'
         Component = FormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inShowAll'
         Component = BooleanStoredProcAction
         DataType = ftBoolean
         ParamType = ptInput
-        Value = False
       end
       item
         Name = 'inIsErased'
         Component = ShowErasedAction
         DataType = ftBoolean
         ParamType = ptInput
-        Value = False
       end>
     Left = 105
     Top = 226
@@ -1281,50 +1273,39 @@
           Name = 'Key'
           Component = MasterCDS
           ComponentItem = 'RouteId'
-          DataType = ftInteger
-          ParamType = ptOutput
         end
         item
           Name = 'Code'
           Component = MasterCDS
           ComponentItem = 'RouteCode'
-          DataType = ftInteger
-          ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = MasterCDS
           ComponentItem = 'RouteName'
           DataType = ftString
-          ParamType = ptOutput
         end
         item
           Name = 'RouteKindId'
           Component = MasterCDS
           ComponentItem = 'RouteKindId'
-          DataType = ftInteger
-          ParamType = ptOutput
         end
         item
           Name = 'RouteKindName'
           Component = MasterCDS
           ComponentItem = 'RouteKindName'
           DataType = ftString
-          ParamType = ptOutput
         end
         item
           Name = 'FreightId'
           Component = MasterCDS
           ComponentItem = 'FreightId'
-          DataType = ftInteger
-          ParamType = ptOutput
         end
         item
           Name = 'FreightName'
           Component = MasterCDS
           ComponentItem = 'FreightName'
           DataType = ftString
-          ParamType = ptOutput
         end>
       isShowModal = True
     end
@@ -1337,15 +1318,11 @@
           Name = 'Key'
           Component = MasterCDS
           ComponentItem = 'FreightId'
-          DataType = ftInteger
-          ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = MasterCDS
           ComponentItem = 'FreightName'
-          DataType = ftInteger
-          ParamType = ptOutput
         end>
       isShowModal = True
     end
@@ -1399,22 +1376,17 @@
           Name = 'Key'
           Component = IncomeCDS
           ComponentItem = 'FromId'
-          DataType = ftInteger
-          ParamType = ptOutput
         end
         item
           Name = 'Code'
           Component = IncomeCDS
           ComponentItem = 'FromCode'
-          DataType = ftInteger
-          ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = IncomeCDS
           ComponentItem = 'FromName'
           DataType = ftString
-          ParamType = ptOutput
         end>
       isShowModal = True
     end
@@ -1427,15 +1399,12 @@
           Name = 'Key'
           Component = IncomeCDS
           ComponentItem = 'PaidKindId'
-          DataType = ftInteger
-          ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = IncomeCDS
           ComponentItem = 'PaidKindName'
           DataType = ftString
-          ParamType = ptOutput
         end>
       isShowModal = True
     end
@@ -1448,29 +1417,23 @@
           Name = 'Key'
           Component = IncomeCDS
           ComponentItem = 'GoodsId'
-          DataType = ftInteger
-          ParamType = ptOutput
         end
         item
           Name = 'Code'
           Component = IncomeCDS
           ComponentItem = 'GoodsCode'
-          DataType = ftInteger
-          ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = IncomeCDS
           ComponentItem = 'GoodsName'
           DataType = ftString
-          ParamType = ptOutput
         end
         item
           Name = 'FuelName'
           Component = IncomeCDS
           ComponentItem = 'FuelName'
           DataType = ftString
-          ParamType = ptOutput
         end>
       isShowModal = True
     end
@@ -1483,15 +1446,12 @@
           Name = 'Key'
           Component = IncomeCDS
           ComponentItem = 'RouteId'
-          DataType = ftInteger
-          ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = IncomeCDS
           ComponentItem = 'RouteName'
           DataType = ftString
-          ParamType = ptOutput
         end>
       isShowModal = True
     end
@@ -1519,7 +1479,6 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
@@ -1527,23 +1486,17 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'PersonalDriverId'
         Component = GuidesPersonalDriver
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'PersonalDriverName'
         Component = GuidesPersonalDriver
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 506
     Top = 83
@@ -1557,168 +1510,112 @@
         Name = 'inId'
         Component = FormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'InvNumber'
         Component = edInvNumber
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'OperDate'
         Component = edOperDate
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 0d
       end
       item
         Name = 'CarId'
         Component = GuidesCar
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'CarName'
         Component = GuidesCar
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'CarTrailerId'
         Component = GuidesCarTrailer
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'CarTrailerName'
         Component = GuidesCarTrailer
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'PersonalDriverId'
         Component = GuidesPersonalDriver
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'PersonalDriverName'
         Component = GuidesPersonalDriver
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'PersonalDriverMoreId'
         Component = GuidesPersonalDriverMore
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'PersonalDriverMoreName'
         Component = GuidesPersonalDriverMore
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'UnitForwardingId'
         Component = GuidesUnitForwarding
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'UnitForwardingName'
         Component = GuidesUnitForwarding
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'StartRunPlan'
         Component = edStartRunPlan
         DataType = ftDateTime
-        ParamType = ptOutput
-        Value = 0d
       end
       item
         Name = 'EndRunPlan'
         Component = edEndRunPlan
         DataType = ftDateTime
-        ParamType = ptOutput
-        Value = 0d
       end
       item
         Name = 'StartRun'
         Component = edStartRun
         DataType = ftDateTime
-        ParamType = ptOutput
-        Value = 0d
       end
       item
         Name = 'EndRun'
         Component = edEndRun
         DataType = ftDateTime
-        ParamType = ptOutput
-        Value = 0d
       end
       item
         Name = 'HoursWork'
         Component = edHoursWork
         DataType = ftFloat
-        ParamType = ptOutput
-        Value = 0.000000000000000000
       end
       item
         Name = 'HoursAdd'
         Component = edHoursAdd
         DataType = ftFloat
-        ParamType = ptOutput
-        Value = 0.000000000000000000
       end
       item
         Name = 'Comment'
         Component = edComment
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'StatusCode'
         Component = ChangeStatus
         ComponentItem = 'Key'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'StatusName'
         Component = ChangeStatus
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 221
     Top = 182
@@ -1743,9 +1640,7 @@
         Name = 'inMovementId'
         Component = FormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end>
     Left = 106
     Top = 357
@@ -1770,22 +1665,18 @@
         Name = 'ioId'
         Component = MasterCDS
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
       end
       item
         Name = 'inMovementId'
         Component = FormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inRouteId'
         Component = MasterCDS
         ComponentItem = 'RouteId'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
@@ -1827,14 +1718,12 @@
         Name = 'inFreightId'
         Component = MasterCDS
         ComponentItem = 'FreightId'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
         Name = 'inRouteKindId'
         Component = MasterCDS
         ComponentItem = 'RouteKindId'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 75
@@ -1872,112 +1761,90 @@
         Name = 'ioId'
         Component = FormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end
       item
         Name = 'inInvNumber'
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inOperDate'
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 0d
       end
       item
         Name = 'inStartRunPlan'
         Component = edStartRunPlan
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 0d
       end
       item
         Name = 'inEndRunPlan'
         Component = edEndRunPlan
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 0d
       end
       item
         Name = 'inStartRun'
         Component = edStartRun
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 0d
       end
       item
         Name = 'inEndRun'
         Component = edEndRun
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 0d
       end
       item
         Name = 'inHoursAdd'
         Component = edHoursAdd
         DataType = ftFloat
         ParamType = ptInput
-        Value = 0.000000000000000000
       end
       item
         Name = 'outHoursWork'
         Component = edHoursWork
         DataType = ftFloat
-        ParamType = ptOutput
-        Value = 0.000000000000000000
       end
       item
         Name = 'inComment'
         Component = edComment
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inCarId'
         Component = GuidesCar
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inCarTrailerId'
         Component = GuidesCarTrailer
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inPersonalDriverId'
         Component = GuidesPersonalDriver
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inPersonalDriverMoreId'
         Component = GuidesPersonalDriverMore
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inUnitForwardingId'
         Component = GuidesUnitForwarding
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end>
     Left = 348
     Top = 226
@@ -1992,9 +1859,7 @@
         Name = 'Key'
         Component = GuidesCarTrailer
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
@@ -2002,7 +1867,6 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 722
     Top = 91
@@ -2017,9 +1881,7 @@
         Name = 'Key'
         Component = GuidesPersonalDriver
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
@@ -2027,7 +1889,6 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 418
     Top = 91
@@ -2042,9 +1903,7 @@
         Name = 'Key'
         Component = GuidesPersonalDriverMore
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
@@ -2052,7 +1911,6 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 778
     Top = 91
@@ -2067,9 +1925,7 @@
         Name = 'Key'
         Component = GuidesUnitForwarding
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
@@ -2077,7 +1933,6 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 898
     Top = 83
@@ -2091,29 +1946,24 @@
         Name = 'ioId'
         Component = ChildCDS
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
       end
       item
         Name = 'inMovementId'
         Component = FormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inParentId'
         Component = ChildCDS
         ComponentItem = 'ParentId'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
         Name = 'inFuelId'
         Component = ChildCDS
         ComponentItem = 'FuelId'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
@@ -2142,7 +1992,6 @@
         Component = ChildCDS
         ComponentItem = 'Amount_calc'
         DataType = ftFloat
-        ParamType = ptOutput
       end
       item
         Name = 'inColdHour'
@@ -2197,7 +2046,6 @@
         Name = 'inRateFuelKindId'
         Component = ChildCDS
         ComponentItem = 'RateFuelKindId'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 74
@@ -2206,9 +2054,6 @@
   object GuidesFiller: TGuidesFiller
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
-    IdParam.DataType = ftInteger
-    IdParam.ParamType = ptOutput
-    IdParam.Value = '0'
     GuidesList = <
       item
         Guides = GuidesCar
@@ -2229,9 +2074,6 @@
   object HeaderSaver: THeaderSaver
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
-    IdParam.DataType = ftInteger
-    IdParam.ParamType = ptOutput
-    IdParam.Value = '0'
     StoredProc = spInsertUpdateMovement
     ControlList = <
       item
@@ -2493,23 +2335,19 @@
         Name = 'inMovementId'
         Component = FormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inShowAll'
         Component = BooleanStoredProcAction
         DataType = ftBoolean
         ParamType = ptInput
-        Value = False
       end
       item
         Name = 'inIsErased'
         Component = ShowErasedAction
         DataType = ftBoolean
         ParamType = ptInput
-        Value = False
       end>
     Left = 106
     Top = 314
@@ -2523,15 +2361,12 @@
         Name = 'inParentId'
         Component = FormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'ioMovementId'
         Component = IncomeCDS
         ComponentItem = 'MovementId'
-        DataType = ftInteger
         ParamType = ptInputOutput
       end
       item
@@ -2573,22 +2408,18 @@
         Name = 'inFromId'
         Component = IncomeCDS
         ComponentItem = 'FromId'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
         Name = 'inToId'
         Component = GuidesCar
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'ioPaidKindId'
         Component = IncomeCDS
         ComponentItem = 'PaidKindId'
-        DataType = ftInteger
         ParamType = ptInputOutput
       end
       item
@@ -2602,7 +2433,6 @@
         Name = 'ioContractId'
         Component = IncomeCDS
         ComponentItem = 'ContractId'
-        DataType = ftInteger
         ParamType = ptInputOutput
       end
       item
@@ -2616,7 +2446,6 @@
         Name = 'ioRouteId'
         Component = IncomeCDS
         ComponentItem = 'RouteId'
-        DataType = ftInteger
         ParamType = ptInputOutput
       end
       item
@@ -2630,29 +2459,24 @@
         Name = 'inPersonalDriverId'
         Component = GuidesPersonalDriver
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'ioMovementItemId'
         Component = IncomeCDS
         ComponentItem = 'MovementItemId'
-        DataType = ftInteger
         ParamType = ptInputOutput
       end
       item
         Name = 'ioGoodsId'
         Component = IncomeCDS
         ComponentItem = 'GoodsId'
-        DataType = ftInteger
         ParamType = ptInputOutput
       end
       item
         Name = 'ioGoodsCode'
         Component = IncomeCDS
         ComponentItem = 'GoodsCode'
-        DataType = ftInteger
         ParamType = ptInputOutput
       end
       item
@@ -2695,14 +2519,12 @@
         Component = IncomeCDS
         ComponentItem = 'AmountSumm'
         DataType = ftFloat
-        ParamType = ptOutput
       end
       item
         Name = 'outAmountSummTotal'
         Component = IncomeCDS
         ComponentItem = 'AmountSummTotal'
         DataType = ftFloat
-        ParamType = ptOutput
       end>
     Left = 75
     Top = 314
@@ -2712,9 +2534,6 @@
     LookupControl = ceStatus
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
-    IdParam.DataType = ftInteger
-    IdParam.ParamType = ptOutput
-    IdParam.Value = '0'
     StoredProcName = 'gpUpdate_Status_Transport'
     Left = 449
     Top = 208
@@ -2728,7 +2547,6 @@
         Name = 'inMovementItemId'
         Component = MasterCDS
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
@@ -2736,7 +2554,6 @@
         Component = MasterCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
-        ParamType = ptOutput
       end>
     Left = 614
     Top = 185
@@ -2750,7 +2567,6 @@
         Name = 'inMovementItemId'
         Component = MasterCDS
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
@@ -2758,7 +2574,6 @@
         Component = MasterCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
-        ParamType = ptOutput
       end>
     Left = 678
     Top = 201
@@ -2772,7 +2587,6 @@
         Name = 'inMovementItemId'
         Component = IncomeCDS
         ComponentItem = 'MovementItemId'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
@@ -2780,7 +2594,6 @@
         Component = IncomeCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
-        ParamType = ptOutput
       end>
     Left = 612
     Top = 244
@@ -2794,7 +2607,6 @@
         Name = 'inMovementItemId'
         Component = IncomeCDS
         ComponentItem = 'MovementItemId'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
@@ -2802,7 +2614,6 @@
         Component = IncomeCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
-        ParamType = ptOutput
       end>
     Left = 684
     Top = 260

@@ -28,18 +28,6 @@ WITH (
 ALTER TABLE MovementLinkObject
   OWNER TO postgres;
 
-/*-------------------------------------------------------------------------------*/
-
-/*                                  Индексы                                      */
-
-
--- Index: "idx_MovementLinkObject_MovementId_DescId_ObjectId"
-
--- DROP INDEX "idx_MovementLinkObject_MovementId_DescId_ObjectId";
-
-CREATE UNIQUE INDEX idx_MovementLinkObject_MovementId_DescId_ObjectId ON MovementLinkObject(MovementId, DescId, ObjectId);
-CREATE INDEX idx_MovementLinkObject_ObjectId ON MovementLinkObject(ObjectId); -- для констрейнта
-
 /*
  ПРИМЕЧАНИЯ:
  ИСТОРИЯ РАЗРАБОТКИ:

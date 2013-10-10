@@ -16,12 +16,6 @@ CREATE TABLE MovementBoolean(
    CONSTRAINT pk_MovementBoolean_DescId   FOREIGN KEY(DescId) REFERENCES MovementBooleanDesc(Id),
    CONSTRAINT pk_MovementBoolean_MovementId FOREIGN KEY(MovementId) REFERENCES Movement(Id) );
 
-/*-------------------------------------------------------------------------------*/
-/*                                  »Ì‰ÂÍÒ˚                                      */
-
-
-CREATE UNIQUE INDEX idx_MovementBoolean_MovementId_DescId_ValueData ON MovementBoolean (MovementId, DescId, ValueData);
-
 /*
  œ–»Ã≈◊¿Õ»ﬂ:
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »:

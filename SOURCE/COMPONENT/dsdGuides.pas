@@ -114,10 +114,6 @@ type
     destructor Destroy; override;
   published
     property FormName;
-    // ID записи
-    property Key;
-    // Текстовое значение
-    property TextValue;
     // Родитель для древовидных справочников
     property ParentId;
     // Где позиционируемся по ИД

@@ -3,7 +3,7 @@
   ClientHeight = 256
   ClientWidth = 346
   ExplicitWidth = 354
-  ExplicitHeight = 290
+  ExplicitHeight = 283
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -114,37 +114,29 @@
         Name = 'ioId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end
       item
         Name = 'inCode'
         Component = ceCode
-        DataType = ftInteger
         ParamType = ptInput
-        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
         Component = edName
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inRatio'
         Component = edRatio
         DataType = ftFloat
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inRateFuelKindId '
         Component = RateFuelKindGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end>
     Left = 224
     Top = 64
@@ -153,9 +145,7 @@
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end>
     Left = 240
     Top = 8
@@ -169,51 +159,38 @@
         Name = 'Id'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'Code'
         Component = ceCode
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 0.000000000000000000
       end
       item
         Name = 'Name'
         Component = edName
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'Ratio'
         Component = edRatio
         DataType = ftFloat
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'RateFuelKindId'
         Component = RateFuelKindGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'RateFuelKindName'
         Component = RateFuelKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 152
     Top = 112
   end
   object RateFuelKindGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edRateFuelKind
     FormName = 'TRateFuelKindForm'
     PositionDataSet = 'ClientDataSet'
@@ -222,17 +199,13 @@
         Name = 'Key'
         Component = RateFuelKindGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
         Component = RateFuelKindGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end>
     Left = 128
     Top = 173

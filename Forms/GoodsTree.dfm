@@ -2,14 +2,14 @@ inherited GoodsTreeForm: TGoodsTreeForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <T'#1086#1074#1072#1088#1099'>'
   ClientHeight = 473
   ClientWidth = 874
-  ExplicitWidth = 890
-  ExplicitHeight = 508
+  ExplicitWidth = 882
+  ExplicitHeight = 500
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
-    Left = 185
+    Left = 188
     Top = 26
-    Width = 689
+    Width = 686
     Height = 447
     Align = alClient
     TabOrder = 0
@@ -135,6 +135,13 @@ inherited GoodsTreeForm: TGoodsTreeForm
       Summary.GroupFooterSummaryItems = <>
     end
   end
+  object cxSplitter: TcxSplitter
+    Left = 185
+    Top = 26
+    Width = 3
+    Height = 447
+    Control = cxDBTreeList
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 464
@@ -153,7 +160,12 @@ inherited GoodsTreeForm: TGoodsTreeForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = clName
+        Component = cxDBTreeList
+        Properties.Strings = (
+          'Width')
+      end
+      item
+        Component = cxGrid
         Properties.Strings = (
           'Width')
       end
@@ -173,8 +185,8 @@ inherited GoodsTreeForm: TGoodsTreeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -311,9 +323,6 @@ inherited GoodsTreeForm: TGoodsTreeForm
       GuiParams = <
         item
           Name = 'Id'
-          DataType = ftInteger
-          ParamType = ptOutput
-          Value = '0'
         end>
       isShowModal = False
       DataSource = DataSource
@@ -330,7 +339,6 @@ inherited GoodsTreeForm: TGoodsTreeForm
           Name = 'Id'
           Component = ClientDataSet
           ComponentItem = 'Id'
-          DataType = ftInteger
           ParamType = ptInput
         end>
       isShowModal = False
@@ -375,14 +383,11 @@ inherited GoodsTreeForm: TGoodsTreeForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
-          ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
-          DataType = ftInteger
-          ParamType = ptOutput
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -422,7 +427,6 @@ inherited GoodsTreeForm: TGoodsTreeForm
         Name = 'inObjectId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 320

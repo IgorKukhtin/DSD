@@ -4,8 +4,8 @@ inherited ZakazExternalForm: TZakazExternalForm
   ClientWidth = 1028
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1044
-  ExplicitHeight = 443
+  ExplicitWidth = 1036
+  ExplicitHeight = 432
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -138,16 +138,15 @@ inherited ZakazExternalForm: TZakazExternalForm
   end
   object cxPageControl1: TcxPageControl
     Left = 0
-    Top = 156
+    Top = 154
     Width = 1028
-    Height = 249
+    Height = 251
     Align = alClient
     TabOrder = 5
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 245
-    ClientRectLeft = 4
-    ClientRectRight = 1024
+    ClientRectBottom = 251
+    ClientRectRight = 1028
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -155,8 +154,8 @@ inherited ZakazExternalForm: TZakazExternalForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1020
-        Height = 221
+        Width = 1028
+        Height = 227
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -258,9 +257,7 @@ inherited ZakazExternalForm: TZakazExternalForm
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end>
     Left = 176
     Top = 256
@@ -277,16 +274,13 @@ inherited ZakazExternalForm: TZakazExternalForm
         Name = 'inMovementId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inShowAll'
         Component = BooleanStoredProcAction
         DataType = ftBoolean
         ParamType = ptInput
-        Value = False
       end>
     Left = 88
     Top = 280
@@ -294,8 +288,8 @@ inherited ZakazExternalForm: TZakazExternalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -312,7 +306,7 @@ inherited ZakazExternalForm: TZakazExternalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar: TdxBar
       Caption = 'Custom'
@@ -469,6 +463,7 @@ inherited ZakazExternalForm: TZakazExternalForm
     Top = 240
   end
   object dsdGuidesFrom: TdsdGuides
+    KeyField = 'Id'
     LookupControl = edFrom
     FormName = 'TJuridicalForm'
     PositionDataSet = 'GridDataSet'
@@ -485,53 +480,33 @@ inherited ZakazExternalForm: TZakazExternalForm
         Name = 'inId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'InvNumber'
         Component = edInvNumber
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'OperDate'
         Component = edOperDate
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 0d
       end
       item
         Name = 'FromId'
         Component = dsdGuidesFrom
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'FromName'
         Component = dsdGuidesFrom
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'ToId'
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
       end
       item
         Name = 'ToName'
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = Null
       end>
     Left = 208
     Top = 120
@@ -552,9 +527,7 @@ inherited ZakazExternalForm: TZakazExternalForm
         Name = 'inMovementId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end>
     Left = 200
     Top = 304
@@ -568,22 +541,18 @@ inherited ZakazExternalForm: TZakazExternalForm
         Name = 'ioId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
       end
       item
         Name = 'inMovementId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inGoodsId'
         Component = ClientDataSet
         ComponentItem = 'GoodsId'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
@@ -597,7 +566,6 @@ inherited ZakazExternalForm: TZakazExternalForm
         Name = 'inAmountPartner'
         DataType = ftFloat
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inPrice'
@@ -610,25 +578,20 @@ inherited ZakazExternalForm: TZakazExternalForm
         Name = 'inCountForPrice'
         DataType = ftFloat
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inLiveWeight'
         DataType = ftFloat
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inHeadCount'
         DataType = ftFloat
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inGoodsKindId'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end>
     Left = 112
     Top = 304
@@ -642,6 +605,7 @@ inherited ZakazExternalForm: TZakazExternalForm
     Top = 232
   end
   object RouteGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceRoute
     FormName = 'TRouteForm'
     PositionDataSet = 'ClientDataSet'
@@ -650,6 +614,7 @@ inherited ZakazExternalForm: TZakazExternalForm
     Top = 16
   end
   object dsdGuidesRouteSorting: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceRouteSorting
     FormName = 'TRouteSortingForm'
     PositionDataSet = 'ClientDataSet'
@@ -658,6 +623,7 @@ inherited ZakazExternalForm: TZakazExternalForm
     Top = 24
   end
   object PersonalGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = cePersonal
     FormName = 'TPersonalForm'
     PositionDataSet = 'ClientDataSet'
@@ -666,6 +632,7 @@ inherited ZakazExternalForm: TZakazExternalForm
     Top = 24
   end
   object InfoMoneyGuides: TdsdGuides
+    KeyField = 'Id'
     FormName = 'TInfoMoneyForm'
     PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'TreeDataSet'
@@ -674,6 +641,7 @@ inherited ZakazExternalForm: TZakazExternalForm
     Top = 80
   end
   object JuridicalGroupGuides: TdsdGuides
+    KeyField = 'Id'
     FormName = 'TJuridicalGroupForm'
     PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'TreeDataSet'
@@ -694,8 +662,11 @@ inherited ZakazExternalForm: TZakazExternalForm
     Top = 128
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
-    SortImages = dmMain.SortImageList
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
     Left = 416
     Top = 248
   end

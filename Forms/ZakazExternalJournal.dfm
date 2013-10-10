@@ -255,9 +255,6 @@ inherited ZakazExternalJournalForm: TZakazExternalJournalForm
       GuiParams = <
         item
           Name = 'Id'
-          DataType = ftInteger
-          ParamType = ptOutput
-          Value = '0'
         end>
       isShowModal = False
       DataSource = DataSource
@@ -275,7 +272,6 @@ inherited ZakazExternalJournalForm: TZakazExternalJournalForm
           Name = 'Id'
           Component = ClientDataSet
           ComponentItem = 'Id'
-          DataType = ftInteger
           ParamType = ptInput
         end>
       isShowModal = False
@@ -305,14 +301,12 @@ inherited ZakazExternalJournalForm: TZakazExternalJournalForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41395d
       end
       item
         Name = 'inEndDate'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41760d
       end>
     Left = 128
     Top = 176
@@ -326,7 +320,6 @@ inherited ZakazExternalJournalForm: TZakazExternalJournalForm
         Name = 'inMovementId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 64
@@ -356,7 +349,6 @@ inherited ZakazExternalJournalForm: TZakazExternalJournalForm
         Name = 'inMovementId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 72
@@ -375,7 +367,6 @@ inherited ZakazExternalJournalForm: TZakazExternalJournalForm
         Name = 'inMovementId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 72
@@ -386,14 +377,15 @@ inherited ZakazExternalJournalForm: TZakazExternalJournalForm
     Top = 240
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
-    OnDblClickActionList = <>
-    SortImages = dmMain.SortImageList
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
+    OnDblClickActionList = <>
     ActionItemList = <
       item
         Action = actUpdate
         ShortCut = 13
       end>
+    SortImages = dmMain.SortImageList
     Left = 256
     Top = 240
   end

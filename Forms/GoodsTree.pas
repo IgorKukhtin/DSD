@@ -22,7 +22,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dsdAddOn, dxBarExtItems, cxCheckBox;
+  dsdAddOn, dxBarExtItems, cxCheckBox, cxSplitter;
 
 type
   TGoodsTreeForm = class(TParentForm)
@@ -69,6 +69,7 @@ type
     TreeDataSet: TClientDataSet;
     dsdDBTreeAddOn: TdsdDBTreeAddOn;
     clFuelName: TcxGridDBColumn;
+    cxSplitter: TcxSplitter;
   private
     { Private declarations }
   public

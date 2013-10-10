@@ -3,7 +3,7 @@ inherited Report_TransportForm: TReport_TransportForm
   ClientHeight = 395
   ClientWidth = 1329
   ExplicitWidth = 1337
-  ExplicitHeight = 429
+  ExplicitHeight = 422
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -528,20 +528,16 @@ inherited Report_TransportForm: TReport_TransportForm
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41395d
       end
       item
         Name = 'inEndDate'
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 41395d
       end
       item
         Name = 'inCarId'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end>
     Left = 152
     Top = 248
@@ -577,7 +573,6 @@ inherited Report_TransportForm: TReport_TransportForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
@@ -585,7 +580,6 @@ inherited Report_TransportForm: TReport_TransportForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 640
     Top = 27

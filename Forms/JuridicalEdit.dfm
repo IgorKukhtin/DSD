@@ -157,58 +157,45 @@
         Name = 'ioId'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end
       item
         Name = 'inCode'
         Component = ceCode
-        DataType = ftInteger
         ParamType = ptInput
-        Value = 0.000000000000000000
       end
       item
         Name = 'inName'
         Component = edName
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inGLNCode'
         Component = edGLNCode
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inisCorporate'
         Component = cbisCorporate
         DataType = ftBoolean
         ParamType = ptInput
-        Value = 'False'
       end
       item
         Name = 'inJuridicalGroupId'
         Component = JuridicalGroupGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inGoodsPropertyId'
         Component = GoodsPropertyGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inInfoMoneyId'
         Component = InfoMoneyGuides
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end>
     Left = 240
     Top = 48
@@ -217,17 +204,13 @@
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end
       item
         Name = 'GroupId'
         Component = JuridicalGroupGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'GroupName'
@@ -235,7 +218,6 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 240
     Top = 8
@@ -249,90 +231,63 @@
         Name = 'Id'
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'Name'
         Component = edName
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'Code'
         Component = ceCode
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 0.000000000000000000
       end
       item
         Name = 'GLNCode'
         Component = edGLNCode
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'isCorporate'
         Component = cbisCorporate
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 'False'
       end
       item
         Name = 'JuridicalGroupId'
         Component = JuridicalGroupGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'JuridicalGroupName'
         Component = JuridicalGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'GoodsPropertyId'
         Component = GoodsPropertyGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'GoodsPropertyName'
         Component = GoodsPropertyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'InfoMoneyId'
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'InfoMoneyName'
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 192
     Top = 88
   end
   object JuridicalGroupGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceJuridicalGroup
     FormName = 'TJuridicalGroupForm'
     PositionDataSet = 'ClientDataSet'
@@ -343,7 +298,6 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
@@ -351,12 +305,12 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 224
     Top = 152
   end
   object GoodsPropertyGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceGoodsProperty
     FormName = 'TGoodsPropertyForm'
     PositionDataSet = 'ClientDataSet'
@@ -367,7 +321,6 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
@@ -375,12 +328,12 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 288
     Top = 192
   end
   object InfoMoneyGuides: TdsdGuides
+    KeyField = 'Id'
     LookupControl = ceInfoMoney
     FormName = 'TInfoMoneyForm'
     PositionDataSet = 'ClientDataSet'
@@ -391,7 +344,6 @@
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
@@ -399,7 +351,6 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 288
     Top = 240

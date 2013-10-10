@@ -4,8 +4,8 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
   ClientWidth = 773
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 789
-  ExplicitHeight = 431
+  ExplicitWidth = 781
+  ExplicitHeight = 423
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -257,6 +257,9 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -442,9 +445,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end>
     Left = 240
     Top = 304
@@ -461,23 +462,19 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         Name = 'inMovementId'
         Component = FormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inShowAll'
         Component = BooleanStoredProcAction
         DataType = ftBoolean
         ParamType = ptInput
-        Value = False
       end
       item
         Name = 'inIsErased'
         Component = ShowErasedAction
         DataType = ftBoolean
         ParamType = ptInput
-        Value = False
       end>
     Left = 116
     Top = 224
@@ -485,8 +482,8 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -729,7 +726,6 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
           Component = edInvNumber
           DataType = ftString
           ParamType = ptInput
-          Value = ''
         end
         item
           Name = 'From'
@@ -737,14 +733,12 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
           ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
-          Value = ''
         end
         item
           Name = 'OperDate'
           Component = edOperDate
           DataType = ftDateTime
           ParamType = ptInput
-          Value = 0d
         end>
       ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
     end
@@ -815,22 +809,17 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
           Name = 'Key'
           Component = MasterCDS
           ComponentItem = 'PersonalId'
-          DataType = ftInteger
-          ParamType = ptOutput
         end
         item
           Name = 'Code'
           Component = MasterCDS
           ComponentItem = 'PersonalCode'
-          DataType = ftInteger
-          ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = MasterCDS
           ComponentItem = 'PersonalName'
           DataType = ftString
-          ParamType = ptOutput
         end>
       isShowModal = True
     end
@@ -842,36 +831,28 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
           Name = 'Key'
           Component = MasterCDS
           ComponentItem = 'CarId'
-          DataType = ftInteger
-          ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = MasterCDS
           ComponentItem = 'CarName'
           DataType = ftString
-          ParamType = ptOutput
         end
         item
           Name = 'PersonalDriverId'
           Component = MasterCDS
           ComponentItem = 'PersonalId'
-          DataType = ftInteger
-          ParamType = ptOutput
         end
         item
           Name = 'PersonalDriverCode'
           Component = MasterCDS
           ComponentItem = 'PersonalCode'
-          DataType = ftInteger
-          ParamType = ptOutput
         end
         item
           Name = 'PersonalDriverName'
           Component = MasterCDS
           ComponentItem = 'PersonalName'
           DataType = ftString
-          ParamType = ptOutput
         end>
       isShowModal = True
     end
@@ -883,15 +864,12 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
           Name = 'Key'
           Component = MasterCDS
           ComponentItem = 'RouteId'
-          DataType = ftInteger
-          ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = MasterCDS
           ComponentItem = 'RouteName'
           DataType = ftString
-          ParamType = ptOutput
         end>
       isShowModal = True
     end
@@ -919,7 +897,6 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
@@ -927,7 +904,6 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 464
     Top = 56
@@ -952,9 +928,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         Name = 'inMovementId'
         Component = FormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end>
     Left = 88
     Top = 296
@@ -979,29 +953,24 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         Name = 'ioMIId_20401'
         Component = MasterCDS
         ComponentItem = 'MIId_20401'
-        DataType = ftInteger
         ParamType = ptInputOutput
       end
       item
         Name = 'ioMIId_21201'
         Component = MasterCDS
         ComponentItem = 'MIId_21201'
-        DataType = ftInteger
         ParamType = ptInputOutput
       end
       item
         Name = 'inMovementId'
         Component = FormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inPersonalId'
         Component = MasterCDS
         ComponentItem = 'PersonalId'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
@@ -1022,14 +991,12 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         Name = 'inRouteId'
         Component = MasterCDS
         ComponentItem = 'RouteId'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
         Name = 'inCarId'
         Component = MasterCDS
         ComponentItem = 'CarId'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 86
@@ -1076,31 +1043,25 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         Name = 'ioId'
         Component = FormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end
       item
         Name = 'inInvNumber'
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inOperDate'
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
-        Value = 0d
       end
       item
         Name = 'inPersonalId'
         Component = GuidesPersonal
         ComponentItem = 'Key'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end>
     Left = 387
     Top = 177
@@ -1108,9 +1069,6 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
   object HeaderSaver: THeaderSaver
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
-    IdParam.DataType = ftInteger
-    IdParam.ParamType = ptOutput
-    IdParam.Value = '0'
     StoredProc = spInsertUpdateMovement
     ControlList = <
       item
@@ -1157,55 +1115,37 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         Name = 'inId'
         Component = FormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'InvNumber'
         Component = edInvNumber
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'OperDate'
         Component = edOperDate
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 0d
       end
       item
         Name = 'PersonalId'
         Component = GuidesPersonal
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'PersonalName'
         Component = GuidesPersonal
         ComponentItem = 'TextValue'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'StatusCode'
         Component = ChangeStatus
         ComponentItem = 'Key'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'StatusName'
         Component = ChangeStatus
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 216
     Top = 168
@@ -1221,9 +1161,6 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
   object GuidesFiller: TGuidesFiller
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
-    IdParam.DataType = ftInteger
-    IdParam.ParamType = ptOutput
-    IdParam.Value = '0'
     GuidesList = <
       item
         Guides = GuidesPersonal
@@ -1242,9 +1179,6 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     LookupControl = ceStatus
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
-    IdParam.DataType = ftInteger
-    IdParam.ParamType = ptOutput
-    IdParam.Value = '0'
     StoredProcName = 'gpUpdate_Status_PersonalSendCash'
     Left = 488
     Top = 176
@@ -1258,15 +1192,12 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         Name = 'inMovementId'
         Component = FormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inPersonalId'
         Component = MasterCDS
         ComponentItem = 'PersonalId'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
@@ -1274,7 +1205,6 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         Component = MasterCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
-        ParamType = ptOutput
       end>
     Left = 574
     Top = 200
@@ -1288,15 +1218,12 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         Name = 'inMovementId'
         Component = FormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
       end
       item
         Name = 'inPersonalId'
         Component = MasterCDS
         ComponentItem = 'PersonalId'
-        DataType = ftInteger
         ParamType = ptInput
       end
       item
@@ -1304,7 +1231,6 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         Component = MasterCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
-        ParamType = ptOutput
       end>
     Left = 630
     Top = 224
