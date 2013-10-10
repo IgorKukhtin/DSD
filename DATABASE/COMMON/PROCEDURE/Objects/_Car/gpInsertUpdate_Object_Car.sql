@@ -35,7 +35,7 @@ BEGIN
    -- проверка прав уникальности для свойства <Код Автомобиля>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Car(), vbCode_calc);
    -- проверка прав уникальности для свойства <Техпаспорт> 
-   PERFORM lpCheckUnique_ObjectString_ValueData(ioId, zc_ObjectString_Car_RegistrationCertificate(), inRegistrationCertificate);
+   -- PERFORM lpCheckUnique_ObjectString_ValueData(ioId, zc_ObjectString_Car_RegistrationCertificate(), inRegistrationCertificate);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Car(), vbCode_calc, inName);

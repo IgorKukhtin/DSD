@@ -217,6 +217,7 @@ type
     procedure pLoadGuide_CarModel;
     procedure pLoadGuide_Route;
     procedure pLoadGuide_Freight;
+    procedure pLoadGuide_RateFuel;
 
     procedure pLoadGuide_RouteSorting;
 
@@ -503,10 +504,18 @@ begin
      if not fStop then pLoadGuide_Branch;
      //if not fStop then pLoadGuide_UnitGroup;
      if not fStop then pLoadGuide_Unit;
-     if not fStop then pLoadGuide_Member_andPersonal;
      if not fStop then pLoadGuide_RouteSorting;
-     if not fStop then pLoadGuide_Car;
+
+     if not fStop then pLoadGuide_PersonalGroup;
+     if not fStop then pLoadGuide_Position;
+     if not fStop then pLoadGuide_Member_andPersonal;
+
      if not fStop then pLoadGuide_Route;
+     if not fStop then pLoadGuide_Freight;
+
+     if not fStop then pLoadGuide_CarModel;
+     if not fStop then pLoadGuide_Car;
+     if not fStop then pLoadGuide_RateFuel;
 
 
 
@@ -2187,37 +2196,32 @@ begin
      myDisabledCB(cbUnit);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadGuide_Car;
-var extId,intId:String;
+procedure TMainForm.pLoadGuide_RateFuel;
 begin
      if (not cbCar.Checked)or(not cbCar.Enabled) then exit;
      //
-     pLoadGuide_CarModel;
-     //
      if cbOnlyOpen.Checked then exit;
-     //
-     fOpenSqToQuery ('select zc_Enum_RouteKind_Internal() AS zc_Enum_RouteKind_Internal');
-     intId:=toSqlQuery.FieldByName('zc_Enum_RouteKind_Internal').AsString;
-     fOpenSqToQuery ('select zc_Enum_RouteKind_External() AS zc_Enum_RouteKind_External');
-     extId:=toSqlQuery.FieldByName('zc_Enum_RouteKind_External').AsString;
-
      //
      myEnabledCB(cbCar);
      //
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select _pgRoute.Id as ObjectId');
-        Add('     , 0 as ObjectCode');
-        Add('     , _pgRoute.Name as ObjectName');
-
-        Add('     , _pgUnit.Id_Postgres as inUnitId');
-        Add('     , _pgRoute.FreightId_pg as inFreightId');
-        Add('     , case when _pgRoute.RouteKindName ='+FormatToVarCharServer_notNULL('город')+' then '+intId+' else '+extId+' end as inRouteKindId');
-
-        Add('     , _pgRoute.RouteId_pg as Id_Postgres');
-        Add('from dba._pgRoute');
-        Add('     left outer join dba._pgUnit on _pgUnit.Id=_pgRoute.UnitCode');
+        Add('select _pgCar.Id as ObjectId');
+        Add('     , _pgCar.I1 as inAmount_Internal');
+        Add('     , _pgCar.I2 as inAmountColdDistance_Internal');
+        Add('     , _pgCar.I3 as inAmountColdHour_Internal');
+        Add('     , _pgCar.E1 as inAmount_External');
+        Add('     , _pgCar.E2 as inAmountColdDistance_External');
+        Add('     , _pgCar.E3 as inAmountColdHour_External');
+        Add('     , _pgCar.CarId_pg as Id_Postgres');
+        Add('from dba._pgCar');
+        Add('     left outer join dba._pgUnit on _pgUnit.Id=_pgCar.UnitCode');
+        Add('     left outer join (select Id_Postgres_Fuel from dba.Goods, dba.GoodsProperty where GoodsId = Goods.Id and GoodsCode=7001)as Goods_7001 on 1=1');
+        Add('     left outer join (select Id_Postgres_Fuel from dba.Goods, dba.GoodsProperty where GoodsId = Goods.Id and GoodsCode=7003)as Goods_7003 on 1=1');
+        Add('     left outer join (select Id_Postgres_Fuel from dba.Goods, dba.GoodsProperty where GoodsId = Goods.Id and GoodsCode=7004)as Goods_7004 on 1=1');
+        Add('     left outer join (select Id_Postgres_Fuel from dba.Goods, dba.GoodsProperty where GoodsId = Goods.Id and GoodsCode=7005)as Goods_7005 on 1=1');
+        Add('     left outer join dba._pgMember on _pgMember.FIO=_pgCar.FIO');
         Add('order by ObjectId');
         Open;
         //
@@ -2227,15 +2231,106 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpInsertUpdate_Object_Route';
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_RateFuel';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inRateFuelId_Internal',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inRateFuelId_External',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmount_Internal',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmountColdHour_Internal',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmountColdDistance_Internal',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmount_External',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmountColdHour_External',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmountColdDistance_External',ftFloat,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+
+             // Member
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inAmount_Internal').Value:=FieldByName('inAmount_Internal').AsFloat;
+             toStoredProc.Params.ParamByName('inAmountColdHour_Internal').Value:=FieldByName('inAmountColdHour_Internal').AsFloat;
+             toStoredProc.Params.ParamByName('inAmountColdDistance_Internal').Value:=FieldByName('inAmountColdDistance_Internal').AsFloat;
+             toStoredProc.Params.ParamByName('inAmount_External').Value:=FieldByName('inAmount_External').AsFloat;
+             toStoredProc.Params.ParamByName('inAmountColdHour_External').Value:=FieldByName('inAmountColdHour_External').AsFloat;
+             toStoredProc.Params.ParamByName('inAmountColdDistance_External').Value:=FieldByName('inAmountColdDistance_External').AsFloat;
+             if not myExecToStoredProc then ;//exit;
+             //
+             //if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             //then fExecSqFromQuery('update dba._pgCar set CarId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        //EnableControls;
+     end;
+     //
+     myDisabledCB(cbCar);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadGuide_Car;
+begin
+     if (not cbCar.Checked)or(not cbCar.Enabled) then exit;
+     //
+     if cbOnlyOpen.Checked then exit;
+     //
+     myEnabledCB(cbCar);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select _pgCar.Id as ObjectId');
+        Add('     , 0 as ObjectCode');
+        Add('     , trim(_pgCar.Name) as ObjectName');
+
+        Add('     , _pgCar.CarId_pg as inUnitId');
+        Add('     , _pgCar.ModelId_pg as inCarModelId');
+        Add('     , _pgMember.PersonalId_pg as inPersonalDriverId');
+        Add('     , case when trim(_pgCar.FuelName) ='+FormatToVarCharServer_notNULL('бензин')+' then Goods_7001.Id_Postgres_Fuel'
+           +'            when trim(_pgCar.FuelName) ='+FormatToVarCharServer_notNULL('метан')+' then Goods_7004.Id_Postgres_Fuel'
+           +'            when trim(_pgCar.FuelName) ='+FormatToVarCharServer_notNULL('д/т')+' then Goods_7003.Id_Postgres_Fuel'
+           +'            when trim(_pgCar.FuelName) ='+FormatToVarCharServer_notNULL('пропан')+' then Goods_7005.Id_Postgres_Fuel'
+           +'       end as inFuelMasterId');
+        Add('     , case when trim(_pgCar.FuelName2) ='+FormatToVarCharServer_notNULL('бензин')+' then Goods_7001.Id_Postgres_Fuel'
+           +'            when trim(_pgCar.FuelName2) ='+FormatToVarCharServer_notNULL('метан')+' then Goods_7004.Id_Postgres_Fuel'
+           +'            when trim(_pgCar.FuelName2) ='+FormatToVarCharServer_notNULL('д/т')+' then Goods_7003.Id_Postgres_Fuel'
+           +'            when trim(_pgCar.FuelName2) ='+FormatToVarCharServer_notNULL('пропан')+' then Goods_7005.Id_Postgres_Fuel'
+           +'       end as inFuelChildId');
+
+        Add('     , _pgCar.CarId_pg as Id_Postgres');
+        Add('from dba._pgCar');
+        Add('     left outer join dba._pgUnit on _pgUnit.Id=_pgCar.UnitCode');
+        Add('     left outer join (select Id_Postgres_Fuel from dba.Goods, dba.GoodsProperty where GoodsId = Goods.Id and GoodsCode=7001)as Goods_7001 on 1=1');
+        Add('     left outer join (select Id_Postgres_Fuel from dba.Goods, dba.GoodsProperty where GoodsId = Goods.Id and GoodsCode=7003)as Goods_7003 on 1=1');
+        Add('     left outer join (select Id_Postgres_Fuel from dba.Goods, dba.GoodsProperty where GoodsId = Goods.Id and GoodsCode=7004)as Goods_7004 on 1=1');
+        Add('     left outer join (select Id_Postgres_Fuel from dba.Goods, dba.GoodsProperty where GoodsId = Goods.Id and GoodsCode=7005)as Goods_7005 on 1=1');
+        Add('     left outer join dba._pgMember on _pgMember.FIO=_pgCar.FIO');
+        Add('order by ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_Car';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inRegistrationCertificate',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inCarModelId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inUnitId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inRouteKindId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inFreightId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPersonalDriverId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inFuelMasterId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inFuelChildId',ftInteger,ptInput, 0);
         //
         while not EOF do
         begin
@@ -2246,13 +2341,15 @@ begin
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inCarModelId').Value:=FieldByName('inCarModelId').AsInteger;
              toStoredProc.Params.ParamByName('inUnitId').Value:=FieldByName('inUnitId').AsInteger;
-             toStoredProc.Params.ParamByName('inRouteKindId').Value:=FieldByName('inRouteKindId').AsInteger;
-             toStoredProc.Params.ParamByName('inFreightId').Value:=FieldByName('inFreightId').AsInteger;
+             toStoredProc.Params.ParamByName('inPersonalDriverId').Value:=FieldByName('inPersonalDriverId').AsInteger;
+             toStoredProc.Params.ParamByName('inFuelMasterId').Value:=FieldByName('inFuelMasterId').AsInteger;
+             toStoredProc.Params.ParamByName('inFuelChildId').Value:=FieldByName('inFuelChildId').AsInteger;
              if not myExecToStoredProc then ;//exit;
              //
-             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)or(FieldByName('Id_Postgres_two').AsInteger=0)
-             then fExecSqFromQuery('update dba._pgRoute set RouteId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba._pgCar set CarId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;
@@ -2276,7 +2373,7 @@ begin
         Clear;
         Add('select 0 as ObjectId');
         Add('     , 0 as ObjectCode');
-        Add('     , CarModel as ObjectName');
+        Add('     , trim(CarModel) as ObjectName');
         Add('     , ModelId_pg as Id_Postgres');
         Add('from (select max (isnull (_pgCar.ModelId_pg,0)) AS ModelId_pg, CarModel from dba._pgCar where CarModel <> '+FormatToVarCharServer_notNULL('') +' group by CarModel) as CarModelList');
         Add('order by ObjectId');
@@ -2306,7 +2403,7 @@ begin
              if not myExecToStoredProc then ;//exit;
              //
              if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba._pgCar set ModelId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where CarModel = '+FormatToVarCharServer_notNULL(FieldByName('ObjectName').AsString));
+             then fExecSqFromQuery('update dba._pgCar set ModelId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where trim(CarModel) = '+FormatToVarCharServer_notNULL(FieldByName('ObjectName').AsString));
              //
              Next;
              Application.ProcessMessages;
@@ -2324,8 +2421,6 @@ var extId,intId:String;
 begin
      if (not cbRoute.Checked)or(not cbRoute.Enabled) then exit;
      //
-     pLoadGuide_Freight;
-     //
      if cbOnlyOpen.Checked then exit;
      //
      fOpenSqToQuery ('select zc_Enum_RouteKind_Internal() AS zc_Enum_RouteKind_Internal');
@@ -2341,7 +2436,7 @@ begin
         Clear;
         Add('select _pgRoute.Id as ObjectId');
         Add('     , 0 as ObjectCode');
-        Add('     , _pgRoute.Name as ObjectName');
+        Add('     , trim(_pgRoute.Name) as ObjectName');
 
         Add('     , _pgUnit.Id_Postgres as inUnitId');
         Add('     , _pgRoute.FreightId_pg as inFreightId');
@@ -2463,9 +2558,9 @@ begin
         Clear;
         Add('select 0 as ObjectId');
         Add('     , 0 as ObjectCode');
-        Add('     , PositionName as ObjectName');
+        Add('     , trim(PositionName) as ObjectName');
         Add('     , PositionId_pg as Id_Postgres');
-        Add('from (select max (isnull (_pgMember.PositionId_pg,0)) AS PositionId_pg, PositionName from dba._pgMember where PositionName <> '+FormatToVarCharServer_notNULL('') +' group by PositionName) as Position');
+        Add('from (select max (isnull (_pgMember.PositionId_pg,0)) AS PositionId_pg, trim(_pgMember.PositionName) as PositionName from dba._pgMember where PositionName <> '+FormatToVarCharServer_notNULL('') +' group by PositionName) as Position');
         Add('order by ObjectId');
         Open;
         //
@@ -2493,7 +2588,7 @@ begin
              if not myExecToStoredProc then ;//exit;
              //
              if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba._pgMember set PositionId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where PositionName = '+FormatToVarCharServer_notNULL(FieldByName('ObjectName').AsString));
+             then fExecSqFromQuery('update dba._pgMember set PositionId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where trim(PositionName) = '+FormatToVarCharServer_notNULL(FieldByName('ObjectName').AsString));
              //
              Next;
              Application.ProcessMessages;
@@ -2563,12 +2658,6 @@ end;
 procedure TMainForm.pLoadGuide_Member_andPersonal;
 begin
      if (not cbMember_andPersonal.Checked)or(not cbMember_andPersonal.Enabled) then exit;
-     //
-     pLoadGuide_Position;
-     if cbOnlyOpen.Checked then exit;
-     //
-     pLoadGuide_PersonalGroup;
-     if cbOnlyOpen.Checked then exit;
      //
      myEnabledCB(cbMember_andPersonal);
      //
