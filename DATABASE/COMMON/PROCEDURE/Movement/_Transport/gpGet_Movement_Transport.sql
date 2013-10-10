@@ -61,7 +61,7 @@ BEGIN
            , Object_UnitForwarding.ValueData AS UnitForwardingName
    
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
-               LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = 1000
+               LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = 8124
                LEFT JOIN (SELECT CAST (MAX (Movement.InvNumber) AS Integer) AS InvNumber 
                          FROM Movement WHERE Movement.DescId = zc_Movement_Transport()) AS tmpMovement_InvNumber ON 1 = 1;
 

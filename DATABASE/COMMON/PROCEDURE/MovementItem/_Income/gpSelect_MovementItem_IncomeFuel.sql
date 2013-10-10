@@ -53,6 +53,8 @@ BEGIN
                       ) AS tmpMI ON tmpMI.GoodsId = ObjectLink_Goods_Fuel.ObjectId
 
        WHERE ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
+         AND ObjectLink_Goods_Fuel.ChildObjectId IS NOT NULL
+         AND tmpMI.GoodsId IS NULL
 
       UNION ALL
        SELECT
