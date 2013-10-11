@@ -70,7 +70,8 @@ BEGIN
                                                  , inObjectId_5 := inInfoMoneyId
                                                                    );
      ELSE
-     IF inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты -- select * from lfSelect_Object_InfoMoney() where inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100()
+     IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100()  -- Запчасти и Ремонты -- select * from lfSelect_Object_InfoMoney() where inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100()
+                                   , zc_Enum_InfoMoneyDestination_20400()) -- ГСМ
                            -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение 2)Товар 3)Основные средства(для которого закуплено ТМЦ) 4)Статьи назначения 5)Статьи назначения(детализация с/с)
                            -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Сотрудник (МО) 2)Товар 3)Основные средства(для которого закуплено ТМЦ) 4)Статьи назначения 5)Статьи назначения(детализация с/с)
      THEN vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -103,8 +104,8 @@ BEGIN
                                                                                                   )
                                                  , inDescId_1   := zc_ContainerLinkObject_Goods()
                                                  , inObjectId_1 := inGoodsId
-                                                 , inDescId_2   := CASE WHEN inPersonalId <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Unit() END
-                                                 , inObjectId_2 := CASE WHEN inPersonalId <> 0 THEN inPersonalId ELSE inUnitId END
+                                                 , inDescId_2   := CASE WHEN COALESCE (inCarId, 0) <> 0 THEN zc_ContainerLinkObject_Car() WHEN inPersonalId <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Unit() END
+                                                 , inObjectId_2 := CASE WHEN COALESCE (inCarId, 0) <> 0 THEN inCarId WHEN inPersonalId <> 0 THEN inPersonalId ELSE inUnitId END
                                                  , inDescId_3   := zc_ContainerLinkObject_AssetTo()
                                                  , inObjectId_3 := inAssetId
                                                  , inDescId_4   := zc_ContainerLinkObject_InfoMoneyDetail()
@@ -293,6 +294,7 @@ ALTER FUNCTION lpInsertUpdate_ContainerSumm_Goods (TDateTime, Integer, Integer, 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.10.13                                        * add zc_Enum_InfoMoneyDestination_20400
  30.09.13                                        * add inCarId
  20.09.13                                        * add zc_ObjectCostLink_Account
  19.09.13                                        * sort by optimize

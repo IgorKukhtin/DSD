@@ -109,16 +109,24 @@ BEGIN
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_ProfitLoss
                                                ON ContainerLinkObject_ProfitLoss.ContainerId = MovementItemContainer.ContainerId
                                               AND ContainerLinkObject_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss()
+                                              AND ContainerLinkObject_ProfitLoss.ObjectId <> 0
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Juridical
                                                ON ContainerLinkObject_Juridical.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
                                               AND ContainerLinkObject_Juridical.DescId = zc_ContainerLinkObject_Juridical()
+                                              AND ContainerLinkObject_Juridical.ObjectId <> 0
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Personal
                                                ON ContainerLinkObject_Personal.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
                                               AND ContainerLinkObject_Personal.DescId = zc_ContainerLinkObject_Personal()
+                                              AND ContainerLinkObject_Personal.ObjectId <> 0
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Unit
                                                ON ContainerLinkObject_Unit.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
                                               AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
-                 LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (ContainerLinkObject_ProfitLoss.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, COALESCE (ContainerLinkObject_Personal.ObjectId, ContainerLinkObject_Unit.ObjectId)))
+                                              AND ContainerLinkObject_Unit.ObjectId <> 0
+                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Car
+                                               ON ContainerLinkObject_Car.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
+                                              AND ContainerLinkObject_Car.DescId = zc_ContainerLinkObject_Car()
+                                              AND ContainerLinkObject_Car.ObjectId <> 0
+                 LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (ContainerLinkObject_ProfitLoss.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, COALESCE (ContainerLinkObject_Personal.ObjectId, COALESCE (ContainerLinkObject_Car.ObjectId, ContainerLinkObject_Unit.ObjectId))))
 
                  LEFT JOIN ObjectLink AS ObjectLink_ProfitLoss_ProfitLossGroup
                                       ON ObjectLink_ProfitLoss_ProfitLossGroup.ObjectId = ContainerLinkObject_ProfitLoss.ObjectId
@@ -223,4 +231,4 @@ ALTER FUNCTION gpSelect_MovementItemContainer_Movement (Integer, TVarChar) OWNER
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 14089, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 197, inSession:= '2')

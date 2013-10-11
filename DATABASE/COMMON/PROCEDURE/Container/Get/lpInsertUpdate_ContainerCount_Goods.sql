@@ -36,7 +36,8 @@ BEGIN
                                                  , inObjectId_2        := CASE WHEN COALESCE (inPersonalId, 0) <> 0 THEN inPersonalId ELSE COALESCE (inUnitId, 0) END
                                                    );
      ELSE
-     IF inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100() -- Запчасти и Ремонты -- select * from lfSelect_Object_InfoMoney() where inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100()
+     IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100()  -- Запчасти и Ремонты -- select * from lfSelect_Object_InfoMoney() where inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100()
+                                   , zc_Enum_InfoMoneyDestination_20400()) -- ГСМ
           -- 0)Товар 1)Подразделение 2)Основные средства(для которого закуплено ТМЦ)
           -- 0)Товар 1)Сотрудник (МО) 2)Основные средства(для которого закуплено ТМЦ)
      THEN vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
@@ -113,6 +114,7 @@ ALTER FUNCTION lpInsertUpdate_ContainerCount_Goods (TDateTime, Integer, Integer,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.10.13                                        * add zc_Enum_InfoMoneyDestination_20400
  30.09.13                                        * add inCarId
  19.09.13                                        * sort by optimize
  17.09.13                                        * CASE -> IF
