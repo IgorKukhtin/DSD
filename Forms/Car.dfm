@@ -2,8 +2,8 @@ inherited CarForm: TCarForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1040#1074#1090#1086#1084#1086#1073#1080#1083#1080'>'
   ClientHeight = 367
   ClientWidth = 853
-  ExplicitWidth = 861
-  ExplicitHeight = 394
+  ExplicitWidth = 869
+  ExplicitHeight = 402
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -127,8 +127,8 @@ inherited CarForm: TCarForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -347,7 +347,6 @@ inherited CarForm: TCarForm
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
       ImageIndex = 7
       DataSource = DataSource
     end
@@ -378,8 +377,22 @@ inherited CarForm: TCarForm
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
-    OnDblClickActionList = <>
-    ActionItemList = <>
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+        Action = actUpdate
+      end>
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
     SortImages = dmMain.SortImageList
     Left = 168
     Top = 216

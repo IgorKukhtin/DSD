@@ -2,8 +2,8 @@ inherited PaidKindForm: TPaidKindForm
   Caption = #1058#1080#1087#1099' '#1086#1087#1083#1072#1090
   ClientHeight = 376
   ClientWidth = 349
-  ExplicitWidth = 357
-  ExplicitHeight = 403
+  ExplicitWidth = 365
+  ExplicitHeight = 411
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -33,7 +33,7 @@ inherited PaidKindForm: TPaidKindForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object clName: TcxGridDBColumn
-        Caption = #1058#1080#1087' '#1086#1087#1083#1072#1090#1099
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -70,8 +70,8 @@ inherited PaidKindForm: TPaidKindForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -158,14 +158,12 @@ inherited PaidKindForm: TPaidKindForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
-          ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
-          ParamType = ptOutput
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

@@ -2,9 +2,8 @@ inherited InfoMoneyForm: TInfoMoneyForm
   Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' '
   ClientHeight = 376
   ClientWidth = 597
-  ExplicitTop = -59
-  ExplicitWidth = 605
-  ExplicitHeight = 403
+  ExplicitWidth = 613
+  ExplicitHeight = 411
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -44,7 +43,7 @@ inherited InfoMoneyForm: TInfoMoneyForm
         Width = 86
       end
       object clName: TcxGridDBColumn
-        Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Width = 177
@@ -108,8 +107,8 @@ inherited InfoMoneyForm: TInfoMoneyForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

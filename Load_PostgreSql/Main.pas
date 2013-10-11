@@ -2216,12 +2216,10 @@ begin
         Add('     , _pgCar.E3 as inAmountColdHour_External');
         Add('     , _pgCar.CarId_pg as Id_Postgres');
         Add('from dba._pgCar');
-        Add('     left outer join dba._pgUnit on _pgUnit.Id=_pgCar.UnitCode');
         Add('     left outer join (select Id_Postgres_Fuel from dba.Goods, dba.GoodsProperty where GoodsId = Goods.Id and GoodsCode=7001)as Goods_7001 on 1=1');
         Add('     left outer join (select Id_Postgres_Fuel from dba.Goods, dba.GoodsProperty where GoodsId = Goods.Id and GoodsCode=7003)as Goods_7003 on 1=1');
         Add('     left outer join (select Id_Postgres_Fuel from dba.Goods, dba.GoodsProperty where GoodsId = Goods.Id and GoodsCode=7004)as Goods_7004 on 1=1');
         Add('     left outer join (select Id_Postgres_Fuel from dba.Goods, dba.GoodsProperty where GoodsId = Goods.Id and GoodsCode=7005)as Goods_7005 on 1=1');
-        Add('     left outer join dba._pgMember on _pgMember.FIO=_pgCar.FIO');
         Add('order by ObjectId');
         Open;
         //
@@ -2288,7 +2286,7 @@ begin
         Add('     , 0 as ObjectCode');
         Add('     , trim(_pgCar.Name) as ObjectName');
 
-        Add('     , _pgCar.CarId_pg as inUnitId');
+        Add('     , _pgUnit.Id_Postgres as inUnitId');
         Add('     , _pgCar.ModelId_pg as inCarModelId');
         Add('     , _pgMember.PersonalId_pg as inPersonalDriverId');
         Add('     , case when trim(_pgCar.FuelName) ='+FormatToVarCharServer_notNULL('бензин')+' then Goods_7001.Id_Postgres_Fuel'
@@ -2304,7 +2302,7 @@ begin
 
         Add('     , _pgCar.CarId_pg as Id_Postgres');
         Add('from dba._pgCar');
-        Add('     left outer join dba._pgUnit on _pgUnit.Id=_pgCar.UnitCode');
+        Add('     left outer join dba._pgUnit on _pgUnit.ObjectCode=_pgCar.UnitCode');
         Add('     left outer join (select Id_Postgres_Fuel from dba.Goods, dba.GoodsProperty where GoodsId = Goods.Id and GoodsCode=7001)as Goods_7001 on 1=1');
         Add('     left outer join (select Id_Postgres_Fuel from dba.Goods, dba.GoodsProperty where GoodsId = Goods.Id and GoodsCode=7003)as Goods_7003 on 1=1');
         Add('     left outer join (select Id_Postgres_Fuel from dba.Goods, dba.GoodsProperty where GoodsId = Goods.Id and GoodsCode=7004)as Goods_7004 on 1=1');
@@ -2444,7 +2442,7 @@ begin
 
         Add('     , _pgRoute.RouteId_pg as Id_Postgres');
         Add('from dba._pgRoute');
-        Add('     left outer join dba._pgUnit on _pgUnit.Id=_pgRoute.UnitCode');
+        Add('     left outer join dba._pgUnit on _pgUnit.ObjectCode=_pgRoute.UnitCode');
         Add('where trim(_pgRoute.Name)<>'+FormatToVarCharServer_notNULL(''));
         Add('order by ObjectId');
         Open;
@@ -2678,7 +2676,7 @@ begin
         Add('     , _pgMember.MemberId_pg as Id_Postgres');
         Add('     , _pgMember.PersonalId_pg as Id_Postgres_two');
         Add('from dba._pgMember');
-        Add('     left outer join dba._pgUnit on _pgUnit.Id=_pgMember.UnitCode');
+        Add('     left outer join dba._pgUnit on _pgUnit.ObjectCode=_pgMember.UnitCode');
         Add('order by ObjectId');
         Open;
         //

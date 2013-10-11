@@ -2,8 +2,8 @@ inherited ContractForm: TContractForm
   Caption = #1044#1086#1075#1086#1074#1086#1088#1072
   ClientHeight = 473
   ClientWidth = 770
-  ExplicitWidth = 778
-  ExplicitHeight = 500
+  ExplicitWidth = 786
+  ExplicitHeight = 508
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -39,42 +39,51 @@ inherited ContractForm: TContractForm
       object clInvNumber: TcxGridDBColumn
         Caption = #1053#1086#1084#1077#1088' '#1076#1086#1075#1086#1074#1086#1088#1072
         DataBinding.FieldName = 'InvNumber'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 84
+        Width = 72
       end
       object clComment: TcxGridDBColumn
         Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
         DataBinding.FieldName = 'Comment'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 238
+        Width = 167
       end
       object clSigning: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1079#1072#1082#1083#1102#1095#1077#1085#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
         DataBinding.FieldName = 'inSigning'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 75
+        Width = 111
       end
       object clStart: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1076#1086#1075#1086#1074#1086#1088#1072
         DataBinding.FieldName = 'Start'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 62
+        Width = 103
       end
       object clEnd: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
         DataBinding.FieldName = 'End'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 83
+        Width = 103
       end
       object clContractKind: TcxGridDBColumn
         Caption = #1042#1080#1076#1099' '#1076#1086#1075#1086#1074#1086#1088#1086#1074
         DataBinding.FieldName = 'ContractKind'
-        Width = 86
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 81
       end
       object clJuridical: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
         DataBinding.FieldName = 'Juridical'
-        Width = 128
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 119
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -115,8 +124,8 @@ inherited ContractForm: TContractForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -318,7 +327,6 @@ inherited ContractForm: TContractForm
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
       ImageIndex = 7
     end
     object dsdGridToExcel1: TdsdGridToExcel
@@ -361,8 +369,22 @@ inherited ContractForm: TContractForm
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
-    OnDblClickActionList = <>
-    ActionItemList = <>
+    OnDblClickActionList = <
+      item
+        Action = actUpdate
+      end
+      item
+        Action = dsdChoiceGuides
+      end>
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
     Left = 272
     Top = 184
   end

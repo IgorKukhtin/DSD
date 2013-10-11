@@ -879,6 +879,7 @@
             DataBinding.FieldName = 'AccountCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 40
           end
           object colDebetAccountGroupName: TcxGridDBColumn
@@ -887,6 +888,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 90
           end
           object colDebetAccountDirectionName: TcxGridDBColumn
@@ -895,6 +897,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 90
           end
           object colDebetAccountName: TcxGridDBColumn
@@ -902,6 +905,7 @@
             DataBinding.FieldName = 'DebetAccountName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 120
           end
           object colKreditAccountGroupName: TcxGridDBColumn
@@ -910,6 +914,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object colKreditAccountDirectionName: TcxGridDBColumn
@@ -918,6 +923,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object colKreditAccountName: TcxGridDBColumn
@@ -925,6 +931,7 @@
             DataBinding.FieldName = 'KreditAccountName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 120
           end
           object colByObjectCode: TcxGridDBColumn
@@ -932,6 +939,7 @@
             DataBinding.FieldName = 'ByObjectCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 40
           end
           object colByObjectName: TcxGridDBColumn
@@ -939,6 +947,7 @@
             DataBinding.FieldName = 'ByObjectName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object colGoodsGroupName: TcxGridDBColumn
@@ -947,6 +956,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object colGoodsCode: TcxGridDBColumn
@@ -955,6 +965,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 40
           end
           object colGoodsName: TcxGridDBColumn
@@ -963,6 +974,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object colGoodsKindName_comlete: TcxGridDBColumn
@@ -971,6 +983,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object colAccountOnComplete: TcxGridDBColumn
@@ -978,6 +991,7 @@
             DataBinding.FieldName = 'AccountOnComplete'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 25
           end
           object colDebetAmount: TcxGridDBColumn
@@ -985,6 +999,7 @@
             DataBinding.FieldName = 'DebetAmount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object colKreditAmount: TcxGridDBColumn
@@ -992,6 +1007,7 @@
             DataBinding.FieldName = 'KreditAmount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object colInfoMoneyName: TcxGridDBColumn
@@ -1000,6 +1016,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object colInfoMoneyName_Detail: TcxGridDBColumn
@@ -1008,6 +1025,7 @@
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
         end
