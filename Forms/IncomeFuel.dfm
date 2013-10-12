@@ -959,19 +959,6 @@ inherited IncomeFuelForm: TIncomeFuelForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-      end
-      item
-        Name = 'DriverId'
-        Value = ''
-        Component = GuidesPersonalDriver
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'DriverName'
-        Value = ''
-        Component = GuidesPersonalDriver
-        ComponentItem = 'TextValue'
-        DataType = ftString
       end>
     Left = 400
     Top = 88

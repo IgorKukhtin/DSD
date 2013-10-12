@@ -44,12 +44,19 @@ inherited RateFuelForm: TRateFuelForm
         Options.Editing = False
         Width = 52
       end
+      object clCarModelName: TcxGridDBColumn
+        Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+        DataBinding.FieldName = 'CarModelName'
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 150
+      end
       object clCarName: TcxGridDBColumn
         Caption = #1043#1086#1089'.'#1085#1086#1084#1077#1088
         DataBinding.FieldName = 'CarName'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 181
+        Width = 120
       end
       object clAmount_Internal: TcxGridDBColumn
         Caption = #1043#1086#1088#1086#1076' '#1050#1086#1083'-'#1074#1086' '#1085#1072' 100 '#1082#1084

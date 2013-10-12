@@ -1,10 +1,8 @@
--- Function: zfFormat_PartionGoods
+-- Function: zfCalc_UserAdmin
 
--- DROP FUNCTION zfFormat_PartionGoods (TVarChar);
+DROP FUNCTION IF EXISTS zfCalc_UserAdmin ();
 
-CREATE OR REPLACE FUNCTION zfFormat_PartionGoods(
-    IN inPartionGoods TVarChar
-)
+CREATE OR REPLACE FUNCTION zfCalc_UserAdmin()
 RETURNS TVarChar AS
 $BODY$
   DECLARE vbValue TVarChar;
@@ -20,17 +18,17 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION zfFormat_PartionGoods (TVarChar) OWNER TO postgres;
+  LANGUAGE PLPGSQL VOLATILE;
+ALTER FUNCTION zfCalc_UserAdmin () OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 24.07.13                        *
+ 12.10.13                                        * - !!!для тестов!!!
 */
 
 -- тест
--- SELECT * FROM zfFormat_PartionGoods ('asasa12-12-22-44')
+-- SELECT * FROM zfCalc_UserAdmin ()
 -- SELECT * FROM zfFormat_PartionGoods ('фывфы72121фывыфв')

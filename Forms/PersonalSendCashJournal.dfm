@@ -127,6 +127,7 @@ inherited PersonalSendCashJournalForm: TPersonalSendCashJournalForm
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
+      OptionsView.GroupByBox = False
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True

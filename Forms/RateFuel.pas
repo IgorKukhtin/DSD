@@ -63,6 +63,7 @@ type
     clAmountColdDistance_External: TcxGridDBColumn;
     spInsertUpdateObject: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    clCarModelName: TcxGridDBColumn;
   private
     { Private declarations }
   public

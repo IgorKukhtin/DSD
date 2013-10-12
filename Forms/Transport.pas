@@ -211,6 +211,16 @@ type
     EntryViewAddOn: TdsdDBViewAddOn;
     colchIsMasterFuel: TcxGridDBColumn;
     colDistanceFuelChild: TcxGridDBColumn;
+    actUnCompleteIncome: TdsdChangeMovementStatus;
+    actCompleteIncome: TdsdChangeMovementStatus;
+    actSetErasedIncome: TdsdChangeMovementStatus;
+    bbCompleteIncome: TdxBarButton;
+    bbUnCompleteIncome: TdxBarButton;
+    bbSetErasedIncome: TdxBarButton;
+    spMovementCompleteIncome: TdsdStoredProc;
+    spMovementUnCompleteIncome: TdsdStoredProc;
+    spMovementSetErasedIncome: TdsdStoredProc;
+    colchRatioFuel: TcxGridDBColumn;
   private
   public
   end;

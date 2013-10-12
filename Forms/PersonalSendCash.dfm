@@ -826,22 +826,6 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
           Component = MasterCDS
           ComponentItem = 'CarName'
           DataType = ftString
-        end
-        item
-          Name = 'PersonalDriverId'
-          Component = MasterCDS
-          ComponentItem = 'PersonalId'
-        end
-        item
-          Name = 'PersonalDriverCode'
-          Component = MasterCDS
-          ComponentItem = 'PersonalCode'
-        end
-        item
-          Name = 'PersonalDriverName'
-          Component = MasterCDS
-          ComponentItem = 'PersonalName'
-          DataType = ftString
         end>
       isShowModal = True
     end

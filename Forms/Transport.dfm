@@ -589,6 +589,11 @@
             Options.Editing = False
             Width = 59
           end
+          object colchRatioFuel: TcxGridDBColumn
+            Caption = #1050#1086#1101#1092#1092'. '#1087#1077#1088#1077#1074#1086#1076#1072' '#1085#1086#1088#1084#1099
+            DataBinding.FieldName = 'RatioFuel'
+            Width = 70
+          end
         end
         object cxGridChildLevel: TcxGridLevel
           GridView = cxGridChildDBTableView
@@ -1454,6 +1459,45 @@
         end>
       isShowModal = True
     end
+    object actUnCompleteIncome: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetIncome
+      StoredProc = spMovementUnCompleteIncome
+      StoredProcList = <
+        item
+          StoredProc = spMovementUnCompleteIncome
+        end>
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 11
+      Status = mtUncomplete
+    end
+    object actCompleteIncome: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetIncome
+      StoredProc = spMovementCompleteIncome
+      StoredProcList = <
+        item
+          StoredProc = spMovementCompleteIncome
+        end>
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 12
+      Status = mtComplete
+    end
+    object actSetErasedIncome: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetIncome
+      StoredProc = spMovementSetErasedIncome
+      StoredProcList = <
+        item
+          StoredProc = spMovementSetErasedIncome
+        end>
+      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      ImageIndex = 13
+      Status = mtDelete
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -1487,19 +1531,6 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-      end
-      item
-        Name = 'PersonalDriverId'
-        Value = ''
-        Component = GuidesPersonalDriver
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PersonalDriverName'
-        Value = ''
-        Component = GuidesPersonalDriver
-        ComponentItem = 'TextValue'
-        DataType = ftString
       end>
     Left = 506
     Top = 83
@@ -2251,6 +2282,22 @@
           ItemName = 'bbStatic'
         end
         item
+          Visible = True
+          ItemName = 'bbCompleteIncome'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnCompleteIncome'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedIncome'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
@@ -2328,6 +2375,18 @@
     end
     object bbUnErasedIncome: TdxBarButton
       Action = SetUnErasedIncome
+      Category = 0
+    end
+    object bbCompleteIncome: TdxBarButton
+      Action = actCompleteIncome
+      Category = 0
+    end
+    object bbUnCompleteIncome: TdxBarButton
+      Action = actUnCompleteIncome
+      Category = 0
+    end
+    object bbSetErasedIncome: TdxBarButton
+      Action = actSetErasedIncome
       Category = 0
     end
   end
@@ -2697,5 +2756,53 @@
     SortImages = dmMain.SortImageList
     Left = 379
     Top = 282
+  end
+  object spMovementCompleteIncome: TdsdStoredProc
+    StoredProcName = 'gpComplete_Movement_Income'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = IncomeCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsLastComplete'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    Left = 584
+    Top = 312
+  end
+  object spMovementUnCompleteIncome: TdsdStoredProc
+    StoredProcName = 'gpUnComplete_Movement'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = IncomeCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+      end>
+    Left = 656
+    Top = 328
+  end
+  object spMovementSetErasedIncome: TdsdStoredProc
+    StoredProcName = 'gpSetErased_Movement'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = IncomeCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+      end>
+    Left = 728
+    Top = 312
   end
 end

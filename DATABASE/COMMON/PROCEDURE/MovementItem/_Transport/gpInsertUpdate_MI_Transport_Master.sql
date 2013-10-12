@@ -139,9 +139,9 @@ BEGIN
                                             , ioAmount             := 0
                                             , inColdHour           := 0
                                             , inColdDistance       := 0
-                                            , inAmountColdHour     := tmpRateFuel.AmountColdHour
-                                            , inAmountColdDistance := tmpRateFuel.AmountColdDistance
-                                            , inAmountFuel         := tmpRateFuel.AmountFuel
+                                            , inAmountColdHour     := tmpRateFuel.AmountColdHour * COALESCE (ObjectFloat_Fuel_Ratio.ValueData, 1) -- !!!с учетом Коэффициента перевода нормы!!!
+                                            , inAmountColdDistance := tmpRateFuel.AmountColdDistance * COALESCE (ObjectFloat_Fuel_Ratio.ValueData, 1) -- !!!с учетом Коэффициента перевода нормы!!!
+                                            , inAmountFuel         := tmpRateFuel.AmountFuel * COALESCE (ObjectFloat_Fuel_Ratio.ValueData, 1) -- !!!с учетом Коэффициента перевода нормы!!!
                                             , inNumber             := CASE WHEN ObjectLink_Car_FuelAll.DescId = zc_ObjectLink_Car_FuelMaster() THEN 1 ELSE 2 END
                                             , inRateFuelKindTax    := ObjectFloat_RateFuelKind_Tax.ValueData
                                             , inRateFuelKindId     := ObjectLink_Fuel_RateFuelKind.ChildObjectId
@@ -157,6 +157,11 @@ BEGIN
              JOIN ObjectLink AS ObjectLink_Car_FuelAll ON ObjectLink_Car_FuelAll.ObjectId = MovementLinkObject_Car.ObjectId
                                                       AND ObjectLink_Car_FuelAll.DescId = tmpDesc.DescId
                                                       AND ObjectLink_Car_FuelAll.ChildObjectId IS NOT NULL
+
+             -- выбрали у Вида топлива - Коэффициент перевода нормы 
+             LEFT JOIN ObjectFloat AS ObjectFloat_Fuel_Ratio ON ObjectFloat_Fuel_Ratio.ObjectId = ObjectLink_Car_FuelAll.ChildObjectId
+                                                            AND ObjectFloat_Fuel_Ratio.DescId = zc_ObjectFloat_Fuel_Ratio()
+                                                            AND ObjectFloat_Fuel_Ratio.ValueData <> 0
 
              -- выбрали у Вида топлива - Вид норм для топлива
              LEFT JOIN ObjectLink AS ObjectLink_Fuel_RateFuelKind ON ObjectLink_Fuel_RateFuelKind.ObjectId = ObjectLink_Car_FuelAll.ChildObjectId
@@ -207,6 +212,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.10.13                                        * add zc_ObjectFloat_Fuel_Ratio
  12.10.13                                        * add lpInsertUpdate_MI_Transport_Child
  07.10.13                                        * add inDistanceFuelChild and inIsMasterFuel
  29.09.13                                        * 

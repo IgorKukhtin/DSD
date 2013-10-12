@@ -50,7 +50,7 @@ begin
   EndRunPlan  := Date;
   StartRun    := Date;
   EndRun      := Date;
-  HoursAdd := 45654;
+  HoursAdd := -123;
   Comment:='';
   CarId := TCarTest.Create.GetDefault;
   CarTrailerId:=0;
