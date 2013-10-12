@@ -877,6 +877,7 @@
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
+          OptionsCustomize.ColumnsQuickCustomization = True
           OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
           OptionsView.HeaderAutoHeight = True
