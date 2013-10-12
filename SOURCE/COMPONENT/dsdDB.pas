@@ -24,13 +24,13 @@ type
     function GetDisplayName: string; override;
     procedure AssignParam(Param: TdsdParam);
   public
-    property Value: Variant read GetValue write SetValue;
     property onChange: TNotifyEvent read FonChange write FonChange;
     function AsString: string;
     procedure Assign(Source: TPersistent); override;
     constructor Create(Collection: TCollection); override;
   published
     property Name: String read FName write FName;
+    property Value: Variant read GetValue write SetValue;
     // Откуда считывать значение параметра
     property Component: TComponent read FComponent write SetComponent;
     property ComponentItem: String read FComponentItem write FComponentItem;

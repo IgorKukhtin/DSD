@@ -4,8 +4,8 @@ inherited IncomeForm: TIncomeForm
   ClientWidth = 971
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 979
-  ExplicitHeight = 489
+  ExplicitWidth = 987
+  ExplicitHeight = 497
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -225,6 +225,7 @@ inherited IncomeForm: TIncomeForm
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.00;-,0.00;'
@@ -429,9 +430,6 @@ inherited IncomeForm: TIncomeForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -442,6 +440,7 @@ inherited IncomeForm: TIncomeForm
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -520,17 +519,17 @@ inherited IncomeForm: TIncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 88
           end
-          object colByObjectCode: TcxGridDBColumn
-            Caption = #1054#1073'.'#1082#1086#1076
-            DataBinding.FieldName = 'ByObjectCode'
+          object colDirectionObjectCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1086#1073'.'#1085#1072#1087#1088'.'
+            DataBinding.FieldName = 'DirectionObjectCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 40
           end
-          object colByObjectName: TcxGridDBColumn
-            Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1074#1072#1085#1080#1077
-            DataBinding.FieldName = 'ByObjectName'
+          object colDirectionObjectName: TcxGridDBColumn
+            Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'DirectionObjectName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 98
@@ -543,21 +542,21 @@ inherited IncomeForm: TIncomeForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colGoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1090#1086#1074'.'
-            DataBinding.FieldName = 'GoodsCode'
+          object colDestinationObjectCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1086#1073'.'#1085#1072#1079#1085'.'
+            DataBinding.FieldName = 'DestinationObjectCode'
             Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object colGoodsName: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088
-            DataBinding.FieldName = 'GoodsName'
+          object colDestinationObjectName: TcxGridDBColumn
+            Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'DestinationObjectName'
             Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colGoodsKindName_comlete: TcxGridDBColumn
+          object clenGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             Visible = False
@@ -626,6 +625,7 @@ inherited IncomeForm: TIncomeForm
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 238
@@ -641,18 +641,21 @@ inherited IncomeForm: TIncomeForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inShowAll'
+        Value = False
         Component = BooleanStoredProcAction
         DataType = ftBoolean
         ParamType = ptInput
       end
       item
         Name = 'inIsErased'
+        Value = False
         Component = ShowErasedAction
         DataType = ftBoolean
         ParamType = ptInput
@@ -663,8 +666,8 @@ inherited IncomeForm: TIncomeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -896,12 +899,14 @@ inherited IncomeForm: TIncomeForm
       Params = <
         item
           Name = 'InvNumber'
+          Value = ''
           Component = edInvNumber
           DataType = ftString
           ParamType = ptInput
         end
         item
           Name = 'From'
+          Value = ''
           Component = dsdGuidesFrom
           ComponentItem = 'TextValue'
           DataType = ftString
@@ -909,6 +914,7 @@ inherited IncomeForm: TIncomeForm
         end
         item
           Name = 'OperDate'
+          Value = 0d
           Component = edOperDate
           DataType = ftDateTime
           ParamType = ptInput
@@ -984,6 +990,7 @@ inherited IncomeForm: TIncomeForm
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = dsdGuidesFrom
         ComponentItem = 'Key'
         DataType = ftString
@@ -991,6 +998,7 @@ inherited IncomeForm: TIncomeForm
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = dsdGuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -1007,6 +1015,7 @@ inherited IncomeForm: TIncomeForm
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = dsdGuidesTo
         ComponentItem = 'Key'
         DataType = ftString
@@ -1014,6 +1023,7 @@ inherited IncomeForm: TIncomeForm
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = dsdGuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -1040,6 +1050,7 @@ inherited IncomeForm: TIncomeForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -1071,6 +1082,7 @@ inherited IncomeForm: TIncomeForm
       end
       item
         Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -1192,76 +1204,89 @@ inherited IncomeForm: TIncomeForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inInvNumber'
+        Value = ''
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inOperDate'
+        Value = 0d
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inOperDatePartner'
+        Value = 0d
         Component = edOperDatePartner
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inInvNumberPartner'
+        Value = ''
         Component = edInvNumberPartner
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inPriceWithVAT'
+        Value = 'False'
         Component = edPriceWithVAT
         DataType = ftBoolean
         ParamType = ptInput
       end
       item
         Name = 'inVATPercent'
+        Value = 0.000000000000000000
         Component = edVATPercent
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inChangePercent'
+        Value = 0.000000000000000000
         Component = edChangePercent
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inFromId'
+        Value = ''
         Component = dsdGuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inToId'
+        Value = ''
         Component = dsdGuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inPaidKindId'
+        Value = ''
         Component = PaidKindGuides
         ParamType = ptInput
       end
       item
         Name = 'inContractId'
+        Value = ''
         Component = ContractGuides
         ParamType = ptInput
       end
       item
         Name = 'inPersonalPackerId'
+        Value = ''
         Component = PackerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
@@ -1270,6 +1295,7 @@ inherited IncomeForm: TIncomeForm
     Top = 240
   end
   object HeaderSaver: THeaderSaver
+    IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
     StoredProc = spInsertUpdateMovement
@@ -1325,108 +1351,129 @@ inherited IncomeForm: TIncomeForm
     Params = <
       item
         Name = 'inId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'InvNumber'
+        Value = ''
         Component = edInvNumber
       end
       item
         Name = 'OperDate'
+        Value = 0d
         Component = edOperDate
       end
       item
         Name = 'OperDatePartner'
+        Value = 0d
         Component = edOperDatePartner
       end
       item
         Name = 'InvNumberPartner'
+        Value = ''
         Component = edInvNumberPartner
       end
       item
         Name = 'FromId'
+        Value = ''
         Component = dsdGuidesFrom
         ComponentItem = 'Key'
       end
       item
         Name = 'FromName'
+        Value = ''
         Component = dsdGuidesFrom
         ComponentItem = 'TextValue'
       end
       item
         Name = 'ToId'
+        Value = ''
         Component = dsdGuidesTo
         ComponentItem = 'Key'
       end
       item
         Name = 'ToName'
+        Value = ''
         Component = dsdGuidesTo
         ComponentItem = 'TextValue'
       end
       item
         Name = 'ToParentId'
+        Value = ''
         Component = dsdGuidesTo
         ComponentItem = 'ParentId'
         DataType = ftString
       end
       item
         Name = 'PriceWithVAT'
+        Value = 'False'
         Component = edPriceWithVAT
         DataType = ftBoolean
       end
       item
         Name = 'VATPercent'
+        Value = 0.000000000000000000
         Component = edVATPercent
         DataType = ftFloat
       end
       item
         Name = 'ChangePercent'
+        Value = 0.000000000000000000
         Component = edChangePercent
         DataType = ftFloat
       end
       item
         Name = 'ContractId'
+        Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'ContarctName'
+        Value = ''
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'PaidKindId'
+        Value = ''
         Component = PaidKindGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'PaidKindName'
+        Value = ''
         Component = PaidKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'PersonalPackerId'
+        Value = ''
         Component = PackerGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'PersonalPackerName'
+        Value = ''
         Component = PackerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'StatusCode'
+        Value = ''
         Component = ChangeStatus
         ComponentItem = 'Key'
         DataType = ftString
       end
       item
         Name = 'StatusName'
+        Value = ''
         Component = ChangeStatus
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -1443,6 +1490,7 @@ inherited IncomeForm: TIncomeForm
     Top = 306
   end
   object GuidesFiller: TGuidesFiller
+    IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
     GuidesList = <
@@ -1467,6 +1515,7 @@ inherited IncomeForm: TIncomeForm
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -1474,6 +1523,7 @@ inherited IncomeForm: TIncomeForm
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -1490,6 +1540,7 @@ inherited IncomeForm: TIncomeForm
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = PaidKindGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -1497,6 +1548,7 @@ inherited IncomeForm: TIncomeForm
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = PaidKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -1513,6 +1565,7 @@ inherited IncomeForm: TIncomeForm
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = PackerGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -1520,6 +1573,7 @@ inherited IncomeForm: TIncomeForm
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = PackerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -1531,6 +1585,7 @@ inherited IncomeForm: TIncomeForm
   object ChangeStatus: TChangeStatus
     KeyField = 'Code'
     LookupControl = ceStatus
+    IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
     StoredProcName = 'gpUpdate_Status_Income'

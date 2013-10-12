@@ -1,9 +1,9 @@
 inherited FreightEditForm: TFreightEditForm
-  Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1079#1072
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1053#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1079#1072'>'
   ClientHeight = 139
   ClientWidth = 295
-  ExplicitWidth = 303
-  ExplicitHeight = 166
+  ExplicitWidth = 311
+  ExplicitHeight = 174
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -14,8 +14,8 @@ inherited FreightEditForm: TFreightEditForm
   end
   object cxLabel1: TcxLabel
     Left = 10
-    Top = 49
-    Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1075#1088#1091#1079#1072
+    Top = 53
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 41
@@ -82,17 +82,20 @@ inherited FreightEditForm: TFreightEditForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = 0.000000000000000000
         Component = edCode
         ParamType = ptInput
       end
       item
         Name = 'inName'
+        Value = ''
         Component = edName
         DataType = ftString
         ParamType = ptInput
@@ -104,6 +107,7 @@ inherited FreightEditForm: TFreightEditForm
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 96
@@ -116,17 +120,20 @@ inherited FreightEditForm: TFreightEditForm
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'Name'
+        Value = ''
         Component = edName
         DataType = ftString
       end
       item
         Name = 'Code'
+        Value = 0.000000000000000000
         Component = edCode
         DataType = ftUnknown
       end>

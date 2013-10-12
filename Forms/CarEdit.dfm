@@ -1,9 +1,9 @@
 ﻿inherited CarEditForm: TCarEditForm
-  Caption = #1053#1086#1074#1099#1081' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1100
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100'>'
   ClientHeight = 424
   ClientWidth = 354
-  ExplicitWidth = 362
-  ExplicitHeight = 451
+  ExplicitWidth = 370
+  ExplicitHeight = 459
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -81,7 +81,7 @@
   object cxLabel7: TcxLabel
     Left = 32
     Top = 203
-    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   object ceUnit: TcxButtonEdit
     Left = 32

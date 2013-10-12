@@ -85,6 +85,8 @@ type
     cxLabel2: TcxLabel;
     colRouteName: TcxGridDBColumn;
     colInvNumberPartner: TcxGridDBColumn;
+    colInvNumberMaster: TcxGridDBColumn;
+    colOperDateMaster: TcxGridDBColumn;
   private
   public
   end;

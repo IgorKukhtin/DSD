@@ -19,19 +19,22 @@ BEGIN
      vbUserId:=2; -- CAST (inSession AS Integer);
 
 
-     -- проверка - связанные документы Удалять нельзя
-     PERFORM lfCheck_Movement_Parent (inMovementId:= inMovementId, inComment:= 'удалить');
+     -- проверка - если <Master> Проведен, то <Ошибка>
+     PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
+
+     -- проверка - если есть <Child> Проведен, то <Ошибка>
+     PERFORM lfCheck_Movement_ChildStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
 
      -- Удаляем Документ
      PERFORM lpSetErased_Movement (inMovementId := inMovementId
                                  , inUserId     := vbUserId);
-
+/*
      -- Удаляем подчиненные Документы
      PERFORM lpSetErased_Movement (inMovementId := Movement.Id
                                  , inUserId     := vbUserId)
      FROM Movement
      WHERE ParentId = inMovementId;
-
+*/
 
 END;
 $BODY$
@@ -41,6 +44,8 @@ ALTER FUNCTION gpSetErased_Movement (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.10.13                                        * del Удаляем подчиненные Документы
+ 12.10.13                                        * add lfCheck_Movement_ParentStatus and lfCheck_Movement_ChildStatus
  06.10.13                                        *
 */
 

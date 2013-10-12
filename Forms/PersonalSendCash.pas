@@ -77,11 +77,9 @@ type
     colAccountCode: TcxGridDBColumn;
     colKreditAccountGroupName: TcxGridDBColumn;
     colKreditAccountDirectionName: TcxGridDBColumn;
-    colGoodsGroupName: TcxGridDBColumn;
-    colByObjectCode: TcxGridDBColumn;
-    colByObjectName: TcxGridDBColumn;
-    colGoodsName: TcxGridDBColumn;
-    colGoodsKindName_comlete: TcxGridDBColumn;
+    colDirectionObjectCode: TcxGridDBColumn;
+    colDirectionObjectName: TcxGridDBColumn;
+    colDestinationObjectName: TcxGridDBColumn;
     colAccountOnComplete: TcxGridDBColumn;
     bbBooleanAction: TdxBarButton;
     bbStatic: TdxBarStatic;
@@ -93,7 +91,7 @@ type
     HeaderSaver: THeaderSaver;
     spGet: TdsdStoredProc;
     RefreshAddOn: TRefreshAddOn;
-    colGoodsCode: TcxGridDBColumn;
+    colDestinationObjectCode: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
     colInfoMoneyName_Detail: TcxGridDBColumn;
     GridToExcel: TdsdGridToExcel;

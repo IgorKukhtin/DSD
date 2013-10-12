@@ -1,9 +1,9 @@
 ﻿inherited PositionEditForm: TPositionEditForm
-  Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1083#1078#1085#1086#1089#1090#1100'>'
   ClientHeight = 187
   ClientWidth = 370
-  ExplicitWidth = 378
-  ExplicitHeight = 214
+  ExplicitWidth = 386
+  ExplicitHeight = 222
   PixelsPerInch = 96
   TextHeight = 13
   object edMeasureName: TcxTextEdit
@@ -15,7 +15,7 @@
   object cxLabel1: TcxLabel
     Left = 32
     Top = 63
-    Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 64
@@ -85,17 +85,20 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
       end
       item
         Name = 'inName'
+        Value = ''
         Component = edMeasureName
         DataType = ftString
         ParamType = ptInput
@@ -107,6 +110,7 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 136
@@ -119,16 +123,19 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'Code'
+        Value = 0.000000000000000000
         Component = ceCode
       end
       item
         Name = 'Name'
+        Value = ''
         Component = edMeasureName
         DataType = ftString
       end>

@@ -19,6 +19,7 @@ inherited RateFuelForm: TRateFuelForm
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
+      DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
@@ -47,6 +48,7 @@ inherited RateFuelForm: TRateFuelForm
         Caption = #1043#1086#1089'.'#1085#1086#1084#1077#1088
         DataBinding.FieldName = 'CarName'
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 181
       end
       object clAmount_Internal: TcxGridDBColumn
@@ -92,6 +94,7 @@ inherited RateFuelForm: TRateFuelForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 71
       end
     end
@@ -265,6 +268,7 @@ inherited RateFuelForm: TRateFuelForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
         end>
       isShowModal = True
       DataSource = DataSource
@@ -346,6 +350,7 @@ inherited RateFuelForm: TRateFuelForm
       end>
     Params = <
       item
+        Value = Null
       end>
     Left = 48
     Top = 216

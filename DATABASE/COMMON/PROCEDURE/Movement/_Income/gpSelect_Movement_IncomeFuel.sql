@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_IncomeFuel(
     IN inEndDate     TDateTime , --
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, InvNumberMaster TVarChar, OperDateMaster TDateTime, StatusCode Integer, StatusName TVarChar
              , InvNumberPartner TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummVAT TFloat
@@ -30,6 +30,8 @@ BEGIN
              Movement.Id
            , Movement.InvNumber
            , Movement.OperDate
+           , Movement_Master.InvNumber AS InvNumberMaster
+           , Movement_Master.OperDate AS OperDateMaster
            , Object_Status.ObjectCode          AS StatusCode
            , Object_Status.ValueData           AS StatusName
 
@@ -53,6 +55,8 @@ BEGIN
            , View_PersonalDriver.PersonalName  AS PersonalDriverName
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN Movement AS Movement_Master ON Movement_Master.Id = Movement.ParentId
 
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
@@ -120,6 +124,7 @@ ALTER FUNCTION gpSelect_Movement_IncomeFuel (TDateTime, TDateTime, TVarChar) OWN
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.10.13                                        * add InvNumberMaster and OperDateMaster
  07.10.13                                        * add lpCheckRight
  04.10.13                                        * add Route
  30.09.13                                        * add Object_Personal_View
@@ -127,4 +132,4 @@ ALTER FUNCTION gpSelect_Movement_IncomeFuel (TDateTime, TDateTime, TVarChar) OWN
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_IncomeFuel (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_IncomeFuel (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= zfCalc_UserAdmin ())

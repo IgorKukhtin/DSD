@@ -2,8 +2,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 427
   ClientWidth = 1240
-  ExplicitWidth = 1248
-  ExplicitHeight = 454
+  ExplicitWidth = 1256
+  ExplicitHeight = 462
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -341,8 +341,8 @@ inherited IncomeJournalForm: TIncomeJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -478,6 +478,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
         end>
       isShowModal = False
       DataSource = DataSource
@@ -558,12 +559,14 @@ inherited IncomeJournalForm: TIncomeJournalForm
     Params = <
       item
         Name = 'inStartDate'
+        Value = 41395d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
+        Value = 41395d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -584,6 +587,7 @@ inherited IncomeJournalForm: TIncomeJournalForm
       end
       item
         Name = 'inIsLastComplete'
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
       end>

@@ -82,9 +82,9 @@ type
     colKreditAccountGroupName: TcxGridDBColumn;
     colKreditAccountDirectionName: TcxGridDBColumn;
     colGoodsGroupName: TcxGridDBColumn;
-    colByObjectCode: TcxGridDBColumn;
-    colByObjectName: TcxGridDBColumn;
-    colGoodsName: TcxGridDBColumn;
+    colDirectionObjectCode: TcxGridDBColumn;
+    colDirectionObjectName: TcxGridDBColumn;
+    colDestinationObjectName: TcxGridDBColumn;
     colAmountPartner: TcxGridDBColumn;
     colAmountPacker: TcxGridDBColumn;
     colCountForPrice: TcxGridDBColumn;
@@ -93,7 +93,7 @@ type
     colLiveWeight: TcxGridDBColumn;
     colGoodsKindName: TcxGridDBColumn;
     colAssetName: TcxGridDBColumn;
-    colGoodsKindName_comlete: TcxGridDBColumn;
+    clenGoodsKindName: TcxGridDBColumn;
     colAccountOnComplete: TcxGridDBColumn;
     bbBooleanAction: TdxBarButton;
     bbStatic: TdxBarStatic;
@@ -114,7 +114,7 @@ type
     edInvNumberPartner: TcxTextEdit;
     spGet: TdsdStoredProc;
     RefreshAddOn: TRefreshAddOn;
-    colGoodsCode: TcxGridDBColumn;
+    colDestinationObjectCode: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
     colInfoMoneyName_Detail: TcxGridDBColumn;
     colPrice_comlete: TcxGridDBColumn;

@@ -3,8 +3,8 @@ inherited PriceListGoodsItemForm: TPriceListGoodsItemForm
   ClientHeight = 398
   ClientWidth = 497
   KeyPreview = True
-  ExplicitWidth = 505
-  ExplicitHeight = 425
+  ExplicitWidth = 513
+  ExplicitHeight = 433
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -19,6 +19,7 @@ inherited PriceListGoodsItemForm: TPriceListGoodsItemForm
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
+      DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
@@ -128,8 +129,8 @@ inherited PriceListGoodsItemForm: TPriceListGoodsItemForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -225,12 +226,14 @@ inherited PriceListGoodsItemForm: TPriceListGoodsItemForm
     Params = <
       item
         Name = 'inPriceListId'
+        Value = ''
         Component = PriceListGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inGoodsId'
+        Value = ''
         Component = GoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
@@ -271,22 +274,26 @@ inherited PriceListGoodsItemForm: TPriceListGoodsItemForm
     Params = <
       item
         Name = 'PriceListId'
+        Value = ''
         Component = PriceListGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'PriceListName'
+        Value = ''
         Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'GoodsId'
+        Value = ''
         Component = GoodsGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'GoodsName'
+        Value = ''
         Component = GoodsGuides
         ComponentItem = 'TextValue'
         DataType = ftString

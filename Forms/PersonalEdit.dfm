@@ -1,9 +1,9 @@
 ﻿inherited PersonalEditForm: TPersonalEditForm
-  Caption = 'C'#1086#1090#1088#1091#1076#1085#1080#1082
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <C'#1086#1090#1088#1091#1076#1085#1080#1082'>'
   ClientHeight = 275
   ClientWidth = 372
-  ExplicitWidth = 380
-  ExplicitHeight = 302
+  ExplicitWidth = 388
+  ExplicitHeight = 310
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
@@ -166,42 +166,49 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inMemberId '
+        Value = ''
         Component = MemberGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inPositionId'
+        Value = ''
         Component = PositionGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inUnitId'
+        Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inPersonalGroupId'
+        Value = ''
         Component = PersonalGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inDateIn'
+        Value = 0d
         Component = edDateIn
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inDateOut'
+        Value = 0d
         Component = edDateOut
         DataType = ftDateTime
         ParamType = ptInput
@@ -213,6 +220,7 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 304
@@ -225,65 +233,77 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'MemberCode'
+        Value = 0.000000000000000000
         Component = ceMemberCode
       end
       item
         Name = 'MemberId'
+        Value = ''
         Component = MemberGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'MemberName'
+        Value = ''
         Component = MemberGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'PositionId'
+        Value = ''
         Component = PositionGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'PositionName'
+        Value = ''
         Component = PositionGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'UnitId'
+        Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'UnitName'
+        Value = ''
         Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'PersonalGroupId'
+        Value = ''
         Component = PersonalGroupGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'PersonalGroupName'
+        Value = ''
         Component = PersonalGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'DateIn'
+        Value = 0d
         Component = edDateIn
         DataType = ftDateTime
       end
       item
         Name = 'DateOut'
+        Value = 0d
         Component = edDateOut
         DataType = ftDateTime
       end>
@@ -317,6 +337,7 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -324,6 +345,7 @@
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -340,6 +362,7 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = MemberGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -347,6 +370,7 @@
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = MemberGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -354,6 +378,7 @@
       end
       item
         Name = 'Code'
+        Value = 0.000000000000000000
         Component = ceMemberCode
         ComponentItem = 'Code'
       end>
@@ -368,6 +393,7 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = PersonalGroupGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -375,6 +401,7 @@
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = PersonalGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -391,6 +418,7 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = PositionGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -398,6 +426,7 @@
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = PositionGuides
         ComponentItem = 'TextValue'
         DataType = ftString

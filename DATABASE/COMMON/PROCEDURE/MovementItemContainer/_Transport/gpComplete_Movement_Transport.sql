@@ -17,14 +17,14 @@ BEGIN
      vbUserId:=2; -- CAST (inSession AS Integer);
 
 
+
      -- таблица - Проводки 
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
-
      -- Проводим Документ
      PERFORM lpComplete_Movement_Transport (inMovementId := inMovementId
                                           , inUserId     := vbUserId);
 
-
+/*
      -- !!!таблицы для подчиненных Документов!!!
 
      -- таблица - элементы по контрагенту, со всеми свойствами для формирования Аналитик в проводках
@@ -52,8 +52,8 @@ BEGIN
      FROM Movement
      WHERE Movement.ParentId = inMovementId
        AND Movement.DescId   = zc_Movement_Income()
-       AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
-
+       AND Movement.StatusId IN (zc_Enum_Status_UnComplete());
+*/
 
 END;
 $BODY$
@@ -62,6 +62,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.10.13                                        * del lpComplete_Movement_Income
  06.10.13                                        *
 */
 

@@ -1,9 +1,9 @@
 ﻿inherited RateFuelKindEditForm: TRateFuelKindEditForm
-  Caption = #1042#1080#1076#1099' '#1085#1086#1088#1084' '#1076#1083#1103' '#1090#1086#1087#1083#1080#1074#1072
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1042#1080#1076' '#1085#1086#1088#1084#1099' '#1090#1086#1087#1083#1080#1074#1072'>'
   ClientHeight = 275
   ClientWidth = 319
-  ExplicitWidth = 327
-  ExplicitHeight = 302
+  ExplicitWidth = 335
+  ExplicitHeight = 310
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -14,8 +14,8 @@
   end
   object cxLabel1: TcxLabel
     Left = 16
-    Top = 48
-    Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+    Top = 57
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 40

@@ -2,9 +2,8 @@ inherited GoodsForm: TGoodsForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <T'#1086#1074#1072#1088#1099'>'
   ClientHeight = 404
   ClientWidth = 645
-  ExplicitTop = -87
-  ExplicitWidth = 653
-  ExplicitHeight = 431
+  ExplicitWidth = 661
+  ExplicitHeight = 439
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -131,8 +130,8 @@ inherited GoodsForm: TGoodsForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -266,6 +265,7 @@ inherited GoodsForm: TGoodsForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
         end>
       isShowModal = True
       DataSource = DataSource

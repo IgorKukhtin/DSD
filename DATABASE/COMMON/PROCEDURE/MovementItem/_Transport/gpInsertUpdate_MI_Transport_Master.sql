@@ -129,6 +129,76 @@ BEGIN
      AND MovementItem.DescId = zc_MI_Child()
      AND MovementItem.ParentId = ioId;
 
+   -- сформировали Child для новых (!!!если есть норма!!!)
+   PERFORM lpInsertUpdate_MI_Transport_Child (ioId                 := 0
+                                            , inMovementId         := inMovementId
+                                            , inParentId           := ioId
+                                            , inFuelId             := ObjectLink_Car_FuelAll.ChildObjectId
+                                            , inIsCalculated       := TRUE
+                                            , inIsMasterFuel       := CASE WHEN ObjectLink_Car_FuelAll.DescId = zc_ObjectLink_Car_FuelMaster() THEN TRUE ELSE FALSE END
+                                            , ioAmount             := 0
+                                            , inColdHour           := 0
+                                            , inColdDistance       := 0
+                                            , inAmountColdHour     := tmpRateFuel.AmountColdHour
+                                            , inAmountColdDistance := tmpRateFuel.AmountColdDistance
+                                            , inAmountFuel         := tmpRateFuel.AmountFuel
+                                            , inNumber             := CASE WHEN ObjectLink_Car_FuelAll.DescId = zc_ObjectLink_Car_FuelMaster() THEN 1 ELSE 2 END
+                                            , inRateFuelKindTax    := ObjectFloat_RateFuelKind_Tax.ValueData
+                                            , inRateFuelKindId     := ObjectLink_Fuel_RateFuelKind.ChildObjectId
+                                            , inUserId             := vbUserId
+                                             )
+        -- !!!это запрос из gpSelect_MI_Transport!!!
+        FROM (SELECT zc_ObjectLink_Car_FuelMaster() AS DescId UNION ALL SELECT zc_ObjectLink_Car_FuelChild() AS DescId) AS tmpDesc
+             -- выбрали автомобиль (он один)
+             JOIN MovementLinkObject AS MovementLinkObject_Car
+                                     ON MovementLinkObject_Car.MovementId = inMovementId
+                                    AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
+             -- выбрали у автомобиля - все Виды топлива
+             JOIN ObjectLink AS ObjectLink_Car_FuelAll ON ObjectLink_Car_FuelAll.ObjectId = MovementLinkObject_Car.ObjectId
+                                                      AND ObjectLink_Car_FuelAll.DescId = tmpDesc.DescId
+                                                      AND ObjectLink_Car_FuelAll.ChildObjectId IS NOT NULL
+
+             -- выбрали у Вида топлива - Вид норм для топлива
+             LEFT JOIN ObjectLink AS ObjectLink_Fuel_RateFuelKind ON ObjectLink_Fuel_RateFuelKind.ObjectId = ObjectLink_Car_FuelAll.ChildObjectId
+                                                                 AND ObjectLink_Fuel_RateFuelKind.DescId = zc_ObjectLink_Fuel_RateFuelKind()
+             -- выбрали у нормы для топлива - % дополнительного расхода в связи с сезоном/температурой
+             LEFT JOIN ObjectFloat AS ObjectFloat_RateFuelKind_Tax ON ObjectFloat_RateFuelKind_Tax.ObjectId = ObjectLink_Fuel_RateFuelKind.ChildObjectId
+                                                                  AND ObjectFloat_RateFuelKind_Tax.DescId = zc_ObjectFloat_RateFuelKind_Tax()
+             -- этот нужен что б отбросить уже введенный вид топлива (если удален/не удален)
+             LEFT JOIN MovementItem AS MovementItem_Find ON MovementItem_Find.MovementId = inMovementId
+                                                        AND MovementItem_Find.ParentId   = ioId
+                                                        AND MovementItem_Find.ObjectId   = ObjectLink_Car_FuelAll.ChildObjectId
+                                                        AND MovementItem_Find.DescId     = zc_MI_Child()
+                                                        -- AND MovementItem_Find.isErased = FALSE
+
+             -- выбрали норму для автомобиль + Тип маршрута
+             LEFT JOIN (SELECT ObjectLink_RateFuel_Car.ChildObjectId       AS CarId
+                             , ObjectLink_RateFuel_RouteKind.ChildObjectId AS RouteKindId
+                             , ObjectFloat_Amount.ValueData                AS AmountFuel
+                             , ObjectFloat_AmountColdHour.ValueData        AS AmountColdHour
+                             , ObjectFloat_AmountColdDistance.ValueData    AS AmountColdDistance
+                        FROM ObjectLink AS ObjectLink_RateFuel_Car
+                             LEFT JOIN ObjectLink AS ObjectLink_RateFuel_RouteKind
+                                                  ON ObjectLink_RateFuel_RouteKind.ObjectId = ObjectLink_RateFuel_Car.ObjectId
+                                                 AND ObjectLink_RateFuel_RouteKind.DescId = zc_ObjectLink_RateFuel_RouteKind()
+                             LEFT JOIN ObjectFloat AS ObjectFloat_Amount
+                                                   ON ObjectFloat_Amount.ObjectId = ObjectLink_RateFuel_Car.ObjectId
+                                                  AND ObjectFloat_Amount.DescId = zc_ObjectFloat_RateFuel_Amount()
+                             LEFT JOIN ObjectFloat AS ObjectFloat_AmountColdHour
+                                                   ON ObjectFloat_AmountColdHour.ObjectId = ObjectLink_RateFuel_Car.ObjectId
+                                                  AND ObjectFloat_AmountColdHour.DescId = zc_ObjectFloat_RateFuel_AmountColdHour()
+                             LEFT JOIN ObjectFloat AS ObjectFloat_AmountColdDistance
+                                                   ON ObjectFloat_AmountColdDistance.ObjectId = ObjectLink_RateFuel_Car.ObjectId
+                                                  AND ObjectFloat_AmountColdDistance.DescId = zc_ObjectFloat_RateFuel_AmountColdDistance()
+                        WHERE ObjectLink_RateFuel_Car.DescId = zc_ObjectLink_RateFuel_Car()
+                       ) AS tmpRateFuel ON tmpRateFuel.CarId       = MovementLinkObject_Car.ObjectId
+                                       AND tmpRateFuel.RouteKindId = inRouteKindId
+
+        WHERE MovementItem_Find.ObjectId IS NULL
+              -- если нормы нет, тогда формировать эелементы не надо
+         AND (tmpRateFuel.AmountFuel <> 0 OR tmpRateFuel.AmountColdHour <> 0 OR tmpRateFuel.AmountColdDistance <> 0);
+
+
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
@@ -137,6 +207,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.10.13                                        * add lpInsertUpdate_MI_Transport_Child
  07.10.13                                        * add inDistanceFuelChild and inIsMasterFuel
  29.09.13                                        * 
  25.09.13         * 
