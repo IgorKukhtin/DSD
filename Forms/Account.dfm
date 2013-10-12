@@ -1,9 +1,9 @@
 inherited AccountForm: TAccountForm
-  Caption = #1057#1095#1077#1090#1072
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1095#1077#1090#1072'>'
   ClientHeight = 382
   ClientWidth = 717
-  ExplicitWidth = 725
-  ExplicitHeight = 409
+  ExplicitWidth = 733
+  ExplicitHeight = 417
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -19,6 +19,7 @@ inherited AccountForm: TAccountForm
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
+      DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
@@ -33,7 +34,6 @@ inherited AccountForm: TAccountForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
-      OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -44,7 +44,7 @@ inherited AccountForm: TAccountForm
         Width = 56
       end
       object clName: TcxGridDBColumn
-        Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Width = 163
@@ -118,8 +118,8 @@ inherited AccountForm: TAccountForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -253,6 +253,7 @@ inherited AccountForm: TAccountForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
         end>
       isShowModal = True
       DataSource = DataSource

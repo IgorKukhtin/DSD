@@ -1,9 +1,9 @@
 ﻿inherited BusinessEditForm: TBusinessEditForm
-  Caption = #1041#1080#1079#1085#1077#1089#1099
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1041#1080#1079#1085#1077#1089'>'
   ClientHeight = 142
   ClientWidth = 349
-  ExplicitWidth = 357
-  ExplicitHeight = 169
+  ExplicitWidth = 365
+  ExplicitHeight = 177
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -15,7 +15,7 @@
   object cxLabel1: TcxLabel
     Left = 40
     Top = 48
-    Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 72
@@ -59,17 +59,20 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
       end
       item
         Name = 'inName'
+        Value = ''
         Component = edName
         DataType = ftString
         ParamType = ptInput
@@ -81,6 +84,7 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 240
@@ -93,17 +97,20 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'Name'
+        Value = ''
         Component = edName
         DataType = ftString
       end
       item
         Name = 'Code'
+        Value = 0.000000000000000000
         Component = ceCode
       end>
     Left = 192

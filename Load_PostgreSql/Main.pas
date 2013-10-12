@@ -1678,7 +1678,7 @@ begin
                   Add('     left outer join dba.Unit as Unit_RouteSorting on Unit_RouteSorting.Id = Unit.RouteUnitID');
                   Add('     left outer join dba._pgPersonal on _pgPersonal.Id = Unit_RouteSorting.PersonalId_Postgres');
                   Add('     left outer join dba._toolsView_Client_isChangeDate on _toolsView_Client_isChangeDate.ClientId = Unit.ID');
-                  Add('where Unit.Id1_Postgres is null'
+                  Add('where (Unit.Id1_Postgres is null'
 //                     +'  and (isnull(Unit.findGoodsCard,zc_rvNo()) = zc_rvNo()'
 //                     +'    or fCheckUnitClientParentID(152,Unit.Id)=zc_rvYes())' // œÓÒÚ‡‚˘ËÍË-¬—≈
                      +'  and fCheckUnitClientParentID(3,Unit.Id)=zc_rvNo()'    // ¿À¿Õ
@@ -1689,6 +1689,14 @@ begin
                      +'  and fCheckUnitClientParentID(149,Unit.Id)=zc_rvNo()'  // –¿—’Œƒ€ œ–Œ»«¬Œƒ—“¬¿
                      +'  and isnull(Unit.PersonalId_Postgres,0)=0'
                      +'  and isnull(Unit.pgUnitId, 0)=0'
+
+                     +'  and '+IntToStr(isGlobalLoad)+'=zc_rvNo()'
+                     +'  )'
+
+                     +' or ('+IntToStr(isGlobalLoad)+'=zc_rvYes()'
+                     +'  and 1=0'
+                     +'     )'
+
                      );
                   Add('order by ObjectId');
              end // if not isBill

@@ -1,9 +1,9 @@
 ﻿inherited AccountEditForm: TAccountEditForm
-  Caption = #1053#1086#1074#1099#1081' '#1089#1095#1077#1090
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1057#1095#1077#1090'>'
   ClientHeight = 350
   ClientWidth = 389
-  ExplicitWidth = 397
-  ExplicitHeight = 377
+  ExplicitWidth = 405
+  ExplicitHeight = 385
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -150,38 +150,45 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
       end
       item
         Name = 'inName'
+        Value = ''
         Component = edName
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inAccountGroupId'
+        Value = ''
         Component = AccountGroupGuides
         ParamType = ptInput
       end
       item
         Name = 'inAccountDirectionId'
+        Value = ''
         Component = AccountDirectionnGuides
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyDestinationId'
+        Value = ''
         Component = InfoMoneyDestinationGuides
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyId'
+        Value = ''
         Component = InfoMoneyGuides
         ParamType = ptInput
       end>
@@ -192,6 +199,7 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 240
@@ -204,57 +212,68 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'Name'
+        Value = ''
         Component = edName
         DataType = ftString
       end
       item
         Name = 'Code'
+        Value = 0.000000000000000000
         Component = ceCode
       end
       item
         Name = 'AccountGroupId'
+        Value = ''
         Component = AccountGroupGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'AccountGroupName'
+        Value = ''
         Component = AccountGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'AccountDirectionId'
+        Value = ''
         Component = AccountDirectionnGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'AccountDirectionName'
+        Value = ''
         Component = AccountDirectionnGuides
         ComponentItem = 'TextValue'
       end
       item
         Name = 'InfoMoneyDestinationId'
+        Value = ''
         Component = InfoMoneyDestinationGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'InfoMoneyDestinationName'
+        Value = ''
         Component = InfoMoneyDestinationGuides
         ComponentItem = 'TextValue'
       end
       item
         Name = 'InfoMoneyId'
+        Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'InfoMoneyName'
+        Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
       end>

@@ -76,18 +76,16 @@ type
     colAccountCode: TcxGridDBColumn;
     colKreditAccountGroupName: TcxGridDBColumn;
     colKreditAccountDirectionName: TcxGridDBColumn;
-    colGoodsGroupName: TcxGridDBColumn;
-    colByObjectCode: TcxGridDBColumn;
-    colByObjectName: TcxGridDBColumn;
-    colGoodsName: TcxGridDBColumn;
+    colDirectionObjectCode: TcxGridDBColumn;
+    colDirectionObjectName: TcxGridDBColumn;
+    colDestinationObjectName: TcxGridDBColumn;
     colEndOdometre: TcxGridDBColumn;
     colRouteKindName: TcxGridDBColumn;
     colWeight: TcxGridDBColumn;
-    colGoodsKindName_comlete: TcxGridDBColumn;
     colAccountOnComplete: TcxGridDBColumn;
     colFreightName: TcxGridDBColumn;
     colStartOdometre: TcxGridDBColumn;
-    colGoodsCode: TcxGridDBColumn;
+    colDestinationObjectCode: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
     colInfoMoneyName_Detail: TcxGridDBColumn;
     cxGridChild: TcxGrid;
@@ -213,6 +211,16 @@ type
     EntryViewAddOn: TdsdDBViewAddOn;
     colchIsMasterFuel: TcxGridDBColumn;
     colDistanceFuelChild: TcxGridDBColumn;
+    actUnCompleteIncome: TdsdChangeMovementStatus;
+    actCompleteIncome: TdsdChangeMovementStatus;
+    actSetErasedIncome: TdsdChangeMovementStatus;
+    bbCompleteIncome: TdxBarButton;
+    bbUnCompleteIncome: TdxBarButton;
+    bbSetErasedIncome: TdxBarButton;
+    spMovementCompleteIncome: TdsdStoredProc;
+    spMovementUnCompleteIncome: TdsdStoredProc;
+    spMovementSetErasedIncome: TdsdStoredProc;
+    colchRatioFuel: TcxGridDBColumn;
   private
   public
   end;

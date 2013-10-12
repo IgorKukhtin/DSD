@@ -2,8 +2,8 @@ inherited BranchForm: TBranchForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1083#1080#1072#1083#1099'>'
   ClientHeight = 374
   ClientWidth = 601
-  ExplicitWidth = 609
-  ExplicitHeight = 401
+  ExplicitWidth = 617
+  ExplicitHeight = 409
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -17,6 +17,7 @@ inherited BranchForm: TBranchForm
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
+      DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
@@ -92,8 +93,8 @@ inherited BranchForm: TBranchForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -227,6 +228,7 @@ inherited BranchForm: TBranchForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
         end>
       isShowModal = True
       DataSource = DataSource

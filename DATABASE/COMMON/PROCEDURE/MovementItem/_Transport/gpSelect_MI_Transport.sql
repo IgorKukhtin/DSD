@@ -90,34 +90,38 @@ BEGIN
             , CASE WHEN ObjectLink_Car_FuelAll.DescId = zc_ObjectLink_Car_FuelMaster()
                              -- если "Основной" вид топлива
                         THEN zfCalc_RateFuelValue (inDistance           := MovementItem_Master.Amount
-                                                 , inAmountFuel         := tmpRateFuel.AmountFuel
+                                                 , inAmountFuel         := tmpRateFuel.AmountFuel * COALESCE (ObjectFloat_Fuel_Ratio.ValueData, 1) -- !!!с учетом Коэффициента перевода нормы!!!
                                                  , inColdHour           := 0
-                                                 , inAmountColdHour     := tmpRateFuel.AmountColdHour
+                                                 , inAmountColdHour     := tmpRateFuel.AmountColdHour * COALESCE (ObjectFloat_Fuel_Ratio.ValueData, 1) -- !!!с учетом Коэффициента перевода нормы!!!
                                                  , inColdDistance       := 0
-                                                 , inAmountColdDistance := tmpRateFuel.AmountColdDistance
+                                                 , inAmountColdDistance := tmpRateFuel.AmountColdDistance * COALESCE (ObjectFloat_Fuel_Ratio.ValueData, 1) -- !!!с учетом Коэффициента перевода нормы!!!
                                                  , inRateFuelKindTax    := ObjectFloat_RateFuelKind_Tax.ValueData
                                                   )
                    WHEN ObjectLink_Car_FuelAll.DescId = zc_ObjectLink_Car_FuelChild()
                              -- если "Дополнительный" вид топлива
                         THEN zfCalc_RateFuelValue (inDistance           := MIFloat_DistanceFuelChild.ValueData
-                                                 , inAmountFuel         := tmpRateFuel.AmountFuel
+                                                 , inAmountFuel         := tmpRateFuel.AmountFuel * COALESCE (ObjectFloat_Fuel_Ratio.ValueData, 1) -- !!!с учетом Коэффициента перевода нормы!!!
                                                  , inColdHour           := 0
-                                                 , inAmountColdHour     := tmpRateFuel.AmountColdHour
+                                                 , inAmountColdHour     := tmpRateFuel.AmountColdHour * COALESCE (ObjectFloat_Fuel_Ratio.ValueData, 1) -- !!!с учетом Коэффициента перевода нормы!!!
                                                  , inColdDistance       := 0
-                                                 , inAmountColdDistance := tmpRateFuel.AmountColdDistance
+                                                 , inAmountColdDistance := tmpRateFuel.AmountColdDistance * COALESCE (ObjectFloat_Fuel_Ratio.ValueData, 1) -- !!!с учетом Коэффициента перевода нормы!!!
                                                  , inRateFuelKindTax    := ObjectFloat_RateFuelKind_Tax.ValueData
                                                   )
                    ELSE 0
-              END Amount_calc
+              END AS Amount_calc
+
+
+              -- Коэффициента перевода нормы
+            , ObjectFloat_Fuel_Ratio.ValueData AS RatioFuel
 
               -- если нормы нет, тогда признак по умолчанию считаем FALSE
             , CASE WHEN (tmpRateFuel.AmountFuel = 0) AND (tmpRateFuel.AmountColdHour = 0) AND (tmpRateFuel.AmountColdDistance = 0) THEN FALSE ELSE TRUE END AS isCalculated
             , CASE WHEN ObjectLink_Car_FuelAll.DescId = zc_ObjectLink_Car_FuelMaster() THEN TRUE ELSE FALSE END AS isMasterFuel
             , 0 AS ColdHour
             , 0 AS ColdDistance
-            , tmpRateFuel.AmountColdHour     AS AmountColdHour
-            , tmpRateFuel.AmountColdDistance AS AmountColdDistance
-            , tmpRateFuel.AmountFuel         AS AmountFuel
+            , tmpRateFuel.AmountColdHour     * COALESCE (ObjectFloat_Fuel_Ratio.ValueData, 1) AS AmountColdHour      -- !!!с учетом Коэффициента перевода нормы!!!
+            , tmpRateFuel.AmountColdDistance * COALESCE (ObjectFloat_Fuel_Ratio.ValueData, 1) AS AmountColdDistance  -- !!!с учетом Коэффициента перевода нормы!!!
+            , tmpRateFuel.AmountFuel         * COALESCE (ObjectFloat_Fuel_Ratio.ValueData, 1) AS AmountFuel          -- !!!с учетом Коэффициента перевода нормы!!!
             , COALESCE (ObjectFloat_RateFuelKind_Tax.ValueData, 0) AS RateFuelKindTax
             
             , Object_RateFuelKind.Id         AS RateFuelKindId
@@ -136,8 +140,13 @@ BEGIN
                                                       AND ObjectLink_Car_FuelAll.ChildObjectId IS NOT NULL
              LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = ObjectLink_Car_FuelAll.ChildObjectId
 
+             -- выбрали у Вида топлива - Коэффициент перевода нормы 
+             LEFT JOIN ObjectFloat AS ObjectFloat_Fuel_Ratio ON ObjectFloat_Fuel_Ratio.ObjectId = ObjectLink_Car_FuelAll.ChildObjectId
+                                                            AND ObjectFloat_Fuel_Ratio.DescId = zc_ObjectFloat_Fuel_Ratio()
+                                                            AND ObjectFloat_Fuel_Ratio.ValueData <> 0
+
              -- выбрали у Вида топлива - Вид норм для топлива
-             LEFT JOIN ObjectLink AS ObjectLink_Fuel_RateFuelKind ON ObjectLink_Fuel_RateFuelKind.ObjectId = Object_Fuel.Id
+             LEFT JOIN ObjectLink AS ObjectLink_Fuel_RateFuelKind ON ObjectLink_Fuel_RateFuelKind.ObjectId = ObjectLink_Car_FuelAll.ChildObjectId
                                                                  AND ObjectLink_Fuel_RateFuelKind.DescId = zc_ObjectLink_Fuel_RateFuelKind()
              LEFT JOIN Object AS Object_RateFuelKind ON Object_RateFuelKind.Id = ObjectLink_Fuel_RateFuelKind.ChildObjectId
              -- выбрали у нормы для топлива - % дополнительного расхода в связи с сезоном/температурой
@@ -200,34 +209,37 @@ BEGIN
             , CASE WHEN COALESCE (MIBoolean_MasterFuel.ValueData, FALSE) = TRUE
                              -- если "Основной" вид топлива
                         THEN zfCalc_RateFuelValue (inDistance           := MovementItem_Master.Amount
-                                                 , inAmountFuel         := MIFloat_AmountFuel.ValueData
+                                                 , inAmountFuel         := MIFloat_AmountFuel.ValueData -- !!!Коэффициент перевода нормы уже учтен!!!
                                                  , inColdHour           := MIFloat_ColdHour.ValueData
-                                                 , inAmountColdHour     := MIFloat_AmountColdHour.ValueData
+                                                 , inAmountColdHour     := MIFloat_AmountColdHour.ValueData -- !!!Коэффициент перевода нормы уже учтен!!!
                                                  , inColdDistance       := MIFloat_ColdDistance.ValueData
-                                                 , inAmountColdDistance := MIFloat_AmountColdDistance.ValueData
+                                                 , inAmountColdDistance := MIFloat_AmountColdDistance.ValueData -- !!!Коэффициент перевода нормы уже учтен!!!
                                                  , inRateFuelKindTax    := MIFloat_RateFuelKindTax.ValueData
                                                   )
                     WHEN COALESCE (MIBoolean_MasterFuel.ValueData, FALSE) = FALSE
                              -- если "Дополнительный" вид топлива
                         THEN zfCalc_RateFuelValue (inDistance           := MIFloat_DistanceFuelChild.ValueData
-                                                 , inAmountFuel         := MIFloat_AmountFuel.ValueData
+                                                 , inAmountFuel         := MIFloat_AmountFuel.ValueData -- !!!Коэффициент перевода нормы уже учтен!!!
                                                  , inColdHour           := MIFloat_ColdHour.ValueData
-                                                 , inAmountColdHour     := MIFloat_AmountColdHour.ValueData
+                                                 , inAmountColdHour     := MIFloat_AmountColdHour.ValueData -- !!!Коэффициент перевода нормы уже учтен!!!
                                                  , inColdDistance       := MIFloat_ColdDistance.ValueData
-                                                 , inAmountColdDistance := MIFloat_AmountColdDistance.ValueData
+                                                 , inAmountColdDistance := MIFloat_AmountColdDistance.ValueData -- !!!Коэффициент перевода нормы уже учтен!!!
                                                  , inRateFuelKindTax    := MIFloat_RateFuelKindTax.ValueData
                                                   )
                    ELSE 0
-              END Amount_calc
+              END AS Amount_calc
+ 
+              -- Коэффициента перевода нормы
+            , ObjectFloat_Fuel_Ratio.ValueData AS RatioFuel
 
             , COALESCE (MIBoolean_Calculated.ValueData, TRUE)  AS isCalculated
             , COALESCE (MIBoolean_MasterFuel.ValueData, FALSE) AS isMasterFuel
 
             , MIFloat_ColdHour.ValueData            AS ColdHour
             , MIFloat_ColdDistance.ValueData        AS ColdDistance
-            , MIFloat_AmountColdHour.ValueData      AS AmountColdHour
-            , MIFloat_AmountColdDistance.ValueData  AS AmountColdDistance
-            , MIFloat_AmountFuel.ValueData          AS AmountFuel
+            , MIFloat_AmountColdHour.ValueData      AS AmountColdHour     -- !!!Коэффициент перевода нормы уже учтен!!!
+            , MIFloat_AmountColdDistance.ValueData  AS AmountColdDistance -- !!!Коэффициент перевода нормы уже учтен!!!
+            , MIFloat_AmountFuel.ValueData          AS AmountFuel         -- !!!Коэффициент перевода нормы уже учтен!!!
             , MIFloat_RateFuelKindTax.ValueData     AS RateFuelKindTax
             
             , Object_RateFuelKind.Id         AS RateFuelKindId
@@ -282,6 +294,10 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_DistanceFuelChild
                                          ON MIFloat_DistanceFuelChild.MovementItemId = MovementItem_Master.Id
                                         AND MIFloat_DistanceFuelChild.DescId = zc_MIFloat_DistanceFuelChild()
+             -- выбрали у Вида топлива - Коэффициент перевода нормы 
+             LEFT JOIN ObjectFloat AS ObjectFloat_Fuel_Ratio ON ObjectFloat_Fuel_Ratio.ObjectId = MovementItem.ObjectId
+                                                            AND ObjectFloat_Fuel_Ratio.DescId = zc_ObjectFloat_Fuel_Ratio()
+                                                            AND ObjectFloat_Fuel_Ratio.ValueData <> 0
       ;
        
     RETURN NEXT Cursor2;
@@ -295,6 +311,7 @@ ALTER FUNCTION gpSelect_MI_Transport (Integer, Boolean, Boolean, TVarChar) OWNER
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.10.13                                        * add zc_ObjectFloat_Fuel_Ratio
  07.10.13                                        * add DistanceFuelChild and isMasterFuel
  04.10.13                                        * inIsErased
  01.10.13                                        * add zc_MIFloat_RateFuelKindTax and zfCalc_RateFuelValue

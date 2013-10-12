@@ -19,6 +19,7 @@ inherited CarForm: TCarForm
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
+      DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
@@ -42,29 +43,29 @@ inherited CarForm: TCarForm
         HeaderAlignmentVert = vaCenter
         Width = 52
       end
-      object clName: TcxGridDBColumn
-        Caption = #1043#1086#1089'.'#1085#1086#1084#1077#1088
-        DataBinding.FieldName = 'Name'
-        HeaderAlignmentVert = vaCenter
-        Width = 181
-      end
-      object clRegistrationCertificate: TcxGridDBColumn
-        Caption = #1058#1077#1093#1087#1072#1089#1087#1086#1088#1090
-        DataBinding.FieldName = 'RegistrationCertificate'
-        HeaderAlignmentVert = vaCenter
-        Width = 85
-      end
       object clCarModel: TcxGridDBColumn
         Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
         DataBinding.FieldName = 'CarModelName'
         HeaderAlignmentVert = vaCenter
-        Width = 86
+        Width = 120
       end
-      object clUnit: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'UnitName'
+      object clName: TcxGridDBColumn
+        Caption = #1043#1086#1089'.'#1085#1086#1084#1077#1088
+        DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 91
+        Width = 80
+      end
+      object clFuelMasterName: TcxGridDBColumn
+        Caption = #1054#1089#1085#1086#1074#1085#1086#1081' '#1074#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
+        DataBinding.FieldName = 'FuelMasterName'
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
+      object clFuelChildName: TcxGridDBColumn
+        Caption = #1044#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081' '#1074#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
+        DataBinding.FieldName = 'FuelChildName'
+        HeaderAlignmentVert = vaCenter
+        Width = 110
       end
       object clPersonalDriverName: TcxGridDBColumn
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100
@@ -72,17 +73,17 @@ inherited CarForm: TCarForm
         HeaderAlignmentVert = vaCenter
         Width = 90
       end
-      object clFuelMasterName: TcxGridDBColumn
-        Caption = #1054#1089#1085#1086#1074#1085#1086#1077' '#1090#1086#1087#1083#1080#1074#1086
-        DataBinding.FieldName = 'FuelMasterName'
+      object clRegistrationCertificate: TcxGridDBColumn
+        Caption = #1058#1077#1093#1087#1072#1089#1087#1086#1088#1090
+        DataBinding.FieldName = 'RegistrationCertificate'
         HeaderAlignmentVert = vaCenter
-        Width = 92
+        Width = 80
       end
-      object clFuelChildName: TcxGridDBColumn
-        Caption = #1058#1086#1087#1083#1080#1074#1086' '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1086#1077
-        DataBinding.FieldName = 'FuelChildName'
+      object clUnit: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'UnitName'
         HeaderAlignmentVert = vaCenter
-        Width = 88
+        Width = 100
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -262,6 +263,7 @@ inherited CarForm: TCarForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
         end>
       isShowModal = True
       DataSource = DataSource

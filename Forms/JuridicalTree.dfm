@@ -2,8 +2,8 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
   Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
   ClientHeight = 473
   ClientWidth = 691
-  ExplicitWidth = 699
-  ExplicitHeight = 500
+  ExplicitWidth = 707
+  ExplicitHeight = 508
   PixelsPerInch = 96
   TextHeight = 13
   object cxDBTreeList: TcxDBTreeList
@@ -56,6 +56,7 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GridDS
+      DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
@@ -152,8 +153,8 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -290,6 +291,7 @@ inherited JuridicalTreeForm: TJuridicalTreeForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
         end
         item
           Name = 'GroupId'

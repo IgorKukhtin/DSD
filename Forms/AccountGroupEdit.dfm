@@ -1,9 +1,9 @@
 ﻿inherited AccountGroupEditForm: TAccountGroupEditForm
-  Caption = #1053#1086#1074#1099#1081' '#1089#1095#1077#1090
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1043#1088#1091#1087#1087#1091' '#1089#1095#1077#1090#1086#1074'>'
   ClientHeight = 141
   ClientWidth = 375
-  ExplicitWidth = 383
-  ExplicitHeight = 168
+  ExplicitWidth = 391
+  ExplicitHeight = 176
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -85,17 +85,20 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
       end
       item
         Name = 'inName'
+        Value = ''
         Component = edName
         DataType = ftString
         ParamType = ptInput
@@ -107,6 +110,7 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 296
@@ -119,17 +123,20 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'Name'
+        Value = ''
         Component = edName
         DataType = ftString
       end
       item
         Name = 'Code'
+        Value = 0.000000000000000000
         Component = ceCode
       end>
     Left = 168

@@ -1,9 +1,9 @@
 inherited InfoMoneyGroupForm: TInfoMoneyGroupForm
-  Caption = #1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1081
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1081'>'
   ClientHeight = 365
   ClientWidth = 464
-  ExplicitWidth = 472
-  ExplicitHeight = 392
+  ExplicitWidth = 480
+  ExplicitHeight = 400
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -17,6 +17,7 @@ inherited InfoMoneyGroupForm: TInfoMoneyGroupForm
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
+      DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
@@ -43,7 +44,7 @@ inherited InfoMoneyGroupForm: TInfoMoneyGroupForm
         Width = 195
       end
       object clName: TcxGridDBColumn
-        Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Width = 305
@@ -92,8 +93,8 @@ inherited InfoMoneyGroupForm: TInfoMoneyGroupForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -227,6 +228,7 @@ inherited InfoMoneyGroupForm: TInfoMoneyGroupForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
         end>
       isShowModal = False
       DataSource = DataSource

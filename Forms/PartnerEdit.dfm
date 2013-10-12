@@ -1,9 +1,9 @@
 ﻿inherited PartnerEditForm: TPartnerEditForm
-  Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
   ClientHeight = 333
   ClientWidth = 371
-  ExplicitWidth = 379
-  ExplicitHeight = 360
+  ExplicitWidth = 387
+  ExplicitHeight = 368
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -15,7 +15,7 @@
   object cxLabel1: TcxLabel
     Left = 40
     Top = 48
-    Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 77
@@ -193,56 +193,66 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
       end
       item
         Name = 'inName'
+        Value = ''
         Component = edName
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inGLNCode'
+        Value = ''
         Component = edGLNCode
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inPrepareDayCount'
+        Value = 0.000000000000000000
         Component = cePrepareDayCount
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inDocumentDayCount'
+        Value = 0.000000000000000000
         Component = ceDocumentDayCount
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inJuridicalId'
+        Value = ''
         Component = dsdJuridicalGuides
         ParamType = ptInput
       end
       item
         Name = 'inRouteId'
+        Value = ''
         Component = dsdRouteGuides
         ParamType = ptInput
       end
       item
         Name = 'inRouteSortingId'
+        Value = ''
         Component = dsdRouteSortingGuides
         ParamType = ptInput
       end
       item
         Name = 'inPersonalTakeId'
+        Value = ''
         Component = dsdPersonalGuides
         ParamType = ptInput
       end>
@@ -253,6 +263,7 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 240
@@ -265,78 +276,92 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'Name'
+        Value = ''
         Component = edName
         DataType = ftString
       end
       item
         Name = 'Code'
+        Value = 0.000000000000000000
         Component = ceCode
       end
       item
         Name = 'GLNCode'
+        Value = ''
         Component = edGLNCode
         DataType = ftString
       end
       item
         Name = 'PrepareDayCount'
+        Value = 0.000000000000000000
         Component = cePrepareDayCount
         DataType = ftFloat
       end
       item
         Name = 'DocumentDayCount'
+        Value = 0.000000000000000000
         Component = ceDocumentDayCount
         DataType = ftFloat
       end
       item
         Name = 'JuridicalId'
+        Value = ''
         Component = dsdJuridicalGuides
         ComponentItem = 'Key'
         DataType = ftString
       end
       item
         Name = 'JuridicalName'
+        Value = ''
         Component = dsdJuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'RouteId'
+        Value = ''
         Component = dsdRouteGuides
         ComponentItem = 'Key'
         DataType = ftString
       end
       item
         Name = 'RouteName'
+        Value = ''
         Component = dsdRouteGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'RouteSortingId'
+        Value = ''
         Component = dsdRouteSortingGuides
         ComponentItem = 'Key'
         DataType = ftString
       end
       item
         Name = 'RouteSortingName'
+        Value = ''
         Component = dsdRouteSortingGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'PersonalTakeId'
+        Value = ''
         Component = dsdPersonalGuides
         ComponentItem = 'Key'
         DataType = ftString
       end
       item
         Name = 'PersonalTakeName'
+        Value = ''
         Component = dsdPersonalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -352,6 +377,7 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = dsdJuridicalGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -359,6 +385,7 @@
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = dsdJuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -375,6 +402,7 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = dsdPersonalGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -382,6 +410,7 @@
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = dsdPersonalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -398,6 +427,7 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = dsdRouteSortingGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -405,6 +435,7 @@
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = dsdRouteSortingGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -421,6 +452,7 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = dsdRouteGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -428,6 +460,7 @@
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = dsdRouteGuides
         ComponentItem = 'TextValue'
         DataType = ftString

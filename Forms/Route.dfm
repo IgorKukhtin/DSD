@@ -2,8 +2,8 @@ inherited RouteForm: TRouteForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1052#1072#1088#1096#1088#1091#1090#1099'>'
   ClientHeight = 395
   ClientWidth = 703
-  ExplicitWidth = 711
-  ExplicitHeight = 422
+  ExplicitWidth = 719
+  ExplicitHeight = 430
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -19,6 +19,7 @@ inherited RouteForm: TRouteForm
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
+      DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
@@ -109,8 +110,8 @@ inherited RouteForm: TRouteForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -244,6 +245,7 @@ inherited RouteForm: TRouteForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
         end>
       isShowModal = False
       DataSource = DataSource

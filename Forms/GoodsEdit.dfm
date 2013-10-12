@@ -1,9 +1,9 @@
 ﻿inherited GoodsEditForm: TGoodsEditForm
-  Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
   ClientHeight = 361
   ClientWidth = 352
-  ExplicitWidth = 360
-  ExplicitHeight = 388
+  ExplicitWidth = 368
+  ExplicitHeight = 396
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -15,7 +15,7 @@
   object cxLabel1: TcxLabel
     Left = 40
     Top = 48
-    Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 64
@@ -197,56 +197,66 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
       end
       item
         Name = 'inName'
+        Value = ''
         Component = edName
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inWeight'
+        Value = 0.000000000000000000
         Component = ceWeight
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inGoodsGroupId'
+        Value = ''
         Component = GoodsGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inMeasureId'
+        Value = ''
         Component = dsdMeasureGuides
         ParamType = ptInput
       end
       item
         Name = 'inTradeMarkId'
+        Value = ''
         Component = TradeMarkGuides
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyId'
+        Value = ''
         Component = dsdInfoMoneyGuides
         ParamType = ptInput
       end
       item
         Name = 'inBusinessId'
+        Value = ''
         Component = BusinessGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inFuelId'
+        Value = ''
         Component = FuelGuides
         ComponentItem = 'Key'
         ParamType = ptInput
@@ -258,6 +268,7 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 240
@@ -269,86 +280,102 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'Name'
+        Value = ''
         Component = edName
         DataType = ftString
       end
       item
         Name = 'Code'
+        Value = 0.000000000000000000
         Component = ceCode
       end
       item
         Name = 'GoodsGroupId'
+        Value = ''
         Component = GoodsGroupGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'GoodsGroupName'
+        Value = ''
         Component = GoodsGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'MeasureId'
+        Value = ''
         Component = dsdMeasureGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'MeasureName'
+        Value = ''
         Component = dsdMeasureGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'TradeMarkId'
+        Value = ''
         Component = TradeMarkGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'TradeMarkName'
+        Value = ''
         Component = TradeMarkGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'InfoMoneyId'
+        Value = ''
         Component = dsdInfoMoneyGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'InfoMoneyName'
+        Value = ''
         Component = dsdInfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'Weight'
+        Value = 0.000000000000000000
         Component = ceWeight
         DataType = ftCurrency
       end
       item
         Name = 'FuelId'
+        Value = ''
         Component = FuelGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'FuelName'
+        Value = ''
         Component = FuelGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'BusinessId'
+        Value = ''
         Component = BusinessGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'BusinessName'
+        Value = ''
         Component = BusinessGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -364,11 +391,13 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = dsdMeasureGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = dsdMeasureGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -384,11 +413,13 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = TradeMarkGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = TradeMarkGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -404,11 +435,13 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = dsdInfoMoneyGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = dsdInfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -442,11 +475,13 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = BusinessGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = BusinessGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -462,11 +497,13 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = FuelGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = FuelGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -482,11 +519,13 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = GoodsGroupGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = GoodsGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString

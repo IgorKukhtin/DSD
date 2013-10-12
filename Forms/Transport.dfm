@@ -4,8 +4,8 @@
   ClientWidth = 996
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1012
-  ExplicitHeight = 490
+  ExplicitWidth = 1004
+  ExplicitHeight = 482
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -222,6 +222,7 @@
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.Images = dmMain.ImageList
       TabOrder = 28
       Width = 95
     end
@@ -238,7 +239,7 @@
     Height = 329
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheetMain
+    Properties.ActivePage = cxTabSheetIncome
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 329
     ClientRectRight = 996
@@ -343,6 +344,21 @@
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
+          object colFreightName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1079#1072
+            DataBinding.FieldName = 'FreightName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = FreightChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
           object colAmount: TcxGridDBColumn
             Caption = #1055#1088#1086#1073#1077#1075', '#1082#1084' ('#1086#1089#1085#1086#1074#1085#1086#1081')'
             DataBinding.FieldName = 'Amount'
@@ -378,21 +394,6 @@
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colFreightName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1075#1088#1091#1079#1072
-            DataBinding.FieldName = 'FreightName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = FreightChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 90
-          end
           object colRouteKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1084#1072#1088#1096#1088#1091#1090#1072
             DataBinding.FieldName = 'RouteKindName'
@@ -424,6 +425,7 @@
         object cxGridChildDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Kind = skSum
@@ -587,6 +589,11 @@
             HeaderAlignmentHorz = taRightJustify
             Options.Editing = False
             Width = 59
+          end
+          object colchRatioFuel: TcxGridDBColumn
+            Caption = #1050#1086#1101#1092#1092'. '#1087#1077#1088#1077#1074#1086#1076#1072' '#1085#1086#1088#1084#1099
+            DataBinding.FieldName = 'RatioFuel'
+            Width = 70
           end
         end
         object cxGridChildLevel: TcxGridLevel
@@ -856,6 +863,7 @@
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -870,6 +878,7 @@
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
+          OptionsCustomize.ColumnsQuickCustomization = True
           OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
           OptionsView.HeaderAutoHeight = True
@@ -934,57 +943,39 @@
             Options.Editing = False
             Width = 120
           end
-          object colByObjectCode: TcxGridDBColumn
-            Caption = #1054#1073'.'#1082#1086#1076
-            DataBinding.FieldName = 'ByObjectCode'
+          object colDirectionObjectCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1086#1073'.'#1085#1072#1087#1088'.'
+            DataBinding.FieldName = 'DirectionObjectCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 40
           end
-          object colByObjectName: TcxGridDBColumn
-            Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1074#1072#1085#1080#1077
-            DataBinding.FieldName = 'ByObjectName'
+          object colDirectionObjectName: TcxGridDBColumn
+            Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'DirectionObjectName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
           end
-          object colGoodsGroupName: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsGroupName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 80
-          end
-          object colGoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1090#1086#1074'.'
-            DataBinding.FieldName = 'GoodsCode'
+          object colDestinationObjectCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1086#1073'.'#1085#1072#1079#1085'.'
+            DataBinding.FieldName = 'DestinationObjectCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 40
           end
-          object colGoodsName: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088
-            DataBinding.FieldName = 'GoodsName'
+          object colDestinationObjectName: TcxGridDBColumn
+            Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'DestinationObjectName'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
-          end
-          object colGoodsKindName_comlete: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsKindName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
           end
           object colAccountOnComplete: TcxGridDBColumn
             Caption = '***'
@@ -1039,6 +1030,7 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 208
@@ -1058,18 +1050,21 @@
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inShowAll'
+        Value = False
         Component = BooleanStoredProcAction
         DataType = ftBoolean
         ParamType = ptInput
       end
       item
         Name = 'inIsErased'
+        Value = False
         Component = ShowErasedAction
         DataType = ftBoolean
         ParamType = ptInput
@@ -1466,6 +1461,48 @@
         end>
       isShowModal = True
     end
+    object actUnCompleteIncome: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetIncome
+      StoredProc = spMovementUnCompleteIncome
+      StoredProcList = <
+        item
+          StoredProc = spMovementUnCompleteIncome
+        end>
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 11
+      DataSource = IncomeDS
+      Status = mtUncomplete
+    end
+    object actCompleteIncome: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetIncome
+      StoredProc = spMovementCompleteIncome
+      StoredProcList = <
+        item
+          StoredProc = spMovementCompleteIncome
+        end>
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 12
+      DataSource = IncomeDS
+      Status = mtComplete
+    end
+    object actSetErasedIncome: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetIncome
+      StoredProc = spMovementSetErasedIncome
+      StoredProcList = <
+        item
+          StoredProc = spMovementSetErasedIncome
+        end>
+      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      ImageIndex = 13
+      DataSource = IncomeDS
+      Status = mtDelete
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -1486,6 +1523,7 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = GuidesCar
         ComponentItem = 'Key'
         DataType = ftString
@@ -1493,21 +1531,11 @@
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = GuidesCar
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-      end
-      item
-        Name = 'PersonalDriverId'
-        Component = GuidesPersonalDriver
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PersonalDriverName'
-        Component = GuidesPersonalDriver
-        ComponentItem = 'TextValue'
-        DataType = ftString
       end>
     Left = 506
     Top = 83
@@ -1519,111 +1547,133 @@
     Params = <
       item
         Name = 'inId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'InvNumber'
+        Value = ''
         Component = edInvNumber
       end
       item
         Name = 'OperDate'
+        Value = 0d
         Component = edOperDate
       end
       item
         Name = 'CarId'
+        Value = ''
         Component = GuidesCar
         ComponentItem = 'Key'
       end
       item
         Name = 'CarName'
+        Value = ''
         Component = GuidesCar
         ComponentItem = 'TextValue'
       end
       item
         Name = 'CarTrailerId'
+        Value = ''
         Component = GuidesCarTrailer
         ComponentItem = 'Key'
       end
       item
         Name = 'CarTrailerName'
+        Value = ''
         Component = GuidesCarTrailer
         ComponentItem = 'TextValue'
       end
       item
         Name = 'PersonalDriverId'
+        Value = ''
         Component = GuidesPersonalDriver
         ComponentItem = 'Key'
       end
       item
         Name = 'PersonalDriverName'
+        Value = ''
         Component = GuidesPersonalDriver
         ComponentItem = 'TextValue'
       end
       item
         Name = 'PersonalDriverMoreId'
+        Value = ''
         Component = GuidesPersonalDriverMore
         ComponentItem = 'Key'
       end
       item
         Name = 'PersonalDriverMoreName'
+        Value = ''
         Component = GuidesPersonalDriverMore
         ComponentItem = 'TextValue'
       end
       item
         Name = 'UnitForwardingId'
+        Value = ''
         Component = GuidesUnitForwarding
         ComponentItem = 'Key'
       end
       item
         Name = 'UnitForwardingName'
+        Value = ''
         Component = GuidesUnitForwarding
         ComponentItem = 'TextValue'
       end
       item
         Name = 'StartRunPlan'
+        Value = 0d
         Component = edStartRunPlan
         DataType = ftDateTime
       end
       item
         Name = 'EndRunPlan'
+        Value = 0d
         Component = edEndRunPlan
         DataType = ftDateTime
       end
       item
         Name = 'StartRun'
+        Value = 0d
         Component = edStartRun
         DataType = ftDateTime
       end
       item
         Name = 'EndRun'
+        Value = 0d
         Component = edEndRun
         DataType = ftDateTime
       end
       item
         Name = 'HoursWork'
+        Value = 0.000000000000000000
         Component = edHoursWork
         DataType = ftFloat
       end
       item
         Name = 'HoursAdd'
+        Value = 0.000000000000000000
         Component = edHoursAdd
         DataType = ftFloat
       end
       item
         Name = 'Comment'
+        Value = ''
         Component = edComment
         DataType = ftString
       end
       item
         Name = 'StatusCode'
+        Value = ''
         Component = ChangeStatus
         ComponentItem = 'Key'
         DataType = ftString
       end
       item
         Name = 'StatusName'
+        Value = ''
         Component = ChangeStatus
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -1649,6 +1699,7 @@
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -1680,6 +1731,7 @@
       end
       item
         Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -1770,89 +1822,104 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inInvNumber'
+        Value = ''
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inOperDate'
+        Value = 0d
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inStartRunPlan'
+        Value = 0d
         Component = edStartRunPlan
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndRunPlan'
+        Value = 0d
         Component = edEndRunPlan
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inStartRun'
+        Value = 0d
         Component = edStartRun
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndRun'
+        Value = 0d
         Component = edEndRun
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inHoursAdd'
+        Value = 0.000000000000000000
         Component = edHoursAdd
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'outHoursWork'
+        Value = 0.000000000000000000
         Component = edHoursWork
         DataType = ftFloat
       end
       item
         Name = 'inComment'
+        Value = ''
         Component = edComment
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inCarId'
+        Value = ''
         Component = GuidesCar
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inCarTrailerId'
+        Value = ''
         Component = GuidesCarTrailer
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inPersonalDriverId'
+        Value = ''
         Component = GuidesPersonalDriver
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inPersonalDriverMoreId'
+        Value = ''
         Component = GuidesPersonalDriverMore
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inUnitForwardingId'
+        Value = ''
         Component = GuidesUnitForwarding
         ComponentItem = 'Key'
         ParamType = ptInput
@@ -1868,12 +1935,14 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = GuidesCarTrailer
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = GuidesCarTrailer
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -1890,12 +1959,14 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = GuidesPersonalDriver
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = GuidesPersonalDriver
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -1912,12 +1983,14 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = GuidesPersonalDriverMore
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = GuidesPersonalDriverMore
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -1934,12 +2007,14 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = GuidesUnitForwarding
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = GuidesUnitForwarding
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -1961,6 +2036,7 @@
       end
       item
         Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -2063,6 +2139,7 @@
     Top = 269
   end
   object GuidesFiller: TGuidesFiller
+    IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
     GuidesList = <
@@ -2083,6 +2160,7 @@
     Top = 196
   end
   object HeaderSaver: THeaderSaver
+    IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
     StoredProc = spInsertUpdateMovement
@@ -2130,8 +2208,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -2203,6 +2281,22 @@
         item
           Visible = True
           ItemName = 'bbUnErasedIncome'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCompleteIncome'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnCompleteIncome'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedIncome'
         end
         item
           Visible = True
@@ -2288,6 +2382,18 @@
       Action = SetUnErasedIncome
       Category = 0
     end
+    object bbCompleteIncome: TdxBarButton
+      Action = actCompleteIncome
+      Category = 0
+    end
+    object bbUnCompleteIncome: TdxBarButton
+      Action = actUnCompleteIncome
+      Category = 0
+    end
+    object bbSetErasedIncome: TdxBarButton
+      Action = actSetErasedIncome
+      Category = 0
+    end
   end
   object RefreshAddOn: TRefreshAddOn
     FormName = 'TransportJournalForm'
@@ -2343,18 +2449,21 @@
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inShowAll'
+        Value = False
         Component = BooleanStoredProcAction
         DataType = ftBoolean
         ParamType = ptInput
       end
       item
         Name = 'inIsErased'
+        Value = False
         Component = ShowErasedAction
         DataType = ftBoolean
         ParamType = ptInput
@@ -2369,6 +2478,7 @@
     Params = <
       item
         Name = 'inParentId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -2422,6 +2532,7 @@
       end
       item
         Name = 'inToId'
+        Value = ''
         Component = GuidesCar
         ComponentItem = 'Key'
         ParamType = ptInput
@@ -2467,6 +2578,7 @@
       end
       item
         Name = 'inPersonalDriverId'
+        Value = ''
         Component = GuidesPersonalDriver
         ComponentItem = 'Key'
         ParamType = ptInput
@@ -2542,6 +2654,7 @@
   object ChangeStatus: TChangeStatus
     KeyField = 'Code'
     LookupControl = ceStatus
+    IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
     StoredProcName = 'gpUpdate_Status_Transport'
@@ -2648,5 +2761,53 @@
     SortImages = dmMain.SortImageList
     Left = 379
     Top = 282
+  end
+  object spMovementCompleteIncome: TdsdStoredProc
+    StoredProcName = 'gpComplete_Movement_Income'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = IncomeCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsLastComplete'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    Left = 584
+    Top = 312
+  end
+  object spMovementUnCompleteIncome: TdsdStoredProc
+    StoredProcName = 'gpUnComplete_Movement'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = IncomeCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+      end>
+    Left = 656
+    Top = 328
+  end
+  object spMovementSetErasedIncome: TdsdStoredProc
+    StoredProcName = 'gpSetErased_Movement'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = IncomeCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+      end>
+    Left = 728
+    Top = 312
   end
 end

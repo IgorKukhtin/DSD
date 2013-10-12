@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_RateFuel(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (RateFuelId_Internal Integer, RateFuelId_External Integer
-             , CarId Integer, CarCode Integer, CarName TVarChar
+             , CarId Integer, CarCode Integer, CarName TVarChar, CarModelName TVarChar
              , Amount_Internal TFloat, AmountColdHour_Internal TFloat, AmountColdDistance_Internal TFloat
              , Amount_External TFloat, AmountColdHour_External TFloat, AmountColdDistance_External TFloat
              , isErased Boolean
@@ -22,10 +22,11 @@ BEGIN
              CAST (tmpRateFuel.RateFuelId_Internal AS Integer)  AS RateFuelId_Internal
            , CAST (tmpRateFuel.RateFuelId_External AS Integer)  AS RateFuelId_External
 
-           , Object_Car.Id         AS CarId
-           , Object_Car.ObjectCode AS CarCode
-           , Object_Car.ValueData  AS CarName
- 
+           , Object_Car.Id             AS CarId
+           , Object_Car.ObjectCode     AS CarCode
+           , Object_Car.ValueData      AS CarName
+           , Object_CarModel.ValueData AS CarModelName
+
            , CAST (tmpRateFuel.Amount_Internal AS TFloat)             AS Amount_Internal
            , CAST (tmpRateFuel.AmountColdHour_Internal AS TFloat)     AS AmountColdHour_Internal
            , CAST (tmpRateFuel.AmountColdDistance_Internal AS TFloat) AS AmountColdDistance_Internal
@@ -69,6 +70,10 @@ BEGIN
                        WHERE Object_RateFuel.DescId = zc_Object_RateFuel()
                        GROUP BY ObjectLink_RateFuel_Car.ChildObjectId
                       ) tmpRateFuel ON tmpRateFuel.CarId = Object_Car.Id
+
+            LEFT JOIN ObjectLink AS Car_CarModel ON Car_CarModel.ObjectId = Object_Car.Id
+                                                AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
+            LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
 
      WHERE Object_Car.DescId = zc_Object_Car();
   

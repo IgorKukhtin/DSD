@@ -121,6 +121,8 @@ begin
   ExecFile(StructurePath + 'MovementItemReport\ReportContainerSEQUENCE.sql', ZQuery);
   ExecFile(StructurePath + 'MovementItemReport\ReportContainerLink.sql', ZQuery);
   ExecFile(StructurePath + 'MovementItemReport\MovementItemReport.sql', ZQuery);
+  ExecFile(StructurePath + 'MovementItemReport\ChildReportContainerSEQUENCE.sql', ZQuery);
+  ExecFile(StructurePath + 'MovementItemReport\ChildReportContainerLink.sql', ZQuery);
 end;
 
 procedure TdbCreateStructureTest.CreateObject;

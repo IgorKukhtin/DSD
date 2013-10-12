@@ -100,6 +100,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.00;-,0.00;'
@@ -256,9 +257,6 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -270,6 +268,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
           PopupMenu = PopupMenu
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -348,50 +347,34 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
             HeaderAlignmentVert = vaCenter
             Width = 150
           end
-          object colByObjectCode: TcxGridDBColumn
-            Caption = #1054#1073'.'#1082#1086#1076
-            DataBinding.FieldName = 'ByObjectCode'
+          object colDirectionObjectCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1086#1073'.'#1085#1072#1087#1088'.'
+            DataBinding.FieldName = 'DirectionObjectCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 40
           end
-          object colByObjectName: TcxGridDBColumn
-            Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1074#1072#1085#1080#1077
-            DataBinding.FieldName = 'ByObjectName'
+          object colDirectionObjectName: TcxGridDBColumn
+            Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'DirectionObjectName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 98
           end
-          object colGoodsGroupName: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsGroupName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object colGoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1090#1086#1074'.'
-            DataBinding.FieldName = 'GoodsCode'
+          object colDestinationObjectCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1086#1073'.'#1085#1072#1079#1085'.'
+            DataBinding.FieldName = 'DestinationObjectCode'
             Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
-          object colGoodsName: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088
-            DataBinding.FieldName = 'GoodsName'
+          object colDestinationObjectName: TcxGridDBColumn
+            Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'DestinationObjectName'
             Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 80
-          end
-          object colGoodsKindName_comlete: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsKindName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
           end
           object colAccountOnComplete: TcxGridDBColumn
             Caption = '***'
@@ -444,6 +427,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 240
@@ -459,18 +443,21 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inShowAll'
+        Value = False
         Component = BooleanStoredProcAction
         DataType = ftBoolean
         ParamType = ptInput
       end
       item
         Name = 'inIsErased'
+        Value = False
         Component = ShowErasedAction
         DataType = ftBoolean
         ParamType = ptInput
@@ -722,12 +709,14 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       Params = <
         item
           Name = 'InvNumber'
+          Value = ''
           Component = edInvNumber
           DataType = ftString
           ParamType = ptInput
         end
         item
           Name = 'From'
+          Value = ''
           Component = GuidesPersonal
           ComponentItem = 'TextValue'
           DataType = ftString
@@ -735,6 +724,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
         end
         item
           Name = 'OperDate'
+          Value = 0d
           Component = edOperDate
           DataType = ftDateTime
           ParamType = ptInput
@@ -836,22 +826,6 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
           Component = MasterCDS
           ComponentItem = 'CarName'
           DataType = ftString
-        end
-        item
-          Name = 'PersonalDriverId'
-          Component = MasterCDS
-          ComponentItem = 'PersonalId'
-        end
-        item
-          Name = 'PersonalDriverCode'
-          Component = MasterCDS
-          ComponentItem = 'PersonalCode'
-        end
-        item
-          Name = 'PersonalDriverName'
-          Component = MasterCDS
-          ComponentItem = 'PersonalName'
-          DataType = ftString
         end>
       isShowModal = True
     end
@@ -892,6 +866,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = GuidesPersonal
         ComponentItem = 'Key'
         DataType = ftString
@@ -899,6 +874,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = GuidesPersonal
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -925,6 +901,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -962,6 +939,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
       end
       item
         Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -1040,24 +1018,28 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inInvNumber'
+        Value = ''
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inOperDate'
+        Value = 0d
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inPersonalId'
+        Value = ''
         Component = GuidesPersonal
         ComponentItem = 'Key'
         ParamType = ptInput
@@ -1066,6 +1048,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     Top = 177
   end
   object HeaderSaver: THeaderSaver
+    IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
     StoredProc = spInsertUpdateMovement
@@ -1112,36 +1095,43 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     Params = <
       item
         Name = 'inId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'InvNumber'
+        Value = ''
         Component = edInvNumber
       end
       item
         Name = 'OperDate'
+        Value = 0d
         Component = edOperDate
       end
       item
         Name = 'PersonalId'
+        Value = ''
         Component = GuidesPersonal
         ComponentItem = 'Key'
       end
       item
         Name = 'PersonalName'
+        Value = ''
         Component = GuidesPersonal
         ComponentItem = 'TextValue'
       end
       item
         Name = 'StatusCode'
+        Value = ''
         Component = ChangeStatus
         ComponentItem = 'Key'
         DataType = ftString
       end
       item
         Name = 'StatusName'
+        Value = ''
         Component = ChangeStatus
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -1158,6 +1148,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     Top = 253
   end
   object GuidesFiller: TGuidesFiller
+    IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
     GuidesList = <
@@ -1176,6 +1167,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
   object ChangeStatus: TChangeStatus
     KeyField = 'Code'
     LookupControl = ceStatus
+    IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
     StoredProcName = 'gpUpdate_Status_PersonalSendCash'
@@ -1189,6 +1181,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -1215,6 +1208,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput

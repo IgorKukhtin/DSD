@@ -1,9 +1,9 @@
 ﻿inherited RouteEditForm: TRouteEditForm
-  Caption = #1053#1086#1074#1099#1081' '#1084#1072#1088#1096#1088#1091#1090
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090'>'
   ClientHeight = 332
   ClientWidth = 380
-  ExplicitWidth = 388
-  ExplicitHeight = 359
+  ExplicitWidth = 396
+  ExplicitHeight = 367
   PixelsPerInch = 96
   TextHeight = 13
   object edRouteName: TcxTextEdit
@@ -15,7 +15,7 @@
   object cxLabel1: TcxLabel
     Left = 32
     Top = 63
-    Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 72
@@ -65,7 +65,7 @@
   object cxLabel7: TcxLabel
     Left = 32
     Top = 115
-    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   object cxLabel2: TcxLabel
     Left = 32

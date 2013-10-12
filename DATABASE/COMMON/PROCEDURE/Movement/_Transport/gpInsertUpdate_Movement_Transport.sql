@@ -36,6 +36,13 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Transport());
      vbUserId := inSession;
 
+     -- проверка
+     IF inHoursAdd > 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Проверьте знак для <Кол-во добавленных рабочих часов>.';
+     END IF;
+
+
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Transport(), inInvNumber, inOperDate, NULL);
 
@@ -93,6 +100,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.10.13                                        * add IF inHoursAdd > 0
  06.10.13                                        * add zc_Movement_Income
  26.09.13                                        * changes in wiki                 
  25.09.13         * changes in wiki                 

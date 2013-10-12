@@ -3,8 +3,8 @@ inherited PriceListItemForm: TPriceListItemForm
   ClientHeight = 398
   ClientWidth = 724
   KeyPreview = True
-  ExplicitWidth = 732
-  ExplicitHeight = 425
+  ExplicitWidth = 740
+  ExplicitHeight = 433
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -19,6 +19,7 @@ inherited PriceListItemForm: TPriceListItemForm
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
+      DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
@@ -146,8 +147,8 @@ inherited PriceListItemForm: TPriceListItemForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -254,12 +255,14 @@ inherited PriceListItemForm: TPriceListItemForm
       GuiParams = <
         item
           Name = 'PriceListId'
+          Value = ''
           Component = PriceListGuides
           ComponentItem = 'Key'
           ParamType = ptInput
         end
         item
           Name = 'PriceListName'
+          Value = ''
           Component = PriceListGuides
           ComponentItem = 'TextValue'
           DataType = ftString
@@ -291,12 +294,14 @@ inherited PriceListItemForm: TPriceListItemForm
     Params = <
       item
         Name = 'inPriceListId'
+        Value = ''
         Component = PriceListGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inOperDate'
+        Value = 41275d
         Component = edShowDate
         DataType = ftDateTime
         ParamType = ptInput

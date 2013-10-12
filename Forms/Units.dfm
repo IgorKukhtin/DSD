@@ -2,8 +2,8 @@ inherited UnitForm: TUnitForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
   ClientHeight = 420
   ClientWidth = 667
-  ExplicitWidth = 675
-  ExplicitHeight = 447
+  ExplicitWidth = 683
+  ExplicitHeight = 455
   PixelsPerInch = 96
   TextHeight = 13
   object cxSplitter1: TcxSplitter
@@ -22,6 +22,7 @@ inherited UnitForm: TUnitForm
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GridDS
+      DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
@@ -89,8 +90,8 @@ inherited UnitForm: TUnitForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -220,6 +221,7 @@ inherited UnitForm: TUnitForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
         end>
       isShowModal = True
       DataSource = GridDS
@@ -267,6 +269,7 @@ inherited UnitForm: TUnitForm
         end
         item
           Name = 'ParentId'
+          Value = Null
           ComponentItem = 'Id'
           DataType = ftString
         end>

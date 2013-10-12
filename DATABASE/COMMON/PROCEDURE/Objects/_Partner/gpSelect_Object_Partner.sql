@@ -58,6 +58,7 @@ BEGIN
                 ON ObjectLink_JuridicalGroup_Parent.ObjectId = Object_JuridicalGroup.Id
                AND ObjectLink_JuridicalGroup_Parent.DescId = zc_ObjectLink_JuridicalGroup_Parent()
      WHERE Object_JuridicalGroup.DescId = zc_Object_JuridicalGroup()
+      AND 1=0 -- !!!первого запроса быть не должно!!!
    UNION
      SELECT 
            Object_Partner.Id             AS Id
@@ -139,6 +140,7 @@ ALTER FUNCTION gpSelect_Object_Partner (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.10.13                                        * !!!первого запроса быть не должно!!!
  30.09.13                                        * add Object_Personal_View
  29.07.13         *  + PersonalTakeId, PrepareDayCount, DocumentDayCount                      
  03.07.13         *  + Route,RouteSorting

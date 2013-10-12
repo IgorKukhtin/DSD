@@ -10,8 +10,10 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItemContainer_Movement(
 RETURNS TABLE (AccountCode Integer, DebetAmount TFloat, DebetAccountGroupName TVarChar, DebetAccountDirectionName TVarChar, DebetAccountName TVarChar
              , KreditAmount TFloat, KreditAccountGroupName TVarChar, KreditAccountDirectionName TVarChar, KreditAccountName  TVarChar
              , Price TFloat
-             , AccountOnComplete Boolean, ByObjectCode Integer, ByObjectName TVarChar, GoodsGroupCode Integer, GoodsGroupName TVarChar
-             , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
+             , AccountOnComplete Boolean, DirectionObjectCode Integer, DirectionObjectName TVarChar
+             , GoodsGroupCode Integer, GoodsGroupName TVarChar
+             , DestinationObjectCode Integer, DestinationObjectName TVarChar
+             , GoodsKindName TVarChar
              , ObjectCostId Integer, MIId_Parent Integer, GoodsCode_Parent Integer, GoodsName_Parent TVarChar, GoodsKindName_Parent TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyCode_Detail Integer, InfoMoneyName_Detail TVarChar
               )
@@ -37,12 +39,12 @@ BEGIN
 
            , CAST (ABS(tmpMovementItemContainer.Price) AS TFloat) AS Price
            , Object_Account_View.onComplete AS AccountOnComplete
-           , tmpMovementItemContainer.ByObjectCode
-           , CAST (tmpMovementItemContainer.ByObjectName AS TVarChar) AS ByObjectName
+           , tmpMovementItemContainer.DirectionObjectCode
+           , CAST (tmpMovementItemContainer.DirectionObjectName AS TVarChar) AS DirectionObjectName
            , tmpMovementItemContainer.GoodsGroupCode
            , tmpMovementItemContainer.GoodsGroupName
-           , tmpMovementItemContainer.GoodsCode
-           , tmpMovementItemContainer.GoodsName
+           , tmpMovementItemContainer.DestinationObjectCode
+           , tmpMovementItemContainer.DestinationObjectName
            , tmpMovementItemContainer.GoodsKindName
            , tmpMovementItemContainer.ObjectCostId
            , tmpMovementItemContainer.MIId_Parent
@@ -58,18 +60,18 @@ BEGIN
                   SUM (MovementItemContainer.Amount)  AS Amount
                 , MovementItemContainer.isActive
                 , Container.ObjectId
-                , Object_by.ObjectCode         AS ByObjectCode
+                , Object_Direction.ObjectCode AS DirectionObjectCode
 
                 , CASE WHEN Object_ProfitLossDirection.ValueData <> ''
-                            THEN CAST (Object_by.ObjectCode AS TVarChar) || ' ' || Object_ProfitLossDirection.ValueData || ' '
+                            THEN CAST (Object_Direction.ObjectCode AS TVarChar) || ' ' || Object_ProfitLossDirection.ValueData || ' '
                        ELSE ''
-                  END || Object_by.ValueData AS ByObjectName
+                  END || Object_Direction.ValueData AS DirectionObjectName
 
-                , Object_GoodsGroup.ObjectCode AS GoodsGroupCode
-                , Object_GoodsGroup.ValueData  AS GoodsGroupName
-                , Object_Goods.ObjectCode      AS GoodsCode
-                , Object_Goods.ValueData       AS GoodsName
-                , Object_GoodsKind.ValueData   AS GoodsKindName
+                , Object_GoodsGroup.ObjectCode  AS GoodsGroupCode
+                , Object_GoodsGroup.ValueData   AS GoodsGroupName
+                , Object_Destination.ObjectCode AS DestinationObjectCode
+                , Object_Destination.ValueData  AS DestinationObjectName
+                , Object_GoodsKind.ValueData    AS GoodsKindName
                 , ContainerObjectCost.ObjectCostId
                 , COALESCE (MovementItem_Parent.Id, MovementItem.Id) AS MIId_Parent
                 , Object_Goods_Parent.ObjectCode      AS GoodsCode_Parent
@@ -127,7 +129,7 @@ BEGIN
                                                ON ContainerLinkObject_Car.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
                                               AND ContainerLinkObject_Car.DescId = zc_ContainerLinkObject_Car()
                                               AND ContainerLinkObject_Car.ObjectId <> 0
-                 LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (ContainerLinkObject_ProfitLoss.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, COALESCE (Object_Personal_View.MemberId, COALESCE (ContainerLinkObject_Car.ObjectId, ContainerLinkObject_Unit.ObjectId))))
+                 LEFT JOIN Object AS Object_Direction ON Object_Direction.Id = COALESCE (ContainerLinkObject_ProfitLoss.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, COALESCE (Object_Personal_View.MemberId, COALESCE (ContainerLinkObject_Car.ObjectId, ContainerLinkObject_Unit.ObjectId))))
 
                  LEFT JOIN ObjectLink AS ObjectLink_ProfitLoss_ProfitLossGroup
                                       ON ObjectLink_ProfitLoss_ProfitLossGroup.ObjectId = ContainerLinkObject_ProfitLoss.ObjectId
@@ -154,7 +156,7 @@ BEGIN
                                                ON ContainerLinkObject_Goods.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
                                               AND ContainerLinkObject_Goods.DescId = zc_ContainerLinkObject_Goods()
                                               -- AND 1=0
-                 LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ContainerLinkObject_Goods.ObjectId
+                 LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = ContainerLinkObject_Goods.ObjectId
 
                  LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                       ON ObjectLink_Goods_GoodsGroup.ObjectId = ContainerLinkObject_Goods.ObjectId
@@ -181,14 +183,14 @@ BEGIN
             GROUP BY Container.ObjectId
                    , MovementItemContainer.Id
                    , MovementItemContainer.isActive
-                   , Object_by.ObjectCode
-                   , Object_by.ValueData
+                   , Object_Direction.ObjectCode
+                   , Object_Direction.ValueData
                    , Object_ProfitLossGroup.ValueData
                    , Object_ProfitLossDirection.ValueData
                    , Object_GoodsGroup.ObjectCode
                    , Object_GoodsGroup.ValueData
-                   , Object_Goods.ObjectCode
-                   , Object_Goods.ValueData
+                   , Object_Destination.ObjectCode
+                   , Object_Destination.ValueData
                    , Object_GoodsKind.ValueData
                    , ContainerObjectCost.ObjectCostId
                    , COALESCE (MovementItem_Parent.Id, MovementItem.Id)
@@ -217,6 +219,7 @@ ALTER FUNCTION gpSelect_MovementItemContainer_Movement (Integer, TVarChar) OWNER
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.10.13                                        * rename to DirectionObject and DestinationObject
  06.10.13                                        * add ParentId = inMovementId
  02.10.13                                        * calc DebetAccountName and KreditAccountName
  08.09.13                                        * add zc_ContainerLinkObject_ProfitLoss
@@ -233,3 +236,16 @@ ALTER FUNCTION gpSelect_MovementItemContainer_Movement (Integer, TVarChar) OWNER
 
 -- тест
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 197, inSession:= '2')
+/*
+Код об.напр.
+DirectionObjectCode
+
+Объект направление
+DirectionObjectName
+
+Код об.назн.
+DestinationObjectCode
+
+Объект назначение
+DestinationObjectName
+*/

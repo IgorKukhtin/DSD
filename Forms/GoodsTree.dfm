@@ -2,8 +2,8 @@ inherited GoodsTreeForm: TGoodsTreeForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <T'#1086#1074#1072#1088#1099'>'
   ClientHeight = 473
   ClientWidth = 874
-  ExplicitWidth = 882
-  ExplicitHeight = 500
+  ExplicitWidth = 890
+  ExplicitHeight = 508
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -17,6 +17,7 @@ inherited GoodsTreeForm: TGoodsTreeForm
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
+      DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
@@ -185,8 +186,8 @@ inherited GoodsTreeForm: TGoodsTreeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -323,6 +324,7 @@ inherited GoodsTreeForm: TGoodsTreeForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
         end>
       isShowModal = False
       DataSource = DataSource
