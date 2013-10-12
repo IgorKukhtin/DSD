@@ -493,22 +493,26 @@ inherited Report_FuelForm: TReport_FuelForm
     Params = <
       item
         Name = 'inStartDate'
+        Value = 41395d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
+        Value = 41395d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inFuelId'
+        Value = Null
         ParamType = ptInput
       end
       item
         Name = 'inCarId'
+        Value = Null
         ParamType = ptInput
       end>
     Left = 208
@@ -540,6 +544,7 @@ inherited Report_FuelForm: TReport_FuelForm
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = CarGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -547,6 +552,7 @@ inherited Report_FuelForm: TReport_FuelForm
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = CarGuides
         ComponentItem = 'TextValue'
         DataType = ftString

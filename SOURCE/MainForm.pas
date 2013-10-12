@@ -205,7 +205,7 @@ var
 
 implementation
 
-uses ParentForm, Storage, CommonData;
+uses ParentForm, Storage, CommonData, MessagesUnit;
 
 {$R DevExpressRus.res}
 
@@ -216,7 +216,7 @@ begin
   // Локализуем сообщения DevExpress
   cxLocalizer.Active:= True;
   cxLocalizer.Locale:= 1049;
-//  Application.OnException := OnException;
+  Application.OnException := OnException;
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);
@@ -237,10 +237,19 @@ begin
 end;
 
 procedure TMainForm.OnException(Sender: TObject; E: Exception);
+var TextMessage: String;
 begin
-  if E is ESortException then
-  else
-     ShowMessage(E.Message);
+  if E is ESortException then begin
+
+  end
+  else begin
+     if (E is EStorageException) then
+        // Выбрасываем все что после Context
+        TextMessage := Copy(E.Message, 1, pos('context', AnsilowerCase(E.Message)) - 1)
+     else
+        TextMessage := E.Message;
+     TMessagesForm.Create(nil).Execute(TextMessage, E.Message);
+  end;
 end;
 
 end.

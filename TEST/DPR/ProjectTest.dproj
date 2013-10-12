@@ -579,9 +579,12 @@
 			<DCCReference Include="..\SOURCE\Component\CrossAddOnViewTestForm.pas">
 				<Form>CrossAddOnViewTest</Form>
 				<FormType>dfm</FormType>
-                        </DCCReference>
+			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_Account.pas">
 				<Form>Report_AccountForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\MessagesUnit.pas">
+				<Form>MessagesForm</Form>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

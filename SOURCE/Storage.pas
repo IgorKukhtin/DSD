@@ -2,7 +2,7 @@ unit Storage;
 
 interface
 
-uses IdHTTP, Xml.XMLDoc, XMLIntf, Classes;
+uses SysUtils;
 
 type
 
@@ -29,9 +29,13 @@ type
      class function GetStorage: IStorage;
   end;
 
+  EStorageException = class(Exception)
+
+  end;
+
 implementation
 
-uses SysUtils, ZLibEx, idGlobal, UtilConst, DBClient, Variants, UtilConvert,
+uses IdHTTP, Xml.XMLDoc, XMLIntf, Classes, ZLibEx, idGlobal, UtilConst, DBClient, Variants, UtilConvert,
      Dialogs, StrUtils;
 
 const
@@ -41,6 +45,7 @@ const
    XMLStructureLenghtLenght = 10;
 
 type
+
   TStorage = class(TInterfacedObject, IStorage)
   strict private
     class var
@@ -100,7 +105,7 @@ procedure TStorage.ProcessErrorCode(pData: String);
 begin
   with LoadXMLData(pData).DocumentElement do
     if NodeName = gcError then
-       raise Exception.Create(StringReplace(GetAttribute(gcErrorMessage), 'Œÿ»¡ ¿:  ', '', []));
+       raise EStorageException.Create(StringReplace(GetAttribute(gcErrorMessage), 'Œÿ»¡ ¿:  ', '', []));
 end;
 
 function TStorage.ProcessMultiDataSet: Variant;
