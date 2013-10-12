@@ -21,6 +21,7 @@ type
     procedure CreateMovementItemReport;
     procedure CreateHistory;
     procedure CreateProtocol;
+    procedure CreateIndexes;
   end;
 
 var
@@ -70,6 +71,11 @@ begin
   ExecFile(StructurePath + 'ObjectHistory\ObjectHistoryDate.sql', ZQuery);
   ExecFile(StructurePath + 'ObjectHistory\ObjectHistoryLinkDesc.sql', ZQuery);
   ExecFile(StructurePath + 'ObjectHistory\ObjectHistoryLink.sql', ZQuery);
+end;
+
+procedure TdbCreateStructureTest.CreateIndexes;
+begin
+  DirectoryLoad(CreateStructurePath + 'INDEX\');
 end;
 
 procedure TdbCreateStructureTest.CreateMovement;

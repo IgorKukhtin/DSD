@@ -8,9 +8,9 @@ inherited Report_FuelForm: TReport_FuelForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 113
+    Top = 65
     Width = 1329
-    Height = 282
+    Height = 330
     Align = alClient
     TabOrder = 0
     object cxGridDBTableView: TcxGridDBTableView
@@ -202,6 +202,7 @@ inherited Report_FuelForm: TReport_FuelForm
       OptionsView.Footer = True
       OptionsView.GroupFooters = gfAlwaysVisible
       OptionsView.HeaderAutoHeight = True
+      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object CarCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'CarCode'
@@ -299,7 +300,7 @@ inherited Report_FuelForm: TReport_FuelForm
     Left = 0
     Top = 26
     Width = 1329
-    Height = 87
+    Height = 39
     Align = alTop
     TabOrder = 5
     object deStart: TcxDateEdit
@@ -337,17 +338,27 @@ inherited Report_FuelForm: TReport_FuelForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 56
-    Top = 64
+    Left = 200
+    Top = 184
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 64
-    Top = 256
+    Left = 184
+    Top = 176
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
       item
         Component = Owner
         Properties.Strings = (
@@ -358,8 +369,8 @@ inherited Report_FuelForm: TReport_FuelForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 296
-    Top = 168
+    Left = 8
+    Top = 64
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -377,8 +388,8 @@ inherited Report_FuelForm: TReport_FuelForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 144
-    Top = 24
+    Left = 72
+    Top = 64
     DockControlHeights = (
       0
       0
@@ -396,6 +407,10 @@ inherited Report_FuelForm: TReport_FuelForm
       FloatClientWidth = 0
       FloatClientHeight = 0
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
         item
           Visible = True
           ItemName = 'bbDialogForm'
@@ -430,11 +445,15 @@ inherited Report_FuelForm: TReport_FuelForm
       Visible = ivAlways
       ImageIndex = 35
     end
+    object bbPrint: TdxBarButton
+      Action = dsdPrintAction
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 256
-    Top = 232
+    Left = 40
+    Top = 64
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -454,6 +473,14 @@ inherited Report_FuelForm: TReport_FuelForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
+    end
+    object dsdPrintAction: TdsdPrintAction
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+      Params = <>
+      ReportName = #1056#1072#1089#1093#1086#1076' '#1090#1086#1087#1083#1080#1074#1072
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -484,8 +511,8 @@ inherited Report_FuelForm: TReport_FuelForm
         Name = 'inCarId'
         ParamType = ptInput
       end>
-    Left = 152
-    Top = 248
+    Left = 208
+    Top = 208
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -497,14 +524,13 @@ inherited Report_FuelForm: TReport_FuelForm
     Top = 296
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 440
-    Top = 240
+    Left = 112
+    Top = 64
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 200
-    Top = 64
+    Left = 280
   end
   object CarGuides: TdsdGuides
     KeyField = 'Id'
@@ -544,7 +570,15 @@ inherited Report_FuelForm: TReport_FuelForm
       item
         Component = CarGuides
       end>
-    Left = 288
-    Top = 64
+    Left = 328
+    Top = 8
+  end
+  object frxDBDataset: TfrxDBDataset
+    UserName = 'frxDBDataset'
+    CloseDataSource = False
+    DataSource = DataSource
+    BCDToCurrency = False
+    Left = 280
+    Top = 160
   end
 end

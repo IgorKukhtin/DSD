@@ -23,7 +23,7 @@ uses
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, dsdGuides,
-  cxButtonEdit, ChoicePeriod, cxLabel;
+  cxButtonEdit, ChoicePeriod, cxLabel, frxClass, frxDBSet;
 
 type
   TReport_FuelForm = class(TParentForm)
@@ -64,6 +64,9 @@ type
     deEnd: TcxDateEdit;
     cxLabel2: TcxLabel;
     CarGuides: TdsdGuides;
+    dsdPrintAction: TdsdPrintAction;
+    frxDBDataset: TfrxDBDataset;
+    bbPrint: TdxBarButton;
   private
   public
   end;
