@@ -1,21 +1,22 @@
 inherited ProfitLossForm: TProfitLossForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1090#1072#1090#1100#1080' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093' >'
   ClientHeight = 397
-  ClientWidth = 675
-  ExplicitWidth = 691
+  ClientWidth = 893
+  ExplicitWidth = 909
   ExplicitHeight = 432
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 675
+    Width = 893
     Height = 371
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 675
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -45,6 +46,20 @@ inherited ProfitLossForm: TProfitLossForm
         HeaderAlignmentVert = vaCenter
         Width = 57
       end
+      object clProfitLossGroup: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' '#1089#1090#1072#1090#1100#1080' '#1054#1055#1080#1059
+        DataBinding.FieldName = 'ProfitLossGroupName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 155
+      end
+      object clProfitLossDirection: TcxGridDBColumn
+        Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1090#1072#1090#1100#1080' '#1054#1055#1080#1059' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'ProfitLossDirectionName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 167
+      end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
@@ -52,29 +67,15 @@ inherited ProfitLossForm: TProfitLossForm
         HeaderAlignmentVert = vaCenter
         Width = 119
       end
-      object clProfitLossGroup: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1099' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093
-        DataBinding.FieldName = 'ProfitLossGroupName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 155
-      end
-      object clProfitLossDirection: TcxGridDBColumn
-        Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103#9
-        DataBinding.FieldName = 'ProfitLossDirectionName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 167
-      end
       object clInfoMoneyDestination: TcxGridDBColumn
-        Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1086#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyDestinationName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 97
       end
       object clInfoMoney: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter

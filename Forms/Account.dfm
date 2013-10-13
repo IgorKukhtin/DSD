@@ -1,21 +1,22 @@
 inherited AccountForm: TAccountForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1095#1077#1090#1072'>'
   ClientHeight = 382
-  ClientWidth = 717
-  ExplicitWidth = 733
+  ClientWidth = 910
+  ExplicitWidth = 926
   ExplicitHeight = 417
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 717
+    Width = 910
     Height = 356
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 717
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -43,12 +44,6 @@ inherited AccountForm: TAccountForm
         HeaderAlignmentVert = vaCenter
         Width = 56
       end
-      object clName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-        DataBinding.FieldName = 'Name'
-        HeaderAlignmentVert = vaCenter
-        Width = 163
-      end
       object clAccountGroup: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1099' '#1089#1095#1077#1090#1086#1074
         DataBinding.FieldName = 'AccountGroupName'
@@ -61,15 +56,21 @@ inherited AccountForm: TAccountForm
         HeaderAlignmentVert = vaCenter
         Width = 141
       end
+      object clName: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'Name'
+        HeaderAlignmentVert = vaCenter
+        Width = 163
+      end
+      object clInfoMoneyGroup: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1081
+        DataBinding.FieldName = 'InfoMoneyGroupName'
+      end
       object clInfoMoneyDestination: TcxGridDBColumn
         Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyDestinationName'
         HeaderAlignmentVert = vaCenter
         Width = 115
-      end
-      object clInfoMoneyGroup: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1081
-        DataBinding.FieldName = 'InfoMoneyGroupName'
       end
       object clInfoMoney: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103

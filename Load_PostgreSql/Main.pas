@@ -6514,6 +6514,16 @@ begin
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'  and Bill.BillKind in (zc_bkProductionInFromReceipt())'
            +'  and Bill.isRemains = zc_rvYes()'
+           +'  and Id_Postgres <> 0');
+        Add('union all');
+        Add('select _pgCar.Id as ObjectId');
+        Add('     , _pgCar.Name as InvNumber');
+        Add('     , '+FormatToDateServer_notNULL(StrToDate('30.09.2013'))+' as OperDate');
+        Add('     , _pgCar.MovementId_pg as Id_Postgres');
+        Add('     , _pgCar.CarId_pg as FromId_Postgres');
+        Add('     , _pgCar.CarId_pg as ToId_Postgres');
+        Add('from dba._pgCar');
+        Add('where '+FormatToDateServer_notNULL(StrToDate('30.09.2013'))+'='+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'  and Id_Postgres <> 0'
            );
 
