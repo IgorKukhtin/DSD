@@ -192,6 +192,10 @@ type
     bbPersonalService: TdxBarButton;
     actReport_Account: TdsdOpenForm;
     bbAccountReport: TdxBarButton;
+    actCardFuel: TdsdOpenForm;
+    actTicketFuel: TdsdOpenForm;
+    bbCardFuel: TdxBarButton;
+    bbTicketFuel: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
