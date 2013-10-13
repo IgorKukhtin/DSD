@@ -107,7 +107,6 @@ type
   TCrossDBViewAddOn = class(TdsdDBViewAddOn)
   private
     FHeaderDataSet: TDataSet;
-    FTemplateIndex: Integer;
     FTemplateColumn: TcxGridDBColumn;
     FHeaderColumnName: String;
     FFirstOpen: boolean;
@@ -576,7 +575,6 @@ begin
 end;
 
 procedure TdsdDBViewAddOn.SetView(const Value: TcxGridDBTableView);
-var i: integer;
 begin
   FView := Value;
   if Assigned(FView) then begin
@@ -807,6 +805,7 @@ end;
 procedure THeaderSaver.OnExit(Sender: TObject);
 var isChanged: boolean;
 begin
+  isChanged := false;
   if not Assigned(IdParam) then
      raise Exception.Create('Не установлено свойство IdParam');
   if (IdParam.Value = 0) then
@@ -956,7 +955,7 @@ begin
                OnDblClickActionList[i].Action := nil;
       end;
       if AComponent = SortImages then
-         AComponent := nil
+         SortImages := nil
     end;
 end;
 

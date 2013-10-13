@@ -125,10 +125,33 @@ type
     property DataSource: TDataSource read GetDataSource write SetDataSource;
   end;
 
-  // Изменяет статус документов
-  TdsdChangeMovementStatus = class (TdsdCustomDataSetAction)
+  TCustomChangeStatus = class (TdsdCustomDataSetAction)
   private
     FStatus: TdsdMovementStatus;
+  public
+    constructor Create(AOwner: TComponent); override;
+  published
+    property Status: TdsdMovementStatus read FStatus write FStatus;
+  end;
+
+  // Изменяет статус документа
+  TChangeGuidesStatus = class (TCustomChangeStatus)
+  private
+    FGuides: TdsdGuides;
+    FOnChange: TNotifyEvent;
+    procedure OnChange(Sender: TObject);
+    procedure SetGuides(const Value: TdsdGuides);
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+  public
+    function Execute: boolean; override;
+  published
+    property Guides: TdsdGuides read FGuides write SetGuides;
+  end;
+
+  // Изменяет статус документов в гриде
+  TdsdChangeMovementStatus = class (TCustomChangeStatus)
+  private
     FActionDataLink: TDataSetDataLink;
     procedure SetDataSource(const Value: TDataSource);
     function GetDataSource: TDataSource;
@@ -140,10 +163,7 @@ type
     function Execute: boolean; override;
   published
     property DataSource: TDataSource read GetDataSource write SetDataSource;
-    property Status: TdsdMovementStatus read FStatus write FStatus;
   end;
-
-  TdsdUpdateErased = class;
 
   TdsdUpdateErased = class(TdsdCustomDataSetAction, IDataSetAction)
   private
@@ -362,6 +382,7 @@ uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
 procedure Register;
 begin
   RegisterActions('DSDLib', [TBooleanStoredProcAction], TBooleanStoredProcAction);
+  RegisterActions('DSDLib', [TChangeGuidesStatus], TChangeGuidesStatus);
   RegisterActions('DSDLib', [TdsdChangeMovementStatus], TdsdChangeMovementStatus);
   RegisterActions('DSDLib', [TdsdChoiceGuides],   TdsdChoiceGuides);
   RegisterActions('DSDLib', [TdsdDataSetRefresh], TdsdDataSetRefresh);
@@ -795,7 +816,6 @@ constructor TdsdChangeMovementStatus.Create(AOwner: TComponent);
 begin
   inherited;
   FActionDataLink := TDataSetDataLink.Create(Self);
-  Status := mtUncomplete;
 end;
 
 procedure TdsdChangeMovementStatus.DataSetChanged;
@@ -811,12 +831,20 @@ begin
 end;
 
 function TdsdChangeMovementStatus.Execute: boolean;
+var lDataSet: TDataSet;
 begin
   result := inherited Execute;
   if result and Assigned(DataSource) and Assigned(DataSource.DataSet) then begin
-     DataSource.DataSet.Edit;
-     DataSource.DataSet.FieldByName('StatusCode').AsInteger := Integer(Status) + 1;
-     DataSource.DataSet.Post;
+     lDataSet := DataSource.DataSet;
+     // Что бы не вызывались события после на Post
+     DataSource.DataSet := nil;
+     try
+       lDataSet.Edit;
+       lDataSet.FieldByName('StatusCode').AsInteger := Integer(Status) + 1;
+       lDataSet.Post;
+     finally
+       DataSource.DataSet := lDataSet;
+     end;
   end;
 end;
 
@@ -1143,6 +1171,60 @@ begin
      if Assigned(FView.DataController.DataSource) then
         if FView.DataController.DataSource.State = dsBrowse then
            FView.DataController.DataSource.DataSet.Edit;
+end;
+
+{ TCustomChangeStatus }
+
+constructor TCustomChangeStatus.Create(AOwner: TComponent);
+begin
+  inherited;
+  Status := mtUncomplete;
+end;
+
+{ TChangeGuidesStatus }
+
+function TChangeGuidesStatus.Execute: boolean;
+var OldKey: string;
+begin
+  if Assigned(FGuides) then begin
+     OldKey := FGuides.Key;
+     FGuides.Key := IntToStr(Integer(Status) + 1);
+  end;
+  try
+    result := inherited Execute;
+    if Assigned(FGuides) then begin
+       FGuides.Key := IntToStr(Integer(Status) + 1);
+       FGuides.TextValue := MovementStatus[Status];
+    end;
+  except
+    FGuides.Key := OldKey;
+    raise;
+  end;
+end;
+
+procedure TChangeGuidesStatus.Notification(AComponent: TComponent;
+  Operation: TOperation);
+begin
+  inherited;
+  if csDesigning in ComponentState then
+    if (Operation = opRemove) and (AComponent = FGuides) then
+       FGuides := nil;
+end;
+
+procedure TChangeGuidesStatus.OnChange(Sender: TObject);
+begin
+  Enabled := StrToInt(TdsdGuides(Sender).Key) <> (Integer(Status) + 1);
+  if Assigned(FOnChange) then
+     FOnChange(Sender)
+end;
+
+procedure TChangeGuidesStatus.SetGuides(const Value: TdsdGuides);
+begin
+  FGuides := Value;
+  if Assigned(FGuides) then begin
+     FOnChange := FGuides.OnChange;
+     FGuides.OnChange := OnChange;
+  end;
 end;
 
 end.

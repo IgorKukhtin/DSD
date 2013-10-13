@@ -3,12 +3,12 @@ unit UtilConst;
 interface
 uses Classes, SysUtils;
 Type
-//  TrfFormState = (frmInsert, frmUpdate, frmMask);
-  //TrfProcType  = (ptInsert, ptUpdate, ptMask, ptInsertUpdate);
+
   TdsdMovementStatus = (mtUncomplete, mtComplete, mtDelete);
 
-
 var
+
+  MovementStatus: Array[TdsdMovementStatus] of string = ('Не проведен', 'Проведен', 'Удален');
 
   ConnectionPath: string = '..\init\init.php';
 

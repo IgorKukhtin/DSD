@@ -223,7 +223,8 @@ uses
   Report_Fuel in '..\..\Forms\Report\Report_Fuel.pas' {Report_FuelForm},
   Report_Transport in '..\..\Forms\Report\Report_Transport.pas' {Report_TransportForm},
   CrossAddOnViewTestForm in '..\SOURCE\Component\CrossAddOnViewTestForm.pas' {CrossAddOnViewTest},
-  Report_Account in '..\..\Forms\Report\Report_Account.pas' {Report_AccountForm};
+  Report_Account in '..\..\Forms\Report\Report_Account.pas' {Report_AccountForm},
+  MessagesUnit in '..\..\SOURCE\MessagesUnit.pas' {MessagesForm};
 
 {$R *.RES}
 

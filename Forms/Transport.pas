@@ -24,7 +24,7 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   cxSplitter, cxCurrencyEdit, DataModul, dsdAddOn, dxBarExtItems,
-  cxGridBandedTableView, cxGridDBBandedTableView, cxBlobEdit;
+  cxGridBandedTableView, cxGridDBBandedTableView, cxBlobEdit, cxImageComboBox;
 
 type
   TTransportForm = class(TParentForm)
@@ -191,7 +191,6 @@ type
     actUpdateIncomeDS: TdsdUpdateDataSet;
     ceStatus: TcxButtonEdit;
     cxLabel15: TcxLabel;
-    ChangeStatus: TChangeStatus;
     clincInvNumberPartner: TcxGridDBColumn;
     clincRouteName: TcxGridDBColumn;
     PaidKindChoiceForm: TOpenChoiceForm;
@@ -221,6 +220,11 @@ type
     spMovementUnCompleteIncome: TdsdStoredProc;
     spMovementSetErasedIncome: TdsdStoredProc;
     colchRatioFuel: TcxGridDBColumn;
+    DeleteMovement: TChangeGuidesStatus;
+    UnCompleteMovement: TChangeGuidesStatus;
+    CompleteMovement: TChangeGuidesStatus;
+    StatusGuides: TdsdGuides;
+    StatusStoredProc: TdsdStoredProc;
   private
   public
   end;

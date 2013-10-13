@@ -61,6 +61,7 @@ type
     FFormName: string;
     FLookupControl: TWinControl;
     FKeyField: string;
+    FOnChange: TNotifyEvent;
     function GetKey: String;
     function GetTextValue: String;
     procedure SetKey(const Value: String);
@@ -100,13 +101,12 @@ type
   private
     FParams: TdsdParams;
     FOnAfterChoice: TNotifyEvent;
-    FOnChange: TNotifyEvent;
     FPopupMenu: TPopupMenu;
     procedure OnPopupClick(Sender: TObject);
     procedure SetLookupControl(const Value: TWinControl); override;
+  protected
     // Вызыввем процедуру после выбора элемента из справочника
     procedure AfterChoice(Params: TdsdParams); override;
-  protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
@@ -204,8 +204,6 @@ begin
   Self.Params.AssignParams(Params);
   if Assigned(FOnAfterChoice) then
      FOnAfterChoice(Self);
-  if Assigned(FOnChange) then
-     FOnChange(Self)
 end;
 
 constructor TdsdGuides.Create(AOwner: TComponent);
@@ -248,8 +246,6 @@ procedure TdsdGuides.OnPopupClick(Sender: TObject);
 begin
   Key := '0';
   TextValue := '';
-  if Assigned(FOnChange) then
-     FOnChange(Self)
 end;
 
 procedure TdsdGuides.SetLookupControl(const Value: TWinControl);
@@ -345,7 +341,7 @@ procedure TGuidesFiller.OnAfterChoice(Sender: TObject);
 var i: integer;
 begin
   if Assigned(FParam) then
-     if FParam.Value = 0 then begin
+     if (FParam.Value = 0) or VarIsNull(FParam.Value) then begin
         for I := 0 to GuidesList.Count - 1 do
             if assigned(GuidesList[i].Guides) then
               if (GuidesList[i].Guides.Key = '0') or ((GuidesList[i].Guides.Key = '')) then begin
@@ -445,7 +441,9 @@ end;
 
 procedure TCustomGuides.OnButtonClick(Sender: TObject; AButtonIndex: Integer);
 begin
-  OnDblClick(Sender);
+  if Sender is TcxButtonEdit then
+     if not Assigned(TcxButtonEdit(Sender).Properties.Buttons[AButtonIndex].Action) then
+        OnDblClick(Sender);
 end;
 
 procedure TCustomGuides.OpenGuides;
@@ -453,6 +451,7 @@ var
   Form: TParentForm;
   DataSet: TDataSet;
 begin
+  if FormName = ''  then exit;
   Form := TdsdFormStorageFactory.GetStorage.Load(FormName);
   // Открыли форму
   Form.Execute(Self, nil);
@@ -519,6 +518,8 @@ begin
      FKey := '0'
   else
      FKey := Value;
+  if Assigned(FOnChange) then
+     FOnChange(Self);
   if Assigned(LookupControl) then begin
      if LookupControl is TcxLookupComboBox then
         (LookupControl as TcxLookupComboBox).EditValue := FKey

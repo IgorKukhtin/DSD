@@ -19,7 +19,8 @@ uses
   dsdAddOn in '..\SOURCE\COMPONENT\dsdAddOn.pas',
   MainForm in '..\SOURCE\MainForm.pas' {MainForm},
   ChoicePeriod in '..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm},
-  Defaults in '..\SOURCE\COMPONENT\Defaults.pas';
+  Defaults in '..\SOURCE\COMPONENT\Defaults.pas',
+  MessagesUnit in '..\SOURCE\MessagesUnit.pas' {MessagesForm};
 
 {$R *.res}
 

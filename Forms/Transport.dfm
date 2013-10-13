@@ -4,8 +4,8 @@
   ClientWidth = 996
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1012
-  ExplicitHeight = 490
+  ExplicitWidth = 1004
+  ExplicitHeight = 482
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -74,7 +74,7 @@
       Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' '
     end
     object edPersonalDriver: TcxButtonEdit
-      Left = 110
+      Left = 182
       Top = 63
       Properties.Buttons = <
         item
@@ -82,10 +82,10 @@
           Kind = bkEllipsis
         end>
       TabOrder = 3
-      Width = 191
+      Width = 119
     end
     object cxLabel5: TcxLabel
-      Left = 110
+      Left = 182
       Top = 45
       Caption = #1042#1086#1076#1080#1090#1077#1083#1100
     end
@@ -215,15 +215,25 @@
       Caption = #1044#1086#1087'. '#1095#1072#1089#1099
     end
     object ceStatus: TcxButtonEdit
-      Left = 8
+      Left = 9
       Top = 63
       Properties.Buttons = <
         item
+          Action = CompleteMovement
+          Kind = bkGlyph
+        end
+        item
+          Action = UnCompleteMovement
           Default = True
-          Kind = bkEllipsis
+          Kind = bkGlyph
+        end
+        item
+          Action = DeleteMovement
+          Kind = bkGlyph
         end>
+      Properties.Images = dmMain.ImageList
       TabOrder = 28
-      Width = 95
+      Width = 152
     end
     object cxLabel15: TcxLabel
       Left = 8
@@ -689,18 +699,28 @@
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object clincStatusCode: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1091#1089
-            DataBinding.FieldName = 'StatusName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
+            DataBinding.FieldName = 'StatusCode'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
               item
-                Action = RouteChoiceForm
-                Default = True
-                Kind = bkEllipsis
+                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = 1
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
               end>
-            Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 50
+            Width = 68
           end
           object clincInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
@@ -1472,6 +1492,7 @@
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 11
       Status = mtUncomplete
+      DataSource = IncomeDS
     end
     object actCompleteIncome: TdsdChangeMovementStatus
       Category = 'DSDLib'
@@ -1485,6 +1506,7 @@
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 12
       Status = mtComplete
+      DataSource = IncomeDS
     end
     object actSetErasedIncome: TdsdChangeMovementStatus
       Category = 'DSDLib'
@@ -1498,6 +1520,55 @@
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       ImageIndex = 13
       Status = mtDelete
+      DataSource = IncomeDS
+    end
+    object UnCompleteMovement: TChangeGuidesStatus
+      Category = 'DSDLib'
+      StoredProc = StatusStoredProc
+      StoredProcList = <
+        item
+          StoredProc = StatusStoredProc
+        end
+        item
+          StoredProc = spSelectMIContainer
+        end>
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 11
+      Status = mtUncomplete
+      Guides = StatusGuides
+    end
+    object CompleteMovement: TChangeGuidesStatus
+      Category = 'DSDLib'
+      StoredProc = StatusStoredProc
+      StoredProcList = <
+        item
+          StoredProc = StatusStoredProc
+        end
+        item
+          StoredProc = spSelectMIContainer
+        end>
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 12
+      Status = mtComplete
+      Guides = StatusGuides
+    end
+    object DeleteMovement: TChangeGuidesStatus
+      Category = 'DSDLib'
+      StoredProc = StatusStoredProc
+      StoredProcList = <
+        item
+          StoredProc = StatusStoredProc
+        end
+        item
+          StoredProc = spSelectMIContainer
+        end>
+      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      ImageIndex = 13
+      Status = mtDelete
+      Guides = StatusGuides
     end
   end
   object MasterDS: TDataSource
@@ -1533,8 +1604,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 506
-    Top = 83
+    Left = 250
+    Top = 11
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Transport'
@@ -1663,14 +1734,14 @@
       item
         Name = 'StatusCode'
         Value = ''
-        Component = ChangeStatus
+        Component = StatusGuides
         ComponentItem = 'Key'
         DataType = ftString
       end
       item
         Name = 'StatusName'
         Value = ''
-        Component = ChangeStatus
+        Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
@@ -2204,8 +2275,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -2647,16 +2718,6 @@
     Left = 75
     Top = 314
   end
-  object ChangeStatus: TChangeStatus
-    KeyField = 'Code'
-    LookupControl = ceStatus
-    IdParam.Value = Null
-    IdParam.Component = FormParams
-    IdParam.ComponentItem = 'Id'
-    StoredProcName = 'gpUpdate_Status_Transport'
-    Left = 449
-    Top = 208
-  end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'
     DataSets = <>
@@ -2805,5 +2866,35 @@
       end>
     Left = 728
     Top = 312
+  end
+  object StatusGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceStatus
+    PositionDataSet = 'ClientDataSet'
+    Params = <>
+    Left = 24
+    Top = 16
+  end
+  object StatusStoredProc: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Status_Transport'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'StatusCode'
+        Value = ''
+        Component = StatusGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    Left = 64
+    Top = 16
   end
 end
