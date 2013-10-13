@@ -4,8 +4,8 @@ inherited InventoryForm: TInventoryForm
   ClientWidth = 806
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 814
-  ExplicitHeight = 420
+  ExplicitWidth = 822
+  ExplicitHeight = 428
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -222,9 +222,6 @@ inherited InventoryForm: TInventoryForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -415,6 +412,7 @@ inherited InventoryForm: TInventoryForm
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 128
@@ -430,23 +428,25 @@ inherited InventoryForm: TInventoryForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inShowAll'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
       end>
-    Left = 88
-    Top = 280
+    Left = 96
+    Top = 288
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -459,7 +459,7 @@ inherited InventoryForm: TInventoryForm
     ShowShortCutInHint = True
     UseSystemFont = True
     Left = 32
-    Top = 56
+    Top = 216
     DockControlHeights = (
       0
       0
@@ -559,12 +559,12 @@ inherited InventoryForm: TInventoryForm
           'Width')
       end>
     StorageName = 'cxPropertiesStore'
-    Top = 56
+    Top = 216
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 64
-    Top = 56
+    Top = 216
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spGet
@@ -613,14 +613,14 @@ inherited InventoryForm: TInventoryForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 32
-    Top = 208
+    Left = 16
+    Top = 272
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 64
-    Top = 208
+    Left = 48
+    Top = 272
   end
   object dsdGuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -647,35 +647,42 @@ inherited InventoryForm: TInventoryForm
     Params = <
       item
         Name = 'inId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'InvNumber'
+        Value = ''
         Component = edInvNumber
       end
       item
         Name = 'OperDate'
+        Value = 0d
         Component = edOperDate
       end
       item
         Name = 'FromId'
+        Value = ''
         Component = dsdGuidesFrom
         ComponentItem = 'Key'
       end
       item
         Name = 'FromName'
+        Value = ''
         Component = dsdGuidesFrom
         ComponentItem = 'TextValue'
       end
       item
         Name = 'ToId'
+        Value = ''
         Component = dsdGuidesTo
         ComponentItem = 'Key'
       end
       item
         Name = 'ToName'
+        Value = ''
         Component = dsdGuidesTo
         ComponentItem = 'TextValue'
       end>
@@ -685,7 +692,7 @@ inherited InventoryForm: TInventoryForm
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
     Left = 96
-    Top = 56
+    Top = 216
     object N1: TMenuItem
       Action = actRefresh
     end
@@ -700,6 +707,7 @@ inherited InventoryForm: TInventoryForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -731,6 +739,7 @@ inherited InventoryForm: TInventoryForm
       end
       item
         Name = 'inMovementId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -750,6 +759,7 @@ inherited InventoryForm: TInventoryForm
       end
       item
         Name = 'inAmountPartner'
+        Value = Null
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -762,21 +772,25 @@ inherited InventoryForm: TInventoryForm
       end
       item
         Name = 'inCountForPrice'
+        Value = Null
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inLiveWeight'
+        Value = Null
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inHeadCount'
+        Value = Null
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inGoodsKindId'
+        Value = Null
         ParamType = ptInput
       end>
     Left = 176
@@ -821,6 +835,7 @@ inherited InventoryForm: TInventoryForm
     Top = 16
   end
   object HeaderSaver: THeaderSaver
+    IdParam.Value = Null
     ControlList = <>
     Left = 608
     Top = 72

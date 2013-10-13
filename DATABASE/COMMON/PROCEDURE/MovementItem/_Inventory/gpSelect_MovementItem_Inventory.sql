@@ -203,5 +203,5 @@ ALTER FUNCTION gpSelect_MovementItem_Inventory (Integer, Boolean, TVarChar) OWNE
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_Inventory (inMovementId:= 25173, inShowAll:= TRUE, inSession:= '2')
--- SELECT * FROM gpSelect_MovementItem_Inventory (inMovementId:= 25173, inShowAll:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_Inventory (inMovementId:= 309, inShowAll:= TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_Inventory (inMovementId:= 309, inShowAll:= FALSE, inSession:= '2')
