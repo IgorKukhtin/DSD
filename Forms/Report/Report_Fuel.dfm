@@ -320,12 +320,12 @@ inherited Report_FuelForm: TReport_FuelForm
       Width = 121
     end
     object cxLabel2: TcxLabel
-      Left = 401
-      Top = 9
+      Left = 506
+      Top = 10
       Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
     end
     object edCar: TcxButtonEdit
-      Left = 472
+      Left = 577
       Top = 8
       Properties.Buttons = <
         item
@@ -334,6 +334,22 @@ inherited Report_FuelForm: TReport_FuelForm
         end>
       TabOrder = 3
       Width = 161
+    end
+    object cxLabel4: TcxLabel
+      Left = 303
+      Top = 10
+      Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
+    end
+    object ceFuel: TcxButtonEdit
+      Left = 377
+      Top = 8
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 5
+      Width = 124
     end
   end
   object DataSource: TDataSource
@@ -507,12 +523,16 @@ inherited Report_FuelForm: TReport_FuelForm
       end
       item
         Name = 'inFuelId'
-        Value = Null
+        Value = ''
+        Component = FuelGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inCarId'
-        Value = Null
+        Value = ''
+        Component = CarGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end>
     Left = 208
@@ -534,7 +554,7 @@ inherited Report_FuelForm: TReport_FuelForm
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 280
+    Left = 176
   end
   object CarGuides: TdsdGuides
     KeyField = 'Id'
@@ -568,16 +588,13 @@ inherited Report_FuelForm: TReport_FuelForm
         Component = PeriodChoice
       end
       item
-      end
-      item
-      end
-      item
+        Component = FuelGuides
       end
       item
         Component = CarGuides
       end>
-    Left = 328
-    Top = 8
+    Left = 232
+    Top = 65528
   end
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'
@@ -586,5 +603,30 @@ inherited Report_FuelForm: TReport_FuelForm
     BCDToCurrency = False
     Left = 280
     Top = 160
+  end
+  object FuelGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceFuel
+    FormName = 'TFuelForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = FuelGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = FuelGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 431
+    Top = 63
   end
 end

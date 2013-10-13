@@ -67,6 +67,9 @@ type
     dsdPrintAction: TdsdPrintAction;
     frxDBDataset: TfrxDBDataset;
     bbPrint: TdxBarButton;
+    cxLabel4: TcxLabel;
+    FuelGuides: TdsdGuides;
+    ceFuel: TcxButtonEdit;
   private
   public
   end;

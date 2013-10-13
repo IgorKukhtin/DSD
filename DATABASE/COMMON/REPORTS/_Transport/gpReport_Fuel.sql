@@ -26,19 +26,27 @@ $BODY$BEGIN
      -- Главная задача - выбор контейнера. Выбираем контейнеры по группе счетов 20400. 
   RETURN QUERY  
       -- Таким нехитрым образом мы получили все нужные нам суммовые контейнеры по определенным счетам
-           WITH ContainerSumm AS (SELECT Id, ParentId, DescId, Amount FROM Container WHERE Container.ObjectId IN
-                          (SELECT AccountId FROM Object_Account_View
-                            WHERE Object_Account_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400()
-                              AND Object_Account_View.AccountGroupId = zc_Enum_AccountGroup_20000()))
+      -- Еще и ограничили их по топливу и авто
+           WITH ContainerSumm AS (SELECT Id, ParentId, DescId, Amount 
+                                 FROM Container 
+                                WHERE Container.ObjectId IN
+                                      (SELECT AccountId FROM Object_Account_View
+                                        WHERE Object_Account_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400()
+                                          AND Object_Account_View.AccountGroupId = zc_Enum_AccountGroup_20000())
+                                      AND ((Container.iD IN (SELECT ContainerId FROM ContainerLinkObject 
+                                       WHERE DescId = zc_ContainerLinkObject_Goods() AND ObjectId = inFuelId)) OR inFuelId = 0)
+                                      AND ((Container.iD IN (SELECT ContainerId FROM ContainerLinkObject 
+                                       WHERE DescId = zc_ContainerLinkObject_Car() AND ObjectId = inCarId)) OR inCarId = 0)
+                                    )
 
            -- Ну и теперь добавили строковые данные. 
-    SELECT Object_Car.Id         AS CarId,  
-           Object_Car.ValueData  AS CarName,
-           Object_Fuel.Id        AS FuelId,
-           Object_Fuel.Code      AS FuelCode,
-           Object_Fuel.ValueData AS FuelName, 
-           StartCount, IncomeCount, OutcomeCount, EndCount,
-           StartSumm, IncomeSumm, OutcomeSumm, EndSumm
+    SELECT Object_Car.Id           AS CarId,  
+           Object_Car.ValueData    AS CarName,
+           Object_Fuel.Id          AS FuelId,
+           Object_Fuel.ObjectCode  AS FuelCode,
+           Object_Fuel.ValueData   AS FuelName, 
+           StartCount::TFloat, IncomeCount::TFloat, OutcomeCount::TFloat, EndCount::TFloat,
+           Report.StartSumm::TFloat, Report.IncomeSumm::TFloat, Report.OutcomeSumm::TFloat, Report.EndSumm::TFloat
     FROM(
       -- Сгруппировали по топливу и автомобилю
       SELECT Report.ObjectId AS FuelId, CarLink.ObjectId as CarId,
@@ -46,21 +54,21 @@ $BODY$BEGIN
              SUM(IncomeCount) AS IncomeCount,
              SUM(OutcomeCount) AS OutcomeCount,
              SUM(EndCount) AS EndCount,
-             SUM(StartSumm) AS StartSumm,
-             SUM(IncomeSumm) AS IncomeSumm,
-             SUM(OutcomeSumm) AS OutcomeSumm,
-             SUM(EndSumm) AS EndSumm
+             SUM(Report.StartSumm) AS StartSumm,
+             SUM(Report.IncomeSumm) AS IncomeSumm,
+             SUM(Report.OutcomeSumm) AS OutcomeSumm,
+             SUM(Report.EndSumm) AS EndSumm
         FROM 
         -- Получили оборотку, развернутую на количество и сумму
        (SELECT KeyContainerId AS ContainerId, SUM(ObjectId) AS ObjectId ,
-               SUM(CASE WHEN DescId = zc_Container_Count() THEN StartAmount ELSE 0 END) AS StartCount,
-               SUM(CASE WHEN DescId = zc_Container_Count() THEN IncomeAmount ELSE 0 END) AS IncomeCount,
-               SUM(CASE WHEN DescId = zc_Container_Count() THEN OutcomeAmount ELSE 0 END) AS OutcomeCount,
-               SUM(CASE WHEN DescId = zc_Container_Count() THEN EndAmount ELSE 0 END) AS EndCount,
-               SUM(CASE WHEN DescId = zc_Container_Summ() THEN StartAmount ELSE 0 END) AS StartSumm,
-               SUM(CASE WHEN DescId = zc_Container_Summ() THEN IncomeAmount ELSE 0 END) AS IncomeSumm,
-               SUM(CASE WHEN DescId = zc_Container_Summ() THEN OutcomeAmount ELSE 0 END) AS OutcomeSumm,
-               SUM(CASE WHEN DescId = zc_Container_Summ() THEN EndAmount ELSE 0 END) AS EndSumm
+               SUM(CASE WHEN DescId = zc_Container_Count() THEN Report.StartAmount ELSE 0 END) AS StartCount,
+               SUM(CASE WHEN DescId = zc_Container_Count() THEN Report.IncomeAmount ELSE 0 END) AS IncomeCount,
+               SUM(CASE WHEN DescId = zc_Container_Count() THEN Report.OutcomeAmount ELSE 0 END) AS OutcomeCount,
+               SUM(CASE WHEN DescId = zc_Container_Count() THEN Report.EndAmount ELSE 0 END) AS EndCount,
+               SUM(CASE WHEN DescId = zc_Container_Summ() THEN Report.StartAmount ELSE 0 END) AS StartSumm,
+               SUM(CASE WHEN DescId = zc_Container_Summ() THEN Report.IncomeAmount ELSE 0 END) AS IncomeSumm,
+               SUM(CASE WHEN DescId = zc_Container_Summ() THEN Report.OutcomeAmount ELSE 0 END) AS OutcomeSumm,
+               SUM(CASE WHEN DescId = zc_Container_Summ() THEN Report.EndAmount ELSE 0 END) AS EndSumm
           FROM
               -- Получаем оборотку по контейнерам. 
               (SELECT KeyContainerId, ObjectId, ReportContainer.DescId, 
@@ -79,7 +87,7 @@ $BODY$BEGIN
                  LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = ReportContainer.Id
                                                                AND MIContainer.OperDate >= inStartDate
                 GROUP BY ReportContainer.Id, ReportContainer.DescId, ReportContainer.Amount, KeyContainerId, ObjectId) AS Report
-                   WHERE StartAmount<>0 OR IncomeAmount<>0 OR OutcomeAmount<>0 OR EndAmount<>0
+                   WHERE Report.StartAmount<>0 OR Report.IncomeAmount<>0 OR Report.OutcomeAmount<>0 OR Report.EndAmount<>0
           GROUP BY ContainerID) AS Report
       LEFT JOIN ContainerLinkObject AS CarLink ON CarLink.ContainerId = Report.ContainerId AND CarLink.DescId = zc_ContainerLinkObject_Car()
       GROUP BY Report.ObjectId, CarLink.ObjectId) AS Report
