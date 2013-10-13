@@ -253,6 +253,16 @@ BEGIN
                               AND MovementItem.isErased   = tmpIsErased.isErased
              LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = MovementItem.ObjectId
 
+             -- выбрали автомобиль (он один)
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
+                                          ON MovementLinkObject_Car.MovementId = inMovementId
+                                         AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
+
+             -- выбрали у автомобиля - Вид топлива
+             LEFT JOIN ObjectLink AS ObjectLink_Car_FuelAll ON ObjectLink_Car_FuelAll.ObjectId = MovementLinkObject_Car.ObjectId
+                                                           AND ObjectLink_Car_FuelAll.ChildObjectId = MovementItem.ObjectId
+                                                           AND ObjectLink_Car_FuelAll.DescId IN (zc_ObjectLink_Car_FuelMaster(), zc_ObjectLink_Car_FuelChild())
+
              LEFT JOIN MovementItemBoolean AS MIBoolean_Calculated
                                            ON MIBoolean_Calculated.MovementItemId = MovementItem.Id
                                           AND MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
@@ -268,14 +278,17 @@ BEGIN
                                         AND MIFloat_ColdDistance.DescId = zc_MIFloat_ColdDistance()
 
              LEFT JOIN MovementItemFloat AS MIFloat_AmountColdHour
-                                        ON MIFloat_AmountColdHour.MovementItemId = MovementItem.Id
+                                         ON MIFloat_AmountColdHour.MovementItemId = MovementItem.Id
                                         AND MIFloat_AmountColdHour.DescId = zc_MIFloat_AmountColdHour()
+                                        AND ObjectLink_Car_FuelAll.ChildObjectId IS NOT NULL
              LEFT JOIN MovementItemFloat AS MIFloat_AmountColdDistance
                                          ON MIFloat_AmountColdDistance.MovementItemId = MovementItem.Id
                                         AND MIFloat_AmountColdDistance.DescId = zc_MIFloat_AmountColdDistance()
+                                        AND ObjectLink_Car_FuelAll.ChildObjectId IS NOT NULL
              LEFT JOIN MovementItemFloat AS MIFloat_AmountFuel
                                          ON MIFloat_AmountFuel.MovementItemId = MovementItem.Id
                                         AND MIFloat_AmountFuel.DescId = zc_MIFloat_AmountFuel()
+                                        AND ObjectLink_Car_FuelAll.ChildObjectId IS NOT NULL
              LEFT JOIN MovementItemFloat AS MIFloat_RateFuelKindTax
                                          ON MIFloat_RateFuelKindTax.MovementItemId = MovementItem.Id
                                         AND MIFloat_RateFuelKindTax.DescId = zc_MIFloat_RateFuelKindTax()
@@ -311,6 +324,7 @@ ALTER FUNCTION gpSelect_MI_Transport (Integer, Boolean, Boolean, TVarChar) OWNER
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.10.13                                        * add ObjectLink_Car_FuelAll.ChildObjectId IS NOT NULL
  12.10.13                                        * add zc_ObjectFloat_Fuel_Ratio
  07.10.13                                        * add DistanceFuelChild and isMasterFuel
  04.10.13                                        * inIsErased

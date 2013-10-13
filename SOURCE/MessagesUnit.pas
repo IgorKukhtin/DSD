@@ -19,7 +19,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, StdCtrls, Buttons, ActnList, rxCtrls, Grids;
+  Dialogs, ExtCtrls, StdCtrls, Buttons, ActnList, Grids;
 
 type
 
@@ -46,7 +46,7 @@ type
 
 
 implementation
-uses rxStrUtils, UtilConst;
+uses UtilConst;
 const c_Password = '111';
       c_PasswordItem = '1';
       c_ShowFullInfo : boolean = false;
