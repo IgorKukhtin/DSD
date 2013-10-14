@@ -586,6 +586,9 @@
 			<DCCReference Include="..\..\SOURCE\MessagesUnit.pas">
 				<Form>MessagesForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\ObjectFrom_byIncomeFuel.pas">
+				<Form>From_byIncomeFuelForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

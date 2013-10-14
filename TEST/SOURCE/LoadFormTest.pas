@@ -77,6 +77,7 @@ type
     procedure LoadRateFuelKindFormTest;
     procedure LoadFreightFormTest;
     procedure LoadWorkTimeKindFormTest;
+    procedure LoadUnionFormTest;
   end;
 
 implementation
@@ -423,6 +424,13 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_AccountForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_AccountForm');
+end;
+
+procedure TLoadFormTest.LoadUnionFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFrom_byIncomeFuelForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFrom_byIncomeFuelForm');
+
 end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
