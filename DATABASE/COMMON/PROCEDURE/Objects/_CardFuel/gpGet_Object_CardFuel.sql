@@ -7,11 +7,11 @@ CREATE OR REPLACE FUNCTION gpGet_Object_CardFuel(
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , PersonalDriverId Integer, PersonalDriverCode Integer, PersonalDriverName TVarChar
-             , CarId Integer, CarCode Integer, CarName TVarChar
-             , PaidKindId Integer, PaidKindCode Integer, PaidKindName TVarChar
-             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
-             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+             , PersonalDriverId Integer, PersonalDriverName TVarChar
+             , CarId Integer, CarName TVarChar
+             , PaidKindId Integer, PaidKindName TVarChar
+             , JuridicalId Integer, JuridicalName TVarChar
+             , GoodsId Integer, GoodsName TVarChar
              , isErased Boolean
              ) AS
 $BODY$BEGIN
@@ -28,23 +28,18 @@ $BODY$BEGIN
            , CAST ('' as TVarChar)  AS Name
                       
            , CAST (0 as Integer)   AS PersonalDriverId 
-           , CAST (0 as Integer)   AS PersonalDriverCode
            , CAST ('' as TVarChar) AS PersonalDriverName
 
            , CAST (0 as Integer)   AS CarId 
-           , CAST (0 as Integer)   AS CarCode
            , CAST ('' as TVarChar) AS CarName
 
            , CAST (0 as Integer)   AS PaidKindId 
-           , CAST (0 as Integer)   AS PaidKindCode
            , CAST ('' as TVarChar) AS PaidKindName
            
            , CAST (0 as Integer)   AS JuridicalId 
-           , CAST (0 as Integer)   AS JuridicalCode
            , CAST ('' as TVarChar) AS JuridicalName
 
            , CAST (0 as Integer)   AS GoodsId 
-           , CAST (0 as Integer)   AS GoodsCode
            , CAST ('' as TVarChar) AS GoodsName                      
             
            , CAST (NULL AS Boolean) AS isErased
@@ -57,23 +52,18 @@ $BODY$BEGIN
            , Object_CardFuel.ValueData  AS NAME
                       
            , View_PersonalDriver.PersonalId   AS PersonalDriverId 
-           , View_PersonalDriver.PersonalCode AS PersonalDriverCode
            , View_PersonalDriver.PersonalName AS PersonalDriverName
 
            , Object_Car.Id         AS CarId 
-           , Object_Car.ObjectCode AS CarCode
            , Object_Car.ValueData  AS CarName
            
            , Object_PaidKind.Id         AS PaidKindId 
-           , Object_PaidKind.ObjectCode AS PaidKindCode
            , Object_PaidKind.ValueData  AS PaidKindName
                        
            , Object_Juridical.Id         AS JuridicalId 
-           , Object_Juridical.ObjectCode AS JuridicalCode
            , Object_Juridical.ValueData  AS JuridicalName
            
            , Object_Goods.Id         AS GoodsId 
-           , Object_Goods.ObjectCode AS GoodsCode
            , Object_Goods.ValueData  AS GoodsName            
             
            , Object_CardFuel.isErased   AS isErased

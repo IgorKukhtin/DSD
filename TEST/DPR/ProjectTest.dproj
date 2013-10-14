@@ -589,6 +589,18 @@
 			<DCCReference Include="..\..\Forms\ObjectFrom_byIncomeFuel.pas">
 				<Form>From_byIncomeFuelForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\CardFuel.pas">
+				<Form>CardFuelForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\CardFuelEdit.pas">
+				<Form>CardFuelEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\TicketFuel.pas">
+				<Form>TicketFuelForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\TicketFuelEdit.pas">
+				<Form>TicketFuelEditForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

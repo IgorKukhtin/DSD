@@ -72,4 +72,4 @@ ALTER FUNCTION gpInsertUpdate_Object_CardFuel (Integer, Integer, TVarChar, Integ
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_CardFuel()
+--SELECT * FROM gpInsertUpdate_Object_CardFuel(ioId:=148, inCode:=1, inName:='Карта 45 ', inPersonalDriverId :=19490, inCarId:= 65594  , inPaidKindId:=  80 , inJuridicalId :=12454 , inGoodsId :=2447 , inSession:= '2')
