@@ -620,7 +620,16 @@ begin
   //
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TRateFuelForm'));
   TdsdFormStorageFactory.GetStorage.Load('TRateFuelForm');
-
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTicketFuelForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTicketFuelForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTicketFuelEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTicketFuelEditForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCardFuelForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCardFuelForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCardFuelEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCardFuelEditForm');
 end;
 
 procedure TLoadFormTest.LoadCarModelFormTest;
