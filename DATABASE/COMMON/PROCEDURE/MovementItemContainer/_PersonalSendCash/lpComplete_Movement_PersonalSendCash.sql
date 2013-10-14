@@ -26,19 +26,24 @@ BEGIN
                , vbPersonalId_From
                , vbJuridicalId_Basis, vbBusinessId
      FROM (SELECT Movement.OperDate
-                , COALESCE (MovementLinkObject_Personal.ObjectId, 0)       AS PersonalId_From
-                , COALESCE (MovementLinkObject_JuridicalBasis.ObjectId, 0) AS JuridicalId_Basis
-                , COALESCE (MovementLinkObject_Business.ObjectId, 0)       AS BusinessId
+                , COALESCE (MovementLinkObject_Personal.ObjectId, 0)    AS PersonalId_From
+                , COALESCE (ObjectLink_Unit_Juridical.ChildObjectId, 0) AS JuridicalId_Basis
+                , COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0)  AS BusinessId
            FROM Movement
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
                                              ON MovementLinkObject_Personal.MovementId = Movement.Id
                                             AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
-                LEFT JOIN MovementLinkObject AS MovementLinkObject_JuridicalBasis
-                                             ON MovementLinkObject_JuridicalBasis.MovementId = Movement.Id
-                                            AND MovementLinkObject_JuridicalBasis.DescId = zc_MovementLinkObject_JuridicalBasis()
-                LEFT JOIN MovementLinkObject AS MovementLinkObject_Business
-                                             ON MovementLinkObject_Business.MovementId = Movement.Id
-                                            AND MovementLinkObject_Business.DescId = zc_MovementLinkObject_Business()
+                LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+                                     ON ObjectLink_Personal_Unit.ObjectId = MovementLinkObject_Personal.ObjectId
+                                    AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Car_Unit()
+
+                LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
+                                     ON ObjectLink_Unit_Juridical.ObjectId = ObjectLink_Personal_Unit.ChildObjectId
+                                    AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+                LEFT JOIN ObjectLink AS ObjectLink_Unit_Business
+                                     ON ObjectLink_Unit_Business.ObjectId = ObjectLink_Personal_Unit.ChildObjectId
+                                    AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
+
            WHERE Movement.Id = inMovementId
              AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
              AND Movement.DescId = zc_Movement_PersonalSendCash()
@@ -131,6 +136,18 @@ BEGIN
      -- RETURN QUERY SELECT _tmpItem.MovementItemId, _tmpItem.MovementId, _tmpItem.OperDate, _tmpItem.JuridicalId_From, _tmpItem.isCorporate, _tmpItem.PersonalId_From, _tmpItem.UnitId, _tmpItem.BranchId_Unit, _tmpItem.PersonalId_Packer, _tmpItem.PaidKindId, _tmpItem.ContractId, _tmpItem.ContainerId_Goods, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.AssetId, _tmpItem.PartionGoods, _tmpItem.OperCount, _tmpItem.tmpOperSumm_Partner, _tmpItem.OperSumm_Partner, _tmpItem.tmpOperSumm_Packer, _tmpItem.OperSumm_Packer, _tmpItem.AccountDirectionId, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId, _tmpItem.InfoMoneyDestinationId_isCorporate, _tmpItem.InfoMoneyId_isCorporate, _tmpItem.JuridicalId_basis, _tmpItem.BusinessId                         , _tmpItem.isPartionCount, _tmpItem.isPartionSumm, _tmpItem.PartionMovementId, _tmpItem.PartionGoodsId FROM _tmpItem;
 
 
+     -- !!!формируются свойства в документе из данных для проводок!!!
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_JuridicalBasis(), inMovementId, vbJuridicalId_Basis);
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Business(), inMovementId, vbBusinessId);
+
+     -- !!!формируются свойства в элементах документа из данных для проводок!!!
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), tmp.MovementItemId, tmp.UnitId_ProfitLoss)
+     FROM (SELECT _tmpItem.MovementItemId, _tmpItem.UnitId_ProfitLoss
+           FROM _tmpItem
+           GROUP BY _tmpItem.MovementItemId, _tmpItem.UnitId_ProfitLoss
+          ) AS tmp;
+
+
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
      -- !!! Ну а теперь - ПРОВОДКИ !!!
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -155,36 +172,79 @@ BEGIN
 
      -- 1.2. определяется ContainerId_To для проводок суммового учета по долг Сотрудника (Водитель) или Прибыль
      UPDATE _tmpItem SET ContainerId_To = _tmpItem_byContainer.ContainerId
-     FROM (SELECT lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
-                                        , inParentId          := NULL
-                                        , inObjectId          := _tmpItem_group.AccountId_To
-                                        , inJuridicalId_basis := vbJuridicalId_Basis
-                                                                 -- !!!подставляем Бизнес для долг Сотрудника (Водитель) или Прибыль!!!
-                                        , inBusinessId        := _tmpItem_group.BusinessId_Route
-                                        , inObjectCostDescId  := NULL
-                                        , inObjectCostId      := NULL
-                                        , inDescId_1          := zc_ContainerLinkObject_Personal()
-                                        , inObjectId_1        := _tmpItem_group.PersonalId_To
-                                        , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
-                                        , inObjectId_2        := _tmpItem_group.InfoMoneyId
-                                        , inDescId_3          := zc_ContainerLinkObject_Car()
-                                        , inObjectId_3        := _tmpItem_group.CarId_To
-                                         ) AS ContainerId
-                , _tmpItem_group.MovementItemId
-           FROM (SELECT _tmpItem.MovementItemId
-                      , _tmpItem.AccountId_To
-                      , _tmpItem.PersonalId_To
-                      , _tmpItem.CarId_To
-                      , _tmpItem.InfoMoneyId
-                      , _tmpItem.BusinessId_Route
-                 FROM _tmpItem
-                 GROUP BY _tmpItem.MovementItemId
-                        , _tmpItem.AccountId_To
-                        , _tmpItem.PersonalId_To
-                        , _tmpItem.CarId_To
-                        , _tmpItem.InfoMoneyId
-                        , _tmpItem.BusinessId_Route
-                ) AS _tmpItem_group
+     FROM (SELECT _tmpItem_byContainer_All.ContainerId
+                , _tmpItem.MovementItemId
+           FROM (SELECT lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                              , inParentId          := NULL
+                                              , inObjectId          := _tmpItem_group.AccountId_To
+                                              , inJuridicalId_basis := vbJuridicalId_Basis
+                                              , inBusinessId        := vbBusinessId
+                                              , inObjectCostDescId  := NULL
+                                              , inObjectCostId      := NULL
+                                              , inDescId_1          := zc_ContainerLinkObject_Personal()
+                                              , inObjectId_1        := _tmpItem_group.PersonalId_To
+                                              , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
+                                              , inObjectId_2        := _tmpItem_group.InfoMoneyId
+                                              , inDescId_3          := zc_ContainerLinkObject_Car()
+                                              , inObjectId_3        := _tmpItem_group.CarId_To
+                                               ) AS ContainerId
+                      , _tmpItem_group.PersonalId_To
+                      , _tmpItem_group.CarId_To
+                      , _tmpItem_group.InfoMoneyId
+
+                 FROM (SELECT _tmpItem.AccountId_To
+                            , _tmpItem.PersonalId_To
+                            , _tmpItem.CarId_To
+                            , _tmpItem.InfoMoneyId
+                       FROM _tmpItem
+                       WHERE _tmpItem.AccountId_To <> zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
+                       GROUP BY _tmpItem.AccountId_To
+                              , _tmpItem.PersonalId_To
+                              , _tmpItem.CarId_To
+                              , _tmpItem.InfoMoneyId
+                      ) AS _tmpItem_group
+                ) AS _tmpItem_byContainer_All
+                JOIN _tmpItem ON _tmpItem.PersonalId_To = _tmpItem_byContainer_All.PersonalId_To
+                             AND _tmpItem.CarId_To      = _tmpItem_byContainer_All.CarId_To
+                             AND _tmpItem.InfoMoneyId   = _tmpItem_byContainer_All.InfoMoneyId
+          UNION ALL
+           SELECT _tmpItem_byContainer_All.ContainerId
+                , _tmpItem.MovementItemId
+           FROM (SELECT lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                              , inParentId          := NULL
+                                              , inObjectId          := zc_Enum_Account_100301 () -- 100301; "прибыль текущего периода"
+                                              , inJuridicalId_basis := vbJuridicalId_Basis
+                                              , inBusinessId        := _tmpItem_byProfitLoss.BusinessId_Route -- !!!подставляем Бизнес для Прибыль!!!
+                                              , inObjectCostDescId  := NULL
+                                              , inObjectCostId      := NULL
+                                              , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
+                                              , inObjectId_1        := _tmpItem_byProfitLoss.ProfitLossId
+                                               ) AS ContainerId
+                      , _tmpItem_byProfitLoss.InfoMoneyDestinationId
+                      , _tmpItem_byProfitLoss.BusinessId_Route
+                 FROM (SELECT lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := _tmpItem_group.ProfitLossGroupId
+                                                            , inProfitLossDirectionId  := _tmpItem_group.ProfitLossDirectionId
+                                                            , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId
+                                                            , inInfoMoneyId            := NULL
+                                                            , inUserId                 := inUserId
+                                                             ) AS ProfitLossId
+                            , _tmpItem_group.InfoMoneyDestinationId
+                            , _tmpItem_group.BusinessId_Route
+                       FROM (SELECT _tmpItem.ProfitLossGroupId
+                                  , _tmpItem.ProfitLossDirectionId
+                                  , _tmpItem.InfoMoneyDestinationId
+                                  , _tmpItem.BusinessId_Route
+                             FROM _tmpItem
+                             WHERE _tmpItem.AccountId_To = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
+                             GROUP BY _tmpItem.ProfitLossGroupId
+                                    , _tmpItem.ProfitLossDirectionId
+                                    , _tmpItem.InfoMoneyDestinationId
+                                    , _tmpItem.BusinessId_Route
+                            ) AS _tmpItem_group
+                      ) AS _tmpItem_byProfitLoss
+                ) AS _tmpItem_byContainer_All
+                JOIN _tmpItem ON _tmpItem.InfoMoneyDestinationId = _tmpItem_byContainer_All.InfoMoneyDestinationId
+                             AND _tmpItem.BusinessId_Route       = _tmpItem_byContainer_All.BusinessId_Route
           ) AS _tmpItem_byContainer
       WHERE _tmpItem.MovementItemId = _tmpItem_byContainer.MovementItemId;
 
@@ -249,7 +309,7 @@ BEGIN
 
 
 
-     -- 3. формируются Проводки для отчета (Аналитики: Товар и ОПиУ - разнице в весе)
+     -- 3. формируются Проводки для отчета (Аналитики: Товар и Сотрудника (Водитель) или ОПиУ)
      PERFORM lpInsertUpdate_MovementItemReport (inMovementId         := inMovementId
                                               , inMovementItemId     := _tmpItem.MovementItemId
                                               , inActiveContainerId  := _tmpItem.ContainerId_To
@@ -290,6 +350,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.10.13                                        * add lpInsertUpdate_MovementItemLinkObject
  06.10.13                                        * add inUserId
  03.10.13                                        *
 */

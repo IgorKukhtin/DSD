@@ -60,8 +60,8 @@ BEGIN
                   SUM (MovementItemContainer.Amount)  AS Amount
                 , MovementItemContainer.isActive
                 , Container.ObjectId
-                , Object_Direction.ObjectCode AS DirectionObjectCode
 
+                , Object_Direction.ObjectCode AS DirectionObjectCode
                 , CASE WHEN Object_ProfitLossDirection.ValueData <> ''
                             THEN CAST (Object_Direction.ObjectCode AS TVarChar) || ' ' || Object_ProfitLossDirection.ValueData || ' '
                        ELSE ''
@@ -69,8 +69,10 @@ BEGIN
 
                 , Object_GoodsGroup.ObjectCode  AS GoodsGroupCode
                 , Object_GoodsGroup.ValueData   AS GoodsGroupName
+
                 , Object_Destination.ObjectCode AS DestinationObjectCode
                 , Object_Destination.ValueData  AS DestinationObjectName
+
                 , Object_GoodsKind.ValueData    AS GoodsKindName
                 , ContainerObjectCost.ObjectCostId
                 , COALESCE (MovementItem_Parent.Id, MovementItem.Id) AS MIId_Parent
@@ -235,7 +237,7 @@ ALTER FUNCTION gpSelect_MovementItemContainer_Movement (Integer, TVarChar) OWNER
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 197, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 338, inSession:= '2')
 /*
 Код об.напр.
 DirectionObjectCode
