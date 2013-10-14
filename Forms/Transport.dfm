@@ -4,8 +4,8 @@
   ClientWidth = 996
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1004
-  ExplicitHeight = 482
+  ExplicitWidth = 1012
+  ExplicitHeight = 490
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -526,14 +526,14 @@
             Width = 166
           end
           object colсhIsCalculated: TcxGridDBColumn
-            Caption = #1060#1072#1082#1090' '#1087#1086' '#1088#1072#1089#1095'. ('#1076#1072'/'#1085#1077#1090')'
+            Caption = #1060#1072#1082#1090' '#1088#1072#1089#1095#1077#1090' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isCalculated'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 64
           end
           object colсhAmount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086' '#1092#1072#1082#1090#1091' '
+            Caption = #1050#1086#1083'-'#1074#1086' '#1092#1072#1082#1090
             DataBinding.FieldName = 'Amount'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
@@ -547,43 +547,43 @@
             Options.Editing = False
             Width = 67
           end
-          object colсhColdHour: TcxGridDBColumn
-            Caption = #1061#1086#1083#1086#1076', '#1092#1072#1082#1090' '#1095#1072#1089#1086#1074
-            DataBinding.FieldName = 'ColdHour'
-            HeaderAlignmentHorz = taRightJustify
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
-          object colсhColdDistance: TcxGridDBColumn
-            Caption = #1061#1086#1083#1086#1076', '#1092#1072#1082#1090' '#1082#1084
-            DataBinding.FieldName = 'ColdDistance'
-            HeaderAlignmentHorz = taRightJustify
-            HeaderAlignmentVert = vaCenter
-            Width = 75
-          end
-          object colсhAmountColdHour: TcxGridDBColumn
-            Caption = #1061#1086#1083#1086#1076', '#1085#1086#1088#1084#1072' '#1074' '#1095#1072#1089
-            DataBinding.FieldName = 'AmountColdHour'
-            HeaderAlignmentHorz = taRightJustify
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 64
-          end
-          object colсhAmountColdDistance: TcxGridDBColumn
-            Caption = #1061#1086#1083#1086#1076', '#1085#1086#1088#1084#1072' '#1085#1072' 100 '#1082#1084
-            DataBinding.FieldName = 'AmountColdDistance'
-            HeaderAlignmentHorz = taRightJustify
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 81
-          end
           object colсhAmountFuel: TcxGridDBColumn
-            Caption = #1056#1072#1089#1093#1086#1076', '#1085#1086#1088#1084#1072' '#1085#1072' 100 '#1082#1084
+            Caption = #1053#1086#1088#1084#1072' '#1085#1072' 100 '#1082#1084
             DataBinding.FieldName = 'AmountFuel'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 74
+          end
+          object colсhColdHour: TcxGridDBColumn
+            Caption = #1063#1072#1089#1086#1074' '#1092#1072#1082#1090', '#1093#1086#1083#1086#1076
+            DataBinding.FieldName = 'ColdHour'
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object colсhColdDistance: TcxGridDBColumn
+            Caption = #1050#1084'. '#1092#1072#1082#1090', '#1093#1086#1083#1086#1076
+            DataBinding.FieldName = 'ColdDistance'
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object colсhAmountColdHour: TcxGridDBColumn
+            Caption = #1053#1086#1088#1084#1072' '#1085#1072' '#1093#1086#1083#1086#1076', '#1074' '#1095#1072#1089
+            DataBinding.FieldName = 'AmountColdHour'
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
+          end
+          object colсhAmountColdDistance: TcxGridDBColumn
+            Caption = #1053#1086#1088#1084#1072' '#1085#1072' '#1093#1086#1083#1086#1076', '#1079#1072' 100 '#1082#1084
+            DataBinding.FieldName = 'AmountColdDistance'
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 75
           end
           object colсhRateFuelKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1085#1086#1088#1084#1099
@@ -2275,8 +2275,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -2836,8 +2836,8 @@
         DataType = ftBoolean
         ParamType = ptInput
       end>
-    Left = 584
-    Top = 312
+    Left = 552
+    Top = 384
   end
   object spMovementUnCompleteIncome: TdsdStoredProc
     StoredProcName = 'gpUnComplete_Movement'
@@ -2850,8 +2850,8 @@
         ComponentItem = 'MovementId'
         ParamType = ptInput
       end>
-    Left = 656
-    Top = 328
+    Left = 624
+    Top = 400
   end
   object spMovementSetErasedIncome: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement'
@@ -2864,8 +2864,8 @@
         ComponentItem = 'MovementId'
         ParamType = ptInput
       end>
-    Left = 728
-    Top = 312
+    Left = 696
+    Top = 384
   end
   object StatusGuides: TdsdGuides
     KeyField = 'Id'

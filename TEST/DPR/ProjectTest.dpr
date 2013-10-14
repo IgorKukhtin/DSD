@@ -224,7 +224,8 @@ uses
   Report_Transport in '..\..\Forms\Report\Report_Transport.pas' {Report_TransportForm},
   CrossAddOnViewTestForm in '..\SOURCE\Component\CrossAddOnViewTestForm.pas' {CrossAddOnViewTest},
   Report_Account in '..\..\Forms\Report\Report_Account.pas' {Report_AccountForm},
-  MessagesUnit in '..\..\SOURCE\MessagesUnit.pas' {MessagesForm};
+  MessagesUnit in '..\..\SOURCE\MessagesUnit.pas' {MessagesForm},
+  ObjectFrom_byIncomeFuel in '..\..\Forms\ObjectFrom_byIncomeFuel.pas' {From_byIncomeFuelForm};
 
 {$R *.RES}
 

@@ -737,7 +737,7 @@ begin
 
      fExecSqFromQuery('update dba._pgRoute set RouteId_pg = null, FreightId_pg = null');
      fExecSqFromQuery('update dba._pgMember set GroupId_pg = null, MemberId_pg = null, PersonalId_pg = null, PositionId_pg = null');
-     fExecSqFromQuery('update dba._pgCar set ModelId_pg = null, CarId_pg = null');
+     fExecSqFromQuery('update dba._pgCar set ModelId_pg = null, CarId_pg = null, MovementId_pg=null');
 
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -6514,6 +6514,16 @@ begin
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'  and Bill.BillKind in (zc_bkProductionInFromReceipt())'
            +'  and Bill.isRemains = zc_rvYes()'
+           +'  and Id_Postgres <> 0');
+        Add('union all');
+        Add('select _pgCar.Id as ObjectId');
+        Add('     , _pgCar.Name as InvNumber');
+        Add('     , '+FormatToDateServer_notNULL(StrToDate('30.09.2013'))+' as OperDate');
+        Add('     , _pgCar.MovementId_pg as Id_Postgres');
+        Add('     , _pgCar.CarId_pg as FromId_Postgres');
+        Add('     , _pgCar.CarId_pg as ToId_Postgres');
+        Add('from dba._pgCar');
+        Add('where '+FormatToDateServer_notNULL(StrToDate('30.09.2013'))+'='+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'  and Id_Postgres <> 0'
            );
 
@@ -6582,11 +6592,21 @@ begin
         Add('     , Bill.BillNumber as InvNumber');
         Add('     , Bill.BillDate as OperDate');
         Add('     , Bill.Id_Postgres as Id_Postgres');
+        Add('     , zc_rvNo() as isCar');
         Add('from dba.Bill');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind=zc_bkProductionInFromReceipt()'
            +'  and Bill.isRemains = zc_rvYes()'
-           +'  and isnull(Bill.Id_Postgres,0) <> 0 '
+           +'  and isnull(Bill.Id_Postgres,0) <> 0 ');
+//           +'  and '+IntToStr(isGlobalLoad)+'=zc_rvNo()'
+        Add('union all');
+        Add('select _pgCar.Id as ObjectId');
+        Add('     , _pgCar.Name as InvNumber');
+        Add('     , '+FormatToDateServer_notNULL(StrToDate('30.09.2013'))+' as OperDate');
+        Add('     , _pgCar.MovementId_pg as Id_Postgres');
+        Add('     , zc_rvYes() as isCar');
+        Add('from dba._pgCar');
+        Add('where '+FormatToDateServer_notNULL(StrToDate('30.09.2013'))+'='+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            );
         Add('order by OperDate, InvNumber, ObjectId');
 
@@ -6613,7 +6633,9 @@ begin
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
              if not myExecToStoredProc then ;//exit;
              //
-             fExecSqFromQuery('update dba.Bill set Id_Postgres=null where Id = '+FieldByName('ObjectId').AsString);
+             if FieldByName('isCar').AsInteger=zc_rvYes
+             then fExecSqFromQuery('update dba._pgCar set MovementId_pg=null where Id = '+FieldByName('ObjectId').AsString)
+             else fExecSqFromQuery('update dba.Bill set Id_Postgres=null where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
              Application.ProcessMessages;
@@ -6680,7 +6702,7 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('call dba._pgSelect_Bill_Inventory('+FormatToDateServer_notNULL(fromQuery_two.FieldByName('StartDate').AsDateTime)+','+FormatToDateServer_notNULL(fromQuery_two.FieldByName('EndDate').AsDateTime)+')');
+        Add('call dba._pgSelect_Bill_Inventory('+IntToStr(isGlobalLoad)+','+FormatToDateServer_notNULL(fromQuery_two.FieldByName('StartDate').AsDateTime)+','+FormatToDateServer_notNULL(fromQuery_two.FieldByName('EndDate').AsDateTime)+')');
         Open;
         Result:=RecordCount;
         cbInventory.Caption:='6. ('+IntToStr(RecordCount)+') Инвентаризация';
@@ -6717,7 +6739,9 @@ begin
              if not myExecToStoredProc then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba.Bill set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
+             then if FieldByName('isCar').AsInteger=zc_rvYes
+                  then fExecSqFromQuery('update dba._pgCar set MovementId_pg=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString)
+                  else fExecSqFromQuery('update dba.Bill set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
              //
              Next;
              Application.ProcessMessages;
@@ -6756,7 +6780,7 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('call dba._pgSelect_Bill_Inventory_Item('+FormatToDateServer_notNULL(fromQuery_two.FieldByName('StartDate').AsDateTime)+','+FormatToDateServer_notNULL(fromQuery_two.FieldByName('EndDate').AsDateTime)+')');
+        Add('call dba._pgSelect_Bill_Inventory_Item('+IntToStr(isGlobalLoad)+','+FormatToDateServer_notNULL(fromQuery_two.FieldByName('StartDate').AsDateTime)+','+FormatToDateServer_notNULL(fromQuery_two.FieldByName('EndDate').AsDateTime)+')');
         Open;
         cbInventory.Caption:='6. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Инвентаризация';
         //

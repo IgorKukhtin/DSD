@@ -31,7 +31,7 @@ BEGIN
        SELECT
              0 AS Id
            , CAST (COALESCE (tmpMovement_InvNumber.InvNumber, 0) + 1 as TVarChar) AS InvNumber
-           , CAST (CURRENT_TIMESTAMP as TDateTime) AS OperDate
+           , CAST (CURRENT_DATE AS TDateTime)      AS OperDate
            , lfObject_Status.Code                  AS StatusCode
            , lfObject_Status.Name                  AS StatusName
            

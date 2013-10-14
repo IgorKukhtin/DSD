@@ -653,6 +653,18 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbCardFuel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTicketFuel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbFrom_byIncomeFuel'
+        end
+        item
+          Visible = True
           ItemName = 'bbTransportDocuments_Separator'
         end
         item
@@ -715,12 +727,24 @@ object MainForm: TMainForm
       Action = actRateFuel
       Category = 0
     end
+    object bbCardFuel: TdxBarButton
+      Action = actCardFuel
+      Category = 0
+    end
+    object bbTicketFuel: TdxBarButton
+      Action = actTicketFuel
+      Category = 0
+    end
     object bbtReport_Transport: TdxBarButton
       Action = actReport_Transport
       Category = 0
     end
     object bbReport_Fuel: TdxBarButton
       Action = actReport_Fuel
+      Category = 0
+    end
+    object bbAccountReport: TdxBarButton
+      Action = actReport_Account
       Category = 0
     end
     object bbPersonalDocuments: TdxBarSubItem
@@ -796,8 +820,8 @@ object MainForm: TMainForm
       Action = actPersonalService
       Category = 0
     end
-    object bbAccountReport: TdxBarButton
-      Action = actReport_Account
+    object bbFrom_byIncomeFuel: TdxBarButton
+      Action = actFrom_byIncomeFuel
       Category = 0
     end
   end
@@ -1336,6 +1360,22 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actCardFuel: TdsdOpenForm
+      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      Caption = #1058#1086#1087#1083#1080#1074#1085#1099#1077' '#1082#1072#1088#1090#1099
+      Hint = #1058#1086#1087#1083#1080#1074#1085#1099#1077' '#1082#1072#1088#1090#1099
+      FormName = 'TCardFuelForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actTicketFuel: TdsdOpenForm
+      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      Caption = #1058#1072#1083#1086#1085#1099' '#1085#1072' '#1090#1086#1087#1083#1080#1074#1086' '
+      Hint = #1058#1072#1083#1086#1085#1099' '#1085#1072' '#1090#1086#1087#1083#1080#1074#1086' '
+      FormName = 'TTicketFuelForm'
+      GuiParams = <>
+      isShowModal = False
+    end
     object actReport_Transport: TdsdOpenForm
       Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1040#1074#1090#1086#1084#1086#1073#1080#1083#1103#1084
@@ -1384,6 +1424,14 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actFrom_byIncomeFuel: TdsdOpenForm
+      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      Caption = #1050#1090#1086' '#1079#1072#1087#1088#1072#1074#1083#1103#1083
+      Hint = #1050#1090#1086' '#1079#1072#1087#1088#1072#1074#1083#1103#1083
+      FormName = 'TFrom_byIncomeFuelForm'
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object cxLocalizer: TcxLocalizer
     StorageType = lstResource
@@ -1410,7 +1458,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.14'
+    Version = '4.12.2'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

@@ -313,8 +313,8 @@ BEGIN
 
         FROM (SELECT
                      MovementItem.Id AS MovementItemId
-                     -- для Автомобиля это Вид топлива, иначе - Товар
-                   , CASE WHEN vbCarId <> 0 THEN COALESCE (ObjectLink_Goods_Fuel.ChildObjectId, 0) ELSE MovementItem.ObjectId END AS GoodsId
+                     -- если Вид топлива, иначе - Товар
+                   , COALESCE (ObjectLink_Goods_Fuel.ChildObjectId, MovementItem.ObjectId) AS GoodsId
                    , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                    , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
                    , CASE WHEN COALESCE (MIString_PartionGoods.ValueData, '') <> '' THEN MIString_PartionGoods.ValueData
@@ -337,16 +337,16 @@ BEGIN
                      END AS tmpOperSumm_Packer
 
                     -- Управленческие назначения
-                  , CASE WHEN vbCarId <> 0 THEN COALESCE (lfObject_InfoMoney_Car.InfoMoneyDestinationId, 0)
+                  , CASE WHEN COALESCE (ObjectLink_Goods_Fuel.ChildObjectId, 0) <> 0 THEN COALESCE (lfObject_InfoMoney_Fuel.InfoMoneyDestinationId, 0)
                          ELSE COALESCE (lfObject_InfoMoney.InfoMoneyDestinationId, 0)
                     END AS InfoMoneyDestinationId
                     -- Статьи назначения
-                  , CASE WHEN vbCarId <> 0 THEN COALESCE (lfObject_InfoMoney_Car.InfoMoneyId, 0)
+                  , CASE WHEN COALESCE (ObjectLink_Goods_Fuel.ChildObjectId, 0) <> 0 THEN COALESCE (lfObject_InfoMoney_Fuel.InfoMoneyId, 0)
                          ELSE COALESCE (lfObject_InfoMoney.InfoMoneyId, 0)
                     END AS InfoMoneyId
 
-                     -- Бизнес из Товара нужен только если не Автомобиль
-                  , CASE WHEN vbCarId <> 0 THEN 0
+                    -- Бизнес из Товара нужен только если не <Вид топлива>
+                  , CASE WHEN COALESCE (ObjectLink_Goods_Fuel.ChildObjectId, 0) <> 0 THEN 0
                          ELSE COALESCE (ObjectLink_Goods_Business.ChildObjectId, 0)
                     END AS BusinessId
 
@@ -403,10 +403,12 @@ BEGIN
                    LEFT JOIN ObjectLink AS ObjectLink_Goods_Fuel
                                         ON ObjectLink_Goods_Fuel.ObjectId = MovementItem.ObjectId
                                        AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
+                                       AND ObjectLink_Goods_Fuel.ChildObjectId <> 0 -- !!! обязательно, что б смело использовать COALESCE
 
                    LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
-                                                                              AND vbCarId = 0
-                   LEFT JOIN lfGet_Object_InfoMoney (zc_Enum_InfoMoney_20401()) AS lfObject_InfoMoney_Car ON vbCarId <> 0
+                                                                              AND ObjectLink_Goods_Fuel.ChildObjectId IS NULL
+                   LEFT JOIN lfGet_Object_InfoMoney (zc_Enum_InfoMoney_20401()) AS lfObject_InfoMoney_Fuel ON ObjectLink_Goods_Fuel.ChildObjectId <> 0 -- ГСМ
+
               WHERE Movement.Id = inMovementId
                 AND Movement.DescId = zc_Movement_Income()
                 AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
