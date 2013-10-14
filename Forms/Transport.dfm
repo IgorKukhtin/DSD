@@ -4,8 +4,8 @@
   ClientWidth = 996
   KeyPreview = True
   PopupMenu = PopupMenu
-  ExplicitWidth = 1012
-  ExplicitHeight = 490
+  ExplicitWidth = 1004
+  ExplicitHeight = 482
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -32,7 +32,6 @@
       Left = 108
       Top = 23
       Properties.SaveTime = False
-      Properties.ShowTime = False
       TabOrder = 1
       Width = 88
     end
@@ -2275,8 +2274,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
