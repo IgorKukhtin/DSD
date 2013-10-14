@@ -196,6 +196,8 @@ type
     actTicketFuel: TdsdOpenForm;
     bbCardFuel: TdxBarButton;
     bbTicketFuel: TdxBarButton;
+    actFrom_byIncomeFuel: TdsdOpenForm;
+    bbFrom_byIncomeFuel: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
