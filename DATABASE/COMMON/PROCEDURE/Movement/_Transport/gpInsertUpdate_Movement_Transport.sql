@@ -29,6 +29,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Transport(
 RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbChild_byMaster Boolean;
 BEGIN
 
 
@@ -40,6 +41,12 @@ BEGIN
      IF inHoursAdd > 0
      THEN
          RAISE EXCEPTION 'Ошибка.Проверьте знак для <Кол-во добавленных рабочих часов>.';
+     END IF;
+
+     -- определяем - если Автомобиль изменился, надо в конце пересчитать Child
+     IF ioId <> 0 AND NOT EXISTS (SELECT MovementId FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_Car() AND ObjectId = inCarId)
+     THEN vbChild_byMaster:= TRUE;
+     ELSE vbChild_byMaster:= FALSE;
      END IF;
 
 
@@ -88,6 +95,17 @@ BEGIN
        AND Movement.DescId   = zc_Movement_Income();
 
 
+     -- !!!обязательно!!! пересчитали Child
+     IF vbChild_byMaster = TRUE
+     THEN PERFORM lpInsertUpdate_MI_Transport_Child_byMaster (inMovementId := ioId, inParentId := MovementItem.Id, inRouteKindId:= MILinkObject_RouteKind.ObjectId, inUserId := vbUserId)
+          FROM MovementItem
+               LEFT JOIN MovementItemLinkObject AS MILinkObject_RouteKind
+                                                ON MILinkObject_RouteKind.MovementItemId = MovementItem.Id 
+                                               AND MILinkObject_RouteKind.DescId = zc_MILinkObject_RouteKind()
+          WHERE MovementItem.MovementId = ioId
+            AND MovementItem.DescId = zc_MI_Master();
+     END IF;
+
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
@@ -100,6 +118,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.10.13                                        * add lpInsertUpdate_MI_Transport_Child_byMaster
  12.10.13                                        * add IF inHoursAdd > 0
  06.10.13                                        * add zc_Movement_Income
  26.09.13                                        * changes in wiki                 

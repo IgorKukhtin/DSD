@@ -32,7 +32,6 @@ inherited InfoMoneyForm: TInfoMoneyForm
       OptionsData.Inserting = False
       OptionsView.CellAutoHeight = True
       OptionsView.ColumnAutoWidth = True
-      OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 50
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -42,23 +41,23 @@ inherited InfoMoneyForm: TInfoMoneyForm
         HeaderAlignmentVert = vaCenter
         Width = 86
       end
-      object clName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-        DataBinding.FieldName = 'Name'
-        HeaderAlignmentVert = vaCenter
-        Width = 177
-      end
       object clInfoMoneyGroup: TcxGridDBColumn
-        Caption = ' '#9#1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1081
+        Caption = #1043#1088#1091#1087#1087#1072' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1086#1075#1086' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyGroupName'
         HeaderAlignmentVert = vaCenter
         Width = 123
       end
       object clInfoMoneyDestination: TcxGridDBColumn
-        Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1086#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'InfoMoneyDestinationName'
         HeaderAlignmentVert = vaCenter
         Width = 200
+      end
+      object clName: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'Name'
+        HeaderAlignmentVert = vaCenter
+        Width = 177
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -242,6 +241,7 @@ inherited InfoMoneyForm: TInfoMoneyForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
         end>
       isShowModal = False
       DataSource = DataSource

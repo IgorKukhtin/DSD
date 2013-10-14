@@ -5,7 +5,7 @@ inherited Report_FuelForm: TReport_FuelForm
   ExplicitLeft = -537
   ExplicitTop = -74
   ExplicitWidth = 1337
-  ExplicitHeight = 422
+  ExplicitHeight = 429
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -368,14 +368,14 @@ inherited Report_FuelForm: TReport_FuelForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 200
-    Top = 184
+    Left = 144
+    Top = 160
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 184
-    Top = 176
+    Left = 64
+    Top = 272
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -551,34 +551,36 @@ inherited Report_FuelForm: TReport_FuelForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41395d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
+        Value = 41395d
       end
       item
         Name = 'inEndDate'
-        Value = 41395d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+        Value = 41395d
       end
       item
         Name = 'inFuelId'
-        Value = ''
         Component = FuelGuides
         ComponentItem = 'Key'
+        DataType = ftInteger
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'inCarId'
-        Value = ''
         Component = CarGuides
         ComponentItem = 'Key'
+        DataType = ftInteger
         ParamType = ptInput
+        Value = ''
       end>
-    Left = 208
-    Top = 208
+    Left = 432
+    Top = 232
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -606,19 +608,19 @@ inherited Report_FuelForm: TReport_FuelForm
     Params = <
       item
         Name = 'Key'
-        Value = ''
         Component = CarGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'TextValue'
-        Value = ''
         Component = CarGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        Value = ''
       end>
     Left = 640
     Top = 27
@@ -643,8 +645,8 @@ inherited Report_FuelForm: TReport_FuelForm
     CloseDataSource = False
     DataSource = DataSource
     BCDToCurrency = False
-    Left = 280
-    Top = 160
+    Left = 264
+    Top = 200
   end
   object FuelGuides: TdsdGuides
     KeyField = 'Id'
@@ -654,21 +656,21 @@ inherited Report_FuelForm: TReport_FuelForm
     Params = <
       item
         Name = 'Key'
-        Value = ''
         Component = FuelGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
+        Value = ''
       end
       item
         Name = 'TextValue'
-        Value = ''
         Component = FuelGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+        Value = ''
       end>
     Left = 431
-    Top = 63
+    Top = 39
   end
 end

@@ -1,5 +1,5 @@
-create PROCEDURE "DBA"."_pgSelect_Bill_Inventory" (in @inStartDate date, in @inEndDate date)
-result(ObjectId Integer, InvNumber integer, OperDate Date, FromId_Postgres Integer, ToId_Postgres Integer, Id_Postgres Integer)
+create PROCEDURE "DBA"."_pgSelect_Bill_Inventory" (in @inIsGlobalLoad smallint, in @inStartDate date, in @inEndDate date)
+result(ObjectId Integer, InvNumber integer, OperDate Date, FromId_Postgres Integer, ToId_Postgres Integer, isCar smallint, Id_Postgres Integer)
 begin
   -- 
   declare local temporary table _tmpList_Unit(
@@ -11,7 +11,29 @@ begin
        BillId Integer
      , UnitId Integer
   ) on commit preserve rows;
-
+  //
+  //
+  //
+  -- !!!start @inIsGlobalLoad!!!
+  if @inIsGlobalLoad=zc_rvYes()
+  then
+      select (_pgCar.Id) as ObjectId
+           , (_pgCar.Id) as InvNumber
+           , @inEndDate as OperDate
+           , _pgCar.CarId_pg as FromId_Postgres
+           , _pgCar.CarId_pg as ToId_Postgres
+           , zc_rvYes() as isCar
+           , (_pgCar.MovementId_pg) as Id_Postgres
+      from dba._pgCar
+      where @inEndDate = '2013-09-30'
+        and isnull(_pgCar.MovementId_pg,0)=0
+      order by 3, 1;
+      --!!!
+      return;
+  end if;
+  -- !!!end @inIsGlobalLoad!!!
+  //
+  // 
   -- Unit
   insert into _tmpList_Unit (UnitId)
      select max (Unit_find.Id) as UnitId
@@ -54,6 +76,7 @@ begin
          , @inEndDate as OperDate
          , isnull (pgPersonalFrom.Id2_Postgres, pgUnitFrom.Id_Postgres) as FromId_Postgres
          , FromId_Postgres as ToId_Postgres
+         , zc_rvNo() as isCar
          , (Bill.Id_Postgres) as Id_Postgres
     from dba.Bill
          left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId
@@ -67,4 +90,5 @@ begin
 
 end
 //
--- call dba._pgSelect_Bill_Inventory ('2012-12-01', '2012-12-31')
+-- call dba._pgSelect_Bill_Inventory (zc_rvNo(), '2012-12-01', '2012-12-31')
+-- call dba._pgSelect_Bill_Inventory (zc_rvYes(), '2013-09-01', '2013-09-30')

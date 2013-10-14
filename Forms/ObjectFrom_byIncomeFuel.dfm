@@ -1,22 +1,21 @@
-inherited AccountForm: TAccountForm
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1095#1077#1090#1072'>'
-  ClientHeight = 382
-  ClientWidth = 910
-  ExplicitWidth = 926
-  ExplicitHeight = 417
+inherited From_byIncomeFuelForm: TFrom_byIncomeFuelForm
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1090#1086' '#1079#1072#1087#1088#1072#1074#1083#1103#1083'>'
+  ClientHeight = 395
+  ClientWidth = 703
+  ExplicitWidth = 711
+  ExplicitHeight = 429
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 910
-    Height = 356
+    Width = 703
+    Height = 369
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 717
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -34,6 +33,7 @@ inherited AccountForm: TAccountForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -42,41 +42,25 @@ inherited AccountForm: TAccountForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 56
-      end
-      object clAccountGroup: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1099' '#1089#1095#1077#1090#1086#1074
-        DataBinding.FieldName = 'AccountGroupName'
-        HeaderAlignmentVert = vaCenter
-        Width = 67
-      end
-      object clAccountDirection: TcxGridDBColumn
-        Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1095#1077#1090#1086#1074' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103' '#9
-        DataBinding.FieldName = 'AccountDirectionName'
-        HeaderAlignmentVert = vaCenter
-        Width = 141
+        Width = 66
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 163
+        Width = 160
       end
-      object clInfoMoneyGroup: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1081
-        DataBinding.FieldName = 'InfoMoneyGroupName'
-      end
-      object clInfoMoneyDestination: TcxGridDBColumn
-        Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-        DataBinding.FieldName = 'InfoMoneyDestinationName'
+      object clJuridicalCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1102#1088'.'#1083#1080#1094#1072
+        DataBinding.FieldName = 'JuridicalCode'
         HeaderAlignmentVert = vaCenter
-        Width = 115
+        Width = 215
       end
-      object clInfoMoney: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-        DataBinding.FieldName = 'InfoMoneyName'
+      object clJuridicalName: TcxGridDBColumn
+        Caption = #1070#1088'.'#1083#1080#1094#1086
+        DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentVert = vaCenter
-        Width = 56
+        Width = 161
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -84,6 +68,7 @@ inherited AccountForm: TAccountForm
         PropertiesClassName = 'TcxCheckBoxProperties'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 85
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -93,13 +78,13 @@ inherited AccountForm: TAccountForm
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 48
-    Top = 104
+    Top = 96
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 40
-    Top = 160
+    Top = 152
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -114,13 +99,13 @@ inherited AccountForm: TAccountForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 280
-    Top = 104
+    Top = 96
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -133,7 +118,7 @@ inherited AccountForm: TAccountForm
     ShowShortCutInHint = True
     UseSystemFont = True
     Left = 160
-    Top = 104
+    Top = 96
     DockControlHeights = (
       0
       0
@@ -199,12 +184,18 @@ inherited AccountForm: TAccountForm
       Category = 0
     end
     object bbInsert: TdxBarButton
-      Action = actInsert
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Category = 0
+      Visible = ivAlways
+      ImageIndex = 0
+      ShortCut = 45
     end
     object bbEdit: TdxBarButton
-      Action = actUpdate
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Category = 0
+      Visible = ivAlways
+      ImageIndex = 1
+      ShortCut = 115
     end
     object bbErased: TdxBarButton
       Action = dsdSetErased
@@ -232,7 +223,7 @@ inherited AccountForm: TAccountForm
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 280
-    Top = 160
+    Top = 152
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -244,39 +235,6 @@ inherited AccountForm: TAccountForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
-    end
-    object actInsert: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      ShortCut = 45
-      ImageIndex = 0
-      FormName = 'TAccountEditForm'
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-        end>
-      isShowModal = True
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-    end
-    object actUpdate: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      ShortCut = 115
-      ImageIndex = 1
-      FormName = 'TAccountEditForm'
-      GuiParams = <
-        item
-          Name = 'Id'
-          Component = ClientDataSet
-          ComponentItem = 'Id'
-          ParamType = ptInput
-        end>
-      isShowModal = True
-      ActionType = acUpdate
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -307,14 +265,6 @@ inherited AccountForm: TAccountForm
       isSetErased = False
       DataSource = DataSource
     end
-    object dsdGridToExcel: TdsdGridToExcel
-      Category = 'DSDLib'
-      Grid = cxGrid
-      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      ImageIndex = 6
-      ShortCut = 16472
-    end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       Params = <
@@ -323,40 +273,78 @@ inherited AccountForm: TAccountForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
+          ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
+          DataType = ftString
+          ParamType = ptOutput
+        end
+        item
+          Name = 'Code'
+          Component = ClientDataSet
+          ComponentItem = 'Code'
+          DataType = ftString
+          ParamType = ptOutput
+        end
+        item
+          Name = 'RouteKindId'
+          Component = ClientDataSet
+          ComponentItem = 'RouteKindId'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end
+        item
+          Name = 'RouteKindName'
+          Component = ClientDataSet
+          ComponentItem = 'RouteKindName'
+          DataType = ftString
+          ParamType = ptOutput
+        end
+        item
+          Name = 'FreightId'
+          Component = ClientDataSet
+          ComponentItem = 'FreightId'
+          DataType = ftInteger
+          ParamType = ptOutput
+        end
+        item
+          Name = 'FreightName'
+          Component = ClientDataSet
+          ComponentItem = 'FreightName'
+          DataType = ftString
+          ParamType = ptOutput
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
       ImageIndex = 7
+      DataSource = DataSource
+    end
+    object dsdGridToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      Grid = cxGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Account'
+    StoredProcName = 'gpSelect_ObjectFrom_byIncomeFuel'
     DataSet = ClientDataSet
     DataSets = <
       item
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 56
-    Top = 216
+    Left = 40
+    Top = 208
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 160
-    Top = 160
-  end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
-    ErasedFieldName = 'isErased'
-    View = cxGridDBTableView
-    OnDblClickActionList = <>
-    ActionItemList = <>
-    Left = 160
-    Top = 216
+    Top = 152
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -367,9 +355,31 @@ inherited AccountForm: TAccountForm
         Name = 'inObjectId'
         Component = ClientDataSet
         ComponentItem = 'Id'
+        DataType = ftInteger
         ParamType = ptInput
       end>
-    Left = 280
+    Left = 288
+    Top = 208
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+      end>
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    Left = 160
     Top = 216
   end
 end

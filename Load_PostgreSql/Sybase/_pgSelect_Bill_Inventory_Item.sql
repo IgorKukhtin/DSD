@@ -1,5 +1,5 @@
-create PROCEDURE "DBA"."_pgSelect_Bill_Inventory_Item" (in @inStartDate date, in @inEndDate date)
-result(ObjectId Integer, MovementId Integer, BillNumber Integer, BillDate Date, UnitId Integer, GoodsId Integer, Amount TSumm, PartionGoodsDate date, Summ TSumm, HeadCount TSumm, myCount TSumm, PartionGoods TVarCharMedium, GoodsKindId Integer, AssetId Integer, Id_Postgres Integer)
+create PROCEDURE "DBA"."_pgSelect_Bill_Inventory_Item" (in @inIsGlobalLoad smallint, in @inStartDate date, in @inEndDate date)
+result(ObjectId Integer, MovementId Integer, BillNumber TVarCharShort, BillDate Date, UnitId Integer, GoodsId Integer, Amount TSumm, PartionGoodsDate date, Summ TSumm, HeadCount TSumm, myCount TSumm, PartionGoods TVarCharMedium, GoodsKindId Integer, AssetId Integer, isCar smallint, Id_Postgres Integer)
 begin
   --
   declare local temporary table _tmpList_Remains_byKindPackage(
@@ -51,6 +51,57 @@ begin
   primary key(GoodsPropertyId),
   ) on commit delete rows;
   //
+  //
+  //
+  -- !!!start @inIsGlobalLoad!!!
+  if @inIsGlobalLoad=zc_rvYes()
+  then
+      select 0 as ObjectId
+           , _pgCar.MovementId_pg as MovementId
+           , _pgCar.Name as BillNumber
+           , @inEndDate as OperDate
+           , _pgCar.Id as UnitId
+           , tmpFuel.Id_Postgres_Fuel as GoodsId
+           , isnull(case when tmpFuel.Id_Postgres_Fuel = Goods_7003.Id_Postgres_Fuel then _pgCar.a11
+                         when tmpFuel.Id_Postgres_Fuel = Goods_7001.Id_Postgres_Fuel then _pgCar.a21
+                         when tmpFuel.Id_Postgres_Fuel = Goods_7004.Id_Postgres_Fuel then _pgCar.a31
+                         when tmpFuel.Id_Postgres_Fuel = Goods_7005.Id_Postgres_Fuel then _pgCar.a41
+             end, 0) as Amount
+           , null as PartionGoodsDate
+           , isnull(case when tmpFuel.Id_Postgres_Fuel = Goods_7003.Id_Postgres_Fuel then _pgCar.a12
+                         when tmpFuel.Id_Postgres_Fuel = Goods_7001.Id_Postgres_Fuel then _pgCar.a22
+                         when tmpFuel.Id_Postgres_Fuel = Goods_7004.Id_Postgres_Fuel then _pgCar.a32
+                         when tmpFuel.Id_Postgres_Fuel = Goods_7005.Id_Postgres_Fuel then _pgCar.a42
+             end, 0) as Summ
+           , 0 as HeadCount
+           , 0 as myCount
+           , '' as PartionGoods
+           , 0 as GoodsKindId
+           , 0 as AssetId
+           , zc_rvYes() as isCar
+           , 0 as Id_Postgres
+      from (select Id_Postgres_Fuel from dba.Goods, dba.GoodsProperty where GoodsId = Goods.Id and GoodsCode=7001
+           union all
+            select Id_Postgres_Fuel from dba.Goods, dba.GoodsProperty where GoodsId = Goods.Id and GoodsCode=7003
+           union all
+            select Id_Postgres_Fuel from dba.Goods, dba.GoodsProperty where GoodsId = Goods.Id and GoodsCode=7004
+           union all
+            select Id_Postgres_Fuel from dba.Goods, dba.GoodsProperty where GoodsId = Goods.Id and GoodsCode=7005
+           ) as tmpFuel
+           left join _pgCar on 1=1
+           left outer join (select Id_Postgres_Fuel from dba.Goods, dba.GoodsProperty where GoodsId = Goods.Id and GoodsCode=7001)as Goods_7001 on 1=1
+           left outer join (select Id_Postgres_Fuel from dba.Goods, dba.GoodsProperty where GoodsId = Goods.Id and GoodsCode=7003)as Goods_7003 on 1=1
+           left outer join (select Id_Postgres_Fuel from dba.Goods, dba.GoodsProperty where GoodsId = Goods.Id and GoodsCode=7004)as Goods_7004 on 1=1
+           left outer join (select Id_Postgres_Fuel from dba.Goods, dba.GoodsProperty where GoodsId = Goods.Id and GoodsCode=7005)as Goods_7005 on 1=1
+      where @inEndDate = '2013-09-30'
+        and Amount <> 0 or Summ <> 0
+      order by 3, 6;
+      --!!!
+      return;
+  end if;
+  -- !!!end @inIsGlobalLoad!!!
+  //
+  // 
   //
   -- !!! create List Unit - 1 !!! 
   insert into _tmpList_Unit (UnitId, isPartionDate)
@@ -139,6 +190,7 @@ begin
          , '' as PartionGoods
          , KindPackage.Id_Postgres as GoodsKindId
          , 0 as AssetId
+         , zc_rvNo() as isCar
          , 0 as Id_Postgres
     from _tmpList_Remains_byKindPackage
          left outer join (select Bill.Id as BillId, Unit_find.Id as UnitId
@@ -173,4 +225,5 @@ begin
 end
 go
 //
--- call dba._pgSelect_Bill_Inventory_Item ('2012-12-01', '2012-12-31')
+-- call dba._pgSelect_Bill_Inventory_Item (zc_rvNo(), '2012-12-01', '2012-12-31')
+-- call dba._pgSelect_Bill_Inventory_Item (zc_rvYes(), '2013-09-01', '2013-09-30')
