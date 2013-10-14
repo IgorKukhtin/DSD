@@ -767,6 +767,11 @@ destructor TdsdChoiceGuides.Destroy;
 begin
   FActionDataLink.Free;
   FreeAndNil(FParams);
+  try
+    // устанавливаем в nil интерфейс.
+    FChoiceCaller := nil;
+  except
+  end;
   inherited;
 end;
 

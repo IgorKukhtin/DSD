@@ -30,7 +30,7 @@ BEGIN
      RETURN QUERY 
        SELECT
              0 AS Id
-           , CAST (COALESCE (tmpMovement_InvNumber.InvNumber, 0) + 1 as TVarChar) AS InvNumber
+           , CAST (lfGet_InvNumber(0, zc_Movement_Transport()) AS TVarChar) AS InvNumber
            , CAST (CURRENT_DATE AS TDateTime)      AS OperDate
            , lfObject_Status.Code                  AS StatusCode
            , lfObject_Status.Name                  AS StatusName
@@ -61,9 +61,7 @@ BEGIN
            , Object_UnitForwarding.ValueData AS UnitForwardingName
    
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
-               LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = zc_Branch_Basis()
-               LEFT JOIN (SELECT CAST (MAX (Movement.InvNumber) AS Integer) AS InvNumber 
-                         FROM Movement WHERE Movement.DescId = zc_Movement_Transport()) AS tmpMovement_InvNumber ON 1 = 1;
+               LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = zc_Branch_Basis();
 
      ELSE
 

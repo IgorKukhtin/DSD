@@ -86,6 +86,7 @@ type
     // Родитель для древовидных справочников
     property ParentId: String read FParentId write FParentId;
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
   protected
     // Вызыввем процедуру после выбора элемента из справочника
     procedure AfterChoice(Params: TdsdParams); virtual; abstract;
@@ -479,6 +480,11 @@ begin
   inherited;
   PositionDataSet := 'ClientDataSet';
   KeyField := 'Id';
+end;
+
+destructor TCustomGuides.Destroy;
+begin
+  inherited;
 end;
 
 function TCustomGuides.GetKey: String;
