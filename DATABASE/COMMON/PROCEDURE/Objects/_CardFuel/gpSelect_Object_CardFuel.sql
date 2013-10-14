@@ -24,9 +24,9 @@ $BODY$BEGIN
            , Object_CardFuel.ObjectCode AS Code
            , Object_CardFuel.ValueData  AS NAME
                       
-           , Object_PersonalDriver.Id         AS PersonalDriverId 
-           , Object_PersonalDriver.ObjectCode AS PersonalDriverCode
-           , Object_PersonalDriver.ValueData  AS PersonalDriverName
+           , View_PersonalDriver.PersonalId   AS PersonalDriverId 
+           , View_PersonalDriver.PersonalCode AS PersonalDriverCode
+           , View_PersonalDriver.PersonalName AS PersonalDriverName
 
            , Object_Car.Id         AS CarId 
            , Object_Car.ObjectCode AS CarCode
@@ -48,23 +48,23 @@ $BODY$BEGIN
            
        FROM Object AS Object_CardFuel
             LEFT JOIN ObjectLink AS ObjectLink_CardFuel_PersonalDriver ON ObjectLink_CardFuel_PersonalDriver.ObjectId = Object_CardFuel.Id
-                                                         AND ObjectLink_CardFuel_PersonalDriver.DescId = zc_ObjectLink_CardFuel_PersonalDriver()
-            LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = ObjectLink_CardFuel_PersonalDriver.ChildObjectId
+                                                                      AND ObjectLink_CardFuel_PersonalDriver.DescId = zc_ObjectLink_CardFuel_PersonalDriver()
+            LEFT JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = ObjectLink_CardFuel_PersonalDriver.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_CardFuel_Car ON ObjectLink_CardFuel_Car.ObjectId = Object_CardFuel.Id
-                                                         AND ObjectLink_CardFuel_Car.DescId = zc_ObjectLink_CardFuel_Car()
+                                                           AND ObjectLink_CardFuel_Car.DescId = zc_ObjectLink_CardFuel_Car()
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = ObjectLink_CardFuel_Car.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_CardFuel_PaidKind ON ObjectLink_CardFuel_PaidKind.ObjectId = Object_CardFuel.Id
-                                                         AND ObjectLink_CardFuel_PaidKind.DescId = zc_ObjectLink_CardFuel_PaidKind()
+                                                                AND ObjectLink_CardFuel_PaidKind.DescId = zc_ObjectLink_CardFuel_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = ObjectLink_CardFuel_PaidKind.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_CardFuel_Juridical ON ObjectLink_CardFuel_Juridical.ObjectId = Object_CardFuel.Id
-                                                         AND ObjectLink_CardFuel_Juridical.DescId = zc_ObjectLink_CardFuel_Juridical()
+                                                                 AND ObjectLink_CardFuel_Juridical.DescId = zc_ObjectLink_CardFuel_Juridical()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_CardFuel_Juridical.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_CardFuel_Goods ON ObjectLink_CardFuel_Goods.ObjectId = Object_CardFuel.Id
-                                                         AND ObjectLink_CardFuel_Goods.DescId = zc_ObjectLink_CardFuel_Goods()
+                                                             AND ObjectLink_CardFuel_Goods.DescId = zc_ObjectLink_CardFuel_Goods()
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_CardFuel_Goods.ChildObjectId
    
    WHERE Object_CardFuel.DescId = zc_Object_CardFuel();
@@ -79,7 +79,7 @@ ALTER FUNCTION gpSelect_Object_CardFuel (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 14.10.13          *  add Unit, CardFuelKind, Freight
+ 14.10.13          *  
 
 */
 

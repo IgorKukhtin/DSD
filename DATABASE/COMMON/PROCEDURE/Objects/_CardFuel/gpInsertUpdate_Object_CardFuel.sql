@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_CardFuel(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar)
 
--- DROP FUNCTION gpInsertUpdate_Object_CardFuel (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_CardFuel (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CardFuel(
  INOUT ioId                Integer   , -- Ключ объекта <Топливные карты>
