@@ -2,8 +2,8 @@
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100'>'
   ClientHeight = 424
   ClientWidth = 354
-  ExplicitWidth = 370
-  ExplicitHeight = 459
+  ExplicitWidth = 362
+  ExplicitHeight = 451
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -22,7 +22,7 @@
     Top = 380
     Width = 75
     Height = 25
-    Action = dsdExecStoredProc
+    Action = InsertUpdateGuides
     Default = True
     ModalResult = 8
     TabOrder = 2
@@ -32,7 +32,7 @@
     Top = 380
     Width = 75
     Height = 25
-    Action = dsdFormClose1
+    Action = dsdFormClose
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 8
@@ -156,7 +156,7 @@
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
     end
-    object dsdExecStoredProc: TdsdExecStoredProc
+    object InsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
       StoredProc = spInsertUpdate
       StoredProcList = <
@@ -165,7 +165,7 @@
         end>
       Caption = 'Ok'
     end
-    object dsdFormClose1: TdsdFormClose
+    object dsdFormClose: TdsdFormClose
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -175,49 +175,58 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
       end
       item
         Name = 'inName'
+        Value = ''
         Component = edName
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inRegistrationCertificate'
+        Value = ''
         Component = ceRegistrationCertificate
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inCarModelId'
+        Value = ''
         Component = CarModelGuides
         ParamType = ptInput
       end
       item
         Name = 'inUnitId '
+        Value = ''
         Component = UnitGuides
         ParamType = ptInput
       end
       item
         Name = 'inPersonalDriverId '
+        Value = ''
         Component = PersonalGuides
         ParamType = ptInput
       end
       item
         Name = 'inFuelMasterId'
+        Value = ''
         Component = FuelMasterGuides
         ParamType = ptInput
       end
       item
         Name = 'inFuelChildId'
+        Value = ''
         Component = FuelChildGuides
         ParamType = ptInput
       end>
@@ -228,6 +237,7 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 184
@@ -240,75 +250,89 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'Code'
+        Value = 0.000000000000000000
         Component = ceCode
       end
       item
         Name = 'Name'
+        Value = ''
         Component = edName
         DataType = ftString
       end
       item
         Name = 'CarModelId'
+        Value = ''
         Component = CarModelGuides
         ComponentItem = 'key'
       end
       item
         Name = 'CarModelName'
+        Value = ''
         Component = CarModelGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'RegistrationCertificate'
+        Value = ''
         Component = ceRegistrationCertificate
         DataType = ftString
       end
       item
         Name = 'UnitId'
+        Value = ''
         Component = UnitGuides
         ComponentItem = 'key'
       end
       item
         Name = 'UnitName'
+        Value = ''
         Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'PersonalDriverId'
+        Value = ''
         Component = PersonalGuides
         ComponentItem = 'key'
       end
       item
         Name = 'PersonalDriverName'
+        Value = ''
         Component = PersonalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'FuelMasterId'
+        Value = ''
         Component = FuelMasterGuides
         ComponentItem = 'key'
       end
       item
         Name = 'FuelMasterName'
+        Value = ''
         Component = FuelMasterGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'FuelChildId'
+        Value = ''
         Component = FuelChildGuides
         ComponentItem = 'key'
       end
       item
         Name = 'FuelChildName'
+        Value = ''
         Component = FuelChildGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -343,6 +367,7 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -350,6 +375,7 @@
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -366,6 +392,7 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = PersonalGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -373,6 +400,7 @@
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = PersonalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -389,6 +417,7 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = FuelMasterGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -396,6 +425,7 @@
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = FuelMasterGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -412,6 +442,7 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = FuelChildGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -419,6 +450,7 @@
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = FuelChildGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -435,6 +467,7 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = CarModelGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -442,6 +475,7 @@
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = CarModelGuides
         ComponentItem = 'TextValue'
         DataType = ftString

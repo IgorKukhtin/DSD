@@ -578,7 +578,6 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Component\CrossAddOnViewTestForm.pas">
 				<Form>CrossAddOnViewTest</Form>
-				<FormType>dfm</FormType>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_Account.pas">
 				<Form>Report_AccountForm</Form>

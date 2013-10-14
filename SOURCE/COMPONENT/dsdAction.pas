@@ -935,13 +935,13 @@ begin
   Stream := TStringStream.Create;
   try
     with TfrxReport.Create(nil) do begin
-      for i := 0 to Params.Count - 1 do
-          Variables[Params[i].Name] := chr(39) + Params[i].AsString + chr(39);
       if ShiftDown then begin
          try
            LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport(ReportName));
          except
          end;
+         for i := 0 to Params.Count - 1 do
+             Variables[Params[i].Name] := chr(39) + Params[i].AsString + chr(39);
          DesignReport;
          Stream.Clear;
          SaveToStream(Stream);
@@ -950,6 +950,8 @@ begin
       end
       else begin
          LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport(ReportName));
+         for i := 0 to Params.Count - 1 do
+             Variables[Params[i].Name] := chr(39) + Params[i].AsString + chr(39);
          PrepareReport;
          ShowReport;
       end;

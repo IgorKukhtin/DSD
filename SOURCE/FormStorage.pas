@@ -151,7 +151,7 @@ function TdsdFormStorage.LoadReport(ReportName: String): TStream;
 begin
   LoadStoredProc.ParamByName('FormName').Value := ReportName;
   StringStream.Clear;
-  StringStream.WriteString(gfStrXmlToStr((LoadStoredProc.Execute)));
+  StringStream.WriteString(StringReplace(LoadStoredProc.Execute, '&#98;',char(StrToInt('$98')), [rfReplaceAll]));
   if StringStream.Size = 0 then
      raise Exception.Create('Форма "' + ReportName + '" не загружена из базы данных');
   StringStream.Position := 0;
@@ -190,7 +190,9 @@ begin
   StringStream.LoadFromStream(Stream);
   StringStream.Position := 0;
 
-  SaveToFormData(ReportName);
+  SaveStoredProc.ParamByName('FormName').Value := ReportName;
+  SaveStoredProc.ParamByName('FormData').Value := AnsiToXML(StringStream.DataString);
+  SaveStoredProc.Execute;
 end;
 
 procedure TdsdFormStorage.SaveToFormData(DataKey: string);

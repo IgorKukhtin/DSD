@@ -70,6 +70,8 @@ type
     cxLabel4: TcxLabel;
     FuelGuides: TdsdGuides;
     ceFuel: TcxButtonEdit;
+    cxLabel1: TcxLabel;
+    cxLabel3: TcxLabel;
   private
   public
   end;

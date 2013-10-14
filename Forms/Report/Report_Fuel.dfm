@@ -2,6 +2,8 @@ inherited Report_FuelForm: TReport_FuelForm
   Caption = #1056#1072#1089#1093#1086#1076' '#1090#1086#1087#1083#1080#1074#1072
   ClientHeight = 395
   ClientWidth = 1329
+  ExplicitLeft = -537
+  ExplicitTop = -74
   ExplicitWidth = 1337
   ExplicitHeight = 422
   PixelsPerInch = 96
@@ -206,11 +208,13 @@ inherited Report_FuelForm: TReport_FuelForm
       object CarCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'CarCode'
+        HeaderAlignmentVert = vaCenter
         Width = 30
       end
       object CarName: TcxGridDBColumn
         Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
         DataBinding.FieldName = 'CarName'
+        HeaderAlignmentVert = vaCenter
         Width = 42
       end
       object FuelCode: TcxGridDBColumn
@@ -298,35 +302,35 @@ inherited Report_FuelForm: TReport_FuelForm
   end
   object Panel1: TPanel
     Left = 0
-    Top = 26
+    Top = 0
     Width = 1329
     Height = 39
     Align = alTop
     TabOrder = 5
     object deStart: TcxDateEdit
-      Left = 16
-      Top = 8
+      Left = 101
+      Top = 10
       EditValue = 41395d
       Properties.ShowTime = False
       TabOrder = 0
-      Width = 121
+      Width = 81
     end
     object deEnd: TcxDateEdit
-      Left = 176
-      Top = 8
+      Left = 299
+      Top = 11
       EditValue = 41395d
       Properties.ShowTime = False
       TabOrder = 1
-      Width = 121
+      Width = 87
     end
     object cxLabel2: TcxLabel
-      Left = 506
-      Top = 10
+      Left = 601
+      Top = 12
       Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
     end
     object edCar: TcxButtonEdit
-      Left = 577
-      Top = 8
+      Left = 672
+      Top = 10
       Properties.Buttons = <
         item
           Default = True
@@ -336,13 +340,13 @@ inherited Report_FuelForm: TReport_FuelForm
       Width = 161
     end
     object cxLabel4: TcxLabel
-      Left = 303
-      Top = 10
+      Left = 398
+      Top = 12
       Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
     end
     object ceFuel: TcxButtonEdit
-      Left = 377
-      Top = 8
+      Left = 472
+      Top = 10
       Properties.Buttons = <
         item
           Default = True
@@ -350,6 +354,16 @@ inherited Report_FuelForm: TReport_FuelForm
         end>
       TabOrder = 5
       Width = 124
+    end
+    object cxLabel1: TcxLabel
+      Left = 9
+      Top = 10
+      Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
+    end
+    object cxLabel3: TcxLabel
+      Left = 187
+      Top = 11
+      Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
   end
   object DataSource: TDataSource
@@ -415,13 +429,13 @@ inherited Report_FuelForm: TReport_FuelForm
       Caption = 'Custom'
       CaptionButtons = <>
       DockedDockingStyle = dsTop
-      DockedLeft = 2
+      DockedLeft = 0
       DockedTop = 0
       DockingStyle = dsTop
-      FloatLeft = 671
-      FloatTop = 8
-      FloatClientWidth = 0
-      FloatClientHeight = 0
+      FloatLeft = 298
+      FloatTop = 240
+      FloatClientWidth = 51
+      FloatClientHeight = 71
       ItemLinks = <
         item
           Visible = True
@@ -495,8 +509,36 @@ inherited Report_FuelForm: TReport_FuelForm
       StoredProcList = <>
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
-      Params = <>
-      ReportName = #1056#1072#1089#1093#1086#1076' '#1090#1086#1087#1083#1080#1074#1072
+      Params = <
+        item
+          Name = 'PeriodStart'
+          Value = 41395d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'PeriodEnd'
+          Value = 41395d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'FuelBenzin'
+          Value = '1'
+        end
+        item
+          Name = 'FuelDizel'
+          Value = '2'
+        end
+        item
+          Name = 'FuelPropan'
+          Value = '3'
+        end
+        item
+          Name = 'FuelMetan'
+          Value = '4'
+        end>
+      ReportName = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1088#1072#1089#1093#1086#1076#1072' '#1090#1086#1087#1083#1080#1074#1072
     end
   end
   object dsdStoredProc: TdsdStoredProc

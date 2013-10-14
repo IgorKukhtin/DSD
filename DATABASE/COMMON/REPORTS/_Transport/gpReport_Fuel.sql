@@ -23,23 +23,42 @@ $BODY$BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
 
      -- Один запрос, который считает остаток и движение. 
-     -- Главная задача - выбор контейнера. Выбираем контейнеры по группе счетов 20400. 
+     -- Главная задача - выбор контейнера. Выбираем контейнеры по группе счетов 20400 для топлива и 30500 для денежных средств
   RETURN QUERY  
-      -- Таким нехитрым образом мы получили все нужные нам суммовые контейнеры по определенным счетам
-      -- Еще и ограничили их по топливу и авто
-           WITH ContainerSumm AS (SELECT Id, ParentId, DescId, Amount 
+           -- Получили все нужные нам суммовые контейнеры по определенным счетам
+           -- Еще и ограничили их по топливу и авто
+           WITH ContainerSumm AS (SELECT Id, ParentId, DescId, Amount  -- здесь топливо
                                  FROM Container 
                                 WHERE Container.ObjectId IN
-                                      (SELECT AccountId FROM Object_Account_View
+                                      -- Получили список счетов
+                                      (SELECT AccountId FROM Object_Account_View 
                                         WHERE Object_Account_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400()
                                           AND Object_Account_View.AccountGroupId = zc_Enum_AccountGroup_20000())
+
+                                      -- Ограничили по топливу, если надо
                                       AND ((Container.iD IN (SELECT ContainerId FROM ContainerLinkObject 
                                        WHERE DescId = zc_ContainerLinkObject_Goods() AND ObjectId = inFuelId)) OR inFuelId = 0)
+                                      -- Ограничили по авто, если надо
                                       AND ((Container.iD IN (SELECT ContainerId FROM ContainerLinkObject 
                                        WHERE DescId = zc_ContainerLinkObject_Car() AND ObjectId = inCarId)) OR inCarId = 0)
-                                    )
 
-           -- Ну и теперь добавили строковые данные. 
+                                UNION -- а ниже денежные средства
+                               SELECT Container.Id, Container.ParentId, Container.DescId, Container.Amount 
+                                 FROM Container 
+                               -- Ограничили по авто, если надо
+                               JOIN  ContainerLinkObject 
+                               ON Container.iD = ContainerId AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Car() 
+                                  AND COALESCE(ContainerLinkObject.ObjectId, 0) <> 0
+                                  AND (ContainerLinkObject.ObjectId = inCarId OR inCarId = 0)
+                               WHERE Container.ObjectId IN
+                                      -- Получили список счетов
+                                      (SELECT  AccountId FROM object_account_view
+                                         WHERE AccountDirectionId = zc_Enum_AccountDirection_30500()
+                                           AND InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400())
+                                    )
+               -- Конец. Получили все нужные нам суммовые контейнеры
+
+    -- Добавили строковые данные. 
     SELECT Object_Car.Id           AS CarId,  
            Object_Car.ValueData    AS CarName,
            Object_Fuel.Id          AS FuelId,
@@ -79,7 +98,8 @@ $BODY$BEGIN
 
               FROM
                     -- ReportContainer. Возвращаем список суммовых и количественных контейнеров по указанному в ContainerSumm счету
-                    (SELECT Id, DescId, Amount, ParentId as KeyContainerId, 0 AS ObjectId FROM ContainerSumm
+                    (SELECT Id, DescId, Amount, COALESCE(ParentId, Id) as KeyContainerId, 0 AS ObjectId 
+                      FROM ContainerSumm
               UNION SELECT Container.Id, Container.DescId, Container.Amount, Container.Id AS KeyContainerId, ObjectId
                       FROM Container, ContainerSumm
                      WHERE Container.Id = ContainerSumm.ParentId) AS ReportContainer
@@ -87,12 +107,20 @@ $BODY$BEGIN
                  LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = ReportContainer.Id
                                                                AND MIContainer.OperDate >= inStartDate
                 GROUP BY ReportContainer.Id, ReportContainer.DescId, ReportContainer.Amount, KeyContainerId, ObjectId) AS Report
-                   WHERE Report.StartAmount<>0 OR Report.IncomeAmount<>0 OR Report.OutcomeAmount<>0 OR Report.EndAmount<>0
+                -- Конец. Получаем оборотку по контейнерам.
+
+          WHERE Report.StartAmount<>0 OR Report.IncomeAmount<>0 OR Report.OutcomeAmount<>0 OR Report.EndAmount<>0
           GROUP BY ContainerID) AS Report
+          -- Конец. Получили оборотку, развернутую на количество и сумму
+
       LEFT JOIN ContainerLinkObject AS CarLink ON CarLink.ContainerId = Report.ContainerId AND CarLink.DescId = zc_ContainerLinkObject_Car()
       GROUP BY Report.ObjectId, CarLink.ObjectId) AS Report
+      -- Конец. Сгруппировали по топливу и автомобилю
+
     LEFT JOIN OBJECT AS Object_Fuel ON Object_Fuel.Id = Report.FuelId
     LEFT JOIN OBJECT AS Object_Car ON Object_Car.Id = Report.CarId;
+    -- Конец. Добавили строковые данные. 
+    -- КОНЕЦ ЗАПРОСА
 
 END;
 $BODY$
@@ -104,6 +132,7 @@ ALTER FUNCTION gpReport_Fuel (TDateTime, TDateTime, Integer, Integer, TVarChar) 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.11.13                        * add Денежные Средства
  11.11.13                        * 
  05.10.13         *
 */
