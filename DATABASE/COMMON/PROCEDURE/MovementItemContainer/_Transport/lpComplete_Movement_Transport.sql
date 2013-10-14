@@ -53,7 +53,7 @@ BEGIN
 
 
      -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItem_Transport (MovementItemId Integer, UnitId_ProfitLoss Integer
+     CREATE TEMP TABLE _tmpItem_Transport (MovementItemId Integer, MovementItemId_parent Integer, UnitId_ProfitLoss Integer
                                , ContainerId_Goods Integer, GoodsId Integer, AssetId Integer
                                , OperCount TFloat
                                , ProfitLossGroupId Integer, ProfitLossDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
@@ -63,7 +63,7 @@ BEGIN
      CREATE TEMP TABLE _tmpItem_TransportSumm_Transport (MovementItemId Integer, ContainerId_ProfitLoss Integer, ContainerId Integer, AccountId Integer, OperSumm TFloat) ON COMMIT DROP;
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItem_Transport (MovementItemId, UnitId_ProfitLoss
+     INSERT INTO _tmpItem_Transport (MovementItemId, MovementItemId_parent, UnitId_ProfitLoss
                          , ContainerId_Goods, GoodsId, AssetId
                          , OperCount
                          , ProfitLossGroupId, ProfitLossDirectionId, InfoMoneyDestinationId, InfoMoneyId
@@ -71,6 +71,7 @@ BEGIN
                           )
         SELECT
               _tmp.MovementItemId
+            , _tmp.MovementItemId_parent
             , _tmp.UnitId_ProfitLoss
             , 0 AS ContainerId_Goods -- сформируем позже
             , _tmp.GoodsId
@@ -87,6 +88,7 @@ BEGIN
 
         FROM (SELECT
                      MovementItem.Id AS MovementItemId
+                   , MovementItem.ParentId AS MovementItemId_parent
                    , COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0) AS UnitId_ProfitLoss
                      -- для Автомобиля это Вид топлива
                    , MovementItem.ObjectId AS GoodsId
@@ -129,6 +131,14 @@ BEGIN
 
      -- для теста
      -- RETURN QUERY SELECT _tmpItem_Transport.MovementItemId, _tmpItem_Transport.MovementId, _tmpItem_Transport.OperDate, _tmpItem_Transport.JuridicalId_From, _tmpItem_Transport.isCorporate, _tmpItem_Transport.PersonalId_From, _tmpItem_Transport.UnitId, _tmpItem_Transport.BranchId_Unit, _tmpItem_Transport.PersonalId_Packer, _tmpItem_Transport.PaidKindId, _tmpItem_Transport.ContractId, _tmpItem_Transport.ContainerId_Goods, _tmpItem_Transport.GoodsId, _tmpItem_Transport.GoodsKindId, _tmpItem_Transport.AssetId, _tmpItem_Transport.PartionGoods, _tmpItem_Transport.OperCount, _tmpItem_Transport.tmpOperSumm_Partner, _tmpItem_Transport.OperSumm_Partner, _tmpItem_Transport.tmpOperSumm_Packer, _tmpItem_Transport.OperSumm_Packer, _tmpItem_Transport.AccountDirectionId, _tmpItem_Transport.InfoMoneyDestinationId, _tmpItem_Transport.InfoMoneyId, _tmpItem_Transport.InfoMoneyDestinationId_isCorporate, _tmpItem_Transport.InfoMoneyId_isCorporate, _tmpItem_Transport.JuridicalId_basis, _tmpItem_Transport.BusinessId                         , _tmpItem_Transport.isPartionCount, _tmpItem_Transport.isPartionSumm, _tmpItem_Transport.PartionMovementId, _tmpItem_Transport.PartionGoodsId FROM _tmpItem_Transport;
+
+
+     -- !!!формируются свойства в Главных элементах документа из данных для проводок!!!
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), tmp.MovementItemId_parent, tmp.UnitId_ProfitLoss)
+     FROM (SELECT _tmpItem_Transport.MovementItemId_parent, _tmpItem_Transport.UnitId_ProfitLoss
+           FROM _tmpItem_Transport
+           GROUP BY _tmpItem_Transport.MovementItemId_parent, _tmpItem_Transport.UnitId_ProfitLoss
+          ) AS tmp;
 
 
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -280,6 +290,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.10.13                                        * add lpInsertUpdate_MovementItemLinkObject
  06.10.13                                        * add inUserId
  02.10.13                                        * add BusinessId_Route
  02.10.13                                        *

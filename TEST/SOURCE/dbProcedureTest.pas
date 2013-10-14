@@ -35,6 +35,10 @@ begin
   ExecFile(ProcedurePath + 'MovementItem\_Income\gpInsertUpdate_MovementItem_Income.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItem\_Income\gpSelect_MovementItem_Income.sql', ZQuery);
 
+  ExecFile(ProcedurePath + 'MovementItem\_Income\gpInsertUpdate_MovementItem_IncomeFuel.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\_Income\gpSelect_MovementItem_IncomeFuel.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\_Income\lpInsertUpdate_MovementItem_IncomeFuel.sql', ZQuery);
+
   ExecFile(ProcedurePath + 'MovementItem\_ProductionUnion\gpInsertUpdate_MI_ProductionUnion_Child.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItem\_ProductionUnion\gpInsertUpdate_MI_ProductionUnion_Master.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItem\_ProductionUnion\gpSelect_MI_ProductionUnion.sql', ZQuery);
@@ -267,6 +271,7 @@ end;
 procedure TdbProcedureTest.CreateReportProcedure;
 begin
   ExecFile(ReportsPath + '_Balance\gpReport_Balance.sql', ZQuery);
+  ExecFile(ReportsPath + '_ProfitLoss\gpReport_ProfitLoss.sql', ZQuery);
   ExecFile(ReportsPath + '_HistoryCost\gpReport_HistoryCost.sql', ZQuery);
   ExecFile(ReportsPath + '_MotionGoods\gpReport_MotionGoods.sql', ZQuery);
 end;
