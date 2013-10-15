@@ -11,26 +11,35 @@ RETURNS VOID
 AS
 $BODY$
   DECLARE vbOperDate TDateTime;
+  DECLARE vbPersonalDriverId Integer;
   DECLARE vbCarId Integer;
   DECLARE vbBranchId Integer;
 
   DECLARE vbJuridicalId_Basis Integer;
   DECLARE vbBusinessId Integer;
+
+  DECLARE vbStartSummCash TFloat;
+  DECLARE vbStartAmountTicketFuel TFloat;
+  DECLARE vbStartAmountFuel TFloat;
 BEGIN
 
      -- Эти параметры нужны для формирования Аналитик в проводках
      SELECT _tmp.OperDate
-          , _tmp.CarId, _tmp.BranchId
+          , _tmp.PersonalDriverId, _tmp.CarId, _tmp.BranchId
           , _tmp.JuridicalId_Basis, _tmp.BusinessId
             INTO vbOperDate
-               , vbCarId, vbBranchId
+               , vbPersonalDriverId, vbCarId, vbBranchId
                , vbJuridicalId_Basis, vbBusinessId
      FROM (SELECT Movement.OperDate
-                , COALESCE (MovementLinkObject_Car.ObjectId, 0) AS CarId
+                , COALESCE (MovementLinkObject_PersonalDriver.ObjectId, 0) AS PersonalDriverId
+                , COALESCE (MovementLinkObject_Car.ObjectId, 0)            AS CarId
                 , COALESCE (ObjectLink_UnitCar_Branch.ChildObjectId, 0)    AS BranchId
                 , COALESCE (ObjectLink_UnitCar_Juridical.ChildObjectId, 0) AS JuridicalId_Basis
                 , COALESCE (ObjectLink_UnitCar_Business.ChildObjectId, 0)  AS BusinessId
            FROM Movement
+                LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
+                                             ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
+                                            AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
                                              ON MovementLinkObject_Car.MovementId = Movement.Id
                                             AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
@@ -47,28 +56,87 @@ BEGIN
                                      ON ObjectLink_UnitCar_Business.ObjectId = ObjectLink_Car_Unit.ChildObjectId
                                     AND ObjectLink_UnitCar_Business.DescId = zc_ObjectLink_Unit_Business()
            WHERE Movement.Id = inMovementId
-             AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+             -- AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
              AND Movement.DescId = zc_Movement_Transport()
           ) AS _tmp;
 
 
+     -- !!!Начали!!! Расчет/сохранение некоторых свойств (остатки) документа/элементов
+
+     -- таблица свойств (остатки) документа/элементов
+     CREATE TEMP TABLE _tmpPropertyRemains (Kind Integer, FuelId Integer, Amount TFloat) ON COMMIT DROP;
+
+     -- Получили все нужные нам количественные/суммовые контейнеры по определенным товарам/счетам
+     WITH tmpContainer AS  (SELECT Id, Amount, 0 AS FuelId, 1 AS Kind
+                            FROM Container
+                                               -- Получили список счетов: (30500)сотрудники (подотчетные лица) + (20400)ГСМ  !!!это (30000)Дебиторы!!!
+                            WHERE ObjectId IN (SELECT AccountId FROM Object_Account_View WHERE InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400() AND AccountDirectionId = zc_Enum_AccountDirection_30500())
+                                         -- Ограничили по Аналитике <Автомобиль>
+                              AND Id IN (SELECT ContainerId FROM ContainerLinkObject WHERE DescId = zc_ContainerLinkObject_Car() AND ObjectId = vbCarId)
+                              AND DescId = zc_Container_Summ()
+                           UNION
+                            SELECT Id, Amount, 0 AS FuelId, 2 AS Kind
+                            FROM Container
+                                              -- Получили список товаров: (20400)ГСМ
+                            WHERE ObjectId = (SELECT GoodsId FROM Object_Goods_View WHERE InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400())
+                                          -- Ограничили по Аналитике <Сотрудник>
+                              AND Id IN (SELECT ContainerId FROM ContainerLinkObject WHERE DescId = zc_ContainerLinkObject_Personal() AND ObjectId = vbPersonalDriverId)
+                              AND DescId = zc_Container_Count()
+                           UNION
+                            SELECT Id, Amount, Container.ObjectId AS FuelId, 3 AS Kind
+                            FROM Container
+                                              -- Получили список Виды топлива
+                            WHERE ObjectId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Fuel())
+                                          -- Ограничили по Аналитике <Автомобиль>
+                              AND Id IN (SELECT ContainerId FROM ContainerLinkObject WHERE DescId =  zc_ContainerLinkObject_Car() AND ObjectId = vbCarId)
+                              AND DescId = zc_Container_Count()
+                           )
+     -- Расчет
+     INSERT INTO _tmpPropertyRemains (Kind, FuelId, Amount)
+       SELECT tmpRemains.Kind
+            , tmpRemains.FuelId
+            , SUM (tmpRemains.AmountRemainsStart) AS Amount
+       FROM (SELECT tmpContainer.Id, tmpContainer.FuelId, tmpContainer.Kind, tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS AmountRemainsStart
+             FROM tmpContainer
+                  LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.Id
+                                                                AND MIContainer.OperDate >= vbOperDate
+             GROUP BY tmpContainer.Id, tmpContainer.FuelId, tmpContainer.Kind, tmpContainer.Amount
+             HAVING tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0
+           ) AS tmpRemains
+       GROUP BY tmpRemains.Kind
+              , tmpRemains.FuelId;
+
+     -- Получили остатки по нужным Kind
+     SELECT SUM (CASE WHEN Kind = 1 THEN Amount ELSE 0 END) AS StartSummCash         -- Начальный остаток денег Автомобиль(Подотчет)
+          , SUM (CASE WHEN Kind = 2 THEN Amount ELSE 0 END) AS StartAmountTicketFuel -- Начальный остаток талонов на топливо Сотрудник (водитель)
+            INTO vbStartSummCash, vbStartAmountTicketFuel
+     FROM _tmpPropertyRemains WHERE Kind IN (1, 3);
+
+     -- сохранили свойство документа <Начальный остаток денег Автомобиль(Подотчет)>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_StartSummCash(), inMovementId, vbStartSummCash);
+     -- сохранили свойство документа <Начальный остаток талонов на топливо Сотрудник (водитель)>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_StartSummCash(), inMovementId, vbStartAmountTicketFuel);
+
+     -- !!!Почти закончили!!! Расчет/сохранение некоторых свойств (остатки) документа/элементов
+
+
      -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem_Transport (MovementItemId Integer, MovementItemId_parent Integer, UnitId_ProfitLoss Integer
-                               , ContainerId_Goods Integer, GoodsId Integer, AssetId Integer
-                               , OperCount TFloat
-                               , ProfitLossGroupId Integer, ProfitLossDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                               , BusinessId Integer, BusinessId_Route Integer
-                                ) ON COMMIT DROP;
+                                         , ContainerId_Goods Integer, GoodsId Integer, AssetId Integer
+                                         , OperCount TFloat
+                                         , ProfitLossGroupId Integer, ProfitLossDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                                         , BusinessId Integer, BusinessId_Route Integer
+                                          ) ON COMMIT DROP;
      -- таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem_TransportSumm_Transport (MovementItemId Integer, ContainerId_ProfitLoss Integer, ContainerId Integer, AccountId Integer, OperSumm TFloat) ON COMMIT DROP;
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem_Transport (MovementItemId, MovementItemId_parent, UnitId_ProfitLoss
-                         , ContainerId_Goods, GoodsId, AssetId
-                         , OperCount
-                         , ProfitLossGroupId, ProfitLossDirectionId, InfoMoneyDestinationId, InfoMoneyId
-                         , BusinessId, BusinessId_Route
-                          )
+                                   , ContainerId_Goods, GoodsId, AssetId
+                                   , OperCount
+                                   , ProfitLossGroupId, ProfitLossDirectionId, InfoMoneyDestinationId, InfoMoneyId
+                                   , BusinessId, BusinessId_Route
+                                    )
         SELECT
               _tmp.MovementItemId
             , _tmp.MovementItemId_parent
@@ -138,6 +206,42 @@ BEGIN
      FROM (SELECT _tmpItem_Transport.MovementItemId_parent, _tmpItem_Transport.UnitId_ProfitLoss
            FROM _tmpItem_Transport
            GROUP BY _tmpItem_Transport.MovementItemId_parent, _tmpItem_Transport.UnitId_ProfitLoss
+          ) AS tmp;
+
+     -- !!!формируются расчитанные свойства в Подчиненых элементах документа!!!
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_StartAmountFuel(), tmp.MovementItemId, tmp.StartAmountFuel)
+     FROM (SELECT _tmpItem_Transport.MovementItemId, _tmpPropertyRemains.Amount AS StartAmountFuel
+           FROM _tmpItem_Transport
+                LEFT JOIN _tmpPropertyRemains ON _tmpPropertyRemains.FuelId = _tmpItem_Transport.GoodsId
+                                             AND _tmpPropertyRemains.Kind = 3
+          UNION ALL
+           -- Прийдется сформировать элементы, если в документе их нет, а остаток по топливу есть
+           SELECT lpInsertUpdate_MI_Transport_Child (ioId                 := 0
+                                            , inMovementId         := inMovementId
+                                            , inParentId           := tmpItem_Transport.MovementItemId_parent
+                                            , inFuelId             := tmp.FuelId
+                                            , inIsCalculated       := TRUE
+                                            , inIsMasterFuel       := FALSE
+                                            , ioAmount             := 0
+                                            , inColdHour           := 0
+                                            , inColdDistance       := 0
+                                            , inAmountColdHour     := 0
+                                            , inAmountColdDistance := 0
+                                            , inAmountFuel         := 0
+                                            , inNumber             := 4
+                                            , inRateFuelKindTax    := 0
+                                            , inRateFuelKindId     := 0
+                                            , inUserId             := inUserId
+                                             ) AS MovementItemId
+               , tmp.StartAmountFuel
+           FROM (SELECT _tmpPropertyRemains.FuelId, _tmpPropertyRemains.Amount AS StartAmountFuel
+                 FROM _tmpPropertyRemains
+                      LEFT JOIN _tmpItem_Transport ON _tmpItem_Transport.GoodsId = _tmpPropertyRemains.FuelId
+                 WHERE _tmpPropertyRemains.Kind = 3
+                   AND _tmpItem_Transport.GoodsId IS NULL
+                ) AS tmp
+                JOIN (SELECT MIN (_tmpItem_Transport.MovementItemId_parent) AS MovementItemId_parent FROM _tmpItem_Transport
+                     ) AS tmpItem_Transport ON 1=1
           ) AS tmp;
 
 
@@ -297,6 +401,6 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpUnComplete_Movement (inMovementId:= 149639, inSession:= '2')
--- SELECT * FROM lpComplete_Movement_Transport (inMovementId:= 149639, inUserId:= 2)
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 149639, inSession:= '2')
+-- SELECT * FROM gpUnComplete_Movement (inMovementId:= 103, inSession:= '2')
+-- SELECT * FROM lpComplete_Movement_Transport (inMovementId:= 103, inUserId:= 2)
+-- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 103, inSession:= '2')

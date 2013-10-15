@@ -20,13 +20,14 @@ RETURNS TABLE ( OperDate TDateTime
              , SummCashIn TFloat, SummCashOut TFloat, SummCashDiff TFloat
              , invNumberIncome TVarChar
              , PriceFuel TFloat, FreightWeight TFloat
-             )
+              )
 AS
-$BODY$BEGIN
+$BODY$
+BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Transport());
-
+/*
      -- таблица - 
 RETURN QUERY 
        SELECT cast ('01.01.2013' as TDateTime) 
@@ -39,7 +40,23 @@ RETURN QUERY
             , cast (120 as Tfloat), cast (120 as Tfloat), cast (120 as Tfloat)
             , cast ('invNumberIncome' as TVarChar)
             , cast (120 as Tfloat), cast (120 as Tfloat)
-  ;   
+*/
+
+      RETURN QUERY 
+        SELECT
+        FROM Movement
+             JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                              AND MovementItem.DescId     = zc_MI_Master()
+                              AND MovementItem.isErased   = FALSE
+             LEFT JOIN MovementItem ON MovementItem.ParentId = Movement.Id
+                                   AND MovementItem.DescId   = zc_MI_Child()
+                                   AND MovementItem.isErased = tmpIsErased.isErased
+
+        WHERE Movement.DescId = zc_Movement_Transport()
+          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+          AND Movement.StatusId = zc_Enum_Status_Complete()
+       ;
+
 
 END;
 $BODY$

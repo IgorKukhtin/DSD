@@ -21,7 +21,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_Transport_Child(
     IN inRateFuelKindId      Integer   , -- Типы норм для топлива
     IN inUserId              Integer     -- Пользователь
 )                              
-ETURNS RECORD AS
+RETURNS RECORD AS
 $BODY$
 BEGIN
 
