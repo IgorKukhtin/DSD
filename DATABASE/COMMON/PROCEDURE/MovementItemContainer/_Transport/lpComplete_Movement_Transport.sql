@@ -216,7 +216,7 @@ BEGIN
                                              AND _tmpPropertyRemains.Kind = 3
           UNION ALL
            -- Прийдется сформировать элементы, если в документе их нет, а остаток по топливу есть
-           SELECT lpInsertUpdate_MI_Transport_Child (ioId                 := 0
+           SELECT (SELECT Id FROM lpInsertUpdate_MI_Transport_Child (ioId                 := 0
                                             , inMovementId         := inMovementId
                                             , inParentId           := tmpItem_Transport.MovementItemId_parent
                                             , inFuelId             := tmp.FuelId
