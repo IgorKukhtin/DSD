@@ -228,7 +228,8 @@ uses
   ObjectFrom_byIncomeFuel in '..\..\Forms\ObjectFrom_byIncomeFuel.pas' {From_byIncomeFuelForm},
   CardFuel in '..\..\Forms\CardFuel.pas' {CardFuelForm},
   TicketFuel in '..\..\Forms\TicketFuel.pas' {TicketFuelForm},
-  TicketFuelEdit in '..\..\Forms\TicketFuelEdit.pas' {TicketFuelEditForm};
+  TicketFuelEdit in '..\..\Forms\TicketFuelEdit.pas' {TicketFuelEditForm},
+  CardFuelEdit in '..\..\Forms\CardFuelEdit.pas' {CardFuelEditForm};
 
 {$R *.RES}
 

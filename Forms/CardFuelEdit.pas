@@ -22,7 +22,7 @@ uses
 
 type
   TCardFuelEditForm = class(TParentForm)
-    edCardFuelName: TcxTextEdit;
+    edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
     cxButton2: TcxButton;
@@ -35,23 +35,23 @@ type
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     cxPropertiesStore: TcxPropertiesStore;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
-    cePersonalDriver: TcxButtonEdit;
+    ceGoods: TcxButtonEdit;
     cxLabel7: TcxLabel;
-    PersonalDriverGuides: TdsdGuides;
+    GoodsGuides: TdsdGuides;
     cxLabel2: TcxLabel;
+    cePersonalDriver: TcxButtonEdit;
+    PersonalDriverGuides: TdsdGuides;
+    cxLabel3: TcxLabel;
     ceCar: TcxButtonEdit;
     CarGuides: TdsdGuides;
-    cxLabel3: TcxLabel;
+    cxLabel4: TcxLabel;
     cePaidKind: TcxButtonEdit;
     PaidKindGuides: TdsdGuides;
-    cxLabel4: TcxLabel;
     cxLabel5: TcxLabel;
     ceJuridical: TcxButtonEdit;
-    ceGoods: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
-    GoodsGuides: TdsdGuides;
 
   private
     { Private declarations }
