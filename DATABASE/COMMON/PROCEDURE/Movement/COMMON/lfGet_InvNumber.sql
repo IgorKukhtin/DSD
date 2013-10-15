@@ -13,7 +13,7 @@ $BODY$
 BEGIN
      IF COALESCE (inInvNumber, 0) = 0
      THEN 
-         SELECT COALESCE (MAX (CAST (InvNumber AS Integer)), 0) + 1 INTO vbInvNumber FROM Movement WHERE DescId = inDescId;
+         SELECT COALESCE (MAX (zfConvert_StringToNumber(InvNumber) ), 0) + 1 INTO vbInvNumber FROM Movement WHERE DescId = inDescId;
      ELSE
          vbInvNumber:=inInvNumber;
      END IF;
