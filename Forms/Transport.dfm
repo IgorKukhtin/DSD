@@ -32,6 +32,7 @@
       Left = 108
       Top = 23
       Properties.SaveTime = False
+      Properties.ShowTime = False
       TabOrder = 1
       Width = 88
     end

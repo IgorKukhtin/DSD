@@ -18,7 +18,8 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, dxSkinsdxBarPainter, dsdAddOn, cxPropertiesStore, frxClass,
-  dsdDB, Data.DB, Datasnap.DBClient;
+  dsdDB, Data.DB, Datasnap.DBClient, frxExportRTF, frxExportPDF, frxExportXML,
+  frxExportXLS;
 
 type
   TMainForm = class(TForm)
@@ -198,6 +199,9 @@ type
     bbTicketFuel: TdxBarButton;
     actFrom_byIncomeFuel: TdsdOpenForm;
     bbFrom_byIncomeFuel: TdxBarButton;
+    frxXLSExport: TfrxXLSExport;
+    frxXMLExport: TfrxXMLExport;
+    frxRTFExport: TfrxRTFExport;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

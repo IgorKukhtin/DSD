@@ -591,9 +591,6 @@
 			<DCCReference Include="..\..\Forms\CardFuel.pas">
 				<Form>CardFuelForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\CardFuelEdit.pas">
-				<Form>CardFuelEditForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\TicketFuel.pas">
 				<Form>TicketFuelForm</Form>
 			</DCCReference>

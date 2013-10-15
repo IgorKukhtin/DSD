@@ -804,6 +804,7 @@ end;
 
 procedure THeaderSaver.OnExit(Sender: TObject);
 var isChanged: boolean;
+   S:string;
 begin
   isChanged := false;
   if not Assigned(IdParam) then
@@ -816,8 +817,10 @@ begin
      isChanged := FEnterValue.Values[TComponent(Sender).Name] <> (Sender as TcxButtonEdit).Text;
   if Sender is TcxCurrencyEdit then
      isChanged := FEnterValue.Values[TComponent(Sender).Name] <> (Sender as TcxCurrencyEdit).Text;
-  if Sender is TcxDateEdit then
-     isChanged := FEnterValue.Values[TComponent(Sender).Name] <> (Sender as TcxDateEdit).Text;
+  if Sender is TcxDateEdit then begin
+     s := (Sender as TcxDateEdit).Text;
+     isChanged := FEnterValue.Values[TComponent(Sender).Name] <> s;//(Sender as TcxDateEdit).Text;
+  end;
   if Sender is TcxCheckBox then
      isChanged := FEnterValue.Values[TComponent(Sender).Name] <> BoolToStr((Sender as TcxCheckBox).Checked);
 
