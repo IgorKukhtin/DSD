@@ -56,7 +56,7 @@ BEGIN
                                      ON ObjectLink_UnitCar_Business.ObjectId = ObjectLink_Car_Unit.ChildObjectId
                                     AND ObjectLink_UnitCar_Business.DescId = zc_ObjectLink_Unit_Business()
            WHERE Movement.Id = inMovementId
-             -- AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+             AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
              AND Movement.DescId = zc_Movement_Transport()
           ) AS _tmp;
 
@@ -110,7 +110,7 @@ BEGIN
      SELECT SUM (CASE WHEN Kind = 1 THEN Amount ELSE 0 END) AS StartSummCash         -- Начальный остаток денег Автомобиль(Подотчет)
           , SUM (CASE WHEN Kind = 2 THEN Amount ELSE 0 END) AS StartAmountTicketFuel -- Начальный остаток талонов на топливо Сотрудник (водитель)
             INTO vbStartSummCash, vbStartAmountTicketFuel
-     FROM _tmpPropertyRemains WHERE Kind IN (1, 3);
+     FROM _tmpPropertyRemains WHERE Kind IN (1, 2);
 
      -- сохранили свойство документа <Начальный остаток денег Автомобиль(Подотчет)>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_StartSummCash(), inMovementId, vbStartSummCash);
@@ -216,23 +216,24 @@ BEGIN
                                              AND _tmpPropertyRemains.Kind = 3
           UNION ALL
            -- Прийдется сформировать элементы, если в документе их нет, а остаток по топливу есть
-           SELECT (SELECT Id FROM lpInsertUpdate_MI_Transport_Child (ioId                 := 0
-                                            , inMovementId         := inMovementId
-                                            , inParentId           := tmpItem_Transport.MovementItemId_parent
-                                            , inFuelId             := tmp.FuelId
-                                            , inIsCalculated       := TRUE
-                                            , inIsMasterFuel       := FALSE
-                                            , ioAmount             := 0
-                                            , inColdHour           := 0
-                                            , inColdDistance       := 0
-                                            , inAmountColdHour     := 0
-                                            , inAmountColdDistance := 0
-                                            , inAmountFuel         := 0
-                                            , inNumber             := 4
-                                            , inRateFuelKindTax    := 0
-                                            , inRateFuelKindId     := 0
-                                            , inUserId             := inUserId
-                                             ) AS MovementItemId
+           SELECT (SELECT ioId FROM lpInsertUpdate_MI_Transport_Child (ioId                 := 0
+                                                                     , inMovementId         := inMovementId
+                                                                     , inParentId           := tmpItem_Transport.MovementItemId_parent
+                                                                     , inFuelId             := tmp.FuelId
+                                                                     , inIsCalculated       := TRUE
+                                                                     , inIsMasterFuel       := FALSE
+                                                                     , ioAmount             := 0
+                                                                     , inColdHour           := 0
+                                                                     , inColdDistance       := 0
+                                                                     , inAmountColdHour     := 0
+                                                                     , inAmountColdDistance := 0
+                                                                     , inAmountFuel         := 0
+                                                                     , inNumber             := 4
+                                                                     , inRateFuelKindTax    := 0
+                                                                     , inRateFuelKindId     := 0
+                                                                     , inUserId             := inUserId
+                                                                      )
+                 ) AS MovementItemId
                , tmp.StartAmountFuel
            FROM (SELECT _tmpPropertyRemains.FuelId, _tmpPropertyRemains.Amount AS StartAmountFuel
                  FROM _tmpPropertyRemains
@@ -389,7 +390,7 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -402,5 +403,6 @@ LANGUAGE PLPGSQL VOLATILE;
 
 -- тест
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 103, inSession:= '2')
+-- CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
 -- SELECT * FROM lpComplete_Movement_Transport (inMovementId:= 103, inUserId:= 2)
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 103, inSession:= '2')

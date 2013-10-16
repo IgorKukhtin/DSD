@@ -1,12 +1,12 @@
 -- Function: gpInsertUpdate_Object_CardFuel(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_CardFuel (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_Object_CardFuel (Integer, Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CardFuel(
  INOUT ioId                Integer   , -- Ключ объекта <Топливные карты>
     IN inCode              Integer   , -- свойство <Код >
     IN inName              TVarChar  , -- свойство <Наименование>
-
+    IN inLimit             TFloat    , -- Лимит
     IN inPersonalDriverId  Integer   , -- ссылка на сотрудника
     IN inCarId             Integer   , -- ссылка на авто
     IN inPaidKindId        Integer   , -- ссылка на Виды форм оплаты
@@ -15,11 +15,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CardFuel(
     
     IN inSession        TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS Integer
+AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;   
-
 BEGIN
  
    -- проверка прав пользователя на вызов процедуры
@@ -40,6 +40,9 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_CardFuel(), vbCode_calc, inName);
 
+   -- сохранили свойство <Лимит>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CardFuel_Limit(), ioId, inLimit);
+
    -- сохранили связь с <сотрудником>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_CardFuel_PersonalDriver(), ioId, inPersonalDriverId);
    
@@ -59,17 +62,17 @@ BEGIN
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_CardFuel (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer,TVarChar) OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpInsertUpdate_Object_CardFuel (Integer, Integer, TVarChar, TFloat, Integer, Integer, Integer, Integer, Integer,TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.10.13                                        * add inLimit
  14.10.13         * 
 */
 
 -- тест
---SELECT * FROM gpInsertUpdate_Object_CardFuel(ioId:=148, inCode:=1, inName:='Карта 45 ', inPersonalDriverId :=19490, inCarId:= 65594  , inPaidKindId:=  80 , inJuridicalId :=12454 , inGoodsId :=2447 , inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_Object_CardFuel(ioId:=148, inCode:=1, inName:='Карта 45 ', inPersonalDriverId :=19490, inCarId:= 65594  , inPaidKindId:=  80 , inJuridicalId :=12454 , inGoodsId :=2447 , inSession:= '2')
