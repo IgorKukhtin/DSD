@@ -202,6 +202,8 @@ type
     frxXLSExport: TfrxXLSExport;
     frxXMLExport: TfrxXMLExport;
     frxRTFExport: TfrxRTFExport;
+    actPositionLevel: TdsdOpenForm;
+    bbPositionLevel: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private

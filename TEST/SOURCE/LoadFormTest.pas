@@ -585,10 +585,16 @@ end;
 
 procedure TLoadFormTest.LoadPositionFormTest;
 begin
+  // должности
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPositionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPositionEditForm');
+  // Разряд должности
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionLevelForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPositionLevelForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionLevelEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPositionLevelEditForm');
 end;
 
 procedure TLoadFormTest.LoadPersonalFormTest;
