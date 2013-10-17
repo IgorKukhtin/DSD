@@ -767,6 +767,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbPositionLevel'
+        end
+        item
+          Visible = True
           ItemName = 'bbMember'
         end
         item
@@ -823,6 +827,10 @@ object MainForm: TMainForm
     end
     object bbFrom_byIncomeFuel: TdxBarButton
       Action = actFrom_byIncomeFuel
+      Category = 0
+    end
+    object bbPositionLevel: TdxBarButton
+      Action = actPositionLevel
       Category = 0
     end
   end
@@ -1433,6 +1441,14 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actPositionLevel: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      Caption = #1056#1072#1079#1088#1103#1076#1099' '#1076#1086#1083#1078#1085#1086#1089#1090#1077#1081' '
+      Hint = #1056#1072#1079#1088#1103#1076#1099' '#1076#1086#1083#1078#1085#1086#1089#1090#1077#1081' '
+      FormName = 'TPositionLevelForm'
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object cxLocalizer: TcxLocalizer
     StorageType = lstResource
@@ -1459,7 +1475,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.14'
+    Version = '4.12'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

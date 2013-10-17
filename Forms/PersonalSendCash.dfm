@@ -984,7 +984,7 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
     CloseDataSource = False
     DataSet = MasterCDS
     BCDToCurrency = False
-    Left = 144
+    Left = 192
     Top = 224
   end
   object MasterViewAddOn: TdsdDBViewAddOn

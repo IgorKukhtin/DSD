@@ -231,7 +231,9 @@ uses
   TicketFuelEdit in '..\..\Forms\TicketFuelEdit.pas' {TicketFuelEditForm},
   CardFuelEdit in '..\..\Forms\CardFuelEdit.pas' {CardFuelEditForm},
   SheetWorkTime in '..\..\Forms\SheetWorkTime.pas' {SheetWorkTimeForm},
-  SheetWorkTimeJournal in '..\..\Forms\SheetWorkTimeJournal.pas' {SheetWorkTimeJournalForm};
+  SheetWorkTimeJournal in '..\..\Forms\SheetWorkTimeJournal.pas' {SheetWorkTimeJournalForm},
+  PositionLevel in '..\..\Forms\PositionLevel.pas' {PositionLevelForm},
+  PositionLevelEdit in '..\..\Forms\PositionLevelEdit.pas' {PositionLevelEditForm};
 
 {$R *.RES}
 
