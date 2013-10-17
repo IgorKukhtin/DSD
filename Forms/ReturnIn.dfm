@@ -1,11 +1,18 @@
-inherited ReturnInForm: TReturnInForm
+object ReturnInForm: TReturnInForm
+  Left = 0
+  Top = 0
   Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
   ClientHeight = 396
   ClientWidth = 1028
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
   KeyPreview = True
+  OldCreateOrder = False
   PopupMenu = PopupMenu
-  ExplicitWidth = 1036
-  ExplicitHeight = 423
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -494,6 +501,7 @@ inherited ReturnInForm: TReturnInForm
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 176
@@ -509,12 +517,14 @@ inherited ReturnInForm: TReturnInForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inShowAll'
+        Value = Null
         DataType = ftBoolean
         ParamType = ptInput
       end>
@@ -744,6 +754,7 @@ inherited ReturnInForm: TReturnInForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -775,6 +786,7 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'inMovementId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -794,6 +806,7 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'inAmountPartner'
+        Value = Null
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -806,21 +819,25 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'inCountForPrice'
+        Value = Null
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inLiveWeight'
+        Value = Null
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inHeadCount'
+        Value = Null
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inGoodsKindId'
+        Value = Null
         ParamType = ptInput
       end>
     Left = 608
@@ -876,68 +893,81 @@ inherited ReturnInForm: TReturnInForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inInvNumber'
+        Value = ''
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inOperDate'
+        Value = 0d
         Component = edOperDate
         DataType = ftDate
         ParamType = ptInput
       end
       item
         Name = 'inOperDatePartner'
+        Value = Null
         DataType = ftDate
         ParamType = ptInput
       end
       item
         Name = 'inPriceWithVAT'
+        Value = 'False'
         Component = edPriceWithVAT
         DataType = ftBoolean
         ParamType = ptInput
       end
       item
         Name = 'inVATPercent'
+        Value = 0.000000000000000000
         Component = edVATPercent
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inChangePercent'
+        Value = Null
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inFromId'
+        Value = Null
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inToId'
+        Value = Null
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inPaidKindId'
+        Value = Null
         ParamType = ptInput
       end
       item
         Name = 'inContractId'
+        Value = Null
         ParamType = ptInput
       end
       item
         Name = 'inCarId'
+        Value = Null
         ParamType = ptInput
       end
       item
         Name = 'inPersonalDriverId'
+        Value = Null
         ParamType = ptInput
       end>
     Left = 752
@@ -950,6 +980,7 @@ inherited ReturnInForm: TReturnInForm
     Params = <
       item
         Name = 'inId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -960,77 +991,97 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Name = 'OperDate'
+        Value = 0d
         Component = edOperDate
       end
       item
         Name = 'StatusCode'
+        Value = Null
         ComponentItem = 'Key'
       end
       item
         Name = 'OperDatePartner'
+        Value = Null
       end
       item
         Name = 'InvNumberPartner'
+        Value = Null
       end
       item
         Name = 'StatusName'
+        Value = Null
         ComponentItem = 'TextValue'
       end
       item
         Name = 'PriceWithVAT'
+        Value = Null
       end
       item
         Name = 'VATPercent'
+        Value = Null
       end
       item
         Name = 'ChangePercent'
+        Value = Null
       end
       item
         Name = 'FromId'
+        Value = Null
         ComponentItem = 'Key'
       end
       item
         Name = 'FromName'
+        Value = Null
         ComponentItem = 'TextValue'
       end
       item
         Name = 'ToId'
+        Value = Null
         ComponentItem = 'Key'
       end
       item
         Name = 'PaidKindId'
+        Value = Null
         ComponentItem = 'Key'
       end
       item
         Name = 'ToName'
+        Value = Null
         ComponentItem = 'TextValue'
       end
       item
         Name = 'PaidKindName'
+        Value = Null
         ComponentItem = 'TextValue'
       end
       item
         Name = 'ContractId'
+        Value = Null
         ComponentItem = 'Key'
       end
       item
         Name = 'ContractName'
+        Value = Null
         ComponentItem = 'TextValue'
       end
       item
         Name = 'CarId'
+        Value = Null
         ComponentItem = 'Key'
       end
       item
         Name = 'CarName'
+        Value = Null
         ComponentItem = 'TextValue'
       end
       item
         Name = 'PersonalDriverId'
+        Value = Null
         ComponentItem = 'Key'
       end
       item
         Name = 'PersonalDriverName'
+        Value = Null
         ComponentItem = 'TextValue'
       end>
     Left = 152

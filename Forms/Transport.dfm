@@ -1,11 +1,18 @@
-﻿inherited TransportForm: TTransportForm
+﻿object TransportForm: TTransportForm
+  Left = 0
+  Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090'>'
   ClientHeight = 455
   ClientWidth = 996
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
   KeyPreview = True
+  OldCreateOrder = False
   PopupMenu = PopupMenu
-  ExplicitWidth = 1004
-  ExplicitHeight = 482
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel

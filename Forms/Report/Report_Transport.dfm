@@ -1,9 +1,16 @@
-inherited Report_TransportForm: TReport_TransportForm
+object Report_TransportForm: TReport_TransportForm
+  Left = 0
+  Top = 0
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1088#1072#1085#1089#1087#1086#1088#1090#1091
   ClientHeight = 395
   ClientWidth = 1329
-  ExplicitWidth = 1337
-  ExplicitHeight = 422
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -525,18 +532,21 @@ inherited Report_TransportForm: TReport_TransportForm
     Params = <
       item
         Name = 'inStartDate'
+        Value = 41395d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
+        Value = 41395d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inCarId'
+        Value = Null
         ParamType = ptInput
       end>
     Left = 152
@@ -569,6 +579,7 @@ inherited Report_TransportForm: TReport_TransportForm
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = CarGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -576,6 +587,7 @@ inherited Report_TransportForm: TReport_TransportForm
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = CarGuides
         ComponentItem = 'TextValue'
         DataType = ftString

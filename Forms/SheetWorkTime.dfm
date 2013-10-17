@@ -13,7 +13,6 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
   KeyPreview = True
   OldCreateOrder = False
   PopupMenu = PopupMenu
-  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -112,6 +111,8 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Height = 363
         Align = alClient
         TabOrder = 0
+        ExplicitLeft = -32
+        ExplicitTop = -44
         object cxGridDBBandedTableView: TcxGridDBBandedTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -228,9 +229,6 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0

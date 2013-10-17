@@ -1,9 +1,16 @@
-inherited ZakazInternalJournalForm: TZakazInternalJournalForm
+object ZakazInternalJournalForm: TZakazInternalJournalForm
+  Left = 0
+  Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1047#1072#1103#1074#1082#1080' ('#1074#1085#1091#1090#1088#1077#1085#1085#1080#1077')'
   ClientHeight = 427
   ClientWidth = 815
-  ExplicitWidth = 823
-  ExplicitHeight = 454
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -229,6 +236,7 @@ inherited ZakazInternalJournalForm: TZakazInternalJournalForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
         end>
       isShowModal = False
       DataSource = DataSource
@@ -272,12 +280,14 @@ inherited ZakazInternalJournalForm: TZakazInternalJournalForm
     Params = <
       item
         Name = 'inStartDate'
+        Value = 41395d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
+        Value = 41760d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

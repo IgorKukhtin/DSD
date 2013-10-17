@@ -1,9 +1,16 @@
-inherited PersonalSendCashJournalForm: TPersonalSendCashJournalForm
+object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
+  Left = 0
+  Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1072#1089#1093#1086#1076' '#1076#1077#1085#1077#1075' '#1089' '#1087#1086#1076#1086#1090#1095#1077#1090#1072' '#1085#1072' '#1087#1086#1076#1086#1090#1095#1077#1090'>'
   ClientHeight = 427
   ClientWidth = 711
-  ExplicitWidth = 727
-  ExplicitHeight = 462
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -231,8 +238,8 @@ inherited PersonalSendCashJournalForm: TPersonalSendCashJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -401,8 +408,8 @@ inherited PersonalSendCashJournalForm: TPersonalSendCashJournalForm
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 11
-      DataSource = DataSource
       Status = mtUncomplete
+      DataSource = DataSource
     end
     object actComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
@@ -414,8 +421,8 @@ inherited PersonalSendCashJournalForm: TPersonalSendCashJournalForm
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 12
-      DataSource = DataSource
       Status = mtComplete
+      DataSource = DataSource
     end
     object actSetErased: TdsdChangeMovementStatus
       Category = 'DSDLib'
@@ -427,8 +434,8 @@ inherited PersonalSendCashJournalForm: TPersonalSendCashJournalForm
       Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       ImageIndex = 13
-      DataSource = DataSource
       Status = mtDelete
+      DataSource = DataSource
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'

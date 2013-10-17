@@ -1,9 +1,16 @@
-inherited Report_ProfitLossForm: TReport_ProfitLossForm
+object Report_ProfitLossForm: TReport_ProfitLossForm
+  Left = 0
+  Top = 0
   Caption = #1054#1090#1095#1077#1090' '#1086' '#1055#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1059#1073#1099#1090#1082#1072#1093
   ClientHeight = 395
   ClientWidth = 1329
-  ExplicitWidth = 1337
-  ExplicitHeight = 422
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -13,7 +20,7 @@ inherited Report_ProfitLossForm: TReport_ProfitLossForm
     Height = 41
     Align = alTop
     Caption = 'Panel1'
-    TabOrder = 3
+    TabOrder = 2
     object deStart: TcxDateEdit
       Left = 208
       Top = 8
@@ -256,12 +263,14 @@ inherited Report_ProfitLossForm: TReport_ProfitLossForm
     Params = <
       item
         Name = 'inStartDate'
+        Value = 41275d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

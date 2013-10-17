@@ -1,11 +1,18 @@
-﻿inherited ProductionUnionForm: TProductionUnionForm
+﻿object ProductionUnionForm: TProductionUnionForm
+  Left = 0
+  Top = 0
   Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
   ClientHeight = 396
   ClientWidth = 1028
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
   KeyPreview = True
+  OldCreateOrder = False
   PopupMenu = PopupMenu
-  ExplicitWidth = 1036
-  ExplicitHeight = 423
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -559,6 +566,7 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 288
@@ -578,12 +586,14 @@
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inShowAll'
+        Value = Null
         DataType = ftBoolean
         ParamType = ptInput
       end>
@@ -761,35 +771,42 @@
     Params = <
       item
         Name = 'inId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'InvNumber'
+        Value = ''
         Component = edInvNumber
       end
       item
         Name = 'OperDate'
+        Value = 0d
         Component = edOperDate
       end
       item
         Name = 'FromId'
+        Value = ''
         Component = dsdGuidesFrom
         ComponentItem = 'Key'
       end
       item
         Name = 'FromName'
+        Value = ''
         Component = dsdGuidesFrom
         ComponentItem = 'TextValue'
       end
       item
         Name = 'ToId'
+        Value = ''
         Component = dsdGuidesTo
         ComponentItem = 'Key'
       end
       item
         Name = 'ToName'
+        Value = ''
         Component = dsdGuidesTo
         ComponentItem = 'TextValue'
       end>
@@ -814,6 +831,7 @@
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -845,6 +863,7 @@
       end
       item
         Name = 'inMovementId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -864,6 +883,7 @@
       end
       item
         Name = 'inAmountPartner'
+        Value = Null
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -876,21 +896,25 @@
       end
       item
         Name = 'inCountForPrice'
+        Value = Null
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inLiveWeight'
+        Value = Null
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inHeadCount'
+        Value = Null
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inGoodsKindId'
+        Value = Null
         ParamType = ptInput
       end>
     Left = 102

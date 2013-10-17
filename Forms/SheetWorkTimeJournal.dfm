@@ -1,9 +1,16 @@
-inherited SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
+object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
+  Left = 0
+  Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1058#1072#1073#1077#1083#1100'>'
   ClientHeight = 427
   ClientWidth = 760
-  ExplicitWidth = 768
-  ExplicitHeight = 454
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel

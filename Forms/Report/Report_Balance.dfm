@@ -1,9 +1,16 @@
-inherited Report_BalanceForm: TReport_BalanceForm
+object Report_BalanceForm: TReport_BalanceForm
+  Left = 0
+  Top = 0
   Caption = #1041#1072#1083#1072#1085#1089
   ClientHeight = 440
   ClientWidth = 1329
-  ExplicitWidth = 1337
-  ExplicitHeight = 467
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -283,12 +290,14 @@ inherited Report_BalanceForm: TReport_BalanceForm
     Params = <
       item
         Name = 'inStartDate'
+        Value = 41395d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
+        Value = 41395d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
