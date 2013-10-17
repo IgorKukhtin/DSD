@@ -77,6 +77,7 @@ type
     procedure LoadRateFuelKindFormTest;
     procedure LoadFreightFormTest;
     procedure LoadWorkTimeKindFormTest;
+    procedure LoadSheetWorkTimeFormTest;
     procedure LoadUnionFormTest;
   end;
 
@@ -248,6 +249,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TUserEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStatusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStatusForm');
+end;
+
+procedure TLoadFormTest.LoadSheetWorkTimeFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeJournalForm');
 end;
 
 procedure TLoadFormTest.LoadSaleFormTest;

@@ -31,9 +31,8 @@ BEGIN
        AS SELECT generate_series(vbStartDate, vbEndDate, '1 DAY'::interval) OperDate;
 
      -- возвращаем заголовки столбцов и даты
-     OPEN cur1 FOR SELECT tmpOperDate.OperDate, 
-                          'Value'||EXTRACT(DAY FROM tmpOperDate.OperDate) AS ValueField,
-                          'TypeId'||EXTRACT(DAY FROM tmpOperDate.OperDate) AS TypeIdField
+     OPEN cur1 FOR SELECT tmpOperDate.OperDate::TDateTime, 
+                          (EXTRACT(DAY FROM tmpOperDate.OperDate))::TVarChar AS ValueField
                FROM tmpOperDate;  
      RETURN NEXT cur1;
     

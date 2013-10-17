@@ -13,6 +13,7 @@ object MainForm: TMainForm
   OldCreateOrder = False
   Position = poDesigned
   OnCreate = FormCreate
+  OnKeyDown = FormKeyDown
   PixelsPerInch = 96
   TextHeight = 13
   object dxBarManager: TdxBarManager
@@ -1404,7 +1405,7 @@ object MainForm: TMainForm
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       Caption = #1058#1072#1073#1077#1083#1100' '#1091#1095#1077#1090#1072' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080
       Hint = #1058#1072#1073#1077#1083#1100' '#1091#1095#1077#1090#1072' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080
-      FormName = 'TSheetWorkTimeForm'
+      FormName = 'TSheetWorkTimeJournalForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -6362,8 +6363,8 @@ object MainForm: TMainForm
     PageBreaks = True
     EmptyLines = True
     SuppressPageHeadersFooters = False
-    Left = 48
-    Top = 176
+    Left = 56
+    Top = 144
   end
   object frxXMLExport: TfrxXMLExport
     UseFileCache = True
@@ -6376,7 +6377,7 @@ object MainForm: TMainForm
     SuppressPageHeadersFooters = False
     RowsCount = 0
     Split = ssNotSplit
-    Left = 64
+    Left = 56
     Top = 192
   end
   object frxRTFExport: TfrxRTFExport

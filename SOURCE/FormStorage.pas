@@ -127,7 +127,18 @@ begin
 end;
 
 function TdsdFormStorage.Load(FormName: String): TParentForm;
+var i: integer;
 begin
+  // ѕытаемс€ найти среди открытых
+  for i := 0 to Screen.FormCount - 1 do begin
+     if Screen.Forms[i] is TParentForm then
+        with TParentForm(Screen.Forms[i]) do begin
+          if (not isFree) and (FormClassName = FormName) then begin
+             Result := Screen.Forms[i] as TParentForm;
+             exit;
+          end;
+        end;
+  end;
   Result := TParentForm.CreateNew(Application);
   Result.FormClassName := FormName;
 
