@@ -27,7 +27,7 @@ type
   TStaffListForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clFundPay: TcxGridDBColumn;
+    clFundPayMonth: TcxGridDBColumn;
     clPositionLevelName: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
@@ -60,6 +60,8 @@ type
     clUnitName: TcxGridDBColumn;
     clHoursPlan: TcxGridDBColumn;
     clPositionName: TcxGridDBColumn;
+    clFundPayTurn: TcxGridDBColumn;
+    clComment: TcxGridDBColumn;
   private
     { Private declarations }
   public

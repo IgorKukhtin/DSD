@@ -2,8 +2,8 @@ inherited RouteKindForm: TRouteKindForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1080#1087#1099' '#1084#1072#1088#1096#1088#1091#1090#1072'>'
   ClientHeight = 376
   ClientWidth = 390
-  ExplicitWidth = 406
-  ExplicitHeight = 411
+  ExplicitWidth = 398
+  ExplicitHeight = 410
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -92,8 +92,8 @@ inherited RouteKindForm: TRouteKindForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -173,20 +173,32 @@ inherited RouteKindForm: TRouteKindForm
       Category = 0
     end
     object bbInsert: TdxBarButton
-      Action = actInsert
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Category = 0
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
+      Visible = ivAlways
+      ImageIndex = 0
+      ShortCut = 45
     end
     object bbEdit: TdxBarButton
       Action = actUpdate
       Category = 0
     end
     object bbSetErased: TdxBarButton
-      Action = dsdSetErased
+      Caption = #1059#1076#1072#1083#1080#1090#1100
       Category = 0
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Visible = ivAlways
+      ImageIndex = 2
+      ShortCut = 46
     end
     object bbSetUnErased: TdxBarButton
-      Action = dsdSetUnErased
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Category = 0
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Visible = ivAlways
+      ImageIndex = 8
+      ShortCut = 32776
     end
     object bbToExcel: TdxBarButton
       Action = dsdGridToExcel
@@ -219,22 +231,6 @@ inherited RouteKindForm: TRouteKindForm
       ImageIndex = 4
       ShortCut = 116
     end
-    object actInsert: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
-      ShortCut = 45
-      ImageIndex = 0
-      FormName = 'TRouteKindEditForm'
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-        end>
-      isShowModal = False
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-    end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
@@ -253,35 +249,6 @@ inherited RouteKindForm: TRouteKindForm
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
-    end
-    object dsdSetErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 2
-      ShortCut = 46
-      ErasedFieldName = 'isErased'
-      DataSource = DataSource
-    end
-    object dsdSetUnErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 32776
-      ErasedFieldName = 'isErased'
-      isSetErased = False
-      DataSource = DataSource
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'

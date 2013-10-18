@@ -22,12 +22,10 @@ uses
 
 type
   TStaffListEditForm = class(TParentForm)
-    edPersonalCount: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     cxLabel2: TcxLabel;
-    ceHoursPlan: TcxCurrencyEdit;
     ActionList: TActionList;
     dsdDataSetRefresh: TdsdDataSetRefresh;
     dsdFormClose1: TdsdFormClose;
@@ -47,7 +45,13 @@ type
     cxLabel7: TcxLabel;
     cePositionLevel: TcxButtonEdit;
     PositionLevelGuides: TdsdGuides;
-    edFundPay: TcxTextEdit;
+    cxLabel4: TcxLabel;
+    edComment: TcxTextEdit;
+    cxLabel8: TcxLabel;
+    edPersonalCount: TcxCurrencyEdit;
+    edHoursPlan: TcxCurrencyEdit;
+    edFundPayMonth: TcxCurrencyEdit;
+    edFundPayTurn: TcxCurrencyEdit;
 
   private
     { Private declarations }

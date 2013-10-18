@@ -26,7 +26,7 @@ inherited StaffListForm: TStaffListForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clFundPay
+      OptionsBehavior.IncSearchItem = clFundPayMonth
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -41,37 +41,47 @@ inherited StaffListForm: TStaffListForm
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'UnitName'
         HeaderAlignmentVert = vaCenter
-        Width = 127
+        Width = 132
       end
       object clPositionName: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
         DataBinding.FieldName = 'PositionName'
         HeaderAlignmentVert = vaCenter
-        Width = 184
+        Width = 155
       end
       object clPositionLevelName: TcxGridDBColumn
         Caption = #1056#1072#1079#1088#1103#1076
         DataBinding.FieldName = 'PositionLevelName'
         HeaderAlignmentVert = vaCenter
-        Width = 105
+        Width = 67
       end
       object clHoursPlan: TcxGridDBColumn
-        Caption = #1055#1083#1072#1085' '#1089#1095#1077#1090#1086#1074
+        Caption = #1055#1083#1072#1085' '#1095#1072#1089#1086#1074
         DataBinding.FieldName = 'HoursPlan'
         HeaderAlignmentVert = vaCenter
-        Width = 112
+        Width = 98
       end
       object clPersonalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'.'#1077#1076'.'
         DataBinding.FieldName = 'PersonalCount'
         HeaderAlignmentVert = vaCenter
-        Width = 109
+        Width = 61
       end
-      object clFundPay: TcxGridDBColumn
-        Caption = #1060#1086#1085#1076' '#1086#1087#1083#1072#1090#1099
-        DataBinding.FieldName = 'FundPay'
+      object clFundPayMonth: TcxGridDBColumn
+        Caption = #1060#1086#1085#1076' '#1086#1087#1083#1072#1090#1099' ('#1079#1072' '#1084#1077#1089#1103#1094')'
+        DataBinding.FieldName = 'FundPayMonth'
         HeaderAlignmentVert = vaCenter
-        Width = 105
+        Width = 99
+      end
+      object clFundPayTurn: TcxGridDBColumn
+        Caption = #1060#1086#1085#1076' '#1086#1087#1083#1072#1090#1099' ('#1079#1072' '#1076#1077#1085#1100')'
+        DataBinding.FieldName = 'FundPayTurn'
+        Width = 90
+      end
+      object clComment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        Width = 89
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -80,7 +90,7 @@ inherited StaffListForm: TStaffListForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 95
+        Width = 46
       end
     end
     object cxGridLevel: TcxGridLevel

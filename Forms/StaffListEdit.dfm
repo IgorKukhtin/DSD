@@ -2,8 +2,8 @@ object StaffListEditForm: TStaffListEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1064#1090#1072#1090#1085#1091#1102' '#1077#1076#1080#1085#1080#1094#1091'>'
-  ClientHeight = 393
-  ClientWidth = 352
+  ClientHeight = 398
+  ClientWidth = 355
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,109 +13,145 @@ object StaffListEditForm: TStaffListEditForm
   OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
-  object edPersonalCount: TcxTextEdit
-    Left = 32
-    Top = 88
-    TabOrder = 0
-    Width = 273
-  end
   object cxLabel1: TcxLabel
-    Left = 32
-    Top = 69
+    Left = 192
+    Top = 19
     Caption = #1050#1086#1083'. '#1077#1076#1080#1085#1080#1094
   end
   object cxButton1: TcxButton
-    Left = 72
-    Top = 349
+    Left = 64
+    Top = 353
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
     ModalResult = 8
-    TabOrder = 2
+    TabOrder = 1
   end
   object cxButton2: TcxButton
-    Left = 230
-    Top = 349
+    Left = 205
+    Top = 353
     Width = 75
     Height = 25
     Action = dsdFormClose1
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 8
-    TabOrder = 3
+    TabOrder = 2
   end
   object cxLabel2: TcxLabel
-    Left = 32
+    Left = 35
     Top = 19
-    Caption = #1055#1083#1072#1085' '#1089#1095#1077#1090#1086#1074
-  end
-  object ceHoursPlan: TcxCurrencyEdit
-    Left = 32
-    Top = 42
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 5
-    Width = 273
+    Caption = #1055#1083#1072#1085' '#1095#1072#1089#1086#1074
   end
   object cxLabel3: TcxLabel
-    Left = 32
-    Top = 123
-    Caption = #1060#1086#1085#1076' '#1086#1087#1083#1072#1090#1099
+    Left = 34
+    Top = 69
+    Caption = #1060#1086#1085#1076' '#1086#1087#1083#1072#1090#1099' ('#1079#1072' '#1084#1077#1089#1103#1094')'
   end
   object cxLabel5: TcxLabel
     Left = 35
-    Top = 179
+    Top = 131
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   object ceUnit: TcxButtonEdit
     Left = 35
-    Top = 202
+    Top = 154
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 6
+    Width = 270
+  end
+  object cxLabel6: TcxLabel
+    Left = 35
+    Top = 181
+    Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+  end
+  object cePosition: TcxButtonEdit
+    Left = 35
+    Top = 204
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 8
-    Width = 273
+    Width = 270
   end
-  object cxLabel6: TcxLabel
+  object cxLabel7: TcxLabel
     Left = 35
-    Top = 229
-    Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+    Top = 231
+    Caption = #1056#1072#1079#1088#1103#1076
   end
-  object cePosition: TcxButtonEdit
-    Left = 35
-    Top = 252
+  object cePositionLevel: TcxButtonEdit
+    Left = 34
+    Top = 254
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 10
-    Width = 273
+    Width = 270
   end
-  object cxLabel7: TcxLabel
-    Left = 35
-    Top = 279
-    Caption = #1056#1072#1079#1088#1103#1076
+  object cxLabel4: TcxLabel
+    Left = 183
+    Top = 69
+    Caption = #1060#1086#1085#1076' '#1086#1087#1083#1072#1090#1099' ('#1079#1072' '#1076#1077#1085#1100')'
   end
-  object cePositionLevel: TcxButtonEdit
+  object edComment: TcxTextEdit
     Left = 35
-    Top = 302
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
+    Top = 312
     TabOrder = 12
-    Width = 273
+    Width = 270
   end
-  object edFundPay: TcxTextEdit
+  object cxLabel8: TcxLabel
     Left = 35
-    Top = 146
-    TabOrder = 13
-    Width = 273
+    Top = 289
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+  end
+  object edPersonalCount: TcxCurrencyEdit
+    Left = 181
+    Top = 42
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 14
+    Width = 123
+  end
+  object edHoursPlan: TcxCurrencyEdit
+    Left = 35
+    Top = 42
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 15
+    Width = 123
+  end
+  object edFundPayMonth: TcxCurrencyEdit
+    Left = 35
+    Top = 92
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 16
+    Width = 123
+  end
+  object edFundPayTurn: TcxCurrencyEdit
+    Left = 181
+    Top = 92
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 17
+    Width = 123
   end
   object ActionList: TActionList
     Left = 320
@@ -158,22 +194,36 @@ object StaffListEditForm: TStaffListEditForm
       item
         Name = 'inHoursPlan'
         Value = 0.000000000000000000
-        Component = ceHoursPlan
+        Component = edHoursPlan
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inPersonalCount'
-        Value = ''
+        Value = 0.000000000000000000
         Component = edPersonalCount
         DataType = ftFloat
         ParamType = ptInput
       end
       item
-        Name = 'inFundPay'
-        Value = ''
-        Component = edFundPay
+        Name = 'inFundPayMonth'
+        Value = 0.000000000000000000
+        Component = edFundPayMonth
         DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inFundPayTurn'
+        Value = 0.000000000000000000
+        Component = edFundPayTurn
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inComment'
+        Value = ''
+        Component = edComment
+        DataType = ftString
         ParamType = ptInput
       end
       item
@@ -222,20 +272,32 @@ object StaffListEditForm: TStaffListEditForm
       item
         Name = 'HoursPlan'
         Value = 0.000000000000000000
-        Component = ceHoursPlan
+        Component = edHoursPlan
         DataType = ftFloat
       end
       item
         Name = 'PersonalCount'
-        Value = ''
+        Value = 0.000000000000000000
         Component = edPersonalCount
         DataType = ftFloat
       end
       item
-        Name = 'FundPay'
-        Value = ''
-        Component = edFundPay
+        Name = 'FundPayMonth'
+        Value = 0.000000000000000000
+        Component = edFundPayMonth
         DataType = ftFloat
+      end
+      item
+        Name = 'FundPayTurn'
+        Value = 0.000000000000000000
+        Component = edFundPayTurn
+        DataType = ftFloat
+      end
+      item
+        Name = 'Comment'
+        Value = ''
+        Component = edComment
+        DataType = ftString
       end
       item
         Name = 'UnitId'
@@ -321,7 +383,7 @@ object StaffListEditForm: TStaffListEditForm
         ParamType = ptInput
       end>
     Left = 167
-    Top = 191
+    Top = 135
   end
   object PositionGuides: TdsdGuides
     KeyField = 'Id'
@@ -345,8 +407,8 @@ object StaffListEditForm: TStaffListEditForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 215
-    Top = 239
+    Left = 207
+    Top = 191
   end
   object PositionLevelGuides: TdsdGuides
     KeyField = 'Id'
@@ -371,6 +433,6 @@ object StaffListEditForm: TStaffListEditForm
         ParamType = ptInput
       end>
     Left = 143
-    Top = 287
+    Top = 239
   end
 end
