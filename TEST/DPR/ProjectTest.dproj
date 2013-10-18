@@ -612,6 +612,12 @@
 			<DCCReference Include="..\..\Forms\PositionLevelEdit.pas">
 				<Form>PositionLevelEditForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\StaffList.pas">
+				<Form>StaffListForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\StaffListEdit.pas">
+				<Form>StaffListEditForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

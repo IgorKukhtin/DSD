@@ -604,6 +604,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPositionLevelForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionLevelEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPositionLevelEditForm');
+  //штатное расписание
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStaffListForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStaffListEditForm');
 end;
 
 procedure TLoadFormTest.LoadPersonalFormTest;

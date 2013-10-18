@@ -233,7 +233,9 @@ uses
   SheetWorkTime in '..\..\Forms\SheetWorkTime.pas' {SheetWorkTimeForm},
   SheetWorkTimeJournal in '..\..\Forms\SheetWorkTimeJournal.pas' {SheetWorkTimeJournalForm},
   PositionLevel in '..\..\Forms\PositionLevel.pas' {PositionLevelForm},
-  PositionLevelEdit in '..\..\Forms\PositionLevelEdit.pas' {PositionLevelEditForm};
+  PositionLevelEdit in '..\..\Forms\PositionLevelEdit.pas' {PositionLevelEditForm},
+  StaffList in '..\..\Forms\StaffList.pas' {StaffListForm},
+  StaffListEdit in '..\..\Forms\StaffListEdit.pas' {StaffListEditForm};
 
 {$R *.RES}
 
