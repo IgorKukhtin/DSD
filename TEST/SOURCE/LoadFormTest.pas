@@ -77,6 +77,7 @@ type
     procedure LoadRateFuelKindFormTest;
     procedure LoadFreightFormTest;
     procedure LoadWorkTimeKindFormTest;
+    procedure LoadSheetWorkTimeFormTest;
     procedure LoadUnionFormTest;
   end;
 
@@ -248,6 +249,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TUserEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStatusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStatusForm');
+end;
+
+procedure TLoadFormTest.LoadSheetWorkTimeFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeJournalForm');
 end;
 
 procedure TLoadFormTest.LoadSaleFormTest;
@@ -585,10 +594,21 @@ end;
 
 procedure TLoadFormTest.LoadPositionFormTest;
 begin
+  // должности
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPositionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPositionEditForm');
+  // Разряд должности
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionLevelForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPositionLevelForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionLevelEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPositionLevelEditForm');
+  //штатное расписание
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStaffListForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStaffListEditForm');
 end;
 
 procedure TLoadFormTest.LoadPersonalFormTest;

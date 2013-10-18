@@ -1,11 +1,18 @@
-inherited SendOnPriceForm: TSendOnPriceForm
+object SendOnPriceForm: TSendOnPriceForm
+  Left = 0
+  Top = 0
   Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077' '
   ClientHeight = 396
   ClientWidth = 924
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
   KeyPreview = True
+  OldCreateOrder = False
   PopupMenu = PopupMenu
-  ExplicitWidth = 932
-  ExplicitHeight = 423
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -428,6 +435,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 16
@@ -443,12 +451,14 @@ inherited SendOnPriceForm: TSendOnPriceForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inShowAll'
+        Value = Null
         DataType = ftBoolean
         ParamType = ptInput
       end>
@@ -722,35 +732,42 @@ inherited SendOnPriceForm: TSendOnPriceForm
     Params = <
       item
         Name = 'inId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'InvNumber'
+        Value = ''
         Component = edInvNumber
       end
       item
         Name = 'OperDate'
+        Value = 0d
         Component = edOperDate
       end
       item
         Name = 'FromId'
+        Value = ''
         Component = dsdGuidesFrom
         ComponentItem = 'Key'
       end
       item
         Name = 'FromName'
+        Value = ''
         Component = dsdGuidesFrom
         ComponentItem = 'TextValue'
       end
       item
         Name = 'ToId'
+        Value = ''
         Component = dsdGuidesTo
         ComponentItem = 'Key'
       end
       item
         Name = 'ToName'
+        Value = ''
         Component = dsdGuidesTo
         ComponentItem = 'TextValue'
       end>
@@ -775,6 +792,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -806,6 +824,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       end
       item
         Name = 'inMovementId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -825,6 +844,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       end
       item
         Name = 'inAmountPartner'
+        Value = Null
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -837,21 +857,25 @@ inherited SendOnPriceForm: TSendOnPriceForm
       end
       item
         Name = 'inCountForPrice'
+        Value = Null
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inLiveWeight'
+        Value = Null
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inHeadCount'
+        Value = Null
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inGoodsKindId'
+        Value = Null
         ParamType = ptInput
       end>
     Left = 168

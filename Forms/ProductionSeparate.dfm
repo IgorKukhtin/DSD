@@ -1,11 +1,18 @@
-inherited ProductionSeparateForm: TProductionSeparateForm
+object ProductionSeparateForm: TProductionSeparateForm
+  Left = 0
+  Top = 0
   Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   ClientHeight = 396
   ClientWidth = 1028
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
   KeyPreview = True
+  OldCreateOrder = False
   PopupMenu = PopupMenu
-  ExplicitWidth = 1036
-  ExplicitHeight = 423
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -498,6 +505,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 280
@@ -517,12 +525,14 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inShowAll'
+        Value = Null
         DataType = ftBoolean
         ParamType = ptInput
       end>
@@ -700,35 +710,42 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     Params = <
       item
         Name = 'inId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'InvNumber'
+        Value = ''
         Component = edInvNumber
       end
       item
         Name = 'OperDate'
+        Value = 0d
         Component = edOperDate
       end
       item
         Name = 'FromId'
+        Value = ''
         Component = dsdGuidesFrom
         ComponentItem = 'Key'
       end
       item
         Name = 'FromName'
+        Value = ''
         Component = dsdGuidesFrom
         ComponentItem = 'TextValue'
       end
       item
         Name = 'ToId'
+        Value = ''
         Component = dsdGuidesTo
         ComponentItem = 'Key'
       end
       item
         Name = 'ToName'
+        Value = ''
         Component = dsdGuidesTo
         ComponentItem = 'TextValue'
       end>
@@ -753,6 +770,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -784,6 +802,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       end
       item
         Name = 'inMovementId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -803,6 +822,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       end
       item
         Name = 'inAmountPartner'
+        Value = Null
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -815,21 +835,25 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       end
       item
         Name = 'inCountForPrice'
+        Value = Null
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inLiveWeight'
+        Value = Null
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inHeadCount'
+        Value = Null
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inGoodsKindId'
+        Value = Null
         ParamType = ptInput
       end>
     Left = 120

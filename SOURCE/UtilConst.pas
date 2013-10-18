@@ -30,7 +30,8 @@ var
 const
 
   gc_isDebugMode: boolean = false; {режим отладки}
-  gc_isShowTimeMode: boolean = false; {режим отладки}
+  gc_isShowTimeMode: boolean = false; {режим времени}
+  gc_isSetDefault: boolean = false;
   gc_Minute : real = (1/24)/60;
   gc_Test : boolean = false; {константа - тест ли это}
   gc_NewFormTest : boolean = false; {вставлять ли формы по новому}

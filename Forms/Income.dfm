@@ -1,11 +1,18 @@
-inherited IncomeForm: TIncomeForm
+object IncomeForm: TIncomeForm
+  Left = 0
+  Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 462
   ClientWidth = 971
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
   KeyPreview = True
+  OldCreateOrder = False
   PopupMenu = PopupMenu
-  ExplicitWidth = 987
-  ExplicitHeight = 497
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -666,8 +673,8 @@ inherited IncomeForm: TIncomeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')

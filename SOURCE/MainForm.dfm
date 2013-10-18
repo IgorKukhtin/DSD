@@ -13,6 +13,7 @@ object MainForm: TMainForm
   OldCreateOrder = False
   Position = poDesigned
   OnCreate = FormCreate
+  OnKeyDown = FormKeyDown
   PixelsPerInch = 96
   TextHeight = 13
   object dxBarManager: TdxBarManager
@@ -766,11 +767,19 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbPositionLevel'
+        end
+        item
+          Visible = True
           ItemName = 'bbMember'
         end
         item
           Visible = True
           ItemName = 'bbWorkTimeKind'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStaffList'
         end
         item
           Visible = True
@@ -822,6 +831,14 @@ object MainForm: TMainForm
     end
     object bbFrom_byIncomeFuel: TdxBarButton
       Action = actFrom_byIncomeFuel
+      Category = 0
+    end
+    object bbPositionLevel: TdxBarButton
+      Action = actPositionLevel
+      Category = 0
+    end
+    object bbStaffList: TdxBarButton
+      Action = actStaffList
       Category = 0
     end
   end
@@ -881,6 +898,14 @@ object MainForm: TMainForm
       Caption = #1056#1072#1089#1093#1086#1076' '#1076#1077#1085#1077#1075' '#1089' '#1087#1086#1076#1086#1090#1095#1077#1090#1072' '#1085#1072' '#1087#1086#1076#1086#1090#1095#1077#1090
       Hint = #1056#1072#1089#1093#1086#1076' '#1076#1077#1085#1077#1075' '#1089' '#1087#1086#1076#1086#1090#1095#1077#1090#1072' '#1085#1072' '#1087#1086#1076#1086#1090#1095#1077#1090
       FormName = 'TPersonalSendCashJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actStaffList: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      Caption = #1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077
+      Hint = #1096#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077
+      FormName = 'TStaffListForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -1404,7 +1429,7 @@ object MainForm: TMainForm
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       Caption = #1058#1072#1073#1077#1083#1100' '#1091#1095#1077#1090#1072' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080
       Hint = #1058#1072#1073#1077#1083#1100' '#1091#1095#1077#1090#1072' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080
-      FormName = 'TSheetWorkTimeForm'
+      FormName = 'TSheetWorkTimeJournalForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -1429,6 +1454,14 @@ object MainForm: TMainForm
       Caption = #1050#1090#1086' '#1079#1072#1087#1088#1072#1074#1083#1103#1083
       Hint = #1050#1090#1086' '#1079#1072#1087#1088#1072#1074#1083#1103#1083
       FormName = 'TFrom_byIncomeFuelForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actPositionLevel: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      Caption = #1056#1072#1079#1088#1103#1076#1099' '#1076#1086#1083#1078#1085#1086#1089#1090#1077#1081' '
+      Hint = #1056#1072#1079#1088#1103#1076#1099' '#1076#1086#1083#1078#1085#1086#1089#1090#1077#1081' '
+      FormName = 'TPositionLevelForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -1458,7 +1491,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.14'
+    Version = '4.12'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
@@ -6362,8 +6395,8 @@ object MainForm: TMainForm
     PageBreaks = True
     EmptyLines = True
     SuppressPageHeadersFooters = False
-    Left = 48
-    Top = 176
+    Left = 56
+    Top = 144
   end
   object frxXMLExport: TfrxXMLExport
     UseFileCache = True
@@ -6376,7 +6409,7 @@ object MainForm: TMainForm
     SuppressPageHeadersFooters = False
     RowsCount = 0
     Split = ssNotSplit
-    Left = 64
+    Left = 56
     Top = 192
   end
   object frxRTFExport: TfrxRTFExport

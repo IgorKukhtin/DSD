@@ -20,7 +20,7 @@ type
     FAfterInsert: TDataSetNotifyEvent;
     procedure OnAfterInsert(DataSet: TDataSet);
     procedure OnDblClick(Sender: TObject);
-    procedure OnKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure OnKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState); virtual;
   protected
     property OnDblClickActionList: TActionItemList read FOnDblClickActionList write FOnDblClickActionList;
     property ActionItemList: TActionItemList read FActionItemList write FActionItemList;
@@ -68,12 +68,13 @@ type
   TdsdDBViewAddOn = class(TCustomDBControlAddOn)
   private
     FBackGroundStyle: TcxStyle;
-    FView: TcxGridDBTableView;
+    FView: TcxGridTableView;
     FonExit: TNotifyEvent;
     // контрол для ввода условия фильтра
     edFilter: TcxTextEdit;
     procedure OnKeyPress(Sender: TObject; var Key: Char);
-    procedure SetView(const Value: TcxGridDBTableView); virtual;
+    procedure OnKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState); override;
+    procedure SetView(const Value: TcxGridTableView); virtual;
     procedure edFilterExit(Sender: TObject);
     procedure edFilterKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     // процедура устанавливает контрол для внесения значения фильтра и позиционируется на заголовке колонки
@@ -97,8 +98,9 @@ type
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
   published
-    property View: TcxGridDBTableView read FView write SetView;
+    property View: TcxGridTableView read FView write SetView;
     property OnDblClickActionList;
     property ActionItemList;
     property SortImages;
@@ -107,15 +109,18 @@ type
   TCrossDBViewAddOn = class(TdsdDBViewAddOn)
   private
     FHeaderDataSet: TDataSet;
-    FTemplateColumn: TcxGridDBColumn;
+    FTemplateColumn: TcxGridColumn;
     FHeaderColumnName: String;
     FFirstOpen: boolean;
     FBeforeOpen: TDataSetNotifyEvent;
     FEditing: TcxGridEditingEvent;
+    FFocusedItemChanged: TcxGridFocusedItemChangedEvent;
     procedure onEditing(Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem;
          var AAllow: Boolean);
     procedure onBeforeOpen(DataSet: TDataSet);
-    procedure SetView(const Value: TcxGridDBTableView); override;
+    procedure SetView(const Value: TcxGridTableView); override;
+    procedure FocusedItemChanged(Sender: TcxCustomGridTableView;
+                                 APrevFocusedItem, AFocusedItem: TcxCustomGridTableItem);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
@@ -126,7 +131,7 @@ type
     // Поле в HeaderDataSet с названиями колонок кроса
     property HeaderColumnName: String read FHeaderColumnName write FHeaderColumnName;
     // Шаблон для Cross колонок
-    property TemplateColumn: TcxGridDBColumn read FTemplateColumn write FTemplateColumn;
+    property TemplateColumn: TcxGridColumn read FTemplateColumn write FTemplateColumn;
   end;
 
   TdsdUserSettingsStorageAddOn = class(TComponent)
@@ -264,7 +269,8 @@ uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf, Windows,
      cxFilter, cxClasses, cxLookAndFeelPainters, cxCustomData,
      cxGridCommon, math, cxPropertiesStore, UtilConst, cxStorage,
      cxGeometry, cxCalendar, cxCheckBox, dxBar, cxButtonEdit, cxCurrencyEdit,
-     VCL.Menus, ParentForm, ChoicePeriod, cxGrid, cxDBData, Variants;
+     VCL.Menus, ParentForm, ChoicePeriod, cxGrid, cxDBData, Variants,
+     cxGridDBBandedTableView, cxGridDBDataDefinitions,cxGridBandedTableView;
 
 type
 
@@ -288,9 +294,10 @@ procedure TdsdDBTreeAddOn.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited;
-  if csDesigning in ComponentState then
+  if csDesigning in ComponentState then begin
     if (Operation = opRemove) and (AComponent = DBTreeList) then
        DBTreeList := nil;
+  end;
 end;
 
 procedure TdsdDBTreeAddOn.onColumnHeaderClick(Sender: TcxCustomTreeList;
@@ -403,14 +410,17 @@ end;
 procedure TdsdDBViewAddOn.OnCustomDrawCell(Sender: TcxCustomGridTableView;
   ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
   var ADone: Boolean);
-var Column: TcxGridDBColumn;
+var Column: TcxGridColumn;
 begin
   if AViewInfo.Focused then begin
      ACanvas.Brush.Color := clHighlight;
      ACanvas.Font.Color := clHighlightText;
   end;
   // работаем со свойством Удален
-  Column := FView.GetColumnByFieldName(FErasedFieldName);
+  if (FView is TcxGridDBTableView) then
+      Column := TcxGridDBTableView(FView).GetColumnByFieldName(FErasedFieldName);
+  if (FView is TcxGridDBBandedTableView) then
+      Column := TcxGridDBBandedTableView(FView).GetColumnByFieldName(FErasedFieldName);
   if Assigned(Column) then
      if not VarIsNull(AViewInfo.GridRecord.Values[Column.Index])
        and AViewInfo.GridRecord.Values[Column.Index] then
@@ -484,6 +494,23 @@ begin
      FView.Styles.Background := nil
 end;
 
+destructor TdsdDBViewAddOn.Destroy;
+begin
+  if Assigned(FView) then begin
+    FView.OnKeyDown := nil;
+    FView.OnKeyPress := nil;
+    FView.OnCustomDrawColumnHeader := nil;
+    FView.DataController.Filter.OnChanged := nil;
+    FView.OnColumnHeaderClick := nil;
+    FView.OnDblClick := nil;
+    FView.OnCustomDrawCell := nil;
+    if Assigned(TcxDBDataController(FView.DataController).DataSource) then
+       if Assigned(TcxDBDataController(FView.DataController).DataSource.DataSet) then
+          TcxDBDataController(FView.DataController).DataSource.DataSet.AfterInsert := nil;
+  end;
+  inherited;
+end;
+
 procedure TdsdDBViewAddOn.edFilterExit(Sender: TObject);
 begin
   edFilter.Visible:=false;
@@ -537,7 +564,7 @@ var
   FilterCriteriaItem: TcxFilterCriteriaItem;
 begin
   edFilter.Visible := false;
-  with FView.DataController, Filter.Root do begin
+  with TcxGridDBDataController(FView.DataController), Filter.Root do begin
     FilterCriteriaItem := GetFilterItem(GetItem(Controller.FocusedItemIndex));
     if Assigned(FilterCriteriaItem) then begin
        FilterCriteriaItem.Value := '%' + edFilter.Text + '%';
@@ -554,11 +581,17 @@ procedure TdsdDBViewAddOn.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
   inherited;
-  if csDesigning in ComponentState then
-    if (Operation = opRemove) and (AComponent = FView) then begin
-       FView := nil;
-       FonExit := nil;
-    end;
+  if (Operation = opRemove) and (AComponent = FView) then begin
+     FView := nil;
+  end;
+end;
+
+procedure TdsdDBViewAddOn.OnKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (Key = VK_ESCAPE) and (View.DataController.Filter.Active) then
+     View.DataController.Filter.Clear;
+  inherited;
 end;
 
 procedure TdsdDBViewAddOn.OnKeyPress(Sender: TObject; var Key: Char);
@@ -574,7 +607,7 @@ begin
   end;
 end;
 
-procedure TdsdDBViewAddOn.SetView(const Value: TcxGridDBTableView);
+procedure TdsdDBViewAddOn.SetView(const Value: TcxGridTableView);
 begin
   FView := Value;
   if Assigned(FView) then begin
@@ -590,10 +623,10 @@ begin
     FView.OnColumnHeaderClick := OnColumnHeaderClick;
     FView.OnDblClick := OnDblClick;
     FView.OnCustomDrawCell := OnCustomDrawCell;
-    if Assigned(FView.DataController.DataSource) then
-       if Assigned(FView.DataController.DataSource.DataSet) then begin
-          FAfterInsert := FView.DataController.DataSource.DataSet.AfterInsert;
-          FView.DataController.DataSource.DataSet.AfterInsert := OnAfterInsert;
+    if Assigned(TcxDBDataController(FView.DataController).DataSource) then
+       if Assigned(TcxDBDataController(FView.DataController).DataSource.DataSet) then begin
+          FAfterInsert := TcxDBDataController(FView.DataController).DataSource.DataSet.AfterInsert;
+          TcxDBDataController(FView.DataController).DataSource.DataSet.AfterInsert := OnAfterInsert;
        end;
   end;
 end;
@@ -639,6 +672,8 @@ var
   FormName: string;
   GridFooter: boolean;
 begin
+  if gc_isSetDefault then
+     exit;
   if FForm is TParentForm then
      FormName := TParentForm(FForm).FormClassName
   else
@@ -651,24 +686,18 @@ begin
       for I := 0 to ChildNodes.Count - 1 do begin
         if ChildNodes[i].NodeName = 'cxGridView' then begin
            GridView := FForm.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxCustomGridView;
-           if Assigned(GridView) then begin
-              // Это свойство не восстанавливать
-              GridFooter := TcxGridDBTableView(GridView).OptionsView.Footer;
+           if Assigned(GridView) then
               GridView.RestoreFromStream(TStringStream.Create(gfStrXmlToStr(XMLToAnsi(ChildNodes[i].GetAttribute('data')))));
-              TcxGridDBTableView(GridView).OptionsView.Footer := GridFooter;
-           end;
         end;
         if ChildNodes[i].NodeName = 'cxTreeList' then begin
            TreeList := FForm.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxDBTreeList;
-           if Assigned(TreeList) then begin
+           if Assigned(TreeList) then
               TreeList.RestoreFromStream(TStringStream.Create(gfStrXmlToStr(XMLToAnsi(ChildNodes[i].GetAttribute('data')))));
-           end;
         end;
         if ChildNodes[i].NodeName = 'dxBarManager' then begin
            BarManager := FForm.FindComponent(ChildNodes[i].GetAttribute('name')) as TdxBarManager;
-           if Assigned(BarManager) then begin
+           if Assigned(BarManager) then
               BarManager.LoadFromStream(TStringStream.Create(gfStrXmlToStr(XMLToAnsi(ChildNodes[i].GetAttribute('data')))));
-           end;
         end;
         if ChildNodes[i].NodeName = 'cxPropertiesStore' then begin
            PropertiesStore := FForm.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxPropertiesStore;
@@ -804,7 +833,6 @@ end;
 
 procedure THeaderSaver.OnExit(Sender: TObject);
 var isChanged: boolean;
-   S:string;
 begin
   isChanged := false;
   if not Assigned(IdParam) then
@@ -818,8 +846,7 @@ begin
   if Sender is TcxCurrencyEdit then
      isChanged := FEnterValue.Values[TComponent(Sender).Name] <> (Sender as TcxCurrencyEdit).Text;
   if Sender is TcxDateEdit then begin
-     s := (Sender as TcxDateEdit).Text;
-     isChanged := FEnterValue.Values[TComponent(Sender).Name] <> s;//(Sender as TcxDateEdit).Text;
+     isChanged := FEnterValue.Values[TComponent(Sender).Name] <> (Sender as TcxDateEdit).Text;
   end;
   if Sender is TcxCheckBox then
      isChanged := FEnterValue.Values[TComponent(Sender).Name] <> BoolToStr((Sender as TcxCheckBox).Checked);
@@ -989,9 +1016,10 @@ end;
 procedure TCustomDBControlAddOn.OnKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 var i: integer;
-begin
+begin                       
   if Assigned(FOnKeyDown) then
      FOnKeyDown(Sender, Key, Shift);
+
   // Сначала проверим все action
   // и если там нет ничего, то тогда идем дальше
   for I := 0 to ActionItemList.Count - 1 do
@@ -1131,7 +1159,24 @@ end;
 constructor TCrossDBViewAddOn.Create(AOwner: TComponent);
 begin
   inherited;
-  FFirstOpen := false;
+  FFirstOpen := true;
+end;
+
+procedure TCrossDBViewAddOn.FocusedItemChanged(Sender: TcxCustomGridTableView;
+  APrevFocusedItem, AFocusedItem: TcxCustomGridTableItem);
+begin
+  if Assigned(FFocusedItemChanged) then
+     FFocusedItemChanged(Sender, APrevFocusedItem, AFocusedItem);
+  if TcxDBDataController(FView.DataController).DataSource.State = dsEdit then begin
+     // Если ошибка, то вернем в прошлую ячейку
+     try
+       TcxDBDataController(FView.DataController).DataSource.DataSet.Post;
+     except
+       TcxDBDataController(FView.DataController).DataSource.DataSet.Cancel;
+       FView.Controller.FocusedItem := APrevFocusedItem;
+       raise;
+     end;
+  end;
 end;
 
 procedure TCrossDBViewAddOn.Notification(AComponent: TComponent;
@@ -1149,21 +1194,30 @@ end;
 
 procedure TCrossDBViewAddOn.onBeforeOpen(DataSet: TDataSet);
 var NewColumnIndex: integer;
+    Column: TcxGridColumn;
 begin
   if Assigned(FBeforeOpen) then
      FBeforeOpen(DataSet);
-  if not FFirstOpen then
+  if FFirstOpen then
     try
       // Заполняем заголовки колонок
       if Assigned(HeaderDataSet) and HeaderDataSet.Active then begin
+         if not Assigned(HeaderDataSet.Fields.FindField(HeaderColumnName)) then
+            raise Exception.Create('HeaderDataSet не имеет поля ' + HeaderColumnName);
+         if not Assigned(TemplateColumn) then
+            raise Exception.Create('TemplateColumn не установлен ');
          HeaderDataSet.First;
          NewColumnIndex := 1;
          while not HeaderDataSet.Eof do begin
-           with View.CreateColumn  do begin
+           Column := View.CreateColumn;
+           with Column do begin
              Assign(TemplateColumn);
              Caption := HeaderDataSet.FieldByName(HeaderColumnName).AsString;
-             DataBinding.FieldName := TemplateColumn.DataBinding.FieldName + '_' + IntToStr(NewColumnIndex);
              Width := TemplateColumn.Width;
+             if Column is TcxGridDBBandedColumn then
+                TcxGridDBBandedColumn(Column).DataBinding.FieldName := TcxGridDBBandedColumn(TemplateColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
+             if Column is TcxGridDBColumn then
+                TcxGridDBColumn(Column).DataBinding.FieldName := TcxGridDBColumn(TemplateColumn).DataBinding.FieldName + IntToStr(NewColumnIndex);
            end;
            inc(NewColumnIndex);
            HeaderDataSet.Next;
@@ -1173,7 +1227,7 @@ begin
       if Assigned(TemplateColumn) then
          TemplateColumn.Free;
     finally
-      FFirstOpen := true;
+      FFirstOpen := false;
     end;
 end;
 
@@ -1186,14 +1240,16 @@ begin
      HeaderDataSet.Locate(HeaderColumnName, Aitem.Caption, []);
 end;
 
-procedure TCrossDBViewAddOn.SetView(const Value: TcxGridDBTableView);
+procedure TCrossDBViewAddOn.SetView(const Value: TcxGridTableView);
 begin
   inherited;
   if Value <> nil then begin
-     FBeforeOpen := Value.DataController.DataSource.DataSet.BeforeOpen;
-     Value.DataController.DataSource.DataSet.BeforeOpen := onBeforeOpen;
+     FBeforeOpen := TcxDBDataController(Value.DataController).DataSource.DataSet.BeforeOpen;
+     TcxDBDataController(Value.DataController).DataSource.DataSet.BeforeOpen := onBeforeOpen;
      FEditing := Value.OnEditing;
      Value.OnEditing := onEditing;
+     FFocusedItemChanged := Value.OnFocusedItemChanged;
+     Value.OnFocusedItemChanged := FocusedItemChanged;
   end;
 end;
 

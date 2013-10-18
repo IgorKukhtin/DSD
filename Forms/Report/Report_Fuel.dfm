@@ -1,9 +1,16 @@
-inherited Report_FuelForm: TReport_FuelForm
+object Report_FuelForm: TReport_FuelForm
+  Left = 0
+  Top = 0
   Caption = #1056#1072#1089#1093#1086#1076' '#1090#1086#1087#1083#1080#1074#1072
   ClientHeight = 395
   ClientWidth = 1329
-  ExplicitWidth = 1337
-  ExplicitHeight = 422
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid

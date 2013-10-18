@@ -1,11 +1,18 @@
-inherited ZakazExternalForm: TZakazExternalForm
+object ZakazExternalForm: TZakazExternalForm
+  Left = 0
+  Top = 0
   Caption = #1047#1072#1103#1074#1082#1072' ('#1089#1090#1086#1088#1085#1085#1103#1103')'
   ClientHeight = 405
   ClientWidth = 1028
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
   KeyPreview = True
+  OldCreateOrder = False
   PopupMenu = PopupMenu
-  ExplicitWidth = 1036
-  ExplicitHeight = 432
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -257,6 +264,7 @@ inherited ZakazExternalForm: TZakazExternalForm
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 176
@@ -272,12 +280,14 @@ inherited ZakazExternalForm: TZakazExternalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inShowAll'
+        Value = False
         Component = BooleanStoredProcAction
         DataType = ftBoolean
         ParamType = ptInput
@@ -478,34 +488,41 @@ inherited ZakazExternalForm: TZakazExternalForm
     Params = <
       item
         Name = 'inId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'InvNumber'
+        Value = ''
         Component = edInvNumber
       end
       item
         Name = 'OperDate'
+        Value = 0d
         Component = edOperDate
       end
       item
         Name = 'FromId'
+        Value = ''
         Component = dsdGuidesFrom
         ComponentItem = 'Key'
       end
       item
         Name = 'FromName'
+        Value = ''
         Component = dsdGuidesFrom
         ComponentItem = 'TextValue'
       end
       item
         Name = 'ToId'
+        Value = Null
         ComponentItem = 'Key'
       end
       item
         Name = 'ToName'
+        Value = Null
         ComponentItem = 'TextValue'
       end>
     Left = 208
@@ -525,6 +542,7 @@ inherited ZakazExternalForm: TZakazExternalForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -545,6 +563,7 @@ inherited ZakazExternalForm: TZakazExternalForm
       end
       item
         Name = 'inMovementId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -564,6 +583,7 @@ inherited ZakazExternalForm: TZakazExternalForm
       end
       item
         Name = 'inAmountPartner'
+        Value = Null
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -576,21 +596,25 @@ inherited ZakazExternalForm: TZakazExternalForm
       end
       item
         Name = 'inCountForPrice'
+        Value = Null
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inLiveWeight'
+        Value = Null
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inHeadCount'
+        Value = Null
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inGoodsKindId'
+        Value = Null
         ParamType = ptInput
       end>
     Left = 112

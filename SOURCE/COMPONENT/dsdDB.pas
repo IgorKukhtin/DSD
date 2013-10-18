@@ -19,7 +19,10 @@ type
     function GetValue: Variant;
     procedure SetValue(const Value: Variant);
     procedure SetComponent(const Value: TComponent);
-    procedure SetInDataSet(const DataSet: TDataSet; const Value: Variant);
+    procedure SetInDataSet(const DataSet: TDataSet; const FieldName: string; const Value: Variant);
+    function GetFromDataSet(const DataSet: TDataSet; const FieldName: string): Variant;
+    procedure SetInCrossDBViewAddOn(const Value: Variant);
+    function GetFromCrossDBViewAddOn: Variant;
   protected
     function GetDisplayName: string; override;
     procedure AssignParam(Param: TdsdParam);
@@ -67,6 +70,8 @@ type
   private
     FDataSet: TClientDataSet;
     procedure SetDataSet(const Value: TClientDataSet);
+  protected
+    function GetDisplayName: string; override;
   published
     property DataSet: TClientDataSet read FDataSet write SetDataSet;
   end;
@@ -119,7 +124,8 @@ implementation
 
 uses Storage, CommonData, TypInfo, UtilConvert, SysUtils, cxTextEdit, VCL.Forms,
      XMLDoc, XMLIntf, StrUtils, cxCurrencyEdit, dsdGuides, cxCheckBox, cxCalendar,
-     Variants, XSBuiltIns, UITypes, dsdAction, Defaults, UtilConst, Windows, Dialogs;
+     Variants, XSBuiltIns, UITypes, dsdAction, Defaults, UtilConst, Windows, Dialogs,
+     dsdAddOn, cxDBData;
 
 procedure Register;
 begin
@@ -482,6 +488,29 @@ begin
   result := Name
 end;
 
+function TdsdParam.GetFromCrossDBViewAddOn: Variant;
+var CrossDBViewAddOn: TCrossDBViewAddOn;
+begin
+  CrossDBViewAddOn := TCrossDBViewAddOn(Component);
+  if CrossDBViewAddOn.HeaderDataSet.Active then
+     result := GetFromDataSet(TcxDBDataController(CrossDBViewAddOn.View.DataController).DataSet, ComponentItem + IntToStr(CrossDBViewAddOn.HeaderDataSet.RecNo));
+end;
+
+function TdsdParam.GetFromDataSet(const DataSet: TDataSet; const FieldName: string): Variant;
+begin
+  if DataSet.Active then begin
+    Result := DataSet.FieldByName(FieldName).Value;
+    if VarIsNull(Result) then
+    case DataType of
+      ftString: Result := '';
+      ftInteger: Result := 0;
+      ftBoolean: Result := false;
+      ftFloat: Result := 0;
+      ftDateTime: Result := Now;
+    end;
+  end;
+end;
+
 function TdsdParam.GetValue: Variant;
 // Если указан Component, то параметры берутся из него
 // иначе из значения Value
@@ -489,19 +518,12 @@ var DateTime: TDateTime;
 begin
   if Assigned(FComponent) then begin
      // В зависимости от типа компонента Value содержится в разных property
+     if Component is TCrossDBViewAddOn then
+        result := GetFromCrossDBViewAddOn;
      if Component is TcxTextEdit then
         Result := (Component as TcxTextEdit).Text;
-     if (Component is TDataSet) and (Component as TDataSet).Active then begin
-        Result := (Component as TDataSet).FieldByName(ComponentItem).Value;
-        if VarIsNull(Result) then
-        case DataType of
-          ftString: Result := '';
-          ftInteger: Result := 0;
-          ftBoolean: Result := false;
-          ftFloat: Result := 0;
-          ftDateTime: Result := Now;
-        end;
-     end;
+     if (Component is TDataSet) then
+        Result := GetFromDataSet(TDataSet(Component), ComponentItem);
      if (Component is TdsdFormParams) then
         if Assigned((Component as TdsdFormParams).ParamByName(ComponentItem)) then
            Result := (Component as TdsdFormParams).ParamByName(ComponentItem).Value
@@ -545,13 +567,21 @@ begin
   end
 end;
 
-procedure TdsdParam.SetInDataSet(const DataSet: TDataSet; const Value: Variant);
+procedure TdsdParam.SetInCrossDBViewAddOn(const Value: Variant);
+var CrossDBViewAddOn: TCrossDBViewAddOn;
+begin
+  CrossDBViewAddOn := TCrossDBViewAddOn(Component);
+  if CrossDBViewAddOn.HeaderDataSet.Active then
+     SetInDataSet(TcxDBDataController(CrossDBViewAddOn.View.DataController).DataSet, ComponentItem + IntToStr(CrossDBViewAddOn.HeaderDataSet.RecNo), Value);
+end;
+
+procedure TdsdParam.SetInDataSet(const DataSet: TDataSet; const FieldName: string; const Value: Variant);
 var Field: TField;
 begin
   if DataSet.Active then begin
     if DataSet.State <> dsEdit then
        DataSet.Edit;
-    Field := DataSet.FieldByName(ComponentItem);
+    Field := DataSet.FieldByName(FieldName);
     if Assigned(Field) then begin
        // в случае дробного числа и если строка, то надо конвертить
        if (Field.DataType in [ftFloat]) and (VarType(FValue) in [vtString, vtClass]) then
@@ -571,7 +601,7 @@ begin
             Field.Value := FValue;
     end
     else
-      raise Exception.Create('У дата сета "' + Component.Name + '" нет поля "' + ComponentItem + '"');
+      raise Exception.Create('У дата сета "' + Component.Name + '" нет поля "' + FieldName + '"');
   end;
 end;
 
@@ -580,8 +610,10 @@ begin
   FValue := Value;
   // передаем значение параметра дальше по цепочке
   if Assigned(FComponent) then begin
+     if (Component is TCrossDBViewAddOn) then
+        SetInCrossDBViewAddOn(FValue);
      if (Component is TDataSet) then
-        SetInDataSet(TDataSet(Component), FValue);
+        SetInDataSet(TDataSet(Component), ComponentItem, FValue);
      if Component is TcxTextEdit then
         (Component as TcxTextEdit).Text := FValue;
      if Component is TdsdFormParams then
@@ -669,6 +701,14 @@ begin
 end;
 
 { TdsdDataSetLink }
+
+function TdsdDataSetLink.GetDisplayName: string;
+begin
+  if Assigned(FDataSet) then
+     Result := FDataSet.Name
+  else
+     Result := inherited;
+end;
 
 procedure TdsdDataSetLink.SetDataSet(const Value: TClientDataSet);
 begin

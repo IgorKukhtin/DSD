@@ -202,8 +202,13 @@ type
     frxXLSExport: TfrxXLSExport;
     frxXMLExport: TfrxXMLExport;
     frxRTFExport: TfrxRTFExport;
+    actPositionLevel: TdsdOpenForm;
+    bbPositionLevel: TdxBarButton;
+    actStaffList: TdsdOpenForm;
+    bbStaffList: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     procedure OnException(Sender: TObject; E: Exception);
   public
@@ -215,7 +220,7 @@ var
 
 implementation
 
-uses ParentForm, Storage, CommonData, MessagesUnit;
+uses ParentForm, Storage, CommonData, MessagesUnit, Menus, UtilConst;
 
 {$R DevExpressRus.res}
 
@@ -227,6 +232,35 @@ begin
   cxLocalizer.Active:= True;
   cxLocalizer.Locale:= 1049;
   Application.OnException := OnException;
+end;
+
+procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  // Ctrl + Shift + S
+  if ShortCut(Key, Shift) = 24659 then begin
+     gc_isDebugMode := not gc_isDebugMode;
+     if gc_isDebugMode then
+        ShowMessage('Установлен режим отладки')
+      else
+        ShowMessage('Снят режим отладки');
+  end;
+  // Ctrl + Shift + T
+  if ShortCut(Key, Shift) = 24660 then begin
+     gc_isShowTimeMode := not gc_isShowTimeMode;
+     if gc_isShowTimeMode then
+        ShowMessage('Установлен режим проверки времени')
+      else
+        ShowMessage('Снят режим проверки времени');
+  end;
+  // Ctrl + Shift + D
+  if ShortCut(Key, Shift) = 24644 then begin
+     gc_isSetDefault := not gc_isSetDefault;
+     if gc_isSetDefault then
+        ShowMessage('Установки пользователя не загружаются')
+      else
+        ShowMessage('Установки пользователя загружаются');
+  end;
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);

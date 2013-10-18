@@ -37,10 +37,11 @@ type
 implementation
 
 uses dsdDB, TypInfo, Db, dsdGuides, cxTextEdit, cxCurrencyEdit, cxCheckBox,
-     cxCalendar, cxButtonEdit, dsdAction, ChoicePeriod;
+     cxCalendar, cxButtonEdit, dsdAction, ChoicePeriod, ParentForm;
 
 procedure Register;
 begin
+   RegisterCustomModule(TParentForm, TCustomModule);
    RegisterPropertyEditor(TypeInfo(String), TdsdParam, 'ComponentItem', TComponentItemTextProperty);
    RegisterPropertyEditor(TypeInfo(TFieldType), TdsdParam, 'DataType', TDataTypeProperty);
    RegisterPropertyEditor(TypeInfo(TComponent), TdsdParam, 'Component', TdsdParamComponentProperty);
@@ -64,6 +65,8 @@ begin
   Designer.GetComponentNames(GetTypeData(TypeInfo(TPeriodChoice)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxCheckBox)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TBooleanStoredProcAction)), Proc);
+  // и даже такой. ѕриходитс€ использовать дл€ кросса
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TCrossDBViewAddOn)), Proc);
 end;
 
 { TComponentItemTextProperty }
@@ -74,7 +77,7 @@ begin
   with TdsdParam(GetComponent(0)) do
        if Component <> nil then
           if (Component is TDataSet) or (Component is TdsdFormParams)
-             or (Component is TdsdGuides) then
+             or (Component is TdsdGuides) or (Component is TCrossDBViewAddOn) then
              Result := Result + [paValueList] - [paReadOnly];
 end;
 

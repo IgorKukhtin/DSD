@@ -1,9 +1,16 @@
-inherited SendJournalForm: TSendJournalForm
+object SendJournalForm: TSendJournalForm
+  Left = 0
+  Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1087#1077#1088#1077#1084#1077#1097#1077#1085#1080#1103
   ClientHeight = 427
   ClientWidth = 733
-  ExplicitWidth = 741
-  ExplicitHeight = 454
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -325,6 +332,7 @@ inherited SendJournalForm: TSendJournalForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
         end>
       isShowModal = False
       DataSource = DataSource
@@ -357,8 +365,8 @@ inherited SendJournalForm: TSendJournalForm
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 11
-      DataSource = DataSource
       Status = mtUncomplete
+      DataSource = DataSource
     end
     object actComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
@@ -370,8 +378,8 @@ inherited SendJournalForm: TSendJournalForm
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 12
-      DataSource = DataSource
       Status = mtComplete
+      DataSource = DataSource
     end
     object actSetErased: TdsdChangeMovementStatus
       Category = 'DSDLib'
@@ -383,8 +391,8 @@ inherited SendJournalForm: TSendJournalForm
       Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       ImageIndex = 13
-      DataSource = DataSource
       Status = mtDelete
+      DataSource = DataSource
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -405,12 +413,14 @@ inherited SendJournalForm: TSendJournalForm
     Params = <
       item
         Name = 'inStartDate'
+        Value = 41395d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
+        Value = 41395d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -431,6 +441,7 @@ inherited SendJournalForm: TSendJournalForm
       end
       item
         Name = 'inIsLastComplete'
+        Value = Null
         DataType = ftBoolean
         ParamType = ptInput
       end>

@@ -1,9 +1,16 @@
-inherited Report_AccountForm: TReport_AccountForm
+object Report_AccountForm: TReport_AccountForm
+  Left = 0
+  Top = 0
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' c'#1095#1077#1090#1091
   ClientHeight = 395
   ClientWidth = 1189
-  ExplicitWidth = 1197
-  ExplicitHeight = 422
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -443,18 +450,21 @@ inherited Report_AccountForm: TReport_AccountForm
     Params = <
       item
         Name = 'inStartDate'
+        Value = 41548d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
+        Value = 41557d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inAccountId'
+        Value = ''
         Component = AccountGuides
         ParamType = ptInput
       end>
@@ -505,12 +515,14 @@ inherited Report_AccountForm: TReport_AccountForm
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = AccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = AccountGuides
         ComponentItem = 'TextValue'
         DataType = ftString

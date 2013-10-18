@@ -229,7 +229,13 @@ uses
   CardFuel in '..\..\Forms\CardFuel.pas' {CardFuelForm},
   TicketFuel in '..\..\Forms\TicketFuel.pas' {TicketFuelForm},
   TicketFuelEdit in '..\..\Forms\TicketFuelEdit.pas' {TicketFuelEditForm},
-  CardFuelEdit in '..\..\Forms\CardFuelEdit.pas' {CardFuelEditForm};
+  CardFuelEdit in '..\..\Forms\CardFuelEdit.pas' {CardFuelEditForm},
+  SheetWorkTime in '..\..\Forms\SheetWorkTime.pas' {SheetWorkTimeForm},
+  SheetWorkTimeJournal in '..\..\Forms\SheetWorkTimeJournal.pas' {SheetWorkTimeJournalForm},
+  PositionLevel in '..\..\Forms\PositionLevel.pas' {PositionLevelForm},
+  PositionLevelEdit in '..\..\Forms\PositionLevelEdit.pas' {PositionLevelEditForm},
+  StaffList in '..\..\Forms\StaffList.pas' {StaffListForm},
+  StaffListEdit in '..\..\Forms\StaffListEdit.pas' {StaffListEditForm};
 
 {$R *.RES}
 

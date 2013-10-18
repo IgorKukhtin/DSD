@@ -1,9 +1,17 @@
-﻿inherited CardFuelEditForm: TCardFuelEditForm
+﻿object CardFuelEditForm: TCardFuelEditForm
+  Left = 0
+  Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1087#1083#1080#1074#1085#1099#1077' '#1082#1072#1088#1090#1099'>'
   ClientHeight = 435
   ClientWidth = 369
-  ExplicitWidth = 377
-  ExplicitHeight = 469
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -164,60 +172,53 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = Null
       end
       item
         Name = 'inCode'
-        Component = ceCode
-        DataType = ftInteger
-        ParamType = ptInput
         Value = 0.000000000000000000
+        Component = ceCode
+        ParamType = ptInput
       end
       item
         Name = 'inName'
+        Value = ''
         Component = edName
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inPersonalDriverId'
-        Component = PersonalDriverGuides
-        DataType = ftInteger
-        ParamType = ptInput
         Value = ''
+        Component = PersonalDriverGuides
+        ParamType = ptInput
       end
       item
         Name = 'inCarId'
-        Component = CarGuides
-        DataType = ftInteger
-        ParamType = ptInput
         Value = ''
+        Component = CarGuides
+        ParamType = ptInput
       end
       item
         Name = 'inPaidKindId'
-        Component = PaidKindGuides
-        DataType = ftInteger
-        ParamType = ptInput
         Value = ''
+        Component = PaidKindGuides
+        ParamType = ptInput
       end
       item
         Name = 'inJuridicalId'
-        Component = JuridicalGuides
-        DataType = ftInteger
-        ParamType = ptInput
         Value = ''
+        Component = JuridicalGuides
+        ParamType = ptInput
       end
       item
         Name = 'inGoodsId'
-        Component = GoodsGuides
-        DataType = ftInteger
-        ParamType = ptInput
         Value = ''
+        Component = GoodsGuides
+        ParamType = ptInput
       end>
     Left = 320
     Top = 40
@@ -226,9 +227,8 @@
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
-        ParamType = ptInputOutput
         Value = Null
+        ParamType = ptInputOutput
       end>
     Left = 208
     Top = 80
@@ -240,105 +240,86 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = Null
       end
       item
         Name = 'Code'
-        Component = ceCode
-        DataType = ftInteger
-        ParamType = ptOutput
         Value = 0.000000000000000000
+        Component = ceCode
       end
       item
         Name = 'Name'
+        Value = ''
         Component = edName
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'PersonalDriverId'
+        Value = ''
         Component = PersonalDriverGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'PersonalDriverName'
+        Value = ''
         Component = PersonalDriverGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'CarId'
+        Value = ''
         Component = CarGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'CarName'
+        Value = ''
         Component = CarGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'PaidKindId'
+        Value = ''
         Component = PaidKindGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'PaidKindName'
+        Value = ''
         Component = PaidKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'JuridicalId'
+        Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'JuridicalName'
+        Value = ''
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'GoodsId'
+        Value = ''
         Component = GoodsGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'GoodsName'
+        Value = ''
         Component = GoodsGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 320
     Top = 160
@@ -370,19 +351,19 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = GoodsGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = GoodsGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 207
     Top = 343
@@ -395,19 +376,19 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = PersonalDriverGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = PersonalDriverGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 183
     Top = 135
@@ -420,19 +401,19 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = CarGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = CarGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 167
     Top = 191
@@ -445,19 +426,19 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = PaidKindGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = PaidKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 215
     Top = 239
@@ -470,19 +451,19 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 159
     Top = 295

@@ -1,9 +1,16 @@
-inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
+object Report_MotionGoodsForm: TReport_MotionGoodsForm
+  Left = 0
+  Top = 0
   Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
   ClientHeight = 395
   ClientWidth = 1329
-  ExplicitWidth = 1337
-  ExplicitHeight = 422
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -601,18 +608,21 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
       GuiParams = <
         item
           Name = 'StartDate'
+          Value = 41395d
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
         end
         item
           Name = 'EndDate'
+          Value = 41395d
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
         end
         item
           Name = 'GoodsId'
+          Value = ''
           Component = GoodsGuides
           ComponentItem = 'Key'
           DataType = ftString
@@ -620,6 +630,7 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
         end
         item
           Name = 'GoodsName'
+          Value = ''
           Component = GoodsGuides
           ComponentItem = 'TextValue'
           DataType = ftString
@@ -627,33 +638,39 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
         end
         item
           Name = 'GoodsGroupId'
+          Value = ''
           Component = GoodsGroupGuides
           ComponentItem = 'Key'
         end
         item
           Name = 'GoodsGroupName'
+          Value = ''
           Component = GoodsGroupGuides
           ComponentItem = 'TextValue'
           DataType = ftString
         end
         item
           Name = 'UnitGroupId'
+          Value = ''
           Component = UnitGroupGuides
           ComponentItem = 'Key'
         end
         item
           Name = 'UnitGroupName'
+          Value = ''
           Component = UnitGroupGuides
           ComponentItem = 'TextValue'
           DataType = ftString
         end
         item
           Name = 'UnitId'
+          Value = ''
           Component = LocationGuides
           ComponentItem = 'Key'
         end
         item
           Name = 'UnitName'
+          Value = ''
           Component = LocationGuides
           ComponentItem = 'Key'
           DataType = ftString
@@ -672,36 +689,42 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
     Params = <
       item
         Name = 'inStartDate'
+        Value = 41395d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
+        Value = 41395d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inUnitGroupId'
+        Value = ''
         Component = UnitGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inLocationId'
+        Value = ''
         Component = LocationGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inGoodsGroupId'
+        Value = ''
         Component = GoodsGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inGoodsId'
+        Value = ''
         Component = GoodsGuides
         ComponentItem = 'Key'
         ParamType = ptInput
@@ -730,6 +753,7 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = GoodsGroupGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -737,6 +761,7 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = GoodsGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -753,6 +778,7 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = LocationGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -760,6 +786,7 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = LocationGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -783,6 +810,7 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = UnitGroupGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -790,6 +818,7 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = UnitGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -806,6 +835,7 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = GoodsGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -813,6 +843,7 @@ inherited Report_MotionGoodsForm: TReport_MotionGoodsForm
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = GoodsGuides
         ComponentItem = 'TextValue'
         DataType = ftString

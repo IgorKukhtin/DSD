@@ -1,10 +1,17 @@
-inherited TransportJournalForm: TTransportJournalForm
+object TransportJournalForm: TTransportJournalForm
+  Left = 0
+  Top = 0
   Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090'>'
   ClientHeight = 427
   ClientWidth = 1276
-  ExplicitWidth = 1284
-  ExplicitHeight = 454
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -355,6 +362,7 @@ inherited TransportJournalForm: TTransportJournalForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
         end>
       isShowModal = False
       DataSource = DataSource
@@ -388,8 +396,8 @@ inherited TransportJournalForm: TTransportJournalForm
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 11
-      DataSource = DataSource
       Status = mtUncomplete
+      DataSource = DataSource
     end
     object actComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
@@ -401,8 +409,8 @@ inherited TransportJournalForm: TTransportJournalForm
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 12
-      DataSource = DataSource
       Status = mtComplete
+      DataSource = DataSource
     end
     object actSetErased: TdsdChangeMovementStatus
       Category = 'DSDLib'
@@ -414,8 +422,8 @@ inherited TransportJournalForm: TTransportJournalForm
       Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       ImageIndex = 13
-      DataSource = DataSource
       Status = mtDelete
+      DataSource = DataSource
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -436,12 +444,14 @@ inherited TransportJournalForm: TTransportJournalForm
     Params = <
       item
         Name = 'inStartDate'
+        Value = 41395d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
+        Value = 41395d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

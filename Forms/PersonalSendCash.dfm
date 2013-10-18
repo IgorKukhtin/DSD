@@ -1,11 +1,18 @@
-inherited PersonalSendCashForm: TPersonalSendCashForm
+object PersonalSendCashForm: TPersonalSendCashForm
+  Left = 0
+  Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1056#1072#1089#1093#1086#1076' '#1076#1077#1085#1077#1075' '#1089' '#1087#1086#1076#1086#1090#1095#1077#1090#1072' '#1085#1072' '#1087#1086#1076#1086#1090#1095#1077#1090'>'
   ClientHeight = 396
   ClientWidth = 773
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
   KeyPreview = True
+  OldCreateOrder = False
   PopupMenu = PopupMenu
-  ExplicitWidth = 789
-  ExplicitHeight = 431
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -468,8 +475,8 @@ inherited PersonalSendCashForm: TPersonalSendCashForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')

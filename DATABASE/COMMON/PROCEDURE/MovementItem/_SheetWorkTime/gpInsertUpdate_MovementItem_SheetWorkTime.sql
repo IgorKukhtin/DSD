@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_SheetWorkTime()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime();
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(INTEGER, INTEGER, INTEGER, INTEGER, TDateTime, TVarChar, INTEGER, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SheetWorkTime(
  INOUT ioPersonalId          Integer   , -- Ключ Сотрудник
@@ -8,10 +8,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SheetWorkTime(
     IN inUnitId              Integer   , -- Подразделение
     IN inPersonalGroupId     Integer   , -- Группировка Сотрудника
     IN inStartDate           TDateTime , -- начальная дата
-
+ INOUT ioValue               TVarChar  , -- начальная дата
+    IN inTypeId              Integer   , 
     IN inSession             TVarChar    -- сессия пользователя
 )                              
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -22,15 +23,17 @@ BEGIN
 	-- проверка прав пользователя на вызов процедуры
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_SheetWorkTime());
     vbUserId := inSession;
-     
+
+    ioValue := '8/Заработало'::TVarChar;
+
      -- сохранили <Элемент документа>
      --ioId := lpInsertUpdate_MovementItem (vbMovementItemId_1, zc_MI_Master(), ioPersonalId, vbMovementId_1, inAmount_1, NULL);
      -- сохранили связь с <Типы рабочего времени>
      --PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_WorkTimeKind(), vbMovementItemId_1, inWorkTimeKindId_1);
 
-     PERFORM lpInsertUpdate_MovementItem_SheetWorkTime (InMovementItemId:= vbMovementItemId_1, inOperDate = inStartDate, inMovementId:= vbMovementId_1
-                                                      , inPersonalId:= ioPersonalId, inPositionId:= inPositionId, inPersonalGroupId=inPersonalGroupId, inUnitId=inUnitId
-                                                      , inAmount:= inAmount_1, inWorkTimeKindId:= inWorkTimeKindId_1);
+--     PERFORM lpInsertUpdate_MovementItem_SheetWorkTime (InMovementItemId:= vbMovementItemId_1, inOperDate = inStartDate, inMovementId:= vbMovementId_1
+  --                                                    , inPersonalId:= ioPersonalId, inPositionId:= inPositionId, inPersonalGroupId=inPersonalGroupId, inUnitId=inUnitId
+    --                                                  , inAmount:= inAmount_1, inWorkTimeKindId:= inWorkTimeKindId_1);
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
@@ -43,6 +46,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.10.13                         *
  03.10.13         *
 
 */
