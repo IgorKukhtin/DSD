@@ -453,7 +453,7 @@ object MainForm: TMainForm
       Top = 251
       Width = 115
       Height = 17
-      Caption = '4.5. '#1040#1074#1090#1086#1084#1086#1073#1080#1083#1080
+      Caption = '4.6. '#1040#1074#1090#1086#1084#1086#1073#1080#1083#1080
       TabOrder = 32
     end
     object cbRoute: TCheckBox
@@ -462,8 +462,17 @@ object MainForm: TMainForm
       Top = 271
       Width = 115
       Height = 17
-      Caption = '4.5. '#1052#1072#1088#1096#1088#1091#1090#1099
+      Caption = '4.7. '#1052#1072#1088#1096#1088#1091#1090#1099
       TabOrder = 33
+    end
+    object cbCardFuel: TCheckBox
+      Tag = 10
+      Left = 184
+      Top = 311
+      Width = 115
+      Height = 17
+      Caption = '4.8. '#1058#1086#1087#1083#1080#1074#1085#1099#1077' '#1082#1072#1088#1090#1099
+      TabOrder = 34
     end
   end
   object DocumentPanel: TPanel
