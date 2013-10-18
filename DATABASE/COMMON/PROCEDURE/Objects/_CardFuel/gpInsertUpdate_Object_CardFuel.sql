@@ -12,8 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CardFuel(
     IN inPaidKindId        Integer   , -- ссылка на Виды форм оплаты
     IN inJuridicalId       Integer   , -- ссылка на Юр.лица
     IN inGoodsId           Integer   , -- ссылка на Товары
-    
-    IN inSession        TVarChar    -- сессия пользователя
+    IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS Integer
 AS
