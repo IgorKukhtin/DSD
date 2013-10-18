@@ -1,9 +1,17 @@
-inherited CardFuelForm: TCardFuelForm
+object CardFuelForm: TCardFuelForm
+  Left = 0
+  Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1086#1087#1083#1080#1074#1085#1099#1077' '#1082#1072#1088#1090#1099'>'
   ClientHeight = 395
   ClientWidth = 703
-  ExplicitWidth = 711
-  ExplicitHeight = 429
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -56,6 +64,13 @@ inherited CardFuelForm: TCardFuelForm
         HeaderAlignmentVert = vaCenter
         Width = 140
       end
+      object clCarModelName: TcxGridDBColumn
+        Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+        DataBinding.FieldName = 'CarModelName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
       object clCarName: TcxGridDBColumn
         Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
         DataBinding.FieldName = 'CarName'
@@ -69,8 +84,17 @@ inherited CardFuelForm: TCardFuelForm
         Width = 58
       end
       object clJuridicalName: TcxGridDBColumn
-        Caption = #1070#1088'.'#1083#1080#1094#1086
+        Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
+      object clGoodsName: TcxGridDBColumn
+        Caption = #1058#1086#1074#1072#1088
+        DataBinding.FieldName = 'GoodsName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 66
       end
       object clErased: TcxGridDBColumn
@@ -80,11 +104,6 @@ inherited CardFuelForm: TCardFuelForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
-      end
-      object clGoodsName: TcxGridDBColumn
-        Caption = #1058#1086#1074#1072#1088
-        DataBinding.FieldName = 'GoodsName'
-        Width = 66
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -120,8 +139,8 @@ inherited CardFuelForm: TCardFuelForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -255,8 +274,6 @@ inherited CardFuelForm: TCardFuelForm
       GuiParams = <
         item
           Name = 'Id'
-          DataType = ftInteger
-          ParamType = ptOutput
           Value = Null
         end>
       isShowModal = False
@@ -274,7 +291,6 @@ inherited CardFuelForm: TCardFuelForm
           Name = 'Id'
           Component = ClientDataSet
           ComponentItem = 'Id'
-          DataType = ftInteger
           ParamType = ptInput
         end>
       isShowModal = False
@@ -319,49 +335,40 @@ inherited CardFuelForm: TCardFuelForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
-          ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
-          ParamType = ptOutput
         end
         item
           Name = 'Code'
           Component = ClientDataSet
           ComponentItem = 'Code'
           DataType = ftString
-          ParamType = ptOutput
         end
         item
           Name = 'RouteKindId'
           Component = ClientDataSet
           ComponentItem = 'RouteKindId'
-          DataType = ftInteger
-          ParamType = ptOutput
         end
         item
           Name = 'RouteKindName'
           Component = ClientDataSet
           ComponentItem = 'RouteKindName'
           DataType = ftString
-          ParamType = ptOutput
         end
         item
           Name = 'FreightId'
           Component = ClientDataSet
           ComponentItem = 'FreightId'
-          DataType = ftInteger
-          ParamType = ptOutput
         end
         item
           Name = 'FreightName'
           Component = ClientDataSet
           ComponentItem = 'FreightName'
           DataType = ftString
-          ParamType = ptOutput
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -401,7 +408,6 @@ inherited CardFuelForm: TCardFuelForm
         Name = 'inObjectId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 288

@@ -1696,7 +1696,8 @@ begin
                      +'  )'
 
                      +' or ('+IntToStr(isGlobalLoad)+'=zc_rvYes()'
-                     +'    and (Unit.UnitName='+FormatToVarCharServer_notNULL('Золотой экватор ТОВ')
+                     +'    and 1=0'
+//                     +'    and (Unit.UnitName='+FormatToVarCharServer_notNULL('Золотой экватор ТОВ')
                      +'     ))'
 
                      );

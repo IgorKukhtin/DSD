@@ -60,6 +60,7 @@ type
     clPaidKindName: TcxGridDBColumn;
     clJuridicalName: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
+    clCarModelName: TcxGridDBColumn;
 
   private
     { Private declarations }

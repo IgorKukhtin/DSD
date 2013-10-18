@@ -82,6 +82,7 @@ type
     PeriodChoice: TPeriodChoice;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
+    CarModelName: TcxGridDBColumn;
   private
   public
   end;

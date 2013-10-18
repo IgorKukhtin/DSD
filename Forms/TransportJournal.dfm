@@ -12,6 +12,7 @@ object TransportJournalForm: TTransportJournalForm
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -110,6 +111,11 @@ object TransportJournalForm: TTransportJournalForm
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentVert = vaCenter
         Width = 47
+      end
+      object CarModelName: TcxGridDBColumn
+        Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+        DataBinding.FieldName = 'CarModelName'
+        HeaderAlignmentVert = vaCenter
       end
       object CarName: TcxGridDBColumn
         Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
@@ -227,8 +233,8 @@ object TransportJournalForm: TTransportJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

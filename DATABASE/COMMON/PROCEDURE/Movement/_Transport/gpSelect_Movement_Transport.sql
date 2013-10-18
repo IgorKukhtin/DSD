@@ -12,8 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StartRunPlan TDateTime, EndRunPlan TDateTime, StartRun TDateTime, EndRun TDateTime
              , HoursWork TFloat, HoursAdd TFloat
              , Comment TVarChar
-             , CarName TVarChar
-             , CarTrailerName TVarChar
+             , CarName TVarChar, CarModelName TVarChar, CarTrailerName TVarChar
              , PersonalDriverName TVarChar
              , PersonalDriverMoreName TVarChar
              , UnitForwardingName TVarChar
@@ -47,6 +46,7 @@ BEGIN
            , MovementString_Comment.ValueData      AS Comment
 
            , Object_Car.ValueData        AS CarName
+           , Object_CarModel.ValueData   AS CarModelName
            , Object_CarTrailer.ValueData AS CarTrailerName
 
            , View_PersonalDriver.PersonalName     AS PersonalDriverName
@@ -90,6 +90,10 @@ BEGIN
                                         AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
+                                                           AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
+            LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CarTrailer
                                          ON MovementLinkObject_CarTrailer.MovementId = Movement.Id
                                         AND MovementLinkObject_CarTrailer.DescId = zc_MovementLinkObject_CarTrailer()
@@ -122,6 +126,7 @@ ALTER FUNCTION gpSelect_Movement_Transport (TDateTime, TDateTime, TVarChar) OWNE
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 18.10.13                                        * add CarModelName
  30.09.13                                        * add Object_Personal_View
  26.09.13                                        * changes in wiki
  25.09.13         * changes in wiki
