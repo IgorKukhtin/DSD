@@ -139,6 +139,8 @@ type
     spErasedMIMaster: TdsdStoredProc;
     spUnErasedMIMaster: TdsdStoredProc;
     colIsErased: TcxGridDBColumn;
+    cxLabel11: TcxLabel;
+    edChangePrice: TcxCurrencyEdit;
   private
   public
   end;

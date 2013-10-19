@@ -262,7 +262,6 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         DataBinding.FieldName = 'TotalSummPVAT'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
-        Visible = False
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
@@ -295,6 +294,12 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         DataBinding.FieldName = 'VATPercent'
         HeaderAlignmentVert = vaCenter
         Width = 40
+      end
+      object colChangePrice: TcxGridDBColumn
+        Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1094#1077#1085#1077
+        DataBinding.FieldName = 'ChangePrice'
+        HeaderAlignmentVert = vaCenter
+        Width = 50
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -345,8 +350,8 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

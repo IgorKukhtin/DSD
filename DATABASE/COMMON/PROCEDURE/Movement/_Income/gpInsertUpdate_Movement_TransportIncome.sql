@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransportIncome(
  INOUT ioOperDate            TDateTime , -- Дата документа
  INOUT ioPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
  INOUT ioVATPercent          TFloat    , -- % НДС
+    IN inChangePrice         TFloat    , -- Скидка в цене
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
  INOUT ioPaidKindId          Integer   , -- Ключ Виды форм оплаты 
@@ -54,21 +55,6 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Автомобиль не выбран.';
      END IF;
 
-     -- проверка
-     IF ioRouteId <> 0
-     THEN
-         IF NOT EXISTS (SELECT MovementItem.ObjectId FROM MovementItem
-                        WHERE MovementItem.MovementId = inParentId
-                          AND MovementItem.DescId     = zc_MI_Master()
-                          AND MovementItem.isErased   = FALSE
-                          AND MovementItem.ObjectId   = ioRouteId
-                        )
-         THEN
-             RAISE EXCEPTION 'Ошибка.Выбранный <Маршрут> не найден в <Путевом листе>.';
-         END IF;
-     END IF;
-
-
 
      -- для нового документа надо расчитать и вернуть свойства
      IF COALESCE (ioMovementId, 0) = 0 
@@ -101,6 +87,7 @@ BEGIN
                                 ) AS tmpMI
                                 JOIN MovementItem ON MovementItem.Id = tmpMI.Id
                           );
+             ioRouteId:= COALESCE (ioRouteId, 0);
              ioRouteName := lfGet_Object_ValueData (ioRouteId);
          END IF;
          -- нашли свойство <Сотрудник (водитель)> у Master <Документа>
@@ -170,6 +157,18 @@ BEGIN
          END IF;
      END IF;
 
+     -- проверка
+     IF NOT EXISTS (SELECT MovementItem.ObjectId FROM MovementItem
+                    WHERE MovementItem.MovementId = inParentId
+                      AND MovementItem.DescId     = zc_MI_Master()
+                       AND MovementItem.isErased   = FALSE
+                       AND MovementItem.ObjectId   = ioRouteId
+                   )
+     THEN
+         RAISE EXCEPTION 'Ошибка.Выбранный <Маршрут> не найден в <Путевом листе>.';
+     END IF;
+
+
      -- сохранили <Документ>
      ioMovementId := lpInsertUpdate_Movement_IncomeFuel (ioId               := ioMovementId
                                                        , inParentId         := inParentId
@@ -178,6 +177,7 @@ BEGIN
                                                        , inOperDate         := ioOperDate
                                                        , inPriceWithVAT     := ioPriceWithVAT
                                                        , inVATPercent       := ioVATPercent
+                                                       , inChangePrice      := inChangePrice
                                                        , inFromId           := inFromId
                                                        , inToId             := inToId
                                                        , inPaidKindId       := ioPaidKindId
@@ -207,9 +207,10 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.10.13                                        * add inChangePrice
  07.10.13                                        * add lpCheckRight
  05.10.13                                        *
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_TransportIncome (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_Movement_TransportIncome (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePrice:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')

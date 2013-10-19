@@ -225,10 +225,10 @@
 				<Form>UnitTreeForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\dbMovementItemTest.pas"/>
-			<DCCReference Include="..\..\Forms\Income.pas">
+			<DCCReference Include="..\..\Forms\Document\Income.pas">
 				<Form>IncomeForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\IncomeJournal.pas">
+			<DCCReference Include="..\..\Forms\Document\IncomeJournal.pas">
 				<Form>ParentForm2</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdAddOn.pas"/>
@@ -347,56 +347,56 @@
 			<DCCReference Include="..\..\Forms\PersonalEdit.pas">
 				<Form>PersonalEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\SendJournal.pas">
+			<DCCReference Include="..\..\Forms\Document\SendJournal.pas">
 				<Form>SendJournalForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Send.pas">
+			<DCCReference Include="..\..\Forms\Document\Send.pas">
 				<Form>SendForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\SaleJournal.pas">
+			<DCCReference Include="..\..\Forms\Document\SaleJournal.pas">
 				<Form>SaleJournalForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Sale.pas">
+			<DCCReference Include="..\..\Forms\Document\Sale.pas">
 				<Form>SaleForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\ReturnOutJournal.pas">
+			<DCCReference Include="..\..\Forms\Document\ReturnOutJournal.pas">
 				<Form>ReturnOutJournalForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\ReturnOut.pas">
+			<DCCReference Include="..\..\Forms\Document\ReturnOut.pas">
 				<Form>ReturnOutForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\JuridicalGroupEdit.pas">
 				<Form>JuridicalGroupEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\JuridicalTest.pas"/>
-			<DCCReference Include="..\..\Forms\SendOnPriceJournal.pas">
+			<DCCReference Include="..\..\Forms\Document\SendOnPriceJournal.pas">
 				<Form>SendOnPriceJournalForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\SendOnPrice.pas">
+			<DCCReference Include="..\..\Forms\Document\SendOnPrice.pas">
 				<Form>SendOnPriceForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\ReturnInJournal.pas">
+			<DCCReference Include="..\..\Forms\Document\ReturnInJournal.pas">
 				<Form>ReturnInJournalForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\ReturnIn.pas">
+			<DCCReference Include="..\..\Forms\Document\ReturnIn.pas">
 				<Form>ReturnInForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\LossJournal.pas">
+			<DCCReference Include="..\..\Forms\Document\LossJournal.pas">
 				<Form>LossJournalForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Loss.pas">
+			<DCCReference Include="..\..\Forms\Document\Loss.pas">
 				<Form>LossForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\InventoryJournal.pas">
+			<DCCReference Include="..\..\Forms\Document\InventoryJournal.pas">
 				<Form>InventoryJournalForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Inventory.pas">
+			<DCCReference Include="..\..\Forms\Document\Inventory.pas">
 				<Form>InventoryForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\ProductionSeparateJournal.pas">
+			<DCCReference Include="..\..\Forms\Document\ProductionSeparateJournal.pas">
 				<Form>ProductionSeparateJournalForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\ProductionUnionJournal.pas">
+			<DCCReference Include="..\..\Forms\Document\ProductionUnionJournal.pas">
 				<Form>ProductionUnionJournalForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_ProfitLoss.pas">
@@ -405,10 +405,10 @@
 			<DCCReference Include="..\..\Forms\Report\Report_HistoryCost.pas">
 				<Form>Report_HistoryCostForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\ProductionUnion.pas">
+			<DCCReference Include="..\..\Forms\Document\ProductionUnion.pas">
 				<Form>ProductionUnionForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\ProductionSeparate.pas">
+			<DCCReference Include="..\..\Forms\Document\ProductionSeparate.pas">
 				<Form>ProductionSeparateForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Contract.pas">
@@ -426,16 +426,16 @@
 			<DCCReference Include="..\SOURCE\Component\ComponentActionTest.pas"/>
 			<DCCReference Include="..\SOURCE\Component\ComponentDBTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\CashOperationTest.pas"/>
-			<DCCReference Include="..\..\Forms\ZakazExternalJournal.pas">
+			<DCCReference Include="..\..\Forms\Document\ZakazExternalJournal.pas">
 				<Form>ZakazExternalJournalForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\ZakazExternal.pas">
+			<DCCReference Include="..\..\Forms\Document\ZakazExternal.pas">
 				<Form>ZakazExternalForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\ZakazInternalJournal.pas">
+			<DCCReference Include="..\..\Forms\Document\ZakazInternalJournal.pas">
 				<Form>ZakazInternalJournalForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\ZakazInternal.pas">
+			<DCCReference Include="..\..\Forms\Document\ZakazInternal.pas">
 				<Form>ZakazInternalForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\ObjectCost\CommonObjectCostProcedureTest.pas"/>
@@ -507,10 +507,10 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Component\ComponentAddOnTest.pas"/>
 			<DCCReference Include="..\SOURCE\Defaults\DefaultsTest.pas"/>
-			<DCCReference Include="..\..\Forms\Transport.pas">
+			<DCCReference Include="..\..\Forms\Document\Transport.pas">
 				<Form>TransportForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\TransportJournal.pas">
+			<DCCReference Include="..\..\Forms\Document\TransportJournal.pas">
 				<Form>TransportJournalForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\FuelEdit.pas">
@@ -527,10 +527,10 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\RoleTest.pas"/>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\Defaults.pas"/>
-			<DCCReference Include="..\..\Forms\IncomeFuel.pas">
+			<DCCReference Include="..\..\Forms\Document\IncomeFuel.pas">
 				<Form>IncomeFuelForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\IncomeFuelJournal.pas">
+			<DCCReference Include="..\..\Forms\Document\IncomeFuelJournal.pas">
 				<Form>IncomeFuelJournalForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Freight.pas">
@@ -554,10 +554,10 @@
 			<DCCReference Include="..\..\Forms\PersonalGroupEdit.pas">
 				<Form>PersonalGroupEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\PersonalSendCash.pas">
+			<DCCReference Include="..\..\Forms\Document\PersonalSendCash.pas">
 				<Form>PersonalSendCashForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\PersonalSendCashJournal.pas">
+			<DCCReference Include="..\..\Forms\Document\PersonalSendCashJournal.pas">
 				<Form>PersonalSendCashJournalForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\PersonalSendCashTest.pas">
@@ -600,10 +600,10 @@
 			<DCCReference Include="..\..\Forms\CardFuelEdit.pas">
 				<Form>CardFuelEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\SheetWorkTime.pas">
+			<DCCReference Include="..\..\Forms\Document\SheetWorkTime.pas">
 				<Form>SheetWorkTimeForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\SheetWorkTimeJournal.pas">
+			<DCCReference Include="..\..\Forms\Document\SheetWorkTimeJournal.pas">
 				<Form>SheetWorkTimeJournalForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\PositionLevel.pas">

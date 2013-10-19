@@ -449,7 +449,7 @@ object MainForm: TMainForm
     end
     object cbCar: TCheckBox
       Tag = 10
-      Left = 184
+      Left = 151
       Top = 251
       Width = 115
       Height = 17
@@ -458,7 +458,7 @@ object MainForm: TMainForm
     end
     object cbRoute: TCheckBox
       Tag = 10
-      Left = 184
+      Left = 151
       Top = 271
       Width = 115
       Height = 17
@@ -467,12 +467,27 @@ object MainForm: TMainForm
     end
     object cbCardFuel: TCheckBox
       Tag = 10
-      Left = 184
+      Left = 151
       Top = 311
-      Width = 115
+      Width = 139
       Height = 17
       Caption = '4.8. '#1058#1086#1087#1083#1080#1074#1085#1099#1077' '#1082#1072#1088#1090#1099
       TabOrder = 34
+    end
+    object cbTicketFuel: TCheckBox
+      Tag = 10
+      Left = 151
+      Top = 41
+      Width = 145
+      Height = 17
+      Caption = '1.7. '#1058#1072#1083#1086#1085#1099' '#1085#1072' '#1090#1086#1087#1083#1080#1074#1086
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 35
     end
   end
   object DocumentPanel: TPanel
