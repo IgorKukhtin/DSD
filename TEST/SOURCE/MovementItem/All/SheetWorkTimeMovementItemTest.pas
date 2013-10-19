@@ -23,7 +23,7 @@ type
 
 implementation
 
-uses UtilConst, Db;
+uses UtilConst, Db, SysUtils, PersonalTest, UnitsTest;
 
 { TSheetWorkTimeMovementItemTest }
 
@@ -36,8 +36,28 @@ begin
 end;
 
 procedure TSheetWorkTimeMovementItemTest.Test;
+var
+  SheetWorkTimeMovementItem: TSheetWorkTimeMovementItem;
+  PersonalId, PositionId, UnitId, PersonalGroupId: Integer;
+  OperDate: TDateTime;
+  Value: string;
+  TypeId: Integer;
 begin
-
+  SheetWorkTimeMovementItem := TSheetWorkTimeMovementItem.Create;
+  PersonalId := TPersonal.Create.GetDefault;
+  PositionId := 0;
+  UnitId := TUnit.Create.GetDefault;
+  PersonalGroupId := 0;
+  OperDate := StrToDateTime('2100-01-01');
+  Value := '8';
+  TypeId := 0;
+  // ѕросто создадим
+  SheetWorkTimeMovementItem.InsertUpdateSheetWorkTimeMovementItem(
+             PersonalId, PositionId, UnitId, PersonalGroupId, OperDate, Value, TypeId);
+  try
+  // а потом отредактируем
+  finally
+  end;
 end;
 
 { TSheetWorkTimeMovementItem }
@@ -55,17 +75,11 @@ begin
   FParams.Clear;
   FParams.AddParam('ioPersonalId', ftInteger, ptInputOutput, PersonalId);
   FParams.AddParam('inPositionId', ftInteger, ptInput, PositionId);
-  FParams.AddParam('inGoodsId', ftInteger, ptInput, GoodsId);
-  FParams.AddParam('inAmount', ftFloat, ptInput, Amount);
-  FParams.AddParam('inAmountPartner', ftFloat, ptInput, AmountPartner);
-  FParams.AddParam('inAmountPacker', ftFloat, ptInput, AmountPacker);
-  FParams.AddParam('inPrice', ftFloat, ptInput, Price);
-  FParams.AddParam('inCountForPrice', ftFloat, ptInput, CountForPrice);
-  FParams.AddParam('inLiveWeight', ftFloat, ptInput, LiveWeight);
-  FParams.AddParam('inHeadCount', ftFloat, ptInput, HeadCount);
-  FParams.AddParam('inPartionGoods', ftString, ptInput, PartionGoods);
-  FParams.AddParam('inGoodsKindId', ftInteger, ptInput, GoodsKindId);
-  FParams.AddParam('inAssetId', ftInteger, ptInput, AssetId);
+  FParams.AddParam('inUnitId', ftInteger, ptInput, UnitId);
+  FParams.AddParam('inPersonalGroupId', ftInteger, ptInput, PersonalGroupId);
+  FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
+  FParams.AddParam('inValue', ftString, ptInput, Value);
+  FParams.AddParam('inTypeId', ftInteger, ptInput, TypeId);
   result := InsertUpdate(FParams);
 end;
 

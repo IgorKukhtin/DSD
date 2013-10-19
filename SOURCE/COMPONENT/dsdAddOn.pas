@@ -639,6 +639,8 @@ end;
 constructor TdsdUserSettingsStorageAddOn.Create(AOwner: TComponent);
 begin
   inherited;
+  if csDesigning in ComponentState then
+     exit;
   if AOwner is TCustomForm then begin
      FForm := AOwner as TForm;
      FOnShow := FForm.OnShow;

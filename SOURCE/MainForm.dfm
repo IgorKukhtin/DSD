@@ -14,6 +14,7 @@ object MainForm: TMainForm
   Position = poDesigned
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object dxBarManager: TdxBarManager
@@ -277,8 +278,10 @@ object MainForm: TMainForm
       ShowCaption = False
     end
     object bbMeasure: TdxBarButton
-      Action = actMeasure
+      Caption = #1045#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
       Category = 0
+      Hint = #1045#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
+      Visible = ivAlways
     end
     object bbJuridicalGroup: TdxBarButton
       Action = actJuridicalGroup
@@ -1491,7 +1494,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.12'
+    Version = '4.14'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

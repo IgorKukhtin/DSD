@@ -19,7 +19,7 @@ uses
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, dxSkinsdxBarPainter, dsdAddOn, cxPropertiesStore, frxClass,
   dsdDB, Data.DB, Datasnap.DBClient, frxExportRTF, frxExportPDF, frxExportXML,
-  frxExportXLS;
+  frxExportXLS, Vcl.Grids, Vcl.DBGrids;
 
 type
   TMainForm = class(TForm)
@@ -264,7 +264,7 @@ begin
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);
-var i: integer;
+var i, j, k: integer;
 begin
   StoredProc.Execute;
   ClientDataSet.IndexFieldNames := 'ActionName';
@@ -278,6 +278,25 @@ begin
 
   ClientDataSet.EmptyDataSet;
   // Отображаем видимые пункты меню
+  for i := 0 to dxBarManager.ItemCount - 1 do
+      if dxBarManager.Items[i] is TdxBarButton then
+         if Assigned(dxBarManager.Items[i].Action) then
+            if not TCustomAction(dxBarManager.Items[i].Action).Enabled then
+               dxBarManager.Items[i].Visible := ivNever;
+
+  for k := 1 to 3 do
+    // А теперь бы пройтись по группам меню и отрубить те, у которых нет видимых чайлдов
+    for i := 0 to dxBarManager.ItemCount - 1 do
+        if dxBarManager.Items[i] is TdxBarSubItem then begin
+           dxBarManager.Items[i].Visible := ivNever;
+           for j := 0 to TdxBarSubItem(dxBarManager.Items[i]).ItemLinks.Count - 1 do
+               if (TdxBarSubItem(dxBarManager.Items[i]).ItemLinks[j].Item.Visible = ivAlways)
+                  and not (TdxBarSubItem(dxBarManager.Items[i]).ItemLinks[j].Item is TdxBarSeparator) then begin
+                  dxBarManager.Items[i].Visible := ivAlways;
+                  break;
+               end;
+        end;
+
 end;
 
 procedure TMainForm.OnException(Sender: TObject; E: Exception);
