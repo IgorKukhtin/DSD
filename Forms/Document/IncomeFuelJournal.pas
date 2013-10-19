@@ -87,6 +87,7 @@ type
     colInvNumberPartner: TcxGridDBColumn;
     colInvNumberMaster: TcxGridDBColumn;
     colOperDateMaster: TcxGridDBColumn;
+    colChangePrice: TcxGridDBColumn;
   private
   public
   end;

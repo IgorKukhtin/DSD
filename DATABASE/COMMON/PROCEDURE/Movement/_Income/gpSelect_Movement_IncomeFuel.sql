@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_IncomeFuel(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, InvNumberMaster TVarChar, OperDateMaster TDateTime, StatusCode Integer, StatusName TVarChar
              , InvNumberPartner TVarChar
-             , PriceWithVAT Boolean, VATPercent TFloat
+             , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalCount TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummVAT TFloat
              , FromName TVarChar, ToName TVarChar
              , PaidKindName TVarChar, ContractName TVarChar
@@ -39,6 +39,7 @@ BEGIN
 
            , MovementBoolean_PriceWithVAT.ValueData      AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData          AS VATPercent
+           , MovementFloat_ChangePercent.ValueData       AS ChangePercent
 
            , MovementFloat_TotalCount.ValueData          AS TotalCount
            , MovementFloat_TotalSummMVAT.ValueData       AS TotalSummMVAT
@@ -68,6 +69,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+            LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                    ON MovementFloat_ChangePercent.MovementId =  Movement.Id
+                                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
@@ -124,6 +128,7 @@ ALTER FUNCTION gpSelect_Movement_IncomeFuel (TDateTime, TDateTime, TVarChar) OWN
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 19.10.13                                        * add ChangePercent
  12.10.13                                        * add InvNumberMaster and OperDateMaster
  07.10.13                                        * add lpCheckRight
  04.10.13                                        * add Route

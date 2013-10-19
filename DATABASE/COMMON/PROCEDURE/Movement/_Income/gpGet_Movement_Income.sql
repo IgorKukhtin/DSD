@@ -27,11 +27,11 @@ BEGIN
          SELECT
                0 AS Id
              , CAST (lfGet_InvNumber (0, zc_Movement_Income()) as TVarChar) AS InvNumber
-             , CAST (CURRENT_TIMESTAMP as TDateTime) AS OperDate
-             , Object_Status.Code                    AS StatusCode
-             , Object_Status.Name                    AS StatusName
+             , CAST (CURRENT_DATE as TDateTime) AS OperDate
+             , Object_Status.Code               AS StatusCode
+             , Object_Status.Name               AS StatusName
 
-             , CAST (CURRENT_TIMESTAMP as TDateTime) AS OperDatePartner
+             , CAST (CURRENT_DATE as TDateTime)      AS OperDatePartner
              , CAST ('' as TVarChar)                 AS InvNumberPartner
 
              , CAST (False as Boolean)               AS PriceWithVAT

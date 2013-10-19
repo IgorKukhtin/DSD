@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_IncomeFuel(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , InvNumberPartner TVarChar
-             , PriceWithVAT Boolean, VATPercent TFloat
+             , PriceWithVAT Boolean, VATPercent TFloat, ChangePrice TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, ToParentId Integer
              , PaidKindId Integer, PaidKindName TVarChar, ContractId Integer, ContractName TVarChar
              , RouteId Integer, RouteName TVarChar
@@ -30,13 +30,14 @@ BEGIN
                0 AS Id
              , CAST (lfGet_InvNumber (0, zc_Movement_Income()) as TVarChar) AS InvNumber
              , CAST (CURRENT_TIMESTAMP as TDateTime) AS OperDate
-             , Object_Status.Code                    AS StatusCode
-             , Object_Status.Name                    AS StatusName
+             , Object_Status.Code               AS StatusCode
+             , Object_Status.Name               AS StatusName
 
              , CAST ('' as TVarChar) AS InvNumberPartner
 
-             , CAST (False as Boolean) AS PriceWithVAT
+             , CAST (TRUE as Boolean) AS PriceWithVAT
              , CAST (20 as TFloat)     AS VATPercent
+             , CAST (0 as TFloat)      AS ChangePrice
 
              , 0                     AS FromId
              , CAST ('' as TVarChar) AS FromName
@@ -65,6 +66,7 @@ BEGIN
 
              , MovementBoolean_PriceWithVAT.ValueData      AS PriceWithVAT
              , MovementFloat_VATPercent.ValueData          AS VATPercent
+             , MovementFloat_ChangePrice.ValueData       AS ChangePrice
 
              , Object_From.Id                    AS FromId
              , Object_From.ValueData             AS FromName
@@ -92,6 +94,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+            LEFT JOIN MovementFloat AS MovementFloat_ChangePrice
+                                    ON MovementFloat_ChangePrice.MovementId =  Movement.Id
+                                   AND MovementFloat_ChangePrice.DescId = zc_MovementFloat_ChangePrice()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -135,6 +140,7 @@ ALTER FUNCTION gpGet_Movement_IncomeFuel (Integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 19.10.13                                        * add ChangePrice
  07.10.13                                        * add lpCheckRight
  05.10.13                                        * add InvNumberPartner
  04.10.13                                        * add Route
@@ -144,4 +150,4 @@ ALTER FUNCTION gpGet_Movement_IncomeFuel (Integer, TVarChar) OWNER TO postgres;
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpGet_Movement_IncomeFuel (inMovementId := 0, inSession:= '2')
+-- SELECT * FROM gpGet_Movement_IncomeFuel (inMovementId := 0, inSession:= zfCalc_UserAdmin ())

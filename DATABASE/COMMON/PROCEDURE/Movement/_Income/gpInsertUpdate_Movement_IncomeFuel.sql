@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_IncomeFuel(
     IN inOperDate            TDateTime , -- Дата документа
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , -- % НДС
+    IN inChangePrice         TFloat    , -- Скидка в цене
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
     IN inPaidKindId          Integer   , -- Виды форм оплаты 
@@ -38,6 +39,7 @@ BEGIN
                                                , inOperDate         := inOperDate
                                                , inPriceWithVAT     := inPriceWithVAT
                                                , inVATPercent       := inVATPercent
+                                               , inChangePrice      := inChangePrice
                                                , inFromId           := inFromId
                                                , inToId             := inToId
                                                , inPaidKindId       := inPaidKindId
@@ -54,6 +56,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.10.13                                        * add inChangePrice
  07.10.13                                        * add lpCheckRight
  06.10.13                                        * add lfCheck_Movement_Parent
  05.10.13                                        * add inInvNumberPartner
@@ -63,4 +66,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_IncomeFuel (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_Movement_IncomeFuel (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePrice:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')

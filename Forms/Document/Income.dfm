@@ -25,6 +25,7 @@ object IncomeForm: TIncomeForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitLeft = 24
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 23
@@ -71,7 +72,7 @@ object IncomeForm: TIncomeForm
           Kind = bkEllipsis
         end>
       TabOrder = 2
-      Width = 170
+      Width = 130
     end
     object cxLabel3: TcxLabel
       Left = 227
@@ -88,17 +89,17 @@ object IncomeForm: TIncomeForm
       Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 9
-      Width = 128
+      Width = 130
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 501
+      Left = 512
       Top = 63
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
       TabOrder = 10
-      Width = 43
+      Width = 77
     end
     object cxLabel5: TcxLabel
       Left = 225
@@ -125,8 +126,9 @@ object IncomeForm: TIncomeForm
       Width = 140
     end
     object edChangePercent: TcxCurrencyEdit
-      Left = 552
+      Left = 598
       Top = 63
+      Enabled = False
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 3
@@ -135,22 +137,22 @@ object IncomeForm: TIncomeForm
       Width = 144
     end
     object cxLabel7: TcxLabel
-      Left = 501
+      Left = 519
       Top = 45
       Caption = '% '#1053#1044#1057
     end
     object cxLabel8: TcxLabel
-      Left = 552
+      Left = 598
       Top = 45
       Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
     end
     object cxLabel9: TcxLabel
-      Left = 705
+      Left = 598
       Top = 5
       Caption = #1044#1086#1075#1086#1074#1086#1088
     end
     object edContract: TcxButtonEdit
-      Left = 705
+      Left = 598
       Top = 23
       Properties.Buttons = <
         item
@@ -158,15 +160,15 @@ object IncomeForm: TIncomeForm
           Kind = bkEllipsis
         end>
       TabOrder = 4
-      Width = 130
+      Width = 286
     end
     object cxLabel10: TcxLabel
-      Left = 552
+      Left = 512
       Top = 5
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKind: TcxButtonEdit
-      Left = 552
+      Left = 512
       Top = 23
       Properties.Buttons = <
         item
@@ -174,15 +176,15 @@ object IncomeForm: TIncomeForm
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 144
+      Width = 77
     end
     object cxLabel13: TcxLabel
-      Left = 705
+      Left = 754
       Top = 45
       Caption = #1047#1072#1075#1086#1090#1086#1074#1080#1090#1077#1083#1100
     end
     object edPacker: TcxButtonEdit
-      Left = 705
+      Left = 754
       Top = 63
       Properties.Buttons = <
         item
@@ -439,9 +441,6 @@ object IncomeForm: TIncomeForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -678,8 +677,8 @@ object IncomeForm: TIncomeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1496,6 +1495,7 @@ object IncomeForm: TIncomeForm
   object RefreshAddOn: TRefreshAddOn
     FormName = 'IncomeJournalForm'
     DataSet = 'ClientDataSet'
+    KeyField = 'Id'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
     Left = 422

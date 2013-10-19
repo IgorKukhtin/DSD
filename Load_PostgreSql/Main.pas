@@ -115,6 +115,7 @@ type
     cbCar: TCheckBox;
     cbRoute: TCheckBox;
     cbCardFuel: TCheckBox;
+    cbTicketFuel: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -201,6 +202,7 @@ type
     procedure pLoadGuide_Goods_toZConnection;
     procedure pLoadGuide_GoodsKind;
     procedure pLoadGuide_Fuel;
+    procedure pLoadGuide_TicketFuel;
     procedure pLoadGuide_PaidKind;
     procedure pLoadGuide_ContractKind;
     procedure pLoadGuide_JuridicalGroup;
@@ -492,6 +494,7 @@ begin
      //
      if not fStop then pLoadGuide_Measure;
      if not fStop then pLoadGuide_Fuel;
+     if not fStop then pLoadGuide_TicketFuel;
      if not fStop then pLoadGuide_GoodsGroup;
      if not fStop then pLoadGuide_Goods;
      //if not fStop then pLoadGuide_Goods_toZConnection;
@@ -717,7 +720,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pSetNullGuide_Id_Postgres;
 begin
-     fExecSqFromQuery('update dba.Goods set Id_Postgres = null,Id_Postgres_Fuel = null');
+     fExecSqFromQuery('update dba.Goods set Id_Postgres = null,Id_Postgres_Fuel = null,Id_Postgres_TicketFuel = null');
      fExecSqFromQuery('update dba.GoodsProperty set Id_Postgres = null');
      fExecSqFromQuery('update dba.Measure set Id_Postgres = null');
      fExecSqFromQuery('update dba.KindPackage set Id_Postgres = null');
@@ -990,7 +993,7 @@ begin
 
         Add('                                                                   end');
         Add('where Goods.HasChildren = zc_hsLeaf()');
-// Add(' and GoodsProperty.GoodsCode = 4147');
+//  Add(' and GoodsProperty.GoodsCode in (7001)');
         Add('group by ObjectId');
         Add('       , ObjectName');
         Add('       , ObjectCode');
@@ -1235,14 +1238,22 @@ begin
         Clear;
         Add('select Goods.Id as ObjectId');
         Add('     , 0 as ObjectCode');
-        Add('     , case when Goods.Id = 7575 then '+FormatToVarCharServer_notNULL('Áåíçèí')+' else Goods.GoodsName end as ObjectName');
+        Add('     , GoodsProperty.GoodsCode');
+        Add('     , case when Goods.Id = 7575 then '+FormatToVarCharServer_notNULL('Áåíçèí')
+           +'            else Goods.GoodsName'
+           +'       end as ObjectName');
         Add('     , case when Goods.Id=7579 then 1.25 else 1 end as Ratio');
         Add('     , '+RateFuelKindId+' as RateFuelKindId');
+        Add('     , GoodsProperty_a95.GoodsId as GoodsId_a95');
+        Add('     , GoodsProperty_Propan.GoodsId as GoodsId_Propan');
         Add('     , Goods.Id_Postgres_Fuel as Id_Postgres');
         Add('from dba.Goods');
+        Add('     join dba.GoodsProperty on GoodsProperty.GoodsId = Goods.Id');
+        Add('     left outer join dba.GoodsProperty as GoodsProperty_a95 on GoodsProperty_a95.GoodsCode = 7002');
+        Add('     left outer join dba.GoodsProperty as GoodsProperty_Propan on GoodsProperty_Propan.GoodsCode = 7011');
         Add('where Goods.HasChildren = zc_hsLeaf()');
         Add('  and fCheckGoodsParentID(7574,Goods.ParentId) =zc_rvYes()'); // ÃÑÌ
-        Add('  and Goods.Id <> 7576');
+        Add('  and GoodsProperty.GoodsCode not in (7002, 7011)');
         Add('order by ObjectId');
         Open;
         //
@@ -1278,8 +1289,10 @@ begin
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.Goods set Id_Postgres_Fuel='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
-             if (FieldByName('ObjectId').AsInteger=7575)
-             then fExecSqFromQuery('update dba.Goods set Id_Postgres_Fuel='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = 7576');
+             if (FieldByName('GoodsCode').AsInteger=7001)
+             then fExecSqFromQuery('update dba.Goods set Id_Postgres_Fuel='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('GoodsId_a95').AsString);
+             if (FieldByName('GoodsCode').AsInteger=7005)
+             then fExecSqFromQuery('update dba.Goods set Id_Postgres_Fuel='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('GoodsId_Propan').AsString);
          end;
              //
              Next;
@@ -1290,6 +1303,67 @@ begin
      end;
      //
      myDisabledCB(cbFuel);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadGuide_TicketFuel;
+begin
+     if (not cbTicketFuel.Checked)or(not cbTicketFuel.Enabled) then exit;
+     //
+     myEnabledCB(cbTicketFuel);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Goods.Id as ObjectId');
+        Add('     , 0 as ObjectCode');
+        Add('     , Goods.GoodsName as ObjectName');
+        Add('     , GoodsProperty.Id_Postgres as inGoodsId');
+        Add('     , Goods.Id_Postgres_TicketFuel as Id_Postgres');
+        Add('from dba.Goods');
+        Add('     join dba.GoodsProperty on GoodsProperty.GoodsId = Goods.Id');
+        Add('where Goods.HasChildren = zc_hsLeaf()');
+        Add('  and fCheckGoodsParentID(7574,Goods.ParentId) =zc_rvYes()'); // ÃÑÌ
+        Add('  and GoodsProperty.GoodsCode in (7011)');
+        Add('order by ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_TicketFuel';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('inGoodsId').AsInteger;
+             //
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba.Goods set Id_Postgres_TicketFuel='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbTicketFuel);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_PaidKind;
@@ -1340,7 +1414,7 @@ begin
              //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
-             if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.MoneyKind set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
@@ -2193,7 +2267,7 @@ begin
              //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
-             if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba._pgUnit set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+', Id_Postgres_Branch=zf_ChangeIntToNull('+IntToStr(FieldByName('BranchId_Postgres').AsInteger)+') where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
@@ -6982,6 +7056,7 @@ insert into dba.GoodsProperty_Postgres (Id, Name_PG)
 
 alter table dba.Goods add Id_Postgres integer null;
 alter table dba.Goods add Id_Postgres_Fuel integer null;
+alter table dba.Goods add Id_Postgres_TicketFuel integer null;
 alter table dba.GoodsProperty add Id_Postgres integer null;
 alter table dba.Measure add Id_Postgres integer null;
 alter table dba.KindPackage add Id_Postgres integer null;

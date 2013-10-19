@@ -403,7 +403,8 @@ BEGIN
                    LEFT JOIN ObjectLink AS ObjectLink_Goods_Fuel
                                         ON ObjectLink_Goods_Fuel.ObjectId = MovementItem.ObjectId
                                        AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
-                                       AND ObjectLink_Goods_Fuel.ChildObjectId <> 0 -- !!! обязательно, что б смело использовать COALESCE
+                                       AND ObjectLink_Goods_Fuel.ChildObjectId <> 0 -- !!!обязательно, что б смело использовать COALESCE!!!
+                                       AND vbCarId <> 0 -- !!!обязательно, т.к. в остальных случаях нужен товар!!!
 
                    LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
                                                                               AND ObjectLink_Goods_Fuel.ChildObjectId IS NULL
