@@ -34,7 +34,7 @@ BEGIN
                            WHERE Movement_SheetWorkTime.DescId = zc_Movement_SheetWorkTime() AND Movement_SheetWorkTime.OperDate::Date = inOperDate::Date);
  
      -- сохранили <Документ>
-     vbMovementId := lpInsertUpdate_Movement_SheetWorkTime(ioId, '', inOperDate::DATE, inUnitId);
+     vbMovementId := lpInsertUpdate_Movement_SheetWorkTime(vbMovementId, '', inOperDate::DATE, inUnitId);
 
     -- 
 

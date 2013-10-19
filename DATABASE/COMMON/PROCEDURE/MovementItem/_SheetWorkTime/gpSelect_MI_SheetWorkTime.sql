@@ -79,7 +79,8 @@ BEGIN
        LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
                             ON ObjectLink_Personal_PersonalGroup.ObjectId = Object_Personal_View.PersonalId
                            AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
-       WHERE Object_Personal_View.UnitId = ''|inUnitId::TVarChar|''
+       WHERE ObjectLink_Personal_Unit.ChildObjectId = '||inUnitId::TVarChar||'
+
 
         ORDER BY PersonalId'',
          ''SELECT OperDate FROM tmpOperDate'')
@@ -100,6 +101,7 @@ ALTER FUNCTION gpSelect_MovementItem_SheetWorkTime (TDateTime, Integer, TVarChar
 /*   
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.10.13                         *
  05.10.13                         *
 
 */
@@ -107,5 +109,5 @@ ALTER FUNCTION gpSelect_MovementItem_SheetWorkTime (TDateTime, Integer, TVarChar
 -- тест
 --BEGIN;
 --  SELECT * FROM gpSelect_MovementItem_SheetWorkTime(now(), 0, '');
---  fetch all "<unnamed portal 77>";
+--  fetch all "<unnamed portal 2>";
 --END;

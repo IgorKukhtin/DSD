@@ -2,11 +2,15 @@ unit SheetWorkTimeMovementItemTest;
 
 interface
 
-uses dbMovementItemTest;
+uses dbMovementItemTest, dbTest;
 
 type
 
-  TSheetWorkTimeMovementItemTest = class(TdbMovementItemTest)
+  TSheetWorkTimeMovementItemTest = class(TdbTest)
+  protected
+    procedure SetUp; override;
+    // возвращаем данные для тестирования
+    procedure TearDown; override;
   published
     // загрузка процедура из определенной директории
     procedure ProcedureLoad; virtual;
@@ -23,7 +27,9 @@ type
 
 implementation
 
-uses UtilConst, Db, SysUtils, PersonalTest, UnitsTest;
+uses UtilConst, Db, SysUtils, PersonalTest, dbMovementTest, UnitsTest,
+     Storage, Authentication, TestFramework, CommonData, dbObjectTest,
+     Variants;
 
 { TSheetWorkTimeMovementItemTest }
 
@@ -35,6 +41,31 @@ begin
   inherited;
 end;
 
+procedure TSheetWorkTimeMovementItemTest.SetUp;
+begin
+  inherited;
+  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
+end;
+
+procedure TSheetWorkTimeMovementItemTest.TearDown;
+begin
+  inherited;
+  if Assigned(InsertedIdMovementItemList) then
+     with TMovementItemTest.Create do
+       while InsertedIdMovementItemList.Count > 0 do
+          Delete(StrToInt(InsertedIdMovementItemList[0]));
+
+  if Assigned(InsertedIdMovementList) then
+     with TMovementTest.Create do
+       while InsertedIdMovementList.Count > 0 do
+          Delete(StrToInt(InsertedIdMovementList[0]));
+
+  if Assigned(InsertedIdObjectList) then
+     with TObjectTest.Create do
+       while InsertedIdObjectList.Count > 0 do
+          Delete(StrToInt(InsertedIdObjectList[0]));
+end;
+
 procedure TSheetWorkTimeMovementItemTest.Test;
 var
   SheetWorkTimeMovementItem: TSheetWorkTimeMovementItem;
@@ -43,12 +74,13 @@ var
   Value: string;
   TypeId: Integer;
 begin
+  exit;
   SheetWorkTimeMovementItem := TSheetWorkTimeMovementItem.Create;
   PersonalId := TPersonal.Create.GetDefault;
   PositionId := 0;
   UnitId := TUnit.Create.GetDefault;
   PersonalGroupId := 0;
-  OperDate := StrToDateTime('2100-01-01');
+  OperDate := VarToDateTime('2100-01-01');
   Value := '8';
   TypeId := 0;
   // Просто создадим
@@ -82,5 +114,8 @@ begin
   FParams.AddParam('inTypeId', ftInteger, ptInput, TypeId);
   result := InsertUpdate(FParams);
 end;
+
+initialization
+  TestFramework.RegisterTest('Строки Документов', TSheetWorkTimeMovementItemTest.Suite);
 
 end.
