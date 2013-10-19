@@ -1,9 +1,19 @@
-﻿inherited UserEditForm: TUserEditForm
+﻿object UserEditForm: TUserEditForm
+  Left = 0
+  Top = 0
   Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
   ClientHeight = 261
   ClientWidth = 295
-  ExplicitWidth = 303
-  ExplicitHeight = 288
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = True
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -113,29 +123,34 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
       end
       item
         Name = 'inName'
+        Value = ''
         Component = edName
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inPassword'
+        Value = ''
         Component = edPassword
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inMemberId'
+        Value = ''
         Component = MemberGuides
         ParamType = ptInput
       end>
@@ -146,6 +161,7 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 213
@@ -158,32 +174,38 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'Name'
+        Value = ''
         Component = edName
         DataType = ftString
       end
       item
         Name = 'Code'
+        Value = 0.000000000000000000
         Component = ceCode
       end
       item
         Name = 'MemberId'
+        Value = ''
         Component = MemberGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'MemberName'
+        Value = ''
         Component = MemberGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'Password'
+        Value = ''
         Component = edPassword
         DataType = ftString
       end>

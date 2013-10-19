@@ -136,10 +136,11 @@ type
 
   TdsdUserSettingsStorageAddOn = class(TComponent)
   private
-    FOnClose: TCloseEvent;
+    FOnDestroy: TNotifyEvent;
     FOnShow: TNotifyEvent;
     FForm: TForm;
-    procedure OnClose(Sender: TObject; var Action: TCloseAction);
+    isAlreadyLoad: boolean;
+    procedure OnDestroy(Sender: TObject);
     procedure OnShow(Sender: TObject);
     procedure LoadUserSettings;
     procedure SaveUserSettings;
@@ -200,6 +201,7 @@ type
     FOnClose: TCloseEvent;
     FRefreshAction: string;
     FFormParams: string;
+    FKeyField: string;
     procedure OnClose(Sender: TObject; var Action: TCloseAction);
   public
     constructor Create(AOwner: TComponent); override;
@@ -207,6 +209,7 @@ type
   published
     property FormName: string read FFormName write FFormName;
     property DataSet: string read FDataSet write FDataSet;
+    property KeyField: string read FKeyField write FKeyField;
     property RefreshAction: string read FRefreshAction write FRefreshAction;
     property FormParams: string read FFormParams write FFormParams;
   end;
@@ -638,26 +641,34 @@ begin
   inherited;
   if AOwner is TCustomForm then begin
      FForm := AOwner as TForm;
-     FOnClose := FForm.OnClose;
      FOnShow := FForm.OnShow;
-     FForm.OnClose := Self.OnClose;
+     FOnDestroy := FForm.OnDestroy;
      FForm.OnShow := Self.OnShow;
+     FForm.OnDestroy := Self.OnDestroy;
+     isAlreadyLoad := false;
   end;
 end;
 
 procedure TdsdUserSettingsStorageAddOn.OnShow(Sender: TObject);
 begin
-  LoadUserSettings;
   if Assigned(FOnShow) then
-     FOnShow(Sender)
+     FOnShow(Sender);
+  // загружаем пользовательские установки один раз
+  if not isAlreadyLoad then
+  try
+    LoadUserSettings;
+  finally
+    isAlreadyLoad := true
+  end;
 end;
 
-procedure TdsdUserSettingsStorageAddOn.OnClose(Sender: TObject;
-  var Action: TCloseAction);
+procedure TdsdUserSettingsStorageAddOn.OnDestroy(Sender: TObject);
 begin
+  if csDesigning in ComponentState then
+     exit;
   SaveUserSettings;
-  if Assigned(FOnClose) then
-     FOnClose(Sender, Action);
+  if Assigned(FOnDestroy) then
+     FOnDestroy(Sender);
 end;
 
 procedure TdsdUserSettingsStorageAddOn.LoadUserSettings;
@@ -929,6 +940,7 @@ begin
   DataSet := 'ClientDataSet';
   RefreshAction := 'actRefresh';
   FormParams := 'FormParams';
+  FKeyField := 'Id';
   if AOwner is TForm then begin
      FOnClose := (AOwner as TForm).OnClose;
      (AOwner as TForm).OnClose := Self.OnClose;
@@ -953,7 +965,8 @@ begin
            if Assigned(FindComponent(RefreshAction)) then
               TdsdDataSetRefresh(FindComponent(RefreshAction)).Execute;
            if Assigned(FindComponent(DataSet)) and Assigned(Self.Owner.FindComponent(FormParams)) then
-              TDataSet(FindComponent(DataSet)).Locate('Id', TdsdFormParams(Self.Owner.FindComponent(FormParams)).ParamByName('Id').AsString, []);
+              if Assigned(TDataSet(FindComponent(DataSet)).FindField(KeyField)) then
+                 TDataSet(FindComponent(DataSet)).Locate(KeyField, TdsdFormParams(Self.Owner.FindComponent(FormParams)).ParamByName(FKeyField).AsString, []);
          end;
   if Assigned(FOnClose) then
      FOnClose(Sender, Action);

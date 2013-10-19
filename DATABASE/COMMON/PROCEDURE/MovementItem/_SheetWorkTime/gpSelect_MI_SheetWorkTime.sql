@@ -79,6 +79,7 @@ BEGIN
        LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
                             ON ObjectLink_Personal_PersonalGroup.ObjectId = Object_Personal_View.PersonalId
                            AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
+       WHERE Object_Personal_View.UnitId = ''|inUnitId::TVarChar|''
 
         ORDER BY PersonalId'',
          ''SELECT OperDate FROM tmpOperDate'')

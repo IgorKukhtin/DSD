@@ -1,9 +1,19 @@
-﻿inherited AssetEditForm: TAssetEditForm
+﻿object AssetEditForm: TAssetEditForm
+  Left = 0
+  Top = 0
   Caption = #1053#1086#1074#1086#1077' '#1089#1088#1077#1076#1089#1090#1074#1086
   ClientHeight = 263
   ClientWidth = 403
-  ExplicitWidth = 411
-  ExplicitHeight = 290
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = True
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -112,26 +122,31 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
       end
       item
         Name = 'inName'
+        Value = ''
         Component = edName
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inInvNumber'
+        Value = Null
       end
       item
         Name = 'inAssetGroup'
+        Value = Null
       end>
     Left = 304
     Top = 56
@@ -140,6 +155,7 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 336
@@ -152,31 +168,37 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'Name'
+        Value = ''
         Component = edName
         DataType = ftString
       end
       item
         Name = 'Code'
+        Value = 0.000000000000000000
         Component = ceCode
       end
       item
         Name = 'AssetGroupId'
+        Value = ''
         Component = AssetGroupGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'AssetGroupName'
+        Value = ''
         Component = AssetGroupGuides
         ComponentItem = 'TextValue'
       end
       item
         Name = 'InvNumber'
+        Value = Null
       end>
     Left = 304
     Top = 16

@@ -1,9 +1,19 @@
-inherited GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
+object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
+  Left = 0
+  Top = 0
   Caption = #1047#1085#1072#1095#1077#1085#1080#1103' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
   ClientHeight = 277
   ClientWidth = 560
-  ExplicitWidth = 568
-  ExplicitHeight = 304
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = True
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -25,7 +35,7 @@ inherited GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
     Action = dsdInsertUpdateGuides
     Default = True
     ModalResult = 8
-    TabOrder = 10
+    TabOrder = 9
   end
   object cxButton2: TcxButton
     Left = 311
@@ -182,58 +192,68 @@ inherited GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inName'
+        Value = ''
         Component = edName
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inAmount'
+        Value = 0.000000000000000000
         Component = ceAmount
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inBarCode'
+        Value = ''
         Component = edBarCode
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inArticle'
+        Value = ''
         Component = edArticle
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inBarCodeGLN'
+        Value = ''
         Component = edBarCodeGLN
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inArticleGLN'
+        Value = ''
         Component = edArticleGLN
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inGoodsPropertyId'
+        Value = '0'
         Component = dsdGoodsPropertyGuides
         ParamType = ptInput
       end
       item
         Name = 'inGoodsId'
+        Value = '0'
         Component = dsdGoodsGuides
         ParamType = ptInput
       end
       item
         Name = 'inGoodsKindId'
+        Value = '0'
         Component = dsdGoodsKindGuides
         ParamType = ptInput
       end>
@@ -244,6 +264,7 @@ inherited GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 504
@@ -256,63 +277,76 @@ inherited GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'Name'
+        Value = ''
         Component = edName
         DataType = ftString
       end
       item
         Name = 'Amount'
+        Value = 0.000000000000000000
         Component = ceAmount
       end
       item
         Name = 'BarCode'
+        Value = ''
         Component = edBarCode
       end
       item
         Name = 'Article'
+        Value = ''
         Component = edArticle
       end
       item
         Name = 'BarCodeGLN'
+        Value = ''
         Component = edBarCodeGLN
       end
       item
         Name = 'ArticleGLN'
+        Value = ''
         Component = edArticleGLN
       end
       item
         Name = 'GoodsPropertyId'
+        Value = '0'
         Component = dsdGoodsPropertyGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'GoodsPropertyName'
+        Value = ''
         Component = dsdGoodsPropertyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'GoodsId'
+        Value = '0'
         Component = dsdGoodsGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'GoodsName'
+        Value = ''
         Component = dsdGoodsGuides
         ComponentItem = 'TextValue'
       end
       item
         Name = 'GoodsKindId'
+        Value = '0'
         Component = dsdGoodsKindGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'GoodsKindName'
+        Value = ''
         Component = dsdGoodsKindGuides
         ComponentItem = 'TextValue'
         ParamType = ptInput

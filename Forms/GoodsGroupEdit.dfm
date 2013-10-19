@@ -1,9 +1,19 @@
-﻿inherited GoodsGroupEditForm: TGoodsGroupEditForm
+﻿object GoodsGroupEditForm: TGoodsGroupEditForm
+  Left = 0
+  Top = 0
   Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074
   ClientHeight = 192
   ClientWidth = 295
-  ExplicitWidth = 303
-  ExplicitHeight = 219
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = True
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -101,23 +111,27 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
       end
       item
         Name = 'inName'
+        Value = ''
         Component = edName
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inParentId'
+        Value = ''
         Component = GoodsGroupGuides
         ParamType = ptInput
       end>
@@ -128,6 +142,7 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 152
@@ -140,26 +155,31 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'Code'
+        Value = 0.000000000000000000
         Component = ceCode
       end
       item
         Name = 'Name'
+        Value = ''
         Component = edName
         DataType = ftString
       end
       item
         Name = 'ParentId'
+        Value = ''
         Component = GoodsGroupGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'ParentName'
+        Value = ''
         Component = GoodsGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -175,11 +195,13 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = GoodsGroupGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = GoodsGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString

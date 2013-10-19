@@ -1,9 +1,19 @@
-﻿inherited TicketFuelEditForm: TTicketFuelEditForm
+﻿object TicketFuelEditForm: TTicketFuelEditForm
+  Left = 0
+  Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1072#1083#1086#1085' '#1085#1072' '#1090#1086#1087#1083#1080#1074#1086'>'
   ClientHeight = 237
   ClientWidth = 364
-  ExplicitWidth = 372
-  ExplicitHeight = 271
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = True
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object edRouteName: TcxTextEdit
@@ -100,32 +110,29 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = Null
       end
       item
         Name = 'inCode'
-        Component = ceCode
-        DataType = ftInteger
-        ParamType = ptInput
         Value = 0.000000000000000000
+        Component = ceCode
+        ParamType = ptInput
       end
       item
         Name = 'inName'
+        Value = ''
         Component = edRouteName
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inGoods'
-        Component = GoodsGuides
-        DataType = ftInteger
-        ParamType = ptInput
         Value = ''
+        Component = GoodsGuides
+        ParamType = ptInput
       end>
     Left = 320
     Top = 40
@@ -134,9 +141,8 @@
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
-        ParamType = ptInputOutput
         Value = Null
+        ParamType = ptInputOutput
       end>
     Left = 208
     Top = 80
@@ -148,41 +154,34 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = Null
       end
       item
         Name = 'Code'
-        Component = ceCode
-        DataType = ftInteger
-        ParamType = ptOutput
         Value = 0.000000000000000000
+        Component = ceCode
       end
       item
         Name = 'Name'
+        Value = ''
         Component = edRouteName
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'GoodsId'
+        Value = ''
         Component = GoodsGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'GoodsName'
+        Value = ''
         Component = GoodsGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end>
     Left = 240
     Top = 144
@@ -214,19 +213,19 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = GoodsGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = GoodsGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
-        Value = ''
       end>
     Left = 127
     Top = 135

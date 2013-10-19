@@ -1,9 +1,19 @@
-﻿inherited ProfitLossDirectionEditForm: TProfitLossDirectionEditForm
+﻿object ProfitLossDirectionEditForm: TProfitLossDirectionEditForm
+  Left = 0
+  Top = 0
   Caption = #1053#1086#1074#1072#1103' '#1072#1085#1072#1083#1080#1090#1080#1082#1072
   ClientHeight = 151
   ClientWidth = 427
-  ExplicitWidth = 435
-  ExplicitHeight = 178
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = True
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -85,17 +95,20 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
       end
       item
         Name = 'inName'
+        Value = ''
         Component = edName
         DataType = ftString
         ParamType = ptInput
@@ -107,6 +120,7 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 336
@@ -119,17 +133,20 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'Name'
+        Value = ''
         Component = edName
         DataType = ftString
       end
       item
         Name = 'Code'
+        Value = 0.000000000000000000
         Component = ceCode
       end>
     Left = 304

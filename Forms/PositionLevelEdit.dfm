@@ -1,9 +1,19 @@
-inherited PositionLevelEditForm: TPositionLevelEditForm
+object PositionLevelEditForm: TPositionLevelEditForm
+  Left = 0
+  Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080'>'
   ClientHeight = 139
   ClientWidth = 295
-  ExplicitWidth = 303
-  ExplicitHeight = 173
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = True
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit

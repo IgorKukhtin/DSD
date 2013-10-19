@@ -16,8 +16,8 @@ type
     FComponentItem: String;
     FParamType: TParamType;
     FonChange: TNotifyEvent;
-    function GetValue: Variant;
-    procedure SetValue(const Value: Variant);
+    function GetValue: OleVariant;
+    procedure SetValue(const Value: OleVariant);
     procedure SetComponent(const Value: TComponent);
     procedure SetInDataSet(const DataSet: TDataSet; const FieldName: string; const Value: Variant);
     function GetFromDataSet(const DataSet: TDataSet; const FieldName: string): Variant;
@@ -33,7 +33,7 @@ type
     constructor Create(Collection: TCollection); override;
   published
     property Name: String read FName write FName;
-    property Value: Variant read GetValue write SetValue;
+    property Value: OleVariant read GetValue write SetValue;
     // Откуда считывать значение параметра
     property Component: TComponent read FComponent write SetComponent;
     property ComponentItem: String read FComponentItem write FComponentItem;
@@ -511,7 +511,7 @@ begin
   end;
 end;
 
-function TdsdParam.GetValue: Variant;
+function TdsdParam.GetValue: OleVariant;
 // Если указан Component, то параметры берутся из него
 // иначе из значения Value
 var DateTime: TDateTime;
@@ -605,7 +605,7 @@ begin
   end;
 end;
 
-procedure TdsdParam.SetValue(const Value: Variant);
+procedure TdsdParam.SetValue(const Value: OleVariant);
 begin
   FValue := Value;
   // передаем значение параметра дальше по цепочке

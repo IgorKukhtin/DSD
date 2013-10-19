@@ -139,7 +139,7 @@ begin
           end;
         end;
   end;
-  Result := TParentForm.CreateNew(Application);
+  Result := TParentForm.Create(Application);
   Result.FormClassName := FormName;
 
   LoadStoredProc.ParamByName('FormName').Value := FormName;

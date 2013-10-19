@@ -1,9 +1,19 @@
-﻿inherited JuridicalGroupEditForm: TJuridicalGroupEditForm
+﻿object JuridicalGroupEditForm: TJuridicalGroupEditForm
+  Left = 0
+  Top = 0
   Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
   ClientHeight = 198
   ClientWidth = 303
-  ExplicitWidth = 311
-  ExplicitHeight = 225
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = True
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -102,23 +112,27 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
       end
       item
         Name = 'inName'
+        Value = ''
         Component = edName
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inJuridicalGroupId'
+        Value = ''
         Component = JuridicalGroupGuides
         ParamType = ptInput
       end>
@@ -129,6 +143,7 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 72
@@ -141,26 +156,31 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'Code'
+        Value = 0.000000000000000000
         Component = ceCode
       end
       item
         Name = 'Name'
+        Value = ''
         Component = edName
         DataType = ftString
       end
       item
         Name = 'ParentId'
+        Value = ''
         Component = JuridicalGroupGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'ParentName'
+        Value = ''
         Component = JuridicalGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -176,12 +196,14 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = JuridicalGroupGuides
         ComponentItem = 'Key'
         DataType = ftString
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = JuridicalGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString

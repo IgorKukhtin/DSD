@@ -1,9 +1,19 @@
-﻿inherited BankAccountEditForm: TBankAccountEditForm
+﻿object BankAccountEditForm: TBankAccountEditForm
+  Left = 0
+  Top = 0
   Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
   ClientHeight = 307
   ClientWidth = 348
-  ExplicitWidth = 356
-  ExplicitHeight = 334
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = True
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -134,33 +144,39 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
       end
       item
         Name = 'inName'
+        Value = ''
         Component = edName
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inJuridicalId'
+        Value = ''
         Component = dsdJuridicalGuides
         ParamType = ptInput
       end
       item
         Name = 'inBankId'
+        Value = ''
         Component = dsdBankGuides
         ParamType = ptInput
       end
       item
         Name = 'inCurrencyId'
+        Value = ''
         Component = dsdCurrencyGuides
         ParamType = ptInput
       end>
@@ -171,6 +187,7 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 240
@@ -183,47 +200,56 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'Name'
+        Value = ''
         Component = edName
         DataType = ftString
       end
       item
         Name = 'Code'
+        Value = 0.000000000000000000
         Component = ceCode
       end
       item
         Name = 'JuridicalId'
+        Value = ''
         Component = dsdJuridicalGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'JuridicalName'
+        Value = ''
         Component = dsdJuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'BankId'
+        Value = ''
         Component = dsdBankGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'BankName'
+        Value = ''
         Component = dsdBankGuides
         ComponentItem = 'TextValue'
       end
       item
         Name = 'CurrencyId'
+        Value = ''
         Component = dsdCurrencyGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'CurrencyName'
+        Value = ''
         Component = dsdCurrencyGuides
         ComponentItem = 'TextValue'
       end>

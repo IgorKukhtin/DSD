@@ -1,9 +1,18 @@
-﻿inherited PersonalGroupEditForm: TPersonalGroupEditForm
+﻿object PersonalGroupEditForm: TPersonalGroupEditForm
+  Left = 0
+  Top = 0
   Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074
   ClientHeight = 249
   ClientWidth = 354
-  ExplicitWidth = 362
-  ExplicitHeight = 276
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -111,29 +120,34 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
       end
       item
         Name = 'inName'
+        Value = ''
         Component = edName
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inWorkHours'
+        Value = ''
         Component = ceWorkHours
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inUnitId '
+        Value = ''
         Component = UnitGuides
         ParamType = ptInput
       end>
@@ -144,6 +158,7 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 272
@@ -156,31 +171,37 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'Code'
+        Value = 0.000000000000000000
         Component = ceCode
       end
       item
         Name = 'Name'
+        Value = ''
         Component = edName
         DataType = ftString
       end
       item
         Name = 'WorkHours'
+        Value = ''
         Component = ceWorkHours
         DataType = ftFloat
       end
       item
         Name = 'UnitId'
+        Value = ''
         Component = UnitGuides
         ComponentItem = 'key'
       end
       item
         Name = 'UnitName'
+        Value = ''
         Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -215,6 +236,7 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -222,6 +244,7 @@
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString

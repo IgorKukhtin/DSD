@@ -1,9 +1,19 @@
-inherited RouteKindEditForm: TRouteKindEditForm
+object RouteKindEditForm: TRouteKindEditForm
+  Left = 0
+  Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1080#1087' '#1084#1072#1088#1096#1088#1091#1090#1072'>'
   ClientHeight = 139
   ClientWidth = 295
-  ExplicitWidth = 311
-  ExplicitHeight = 174
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = True
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -82,17 +92,20 @@ inherited RouteKindEditForm: TRouteKindEditForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = 0.000000000000000000
         Component = edCode
         ParamType = ptInput
       end
       item
         Name = 'inName'
+        Value = ''
         Component = edName
         DataType = ftString
         ParamType = ptInput
@@ -104,6 +117,7 @@ inherited RouteKindEditForm: TRouteKindEditForm
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 96
@@ -116,17 +130,20 @@ inherited RouteKindEditForm: TRouteKindEditForm
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'Name'
+        Value = ''
         Component = edName
         DataType = ftString
       end
       item
         Name = 'Code'
+        Value = 0.000000000000000000
         Component = edCode
         DataType = ftUnknown
       end>

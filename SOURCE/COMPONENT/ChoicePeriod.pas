@@ -74,7 +74,7 @@ implementation
 
 {$R *.dfm}
 
-uses DateUtils, ParentForm;
+uses DateUtils, ParentForm, UtilConst;
 
 type
   TWeek = class
@@ -100,17 +100,17 @@ begin
        pcMonth:
          begin
             cxDateStart.Date := EncodeDate(seYear.Value, cbMonth.ItemIndex + 1, 1);
-            cxDateEnd.Date := EndOfTheMonth(cxDateStart.Date);
+            cxDateEnd.Date := EndOfTheMonth(cxDateStart.Date) - gc_Minute;
           end;
        pcQuarter:
           begin
             cxDateStart.Date := EncodeDate(seYear.Value, cbQuarter.ItemIndex * 3 + 1, 1);
-            cxDateEnd.Date := EndOfTheMonth(EncodeDate(seYear.Value, cbQuarter.ItemIndex * 3 + 3, 1));
+            cxDateEnd.Date := EndOfTheMonth(EncodeDate(seYear.Value, cbQuarter.ItemIndex * 3 + 3, 1)) - gc_Minute;
           end;
        pcYear:
           begin
             cxDateStart.Date := EncodeDate(seYear.Value, 1, 1);
-            cxDateEnd.Date := EndOfTheYear(cxDateStart.Date);
+            cxDateEnd.Date := EndOfTheYear(cxDateStart.Date) - gc_Minute;
           end;
      end;
   end;
@@ -221,8 +221,8 @@ begin
   if Assigned(FDateEnd) then begin
      FDateEndDblClick := FDateEnd.OnDblClick;
      FDateEnd.OnDblClick := OnDblClick;
-     FDateEndChange := FDateEnd.Properties.OnChange;
-     FDateEnd.Properties.OnChange := OnDateEditChange;
+//     FDateEndChange := FDateEnd.Properties.OnChange;
+//     FDateEnd.Properties.OnChange := OnDateEditChange;
   end;
 end;
 
@@ -232,8 +232,8 @@ begin
   if Assigned(FDateStart) then begin
      FDateStartDblClick := FDateStart.OnDblClick;
      FDateStart.OnDblClick := OnDblClick;
-     FDateStartChange := FDateStart.Properties.OnChange;
-     FDateStart.Properties.OnChange := OnDateEditChange;
+//     FDateStartChange := FDateStart.Properties.OnChange;
+//     FDateStart.Properties.OnChange := OnDateEditChange;
   end;
 end;
 

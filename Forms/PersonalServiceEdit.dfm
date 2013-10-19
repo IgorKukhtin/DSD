@@ -1,9 +1,19 @@
-﻿inherited PersonalServiceEditForm: TPersonalServiceEditForm
+﻿object PersonalServiceEditForm: TPersonalServiceEditForm
+  Left = 0
+  Top = 0
   Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077
   ClientHeight = 328
   ClientWidth = 654
-  ExplicitWidth = 662
-  ExplicitHeight = 355
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = True
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxLabel1: TcxLabel
@@ -206,12 +216,14 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = 0.000000000000000000
         Component = ceInvNumber
         ParamType = ptInput
       end
@@ -223,21 +235,25 @@
       end
       item
         Name = 'inProfitLossGroupId '
+        Value = ''
         Component = PersonalGuides
         ParamType = ptInput
       end
       item
         Name = 'inProfitLossDirectionId'
+        Value = ''
         Component = PaidKindGuides
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyDestinationId'
+        Value = ''
         Component = UnitGuides
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyId '
+        Value = ''
         Component = InfoMoneyGuides
       end>
     Left = 264
@@ -247,6 +263,7 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 312
@@ -259,6 +276,7 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -270,45 +288,54 @@
       end
       item
         Name = 'Code'
+        Value = 0.000000000000000000
         Component = ceInvNumber
       end
       item
         Name = 'ProfitLossGroupId'
+        Value = ''
         Component = PersonalGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'ProfitLossDirectionId'
+        Value = ''
         Component = PaidKindGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'ProfitLossGroupName'
+        Value = ''
         Component = PersonalGuides
         ComponentItem = 'TextValue'
       end
       item
         Name = 'ProfitLossDirectionName'
+        Value = ''
         Component = PaidKindGuides
         ComponentItem = 'TextValue'
       end
       item
         Name = 'InfoMoneyDestinationId'
+        Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'InfoMoneyDestinationName'
+        Value = ''
         Component = UnitGuides
         ComponentItem = 'TextValue'
       end
       item
         Name = 'InfoMoneyId'
+        Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'InfoMoneyName'
+        Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
       end>

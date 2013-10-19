@@ -1,9 +1,19 @@
-﻿inherited ProfitLossEditForm: TProfitLossEditForm
+﻿object ProfitLossEditForm: TProfitLossEditForm
+  Left = 0
+  Top = 0
   Caption = #1053#1086#1074#1072#1103' '#1089#1090#1072#1090#1100#1103
   ClientHeight = 371
   ClientWidth = 348
-  ExplicitWidth = 356
-  ExplicitHeight = 398
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = True
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -150,38 +160,45 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
       end
       item
         Name = 'inName'
+        Value = ''
         Component = edName
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inProfitLossGroupId '
+        Value = ''
         Component = ProfitLossGroupGuides
         ParamType = ptInput
       end
       item
         Name = 'inProfitLossDirectionId'
+        Value = ''
         Component = ProfitLossDirectionGuides
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyDestinationId'
+        Value = ''
         Component = InfoMoneyDestinationGuides
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyId '
+        Value = ''
         Component = InfoMoneyGuides
       end>
     Left = 264
@@ -191,6 +208,7 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 216
@@ -203,56 +221,67 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'Name'
+        Value = ''
         Component = edName
         DataType = ftString
       end
       item
         Name = 'Code'
+        Value = 0.000000000000000000
         Component = ceCode
       end
       item
         Name = 'ProfitLossGroupId'
+        Value = ''
         Component = ProfitLossGroupGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'ProfitLossDirectionId'
+        Value = ''
         Component = ProfitLossDirectionGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'ProfitLossGroupName'
+        Value = ''
         Component = ProfitLossGroupGuides
         ComponentItem = 'TextValue'
       end
       item
         Name = 'ProfitLossDirectionName'
+        Value = ''
         Component = ProfitLossDirectionGuides
         ComponentItem = 'TextValue'
       end
       item
         Name = 'InfoMoneyDestinationId'
+        Value = ''
         Component = InfoMoneyDestinationGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'InfoMoneyDestinationName'
+        Value = ''
         Component = InfoMoneyDestinationGuides
         ComponentItem = 'TextValue'
       end
       item
         Name = 'InfoMoneyId'
+        Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'InfoMoneyName'
+        Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
       end>

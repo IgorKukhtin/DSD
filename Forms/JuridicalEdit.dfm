@@ -1,9 +1,19 @@
-﻿inherited JuridicalEditForm: TJuridicalEditForm
+﻿object JuridicalEditForm: TJuridicalEditForm
+  Left = 0
+  Top = 0
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1075#1086' '#1083#1080#1094#1072
   ClientHeight = 333
   ClientWidth = 356
-  ExplicitWidth = 364
-  ExplicitHeight = 360
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = True
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -155,45 +165,53 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
       end
       item
         Name = 'inName'
+        Value = ''
         Component = edName
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inGLNCode'
+        Value = ''
         Component = edGLNCode
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inisCorporate'
+        Value = 'False'
         Component = cbisCorporate
         DataType = ftBoolean
         ParamType = ptInput
       end
       item
         Name = 'inJuridicalGroupId'
+        Value = ''
         Component = JuridicalGroupGuides
         ParamType = ptInput
       end
       item
         Name = 'inGoodsPropertyId'
+        Value = ''
         Component = GoodsPropertyGuides
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyId'
+        Value = ''
         Component = InfoMoneyGuides
         ParamType = ptInput
       end>
@@ -204,16 +222,19 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end
       item
         Name = 'GroupId'
+        Value = ''
         Component = JuridicalGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'GroupName'
+        Value = ''
         Component = JuridicalGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -229,57 +250,68 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'Name'
+        Value = ''
         Component = edName
         DataType = ftString
       end
       item
         Name = 'Code'
+        Value = 0.000000000000000000
         Component = ceCode
       end
       item
         Name = 'GLNCode'
+        Value = ''
         Component = edGLNCode
         DataType = ftString
       end
       item
         Name = 'isCorporate'
+        Value = 'False'
         Component = cbisCorporate
       end
       item
         Name = 'JuridicalGroupId'
+        Value = ''
         Component = JuridicalGroupGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'JuridicalGroupName'
+        Value = ''
         Component = JuridicalGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'GoodsPropertyId'
+        Value = ''
         Component = GoodsPropertyGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'GoodsPropertyName'
+        Value = ''
         Component = GoodsPropertyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'InfoMoneyId'
+        Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'InfoMoneyName'
+        Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
       end>
@@ -294,6 +326,7 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = JuridicalGroupGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -301,6 +334,7 @@
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = JuridicalGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -317,6 +351,7 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = GoodsPropertyGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -324,6 +359,7 @@
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = GoodsPropertyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -340,6 +376,7 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -347,6 +384,7 @@
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString

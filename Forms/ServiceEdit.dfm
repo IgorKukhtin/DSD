@@ -1,9 +1,19 @@
-﻿inherited ServiceEditForm: TServiceEditForm
+﻿object ServiceEditForm: TServiceEditForm
+  Left = 0
+  Top = 0
   Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077
   ClientHeight = 328
   ClientWidth = 644
-  ExplicitWidth = 652
-  ExplicitHeight = 355
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = True
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxLabel1: TcxLabel
@@ -195,47 +205,57 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inInvNumber'
+        Value = 0.000000000000000000
         Component = ceInvNumber
         DataType = ftString
       end
       item
         Name = 'inOperDate'
+        Value = 0d
         Component = ceOperDate
         DataType = ftDateTime
       end
       item
         Name = 'inAmount'
+        Value = 0.000000000000000000
         Component = ceAmount
         DataType = ftFloat
       end
       item
         Name = 'inJuridicalId'
+        Value = ''
         Component = JuridicalGuides
       end
       item
         Name = 'inMainJuridicalId'
+        Value = ''
         Component = MainJuridicalGuides
       end
       item
         Name = 'inBusinessId'
+        Value = ''
         Component = BusinessGuides
       end
       item
         Name = 'inPaidKindId'
+        Value = ''
         Component = PaidKindGuides
       end
       item
         Name = 'inInfoMoneyId'
+        Value = ''
         Component = InfoMoneyGuides
       end
       item
         Name = 'inUnitId'
+        Value = ''
         Component = UnitGuides
       end>
     Left = 264
@@ -245,6 +265,7 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 312
@@ -257,26 +278,32 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'InvNumber'
+        Value = 0.000000000000000000
         Component = ceInvNumber
       end
       item
         Name = 'OperDate'
+        Value = 0d
         Component = ceOperDate
       end
       item
         Name = 'StatusCode'
+        Value = Null
       end
       item
         Name = 'StatusName'
+        Value = Null
       end
       item
         Name = 'Amount'
+        Value = 0.000000000000000000
         Component = ceAmount
         DataType = ftFloat
       end>

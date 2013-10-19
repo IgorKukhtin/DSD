@@ -1,9 +1,19 @@
-﻿inherited MemberEditForm: TMemberEditForm
+﻿object MemberEditForm: TMemberEditForm
+  Left = 0
+  Top = 0
   Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   ClientHeight = 322
   ClientWidth = 339
-  ExplicitWidth = 347
-  ExplicitHeight = 349
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = True
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object edMeasureName: TcxTextEdit
@@ -117,35 +127,41 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
       end
       item
         Name = 'inName'
+        Value = ''
         Component = edMeasureName
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inINN'
+        Value = ''
         Component = ceINN
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inDriverCertificate'
+        Value = ''
         Component = ceDriverCertificate
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inComment'
+        Value = ''
         Component = ceComment
         DataType = ftString
         ParamType = ptInput
@@ -157,6 +173,7 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 168
@@ -169,31 +186,37 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'Code'
+        Value = 0.000000000000000000
         Component = ceCode
       end
       item
         Name = 'Name'
+        Value = ''
         Component = edMeasureName
         DataType = ftString
       end
       item
         Name = 'INN'
+        Value = ''
         Component = ceINN
         DataType = ftString
       end
       item
         Name = 'DriverCertificate'
+        Value = ''
         Component = ceDriverCertificate
         DataType = ftString
       end
       item
         Name = 'Comment'
+        Value = ''
         Component = ceComment
         DataType = ftString
       end>

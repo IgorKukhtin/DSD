@@ -16,7 +16,7 @@ type
 
 implementation
 
-uses dsdDB, cxCalendar;
+uses dsdDB, SysUtils, DateUtils, cxCalendar;
 
 { TComponentDBTest }
 
@@ -24,7 +24,10 @@ procedure TComponentDBTest.ParamTest;
 var param: TdsdParam;
     edDate: TcxDateEdit;
     s: string;
+    D: Variant;
 begin
+  D := EndOfTheMonth(Date)-0.5;
+  Check(D = EndOfTheMonth(Date), '');
   param := TdsdParam.Create(nil);
   edDate := TcxDateEdit.Create(nil);
   param.Component := edDate;

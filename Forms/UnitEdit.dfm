@@ -1,9 +1,19 @@
-﻿inherited UnitEditForm: TUnitEditForm
+﻿object UnitEditForm: TUnitEditForm
+  Left = 0
+  Top = 0
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
   ClientHeight = 300
   ClientWidth = 497
-  ExplicitWidth = 505
-  ExplicitHeight = 327
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = True
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -190,59 +200,69 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
       end
       item
         Name = 'inName'
+        Value = ''
         Component = edName
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inPartionDate'
+        Value = 'False'
         Component = cbPartionDate
         DataType = ftBoolean
         ParamType = ptInput
       end
       item
         Name = 'inParentId'
+        Value = ''
         Component = ParentGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inBranchId'
+        Value = ''
         Component = BranchGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inBusinessId'
+        Value = ''
         Component = BusinessGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inJuridicalId'
+        Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inAccountDirectionId'
+        Value = ''
         Component = AccountDirectionGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inProfitLossDirectionId'
+        Value = ''
         Component = ProfitLossDirectionGuides
         ComponentItem = 'Key'
         ParamType = ptInput
@@ -254,6 +274,7 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 16
@@ -266,78 +287,93 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'Name'
+        Value = ''
         Component = edName
         DataType = ftString
       end
       item
         Name = 'Code'
+        Value = 0.000000000000000000
         Component = ceCode
       end
       item
         Name = 'ParentId'
+        Value = ''
         Component = ParentGuides
         ComponentItem = 'Id'
       end
       item
         Name = 'ParentName'
+        Value = ''
         Component = ParentGuides
         ComponentItem = 'Name'
         DataType = ftString
       end
       item
         Name = 'BranchId'
+        Value = ''
         Component = BranchGuides
         ComponentItem = 'Id'
       end
       item
         Name = 'BranchName'
+        Value = ''
         Component = BranchGuides
         ComponentItem = 'Name'
         DataType = ftString
       end
       item
         Name = 'BusinessId'
+        Value = ''
         Component = BusinessGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'BusinessName'
+        Value = ''
         Component = BusinessGuides
         ComponentItem = 'TextValue'
       end
       item
         Name = 'JuridicalId'
+        Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'JuridicalName'
+        Value = ''
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
       end
       item
         Name = 'AccountDirectionId'
+        Value = ''
         Component = AccountDirectionGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'AccountDirectionName'
+        Value = ''
         Component = AccountDirectionGuides
         ComponentItem = 'TextValue'
       end
       item
         Name = 'ProfitLossDirectionId'
+        Value = ''
         Component = ProfitLossDirectionGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'ProfitLossDirectionName'
+        Value = ''
         Component = ProfitLossDirectionGuides
         ComponentItem = 'TextValue'
       end>

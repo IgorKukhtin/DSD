@@ -20,16 +20,18 @@ type
     FonAfterShow: TNotifyEvent;
     FisAfterShow: boolean;
     FisFree: boolean;
+    FisAlwaysRefresh: boolean;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
     procedure SetSender(const Value: TComponent);
     procedure SetisFree(const Value: boolean);
+    procedure SetisAlwaysRefresh(const Value: boolean);
     property FormSender: TComponent read FSender write SetSender;
     procedure AfterShow(var a : TWMSHOWWINDOW); message MY_MESSAGE;
   public
     { Public declarations }
-    constructor CreateNew(AOwner: TComponent; Dummy: Integer = 0); override;
+    constructor Create(AOwner: TComponent); override;
     function Execute(Sender: TComponent; Params: TdsdParams): boolean;
     procedure Close(Sender: TObject);
     property FormClassName: string read FFormClassName write FFormClassName;
@@ -38,7 +40,8 @@ type
     // запросы при подгрузке данных!!!
     property isAfterShow: boolean read FisAfterShow default false;
   published
-    property isFree: boolean read FisFree write SetisFree default true;
+    property isAlwaysRefresh: boolean read FisAlwaysRefresh write SetisAlwaysRefresh;
+    property isFree: boolean read FisFree write SetisFree;
     property Params: TdsdParams read FParams write FParams;
   end;
 
@@ -59,6 +62,8 @@ procedure TParentForm.AfterShow(var a : TWMSHOWWINDOW);
 var
   i: integer;
 begin
+  if csDesigning in ComponentState then
+     exit;
   if not FisAfterShow then
     try
       for I := 0 to ComponentCount - 1 do begin
@@ -85,7 +90,7 @@ begin
   inherited Close;
 end;
 
-constructor TParentForm.CreateNew(AOwner: TComponent; Dummy: Integer = 0);
+constructor TParentForm.Create(AOwner: TComponent);
 begin
   inherited;
   onKeyDown := FormKeyDown;
@@ -99,6 +104,12 @@ var
   i: integer;
   ExecuteDialog: TExecuteDialog;
 begin
+  // если форма уже показывалась
+  // то перечитывать ли ее каждый раз определяет флаг
+  if FisAfterShow then
+     if isAlwaysRefresh then
+        FisAfterShow := false;
+
   result := true;
   // Заполняет параметры формы переданными параметрами
   for I := 0 to ComponentCount - 1 do begin
@@ -159,6 +170,11 @@ end;
 procedure TParentForm.FormShow(Sender: TObject);
 begin
   PostMessage(Handle, MY_MESSAGE, 0, 0);
+end;
+
+procedure TParentForm.SetisAlwaysRefresh(const Value: boolean);
+begin
+  FisAlwaysRefresh := Value;
 end;
 
 procedure TParentForm.SetisFree(const Value: boolean);

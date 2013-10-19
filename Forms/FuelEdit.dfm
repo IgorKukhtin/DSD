@@ -1,9 +1,19 @@
-﻿inherited FuelEditForm: TFuelEditForm
+﻿object FuelEditForm: TFuelEditForm
+  Left = 0
+  Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072'>'
   ClientHeight = 256
   ClientWidth = 346
-  ExplicitWidth = 362
-  ExplicitHeight = 291
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = True
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit

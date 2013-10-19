@@ -1,9 +1,19 @@
-﻿inherited InfoMoneyEditForm: TInfoMoneyEditForm
+﻿object InfoMoneyEditForm: TInfoMoneyEditForm
+  Left = 0
+  Top = 0
   Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1072#1103' '#1089#1090#1072#1090#1100#1103
   ClientHeight = 273
   ClientWidth = 306
-  ExplicitWidth = 314
-  ExplicitHeight = 300
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = True
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -117,28 +127,33 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
       end
       item
         Name = 'inName'
+        Value = ''
         Component = edName
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyGroupId'
+        Value = ''
         Component = dsdInfoMoneyGroupGuides
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyDestinationId'
+        Value = ''
         Component = dsdInfoMoneyDestinationGuides
         ParamType = ptInput
       end>
@@ -149,6 +164,7 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 240
@@ -161,36 +177,43 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'Name'
+        Value = ''
         Component = edName
         DataType = ftString
       end
       item
         Name = 'Code'
+        Value = 0.000000000000000000
         Component = ceCode
       end
       item
         Name = 'InfoMoneyGroupId'
+        Value = ''
         Component = dsdInfoMoneyGroupGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'InfoMoneyGroupName'
+        Value = ''
         Component = dsdInfoMoneyGroupGuides
         ComponentItem = 'TextValue'
       end
       item
         Name = 'InfoMoneyDestinationId'
+        Value = ''
         Component = dsdInfoMoneyDestinationGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'InfoMoneyDestinationName'
+        Value = ''
         Component = dsdInfoMoneyDestinationGuides
         ComponentItem = 'TextValue'
       end>
@@ -204,6 +227,7 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = dsdInfoMoneyGroupGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -211,6 +235,7 @@
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = dsdInfoMoneyGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -227,6 +252,7 @@
     Params = <
       item
         Name = 'Key'
+        Value = ''
         Component = dsdInfoMoneyDestinationGuides
         ComponentItem = 'Key'
         DataType = ftString
@@ -234,6 +260,7 @@
       end
       item
         Name = 'TextValue'
+        Value = ''
         Component = dsdInfoMoneyDestinationGuides
         ComponentItem = 'TextValue'
         DataType = ftString

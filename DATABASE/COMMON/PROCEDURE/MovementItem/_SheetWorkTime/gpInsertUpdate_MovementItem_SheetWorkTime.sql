@@ -7,8 +7,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SheetWorkTime(
     IN inPositionId          Integer   , -- Должность
     IN inUnitId              Integer   , -- Подразделение
     IN inPersonalGroupId     Integer   , -- Группировка Сотрудника
-    IN inStartDate           TDateTime , -- начальная дата
- INOUT ioValue               TVarChar  , -- начальная дата
+    IN inOperDate            TDateTime , -- дата установки часов
+ INOUT ioValue               TVarChar  , -- часы
     IN inTypeId              Integer   , 
     IN inSession             TVarChar    -- сессия пользователя
 )                              
@@ -16,7 +16,7 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbMovementId_1 Integer;
+   DECLARE vbMovementId Integer;
    DECLARE vbMovementItemId_1 Integer;
 
 BEGIN
@@ -25,6 +25,20 @@ BEGIN
     vbUserId := inSession;
 
     ioValue := '8/Заработало'::TVarChar;
+
+    -- Для начала определим ID Movement, если таковой имеется. Ключом будет OperDate и UnitId
+    vbMovementId := (SELECT Movement_SheetWorkTime.Id FROM Movement AS Movement_SheetWorkTime
+                               JOIN MovementLinkObject AS MovementLinkObject_Unit 
+                                 ON MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+                                AND MovementLinkObject_Unit.MovementId = Movement_SheetWorkTime.Id  
+                           WHERE Movement_SheetWorkTime.DescId = zc_Movement_SheetWorkTime() AND Movement_SheetWorkTime.OperDate::Date = inOperDate::Date);
+         -- сохранили <Документ>
+     vbMovementId := lpInsertUpdate_Movement (vbMovementId, zc_Movement_SheetWorkTime(), '', inOperDate::DATE, NULL);
+     -- сохранили связь с <Подразделение (в документе)>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), vbMovementId, inUnitId);
+
+
+    -- 
 
      -- сохранили <Элемент документа>
      --ioId := lpInsertUpdate_MovementItem (vbMovementItemId_1, zc_MI_Master(), ioPersonalId, vbMovementId_1, inAmount_1, NULL);

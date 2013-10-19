@@ -1,9 +1,19 @@
-﻿inherited CashEditForm: TCashEditForm
+﻿object CashEditForm: TCashEditForm
+  Left = 0
+  Top = 0
   Caption = #1050#1072#1089#1089#1072
   ClientHeight = 353
   ClientWidth = 335
-  ExplicitWidth = 343
-  ExplicitHeight = 380
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = True
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -150,39 +160,46 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
+        Value = 0.000000000000000000
         Component = ceCode
         ParamType = ptInput
       end
       item
         Name = 'inName'
+        Value = ''
         Component = edName
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inCurrencyId'
+        Value = ''
         Component = dsdCurrencyGuides
         ParamType = ptInput
       end
       item
         Name = 'inBranchId'
+        Value = ''
         Component = dsdBranchGuides
         ParamType = ptInput
       end
       item
         Name = 'inMainJuridicalId'
+        Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inBusinessId'
+        Value = ''
         Component = BusinessGuides
         ComponentItem = 'Key'
         ParamType = ptInput
@@ -194,6 +211,7 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 240
@@ -206,58 +224,69 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'Name'
+        Value = ''
         Component = edName
         DataType = ftString
       end
       item
         Name = 'Code'
+        Value = 0.000000000000000000
         Component = ceCode
       end
       item
         Name = 'BranchId'
+        Value = ''
         Component = dsdBranchGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'BranchName'
+        Value = ''
         Component = dsdBranchGuides
         ComponentItem = 'TextValue'
       end
       item
         Name = 'CurrencyId'
+        Value = ''
         Component = dsdCurrencyGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'CurrencyName'
+        Value = ''
         Component = dsdCurrencyGuides
         ComponentItem = 'TextValue'
       end
       item
         Name = 'MainJuridicalId'
+        Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'MainJuridicalName'
+        Value = ''
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'BusinessId'
+        Value = ''
         Component = BusinessGuides
         ComponentItem = 'Key'
         DataType = ftString
       end
       item
         Name = 'BusinessName'
+        Value = ''
         Component = BusinessGuides
         ComponentItem = 'TextValue'
         DataType = ftString

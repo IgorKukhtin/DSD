@@ -1,9 +1,19 @@
-inherited ContractEditForm: TContractEditForm
+object ContractEditForm: TContractEditForm
+  Left = 0
+  Top = 0
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1044#1086#1075#1086#1074#1086#1088#1072
   ClientHeight = 309
   ClientWidth = 531
-  ExplicitWidth = 539
-  ExplicitHeight = 336
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = True
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object edInvNumber: TcxTextEdit
@@ -154,18 +164,21 @@ inherited ContractEditForm: TContractEditForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inInvNumber'
+        Value = ''
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inComment'
+        Value = ''
         Component = ceComment
         DataType = ftString
         ParamType = ptInput
@@ -180,16 +193,19 @@ inherited ContractEditForm: TContractEditForm
       end
       item
         Name = 'inSigningDate'
+        Value = 0d
         Component = edSigningDate
         DataType = ftDateTime
       end
       item
         Name = 'inStartDate'
+        Value = 0d
         Component = edStartDate
         DataType = ftDateTime
       end
       item
         Name = 'inEndDate'
+        Value = 0d
         Component = edEndDate
         DataType = ftDateTime
       end>
@@ -200,6 +216,7 @@ inherited ContractEditForm: TContractEditForm
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end>
     Left = 304
@@ -212,17 +229,20 @@ inherited ContractEditForm: TContractEditForm
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inInvNumber'
+        Value = ''
         Component = edInvNumber
         DataType = ftString
       end
       item
         Name = 'inComment'
+        Value = ''
         Component = ceComment
         DataType = ftString
       end
@@ -236,16 +256,19 @@ inherited ContractEditForm: TContractEditForm
       end
       item
         Name = 'inSigningDate'
+        Value = 0d
         Component = edSigningDate
         DataType = ftDateTime
       end
       item
         Name = 'inStartDate'
+        Value = 0d
         Component = edStartDate
         DataType = ftDateTime
       end
       item
         Name = 'inEndDate'
+        Value = 0d
         Component = edStartDate
         DataType = ftDateTime
       end>
