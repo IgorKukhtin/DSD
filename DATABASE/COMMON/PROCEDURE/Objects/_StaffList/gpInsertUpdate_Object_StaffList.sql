@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_StaffList(Integer,  TFloat, TFloat
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StaffList(
  INOUT ioId                  Integer   , -- ключ объекта <Ўтатное расписание>
-    IN inHoursPlan           TFloat    , -- ѕлан счетов
+    IN inHoursPlan           TFloat    , -- ѕлан часов
     IN inPersonalCount       TFloat    , -- кол. человек
     IN inFundPayMonth        TFloat    , -- ‘онд оплаты за мес€ц
     IN inFundPayTurn         TFloat    , -- ‘онд оплаты за день

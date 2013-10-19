@@ -91,19 +91,26 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_RouteKind_External(), inDescId:= zc_Object_RouteKind(), inCode:= 2, inName:= 'Межгород', inEnumName:= 'zc_Enum_RouteKind_External');
 
      -- !!! Типы рабочего времени
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_Work(),    inDescId:= zc_Object_WorkTimeKind(), inCode:= 1, inName:= 'Рабочие часы', inEnumName:= 'zc_Enum_WorkTimeKind_Work');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_Holiday(), inDescId:= zc_Object_WorkTimeKind(), inCode:= 2, inName:= 'Отпуск'      , inEnumName:= 'zc_Enum_WorkTimeKind_Holiday');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_Work(),     inDescId:= zc_Object_WorkTimeKind(), inCode:= 1, inName:= 'Рабочие часы', inEnumName:= 'zc_Enum_WorkTimeKind_Work');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_Holiday(),  inDescId:= zc_Object_WorkTimeKind(), inCode:= 2, inName:= 'Отпуск'      , inEnumName:= 'zc_Enum_WorkTimeKind_Holiday');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_Hospital(), inDescId:= zc_Object_WorkTimeKind(), inCode:= 3, inName:= 'Больничный' , inEnumName:= 'zc_Enum_WorkTimeKind_Hospital');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_Skip(),    inDescId:= zc_Object_WorkTimeKind(), inCode:= 4, inName:= 'Прогул'      , inEnumName:= 'zc_Enum_WorkTimeKind_Skip');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_Trainee(), inDescId:= zc_Object_WorkTimeKind(), inCode:= 5, inName:= 'Стажер'      , inEnumName:= 'zc_Enum_WorkTimeKind_Trainee');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_DayOff(),  inDescId:= zc_Object_WorkTimeKind(), inCode:= 6, inName:= 'Выходной'    , inEnumName:= 'zc_Enum_WorkTimeKind_DayOff');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_Skip(),     inDescId:= zc_Object_WorkTimeKind(), inCode:= 4, inName:= 'Прогул'      , inEnumName:= 'zc_Enum_WorkTimeKind_Skip');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_Trainee(),  inDescId:= zc_Object_WorkTimeKind(), inCode:= 5, inName:= 'Стажер'      , inEnumName:= 'zc_Enum_WorkTimeKind_Trainee');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_DayOff(),   inDescId:= zc_Object_WorkTimeKind(), inCode:= 6, inName:= 'Выходной'    , inEnumName:= 'zc_Enum_WorkTimeKind_DayOff');
 
      -- !!! Типы рабочего времени
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ModelServiceKind_DaySheetWorkTime(),   inDescId:= zc_Object_ModelServiceKind(), inCode:= 1, inName:= 'По дням табель'         , inEnumName:= 'zc_Enum_ModelServiceKind_DaySheetWorkTime');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ModelServiceKind_MonthSheetWorkTime(), inDescId:= zc_Object_ModelServiceKind(), inCode:= 1, inName:= 'За месяц табель'        , inEnumName:= 'zc_Enum_ModelServiceKind_MonthSheetWorkTime');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ModelServiceKind_SatSheetWorkTime(),   inDescId:= zc_Object_ModelServiceKind(), inCode:= 1, inName:= 'По субботам табель'     , inEnumName:= 'zc_Enum_ModelServiceKind_SatSheetWorkTime');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ModelServiceKind_MonthFundPay(),       inDescId:= zc_Object_ModelServiceKind(), inCode:= 1, inName:= 'За месяц Фонд/Доплата'  , inEnumName:= 'zc_Enum_ModelServiceKind_MonthFundPay');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ModelServiceKind_TurnFundPay(),        inDescId:= zc_Object_ModelServiceKind(), inCode:= 1, inName:= 'За 1 смену Фонд/Доплата', inEnumName:= 'zc_Enum_ModelServiceKind_TurnFundPay');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ModelServiceKind_MonthSheetWorkTime(), inDescId:= zc_Object_ModelServiceKind(), inCode:= 2, inName:= 'За месяц табель'        , inEnumName:= 'zc_Enum_ModelServiceKind_MonthSheetWorkTime');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ModelServiceKind_SatSheetWorkTime(),   inDescId:= zc_Object_ModelServiceKind(), inCode:= 3, inName:= 'По субботам табель'     , inEnumName:= 'zc_Enum_ModelServiceKind_SatSheetWorkTime');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ModelServiceKind_MonthFundPay(),       inDescId:= zc_Object_ModelServiceKind(), inCode:= 4, inName:= 'За месяц Фонд/Доплата'  , inEnumName:= 'zc_Enum_ModelServiceKind_MonthFundPay');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ModelServiceKind_TurnFundPay(),        inDescId:= zc_Object_ModelServiceKind(), inCode:= 5, inName:= 'За 1 смену Фонд/Доплата', inEnumName:= 'zc_Enum_ModelServiceKind_TurnFundPay');
+
+     -- !!! Типы выбора данных
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_InWeight(),  inDescId:= zc_Object_SelectKind(), inCode:= 1, inName:= 'Кол-во приход с пересчетом в вес', inEnumName:= 'zc_Enum_SelectKind_InWeight');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_OutWeight(), inDescId:= zc_Object_SelectKind(), inCode:= 2, inName:= 'Кол-во расход с пересчетом в вес', inEnumName:= 'zc_Enum_SelectKind_OutWeight');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_InAmount(),  inDescId:= zc_Object_SelectKind(), inCode:= 3, inName:= 'Кол-во приход',                    inEnumName:= 'zc_Enum_SelectKind_InAmount');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_OutAmount(), inDescId:= zc_Object_SelectKind(), inCode:= 4, inName:= 'Кол-во расход',                    inEnumName:= 'zc_Enum_SelectKind_OutAmount');
+
 
      -- !!! 
      -- !!! Баланс: 1-уровень Управленческих Счетов
