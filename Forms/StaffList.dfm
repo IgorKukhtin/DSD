@@ -1,24 +1,16 @@
-object CardFuelForm: TCardFuelForm
-  Left = 0
-  Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1086#1087#1083#1080#1074#1085#1099#1077' '#1082#1072#1088#1090#1099'>'
-  ClientHeight = 395
-  ClientWidth = 703
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  OldCreateOrder = False
-  isFree = False
+inherited StaffListForm: TStaffListForm
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077'>'
+  ClientHeight = 367
+  ClientWidth = 853
+  ExplicitWidth = 861
+  ExplicitHeight = 401
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 703
-    Height = 369
+    Width = 853
+    Height = 341
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -34,68 +26,62 @@ object CardFuelForm: TCardFuelForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = clFundPayMonth
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'Code'
+      object clUnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'UnitName'
         HeaderAlignmentVert = vaCenter
-        Width = 51
+        Width = 132
       end
-      object clName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-        DataBinding.FieldName = 'Name'
+      object clPositionName: TcxGridDBColumn
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+        DataBinding.FieldName = 'PositionName'
         HeaderAlignmentVert = vaCenter
-        Width = 145
+        Width = 155
       end
-      object clPersonalDriver: TcxGridDBColumn
-        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1074#1086#1076#1080#1090#1077#1083#1100')'
-        DataBinding.FieldName = 'PersonalDriverName'
+      object clPositionLevelName: TcxGridDBColumn
+        Caption = #1056#1072#1079#1088#1103#1076
+        DataBinding.FieldName = 'PositionLevelName'
         HeaderAlignmentVert = vaCenter
-        Width = 140
+        Width = 67
       end
-      object clCarModelName: TcxGridDBColumn
-        Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
-        DataBinding.FieldName = 'CarModelName'
-        HeaderAlignmentHorz = taCenter
+      object clHoursPlan: TcxGridDBColumn
+        Caption = #1055#1083#1072#1085' '#1095#1072#1089#1086#1074
+        DataBinding.FieldName = 'HoursPlan'
         HeaderAlignmentVert = vaCenter
-        Width = 100
+        Width = 98
       end
-      object clCarName: TcxGridDBColumn
-        Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
-        DataBinding.FieldName = 'CarName'
+      object clPersonalCount: TcxGridDBColumn
+        Caption = #1050#1086#1083'.'#1077#1076'.'
+        DataBinding.FieldName = 'PersonalCount'
         HeaderAlignmentVert = vaCenter
-        Width = 106
+        Width = 61
       end
-      object clPaidKindName: TcxGridDBColumn
-        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-        DataBinding.FieldName = 'PaidKindName'
+      object clFundPayMonth: TcxGridDBColumn
+        Caption = #1060#1086#1085#1076' '#1086#1087#1083#1072#1090#1099' ('#1079#1072' '#1084#1077#1089#1103#1094')'
+        DataBinding.FieldName = 'FundPayMonth'
         HeaderAlignmentVert = vaCenter
-        Width = 58
+        Width = 99
       end
-      object clJuridicalName: TcxGridDBColumn
-        Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
-        DataBinding.FieldName = 'JuridicalName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 100
+      object clFundPayTurn: TcxGridDBColumn
+        Caption = #1060#1086#1085#1076' '#1086#1087#1083#1072#1090#1099' ('#1079#1072' '#1076#1077#1085#1100')'
+        DataBinding.FieldName = 'FundPayTurn'
+        Width = 90
       end
-      object clGoodsName: TcxGridDBColumn
-        Caption = #1058#1086#1074#1072#1088
-        DataBinding.FieldName = 'GoodsName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 66
+      object clComment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        Width = 89
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -103,7 +89,8 @@ object CardFuelForm: TCardFuelForm
         PropertiesClassName = 'TcxCheckBoxProperties'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 46
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -112,14 +99,14 @@ object CardFuelForm: TCardFuelForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 48
-    Top = 96
+    Left = 56
+    Top = 104
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 40
-    Top = 152
+    Left = 48
+    Top = 160
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -133,14 +120,14 @@ object CardFuelForm: TCardFuelForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 280
-    Top = 96
+    Left = 288
+    Top = 104
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -152,8 +139,8 @@ object CardFuelForm: TCardFuelForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 160
-    Top = 96
+    Left = 168
+    Top = 104
     DockControlHeights = (
       0
       0
@@ -251,8 +238,8 @@ object CardFuelForm: TCardFuelForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 280
-    Top = 152
+    Left = 288
+    Top = 160
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -270,13 +257,13 @@ object CardFuelForm: TCardFuelForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TCardFuelEditForm'
+      FormName = 'TStaffListEditForm'
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
         end>
-      isShowModal = False
+      isShowModal = True
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
@@ -285,7 +272,7 @@ object CardFuelForm: TCardFuelForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TCardFuelEditForm'
+      FormName = 'TStaffListEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -293,7 +280,7 @@ object CardFuelForm: TCardFuelForm
           ComponentItem = 'Id'
           ParamType = ptInput
         end>
-      isShowModal = False
+      isShowModal = True
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
@@ -343,31 +330,19 @@ object CardFuelForm: TCardFuelForm
           DataType = ftString
         end
         item
-          Name = 'Code'
+          Name = 'PersonalDriverId'
           Component = ClientDataSet
-          ComponentItem = 'Code'
-          DataType = ftString
+          ComponentItem = 'PersonalDriverId'
         end
         item
-          Name = 'RouteKindId'
+          Name = 'PersonalDriverCode'
           Component = ClientDataSet
-          ComponentItem = 'RouteKindId'
+          ComponentItem = 'PersonalDriverCode'
         end
         item
-          Name = 'RouteKindName'
+          Name = 'PersonalDriverName'
           Component = ClientDataSet
-          ComponentItem = 'RouteKindName'
-          DataType = ftString
-        end
-        item
-          Name = 'FreightId'
-          Component = ClientDataSet
-          ComponentItem = 'FreightId'
-        end
-        item
-          Name = 'FreightName'
-          Component = ClientDataSet
-          ComponentItem = 'FreightName'
+          ComponentItem = 'PersonalDriverName'
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -385,33 +360,19 @@ object CardFuelForm: TCardFuelForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_CardFuel'
+    StoredProcName = 'gpSelect_Object_StaffList'
     DataSet = ClientDataSet
     DataSets = <
       item
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 40
-    Top = 208
+    Left = 48
+    Top = 216
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 160
-    Top = 152
-  end
-  object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inObjectId'
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    Left = 288
-    Top = 208
+    Left = 168
+    Top = 160
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -433,7 +394,21 @@ object CardFuelForm: TCardFuelForm
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
-    Left = 160
+    Left = 168
     Top = 216
+  end
+  object spErasedUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    Left = 288
+    Top = 208
   end
 end

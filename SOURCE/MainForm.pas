@@ -204,6 +204,8 @@ type
     frxRTFExport: TfrxRTFExport;
     actPositionLevel: TdsdOpenForm;
     bbPositionLevel: TdxBarButton;
+    actStaffList: TdsdOpenForm;
+    bbStaffList: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

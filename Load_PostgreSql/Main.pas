@@ -114,6 +114,7 @@ type
     cbFuel: TCheckBox;
     cbCar: TCheckBox;
     cbRoute: TCheckBox;
+    cbCardFuel: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -218,6 +219,7 @@ type
     procedure pLoadGuide_Route;
     procedure pLoadGuide_Freight;
     procedure pLoadGuide_RateFuel;
+    procedure pLoadGuide_CardFuel;
 
     procedure pLoadGuide_RouteSorting;
 
@@ -516,8 +518,7 @@ begin
      if not fStop then pLoadGuide_CarModel;
      if not fStop then pLoadGuide_Car;
      if not fStop then pLoadGuide_RateFuel;
-
-
+     if not fStop then pLoadGuide_CardFuel;
 
      if not fStop then pLoadGuide_PriceList;
      if not fStop then pLoadGuide_PriceListItems;
@@ -1277,7 +1278,7 @@ begin
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.Goods set Id_Postgres_Fuel='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
-             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)or(FieldByName('ObjectId').AsInteger=7575)
+             if (FieldByName('ObjectId').AsInteger=7575)
              then fExecSqFromQuery('update dba.Goods set Id_Postgres_Fuel='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = 7576');
          end;
              //
@@ -1553,8 +1554,9 @@ begin
                      +' ) and '+IntToStr(isGlobalLoad)+'=zc_rvNo())'
 
                      +' or ('+IntToStr(isGlobalLoad)+'=zc_rvYes()'
-                     +'    and Unit.Id=3'    // АЛАН
-                     +'     )'
+                     +'    and (Unit.Id=3'    // АЛАН
+                     +'      or Unit.UnitName='+FormatToVarCharServer_notNULL('Золотой экватор ТОВ')
+                     +'     ))'
                      );
                   Add('group by ObjectId');
                   Add('       , ObjectName');
@@ -1694,8 +1696,9 @@ begin
                      +'  )'
 
                      +' or ('+IntToStr(isGlobalLoad)+'=zc_rvYes()'
-                     +'  and 1=0'
-                     +'     )'
+                     +'    and 1=0'
+//                     +'    and (Unit.UnitName='+FormatToVarCharServer_notNULL('Золотой экватор ТОВ')
+                     +'     ))'
 
                      );
                   Add('order by ObjectId');
@@ -2753,6 +2756,89 @@ begin
      end;
      //
      myDisabledCB(cbMember_andPersonal);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadGuide_CardFuel;
+begin
+     if (not cbCardFuel.Checked)or(not cbCardFuel.Enabled) then exit;
+     //
+     myEnabledCB(cbCardFuel);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+             begin
+                  Add('select _pgCardFuel.Id as ObjectId');
+                  Add('     , 0 as ObjectCode');
+                  Add('     , _pgCardFuel.CardFuel as ObjectName');
+                  Add('     , _pgCar.CarId_pg as inCarId');
+                  Add('     , Unit.Id2_Postgres as inJuridicalId');
+                  Add('     , MoneyKind.Id_Postgres as inPaidKindId');
+                  Add('     , case when trim(_pgCardFuel.FuelName) ='+FormatToVarCharServer_notNULL('А-92')+' then Goods_7001.Id_Postgres'
+                     +'            when trim(_pgCardFuel.FuelName) ='+FormatToVarCharServer_notNULL('А-95')+' then Goods_7002.Id_Postgres'
+                     +'            when trim(_pgCardFuel.FuelName) ='+FormatToVarCharServer_notNULL('ДТ')+' then Goods_7003.Id_Postgres'
+                     +'       end as inGoodsId');
+                  Add('     , _pgCardFuel.Limit as inLimit');
+                  Add('     , _pgCardFuel.CardFuelId_pg as Id_Postgres');
+                  Add('from dba._pgCardFuel');
+                  Add('     left outer join dba._pgCar on _pgCar.Name = _pgCardFuel.CarName');
+                  Add('     left outer join dba.Unit on Unit.UnitName = _pgCardFuel.JuridicalName');
+                  Add('     left outer join dba.MoneyKind on MoneyKind.Id = _pgCardFuel.KindAccountId');
+                  Add('     left outer join (select GoodsProperty.Id_Postgres from dba.Goods, dba.GoodsProperty where GoodsId = Goods.Id and GoodsCode=7001)as Goods_7001 on 1=1');
+                  Add('     left outer join (select GoodsProperty.Id_Postgres from dba.Goods, dba.GoodsProperty where GoodsId = Goods.Id and GoodsCode=7002)as Goods_7002 on 1=1');
+                  Add('     left outer join (select GoodsProperty.Id_Postgres from dba.Goods, dba.GoodsProperty where GoodsId = Goods.Id and GoodsCode=7003)as Goods_7003 on 1=1');
+                  Add('order by ObjectId');
+             end;
+        Open;
+        cbRouteSorting.Caption:='4.8. ('+IntToStr(RecordCount)+') Топливные карты';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_CardFuel';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inLimit',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPersonalDriverId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCarId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPaidKindId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inLimit').Value:=FieldByName('inLimit').AsFloat;
+             toStoredProc.Params.ParamByName('inPersonalDriverId').Value:=0;
+             toStoredProc.Params.ParamByName('inCarId').Value:=FieldByName('inCarId').AsInteger;
+             toStoredProc.Params.ParamByName('inPaidKindId').Value:=FieldByName('inPaidKindId').AsInteger;
+             toStoredProc.Params.ParamByName('inJuridicalId').Value:=FieldByName('inJuridicalId').AsInteger;
+             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('inGoodsId').AsInteger;
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba._pgCardFuel set CardFuelId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        //EnableControls;
+     end;
+     //
+     myDisabledCB(cbCardFuel);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_RouteSorting();

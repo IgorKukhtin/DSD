@@ -779,6 +779,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbStaffList'
+        end
+        item
+          Visible = True
           ItemName = 'bbPersonalDocuments_Separator'
         end
         item
@@ -831,6 +835,10 @@ object MainForm: TMainForm
     end
     object bbPositionLevel: TdxBarButton
       Action = actPositionLevel
+      Category = 0
+    end
+    object bbStaffList: TdxBarButton
+      Action = actStaffList
       Category = 0
     end
   end
@@ -890,6 +898,14 @@ object MainForm: TMainForm
       Caption = #1056#1072#1089#1093#1086#1076' '#1076#1077#1085#1077#1075' '#1089' '#1087#1086#1076#1086#1090#1095#1077#1090#1072' '#1085#1072' '#1087#1086#1076#1086#1090#1095#1077#1090
       Hint = #1056#1072#1089#1093#1086#1076' '#1076#1077#1085#1077#1075' '#1089' '#1087#1086#1076#1086#1090#1095#1077#1090#1072' '#1085#1072' '#1087#1086#1076#1086#1090#1095#1077#1090
       FormName = 'TPersonalSendCashJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actStaffList: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      Caption = #1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077
+      Hint = #1096#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077
+      FormName = 'TStaffListForm'
       GuiParams = <>
       isShowModal = False
     end

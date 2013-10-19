@@ -1,4 +1,4 @@
-unit CardFuel;
+unit StaffList;
 
 interface
 
@@ -20,14 +20,15 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, dxSkinsdxBarPainter, dsdAddOn,
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox;
+  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
+  DataModul;
 
 type
-  TCardFuelForm = class(TParentForm)
+  TStaffListForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
+    clFundPayMonth: TcxGridDBColumn;
+    clPositionLevelName: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -51,17 +52,16 @@ type
     dsdGridToExcel: TdsdGridToExcel;
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
+    clPersonalCount: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     clErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
-    clPersonalDriver: TcxGridDBColumn;
-    clCarName: TcxGridDBColumn;
-    clPaidKindName: TcxGridDBColumn;
-    clJuridicalName: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
-    clCarModelName: TcxGridDBColumn;
-
+    clUnitName: TcxGridDBColumn;
+    clHoursPlan: TcxGridDBColumn;
+    clPositionName: TcxGridDBColumn;
+    clFundPayTurn: TcxGridDBColumn;
+    clComment: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -72,7 +72,6 @@ type
 implementation
 
 {$R *.dfm}
-
-initialization
-  RegisterClass(TCardFuelForm);
+ initialization
+  RegisterClass(TStaffListForm);
 end.

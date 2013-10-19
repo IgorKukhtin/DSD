@@ -1,12 +1,14 @@
--- Function: gpInsertUpdate_Object_StaffList(Integer,  TFloat, TFloat, TFloat, Integer, Integer, Integer, TVarChar)
+-- Function: gpInsertUpdate_Object_StaffList(Integer,  TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_StaffList(Integer,  TFloat, TFloat, TFloat, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_StaffList(Integer,  TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StaffList(
  INOUT ioId                  Integer   , -- ключ объекта <Штатное расписание>
     IN inHoursPlan           TFloat    , -- План счетов
     IN inPersonalCount       TFloat    , -- кол. человек
-    IN inFundPay             TFloat    , -- Фонд оплаты
+    IN inFundPayMonth        TFloat    , -- Фонд оплаты за месяц
+    IN inFundPayTurn         TFloat    , -- Фонд оплаты за день
+    IN inComment             TVarChar  , -- комментарий
     IN inUnitId              Integer   , -- Подразделение
     IN inPositionId          Integer   , -- Должность
     IN inPositionLevelId     Integer   , -- Разряд должности
@@ -24,6 +26,16 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_StaffList(), 0, '');
    
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StaffList_HoursPlan(), ioId, inHoursPlan);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StaffList_PersonalCount(), ioId, inPersonalCount);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StaffList_FundPayMonth(), ioId, inFundPayMonth);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StaffList_FundPayTurn(), ioId, inFundPayTurn);
+   -- сохранили свойство <>   
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_StaffList_Comment(), ioId, inComment);
+   
    -- сохранили связь с <Подразделением>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StaffList_Unit(), ioId, inUnitId);   
    -- сохранили связь с <Должностью>
@@ -31,12 +43,8 @@ BEGIN
    -- сохранили связь с <Разрядом должности)>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StaffList_PositionLevel(), ioId, inPositionLevelId);
 
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StaffList_HoursPlan(), ioId, inHoursPlan);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StaffList_PersonalCount(), ioId, inPersonalCount);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StaffList_FundPay(), ioId, inFundPay);
+
+
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -45,12 +53,13 @@ END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_StaffList (Integer,  TFloat, TFloat, TFloat, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_StaffList (Integer,  TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
   
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.10.13         * add FundPayMonth, FundPayTurn, Comment  
  17.10.13         * 
 
 */

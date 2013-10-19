@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_CardFuel(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , PersonalDriverId Integer, PersonalDriverCode Integer, PersonalDriverName TVarChar
-             , CarId Integer, CarCode Integer, CarName TVarChar
+             , CarId Integer, CarCode Integer, CarName TVarChar, CarModelName TVarChar
              , PaidKindId Integer, PaidKindCode Integer, PaidKindName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
@@ -31,6 +31,7 @@ $BODY$BEGIN
            , Object_Car.Id         AS CarId 
            , Object_Car.ObjectCode AS CarCode
            , Object_Car.ValueData  AS CarName
+           , Object_CarModel.ValueData AS CarModelName
            
            , Object_PaidKind.Id         AS PaidKindId 
            , Object_PaidKind.ObjectCode AS PaidKindCode
@@ -55,6 +56,10 @@ $BODY$BEGIN
                                                            AND ObjectLink_CardFuel_Car.DescId = zc_ObjectLink_CardFuel_Car()
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = ObjectLink_CardFuel_Car.ChildObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
+                                                           AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
+            LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
+
             LEFT JOIN ObjectLink AS ObjectLink_CardFuel_PaidKind ON ObjectLink_CardFuel_PaidKind.ObjectId = Object_CardFuel.Id
                                                                 AND ObjectLink_CardFuel_PaidKind.DescId = zc_ObjectLink_CardFuel_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = ObjectLink_CardFuel_PaidKind.ChildObjectId
@@ -67,6 +72,7 @@ $BODY$BEGIN
                                                              AND ObjectLink_CardFuel_Goods.DescId = zc_ObjectLink_CardFuel_Goods()
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_CardFuel_Goods.ChildObjectId
    
+
    WHERE Object_CardFuel.DescId = zc_Object_CardFuel();
   
 END;$BODY$
@@ -79,8 +85,8 @@ ALTER FUNCTION gpSelect_Object_CardFuel (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 14.10.13          *  
-
+ 18.10.13                                        * add CarModelName
+ 14.10.13          *
 */
 
 -- ÚÂÒÚ

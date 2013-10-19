@@ -90,16 +90,20 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_StaffList_PersonalCount() RETURNS Inte
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
   SELECT zc_Object_StaffList(), 'zc_ObjectFloat_StaffList_PersonalCount', 'Кол. человек' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StaffList_PersonalCount'); 
 
-CREATE OR REPLACE FUNCTION zc_ObjectFloat_StaffList_FundPay() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StaffList_FundPay'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_StaffList_FundPayMonth() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StaffList_FundPayMonth'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
-  SELECT zc_Object_StaffList(), 'zc_ObjectFloat_StaffList_FundPay', 'Фонд оплаты' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StaffList_FundPay'); 
+  SELECT zc_Object_StaffList(), 'zc_ObjectFloat_StaffList_FundPayMonth', 'Фонд оплаты за месяц' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StaffList_FundPayMonth'); 
 
+CREATE OR REPLACE FUNCTION zc_ObjectFloat_StaffList_FundPayTurn() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StaffList_FundPayTurn'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectFloatDesc (DescId, Code, ItemName)
+  SELECT zc_Object_StaffList(), 'zc_ObjectFloat_StaffList_FundPayTurn', 'Фонд оплаты за смену' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StaffList_FundPayTurn'); 
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 17.10.13         * add _StaffList_HoursPlan, _StaffList_PersonalCount, _StaffList_FundPay
+ 18.10.13         * add _StaffList_FundPayMonth, _StaffList_FundPayTurn
+ 17.10.13         * add _StaffList_HoursPlan, _StaffList_PersonalCount
  16.10.13                                        * add   zc_ObjectFloat_CardFuel_Limit
  29.09.13         * add   zc_ObjectFloat_PersonalGroup_WorkHours
  27.09.13         * add   zc_ObjectFloat_RateFuelKind_Tax           

@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_StaffList(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
-             , HoursPlan TFloat, PersonalCount TFloat, FundPay TFloat
+             , HoursPlan TFloat, PersonalCount TFloat, FundPayMonth TFloat, FundPayTurn TFloat
+             , Comment TVarChar
              , UnitId Integer, UnitName TVarChar                
              , PositionId Integer, PositionName TVarChar                
              , PositionLevelId Integer, PositionLevelName TVarChar                
@@ -27,7 +28,10 @@ BEGIN
           
            , CAST (NULL as TFloat) AS HoursPlan
            , CAST (NULL as TFloat) AS PersonalCount
-           , CAST (NULL as TFloat) AS FundPay
+           , CAST (NULL as TFloat) AS FundPayMonth
+           , CAST (NULL as TFloat) AS FundPayTurn
+
+		   , CAST ('' as TVarChar) AS Comment
                                                         
            , CAST (0 as Integer)   AS UnitId
            , CAST ('' as TVarChar) AS UnitName
@@ -49,7 +53,10 @@ BEGIN
  
          , ObjectFloat_HoursPlan.ValueData     AS HoursPlan  
          , ObjectFloat_PersonalCount.ValueData AS PersonalCount
-         , ObjectFloat_FundPay.ValueData       AS FundPay
+         , ObjectFloat_FundPayMonth.ValueData  AS FundPayMonth
+         , ObjectFloat_FundPayTurn.ValueData    AS FundPayTurn
+         
+         , ObjectString_Comment.ValueData      AS Comment
                                                         
          , Object_Unit.Id          AS UnitId
          , Object_Unit.ValueData   AS UnitName
@@ -69,8 +76,8 @@ BEGIN
           LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_StaffList_Unit.ChildObjectId
  
           LEFT JOIN ObjectLink AS ObjectLink_StaffList_Position
-                              ON ObjectLink_StaffList_Position.ObjectId = Object_StaffList.Id
-                             AND ObjectLink_StaffList_Position.DescId = zc_ObjectLink_StaffList_Position()
+                               ON ObjectLink_StaffList_Position.ObjectId = Object_StaffList.Id
+                              AND ObjectLink_StaffList_Position.DescId = zc_ObjectLink_StaffList_Position()
           LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_StaffList_Position.ChildObjectId
 
           LEFT JOIN ObjectLink AS ObjectLink_StaffList_PositionLevel
@@ -86,10 +93,18 @@ BEGIN
                                 ON ObjectFloat_PersonalCount.ObjectId = Object_StaffList.Id 
                                AND ObjectFloat_PersonalCount.DescId = zc_ObjectFloat_StaffList_PersonalCount()
                                
-          LEFT JOIN ObjectFloat AS ObjectFloat_FundPay
-                                ON ObjectFloat_FundPay.ObjectId = Object_StaffList.Id 
-                               AND ObjectFloat_FundPay.DescId = zc_ObjectFloat_StaffList_FundPay()
+          LEFT JOIN ObjectFloat AS ObjectFloat_FundPayMonth
+                                ON ObjectFloat_FundPayMonth.ObjectId = Object_StaffList.Id 
+                               AND ObjectFloat_FundPayMonth.DescId = zc_ObjectFloat_StaffList_FundPayMonth()
 
+          LEFT JOIN ObjectFloat AS ObjectFloat_FundPayTurn
+                                ON ObjectFloat_FundPayTurn.ObjectId = Object_StaffList.Id 
+                               AND ObjectFloat_FundPayTurn.DescId = zc_ObjectFloat_StaffList_FundPayTurn()
+
+          LEFT JOIN ObjectString AS ObjectString_Comment
+                                 ON ObjectString_Comment.ObjectId = Object_StaffList.Id 
+                                AND ObjectString_Comment.DescId = zc_ObjectString_StaffList_Comment()
+                               
      WHERE Object_StaffList.Id = inId;
      
   END IF;
@@ -105,6 +120,7 @@ ALTER FUNCTION gpGet_Object_StaffList(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.10.13         * add FundPayMonth, FundPayTurn, Comment                
  17.10.13         *              
 
 */
