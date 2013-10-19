@@ -10,7 +10,10 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  KeyPreview = True
   OldCreateOrder = False
+  isAlwaysRefresh = False
+  isFree = True
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -20,7 +23,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     Height = 41
     Align = alTop
     Caption = 'Panel1'
-    TabOrder = 2
+    TabOrder = 1
     object deStart: TcxDateEdit
       Left = 208
       Top = 8

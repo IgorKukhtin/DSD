@@ -39,7 +39,7 @@ uses
   DataModul in '..\..\SOURCE\DataModul.pas' {dmMain: TDataModule},
   Authentication in '..\..\SOURCE\Authentication.pas',
   Storage in '..\..\SOURCE\Storage.pas',
-  zLibUtil in '..\SOURCE\zLibUtil.pas',                  
+  zLibUtil in '..\SOURCE\zLibUtil.pas',
   UtilConst in '..\..\SOURCE\UtilConst.pas',
   UtilConvert in '..\..\SOURCE\UtilConvert.pas',
   CommonData in '..\..\SOURCE\CommonData.pas',
@@ -235,7 +235,9 @@ uses
   PositionLevel in '..\..\Forms\PositionLevel.pas' {PositionLevelForm},
   PositionLevelEdit in '..\..\Forms\PositionLevelEdit.pas' {PositionLevelEditForm},
   StaffList in '..\..\Forms\StaffList.pas' {StaffListForm},
-  StaffListEdit in '..\..\Forms\StaffListEdit.pas' {StaffListEditForm};
+  StaffListEdit in '..\..\Forms\StaffListEdit.pas' {StaffListEditForm},
+  PersonalTest in '..\SOURCE\Objects\All\PersonalTest.pas',
+  SheetWorkTimeMovementItemTest in '..\SOURCE\MovementItem\All\SheetWorkTimeMovementItemTest.pas';
 
 {$R *.RES}
 

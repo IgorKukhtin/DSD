@@ -77,7 +77,6 @@ type
     procedure InfoMoney_Test;
     procedure Member_Test;
     procedure Position_Test;
-    procedure Personal_Test;
     procedure AssetGroup_Test;
     procedure Asset_Test;
     procedure ReceiptCost_Test;
@@ -319,15 +318,6 @@ type
   function InsertDefault: integer; override;
   public
     function InsertUpdatePosition(const Id, Code : integer; Name: string): integer;
-    constructor Create; override;
-  end;
-
-  TPersonalTest = class(TObjectTest)
-  private
-    function InsertDefault: integer; override;
-  public
-   function InsertUpdatePersonal(const Id: integer;
-    MemberId, PositionId, UnitId, PersonalGroupId: integer; DateIn, DateOut: TDateTime): integer;
     constructor Create; override;
   end;
 
@@ -1992,64 +1982,6 @@ begin
     // Получение данных
     with ObjectTest.GetRecord(Id) do
       Check((FieldByName('Name').AsString = 'Должности'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
-  finally
-    ObjectTest.Delete(Id);
-  end;
-end;
-
-{TPersonalTest}
- constructor TPersonalTest.Create;
-begin
-  inherited;
-  spInsertUpdate := 'gpInsertUpdate_Object_Personal';
-  spSelect := 'gpSelect_Object_Personal';
-  spGet := 'gpGet_Object_Personal';
-end;
-
-function TPersonalTest.InsertDefault: integer;
-var
-  MemberId: Integer;
-  PositionId: Integer;
-  UnitId: Integer;
-  PersonalGroupId: Integer;
-begin
-  MemberId := TMemberTest.Create.GetDefault;
-  PositionId := TPositionTest.Create.GetDefault;
-  UnitId := TUnit.Create.GetDefault;
-  PersonalGroupId:= 0;
-  result := InsertUpdatePersonal(0, MemberId, PositionId, UnitId, PersonalGroupId, Date,Date);
-end;
-
-function TPersonalTest.InsertUpdatePersonal(const Id: integer;
-    MemberId, PositionId, UnitId, PersonalGroupId: integer; DateIn, DateOut: TDateTime): integer;
-begin
-  FParams.Clear;
-  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
-  FParams.AddParam('inMemberId', ftInteger, ptInput, MemberId);
-  FParams.AddParam('inPositionId', ftInteger, ptInput, PositionId);
-  FParams.AddParam('inUnitId', ftInteger, ptInput, UnitId);
-  FParams.AddParam('inPersonalGroupId', ftInteger, ptInput, PersonalGroupId);
-  FParams.AddParam('inDateIn', ftDateTime, ptInput, DateIn);
-  FParams.AddParam('inDateOut', ftDateTime, ptInput, DateOut);
-  result := InsertUpdate(FParams);
-end;
-
-procedure TdbObjectTest.Personal_Test;
-var Id: integer;
-    RecordCount: Integer;
-    ObjectTest: TPersonalTest;
-begin
-  ObjectTest := TPersonalTest.Create;
-  // Получим список
-  RecordCount := GetRecordCount(ObjectTest);
-  // Вставка
-  Id := ObjectTest.InsertDefault;
-  try
-    // Получение данных
-    with ObjectTest.GetRecord(Id) do begin
-      Check((FieldByName('MemberCode').AsInteger = -1), 'Не сходятся данные Id = ' + IntToStr(Id));
-      Check((FieldByName('MemberName').AsString = 'Физические лица'), 'Не сходятся данные Id = ' + IntToStr(Id));
-    end;
   finally
     ObjectTest.Delete(Id);
   end;

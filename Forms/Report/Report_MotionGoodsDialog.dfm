@@ -11,7 +11,10 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  KeyPreview = True
   OldCreateOrder = False
+  isAlwaysRefresh = False
+  isFree = True
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton

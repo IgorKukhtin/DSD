@@ -85,7 +85,9 @@ var MovementSheetWorkTime: TSheetWorkTime;
     Id: Integer;
 begin
   inherited;
-  // Создаем документ
+  // Создаем сотрудника на подразделении
+  // И потом у него на дату ставим часы
+  // Проверяем что сформировался Movement и MovementItem
   MovementSheetWorkTime := TSheetWorkTime.Create;
   Id := MovementSheetWorkTime.InsertDefault;
   // создание документа

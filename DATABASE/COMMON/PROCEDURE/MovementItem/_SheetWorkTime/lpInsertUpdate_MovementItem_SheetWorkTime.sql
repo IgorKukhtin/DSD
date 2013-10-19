@@ -16,15 +16,6 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_SheetWorkTime(
 RETURNS Integer AS
 $BODY$
 BEGIN
-IF COALESCE(inMovementId,0) = 0 
-then
-     -- сохранили <Ёлемент документа>
-     inMovementId := lpInsertUpdate_Movement (inMovementId, zc_Movement_SheetWorkTime(), lfGet_InvNumber (0, zc_Movement_SheetWorkTime()), inOperDate, NULL);
-     
-     -- сохранили св€зь с <ѕодразделением>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), inMovementId, inUnitId);
-
-end IF;
      
      -- сохранили <Ёлемент документа>
      PERFORM lpInsertUpdate_MovementItem (InMovementItemId, zc_MI_Master(), inPersonalId, inMovementId, inAmount, NULL);

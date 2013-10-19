@@ -32,11 +32,9 @@ BEGIN
                                  ON MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                                 AND MovementLinkObject_Unit.MovementId = Movement_SheetWorkTime.Id  
                            WHERE Movement_SheetWorkTime.DescId = zc_Movement_SheetWorkTime() AND Movement_SheetWorkTime.OperDate::Date = inOperDate::Date);
-         -- сохранили <Документ>
-     vbMovementId := lpInsertUpdate_Movement (vbMovementId, zc_Movement_SheetWorkTime(), '', inOperDate::DATE, NULL);
-     -- сохранили связь с <Подразделение (в документе)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), vbMovementId, inUnitId);
-
+ 
+     -- сохранили <Документ>
+     vbMovementId := lpInsertUpdate_Movement_SheetWorkTime(ioId, '', inOperDate::DATE, inUnitId);
 
     -- 
 

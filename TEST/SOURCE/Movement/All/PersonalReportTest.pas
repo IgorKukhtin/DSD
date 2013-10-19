@@ -23,7 +23,7 @@ type
 
 implementation
 
-uses UtilConst, JuridicalTest, dbObjectTest, SysUtils, Db, TestFramework;
+uses UtilConst, JuridicalTest, PersonalTest, dbObjectTest, SysUtils, Db, TestFramework;
 
 { TPersonalReport }
 
@@ -45,7 +45,7 @@ begin
   Id:=0;
   InvNumber:='1';
   OperDate:= Date;
-  FromId := TPersonalTest.Create.GetDefault;
+  FromId := TPersonal.Create.GetDefault;
   ToId := TJuridical.Create.GetDefault;
   PaidKindId := 0;
   InfoMoneyId := 0;

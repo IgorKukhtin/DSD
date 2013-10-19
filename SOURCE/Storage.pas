@@ -103,7 +103,8 @@ end;
 
 procedure TStorage.ProcessErrorCode(pData: String);
 begin
-  with LoadXMLData(pData).DocumentElement do
+  // Нужно экранировать XML символы перед выводом
+  with LoadXMLData(gfStrToXmlStr(pData)).DocumentElement do
     if NodeName = gcError then
        raise EStorageException.Create(StringReplace(GetAttribute(gcErrorMessage), 'ОШИБКА:  ', '', []));
 end;

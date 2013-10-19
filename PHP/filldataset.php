@@ -22,9 +22,9 @@
            {
               $res .= ' '.$fieldname[$i].'="'.str_replace(' ', 'T', $col_value).'"';
            }
-           else
+	   else
            {
-              $res .= ' '.$fieldname[$i].'="'.str_replace('"', '&quot;', $col_value).'"';
+              $res .= ' '.$fieldname[$i].'="'.htmlspecialchars($col_value, ENT_COMPAT, 'WIN-1251').'"';
            }; 
            $i++;
         }
