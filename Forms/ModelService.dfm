@@ -37,38 +37,38 @@ inherited ModelServiceForm: TModelServiceForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object clUnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentVert = vaCenter
+        Width = 125
+      end
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
-        DataBinding.FieldName = 'CarCode'
+        DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 52
+        Width = 76
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 150
-      end
-      object clComment: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-        DataBinding.FieldName = 'Comment'
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 120
-      end
-      object clUnitName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'UnitName'
-        HeaderAlignmentVert = vaCenter
-        Width = 85
+        Width = 220
       end
       object clModelServiceKindName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1084#1086#1076#1077#1083#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
         DataBinding.FieldName = 'ModelServiceKindName'
         HeaderAlignmentVert = vaCenter
-        Width = 92
+        Options.Editing = False
+        Width = 173
+      end
+      object clComment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        HeaderAlignmentVert = vaCenter
+        Width = 152
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -78,7 +78,7 @@ inherited ModelServiceForm: TModelServiceForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 71
+        Width = 91
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -387,7 +387,7 @@ inherited ModelServiceForm: TModelServiceForm
       item
         Name = 'ioId'
         Component = ClientDataSet
-        ComponentItem = 'CarId'
+        ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
@@ -406,7 +406,7 @@ inherited ModelServiceForm: TModelServiceForm
       item
         Name = 'inComment'
         Component = ClientDataSet
-        ComponentItem = 'Amount_Internal'
+        ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
       end
@@ -414,13 +414,6 @@ inherited ModelServiceForm: TModelServiceForm
         Name = 'inUnitId'
         Component = ClientDataSet
         ComponentItem = 'UnitId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inAmountColdDistance_Internal'
-        Component = ClientDataSet
-        ComponentItem = 'AmountColdDistance_Internal'
-        DataType = ftFloat
         ParamType = ptInput
       end
       item
