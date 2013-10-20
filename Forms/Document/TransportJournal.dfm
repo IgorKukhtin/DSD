@@ -364,6 +364,7 @@ object TransportJournalForm: TTransportJournalForm
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TTransportForm'
@@ -379,6 +380,7 @@ object TransportJournalForm: TTransportJournalForm
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TTransportForm'

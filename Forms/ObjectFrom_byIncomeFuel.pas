@@ -57,6 +57,7 @@ type
     clInvNumber: TcxGridDBColumn;
     clChangePercent: TcxGridDBColumn;
     clChangePrice: TcxGridDBColumn;
+    FormParams: TdsdFormParams;
 
   private
     { Private declarations }

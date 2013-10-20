@@ -1,8 +1,8 @@
--- Function: gpSelect_Object_Contract_View()
+-- Function: gpSelect_Object_Contract()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Contract_View (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Contract (TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_Contract_View(
+CREATE OR REPLACE FUNCTION gpSelect_Object_Contract(
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar
@@ -71,7 +71,7 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Contract_View (TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_Contract (TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
@@ -86,4 +86,4 @@ ALTER FUNCTION gpSelect_Object_Contract_View (TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Contract_View (inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Contract (inSession := zfCalc_UserAdmin())

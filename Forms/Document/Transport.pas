@@ -186,7 +186,7 @@ type
     clincAmountSumm: TcxGridDBColumn;
     clincAmountSummTotal: TcxGridDBColumn;
     InsertRecordIncome: TInsertRecord;
-    PartnerChoiceForm: TOpenChoiceForm;
+    ObjectFrom_byIncomeFuelChoiceForm: TOpenChoiceForm;
     bbAddIncome: TdxBarButton;
     actUpdateIncomeDS: TdsdUpdateDataSet;
     ceStatus: TcxButtonEdit;
@@ -225,6 +225,8 @@ type
     CompleteMovement: TChangeGuidesStatus;
     StatusGuides: TdsdGuides;
     StatusStoredProc: TdsdStoredProc;
+    clincChangePrice: TcxGridDBColumn;
+    clincContractName: TcxGridDBColumn;
   private
   public
   end;

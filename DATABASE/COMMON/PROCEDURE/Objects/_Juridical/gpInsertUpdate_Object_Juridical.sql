@@ -25,7 +25,7 @@ BEGIN
 
    -- !!! Если код не установлен, определяем его каи последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
    -- !!! vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Juridical());
-   IF COALESCE (inCode, 0) = 0  THEN vbCode_calc := NULL; ELSE vbCode_calc := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
+   IF COALESCE (inCode, 0) = 0  THEN vbCode_calc := 0; ELSE vbCode_calc := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
    
    -- !!! проверка уникальность <Наименование>
    -- !!! PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Juridical(), inName);
@@ -59,11 +59,11 @@ ALTER FUNCTION gpInsertUpdate_Object_Juridical(Integer, Integer, TVarChar, TVarC
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.10.13                                        * vbCode_calc:=0
  03.07.13          * + InfoMoney              
  12.05.13                                        * rem lpCheckUnique_Object_ValueData
  12.06.13          *    
  16.06.13                                        * rem lpCheckUnique_Object_ObjectCode
- 
 */
 
 -- тест

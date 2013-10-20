@@ -26,7 +26,6 @@ object ObjectFrom_byIncomeFuelForm: TObjectFrom_byIncomeFuelForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 703
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -74,6 +73,7 @@ object ObjectFrom_byIncomeFuelForm: TObjectFrom_byIncomeFuelForm
       object clJuridicalCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
         DataBinding.FieldName = 'JuridicalCode'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -86,8 +86,9 @@ object ObjectFrom_byIncomeFuelForm: TObjectFrom_byIncomeFuelForm
         Width = 80
       end
       object clInvNumber: TcxGridDBColumn
-        Caption = #1053#1086#1084#1077#1088' '#1076#1086#1075#1086#1074#1086#1088#1072
+        Caption = #8470' '#1076#1086#1075'.'
         DataBinding.FieldName = 'InvNumber'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -95,6 +96,7 @@ object ObjectFrom_byIncomeFuelForm: TObjectFrom_byIncomeFuelForm
       object clChangePercent: TcxGridDBColumn
         Caption = '(-)% '#1057#1082'. (+)% '#1053#1072#1094'.'
         DataBinding.FieldName = 'ChangePercent'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -109,6 +111,7 @@ object ObjectFrom_byIncomeFuelForm: TObjectFrom_byIncomeFuelForm
       object clGoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1090#1086#1074'.'
         DataBinding.FieldName = 'GoodsCode'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
@@ -292,6 +295,11 @@ object ObjectFrom_byIncomeFuelForm: TObjectFrom_byIncomeFuelForm
           ComponentItem = 'GoodsId'
         end
         item
+          Name = 'GoodsCode'
+          Component = ClientDataSet
+          ComponentItem = 'GoodsCode'
+        end
+        item
           Name = 'GoodsName'
           Component = ClientDataSet
           ComponentItem = 'GoodsName'
@@ -302,6 +310,36 @@ object ObjectFrom_byIncomeFuelForm: TObjectFrom_byIncomeFuelForm
           Component = ClientDataSet
           ComponentItem = 'FuelName'
           DataType = ftString
+        end
+        item
+          Name = 'ContractId'
+          Component = ClientDataSet
+          ComponentItem = 'ContractId'
+        end
+        item
+          Name = 'InvNumber'
+          Component = ClientDataSet
+          ComponentItem = 'InvNumber'
+        end
+        item
+          Name = 'ChangePercent'
+          Component = ClientDataSet
+          ComponentItem = 'ChangePercent'
+        end
+        item
+          Name = 'ChangePrice'
+          Component = ClientDataSet
+          ComponentItem = 'ChangePrice'
+        end
+        item
+          Name = 'PaidKindId'
+          Component = ClientDataSet
+          ComponentItem = 'PaidKindId'
+        end
+        item
+          Name = 'PaidKindName'
+          Component = ClientDataSet
+          ComponentItem = 'PaidKindName'
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -324,7 +362,14 @@ object ObjectFrom_byIncomeFuelForm: TObjectFrom_byIncomeFuelForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inOperDate'
+        Component = FormParams
+        ComponentItem = 'inOperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
     Left = 40
     Top = 208
   end
@@ -364,5 +409,15 @@ object ObjectFrom_byIncomeFuelForm: TObjectFrom_byIncomeFuelForm
     SortImages = dmMain.SortImageList
     Left = 160
     Top = 216
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'inOperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
+    Left = 168
+    Top = 272
   end
 end

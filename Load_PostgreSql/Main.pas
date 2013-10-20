@@ -902,7 +902,7 @@ begin
         Close;
         Clear;
         Add('select GoodsProperty.Id as ObjectId');
-        Add('     , GoodsProperty.GoodsCode as ObjectCode');
+        Add('     , isnull(GoodsProperty.GoodsCode,0) as ObjectCode');
         Add('     , GoodsProperty.GoodsName as ObjectName');
         Add('     , max (case when Goods.ParentId=686 then GoodsProperty.Tare_Weight else GoodsProperty_Detail.Ves_onMeasure end) as Ves_onMeasure');
         Add('     , GoodsProperty.Id_Postgres as Id_Postgres');
@@ -1562,7 +1562,7 @@ begin
         if not isBill
         then begin
                   Add('select Unit.Id as ObjectId');
-                  Add('     , Unit.UnitCode as ObjectCode');
+                  Add('     , isnull(Unit.UnitCode,0) as ObjectCode');
                   Add('     , Unit.UnitName as ObjectName');
                   Add('     , Unit.Id2_Postgres as Id_Postgres');
                   Add('     , case when Unit_parent1.Id1_Postgres is not null then Unit_parent1.Id1_Postgres');
@@ -1747,7 +1747,7 @@ begin
         if not isBill
         then begin
                   Add('select Unit.Id as ObjectId');
-                  Add('     , Unit.UnitCode as ObjectCode');
+                  Add('     , isnull(Unit.UnitCode,0) as ObjectCode');
                   Add('     , Unit.UnitName as ObjectName');
                   Add('     , ClientInformation.GLN as GLNCode');
                   Add('     , case when isnull(Unit_RouteSorting.KindRoute,0) = 1 then 1 else 0 end as PrepareDayCount');
@@ -1779,8 +1779,7 @@ begin
                      +'  )'
 
                      +' or ('+IntToStr(isGlobalLoad)+'=zc_rvYes()'
-                     +'    and 1=0'
-//                     +'    and (Unit.UnitName='+FormatToVarCharServer_notNULL('Золотой экватор ТОВ')
+                     +'    and (Unit.UnitName='+FormatToVarCharServer_notNULL('Золотой экватор ТОВ')
                      +'     ))'
 
                      );

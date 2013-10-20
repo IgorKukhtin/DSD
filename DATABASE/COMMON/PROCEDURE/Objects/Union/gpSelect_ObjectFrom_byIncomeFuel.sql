@@ -47,7 +47,7 @@ BEGIN
 
      FROM Object_InfoMoney_View
           JOIN Object_Contract_View ON Object_Contract_View.InfoMoneyId = Object_InfoMoney_View.InfoMoneyId
-                                   AND inOperDate BETWEEN Object_Contract_View.StartDate AND Object_Contract_View.EndDate
+                                   -- AND inOperDate BETWEEN Object_Contract_View.StartDate AND Object_Contract_View.EndDate
           JOIN ObjectLink AS ObjectLink_Partner_Juridical
                           ON ObjectLink_Partner_Juridical.ChildObjectId = Object_Contract_View.JuridicalId
                          AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
@@ -100,7 +100,7 @@ BEGIN
                           , Object_Contract_View.PaidKindId
                      FROM Object_InfoMoney_View
                           JOIN Object_Contract_View ON Object_Contract_View.InfoMoneyId = Object_InfoMoney_View.InfoMoneyId
-                                                   AND inOperDate BETWEEN Object_Contract_View.StartDate AND Object_Contract_View.EndDate
+                                                   -- AND inOperDate BETWEEN Object_Contract_View.StartDate AND Object_Contract_View.EndDate
                      WHERE Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400() -- ÃÑÌ
                      ) AS tmpContract ON tmpContract.JuridicalId = Object_Juridical.Id
                                      AND tmpContract.PaidKindId = Object_PaidKind.Id

@@ -32,7 +32,7 @@ BEGIN
    
    -- !!! Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
    -- !!! vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Partner());
-   IF COALESCE (inCode, 0) = 0  THEN vbCode_calc := NULL; ELSE vbCode_calc := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
+   IF COALESCE (inCode, 0) = 0  THEN vbCode_calc := 0; ELSE vbCode_calc := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
    
    -- !!! проверка уникальности <Наименование>
    -- !!! PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Partner(), inName);
@@ -62,20 +62,19 @@ BEGIN
    
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpInsertUpdate_Object_Partner(Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.10.13                                        * vbCode_calc:=0
  29.07.13          *  + PersonalTakeId, PrepareDayCount, DocumentDayCount                
  03.07.13          *  + Route, RouteSorting              
  16.06.13                                        * rem lpCheckUnique_Object_ObjectCode
  13.06.13          *
  14.05.13                                        * rem lpCheckUnique_Object_ValueData
- 
 */
 
 -- тест

@@ -46,13 +46,19 @@ BEGIN
      -- проверка
      IF COALESCE (inParentId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Путевой лист не сохранен.';
+         RAISE EXCEPTION 'Ошибка.<Путевой лист> не сохранен.';
+     END IF;
+
+     -- проверка
+     IF COALESCE (inFromId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.<Источник заправки> не выбран.';
      END IF;
 
      -- проверка
      IF COALESCE (inToId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Автомобиль не выбран.';
+         RAISE EXCEPTION 'Ошибка.<Автомобиль> не выбран.';
      END IF;
 
 
@@ -64,7 +70,7 @@ BEGIN
          -- расчитали свойство <Номер документа>
          ioInvNumber := lfGet_InvNumber (0, zc_Movement_Income());
          -- определили свойство из Default <Цена с НДС (да/нет)>
-         ioPriceWithVAT := FALSE;
+         ioPriceWithVAT := TRUE;
          -- определили свойство из Default <% НДС>
          ioVATPercent := 20;
          -- определили свойство из Default <Виды форм оплаты>
@@ -73,8 +79,8 @@ BEGIN
              ioPaidKindId := zc_Enum_PaidKind_FirstForm();
              ioPaidKindName := lfGet_Object_ValueData (ioPaidKindId);
          END IF;
-         -- нашли свойство <Договора> у "Контрагента"
-         IF COALESCE (ioContractId, 0) =0
+         -- нашли свойство <Договор> у "Контрагента"
+         IF COALESCE (ioContractId, 0) = 0
          THEN
              ioContractId := 0;
              ioContractName := lfGet_Object_ValueData (ioContractId);

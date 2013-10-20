@@ -27,7 +27,7 @@ BEGIN
    
    -- !!! Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
    -- !!! vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Goods());
-   IF COALESCE (inCode, 0) = 0  THEN vbCode_calc := NULL; ELSE vbCode_calc := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
+   IF COALESCE (inCode, 0) = 0  THEN vbCode_calc := 0; ELSE vbCode_calc := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
    
    -- !!! проверка уникальности <Наименование>
    -- !!! PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Goods(), inName);
@@ -64,6 +64,7 @@ ALTER FUNCTION gpInsertUpdate_Object_Goods (Integer, Integer, TVarChar, TFloat, 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.10.13                                        * vbCode_calc:=0
  29.09.13                                        * add zc_ObjectLink_Goods_Fuel
  01.09.13                                        * add zc_ObjectLink_Goods_Business
  30.06.13                                        * add vb
