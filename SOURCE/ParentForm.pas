@@ -192,6 +192,11 @@ begin
      FChoiceAction.Visible := Assigned(FSender) and Supports(FSender, IChoiceCaller);
      FChoiceAction.Enabled := FChoiceAction.Visible;
      if Supports(FSender, IChoiceCaller) then begin
+        try
+          TdsdChoiceGuides(FChoiceAction).ChoiceCaller := nil;
+        except
+          // пока под стул!!!
+        end;
         // объединили вызывающий справочник и кнопку выбора!!!
         TdsdChoiceGuides(FChoiceAction).ChoiceCaller := FSender as IChoiceCaller;
         (FSender as IChoiceCaller).Owner := FChoiceAction;
