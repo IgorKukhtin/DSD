@@ -66,6 +66,7 @@ type
     clInfoMoneyDestinationCode: TcxGridDBColumn;
     clInfoMoneyDestinationName: TcxGridDBColumn;
     clInfoMoneyCode: TcxGridDBColumn;
+    clBusinessName: TcxGridDBColumn;
   private
     { Private declarations }
   public
