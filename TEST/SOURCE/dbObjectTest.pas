@@ -97,7 +97,9 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdateContract(const Id: integer; InvNumber, Comment: string;
-                                        SigningDate, StartDate, EndDate: TDateTime ): integer;
+                                        SigningDate, StartDate, EndDate: TDateTime;
+                                        ChangePercent,ChangePrice :Double; JuridicalId,InfoMoneyId,ContractKindId,PaidKindId :Integer
+                                 ): integer;
     constructor Create; override;
   end;
 
@@ -980,21 +982,29 @@ end;
 
 function TContractTest.InsertDefault: integer;
 begin
-  result := InsertUpdateContract(0, '123456', 'comment', date,date,date);
+  result := InsertUpdateContract(0, '123456', 'comment', date,date,date, 1,2,0,0,0,0);
   inherited;
 end;
 
 function TContractTest.InsertUpdateContract(const Id: integer; InvNumber,
-  Comment: string; SigningDate, StartDate, EndDate: TDateTime): integer;
+  Comment: string; SigningDate, StartDate, EndDate: TDateTime;
+  ChangePercent,ChangePrice :Double; JuridicalId,InfoMoneyId,ContractKindId,PaidKindId :Integer
+ ): integer;
+
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
-  FParams.AddParam('inComment', ftString, ptInput, Comment);
-
   FParams.AddParam('inSigningDate', ftDateTime, ptInput, SigningDate);
   FParams.AddParam('inStartDate', ftDateTime, ptInput, StartDate);
   FParams.AddParam('inEndDate', ftDateTime, ptInput, EndDate);
+  FParams.AddParam('inChangePercent', ftFloat, ptInput, ChangePercent);
+  FParams.AddParam('inChangePrice', ftFloat, ptInput, ChangePrice);
+  FParams.AddParam('inComment', ftString, ptInput, Comment);
+  FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
+  FParams.AddParam('inInfoMoneyId', ftInteger, ptInput, InfoMoneyId);
+  FParams.AddParam('inContractKindId', ftInteger, ptInput, ContractKindId);
+  FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
 
   result := InsertUpdate(FParams);
 end;

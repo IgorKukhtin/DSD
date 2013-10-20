@@ -1,14 +1,20 @@
 -- Function: gpInsertUpdate_Object_Contract()
 
--- DROP FUNCTION gpInsertUpdate_Object_Contract (Integer, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
  INOUT ioId             Integer,       -- Ключ объекта <Договор>
-    IN inInvNumber      TVarChar,      -- свойство <Номер договора>
-    IN inComment        TVarChar,      -- свойство <Комментарий>
+    IN inInvNumber      TVarChar,      -- Номер договора
     IN inSigningDate    TDateTime,     -- свойство Дата заключения договора
     IN inStartDate      TDateTime,     -- свойство Дата с которой действует договор
     IN inEndDate        TDateTime,     -- свойство Дата до которой действует договор    
+    IN inChangePercent  TFloat   ,     -- (-)% Скидки (+)% Наценки 
+    IN inChangePrice    TFloat   ,     -- Скидка в цене
+    IN inComment        TVarChar,      -- Комментарий
+    IN inJuridicalId    Integer  ,     -- Юридическое лицо
+    IN inInfoMoneyId    Integer  ,     -- Статьи назначения
+    IN inContractKindId Integer  ,     -- Виды договоров
+    IN inPaidKindId     Integer  ,     -- Виды форм оплаты
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS Integer AS
@@ -25,11 +31,10 @@ BEGIN
    PERFORM lpCheckUnique_ObjectString_ValueData (ioId, zc_ObjectString_Contract_InvNumber(), inInvNumber);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Contract(), 0, '');
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Contract(), 0, inInvNumber);
+
    -- сохранили свойство <Номер договора>
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_InvNumber(), ioId, inInvNumber);
-   -- сохранили свойство <Комментарий>
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_Comment(), ioId, inComment);
+   -- PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_InvNumber(), ioId, inInvNumber);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_Signing(), ioId, inSigningDate);
@@ -38,24 +43,41 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_End(), ioId, inEndDate);
 
+   -- сохранили свойство <(-)% Скидки (+)% Наценки >
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Contract_ChangePercent(), ioId, inChangePercent);
+   -- сохранили свойство <Скидка в цене>
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Contract_ChangePrice(), ioId, inChangePrice);
+
+   -- сохранили свойство <Комментарий>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_Comment(), ioId, inComment);
+
+   -- сохранили связь с <Юридическое лицо>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_Juridical(), ioId, inJuridicalId);
+   -- сохранили связь с <Статьи назначения>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_InfoMoney(), ioId, inInfoMoneyId);
+   -- сохранили связь с <Виды договоров>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_ContractKind(), ioId, inContractKindId);
+   -- сохранили связь с <Виды форм оплаты>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_PaidKind(), ioId, inPaidKindId);
+
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, UserId);
 
-END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Contract (Integer, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
-
+END;
+$BODY$
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.10.13                                        * add from redmaine
+ 19.10.13                                        * del zc_ObjectString_Contract_InvNumber()
  22.07.13         * add  SigningDate, StartDate, EndDate              
  12.04.13                                        *
  16.06.13                                        * красота
-
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_Contract()
+-- SELECT * FROM gpInsertUpdate_Object_Contract ()

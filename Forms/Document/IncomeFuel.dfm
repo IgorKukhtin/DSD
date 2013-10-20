@@ -25,7 +25,6 @@ object IncomeFuelForm: TIncomeFuelForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 773
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 23
@@ -114,6 +113,7 @@ object IncomeFuelForm: TIncomeFuelForm
     object edContract: TcxButtonEdit
       Left = 612
       Top = 23
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
@@ -130,6 +130,7 @@ object IncomeFuelForm: TIncomeFuelForm
     object edPaidKind: TcxButtonEdit
       Left = 758
       Top = 63
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
@@ -223,14 +224,12 @@ object IncomeFuelForm: TIncomeFuelForm
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 773
     ClientRectBottom = 270
     ClientRectRight = 920
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 773
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -238,7 +237,6 @@ object IncomeFuelForm: TIncomeFuelForm
         Height = 246
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 773
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -390,7 +388,6 @@ object IncomeFuelForm: TIncomeFuelForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitWidth = 773
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -398,7 +395,6 @@ object IncomeFuelForm: TIncomeFuelForm
         Height = 246
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 773
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS

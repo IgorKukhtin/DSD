@@ -29,7 +29,7 @@ BEGIN
          SELECT
                0 AS Id
              , CAST (lfGet_InvNumber (0, zc_Movement_Income()) as TVarChar) AS InvNumber
-             , CAST (CURRENT_TIMESTAMP as TDateTime) AS OperDate
+             , CAST (CURRENT_DATE AS TDateTime) AS OperDate
              , Object_Status.Code               AS StatusCode
              , Object_Status.Name               AS StatusName
 
@@ -140,6 +140,7 @@ ALTER FUNCTION gpGet_Movement_IncomeFuel (Integer, TVarChar) OWNER TO postgres;
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 20.10.13                                        * CURRENT_TIMESTAMP -> CURRENT_DATE
  19.10.13                                        * add ChangePrice
  07.10.13                                        * add lpCheckRight
  05.10.13                                        * add InvNumberPartner
@@ -150,4 +151,4 @@ ALTER FUNCTION gpGet_Movement_IncomeFuel (Integer, TVarChar) OWNER TO postgres;
 */
 
 -- òåñò
--- SELECT * FROM gpGet_Movement_IncomeFuel (inMovementId := 0, inSession:= zfCalc_UserAdmin ())
+-- SELECT * FROM gpGet_Movement_IncomeFuel (inMovementId := 0, inSession:= zfCalc_UserAdmin())

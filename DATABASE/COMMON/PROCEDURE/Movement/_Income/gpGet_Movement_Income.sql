@@ -134,6 +134,7 @@ ALTER FUNCTION gpGet_Movement_Income (Integer, TVarChar) OWNER TO postgres;
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 20.10.13                                        * CURRENT_TIMESTAMP -> CURRENT_DATE
  07.10.13                                        * add lpCheckRight
  30.09.13                                        * add Object_Personal_View
  30.09.13                                        * del zc_MovementLinkObject_PersonalDriver

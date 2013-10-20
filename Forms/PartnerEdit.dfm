@@ -1,7 +1,7 @@
 ﻿object PartnerEditForm: TPartnerEditForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090'>'
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
   ClientHeight = 333
   ClientWidth = 371
   Color = clBtnFace
@@ -77,7 +77,7 @@
     Top = 104
     Caption = #1070#1088'. '#1083#1080#1094#1086
   end
-  object ceJuridical: TcxButtonEdit
+  object edJuridical: TcxButtonEdit
     Left = 97
     Top = 101
     Properties.Buttons = <
@@ -381,7 +381,7 @@
   end
   object dsdJuridicalGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceJuridical
+    LookupControl = edJuridical
     FormName = 'TJuridicalForm'
     PositionDataSet = 'ClientDataSet'
     Params = <

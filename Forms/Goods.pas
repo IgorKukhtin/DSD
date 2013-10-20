@@ -29,11 +29,11 @@ type
     clCode: TcxGridDBColumn;
     clName: TcxGridDBColumn;
     clWeight: TcxGridDBColumn;
-    clGoodsGroup: TcxGridDBColumn;
-    clMeasure: TcxGridDBColumn;
-    clTradeMark: TcxGridDBColumn;
-    clInfoMoney: TcxGridDBColumn;
-    clErased: TcxGridDBColumn;
+    clGoodsGroupName: TcxGridDBColumn;
+    clMeasureName: TcxGridDBColumn;
+    clTradeMarkName: TcxGridDBColumn;
+    clInfoMoneyName: TcxGridDBColumn;
+    clIsErased: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -61,6 +61,11 @@ type
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clFuelName: TcxGridDBColumn;
+    clInfoMoneyGroupCode: TcxGridDBColumn;
+    clInfoMoneyGroupName: TcxGridDBColumn;
+    clInfoMoneyDestinationCode: TcxGridDBColumn;
+    clInfoMoneyDestinationName: TcxGridDBColumn;
+    clInfoMoneyCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -29,8 +29,8 @@ type
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     ceCode: TcxGridDBColumn;
-    ceJuridicalName: TcxGridDBColumn;
-    ceisErased: TcxGridDBColumn;
+    ceName: TcxGridDBColumn;
+    ceIsErased: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
@@ -57,6 +57,12 @@ type
     GridStoredProc: TdsdStoredProc;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    clInfoMoneyGroupCode: TcxGridDBColumn;
+    clInfoMoneyGroupName: TcxGridDBColumn;
+    clInfoMoneyDestinationCode: TcxGridDBColumn;
+    clInfoMoneyDestinationName: TcxGridDBColumn;
+    clInfoMoneyCode: TcxGridDBColumn;
+    clInfoMoneyName: TcxGridDBColumn;
   private
     { Private declarations }
   public

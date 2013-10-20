@@ -40,7 +40,7 @@ type
     cxLabel2: TcxLabel;
     edGLNCode: TcxTextEdit;
     cxLabel3: TcxLabel;
-    ceJuridical: TcxButtonEdit;
+    edJuridical: TcxButtonEdit;
     dsdJuridicalGuides: TdsdGuides;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
     cxLabel4: TcxLabel;

@@ -1,9 +1,19 @@
-inherited From_byIncomeFuelForm: TFrom_byIncomeFuelForm
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1090#1086' '#1079#1072#1087#1088#1072#1074#1083#1103#1083'>'
+object From_byIncomeFuelForm: TFrom_byIncomeFuelForm
+  Left = 0
+  Top = 0
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1048#1089#1090#1086#1095#1085#1080#1082' '#1079#1072#1087#1088#1072#1074#1082#1080'>'
   ClientHeight = 395
   ClientWidth = 703
-  ExplicitWidth = 711
-  ExplicitHeight = 429
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = False
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -35,6 +45,7 @@ inherited From_byIncomeFuelForm: TFrom_byIncomeFuelForm
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
+      OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -51,10 +62,10 @@ inherited From_byIncomeFuelForm: TFrom_byIncomeFuelForm
         Width = 160
       end
       object clJuridicalCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1102#1088'.'#1083#1080#1094#1072
+        Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
         DataBinding.FieldName = 'JuridicalCode'
         HeaderAlignmentVert = vaCenter
-        Width = 215
+        Width = 55
       end
       object clJuridicalName: TcxGridDBColumn
         Caption = #1070#1088'.'#1083#1080#1094#1086
@@ -68,7 +79,7 @@ inherited From_byIncomeFuelForm: TFrom_byIncomeFuelForm
         PropertiesClassName = 'TcxCheckBoxProperties'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 85
+        Width = 45
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -104,8 +115,8 @@ inherited From_byIncomeFuelForm: TFrom_byIncomeFuelForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -138,27 +149,6 @@ inherited From_byIncomeFuelForm: TFrom_byIncomeFuelForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -181,28 +171,6 @@ inherited From_byIncomeFuelForm: TFrom_byIncomeFuelForm
     end
     object bbRefresh: TdxBarButton
       Action = actRefresh
-      Category = 0
-    end
-    object bbInsert: TdxBarButton
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      Category = 0
-      Visible = ivAlways
-      ImageIndex = 0
-      ShortCut = 45
-    end
-    object bbEdit: TdxBarButton
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      Category = 0
-      Visible = ivAlways
-      ImageIndex = 1
-      ShortCut = 115
-    end
-    object bbErased: TdxBarButton
-      Action = dsdSetErased
-      Category = 0
-    end
-    object bbUnErased: TdxBarButton
-      Action = dsdSetUnErased
       Category = 0
     end
     object bbGridToExcel: TdxBarButton
@@ -236,35 +204,6 @@ inherited From_byIncomeFuelForm: TFrom_byIncomeFuelForm
       ImageIndex = 4
       ShortCut = 116
     end
-    object dsdSetErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 2
-      ShortCut = 46
-      ErasedFieldName = 'isErased'
-      DataSource = DataSource
-    end
-    object dsdSetUnErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 32776
-      ErasedFieldName = 'isErased'
-      isSetErased = False
-      DataSource = DataSource
-    end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       Params = <
@@ -273,49 +212,40 @@ inherited From_byIncomeFuelForm: TFrom_byIncomeFuelForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
-          ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
-          ParamType = ptOutput
         end
         item
           Name = 'Code'
           Component = ClientDataSet
           ComponentItem = 'Code'
           DataType = ftString
-          ParamType = ptOutput
         end
         item
           Name = 'RouteKindId'
           Component = ClientDataSet
           ComponentItem = 'RouteKindId'
-          DataType = ftInteger
-          ParamType = ptOutput
         end
         item
           Name = 'RouteKindName'
           Component = ClientDataSet
           ComponentItem = 'RouteKindName'
           DataType = ftString
-          ParamType = ptOutput
         end
         item
           Name = 'FreightId'
           Component = ClientDataSet
           ComponentItem = 'FreightId'
-          DataType = ftInteger
-          ParamType = ptOutput
         end
         item
           Name = 'FreightName'
           Component = ClientDataSet
           ComponentItem = 'FreightName'
           DataType = ftString
-          ParamType = ptOutput
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -355,7 +285,6 @@ inherited From_byIncomeFuelForm: TFrom_byIncomeFuelForm
         Name = 'inObjectId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 288

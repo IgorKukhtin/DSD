@@ -48,6 +48,18 @@ type
     edEndDate: TcxDateEdit;
     cxLabel6: TcxLabel;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
+    ceChangePercent: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
+    ceChangePrice: TcxCurrencyEdit;
+    cxLabel8: TcxLabel;
+    cxLabel9: TcxLabel;
+    edInfoMoney: TcxButtonEdit;
+    JuridicalGuides: TdsdGuides;
+    InfoMoneyGuides: TdsdGuides;
+    ContractKindGuides: TdsdGuides;
+    edPaidKind: TcxButtonEdit;
+    cxLabel10: TcxLabel;
+    PaidKindGuides: TdsdGuides;
   private
     { Private declarations }
   public

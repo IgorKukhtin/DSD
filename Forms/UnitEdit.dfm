@@ -126,7 +126,7 @@
   object cxLabel6: TcxLabel
     Left = 40
     Top = 169
-    Caption = #1059#1087#1088'. '#1089#1095#1077#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+    Caption = #1057#1095#1077#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
   end
   object ceAccountDirection: TcxButtonEdit
     Left = 40
@@ -142,7 +142,7 @@
   object cxLabel7: TcxLabel
     Left = 280
     Top = 169
-    Caption = #1057#1090#1072#1090#1100#1103' '#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+    Caption = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
   end
   object ceProfitLossDirection: TcxButtonEdit
     Left = 280
@@ -415,7 +415,6 @@
     LookupControl = ceJuridical
     FormName = 'TJuridicalForm'
     PositionDataSet = 'ClientDataSet'
-    ParentDataSet = 'GridDataSet'
     Params = <>
     Left = 384
     Top = 112

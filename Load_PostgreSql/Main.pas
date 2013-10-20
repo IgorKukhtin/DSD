@@ -1579,8 +1579,13 @@ begin
                   Add('     , GoodsProperty_PG.Id_Postgres as GoodsPropertyId_PG');
                   Add('     , isnull(isnull(zf_ChangeTVarCharMediumToNull(ClientInformation.GLNMain),ClientInformation.GLN),'+FormatToVarCharServer_notNULL('')+') as GLNCode');
                   Add('     , zc_rvYes() as zc_rvYes');
+                  Add('     , case when Unit.Id=3 then zc_rvYes() else zc_rvNo() end as zc_Juridical_Basis');
                   Add('     , case when Unit.Id in (3, 165) then zc_rvYes() else zc_rvNo() end isCorporate'); // АЛАН + ИРНА-1
-                  Add('     , case when Unit.Id = 3 then _pgInfoMoney_Alan.Id3_Postgres when Unit.Id = 165 then _pgInfoMoney_Irna.Id3_Postgres else null end InfoMoneyId_PG'); // АЛАН + ИРНА-1
+                  Add('     , case when Unit.Id = 3 then _pgInfoMoney_Alan.Id3_Postgres'
+                     +'            when Unit.Id = 165 then _pgInfoMoney_Irna.Id3_Postgres'
+                     +'            when Unit.UnitName = '+FormatToVarCharServer_notNULL('Золотой экватор ТОВ') +' then _pgInfoMoney_GSM.Id3_Postgres'
+                     +'            else null'
+                     +'       end InfoMoneyId_PG'); // АЛАН + ИРНА-1
                   Add('from dba.Unit as Unit_all');
                   Add('     join dba.Unit on Unit.Id = isnull(zf_ChangeIntToNull(Unit_all.DolgByUnitID), isnull(zf_ChangeIntToNull(Unit_all.InformationFromUnitID), Unit_all.Id))');
                   Add('     left outer join dba.GoodsProperty_Postgres as GoodsProperty_PG on GoodsProperty_PG.Id= case when fIsClient_ATB(Unit.Id)=zc_rvYes() then 1'
@@ -1612,6 +1617,7 @@ begin
                   Add('     left outer join dba.ClientInformation on ClientInformation.ClientId = isnull( zf_ChangeIntToNull( Unit_all.InformationFromUnitID), Unit_all.Id)');
                   Add('     left outer join dba._pgInfoMoney as _pgInfoMoney_Alan on _pgInfoMoney_Alan.ObjectCode = 20801'); // Общефирменные + Алан + Алан
                   Add('     left outer join dba._pgInfoMoney as _pgInfoMoney_Irna on _pgInfoMoney_Irna.ObjectCode = 20901'); // Общефирменные + Ирна + Ирна
+                  Add('     left outer join dba._pgInfoMoney as _pgInfoMoney_GSM on _pgInfoMoney_GSM.ObjectCode = 20401'); // Общефирменные + ГСМ + ГСМ
                   Add('where (((Unit.Id1_Postgres is null'
 //                     +'   and (isnull(Unit_all.findGoodsCard,zc_rvNo()) = zc_rvNo()'
 //                     +'     or fCheckUnitClientParentID(152,Unit.Id)=zc_rvYes())' // Поставщики-ВСЕ
@@ -1706,7 +1712,7 @@ begin
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
              toStoredProc.Params.ParamByName('inGLNCode').Value:=FieldByName('GLNCode').AsString;
-             if FieldByName('isCorporate').AsInteger=FieldByName('zc_rvYes').AsInteger then toStoredProc.Params.ParamByName('inIsCorporate').Value:=true else toStoredProc.Params.ParamByName('inIsCorporate').Value:=false;
+             if FieldByName('isCorporate').AsInteger=zc_rvYes then toStoredProc.Params.ParamByName('inIsCorporate').Value:=true else toStoredProc.Params.ParamByName('inIsCorporate').Value:=false;
              toStoredProc.Params.ParamByName('inJuridicalGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId_PG').AsInteger;
              toStoredProc.Params.ParamByName('inInfoMoneyId').Value:=FieldByName('InfoMoneyId_PG').AsInteger;
@@ -1715,6 +1721,9 @@ begin
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.Unit set Id2_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             if FieldByName('zc_Juridical_Basis').AsInteger=zc_rvYes
+             then fExecSqToQuery ('CREATE OR REPLACE FUNCTION zc_Juridical_Basis() RETURNS Integer AS $BODY$BEGIN RETURN ('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;');
              //
              Next;
              Application.ProcessMessages;

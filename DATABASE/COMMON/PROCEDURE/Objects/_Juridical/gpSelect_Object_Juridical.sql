@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_Juridical()
 
---DROP FUNCTION gpSelect_Object_Juridical(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Juridical (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical(
     IN inSession        TVarChar       -- сессия пользователя
@@ -8,12 +8,15 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                GLNCode TVarChar, isCorporate Boolean,
                JuridicalGroupId Integer, JuridicalGroupName TVarChar,
-               GoodsPropertyId Integer, GoodsPropertyName TVarChar, 
-               InfoMoneyGroupId Integer, InfoMoneyGroupName TVarChar, 
-               InfoMoneyDestinationId Integer, InfoMoneyDestinationName TVarChar, 
-               InfoMoneyId Integer, InfoMoneyName TVarChar, 
-               isErased BOOLEAN) AS
-$BODY$BEGIN
+               GoodsPropertyName TVarChar, 
+               InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar, 
+               InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar, 
+               InfoMoneyCode Integer, InfoMoneyName TVarChar, 
+               isErased Boolean
+              )
+AS
+$BODY$
+BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_Juridical());
@@ -58,20 +61,17 @@ $BODY$BEGIN
        , ObjectBoolean_isCorporate.ValueData AS isCorporate
 
 
-       , COALESCE(ObjectLink_Juridical_JuridicalGroup.ChildObjectId, 0) AS JuridicalGroupId
-       , CAST ('' AS TVarChar)           AS JuridicalGroupName
+       , COALESCE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId, 0) AS JuridicalGroupId
+       , Object_JuridicalGroup.ValueData  AS JuridicalGroupName
     
-       , Object_GoodsProperty.Id         AS GoodsPropertyId
        , Object_GoodsProperty.ValueData  AS GoodsPropertyName
        
-       , lfObject_InfoMoney.InfoMoneyGroupId   AS InfoMoneyGroupId
-       , lfObject_InfoMoney.InfoMoneyGroupName AS InfoMoneyGroupName
-
-       , lfObject_InfoMoney.InfoMoneyDestinationId   AS InfoMoneyDestinationId
-       , lfObject_InfoMoney.InfoMoneyDestinationName AS InfoMoneyDestinationName
-
-       , lfObject_InfoMoney.InfoMoneyId   AS InfoMoneyId
-       , lfObject_InfoMoney.InfoMoneyName AS InfoMoneyName
+       , Object_InfoMoney_View.InfoMoneyGroupCode
+       , Object_InfoMoney_View.InfoMoneyGroupName
+       , Object_InfoMoney_View.InfoMoneyDestinationCode
+       , Object_InfoMoney_View.InfoMoneyDestinationName
+       , Object_InfoMoney_View.InfoMoneyCode
+       , Object_InfoMoney_View.InfoMoneyName
        
        , Object_Juridical.isErased        AS isErased
    FROM Object AS Object_Juridical
@@ -83,9 +83,10 @@ $BODY$BEGIN
                                AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
 
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_JuridicalGroup
-                 ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id 
-                AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
-        
+                             ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id 
+                            AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
+        LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
+
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
                              ON ObjectLink_Juridical_GoodsProperty.ObjectId = Object_Juridical.Id 
                             AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
@@ -94,24 +95,24 @@ $BODY$BEGIN
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_InfoMoney
                              ON ObjectLink_Juridical_InfoMoney.ObjectId = Object_Juridical.Id
                             AND ObjectLink_Juridical_InfoMoney.DescId = zc_ObjectLink_Juridical_InfoMoney()
-        LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ObjectLink_Juridical_InfoMoney.ChildObjectId
+        LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Juridical_InfoMoney.ChildObjectId
 
    WHERE Object_Juridical.DescId = zc_Object_Juridical();
   
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_Juridical (TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.10.13                                         * add Object_InfoMoney_View
  03.07.13         * +GoodsProperty, InfoMoney               
  14.05.13                                        *
 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Juridical('2')
+-- SELECT * FROM gpSelect_Object_Juridical ('2')

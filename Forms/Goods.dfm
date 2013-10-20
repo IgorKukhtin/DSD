@@ -1,19 +1,30 @@
-inherited GoodsForm: TGoodsForm
+object GoodsForm: TGoodsForm
+  Left = 0
+  Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <T'#1086#1074#1072#1088#1099'>'
   ClientHeight = 404
-  ClientWidth = 645
-  ExplicitWidth = 661
-  ExplicitHeight = 439
+  ClientWidth = 1032
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = False
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 645
+    Width = 1032
     Height = 378
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 645
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -42,29 +53,29 @@ inherited GoodsForm: TGoodsForm
         HeaderAlignmentVert = vaCenter
         Width = 58
       end
-      object clGoodsGroup: TcxGridDBColumn
+      object clGoodsGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'GoodsGroupName'
         HeaderAlignmentVert = vaCenter
-        Width = 150
+        Width = 120
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 150
+        Width = 140
       end
-      object clMeasure: TcxGridDBColumn
+      object clMeasureName: TcxGridDBColumn
         Caption = #1045#1076'. '#1080#1079#1084'.'
         DataBinding.FieldName = 'MeasureName'
         HeaderAlignmentVert = vaCenter
-        Width = 45
+        Width = 40
       end
       object clWeight: TcxGridDBColumn
         Caption = #1042#1077#1089
         DataBinding.FieldName = 'Weight'
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 45
       end
       object clFuelName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
@@ -72,24 +83,57 @@ inherited GoodsForm: TGoodsForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object clTradeMark: TcxGridDBColumn
+      object clTradeMarkName: TcxGridDBColumn
         Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
         DataBinding.FieldName = 'TradeMarkName'
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
-      object clInfoMoney: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+      object clInfoMoneyGroupCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1059#1055' '#1075#1088#1091#1087#1087#1099
+        DataBinding.FieldName = 'InfoMoneyGroupCode'
+        Visible = False
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object clInfoMoneyGroupName: TcxGridDBColumn
+        Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1103
+        DataBinding.FieldName = 'InfoMoneyGroupName'
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object clInfoMoneyDestinationCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1059#1055' '#1085#1072#1079#1085#1072#1095'.'
+        DataBinding.FieldName = 'InfoMoneyDestinationCode'
+        Visible = False
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object clInfoMoneyDestinationName: TcxGridDBColumn
+        Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+        DataBinding.FieldName = 'InfoMoneyDestinationName'
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object clInfoMoneyCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1059#1055' '#1089#1090'. '#1085#1072#1079#1085#1072#1095'.'
+        DataBinding.FieldName = 'InfoMoneyCode'
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
+      object clInfoMoneyName: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentVert = vaCenter
-        Width = 100
+        Width = 80
       end
-      object clErased: TcxGridDBColumn
+      object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
         HeaderAlignmentVert = vaCenter
-        Width = 50
+        Width = 40
       end
     end
     object cxGridLevel: TcxGridLevel

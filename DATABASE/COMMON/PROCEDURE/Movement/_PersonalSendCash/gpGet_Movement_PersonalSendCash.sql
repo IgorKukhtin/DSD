@@ -26,9 +26,9 @@ BEGIN
        SELECT
              0 AS Id
            , CAST (lfGet_InvNumber (0, zc_Movement_PersonalSendCash()) as TVarChar) InvNumber
-           , CAST (CURRENT_TIMESTAMP as TDateTime) AS OperDate
-           , lfObject_Status.Code                  AS StatusCode
-           , lfObject_Status.Name                  AS StatusName
+           , CAST (CURRENT_DATE as TDateTime) AS OperDate
+           , lfObject_Status.Code             AS StatusCode
+           , lfObject_Status.Name             AS StatusName
 
            , View_Personal.PersonalId
            , View_Personal.PersonalName
@@ -75,8 +75,9 @@ ALTER FUNCTION gpGet_Movement_PersonalSendCash (Integer, TVarChar) OWNER TO post
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 20.10.13                                        * CURRENT_TIMESTAMP -> CURRENT_DATE
  30.09.13                                        *
 */
 
 -- òåñò
--- SELECT * FROM gpGet_Movement_PersonalSendCash (inMovementId:= 0, inSession:= '2')
+-- SELECT * FROM gpGet_Movement_PersonalSendCash (inMovementId:= 0, inSession:= zfCalc_UserAdmin())

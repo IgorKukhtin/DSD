@@ -25,7 +25,6 @@ object IncomeForm: TIncomeForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = 24
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 23
@@ -154,6 +153,7 @@ object IncomeForm: TIncomeForm
     object edContract: TcxButtonEdit
       Left = 598
       Top = 23
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
@@ -170,6 +170,7 @@ object IncomeForm: TIncomeForm
     object edPaidKind: TcxButtonEdit
       Left = 512
       Top = 23
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True

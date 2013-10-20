@@ -1,10 +1,10 @@
-п»ї-- Function: gpGet_Object_Juridical()
+-- Function: gpGet_Object_Juridical()
 
---DROP FUNCTION gpGet_Object_Juridical(Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_Juridical (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Juridical(
-    IN inId          Integer,       -- Р®СЂРёРґРёС‡РµСЃРєРёРµ Р»РёС†Р° 
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inId          Integer,       -- Юридические лица 
+    IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                GLNCode TVarChar, isCorporate Boolean, 
@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
 $BODY$
 BEGIN
 
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_Juridical());
      
    IF COALESCE (inId, 0) = 0
@@ -52,8 +52,12 @@ BEGIN
            , Object_GoodsProperty.Id         AS GoodsPropertyId
            , Object_GoodsProperty.ValueData  AS GoodsPropertyName
            
-           , Object_InfoMoney.Id             AS InfoMoneyId
-           , Object_InfoMoney.ValueData      AS InfoMoneyName
+           , Object_InfoMoney_View.InfoMoneyId
+           , (   '(' || Object_InfoMoney_View.InfoMoneyCode :: TVarChar
+              || ') '|| Object_InfoMoney_View.InfoMoneyGroupName
+              || ' ' || Object_InfoMoney_View.InfoMoneyDestinationName
+              || ' ' || Object_InfoMoney_View.InfoMoneyName
+             ) :: TVarChar AS InfoMoneyName
 
        FROM Object AS Object_Juridical
            LEFT JOIN ObjectString AS ObjectString_GLNCode 
@@ -76,7 +80,7 @@ BEGIN
            LEFT JOIN ObjectLink AS ObjectLink_Juridical_InfoMoney
                                 ON ObjectLink_Juridical_InfoMoney.ObjectId = Object_Juridical.Id
                                AND ObjectLink_Juridical_InfoMoney.DescId = zc_ObjectLink_Juridical_InfoMoney()
-           LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Juridical_InfoMoney.ChildObjectId
+           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Juridical_InfoMoney.ChildObjectId
 
        WHERE Object_Juridical.Id = inId;
    END IF;      
@@ -88,13 +92,13 @@ LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Object_Juridical(integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  12.06.13          * + InfoMoney              
  12.06.13          *
  14.05.13                                        *
 
 */
 
--- С‚РµСЃС‚
--- SELECT * FROM gpSelect_Juridical('2')
+-- тест
+-- SELECT * FROM gpGet_Object_Juridical (1, '2')

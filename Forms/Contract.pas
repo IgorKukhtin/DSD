@@ -55,12 +55,23 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clSigning: TcxGridDBColumn;
-    clStart: TcxGridDBColumn;
-    clEnd: TcxGridDBColumn;
-    clContractKind: TcxGridDBColumn;
-    clJuridical: TcxGridDBColumn;
+    clSigningDate: TcxGridDBColumn;
+    clStartDate: TcxGridDBColumn;
+    clEndDate: TcxGridDBColumn;
+    clContractKindName: TcxGridDBColumn;
+    clJuridicalName: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
+    clJuridicalCode: TcxGridDBColumn;
+    clChangePercent: TcxGridDBColumn;
+    clChangePrice: TcxGridDBColumn;
+    clInfoMoneyGroupCode: TcxGridDBColumn;
+    clInfoMoneyGroupName: TcxGridDBColumn;
+    clInfoMoneyDestinationCode: TcxGridDBColumn;
+    clInfoMoneyDestinationName: TcxGridDBColumn;
+    clInfoMoneyCode: TcxGridDBColumn;
+    clInfoMoneyName: TcxGridDBColumn;
+    clIsErased: TcxGridDBColumn;
+    clPaidKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public
