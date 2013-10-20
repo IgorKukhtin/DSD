@@ -191,9 +191,11 @@ begin
   if Assigned(FChoiceAction) then begin
      FChoiceAction.Visible := Assigned(FSender) and Supports(FSender, IChoiceCaller);
      FChoiceAction.Enabled := FChoiceAction.Visible;
-     if Supports(FSender, IChoiceCaller) then
+     if Supports(FSender, IChoiceCaller) then begin
         // объединили вызывающий справочник и кнопку выбора!!!
         TdsdChoiceGuides(FChoiceAction).ChoiceCaller := FSender as IChoiceCaller;
+        (FSender as IChoiceCaller).Owner := FChoiceAction;
+     end;
   end;
 end;
 
