@@ -9,13 +9,6 @@ uses
   cxGroupBox, cxRadioGroup, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar,
   cxLabel, cxSpinEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxPropertiesStore;
 
-const
-  pcDay = 0;
-  pcWeek = 1;
-  pcMonth = 2;
-  pcQuarter = 3;
-  pcYear = 4;
-
 type
 
   // Компонент выбора периода
@@ -45,7 +38,6 @@ type
   TPeriodChoiceForm = class(TForm)
     cxDateEnd: TcxDateEdit;
     cxDateStart: TcxDateEdit;
-    cxRadioGroup: TcxRadioGroup;
     cbMonth: TcxComboBox;
     cbQuarter: TcxComboBox;
     cxLabel1: TcxLabel;
@@ -59,9 +51,24 @@ type
     bbOk: TcxButton;
     bbCancel: TcxButton;
     cxPropertiesStore: TcxPropertiesStore;
+    rbDay: TcxRadioButton;
+    rbWeek: TcxRadioButton;
+    rbMonth: TcxRadioButton;
+    rbQuater: TcxRadioButton;
+    rbYear: TcxRadioButton;
     procedure FormCreate(Sender: TObject);
-    procedure cxRadioGroupClick(Sender: TObject);
     procedure seYearPropertiesChange(Sender: TObject);
+    procedure rbWeekClick(Sender: TObject);
+    procedure cbWeekEnter(Sender: TObject);
+    procedure cbWeekPropertiesChange(Sender: TObject);
+    procedure rbMonthClick(Sender: TObject);
+    procedure cbMonthPropertiesChange(Sender: TObject);
+    procedure rbQuaterClick(Sender: TObject);
+    procedure cbMonthEnter(Sender: TObject);
+    procedure cbQuarterEnter(Sender: TObject);
+    procedure cbQuarterPropertiesChange(Sender: TObject);
+    procedure seYearEnter(Sender: TObject);
+    procedure rbYearClick(Sender: TObject);
   private
     WeekList: TList;
   public
@@ -87,33 +94,34 @@ begin
    RegisterComponents('DSDComponent', [TPeriodChoice]);
 end;
 
-procedure TPeriodChoiceForm.cxRadioGroupClick(Sender: TObject);
+procedure TPeriodChoiceForm.cbMonthEnter(Sender: TObject);
 begin
-  with cxRadioGroup do begin
-     case ItemIndex of
-       pcDay: ;
-       pcWeek:
-          with TWeek(WeekList[cbWeek.ItemIndex]) do begin
-            cxDateStart.Date := DateStart;
-            cxDateEnd.Date := DateEnd;
-          end;
-       pcMonth:
-         begin
-            cxDateStart.Date := EncodeDate(seYear.Value, cbMonth.ItemIndex + 1, 1);
-            cxDateEnd.Date := EndOfTheMonth(cxDateStart.Date) - gc_Minute;
-          end;
-       pcQuarter:
-          begin
-            cxDateStart.Date := EncodeDate(seYear.Value, cbQuarter.ItemIndex * 3 + 1, 1);
-            cxDateEnd.Date := EndOfTheMonth(EncodeDate(seYear.Value, cbQuarter.ItemIndex * 3 + 3, 1)) - gc_Minute;
-          end;
-       pcYear:
-          begin
-            cxDateStart.Date := EncodeDate(seYear.Value, 1, 1);
-            cxDateEnd.Date := EndOfTheYear(cxDateStart.Date) - gc_Minute;
-          end;
-     end;
-  end;
+  rbMonth.Checked := true;
+end;
+
+procedure TPeriodChoiceForm.cbMonthPropertiesChange(Sender: TObject);
+begin
+  rbMonth.OnClick(Sender);
+end;
+
+procedure TPeriodChoiceForm.cbQuarterEnter(Sender: TObject);
+begin
+  rbQuater.Checked := true
+end;
+
+procedure TPeriodChoiceForm.cbQuarterPropertiesChange(Sender: TObject);
+begin
+  rbQuater.OnClick(Sender)
+end;
+
+procedure TPeriodChoiceForm.cbWeekEnter(Sender: TObject);
+begin
+  rbWeek.Checked := true
+end;
+
+procedure TPeriodChoiceForm.cbWeekPropertiesChange(Sender: TObject);
+begin
+  rbWeek.OnClick(Sender);
 end;
 
 procedure TPeriodChoiceForm.FormCreate(Sender: TObject);
@@ -131,9 +139,40 @@ begin
   end;
 end;
 
+procedure TPeriodChoiceForm.rbMonthClick(Sender: TObject);
+begin
+  cxDateStart.Date := EncodeDate(seYear.Value, cbMonth.ItemIndex + 1, 1);
+  cxDateEnd.Date := EndOfTheMonth(cxDateStart.Date) - gc_Minute;
+end;
+
+procedure TPeriodChoiceForm.rbQuaterClick(Sender: TObject);
+begin
+  cxDateStart.Date := EncodeDate(seYear.Value, cbQuarter.ItemIndex * 3 + 1, 1);
+  cxDateEnd.Date := EndOfTheMonth(EncodeDate(seYear.Value, cbQuarter.ItemIndex * 3 + 3, 1)) - gc_Minute;
+end;
+
+procedure TPeriodChoiceForm.rbWeekClick(Sender: TObject);
+begin
+  with TWeek(WeekList[cbWeek.ItemIndex]) do begin
+    cxDateStart.Date := DateStart;
+    cxDateEnd.Date := DateEnd;
+  end;
+end;
+
+procedure TPeriodChoiceForm.rbYearClick(Sender: TObject);
+begin
+  cxDateStart.Date := EncodeDate(seYear.Value, 1, 1);
+  cxDateEnd.Date := EndOfTheYear(cxDateStart.Date) - gc_Minute;
+end;
+
+procedure TPeriodChoiceForm.seYearEnter(Sender: TObject);
+begin
+  rbYear.OnClick(Sender)
+end;
+
 procedure TPeriodChoiceForm.seYearPropertiesChange(Sender: TObject);
 begin
-  cxRadioGroupClick(Sender);
+  rbYear.Checked := true
 end;
 
 { TPeriodChoice }
@@ -149,12 +188,13 @@ begin
    with TPeriodChoiceForm.Create(nil) do
    begin
      try
+       seYear.Value := YearOf(DateStart.Date);
+       cbMonth.ItemIndex := MonthOf(DateStart.Date) - 1;
+       cbQuarter.ItemIndex := (cbMonth.ItemIndex div 3);
+       cbWeek.ItemIndex := WeekOf(DateStart.Date) - 1;
        cxDateStart.Date := DateStart.Date;
        cxDateEnd.Date := DateEnd.Date;
-       seYear.Value := YearOf(cxDateStart.Date);
-       cbMonth.ItemIndex := MonthOf(cxDateStart.Date) - 1;
-       cbQuarter.ItemIndex := (cbMonth.ItemIndex div 3);
-       cbWeek.ItemIndex := WeekOf(cxDateStart.Date) - 1;
+       rbDay.Checked := true;
        if ShowModal = mrOk then
        begin
          FUpdateDateEdit := true;

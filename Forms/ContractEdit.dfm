@@ -351,7 +351,7 @@ object ContractEditForm: TContractEditForm
       item
         Name = 'EndDate'
         Value = 0d
-        Component = edStartDate
+        Component = edEndDate
         DataType = ftDateTime
       end
       item
