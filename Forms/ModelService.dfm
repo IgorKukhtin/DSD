@@ -1,5 +1,5 @@
-inherited StaffListForm: TStaffListForm
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077'>'
+inherited ModelServiceForm: TModelServiceForm
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1052#1086#1076#1077#1083#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>'
   ClientHeight = 367
   ClientWidth = 853
   ExplicitWidth = 861
@@ -26,62 +26,49 @@ inherited StaffListForm: TStaffListForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clFundPayMonth
+      OptionsBehavior.IncSearchItem = clComment
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsData.Appending = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
-      OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
-      OptionsView.HeaderHeight = 40
+      OptionsView.GroupByBox = False
+      OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clUnitName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'UnitName'
+      object clCode: TcxGridDBColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'CarCode'
         HeaderAlignmentVert = vaCenter
-        Width = 132
+        Options.Editing = False
+        Width = 52
       end
-      object clPositionName: TcxGridDBColumn
-        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
-        DataBinding.FieldName = 'PositionName'
+      object clName: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 155
-      end
-      object clPositionLevelName: TcxGridDBColumn
-        Caption = #1056#1072#1079#1088#1103#1076
-        DataBinding.FieldName = 'PositionLevelName'
-        HeaderAlignmentVert = vaCenter
-        Width = 67
-      end
-      object clHoursPlan: TcxGridDBColumn
-        Caption = #1055#1083#1072#1085' '#1095#1072#1089#1086#1074
-        DataBinding.FieldName = 'HoursPlan'
-        HeaderAlignmentVert = vaCenter
-        Width = 98
-      end
-      object clPersonalCount: TcxGridDBColumn
-        Caption = #1050#1086#1083'.'#1077#1076'.'
-        DataBinding.FieldName = 'PersonalCount'
-        HeaderAlignmentVert = vaCenter
-        Width = 61
-      end
-      object clFundPayMonth: TcxGridDBColumn
-        Caption = #1060#1086#1085#1076' '#1086#1087#1083#1072#1090#1099' ('#1079#1072' '#1084#1077#1089#1103#1094')'
-        DataBinding.FieldName = 'FundPayMonth'
-        HeaderAlignmentVert = vaCenter
-        Width = 99
-      end
-      object clFundPayTurn: TcxGridDBColumn
-        Caption = #1060#1086#1085#1076' '#1086#1087#1083#1072#1090#1099' ('#1079#1072' '#1076#1077#1085#1100')'
-        DataBinding.FieldName = 'FundPayTurn'
-        Width = 90
+        Options.Editing = False
+        Width = 150
       end
       object clComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
-        Width = 89
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 120
+      end
+      object clUnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentVert = vaCenter
+        Width = 85
+      end
+      object clModelServiceKindName: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1084#1086#1076#1077#1083#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+        DataBinding.FieldName = 'ModelServiceKindName'
+        HeaderAlignmentVert = vaCenter
+        Width = 92
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -90,7 +77,8 @@ inherited StaffListForm: TStaffListForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 46
+        Options.Editing = False
+        Width = 71
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -206,11 +194,8 @@ inherited StaffListForm: TStaffListForm
       Category = 0
     end
     object bbInsert: TdxBarButton
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Action = actInsert
       Category = 0
-      Visible = ivAlways
-      ImageIndex = 0
-      ShortCut = 45
     end
     object bbEdit: TdxBarButton
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
@@ -258,6 +243,30 @@ inherited StaffListForm: TStaffListForm
       ImageIndex = 4
       ShortCut = 116
     end
+    object actInsert: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 45
+      ImageIndex = 0
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end>
+      isShowModal = True
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+    end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      StoredProc = spInsertUpdateObject
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateObject
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
+    end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       StoredProc = spErasedUnErased
@@ -300,23 +309,6 @@ inherited StaffListForm: TStaffListForm
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
-          DataType = ftString
-        end
-        item
-          Name = 'PersonalDriverId'
-          Component = ClientDataSet
-          ComponentItem = 'PersonalDriverId'
-        end
-        item
-          Name = 'PersonalDriverCode'
-          Component = ClientDataSet
-          ComponentItem = 'PersonalDriverCode'
-        end
-        item
-          Name = 'PersonalDriverName'
-          Component = ClientDataSet
-          ComponentItem = 'PersonalDriverName'
-          DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -333,13 +325,16 @@ inherited StaffListForm: TStaffListForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_StaffList'
+    StoredProcName = 'gpSelect_Object_ModelService'
     DataSet = ClientDataSet
     DataSets = <
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Value = Null
+      end>
     Left = 48
     Top = 216
   end
@@ -355,6 +350,7 @@ inherited StaffListForm: TStaffListForm
         Action = dsdChoiceGuides
       end
       item
+        Action = actUpdateDataSet
       end>
     ActionItemList = <
       item
@@ -362,6 +358,7 @@ inherited StaffListForm: TStaffListForm
         ShortCut = 13
       end
       item
+        Action = actUpdateDataSet
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
@@ -381,5 +378,58 @@ inherited StaffListForm: TStaffListForm
       end>
     Left = 288
     Top = 208
+  end
+  object spInsertUpdateObject: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_ModelService'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Component = ClientDataSet
+        ComponentItem = 'CarId'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inCode'
+        Component = ClientDataSet
+        ComponentItem = 'Code'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inName'
+        Component = ClientDataSet
+        ComponentItem = 'Name'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inComment'
+        Component = ClientDataSet
+        ComponentItem = 'Amount_Internal'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUnitId'
+        Component = ClientDataSet
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmountColdDistance_Internal'
+        Component = ClientDataSet
+        ComponentItem = 'AmountColdDistance_Internal'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inModelServiceKindId'
+        Component = ClientDataSet
+        ComponentItem = 'ModelServiceKindId'
+        ParamType = ptInput
+      end>
+    Left = 128
+    Top = 296
   end
 end

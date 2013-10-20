@@ -1,4 +1,4 @@
-unit StaffList;
+unit ModelService;
 
 interface
 
@@ -24,11 +24,12 @@ uses
   DataModul;
 
 type
-  TStaffListForm = class(TParentForm)
+  TModelServiceForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clFundPayMonth: TcxGridDBColumn;
-    clPositionLevelName: TcxGridDBColumn;
+    clCode: TcxGridDBColumn;
+    clComment: TcxGridDBColumn;
+    clUnitName: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -45,21 +46,20 @@ type
     bbChoiceGuides: TdxBarButton;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
+    actInsert: TdsdInsertUpdateAction;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clPersonalCount: TcxGridDBColumn;
+    clModelServiceKindName: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     clErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
-    clUnitName: TcxGridDBColumn;
-    clHoursPlan: TcxGridDBColumn;
-    clPositionName: TcxGridDBColumn;
-    clFundPayTurn: TcxGridDBColumn;
-    clComment: TcxGridDBColumn;
+    spInsertUpdateObject: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    clName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -71,5 +71,5 @@ implementation
 
 {$R *.dfm}
  initialization
-  RegisterClass(TStaffListForm);
+  RegisterClass(TModelServiceForm);
 end.
