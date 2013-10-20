@@ -607,8 +607,18 @@ begin
   //штатное расписание
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStaffListForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TStaffListEditForm');
+  //TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListEditForm'));
+  //TdsdFormStorageFactory.GetStorage.Load('TStaffListEditForm');
+  //Типы модели начисления
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TModelServiceKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TModelServiceKindForm');
+  //Типы выбора данных
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSelectKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSelectKindForm');
+  //Типы выбора данных
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TModelServiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TModelServiceForm');
+
 end;
 
 procedure TLoadFormTest.LoadPersonalFormTest;

@@ -48,7 +48,9 @@ type
   // имплементирующий данный класс вызывает форму дл€ выбора из справочника
   IChoiceCaller = interface
     ['{879D5206-590F-43CB-B992-26B096342EC2}']
+    procedure SetOwner(Owner: TObject);
     procedure AfterChoice(Params: TdsdParams);
+    property Owner: TObject write SetOwner;
   end;
 
   TCustomGuides = class(TComponent, IChoiceCaller)
@@ -62,6 +64,7 @@ type
     FLookupControl: TWinControl;
     FKeyField: string;
     FOnChange: TNotifyEvent;
+    FChoiceAction: TObject;
     function GetKey: String;
     function GetTextValue: String;
     procedure SetKey(const Value: String);
@@ -70,6 +73,7 @@ type
     procedure OnDblClick(Sender: TObject);
     procedure OpenGuides;
     procedure OnButtonClick(Sender: TObject; AButtonIndex: Integer);
+    procedure SetOwner(Owner: TObject);
   protected
     // им€ формы
     property FormName: string read FFormName write FFormName;
@@ -188,7 +192,7 @@ type
 implementation
 
 uses cxDBLookupComboBox, cxButtonEdit, Variants, ParentForm, FormStorage, DB,
-     SysUtils, Forms, Dialogs;
+     SysUtils, Forms, Dialogs, dsdAction;
 
 procedure Register;
 begin
@@ -440,6 +444,11 @@ begin
      (LookupControl as TcxButtonEdit).Properties.OnButtonClick := OnButtonClick;
 end;
 
+procedure TCustomGuides.SetOwner(Owner: TObject);
+begin
+  FChoiceAction := Owner;
+end;
+
 procedure TCustomGuides.OnButtonClick(Sender: TObject; AButtonIndex: Integer);
 begin
   if Sender is TcxButtonEdit then
@@ -484,6 +493,10 @@ end;
 
 destructor TCustomGuides.Destroy;
 begin
+  // ”нижтожаем ссылку на себ€ в другом компоненте!
+  if Assigned(FChoiceAction) then
+     if FChoiceAction is TdsdChoiceGuides then
+        TdsdChoiceGuides(FChoiceAction).ChoiceCaller := nil;
   inherited;
 end;
 

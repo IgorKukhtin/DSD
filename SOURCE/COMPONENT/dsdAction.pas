@@ -215,6 +215,7 @@ type
   TOpenChoiceForm = class(TdsdOpenForm, IChoiceCaller)
   private
     // Вызыввем процедуру после выбора элемента из справочника
+    procedure SetOwner(Owner: TObject);
     procedure AfterChoice(Params: TdsdParams);
   end;
 
@@ -288,12 +289,13 @@ type
     FChoiceCaller: IChoiceCaller;
     function GetDataSource: TDataSource;
     procedure SetDataSource(const Value: TDataSource);
+    procedure SetChoiceCaller(const Value: IChoiceCaller);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure DataSetChanged;
     procedure UpdateData;
   public
-    property ChoiceCaller: IChoiceCaller read FChoiceCaller write FChoiceCaller;
+    property ChoiceCaller: IChoiceCaller read FChoiceCaller write SetChoiceCaller;
     function Execute: boolean; override;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -767,11 +769,6 @@ destructor TdsdChoiceGuides.Destroy;
 begin
   FActionDataLink.Free;
   FreeAndNil(FParams);
-  try
-    // устанавливаем в nil интерфейс.
-    FChoiceCaller := nil;
-  except
-  end;
   inherited;
 end;
 
@@ -803,6 +800,11 @@ begin
        if (AComponent = DataSource) then
            DataSource := nil;
     end;
+end;
+
+procedure TdsdChoiceGuides.SetChoiceCaller(const Value: IChoiceCaller);
+begin
+  FChoiceCaller := Value;
 end;
 
 procedure TdsdChoiceGuides.SetDataSource(const Value: TDataSource);
@@ -1158,6 +1160,11 @@ begin
     if AComponent = FAction then
        FAction := nil;
   end;
+end;
+
+procedure TOpenChoiceForm.SetOwner(Owner: TObject);
+begin
+
 end;
 
 { TInsertRecord }
