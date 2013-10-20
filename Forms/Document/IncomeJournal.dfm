@@ -221,7 +221,7 @@ object IncomeJournalForm: TIncomeJournalForm
         Width = 97
       end
       object colContractName: TcxGridDBColumn
-        Caption = #1044#1086#1075#1086#1074#1086#1088
+        Caption = #8470' '#1076#1086#1075'.'
         DataBinding.FieldName = 'ContractName'
         HeaderAlignmentVert = vaCenter
         Width = 58
@@ -351,8 +351,8 @@ object IncomeJournalForm: TIncomeJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

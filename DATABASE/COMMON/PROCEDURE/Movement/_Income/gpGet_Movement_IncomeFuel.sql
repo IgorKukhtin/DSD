@@ -28,30 +28,30 @@ BEGIN
          RETURN QUERY 
          SELECT
                0 AS Id
-             , CAST (lfGet_InvNumber (0, zc_Movement_Income()) as TVarChar) AS InvNumber
+             , CAST (lfGet_InvNumber (0, zc_Movement_Income()) AS TVarChar) AS InvNumber
              , CAST (CURRENT_DATE AS TDateTime) AS OperDate
              , Object_Status.Code               AS StatusCode
              , Object_Status.Name               AS StatusName
 
-             , CAST ('' as TVarChar) AS InvNumberPartner
+             , CAST ('' AS TVarChar) AS InvNumberPartner
 
-             , CAST (TRUE as Boolean) AS PriceWithVAT
-             , CAST (20 as TFloat)     AS VATPercent
-             , CAST (0 as TFloat)      AS ChangePrice
+             , CAST (TRUE AS Boolean) AS PriceWithVAT
+             , CAST (20 AS TFloat)     AS VATPercent
+             , CAST (0 AS TFloat)      AS ChangePrice
 
              , 0                     AS FromId
-             , CAST ('' as TVarChar) AS FromName
+             , CAST ('' AS TVarChar) AS FromName
              , 0                     AS ToId
-             , CAST ('' as TVarChar) AS ToName
+             , CAST ('' AS TVarChar) AS ToName
              , 0                     AS ToParentId
              , 0                     AS PaidKindId
-             , CAST ('' as TVarChar) AS PaidKindName
+             , CAST ('' AS TVarChar) AS PaidKindName
              , 0                     AS ContractId
-             , CAST ('' as TVarChar) AS ContractName
+             , CAST ('' AS TVarChar) AS ContractName
              , 0                     AS RouteId
-             , CAST ('' as TVarChar) AS RouteName
+             , CAST ('' AS TVarChar) AS RouteName
              , 0                     AS PersonalDriverId
-             , CAST ('' as TVarChar) AS PersonalDriverName
+             , CAST ('' AS TVarChar) AS PersonalDriverName
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
        RETURN QUERY 
@@ -66,7 +66,7 @@ BEGIN
 
              , MovementBoolean_PriceWithVAT.ValueData      AS PriceWithVAT
              , MovementFloat_VATPercent.ValueData          AS VATPercent
-             , MovementFloat_ChangePrice.ValueData       AS ChangePrice
+             , MovementFloat_ChangePrice.ValueData         AS ChangePrice
 
              , Object_From.Id                    AS FromId
              , Object_From.ValueData             AS FromName

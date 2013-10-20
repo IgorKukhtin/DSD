@@ -2,7 +2,7 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090'>'
-  ClientHeight = 455
+  ClientHeight = 547
   ClientWidth = 996
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -254,24 +254,27 @@
     Left = 0
     Top = 126
     Width = 996
-    Height = 329
+    Height = 421
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 329
+    ExplicitHeight = 329
+    ClientRectBottom = 421
     ClientRectRight = 996
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitHeight = 305
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
         Width = 996
-        Height = 160
+        Height = 252
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 160
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -435,11 +438,12 @@
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 165
+        Top = 257
         Width = 996
         Height = 140
         Align = alBottom
         TabOrder = 1
+        ExplicitTop = 165
         object cxGridChildDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -620,26 +624,26 @@
       end
       object cxSplitterChild: TcxSplitter
         Left = 0
-        Top = 160
+        Top = 252
         Width = 996
         Height = 5
         AlignSplitter = salBottom
         Control = cxGridChild
+        ExplicitTop = 160
       end
     end
     object cxTabSheetIncome: TcxTabSheet
       Caption = #1055#1088#1080#1093#1086#1076
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitHeight = 305
       object cxGridIncome: TcxGrid
         Left = 0
         Top = 0
         Width = 996
-        Height = 305
+        Height = 397
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 305
         object cxGridIncomeDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = IncomeDS
@@ -754,12 +758,12 @@
             Width = 60
           end
           object clincFromName: TcxGridDBColumn
-            Caption = #1054#1090' '#1082#1086#1075#1086' ('#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090')'
+            Caption = #1048#1089#1090#1086#1095#1085#1080#1082' '#1079#1072#1087#1088#1072#1074#1082#1080
             DataBinding.FieldName = 'FromName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = PartnerChoiceForm
+                Action = ObjectFrom_byIncomeFuelChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -779,7 +783,7 @@
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 50
           end
           object clincRouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090
@@ -798,6 +802,7 @@
           object clincGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
@@ -814,6 +819,7 @@
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object clincFuelName: TcxGridDBColumn
@@ -821,7 +827,7 @@
             DataBinding.FieldName = 'FuelName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 100
+            Width = 80
           end
           object clincAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
@@ -849,6 +855,24 @@
             Options.Editing = False
             Width = 55
           end
+          object clincContractName: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object clincChangePrice: TcxGridDBColumn
+            Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1094#1077#1085#1077
+            DataBinding.FieldName = 'ChangePrice'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
           object clincPriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'PriceWithVAT'
@@ -871,9 +895,11 @@
           object clincIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 60
           end
         end
         object cxGridIncomeLevel: TcxGridLevel
@@ -884,16 +910,15 @@
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitHeight = 305
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
         Width = 996
-        Height = 305
+        Height = 397
         Align = alClient
         TabOrder = 0
+        ExplicitHeight = 305
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -1370,7 +1395,7 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetIncome
       View = cxGridIncomeDBTableView
-      Action = PartnerChoiceForm
+      Action = ObjectFrom_byIncomeFuelChoiceForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1088#1080#1093#1086#1076' ('#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086')>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1088#1080#1093#1086#1076' ('#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086')>'
       ShortCut = 45
@@ -1407,10 +1432,10 @@
       isSetErased = False
       DataSource = IncomeDS
     end
-    object PartnerChoiceForm: TOpenChoiceForm
+    object ObjectFrom_byIncomeFuelChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
-      Caption = 'PartnerChoiceForm'
-      FormName = 'TPartnerForm'
+      Caption = 'ObjectFrom_byIncomeFuelChoiceForm'
+      FormName = 'TObjectFrom_byIncomeFuelForm'
       GuiParams = <
         item
           Name = 'Key'
@@ -1427,6 +1452,62 @@
           Component = IncomeCDS
           ComponentItem = 'FromName'
           DataType = ftString
+        end
+        item
+          Name = 'PaidKindId'
+          Component = IncomeCDS
+          ComponentItem = 'PaidKindId'
+        end
+        item
+          Name = 'PaidKindName'
+          Component = IncomeCDS
+          ComponentItem = 'PaidKindName'
+          DataType = ftString
+        end
+        item
+          Name = 'ContractId'
+          Component = IncomeCDS
+          ComponentItem = 'ContractId'
+        end
+        item
+          Name = 'InvNumber'
+          Component = IncomeCDS
+          ComponentItem = 'ContractName'
+          DataType = ftString
+        end
+        item
+          Name = 'ChangePrice'
+          Component = IncomeCDS
+          ComponentItem = 'ChangePrice'
+        end
+        item
+          Name = 'GoodsId'
+          Component = IncomeCDS
+          ComponentItem = 'GoodsId'
+        end
+        item
+          Name = 'GoodsCode'
+          Component = IncomeCDS
+          ComponentItem = 'GoodsCode'
+        end
+        item
+          Name = 'GoodsName'
+          Component = IncomeCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+        end
+        item
+          Name = 'FuelName'
+          Component = IncomeCDS
+          ComponentItem = 'FuelName'
+          DataType = ftString
+        end
+        item
+          Name = 'inOperDate'
+          Component = IncomeCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInputOutput
         end>
       isShowModal = True
     end
@@ -2290,8 +2371,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -2480,6 +2561,7 @@
   object RefreshAddOn: TRefreshAddOn
     FormName = 'TransportJournalForm'
     DataSet = 'ClientDataSet'
+    KeyField = 'Id'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
     Left = 442
@@ -2605,6 +2687,13 @@
         ComponentItem = 'VATPercent'
         DataType = ftFloat
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'inChangePrice'
+        Component = IncomeCDS
+        ComponentItem = 'ChangePrice'
+        DataType = ftFloat
+        ParamType = ptInput
       end
       item
         Name = 'inFromId'
@@ -2818,7 +2907,7 @@
     View = cxGridIncomeDBTableView
     OnDblClickActionList = <
       item
-        Action = PartnerChoiceForm
+        Action = ObjectFrom_byIncomeFuelChoiceForm
       end>
     ActionItemList = <>
     SortImages = dmMain.SortImageList

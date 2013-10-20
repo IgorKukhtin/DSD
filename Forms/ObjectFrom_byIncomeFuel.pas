@@ -23,7 +23,7 @@ uses
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox;
 
 type
-  TFrom_byIncomeFuelForm = class(TParentForm)
+  TObjectFrom_byIncomeFuelForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     clCode: TcxGridDBColumn;
@@ -49,6 +49,15 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clJuridicalCode: TcxGridDBColumn;
     clJuridicalName: TcxGridDBColumn;
+    clGoodsCode: TcxGridDBColumn;
+    clGoodsName: TcxGridDBColumn;
+    clFuelName: TcxGridDBColumn;
+    clItemName: TcxGridDBColumn;
+    clPaidKindName: TcxGridDBColumn;
+    clInvNumber: TcxGridDBColumn;
+    clChangePercent: TcxGridDBColumn;
+    clChangePrice: TcxGridDBColumn;
+    FormParams: TdsdFormParams;
 
   private
     { Private declarations }
@@ -62,5 +71,5 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TFrom_byIncomeFuelForm);
+  RegisterClass(TObjectFrom_byIncomeFuelForm);
 end.

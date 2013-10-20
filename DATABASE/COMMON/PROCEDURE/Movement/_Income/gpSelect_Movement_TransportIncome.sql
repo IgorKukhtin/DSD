@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_TransportIncome(
 )
 RETURNS TABLE (MovementId Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , InvNumberPartner TVarChar
-             , PriceWithVAT Boolean, VATPercent TFloat
+             , PriceWithVAT Boolean, VATPercent TFloat, ChangePrice TFloat
              , FromId Integer, FromCode Integer, FromName TVarChar, PaidKindId Integer, PaidKindName TVarChar, ContractId Integer, ContractName TVarChar
              , RouteId Integer, RouteName TVarChar
              , MovementItemId Integer
@@ -39,6 +39,7 @@ BEGIN
 
            , MovementBoolean_PriceWithVAT.ValueData      AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData          AS VATPercent
+           , MovementFloat_ChangePrice.ValueData         AS ChangePrice
 
            , Object_From.Id                    AS FromId
            , Object_From.ObjectCode            AS FromCode
@@ -85,6 +86,9 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+            LEFT JOIN MovementFloat AS MovementFloat_ChangePrice
+                                    ON MovementFloat_ChangePrice.MovementId =  Movement.Id
+                                   AND MovementFloat_ChangePrice.DescId = zc_MovementFloat_ChangePrice()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
                                     ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
@@ -162,4 +166,4 @@ ALTER FUNCTION gpSelect_Movement_TransportIncome (Integer, Boolean, Boolean, TVa
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_TransportIncome (inParentId:= 149691, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_TransportIncome (inParentId:= 149691, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
