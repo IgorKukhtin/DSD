@@ -206,9 +206,12 @@ type
     bbPositionLevel: TdxBarButton;
     actStaffList: TdsdOpenForm;
     bbStaffList: TdxBarButton;
+    actUpdateProgram: TAction;
+    bbUpdateProgramm: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure actUpdateProgramExecute(Sender: TObject);
   private
     procedure OnException(Sender: TObject; E: Exception);
   public
@@ -220,11 +223,28 @@ var
 
 implementation
 
-uses ParentForm, Storage, CommonData, MessagesUnit, Menus, UtilConst;
+uses ParentForm, Storage, CommonData, MessagesUnit, Menus, UtilConst, Math;
 
 {$R DevExpressRus.res}
 
 {$R *.dfm}
+
+procedure TMainForm.actUpdateProgramExecute(Sender: TObject);
+var Index: integer;
+    AllParentFormFree: boolean;
+begin
+  AllParentFormFree := false;
+  while not AllParentFormFree do begin
+    AllParentFormFree := true;
+    for Index := 0 to Screen.FormCount - 1 do
+        if Screen.Forms[Index] is TParentForm then begin
+           AllParentFormFree := false;
+           Screen.Forms[Index].Free;
+           break;
+        end;
+  end;
+  ShowMessage('Формы удалены');
+end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
@@ -306,9 +326,13 @@ begin
 
   end
   else begin
-     if (E is EStorageException) then
-        // Выбрасываем все что после Context
-        TextMessage := Copy(E.Message, 1, pos('context', AnsilowerCase(E.Message)) - 1)
+     if (E is EStorageException) then begin
+        if pos('context', AnsilowerCase(E.Message)) = 0 then
+           TextMessage := E.Message
+         else
+           // Выбрасываем все что после Context
+           TextMessage := Copy(E.Message, 1, pos('context', AnsilowerCase(E.Message)) - 1)
+     end
      else
         TextMessage := E.Message;
      TMessagesForm.Create(nil).Execute(TextMessage, E.Message);

@@ -31,38 +31,12 @@ object PeriodChoiceForm: TPeriodChoiceForm
     TabOrder = 1
     Width = 121
   end
-  object cxRadioGroup: TcxRadioGroup
-    Left = 0
-    Top = 0
-    Caption = #1055#1077#1088#1080#1086#1076
-    Properties.Items = <
-      item
-        Caption = #1044#1077#1085#1100
-      end
-      item
-        Caption = #1053#1077#1076#1077#1083#1103
-      end
-      item
-        Caption = #1052#1077#1089#1103#1094
-      end
-      item
-        Caption = #1050#1074#1072#1088#1090#1072#1083
-      end
-      item
-        Caption = #1043#1086#1076
-      end>
-    ItemIndex = 0
-    Style.BorderStyle = ebsNone
-    TabOrder = 2
-    OnClick = cxRadioGroupClick
-    Height = 186
-    Width = 81
-  end
   object cbMonth: TcxComboBox
     Left = 200
     Top = 98
-    Properties.OnChange = seYearPropertiesChange
-    TabOrder = 3
+    Properties.OnChange = cbMonthPropertiesChange
+    TabOrder = 2
+    OnEnter = cbMonthEnter
     Width = 121
   end
   object cbQuarter: TcxComboBox
@@ -73,8 +47,9 @@ object PeriodChoiceForm: TPeriodChoiceForm
       'II '#1082#1074#1072#1088#1090#1072#1083
       'III '#1082#1074#1072#1088#1090#1072#1083
       'IV '#1082#1074#1072#1088#1090#1072#1083)
-    Properties.OnChange = seYearPropertiesChange
-    TabOrder = 4
+    Properties.OnChange = cbQuarterPropertiesChange
+    TabOrder = 3
+    OnEnter = cbQuarterEnter
     Width = 121
   end
   object cxLabel1: TcxLabel
@@ -86,7 +61,8 @@ object PeriodChoiceForm: TPeriodChoiceForm
     Left = 200
     Top = 156
     Properties.OnChange = seYearPropertiesChange
-    TabOrder = 6
+    TabOrder = 5
+    OnEnter = seYearEnter
     Width = 121
   end
   object cxLabel3: TcxLabel
@@ -107,8 +83,9 @@ object PeriodChoiceForm: TPeriodChoiceForm
   object cbWeek: TcxComboBox
     Left = 200
     Top = 70
-    Properties.OnChange = seYearPropertiesChange
-    TabOrder = 10
+    Properties.OnChange = cbWeekPropertiesChange
+    TabOrder = 9
+    OnEnter = cbWeekEnter
     Width = 121
   end
   object cxLabel2: TcxLabel
@@ -129,7 +106,7 @@ object PeriodChoiceForm: TPeriodChoiceForm
     Caption = 'Ok'
     Default = True
     ModalResult = 1
-    TabOrder = 13
+    TabOrder = 12
   end
   object bbCancel: TcxButton
     Left = 190
@@ -138,7 +115,53 @@ object PeriodChoiceForm: TPeriodChoiceForm
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 2
+    TabOrder = 13
+  end
+  object rbDay: TcxRadioButton
+    Left = 8
+    Top = 34
+    Width = 65
+    Height = 17
+    Caption = #1044#1077#1085#1100
+    Checked = True
     TabOrder = 14
+    TabStop = True
+  end
+  object rbWeek: TcxRadioButton
+    Left = 8
+    Top = 72
+    Width = 113
+    Height = 17
+    Caption = #1053#1077#1076#1077#1083#1103
+    TabOrder = 15
+    OnClick = rbWeekClick
+  end
+  object rbMonth: TcxRadioButton
+    Left = 8
+    Top = 100
+    Width = 113
+    Height = 17
+    Caption = #1052#1077#1089#1103#1094
+    TabOrder = 16
+    OnClick = rbMonthClick
+  end
+  object rbQuater: TcxRadioButton
+    Left = 8
+    Top = 129
+    Width = 113
+    Height = 17
+    Caption = #1050#1074#1072#1088#1090#1072#1083
+    TabOrder = 17
+    OnClick = rbQuaterClick
+  end
+  object rbYear: TcxRadioButton
+    Left = 8
+    Top = 158
+    Width = 113
+    Height = 17
+    Caption = #1043#1086#1076
+    TabOrder = 18
+    OnClick = rbYearClick
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <

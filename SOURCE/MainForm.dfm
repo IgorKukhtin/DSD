@@ -592,6 +592,14 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbRole'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGuides_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateProgramm'
         end>
     end
     object bbAction: TdxBarButton
@@ -842,6 +850,10 @@ object MainForm: TMainForm
     end
     object bbStaffList: TdxBarButton
       Action = actStaffList
+      Category = 0
+    end
+    object bbUpdateProgramm: TdxBarButton
+      Action = actUpdateProgram
       Category = 0
     end
   end
@@ -1467,6 +1479,12 @@ object MainForm: TMainForm
       FormName = 'TPositionLevelForm'
       GuiParams = <>
       isShowModal = False
+    end
+    object actUpdateProgram: TAction
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      Caption = #1054#1085#1086#1074#1080#1090#1100' '#1074#1077#1088#1089#1080#1102' '#1087#1088#1086#1075#1088#1072#1084#1084#1099
+      ShortCut = 57429
+      OnExecute = actUpdateProgramExecute
     end
   end
   object cxLocalizer: TcxLocalizer
