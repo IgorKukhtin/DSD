@@ -26,14 +26,14 @@ object IncomeJournalForm: TIncomeJournalForm
     object deStart: TcxDateEdit
       Left = 106
       Top = 10
-      EditValue = 41395d
+      EditValue = 41275d
       TabOrder = 0
       Width = 85
     end
     object deEnd: TcxDateEdit
       Left = 323
       Top = 10
-      EditValue = 41395d
+      EditValue = 41639d
       Properties.ShowTime = False
       TabOrder = 1
       Width = 84
@@ -569,14 +569,14 @@ object IncomeJournalForm: TIncomeJournalForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41395d
+        Value = 41275d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41395d
+        Value = 41639d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

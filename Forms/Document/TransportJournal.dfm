@@ -27,14 +27,14 @@ object TransportJournalForm: TTransportJournalForm
     object deStart: TcxDateEdit
       Left = 110
       Top = 8
-      EditValue = 41395d
+      EditValue = 41275d
       TabOrder = 0
       Width = 86
     end
     object deEnd: TcxDateEdit
       Left = 328
       Top = 8
-      EditValue = 41395d
+      EditValue = 41639d
       TabOrder = 1
       Width = 92
     end
@@ -118,6 +118,7 @@ object TransportJournalForm: TTransportJournalForm
         Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
         DataBinding.FieldName = 'CarModelName'
         HeaderAlignmentVert = vaCenter
+        Width = 60
       end
       object CarName: TcxGridDBColumn
         Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
@@ -235,8 +236,8 @@ object TransportJournalForm: TTransportJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -454,14 +455,14 @@ object TransportJournalForm: TTransportJournalForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41395d
+        Value = 41275d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41395d
+        Value = 41639d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

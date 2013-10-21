@@ -34,7 +34,7 @@ BEGIN
            , View_Personal.PersonalName
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
-               LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId IN (SELECT MIN (Object_Personal_View.PersonalId) FROM Object_Personal_View where id = 8216)
+               LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId IN (SELECT MIN (Object_Personal_View.PersonalId) FROM Object_Personal_View WHERE PersonalCode = 2)
        ;
      ELSE
      RETURN QUERY 

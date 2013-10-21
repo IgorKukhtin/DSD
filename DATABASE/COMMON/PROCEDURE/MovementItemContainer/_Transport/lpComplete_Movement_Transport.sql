@@ -77,8 +77,8 @@ BEGIN
                            UNION
                             SELECT Id, Amount, 0 AS FuelId, 2 AS Kind
                             FROM Container
-                                              -- Получили список товаров: (20400)ГСМ
-                            WHERE ObjectId = (SELECT GoodsId FROM Object_Goods_View WHERE InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400())
+                                               -- Получили список товаров: (20400)ГСМ
+                            WHERE ObjectId IN (SELECT GoodsId FROM Object_Goods_View WHERE InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400())
                                           -- Ограничили по Аналитике <Сотрудник>
                               AND Id IN (SELECT ContainerId FROM ContainerLinkObject WHERE DescId = zc_ContainerLinkObject_Personal() AND ObjectId = vbPersonalDriverId)
                               AND DescId = zc_Container_Count()
@@ -395,6 +395,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.10.13                                        * err ObjectId IN (SELECT GoodsId...
  14.10.13                                        * add lpInsertUpdate_MovementItemLinkObject
  06.10.13                                        * add inUserId
  02.10.13                                        * add BusinessId_Route

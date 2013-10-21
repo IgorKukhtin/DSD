@@ -27,11 +27,16 @@ BEGIN
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Contract());
    vbUserId := inSession;
 
-   -- Если код не установлен, определяем его как последний+1
-   vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Contract()); 
+   IF ioId <> 0 
+        -- пытаемся найти код
+   THEN vbCode_calc := (SELECT ObjectCode FROM Object WHERE Id = ioId); 
+        -- Иначе, определяем его как последний+1
+   ELSE vbCode_calc:=lfGet_ObjectCode (vbCode_calc, zc_Object_Contract()); 
+   END IF;
+
 
    -- проверка уникальности для свойства <Номер договора>
-   PERFORM lpCheckUnique_ObjectString_ValueData (ioId, zc_ObjectString_Contract_InvNumber(), inInvNumber);
+   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Contract(), inInvNumber);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Contract(), vbCode_calc, inInvNumber);

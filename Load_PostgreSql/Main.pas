@@ -1240,10 +1240,10 @@ begin
         Add('select Goods.Id as ObjectId');
         Add('     , 0 as ObjectCode');
         Add('     , GoodsProperty.GoodsCode');
-        Add('     , case when Goods.Id = 7575 then '+FormatToVarCharServer_notNULL('Бензин')
+        Add('     , case when GoodsProperty.GoodsCode = 7001 then '+FormatToVarCharServer_notNULL('Бензин')
            +'            else Goods.GoodsName'
            +'       end as ObjectName');
-        Add('     , case when Goods.Id=7579 then 1.25 else 1 end as Ratio');
+        Add('     , case when GoodsProperty.GoodsCode = 7005 then 1.25 else 1 end as Ratio');
         Add('     , '+RateFuelKindId+' as RateFuelKindId');
         Add('     , GoodsProperty_a95.GoodsId as GoodsId_a95');
         Add('     , GoodsProperty_Propan.GoodsId as GoodsId_Propan');
@@ -1415,7 +1415,8 @@ begin
              //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
-             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             // !!!всегда update!!!
+             if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.MoneyKind set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
              //
              Next;
@@ -1585,6 +1586,7 @@ begin
                   Add('     , case when Unit.Id = 3 then _pgInfoMoney_Alan.Id3_Postgres'
                      +'            when Unit.Id = 165 then _pgInfoMoney_Irna.Id3_Postgres'
                      +'            when Unit.UnitName = '+FormatToVarCharServer_notNULL('Золотой экватор ТОВ') +' then _pgInfoMoney_GSM.Id3_Postgres'
+                     +'            when Unit.UnitName = '+FormatToVarCharServer_notNULL('Эссенс-Премиум') +' then _pgInfoMoney_GSM.Id3_Postgres'
                      +'            else null'
                      +'       end InfoMoneyId_PG'); // АЛАН + ИРНА-1
                   Add('from dba.Unit as Unit_all');
@@ -1637,6 +1639,7 @@ begin
                      +' or ('+IntToStr(isGlobalLoad)+'=zc_rvYes()'
                      +'    and (Unit.Id=3'    // АЛАН
                      +'      or Unit.UnitName='+FormatToVarCharServer_notNULL('Золотой экватор ТОВ')
+                     +'      or Unit.UnitName='+FormatToVarCharServer_notNULL('Эссенс-Премиум')
                      +'     ))'
                      );
                   Add('group by ObjectId');
@@ -1781,6 +1784,7 @@ begin
 
                      +' or ('+IntToStr(isGlobalLoad)+'=zc_rvYes()'
                      +'    and (Unit.UnitName='+FormatToVarCharServer_notNULL('Золотой экватор ТОВ')
+                     +'      or Unit.UnitName='+FormatToVarCharServer_notNULL('Эссенс-Премиум')
                      +'     ))'
 
                      );

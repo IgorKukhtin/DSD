@@ -259,14 +259,12 @@
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitHeight = 329
     ClientRectBottom = 421
     ClientRectRight = 996
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 305
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -274,7 +272,6 @@
         Height = 252
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 160
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -443,7 +440,6 @@
         Height = 140
         Align = alBottom
         TabOrder = 1
-        ExplicitTop = 165
         object cxGridChildDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -629,13 +625,11 @@
         Height = 5
         AlignSplitter = salBottom
         Control = cxGridChild
-        ExplicitTop = 160
       end
     end
     object cxTabSheetIncome: TcxTabSheet
       Caption = #1055#1088#1080#1093#1086#1076
       ImageIndex = 2
-      ExplicitHeight = 305
       object cxGridIncome: TcxGrid
         Left = 0
         Top = 0
@@ -643,7 +637,6 @@
         Height = 397
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 305
         object cxGridIncomeDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = IncomeDS
@@ -819,7 +812,6 @@
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 100
           end
           object clincFuelName: TcxGridDBColumn
@@ -910,7 +902,9 @@
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitHeight = 305
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -918,7 +912,6 @@
         Height = 397
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 305
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -2905,10 +2898,7 @@
   object IncomeViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridIncomeDBTableView
-    OnDblClickActionList = <
-      item
-        Action = ObjectFrom_byIncomeFuelChoiceForm
-      end>
+    OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     Left = 263

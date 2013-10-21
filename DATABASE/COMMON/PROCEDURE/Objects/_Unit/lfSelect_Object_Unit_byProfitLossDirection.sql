@@ -36,9 +36,9 @@ BEGIN
            , Object_Unit_parent1.ValueData  AS UnitName_parent1
 
        FROM Object AS Object_Unit_parent0 -- Это самый верхний уровень
-            LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
-                                 ON ObjectLink_Unit_Parent.ObjectId = Object_Unit_parent0.Id
-                                AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
+            JOIN ObjectLink AS ObjectLink_Unit_Parent
+                            ON ObjectLink_Unit_Parent.ObjectId = Object_Unit_parent0.Id
+                           AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
 
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Child -- Это следующий уровень после самого верхнего
                                  ON ObjectLink_Unit_Child.ChildObjectId = Object_Unit_parent0.Id
@@ -117,6 +117,7 @@ ALTER FUNCTION lfSelect_Object_Unit_byProfitLossDirection () OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.10.13                                        * err
  26.08.13                                        *
 */
 
