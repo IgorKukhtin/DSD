@@ -21,17 +21,15 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul;
+  DataModul, cxButtonEdit;
 
 type
   TStaffListForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clFundPayMonth: TcxGridDBColumn;
-    clPositionLevelName: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
-    DataSource: TDataSource;
-    ClientDataSet: TClientDataSet;
+    MasterDS: TDataSource;
+    MasterCDS: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
@@ -48,18 +46,44 @@ type
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
-    dsdStoredProc: TdsdStoredProc;
+    spSelectMaster: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clPersonalCount: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
-    clErased: TcxGridDBColumn;
+    clIsErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
-    clUnitName: TcxGridDBColumn;
-    clHoursPlan: TcxGridDBColumn;
+    clName: TcxGridDBColumn;
+    cxGridStaffList: TcxGrid;
+    cxGridDBTableViewStaffLis: TcxGridDBTableView;
     clPositionName: TcxGridDBColumn;
+    clPositionLevelName: TcxGridDBColumn;
+    clHoursPlan: TcxGridDBColumn;
+    clPersonalCount: TcxGridDBColumn;
+    clFundPayMonth: TcxGridDBColumn;
     clFundPayTurn: TcxGridDBColumn;
     clComment: TcxGridDBColumn;
+    clsfIsErased: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxGrid2: TcxGrid;
+    cxGridDBTableView2: TcxGridDBTableView;
+    cxGridDBColumn10: TcxGridDBColumn;
+    cxGridDBColumn11: TcxGridDBColumn;
+    cxGridDBColumn12: TcxGridDBColumn;
+    cxGridDBColumn13: TcxGridDBColumn;
+    cxGridDBColumn14: TcxGridDBColumn;
+    cxGridDBColumn15: TcxGridDBColumn;
+    cxGridDBColumn16: TcxGridDBColumn;
+    cxGridDBColumn17: TcxGridDBColumn;
+    cxGridDBColumn18: TcxGridDBColumn;
+    cxGridLevel2: TcxGridLevel;
+    StaffListCDS: TClientDataSet;
+    StaffListDS: TDataSource;
+    spSelectStaffList: TdsdStoredProc;
+    clCode: TcxGridDBColumn;
+    spInsertUpdateObject: TdsdStoredProc;
+    InsertRecord: TInsertRecord;
+    PositionChoiceForm: TOpenChoiceForm;
+    actUpdateStaffList: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

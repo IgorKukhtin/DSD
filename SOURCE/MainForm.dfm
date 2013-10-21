@@ -14,7 +14,6 @@ object MainForm: TMainForm
   Position = poDesigned
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
-  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object dxBarManager: TdxBarManager
@@ -794,6 +793,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbModelService'
+        end
+        item
+          Visible = True
           ItemName = 'bbPersonalDocuments_Separator'
         end
         item
@@ -854,6 +857,10 @@ object MainForm: TMainForm
     end
     object bbUpdateProgramm: TdxBarButton
       Action = actUpdateProgram
+      Category = 0
+    end
+    object bbModelService: TdxBarButton
+      Action = actModelService
       Category = 0
     end
   end
@@ -1486,6 +1493,14 @@ object MainForm: TMainForm
       ShortCut = 57429
       OnExecute = actUpdateProgramExecute
     end
+    object actModelService: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      Caption = #1052#1086#1076#1077#1083#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+      Hint = #1052#1086#1076#1077#1083#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+      FormName = 'TModelServiceForm'
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object cxLocalizer: TcxLocalizer
     StorageType = lstResource
@@ -1512,7 +1527,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.14'
+    Version = '4.12'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
