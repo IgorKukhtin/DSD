@@ -22,21 +22,30 @@ object Report_BalanceForm: TReport_BalanceForm
     Width = 1329
     Height = 41
     Align = alTop
-    Caption = 'Panel1'
     TabOrder = 0
     object deStart: TcxDateEdit
-      Left = 208
-      Top = 8
+      Left = 104
+      Top = 9
       EditValue = 41395d
       TabOrder = 0
-      Width = 121
+      Width = 85
     end
     object deEnd: TcxDateEdit
-      Left = 352
-      Top = 8
+      Left = 317
+      Top = 9
       EditValue = 41395d
       TabOrder = 1
-      Width = 121
+      Width = 83
+    end
+    object cxLabel1: TcxLabel
+      Left = 9
+      Top = 10
+      Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
+    end
+    object cxLabel2: TcxLabel
+      Left = 202
+      Top = 10
+      Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
   end
   object cxDBPivotGrid: TcxDBPivotGrid
@@ -91,6 +100,22 @@ object Report_BalanceForm: TReport_BalanceForm
       DataBinding.FieldName = 'InfoMoneyName'
       Visible = True
       UniqueName = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    end
+    object pvObjectDirection: TcxDBPivotGridField
+      AreaIndex = 1
+      IsCaptionAssigned = True
+      Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+      DataBinding.FieldName = 'ByObjectName'
+      Visible = True
+      UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+    end
+    object pvObjectDestination: TcxDBPivotGridField
+      AreaIndex = 2
+      IsCaptionAssigned = True
+      Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+      DataBinding.FieldName = 'GoodsName'
+      Visible = True
+      UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
     end
     object pvAmountDebetStart: TcxDBPivotGridField
       Area = faData
@@ -167,13 +192,14 @@ object Report_BalanceForm: TReport_BalanceForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 88
-    Top = 8
+    Left = 120
+    Top = 208
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 56
+    Left = 80
+    Top = 208
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -197,8 +223,8 @@ object Report_BalanceForm: TReport_BalanceForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 168
-    Top = 16
+    Left = 256
+    Top = 200
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -216,8 +242,8 @@ object Report_BalanceForm: TReport_BalanceForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 120
-    Top = 16
+    Left = 176
+    Top = 216
     DockControlHeights = (
       0
       0
@@ -261,8 +287,8 @@ object Report_BalanceForm: TReport_BalanceForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 16
-    Top = 32
+    Left = 40
+    Top = 200
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -305,17 +331,25 @@ object Report_BalanceForm: TReport_BalanceForm
         DataType = ftDateTime
         ParamType = ptInput
       end>
-    Left = 152
-    Top = 24
-  end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
-    ErasedFieldName = 'isErased'
-    OnDblClickActionList = <>
-    ActionItemList = <>
-    Left = 552
-    Top = 8
+    Left = 208
+    Top = 208
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 528
+  end
+  object PeriodChoice: TPeriodChoice
+    DateStart = deStart
+    DateEnd = deEnd
+    Left = 400
+    Top = 48
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end>
+    Left = 488
+    Top = 48
   end
 end

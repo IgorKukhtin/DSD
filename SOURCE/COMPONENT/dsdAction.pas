@@ -1172,9 +1172,12 @@ end;
 procedure TInsertRecord.ChangeDSState;
 begin
   if Assigned(FView) then
-     if Assigned(FView.DataController.DataSource) then
+     if Assigned(FView.DataController.DataSource) then begin
+        if FView.DataController.DataSource.State = dsInactive then
+           raise Exception.Create('DataSet ' + FView.DataController.DataSource.DataSet.Name + ' не открыт. Добавление не возможно');
         if FView.DataController.DataSource.State = dsBrowse then
            FView.DataController.DataSource.DataSet.Append;
+     end;
 end;
 
 { TUpdateRecord }
@@ -1182,9 +1185,12 @@ end;
 procedure TUpdateRecord.ChangeDSState;
 begin
   if Assigned(FView) then
-     if Assigned(FView.DataController.DataSource) then
+     if Assigned(FView.DataController.DataSource) then begin
+        if FView.DataController.DataSource.State = dsInactive then
+           raise Exception.Create('DataSet ' + FView.DataController.DataSource.DataSet.Name + ' не открыт. Редактирование не возможно');
         if FView.DataController.DataSource.State = dsBrowse then
            FView.DataController.DataSource.DataSet.Edit;
+     end;
 end;
 
 { TCustomChangeStatus }

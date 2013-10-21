@@ -23,7 +23,7 @@ uses
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, cxCustomPivotGrid,
-  cxDBPivotGrid;
+  cxDBPivotGrid, cxLabel, ChoicePeriod;
 
 type
   TReport_BalanceForm = class(TParentForm)
@@ -38,7 +38,6 @@ type
     dsdStoredProc: TdsdStoredProc;
     actExportToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     Panel1: TPanel;
     deStart: TcxDateEdit;
@@ -55,6 +54,12 @@ type
     pvAmountKreditStart: TcxDBPivotGridField;
     pvAmountDebetEnd: TcxDBPivotGridField;
     pvAmountKreditEnd: TcxDBPivotGridField;
+    cxLabel1: TcxLabel;
+    cxLabel2: TcxLabel;
+    PeriodChoice: TPeriodChoice;
+    RefreshDispatcher: TRefreshDispatcher;
+    pvObjectDirection: TcxDBPivotGridField;
+    pvObjectDestination: TcxDBPivotGridField;
   private
   public
   end;
