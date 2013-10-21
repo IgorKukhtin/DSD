@@ -97,7 +97,6 @@ object StaffListForm: TStaffListForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.HeaderHeight = 40
@@ -109,15 +108,25 @@ object StaffListForm: TStaffListForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
+            Action = PositionChoiceForm
             Default = True
             Kind = bkEllipsis
           end>
+        Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
         Width = 155
       end
       object clPositionLevelName: TcxGridDBColumn
         Caption = #1056#1072#1079#1088#1103#1076
         DataBinding.FieldName = 'PositionLevelName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = PositionLevelChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = False
         HeaderAlignmentVert = vaCenter
         Width = 67
       end
@@ -156,6 +165,7 @@ object StaffListForm: TStaffListForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 46
       end
     end
@@ -163,7 +173,7 @@ object StaffListForm: TStaffListForm
       GridView = cxGridDBTableViewStaffLis
     end
   end
-  object cxGrid2: TcxGrid
+  object cxGridStaffListCost: TcxGrid
     Left = 0
     Top = 456
     Width = 857
@@ -173,9 +183,10 @@ object StaffListForm: TStaffListForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    object cxGridDBTableView2: TcxGridDBTableView
+    ExplicitTop = 462
+    object cxGridDBTableViewStaffListCost: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = MasterDS
+      DataController.DataSource = StaffListCostDS
       DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
@@ -183,7 +194,7 @@ object StaffListForm: TStaffListForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = cxGridDBColumn15
+      OptionsBehavior.IncSearchItem = clsfcComment
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -194,64 +205,27 @@ object StaffListForm: TStaffListForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object cxGridDBColumn10: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'UnitName'
+      object clModelServiceName: TcxGridDBColumn
+        Caption = #1052#1086#1076#1077#1083#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+        DataBinding.FieldName = 'ModelServiceName'
         HeaderAlignmentVert = vaCenter
-        Width = 132
+        Width = 301
       end
-      object cxGridDBColumn11: TcxGridDBColumn
-        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
-        DataBinding.FieldName = 'PositionName'
+      object clPrice: TcxGridDBColumn
+        Caption = #1056#1072#1089#1094#1077#1085#1082#1072' '#1075#1088#1085'./'#1082#1075'.'
+        DataBinding.FieldName = 'Price'
         HeaderAlignmentVert = vaCenter
-        Width = 155
+        Width = 257
       end
-      object cxGridDBColumn12: TcxGridDBColumn
-        Caption = #1056#1072#1079#1088#1103#1076
-        DataBinding.FieldName = 'PositionLevelName'
-        HeaderAlignmentVert = vaCenter
-        Width = 67
-      end
-      object cxGridDBColumn13: TcxGridDBColumn
-        Caption = #1055#1083#1072#1085' '#1095#1072#1089#1086#1074
-        DataBinding.FieldName = 'HoursPlan'
-        HeaderAlignmentVert = vaCenter
-        Width = 98
-      end
-      object cxGridDBColumn14: TcxGridDBColumn
-        Caption = #1050#1086#1083'.'#1077#1076'.'
-        DataBinding.FieldName = 'PersonalCount'
-        HeaderAlignmentVert = vaCenter
-        Width = 61
-      end
-      object cxGridDBColumn15: TcxGridDBColumn
-        Caption = #1060#1086#1085#1076' '#1086#1087#1083#1072#1090#1099' ('#1079#1072' '#1084#1077#1089#1103#1094')'
-        DataBinding.FieldName = 'FundPayMonth'
-        HeaderAlignmentVert = vaCenter
-        Width = 99
-      end
-      object cxGridDBColumn16: TcxGridDBColumn
-        Caption = #1060#1086#1085#1076' '#1086#1087#1083#1072#1090#1099' ('#1079#1072' '#1076#1077#1085#1100')'
-        DataBinding.FieldName = 'FundPayTurn'
-        Width = 90
-      end
-      object cxGridDBColumn17: TcxGridDBColumn
+      object clsfcComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
-        Width = 89
-      end
-      object cxGridDBColumn18: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'isErased'
-        PropertiesClassName = 'TcxCheckBoxProperties'
-        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 46
+        Width = 283
       end
     end
     object cxGridLevel2: TcxGridLevel
-      GridView = cxGridDBTableView2
+      GridView = cxGridDBTableViewStaffListCost
     end
   end
   object MasterDS: TDataSource
@@ -336,6 +310,10 @@ object StaffListForm: TStaffListForm
           ItemName = 'dxBarStatic'
         end
         item
+          Visible = True
+          ItemName = 'bbModelServise'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
@@ -395,6 +373,10 @@ object StaffListForm: TStaffListForm
       Action = dsdChoiceGuides
       Category = 0
     end
+    object bbModelServise: TdxBarButton
+      Action = InsertRecordSLC
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -406,6 +388,12 @@ object StaffListForm: TStaffListForm
       StoredProcList = <
         item
           StoredProc = spSelectMaster
+        end
+        item
+          StoredProc = spSelectStaffList
+        end
+        item
+          StoredProc = spSelectStaffListCost
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -424,7 +412,7 @@ object StaffListForm: TStaffListForm
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
-      DataSource = MasterDS
+      DataSource = StaffListDS
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -521,6 +509,59 @@ object StaffListForm: TStaffListForm
       Caption = 'dsdUpdateStaffList'
       DataSource = StaffListDS
     end
+    object PositionLevelChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'PositionLevelChoiceForm'
+      FormName = 'TPositionLevelForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = StaffListCDS
+          ComponentItem = 'PositionLevelId'
+        end
+        item
+          Name = 'TextValue'
+          Component = StaffListCDS
+          ComponentItem = 'PositionLevelName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object InsertRecordSLC: TInsertRecord
+      Category = 'DSDLib'
+      View = cxGridDBTableViewStaffListCost
+      Action = ModelServiceChoiceForm
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1084#1086#1076#1077#1083#1100
+      ImageIndex = 0
+    end
+    object ModelServiceChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'ModelServiceChoiceForm'
+      FormName = 'TModelServiceForm'
+      GuiParams = <
+        item
+          Name = 'key'
+          Component = StaffListCostCDS
+          ComponentItem = 'ModelServiceId'
+        end
+        item
+          Name = 'TextValue'
+          Component = StaffListCostCDS
+          ComponentItem = 'ModelServiceName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actUpdateStaffListCost: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      StoredProc = spInsertUpdateObjectSLCost
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateObjectSLCost
+        end>
+      Caption = 'actUpdateStaffListCost'
+      DataSource = StaffListCostDS
+    end
   end
   object spSelectMaster: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Unit'
@@ -574,7 +615,7 @@ object StaffListForm: TStaffListForm
   end
   object StaffListCDS: TClientDataSet
     Aggregates = <>
-    IndexFieldNames = 'Id'
+    IndexFieldNames = 'UnitId'
     MasterFields = 'Id'
     MasterSource = MasterDS
     PacketRecords = 0
@@ -600,11 +641,7 @@ object StaffListForm: TStaffListForm
   end
   object spInsertUpdateObject: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_StaffList'
-    DataSet = StaffListCDS
-    DataSets = <
-      item
-        DataSet = StaffListCDS
-      end>
+    DataSets = <>
     OutputType = otResult
     Params = <
       item
@@ -637,7 +674,7 @@ object StaffListForm: TStaffListForm
       item
         Name = 'inFundPayTurn'
         Component = StaffListCDS
-        ComponentItem = 'inFundPayTurn'
+        ComponentItem = 'FundPayTurn'
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -651,13 +688,13 @@ object StaffListForm: TStaffListForm
       item
         Name = 'inUnitId'
         Component = MasterCDS
-        ComponentItem = 'UnitId'
+        ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inPositionId'
         Component = StaffListCDS
-        ComponentItem = 'inPositionId'
+        ComponentItem = 'PositionId'
         ParamType = ptInput
       end
       item
@@ -668,5 +705,71 @@ object StaffListForm: TStaffListForm
       end>
     Left = 640
     Top = 208
+  end
+  object StaffListCostCDS: TClientDataSet
+    Aggregates = <>
+    IndexFieldNames = 'StaffListId'
+    MasterFields = 'Id'
+    MasterSource = StaffListDS
+    PacketRecords = 0
+    Params = <>
+    Left = 201
+    Top = 549
+  end
+  object StaffListCostDS: TDataSource
+    DataSet = StaffListCostCDS
+    Left = 86
+    Top = 549
+  end
+  object spSelectStaffListCost: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_StaffListCost'
+    DataSet = StaffListCostCDS
+    DataSets = <
+      item
+        DataSet = StaffListCostCDS
+      end>
+    Params = <>
+    Left = 530
+    Top = 549
+  end
+  object spInsertUpdateObjectSLCost: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_StaffListCost'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Component = StaffListCostCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inPrice'
+        Component = StaffListCostCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inComment'
+        Component = StaffListCostCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStaffListId'
+        Component = StaffListCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inModelServiceId'
+        Component = StaffListCostCDS
+        ComponentItem = 'ModelServiceId'
+        ParamType = ptInput
+      end>
+    Left = 384
+    Top = 552
   end
 end
