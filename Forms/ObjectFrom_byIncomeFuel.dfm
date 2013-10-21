@@ -13,7 +13,7 @@ object ObjectFrom_byIncomeFuelForm: TObjectFrom_byIncomeFuelForm
   KeyPreview = True
   OldCreateOrder = False
   isAlwaysRefresh = False
-  isFree = False
+  isFree = True
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -365,6 +365,7 @@ object ObjectFrom_byIncomeFuelForm: TObjectFrom_byIncomeFuelForm
     Params = <
       item
         Name = 'inOperDate'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
@@ -414,6 +415,7 @@ object ObjectFrom_byIncomeFuelForm: TObjectFrom_byIncomeFuelForm
     Params = <
       item
         Name = 'inOperDate'
+        Value = Null
         DataType = ftDateTime
         ParamType = ptInput
       end>
