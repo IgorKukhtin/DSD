@@ -1,6 +1,6 @@
 -- View: Object_Contract_View
 
-DROP VIEW IF EXISTS Object_Contract_View;
+-- DROP VIEW IF EXISTS Object_Contract_View;
 
 CREATE OR REPLACE VIEW Object_Contract_View AS
   SELECT Object_Contract.Id                          AS ContractId
