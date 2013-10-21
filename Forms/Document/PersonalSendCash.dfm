@@ -274,9 +274,6 @@ object PersonalSendCashForm: TPersonalSendCashForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -845,6 +842,12 @@ object PersonalSendCashForm: TPersonalSendCashForm
           Name = 'TextValue'
           Component = MasterCDS
           ComponentItem = 'CarName'
+          DataType = ftString
+        end
+        item
+          Name = 'CarModelName'
+          Component = MasterCDS
+          ComponentItem = 'CarModelName'
           DataType = ftString
         end>
       isShowModal = True

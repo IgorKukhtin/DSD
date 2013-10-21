@@ -1,9 +1,19 @@
-inherited CarForm: TCarForm
+object CarForm: TCarForm
+  Left = 0
+  Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1040#1074#1090#1086#1084#1086#1073#1080#1083#1080'>'
   ClientHeight = 367
   ClientWidth = 853
-  ExplicitWidth = 869
-  ExplicitHeight = 402
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = False
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -345,6 +355,12 @@ inherited CarForm: TCarForm
           Name = 'PersonalDriverName'
           Component = ClientDataSet
           ComponentItem = 'PersonalDriverName'
+          DataType = ftString
+        end
+        item
+          Name = 'CarModelName'
+          Component = ClientDataSet
+          ComponentItem = 'CarModelName'
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

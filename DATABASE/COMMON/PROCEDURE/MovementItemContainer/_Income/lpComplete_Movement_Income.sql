@@ -21,12 +21,15 @@ $BODY$
   DECLARE vbVATPercent TFloat;
   DECLARE vbDiscountPercent TFloat;
   DECLARE vbExtraChargesPercent TFloat;
+  DECLARE vbChangePrice TFloat;
 
   DECLARE vbOperDate TDateTime;
   DECLARE vbJuridicalId_From Integer;
   DECLARE vbIsCorporate_From Boolean;
   DECLARE vbPartnerId_From Integer;
   DECLARE vbPersonalId_From Integer;
+  DECLARE vbCardFuelId_From Integer;
+  DECLARE vbTicketFuelId_From Integer;
   DECLARE vbInfoMoneyDestinationId_From Integer;
   DECLARE vbInfoMoneyId_From Integer;
 
@@ -74,7 +77,7 @@ BEGIN
           , _tmp.InfoMoneyId_From
           , _tmp.UnitId, _tmp.CarId, _tmp.PersonalDriverId, _tmp.BranchId_To, _tmp.AccountDirectionId_To, _tmp.isPartionDate_Unit
           , _tmp.PersonalId_Packer, _tmp.PaidKindId, _tmp.ContractId, _tmp.JuridicalId_Basis_To, _tmp.BusinessId_To, _tmp.BusinessId_Route
-            INTO vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
+            INTO vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbChangePrice
                , vbOperDate, vbJuridicalId_From, vbIsCorporate_From, vbPartnerId_From, vbPersonalId_From, vbInfoMoneyId_From
                , vbUnitId, vbCarId, vbPersonalId_Driver, vbBranchId_To, vbAccountDirectionId_To, vbIsPartionDate_Unit
                , vbPersonalId_Packer, vbPaidKindId, vbContractId, vbJuridicalId_Basis_To, vbBusinessId_To, vbBusinessId_Route
@@ -83,6 +86,7 @@ BEGIN
                 , COALESCE (MovementFloat_VATPercent.ValueData, 0) AS VATPercent
                 , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
                 , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
+                , COALESCE (MovementFloat_ChangePrice.ValueData, 0)
 
                 , Movement.OperDate
                 , COALESCE (CASE WHEN Object_From.DescId <> zc_Object_Personal() THEN ObjectLink_Partner_Juridical.ChildObjectId ELSE 0 END, 0) AS JuridicalId_From
@@ -121,6 +125,9 @@ BEGIN
                 LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                         ON MovementFloat_ChangePercent.MovementId = Movement.Id
                                        AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+                LEFT JOIN MovementFloat AS MovementFloat_ChangePrice
+                                        ON MovementFloat_ChangePrice.MovementId =  Movement.Id
+                                       AND MovementFloat_ChangePrice.DescId = zc_MovementFloat_ChangePrice()
 
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                              ON MovementLinkObject_From.MovementId = Movement.Id
@@ -238,21 +245,21 @@ BEGIN
               -- конечная сумма по Контрагенту
             , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
                       -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки
-                      THEN CASE WHEN vbDiscountPercent > 0 THEN CAST ( (1 - vbDiscountPercent / 100) * (tmpOperSumm_Partner) AS NUMERIC (16, 2))
-                                WHEN vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (tmpOperSumm_Partner) AS NUMERIC (16, 2))
-                                ELSE (tmpOperSumm_Partner)
+                      THEN CASE WHEN vbDiscountPercent > 0 THEN CAST ( (1 - vbDiscountPercent / 100) * (tmpOperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))
+                                WHEN vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * (tmpOperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))
+                                ELSE (tmpOperSumm_Partner_ChangePrice)
                            END
                    WHEN vbVATPercent > 0
                       -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН)
-                      THEN CASE WHEN vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * (1 - vbDiscountPercent/100) * (tmpOperSumm_Partner) AS NUMERIC (16, 2))
-                                WHEN vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * (1 + vbExtraChargesPercent/100) * (tmpOperSumm_Partner) AS NUMERIC (16, 2))
-                                ELSE CAST ( (1 + vbVATPercent / 100) * (tmpOperSumm_Partner) AS NUMERIC (16, 2))
+                      THEN CASE WHEN vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * (1 - vbDiscountPercent/100) * (tmpOperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))
+                                WHEN vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * (1 + vbExtraChargesPercent/100) * (tmpOperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))
+                                ELSE CAST ( (1 + vbVATPercent / 100) * (tmpOperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))
                            END
                    WHEN vbVATPercent > 0
                       -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН)
-                      THEN CASE WHEN vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 - vbDiscountPercent/100) * (tmpOperSumm_Partner) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
-                                WHEN vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 + vbExtraChargesPercent/100) * (tmpOperSumm_Partner) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
-                                ELSE CAST ( (1 + vbVATPercent / 100) * (tmpOperSumm_Partner) AS NUMERIC (16, 2))
+                      THEN CASE WHEN vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 - vbDiscountPercent/100) * (tmpOperSumm_Partner_ChangePrice) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                WHEN vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 + vbExtraChargesPercent/100) * (tmpOperSumm_Partner_ChangePrice) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                ELSE CAST ( (1 + vbVATPercent / 100) * (tmpOperSumm_Partner_ChangePrice) AS NUMERIC (16, 2))
                            END
               END AS OperSumm_Partner
 
@@ -330,6 +337,10 @@ BEGIN
                    , CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) <> 0 THEN COALESCE (CAST (MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)), 0)
                                                                                   ELSE COALESCE (CAST (MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData AS NUMERIC (16, 2)), 0)
                      END AS tmpOperSumm_Partner
+                     -- промежуточная сумма по Контрагенту с учетом скидки в цене - с округлением до 2-х знаков
+                   , SUM (CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) <> 0 THEN COALESCE (CAST (MIFloat_AmountPartner.ValueData * (MIFloat_Price.ValueData - vbChangePrice) / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)), 0)
+                                                                                       ELSE COALESCE (CAST (MIFloat_AmountPartner.ValueData * (MIFloat_Price.ValueData - vbChangePrice) AS NUMERIC (16, 2)), 0)
+                          END) AS tmpOperSumm_Partner_ChangePrice
 
                      -- промежуточная сумма по Сотруднику (заготовитель) - с округлением до 2-х знаков
                    , CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) <> 0 THEN COALESCE (CAST (MIFloat_AmountPacker.ValueData * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)), 0)
@@ -911,6 +922,8 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.10.13                                        * add vbCardFuelId_From and vbTicketFuelId_From
+ 20.10.13                                        * add vbChangePrice
  06.10.13                                        * add StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
  06.10.13                                        * add inUserId
  03.10.13                                        * add vbBusinessId_Route
