@@ -742,6 +742,7 @@ begin
      fExecSqFromQuery('update dba._pgRoute set RouteId_pg = null, FreightId_pg = null');
      fExecSqFromQuery('update dba._pgMember set GroupId_pg = null, MemberId_pg = null, PersonalId_pg = null, PositionId_pg = null');
      fExecSqFromQuery('update dba._pgCar set ModelId_pg = null, CarId_pg = null, MovementId_pg=null');
+     fExecSqFromQuery('update dba._pgCardFuel set CardFuelId_pg = null');
 
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------

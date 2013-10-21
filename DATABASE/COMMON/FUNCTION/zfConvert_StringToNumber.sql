@@ -1,6 +1,6 @@
 -- Function: zfConvert_StringToNumber
 
-DROP FUNCTION IF EXISTS zfConvert_StringToNumber (TVarChar);
+-- DROP FUNCTION IF EXISTS zfConvert_StringToNumber (TVarChar);
 
 CREATE OR REPLACE FUNCTION zfConvert_StringToNumber(Number TVarChar)
 RETURNS Integer AS

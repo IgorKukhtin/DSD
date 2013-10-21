@@ -27,7 +27,7 @@ BEGIN
    -- пытаемс€ найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
 
-   -- ≈сли код не установлен, определ€ем его каи последний+1
+   -- ≈сли код не установлен, определ€ем его как последний+1
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Car()); 
    
    -- проверка прав уникальности дл€ свойства <Ќаименование јвтомобил€>
