@@ -234,9 +234,14 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Width = 45
       end
       object colContractName: TcxGridDBColumn
-        Caption = #1044#1086#1075#1086#1074#1086#1088
+        Caption = #8470' '#1076#1086#1075'.'
         DataBinding.FieldName = 'ContractName'
-        Visible = False
+        HeaderAlignmentVert = vaCenter
+        Width = 50
+      end
+      object colChangePrice: TcxGridDBColumn
+        Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1094#1077#1085#1077
+        DataBinding.FieldName = 'ChangePrice'
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
@@ -294,12 +299,6 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         DataBinding.FieldName = 'VATPercent'
         HeaderAlignmentVert = vaCenter
         Width = 40
-      end
-      object colChangePrice: TcxGridDBColumn
-        Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1094#1077#1085#1077
-        DataBinding.FieldName = 'ChangePrice'
-        HeaderAlignmentVert = vaCenter
-        Width = 50
       end
     end
     object cxGridLevel: TcxGridLevel

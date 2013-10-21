@@ -108,7 +108,7 @@ object IncomeFuelForm: TIncomeFuelForm
     object cxLabel9: TcxLabel
       Left = 612
       Top = 5
-      Caption = #1044#1086#1075#1086#1074#1086#1088
+      Caption = #1053#1086#1084#1077#1088' '#1076#1086#1075#1086#1074#1086#1088#1072
     end
     object edContract: TcxButtonEdit
       Left = 612
@@ -201,7 +201,7 @@ object IncomeFuelForm: TIncomeFuelForm
     object cxLabel11: TcxLabel
       Left = 323
       Top = 45
-      Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1094#1077#1085#1077', '#1075#1088#1085' '#1085#1072' 1'#1083'.'
+      Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1094#1077#1085#1077', '#1075#1088#1085' '#1079#1072' 1'#1083'.'
     end
     object edChangePrice: TcxCurrencyEdit
       Left = 323

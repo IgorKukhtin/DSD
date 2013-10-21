@@ -1,9 +1,9 @@
-object From_byIncomeFuelForm: TFrom_byIncomeFuelForm
+object ObjectFrom_byIncomeFuelForm: TObjectFrom_byIncomeFuelForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1048#1089#1090#1086#1095#1085#1080#1082' '#1079#1072#1087#1088#1072#1074#1082#1080'>'
   ClientHeight = 395
-  ClientWidth = 703
+  ClientWidth = 927
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,7 +19,7 @@ object From_byIncomeFuelForm: TFrom_byIncomeFuelForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 703
+    Width = 927
     Height = 369
     Align = alClient
     TabOrder = 0
@@ -52,26 +52,90 @@ object From_byIncomeFuelForm: TFrom_byIncomeFuelForm
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 66
+        Width = 40
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 160
+        Width = 120
+      end
+      object clPaidKindName: TcxGridDBColumn
+        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+        DataBinding.FieldName = 'PaidKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
       end
       object clJuridicalCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
         DataBinding.FieldName = 'JuridicalCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 40
       end
       object clJuridicalName: TcxGridDBColumn
         Caption = #1070#1088'.'#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 161
+        Width = 80
+      end
+      object clInvNumber: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1075'.'
+        DataBinding.FieldName = 'InvNumber'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object clChangePercent: TcxGridDBColumn
+        Caption = '(-)% '#1057#1082'. (+)% '#1053#1072#1094'.'
+        DataBinding.FieldName = 'ChangePercent'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object clChangePrice: TcxGridDBColumn
+        Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1094#1077#1085#1077
+        DataBinding.FieldName = 'ChangePrice'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
+      object clGoodsCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1090#1086#1074'.'
+        DataBinding.FieldName = 'GoodsCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object clGoodsName: TcxGridDBColumn
+        Caption = #1058#1086#1074#1072#1088
+        DataBinding.FieldName = 'GoodsName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object clFuelName: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
+        DataBinding.FieldName = 'FuelName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
+      object clItemName: TcxGridDBColumn
+        Caption = #1069#1083#1077#1084#1077#1085#1090
+        DataBinding.FieldName = 'ItemName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -79,7 +143,7 @@ object From_byIncomeFuelForm: TFrom_byIncomeFuelForm
         PropertiesClassName = 'TcxCheckBoxProperties'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 45
+        Width = 40
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -226,26 +290,56 @@ object From_byIncomeFuelForm: TFrom_byIncomeFuelForm
           DataType = ftString
         end
         item
-          Name = 'RouteKindId'
+          Name = 'GoodsId'
           Component = ClientDataSet
-          ComponentItem = 'RouteKindId'
+          ComponentItem = 'GoodsId'
         end
         item
-          Name = 'RouteKindName'
+          Name = 'GoodsCode'
           Component = ClientDataSet
-          ComponentItem = 'RouteKindName'
+          ComponentItem = 'GoodsCode'
+        end
+        item
+          Name = 'GoodsName'
+          Component = ClientDataSet
+          ComponentItem = 'GoodsName'
           DataType = ftString
         end
         item
-          Name = 'FreightId'
+          Name = 'FuelName'
           Component = ClientDataSet
-          ComponentItem = 'FreightId'
+          ComponentItem = 'FuelName'
+          DataType = ftString
         end
         item
-          Name = 'FreightName'
+          Name = 'ContractId'
           Component = ClientDataSet
-          ComponentItem = 'FreightName'
-          DataType = ftString
+          ComponentItem = 'ContractId'
+        end
+        item
+          Name = 'InvNumber'
+          Component = ClientDataSet
+          ComponentItem = 'InvNumber'
+        end
+        item
+          Name = 'ChangePercent'
+          Component = ClientDataSet
+          ComponentItem = 'ChangePercent'
+        end
+        item
+          Name = 'ChangePrice'
+          Component = ClientDataSet
+          ComponentItem = 'ChangePrice'
+        end
+        item
+          Name = 'PaidKindId'
+          Component = ClientDataSet
+          ComponentItem = 'PaidKindId'
+        end
+        item
+          Name = 'PaidKindName'
+          Component = ClientDataSet
+          ComponentItem = 'PaidKindName'
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -268,7 +362,14 @@ object From_byIncomeFuelForm: TFrom_byIncomeFuelForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inOperDate'
+        Component = FormParams
+        ComponentItem = 'inOperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
     Left = 40
     Top = 208
   end
@@ -296,8 +397,6 @@ object From_byIncomeFuelForm: TFrom_byIncomeFuelForm
     OnDblClickActionList = <
       item
         Action = dsdChoiceGuides
-      end
-      item
       end>
     ActionItemList = <
       item
@@ -310,5 +409,15 @@ object From_byIncomeFuelForm: TFrom_byIncomeFuelForm
     SortImages = dmMain.SortImageList
     Left = 160
     Top = 216
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'inOperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
+    Left = 168
+    Top = 272
   end
 end

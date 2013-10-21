@@ -83,6 +83,7 @@ type
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
     CarModelName: TcxGridDBColumn;
+    RefreshDispatcher: TRefreshDispatcher;
   private
   public
   end;

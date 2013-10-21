@@ -437,8 +437,8 @@ end;
 
 procedure TLoadFormTest.LoadUnionFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFrom_byIncomeFuelForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TFrom_byIncomeFuelForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectFrom_byIncomeFuelForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TObjectFrom_byIncomeFuelForm');
 
 end;
 
