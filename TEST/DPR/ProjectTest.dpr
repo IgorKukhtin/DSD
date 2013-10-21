@@ -237,7 +237,10 @@ uses
   StaffList in '..\..\Forms\StaffList.pas' {StaffListForm},
   StaffListEdit in '..\..\Forms\StaffListEdit.pas' {StaffListEditForm},
   PersonalTest in '..\SOURCE\Objects\All\PersonalTest.pas',
-  SheetWorkTimeMovementItemTest in '..\SOURCE\MovementItem\All\SheetWorkTimeMovementItemTest.pas';
+  SheetWorkTimeMovementItemTest in '..\SOURCE\MovementItem\All\SheetWorkTimeMovementItemTest.pas',
+  ModelService in '..\..\Forms\ModelService.pas' {ModelServiceForm},
+  ModelServiceKind in '..\..\Forms\ModelServiceKind.pas' {ModelServiceKindForm},
+  SelectKind in '..\..\Forms\SelectKind.pas' {SelectKindForm};
 
 {$R *.RES}
 

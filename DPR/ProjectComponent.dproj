@@ -108,6 +108,7 @@
 			<DCCReference Include="frxDB16.dcp"/>
 			<DCCReference Include="dxBarExtItemsRS16.dcp"/>
 			<DCCReference Include="cxPivotGridRS16.dcp"/>
+			<DCCReference Include="zlibEx.dcp"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
 			<DCCReference Include="..\SOURCE\UtilConst.pas"/>
 			<DCCReference Include="..\SOURCE\CommonData.pas"/>

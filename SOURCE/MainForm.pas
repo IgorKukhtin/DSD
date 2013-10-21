@@ -208,6 +208,8 @@ type
     bbStaffList: TdxBarButton;
     actUpdateProgram: TAction;
     bbUpdateProgramm: TdxBarButton;
+    actModelService: TdsdOpenForm;
+    bbModelService: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
