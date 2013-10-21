@@ -316,6 +316,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             DataBinding.FieldName = 'AccountCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object colDebetAccountGroupName: TcxGridDBColumn
@@ -324,6 +325,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 90
           end
           object colDebetAccountDirectionName: TcxGridDBColumn
@@ -332,6 +334,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 90
           end
           object colDebetAccountName: TcxGridDBColumn
@@ -339,6 +342,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             DataBinding.FieldName = 'DebetAccountName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 150
           end
           object colKreditAccountGroupName: TcxGridDBColumn
@@ -347,6 +351,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object colKreditAccountDirectionName: TcxGridDBColumn
@@ -355,6 +360,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object colKreditAccountName: TcxGridDBColumn
@@ -362,6 +368,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             DataBinding.FieldName = 'KreditAccountName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 150
           end
           object colDirectionObjectCode: TcxGridDBColumn
@@ -370,6 +377,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 40
           end
           object colDirectionObjectName: TcxGridDBColumn
@@ -377,6 +385,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             DataBinding.FieldName = 'DirectionObjectName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 98
           end
           object colDestinationObjectCode: TcxGridDBColumn
@@ -384,6 +393,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             DataBinding.FieldName = 'DestinationObjectCode'
             Visible = False
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 50
           end
           object colDestinationObjectName: TcxGridDBColumn
@@ -391,13 +401,28 @@ object PersonalSendCashForm: TPersonalSendCashForm
             DataBinding.FieldName = 'DestinationObjectName'
             Visible = False
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
+          end
+          object colBusinessCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1073#1080#1079#1085#1077#1089#1072
+            DataBinding.FieldName = 'BusinessCode'
+            Visible = False
+            Options.Editing = False
+            Width = 45
+          end
+          object colBusinessName: TcxGridDBColumn
+            Caption = #1041#1080#1079#1085#1077#1089
+            DataBinding.FieldName = 'BusinessName'
+            Options.Editing = False
+            Width = 70
           end
           object colAccountOnComplete: TcxGridDBColumn
             Caption = '***'
             DataBinding.FieldName = 'AccountOnComplete'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 20
           end
           object colDebetAmount: TcxGridDBColumn
@@ -407,6 +432,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             Properties.DisplayFormat = ',0.00;-,0.00; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object colKreditAmount: TcxGridDBColumn
@@ -417,6 +443,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             Properties.Nullable = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object colInfoMoneyName: TcxGridDBColumn
@@ -424,6 +451,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 93
           end
           object colInfoMoneyName_Detail: TcxGridDBColumn
@@ -431,6 +459,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             DataBinding.FieldName = 'InfoMoneyName_Detail'
             Visible = False
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
         end

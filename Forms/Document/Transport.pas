@@ -227,6 +227,8 @@ type
     StatusStoredProc: TdsdStoredProc;
     clincChangePrice: TcxGridDBColumn;
     clincContractName: TcxGridDBColumn;
+    colBusinessName: TcxGridDBColumn;
+    colBusinessCode: TcxGridDBColumn;
   private
   public
   end;
