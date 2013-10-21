@@ -1,16 +1,15 @@
 -- Function: gpReport_Balance()
 
--- DROP FUNCTION gpReport_Balance (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Balance (TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Balance(
     IN inStartDate   TDateTime , -- 
     IN inEndDate     TDateTime , --
     IN inSession     TVarChar    -- ÒÂÒÒËˇ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ
 )
-RETURNS TABLE (RootName TVarChar, AccountGroupCode Integer, AccountGroupName TVarChar, AccountDirectionCode Integer, AccountDirectionName TVarChar, AccountCode Integer, AccountName  TVarChar, AccountOnComplete Boolean
-             , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyCode_Detail Integer, InfoMoneyName_Detail TVarChar
-             , ByObjectCode Integer, ByObjectName TVarChar
-             , GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (RootName TVarChar, AccountGroupName TVarChar, AccountDirectionName TVarChar, AccountName  TVarChar, 
+               AccountOnComplete Boolean, InfoMoneyName TVarChar, InfoMoneyName_Detail TVarChar
+             , ByObjectName TVarChar, GoodsName TVarChar
              , AmountDebetStart TFloat, AmountKreditStart TFloat, AmountDebet TFloat, AmountKredit TFloat, AmountDebetEnd TFloat, AmountKreditEnd TFloat
              , CountStart TFloat, CountDebet TFloat, CountKredit TFloat, CountEnd TFloat
               )
@@ -22,24 +21,21 @@ $BODY$BEGIN
 
      RETURN QUERY 
        SELECT
-             CAST (CASE WHEN lfObject_Account.AccountCode >= 70000 THEN 'œ¿——»¬€' ELSE '¿ “»¬€' END AS TVarChar) AS RootName
+             CAST (CASE WHEN Object_Account_View.AccountCode >= 70000 THEN 'œ¿——»¬€' ELSE '¿ “»¬€' END AS TVarChar) AS RootName
 
-           , lfObject_Account.AccountGroupCode                AS AccountGroupCode
-           , lfObject_Account.AccountGroupName                AS AccountGroupName
-           , lfObject_Account.AccountDirectionCode            AS AccountDirectionCode
-           , lfObject_Account.AccountDirectionName            AS AccountDirectionName
-           , lfObject_Account.AccountCode                     AS AccountCode
-           , lfObject_Account.AccountName                     AS AccountName
-           , lfObject_Account.onComplete                      AS AccountOnComplete
+           , (Object_Account_View.AccountGroupCode||' '||Object_Account_View.AccountGroupName)::TVarChar  AS AccountGroupName
+           , (Object_Account_View.AccountDirectionCode||'  '||Object_Account_View.AccountDirectionName)::TVarChar      AS AccountDirectionName
+           , (Object_Account_View.AccountCode||'  '||Object_Account_View.AccountName)::TVarChar                     AS AccountName
+           , Object_Account_View.onComplete                      AS AccountOnComplete
 
-           , lfObject_InfoMoney.InfoMoneyCode
-           , lfObject_InfoMoney.InfoMoneyName
-           , lfObject_InfoMoney_Detail.InfoMoneyCode AS InfoMoneyCode_Detail
-           , lfObject_InfoMoney_Detail.InfoMoneyName AS InfoMoneyName_Detail
+           --, lfObject_InfoMoney.InfoMoneyCode
+           , Object_InfoMoney_View.InfoMoneyName
+           --, lfObject_InfoMoney_Detail.InfoMoneyCode AS InfoMoneyCode_Detail
+           , Object_InfoMoney_View_Detail.InfoMoneyName AS InfoMoneyName_Detail
 
-           , Object_by.ObjectCode         AS ByObjectCode
+           --, Object_by.ObjectCode         AS ByObjectCode
            , Object_by.ValueData          AS ByObjectName
-           , Object_Goods.ObjectCode      AS GoodsCode
+           --, Object_Goods.ObjectCode      AS GoodsCode
            , Object_Goods.ValueData       AS GoodsName
 
            , CAST (CASE WHEN tmpReportOperation.AmountRemainsStart > 0 THEN tmpReportOperation.AmountRemainsStart ELSE 0 END AS TFloat) AS AmountDebetStart
@@ -54,7 +50,7 @@ $BODY$BEGIN
            , CAST (tmpReportOperation.CountKredit AS TFloat) AS CountKredit
            , CAST (tmpReportOperation.CountRemainsEnd AS TFloat) AS CountEnd
        FROM 
-           lfSelect_Object_Account() AS lfObject_Account
+           Object_Account_View 
            LEFT JOIN
            (SELECT tmpMIContainer_Remains.AccountId
                  , ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId
@@ -80,19 +76,10 @@ $BODY$BEGIN
                       , COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
                       , COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
                       , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS AmountRemainsStart
-                      /*, COALESCE (SUM (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Passive() THEN MIContainer_byPeriod.Amount ELSE 0 END), 0) AS AmountDebet
-                      , COALESCE (SUM (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Passive() THEN -MIContainer_byPeriod.Amount ELSE 0 END), 0) AS AmountKredit
-                      , Container.Amount - COALESCE (SUM (MIContainer_byEndDate.Amount), 0) AS AmountRemainsEnd*/
                  FROM Container
                       LEFT JOIN MovementItemContainer AS MIContainer
                                                       ON MIContainer.Containerid = Container.Id
                                                      AND MIContainer.OperDate >= inStartDate
-                      /*LEFT JOIN MovementItemContainer AS MIContainer_byEndDate
-                                                      ON MIContainer_byEndDate.Containerid = Container.Id
-                                                     AND MIContainer_byEndDate.OperDate > inEndDate
-                      LEFT JOIN MovementItemContainer AS MIContainer_byPeriod
-                                                      ON MIContainer_byPeriod.Containerid = Container.Id
-                                                     AND MIContainer_byPeriod.OperDate BETWEEN inStartDate AND inEndDate*/
                  WHERE Container.DescId = zc_Container_Summ()
                  GROUP BY Container.ObjectId
                         , Container.Amount
@@ -101,29 +88,17 @@ $BODY$BEGIN
                  HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0) -- AmountRemainsStart <> 0
                      OR (COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) <> 0) -- AmountDebet <> 0
                      OR (COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -MIContainer.Amount ELSE 0 END), 0) <> 0) -- AmountKredit <> 0
-                 /*HAVING (Container.Amount - COALESCE (SUM (MIContainer_byEndDate.Amount), 0) <> 0) -- AmountRemainsEnd <> 0
-                     OR (COALESCE (SUM (CASE WHEN MIContainer_byPeriod.Amount > 0 THEN MIContainer_byPeriod.Amount ELSE 0 END), 0) <> 0) -- AmountDebet <> 0
-                     OR (COALESCE (SUM (CASE WHEN MIContainer_byPeriod.Amount < 0 THEN -MIContainer_byPeriod.Amount ELSE 0 END), 0) <> 0) -- AmountKredit <> 0*/
                 ) AS tmpMIContainer_Remains
                 LEFT JOIN
                 (SELECT Container.Id AS ContainerId
                       , COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) AS AmountDebet
                       , COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate THEN -MIContainer.Amount ELSE 0 END), 0) AS AmountKredit
                       , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS AmountRemainsStart
-                      /*, COALESCE (SUM (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Passive() THEN MIContainer_byPeriod.Amount ELSE 0 END), 0) AS AmountDebet
-                      , COALESCE (SUM (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Passive() THEN -MIContainer_byPeriod.Amount ELSE 0 END), 0) AS AmountKredit
-                      , Container.Amount - COALESCE (SUM (MIContainer_byEndDate.Amount), 0) AS AmountRemainsEnd*/
                  FROM Container
                       LEFT JOIN MovementItemContainer AS MIContainer
                                                       ON MIContainer.Containerid = Container.Id
                                                      AND MIContainer.OperDate >= inStartDate
-                      /*LEFT JOIN MovementItemContainer AS MIContainer_byEndDate
-                                                      ON MIContainer_byEndDate.Containerid = Container.Id
-                                                     AND MIContainer_byEndDate.OperDate > inEndDate
-                      LEFT JOIN MovementItemContainer AS MIContainer_byPeriod
-                                                      ON MIContainer_byPeriod.Containerid = Container.Id
-                                                     AND MIContainer_byPeriod.OperDate BETWEEN inStartDate AND inEndDate*/
-                 WHERE Container.DescId = zc_Container_Count()
+                WHERE Container.DescId = zc_Container_Count()
                  GROUP BY Container.ObjectId
                         , Container.Amount
                         , Container.Id
@@ -140,19 +115,15 @@ $BODY$BEGIN
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Juridical
                                               ON ContainerLinkObject_Juridical.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-                                             AND 1=1
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Personal
                                               ON ContainerLinkObject_Personal.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_Personal.DescId = zc_ContainerLinkObject_Personal()
-                                             AND 1=1
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Unit
                                               ON ContainerLinkObject_Unit.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
-                                             AND 1=1
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Goods
                                               ON ContainerLinkObject_Goods.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_Goods.DescId = zc_ContainerLinkObject_Goods()
-                                             AND 1=1
             GROUP BY tmpMIContainer_Remains.AccountId
                    , ContainerLinkObject_InfoMoney.ObjectId
                    , ContainerLinkObject_InfoMoneyDetail.ObjectId
@@ -160,9 +131,9 @@ $BODY$BEGIN
                    , ContainerLinkObject_Juridical.ObjectId
                    , ContainerLinkObject_Unit.ObjectId
                    , ContainerLinkObject_Goods.ObjectId
-           ) AS tmpReportOperation ON tmpReportOperation.AccountId = lfObject_Account.AccountId
-           LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = tmpReportOperation.InfoMoneyId
-           LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney_Detail ON lfObject_InfoMoney_Detail.InfoMoneyId = CASE WHEN COALESCE (tmpReportOperation.InfoMoneyId_Detail, 0) = 0 THEN tmpReportOperation.InfoMoneyId ELSE tmpReportOperation.InfoMoneyId_Detail END
+           ) AS tmpReportOperation ON tmpReportOperation.AccountId = Object_Account_View.AccountId
+           LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = tmpReportOperation.InfoMoneyId
+           LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View_Detail ON Object_InfoMoney_View_Detail.InfoMoneyId = CASE WHEN COALESCE (tmpReportOperation.InfoMoneyId_Detail, 0) = 0 THEN tmpReportOperation.InfoMoneyId ELSE tmpReportOperation.InfoMoneyId_Detail END
            LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (JuridicalId, COALESCE (PersonalId, UnitId))
            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = GoodsId
           ;
@@ -177,6 +148,7 @@ ALTER FUNCTION gpReport_Balance (TDateTime, TDateTime, TVarChar) OWNER TO postgr
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 21.10.13                        * add Code
  24.08.13                                        * add count and goods
  11.07.13                                        * add optimize
  08.07.13                                        * add ByObjectName
@@ -185,4 +157,4 @@ ALTER FUNCTION gpReport_Balance (TDateTime, TDateTime, TVarChar) OWNER TO postgr
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpReport_Balance (inStartDate:= '01.01.2013', inEndDate:= '01.02.2013', inSession:= '2') where AccountGroupCode = 20000 and CountStart <> 0 
+-- SELECT * FROM gpReport_Balance (inStartDate:= '01.01.2013', inEndDate:= '01.02.2013', inSession:= '2') 

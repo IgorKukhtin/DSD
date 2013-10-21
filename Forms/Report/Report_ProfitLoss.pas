@@ -23,7 +23,7 @@ uses
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, cxCustomPivotGrid,
-  cxDBPivotGrid;
+  cxDBPivotGrid, cxLabel;
 
 type
   TReport_ProfitLossForm = class(TParentForm)
@@ -44,17 +44,17 @@ type
     deEnd: TcxDateEdit;
     cxDBPivotGrid: TcxDBPivotGrid;
     clProfitLossGroupName: TcxDBPivotGridField;
-    clProfitLossDirectionCode: TcxDBPivotGridField;
     clProfitLossDirectionName: TcxDBPivotGridField;
-    clProfitLossCode: TcxDBPivotGridField;
     clProfitLossName: TcxDBPivotGridField;
     clOnComplete: TcxDBPivotGridField;
-    clInfoMoneyCode: TcxDBPivotGridField;
     clInfoMoneyName: TcxDBPivotGridField;
     clByObjectName: TcxDBPivotGridField;
     clGoodsName: TcxDBPivotGridField;
     clAmount: TcxDBPivotGridField;
-    clProfitLossGroupCode: TcxDBPivotGridField;
+    cxLabel1: TcxLabel;
+    cxLabel2: TcxLabel;
+    clBusiness: TcxDBPivotGridField;
+    clJuridicalBasis: TcxDBPivotGridField;
   private
   public
   end;

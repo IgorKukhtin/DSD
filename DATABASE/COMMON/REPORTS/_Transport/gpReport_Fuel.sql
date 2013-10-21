@@ -91,10 +91,10 @@ $BODY$BEGIN
           FROM
               -- Получаем оборотку по контейнерам. 
               (SELECT KeyContainerId, ObjectId, ReportContainer.DescId, 
-                     ReportContainer.Amount - SUM (MIContainer.Amount) AS StartAmount,
+                     ReportContainer.Amount - COALESCE(SUM (MIContainer.Amount), 0) AS StartAmount,
                      SUM (CASE WHEN MIContainer.OperDate < inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS IncomeAmount,
                      SUM (CASE WHEN MIContainer.OperDate < inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN - MIContainer.Amount ELSE 0 END ELSE 0 END) AS OutComeAmount,
-                     ReportContainer.Amount - SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END) AS EndAmount
+                     ReportContainer.Amount - COALESCE(SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS EndAmount
 
               FROM
                     -- ReportContainer. Возвращаем список суммовых и количественных контейнеров по указанному в ContainerSumm счету
@@ -105,7 +105,7 @@ $BODY$BEGIN
                      WHERE Container.Id = ContainerSumm.ParentId) AS ReportContainer
 
                  LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = ReportContainer.Id
-                                                               AND MIContainer.OperDate >= inStartDate
+                                                               AND MIContainer.OperDate > inStartDate
                 GROUP BY ReportContainer.Id, ReportContainer.DescId, ReportContainer.Amount, KeyContainerId, ObjectId) AS Report
                 -- Конец. Получаем оборотку по контейнерам.
 

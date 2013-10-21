@@ -1,18 +1,16 @@
 -- Function: gpReport_ProfitLoss()
 
--- DROP FUNCTION gpReport_ProfitLoss (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_ProfitLoss (TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_ProfitLoss(
     IN inStartDate   TDateTime , -- 
     IN inEndDate     TDateTime , --
     IN inSession     TVarChar    -- ñåññèÿ ïîëüçîâàòåëÿ
 )
-RETURNS TABLE (ProfitLossGroupCode Integer, ProfitLossGroupName TVarChar, ProfitLossDirectionCode Integer, ProfitLossDirectionName TVarChar
-             , ProfitLossCode Integer, ProfitLossName  TVarChar, OnComplete Boolean
-             , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyCode_Detail Integer, InfoMoneyName_Detail TVarChar
-             , BusinessCode Integer, BusinessName TVarChar
-             , ByObjectCode Integer, ByObjectName TVarChar
-             , GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (ProfitLossGroupName TVarChar, ProfitLossDirectionName TVarChar
+             , ProfitLossName  TVarChar, OnComplete Boolean
+             , InfoMoneyName TVarChar, InfoMoneyName_Detail TVarChar
+             , JuridicalBasisName TVarChar, BusinessName TVarChar, ByObjectName TVarChar, GoodsName TVarChar
              , Amount TFloat
               )
 AS
@@ -23,29 +21,31 @@ $BODY$BEGIN
 
      RETURN QUERY 
       SELECT
-             lfObject_ProfitLoss.ProfitLossGroupCode                AS ProfitLossGroupCode
-           , lfObject_ProfitLoss.ProfitLossGroupName                AS ProfitLossGroupName
-           , lfObject_ProfitLoss.ProfitLossDirectionCode            AS ProfitLossDirectionCode
-           , lfObject_ProfitLoss.ProfitLossDirectionName            AS ProfitLossDirectionName
-           , lfObject_ProfitLoss.ProfitLossCode                     AS ProfitLossCode
-           , lfObject_ProfitLoss.ProfitLossName                     AS ProfitLossName
-           , lfObject_ProfitLoss.onComplete                         AS OnComplete
+     --        lfObject_ProfitLoss.ProfitLossGroupCode                AS ProfitLossGroupCode
+             (Object_ProfitLoss_View.ProfitLossGroupCode||' '||Object_ProfitLoss_View.ProfitLossGroupName):: TVarChar AS ProfitLossGroupName
+       --    , lfObject_ProfitLoss.ProfitLossDirectionCode            AS ProfitLossDirectionCode
+           , (Object_ProfitLoss_View.ProfitLossDirectionCode||' '||Object_ProfitLoss_View.ProfitLossDirectionName):: TVarChar AS ProfitLossDirectionName
+         --  , lfObject_ProfitLoss.ProfitLossCode                     AS ProfitLossCode
+           , (Object_ProfitLoss_View.ProfitLossCode||' '||Object_ProfitLoss_View.ProfitLossName):: TVarChar      AS ProfitLossName
+           , Object_ProfitLoss_View.onComplete                         AS OnComplete
 
-           , lfObject_InfoMoney.InfoMoneyCode
-           , lfObject_InfoMoney.InfoMoneyName
-           , lfObject_InfoMoney_Detail.InfoMoneyCode AS InfoMoneyCode_Detail
-           , lfObject_InfoMoney_Detail.InfoMoneyName AS InfoMoneyName_Detail
+    --       , Object_InfoMoney_View_Detail.InfoMoneyCode
+           , (Object_InfoMoney_View_Detail.InfoMoneyCode||' '||Object_InfoMoney_View.InfoMoneyName)::TVarChar AS InfoMoneyName
+     --      , Object_InfoMoney_View_Detail.InfoMoneyCode AS InfoMoneyCode_Detail
+           , Object_InfoMoney_View_Detail.InfoMoneyName AS InfoMoneyName_Detail
 
-           , Object_Business.ObjectCode   AS BusinessCode
+        --   , Object_Business.ObjectCode   AS BusinessCode
+           , Object_JuridicalBasis.ValueData AS JuridicalBasisName
            , Object_Business.ValueData    AS BusinessName
-           , Object_by.ObjectCode         AS ByObjectCode
+       --    , Object_by.ObjectCode         AS ByObjectCode
            , Object_by.ValueData          AS ByObjectName
-           , Object_Goods.ObjectCode      AS GoodsCode
+       --    , Object_Goods.ObjectCode      AS GoodsCode
            , Object_Goods.ValueData       AS GoodsName
+           
 
            , CAST (tmpProfitLoss.Amount AS TFloat)
 
-      FROM lfSelect_Object_ProfitLoss() AS lfObject_ProfitLoss
+      FROM Object_ProfitLoss_View
            LEFT JOIN (SELECT tmpMIContainer.ContainerId
                            , tmpMIContainer.ContainerId_Parent
                            , -1 * tmpMIContainer.Amount AS Amount
@@ -67,39 +67,39 @@ $BODY$BEGIN
                            LEFT JOIN ContainerLinkObject AS ContainerLinkObject_ProfitLoss
                                                          ON ContainerLinkObject_ProfitLoss.ContainerId = tmpMIContainer.ContainerId
                                                         AND ContainerLinkObject_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss()
-                     ) AS tmpProfitLoss ON tmpProfitLoss.ProfitLossId = lfObject_ProfitLoss.ProfitLossId
+                     ) AS tmpProfitLoss ON tmpProfitLoss.ProfitLossId = Object_ProfitLoss_View.ProfitLossId
 
            LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Business
-                                         ON ContainerLinkObject_Business.ContainerId = tmpProfitLoss.ContainerId_Parent
+                                         ON ContainerLinkObject_Business.ContainerId = tmpProfitLoss.ContainerId
                                         AND ContainerLinkObject_Business.DescId = zc_ContainerLinkObject_Business()
+           LEFT JOIN ContainerLinkObject AS ContainerLinkObject_JuridicalBasis
+                                         ON ContainerLinkObject_JuridicalBasis.ContainerId = tmpProfitLoss.ContainerId
+                                        AND ContainerLinkObject_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
            LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
-                                         ON ContainerLinkObject_InfoMoney.ContainerId = tmpProfitLoss.ContainerId_Parent
+                                         ON ContainerLinkObject_InfoMoney.ContainerId = tmpProfitLoss.ContainerId
                                         AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
            LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
                                          ON ContainerLinkObject_InfoMoneyDetail.ContainerId = tmpProfitLoss.ContainerId_Parent
                                         AND ContainerLinkObject_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
            LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Juridical
-                                         ON ContainerLinkObject_Juridical.ContainerId = tmpProfitLoss.ContainerId_Parent
+                                         ON ContainerLinkObject_Juridical.ContainerId = tmpProfitLoss.ContainerId
                                         AND ContainerLinkObject_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-                                        AND 1=1
            LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Personal
-                                         ON ContainerLinkObject_Personal.ContainerId = tmpProfitLoss.ContainerId_Parent
+                                         ON ContainerLinkObject_Personal.ContainerId = tmpProfitLoss.ContainerId
                                         AND ContainerLinkObject_Personal.DescId = zc_ContainerLinkObject_Personal()
-                                        AND 1=1
            LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Unit
-                                         ON ContainerLinkObject_Unit.ContainerId = tmpProfitLoss.ContainerId_Parent
+                                         ON ContainerLinkObject_Unit.ContainerId = tmpProfitLoss.ContainerId
                                         AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
-                                        AND 1=1
            LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Goods
-                                         ON ContainerLinkObject_Goods.ContainerId = tmpProfitLoss.ContainerId_Parent
+                                         ON ContainerLinkObject_Goods.ContainerId = tmpProfitLoss.ContainerId
                                         AND ContainerLinkObject_Goods.DescId = zc_ContainerLinkObject_Goods()
-                                        AND 1=1
-
-           LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ContainerLinkObject_InfoMoney.ObjectId
-           LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney_Detail ON lfObject_InfoMoney_Detail.InfoMoneyId = COALESCE (ContainerLinkObject_InfoMoneyDetail.ObjectId, ContainerLinkObject_InfoMoney.ObjectId)
+           
+           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ContainerLinkObject_InfoMoney.ObjectId
+           LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View_Detail ON Object_InfoMoney_View_Detail.InfoMoneyId = COALESCE (ContainerLinkObject_InfoMoneyDetail.ObjectId, ContainerLinkObject_InfoMoney.ObjectId)
                                                                              AND zc_isHistoryCost_byInfoMoneyDetail() = TRUE
 
            LEFT JOIN Object AS Object_Business ON Object_Business.Id = ContainerLinkObject_Business.ObjectId
+           LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = ContainerLinkObject_JuridicalBasis.ObjectId
            LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (ContainerLinkObject_Juridical.ObjectId, COALESCE (ContainerLinkObject_Personal.ObjectId, ContainerLinkObject_Unit.ObjectId))
            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ContainerLinkObject_Goods.ObjectId
       ;
@@ -114,9 +114,10 @@ ALTER FUNCTION gpReport_ProfitLoss (TDateTime, TDateTime, TVarChar) OWNER TO pos
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 21.10.13                         *
  01.09.13                                        *
  27.08.13                                        *
 */
 
 -- òåñò
--- SELECT * FROM gpReport_ProfitLoss (inStartDate:= '01.01.2012', inEndDate:= '01.02.2013', inSession:= '2') WHERE Amount <> 0 ORDER BY 5
+-- SELECT * FROM gpReport_ProfitLoss (inStartDate:= '01.01.2012', inEndDate:= '01.02.2014', inSession:= '2') WHERE Amount <> 0 ORDER BY 5
