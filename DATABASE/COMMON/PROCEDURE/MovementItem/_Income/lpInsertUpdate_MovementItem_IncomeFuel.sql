@@ -17,6 +17,13 @@ AS
 $BODY$
 BEGIN
 
+     -- проверка - для <Талоны на топливо> цена должна быть = 0, т.к. это типа Перемещение
+     IF inPrice <> 0 AND EXISTS (SELECT tmpFrom.ObjectId FROM (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_From()) AS tmpFrom JOIN Object ON Object.Id = tmpFrom.ObjectId AND Object.DescId = zc_Object_TicketFuel())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Для <Талоны на топливо> цену вводить не надо.';
+     END IF;
+
+
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
    
@@ -49,6 +56,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.10.13                                        * add IF inPrice <> 0 AND ...
  04.10.13                                        *
 */
 

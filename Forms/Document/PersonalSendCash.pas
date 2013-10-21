@@ -120,6 +120,7 @@ type
     spErasedMIMaster: TdsdStoredProc;
     spUnErasedMIMaster: TdsdStoredProc;
     colIsErased: TcxGridDBColumn;
+    colCarModelName: TcxGridDBColumn;
   private
   public
   end;

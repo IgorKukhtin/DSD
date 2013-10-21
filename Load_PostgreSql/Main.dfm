@@ -74,11 +74,12 @@ object MainForm: TMainForm
       OnClick = CloseButtonClick
     end
     object cbSetNull_Id_Postgres: TCheckBox
-      Left = 747
-      Top = 16
+      Left = 754
+      Top = 20
       Width = 292
       Height = 17
       Caption = #1044#1083#1103' '#1087#1077#1088#1074#1086#1075#1086' '#1088#1072#1079#1072' set Sybase.'#1042#1057#1045#1052'.Id_Postgres = null'
+      Enabled = False
       TabOrder = 3
     end
     object cbOnlyOpen: TCheckBox

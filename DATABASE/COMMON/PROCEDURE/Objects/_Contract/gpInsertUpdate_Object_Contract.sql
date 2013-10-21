@@ -19,19 +19,27 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
 )
 RETURNS Integer AS
 $BODY$
-   DECLARE UserId Integer;
-
+   DECLARE vbUserId Integer;
+   DECLARE vbCode_calc Integer;   
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Contract());
-   UserId := inSession;
+   vbUserId := inSession;
+
+   IF ioId <> 0 
+        -- пытаемся найти код
+   THEN vbCode_calc := (SELECT ObjectCode FROM Object WHERE Id = ioId); 
+        -- Иначе, определяем его как последний+1
+   ELSE vbCode_calc:=lfGet_ObjectCode (vbCode_calc, zc_Object_Contract()); 
+   END IF;
+
 
    -- проверка уникальности для свойства <Номер договора>
-   PERFORM lpCheckUnique_ObjectString_ValueData (ioId, zc_ObjectString_Contract_InvNumber(), inInvNumber);
+   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Contract(), inInvNumber);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Contract(), 0, inInvNumber);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Contract(), vbCode_calc, inInvNumber);
 
    -- сохранили свойство <Номер договора>
    -- PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_InvNumber(), ioId, inInvNumber);
@@ -62,7 +70,7 @@ BEGIN
 
 
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;
 $BODY$
@@ -72,6 +80,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.10.13                                        * add vbCode_calc
  20.10.13                                        * add from redmaine
  19.10.13                                        * del zc_ObjectString_Contract_InvNumber()
  22.07.13         * add  SigningDate, StartDate, EndDate              
