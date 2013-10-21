@@ -64,17 +64,11 @@ type
     clComment: TcxGridDBColumn;
     clsfIsErased: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
-    cxGrid2: TcxGrid;
-    cxGridDBTableView2: TcxGridDBTableView;
-    cxGridDBColumn10: TcxGridDBColumn;
-    cxGridDBColumn11: TcxGridDBColumn;
-    cxGridDBColumn12: TcxGridDBColumn;
-    cxGridDBColumn13: TcxGridDBColumn;
-    cxGridDBColumn14: TcxGridDBColumn;
-    cxGridDBColumn15: TcxGridDBColumn;
-    cxGridDBColumn16: TcxGridDBColumn;
-    cxGridDBColumn17: TcxGridDBColumn;
-    cxGridDBColumn18: TcxGridDBColumn;
+    cxGridStaffListCost: TcxGrid;
+    cxGridDBTableViewStaffListCost: TcxGridDBTableView;
+    clModelServiceName: TcxGridDBColumn;
+    clsfcComment: TcxGridDBColumn;
+    clPrice: TcxGridDBColumn;
     cxGridLevel2: TcxGridLevel;
     StaffListCDS: TClientDataSet;
     StaffListDS: TDataSource;
@@ -84,6 +78,15 @@ type
     InsertRecord: TInsertRecord;
     PositionChoiceForm: TOpenChoiceForm;
     actUpdateStaffList: TdsdUpdateDataSet;
+    PositionLevelChoiceForm: TOpenChoiceForm;
+    StaffListCostCDS: TClientDataSet;
+    StaffListCostDS: TDataSource;
+    spSelectStaffListCost: TdsdStoredProc;
+    spInsertUpdateObjectSLCost: TdsdStoredProc;
+    InsertRecordSLC: TInsertRecord;
+    ModelServiceChoiceForm: TOpenChoiceForm;
+    bbModelServise: TdxBarButton;
+    actUpdateStaffListCost: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
