@@ -70,28 +70,28 @@ $BODY$BEGIN
                      ) AS tmpProfitLoss ON tmpProfitLoss.ProfitLossId = Object_ProfitLoss_View.ProfitLossId
 
            LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Business
-                                         ON ContainerLinkObject_Business.ContainerId = tmpProfitLoss.ContainerId_Parent
+                                         ON ContainerLinkObject_Business.ContainerId = tmpProfitLoss.ContainerId
                                         AND ContainerLinkObject_Business.DescId = zc_ContainerLinkObject_Business()
            LEFT JOIN ContainerLinkObject AS ContainerLinkObject_JuridicalBasis
-                                         ON ContainerLinkObject_JuridicalBasis.ContainerId = tmpProfitLoss.ContainerId_Parent
+                                         ON ContainerLinkObject_JuridicalBasis.ContainerId = tmpProfitLoss.ContainerId
                                         AND ContainerLinkObject_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
            LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
-                                         ON ContainerLinkObject_InfoMoney.ContainerId = tmpProfitLoss.ContainerId_Parent
+                                         ON ContainerLinkObject_InfoMoney.ContainerId = tmpProfitLoss.ContainerId
                                         AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
            LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
                                          ON ContainerLinkObject_InfoMoneyDetail.ContainerId = tmpProfitLoss.ContainerId_Parent
                                         AND ContainerLinkObject_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
            LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Juridical
-                                         ON ContainerLinkObject_Juridical.ContainerId = tmpProfitLoss.ContainerId_Parent
+                                         ON ContainerLinkObject_Juridical.ContainerId = tmpProfitLoss.ContainerId
                                         AND ContainerLinkObject_Juridical.DescId = zc_ContainerLinkObject_Juridical()
            LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Personal
-                                         ON ContainerLinkObject_Personal.ContainerId = tmpProfitLoss.ContainerId_Parent
+                                         ON ContainerLinkObject_Personal.ContainerId = tmpProfitLoss.ContainerId
                                         AND ContainerLinkObject_Personal.DescId = zc_ContainerLinkObject_Personal()
            LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Unit
-                                         ON ContainerLinkObject_Unit.ContainerId = tmpProfitLoss.ContainerId_Parent
+                                         ON ContainerLinkObject_Unit.ContainerId = tmpProfitLoss.ContainerId
                                         AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
            LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Goods
-                                         ON ContainerLinkObject_Goods.ContainerId = tmpProfitLoss.ContainerId_Parent
+                                         ON ContainerLinkObject_Goods.ContainerId = tmpProfitLoss.ContainerId
                                         AND ContainerLinkObject_Goods.DescId = zc_ContainerLinkObject_Goods()
            
            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ContainerLinkObject_InfoMoney.ObjectId
@@ -120,4 +120,4 @@ ALTER FUNCTION gpReport_ProfitLoss (TDateTime, TDateTime, TVarChar) OWNER TO pos
 */
 
 -- тест
--- SELECT * FROM gpReport_ProfitLoss (inStartDate:= '01.01.2012', inEndDate:= '01.02.2013', inSession:= '2') WHERE Amount <> 0 ORDER BY 5
+-- SELECT * FROM gpReport_ProfitLoss (inStartDate:= '01.01.2012', inEndDate:= '01.02.2014', inSession:= '2') WHERE Amount <> 0 ORDER BY 5
