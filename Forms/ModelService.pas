@@ -21,18 +21,15 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul;
+  DataModul, cxButtonEdit;
 
 type
   TModelServiceForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clComment: TcxGridDBColumn;
-    clUnitName: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
-    DataSource: TDataSource;
-    ClientDataSet: TClientDataSet;
+    MasterDS: TDataSource;
+    MasterCDS: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
@@ -46,20 +43,57 @@ type
     bbChoiceGuides: TdxBarButton;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdInsertUpdateAction;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
-    dsdStoredProc: TdsdStoredProc;
+    spSelectMaster: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clModelServiceKindName: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
-    clErased: TcxGridDBColumn;
+    clIsErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
-    spInsertUpdateObject: TdsdStoredProc;
-    actUpdateDataSet: TdsdUpdateDataSet;
     clName: TcxGridDBColumn;
+    cxGridModelServiceItemMaster: TcxGrid;
+    cxGridDBTableViewModelServiceItemMaster: TcxGridDBTableView;
+    clMovementDesc: TcxGridDBColumn;
+    clRatio: TcxGridDBColumn;
+    clFromName: TcxGridDBColumn;
+    clToName: TcxGridDBColumn;
+    clSelectKindName: TcxGridDBColumn;
+    clComment: TcxGridDBColumn;
+    clmsimIsErased: TcxGridDBColumn;
+    cxGridLevel1: TcxGridLevel;
+    cxGridStaffListCost: TcxGrid;
+    cxGridDBTableViewModelServiceItemChild: TcxGridDBTableView;
+    clmsicFromName: TcxGridDBColumn;
+    clsfcComment: TcxGridDBColumn;
+    clmsicToName: TcxGridDBColumn;
+    cxGridLevel2: TcxGridLevel;
+    ModelServiceItemMasterCDS: TClientDataSet;
+    ModelServiceItemMasterDS: TDataSource;
+    spSelectModelServiceItemMaster: TdsdStoredProc;
+    clCode: TcxGridDBColumn;
+    spInsertUpdateObjectModelServiceItemMaster: TdsdStoredProc;
+    actUpdateModelServiceItemMaster: TdsdUpdateDataSet;
+    UnitFromChoiceForm: TOpenChoiceForm;
+    ModelServiceItemChildCDS: TClientDataSet;
+    ModelServiceItemChildDS: TDataSource;
+    spSelectModelServiceItemChild: TdsdStoredProc;
+    spInsertUpdateObjectModelServiceItemChild: TdsdStoredProc;
+    bbModelServiceItemChild: TdxBarButton;
+    actUpdateModelServiceItemChild: TdsdUpdateDataSet;
+    spInsertUpdateObjectModelService: TdsdStoredProc;
+    clmsComment: TcxGridDBColumn;
+    clUnitName: TcxGridDBColumn;
+    clModelServiceKindName: TcxGridDBColumn;
+    actUpdateModelService: TdsdUpdateDataSet;
+    bbModelService: TdxBarButton;
+    actInsert: TdsdInsertUpdateAction;
+    ModelServiceKindChoiceForm: TOpenChoiceForm;
+    actInsertMaster: TdsdInsertUpdateAction;
+    SelectKindChoiceForm: TOpenChoiceForm;
+    UnitFromChoiceFormMaster: TOpenChoiceForm;
+    UnitFromChoiceFormChild: TOpenChoiceForm;
   private
     { Private declarations }
   public
