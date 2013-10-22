@@ -34,7 +34,6 @@ type
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
     bbRefresh: TdxBarButton;
-    bbInsert: TdxBarButton;
     bbEdit: TdxBarButton;
     bbErased: TdxBarButton;
     bbUnErased: TdxBarButton;
@@ -80,20 +79,21 @@ type
     ModelServiceItemChildDS: TDataSource;
     spSelectModelServiceItemChild: TdsdStoredProc;
     spInsertUpdateObjectModelServiceItemChild: TdsdStoredProc;
-    bbModelServiceItemChild: TdxBarButton;
     actUpdateModelServiceItemChild: TdsdUpdateDataSet;
-    spInsertUpdateObjectModelService: TdsdStoredProc;
     clmsComment: TcxGridDBColumn;
     clUnitName: TcxGridDBColumn;
     clModelServiceKindName: TcxGridDBColumn;
     actUpdateModelService: TdsdUpdateDataSet;
     bbModelService: TdxBarButton;
-    actInsert: TdsdInsertUpdateAction;
     ModelServiceKindChoiceForm: TOpenChoiceForm;
     actInsertMaster: TdsdInsertUpdateAction;
     SelectKindChoiceForm: TOpenChoiceForm;
     UnitFromChoiceFormMaster: TOpenChoiceForm;
     UnitFromChoiceFormChild: TOpenChoiceForm;
+    InsertModelService: TInsertRecord;
+    ModelServiceChoiceForm: TOpenChoiceForm;
+    GoodsFromChoiceForm: TOpenChoiceForm;
+    GoodsToChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

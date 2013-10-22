@@ -68,7 +68,7 @@ object ModelServiceForm: TModelServiceForm
             Default = True
             Kind = bkEllipsis
           end>
-        Properties.ReadOnly = False
+        Properties.ReadOnly = True
         Width = 90
       end
       object clUnitName: TcxGridDBColumn
@@ -81,7 +81,7 @@ object ModelServiceForm: TModelServiceForm
             Default = True
             Kind = bkEllipsis
           end>
-        Properties.ReadOnly = False
+        Properties.ReadOnly = True
         Width = 87
       end
       object clmsComment: TcxGridDBColumn
@@ -113,7 +113,6 @@ object ModelServiceForm: TModelServiceForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = 487
     object cxGridDBTableViewModelServiceItemMaster: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ModelServiceItemMasterDS
@@ -130,7 +129,6 @@ object ModelServiceForm: TModelServiceForm
       OptionsData.Appending = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -145,7 +143,7 @@ object ModelServiceForm: TModelServiceForm
             Default = True
             Kind = bkEllipsis
           end>
-        Properties.ReadOnly = False
+        Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
         Width = 67
       end
@@ -159,7 +157,7 @@ object ModelServiceForm: TModelServiceForm
             Default = True
             Kind = bkEllipsis
           end>
-        Properties.ReadOnly = False
+        Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
         Width = 59
       end
@@ -190,7 +188,7 @@ object ModelServiceForm: TModelServiceForm
             Default = True
             Kind = bkEllipsis
           end>
-        Properties.ReadOnly = False
+        Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
@@ -219,8 +217,6 @@ object ModelServiceForm: TModelServiceForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = -8
-    ExplicitTop = 390
     object cxGridDBTableViewModelServiceItemChild: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ModelServiceItemChildDS
@@ -234,9 +230,9 @@ object ModelServiceForm: TModelServiceForm
       OptionsBehavior.IncSearchItem = clsfcComment
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsData.Appending = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.HeaderHeight = 40
@@ -245,12 +241,28 @@ object ModelServiceForm: TModelServiceForm
       object clmsicFromName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088' '#1086#1090
         DataBinding.FieldName = 'FromName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = GoodsFromChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
         Width = 301
       end
       object clmsicToName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088' ('#1082#1086#1084#1091')'
         DataBinding.FieldName = 'ToName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = GoodsToChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
         Width = 257
       end
@@ -336,10 +348,6 @@ object ModelServiceForm: TModelServiceForm
         end
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
           ItemName = 'bbEdit'
         end
         item
@@ -353,10 +361,6 @@ object ModelServiceForm: TModelServiceForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbModelServiceItemChild'
         end
         item
           BeginGroup = True
@@ -384,13 +388,6 @@ object ModelServiceForm: TModelServiceForm
     object bbRefresh: TdxBarButton
       Action = actRefresh
       Category = 0
-    end
-    object bbInsert: TdxBarButton
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1075#1083#1072#1074#1085#1099#1081' '#1101#1083#1077#1084#1077#1085#1090
-      Category = 0
-      Visible = ivAlways
-      ImageIndex = 0
-      ShortCut = 45
     end
     object bbEdit: TdxBarButton
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
@@ -421,15 +418,8 @@ object ModelServiceForm: TModelServiceForm
       Action = dsdChoiceGuides
       Category = 0
     end
-    object bbModelServiceItemChild: TdxBarButton
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086#1076#1095#1080#1085#1077#1085#1085#1099#1081' '#1101#1083#1077#1084#1077#1085#1090
-      Category = 0
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086#1076#1095#1080#1085#1077#1085#1085#1099#1081' '#1101#1083#1077#1084#1077#1085#1090
-      Visible = ivAlways
-      ImageIndex = 0
-    end
     object bbModelService: TdxBarButton
-      Action = actInsert
+      Action = InsertModelService
       Category = 0
     end
   end
@@ -498,22 +488,6 @@ object ModelServiceForm: TModelServiceForm
           Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
-        end
-        item
-          Name = 'PersonalDriverId'
-          Component = MasterCDS
-          ComponentItem = 'PersonalDriverId'
-        end
-        item
-          Name = 'PersonalDriverCode'
-          Component = MasterCDS
-          ComponentItem = 'PersonalDriverCode'
-        end
-        item
-          Name = 'PersonalDriverName'
-          Component = MasterCDS
-          ComponentItem = 'PersonalDriverName'
-          DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -568,10 +542,8 @@ object ModelServiceForm: TModelServiceForm
     end
     object actUpdateModelService: TdsdUpdateDataSet
       Category = 'DSDLib'
-      StoredProc = spInsertUpdateObjectModelService
       StoredProcList = <
         item
-          StoredProc = spInsertUpdateObjectModelService
         end>
       Caption = 'actUpdateModelService'
       DataSource = MasterDS
@@ -594,16 +566,6 @@ object ModelServiceForm: TModelServiceForm
         end>
       isShowModal = True
     end
-    object actInsert: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1084#1086#1076#1077#1083#1100
-      ImageIndex = 0
-      FormName = 'TModelForm'
-      GuiParams = <>
-      isShowModal = True
-      DataSource = MasterDS
-      DataSetRefresh = actRefresh
-    end
     object actInsertMaster: TdsdInsertUpdateAction
       Category = 'DSDLib'
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1075#1083#1072#1074#1085#1099#1081' '#1101#1083#1077#1084#1077#1085#1090
@@ -621,30 +583,30 @@ object ModelServiceForm: TModelServiceForm
         item
           Name = 'Key'
           Component = ModelServiceItemMasterCDS
-          ComponentItem = 'UnitId'
+          ComponentItem = 'FromId'
         end
         item
           Name = 'TextValue'
           Component = ModelServiceItemMasterCDS
-          ComponentItem = 'UnitName'
+          ComponentItem = 'FromName'
           DataType = ftString
         end>
       isShowModal = True
     end
     object UnitFromChoiceFormChild: TOpenChoiceForm
       Category = 'DSDLib'
-      Caption = 'UnitFromChoiceFormChild'
+      Caption = 'UnitFromChoiceFormMasterTo'
       FormName = 'TUnitForm'
       GuiParams = <
         item
           Name = 'Key'
-          Component = ModelServiceItemChildCDS
-          ComponentItem = 'UnitId'
+          Component = ModelServiceItemMasterCDS
+          ComponentItem = 'Toid'
         end
         item
           Name = 'TextValue'
-          Component = ModelServiceItemChildCDS
-          ComponentItem = 'UnitName'
+          Component = ModelServiceItemMasterCDS
+          ComponentItem = 'ToName'
           DataType = ftString
         end>
       isShowModal = True
@@ -663,6 +625,67 @@ object ModelServiceForm: TModelServiceForm
           Name = 'TextValue'
           Component = ModelServiceItemMasterCDS
           ComponentItem = 'SelectKindName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object InsertModelService: TInsertRecord
+      Category = 'DSDLib'
+      View = cxGridDBTableView
+      Action = ModelServiceChoiceForm
+      Caption = 'InsertModelService'
+      ImageIndex = 0
+    end
+    object ModelServiceChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'ModelServiceChoiceForm'
+      FormName = 'TModelServiceEditForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
+    object GoodsFromChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'GoodsFromChoiceForm'
+      FormName = 'TGoodsForm'
+      GuiParams = <
+        item
+          Name = 'key'
+          Component = ModelServiceItemChildCDS
+          ComponentItem = 'FromId'
+        end
+        item
+          Name = 'TextValue'
+          Component = ModelServiceItemChildCDS
+          ComponentItem = 'FromName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object GoodsToChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'GoodsToChoiceForm'
+      FormName = 'TGoodsForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = ModelServiceItemChildCDS
+          ComponentItem = 'ToId'
+        end
+        item
+          Name = 'TextValue'
+          Component = ModelServiceItemChildCDS
+          ComponentItem = 'ToName'
           DataType = ftString
         end>
       isShowModal = True
@@ -720,7 +743,7 @@ object ModelServiceForm: TModelServiceForm
   end
   object ModelServiceItemMasterCDS: TClientDataSet
     Aggregates = <>
-    IndexFieldNames = 'Id'
+    IndexFieldNames = 'ModelServiceId'
     MasterFields = 'Id'
     MasterSource = MasterDS
     PacketRecords = 0
@@ -741,8 +764,8 @@ object ModelServiceForm: TModelServiceForm
         DataSet = ModelServiceItemMasterCDS
       end>
     Params = <>
-    Left = 642
-    Top = 157
+    Left = 610
+    Top = 125
   end
   object spInsertUpdateObjectModelServiceItemMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_ModelServiceItemMaster'
@@ -800,12 +823,12 @@ object ModelServiceForm: TModelServiceForm
         ComponentItem = 'SelectKindId'
         ParamType = ptInput
       end>
-    Left = 656
-    Top = 216
+    Left = 600
+    Top = 208
   end
   object ModelServiceItemChildCDS: TClientDataSet
     Aggregates = <>
-    IndexFieldNames = 'id'
+    IndexFieldNames = 'ModelServiceItemMasterid'
     MasterFields = 'Id'
     MasterSource = ModelServiceItemMasterDS
     PacketRecords = 0
@@ -815,8 +838,8 @@ object ModelServiceForm: TModelServiceForm
   end
   object ModelServiceItemChildDS: TDataSource
     DataSet = ModelServiceItemChildCDS
-    Left = 86
-    Top = 549
+    Left = 70
+    Top = 501
   end
   object spSelectModelServiceItemChild: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ModelServiceItemChild'
@@ -858,54 +881,14 @@ object ModelServiceForm: TModelServiceForm
         Component = ModelServiceItemChildCDS
         ComponentItem = 'ToId'
         ParamType = ptInput
+      end
+      item
+        Name = 'inModelServiceItemMasterId'
+        Component = ModelServiceItemMasterCDS
+        ComponentItem = 'id'
+        ParamType = ptInput
       end>
     Left = 320
     Top = 488
-  end
-  object spInsertUpdateObjectModelService: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_ModelService'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInputOutput
-      end
-      item
-        Name = 'inCode'
-        Component = MasterCDS
-        ComponentItem = 'Code'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inName'
-        Component = MasterCDS
-        ComponentItem = 'Name'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'inComment'
-        Component = MasterCDS
-        ComponentItem = 'Comment'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'inUnitId'
-        Component = MasterCDS
-        ComponentItem = 'UnitId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inModelServiceKindId'
-        Component = MasterCDS
-        ComponentItem = 'ModelServiceKindId'
-        ParamType = ptInput
-      end>
-    Left = 152
-    Top = 288
   end
 end

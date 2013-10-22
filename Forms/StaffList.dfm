@@ -126,7 +126,7 @@ object StaffListForm: TStaffListForm
             Default = True
             Kind = bkEllipsis
           end>
-        Properties.ReadOnly = False
+        Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
         Width = 67
       end
@@ -183,7 +183,6 @@ object StaffListForm: TStaffListForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = 462
     object cxGridDBTableViewStaffListCost: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = StaffListCostDS
@@ -199,7 +198,6 @@ object StaffListForm: TStaffListForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.HeaderHeight = 40
@@ -222,6 +220,10 @@ object StaffListForm: TStaffListForm
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentVert = vaCenter
         Width = 283
+      end
+      object clsfcisErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
       end
     end
     object cxGridLevel2: TcxGridLevel
@@ -380,7 +382,7 @@ object StaffListForm: TStaffListForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 288
+    Left = 296
     Top = 160
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -442,22 +444,6 @@ object StaffListForm: TStaffListForm
           Name = 'TextValue'
           Component = MasterCDS
           ComponentItem = 'Name'
-          DataType = ftString
-        end
-        item
-          Name = 'PersonalDriverId'
-          Component = MasterCDS
-          ComponentItem = 'PersonalDriverId'
-        end
-        item
-          Name = 'PersonalDriverCode'
-          Component = MasterCDS
-          ComponentItem = 'PersonalDriverCode'
-        end
-        item
-          Name = 'PersonalDriverName'
-          Component = MasterCDS
-          ComponentItem = 'PersonalDriverName'
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
