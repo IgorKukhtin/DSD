@@ -30,7 +30,10 @@ $BODY$BEGIN
            , Object_ProfitLoss_View.onComplete                         AS OnComplete
 
     --       , Object_InfoMoney_View_Detail.InfoMoneyCode
-           , (Object_InfoMoney_View_Detail.InfoMoneyCode||' '||Object_InfoMoney_View.InfoMoneyName)::TVarChar AS InfoMoneyName
+     --      , (Object_InfoMoney_View.InfoMoneyCode||' '||Object_InfoMoney_View.InfoMoneyName)::TVarChar AS InfoMoneyName
+           , CASE Object_ProfitLoss_View.ProfitLossCode WHEN 40106 THEN ('Коммандировочные')::TVarChar 
+           ELSE ('ГСМ')::TVarChar  END 
+             AS InfoMoneyName
      --      , Object_InfoMoney_View_Detail.InfoMoneyCode AS InfoMoneyCode_Detail
            , Object_InfoMoney_View_Detail.InfoMoneyName AS InfoMoneyName_Detail
 
@@ -76,7 +79,7 @@ $BODY$BEGIN
                                          ON ContainerLinkObject_JuridicalBasis.ContainerId = tmpProfitLoss.ContainerId
                                         AND ContainerLinkObject_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
            LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney
-                                         ON ContainerLinkObject_InfoMoney.ContainerId = tmpProfitLoss.ContainerId
+                                         ON ContainerLinkObject_InfoMoney.ContainerId = COALESCE(tmpProfitLoss.ContainerId, tmpProfitLoss.ContainerId_Parent)
                                         AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
            LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
                                          ON ContainerLinkObject_InfoMoneyDetail.ContainerId = tmpProfitLoss.ContainerId_Parent

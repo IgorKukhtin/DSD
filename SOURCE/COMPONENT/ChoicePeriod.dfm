@@ -171,7 +171,7 @@ object PeriodChoiceForm: TPeriodChoiceForm
           'Left'
           'Top')
       end>
-    StorageName = 'cxPropertiesStore'
+    StorageName = 'ChoicePeriod.ini'
     Left = 120
     Top = 144
   end

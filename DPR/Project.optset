@@ -1,0 +1,24 @@
+﻿	<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+		<PropertyGroup>
+			<VerInfo_Build>1</VerInfo_Build>
+			<VerInfo_Keys>CompanyName=;FileDescription=Управленческий учет - &quot;Project&quot;;FileVersion=1.1.1.1;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.1;Comments=</VerInfo_Keys>
+			<VerInfo_MinorVer>1</VerInfo_MinorVer>
+			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+			<VerInfo_Locale>1049</VerInfo_Locale>
+			<VerInfo_Release>1</VerInfo_Release>
+			<Manifest_File>None</Manifest_File>
+			<DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
+			<Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
+			<DCC_UsePackage>JvGlobus;JvMM;JvManagedThreads;fmx;JvDlgs;JvCrypt;DataSnapServer;DBXInterBaseDriver;DataSnapCommon;DataSnapClient;JvNet;DataSnapProviderClient;JvDotNetCtrls;DbxCommonDriver;dbxcds;JvXPCtrls;DBXOracleDriver;CustomIPTransport;JvCore;dsnap;fmxase;JvAppFrm;JvDB;inetdbxpress;JvDocking;JvWizards;JvHMI;bindcompfmx;JvBands;rtl;dbrtl;DbxClientDriver;bindcomp;inetdb;JvPluginSystem;JvCmp;JvSystem;xmlrtl;ibxpress;JvTimeFramework;JvControls;DBXMySQLDriver;bindengine;soaprtl;JvStdCtrls;JvCustom;JvJans;JvPrintPreview;JvPageComps;DBXInformixDriver;DBXFirebirdDriver;inet;fmxobj;JvPascalInterpreter;DBXSybaseASADriver;fmxdae;dbexpress;DataSnapIndy10ServerTransport;JvBDE;$(DCC_UsePackage)</DCC_UsePackage>
+			<DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
+			<DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
+		</PropertyGroup>
+		<ProjectExtensions>
+			<Borland.Personality>Delphi.Personality.12</Borland.Personality>
+			<Borland.ProjectType>OptionSet</Borland.ProjectType>
+			<BorlandProject>
+				<Delphi.Personality/>
+			</BorlandProject>
+			<ProjectFileVersion>12</ProjectFileVersion>
+		</ProjectExtensions>
+	</Project>

@@ -1,6 +1,7 @@
 program Project;
 
 uses
+  MidasLib,
   Vcl.Forms,
   Controls,
   Classes,
@@ -20,7 +21,10 @@ uses
   MainForm in '..\SOURCE\MainForm.pas' {MainForm},
   ChoicePeriod in '..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm},
   Defaults in '..\SOURCE\COMPONENT\Defaults.pas',
-  MessagesUnit in '..\SOURCE\MessagesUnit.pas' {MessagesForm};
+  MessagesUnit in '..\SOURCE\MessagesUnit.pas' {MessagesForm},
+  Updater in '..\SOURCE\COMPONENT\Updater.pas',
+  AboutBoxUnit in '..\SOURCE\AboutBoxUnit.pas' {AboutBox},
+  UnilWin in '..\SOURCE\UnilWin.pas';
 
 {$R *.res}
 
@@ -32,8 +36,9 @@ begin
   with TLoginForm.Create(Application) do
     //≈сли все хорошо создаем главную форму Application.CreateForm();
     if ShowModal = mrOk then begin
+       TUpdater.AutomaticUpdateProgram;
        Application.CreateForm(TMainForm, MainFormInstance);
-  Application.CreateForm(TdmMain, dmMain);
-  end;
+       Application.CreateForm(TdmMain, dmMain);
+    end;
   Application.Run;
 end.

@@ -210,10 +210,13 @@ type
     bbUpdateProgramm: TdxBarButton;
     actModelService: TdsdOpenForm;
     bbModelService: TdxBarButton;
+    actAbout: TAction;
+    bbAbout: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure actUpdateProgramExecute(Sender: TObject);
+    procedure actAboutExecute(Sender: TObject);
   private
     procedure OnException(Sender: TObject; E: Exception);
   public
@@ -225,11 +228,17 @@ var
 
 implementation
 
-uses ParentForm, Storage, CommonData, MessagesUnit, Menus, UtilConst, Math;
+uses ParentForm, Storage, CommonData, MessagesUnit, Menus, UtilConst, Math,
+     AboutBoxUnit;
 
 {$R DevExpressRus.res}
 
 {$R *.dfm}
+
+procedure TMainForm.actAboutExecute(Sender: TObject);
+begin
+  TAboutBox.Create(Self).ShowModal;
+end;
 
 procedure TMainForm.actUpdateProgramExecute(Sender: TObject);
 var Index: integer;
@@ -245,7 +254,7 @@ begin
            break;
         end;
   end;
-  ShowMessage('Формы удалены');
+  ShowMessage('Программа обновлена');
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);

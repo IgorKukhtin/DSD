@@ -3,7 +3,7 @@ unit FormStorage;
 interface
 
 uses
-  Classes, Forms, dsdDB, Xml.XMLDoc, ParentForm;
+  Classes, Forms, dsdDB, Xml.XMLDoc, ParentForm, UnilWin;
 
 type
 
@@ -17,11 +17,15 @@ type
     MemoryStream: TMemoryStream;
     SaveStoredProc: TdsdStoredProc;
     LoadStoredProc: TdsdStoredProc;
+    LoadProgramProc: TdsdStoredProc;
+    LoadProgramVersionProc: TdsdStoredProc;
     SaveUserFormSettingsStoredProc: TdsdStoredProc;
     LoadUserFormSettingsStoredProc: TdsdStoredProc;
     function StringToXML(S: String): String;
     procedure SaveToFormData(DataKey: string);
   public
+    function LoadFile(FileName: string): AnsiString;
+    function LoadFileVersion(FileName: string): TVersionInfo;
     procedure Save(Form: TComponent);
     function Load(FormName: String): TParentForm;
     procedure SaveReport(Stream: TStream; ReportName: string);
@@ -37,11 +41,40 @@ type
   end;
   function StreamToString(Stream: TStream): String;
   function ANSIToXML(S: String): String;
+  function ANSIToXMLFile(S: String): String;
   function XMLToAnsi(S: String): String;
+
+  // Процедура по символьно переводит строку в набор цифр
+function ReConvertConvert(S: Ansistring): AnsiString;
+// Процедура по символьно переводит строку в набор цифр
+function ConvertConvert(S: RawByteString): String;
 
 implementation
 
-uses UtilConvert, DB, SysUtils;
+uses UtilConvert, DB, SysUtils, ZLibEx, Dialogs;
+
+// Процедура по символьно переводит строку в набор цифр
+function ConvertConvert(S: RawByteString): String;
+var i: integer;
+begin
+  result := '';
+  for I := 1 to Length(S) do
+      result := result + IntToHex(byte(s[i]),2);
+end;
+
+  // Процедура по символьно переводит строку в набор цифр
+function ReConvertConvert(S: Ansistring): AnsiString;
+var i: integer;
+begin
+  i := 1;
+  result := '';
+  while i <= Length(S) do begin
+    result := result + Ansichar(StrToInt('$' + s[i] + s[i+1]));
+    i := i + 2;
+  end;
+end;
+
+
 
 function ANSIToXML(S: String): String;
 var i: integer;
@@ -52,6 +85,14 @@ begin
       result := result + '&amp;#' + IntToHex(byte(s[i]),2) + ';'
     else
       result := result + gfStrToXmlStr(s[i]);
+end;
+
+function ANSIToXMLFile(S: String): String;
+var i: integer;
+begin
+  result := '';
+  for I := 1 to Length(S) do
+      result := result + '999999999';//'&amp;#' + IntToHex(byte(s[i]),2) + ';'
 end;
 
 function XMLToAnsi(S: String): String;
@@ -107,6 +148,18 @@ begin
     Instance.LoadUserFormSettingsStoredProc.OutputType := otBlob;
     Instance.LoadUserFormSettingsStoredProc.Params.AddParam('inFormName', ftString, ptInput, '');
 
+    Instance.LoadProgramProc := TdsdStoredProc.Create(nil);
+    Instance.LoadProgramProc.StoredProcName := 'gpGet_Object_Program';
+    Instance.LoadProgramProc.OutputType := otBlob;
+    Instance.LoadProgramProc.Params.AddParam('inProgramName', ftString, ptInput, '');
+
+    Instance.LoadProgramVersionProc := TdsdStoredProc.Create(nil);
+    Instance.LoadProgramVersionProc.StoredProcName := 'gpGet_Object_ProgramVersion';
+    Instance.LoadProgramVersionProc.OutputType := otResult;
+    Instance.LoadProgramVersionProc.Params.AddParam('inProgramName', ftString, ptInput, '');
+    Instance.LoadProgramVersionProc.Params.AddParam('outMajorVersion', ftInteger, ptOutput, 0);
+    Instance.LoadProgramVersionProc.Params.AddParam('outMinorVersion', ftInteger, ptOutput, 0);
+
     Instance.XMLDocument:= TXMLDocument.Create(nil);
     Instance.StringStream := TStringStream.Create;
     Instance.MemoryStream := TMemoryStream.Create;
@@ -134,28 +187,57 @@ begin
      if Screen.Forms[i] is TParentForm then
         with TParentForm(Screen.Forms[i]) do begin
           if (not isFree) and (FormClassName = FormName) then begin
-             Result := Screen.Forms[i] as TParentForm;
+             {Result := TParentForm.Create(Application);
+             Result.FormClassName := FormName;
+             try
+               MemoryStream.WriteComponent(Screen.Forms[i]);
+               MemoryStream.Position := 0;
+               MemoryStream.ReadComponent(Result);
+             finally
+               MemoryStream.Clear;
+             end;}
+             result := TParentForm(Screen.Forms[i]);
              exit;
           end;
         end;
   end;
-  Result := TParentForm.Create(Application);
-  Result.FormClassName := FormName;
-
   LoadStoredProc.ParamByName('FormName').Value := FormName;
+  try
+    StringStream.WriteString(gfStrXmlToStr(LoadStoredProc.Execute));
+    // ПОКА ОСТАВЛЯЕМ ПО СТАРОМУ!!!
+    //StringStream.WriteString(ReConvertConvert(LoadStoredProc.Execute));
+    if StringStream.Size = 0 then
+       raise Exception.Create('Форма "' + FormName + '" не загружена из базы данных');
+    StringStream.Position := 0;
+    // Преобразовать текст в бинарные данные
+    ObjectTextToBinary(StringStream, MemoryStream);
+    // Вернуть смещение
+    MemoryStream.Position := 0;
 
-  StringStream.Clear;
-  MemoryStream.Clear;
-  StringStream.WriteString(gfStrXmlToStr(LoadStoredProc.Execute));
-  if StringStream.Size = 0 then
-     raise Exception.Create('Форма "' + FormName + '" не загружена из базы данных');
-  StringStream.Position := 0;
-  // Преобразовать текст в бинарные данные
-  ObjectTextToBinary(StringStream, MemoryStream);
-  // Вернуть смещение
-  MemoryStream.Position := 0;
-  // Прочитать компонент из потока
-  MemoryStream.ReadComponent(Result);
+    // Создаем форму
+    Result := TParentForm.Create(Application);
+    Result.FormClassName := FormName;
+
+    // Прочитать компонент из потока
+    MemoryStream.ReadComponent(Result);
+  finally
+    StringStream.Clear;
+    MemoryStream.Clear;
+  end;
+end;
+
+function TdsdFormStorage.LoadFile(FileName: string): AnsiString;
+begin
+  LoadProgramProc.ParamByName('inProgramName').Value := FileName;
+  result := ZDeCompressStr(ReConvertConvert(LoadProgramProc.Execute));
+end;
+
+function TdsdFormStorage.LoadFileVersion(FileName: string): TVersionInfo;
+begin
+  LoadProgramVersionProc.ParamByName('inProgramName').Value := FileName;
+  LoadProgramVersionProc.Execute;
+  result.VerHigh := StrToInt(LoadProgramVersionProc.ParamByName('outMajorVersion').asString);
+  result.VerLow := StrToInt(LoadProgramVersionProc.ParamByName('outMinorVersion').asString);
 end;
 
 function TdsdFormStorage.LoadReport(ReportName: String): TStream;
@@ -209,6 +291,7 @@ end;
 procedure TdsdFormStorage.SaveToFormData(DataKey: string);
 begin
   SaveStoredProc.ParamByName('FormName').Value := DataKey;
+    // ПОКА ОСТАВЛЯЕМ ПО СТАРОМУ!!! ConvertConvert(StringStream.DataString);//
   SaveStoredProc.ParamByName('FormData').Value := StringToXML(StringStream.DataString);
   SaveStoredProc.Execute;
 end;

@@ -240,7 +240,10 @@ uses
   SheetWorkTimeMovementItemTest in '..\SOURCE\MovementItem\All\SheetWorkTimeMovementItemTest.pas',
   ModelService in '..\..\Forms\ModelService.pas' {ModelServiceForm},
   ModelServiceKind in '..\..\Forms\ModelServiceKind.pas' {ModelServiceKindForm},
-  SelectKind in '..\..\Forms\SelectKind.pas' {SelectKindForm};
+  SelectKind in '..\..\Forms\SelectKind.pas' {SelectKindForm},
+  UpdaterTest in '..\SOURCE\Component\UpdaterTest.pas',
+  AboutBoxUnit in '..\..\SOURCE\AboutBoxUnit.pas' {AboutBox},
+  UnilWin in '..\..\SOURCE\UnilWin.pas';
 
 {$R *.RES}
 

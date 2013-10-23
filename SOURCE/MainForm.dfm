@@ -20,8 +20,8 @@ object MainForm: TMainForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -597,6 +597,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbAbout'
+        end
+        item
+          Visible = True
           ItemName = 'bbUpdateProgramm'
         end>
     end
@@ -860,6 +864,10 @@ object MainForm: TMainForm
     end
     object bbModelService: TdxBarButton
       Action = actModelService
+      Category = 0
+    end
+    object bbAbout: TdxBarButton
+      Action = actAbout
       Category = 0
     end
   end
@@ -1488,7 +1496,7 @@ object MainForm: TMainForm
     end
     object actUpdateProgram: TAction
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
-      Caption = #1054#1085#1086#1074#1080#1090#1100' '#1074#1077#1088#1089#1080#1102' '#1087#1088#1086#1075#1088#1072#1084#1084#1099
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1074#1077#1088#1089#1080#1102' '#1087#1088#1086#1075#1088#1072#1084#1084#1099
       ShortCut = 57429
       OnExecute = actUpdateProgramExecute
     end
@@ -1499,6 +1507,11 @@ object MainForm: TMainForm
       FormName = 'TModelServiceForm'
       GuiParams = <>
       isShowModal = False
+    end
+    object actAbout: TAction
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      Caption = #1054' '#1087#1088#1086#1075#1088#1072#1084#1084#1077'...'
+      OnExecute = actAboutExecute
     end
   end
   object cxLocalizer: TcxLocalizer
