@@ -18,6 +18,12 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ModelServiceItemChild()());
    vbUserId := inSession;
+      
+    -- проверка
+   IF COALESCE (inModelServiceItemMasterId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка. Не установлен главный элемент!';
+   END IF;
    
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_ModelServiceItemChild(), 0, '');
