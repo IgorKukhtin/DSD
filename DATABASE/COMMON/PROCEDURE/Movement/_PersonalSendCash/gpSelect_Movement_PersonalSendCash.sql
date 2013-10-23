@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalSendCash(
     IN inEndDate     TDateTime , --
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , TotalSumm TFloat
              , PersonalName TVarChar
@@ -25,7 +25,7 @@ BEGIN
      RETURN QUERY 
        SELECT
              Movement.Id
-           , Movement.InvNumber
+           , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
            , Movement.OperDate
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
@@ -58,6 +58,7 @@ ALTER FUNCTION gpSelect_Movement_PersonalSendCash (TDateTime, TDateTime, TVarCha
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.10.13                                        * add zfConvert_StringToNumber
  30.09.13                                        *
 */
 

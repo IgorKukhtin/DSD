@@ -26,7 +26,7 @@ BEGIN
          RETURN QUERY 
          SELECT
                0 AS Id
-             , CAST (lfGet_InvNumber (0, zc_Movement_Income()) as TVarChar) AS InvNumber
+             , CAST (NEXTVAL ('Movement_Income_seq') AS TVarChar) AS InvNumber
              , CAST (CURRENT_DATE as TDateTime) AS OperDate
              , Object_Status.Code               AS StatusCode
              , Object_Status.Name               AS StatusName
@@ -134,6 +134,7 @@ ALTER FUNCTION gpGet_Movement_Income (Integer, TVarChar) OWNER TO postgres;
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 23.10.13                                        * add NEXTVAL
  20.10.13                                        * CURRENT_TIMESTAMP -> CURRENT_DATE
  07.10.13                                        * add lpCheckRight
  30.09.13                                        * add Object_Personal_View
@@ -149,4 +150,4 @@ ALTER FUNCTION gpGet_Movement_Income (Integer, TVarChar) OWNER TO postgres;
 */
 
 -- òåñò
--- SELECT * FROM gpGet_Movement_Income (inMovementId := 0, inSession:= '2')
+-- SELECT * FROM gpGet_Movement_Income (inMovementId := 0, inSession:= zfCalc_UserAdmin())

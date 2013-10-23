@@ -30,7 +30,7 @@ BEGIN
      RETURN QUERY 
        SELECT
              0 AS Id
-           , CAST (lfGet_InvNumber(0, zc_Movement_Transport()) AS TVarChar) AS InvNumber
+           , CAST (NEXTVAL ('Movement_Transport_seq') AS TVarChar) AS InvNumber
            , CAST (CURRENT_DATE AS TDateTime)      AS OperDate
            , lfObject_Status.Code                  AS StatusCode
            , lfObject_Status.Name                  AS StatusName
@@ -168,6 +168,7 @@ ALTER FUNCTION gpGet_Movement_Transport (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.10.13                                        * add NEXTVAL
  30.09.13                                        * add Object_Personal_View
  26.09.13                                        * changes in wiki
  25.09.13         * changes in wiki              

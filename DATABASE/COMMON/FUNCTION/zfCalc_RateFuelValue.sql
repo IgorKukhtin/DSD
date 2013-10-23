@@ -17,17 +17,17 @@ $BODY$
 BEGIN
 
      vbValue := (-- для расстояния / 100
-                 (COALESCE (inDistance, 0) / 100) * COALESCE (inAmountFuel, 0)
+                 CAST ( (COALESCE (inDistance, 0) / 100) * COALESCE (inAmountFuel, 0) AS NUMERIC (16, 2))
                  -- для Холод, часов
-               + COALESCE (inColdHour, 0) * COALESCE (inAmountColdHour, 0)
+               + CAST ( COALESCE (inColdHour, 0) * COALESCE (inAmountColdHour, 0) AS NUMERIC (16, 2))
                  -- для Холод, км / 100
-               + (COALESCE (inColdDistance, 0) / 100) * COALESCE (inAmountColdDistance, 0)
+               + CAST ( (COALESCE (inColdDistance, 0) / 100) * COALESCE (inAmountColdDistance, 0) AS NUMERIC (16, 2))
                 )
                  -- добавляем % дополнительного расхода в связи с сезоном/температурой
               * (1 + COALESCE (inRateFuelKindTax, 0) / 100)
      ;
-     
-     RETURN (vbValue);
+
+     RETURN (CAST (vbValue AS NUMERIC (16, 2)));
 
 END;
 $BODY$
@@ -39,6 +39,7 @@ ALTER FUNCTION zfCalc_RateFuelValue (TFloat, TFloat, TFloat, TFloat, TFloat, TFl
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.10.13                                        *
  01.10.13                                        *
 */
 /*

@@ -68,7 +68,7 @@ BEGIN
          -- для документа
          --
          -- расчитали свойство <Номер документа>
-         ioInvNumber := lfGet_InvNumber (0, zc_Movement_Income());
+         ioInvNumber := CAST (NEXTVAL ('Movement_Income_seq') AS TVarChar);
          -- определили свойство из Default <Цена с НДС (да/нет)>
          ioPriceWithVAT := TRUE;
          -- определили свойство из Default <% НДС>
@@ -213,6 +213,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.10.13                                        * add NEXTVAL
  19.10.13                                        * add inChangePrice
  07.10.13                                        * add lpCheckRight
  05.10.13                                        *
