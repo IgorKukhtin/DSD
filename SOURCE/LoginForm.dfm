@@ -1,10 +1,9 @@
 object LoginForm: TLoginForm
   Left = 0
   Top = 0
-  BorderStyle = bsDialog
   Caption = #1042#1093#1086#1076' '#1074' '#1089#1080#1089#1090#1077#1084#1091
   ClientHeight = 155
-  ClientWidth = 395
+  ClientWidth = 391
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

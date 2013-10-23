@@ -168,6 +168,8 @@ begin
       Assigned(DataSets[0]) and
       Assigned(DataSets[0].DataSet) then
    begin
+     if DataSets[0].DataSet.State in [dsEdit, dsInsert] then
+        DataSets[0].DataSet.Post;
      if DataSets[0].DataSet.Active and (DataSets[0].DataSet.RecordCount > 0) then
         B := DataSets[0].DataSet.GetBookmark;
      DataSets[0].DataSet.XMLData := TStorageFactory.GetStorage.ExecuteProc(GetXML);
@@ -293,6 +295,8 @@ begin
   XMLResult := TStorageFactory.GetStorage.ExecuteProc(GetXML);
   try
     for I := 0 to DataSets.Count - 1 do begin
+       if DataSets[i].DataSet.State in [dsEdit, dsInsert] then
+          DataSets[i].DataSet.Post;
        if DataSets[i].DataSet.Active then
           B := DataSets[i].DataSet.GetBookmark;
        DataSets[i].DataSet.XMLData := XMLResult[i];
