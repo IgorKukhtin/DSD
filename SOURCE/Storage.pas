@@ -102,6 +102,7 @@ begin
 end;
 
 procedure TStorage.ProcessErrorCode(pData: String);
+var i: double;
 begin
   with LoadXMLData(pData).DocumentElement do
     if NodeName = gcError then

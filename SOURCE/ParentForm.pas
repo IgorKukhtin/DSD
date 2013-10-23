@@ -22,6 +22,7 @@ type
     FisFree: boolean;
     FisAlwaysRefresh: boolean;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
     procedure SetSender(const Value: TComponent);
@@ -96,6 +97,7 @@ begin
   onKeyDown := FormKeyDown;
   onClose := FormClose;
   onShow := FormShow;
+  OnCloseQuery := FormCloseQuery;
   KeyPreview := true;
 end;
 
@@ -132,10 +134,15 @@ end;
 procedure TParentForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   inherited;
-  // Нужно что бы вызать событие OnExit на последнем компоненте
-  ActiveControl := nil;
   if isFree then
      Action := caFree;
+end;
+
+procedure TParentForm.FormCloseQuery(Sender: TObject; var CanClose: boolean);
+begin
+  // Нужно что бы вызать событие OnExit на последнем компоненте
+  ActiveControl := nil;
+  CanClose := not Assigned(ActiveControl);
 end;
 
 procedure TParentForm.FormKeyDown(Sender: TObject; var Key: Word;

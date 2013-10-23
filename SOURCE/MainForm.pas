@@ -217,6 +217,7 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure actUpdateProgramExecute(Sender: TObject);
     procedure actAboutExecute(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
     procedure OnException(Sender: TObject; E: Exception);
   public
@@ -255,6 +256,11 @@ begin
         end;
   end;
   ShowMessage('Программа обновлена');
+end;
+
+procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+begin
+  // Здесь поверяем
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);

@@ -196,6 +196,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object colPersonalCode: TcxGridDBColumn
@@ -514,8 +515,8 @@ object PersonalSendCashForm: TPersonalSendCashForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1047,6 +1048,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
       item
       end>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = True
     Left = 304
     Top = 288
   end
@@ -1060,6 +1062,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 368
     Top = 272
   end

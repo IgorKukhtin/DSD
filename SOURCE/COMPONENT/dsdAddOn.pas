@@ -5,7 +5,8 @@ interface
 uses Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView,
      cxTextEdit, DB, dsdAction, cxGridTableView,
      VCL.Graphics, cxGraphics, cxStyles, Forms, Controls,
-     SysUtils, dsdDB, Contnrs, cxGridCustomView, cxGridCustomTableView, dsdGuides, VCL.ActnList;
+     SysUtils, dsdDB, Contnrs, cxGridCustomView, cxGridCustomTableView, dsdGuides,
+     VCL.ActnList, cxEdit;
 
 type
 
@@ -72,6 +73,11 @@ type
     FonExit: TNotifyEvent;
     // контрол для ввода условия фильтра
     edFilter: TcxTextEdit;
+    FOnlyEditingCellOnEnter: boolean;
+    FGridEditKeyEvent: TcxGridEditKeyEvent;
+    procedure ActionOnlyEditingCellOnEnter;
+    procedure GridEditKeyEvent(Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem;
+                                AEdit: TcxCustomEdit; var Key: Word; Shift: TShiftState);
     procedure OnKeyPress(Sender: TObject; var Key: Char);
     procedure OnKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState); override;
     procedure SetView(const Value: TcxGridTableView); virtual;
@@ -94,16 +100,24 @@ type
     procedure onFilterChanged(Sender: TObject);
     // если при выходе из грида ДатаСет в Edit mode, то делаем Post
     procedure OnExit(Sender: TObject);
+    procedure SetOnlyEditingCellOnEnter(const Value: boolean);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
+    // Ссылка ссылка на элемент отображающий список
     property View: TcxGridTableView read FView write SetView;
+    // список событий на DblClick
     property OnDblClickActionList;
+    // список событий, реагирующих на нажатие клавиш в гриде
     property ActionItemList;
+    // картинки для сортировки
     property SortImages;
+    // Перемещаться только по редактируемым ячейкам по Enter
+    // В случае достижения конца колонок и наличия следующей записи перейти на нее и cпозиционироваться на редактируемой ячейке
+    property OnlyEditingCellOnEnter: boolean read FOnlyEditingCellOnEnter write SetOnlyEditingCellOnEnter;
   end;
 
   TCrossDBViewAddOn = class(TdsdDBViewAddOn)
@@ -388,7 +402,28 @@ begin
   end;
 end;
 
-{ TdsdDBFilterAddOn }
+
+procedure TdsdDBViewAddOn.ActionOnlyEditingCellOnEnter;
+var i: integer;
+    NextFocusIndex: integer;
+begin
+  // 1. Смотрим куда может идти
+  NextFocusIndex := -1;
+  for I := View.Controller.FocusedColumnIndex + 1 to View.VisibleColumnCount - 1 do
+      if View.VisibleColumns[i].Editable then begin
+         NextFocusIndex := i;
+         break;
+      end;
+  // 2. Если есть куда на этой строчке, то идем на этой строчке
+  if NextFocusIndex > -1 then begin
+     View.Controller.FocusedColumnIndex := NextFocusIndex;
+     View.Controller.FocusedItem.Editing := true;
+  end;
+  // 3. Если на этой строчке некуда и находимся в состоянии редактирования, то Post
+  if (NextFocusIndex = -1) and (TcxDBDataController(FView.DataController).DataSource.State in [dsEdit, dsInsert]) then
+     TcxDBDataController(FView.DataController).DataSource.DataSet.Post;
+  // 4. Если есть куда на следующей, то идем на следующую
+end;
 
 constructor TdsdDBViewAddOn.Create(AOwner: TComponent);
 begin
@@ -530,6 +565,19 @@ begin
   end;
 end;
 
+procedure TdsdDBViewAddOn.GridEditKeyEvent(Sender: TcxCustomGridTableView;
+  AItem: TcxCustomGridTableItem; AEdit: TcxCustomEdit; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Assigned(FGridEditKeyEvent) then
+     FGridEditKeyEvent(Sender, AItem, AEdit, Key, Shift);
+  // Если нажат ТОЛЬКО Enter и OnlyEditingCellOnEnter
+  if (Key = VK_RETURN) and (Shift = []) and OnlyEditingCellOnEnter then begin
+     ActionOnlyEditingCellOnEnter;
+     Key := 0;
+  end;
+end;
+
 procedure TdsdDBViewAddOn.lpSetEdFilterPos(inKey: Char);
 // процедура устанавливает контрол для внесения значения фильтра и позиционируется на заголовке колонки
 var pRect:TRect;
@@ -610,6 +658,11 @@ begin
   end;
 end;
 
+procedure TdsdDBViewAddOn.SetOnlyEditingCellOnEnter(const Value: boolean);
+begin
+  FOnlyEditingCellOnEnter := Value;
+end;
+
 procedure TdsdDBViewAddOn.SetView(const Value: TcxGridTableView);
 begin
   FView := Value;
@@ -618,6 +671,9 @@ begin
        FOnExit := TcxGrid(FView.Control).OnExit;
        TcxGrid(FView.Control).OnExit := OnExit;
     end;
+    // нужно обязательно убрать предустановленную обработку
+//    if OnlyEditingCellOnEnter then
+  //     FView.OptionsBehavior.GoToNextCellOnEnter := false;
     FOnKeyDown := FView.OnKeyDown;
     FView.OnKeyDown := OnKeyDown;
     FView.OnKeyPress := OnKeyPress;
@@ -626,6 +682,9 @@ begin
     FView.OnColumnHeaderClick := OnColumnHeaderClick;
     FView.OnDblClick := OnDblClick;
     FView.OnCustomDrawCell := OnCustomDrawCell;
+    FGridEditKeyEvent := FView.OnEditKeyDown;
+    FView.OnEditKeyDown := GridEditKeyEvent;
+
     if Assigned(TcxDBDataController(FView.DataController).DataSource) then
        if Assigned(TcxDBDataController(FView.DataController).DataSource.DataSet) then begin
           FAfterInsert := TcxDBDataController(FView.DataController).DataSource.DataSet.AfterInsert;
