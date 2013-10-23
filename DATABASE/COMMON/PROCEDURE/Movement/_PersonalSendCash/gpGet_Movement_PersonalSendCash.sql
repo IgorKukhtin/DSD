@@ -25,7 +25,7 @@ BEGIN
      RETURN QUERY 
        SELECT
              0 AS Id
-           , CAST (lfGet_InvNumber (0, zc_Movement_PersonalSendCash()) as TVarChar) InvNumber
+           , CAST (NEXTVAL ('Movement_PersonalSendCash_seq') AS TVarChar) AS InvNumber
            , CAST (CURRENT_DATE as TDateTime) AS OperDate
            , lfObject_Status.Code             AS StatusCode
            , lfObject_Status.Name             AS StatusName
@@ -75,6 +75,7 @@ ALTER FUNCTION gpGet_Movement_PersonalSendCash (Integer, TVarChar) OWNER TO post
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 23.10.13                                        * add NEXTVAL
  20.10.13                                        * CURRENT_TIMESTAMP -> CURRENT_DATE
  30.09.13                                        *
 */
