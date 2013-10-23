@@ -890,8 +890,16 @@ begin
 end;
 
 procedure TdsdUpdateDataSet.UpdateData;
+var DataSet: TDataSet;
 begin
-  Execute;
+  try
+    // снимаем на время выполнения реакцию на пост, что бы не было зацикливаний
+    DataSet := DataSource.DataSet;
+    DataSource.DataSet := nil;
+    Execute;
+  finally
+    DataSource.DataSet := DataSet;
+  end;
 end;
 
 { TdsdGridToExcel }

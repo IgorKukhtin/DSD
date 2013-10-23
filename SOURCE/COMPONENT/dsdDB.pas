@@ -291,6 +291,7 @@ procedure TdsdStoredProc.MultiDataSetRefresh;
 var B: TBookMark;
     i: integer;
     XMLResult: OleVariant;
+    DataSet: TDataSet;
 begin
   XMLResult := TStorageFactory.GetStorage.ExecuteProc(GetXML);
   try

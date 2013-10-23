@@ -4,12 +4,10 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SheetWorkTime (Integer, Inte
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_SheetWorkTime(
  INOUT InMovementItemId      Integer   , -- Ключ объекта <Элемент документа>
-    IN inOperDate            TDateTime , --
     IN inMovementId          Integer   , -- ключ Документа
     IN inPersonalId          Integer   , -- Сотрудник
     IN inPositionId          Integer   , -- Должность
     IN inPersonalGroupId     Integer   , -- Группировка Сотрудника
-    IN inUnitId              Integer   , -- Подразделение
     IN inAmount              TFloat    , -- Количество часов факт
     IN inWorkTimeKindId      Integer     -- Типы рабочего времени
 )                              
