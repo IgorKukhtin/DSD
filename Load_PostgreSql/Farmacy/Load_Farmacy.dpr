@@ -15,7 +15,8 @@ uses
   dsdDB in '..\..\SOURCE\COMPONENT\dsdDB.pas',
   dsdGuides in '..\..\SOURCE\COMPONENT\dsdGuides.pas',
   ChoicePeriod in '..\..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm},
-  Defaults in '..\..\SOURCE\COMPONENT\Defaults.pas';
+  Defaults in '..\..\SOURCE\COMPONENT\Defaults.pas',
+  UnilWin in '..\..\SOURCE\UnilWin.pas';
 
 {$R *.res}
 

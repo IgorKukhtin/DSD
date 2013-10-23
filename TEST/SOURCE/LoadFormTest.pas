@@ -618,7 +618,8 @@ begin
   //Типы выбора данных
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TModelServiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TModelServiceForm');
-
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TModelServiceEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TModelServiceEditForm');
 end;
 
 procedure TLoadFormTest.LoadPersonalFormTest;

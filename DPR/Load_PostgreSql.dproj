@@ -104,6 +104,7 @@
 				<Form>PeriodChoiceForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\COMPONENT\Defaults.pas"/>
+			<DCCReference Include="..\SOURCE\UnilWin.pas"/>
 			<None Include="Load_PostgreSql.todo"/>
 			<BuildConfiguration Include="Debug">
 				<Key>Cfg_2</Key>

@@ -87,6 +87,7 @@ type
     ModelServiceChoiceForm: TOpenChoiceForm;
     bbModelServise: TdxBarButton;
     actUpdateStaffListCost: TdsdUpdateDataSet;
+    clsfcisErased: TcxGridDBColumn;
   private
     { Private declarations }
   public

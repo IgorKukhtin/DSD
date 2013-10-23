@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ModelServiceItemChild(
 RETURNS TABLE (Id Integer
              , Comment TVarChar
              , FromId Integer, FromName TVarChar                
-             , ToId Integer, ToName TVarChar                
+             , ToId Integer, ToName TVarChar  
+             , ModelServiceItemMasterId Integer, ModelServiceItemMasterName TVarChar                
              , isErased boolean
              ) AS
 $BODY$
@@ -29,6 +30,9 @@ BEGIN
          , Object_To.Id         AS ToId
          , Object_To.ValueData  AS ToName
 
+         , Object_ModelServiceItemMaster.Id         AS ModelServiceItemMasterId
+         , Object_ModelServiceItemMaster.ValueData  AS ModelServiceItemMasterName
+
          , Object_ModelServiceItemChild.isErased AS isErased
          
      FROM OBJECT AS Object_ModelServiceItemChild
@@ -41,6 +45,11 @@ BEGIN
                                ON ObjectLink_ModelServiceItemChild_To.ObjectId = Object_ModelServiceItemChild.Id
                               AND ObjectLink_ModelServiceItemChild_To.DescId = zc_ObjectLink_ModelServiceItemChild_To()
           LEFT JOIN Object AS Object_To ON Object_To.Id = ObjectLink_ModelServiceItemChild_To.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemChild_ModelServiceItemMaster
+                               ON ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.ObjectId = Object_ModelServiceItemChild.Id
+                              AND ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.DescId = zc_ObjectLink_ModelServiceItemChild_ModelServiceItemMaster()
+          LEFT JOIN Object AS Object_ModelServiceItemMaster ON Object_ModelServiceItemMaster.Id = ObjectLink_ModelServiceItemChild_ModelServiceItemMaster.ChildObjectId
 
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_ModelServiceItemChild.Id 

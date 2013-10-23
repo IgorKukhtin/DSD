@@ -243,7 +243,8 @@ uses
   SelectKind in '..\..\Forms\SelectKind.pas' {SelectKindForm},
   UpdaterTest in '..\SOURCE\Component\UpdaterTest.pas',
   AboutBoxUnit in '..\..\SOURCE\AboutBoxUnit.pas' {AboutBox},
-  UnilWin in '..\..\SOURCE\UnilWin.pas';
+  UnilWin in '..\..\SOURCE\UnilWin.pas',
+  ModelServiceEdit in '..\..\Forms\ModelServiceEdit.pas' {ModelServiceEditForm: TParentForm};
 
 {$R *.RES}
 

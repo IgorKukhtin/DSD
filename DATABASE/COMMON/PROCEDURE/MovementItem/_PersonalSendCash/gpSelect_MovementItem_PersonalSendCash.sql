@@ -13,7 +13,7 @@ RETURNS TABLE (MIId_20401 Integer, MIId_21201 Integer
              , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , Amount_20401 TFloat, Amount_21201 TFloat
              , RouteId Integer, RouteName TVarChar 
-             , CarId Integer, CarName TVarChar 
+             , CarId Integer, CarName TVarChar, CarModelName TVarChar
              , isErased Boolean
               )
 AS
@@ -37,8 +37,9 @@ BEGIN
            , Object_Route.Id         AS RouteId
            , Object_Route.ValueData  AS RouteName
 
-           , Object_Car.Id         AS CarId
-           , Object_Car.ValueData  AS CarName
+           , Object_Car.Id              AS CarId
+           , Object_Car.ValueData       AS CarName
+           , Object_CarModel.ValueData  AS CarModelName
 
            , tmpMovementItem.isErased
 
@@ -71,6 +72,11 @@ BEGIN
             LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = tmpMovementItem.PersonalId
             LEFT JOIN Object AS Object_Route ON Object_Route.Id = tmpMovementItem.RouteId
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpMovementItem.CarId
+
+            LEFT JOIN ObjectLink AS Car_CarModel ON Car_CarModel.ObjectId = Object_Car.Id
+                                                AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
+            LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
+
       ;
 
 END;
@@ -82,6 +88,7 @@ ALTER FUNCTION gpSelect_MovementItem_PersonalSendCash (Integer, Boolean, Boolean
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 21.10.13                                        * add CarModelName
  07.10.13                                        * add MIId_20401 and MIId_21201
  04.10.13                                        * add inIsErased
  30.09.13                                        *

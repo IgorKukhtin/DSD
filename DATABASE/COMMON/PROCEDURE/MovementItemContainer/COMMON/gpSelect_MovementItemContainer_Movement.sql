@@ -11,6 +11,7 @@ RETURNS TABLE (AccountCode Integer, DebetAmount TFloat, DebetAccountGroupName TV
              , KreditAmount TFloat, KreditAccountGroupName TVarChar, KreditAccountDirectionName TVarChar, KreditAccountName  TVarChar
              , Price TFloat
              , AccountOnComplete Boolean, DirectionObjectCode Integer, DirectionObjectName TVarChar
+             , BusinessCode Integer, BusinessName TVarChar
              , GoodsGroupCode Integer, GoodsGroupName TVarChar
              , DestinationObjectCode Integer, DestinationObjectName TVarChar
              , GoodsKindName TVarChar
@@ -41,6 +42,8 @@ BEGIN
            , Object_Account_View.onComplete AS AccountOnComplete
            , tmpMovementItemContainer.DirectionObjectCode
            , CAST (tmpMovementItemContainer.DirectionObjectName AS TVarChar) AS DirectionObjectName
+           , tmpMovementItemContainer.BusinessCode
+           , tmpMovementItemContainer.BusinessName
            , tmpMovementItemContainer.GoodsGroupCode
            , tmpMovementItemContainer.GoodsGroupName
            , tmpMovementItemContainer.DestinationObjectCode
@@ -66,6 +69,10 @@ BEGIN
                             THEN CAST (Object_Direction.ObjectCode AS TVarChar) || ' ' || Object_ProfitLossDirection.ValueData || ' '
                        ELSE ''
                   END || Object_Direction.ValueData AS DirectionObjectName
+
+
+                , Object_Business.ObjectCode  AS BusinessCode
+                , Object_Business.ValueData   AS BusinessName
 
                 , Object_GoodsGroup.ObjectCode  AS GoodsGroupCode
                 , Object_GoodsGroup.ValueData   AS GoodsGroupName
@@ -133,6 +140,12 @@ BEGIN
                                               AND ContainerLinkObject_Car.ObjectId <> 0
                  LEFT JOIN Object AS Object_Direction ON Object_Direction.Id = COALESCE (ContainerLinkObject_ProfitLoss.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, COALESCE (Object_Personal_View.MemberId, COALESCE (ContainerLinkObject_Car.ObjectId, ContainerLinkObject_Unit.ObjectId))))
 
+                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Business
+                                               ON ContainerLinkObject_Business.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
+                                              AND ContainerLinkObject_Business.DescId = zc_ContainerLinkObject_Business()
+                                              AND ContainerLinkObject_Business.ObjectId <> 0
+                 LEFT JOIN Object AS Object_Business ON Object_Business.Id = ContainerLinkObject_Business.ObjectId
+
                  LEFT JOIN ObjectLink AS ObjectLink_ProfitLoss_ProfitLossGroup
                                       ON ObjectLink_ProfitLoss_ProfitLossGroup.ObjectId = ContainerLinkObject_ProfitLoss.ObjectId
                                      AND ObjectLink_ProfitLoss_ProfitLossGroup.DescId = zc_ObjectLink_ProfitLoss_ProfitLossGroup()
@@ -185,6 +198,8 @@ BEGIN
             GROUP BY Container.ObjectId
                    , MovementItemContainer.Id
                    , MovementItemContainer.isActive
+                   , Object_Business.ObjectCode
+                   , Object_Business.ValueData
                    , Object_Direction.ObjectCode
                    , Object_Direction.ValueData
                    , Object_ProfitLossGroup.ValueData
@@ -221,6 +236,7 @@ ALTER FUNCTION gpSelect_MovementItemContainer_Movement (Integer, TVarChar) OWNER
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 21.10.13                                        * add zc_ContainerLinkObject_Business
  12.10.13                                        * rename to DirectionObject and DestinationObject
  06.10.13                                        * add ParentId = inMovementId
  02.10.13                                        * calc DebetAccountName and KreditAccountName

@@ -121,6 +121,8 @@ type
     spUnErasedMIMaster: TdsdStoredProc;
     colIsErased: TcxGridDBColumn;
     colCarModelName: TcxGridDBColumn;
+    colBusinessCode: TcxGridDBColumn;
+    colBusinessName: TcxGridDBColumn;
   private
   public
   end;

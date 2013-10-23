@@ -10,7 +10,8 @@ RETURNS TABLE (Id Integer
              , Comment TVarChar
              , FromId Integer, FromName TVarChar                
              , ToId Integer, ToName TVarChar                
-             , SelectKindId Integer, SelectKindName TVarChar                
+             , SelectKindId Integer, SelectKindName TVarChar  
+             , ModelServiceId Integer, ModelServiceName TVarChar  
              , isErased boolean
              ) AS
 $BODY$
@@ -35,6 +36,9 @@ BEGIN
 
          , Object_SelectKind.Id          AS SelectKindId
          , Object_SelectKind.ValueData   AS SelectKindName
+         
+         , Object_ModelService.Id         AS ModelServiceId
+         , Object_ModelService.ValueData  AS ModelServiceName
 
          , Object_ModelServiceItemMaster.isErased AS isErased
          
@@ -53,7 +57,12 @@ BEGIN
                                ON ObjectLink_ModelServiceItemMaster_SelectKind.ObjectId = Object_ModelServiceItemMaster.Id
                               AND ObjectLink_ModelServiceItemMaster_SelectKind.DescId = zc_ObjectLink_ModelServiceItemMaster_SelectKind()
           LEFT JOIN Object AS Object_SelectKind ON Object_SelectKind.Id = ObjectLink_ModelServiceItemMaster_SelectKind.ChildObjectId
-           
+          
+          LEFT JOIN ObjectLink AS ObjectLink_ModelServiceItemMaster_ModelService
+                               ON ObjectLink_ModelServiceItemMaster_ModelService.ObjectId = Object_ModelServiceItemMaster.Id
+                              AND ObjectLink_ModelServiceItemMaster_ModelService.DescId = zc_ObjectLink_ModelServiceItemMaster_ModelService()
+          LEFT JOIN Object AS Object_ModelService ON Object_ModelService.Id = ObjectLink_ModelServiceItemMaster_ModelService.ChildObjectId
+          
           LEFT JOIN ObjectFloat AS ObjectFloat_MovementDesc 
                                 ON ObjectFloat_MovementDesc.ObjectId = Object_ModelServiceItemMaster.Id 
                                AND ObjectFloat_MovementDesc.DescId = zc_ObjectFloat_ModelServiceItemMaster_MovementDesc()

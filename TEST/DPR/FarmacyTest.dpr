@@ -31,7 +31,8 @@ uses
   UnitEdit in '..\..\FarmacyForms\UnitEdit.pas' {UnitEditForm},
   dbTest in '..\SOURCE\dbTest.pas',
   ChoicePeriod in '..\..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm},
-  Defaults in '..\..\SOURCE\COMPONENT\Defaults.pas';
+  Defaults in '..\..\SOURCE\COMPONENT\Defaults.pas',
+  UnilWin in '..\..\SOURCE\UnilWin.pas';
 
 {$R *.res}
 
