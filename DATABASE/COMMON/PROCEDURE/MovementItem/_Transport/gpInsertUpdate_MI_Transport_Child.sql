@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MI_Transport_Child()
 
--- DROP FUNCTION gpInsertUpdate_MI_Transport_Child (Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, TVarChar);
+-- DROP FUNCTION gpinsertupdate_mi_transport_child(integer, integer, integer, integer, boolean, boolean, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, integer, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -11,11 +11,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Child(
     IN inIsMasterFuel        Boolean   , -- Основной вид топлива (да/нет)
  INOUT ioAmount              TFloat    , -- Количество по факту
    OUT outAmount_calc        TFloat    , -- Количество расчетное по норме
+   OUT outAmount_Distance_calc      TFloat    , -- Количество расчетное по норме
+   OUT outAmount_ColdHour_calc      TFloat    , -- Количество расчетное по норме
+   OUT outAmount_ColdDistance_calc  TFloat    , -- Количество расчетное по норме
     IN inColdHour            TFloat    , -- Холод, Кол-во факт часов 
     IN inColdDistance        TFloat    , -- Холод, Кол-во факт км 
+    IN inAmountFuel          TFloat    , -- Кол-во норма на 100 км 
     IN inAmountColdHour      TFloat    , -- Холод, Кол-во норма в час  
     IN inAmountColdDistance  TFloat    , -- Холод, Кол-во норма на 100 км 
-    IN inAmountFuel          TFloat    , -- Кол-во норма на 100 км 
     IN inNumber              TFloat    , -- № по порядку
     IN inRateFuelKindTax     TFloat    , -- % дополнительного расхода в связи с сезоном/температурой
     IN inRateFuelKindId      Integer   , -- Типы норм для топлива          
@@ -31,8 +34,8 @@ BEGIN
      vbUserId := inSession;
 
      -- сохранили <Элемент документа> и вернули параметры
-     SELECT tmp.ioId, tmp.ioAmount, tmp.outAmount_calc
-            INTO ioId, ioAmount, outAmount_calc
+     SELECT tmp.ioId, tmp.ioAmount, tmp.outAmount_calc, tmp.outAmount_Distance_calc, tmp.outAmount_ColdHour_calc, tmp.outAmount_ColdDistance_calc
+            INTO ioId, ioAmount, outAmount_calc, outAmount_Distance_calc, outAmount_ColdHour_calc, outAmount_ColdDistance_calc
      FROM lpInsertUpdate_MI_Transport_Child (ioId                 := ioId
                                            , inMovementId         := inMovementId
                                            , inParentId           := inParentId
@@ -42,9 +45,9 @@ BEGIN
                                            , ioAmount             := ioAmount
                                            , inColdHour           := inColdHour
                                            , inColdDistance       := inColdDistance
+                                           , inAmountFuel         := inAmountFuel
                                            , inAmountColdHour     := inAmountColdHour
                                            , inAmountColdDistance := inAmountColdDistance
-                                           , inAmountFuel         := inAmountFuel
                                            , inNumber             := inNumber
                                            , inRateFuelKindTax    := inRateFuelKindTax
                                            , inRateFuelKindId     := inRateFuelKindId
@@ -59,6 +62,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.10.13                                        * add outAmount_...
  07.10.13                                        * add inIsMasterFuel
  04.10.13                                        * add inUserId
  01.10.13                                        * add inRateFuelKindTax

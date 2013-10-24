@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_MI_Transport_Child_only()
 
--- DROP FUNCTION lpInsertUpdate_MI_Transport_Child_only (Integer, Integer, Integer, Integer, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer);
+-- DROP FUNCTION lpInsertUpdate_MI_Transport_Child_only (Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_Transport_Child_only(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>

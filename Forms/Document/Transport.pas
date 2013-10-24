@@ -230,7 +230,9 @@ type
     clincContractName: TcxGridDBColumn;
     colBusinessName: TcxGridDBColumn;
     colBusinessCode: TcxGridDBColumn;
-    DBGrid1: TDBGrid;
+    colchAmount_Distance_calc: TcxGridDBColumn;
+    colchAmount_ColdHour_calc: TcxGridDBColumn;
+    colchAmount_ColdDistance_calc: TcxGridDBColumn;
   private
   public
   end;
