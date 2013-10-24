@@ -24,9 +24,24 @@ BEGIN
                                             , ioAmount             := MovementItem.Amount
                                             , inColdHour           := MIFloat_ColdHour.ValueData
                                             , inColdDistance       := MIFloat_ColdDistance.ValueData
-                                            , inAmountColdHour     := tmpRateFuel.AmountColdHour     * COALESCE (ObjectFloat_Fuel_Ratio.ValueData, 1) -- !!!с учетом Коэффициента перевода нормы!!!
-                                            , inAmountColdDistance := tmpRateFuel.AmountColdDistance * COALESCE (ObjectFloat_Fuel_Ratio.ValueData, 1) -- !!!с учетом Коэффициента перевода нормы!!!
-                                            , inAmountFuel         := tmpRateFuel.AmountFuel         * COALESCE (ObjectFloat_Fuel_Ratio.ValueData, 1) -- !!!с учетом Коэффициента перевода нормы!!!
+                                              -- Кол-во норма на 100 км, с учетом Коэффициента и % дополнительного расхода
+                                            , inAmountFuel         := zfCalc_RateFuelValue_Distance (inDistance           := 100
+                                                                                                   , inAmountFuel         := tmpRateFuel.AmountFuel
+                                                                                                   , inFuel_Ratio         := ObjectFloat_Fuel_Ratio.ValueData
+                                                                                                   , inRateFuelKindTax    := COALESCE (ObjectFloat_RateFuelKind_Tax.ValueData, MIFloat_RateFuelKindTax.ValueData)
+                                                                                                    )
+                                              -- Холод, Кол-во норма в час, с учетом Коэффициента и % дополнительного расхода
+                                            , inAmountColdHour     := zfCalc_RateFuelValue_ColdHour (inColdHour           := 1
+                                                                                                   , inAmountColdHour     := tmpRateFuel.AmountColdHour
+                                                                                                   , inFuel_Ratio         := ObjectFloat_Fuel_Ratio.ValueData
+                                                                                                   , inRateFuelKindTax    := COALESCE (ObjectFloat_RateFuelKind_Tax.ValueData, MIFloat_RateFuelKindTax.ValueData)
+                                                                                                    )
+                                              -- Холод, Кол-во норма на 100 км, с учетом Коэффициента и % дополнительного расхода
+                                            , inAmountColdDistance := zfCalc_RateFuelValue_ColdDistance (inColdDistance       := 100
+                                                                                                       , inAmountColdDistance := tmpRateFuel.AmountColdDistance
+                                                                                                       , inFuel_Ratio         := ObjectFloat_Fuel_Ratio.ValueData
+                                                                                                       , inRateFuelKindTax    := COALESCE (ObjectFloat_RateFuelKind_Tax.ValueData, MIFloat_RateFuelKindTax.ValueData)
+                                                                                                        )
                                             , inNumber             := CASE WHEN COALESCE (ObjectLink_Car_FuelAll.DescId, 0) = zc_ObjectLink_Car_FuelMaster() THEN 1
                                                                            WHEN COALESCE (ObjectLink_Car_FuelAll.DescId, 0) = zc_ObjectLink_Car_FuelChild() THEN 2
                                                                            ELSE 3
@@ -189,6 +204,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.10.13                                        * add zfCalc_RateFuelValue_...
  13.10.13                                        *
 */
 

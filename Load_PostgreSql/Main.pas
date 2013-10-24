@@ -1243,7 +1243,7 @@ begin
         Add('     , case when GoodsProperty.GoodsCode = 7001 then '+FormatToVarCharServer_notNULL('Бензин')
            +'            else Goods.GoodsName'
            +'       end as ObjectName');
-        Add('     , case when GoodsProperty.GoodsCode = 7005 then 1.25 else 1 end as Ratio');
+        Add('     , case when GoodsProperty.GoodsCode = 7005 then 1.3059 else 1 end as Ratio');
         Add('     , '+RateFuelKindId+' as RateFuelKindId');
         Add('     , GoodsProperty_a95.GoodsId as GoodsId_a95');
         Add('     , GoodsProperty_Propan.GoodsId as GoodsId_Propan');
