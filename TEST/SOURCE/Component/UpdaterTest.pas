@@ -58,8 +58,6 @@ procedure TUpdaterTest.Test;
 begin
   SaveFile(ExtractFileDir(ParamStr(0))+'\Upgrader4.exe');
   SaveFile(ExtractFileDir(ParamStr(0))+'\Project.exe');
-
-//  TdsdFormStorageFactory.GetStorage.LoadFile('test'{ExtractFileName(ParamStr(0))}, 'c:\Upgrader4.exe' );
 end;
 
 initialization

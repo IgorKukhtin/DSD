@@ -522,8 +522,16 @@ begin
      FOnExit(Sender);
   if Assigned(FView) then
      if Assigned(TcxDBDataController(FView.DataController).DataSource) then
-        if TcxDBDataController(FView.DataController).DataSource.State in [dsEdit, dsInsert] then
-           TcxDBDataController(FView.DataController).DataSource.DataSet.Post;
+        if TcxDBDataController(FView.DataController).DataSource.State in dsEditModes then
+           try
+             TcxDBDataController(FView.DataController).DataSource.DataSet.Post;
+             // В случае ошибки оставляем фокус
+           except
+             on E: Exception do begin
+               FView.Control.SetFocus;
+               raise;
+             end;
+           end;
 end;
 
 procedure TdsdDBViewAddOn.onFilterChanged(Sender: TObject);
