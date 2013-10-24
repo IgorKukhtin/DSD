@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MI_Transport_Child()
 
--- DROP FUNCTION gpinsertupdate_mi_transport_child(integer, integer, integer, integer, boolean, boolean, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, integer, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MI_Transport_Child (integer, integer, integer, integer, boolean, boolean, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, integer, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>

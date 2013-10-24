@@ -14,7 +14,7 @@ $BODY$
 BEGIN
 
 
-   -- пересчитали Child для тех кому надо (MIBoolean_Calculated.ValueData = TRUE)
+   -- пересчитали Child для существующих
    PERFORM lpInsertUpdate_MI_Transport_Child (ioId                 := MovementItem.Id
                                             , inMovementId         := inMovementId
                                             , inParentId           := inParentId
@@ -131,9 +131,24 @@ BEGIN
                                             , ioAmount             := 0
                                             , inColdHour           := 0
                                             , inColdDistance       := 0
-                                            , inAmountColdHour     := tmpRateFuel.AmountColdHour * COALESCE (ObjectFloat_Fuel_Ratio.ValueData, 1)     -- !!!с учетом Коэффициента перевода нормы!!!
-                                            , inAmountColdDistance := tmpRateFuel.AmountColdDistance * COALESCE (ObjectFloat_Fuel_Ratio.ValueData, 1) -- !!!с учетом Коэффициента перевода нормы!!!
-                                            , inAmountFuel         := tmpRateFuel.AmountFuel * COALESCE (ObjectFloat_Fuel_Ratio.ValueData, 1)         -- !!!с учетом Коэффициента перевода нормы!!!
+                                              -- Кол-во норма на 100 км, с учетом Коэффициента и % дополнительного расхода
+                                            , inAmountFuel         := zfCalc_RateFuelValue_Distance (inDistance           := 100
+                                                                                                   , inAmountFuel         := tmpRateFuel.AmountFuel
+                                                                                                   , inFuel_Ratio         := ObjectFloat_Fuel_Ratio.ValueData
+                                                                                                   , inRateFuelKindTax    := ObjectFloat_RateFuelKind_Tax.ValueData
+                                                                                                    )
+                                              -- Холод, Кол-во норма в час, с учетом Коэффициента и % дополнительного расхода
+                                            , inAmountColdHour     := zfCalc_RateFuelValue_ColdHour (inColdHour           := 1
+                                                                                                   , inAmountColdHour     := tmpRateFuel.AmountColdHour
+                                                                                                   , inFuel_Ratio         := ObjectFloat_Fuel_Ratio.ValueData
+                                                                                                   , inRateFuelKindTax    := ObjectFloat_RateFuelKind_Tax.ValueData
+                                                                                                    )
+                                              -- Холод, Кол-во норма на 100 км, с учетом Коэффициента и % дополнительного расхода
+                                            , inAmountColdDistance := zfCalc_RateFuelValue_ColdDistance (inColdDistance       := 100
+                                                                                                       , inAmountColdDistance := tmpRateFuel.AmountColdDistance
+                                                                                                       , inFuel_Ratio         := ObjectFloat_Fuel_Ratio.ValueData
+                                                                                                       , inRateFuelKindTax    := ObjectFloat_RateFuelKind_Tax.ValueData
+                                                                                                        )
                                             , inNumber             := CASE WHEN ObjectLink_Car_FuelAll.DescId = zc_ObjectLink_Car_FuelMaster() THEN 1 ELSE 2 END
                                             , inRateFuelKindTax    := ObjectFloat_RateFuelKind_Tax.ValueData
                                             , inRateFuelKindId     := ObjectLink_Fuel_RateFuelKind.ChildObjectId
@@ -191,7 +206,16 @@ BEGIN
                        ) AS tmpRateFuel ON tmpRateFuel.CarId       = MovementLinkObject_Car.ObjectId
                                        AND tmpRateFuel.RouteKindId = inRouteKindId
 
+             -- это для мастера
+             LEFT JOIN MovementItem AS MovementItem_Master ON MovementItem_Master.Id = inParentId
+                                                          AND MovementItem_Master.MovementId = inMovementId
+             LEFT JOIN MovementItemFloat AS MIFloat_DistanceFuelChild
+                                         ON MIFloat_DistanceFuelChild.MovementItemId = MovementItem_Master.Id
+                                        AND MIFloat_DistanceFuelChild.DescId = zc_MIFloat_DistanceFuelChild()
+
         WHERE MovementItem_Find.ObjectId IS NULL
+              -- если Пробег не введен, тогда формировать эелементы не надо
+         AND (COALESCE (MovementItem_Master.Amount, 0) <> 0 OR COALESCE (MIFloat_DistanceFuelChild.ValueData, 0) <> 0)
               -- если нормы нет, тогда формировать эелементы не надо
          AND (tmpRateFuel.AmountFuel <> 0 OR tmpRateFuel.AmountColdHour <> 0 OR tmpRateFuel.AmountColdDistance <> 0);
 

@@ -40,7 +40,7 @@ BEGIN
            , MovementDate_StartRun.ValueData     AS StartRun 
            , MovementDate_EndRun.ValueData       AS EndRun           
           
-           , MovementFloat_HoursWork.ValueData     AS HoursWork
+           , CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat) AS HoursWork
            , MovementFloat_HoursAdd.ValueData      AS HoursAdd
                       
            , MovementString_Comment.ValueData      AS Comment

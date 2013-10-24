@@ -36,6 +36,12 @@ BEGIN
        inAmount := ABS (inAmount);
    END IF;
 
+   -- проверка
+   IF COALESCE (inMovementId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.<Путевой лист> не сохранен.';
+   END IF;
+
    -- проверка 
    IF inAmount < 0
    THEN 
