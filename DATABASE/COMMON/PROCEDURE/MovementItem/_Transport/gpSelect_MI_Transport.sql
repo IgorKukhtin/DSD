@@ -208,7 +208,7 @@ BEGIN
                                                   AND ObjectFloat_AmountColdDistance.DescId = zc_ObjectFloat_RateFuel_AmountColdDistance()
                         WHERE ObjectLink_RateFuel_Car.DescId = zc_ObjectLink_RateFuel_Car()
                        ) AS tmpRateFuel ON tmpRateFuel.CarId       = MovementLinkObject_Car.ObjectId
-                                       AND tmpRateFuel.RouteKindId = MILinkObject_RouteKind.ObjectId
+                                       AND tmpRateFuel.RouteKindId = COALESCE (MILinkObject_RouteKind.ObjectId, zc_Enum_RouteKind_Internal())
 
         WHERE MovementItem_Find.ObjectId IS NULL
       UNION ALL
