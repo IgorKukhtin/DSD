@@ -1,9 +1,19 @@
-inherited RouteSortingForm: TRouteSortingForm
+object RouteSortingForm: TRouteSortingForm
+  Left = 0
+  Top = 0
   Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1080' '#1084#1072#1088#1096#1088#1091#1090#1086#1074
   ClientHeight = 379
   ClientWidth = 532
-  ExplicitWidth = 540
-  ExplicitHeight = 406
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = False
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -103,6 +113,7 @@ inherited RouteSortingForm: TRouteSortingForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -228,6 +239,7 @@ inherited RouteSortingForm: TRouteSortingForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
         end>
       isShowModal = False
       DataSource = DataSource
@@ -358,6 +370,7 @@ inherited RouteSortingForm: TRouteSortingForm
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 160
     Top = 224
   end

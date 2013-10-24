@@ -1,9 +1,19 @@
-inherited TicketFuelForm: TTicketFuelForm
+object TicketFuelForm: TTicketFuelForm
+  Left = 0
+  Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1072#1083#1086#1085#1099' '#1085#1072' '#1090#1086#1087#1083#1080#1074#1086'>'
   ClientHeight = 294
   ClientWidth = 720
-  ExplicitWidth = 728
-  ExplicitHeight = 328
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = False
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -16,8 +26,6 @@ inherited TicketFuelForm: TTicketFuelForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 703
-    ExplicitHeight = 369
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -110,6 +118,7 @@ inherited TicketFuelForm: TTicketFuelForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -235,8 +244,6 @@ inherited TicketFuelForm: TTicketFuelForm
       GuiParams = <
         item
           Name = 'Id'
-          DataType = ftInteger
-          ParamType = ptOutput
           Value = Null
         end>
       isShowModal = False
@@ -254,7 +261,6 @@ inherited TicketFuelForm: TTicketFuelForm
           Name = 'Id'
           Component = ClientDataSet
           ComponentItem = 'Id'
-          DataType = ftInteger
           ParamType = ptInput
         end>
       isShowModal = False
@@ -299,49 +305,40 @@ inherited TicketFuelForm: TTicketFuelForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
-          ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
-          ParamType = ptOutput
         end
         item
           Name = 'Code'
           Component = ClientDataSet
           ComponentItem = 'Code'
           DataType = ftString
-          ParamType = ptOutput
         end
         item
           Name = 'RouteKindId'
           Component = ClientDataSet
           ComponentItem = 'RouteKindId'
-          DataType = ftInteger
-          ParamType = ptOutput
         end
         item
           Name = 'RouteKindName'
           Component = ClientDataSet
           ComponentItem = 'RouteKindName'
           DataType = ftString
-          ParamType = ptOutput
         end
         item
           Name = 'FreightId'
           Component = ClientDataSet
           ComponentItem = 'FreightId'
-          DataType = ftInteger
-          ParamType = ptOutput
         end
         item
           Name = 'FreightName'
           Component = ClientDataSet
           ComponentItem = 'FreightName'
           DataType = ftString
-          ParamType = ptOutput
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -381,7 +378,6 @@ inherited TicketFuelForm: TTicketFuelForm
         Name = 'inObjectId'
         Component = ClientDataSet
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
       end>
     Left = 288
@@ -407,6 +403,7 @@ inherited TicketFuelForm: TTicketFuelForm
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 160
     Top = 216
   end

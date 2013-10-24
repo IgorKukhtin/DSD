@@ -163,6 +163,7 @@ object ZakazExternalJournalForm: TZakazExternalJournalForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -399,6 +400,7 @@ object ZakazExternalJournalForm: TZakazExternalJournalForm
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 256
     Top = 240
   end

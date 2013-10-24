@@ -239,6 +239,7 @@ object Report_BalanceForm: TReport_BalanceForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True

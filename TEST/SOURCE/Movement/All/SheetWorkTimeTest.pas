@@ -8,7 +8,7 @@ type
   TSheetWorkTimeTest = class (TdbMovementTestNew)
   published
     procedure ProcedureLoad; override;
-    procedure Test; override;
+//    procedure Test; override;
   end;
 
   TSheetWorkTime = class(TMovementTest)
@@ -80,10 +80,11 @@ begin
   inherited;
 end;
 
-procedure TSheetWorkTimeTest.Test;
+(*procedure TSheetWorkTimeTest.Test;
 var MovementSheetWorkTime: TSheetWorkTime;
     Id: Integer;
 begin
+
   inherited;
   // Создаем сотрудника на подразделении
   // И потом у него на дату ставим часы
@@ -96,7 +97,7 @@ begin
   finally
   end;
 end;
-
+  *)
 initialization
 
   TestFramework.RegisterTest('Документы', TSheetWorkTimeTest.Suite);

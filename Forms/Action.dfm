@@ -1,9 +1,19 @@
-inherited ActionForm: TActionForm
+object ActionForm: TActionForm
+  Left = 0
+  Top = 0
   Caption = #1044#1077#1081#1089#1090#1074#1080#1103
   ClientHeight = 350
   ClientWidth = 478
-  ExplicitWidth = 486
-  ExplicitHeight = 377
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = False
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -13,9 +23,6 @@ inherited ActionForm: TActionForm
     Height = 324
     Align = alClient
     TabOrder = 0
-    ExplicitTop = -137
-    ExplicitWidth = 349
-    ExplicitHeight = 350
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -82,6 +89,7 @@ inherited ActionForm: TActionForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -160,14 +168,12 @@ inherited ActionForm: TActionForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           DataType = ftString
-          ParamType = ptOutput
         end
         item
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
-          ParamType = ptOutput
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -189,6 +195,7 @@ inherited ActionForm: TActionForm
     Top = 200
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
     View = cxGridDBTableView
     OnDblClickActionList = <
       item
@@ -200,6 +207,7 @@ inherited ActionForm: TActionForm
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 152
     Top = 240
   end

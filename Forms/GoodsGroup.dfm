@@ -1,9 +1,19 @@
-inherited GoodsGroupForm: TGoodsGroupForm
+object GoodsGroupForm: TGoodsGroupForm
+  Left = 0
+  Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1075#1088#1091#1087#1087' '#1090#1086#1074#1072#1088#1086#1074
   ClientHeight = 376
   ClientWidth = 390
-  ExplicitWidth = 398
-  ExplicitHeight = 403
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = False
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxDBTreeList: TcxDBTreeList
@@ -100,6 +110,7 @@ inherited GoodsGroupForm: TGoodsGroupForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -220,6 +231,7 @@ inherited GoodsGroupForm: TGoodsGroupForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
         end>
       isShowModal = False
       DataSource = DataSource

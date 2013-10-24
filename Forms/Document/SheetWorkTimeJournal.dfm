@@ -226,6 +226,7 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -400,6 +401,7 @@ object SheetWorkTimeJournalForm: TSheetWorkTimeJournalForm
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 248
     Top = 216
   end

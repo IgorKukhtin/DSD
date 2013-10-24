@@ -23,8 +23,6 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_SheetWorkTime());
     vbUserId := inSession;
 
-    ioValue := '8/Заработало'::TVarChar;
-
     -- Для начала определим ID Movement, если таковой имеется. Ключом будет OperDate и UnitId
     vbMovementId := (SELECT Movement_SheetWorkTime.Id FROM Movement AS Movement_SheetWorkTime
                                JOIN MovementLinkObject AS MovementLinkObject_Unit 
@@ -35,20 +33,20 @@ BEGIN
      IF COALESCE(vbMovementId, 0) = 0 THEN
         -- сохранили <Документ>
         vbMovementId := lpInsertUpdate_Movement_SheetWorkTime(vbMovementId, '', inOperDate::DATE, inUnitId);
-     END;
+     END IF;
 
      -- Теперь ищем MovementItemId
      vbMovementItemId := (SELECT MI_SheetWorkTime.Id 
                             FROM MovementItem AS MI_SheetWorkTime
-                            JOIN MovementItemObject AS MIObject_Position
+                            JOIN MovementItemLinkObject AS MIObject_Position
                               ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id 
-                             AND MIObject_Position.ObjectId = inPositionId
+                             AND ((MIObject_Position.ObjectId IS NULL) OR (MIObject_Position.ObjectId = inPositionId))
                              AND MIObject_Position.DescId = zc_MILinkObject_Position() 
-                            JOIN MovementItemObject AS MIObject_PersonalGroup
+                            JOIN MovementItemLinkObject AS MIObject_PersonalGroup
                               ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
-                             AND MIObject_PersonalGroup.ObjectId = inPersonalGroupId
+                             AND ((MIObject_PersonalGroup.ObjectId IS NULL) OR (MIObject_PersonalGroup.ObjectId = inPersonalGroupId))
                              AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup() 
-                           WHERE MI_SheetWorkTime.ObjectId = ioPersonalId);
+                           WHERE MI_SheetWorkTime.ObjectId = ioPersonalId AND MI_SheetWorkTime.MovementId = vbMovementId);
 
     PERFORM lpInsertUpdate_MovementItem_SheetWorkTime(
        inMovementItemId      := vbMovementItemId , -- Ключ объекта <Элемент документа>
@@ -57,9 +55,10 @@ BEGIN
        inPositionId          := inPositionId     , -- Должность
        inPersonalGroupId     := inPersonalGroupId, -- Группировка Сотрудника
        inAmount              := ioValue::TFloat  , -- Количество часов факт
-       inWorkTimeKindId      := inTypeId;        -- Типы рабочего времени
+       inWorkTimeKindId      := inTypeId);        -- Типы рабочего времени
 
-                           
+    ioValue := '8/Заработало'::TVarChar;
+                         
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);

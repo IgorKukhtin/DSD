@@ -624,8 +624,8 @@ object IncomeFuelForm: TIncomeFuelForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -634,6 +634,7 @@ object IncomeFuelForm: TIncomeFuelForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -827,7 +828,6 @@ object IncomeFuelForm: TIncomeFuelForm
           StoredProc = spInsertUpdateMIMaster
         end>
       Caption = 'actUpdateMasterDS'
-      DataSource = MasterDS
     end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -1099,6 +1099,7 @@ object IncomeFuelForm: TIncomeFuelForm
       item
       end>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 280
     Top = 280
   end
@@ -1112,6 +1113,7 @@ object IncomeFuelForm: TIncomeFuelForm
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 352
     Top = 264
   end

@@ -179,6 +179,7 @@ object InventoryJournalForm: TInventoryJournalForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -477,6 +478,7 @@ object InventoryJournalForm: TInventoryJournalForm
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 184
     Top = 248
   end

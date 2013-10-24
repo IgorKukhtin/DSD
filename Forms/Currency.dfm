@@ -1,9 +1,19 @@
-inherited CurrencyForm: TCurrencyForm
+object CurrencyForm: TCurrencyForm
+  Left = 0
+  Top = 0
   Caption = #1042#1072#1083#1102#1090#1099
   ClientHeight = 376
   ClientWidth = 588
-  ExplicitWidth = 596
-  ExplicitHeight = 403
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = False
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -110,6 +120,7 @@ inherited CurrencyForm: TCurrencyForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -235,6 +246,7 @@ inherited CurrencyForm: TCurrencyForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
         end>
       isShowModal = False
       DataSource = DataSource
@@ -337,6 +349,7 @@ inherited CurrencyForm: TCurrencyForm
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 56
     Top = 240
   end

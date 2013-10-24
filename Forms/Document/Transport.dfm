@@ -626,6 +626,19 @@
         AlignSplitter = salBottom
         Control = cxGridChild
       end
+      object DBGrid1: TDBGrid
+        Left = 368
+        Top = 40
+        Width = 320
+        Height = 120
+        DataSource = MasterDS
+        TabOrder = 3
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -11
+        TitleFont.Name = 'Tahoma'
+        TitleFont.Style = []
+      end
     end
     object cxTabSheetIncome: TcxTabSheet
       Caption = #1055#1088#1080#1093#1086#1076
@@ -2378,8 +2391,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -2388,6 +2401,7 @@
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True

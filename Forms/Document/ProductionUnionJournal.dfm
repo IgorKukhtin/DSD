@@ -208,6 +208,7 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -507,6 +508,7 @@ object ProductionUnionJournalForm: TProductionUnionJournalForm
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 160
     Top = 200
   end

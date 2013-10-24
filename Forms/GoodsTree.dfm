@@ -1,9 +1,19 @@
-inherited GoodsTreeForm: TGoodsTreeForm
+object GoodsTreeForm: TGoodsTreeForm
+  Left = 0
+  Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <T'#1086#1074#1072#1088#1099'>'
   ClientHeight = 473
   ClientWidth = 874
-  ExplicitWidth = 890
-  ExplicitHeight = 508
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = False
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -186,8 +196,8 @@ inherited GoodsTreeForm: TGoodsTreeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -196,6 +206,7 @@ inherited GoodsTreeForm: TGoodsTreeForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -439,6 +450,7 @@ inherited GoodsTreeForm: TGoodsTreeForm
     View = cxGridDBTableView
     OnDblClickActionList = <>
     ActionItemList = <>
+    OnlyEditingCellOnEnter = False
     Left = 336
     Top = 184
   end

@@ -443,6 +443,7 @@ object Report_TransportForm: TReport_TransportForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -561,6 +562,7 @@ object Report_TransportForm: TReport_TransportForm
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 304
     Top = 296
   end

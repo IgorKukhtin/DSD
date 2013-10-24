@@ -1,9 +1,19 @@
-inherited MeasureForm: TMeasureForm
+object MeasureForm: TMeasureForm
+  Left = 0
+  Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1077#1076#1080#1085#1080#1094' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
   ClientHeight = 376
   ClientWidth = 390
-  ExplicitWidth = 398
-  ExplicitHeight = 403
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = False
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -98,6 +108,7 @@ inherited MeasureForm: TMeasureForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -225,6 +236,7 @@ inherited MeasureForm: TMeasureForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
         end>
       isShowModal = False
       DataSource = DataSource
@@ -356,6 +368,7 @@ inherited MeasureForm: TMeasureForm
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 136
     Top = 224
   end

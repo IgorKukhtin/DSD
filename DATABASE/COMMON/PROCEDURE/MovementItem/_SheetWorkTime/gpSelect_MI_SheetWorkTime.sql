@@ -68,7 +68,7 @@ BEGIN
 	''SELECT ARRAY[PersonalId, ObjectLink_Personal_Position.ChildObjectId,
                        ObjectLink_Personal_Unit.ChildObjectId, ObjectLink_Personal_PersonalGroup.ChildObjectId]::integer[],
 	         OperDate, 
-	         ARRAY[''''8 hour'''', ''''678908'''']::VarChar[]
+	         ARRAY[''''8 hour'''', ''''0'''']::VarChar[]
 	    FROM tmpOperDate, Object_Personal_View 
        LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
                             ON ObjectLink_Personal_Position.ObjectId = Object_Personal_View.PersonalId

@@ -310,6 +310,7 @@ object ZakazExternalForm: TZakazExternalForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -678,6 +679,7 @@ object ZakazExternalForm: TZakazExternalForm
   object RefreshAddOn: TRefreshAddOn
     FormName = 'TZakazExternalJournalForm'
     DataSet = 'ClientDataSet'
+    KeyField = 'Id'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
     Left = 504
@@ -693,6 +695,7 @@ object ZakazExternalForm: TZakazExternalForm
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 416
     Top = 248
   end

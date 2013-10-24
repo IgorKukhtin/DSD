@@ -242,6 +242,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -493,6 +494,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'ValueField'
     TemplateColumn = TemplateColumn

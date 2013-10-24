@@ -10,7 +10,9 @@ object CardFuelForm: TCardFuelForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  KeyPreview = True
   OldCreateOrder = False
+  isAlwaysRefresh = False
   isFree = False
   PixelsPerInch = 96
   TextHeight = 13
@@ -139,8 +141,8 @@ object CardFuelForm: TCardFuelForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -149,6 +151,7 @@ object CardFuelForm: TCardFuelForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -433,6 +436,7 @@ object CardFuelForm: TCardFuelForm
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 160
     Top = 216
   end

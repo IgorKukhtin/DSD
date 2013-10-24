@@ -113,6 +113,7 @@ type
 
   TdsdUpdateDataSet = class(TdsdCustomDataSetAction)
   private
+    FAlreadyRun: boolean;
     FDataSetDataLink: TDataSetDataLink;
     function GetDataSource: TDataSource;
     procedure SetDataSource(const Value: TDataSource);
@@ -870,6 +871,7 @@ end;
 constructor TdsdUpdateDataSet.Create(AOwner: TComponent);
 begin
   inherited;
+  FAlreadyRun := false;
   FDataSetDataLink := TDataSetDataLink.Create(Self);
 end;
 
@@ -890,15 +892,15 @@ begin
 end;
 
 procedure TdsdUpdateDataSet.UpdateData;
-var DataSet: TDataSet;
 begin
+  // Убираем цикл
+  if FAlreadyRun then
+     exit;
+  FAlreadyRun := true;
   try
-    // снимаем на время выполнения реакцию на пост, что бы не было зацикливаний
-    DataSet := DataSource.DataSet;
-    DataSource.DataSet := nil;
     Execute;
   finally
-    DataSource.DataSet := DataSet;
+    FAlreadyRun := false;
   end;
 end;
 
@@ -1256,3 +1258,4 @@ begin
 end;
 
 end.
+

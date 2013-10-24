@@ -1,9 +1,19 @@
-inherited RoleForm: TRoleForm
+object RoleForm: TRoleForm
+  Left = 0
+  Top = 0
   Caption = #1056#1086#1083#1080' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
   ClientHeight = 370
   ClientWidth = 752
-  ExplicitWidth = 760
-  ExplicitHeight = 397
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = False
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -281,6 +291,7 @@ inherited RoleForm: TRoleForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -417,6 +428,7 @@ inherited RoleForm: TRoleForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
         end>
       isShowModal = False
       DataSource = DataSource
@@ -612,6 +624,7 @@ inherited RoleForm: TRoleForm
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 248
     Top = 272
   end
@@ -654,6 +667,7 @@ inherited RoleForm: TRoleForm
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 432
     Top = 208
   end
@@ -689,6 +703,7 @@ inherited RoleForm: TRoleForm
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 448
     Top = 32
   end
@@ -735,6 +750,7 @@ inherited RoleForm: TRoleForm
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 416
     Top = 320
   end

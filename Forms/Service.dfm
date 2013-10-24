@@ -1,9 +1,19 @@
-inherited ServiceForm: TServiceForm
+object ServiceForm: TServiceForm
+  Left = 0
+  Top = 0
   Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1091#1089#1083#1091#1075' '#1087#1086' '#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1084#1091' '#1083#1080#1094#1091
   ClientHeight = 380
   ClientWidth = 666
-  ExplicitWidth = 674
-  ExplicitHeight = 407
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = False
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -155,6 +165,7 @@ inherited ServiceForm: TServiceForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -280,6 +291,7 @@ inherited ServiceForm: TServiceForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
         end>
       isShowModal = True
       DataSource = DataSource
@@ -408,6 +420,7 @@ inherited ServiceForm: TServiceForm
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 160
     Top = 224
   end

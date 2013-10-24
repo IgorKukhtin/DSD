@@ -1,9 +1,19 @@
-inherited ProfitLossGroupForm: TProfitLossGroupForm
+object ProfitLossGroupForm: TProfitLossGroupForm
+  Left = 0
+  Top = 0
   Caption = #1043#1088#1091#1087#1087#1099' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093
   ClientHeight = 361
   ClientWidth = 337
-  ExplicitWidth = 345
-  ExplicitHeight = 388
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = False
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -101,6 +111,7 @@ inherited ProfitLossGroupForm: TProfitLossGroupForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -226,6 +237,7 @@ inherited ProfitLossGroupForm: TProfitLossGroupForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
         end>
       isShowModal = True
       DataSource = DataSource
@@ -354,6 +366,7 @@ inherited ProfitLossGroupForm: TProfitLossGroupForm
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 152
     Top = 224
   end

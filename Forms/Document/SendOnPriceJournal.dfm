@@ -284,6 +284,7 @@ object SendOnPriceJournalForm: TSendOnPriceJournalForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -581,6 +582,7 @@ object SendOnPriceJournalForm: TSendOnPriceJournalForm
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 208
     Top = 200
   end

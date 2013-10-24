@@ -1,10 +1,19 @@
-inherited PriceListGoodsItemForm: TPriceListGoodsItemForm
+object PriceListGoodsItemForm: TPriceListGoodsItemForm
+  Left = 0
+  Top = 0
   Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1072
   ClientHeight = 398
   ClientWidth = 497
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
   KeyPreview = True
-  ExplicitWidth = 513
-  ExplicitHeight = 433
+  OldCreateOrder = False
+  isAlwaysRefresh = False
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -129,8 +138,8 @@ inherited PriceListGoodsItemForm: TPriceListGoodsItemForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -139,6 +148,7 @@ inherited PriceListGoodsItemForm: TPriceListGoodsItemForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -247,6 +257,7 @@ inherited PriceListGoodsItemForm: TPriceListGoodsItemForm
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 184
     Top = 240
   end

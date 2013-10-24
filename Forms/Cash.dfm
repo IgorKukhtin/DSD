@@ -1,9 +1,19 @@
-inherited CashForm: TCashForm
+object CashForm: TCashForm
+  Left = 0
+  Top = 0
   Caption = #1050#1072#1089#1089#1099
   ClientHeight = 374
   ClientWidth = 773
-  ExplicitWidth = 781
-  ExplicitHeight = 401
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = False
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -127,6 +137,7 @@ inherited CashForm: TCashForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -252,6 +263,7 @@ inherited CashForm: TCashForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
         end>
       isShowModal = False
       DataSource = DataSource
@@ -364,6 +376,7 @@ inherited CashForm: TCashForm
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 56
     Top = 240
   end

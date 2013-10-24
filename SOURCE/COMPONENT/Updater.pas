@@ -11,7 +11,7 @@ type
 
 implementation
 
-uses UnilWin, Dialogs, Controls, StdCtrls, FormStorage, SysUtils, forms;
+uses UnilWin, Dialogs, Controls, StdCtrls, FormStorage, SysUtils, forms, MessagesUnit;
 
 { TUpdater }
 
@@ -26,7 +26,8 @@ begin
         if MessageDlg('Обнаружена новая версия программы! Обновить', mtInformation, mbOKCancel, 0) = mrOk then
            UpdateProgram;
   except
-    ShowMessage('Не работает автоматическое обновление.'#13#10'Обратитесь к разработчику');
+    on E: Exception do
+       TMessagesForm.Create(nil).Execute('Не работает автоматическое обновление.'#13#10'Обратитесь к разработчику', E.Message);
   end;
 end;
 

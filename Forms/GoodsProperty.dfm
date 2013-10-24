@@ -1,9 +1,19 @@
-inherited GoodsPropertyForm: TGoodsPropertyForm
+object GoodsPropertyForm: TGoodsPropertyForm
+  Left = 0
+  Top = 0
   Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
   ClientHeight = 376
   ClientWidth = 390
-  ExplicitWidth = 406
-  ExplicitHeight = 411
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = False
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -88,8 +98,8 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -98,6 +108,7 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -332,6 +343,7 @@ inherited GoodsPropertyForm: TGoodsPropertyForm
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 224
     Top = 232
   end

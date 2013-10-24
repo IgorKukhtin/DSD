@@ -125,7 +125,7 @@ implementation
 uses Storage, CommonData, TypInfo, UtilConvert, SysUtils, cxTextEdit, VCL.Forms,
      XMLDoc, XMLIntf, StrUtils, cxCurrencyEdit, dsdGuides, cxCheckBox, cxCalendar,
      Variants, XSBuiltIns, UITypes, dsdAction, Defaults, UtilConst, Windows, Dialogs,
-     dsdAddOn, cxDBData;
+     dsdAddOn, cxDBData, cxGridDBTableView;
 
 procedure Register;
 begin
@@ -168,7 +168,7 @@ begin
       Assigned(DataSets[0]) and
       Assigned(DataSets[0].DataSet) then
    begin
-     if DataSets[0].DataSet.State in [dsEdit, dsInsert] then
+     if DataSets[0].DataSet.State in dsEditModes then
         DataSets[0].DataSet.Post;
      if DataSets[0].DataSet.Active and (DataSets[0].DataSet.RecordCount > 0) then
         B := DataSets[0].DataSet.GetBookmark;
@@ -498,7 +498,7 @@ var CrossDBViewAddOn: TCrossDBViewAddOn;
 begin
   CrossDBViewAddOn := TCrossDBViewAddOn(Component);
   if CrossDBViewAddOn.HeaderDataSet.Active then
-     result := GetFromDataSet(TcxDBDataController(CrossDBViewAddOn.View.DataController).DataSet, ComponentItem + IntToStr(CrossDBViewAddOn.HeaderDataSet.RecNo));
+     result := GetFromDataSet(CrossDBViewAddOn.DataSet, ComponentItem + IntToStr(CrossDBViewAddOn.HeaderDataSet.RecNo));
 end;
 
 function TdsdParam.GetFromDataSet(const DataSet: TDataSet; const FieldName: string): Variant;
@@ -577,14 +577,14 @@ var CrossDBViewAddOn: TCrossDBViewAddOn;
 begin
   CrossDBViewAddOn := TCrossDBViewAddOn(Component);
   if CrossDBViewAddOn.HeaderDataSet.Active then
-     SetInDataSet(TcxDBDataController(CrossDBViewAddOn.View.DataController).DataSet, ComponentItem + IntToStr(CrossDBViewAddOn.HeaderDataSet.RecNo), Value);
+     SetInDataSet(CrossDBViewAddOn.DataSet, ComponentItem + IntToStr(CrossDBViewAddOn.HeaderDataSet.RecNo), Value);
 end;
 
 procedure TdsdParam.SetInDataSet(const DataSet: TDataSet; const FieldName: string; const Value: Variant);
 var Field: TField;
 begin
   if DataSet.Active then begin
-    if DataSet.State <> dsEdit then
+    if not (DataSet.State in [dsEdit, dsInsert]) then
        DataSet.Edit;
     Field := DataSet.FieldByName(FieldName);
     if Assigned(Field) then begin

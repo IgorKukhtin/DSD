@@ -301,6 +301,7 @@ object ReturnOutJournalForm: TReturnOutJournalForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -596,6 +597,7 @@ object ReturnOutJournalForm: TReturnOutJournalForm
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 176
     Top = 160
   end

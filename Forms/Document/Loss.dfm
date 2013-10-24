@@ -224,14 +224,11 @@ object LossForm: TLossForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 1020
-        Height = 256
+        Width = 1028
+        Height = 262
         Align = alClient
         TabOrder = 0
         object cxGridEntryDBTableView: TcxGridDBTableView
@@ -459,6 +456,7 @@ object LossForm: TLossForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -814,6 +812,7 @@ object LossForm: TLossForm
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 312
     Top = 248
   end
@@ -827,6 +826,7 @@ object LossForm: TLossForm
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 480
     Top = 192
   end
@@ -839,6 +839,7 @@ object LossForm: TLossForm
   object RefreshAddOn: TRefreshAddOn
     FormName = 'TLossJournalForm'
     DataSet = 'ClientDataSet'
+    KeyField = 'Id'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
     Left = 568

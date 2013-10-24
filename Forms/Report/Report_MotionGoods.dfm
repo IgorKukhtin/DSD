@@ -524,6 +524,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -741,6 +742,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 216
     Top = 264
   end

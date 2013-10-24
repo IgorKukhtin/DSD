@@ -535,6 +535,7 @@ object Report_HistoryCostForm: TReport_HistoryCostForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -636,6 +637,7 @@ object Report_HistoryCostForm: TReport_HistoryCostForm
     View = cxGridDBTableView
     OnDblClickActionList = <>
     ActionItemList = <>
+    OnlyEditingCellOnEnter = False
     Left = 232
     Top = 192
   end

@@ -1,9 +1,19 @@
-inherited ContractKindForm: TContractKindForm
+object ContractKindForm: TContractKindForm
+  Left = 0
+  Top = 0
   Caption = #1042#1080#1076#1099' '#1076#1086#1075#1086#1074#1086#1088#1086#1074
   ClientHeight = 376
   ClientWidth = 390
-  ExplicitWidth = 398
-  ExplicitHeight = 403
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = False
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -101,6 +111,7 @@ inherited ContractKindForm: TContractKindForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -226,6 +237,7 @@ inherited ContractKindForm: TContractKindForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
         end>
       isShowModal = True
       DataSource = DataSource
@@ -324,6 +336,7 @@ inherited ContractKindForm: TContractKindForm
     View = cxGridDBTableView
     OnDblClickActionList = <>
     ActionItemList = <>
+    OnlyEditingCellOnEnter = False
     Left = 224
     Top = 104
   end

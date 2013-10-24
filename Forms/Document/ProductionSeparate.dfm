@@ -10,6 +10,7 @@ object ProductionSeparateForm: TProductionSeparateForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  KeyPreview = True
   OldCreateOrder = False
   PopupMenu = PopupMenu
   isAlwaysRefresh = False
@@ -550,6 +551,7 @@ object ProductionSeparateForm: TProductionSeparateForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True

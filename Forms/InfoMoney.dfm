@@ -1,9 +1,19 @@
-inherited InfoMoneyForm: TInfoMoneyForm
+object InfoMoneyForm: TInfoMoneyForm
+  Left = 0
+  Top = 0
   Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' '
   ClientHeight = 376
   ClientWidth = 597
-  ExplicitWidth = 613
-  ExplicitHeight = 411
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = False
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -106,8 +116,8 @@ inherited InfoMoneyForm: TInfoMoneyForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -116,6 +126,7 @@ inherited InfoMoneyForm: TInfoMoneyForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -371,6 +382,7 @@ inherited InfoMoneyForm: TInfoMoneyForm
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 304
     Top = 152
   end

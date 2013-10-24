@@ -1,9 +1,19 @@
-inherited PaidKindForm: TPaidKindForm
+object PaidKindForm: TPaidKindForm
+  Left = 0
+  Top = 0
   Caption = #1058#1080#1087#1099' '#1086#1087#1083#1072#1090
   ClientHeight = 376
   ClientWidth = 349
-  ExplicitWidth = 365
-  ExplicitHeight = 411
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = False
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -71,8 +81,8 @@ inherited PaidKindForm: TPaidKindForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -81,6 +91,7 @@ inherited PaidKindForm: TPaidKindForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -198,6 +209,7 @@ inherited PaidKindForm: TPaidKindForm
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 152
     Top = 240
   end

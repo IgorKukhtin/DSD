@@ -1,9 +1,19 @@
-inherited WorkTimeKindForm: TWorkTimeKindForm
+object WorkTimeKindForm: TWorkTimeKindForm
+  Left = 0
+  Top = 0
   Caption = #1058#1080#1087#1099' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080
   ClientHeight = 376
   ClientWidth = 476
-  ExplicitWidth = 484
-  ExplicitHeight = 403
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = False
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -105,6 +115,7 @@ inherited WorkTimeKindForm: TWorkTimeKindForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -234,6 +245,7 @@ inherited WorkTimeKindForm: TWorkTimeKindForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
         end>
       isShowModal = True
       DataSource = DataSource
@@ -374,6 +386,7 @@ inherited WorkTimeKindForm: TWorkTimeKindForm
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 136
     Top = 224
   end

@@ -1,9 +1,19 @@
-inherited SelectKindForm: TSelectKindForm
+object SelectKindForm: TSelectKindForm
+  Left = 0
+  Top = 0
   Caption = #1058#1080#1087#1099' '#1074#1099#1073#1086#1088#1072' '#1076#1072#1085#1085#1099#1093
   ClientHeight = 376
   ClientWidth = 476
-  ExplicitWidth = 484
-  ExplicitHeight = 410
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = False
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -98,6 +108,7 @@ inherited SelectKindForm: TSelectKindForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -307,6 +318,7 @@ inherited SelectKindForm: TSelectKindForm
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 136
     Top = 224
   end

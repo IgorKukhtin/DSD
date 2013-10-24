@@ -24,7 +24,8 @@ uses
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
   cxSplitter, cxCurrencyEdit, DataModul, dsdAddOn, dxBarExtItems,
-  cxGridBandedTableView, cxGridDBBandedTableView, cxBlobEdit, cxImageComboBox;
+  cxGridBandedTableView, cxGridDBBandedTableView, cxBlobEdit, cxImageComboBox,
+  Vcl.Grids, Vcl.DBGrids;
 
 type
   TTransportForm = class(TParentForm)
@@ -229,6 +230,7 @@ type
     clincContractName: TcxGridDBColumn;
     colBusinessName: TcxGridDBColumn;
     colBusinessCode: TcxGridDBColumn;
+    DBGrid1: TDBGrid;
   private
   public
   end;

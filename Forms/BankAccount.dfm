@@ -1,9 +1,19 @@
-inherited BankAccountForm: TBankAccountForm
+object BankAccountForm: TBankAccountForm
+  Left = 0
+  Top = 0
   Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1077' '#1089#1095#1077#1090#1072
   ClientHeight = 376
   ClientWidth = 588
-  ExplicitWidth = 596
-  ExplicitHeight = 403
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = False
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -113,6 +123,7 @@ inherited BankAccountForm: TBankAccountForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -238,6 +249,7 @@ inherited BankAccountForm: TBankAccountForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
         end>
       isShowModal = True
       DataSource = DataSource
@@ -347,6 +359,7 @@ inherited BankAccountForm: TBankAccountForm
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 216
     Top = 240
   end

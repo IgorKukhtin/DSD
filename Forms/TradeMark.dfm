@@ -1,9 +1,19 @@
-inherited TradeMarkForm: TTradeMarkForm
+object TradeMarkForm: TTradeMarkForm
+  Left = 0
+  Top = 0
   Caption = #1058#1086#1088#1075#1086#1074#1099#1077' '#1084#1072#1088#1082#1080
   ClientHeight = 354
   ClientWidth = 554
-  ExplicitWidth = 562
-  ExplicitHeight = 381
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = False
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -100,6 +110,7 @@ inherited TradeMarkForm: TTradeMarkForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -225,6 +236,7 @@ inherited TradeMarkForm: TTradeMarkForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
         end>
       isShowModal = False
       DataSource = DataSource
@@ -355,6 +367,7 @@ inherited TradeMarkForm: TTradeMarkForm
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 160
     Top = 216
   end

@@ -129,6 +129,7 @@ type
     FBeforeOpen: TDataSetNotifyEvent;
     FEditing: TcxGridEditingEvent;
     FFocusedItemChanged: TcxGridFocusedItemChangedEvent;
+    FDataSet: TDataSet;
     procedure onEditing(Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem;
          var AAllow: Boolean);
     procedure onBeforeOpen(DataSet: TDataSet);
@@ -138,6 +139,7 @@ type
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
+    property DataSet: TDataSet read FDataSet;
     constructor Create(AOwner: TComponent); override;
   published
     // Дата сет с названием колонок и другой необходимой для работы информацией.
@@ -1318,8 +1320,9 @@ procedure TCrossDBViewAddOn.SetView(const Value: TcxGridTableView);
 begin
   inherited;
   if Value <> nil then begin
-     FBeforeOpen := TcxDBDataController(Value.DataController).DataSource.DataSet.BeforeOpen;
-     TcxDBDataController(Value.DataController).DataSource.DataSet.BeforeOpen := onBeforeOpen;
+     FDataSet := TcxDBDataController(Value.DataController).DataSet;
+     FBeforeOpen := FDataSet.BeforeOpen;
+     FDataSet.BeforeOpen := onBeforeOpen;
      FEditing := Value.OnEditing;
      Value.OnEditing := onEditing;
      FFocusedItemChanged := Value.OnFocusedItemChanged;

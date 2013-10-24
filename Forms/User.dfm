@@ -1,9 +1,19 @@
-inherited UserForm: TUserForm
+object UserForm: TUserForm
+  Left = 0
+  Top = 0
   Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
   ClientHeight = 357
   ClientWidth = 795
-  ExplicitWidth = 803
-  ExplicitHeight = 384
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = False
+  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -155,6 +165,7 @@ inherited UserForm: TUserForm
     Categories.Visibles = (
       True)
     ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
@@ -285,6 +296,7 @@ inherited UserForm: TUserForm
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
         end>
       isShowModal = False
       DataSource = DataSource
@@ -424,6 +436,7 @@ inherited UserForm: TUserForm
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 328
     Top = 264
   end
@@ -450,6 +463,7 @@ inherited UserForm: TUserForm
     OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
     Left = 448
     Top = 32
   end
