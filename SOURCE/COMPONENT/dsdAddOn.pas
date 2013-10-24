@@ -626,13 +626,13 @@ var
 begin
   edFilter.Visible := false;
   with TcxGridDBDataController(FView.DataController), Filter.Root do begin
-    FilterCriteriaItem := GetFilterItem(GetItem(Controller.FocusedItemIndex));
+    FilterCriteriaItem := GetFilterItem(GetItem(View.VisibleColumns[Controller.FocusedItemIndex].Index));
     if Assigned(FilterCriteriaItem) then begin
        FilterCriteriaItem.Value := '%' + edFilter.Text + '%';
        FilterCriteriaItem.DisplayValue := '"' + edFilter.Text + '"';
     end
     else
-       AddItem(FView.DataController.GetItem(FView.Controller.FocusedItemIndex) , foLike, '%' + edFilter.Text + '%', '"' + edFilter.Text + '"');
+       AddItem(GetItem(View.VisibleColumns[Controller.FocusedItemIndex].Index), foLike, '%' + edFilter.Text + '%', '"' + edFilter.Text + '"');
   end;
   edFilter.Text := '';
   FView.DataController.Filter.Active := True;
