@@ -134,6 +134,8 @@
       Left = 307
       Top = 23
       Properties.DateButtons = [btnClear, btnToday]
+      Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+      Properties.EditFormat = 'dd.mm.yyyy hh:mm'
       Properties.InputKind = ikMask
       Properties.Kind = ckDateTime
       TabOrder = 4
@@ -147,6 +149,8 @@
     object edEndRunPlan: TcxDateEdit
       Left = 307
       Top = 63
+      Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+      Properties.EditFormat = 'dd.mm.yyyy hh:mm'
       Properties.Kind = ckDateTime
       TabOrder = 5
       Width = 145
@@ -164,6 +168,8 @@
     object edStartRun: TcxDateEdit
       Left = 458
       Top = 23
+      Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+      Properties.EditFormat = 'dd.mm.yyyy hh:mm'
       Properties.InputKind = ikMask
       Properties.Kind = ckDateTime
       TabOrder = 6
@@ -177,6 +183,8 @@
     object edEndRun: TcxDateEdit
       Left = 458
       Top = 63
+      Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
+      Properties.EditFormat = 'dd.mm.yyyy hh:mm'
       Properties.Kind = ckDateTime
       TabOrder = 7
       Width = 147
@@ -198,8 +206,8 @@
       Enabled = False
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
-      Properties.DecimalPlaces = 0
-      Properties.DisplayFormat = ',0'
+      Properties.DecimalPlaces = 2
+      Properties.DisplayFormat = ',0.####'
       TabOrder = 8
       Width = 71
     end
@@ -641,6 +649,7 @@
             DataBinding.FieldName = 'RatioFuel'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
         end
@@ -2281,6 +2290,24 @@
         DataType = ftFloat
       end
       item
+        Name = 'outAmount_Distance_calc'
+        Component = ChildCDS
+        ComponentItem = 'Amount_Distance_calc'
+        DataType = ftFloat
+      end
+      item
+        Name = 'outAmount_ColdHour_calc'
+        Component = ChildCDS
+        ComponentItem = 'Amount_ColdHour_calc'
+        DataType = ftFloat
+      end
+      item
+        Name = 'outAmount_ColdDistance_calc'
+        Component = ChildCDS
+        ComponentItem = 'Amount_ColdDistance_calc'
+        DataType = ftFloat
+      end
+      item
         Name = 'inColdHour'
         Component = ChildCDS
         ComponentItem = 'ColdHour'
@@ -2295,6 +2322,13 @@
         ParamType = ptInput
       end
       item
+        Name = 'inAmountFuel'
+        Component = ChildCDS
+        ComponentItem = 'AmountFuel'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
         Name = 'inAmountColdHour'
         Component = ChildCDS
         ComponentItem = 'AmountColdHour'
@@ -2305,13 +2339,6 @@
         Name = 'inAmountColdDistance'
         Component = ChildCDS
         ComponentItem = 'AmountColdDistance'
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inAmountFuel'
-        Component = ChildCDS
-        ComponentItem = 'AmountFuel'
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -2408,8 +2435,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

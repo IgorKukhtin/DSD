@@ -17,6 +17,8 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Status_Income_UnComplete() RET
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Status_Income_Complete() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Status_Income_Complete' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Status_Income_Erased() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Status_Income_Erased' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
+-- "Элемент <Приход (Заправка авто) - Путевой Лист>
+
 DO $$
 BEGIN
 
@@ -70,7 +72,7 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_Movement_Trans
                                   , inCode:= 3
                                   , inName:= 'Документ <Приход (Заправка авто)> - получение данных.'
                                   , inEnumName:= 'zc_Enum_Process_Select_Movement_TransportIncome');
-
+                   
 -- Status
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Status_Income_UnComplete()
                                   , inDescId:= zc_Object_Process()
@@ -89,6 +91,8 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Status_Income_
                                   , inCode:= 1
                                   , inName:= 'Документ <Приход> - Удаление.'
                                   , inEnumName:= 'zc_Enum_Process_Update_Status_Income_Erased');
+
+-- Элемент
 
 END $$;
 

@@ -1,7 +1,7 @@
 -- Function: lpInsertUpdate_MI_Transport_Child()
 
--- DROP FUNCTION lpinsertupdate_mi_transport_child(integer, integer, integer, integer, boolean, boolean, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, integer, integer);
--- DROP FUNCTION lpInsertUpdate_MI_Transport_Child_only (Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_Transport_Child (integer, integer, integer, integer, boolean, boolean, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, integer, integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_Transport_Child_only (Integer, Integer, Integer, Integer, Boolean, Boolean, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_Transport_Child(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -60,7 +60,8 @@ BEGIN
         LEFT JOIN MovementItemFloat AS MIFloat_DistanceFuelChild
                                     ON MIFloat_DistanceFuelChild.MovementItemId = MovementItem_Master.Id
                                    AND MIFloat_DistanceFuelChild.DescId = zc_MIFloat_DistanceFuelChild()
-   WHERE MovementItem_Master.Id = inParentId;
+   WHERE MovementItem_Master.Id = inParentId
+     AND MovementItem_Master.MovementId = inMovementId;
 
    -- Расчитываем норму за все
    outAmount_calc := outAmount_Distance_calc + outAmount_ColdHour_calc + outAmount_ColdDistance_calc;

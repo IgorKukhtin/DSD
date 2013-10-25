@@ -63,9 +63,12 @@ BEGIN
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndRun(), ioId, inEndRun);
 
      -- расчитали свойство <Кол-во рабочих часов>
-     outHoursWork := EXTRACT (DAY FROM (inEndRun - inStartRun)) * 24 + EXTRACT (HOUR FROM (inEndRun - inStartRun));
+     outHoursWork := EXTRACT (DAY FROM (inEndRun - inStartRun)) * 24 + EXTRACT (HOUR FROM (inEndRun - inStartRun)) + CAST (EXTRACT (MIN FROM (inEndRun - inStartRun)) / 60 AS NUMERIC (16, 2));
      -- сохранили свойство <Кол-во рабочих часов>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_HoursWork(), ioId, outHoursWork);
+
+     -- досчитали что б правильно вернут в контрол свойство <Кол-во рабочих часов> !!!с учетом добавленных!!!
+     outHoursWork := outHoursWork + COALESCE (inHoursAdd, 0);
 
      -- сохранили свойство <Кол-во добавленных рабочих часов>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_HoursAdd(), ioId, inHoursAdd);
@@ -118,6 +121,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.10.13                                        * add !!!с учетом добавленных!!!
+ 24.10.13                                        * add min to outHoursWork
  13.10.13                                        * add lpInsertUpdate_MI_Transport_Child_byMaster
  12.10.13                                        * add IF inHoursAdd > 0
  06.10.13                                        * add zc_Movement_Income

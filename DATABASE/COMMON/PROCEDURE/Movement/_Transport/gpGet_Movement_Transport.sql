@@ -35,10 +35,10 @@ BEGIN
            , lfObject_Status.Code                  AS StatusCode
            , lfObject_Status.Name                  AS StatusName
            
-           , CAST (CURRENT_TIMESTAMP as TDateTime) AS StartRunPlan 
-           , CAST (CURRENT_TIMESTAMP as TDateTime) AS EndRunPlan 
-           , CAST (CURRENT_TIMESTAMP as TDateTime) AS StartRun 
-           , CAST (CURRENT_TIMESTAMP as TDateTime) AS EndRun           
+           , CAST (DATE_TRUNC ('SECOND', CURRENT_TIMESTAMP) AS TDateTime) AS StartRunPlan 
+           , CAST (DATE_TRUNC ('SECOND', CURRENT_TIMESTAMP) AS TDateTime) AS EndRunPlan
+           , CAST (DATE_TRUNC ('SECOND', CURRENT_TIMESTAMP) AS TDateTime) AS StartRun 
+           , CAST (DATE_TRUNC ('SECOND', CURRENT_TIMESTAMP) AS TDateTime) AS EndRun           
           
            , CAST (0 as TFloat)                    AS HoursWork
            , CAST (0 as TFloat)                    AS HoursAdd
@@ -73,12 +73,12 @@ BEGIN
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
            
-           , MovementDate_StartRunPlan.ValueData AS StartRunPlan 
-           , MovementDate_EndRunPlan.ValueData   AS EndRunPlan 
-           , MovementDate_StartRun.ValueData     AS StartRun 
-           , MovementDate_EndRun.ValueData       AS EndRun           
+           , CAST (DATE_TRUNC ('SECOND', MovementDate_StartRunPlan.ValueData) AS TDateTime) AS StartRunPlan
+           , CAST (DATE_TRUNC ('SECOND', MovementDate_EndRunPlan.ValueData)   AS TDateTime) AS EndRunPlan
+           , CAST (DATE_TRUNC ('SECOND', MovementDate_StartRun.ValueData)     AS TDateTime) AS StartRun
+           , CAST (DATE_TRUNC ('SECOND', MovementDate_EndRun.ValueData)       AS TDateTime) AS EndRun
           
-           , MovementFloat_HoursWork.ValueData     AS HoursWork
+           , CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat) AS HoursWork
            , MovementFloat_HoursAdd.ValueData      AS HoursAdd
                       
            , MovementString_Comment.ValueData      AS Comment

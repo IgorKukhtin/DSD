@@ -1,7 +1,7 @@
 -- Function: zfCalc_RateFuelValue
 
--- DROP FUNCTION IF EXISTS zfCalc_RateFuelValue (TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat);
--- DROP FUNCTION IF EXISTS zfCalc_RateFuelValue (TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat);
+DROP FUNCTION IF EXISTS zfCalc_RateFuelValue (TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat);
+DROP FUNCTION IF EXISTS zfCalc_RateFuelValue (TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat);
 
 CREATE OR REPLACE FUNCTION zfCalc_RateFuelValue(
     IN inDistance            TFloat    , -- Расстояние факт км
