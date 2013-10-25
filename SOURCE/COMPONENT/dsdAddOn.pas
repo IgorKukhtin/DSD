@@ -522,8 +522,16 @@ begin
      FOnExit(Sender);
   if Assigned(FView) then
      if Assigned(TcxDBDataController(FView.DataController).DataSource) then
-        if TcxDBDataController(FView.DataController).DataSource.State in [dsEdit, dsInsert] then
-           TcxDBDataController(FView.DataController).DataSource.DataSet.Post;
+        if TcxDBDataController(FView.DataController).DataSource.State in dsEditModes then
+           try
+             TcxDBDataController(FView.DataController).DataSource.DataSet.Post;
+             // В случае ошибки оставляем фокус
+           except
+             on E: Exception do begin
+               FView.Control.SetFocus;
+               raise;
+             end;
+           end;
 end;
 
 procedure TdsdDBViewAddOn.onFilterChanged(Sender: TObject);
@@ -618,13 +626,13 @@ var
 begin
   edFilter.Visible := false;
   with TcxGridDBDataController(FView.DataController), Filter.Root do begin
-    FilterCriteriaItem := GetFilterItem(GetItem(Controller.FocusedItemIndex));
+    FilterCriteriaItem := GetFilterItem(GetItem(View.VisibleColumns[Controller.FocusedItemIndex].Index));
     if Assigned(FilterCriteriaItem) then begin
        FilterCriteriaItem.Value := '%' + edFilter.Text + '%';
        FilterCriteriaItem.DisplayValue := '"' + edFilter.Text + '"';
     end
     else
-       AddItem(FView.DataController.GetItem(FView.Controller.FocusedItemIndex) , foLike, '%' + edFilter.Text + '%', '"' + edFilter.Text + '"');
+       AddItem(GetItem(View.VisibleColumns[Controller.FocusedItemIndex].Index), foLike, '%' + edFilter.Text + '%', '"' + edFilter.Text + '"');
   end;
   edFilter.Text := '';
   FView.DataController.Filter.Active := True;

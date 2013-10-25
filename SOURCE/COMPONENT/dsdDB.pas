@@ -293,11 +293,12 @@ var B: TBookMark;
     XMLResult: OleVariant;
     DataSet: TDataSet;
 begin
+   for I := 0 to DataSets.Count - 1 do
+       if DataSets[i].DataSet.State in [dsEdit, dsInsert] then
+          DataSets[i].DataSet.Post;
   XMLResult := TStorageFactory.GetStorage.ExecuteProc(GetXML);
   try
     for I := 0 to DataSets.Count - 1 do begin
-       if DataSets[i].DataSet.State in [dsEdit, dsInsert] then
-          DataSets[i].DataSet.Post;
        if DataSets[i].DataSet.Active then
           B := DataSets[i].DataSet.GetBookmark;
        DataSets[i].DataSet.XMLData := XMLResult[i];
