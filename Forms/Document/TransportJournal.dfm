@@ -64,8 +64,28 @@ object TransportJournalForm: TTransportJournalForm
       DataController.Filter.TranslateBetween = True
       DataController.Filter.TranslateIn = True
       DataController.Filter.TranslateLike = True
-      DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.DefaultGroupSummaryItems = <
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = HoursWork
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = HoursAdd
+        end>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = HoursWork
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = HoursAdd
+        end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsCustomize.ColumnHiding = True
@@ -75,6 +95,7 @@ object TransportJournalForm: TTransportJournalForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
+      OptionsView.Footer = True
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -177,12 +198,16 @@ object TransportJournalForm: TTransportJournalForm
       object HoursWork: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1095#1072#1089#1086#1074
         DataBinding.FieldName = 'HoursWork'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
       object HoursAdd: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1073#1072#1074#1083#1077#1085#1085#1099#1093' '#1095#1072#1089#1086#1074
         DataBinding.FieldName = 'HoursAdd'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
@@ -236,8 +261,8 @@ object TransportJournalForm: TTransportJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -346,6 +371,10 @@ object TransportJournalForm: TTransportJournalForm
       Action = dsdGridToExcel
       Category = 0
     end
+    object bbReCompleteAll: TdxBarButton
+      Action = actReCompleteAll
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -444,6 +473,19 @@ object TransportJournalForm: TTransportJournalForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
+    end
+    object actReCompleteAll: TdsdChangeMovementStatus
+      Category = 'DSDLib'
+      StoredProc = spMovementReCompleteAll
+      StoredProcList = <
+        item
+          StoredProc = spMovementReCompleteAll
+        end>
+      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      ImageIndex = 10
+      Status = mtComplete
+      DataSource = DataSource
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -563,5 +605,26 @@ object TransportJournalForm: TTransportJournalForm
       end>
     Left = 456
     Top = 24
+  end
+  object spMovementReCompleteAll: TdsdStoredProc
+    StoredProcName = 'gpCompletePeriod_Movement_Transport'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41275d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndtDate'
+        Value = 41639d
+        Component = deEnd
+        DataType = ftDateTime
+      end>
+    Left = 240
+    Top = 288
   end
 end

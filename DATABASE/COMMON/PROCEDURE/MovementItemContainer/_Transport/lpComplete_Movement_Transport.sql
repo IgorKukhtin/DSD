@@ -79,15 +79,15 @@ BEGIN
      -- Получили все нужные нам количественные/суммовые контейнеры по определенным товарам/счетам
      WITH tmpContainer AS  (SELECT Id, Amount, 0 AS FuelId, 1 AS Kind
                             FROM Container
-                                               -- Получили список счетов: (30500)сотрудники (подотчетные лица) + (20400)ГСМ  !!!это (30000)Дебиторы!!!
-                            WHERE ObjectId IN (SELECT AccountId FROM Object_Account_View WHERE InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400() AND AccountDirectionId = zc_Enum_AccountDirection_30500())
+                                               -- ограничили списком счетов: (30500) Дебиторы + сотрудники (подотчетные лица) + (20400) Общефирменные + ГСМ
+                            WHERE ObjectId IN (SELECT AccountId FROM Object_Account_View WHERE AccountDirectionId = zc_Enum_AccountDirection_30500() AND InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400())
                                          -- Ограничили по Аналитике <Автомобиль>
                               AND Id IN (SELECT ContainerId FROM ContainerLinkObject WHERE DescId = zc_ContainerLinkObject_Car() AND ObjectId = vbCarId)
                               AND DescId = zc_Container_Summ()
                            UNION
                             SELECT Id, Amount, 0 AS FuelId, 2 AS Kind
                             FROM Container
-                                               -- Получили список товаров: (20400)ГСМ
+                                               -- ограничили списком товаров: (20400)ГСМ
                             WHERE ObjectId IN (SELECT GoodsId FROM Object_Goods_View WHERE InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400())
                                           -- Ограничили по Аналитике <Сотрудник>
                               AND Id IN (SELECT ContainerId FROM ContainerLinkObject WHERE DescId = zc_ContainerLinkObject_Personal() AND ObjectId = vbPersonalDriverId)
@@ -95,7 +95,7 @@ BEGIN
                            UNION
                             SELECT Id, Amount, Container.ObjectId AS FuelId, 3 AS Kind
                             FROM Container
-                                              -- Получили список Виды топлива
+                                              -- Ограничили списком Виды топлива
                             WHERE ObjectId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Fuel())
                                           -- Ограничили по Аналитике <Автомобиль>
                               AND Id IN (SELECT ContainerId FROM ContainerLinkObject WHERE DescId =  zc_ContainerLinkObject_Car() AND ObjectId = vbCarId)
