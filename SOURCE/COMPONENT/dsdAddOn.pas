@@ -463,8 +463,8 @@ begin
       Column := TcxGridDBBandedTableView(FView).GetColumnByFieldName(FErasedFieldName);
   if Assigned(Column) then
      if not VarIsNull(AViewInfo.GridRecord.Values[Column.Index])
-       and AViewInfo.GridRecord.Values[Column.Index] then
-        ACanvas.Font.Color := clRed;
+        and AViewInfo.GridRecord.Values[Column.Index] then
+            ACanvas.Font.Color := clRed;
 end;
 
 procedure TdsdDBViewAddOn.OnCustomDrawColumnHeader(

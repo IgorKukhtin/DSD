@@ -65,24 +65,69 @@ BEGIN
            || vbFieldNameText ||
           ' FROM
           (SELECT * FROM crosstab(
-	''SELECT ARRAY[PersonalId, ObjectLink_Personal_Position.ChildObjectId,
-                       ObjectLink_Personal_Unit.ChildObjectId, ObjectLink_Personal_PersonalGroup.ChildObjectId]::integer[],
-	         OperDate, 
-	         ARRAY[''''8 hour'''', ''''0'''']::VarChar[]
-	    FROM tmpOperDate, Object_Personal_View 
-       LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
-                            ON ObjectLink_Personal_Position.ObjectId = Object_Personal_View.PersonalId
-                           AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
-       LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
-                            ON ObjectLink_Personal_Unit.ObjectId = Object_Personal_View.PersonalId
-                           AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
-       LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
-                            ON ObjectLink_Personal_PersonalGroup.ObjectId = Object_Personal_View.PersonalId
-                           AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
-       WHERE ObjectLink_Personal_Unit.ChildObjectId = '||inUnitId::TVarChar||'
-
-
-        ORDER BY PersonalId'',
+	''SELECT 
+             ARRAY[COALESCE(Movement_Data.PersonalId, Object_Data.PersonalId)           ,--AS PersonalId,
+                   COALESCE(Movement_Data.PositionId, Object_Data.PositionId)           ,--AS PositionId,
+                   COALESCE(Movement_Data.UnitId, Object_Data.UnitId)                   ,--AS UnitId,
+                   COALESCE(Movement_Data.PersonalGroupId, Object_Data.PersonalGroupId)  --AS PersonalGroupId
+                  ]::integer[],
+             COALESCE(Movement_Data.OperDate, Object_Data.OperDate) AS OperDate,
+             ARRAY[zfCalc_ViewWorkHour(COALESCE(Movement_Data.Amount, 0), Movement_Data.ShortName)::VarChar, 
+                   COALESCE(Movement_Data.ObjectId, zc_Enum_WorkTimeKind_Work())::VarChar
+                   ]::TVarChar
+          FROM 
+            (SELECT tmpOperDate.operdate,
+	            MI_SheetWorkTime.Amount, 
+	            COALESCE(MI_SheetWorkTime.ObjectId, 0) AS PersonalId,
+	            COALESCE(MovementLinkObject_Unit.ObjectId, 0) UnitId, 
+	            COALESCE(MIObject_Position.ObjectId, 0) AS PositionId,
+	            COALESCE(MIObject_PersonalGroup.ObjectId, 0) AS PersonalGroupId,
+	            MIObject_WorkTimeKind.ObjectId,
+	            ObjectString_WorkTimeKind_ShortName.ValueData AS ShortName
+	     FROM tmpOperDate
+             JOIN Movement 
+	       ON Movement.operDate = tmpOperDate.OperDate
+              AND Movement.DescId = zc_Movement_SheetWorkTime()
+        LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+               ON MovementLinkObject_Unit.MovementId = Movement.Id
+              AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+             JOIN MovementItem AS MI_SheetWorkTime      
+               ON MI_SheetWorkTime.MovementId = Movement.Id
+        LEFT JOIN MovementItemLinkObject AS MIObject_Position
+               ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id 
+              AND MIObject_Position.DescId = zc_MILinkObject_Position() 
+        LEFT JOIN MovementItemLinkObject AS MIObject_WorkTimeKind
+               ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id 
+              AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind() 
+        LEFT JOIN ObjectString AS ObjectString_WorkTimeKind_ShortName 
+               ON ObjectString_WorkTimeKind_ShortName.ObjectId = MIObject_WorkTimeKind.ObjectId  
+              AND ObjectString_WorkTimeKind_ShortName.DescId = zc_ObjectString_WorkTimeKind_ShortName()       
+        LEFT JOIN MovementItemLinkObject AS MIObject_PersonalGroup
+               ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
+              AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup() 
+            WHERE MovementLinkObject_Unit.ObjectId = '||inUnitId::TVarChar||') AS Movement_Data 
+    FULL JOIN  
+          (SELECT tmpOperDate.operdate, 0, 
+                  COALESCE(PersonalId, 0) AS PersonalId, 
+                  COALESCE(ObjectLink_Personal_Unit.ChildObjectId, 0) AS UnitId, 
+                  COALESCE(ObjectLink_Personal_Position.ChildObjectId, 0) AS PositionId, 
+                  COALESCE(ObjectLink_Personal_PersonalGroup.ChildObjectId, 0)  AS PersonalGroupId  
+             FROM tmpOperDate, Object_Personal_View 
+        LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+               ON ObjectLink_Personal_Position.ObjectId = Object_Personal_View.PersonalId
+              AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+        LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
+               ON ObjectLink_Personal_Unit.ObjectId = Object_Personal_View.PersonalId
+              AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+        LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
+               ON ObjectLink_Personal_PersonalGroup.ObjectId = Object_Personal_View.PersonalId
+              AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
+            WHERE ObjectLink_Personal_Unit.ChildObjectId = '||inUnitId::TVarChar||') AS Object_Data
+       ON Movement_Data.OperDate = Object_Data.OperDate
+      AND Movement_Data.UnitId = Object_Data.UnitId
+      AND Movement_Data.PersonalId = Object_Data.PersonalId
+      AND Movement_Data.PositionId = Object_Data.PositionId
+      AND Movement_Data.PersonalGroupId = Object_Data.PersonalGroupId'',
          ''SELECT OperDate FROM tmpOperDate'')
          AS ct('||vbCrossString||')) AS D
       LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = D.Key[1]
@@ -101,6 +146,7 @@ ALTER FUNCTION gpSelect_MovementItem_SheetWorkTime (TDateTime, Integer, TVarChar
 /*   
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 25.10.13                         *
  19.10.13                         *
  05.10.13                         *
 
@@ -109,83 +155,6 @@ ALTER FUNCTION gpSelect_MovementItem_SheetWorkTime (TDateTime, Integer, TVarChar
 -- ÚÂÒÚ
 --BEGIN;
 --  SELECT * FROM gpSelect_MovementItem_SheetWorkTime(now(), 0, '');
---  fetch all "<unnamed portal 2>";
+--  fetch all "<unnamed portal 10>";
 --END;
 
-/*
-WITH tmpOperDate AS (SELECT generate_series( ('01-10-2013')::DATE, ('01-11-2013')::DATE, '1 DAY'::interval) OperDate)
-
-SELECT  /*ARRAY[PersonalId, ObjectLink_Personal_Position.ChildObjectId,
-                       ObjectLink_Personal_Unit.ChildObjectId, ObjectLink_Personal_PersonalGroup.ChildObjectId]::integer[],
-	         OperDate, 
-	         ARRAY['8 hour', '0']::VarChar[]*/
-*
-FROM 
-(SELECT 	    tmpOperDate.operdate,
-	    MI_SheetWorkTime.Amount, 
-	    COALESCE(MI_SheetWorkTime.ObjectId, 0) AS PersonalId,
-	    COALESCE(MovementLinkObject_Unit.ObjectId, 0) UnitId, 
-	    COALESCE(MIObject_Position.ObjectId, 0) AS PositionId,
-	    COALESCE(MIObject_PersonalGroup.ObjectId, 0) AS PersonalGroupId
-	    
-	         
-	  FROM tmpOperDate
-          JOIN Movement 
-	    ON Movement.operDate = tmpOperDate.OperDate
-           AND Movement.DescId = zc_Movement_SheetWorkTime()
-     LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-            ON MovementLinkObject_Unit.MovementId = Movement.Id
-           AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-     LEFT JOIN MovementItem AS MI_SheetWorkTime      
-            ON MI_SheetWorkTime.MovementId = Movement.Id
-     LEFT JOIN MovementItemLinkObject AS MIObject_Position
-            ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id 
-            --                 AND ((MIObject_Position.ObjectId IS NULL) OR (MIObject_Position.ObjectId = inPositionId))
-           AND MIObject_Position.DescId = zc_MILinkObject_Position() 
-     LEFT JOIN MovementItemLinkObject AS MIObject_PersonalGroup
-           ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
-     --        AND ((MIObject_PersonalGroup.ObjectId IS NULL) OR (MIObject_PersonalGroup.ObjectId = inPersonalGroupId))
-          AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup() ) AS Movement_Data
-       
-	FULL JOIN  
-       (SELECT tmpOperDate.operdate, 0, 
-                       COALESCE(PersonalId, 0) AS PersonalId, 
-                       COALESCE(ObjectLink_Personal_Unit.ChildObjectId, 0) AS UnitId, 
-                       COALESCE(ObjectLink_Personal_Position.ChildObjectId, 0) AS PositionId, 
-                       COALESCE(ObjectLink_Personal_PersonalGroup.ChildObjectId, 0)  AS PersonalGroupId  
-        FROM    tmpOperDate, Object_Personal_View 
-       LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
-                            ON ObjectLink_Personal_Position.ObjectId = Object_Personal_View.PersonalId
-                           AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
-       LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
-                            ON ObjectLink_Personal_Unit.ObjectId = Object_Personal_View.PersonalId
-                           AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
-       LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
-                            ON ObjectLink_Personal_PersonalGroup.ObjectId = Object_Personal_View.PersonalId
-                           AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
-       ) AS Object_Data
-       ON Movement_Data.OperDate = Object_Data.OperDate
-      AND Movement_Data.UnitId = Object_Data.UnitId
-      AND Movement_Data.PersonalId = Object_Data.PersonalId
-      AND Movement_Data.PositionId = Object_Data.PositionId
-      AND Movement_Data.PersonalGroupId = Object_Data.PersonalGroupId
-      
-ORDER BY COALESCE(Movement_Data.OperDate, Object_Data.OperDate)
-            
-
-	    
-	    
-	    
-	    
-	  /*  , Object_Personal_View 
-       LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
-                            ON ObjectLink_Personal_Position.ObjectId = Object_Personal_View.PersonalId
-                           AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
-       LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
-                            ON ObjectLink_Personal_Unit.ObjectId = Object_Personal_View.PersonalId
-                           AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
-       LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
-                            ON ObjectLink_Personal_PersonalGroup.ObjectId = Object_Personal_View.PersonalId
-                           AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()*/
-
-*/

@@ -8,19 +8,19 @@ BEGIN
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_Object_User()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 1
-                                  , inName:= 'Справочник <Пользователи> - сохранение данных.'
+                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_User())||'> - сохранение данных.'
                                   , inEnumName:= 'zc_Enum_Process_InsertUpdate_Object_User');
 
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Get_Object_User()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 2
-                                  , inName:= 'Справочник <Пользователи> - выбор данных.'
+                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_User())||'> - выбор данных.'
                                   , inEnumName:= 'zc_Enum_Process_Get_Object_User');
 
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_Object_User()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 3
-                                  , inName:= 'Справочник <Пользователи> - получение данных.'
+                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_User())||'> - получение данных.'
                                   , inEnumName:= 'zc_Enum_Process_Select_Object_User');
                                   
  -- заливка прав - InsertUpdate
@@ -39,7 +39,7 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_Object_User()
                  FROM ObjectLink AS ObjectLink_RoleRight_Role
                       JOIN ObjectLink AS ObjectLink_RoleRight_Process ON ObjectLink_RoleRight_Process.ObjectId = ObjectLink_RoleRight_Role.ObjectId
                                                                      AND ObjectLink_RoleRight_Process.DescId = zc_ObjectLink_RoleRight_Process()
-                 WHERE ObjectLink_RoleRight_Role.DescId = zc_ObjectLink_RoleRight_Role()        
+                 WHERE ObjectLink_RoleRight_Role.DescId = zc_ObjectLink_RoleRight_Role()
                 ) AS tmpData ON tmpData.RoleId    = tmpRole.RoleId
                             AND tmpData.ProcessId = tmpProcess.ProcessId
  ;
