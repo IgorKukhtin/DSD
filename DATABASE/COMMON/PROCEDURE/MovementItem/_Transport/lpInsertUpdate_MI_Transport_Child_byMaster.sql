@@ -214,9 +214,9 @@ BEGIN
                                         AND MIFloat_DistanceFuelChild.DescId = zc_MIFloat_DistanceFuelChild()
 
         WHERE MovementItem_Find.ObjectId IS NULL
-              -- если Пробег не введен, тогда формировать эелементы не надо
+              -- если Пробег не введен, тогда формировать элементы не надо
          AND (COALESCE (MovementItem_Master.Amount, 0) <> 0 OR COALESCE (MIFloat_DistanceFuelChild.ValueData, 0) <> 0)
-              -- если нормы нет, тогда формировать эелементы не надо
+              -- если нормы нет, тогда формировать элементы не надо
          AND (tmpRateFuel.AmountFuel <> 0 OR tmpRateFuel.AmountColdHour <> 0 OR tmpRateFuel.AmountColdDistance <> 0);
 
 

@@ -23,6 +23,16 @@ $BODY$
   DECLARE vbStartAmountFuel TFloat;
 BEGIN
 
+     -- !!!обязательно!!! пересчитали Child - нормы
+     PERFORM lpInsertUpdate_MI_Transport_Child_byMaster (inMovementId := inMovementId, inParentId := MovementItem.Id, inRouteKindId:= MILinkObject_RouteKind.ObjectId, inUserId := inUserId)
+     FROM MovementItem
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_RouteKind
+                                           ON MILinkObject_RouteKind.MovementItemId = MovementItem.Id 
+                                          AND MILinkObject_RouteKind.DescId = zc_MILinkObject_RouteKind()
+     WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.DescId = zc_MI_Master();
+
+
      -- Эти параметры нужны для формирования Аналитик в проводках
      SELECT _tmp.OperDate
           , _tmp.PersonalDriverId, _tmp.CarId, _tmp.BranchId
@@ -208,6 +218,7 @@ BEGIN
            GROUP BY _tmpItem_Transport.MovementItemId_parent, _tmpItem_Transport.UnitId_ProfitLoss
           ) AS tmp;
 
+
      -- !!!формируются расчитанные свойства в Подчиненых элементах документа!!!
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_StartAmountFuel(), tmp.MovementItemId, tmp.StartAmountFuel)
      FROM (SELECT _tmpItem_Transport.MovementItemId, _tmpPropertyRemains.Amount AS StartAmountFuel
@@ -225,9 +236,9 @@ BEGIN
                                                                      , ioAmount             := 0
                                                                      , inColdHour           := 0
                                                                      , inColdDistance       := 0
+                                                                     , inAmountFuel         := 0
                                                                      , inAmountColdHour     := 0
                                                                      , inAmountColdDistance := 0
-                                                                     , inAmountFuel         := 0
                                                                      , inNumber             := 4
                                                                      , inRateFuelKindTax    := 0
                                                                      , inRateFuelKindId     := 0
@@ -241,7 +252,7 @@ BEGIN
                  WHERE _tmpPropertyRemains.Kind = 3
                    AND _tmpItem_Transport.GoodsId IS NULL
                 ) AS tmp
-                JOIN (SELECT MIN (_tmpItem_Transport.MovementItemId_parent) AS MovementItemId_parent FROM _tmpItem_Transport
+                JOIN (SELECT MIN (Id) AS MovementItemId_parent FROM MovementItem WHERE MovementId = inMovementId AND DescId = zc_MI_Master() AND isErased = FALSE
                      ) AS tmpItem_Transport ON 1=1
           ) AS tmp;
 
@@ -395,6 +406,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.10.13                                        * err
+ 25.10.13                                        * add lpInsertUpdate_MI_Transport_Child_byMaster
  21.10.13                                        * err ObjectId IN (SELECT GoodsId...
  14.10.13                                        * add lpInsertUpdate_MovementItemLinkObject
  06.10.13                                        * add inUserId

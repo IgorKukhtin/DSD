@@ -261,9 +261,9 @@ BEGIN
             , MIFloat_ColdHour.ValueData            AS ColdHour
             , MIFloat_ColdDistance.ValueData        AS ColdDistance
 
+            , MIFloat_AmountFuel.ValueData          AS AmountFuel         -- !!!Коэффициент и % дополнительного расхода уже учтены!!!
             , MIFloat_AmountColdHour.ValueData      AS AmountColdHour     -- !!!Коэффициент и % дополнительного расхода уже учтены!!!
             , MIFloat_AmountColdDistance.ValueData  AS AmountColdDistance -- !!!Коэффициент и % дополнительного расхода уже учтены!!!
-            , MIFloat_AmountFuel.ValueData          AS AmountFuel         -- !!!Коэффициент и % дополнительного расхода уже учтены!!!
 
             , COALESCE (ObjectFloat_Fuel_Ratio.ValueData, 1) AS RatioFuel        -- Коэффициента перевода нормы
             , MIFloat_RateFuelKindTax.ValueData              AS RateFuelKindTax  -- % дополнительного расхода в связи с сезоном/температурой
