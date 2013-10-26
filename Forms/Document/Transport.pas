@@ -233,6 +233,22 @@ type
     colchAmount_Distance_calc: TcxGridDBColumn;
     colchAmount_ColdHour_calc: TcxGridDBColumn;
     colchAmount_ColdDistance_calc: TcxGridDBColumn;
+    cxTabSheetReport: TcxTabSheet;
+    cxGridReport: TcxGrid;
+    cxGridReportDBTableView: TcxGridDBTableView;
+    clrpStatusCode: TcxGridDBColumn;
+    clrpKindName: TcxGridDBColumn;
+    clrpAmount_20401: TcxGridDBColumn;
+    clrpAmount_Start: TcxGridDBColumn;
+    clrpAmount_In: TcxGridDBColumn;
+    clrpAmount_Out: TcxGridDBColumn;
+    clrpAmount_End: TcxGridDBColumn;
+    cxGridReportLevel: TcxGridLevel;
+    ReportCDS: TClientDataSet;
+    ReportDS: TDataSource;
+    spSelectMiReport: TdsdStoredProc;
+    colRouteKindName_Freight: TcxGridDBColumn;
+    RouteKindFreightChoiceForm: TOpenChoiceForm;
   private
   public
   end;

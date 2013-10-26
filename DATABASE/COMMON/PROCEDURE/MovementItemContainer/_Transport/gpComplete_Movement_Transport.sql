@@ -20,6 +20,19 @@ BEGIN
 
      -- таблица - Проводки 
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
+     -- таблица свойств (остатки) документа/элементов
+     CREATE TEMP TABLE _tmpPropertyRemains (Kind Integer, FuelId Integer, Amount TFloat) ON COMMIT DROP;
+     -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     CREATE TEMP TABLE _tmpItem_Transport (MovementItemId Integer, MovementItemId_parent Integer, UnitId_ProfitLoss Integer
+                                         , ContainerId_Goods Integer, GoodsId Integer, AssetId Integer
+                                         , OperCount TFloat
+                                         , ProfitLossGroupId Integer, ProfitLossDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                                         , BusinessId Integer, BusinessId_Route Integer
+                                          ) ON COMMIT DROP;
+     -- таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     CREATE TEMP TABLE _tmpItem_TransportSumm_Transport (MovementItemId Integer, ContainerId_ProfitLoss Integer, ContainerId Integer, AccountId Integer, OperSumm TFloat) ON COMMIT DROP;
+
+
      -- Проводим Документ
      PERFORM lpComplete_Movement_Transport (inMovementId := inMovementId
                                           , inUserId     := vbUserId);
@@ -62,11 +75,12 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.10.13                                        * add CREATE TEMP TABLE...
  12.10.13                                        * del lpComplete_Movement_Income
  06.10.13                                        *
 */
 
 -- тест
--- SELECT * FROM gpUnComplete_Movement (inMovementId:= 149639, inSession:= '2')
--- SELECT * FROM gpComplete_Movement_Transport (inMovementId:= 149639, inSession:= '2')
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 149639, inSession:= '2')
+-- SELECT * FROM gpUnComplete_Movement (inMovementId:= 149639, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpComplete_Movement_Transport (inMovementId:= 149639, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 149639, inSession:= zfCalc_UserAdmin())

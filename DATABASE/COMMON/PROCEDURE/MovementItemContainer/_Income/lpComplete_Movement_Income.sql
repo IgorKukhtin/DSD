@@ -48,6 +48,10 @@ $BODY$
   DECLARE vbBusinessId_Route Integer;
 BEGIN
 
+     -- !!!обязательно!!! очистили таблицу проводок
+     DELETE FROM _tmpMIContainer_insert;
+
+
      -- формируются Партии для Сырья
      PERFORM lpInsertUpdate_MovementItemString (inDescId:= zc_MIString_PartionGoodsCalc()
                                               , inMovementItemId:= MovementItem.Id
@@ -213,8 +217,6 @@ BEGIN
      SELECT lfObject_InfoMoney.InfoMoneyDestinationId INTO vbInfoMoneyDestinationId_From FROM lfGet_Object_InfoMoney (vbInfoMoneyId_From) AS lfObject_InfoMoney;
 
 
-     -- таблица - Проводки 
-     DELETE FROM _tmpMIContainer_insert;
      -- таблица - элементы по контрагенту, со всеми свойствами для формирования Аналитик в проводках
      DELETE FROM _tmpItem_SummPartner;
      -- таблица - элементы по Сотруднику (заготовитель), со всеми свойствами для формирования Аналитик в проводках

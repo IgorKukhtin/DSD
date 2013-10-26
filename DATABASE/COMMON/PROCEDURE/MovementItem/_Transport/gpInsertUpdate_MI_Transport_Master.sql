@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Master(
     IN inStartOdometre       TFloat    , -- Спидометр начальное показание, км
     IN inEndOdometre         TFloat    , -- Спидометр конечное показание, км
     IN inFreightId           Integer   , -- Название груза
+    IN inRouteKindId_Freight Integer   , -- Типы маршрутов(груз)
     IN inRouteKindId         Integer   , -- Типы маршрутов
     IN inSession             TVarChar    -- сессия пользователя
 )                              
@@ -71,10 +72,13 @@ BEGIN
    ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inRouteId, inMovementId, inAmount, NULL);
   
    -- сохранили связь с <Название груза>
-   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_Freight(), ioId, inFreightId);
+   PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Freight(), ioId, inFreightId);
    
+   -- сохранили связь с <Типы маршрутов(груз)>
+   PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_RouteKindFreight(), ioId, inRouteKindId_Freight);
+
    -- сохранили связь с <Типы маршрутов>
-   PERFORM lpInsertUpdate_MovementItemLinkObject(zc_MILinkObject_RouteKind(), ioId, inRouteKindId);
+   PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_RouteKind(), ioId, inRouteKindId);
 
    -- сохранили свойство <Пробег, км (дополнительный вид топлива)>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_DistanceFuelChild(), ioId, inDistanceFuelChild);
@@ -83,10 +87,10 @@ BEGIN
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Weight(), ioId, inWeight);
 
    -- сохранили свойство <Спидометр начальное показание, км>
-   PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_StartOdometre(), ioId, inStartOdometre);
+   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_StartOdometre(), ioId, inStartOdometre);
 
    -- сохранили свойство <Спидометр конечное показание, км>
-   PERFORM lpInsertUpdate_MovementItemFloat(zc_MIFloat_EndOdometre(), ioId, inEndOdometre);
+   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_EndOdometre(), ioId, inEndOdometre);
 
    -- !!!обязательно!!! пересчитали Child
    PERFORM lpInsertUpdate_MI_Transport_Child_byMaster (inMovementId := inMovementId, inParentId := ioId, inRouteKindId:= inRouteKindId, inUserId := vbUserId);
@@ -100,6 +104,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.10.13                                        * add inRouteKindId_Freight
  13.10.13                                        * add lpInsertUpdate_MI_Transport_Child_byMaster
  13.10.13                                        * add lpInsertUpdate_MI_Transport_Child_byMaster
  12.10.13                                        * add zc_ObjectFloat_Fuel_Ratio

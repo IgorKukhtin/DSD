@@ -24,7 +24,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dxBarExtItems, ChoicePeriod, cxLabel;
+  dxBarExtItems, ChoicePeriod, cxLabel, cxCurrencyEdit;
 
 type
   TTransportJournalForm = class(TParentForm)
@@ -84,6 +84,9 @@ type
     cxLabel2: TcxLabel;
     CarModelName: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
+    spMovementReCompleteAll: TdsdStoredProc;
+    bbReCompleteAll: TdxBarButton;
+    actReCompleteAll: TdsdExecStoredProc;
   private
   public
   end;

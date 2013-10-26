@@ -302,16 +302,21 @@
             item
               Kind = skSum
               Position = spFooter
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
               Column = colAmount
             end
             item
+              Format = ',0.00'
               Kind = skSum
-              Position = spFooter
-              Column = colEndOdometre
+              Column = colDistanceFuelChild
             end
             item
+              Format = ',0.00'
               Kind = skSum
-              Position = spFooter
+              Column = colWeight
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -321,19 +326,22 @@
               Kind = skSum
             end
             item
+              Format = ',0.00'
               Kind = skSum
               Column = colWeight
             end
             item
+              Format = ',0.00'
               Kind = skSum
               Column = colAmount
             end
             item
               Kind = skSum
-              Column = colEndOdometre
             end
             item
+              Format = ',0.00'
               Kind = skSum
+              Column = colDistanceFuelChild
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsBehavior.GoToNextCellOnEnter = True
@@ -344,6 +352,7 @@
           OptionsData.CancelOnExit = False
           OptionsData.Inserting = False
           OptionsView.ColumnAutoWidth = True
+          OptionsView.Footer = True
           OptionsView.GroupByBox = False
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
@@ -391,21 +400,21 @@
             DataBinding.FieldName = 'Amount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Width = 80
           end
           object colDistanceFuelChild: TcxGridDBColumn
             Caption = #1055#1088#1086#1073#1077#1075', '#1082#1084' ('#1076#1086#1087#1086#1083#1085#1080#1090'.)'
             DataBinding.FieldName = 'DistanceFuelChild'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Width = 80
           end
           object colStartOdometre: TcxGridDBColumn
             Caption = #1057#1087#1080#1076#1086#1084#1077#1090#1088' '#1085#1072#1095'. '#1087#1086#1082#1072#1079#1072#1085#1080#1077', '#1082#1084
             DataBinding.FieldName = 'StartOdometre'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 110
+            Width = 100
           end
           object colEndOdometre: TcxGridDBColumn
             Caption = #1057#1087#1080#1076#1086#1084#1077#1090#1088' '#1082#1086#1085#1077#1095'. '#1087#1086#1082#1072#1079#1072#1085#1080#1077', '#1082#1084
@@ -421,6 +430,21 @@
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
+          object colRouteKindName_Freight: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1075#1088#1091#1079#1072
+            DataBinding.FieldName = 'RouteKindName_Freight'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = RouteKindFreightChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object colRouteKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1084#1072#1088#1096#1088#1091#1090#1072
             DataBinding.FieldName = 'RouteKindName'
@@ -432,6 +456,7 @@
           object colIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -469,15 +494,45 @@
             item
               Kind = skSum
               Position = spFooter
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
               Column = colсhAmount
             end
             item
+              Format = ',0.00'
               Kind = skSum
-              Position = spFooter
+              Column = colсhAmount_calc
             end
             item
+              Format = ',0.00'
               Kind = skSum
-              Position = spFooter
+              Column = colchAmount_Distance_calc
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colchAmount_ColdHour_calc
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colchAmount_ColdDistance_calc
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colсhColdHour
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colсhColdDistance
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -490,6 +545,7 @@
               Kind = skSum
             end
             item
+              Format = ',0.00'
               Kind = skSum
               Column = colсhAmount
             end
@@ -498,6 +554,36 @@
             end
             item
               Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colсhAmount_calc
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colchAmount_Distance_calc
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colchAmount_ColdHour_calc
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colchAmount_ColdDistance_calc
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colсhColdHour
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colсhColdDistance
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -508,6 +594,7 @@
           OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = False
           OptionsView.ColumnAutoWidth = True
+          OptionsView.Footer = True
           OptionsView.GroupByBox = False
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
@@ -698,18 +785,18 @@
               Position = spFooter
             end
             item
+              Format = ',0.00'
               Kind = skSum
-              Position = spFooter
-              Column = clincAmount
-            end
-            item
-              Kind = skSum
-              Position = spFooter
               Column = clincAmountSumm
             end
             item
+              Format = ',0.00'
               Kind = skSum
-              Position = spFooter
+              Column = clincAmount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
               Column = clincAmountSummTotal
             end>
           DataController.Summary.FooterSummaryItems = <
@@ -723,14 +810,17 @@
               Kind = skSum
             end
             item
+              Format = ',0.00'
               Kind = skSum
               Column = clincAmount
             end
             item
+              Format = ',0.00'
               Kind = skSum
               Column = clincAmountSumm
             end
             item
+              Format = ',0.00'
               Kind = skSum
               Column = clincAmountSummTotal
             end>
@@ -867,18 +957,24 @@
           object clincAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
           object clincPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
           object clincAmountSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
@@ -886,6 +982,8 @@
           object clincAmountSummTotal: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
             DataBinding.FieldName = 'AmountSummTotal'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
@@ -893,6 +991,8 @@
           object clincContractName: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractName'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -902,6 +1002,8 @@
           object clincChangePrice: TcxGridDBColumn
             Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'ChangePrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -917,12 +1019,16 @@
           object clincVATPercent: TcxGridDBColumn
             Caption = '% '#1053#1044#1057
             DataBinding.FieldName = 'VATPercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentVert = vaCenter
             Width = 40
           end
           object clincCountForPrice: TcxGridDBColumn
             Caption = #1050#1086#1083' '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00'
             Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 50
@@ -939,6 +1045,152 @@
         end
         object cxGridIncomeLevel: TcxGridLevel
           GridView = cxGridIncomeDBTableView
+        end
+      end
+    end
+    object cxTabSheetReport: TcxTabSheet
+      Caption = #1048#1090#1086#1075#1080
+      ImageIndex = 3
+      object cxGridReport: TcxGrid
+        Left = 0
+        Top = 0
+        Width = 996
+        Height = 397
+        Align = alClient
+        TabOrder = 0
+        object cxGridReportDBTableView: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ReportDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Kind = skSum
+            end
+            item
+              Kind = skSum
+            end
+            item
+              Kind = skSum
+            end
+            item
+              Kind = skSum
+            end
+            item
+              Kind = skSum
+            end
+            item
+              Kind = skSum
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Inserting = False
+          OptionsView.ColumnAutoWidth = True
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object clrpStatusCode: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1091#1089
+            DataBinding.FieldName = 'StatusCode'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = 1
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end>
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object clrpKindName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'KindName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 100
+          end
+          object clrpAmount_20401: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1085#1072' '#1050#1086#1084#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1077
+            DataBinding.FieldName = 'Amount_20401'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object clrpAmount_Start: TcxGridDBColumn
+            Caption = #1053#1072#1095#1072#1083#1100#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
+            DataBinding.FieldName = 'Amount_Start'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object clrpAmount_In: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'Amount_In'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object clrpAmount_Out: TcxGridDBColumn
+            Caption = #1056#1072#1089#1093#1086#1076
+            DataBinding.FieldName = 'Amount_Out'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object clrpAmount_End: TcxGridDBColumn
+            Caption = #1050#1086#1085#1077#1095#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
+            DataBinding.FieldName = 'Amount_End'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+        end
+        object cxGridReportLevel: TcxGridLevel
+          GridView = cxGridReportDBTableView
         end
       end
     end
@@ -959,7 +1211,17 @@
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
-          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colDebetAmount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colKreditAmount
+            end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00'
@@ -1100,6 +1362,8 @@
           object colDebetAmount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1076#1077#1073#1077#1090
             DataBinding.FieldName = 'DebetAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1108,6 +1372,8 @@
           object colKreditAmount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1082#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'KreditAmount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -1284,6 +1550,9 @@
           StoredProc = spSelectMIIncome
         end
         item
+          StoredProc = spSelectMiReport
+        end
+        item
           StoredProc = spSelectMIContainer
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
@@ -1424,6 +1693,17 @@
           Component = MasterCDS
           ComponentItem = 'FreightName'
           DataType = ftString
+        end
+        item
+          Name = 'RouteKindId2'
+          Component = MasterCDS
+          ComponentItem = 'RouteKindId_Freight'
+        end
+        item
+          Name = 'RouteKindName2'
+          Component = MasterCDS
+          ComponentItem = 'RouteKindName_Freight'
+          DataType = ftString
         end>
       isShowModal = True
     end
@@ -1441,6 +1721,24 @@
           Name = 'TextValue'
           Component = MasterCDS
           ComponentItem = 'FreightName'
+        end>
+      isShowModal = True
+    end
+    object RouteKindFreightChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'RouteKindFreightChoiceForm'
+      FormName = 'TRouteKindForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'RouteKindId_Freight'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'RouteKindName_Freight'
+          DataType = ftString
         end>
       isShowModal = True
     end
@@ -1921,18 +2219,18 @@
         ParamType = ptInput
       end>
     Left = 106
-    Top = 357
+    Top = 403
   end
   object EntryCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 17
-    Top = 357
+    Top = 403
   end
   object EntryDS: TDataSource
     DataSet = EntryCDS
     Left = 46
-    Top = 357
+    Top = 403
   end
   object spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_Transport_Master'
@@ -1997,6 +2295,12 @@
         Name = 'inFreightId'
         Component = MasterCDS
         ComponentItem = 'FreightId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inRouteKindId_Freight'
+        Component = MasterCDS
+        ComponentItem = 'RouteKindId_Freight'
         ParamType = ptInput
       end
       item
@@ -2646,10 +2950,7 @@
   object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
-    OnDblClickActionList = <
-      item
-        Action = RouteChoiceForm
-      end>
+    OnDblClickActionList = <>
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
@@ -3073,5 +3374,48 @@
       end>
     Left = 64
     Top = 16
+  end
+  object ReportCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 16
+    Top = 357
+  end
+  object ReportDS: TDataSource
+    DataSet = ReportCDS
+    Left = 45
+    Top = 357
+  end
+  object spSelectMiReport: TdsdStoredProc
+    StoredProcName = 'gpSelect_MI_TransportReport'
+    DataSet = ReportCDS
+    DataSets = <
+      item
+        DataSet = ReportCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inShowAll'
+        Value = False
+        Component = BooleanStoredProcAction
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = ShowErasedAction
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    Left = 106
+    Top = 357
   end
 end

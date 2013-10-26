@@ -35,6 +35,8 @@ BEGIN
             , Object_Freight.ValueData    AS FreightName
             , Object_RouteKind.Id         AS RouteKindId
             , Object_RouteKind.ValueData  AS RouteKindName
+            , Object_RouteKindFreight.Id         AS RouteKindId_Freight
+            , Object_RouteKindFreight.ValueData  AS RouteKindName_Freight
  
             , MovementItem.isErased     AS isErased
             
@@ -67,6 +69,11 @@ BEGIN
                                               ON MILinkObject_RouteKind.MovementItemId = MovementItem.Id 
                                              AND MILinkObject_RouteKind.DescId = zc_MILinkObject_RouteKind()
              LEFT JOIN Object AS Object_RouteKind ON Object_RouteKind.Id = MILinkObject_RouteKind.ObjectId
+
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_RouteKindFreight
+                                              ON MILinkObject_RouteKindFreight.MovementItemId = MovementItem.Id 
+                                             AND MILinkObject_RouteKindFreight.DescId = zc_MILinkObject_RouteKindFreight()
+             LEFT JOIN Object AS Object_RouteKindFreight ON Object_RouteKindFreight.Id = MILinkObject_RouteKindFreight.ObjectId
       ;
     
     RETURN NEXT Cursor1;
@@ -261,9 +268,9 @@ BEGIN
             , MIFloat_ColdHour.ValueData            AS ColdHour
             , MIFloat_ColdDistance.ValueData        AS ColdDistance
 
+            , MIFloat_AmountFuel.ValueData          AS AmountFuel         -- !!!Коэффициент и % дополнительного расхода уже учтены!!!
             , MIFloat_AmountColdHour.ValueData      AS AmountColdHour     -- !!!Коэффициент и % дополнительного расхода уже учтены!!!
             , MIFloat_AmountColdDistance.ValueData  AS AmountColdDistance -- !!!Коэффициент и % дополнительного расхода уже учтены!!!
-            , MIFloat_AmountFuel.ValueData          AS AmountFuel         -- !!!Коэффициент и % дополнительного расхода уже учтены!!!
 
             , COALESCE (ObjectFloat_Fuel_Ratio.ValueData, 1) AS RatioFuel        -- Коэффициента перевода нормы
             , MIFloat_RateFuelKindTax.ValueData              AS RateFuelKindTax  -- % дополнительного расхода в связи с сезоном/температурой
@@ -350,6 +357,7 @@ ALTER FUNCTION gpSelect_MI_Transport (Integer, Boolean, Boolean, TVarChar) OWNER
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.10.13                                        * add zc_MILinkObject_RouteKindFreight
  24.10.13                                        * add zfCalc_RateFuelValue_...
  13.10.13                                        * add ObjectLink_Car_FuelAll.ChildObjectId IS NOT NULL
  12.10.13                                        * add zc_ObjectFloat_Fuel_Ratio

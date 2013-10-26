@@ -41,7 +41,16 @@ $BODY$
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_TransportIncome());
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_TransportIncome());
+
+     -- отбрасываем время
+     ioOperDate:= DATE_TRUNC ('DAY', ioOperDate);
+
+     -- проверка
+     IF ioOperDate < '01.10.2012'
+     THEN
+         RAISE EXCEPTION 'Ошибка.<Дата документа> %.', ioOperDate;
+     END IF;
 
      -- проверка
      IF COALESCE (inParentId, 0) = 0
@@ -213,11 +222,13 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.10.13                                        * отбрасываем время
  23.10.13                                        * add NEXTVAL
  19.10.13                                        * add inChangePrice
  07.10.13                                        * add lpCheckRight
  05.10.13                                        *
 */
 
+-- update Movement  set OperDate = DATE_TRUNC ('DAY', OperDate)  where descId = 1 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Movement_TransportIncome (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePrice:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')
