@@ -20,11 +20,11 @@ BEGIN
 
 
      -- таблица - Документы которые надо сначала Распровести, потом Провести
-     CREATE TEMP TABLE _tmpMovement (MovementId Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMovement (MovementId Integer, OperDate TDateTime) ON COMMIT DROP;
 
      -- формируется список !!!только!! из Проведенных Документов
-     INSERT INTO _tmpMovement (MovementId)
-        SELECT Movement.Id
+     INSERT INTO _tmpMovement (MovementId, OperDate)
+        SELECT Movement.Id, Movement.OperDate
         FROM Movement
         WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
           AND Movement.DescId   = zc_Movement_Transport()
@@ -55,7 +55,8 @@ BEGIN
      -- !!!Проводим Документы!!!
      PERFORM lpComplete_Movement_Transport (inMovementId := _tmpMovement.MovementId
                                           , inUserId     := vbUserId)
-     FROM _tmpMovement;
+     FROM _tmpMovement
+     ORDER BY _tmpMovement.OperDate, _tmpMovement.MovementId;
 
 
 END;
