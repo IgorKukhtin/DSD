@@ -23,6 +23,16 @@ $BODY$
   DECLARE vbStartAmountFuel TFloat;
 BEGIN
 
+     -- !!!обязательно!!! очистили таблицу проводок
+     DELETE FROM _tmpMIContainer_insert;
+     -- !!!обязательно!!! очистили таблицу свойств (остатки) документа/элементов
+     DELETE FROM _tmpPropertyRemains;
+     -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     DELETE FROM _tmpItem_Transport;
+     -- !!!обязательно!!! очистили таблицу - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     DELETE FROM _tmpItem_TransportSumm_Transport;
+
+
      -- !!!обязательно!!! пересчитали Child - нормы
      PERFORM lpInsertUpdate_MI_Transport_Child_byMaster (inMovementId := inMovementId, inParentId := MovementItem.Id, inRouteKindId:= MILinkObject_RouteKind.ObjectId, inUserId := inUserId)
      FROM MovementItem
@@ -72,9 +82,6 @@ BEGIN
 
 
      -- !!!Начали!!! Расчет/сохранение некоторых свойств (остатки) документа/элементов
-
-     -- таблица свойств (остатки) документа/элементов
-     CREATE TEMP TABLE _tmpPropertyRemains (Kind Integer, FuelId Integer, Amount TFloat) ON COMMIT DROP;
 
      -- Получили все нужные нам количественные/суммовые контейнеры по определенным товарам/счетам
      WITH tmpContainer AS  (SELECT Id, Amount, 0 AS FuelId, 1 AS Kind
@@ -128,17 +135,6 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_StartSummCash(), inMovementId, vbStartAmountTicketFuel);
 
      -- !!!Почти закончили!!! Расчет/сохранение некоторых свойств (остатки) документа/элементов
-
-
-     -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItem_Transport (MovementItemId Integer, MovementItemId_parent Integer, UnitId_ProfitLoss Integer
-                                         , ContainerId_Goods Integer, GoodsId Integer, AssetId Integer
-                                         , OperCount TFloat
-                                         , ProfitLossGroupId Integer, ProfitLossDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                                         , BusinessId Integer, BusinessId_Route Integer
-                                          ) ON COMMIT DROP;
-     -- таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItem_TransportSumm_Transport (MovementItemId Integer, ContainerId_ProfitLoss Integer, ContainerId Integer, AccountId Integer, OperSumm TFloat) ON COMMIT DROP;
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem_Transport (MovementItemId, MovementItemId_parent, UnitId_ProfitLoss
@@ -406,6 +402,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.10.13                                        * add !!!обязательно!!! очистили таблицу...
  26.10.13                                        * err
  25.10.13                                        * add lpInsertUpdate_MI_Transport_Child_byMaster
  21.10.13                                        * err ObjectId IN (SELECT GoodsId...

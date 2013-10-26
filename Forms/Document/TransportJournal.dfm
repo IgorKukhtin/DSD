@@ -474,7 +474,7 @@ object TransportJournalForm: TTransportJournalForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object actReCompleteAll: TdsdChangeMovementStatus
+    object actReCompleteAll: TdsdExecStoredProc
       Category = 'DSDLib'
       StoredProc = spMovementReCompleteAll
       StoredProcList = <
@@ -484,8 +484,6 @@ object TransportJournalForm: TTransportJournalForm
       Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
       Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
       ImageIndex = 10
-      Status = mtComplete
-      DataSource = DataSource
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -623,6 +621,7 @@ object TransportJournalForm: TTransportJournalForm
         Value = 41639d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
       end>
     Left = 240
     Top = 288

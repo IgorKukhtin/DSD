@@ -85,8 +85,8 @@ type
     CarModelName: TcxGridDBColumn;
     RefreshDispatcher: TRefreshDispatcher;
     spMovementReCompleteAll: TdsdStoredProc;
-    actReCompleteAll: TdsdChangeMovementStatus;
     bbReCompleteAll: TdxBarButton;
+    actReCompleteAll: TdsdExecStoredProc;
   private
   public
   end;
