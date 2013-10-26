@@ -12,8 +12,8 @@ object JuridicalForm: TJuridicalForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  isAlwaysRefresh = False
-  isFree = False
+  AddOnFormData.isAlwaysRefresh = False
+  AddOnFormData.ChoiceAction = dsdChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
   object cxSplitter: TcxSplitter

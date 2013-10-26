@@ -12,8 +12,8 @@ object GoodsTreeForm: TGoodsTreeForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  isAlwaysRefresh = False
-  isFree = False
+  AddOnFormData.isAlwaysRefresh = False
+  AddOnFormData.isSingle = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
