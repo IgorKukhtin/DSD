@@ -48,10 +48,10 @@
 			<DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base_Win64)'!=''">
-			<DCC_UsePackage>TeeDB;vclib;Tee;DBXOdbcDriver;officeXPrt;DBXSybaseASEDriver;vclimg;vclactnband;vcldb;TeeUI;ipstudiowin;vcldsnap;bindcompvcl;vclie;vcltouch;DBXDb2Driver;websnap;VclSmp;vcl;ipstudiowinclient;DBXMSSQLDriver;dsnapcon;vclx;webdsnap;EhLib160;adortl;$(DCC_UsePackage)</DCC_UsePackage>
+			<DCC_UsePackage>TeeDB;vclib;Tee;DBXOdbcDriver;officeXPrt;DBXSybaseASEDriver;vclimg;vclactnband;vcldb;TeeUI;ipstudiowin;vcldsnap;bindcompvcl;vclie;vcltouch;DBXDb2Driver;websnap;VclSmp;vcl;ipstudiowinclient;DBXMSSQLDriver;dsnapcon;vclx;webdsnap;EhLib160;adortl;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;dxBarExtItemsRS16;cxPivotGridRS16;cxGridRS16;cxTreeListRS16;$(DCC_UsePackage)</DCC_UsePackage>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base_Win32)'!=''">
-			<DCC_UsePackage>ipstudiowindataset;RtmRxBDE160;vcldbx;frx16;QRDBASE_D2007;TeeDB;inetdbbde;vclib;Rave100VCL;Tee;DBXOdbcDriver;frxBDE16;officeXPrt;svnui;DBXSybaseASEDriver;vclimg;QR5RunDXE2;fmi;RtmRxCtl160;intrawebdb_120_160;fs16;vclactnband;vcldb;FMXTee;TeeUI;ipstudiowin;vcldsnap;bindcompvcl;frxDB16;vclie;dac160;vcltouch;Intraweb_120_160;DBXDb2Driver;websnap;dacvcl160;vclribbon;VclSmp;QExport3RT_D10;vcl;DataSnapConnectors;ipstudiowinclient;RtmRxDB160;CloudService;DBXMSSQLDriver;FmxTeeUI;dsnapcon;CodeSiteExpressPkg;ipstudiowinwordxp;vclx;ADDONS_XE2;webdsnap;svn;EhLib160;EhLibDataDrivers160;bdertl;adortl;fsTee16;frxADO16;frxDBX16;frxe16;frxIBX16;dclfrxTee16;frxTee16;fsADO16;fsBDE16;fsDB16;fsIBX16;$(DCC_UsePackage)</DCC_UsePackage>
+			<DCC_UsePackage>ipstudiowindataset;RtmRxBDE160;vcldbx;frx16;QRDBASE_D2007;TeeDB;inetdbbde;vclib;Rave100VCL;Tee;DBXOdbcDriver;frxBDE16;officeXPrt;svnui;DBXSybaseASEDriver;vclimg;QR5RunDXE2;fmi;RtmRxCtl160;intrawebdb_120_160;fs16;vclactnband;vcldb;FMXTee;TeeUI;ipstudiowin;vcldsnap;bindcompvcl;frxDB16;vclie;dac160;vcltouch;Intraweb_120_160;DBXDb2Driver;websnap;dacvcl160;vclribbon;VclSmp;QExport3RT_D10;vcl;DataSnapConnectors;ipstudiowinclient;RtmRxDB160;CloudService;DBXMSSQLDriver;FmxTeeUI;dsnapcon;CodeSiteExpressPkg;ipstudiowinwordxp;vclx;ADDONS_XE2;webdsnap;svn;EhLib160;EhLibDataDrivers160;bdertl;adortl;fsTee16;frxADO16;frxDBX16;frxe16;frxIBX16;dclfrxTee16;frxTee16;fsADO16;fsBDE16;fsDB16;fsIBX16;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;cxDataRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;dxBarExtItemsRS16;cxPivotGridRS16;cxGridRS16;cxTreeListRS16;ProjectComponent;ProjectDesignComponent;$(DCC_UsePackage)</DCC_UsePackage>
 			<DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
 			<VerInfo_Locale>1033</VerInfo_Locale>
 			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
@@ -638,6 +638,10 @@
 				<Form>ModelServiceEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_MovementTransport.pas">
+				<Form>Report_MovementTransportForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
@@ -683,9 +687,12 @@
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
 					<Excluded_Packages>
+						<Excluded_Packages Name="D:\WORK\DSD\DSD\BIN\DSDComponent.bpl">File D:\WORK\DSD\DSD\BIN\DSDComponent.bpl not found</Excluded_Packages>
+						<Excluded_Packages Name="D:\WORK\DSD\DSD\BIN\DSDDesignComponent.bpl">File D:\WORK\DSD\DSD\BIN\DSDDesignComponent.bpl not found</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files (x86)\FastReports\FastReport 4\LibD16\dclfsDB16.bpl">FastScript 1.9 DB Components</Excluded_Packages>
+						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\dcldxCoreD7.bpl">File C:\Users\Public\Documents\RAD Studio\9.0\Bpl\dcldxCoreD7.bpl not found</Excluded_Packages>
+						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\dacvcl160.bpl">Devart Data Access GUI related Components</Excluded_Packages>
 						<Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl160.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\dcloffice2k160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\dclofficexp160.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
 					</Excluded_Packages>
 					<Source>
 						<Source Name="MainSource">ProjectTest.dpr</Source>

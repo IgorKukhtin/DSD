@@ -13,8 +13,9 @@
   KeyPreview = True
   OldCreateOrder = False
   PopupMenu = PopupMenu
-  isAlwaysRefresh = False
-  isFree = True
+  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.isSingle = False
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel
@@ -756,6 +757,9 @@
     object cxTabSheetIncome: TcxTabSheet
       Caption = #1047#1072#1087#1088#1072#1074#1082#1072
       ImageIndex = 2
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridIncome: TcxGrid
         Left = 0
         Top = 0
@@ -1047,6 +1051,9 @@
     object cxTabSheetReport: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 3
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridReport: TcxGrid
         Left = 0
         Top = 0
@@ -1193,6 +1200,9 @@
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -2739,8 +2749,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')

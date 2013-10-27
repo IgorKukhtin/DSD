@@ -693,6 +693,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbAccountReport'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_MovementTransport'
         end>
     end
     object bbTransport: TdxBarButton
@@ -871,6 +875,10 @@ object MainForm: TMainForm
       Action = actAbout
       Category = 0
     end
+    object bbReport_MovementTransport: TdxBarButton
+      Action = actReport_MovementTransport
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Left = 192
@@ -983,6 +991,14 @@ object MainForm: TMainForm
       Category = #1054#1090#1095#1077#1090#1099
       Caption = #1041#1072#1083#1072#1085#1089
       FormName = 'TReport_BalanceForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_MovementTransport: TdsdOpenForm
+      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1042#1086#1076#1080#1090#1077#1083#1103#1084
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1042#1086#1076#1080#1090#1077#1083#1103#1084
+      FormName = 'TReport_MovementTransportForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -1540,7 +1556,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.14'
+    Version = '4.12'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

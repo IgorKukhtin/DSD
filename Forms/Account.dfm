@@ -12,8 +12,9 @@ object AccountForm: TAccountForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  isAlwaysRefresh = False
-  isFree = False
+  AddOnFormData.isAlwaysRefresh = False
+  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.ChoiceAction = dsdChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid

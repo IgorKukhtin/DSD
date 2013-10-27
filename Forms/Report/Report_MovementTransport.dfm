@@ -1,9 +1,9 @@
-object Report_TransportForm: TReport_TransportForm
+object Report_MovementTransportForm: TReport_MovementTransportForm
   Left = 0
   Top = 0
-  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1088#1072#1085#1089#1087#1086#1088#1090#1091
+  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1074#1086#1076#1080#1090#1077#1083#1103#1084' - '#1088#1072#1073#1086#1095#1077#1077' '#1074#1088#1103#1084#1103
   ClientHeight = 395
-  ClientWidth = 1329
+  ClientWidth = 1189
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,12 +12,14 @@ object Report_TransportForm: TReport_TransportForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  isAlwaysRefresh = False
+  isFree = True
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 113
-    Width = 1329
+    Width = 1189
     Height = 282
     Align = alClient
     TabOrder = 0
@@ -40,40 +42,6 @@ object Report_TransportForm: TReport_TransportForm
           Format = ',0.00'
           Kind = skSum
           Position = spFooter
-          Column = StartOdometre
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Position = spFooter
-          Column = Amount
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Position = spFooter
-          Column = EndOdometre
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Position = spFooter
-          Column = StartFuel
         end
         item
           Format = ',0.00'
@@ -94,13 +62,44 @@ object Report_TransportForm: TReport_TransportForm
           Format = ',0.00'
           Kind = skSum
           Position = spFooter
-          Column = AmountCold
+          Column = clHoursWork
         end
         item
           Format = ',0.00'
           Kind = skSum
           Position = spFooter
-          Column = AmountColdFact
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+          Column = clHoursAdd
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+          Column = clOperDate
         end
         item
           Format = ',0.00'
@@ -132,34 +131,6 @@ object Report_TransportForm: TReport_TransportForm
         item
           Format = ',0.00'
           Kind = skSum
-          Column = StartOdometre
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Column = AmountCold
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Column = EndOdometre
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Column = StartFuel
         end
         item
           Format = ',0.00'
@@ -176,12 +147,37 @@ object Report_TransportForm: TReport_TransportForm
         item
           Format = ',0.00'
           Kind = skSum
-          Column = AmountCold
+          Column = clHoursWork
         end
         item
           Format = ',0.00'
           Kind = skSum
-          Column = AmountColdFact
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = clHoursAdd
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = clOperDate
         end
         item
           Format = ',0.00'
@@ -210,152 +206,64 @@ object Report_TransportForm: TReport_TransportForm
       OptionsView.Footer = True
       OptionsView.GroupFooters = gfAlwaysVisible
       OptionsView.HeaderAutoHeight = True
-      object OperDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072
-        DataBinding.FieldName = 'OperDate'
-        Width = 77
-      end
-      object RouteCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'RouteCode'
-        Width = 37
-      end
-      object RouteName: TcxGridDBColumn
-        Caption = #1052#1072#1088#1096#1088#1091#1090
-        DataBinding.FieldName = 'RouteName'
-        Width = 50
-      end
-      object PersonalDriverCode: TcxGridDBColumn
-        Caption = #1042#1086#1076#1080#1090#1077#1083#1100' ('#1082#1086#1076')'
-        DataBinding.FieldName = 'PersonalDriverCode'
-        HeaderAlignmentVert = vaCenter
-        Width = 27
-      end
-      object PersonalDriverName: TcxGridDBColumn
-        Caption = #1042#1086#1076#1080#1090#1077#1083#1100
+      object clPersonalDriverName: TcxGridDBColumn
+        Caption = #1042#1086#1076#1080#1090#1077#1083#1100' '#1060#1048#1054
         DataBinding.FieldName = 'PersonalDriverName'
         HeaderAlignmentVert = vaCenter
-        Width = 36
+        Width = 147
       end
-      object StartOdometre: TcxGridDBColumn
-        Caption = #1059#1090#1088#1086
-        DataBinding.FieldName = 'StartOdometre'
+      object clRouteName: TcxGridDBColumn
+        Caption = #1052#1072#1088#1096#1088#1091#1090
+        DataBinding.FieldName = 'RouteName'
+        Width = 132
+      end
+      object clRouteKindName: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1084#1072#1088#1096#1088#1091#1090#1072
+        DataBinding.FieldName = 'RouteKindName'
+        Width = 193
+      end
+      object clFreightName: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1075#1088#1091#1079#1072
+        DataBinding.FieldName = 'FreightName'
+        Width = 179
+      end
+      object clWeight: TcxGridDBColumn
+        Caption = #1042#1077#1089' ('#1082#1075')'
+        DataBinding.FieldName = 'Weight'
+        Width = 138
+      end
+      object clHoursWork: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1073#1086#1095#1080#1093' '#1095#1072#1089#1086#1074
+        DataBinding.FieldName = 'HoursWork'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 53
+        Width = 91
       end
-      object EndOdometre: TcxGridDBColumn
-        Caption = #1042#1077#1095#1077#1088
-        DataBinding.FieldName = 'EndOdometre'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
-        HeaderAlignmentHorz = taRightJustify
-        HeaderAlignmentVert = vaCenter
-        Width = 53
-      end
-      object Amount: TcxGridDBColumn
-        Caption = #1055#1088#1086#1073#1077#1075
-        DataBinding.FieldName = 'Amount'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 35
-      end
-      object StartFuel: TcxGridDBColumn
-        Caption = #1053#1072#1095'.'#1086#1089#1090'.'#1090#1086#1087#1083#1080#1074#1072
-        DataBinding.FieldName = 'StartFuel'
+      object clHoursAdd: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1073#1072#1074#1083#1077#1085#1085#1099#1093' '#1088#1072#1073#1086#1095#1080#1093' '#1095#1072#1089#1086#1074
+        DataBinding.FieldName = 'HoursAdd'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 92
       end
-      object ReFuel: TcxGridDBColumn
-        Caption = #1047#1072#1087#1088#1072#1074#1082#1072
-        DataBinding.FieldName = 'ReFuel'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.AssignedValues.DisplayFormat = True
-        HeaderAlignmentVert = vaCenter
-        Width = 35
-      end
-      object TotalFuel: TcxGridDBColumn
-        Caption = #1048#1090#1086#1075#1086
-        DataBinding.FieldName = 'TotalFuel'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        HeaderAlignmentVert = vaCenter
-        Width = 54
-      end
-      object AmountCold: TcxGridDBColumn
-        Caption = #1061#1086#1083#1086#1076
-        DataBinding.FieldName = 'AmountCold'
+      object clInvNumber: TcxGridDBColumn
+        Caption = #1053#1086#1084#1077#1088' '#1087#1091#1090#1077#1074#1086#1075#1086
+        DataBinding.FieldName = 'InvNumber'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentVert = vaCenter
-        Width = 53
+        Width = 103
       end
-      object AmountColdFact: TcxGridDBColumn
-        Caption = #1061#1086#1083#1086#1076', '#1085#1086#1088#1084#1072
-        DataBinding.FieldName = 'AmountColdFact'
+      object clOperDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1087#1091#1090#1077#1074#1086#1075#1086
+        DataBinding.FieldName = 'OperDate'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentVert = vaCenter
-        Width = 76
-      end
-      object AmountRate: TcxGridDBColumn
-        Caption = #1056#1072#1089#1093#1086#1076
-        DataBinding.FieldName = 'AmountRate'
-        HeaderAlignmentVert = vaCenter
-        Width = 76
-      end
-      object EndFuel: TcxGridDBColumn
-        Caption = #1054#1089#1090#1072#1090#1086#1082
-        DataBinding.FieldName = 'EndFuel'
-        HeaderAlignmentVert = vaCenter
-        Width = 74
-      end
-      object InvNumberPersonalSendCash: TcxGridDBColumn
-        Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100
-        DataBinding.FieldName = 'InvNumberPersonalSendCash'
-        HeaderAlignmentVert = vaCenter
-        Width = 75
-      end
-      object SummCashIn: TcxGridDBColumn
-        Caption = #1042#1099#1076#1072#1085#1086' '#1076'.'#1089'.'
-        DataBinding.FieldName = 'SummCashIn'
-        HeaderAlignmentVert = vaCenter
-        Width = 75
-      end
-      object SummCashOut: TcxGridDBColumn
-        Caption = #1048#1079#1088#1072#1089#1093#1086#1076#1086#1074#1072#1085#1086' '#1076'.'#1089'.'
-        DataBinding.FieldName = 'SummCashOut'
-        HeaderAlignmentVert = vaCenter
-        Width = 75
-      end
-      object SummCashDiff: TcxGridDBColumn
-        Caption = #1056#1072#1079#1085#1080#1094#1072' '#1076'.'#1089'.'
-        DataBinding.FieldName = 'SummCashDiff'
-        HeaderAlignmentVert = vaCenter
-        Width = 74
-      end
-      object invNumberIncome: TcxGridDBColumn
-        Caption = #1063#1077#1082
-        DataBinding.FieldName = 'invNumberIncome'
-        HeaderAlignmentVert = vaCenter
-        Width = 75
-      end
-      object PriceFuel: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1090#1086#1087#1083#1080#1074#1072
-        DataBinding.FieldName = 'PriceFuel'
-        HeaderAlignmentVert = vaCenter
-        Width = 75
-      end
-      object FreightWeight: TcxGridDBColumn
-        Caption = #1042#1099#1074#1086#1079', '#1082#1075
-        DataBinding.FieldName = 'FreightWeight'
-        HeaderAlignmentVert = vaCenter
-        Width = 75
+        Width = 100
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -365,14 +273,14 @@ object Report_TransportForm: TReport_TransportForm
   object Panel1: TPanel
     Left = 0
     Top = 26
-    Width = 1329
+    Width = 1189
     Height = 87
     Align = alTop
     TabOrder = 5
     object deStart: TcxDateEdit
       Left = 16
       Top = 8
-      EditValue = 41395d
+      EditValue = 41548d
       Properties.ShowTime = False
       TabOrder = 0
       Width = 121
@@ -380,18 +288,18 @@ object Report_TransportForm: TReport_TransportForm
     object deEnd: TcxDateEdit
       Left = 176
       Top = 8
-      EditValue = 41395d
+      EditValue = 41557d
       Properties.ShowTime = False
       TabOrder = 1
       Width = 121
     end
     object cxLabel2: TcxLabel
-      Left = 401
+      Left = 341
       Top = 9
-      Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
+      Caption = #1042#1086#1076#1080#1090#1077#1083#1100
     end
-    object edCar: TcxButtonEdit
-      Left = 472
+    object edPersonalDriver: TcxButtonEdit
+      Left = 400
       Top = 8
       Properties.Buttons = <
         item
@@ -399,7 +307,7 @@ object Report_TransportForm: TReport_TransportForm
           Kind = bkEllipsis
         end>
       TabOrder = 3
-      Width = 161
+      Width = 233
     end
   end
   object DataSource: TDataSource
@@ -425,8 +333,8 @@ object Report_TransportForm: TReport_TransportForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 296
-    Top = 168
+    Left = 584
+    Top = 256
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -466,10 +374,6 @@ object Report_TransportForm: TReport_TransportForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbDialogForm'
-        end
-        item
-          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -501,8 +405,8 @@ object Report_TransportForm: TReport_TransportForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 256
-    Top = 232
+    Left = 232
+    Top = 240
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -525,7 +429,7 @@ object Report_TransportForm: TReport_TransportForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpReport_Transport'
+    StoredProcName = 'gpReport_MovementTransport'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -534,21 +438,22 @@ object Report_TransportForm: TReport_TransportForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41395d
+        Value = 41548d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41395d
+        Value = 41557d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
-        Name = 'inCarId'
-        Value = Null
+        Name = 'inPersonalDriverId'
+        Value = ''
+        Component = PersonalDriverGuides
         ParamType = ptInput
       end>
     Left = 152
@@ -561,43 +466,18 @@ object Report_TransportForm: TReport_TransportForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    Left = 304
-    Top = 296
+    Left = 312
+    Top = 264
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 440
-    Top = 240
+    Left = 432
+    Top = 232
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
     Left = 200
     Top = 64
-  end
-  object CarGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edCar
-    FormName = 'TCarForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = CarGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = CarGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 640
-    Top = 27
   end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefresh
@@ -612,9 +492,32 @@ object Report_TransportForm: TReport_TransportForm
       item
       end
       item
-        Component = CarGuides
       end>
-    Left = 288
+    Left = 328
     Top = 64
+  end
+  object PersonalDriverGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonalDriver
+    FormName = 'TPersonalForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PersonalDriverGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PersonalDriverGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 640
+    Top = 32
   end
 end

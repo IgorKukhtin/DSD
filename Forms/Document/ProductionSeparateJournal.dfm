@@ -13,8 +13,6 @@ object ProductionSeparateJournalForm: TProductionSeparateJournalForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  isAlwaysRefresh = False
-  isFree = True
   PixelsPerInch = 96
   TextHeight = 13
   object TPanel

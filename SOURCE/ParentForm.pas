@@ -4,32 +4,31 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.ActnList, Vcl.Forms, Vcl.Dialogs, dsdDB, cxPropertiesStore, frxClass;
+  Vcl.Controls, Vcl.ActnList, Vcl.Forms, Vcl.Dialogs, dsdDB, cxPropertiesStore,
+  frxClass, dsdAddOn;
 
 const
   MY_MESSAGE = WM_USER + 1;
 
 type
+
   TParentForm = class(TForm)
   private
-    FChoiceAction: TCustomAction;
-    FParams: TdsdParams;
     //  ласс, который вызвал данную форму
     FSender: TComponent;
     FFormClassName: string;
     FonAfterShow: TNotifyEvent;
-    FisAfterShow: boolean;
-    FisFree: boolean;
-    FisAlwaysRefresh: boolean;
+    FisAlreadyOpen: boolean;
+    FAddOnFormData: TAddOnFormData;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormShow(Sender: TObject);
     procedure SetSender(const Value: TComponent);
-    procedure SetisFree(const Value: boolean);
-    procedure SetisAlwaysRefresh(const Value: boolean);
     property FormSender: TComponent read FSender write SetSender;
     procedure AfterShow(var a : TWMSHOWWINDOW); message MY_MESSAGE;
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
@@ -37,13 +36,8 @@ type
     procedure Close(Sender: TObject);
     property FormClassName: string read FFormClassName write FFormClassName;
     property onAfterShow: TNotifyEvent read FonAfterShow write FonAfterShow;
-    //   сожалению приходитс€ использовать данное свойство что бы не перечитывать
-    // запросы при подгрузке данных!!!
-    property isAfterShow: boolean read FisAfterShow default false;
   published
-    property isAlwaysRefresh: boolean read FisAlwaysRefresh write SetisAlwaysRefresh;
-    property isFree: boolean read FisFree write SetisFree;
-    property Params: TdsdParams read FParams write FParams;
+    property AddOnFormData: TAddOnFormData read FAddOnFormData write FAddOnFormData;
   end;
 
 implementation
@@ -53,9 +47,9 @@ uses
   cxGroupBox, dxBevel, cxButtons, cxGridDBTableView, cxGrid, DB, DBClient,
   dxBar, cxTextEdit, cxLabel,
   StdActns, cxDBTL, cxCurrencyEdit, cxDropDownEdit, dsdGuides,
-  cxDBLookupComboBox, DBGrids, cxCheckBox, cxCalendar, ExtCtrls, dsdAddOn,
-  cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, dsdAction, frxDBSet, dxBarExtItems,
-  cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView;
+  cxDBLookupComboBox, DBGrids, cxCheckBox, cxCalendar, ExtCtrls,
+  cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, frxDBSet, dxBarExtItems,
+  cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView, dsdAction;
 
 {$R *.dfm}
 
@@ -65,19 +59,8 @@ var
 begin
   if csDesigning in ComponentState then
      exit;
-  if not FisAfterShow then
-    try
-      for I := 0 to ComponentCount - 1 do begin
-        // ѕеречитывает видимые компоненты
-        if Components[i] is TdsdDataSetRefresh then
-           (Components[i] as TdsdDataSetRefresh).Execute;
-      end;
-      if Assigned(FonAfterShow) then
-         FonAfterShow(Self);
-    finally
-      // форма отрисована и показана и все данные загружены
-      FisAfterShow := true;
-    end;
+  if Assigned(FonAfterShow) then
+     FonAfterShow(Self);
 end;
 
 procedure TParentForm.Close(Sender: TObject);
@@ -87,55 +70,64 @@ begin
   if Sender is TdsdInsertUpdateGuides then
      if Assigned(FSender) then
         if FSender.GetInterface(IFormAction, FormAction) then
-           FormAction.OnFormClose(Params);
+           FormAction.OnFormClose(AddOnFormData.Params.Params);
   inherited Close;
 end;
 
 constructor TParentForm.Create(AOwner: TComponent);
 begin
+  FAddOnFormData := TAddOnFormData.Create;
   inherited;
   onKeyDown := FormKeyDown;
   onClose := FormClose;
   onShow := FormShow;
   OnCloseQuery := FormCloseQuery;
   KeyPreview := true;
+  FisAlreadyOpen := false;
 end;
 
 function TParentForm.Execute(Sender: TComponent; Params: TdsdParams): boolean;
 var
   i: integer;
-  ExecuteDialog: TExecuteDialog;
 begin
-  // если форма уже показывалась
-  // то перечитывать ли ее каждый раз определ€ет флаг
-  if FisAfterShow then
-     if isAlwaysRefresh then
-        FisAfterShow := false;
-
-  result := true;
-  // «аполн€ет параметры формы переданными параметрами
-  for I := 0 to ComponentCount - 1 do begin
-    if Components[i] is TdsdFormParams then begin
-       FParams := (Components[i] as TdsdFormParams).Params;
-       FParams.AssignParams(Params);
+  try
+    // то перечитывать ли ее каждый раз определ€ет флаг
+    result := true;
+    // «аполн€ет параметры формы переданными параметрами
+    if Assigned(AddOnFormData.Params) then
+       AddOnFormData.Params.Params.AssignParams(Params);
+    // ≈сли надо вызываем заполнение диалогом
+    if Assigned(AddOnFormData.ExecuteDialogAction) and AddOnFormData.ExecuteDialogAction.OpenBeforeShow then begin
+       AddOnFormData.ExecuteDialogAction.RefreshAllow := false; // „то бы не было двух перечитываний.
+       result := AddOnFormData.ExecuteDialogAction.Execute;
     end;
-    if Components[i] is TdsdChoiceGuides then
-       FChoiceAction := Components[i] as TdsdChoiceGuides;
-    if Components[i] is TExecuteDialog then
-       ExecuteDialog := Components[i] as TExecuteDialog;
+    FormSender := Sender;
+    // ≈сли открыта первый раз и всегда перечитываем
+    if (not FisAlreadyOpen) or AddOnFormData.isAlwaysRefresh then
+       // ѕеречитываем запросы
+       if Assigned(AddOnFormData.RefreshAction) then
+          AddOnFormData.RefreshAction.Execute;
+  finally
+    FisAlreadyOpen := true;
   end;
-  if Assigned(ExecuteDialog) and ExecuteDialog.OpenBeforeShow then begin
-     ExecuteDialog.RefreshAllow := false; // „то бы не было двух перечитываний.
-     result := ExecuteDialog.Execute;
-  end;
-  FormSender := Sender;
 end;
 
 procedure TParentForm.FormClose(Sender: TObject; var Action: TCloseAction);
+var i: integer;
 begin
   inherited;
-  if isFree then
-     Action := caFree;
+  // ≈сли данна€ форма не одиночка, то при закрытии надо проверить единственна€ она или нет
+  // ≈сли не единственна€, то сделать ей Free
+  if not AddOnFormData.isSingle then begin
+     for i := 0 to ComponentCount - 1 do
+         if Components[i] is TDataSet then
+            TDataSet(Components[i]).Close;
+     for i := 0 to Screen.FormCount - 1 do
+         if (Screen.Forms[i] is TParentForm) then
+            if Screen.Forms[i] <> Self then
+               if TParentForm(Screen.Forms[i]).FormClassName = Self.FormClassName then
+                  Action := caFree;
+  end;
 end;
 
 procedure TParentForm.FormCloseQuery(Sender: TObject; var CanClose: boolean);
@@ -179,14 +171,15 @@ begin
   PostMessage(Handle, MY_MESSAGE, 0, 0);
 end;
 
-procedure TParentForm.SetisAlwaysRefresh(const Value: boolean);
+procedure TParentForm.Notification(AComponent: TComponent;
+  Operation: TOperation);
 begin
-  FisAlwaysRefresh := Value;
-end;
-
-procedure TParentForm.SetisFree(const Value: boolean);
-begin
-  FisFree := Value;
+  inherited;
+  if csDesigning in ComponentState then
+    if (Operation = opRemove) then begin
+      if AComponent = AddOnFormData.RefreshAction then
+         AddOnFormData.RefreshAction := nil;
+    end;
 end;
 
 procedure TParentForm.SetSender(const Value: TComponent);
@@ -195,18 +188,18 @@ begin
   // ¬ зависимости от того, как была вызвана форма мен€етс€ некоторое поведение
 
   // ≈сли вызывали дл€ выбора, то делаем видимой кнопку выбора
-  if Assigned(FChoiceAction) then begin
-     FChoiceAction.Visible := Assigned(FSender) and Supports(FSender, IChoiceCaller);
-     FChoiceAction.Enabled := FChoiceAction.Visible;
+  if Assigned(AddOnFormData.ChoiceAction) then begin
+     AddOnFormData.ChoiceAction.Visible := Assigned(FSender) and Supports(FSender, IChoiceCaller);
+     AddOnFormData.ChoiceAction.Enabled := AddOnFormData.ChoiceAction.Visible;
      if Supports(FSender, IChoiceCaller) then begin
         try
-          TdsdChoiceGuides(FChoiceAction).ChoiceCaller := nil;
+          TdsdChoiceGuides(AddOnFormData.ChoiceAction).ChoiceCaller := nil;
         except
           // пока под стул!!!
         end;
         // объединили вызывающий справочник и кнопку выбора!!!
-        TdsdChoiceGuides(FChoiceAction).ChoiceCaller := FSender as IChoiceCaller;
-        (FSender as IChoiceCaller).Owner := FChoiceAction;
+        TdsdChoiceGuides(AddOnFormData.ChoiceAction).ChoiceCaller := FSender as IChoiceCaller;
+        (FSender as IChoiceCaller).Owner := AddOnFormData.ChoiceAction;
      end;
   end;
 end;

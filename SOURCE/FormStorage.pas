@@ -186,17 +186,20 @@ begin
   for i := 0 to Screen.FormCount - 1 do begin
      if Screen.Forms[i] is TParentForm then
         with TParentForm(Screen.Forms[i]) do begin
-          if (not isFree) and (FormClassName = FormName) then begin
-             {Result := TParentForm.Create(Application);
-             Result.FormClassName := FormName;
-             try
-               MemoryStream.WriteComponent(Screen.Forms[i]);
-               MemoryStream.Position := 0;
-               MemoryStream.ReadComponent(Result);
-             finally
-               MemoryStream.Clear;
-             end;}
-             result := TParentForm(Screen.Forms[i]);
+          if FormClassName = FormName then begin
+             if AddOnFormData.isSingle or (not Visible) then
+                result := TParentForm(Screen.Forms[i])
+             else begin
+               Result := TParentForm.Create(Application);
+               Result.FormClassName := FormName;
+               try
+                 MemoryStream.WriteComponent(Screen.Forms[i]);
+                 MemoryStream.Position := 0;
+                 MemoryStream.ReadComponent(Result);
+               finally
+                 MemoryStream.Clear;
+               end;
+             end;
              exit;
           end;
         end;

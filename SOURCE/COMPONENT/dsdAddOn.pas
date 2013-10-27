@@ -75,6 +75,8 @@ type
     edFilter: TcxTextEdit;
     FOnlyEditingCellOnEnter: boolean;
     FGridEditKeyEvent: TcxGridEditKeyEvent;
+    FOnGetContentStyleEvent: TcxGridGetCellStyleEvent;
+    FErasedStyle: TcxStyle;
     procedure ActionOnlyEditingCellOnEnter;
     procedure GridEditKeyEvent(Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem;
                                 AEdit: TcxCustomEdit; var Key: Word; Shift: TShiftState);
@@ -93,9 +95,12 @@ type
     procedure OnCustomDrawColumnHeader(Sender: TcxGridTableView;
      ACanvas: TcxCanvas; AViewInfo: TcxGridColumnHeaderViewInfo;
      var ADone: Boolean);
-    // рисуем свой цвет у выделенной ячейки
+    // рисуем свой цвет у выделенной ячейки в гриде
     procedure OnCustomDrawCell(Sender: TcxCustomGridTableView; ACanvas: TcxCanvas;
       AViewInfo: TcxGridTableDataCellViewInfo; var ADone: Boolean);
+    // рисуем свой цвет у выделенной ячейки при выгрузке в Excel, например, или печати
+    procedure OnGetContentStyle(Sender: TcxCustomGridTableView; ARecord: TcxCustomGridRecord;
+      AItem: TcxCustomGridTableItem; out AStyle: TcxStyle);
     // поменять цвет грида в случае установки фильтра
     procedure onFilterChanged(Sender: TObject);
     // если при выходе из грида ДатаСет в Edit mode, то делаем Post
@@ -280,6 +285,31 @@ type
     property OpenBeforeShow: boolean read FOpenBeforeShow write FOpenBeforeShow;
   end;
 
+  TAddOnFormData = class(TPersistent)
+  private
+    FChoiceAction: TdsdChoiceGuides;
+    FParams: TdsdFormParams;
+    FExecuteDialogAction: TExecuteDialog;
+    FRefreshAction: TdsdDataSetRefresh;
+    FisSingle: boolean;
+    FisAlwaysRefresh: boolean;
+  public
+    constructor Create;
+  published
+    // Всегда перечитываем форму
+    property isAlwaysRefresh: boolean read FisAlwaysRefresh write FisAlwaysRefresh default true;
+    // Событие вызываемое для перечитывания формы
+    property RefreshAction: TdsdDataSetRefresh read FRefreshAction write FRefreshAction;
+    // Данная форма создается в единственном экземпляре. Актуально, например, для справочников
+    property isSingle: boolean read FisSingle write FisSingle default true;
+    // Событие вызываемое для выбора значения
+    property ChoiceAction: TdsdChoiceGuides read FChoiceAction write FChoiceAction;
+    // Событие открытия диалога
+    property ExecuteDialogAction: TExecuteDialog read FExecuteDialogAction write FExecuteDialogAction;
+    // Параметры формы
+    property Params: TdsdFormParams read FParams write FParams;
+  end;
+
   procedure Register;
 
 implementation
@@ -437,6 +467,8 @@ begin
   edFilter.OnExit := edFilterExit;
   FBackGroundStyle := TcxStyle.Create(nil);
   FBackGroundStyle.Color := $00E4E4E4;
+  FErasedStyle := TcxStyle.Create(nil);
+  FErasedStyle.TextColor := clRed;
 end;
 
 procedure TdsdDBViewAddOn.OnColumnHeaderClick(Sender: TcxGridTableView;
@@ -457,14 +489,14 @@ begin
      ACanvas.Font.Color := clHighlightText;
   end;
   // работаем со свойством Удален
-  if (FView is TcxGridDBTableView) then
-      Column := TcxGridDBTableView(FView).GetColumnByFieldName(FErasedFieldName);
-  if (FView is TcxGridDBBandedTableView) then
-      Column := TcxGridDBBandedTableView(FView).GetColumnByFieldName(FErasedFieldName);
+  if (Sender is TcxGridDBTableView) then
+      Column := TcxGridDBTableView(Sender).GetColumnByFieldName(FErasedFieldName);
+  if (Sender is TcxGridDBBandedTableView) then
+      Column := TcxGridDBBandedTableView(Sender).GetColumnByFieldName(FErasedFieldName);
   if Assigned(Column) then
      if not VarIsNull(AViewInfo.GridRecord.Values[Column.Index])
         and AViewInfo.GridRecord.Values[Column.Index] then
-            ACanvas.Font.Color := clRed;
+            ACanvas.Font.Color := FErasedStyle.TextColor;
 end;
 
 procedure TdsdDBViewAddOn.OnCustomDrawColumnHeader(
@@ -556,6 +588,7 @@ begin
        if Assigned(TcxDBDataController(FView.DataController).DataSource.DataSet) then
           TcxDBDataController(FView.DataController).DataSource.DataSet.AfterInsert := nil;
   end;
+  FErasedStyle.Free;
   inherited;
 end;
 
@@ -647,6 +680,25 @@ begin
   end;
 end;
 
+procedure TdsdDBViewAddOn.OnGetContentStyle(Sender: TcxCustomGridTableView;
+  ARecord: TcxCustomGridRecord; AItem: TcxCustomGridTableItem;
+  out AStyle: TcxStyle);
+var Column: TcxGridColumn;
+begin
+  // работаем со свойством Удален
+  if Assigned(FOnGetContentStyleEvent) then
+     FOnGetContentStyleEvent(Sender, ARecord, AItem, AStyle);
+
+  if (Sender is TcxGridDBTableView) then
+      Column := TcxGridDBTableView(Sender).GetColumnByFieldName(FErasedFieldName);
+  if (Sender is TcxGridDBBandedTableView) then
+      Column := TcxGridDBBandedTableView(Sender).GetColumnByFieldName(FErasedFieldName);
+  if Assigned(Column) then
+     if not VarIsNull(ARecord.Values[Column.Index])
+        and ARecord.Values[Column.Index] then 
+            AStyle := FErasedStyle; 
+end;
+
 procedure TdsdDBViewAddOn.OnKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
@@ -681,9 +733,6 @@ begin
        FOnExit := TcxGrid(FView.Control).OnExit;
        TcxGrid(FView.Control).OnExit := OnExit;
     end;
-    // нужно обязательно убрать предустановленную обработку
-//    if OnlyEditingCellOnEnter then
-  //     FView.OptionsBehavior.GoToNextCellOnEnter := false;
     FOnKeyDown := FView.OnKeyDown;
     FView.OnKeyDown := OnKeyDown;
     FView.OnKeyPress := OnKeyPress;
@@ -694,6 +743,8 @@ begin
     FView.OnCustomDrawCell := OnCustomDrawCell;
     FGridEditKeyEvent := FView.OnEditKeyDown;
     FView.OnEditKeyDown := GridEditKeyEvent;
+    FOnGetContentStyleEvent := FView.Styles.OnGetContentStyle;
+    FView.Styles.OnGetContentStyle := OnGetContentStyle;
 
     if Assigned(TcxDBDataController(FView.DataController).DataSource) then
        if Assigned(TcxDBDataController(FView.DataController).DataSource.DataSet) then begin
@@ -1154,9 +1205,8 @@ procedure TRefreshDispatcher.OnComponentChange(Sender: TObject);
 begin
   if Assigned(FRefreshAction) then
   // перечитываем запросы только если форма загружена
-     if Assigned(Self.Owner) and (Self.Owner is TParentForm)
-        and TParentForm(Self.Owner).isAfterShow then
-            FRefreshAction.Execute
+     if Assigned(Self.Owner) and (Self.Owner is TParentForm) then
+        FRefreshAction.Execute
 end;
 
 procedure TRefreshDispatcher.SetShowDialogAction(const Value: TExecuteDialog);
@@ -1219,10 +1269,10 @@ end;
 function TExecuteDialog.Execute: boolean;
 begin
   result := false;
-  with ShowForm do
+  with TParentForm(ShowForm) do
     if ModalResult = mrOk then begin
        result := true;
-       Self.GuiParams.AssignParams(Params);
+       Self.GuiParams.AssignParams(AddOnFormData.Params.Params);
        if Assigned(RefreshDispatcher) and Assigned(RefreshDispatcher.RefreshAction) and RefreshAllow then
           RefreshDispatcher.RefreshAction.Execute;// OnComponentChange(Self);
        RefreshAllow := true;
@@ -1336,6 +1386,14 @@ begin
      FFocusedItemChanged := Value.OnFocusedItemChanged;
      Value.OnFocusedItemChanged := FocusedItemChanged;
   end;
+end;
+
+{ TAddOnFormData }
+
+constructor TAddOnFormData.Create;
+begin
+  FisAlwaysRefresh := true;
+  FisSingle := true;
 end;
 
 end.

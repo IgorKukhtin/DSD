@@ -13,8 +13,8 @@ object TransportJournalForm: TTransportJournalForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  isAlwaysRefresh = False
-  isFree = True
+  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.isSingle = False
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
@@ -96,6 +96,7 @@ object TransportJournalForm: TTransportJournalForm
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
+      OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -261,8 +262,8 @@ object TransportJournalForm: TTransportJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')

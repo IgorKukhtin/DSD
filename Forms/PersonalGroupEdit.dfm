@@ -12,7 +12,6 @@
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit

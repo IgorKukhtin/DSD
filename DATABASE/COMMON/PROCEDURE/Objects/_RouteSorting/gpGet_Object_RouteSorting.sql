@@ -1,6 +1,6 @@
 -- Function: gpGet_Object_RouteSorting (Integer, TVarChar)
 
--- DROP FUNCTION gpGet_Object_RouteSorting (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_RouteSorting (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_RouteSorting(
     IN inId             Integer,       -- ключ объекта <Сортировки Маршрутов>

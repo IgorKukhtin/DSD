@@ -12,8 +12,6 @@ object ReturnOutJournalForm: TReturnOutJournalForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  isAlwaysRefresh = False
-  isFree = True
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
