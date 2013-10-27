@@ -13,8 +13,9 @@ object IncomeForm: TIncomeForm
   KeyPreview = True
   OldCreateOrder = False
   PopupMenu = PopupMenu
-  isAlwaysRefresh = False
-  isFree = True
+  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.isSingle = False
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel

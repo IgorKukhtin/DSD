@@ -12,8 +12,6 @@ object RouteKindEditForm: TRouteKindEditForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  isAlwaysRefresh = True
-  isFree = False
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit

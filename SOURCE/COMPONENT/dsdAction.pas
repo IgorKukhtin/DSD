@@ -2,7 +2,7 @@ unit dsdAction;
 
 interface
 
-uses VCL.ActnList, Forms, Classes, ParentForm, dsdDB, DB, DBClient, UtilConst,
+uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst,
      cxGrid, dsdGuides, ImgList, cxPC, cxGridDBTableView;
 
 type
@@ -193,9 +193,9 @@ type
     FFormName: string;
     FisShowModal: boolean;
   protected
-    procedure BeforeExecute(Form: TParentForm); virtual;
+    procedure BeforeExecute(Form: TForm); virtual;
     procedure OnFormClose(Params: TdsdParams); virtual;
-    function ShowForm: TParentForm;
+    function ShowForm: TForm;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
     function Execute: boolean; override;
@@ -380,7 +380,8 @@ type
 implementation
 
 uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
-     Vcl.Controls, Menus, cxGridExportLink, ShellApi, frxClass, frxDesgn, messages;
+     Vcl.Controls, Menus, cxGridExportLink, ShellApi, frxClass, frxDesgn,
+     messages, ParentForm;
 
 procedure Register;
 begin
@@ -534,11 +535,11 @@ begin
 
 end;
 
-function TdsdOpenForm.ShowForm: TParentForm;
+function TdsdOpenForm.ShowForm: TForm;
 begin
   Result := TdsdFormStorageFactory.GetStorage.Load(FormName);
   BeforeExecute(Result);
-  if Result.Execute(Self, FParams) then
+  if TParentForm(Result).Execute(Self, FParams) then
     if isShowModal then
        Result.ShowModal
     else

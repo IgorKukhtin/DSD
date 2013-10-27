@@ -12,8 +12,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  isAlwaysRefresh = False
-  isFree = True
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
