@@ -640,7 +640,7 @@ begin
           with TXSDateTime.Create() do
           try
             XSToNative(FValue); // convert from WideString
-            (Component as TcxDateEdit).EditValue := AsDateTime;//AsDateTime; // convert to TDateTime
+            (Component as TcxDateEdit).Date := AsUTCDateTime + HourOffset/24; // convert to TDateTime
           finally
             Free;
           end;

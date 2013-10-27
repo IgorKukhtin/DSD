@@ -12,6 +12,8 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.isSingle = False
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel

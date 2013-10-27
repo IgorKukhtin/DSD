@@ -13,7 +13,8 @@ object JuridicalGroupForm: TJuridicalGroupForm
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.isAlwaysRefresh = False
-  AddOnFormData.isSingle = False
+  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.ChoiceAction = actChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
   object cxDBTreeList: TcxDBTreeList

@@ -57,14 +57,10 @@ procedure TParentForm.AfterShow(var a : TWMSHOWWINDOW);
 var
   i: integer;
 begin
-  {if csDesigning in ComponentState then
+  if csDesigning in ComponentState then
      exit;
   if Assigned(FonAfterShow) then
      FonAfterShow(Self);
-  if AddOnFormData.isAlwaysRefresh then
-     // Перечитываем запросы
-     if Assigned(AddOnFormData.RefreshAction) then
-        AddOnFormData.RefreshAction.Execute;}
 end;
 
 procedure TParentForm.Close(Sender: TObject);
