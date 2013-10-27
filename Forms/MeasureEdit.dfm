@@ -12,6 +12,8 @@ object MeasureEditForm: TMeasureEditForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  AddOnFormData.RefreshAction = dsdDataSetRefresh
+  AddOnFormData.Params = dsdFormParams
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
