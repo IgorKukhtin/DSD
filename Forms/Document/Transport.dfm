@@ -757,9 +757,6 @@
     object cxTabSheetIncome: TcxTabSheet
       Caption = #1047#1072#1087#1088#1072#1074#1082#1072
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridIncome: TcxGrid
         Left = 0
         Top = 0
@@ -1051,9 +1048,6 @@
     object cxTabSheetReport: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridReport: TcxGrid
         Left = 0
         Top = 0
@@ -1200,9 +1194,6 @@
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -1553,15 +1544,13 @@
           StoredProc = spSelectMIIncome
         end
         item
-          StoredProc = spSelectMiReport
-        end
-        item
           StoredProc = spSelectMIContainer
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -2019,6 +2008,20 @@
       ImageIndex = 13
       Status = mtDelete
       Guides = StatusGuides
+    end
+    object TotalRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetReport
+      StoredProc = spSelectMiReport
+      StoredProcList = <
+        item
+          StoredProc = spSelectMiReport
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 28
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
     end
   end
   object MasterDS: TDataSource
@@ -2495,8 +2498,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 418
-    Top = 91
+    Left = 482
+    Top = 83
   end
   object GuidesPersonalDriverMore: TdsdGuides
     KeyField = 'Id'
@@ -2860,6 +2863,10 @@
         item
           Visible = True
           ItemName = 'bbEntryToGrid'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTotalRefresh'
         end>
       OneOnRow = True
       Row = 0
@@ -2934,6 +2941,10 @@
     end
     object bbSetErasedIncome: TdxBarButton
       Action = actSetErasedIncome
+      Category = 0
+    end
+    object bbTotalRefresh: TdxBarButton
+      Action = TotalRefresh
       Category = 0
     end
   end
