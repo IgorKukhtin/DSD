@@ -35,10 +35,10 @@ BEGIN
            , lfObject_Status.Code                  AS StatusCode
            , lfObject_Status.Name                  AS StatusName
            
-           , CAST (DATE_TRUNC ('SECOND', CURRENT_TIMESTAMP) AS TDateTime) AS StartRunPlan 
-           , CAST (DATE_TRUNC ('SECOND', CURRENT_TIMESTAMP) AS TDateTime) AS EndRunPlan
-           , CAST (DATE_TRUNC ('SECOND', CURRENT_TIMESTAMP) AS TDateTime) AS StartRun 
-           , CAST (DATE_TRUNC ('SECOND', CURRENT_TIMESTAMP) AS TDateTime) AS EndRun           
+           , CAST (DATE_TRUNC ('MINUTE', CURRENT_TIMESTAMP) AS TDateTime) AS StartRunPlan 
+           , CAST (DATE_TRUNC ('MINUTE', CURRENT_TIMESTAMP) AS TDateTime) AS EndRunPlan
+           , CAST (DATE_TRUNC ('MINUTE', CURRENT_TIMESTAMP) AS TDateTime) AS StartRun 
+           , CAST (DATE_TRUNC ('MINUTE', CURRENT_TIMESTAMP) AS TDateTime) AS EndRun           
           
            , CAST (0 as TFloat)                    AS HoursWork
            , CAST (0 as TFloat)                    AS HoursAdd
@@ -73,10 +73,10 @@ BEGIN
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
            
-           , CAST (DATE_TRUNC ('SECOND', MovementDate_StartRunPlan.ValueData) AS TDateTime) AS StartRunPlan
-           , CAST (DATE_TRUNC ('SECOND', MovementDate_EndRunPlan.ValueData)   AS TDateTime) AS EndRunPlan
-           , CAST (DATE_TRUNC ('SECOND', MovementDate_StartRun.ValueData)     AS TDateTime) AS StartRun
-           , CAST (DATE_TRUNC ('SECOND', MovementDate_EndRun.ValueData)       AS TDateTime) AS EndRun
+           , CAST (DATE_TRUNC ('MINUTE', MovementDate_StartRunPlan.ValueData) AS TDateTime) AS StartRunPlan
+           , CAST (DATE_TRUNC ('MINUTE', MovementDate_EndRunPlan.ValueData)   AS TDateTime) AS EndRunPlan
+           , CAST (DATE_TRUNC ('MINUTE', MovementDate_StartRun.ValueData)     AS TDateTime) AS StartRun
+           , CAST (DATE_TRUNC ('MINUTE', MovementDate_EndRun.ValueData)       AS TDateTime) AS EndRun
           
            , CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat) AS HoursWork
            , MovementFloat_HoursAdd.ValueData      AS HoursAdd
@@ -168,6 +168,7 @@ ALTER FUNCTION gpGet_Movement_Transport (Integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 25.10.13                                        * add MINUTE
  23.10.13                                        * add NEXTVAL
  30.09.13                                        * add Object_Personal_View
  26.09.13                                        * changes in wiki

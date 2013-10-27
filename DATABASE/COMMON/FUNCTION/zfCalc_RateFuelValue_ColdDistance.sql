@@ -37,7 +37,7 @@ BEGIN
 
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL IMMUTABLE;
 ALTER FUNCTION zfCalc_RateFuelValue_ColdDistance (TFloat, TFloat, TFloat, TFloat) OWNER TO postgres;
 
 
@@ -45,6 +45,7 @@ ALTER FUNCTION zfCalc_RateFuelValue_ColdDistance (TFloat, TFloat, TFloat, TFloat
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 25.10.13                        * -- VOLATILE -->> IMMUTABLE
  24.10.13                                        *
 */
 /*

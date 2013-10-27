@@ -35,14 +35,7 @@ type
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
-    bbInsert: TdxBarButton;
     dsdStoredProc: TdsdStoredProc;
-    actUpdate: TdsdInsertUpdateAction;
-    bbEdit: TdxBarButton;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
-    bbSetErased: TdxBarButton;
-    bbSetUnErased: TdxBarButton;
     dsdGridToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
@@ -58,7 +51,6 @@ type
     clShortName: TcxGridDBColumn;
     spInsertUpdateObject: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
-    actInsert: TdsdInsertUpdateAction;
   private
     { Private declarations }
   public

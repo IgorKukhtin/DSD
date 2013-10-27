@@ -23,6 +23,10 @@ BEGIN
     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_SheetWorkTime());
     vbUserId := inSession;
 
+    IF  COALESCE(inTypeId, 0) = 0 THEN
+        inTypeId := zc_Enum_WorkTimeKind_Work();
+    END IF;
+
     -- Для начала определим ID Movement, если таковой имеется. Ключом будет OperDate и UnitId
     vbMovementId := (SELECT Movement_SheetWorkTime.Id FROM Movement AS Movement_SheetWorkTime
                                JOIN MovementLinkObject AS MovementLinkObject_Unit 
@@ -48,6 +52,8 @@ BEGIN
                              AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup() 
                            WHERE MI_SheetWorkTime.ObjectId = ioPersonalId AND MI_SheetWorkTime.MovementId = vbMovementId);
 
+    ioValue := zfConvert_ViewWorkHourToHour(ioValue);
+
     PERFORM lpInsertUpdate_MovementItem_SheetWorkTime(
        inMovementItemId      := vbMovementItemId , -- Ключ объекта <Элемент документа>
        inMovementId          := vbMovementId     , -- ключ Документа
@@ -57,7 +63,7 @@ BEGIN
        inAmount              := ioValue::TFloat  , -- Количество часов факт
        inWorkTimeKindId      := inTypeId);        -- Типы рабочего времени
 
-    ioValue := '8/Заработало'::TVarChar;
+     ioValue := zfGet_ViewWorkHour(zfConvert_ViewWorkHourToHour(ioValue), inTypeId);
                          
 
      -- сохранили протокол

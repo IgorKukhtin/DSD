@@ -23,6 +23,26 @@ $BODY$
   DECLARE vbStartAmountFuel TFloat;
 BEGIN
 
+     -- !!!обязательно!!! очистили таблицу проводок
+     DELETE FROM _tmpMIContainer_insert;
+     -- !!!обязательно!!! очистили таблицу свойств (остатки) документа/элементов
+     DELETE FROM _tmpPropertyRemains;
+     -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     DELETE FROM _tmpItem_Transport;
+     -- !!!обязательно!!! очистили таблицу - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     DELETE FROM _tmpItem_TransportSumm_Transport;
+
+
+     -- !!!обязательно!!! пересчитали Child - нормы
+     PERFORM lpInsertUpdate_MI_Transport_Child_byMaster (inMovementId := inMovementId, inParentId := MovementItem.Id, inRouteKindId:= MILinkObject_RouteKind.ObjectId, inUserId := inUserId)
+     FROM MovementItem
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_RouteKind
+                                           ON MILinkObject_RouteKind.MovementItemId = MovementItem.Id 
+                                          AND MILinkObject_RouteKind.DescId = zc_MILinkObject_RouteKind()
+     WHERE MovementItem.MovementId = inMovementId
+       AND MovementItem.DescId = zc_MI_Master();
+
+
      -- Эти параметры нужны для формирования Аналитик в проводках
      SELECT _tmp.OperDate
           , _tmp.PersonalDriverId, _tmp.CarId, _tmp.BranchId
@@ -63,21 +83,18 @@ BEGIN
 
      -- !!!Начали!!! Расчет/сохранение некоторых свойств (остатки) документа/элементов
 
-     -- таблица свойств (остатки) документа/элементов
-     CREATE TEMP TABLE _tmpPropertyRemains (Kind Integer, FuelId Integer, Amount TFloat) ON COMMIT DROP;
-
      -- Получили все нужные нам количественные/суммовые контейнеры по определенным товарам/счетам
      WITH tmpContainer AS  (SELECT Id, Amount, 0 AS FuelId, 1 AS Kind
                             FROM Container
-                                               -- Получили список счетов: (30500)сотрудники (подотчетные лица) + (20400)ГСМ  !!!это (30000)Дебиторы!!!
-                            WHERE ObjectId IN (SELECT AccountId FROM Object_Account_View WHERE InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400() AND AccountDirectionId = zc_Enum_AccountDirection_30500())
+                                               -- ограничили списком счетов: (30500) Дебиторы + сотрудники (подотчетные лица) + (20400) Общефирменные + ГСМ
+                            WHERE ObjectId IN (SELECT AccountId FROM Object_Account_View WHERE AccountDirectionId = zc_Enum_AccountDirection_30500() AND InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400())
                                          -- Ограничили по Аналитике <Автомобиль>
                               AND Id IN (SELECT ContainerId FROM ContainerLinkObject WHERE DescId = zc_ContainerLinkObject_Car() AND ObjectId = vbCarId)
                               AND DescId = zc_Container_Summ()
                            UNION
                             SELECT Id, Amount, 0 AS FuelId, 2 AS Kind
                             FROM Container
-                                               -- Получили список товаров: (20400)ГСМ
+                                               -- ограничили списком товаров: (20400)ГСМ
                             WHERE ObjectId IN (SELECT GoodsId FROM Object_Goods_View WHERE InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400())
                                           -- Ограничили по Аналитике <Сотрудник>
                               AND Id IN (SELECT ContainerId FROM ContainerLinkObject WHERE DescId = zc_ContainerLinkObject_Personal() AND ObjectId = vbPersonalDriverId)
@@ -85,7 +102,7 @@ BEGIN
                            UNION
                             SELECT Id, Amount, Container.ObjectId AS FuelId, 3 AS Kind
                             FROM Container
-                                              -- Получили список Виды топлива
+                                              -- Ограничили списком Виды топлива
                             WHERE ObjectId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Fuel())
                                           -- Ограничили по Аналитике <Автомобиль>
                               AND Id IN (SELECT ContainerId FROM ContainerLinkObject WHERE DescId =  zc_ContainerLinkObject_Car() AND ObjectId = vbCarId)
@@ -118,17 +135,6 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_StartSummCash(), inMovementId, vbStartAmountTicketFuel);
 
      -- !!!Почти закончили!!! Расчет/сохранение некоторых свойств (остатки) документа/элементов
-
-
-     -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItem_Transport (MovementItemId Integer, MovementItemId_parent Integer, UnitId_ProfitLoss Integer
-                                         , ContainerId_Goods Integer, GoodsId Integer, AssetId Integer
-                                         , OperCount TFloat
-                                         , ProfitLossGroupId Integer, ProfitLossDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                                         , BusinessId Integer, BusinessId_Route Integer
-                                          ) ON COMMIT DROP;
-     -- таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItem_TransportSumm_Transport (MovementItemId Integer, ContainerId_ProfitLoss Integer, ContainerId Integer, AccountId Integer, OperSumm TFloat) ON COMMIT DROP;
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem_Transport (MovementItemId, MovementItemId_parent, UnitId_ProfitLoss
@@ -208,6 +214,7 @@ BEGIN
            GROUP BY _tmpItem_Transport.MovementItemId_parent, _tmpItem_Transport.UnitId_ProfitLoss
           ) AS tmp;
 
+
      -- !!!формируются расчитанные свойства в Подчиненых элементах документа!!!
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_StartAmountFuel(), tmp.MovementItemId, tmp.StartAmountFuel)
      FROM (SELECT _tmpItem_Transport.MovementItemId, _tmpPropertyRemains.Amount AS StartAmountFuel
@@ -225,9 +232,9 @@ BEGIN
                                                                      , ioAmount             := 0
                                                                      , inColdHour           := 0
                                                                      , inColdDistance       := 0
+                                                                     , inAmountFuel         := 0
                                                                      , inAmountColdHour     := 0
                                                                      , inAmountColdDistance := 0
-                                                                     , inAmountFuel         := 0
                                                                      , inNumber             := 4
                                                                      , inRateFuelKindTax    := 0
                                                                      , inRateFuelKindId     := 0
@@ -241,7 +248,7 @@ BEGIN
                  WHERE _tmpPropertyRemains.Kind = 3
                    AND _tmpItem_Transport.GoodsId IS NULL
                 ) AS tmp
-                JOIN (SELECT MIN (_tmpItem_Transport.MovementItemId_parent) AS MovementItemId_parent FROM _tmpItem_Transport
+                JOIN (SELECT MIN (Id) AS MovementItemId_parent FROM MovementItem WHERE MovementId = inMovementId AND DescId = zc_MI_Master() AND isErased = FALSE
                      ) AS tmpItem_Transport ON 1=1
           ) AS tmp;
 
@@ -395,6 +402,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.10.13                                        * add !!!обязательно!!! очистили таблицу...
+ 26.10.13                                        * err
+ 25.10.13                                        * add lpInsertUpdate_MI_Transport_Child_byMaster
  21.10.13                                        * err ObjectId IN (SELECT GoodsId...
  14.10.13                                        * add lpInsertUpdate_MovementItemLinkObject
  06.10.13                                        * add inUserId

@@ -145,6 +145,7 @@ BEGIN
 
             LEFT JOIN MovementItemContainer AS MIContainer_Count ON MIContainer_Count.MovementItemId = MovementItem.Id
                                                                 AND MIContainer_Count.DescId = zc_MIContainer_Count()
+                                                                AND MIContainer_Count.isActive = TRUE
             LEFT JOIN Container AS Container_Count ON Container_Count.Id = MIContainer_Count.ContainerId
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Fuel ON ObjectLink_Goods_Fuel.ObjectId = MovementItem.ObjectId
                                                          AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
@@ -160,6 +161,7 @@ ALTER FUNCTION gpSelect_Movement_TransportIncome (Integer, Boolean, Boolean, TVa
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.10.13                                        * add MIContainer_Count.isActive = TRUE
  23.10.13                                        * add zfConvert_StringToNumber
  07.10.13                                        * add lpCheckRight
  05.10.13                                        * add InvNumberPartner
@@ -167,4 +169,4 @@ ALTER FUNCTION gpSelect_Movement_TransportIncome (Integer, Boolean, Boolean, TVa
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_TransportIncome (inParentId:= 149691, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_TransportIncome (inParentId:= 688, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())

@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PersonalSendCash(
 RETURNS TABLE (MIId_20401 Integer, MIId_21201 Integer
              , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , Amount_20401 TFloat, Amount_21201 TFloat
-             , RouteId Integer, RouteName TVarChar 
+             , RouteId Integer, RouteName TVarChar
              , CarId Integer, CarName TVarChar, CarModelName TVarChar
              , isErased Boolean
               )

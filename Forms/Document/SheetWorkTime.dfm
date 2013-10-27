@@ -165,8 +165,8 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
             Default = True
             Kind = bkEllipsis
           end>
-        MinWidth = 30
-        Width = 30
+        MinWidth = 40
+        Width = 40
         Position.BandIndex = 1
         Position.ColIndex = 0
         Position.RowIndex = 0
