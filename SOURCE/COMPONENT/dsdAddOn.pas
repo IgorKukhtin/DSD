@@ -130,14 +130,16 @@ type
     FHeaderDataSet: TDataSet;
     FTemplateColumn: TcxGridColumn;
     FHeaderColumnName: String;
-    FFirstOpen: boolean;
     FBeforeOpen: TDataSetNotifyEvent;
+    FAfterClose: TDataSetNotifyEvent;
     FEditing: TcxGridEditingEvent;
     FFocusedItemChanged: TcxGridFocusedItemChangedEvent;
     FDataSet: TDataSet;
+    FCreateColumnList: TList;
     procedure onEditing(Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem;
          var AAllow: Boolean);
     procedure onBeforeOpen(DataSet: TDataSet);
+    procedure onAfterClose(DataSet: TDataSet);
     procedure SetView(const Value: TcxGridTableView); override;
     procedure FocusedItemChanged(Sender: TcxCustomGridTableView;
                                  APrevFocusedItem, AFocusedItem: TcxCustomGridTableItem);
@@ -146,6 +148,7 @@ type
   public
     property DataSet: TDataSet read FDataSet;
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
   published
     // ƒата сет с названием колонок и другой необходимой дл€ работы информацией.
     property HeaderDataSet: TDataSet read FHeaderDataSet write FHeaderDataSet;
@@ -158,14 +161,11 @@ type
   TdsdUserSettingsStorageAddOn = class(TComponent)
   private
     FOnDestroy: TNotifyEvent;
-    FOnShow: TNotifyEvent;
-    FForm: TForm;
-    isAlreadyLoad: boolean;
+    //FForm: TForm;
     procedure OnDestroy(Sender: TObject);
-    procedure OnShow(Sender: TObject);
-    procedure LoadUserSettings;
     procedure SaveUserSettings;
   public
+    procedure LoadUserSettings;
     constructor Create(AOwner: TComponent); override;
   end;
 
@@ -761,26 +761,9 @@ begin
   inherited;
   if csDesigning in ComponentState then
      exit;
-  if AOwner is TCustomForm then begin
-     FForm := AOwner as TForm;
-     FOnShow := FForm.OnShow;
-     FOnDestroy := FForm.OnDestroy;
-     FForm.OnShow := Self.OnShow;
-     FForm.OnDestroy := Self.OnDestroy;
-     isAlreadyLoad := false;
-  end;
-end;
-
-procedure TdsdUserSettingsStorageAddOn.OnShow(Sender: TObject);
-begin
-  if Assigned(FOnShow) then
-     FOnShow(Sender);
-  // загружаем пользовательские установки один раз
-  if not isAlreadyLoad then
-  try
-    LoadUserSettings;
-  finally
-    isAlreadyLoad := true
+  if AOwner is TForm then begin
+     FOnDestroy := TForm(AOwner).OnDestroy;
+     TForm(AOwner).OnDestroy := Self.OnDestroy;
   end;
 end;
 
@@ -807,10 +790,10 @@ var
 begin
   if gc_isSetDefault then
      exit;
-  if FForm is TParentForm then
-     FormName := TParentForm(FForm).FormClassName
+  if Owner is TParentForm then
+     FormName := TParentForm(Owner).FormClassName
   else
-     FormName := FForm.ClassName;
+     FormName := Owner.ClassName;
   Data := StringReplace(TdsdFormStorageFactory.GetStorage.LoadUserFormSettings(FormName), '&', '&amp;', [rfReplaceAll]);
   if Data <> '' then begin
     XMLDocument := TXMLDocument.Create(nil);
@@ -818,22 +801,22 @@ begin
     with XMLDocument.DocumentElement do begin
       for I := 0 to ChildNodes.Count - 1 do begin
         if ChildNodes[i].NodeName = 'cxGridView' then begin
-           GridView := FForm.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxCustomGridView;
+           GridView := Owner.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxCustomGridView;
            if Assigned(GridView) then
               GridView.RestoreFromStream(TStringStream.Create(gfStrXmlToStr(XMLToAnsi(ChildNodes[i].GetAttribute('data')))));
         end;
         if ChildNodes[i].NodeName = 'cxTreeList' then begin
-           TreeList := FForm.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxDBTreeList;
+           TreeList := Owner.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxDBTreeList;
            if Assigned(TreeList) then
               TreeList.RestoreFromStream(TStringStream.Create(gfStrXmlToStr(XMLToAnsi(ChildNodes[i].GetAttribute('data')))));
         end;
         if ChildNodes[i].NodeName = 'dxBarManager' then begin
-           BarManager := FForm.FindComponent(ChildNodes[i].GetAttribute('name')) as TdxBarManager;
+           BarManager := Owner.FindComponent(ChildNodes[i].GetAttribute('name')) as TdxBarManager;
            if Assigned(BarManager) then
               BarManager.LoadFromStream(TStringStream.Create(gfStrXmlToStr(XMLToAnsi(ChildNodes[i].GetAttribute('data')))));
         end;
         if ChildNodes[i].NodeName = 'cxPropertiesStore' then begin
-           PropertiesStore := FForm.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxPropertiesStore;
+           PropertiesStore := Owner.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxPropertiesStore;
            if Assigned(PropertiesStore) then begin
               PropertiesStore.StorageType := stStream;
               PropertiesStore.StorageStream := TStringStream.Create(gfStrXmlToStr(XMLToAnsi(ChildNodes[i].GetAttribute('data'))));
@@ -853,36 +836,36 @@ var
   xml: string;
   FormName: string;
 begin
-  if FForm is TParentForm then
-     FormName := TParentForm(FForm).FormClassName
+  if Owner is TParentForm then
+     FormName := TParentForm(Owner).FormClassName
   else
-     FormName := FForm.ClassName;
+     FormName := Owner.ClassName;
   TempStream :=  TStringStream.Create;
   try
     xml := '<root>';
     // —охран€ем установки гридов
-    for i := 0 to FForm.ComponentCount - 1 do begin
-      if FForm.Components[i] is TdxBarManager then
-         with TdxBarManager(FForm.Components[i]) do begin
+    for i := 0 to Owner.ComponentCount - 1 do begin
+      if Owner.Components[i] is TdxBarManager then
+         with TdxBarManager(Owner.Components[i]) do begin
            SaveToStream(TempStream);
            xml := xml + '<dxBarManager name = "' + Name + '" data = "' + gfStrToXmlStr(TempStream.DataString) + '" />';
            TempStream.Clear;
          end;
-      if FForm.Components[i] is TcxCustomGridView then
-         with TcxCustomGridView(FForm.Components[i]) do begin
+      if Owner.Components[i] is TcxCustomGridView then
+         with TcxCustomGridView(Owner.Components[i]) do begin
            StoreToStream(TempStream);
            xml := xml + '<cxGridView name = "' + Name + '" data = "' + gfStrToXmlStr(TempStream.DataString) + '" />';
            TempStream.Clear;
          end;
-      if FForm.Components[i] is TcxDBTreeList then
-         with TcxDBTreeList(FForm.Components[i]) do begin
+      if Owner.Components[i] is TcxDBTreeList then
+         with TcxDBTreeList(Owner.Components[i]) do begin
            StoreToStream(TempStream);
            xml := xml + '<cxTreeList name = "' + Name + '" data = "' + gfStrToXmlStr(TempStream.DataString) + '" />';
            TempStream.Clear;
          end;
       // сохран€ем остальные установки
-      if FForm.Components[i] is TcxPropertiesStore then
-         with FForm.Components[i] as TcxPropertiesStore do begin
+      if Owner.Components[i] is TcxPropertiesStore then
+         with Owner.Components[i] as TcxPropertiesStore do begin
             StorageType := stStream;
             StorageStream := TempStream;
             StoreTo;
@@ -1205,7 +1188,8 @@ procedure TRefreshDispatcher.OnComponentChange(Sender: TObject);
 begin
   if Assigned(FRefreshAction) then
   // перечитываем запросы только если форма загружена
-     if Assigned(Self.Owner) and (Self.Owner is TParentForm) then
+     if Assigned(Self.Owner) and (Self.Owner is TParentForm)
+       and TParentForm(Self.Owner).Visible then
         FRefreshAction.Execute
 end;
 
@@ -1293,7 +1277,13 @@ end;
 constructor TCrossDBViewAddOn.Create(AOwner: TComponent);
 begin
   inherited;
-  FFirstOpen := true;
+  FCreateColumnList := TList.Create;
+end;
+
+destructor TCrossDBViewAddOn.Destroy;
+begin
+  FreeAndNil(FCreateColumnList);
+  inherited;
 end;
 
 procedure TCrossDBViewAddOn.FocusedItemChanged(Sender: TcxCustomGridTableView;
@@ -1326,13 +1316,25 @@ begin
      end;
 end;
 
+procedure TCrossDBViewAddOn.onAfterClose(DataSet: TDataSet);
+var i: integer;
+begin
+  if Assigned(FAfterClose) then
+     FAfterClose(DataSet);
+
+  for i := 0 to FCreateColumnList.Count - 1 do
+    View.Columns[View.ColumnCount - 1].Destroy;
+
+  FCreateColumnList.Clear;
+end;
+
 procedure TCrossDBViewAddOn.onBeforeOpen(DataSet: TDataSet);
 var NewColumnIndex: integer;
     Column: TcxGridColumn;
 begin
   if Assigned(FBeforeOpen) then
      FBeforeOpen(DataSet);
-  if FFirstOpen then
+  View.BeginUpdate;
     try
       // «аполн€ем заголовки колонок
       if Assigned(HeaderDataSet) and HeaderDataSet.Active then begin
@@ -1344,8 +1346,10 @@ begin
          NewColumnIndex := 1;
          while not HeaderDataSet.Eof do begin
            Column := View.CreateColumn;
+           FCreateColumnList.Add(Column);
            with Column do begin
              Assign(TemplateColumn);
+             Visible := true;
              Caption := HeaderDataSet.FieldByName(HeaderColumnName).AsString;
              Width := TemplateColumn.Width;
              if Column is TcxGridDBBandedColumn then
@@ -1357,11 +1361,8 @@ begin
            HeaderDataSet.Next;
          end;
       end;
-      // » удал€ем шаблон
-      if Assigned(TemplateColumn) then
-         TemplateColumn.Free;
     finally
-      FFirstOpen := false;
+      View.EndUpdate;
     end;
 end;
 
@@ -1381,6 +1382,8 @@ begin
      FDataSet := TcxDBDataController(Value.DataController).DataSet;
      FBeforeOpen := FDataSet.BeforeOpen;
      FDataSet.BeforeOpen := onBeforeOpen;
+     FAfterClose := FDataSet.AfterClose;
+     FDataSet.AfterClose := onAfterClose;
      FEditing := Value.OnEditing;
      Value.OnEditing := onEditing;
      FFocusedItemChanged := Value.OnFocusedItemChanged;
