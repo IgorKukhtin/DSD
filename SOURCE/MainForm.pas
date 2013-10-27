@@ -212,6 +212,8 @@ type
     bbModelService: TdxBarButton;
     actAbout: TAction;
     bbAbout: TdxBarButton;
+    actReport_MovementTransport: TdsdOpenForm;
+    bbReport_MovementTransport: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

@@ -1,0 +1,523 @@
+object Report_MovementTransportForm: TReport_MovementTransportForm
+  Left = 0
+  Top = 0
+  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1074#1086#1076#1080#1090#1077#1083#1103#1084' - '#1088#1072#1073#1086#1095#1077#1077' '#1074#1088#1103#1084#1103
+  ClientHeight = 395
+  ClientWidth = 1189
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  isAlwaysRefresh = False
+  isFree = True
+  PixelsPerInch = 96
+  TextHeight = 13
+  object cxGrid: TcxGrid
+    Left = 0
+    Top = 113
+    Width = 1189
+    Height = 282
+    Align = alClient
+    TabOrder = 0
+    object cxGridDBTableView: TcxGridDBTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = DataSource
+      DataController.Filter.Active = True
+      DataController.Summary.DefaultGroupSummaryItems = <
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+          Column = clHoursWork
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+          Column = clHoursAdd
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+          Column = clOperDate
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Position = spFooter
+        end>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = ',0.00'
+          Kind = skSum
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = clHoursWork
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = clHoursAdd
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = clOperDate
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+        end
+        item
+          Format = ',0.00'
+        end
+        item
+          Format = ',0.00'
+        end>
+      DataController.Summary.SummaryGroups = <>
+      Images = dmMain.SortImageList
+      OptionsBehavior.IncSearch = True
+      OptionsCustomize.ColumnHiding = True
+      OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
+      OptionsData.Inserting = False
+      OptionsView.ColumnAutoWidth = True
+      OptionsView.Footer = True
+      OptionsView.GroupFooters = gfAlwaysVisible
+      OptionsView.HeaderAutoHeight = True
+      object clPersonalDriverName: TcxGridDBColumn
+        Caption = #1042#1086#1076#1080#1090#1077#1083#1100' '#1060#1048#1054
+        DataBinding.FieldName = 'PersonalDriverName'
+        HeaderAlignmentVert = vaCenter
+        Width = 147
+      end
+      object clRouteName: TcxGridDBColumn
+        Caption = #1052#1072#1088#1096#1088#1091#1090
+        DataBinding.FieldName = 'RouteName'
+        Width = 132
+      end
+      object clRouteKindName: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1084#1072#1088#1096#1088#1091#1090#1072
+        DataBinding.FieldName = 'RouteKindName'
+        Width = 193
+      end
+      object clFreightName: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1075#1088#1091#1079#1072
+        DataBinding.FieldName = 'FreightName'
+        Width = 179
+      end
+      object clWeight: TcxGridDBColumn
+        Caption = #1042#1077#1089' ('#1082#1075')'
+        DataBinding.FieldName = 'Weight'
+        Width = 138
+      end
+      object clHoursWork: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1073#1086#1095#1080#1093' '#1095#1072#1089#1086#1074
+        DataBinding.FieldName = 'HoursWork'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
+        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentVert = vaCenter
+        Width = 91
+      end
+      object clHoursAdd: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1073#1072#1074#1083#1077#1085#1085#1099#1093' '#1088#1072#1073#1086#1095#1080#1093' '#1095#1072#1089#1086#1074
+        DataBinding.FieldName = 'HoursAdd'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
+        HeaderAlignmentVert = vaCenter
+        Width = 92
+      end
+      object clInvNumber: TcxGridDBColumn
+        Caption = #1053#1086#1084#1077#1088' '#1087#1091#1090#1077#1074#1086#1075#1086
+        DataBinding.FieldName = 'InvNumber'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
+        HeaderAlignmentVert = vaCenter
+        Width = 103
+      end
+      object clOperDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1087#1091#1090#1077#1074#1086#1075#1086
+        DataBinding.FieldName = 'OperDate'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
+    end
+    object cxGridLevel: TcxGridLevel
+      GridView = cxGridDBTableView
+    end
+  end
+  object Panel1: TPanel
+    Left = 0
+    Top = 26
+    Width = 1189
+    Height = 87
+    Align = alTop
+    TabOrder = 5
+    object deStart: TcxDateEdit
+      Left = 16
+      Top = 8
+      EditValue = 41548d
+      Properties.ShowTime = False
+      TabOrder = 0
+      Width = 121
+    end
+    object deEnd: TcxDateEdit
+      Left = 176
+      Top = 8
+      EditValue = 41557d
+      Properties.ShowTime = False
+      TabOrder = 1
+      Width = 121
+    end
+    object cxLabel2: TcxLabel
+      Left = 341
+      Top = 9
+      Caption = #1042#1086#1076#1080#1090#1077#1083#1100
+    end
+    object edPersonalDriver: TcxButtonEdit
+      Left = 400
+      Top = 8
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 3
+      Width = 233
+    end
+  end
+  object DataSource: TDataSource
+    DataSet = ClientDataSet
+    Left = 56
+    Top = 64
+  end
+  object ClientDataSet: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 64
+    Top = 256
+  end
+  object cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
+    StorageName = 'cxPropertiesStore'
+    StorageType = stStream
+    Left = 584
+    Top = 256
+  end
+  object dxBarManager: TdxBarManager
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    Categories.Strings = (
+      'Default')
+    Categories.ItemsVisibles = (
+      2)
+    Categories.Visibles = (
+      True)
+    ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
+    PopupMenuLinks = <>
+    ShowShortCutInHint = True
+    UseSystemFont = True
+    Left = 144
+    Top = 24
+    DockControlHeights = (
+      0
+      0
+      26
+      0)
+    object dxBarManagerBar1: TdxBar
+      Caption = 'Custom'
+      CaptionButtons = <>
+      DockedDockingStyle = dsTop
+      DockedLeft = 2
+      DockedTop = 0
+      DockingStyle = dsTop
+      FloatLeft = 671
+      FloatTop = 8
+      FloatClientWidth = 0
+      FloatClientHeight = 0
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbToExcel'
+        end>
+      OneOnRow = True
+      Row = 0
+      UseOwnFont = False
+      Visible = True
+      WholeRow = False
+    end
+    object bbRefresh: TdxBarButton
+      Action = actRefresh
+      Category = 0
+    end
+    object bbToExcel: TdxBarButton
+      Action = actExportToExcel
+      Category = 0
+    end
+    object bbDialogForm: TdxBarButton
+      Caption = #1044#1080#1072#1083#1086#1075' '#1091#1089#1090#1072#1085#1086#1074#1082#1080' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074
+      Category = 0
+      Hint = #1044#1080#1072#1083#1086#1075' '#1091#1089#1090#1072#1085#1086#1074#1082#1080' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074
+      Visible = ivAlways
+      ImageIndex = 35
+    end
+  end
+  object ActionList: TActionList
+    Images = dmMain.ImageList
+    Left = 232
+    Top = 240
+    object actRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      StoredProc = dsdStoredProc
+      StoredProcList = <
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+    end
+    object actExportToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      Grid = cxGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
+    end
+  end
+  object dsdStoredProc: TdsdStoredProc
+    StoredProcName = 'gpReport_MovementTransport'
+    DataSet = ClientDataSet
+    DataSets = <
+      item
+        DataSet = ClientDataSet
+      end>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41548d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = 41557d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalDriverId'
+        Value = ''
+        Component = PersonalDriverGuides
+        ParamType = ptInput
+      end>
+    Left = 152
+    Top = 248
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    Left = 312
+    Top = 264
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 432
+    Top = 232
+  end
+  object PeriodChoice: TPeriodChoice
+    DateStart = deStart
+    DateEnd = deEnd
+    Left = 200
+    Top = 64
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+      end
+      item
+      end
+      item
+      end
+      item
+      end>
+    Left = 328
+    Top = 64
+  end
+  object PersonalDriverGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonalDriver
+    FormName = 'TPersonalForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PersonalDriverGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PersonalDriverGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 640
+    Top = 32
+  end
+end
