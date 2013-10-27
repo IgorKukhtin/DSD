@@ -1,7 +1,7 @@
 object SendForm: TSendForm
   Left = 0
   Top = 0
-  Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 396
   ClientWidth = 1028
   Color = clBtnFace
@@ -32,7 +32,7 @@ object SendForm: TSendForm
     object cxLabel1: TcxLabel
       Left = 8
       Top = 5
-      Caption = #1053#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
     object edOperDate: TcxDateEdit
       Left = 144
@@ -102,7 +102,7 @@ object SendForm: TSendForm
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = DataSource
+          DataController.DataSource = MasterDS
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Kind = skSum
@@ -153,6 +153,7 @@ object SendForm: TSendForm
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsView.ColumnAutoWidth = True
+          OptionsView.GroupByBox = False
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -403,15 +404,15 @@ object SendForm: TSendForm
         Value = Null
         ParamType = ptInputOutput
       end>
-    Left = 40
-    Top = 56
+    Left = 296
+    Top = 192
   end
-  object spSelectMovementItem: TdsdStoredProc
+  object spSelectMI: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Send'
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
     Params = <
       item
@@ -427,14 +428,14 @@ object SendForm: TSendForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
-    Left = 88
-    Top = 280
+    Left = 112
+    Top = 247
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -447,8 +448,8 @@ object SendForm: TSendForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 8
-    Top = 56
+    Left = 24
+    Top = 184
     DockControlHeights = (
       0
       0
@@ -540,13 +541,21 @@ object SendForm: TSendForm
           'Width')
       end>
     StorageName = 'cxPropertiesStore'
-    Left = 72
-    Top = 56
+    Left = 81
+    Top = 185
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 104
-    Top = 56
+    Left = 52
+    Top = 185
+    object actInsertUpdateMovement: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 14
+      ShortCut = 113
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spGet
@@ -555,10 +564,10 @@ object SendForm: TSendForm
           StoredProc = spGet
         end
         item
-          StoredProc = spSelectMovementItem
+          StoredProc = spSelectMI
         end
         item
-          StoredProc = spSelectMovementContainerItem
+          StoredProc = spSelectMIContainer
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -567,13 +576,13 @@ object SendForm: TSendForm
     end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
-      StoredProc = spInsertUpdateMovementItem
+      StoredProc = spInsertUpdateMIMaster
       StoredProcList = <
         item
-          StoredProc = spInsertUpdateMovementItem
+          StoredProc = spInsertUpdateMIMaster
         end>
       Caption = 'actUpdateDataSet'
-      DataSource = DataSource
+      DataSource = MasterDS
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -593,16 +602,16 @@ object SendForm: TSendForm
       ShortCut = 16472
     end
   end
-  object DataSource: TDataSource
-    DataSet = ClientDataSet
-    Left = 32
-    Top = 208
+  object MasterDS: TDataSource
+    DataSet = MasterCDS
+    Left = 53
+    Top = 248
   end
-  object ClientDataSet: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 80
-    Top = 144
+    Left = 24
+    Top = 248
   end
   object dsdGuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -610,7 +619,7 @@ object SendForm: TSendForm
     FormName = 'TJuridicalForm'
     PositionDataSet = 'GridDataSet'
     Params = <>
-    Left = 304
+    Left = 336
     Top = 56
   end
   object dsdGuidesTo: TdsdGuides
@@ -619,7 +628,7 @@ object SendForm: TSendForm
     FormName = 'TUnitForm'
     PositionDataSet = 'GridDataSet'
     Params = <>
-    Left = 448
+    Left = 464
     Top = 56
   end
   object spGet: TdsdStoredProc
@@ -668,18 +677,18 @@ object SendForm: TSendForm
         Component = dsdGuidesTo
         ComponentItem = 'TextValue'
       end>
-    Left = 136
-    Top = 72
+    Left = 256
+    Top = 168
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
-    Left = 384
-    Top = 312
+    Left = 224
+    Top = 264
     object N1: TMenuItem
       Action = actRefresh
     end
   end
-  object spSelectMovementContainerItem: TdsdStoredProc
+  object spSelectMIContainer: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItemContainer_Movement'
     DataSet = EntryCDS
     DataSets = <
@@ -694,28 +703,28 @@ object SendForm: TSendForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 560
-    Top = 216
+    Left = 81
+    Top = 304
   end
   object EntryCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 424
-    Top = 176
+    Left = 24
+    Top = 304
   end
   object EntryDS: TDataSource
     DataSet = EntryCDS
-    Left = 440
-    Top = 224
+    Left = 53
+    Top = 304
   end
-  object spInsertUpdateMovementItem: TdsdStoredProc
+  object spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_Send'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
         Name = 'ioId'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
@@ -728,13 +737,13 @@ object SendForm: TSendForm
       end
       item
         Name = 'inGoodsId'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
       end
       item
         Name = 'inAmount'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
@@ -747,7 +756,7 @@ object SendForm: TSendForm
       end
       item
         Name = 'inPrice'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Price'
         DataType = ftFloat
         ParamType = ptInput
@@ -775,13 +784,13 @@ object SendForm: TSendForm
         Value = Null
         ParamType = ptInput
       end>
-    Left = 520
-    Top = 120
+    Left = 83
+    Top = 248
   end
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'
     CloseDataSource = False
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     BCDToCurrency = False
     Left = 232
     Top = 216
@@ -791,7 +800,11 @@ object SendForm: TSendForm
     KeyField = 'Id'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
-    Left = 552
-    Top = 56
+    Left = 326
+    Top = 264
+  end
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 109
+    Top = 185
   end
 end

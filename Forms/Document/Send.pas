@@ -28,15 +28,15 @@ uses
 type
   TSendForm = class(TParentForm)
     dsdFormParams: TdsdFormParams;
-    spSelectMovementItem: TdsdStoredProc;
+    spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
     dxBarManagerBar: TdxBar;
     bbRefresh: TdxBarButton;
     cxPropertiesStore: TcxPropertiesStore;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
-    DataSource: TDataSource;
-    ClientDataSet: TClientDataSet;
+    MasterDS: TDataSource;
+    MasterCDS: TClientDataSet;
     DataPanel: TPanel;
     edInvNumber: TcxTextEdit;
     cxLabel1: TcxLabel;
@@ -60,7 +60,7 @@ type
     colName: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
-    spSelectMovementContainerItem: TdsdStoredProc;
+    spSelectMIContainer: TdsdStoredProc;
     cxGridEntryDBTableView: TcxGridDBTableView;
     cxGridEntryLevel: TcxGridLevel;
     cxGridEntry: TcxGrid;
@@ -71,7 +71,7 @@ type
     colKreditAccountName: TcxGridDBColumn;
     colKreditAmount: TcxGridDBColumn;
     actUpdateDataSet: TdsdUpdateDataSet;
-    spInsertUpdateMovementItem: TdsdStoredProc;
+    spInsertUpdateMIMaster: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
     frxDBDataset: TfrxDBDataset;
@@ -105,6 +105,8 @@ type
     RefreshAddOn: TRefreshAddOn;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
+    actInsertUpdateMovement: TdsdExecStoredProc;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
   private
   public
   end;

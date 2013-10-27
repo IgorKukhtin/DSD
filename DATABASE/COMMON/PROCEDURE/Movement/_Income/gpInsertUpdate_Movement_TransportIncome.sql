@@ -139,6 +139,13 @@ BEGIN
              END IF;
 
          ELSE
+             -- проверка - товар не может быть Талоном
+             IF EXISTS (SELECT ChildObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_TicketFuel_Goods() AND ChildObjectId = ioGoodsId)
+              AND NOT EXISTS (SELECT Id FROM Object WHERE Id = inFromId AND DescId = zc_Object_TicketFuel())
+             THEN
+                 RAISE EXCEPTION 'Ошибка.Операция для товара <%> здесь недопустима.', ioGoodsName;
+             END IF;
+
              -- нашли свойство <Вид топлива> для <Товар> (это что б проверить у товара должен быть вид топлива)
              SELECT Object_Goods.ValueData AS GoodsName
                   , Object_Fuel.ValueData  AS FuelName
@@ -156,6 +163,13 @@ BEGIN
          END IF;
 
      ELSE
+         -- проверка - товар не может быть Талоном
+         IF EXISTS (SELECT ChildObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_TicketFuel_Goods() AND ChildObjectId = ioGoodsId)
+          AND NOT EXISTS (SELECT Id FROM Object WHERE Id = inFromId AND DescId = zc_Object_TicketFuel())
+         THEN
+             RAISE EXCEPTION 'Ошибка.Операция для товара <%> здесь недопустима.', ioGoodsName;
+         END IF;
+
          -- нашли свойство <Вид топлива> для <Товар> (это что б проверить у товара должен быть вид топлива)
          SELECT Object_Goods.ValueData AS GoodsName
               , Object_Fuel.ValueData  AS FuelName
@@ -229,6 +243,8 @@ $BODY$
  05.10.13                                        *
 */
 
--- update Movement  set OperDate = DATE_TRUNC ('DAY', OperDate)  where descId = 1 
+-- update MovementItemContainer set OperDate = DATE_TRUNC ('DAY', OperDate) where DATE_TRUNC ('DAY', OperDate) <> OperDate;
+-- update Movement set OperDate = DATE_TRUNC ('DAY', OperDate) where DATE_TRUNC ('DAY', OperDate) <> OperDate;
+
 -- тест
 -- SELECT * FROM gpInsertUpdate_Movement_TransportIncome (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePrice:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')
