@@ -1,6 +1,6 @@
 -- Function: gpReport_MotionGoods()
 
--- DROP FUNCTION gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_MotionGoods (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_MotionGoods(
     IN inStartDate    TDateTime , -- 

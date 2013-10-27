@@ -132,7 +132,7 @@ BEGIN
      -- сохранили свойство документа <Начальный остаток денег Автомобиль(Подотчет)>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_StartSummCash(), inMovementId, vbStartSummCash);
      -- сохранили свойство документа <Начальный остаток талонов на топливо Сотрудник (водитель)>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_StartSummCash(), inMovementId, vbStartAmountTicketFuel);
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_StartAmountTicketFuel(), inMovementId, vbStartAmountTicketFuel);
 
      -- !!!Почти закончили!!! Расчет/сохранение некоторых свойств (остатки) документа/элементов
 
@@ -402,6 +402,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.10.13                                        * err zc_MovementFloat_StartAmountTicketFuel
  26.10.13                                        * add !!!обязательно!!! очистили таблицу...
  26.10.13                                        * err
  25.10.13                                        * add lpInsertUpdate_MI_Transport_Child_byMaster

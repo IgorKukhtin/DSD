@@ -129,19 +129,21 @@ BEGIN
                    WHERE DescId = zc_MovementFloat_StartSummCash()
                      AND MovementId = inMovementId
                   UNION ALL
-                   -- Проводки суммовые - Расход денег Автомобиль (Подотчет) !!!это документ - Путевой лист!!!
+                   -- Проводки суммовые - Расход денег Автомобиль (Подотчет) !!!это документ - Приход от поставщика (Заправка авто) !!!
                    SELECT zc_Enum_Status_Complete() AS StatusId
                         , 0 AS Amount_Start
                         , 0 AS Amount_In
                         , -1 * SUM (MIContainer.Amount) AS Amount_Out
                         , 0 AS Amount_20401
-                   FROM MovementItemContainer AS MIContainer
+                   FROM Movement
+                        JOIN MovementItemContainer AS MIContainer ON MIContainer.MovementId = Movement.Id
                         JOIN Container ON Container.Id = MIContainer.ContainerId
                                                                  -- Ограничили списком счетов: (30500) Дебиторы + сотрудники (подотчетные лица) + (20400) Общефирменные + ГСМ
                                       AND Container.ObjectId IN (SELECT AccountId FROM Object_Account_View WHERE AccountDirectionId = zc_Enum_AccountDirection_30500() AND InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400())
                                       AND Container.DescId = zc_Container_Summ()
-                   WHERE MIContainer.DescId = zc_MIContainer_Summ()
-                     AND MIContainer.MovementId = inMovementId
+                   WHERE Movement.ParentId = inMovementId
+                     AND Movement.DescId = zc_Movement_Income()
+                     AND Movement.StatusId = zc_Enum_Status_Complete()
                    HAVING SUM (MIContainer.Amount) <> 0 
 
                   ) AS tmpPersonalMoney
@@ -354,4 +356,4 @@ ALTER FUNCTION gpSelect_MI_TransportReport (Integer, Boolean, Boolean, TVarChar)
 */
 
 -- тест
--- SELECT * FROM gpSelect_MI_TransportReport (inMovementId:= 688, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_MI_TransportReport (inMovementId:= 492, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= '2')
