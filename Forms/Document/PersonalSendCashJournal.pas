@@ -70,9 +70,9 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
   private
   public
   end;

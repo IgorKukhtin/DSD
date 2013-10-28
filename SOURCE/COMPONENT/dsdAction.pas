@@ -503,8 +503,9 @@ procedure TdsdDataSetRefresh.OnPageChanging(Sender: TObject;
   NewPage: TcxTabSheet; var AllowChange: Boolean);
 begin
   inherited;
-  if Enabled and RefreshOnTabSetChanges then
-     Execute;
+  if not(csDesigning in ComponentState) then
+     if Enabled and RefreshOnTabSetChanges then
+        Execute;
 end;
 
 { TdsdOpenForm }

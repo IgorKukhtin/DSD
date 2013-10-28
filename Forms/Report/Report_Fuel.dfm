@@ -18,11 +18,13 @@ object Report_FuelForm: TReport_FuelForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 65
+    Top = 57
     Width = 1329
-    Height = 330
+    Height = 338
     Align = alClient
     TabOrder = 0
+    ExplicitTop = 65
+    ExplicitHeight = 330
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -310,67 +312,67 @@ object Report_FuelForm: TReport_FuelForm
   end
   object Panel1: TPanel
     Left = 0
-    Top = 0
+    Top = 26
     Width = 1329
-    Height = 39
+    Height = 31
     Align = alTop
     TabOrder = 5
     object deStart: TcxDateEdit
       Left = 101
-      Top = 10
+      Top = 5
       EditValue = 41395d
       Properties.ShowTime = False
       TabOrder = 0
-      Width = 81
+      Width = 85
     end
     object deEnd: TcxDateEdit
-      Left = 299
-      Top = 11
+      Left = 310
+      Top = 5
       EditValue = 41395d
       Properties.ShowTime = False
       TabOrder = 1
-      Width = 87
+      Width = 85
     end
     object cxLabel2: TcxLabel
-      Left = 601
-      Top = 12
+      Left = 611
+      Top = 6
       Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
     end
     object edCar: TcxButtonEdit
-      Left = 672
-      Top = 10
+      Left = 676
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 3
-      Width = 161
+      Width = 150
     end
     object cxLabel4: TcxLabel
-      Left = 398
-      Top = 12
+      Left = 409
+      Top = 6
       Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
     end
     object ceFuel: TcxButtonEdit
-      Left = 472
-      Top = 10
+      Left = 477
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 124
+      Width = 120
     end
     object cxLabel1: TcxLabel
-      Left = 9
-      Top = 10
+      Left = 10
+      Top = 6
       Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object cxLabel3: TcxLabel
-      Left = 187
-      Top = 11
+      Left = 200
+      Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
   end
@@ -414,8 +416,8 @@ object Report_FuelForm: TReport_FuelForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -505,6 +507,7 @@ object Report_FuelForm: TReport_FuelForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actExportToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -631,8 +634,8 @@ object Report_FuelForm: TReport_FuelForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 640
-    Top = 27
+    Left = 760
+    Top = 147
   end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefresh
@@ -679,7 +682,7 @@ object Report_FuelForm: TReport_FuelForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 431
-    Top = 39
+    Left = 463
+    Top = 135
   end
 end

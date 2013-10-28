@@ -51,10 +51,10 @@ type
     clByObjectName: TcxDBPivotGridField;
     clGoodsName: TcxDBPivotGridField;
     clAmount: TcxDBPivotGridField;
-    cxLabel1: TcxLabel;
-    cxLabel2: TcxLabel;
     clBusiness: TcxDBPivotGridField;
     clJuridicalBasis: TcxDBPivotGridField;
+    cxLabel1: TcxLabel;
+    cxLabel2: TcxLabel;
   private
   public
   end;

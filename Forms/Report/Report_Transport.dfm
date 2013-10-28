@@ -18,9 +18,9 @@ object Report_TransportForm: TReport_TransportForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 113
+    Top = 57
     Width = 1329
-    Height = 282
+    Height = 338
     Align = alClient
     TabOrder = 0
     object cxGridDBTableView: TcxGridDBTableView
@@ -458,24 +458,34 @@ object Report_TransportForm: TReport_TransportForm
     Left = 0
     Top = 26
     Width = 1329
-    Height = 87
+    Height = 31
     Align = alTop
     TabOrder = 5
     object deStart: TcxDateEdit
-      Left = 16
-      Top = 8
+      Left = 101
+      Top = 5
       EditValue = 41395d
       Properties.ShowTime = False
       TabOrder = 0
-      Width = 121
+      Width = 85
     end
     object deEnd: TcxDateEdit
-      Left = 176
-      Top = 8
+      Left = 310
+      Top = 5
       EditValue = 41395d
       Properties.ShowTime = False
       TabOrder = 1
-      Width = 121
+      Width = 85
+    end
+    object cxLabel1: TcxLabel
+      Left = 10
+      Top = 6
+      Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
+    end
+    object cxLabel2: TcxLabel
+      Left = 200
+      Top = 6
+      Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
   end
   object DataSource: TDataSource
@@ -491,6 +501,108 @@ object Report_TransportForm: TReport_TransportForm
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Align'
+          'AlignWithMargins'
+          'Anchors'
+          'AutoSize'
+          'BeepOnEnter'
+          'BiDiMode'
+          'Constraints'
+          'Cursor'
+          'CustomHint'
+          'Date'
+          'DragCursor'
+          'DragKind'
+          'DragMode'
+          'EditValue'
+          'Enabled'
+          'FakeStyleController'
+          'Height'
+          'HelpContext'
+          'HelpKeyword'
+          'HelpType'
+          'Hint'
+          'ImeMode'
+          'ImeName'
+          'Left'
+          'Margins'
+          'Name'
+          'ParentBiDiMode'
+          'ParentColor'
+          'ParentCustomHint'
+          'ParentFont'
+          'ParentShowHint'
+          'PopupMenu'
+          'Properties'
+          'RepositoryItem'
+          'ShowHint'
+          'Style'
+          'StyleDisabled'
+          'StyleFocused'
+          'StyleHot'
+          'TabOrder'
+          'TabStop'
+          'Tag'
+          'TextHint'
+          'Top'
+          'Touch'
+          'Visible'
+          'Width')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Align'
+          'AlignWithMargins'
+          'Anchors'
+          'AutoSize'
+          'BeepOnEnter'
+          'BiDiMode'
+          'Constraints'
+          'Cursor'
+          'CustomHint'
+          'Date'
+          'DragCursor'
+          'DragKind'
+          'DragMode'
+          'EditValue'
+          'Enabled'
+          'FakeStyleController'
+          'Height'
+          'HelpContext'
+          'HelpKeyword'
+          'HelpType'
+          'Hint'
+          'ImeMode'
+          'ImeName'
+          'Left'
+          'Margins'
+          'Name'
+          'ParentBiDiMode'
+          'ParentColor'
+          'ParentCustomHint'
+          'ParentFont'
+          'ParentShowHint'
+          'PopupMenu'
+          'Properties'
+          'RepositoryItem'
+          'ShowHint'
+          'Style'
+          'StyleDisabled'
+          'StyleFocused'
+          'StyleHot'
+          'TabOrder'
+          'TabStop'
+          'Tag'
+          'TextHint'
+          'Top'
+          'Touch'
+          'Visible'
+          'Width')
+      end
       item
         Component = Owner
         Properties.Strings = (

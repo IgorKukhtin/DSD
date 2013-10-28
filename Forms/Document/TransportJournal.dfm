@@ -21,42 +21,44 @@ object TransportJournalForm: TTransportJournalForm
     Left = 0
     Top = 26
     Width = 1276
-    Height = 41
+    Height = 31
     Align = alTop
     TabOrder = 1
     object deStart: TcxDateEdit
-      Left = 110
-      Top = 8
+      Left = 101
+      Top = 5
       EditValue = 41275d
       TabOrder = 0
-      Width = 86
+      Width = 85
     end
     object deEnd: TcxDateEdit
-      Left = 328
-      Top = 8
+      Left = 310
+      Top = 5
       EditValue = 41639d
       TabOrder = 1
-      Width = 92
+      Width = 85
     end
     object cxLabel1: TcxLabel
-      Left = 9
-      Top = 10
+      Left = 10
+      Top = 6
       Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object cxLabel2: TcxLabel
-      Left = 210
-      Top = 10
+      Left = 200
+      Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
   end
   object cxGrid: TcxGrid
     Left = 0
-    Top = 67
+    Top = 57
     Width = 1276
-    Height = 360
+    Height = 370
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
+    ExplicitTop = 67
+    ExplicitHeight = 360
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -262,8 +264,8 @@ object TransportJournalForm: TTransportJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -392,6 +394,7 @@ object TransportJournalForm: TTransportJournalForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'

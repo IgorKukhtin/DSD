@@ -20,43 +20,45 @@ object Report_BalanceForm: TReport_BalanceForm
     Left = 0
     Top = 26
     Width = 1329
-    Height = 41
+    Height = 31
     Align = alTop
     TabOrder = 0
     object deStart: TcxDateEdit
-      Left = 104
-      Top = 9
+      Left = 101
+      Top = 5
       EditValue = 41395d
       TabOrder = 0
       Width = 85
     end
     object deEnd: TcxDateEdit
-      Left = 317
-      Top = 9
+      Left = 310
+      Top = 5
       EditValue = 41395d
       TabOrder = 1
-      Width = 83
+      Width = 85
     end
     object cxLabel1: TcxLabel
-      Left = 9
-      Top = 10
+      Left = 10
+      Top = 6
       Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object cxLabel2: TcxLabel
-      Left = 202
-      Top = 10
+      Left = 200
+      Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
   end
   object cxDBPivotGrid: TcxDBPivotGrid
     Left = 0
-    Top = 67
+    Top = 57
     Width = 1329
-    Height = 373
+    Height = 383
     Align = alClient
     DataSource = DataSource
     Groups = <>
     TabOrder = 5
+    ExplicitTop = 67
+    ExplicitHeight = 373
     object pvRootName: TcxDBPivotGridField
       Area = faRow
       AreaIndex = 0
@@ -229,8 +231,8 @@ object Report_BalanceForm: TReport_BalanceForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -301,6 +303,7 @@ object Report_BalanceForm: TReport_BalanceForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actExportToExcel: TdsdGridToExcel
       Category = 'DSDLib'

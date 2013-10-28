@@ -74,6 +74,8 @@ type
     clAmount_ColdHour_calc: TcxGridDBColumn;
     clAmount_ColdDistance_calc: TcxGridDBColumn;
     cxGridDBTableViewColumn1: TcxGridDBColumn;
+    cxLabel1: TcxLabel;
+    cxLabel2: TcxLabel;
   private
   public
   end;
