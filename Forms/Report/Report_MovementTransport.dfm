@@ -12,17 +12,19 @@ object Report_MovementTransportForm: TReport_MovementTransportForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
-  isAlwaysRefresh = False
-  isFree = True
+  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.isSingle = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 113
+    Top = 65
     Width = 1189
-    Height = 282
+    Height = 330
     Align = alClient
     TabOrder = 0
+    ExplicitTop = 113
+    ExplicitHeight = 282
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -274,7 +276,7 @@ object Report_MovementTransportForm: TReport_MovementTransportForm
     Left = 0
     Top = 26
     Width = 1189
-    Height = 87
+    Height = 39
     Align = alTop
     TabOrder = 5
     object deStart: TcxDateEdit

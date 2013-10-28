@@ -51,7 +51,7 @@ function ConvertConvert(S: RawByteString): String;
 
 implementation
 
-uses UtilConvert, DB, SysUtils, ZLibEx, Dialogs;
+uses UtilConvert, DB, SysUtils, ZLibEx, Dialogs, dsdAddOn;
 
 // Процедура по символьно переводит строку в набор цифр
 function ConvertConvert(S: RawByteString): String;
@@ -223,6 +223,10 @@ begin
 
     // Прочитать компонент из потока
     MemoryStream.ReadComponent(Result);
+    // Загрузить пользователские дефотлы!!!
+    for i := 0 to Result.ComponentCount - 1 do
+      if Result.Components[i] is TdsdUserSettingsStorageAddOn then
+         TdsdUserSettingsStorageAddOn(Result.Components[i]).LoadUserSettings;
   finally
     StringStream.Clear;
     MemoryStream.Clear;

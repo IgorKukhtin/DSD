@@ -13,6 +13,9 @@ object InventoryForm: TInventoryForm
   KeyPreview = True
   OldCreateOrder = False
   PopupMenu = PopupMenu
+  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.isSingle = False
+  AddOnFormData.Params = dsdFormParams
   PixelsPerInch = 96
   TextHeight = 13
   object DataPanel: TPanel

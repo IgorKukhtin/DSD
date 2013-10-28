@@ -114,19 +114,27 @@ end;
 
 procedure TParentForm.FormClose(Sender: TObject; var Action: TCloseAction);
 var i: integer;
+    DataSetList: TList;
 begin
   inherited;
-  // Если данная форма не одиночка, то при закрытии надо проверить единственная она или нет
-  // Если не единственная, то сделать ей Free
-  if not AddOnFormData.isSingle then begin
-     for i := 0 to ComponentCount - 1 do
-         if Components[i] is TDataSet then
-            TDataSet(Components[i]).Close;
-     for i := 0 to Screen.FormCount - 1 do
-         if (Screen.Forms[i] is TParentForm) then
-            if Screen.Forms[i] <> Self then
-               if TParentForm(Screen.Forms[i]).FormClassName = Self.FormClassName then
-                  Action := caFree;
+  DataSetList := TList.Create;
+  try
+    // Если данная форма не одиночка, то при закрытии надо проверить единственная она или нет
+    // Если не единственная, то сделать ей Free
+    if not AddOnFormData.isSingle then begin
+       for i := 0 to ComponentCount - 1 do
+           if Components[i] is TDataSet then
+              DataSetList.Add(Components[i]);
+       for i := 0 to DataSetList.Count - 1 do
+           TDataSet(DataSetList[i]).Close;
+       for i := 0 to Screen.FormCount - 1 do
+           if (Screen.Forms[i] is TParentForm) then
+              if Screen.Forms[i] <> Self then
+                 if TParentForm(Screen.Forms[i]).FormClassName = Self.FormClassName then
+                    Action := caFree;
+    end;
+  finally
+    DataSetList.Free
   end;
 end;
 

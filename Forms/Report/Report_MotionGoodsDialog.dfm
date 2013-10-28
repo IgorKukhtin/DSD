@@ -13,6 +13,8 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  AddOnFormData.isSingle = False
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton

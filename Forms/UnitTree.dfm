@@ -12,6 +12,10 @@ object UnitTreeForm: TUnitTreeForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  AddOnFormData.isAlwaysRefresh = False
+  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = dsdFormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxDBTreeList: TcxDBTreeList

@@ -46,9 +46,9 @@ type
   private
     FOnPageChanging: TOnPageChanging;
     FTabSheet: TcxTabSheet;
-    procedure SetTabSheet(const Value: TcxTabSheet);
-    procedure OnPageChanging(Sender: TObject; NewPage: TcxTabSheet; var AllowChange: Boolean);
+    procedure SetTabSheet(const Value: TcxTabSheet); virtual;
   protected
+    procedure OnPageChanging(Sender: TObject; NewPage: TcxTabSheet; var AllowChange: Boolean); virtual;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   published
     // ѕри установке данного свойства Action будет активирован только если TabSheet активен
@@ -92,8 +92,14 @@ type
   end;
 
   TdsdDataSetRefresh = class(TdsdCustomDataSetAction)
+  private
+    FRefreshOnTabSetChanges: boolean;
+  protected
+    procedure OnPageChanging(Sender: TObject; NewPage: TcxTabSheet; var AllowChange: Boolean); override;
   public
     constructor Create(AOwner: TComponent); override;
+  published
+    property RefreshOnTabSetChanges: boolean read FRefreshOnTabSetChanges write FRefreshOnTabSetChanges;
   end;
 
   // —охран€ет или измен€ет значение в справочнике и закрывает форму
@@ -491,6 +497,14 @@ begin
   Caption := 'ѕеречитать';
   Hint:='ќбновить данные';
   ShortCut:=VK_F5
+end;
+
+procedure TdsdDataSetRefresh.OnPageChanging(Sender: TObject;
+  NewPage: TcxTabSheet; var AllowChange: Boolean);
+begin
+  inherited;
+  if Enabled and RefreshOnTabSetChanges then
+     Execute;
 end;
 
 { TdsdOpenForm }
