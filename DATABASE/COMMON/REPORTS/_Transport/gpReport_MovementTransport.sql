@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpReport_MovementTransport(
 RETURNS TABLE (PersonalDriverName TVarChar
              , RouteName TVarChar
              , RouteKindName TVarChar
-             , FreightName TVarChar
+             , RouteKindFreightName TVarChar
              , Weight TFloat, HoursWork TFloat, HoursAdd TFloat
              , InvNumber Integer, OperDate TDateTime
               )
@@ -29,9 +29,9 @@ $BODY$BEGIN
 
             , Object_RouteKind.ValueData  AS RouteKindName
 
-            , Object_Freight.ValueData AS FreightName
+            , Object_RouteKindFreight.ValueData AS RouteKindFreightName
 
-            , MIFloat_Weight.ValueData AS Weight
+            , CAST (tmpMI.Weight AS TFloat) AS Weight
             
             , CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat) AS HoursWork
             , MovementFloat_HoursAdd.ValueData      AS HoursAdd
@@ -40,58 +40,43 @@ $BODY$BEGIN
            , Movement.OperDate
 
         FROM Movement
-             LEFT JOIN (SELECT MIN(MovementItem.Id) AS MovementItemId, MovementId, ObjectId as RouteId
+             LEFT JOIN (SELECT MIN(MovementItem.Id) AS MovementItemId
+                             , SUM(MIFloat_Weight.ValueData) AS Weight
+                             , MovementId 
                         FROM MovementItem
-
+                            LEFT JOIN MovementItemFloat AS MIFloat_Weight ON MIFloat_Weight.MovementItemId = MovementItem.Id
+                                                                         AND MIFloat_Weight.DescId = zc_MIFloat_Weight()
                         where MovementItem.DescId = zc_MI_Master()
                           AND MovementItem.isErased = FALSE
-
-                        GROUP BY MovementItem.Id 
+              
+                        GROUP BY MovementId 
                         ) AS tmpMI ON tmpMI.MovementId = Movement.Id 
 
-              LEFT JOIN Object AS Object_Route ON Object_Route.Id = tmpMI.RouteId      
-
-              /*LEFT JOIN (select sum(MIFloat_Weight.ValueData) as Weight, MovementItemId
-                         from MovementItemFloat AS MIFloat_Weight
-                         where MIFloat_Weight.DescId = zc_MIFloat_Weight()
-                         group by MovementId
-                        ) as tmpFloat_Weight ON tmpFloat_Weight.MovementItemId = tmpMI.MovementItemId*/
-      
-              LEFT JOIN MovementItemFloat AS MIFloat_Weight
-                                          ON MIFloat_Weight.MovementItemId = tmpMI.MovementItemId
-                                         AND MIFloat_Weight.DescId = zc_MIFloat_Weight()
-               
-              LEFT JOIN MovementItemLinkObject AS MILinkObject_RouteKind ON MILinkObject_RouteKind.MovementItemId = tmpMI.MovementId
+              LEFT JOIN MovementItem AS MI ON MI.Id = tmpMI.MovementItemId
+              LEFT JOIN Object AS Object_Route ON Object_Route.Id = MI.ObjectId      
+                  
+              LEFT JOIN MovementItemLinkObject AS MILinkObject_RouteKind ON MILinkObject_RouteKind.MovementItemId = tmpMI.MovementItemId
                                                                         AND MILinkObject_RouteKind.DescId = zc_MILinkObject_RouteKind()
               LEFT JOIN Object AS Object_RouteKind ON Object_RouteKind.Id = MILinkObject_RouteKind.ObjectId
 
-              LEFT JOIN MovementItemLinkObject AS MILinkObject_Freight ON MILinkObject_Freight.MovementItemId = tmpMI.MovementId
-                                                                      AND MILinkObject_Freight.DescId = zc_MILinkObject_Freight()
-              LEFT JOIN Object AS Object_Freight ON Object_Freight.Id = MILinkObject_Freight.ObjectId
-
-
+              LEFT JOIN MovementItemLinkObject AS MILinkObject_RouteKindFreight ON MILinkObject_RouteKindFreight.MovementItemId = tmpMI.MovementItemId
+                                                                               AND MILinkObject_RouteKindFreight.DescId = zc_MILinkObject_RouteKindFreight()
+              LEFT JOIN Object AS Object_RouteKindFreight ON Object_RouteKindFreight.Id = MILinkObject_RouteKindFreight.ObjectId
+              
               LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
                                                                                AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
-              LEFT JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
-																   AND View_PersonalDriver.PersonalId = inPersonalId
+              JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
+                                                              AND View_PersonalDriver.PersonalId = inPersonalId
 
               LEFT JOIN MovementFloat AS MovementFloat_HoursWork ON MovementFloat_HoursWork.MovementId =  Movement.Id
-                                   AND MovementFloat_HoursWork.DescId = zc_MovementFloat_HoursWork()
-            
-              LEFT JOIN MovementFloat AS MovementFloat_HoursAdd
-                                      ON MovementFloat_HoursAdd.MovementId =  Movement.Id
-                                     AND MovementFloat_HoursAdd.DescId = zc_MovementFloat_HoursAdd()
+                                                                AND MovementFloat_HoursWork.DescId = zc_MovementFloat_HoursWork()
+
+              LEFT JOIN MovementFloat AS MovementFloat_HoursAdd ON MovementFloat_HoursAdd.MovementId =  Movement.Id
+                                                               AND MovementFloat_HoursAdd.DescId = zc_MovementFloat_HoursAdd()
               
         WHERE Movement.DescId = zc_Movement_Transport()
           AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-          --AND Movement.StatusId = zc_Enum_Status_Complete()
-
-
-/*select sum(MIFloat_Weight.ValueData) as Weight, MovementItemId
-                         from MovementItemFloat AS MIFloat_Weight
-                         where MIFloat_Weight.DescId = zc_MIFloat_Weight()
-                         group by MovementItemId*/
-
+          AND Movement.StatusId = zc_Enum_Status_Complete()
 ;
 
 END;

@@ -23,8 +23,6 @@ object Report_MovementTransportForm: TReport_MovementTransportForm
     Height = 330
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 113
-    ExplicitHeight = 282
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -224,9 +222,9 @@ object Report_MovementTransportForm: TReport_MovementTransportForm
         DataBinding.FieldName = 'RouteKindName'
         Width = 193
       end
-      object clFreightName: TcxGridDBColumn
+      object clRouteKindFreightName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1075#1088#1091#1079#1072
-        DataBinding.FieldName = 'FreightName'
+        DataBinding.FieldName = 'RouteKindFreightName'
         Width = 179
       end
       object clWeight: TcxGridDBColumn
@@ -420,6 +418,7 @@ object Report_MovementTransportForm: TReport_MovementTransportForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actExportToExcel: TdsdGridToExcel
       Category = 'DSDLib'

@@ -53,7 +53,7 @@ begin
   try
     // Получение данных о Подразделении
     with ObjectTest.GetRecord(Id) do begin
-         Check((FieldByName('Name').AsString = 'Подразделение'), 'Не сходятся данные Id = ' + IntToStr(Id));
+         Check((FieldByName('Name').AsString = 'Test - Подразделение'), 'Не сходятся данные Id = ' + IntToStr(Id));
          Check((FieldByName('isLeaf').AsBoolean ), 'Не правильно установлено свойство isLeaf Id = ' + IntToStr(Id));
     end;
     // теперь делаем ссылку на себя и проверяем ошибку
@@ -131,7 +131,7 @@ end;
 
 function TUnit.InsertDefault: integer;
 begin
-  result := InsertUpdateUnit(0, -100, 'Подразделение',true, 0, BranchTest.GetDefault, 0, 0, 0, 0);
+  result := InsertUpdateUnit(0, -11100, 'Test - Подразделение',true, 0, BranchTest.GetDefault, 0, 0, 0, 0);
   inherited;
 end;
 

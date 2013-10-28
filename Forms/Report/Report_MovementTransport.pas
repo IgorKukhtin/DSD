@@ -58,7 +58,7 @@ type
     deEnd: TcxDateEdit;
     cxLabel2: TcxLabel;
     clRouteKindName: TcxGridDBColumn;
-    clFreightName: TcxGridDBColumn;
+    clRouteKindFreightName: TcxGridDBColumn;
     clRouteName: TcxGridDBColumn;
     PersonalDriverGuides: TdsdGuides;
   private
