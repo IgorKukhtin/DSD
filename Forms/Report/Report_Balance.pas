@@ -54,12 +54,12 @@ type
     pvAmountKreditStart: TcxDBPivotGridField;
     pvAmountDebetEnd: TcxDBPivotGridField;
     pvAmountKreditEnd: TcxDBPivotGridField;
-    cxLabel1: TcxLabel;
-    cxLabel2: TcxLabel;
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
     pvObjectDirection: TcxDBPivotGridField;
     pvObjectDestination: TcxDBPivotGridField;
+    cxLabel1: TcxLabel;
+    cxLabel2: TcxLabel;
   private
   public
   end;

@@ -1,6 +1,6 @@
 -- View: Object_Personal_View
 
--- DROP VIEW IF EXISTS Object_Personal_View;
+--DROP VIEW IF EXISTS Object_Personal_View;
 
 CREATE OR REPLACE VIEW Object_Personal_View AS
   SELECT Object_Personal.Id                        AS PersonalId
@@ -8,6 +8,11 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
        , Object_Member.ObjectCode                  AS PersonalCode
        , Object_Member.ValueData                   AS PersonalName
        , Object_Personal.isErased                  AS isErased
+
+       , ObjectLink_Personal_Position.ChildObjectId AS PositionId
+       , Object_Position.ObjectCode                 AS PositionCode
+       , Object_Position.ValueData                  AS PositionName
+
        , ObjectLink_Personal_Unit.ChildObjectId    AS UnitId
        , Object_Unit.ObjectCode                    AS UnitCode
        , Object_Unit.ValueData                     AS UnitName

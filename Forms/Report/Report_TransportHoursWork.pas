@@ -1,4 +1,4 @@
-unit Report_MovementTransport;
+unit Report_TransportHoursWork;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   cxButtonEdit, ChoicePeriod, cxLabel;
 
 type
-  TReport_MovementTransportForm = class(TParentForm)
+  TReport_TransportHoursWorkForm = class(TParentForm)
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
@@ -58,9 +58,11 @@ type
     deEnd: TcxDateEdit;
     cxLabel2: TcxLabel;
     clRouteKindName: TcxGridDBColumn;
-    clFreightName: TcxGridDBColumn;
+    clRouteKindFreightName: TcxGridDBColumn;
     clRouteName: TcxGridDBColumn;
     PersonalDriverGuides: TdsdGuides;
+    cxLabel1: TcxLabel;
+    cxLabel3: TcxLabel;
   private
   public
   end;
@@ -72,6 +74,6 @@ implementation
 
 
 initialization
-  RegisterClass(TReport_MovementTransportForm);
+  RegisterClass(TReport_TransportHoursWorkForm);
 
 end.

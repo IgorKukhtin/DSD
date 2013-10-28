@@ -81,13 +81,13 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
-    cxLabel1: TcxLabel;
-    cxLabel2: TcxLabel;
     colRouteName: TcxGridDBColumn;
     colInvNumberPartner: TcxGridDBColumn;
     colInvNumberMaster: TcxGridDBColumn;
     colOperDateMaster: TcxGridDBColumn;
     colChangePrice: TcxGridDBColumn;
+    cxLabel1: TcxLabel;
+    cxLabel2: TcxLabel;
   private
   public
   end;

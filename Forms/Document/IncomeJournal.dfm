@@ -20,45 +20,47 @@ object IncomeJournalForm: TIncomeJournalForm
     Left = 0
     Top = 26
     Width = 1240
-    Height = 41
+    Height = 31
     Align = alTop
     TabOrder = 1
     object deStart: TcxDateEdit
-      Left = 106
-      Top = 10
+      Left = 101
+      Top = 5
       EditValue = 41275d
       Properties.ReadOnly = True
       TabOrder = 0
       Width = 85
     end
     object deEnd: TcxDateEdit
-      Left = 323
-      Top = 10
+      Left = 310
+      Top = 5
       EditValue = 41639d
       Properties.ReadOnly = True
       Properties.ShowTime = False
       TabOrder = 1
-      Width = 84
-    end
-    object cxLabel2: TcxLabel
-      Left = 210
-      Top = 10
-      Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
+      Width = 85
     end
     object cxLabel1: TcxLabel
-      Left = 9
-      Top = 10
+      Left = 10
+      Top = 6
       Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
+    end
+    object cxLabel2: TcxLabel
+      Left = 200
+      Top = 6
+      Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
   end
   object cxGrid: TcxGrid
     Left = 0
-    Top = 67
+    Top = 57
     Width = 1240
-    Height = 360
+    Height = 370
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitTop = 67
+    ExplicitHeight = 360
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -353,8 +355,8 @@ object IncomeJournalForm: TIncomeJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

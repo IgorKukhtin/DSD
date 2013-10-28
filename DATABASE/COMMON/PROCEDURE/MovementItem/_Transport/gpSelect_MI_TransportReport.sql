@@ -161,7 +161,7 @@ BEGIN
 
                    -- Проводки количественные или Элементы - Приход Топливо !!!это документ - Приход от поставщика (Заправка авто) !!!
              FROM (SELECT Movement.StatusId
-                        , COALESCE (Container.ObjectId, ObjectLink_Goods_Fuel.ObjectId) AS FuelId
+                        , COALESCE (Container.ObjectId, ObjectLink_Goods_Fuel.ChildObjectId) AS FuelId
                         , 0 AS Amount_Start
                         , SUM (COALESCE (MIContainer.Amount, COALESCE (MI.Amount, 0))) AS Amount_In
                         , 0 AS Amount_Out
@@ -191,7 +191,7 @@ BEGIN
                      -- AND COALESCE (ObjectFrom.DescId, 0) <> zc_Object_TicketFuel()
                    GROUP BY Movement.StatusId
                           , Container.ObjectId
-                          , ObjectLink_Goods_Fuel.ObjectId
+                          , ObjectLink_Goods_Fuel.ChildObjectId
                    
                   UNION ALL
                    -- Начальный остаток топлива в автомобиле !!!это документ - Путевой лист!!!
@@ -309,16 +309,12 @@ BEGIN
                                                     AND MI.DescId = zc_MI_Master()
                                                     AND MI.isErased = FALSE
                                                     AND Movement.StatusId = zc_Enum_Status_UnComplete()
-                        LEFT JOIN ObjectLink AS ObjectLink_Goods_Fuel
-                                             ON ObjectLink_Goods_Fuel.ObjectId = MI.ObjectId
-                                            AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
                    WHERE Movement.ParentId = inMovementId
                      AND Movement.DescId = zc_Movement_Income()
                      AND Movement.StatusId <> zc_Enum_Status_Erased()
                      AND COALESCE (ObjectFrom.DescId, 0) = zc_Object_TicketFuel()
                    GROUP BY Movement.StatusId
                           , Container.ObjectId
-                          , ObjectLink_Goods_Fuel.ObjectId
                    
                   UNION ALL
                    -- Начальный остаток талонов на топливо Сотрудник (водитель) !!!это документ - Путевой лист!!!

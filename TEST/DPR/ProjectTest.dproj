@@ -638,12 +638,12 @@
 				<Form>ModelServiceEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_MovementTransport.pas">
-				<Form>Report_MovementTransportForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Object_StoragePlace.pas">
 				<Form>Object_StoragePlace</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_TransportHoursWork.pas">
+				<Form>Report_TransportHoursWorkForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

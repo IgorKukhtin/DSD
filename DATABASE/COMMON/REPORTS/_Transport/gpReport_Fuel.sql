@@ -7,12 +7,10 @@ CREATE OR REPLACE FUNCTION gpReport_Fuel(
     IN inEndDate       TDateTime , --
     IN inFuelId        Integer,    -- топливо  
     IN inCarId         Integer,    -- машина
-     
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (CarId Integer, CarName TVarChar
-             , FuelId Integer, FuelCode Integer, FuelName TVarChar
-
+RETURNS TABLE (CarModelName TVarChar, CarCode Integer, CarName TVarChar
+             , FuelCode Integer, FuelName TVarChar
              , StartAmount TFloat, IncomeAmount TFloat, RateAmount TFloat, EndAmount TFloat
              , StartSumm TFloat, IncomeSumm TFloat, RateSumm TFloat, EndSumm TFloat
              )
@@ -52,18 +50,18 @@ $BODY$BEGIN
                                   AND (ContainerLinkObject.ObjectId = inCarId OR inCarId = 0)
                                WHERE Container.ObjectId IN
                                       -- Получили список счетов
-                                      (SELECT  AccountId FROM object_account_view
+                                      (SELECT  AccountId FROM Object_account_view
                                          WHERE AccountDirectionId = zc_Enum_AccountDirection_30500()
                                            AND InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400())
                                     )
                -- Конец. Получили все нужные нам суммовые контейнеры
 
     -- Добавили строковые данные. 
-    SELECT Object_Car.Id           AS CarId,  
-           Object_Car.ValueData    AS CarName,
-           Object_Fuel.Id          AS FuelId,
-           Object_Fuel.ObjectCode  AS FuelCode,
-           Object_Fuel.ValueData   AS FuelName, 
+    SELECT Object_CarModel.ValueData AS CarModelName,
+           Object_Car.ObjectCode     AS CarCode,  
+           Object_Car.ValueData      AS CarName,
+           Object_Fuel.ObjectCode    AS FuelCode,
+           Object_Fuel.ValueData     AS FuelName, 
            StartCount::TFloat, IncomeCount::TFloat, OutcomeCount::TFloat, EndCount::TFloat,
            Report.StartSumm::TFloat, Report.IncomeSumm::TFloat, Report.OutcomeSumm::TFloat, Report.EndSumm::TFloat
     FROM(
@@ -117,8 +115,12 @@ $BODY$BEGIN
       GROUP BY Report.ObjectId, CarLink.ObjectId) AS Report
       -- Конец. Сгруппировали по топливу и автомобилю
 
-    LEFT JOIN OBJECT AS Object_Fuel ON Object_Fuel.Id = Report.FuelId
-    LEFT JOIN OBJECT AS Object_Car ON Object_Car.Id = Report.CarId;
+             LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = Report.FuelId
+             LEFT JOIN Object AS Object_Car ON Object_Car.Id = Report.CarId
+             LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
+                                                            AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
+             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
+    ;
     -- Конец. Добавили строковые данные. 
     -- КОНЕЦ ЗАПРОСА
 
@@ -132,6 +134,7 @@ ALTER FUNCTION gpReport_Fuel (TDateTime, TDateTime, Integer, Integer, TVarChar) 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.11.13                                        * add CarModelName
  14.11.13                        * add Денежные Средства
  11.11.13                        * 
  05.10.13         *
