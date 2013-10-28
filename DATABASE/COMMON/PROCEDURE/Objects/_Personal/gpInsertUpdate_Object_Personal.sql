@@ -30,6 +30,12 @@ BEGIN
    -- PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Personal(), vbCode);
 
 
+   -- проверка
+   IF COALESCE (inMemberId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.ФИО не выбрано.';
+   END IF;
+
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Personal(), 0, '');
    -- сохранили связь с <физ.лицом>
@@ -57,6 +63,7 @@ ALTER FUNCTION gpInsertUpdate_Object_Personal (Integer, Integer, Integer,Integer
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.10.13                                         * add RAISE...
  30.09.13                                         * del vbCode
  25.09.13         * add _PersonalGroup; remove _Juridical, _Business              
  06.09.13                         * inName - УБРАЛ. Не нашел для него применения

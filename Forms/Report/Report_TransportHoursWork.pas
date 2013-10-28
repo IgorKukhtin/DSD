@@ -61,6 +61,8 @@ type
     clRouteKindFreightName: TcxGridDBColumn;
     clRouteName: TcxGridDBColumn;
     PersonalDriverGuides: TdsdGuides;
+    cxLabel1: TcxLabel;
+    cxLabel3: TcxLabel;
   private
   public
   end;

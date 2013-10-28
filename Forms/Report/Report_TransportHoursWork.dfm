@@ -205,13 +205,13 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
       OptionsView.HeaderAutoHeight = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object clPersonalDriverName: TcxGridDBColumn
-        Caption = #1042#1086#1076#1080#1090#1077#1083#1100' '#1060#1048#1054
+        Caption = #1042#1086#1076#1080#1090#1077#1083#1100
         DataBinding.FieldName = 'PersonalDriverName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 147
+        Width = 140
       end
       object clRouteName: TcxGridDBColumn
         Caption = #1052#1072#1088#1096#1088#1091#1090
@@ -220,7 +220,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 132
+        Width = 120
       end
       object clRouteKindName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1084#1072#1088#1096#1088#1091#1090#1072
@@ -229,7 +229,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 193
+        Width = 100
       end
       object clRouteKindFreightName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1075#1088#1091#1079#1072
@@ -238,10 +238,10 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 179
+        Width = 100
       end
       object clWeight: TcxGridDBColumn
-        Caption = #1042#1077#1089' ('#1082#1075')'
+        Caption = #1042#1077#1089' '#1075#1088#1091#1079#1072', '#1082#1075
         DataBinding.FieldName = 'Weight'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
@@ -274,22 +274,22 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         Width = 92
       end
       object clInvNumber: TcxGridDBColumn
-        Caption = #1053#1086#1084#1077#1088' '#1087#1091#1090#1077#1074#1086#1075#1086
+        Caption = #8470' '#1087#1091#1090#1077#1074#1086#1075#1086' '#1083#1080#1089#1090#1072
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 103
+        Width = 80
       end
       object clOperDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1087#1091#1090#1077#1074#1086#1075#1086
+        Caption = #1044#1072#1090#1072' '#1087#1091#1090#1077#1074#1086#1075#1086' '#1083#1080#1089#1090#1072
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
-        Width = 100
+        Width = 80
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -304,36 +304,46 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
     Align = alTop
     TabOrder = 5
     object deStart: TcxDateEdit
-      Left = 16
-      Top = 8
+      Left = 101
+      Top = 5
       EditValue = 41548d
       Properties.ShowTime = False
       TabOrder = 0
-      Width = 121
+      Width = 85
     end
     object deEnd: TcxDateEdit
-      Left = 176
-      Top = 8
+      Left = 310
+      Top = 5
       EditValue = 41557d
       Properties.ShowTime = False
       TabOrder = 1
-      Width = 121
+      Width = 85
     end
     object cxLabel2: TcxLabel
-      Left = 341
-      Top = 9
-      Caption = #1042#1086#1076#1080#1090#1077#1083#1100
+      Left = 409
+      Top = 6
+      Caption = #1042#1086#1076#1080#1090#1077#1083#1100':'
     end
     object edPersonalDriver: TcxButtonEdit
-      Left = 400
-      Top = 8
+      Left = 466
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 3
-      Width = 233
+      Width = 150
+    end
+    object cxLabel1: TcxLabel
+      Left = 10
+      Top = 6
+      Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
+    end
+    object cxLabel3: TcxLabel
+      Left = 200
+      Top = 6
+      Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
   end
   object DataSource: TDataSource
@@ -467,8 +477,8 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

@@ -1,6 +1,7 @@
  -- Function: gpReport_TransportHoursWork()
 
-DROP FUNCTION IF EXISTS gpReport_TransportHoursWork(TDateTime, TDateTime, Integer, TVarChar);
+-- DROP FUNCTION IF EXISTS gpReport_MovementTransport (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_TransportHoursWork (TDateTime, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_TransportHoursWork(
     IN inStartDate    TDateTime , -- 

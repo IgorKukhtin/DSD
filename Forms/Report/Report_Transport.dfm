@@ -337,7 +337,7 @@ object Report_TransportForm: TReport_TransportForm
       end
       object clAmountFuel_In: TcxGridDBColumn
         Caption = #1047#1072#1087#1088#1072#1074#1082#1072', '#1083'.'
-        DataBinding.FieldName = 'ReFuel'
+        DataBinding.FieldName = 'AmountFuel_In'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taCenter
@@ -384,6 +384,7 @@ object Report_TransportForm: TReport_TransportForm
       object clRateFuelKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1085#1086#1088#1084#1099
         DataBinding.FieldName = 'RateFuelKindName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -392,6 +393,7 @@ object Report_TransportForm: TReport_TransportForm
       object clRateFuelKindTax: TcxGridDBColumn
         Caption = '% '#1089#1077#1079#1086#1085', '#1090#1077#1084#1087'.'
         DataBinding.FieldName = 'RateFuelKindTax'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False

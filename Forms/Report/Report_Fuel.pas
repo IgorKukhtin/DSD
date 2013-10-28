@@ -72,6 +72,7 @@ type
     ceFuel: TcxButtonEdit;
     cxLabel1: TcxLabel;
     cxLabel3: TcxLabel;
+    CarModelName: TcxGridDBColumn;
   private
   public
   end;

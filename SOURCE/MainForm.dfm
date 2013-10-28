@@ -21,8 +21,8 @@ object MainForm: TMainForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1441,8 +1441,8 @@ object MainForm: TMainForm
     end
     object actReport_Transport: TdsdOpenForm
       Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1040#1074#1090#1086#1084#1086#1073#1080#1083#1103#1084
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1040#1074#1090#1086#1084#1086#1073#1080#1083#1103#1084
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1091#1090#1077#1074#1099#1084' '#1083#1080#1089#1090#1072#1084
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1091#1090#1077#1074#1099#1084' '#1083#1080#1089#1090#1072#1084
       FormName = 'TReport_TransportForm'
       GuiParams = <>
       isShowModal = False

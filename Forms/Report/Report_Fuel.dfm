@@ -1,9 +1,9 @@
 object Report_FuelForm: TReport_FuelForm
   Left = 0
   Top = 0
-  Caption = #1056#1072#1089#1093#1086#1076' '#1090#1086#1087#1083#1080#1074#1072
+  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1088#1072#1089#1093#1086#1076#1091' '#1090#1086#1087#1083#1080#1074#1072
   ClientHeight = 395
-  ClientWidth = 1329
+  ClientWidth = 988
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,12 +19,10 @@ object Report_FuelForm: TReport_FuelForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 1329
+    Width = 988
     Height = 338
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 65
-    ExplicitHeight = 330
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -44,85 +42,89 @@ object Report_FuelForm: TReport_FuelForm
           Format = ',0.00'
           Kind = skSum
           Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
           Column = StartAmount
         end
         item
           Format = ',0.00'
           Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Position = spFooter
-          Column = IncomeAmount
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Position = spFooter
           Column = StartSumm
         end
         item
           Format = ',0.00'
           Kind = skSum
-          Position = spFooter
+          Column = IncomeAmount
         end
         item
           Format = ',0.00'
           Kind = skSum
-          Position = spFooter
           Column = IncomeSumm
         end
         item
           Format = ',0.00'
           Kind = skSum
-          Position = spFooter
+          Column = RateAmount
         end
         item
           Format = ',0.00'
           Kind = skSum
-          Position = spFooter
+          Column = RateSumm
         end
         item
           Format = ',0.00'
           Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Position = spFooter
           Column = EndAmount
         end
         item
           Format = ',0.00'
           Kind = skSum
-          Position = spFooter
           Column = EndSumm
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.00'
-          Position = spFooter
-        end
-        item
-          Format = ',0.00'
-          Position = spFooter
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -200,6 +202,21 @@ object Report_FuelForm: TReport_FuelForm
         end
         item
           Format = ',0.00'
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = IncomeAmount
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = RateAmount
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = RateSumm
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -212,12 +229,19 @@ object Report_FuelForm: TReport_FuelForm
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
-      OptionsView.GroupFooters = gfAlwaysVisible
+      OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object CarModelName: TcxGridDBColumn
+        Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+        DataBinding.FieldName = 'CarModelName'
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object CarCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'CarCode'
+        Visible = False
         HeaderAlignmentVert = vaCenter
         Width = 30
       end
@@ -225,19 +249,20 @@ object Report_FuelForm: TReport_FuelForm
         Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
         DataBinding.FieldName = 'CarName'
         HeaderAlignmentVert = vaCenter
-        Width = 42
+        Width = 70
       end
       object FuelCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1090#1086#1087#1083#1080#1074#1072
         DataBinding.FieldName = 'FuelCode'
+        Visible = False
         HeaderAlignmentVert = vaCenter
-        Width = 22
+        Width = 40
       end
       object FuelName: TcxGridDBColumn
         Caption = #1058#1086#1087#1083#1080#1074#1086
         DataBinding.FieldName = 'FuelName'
         HeaderAlignmentVert = vaCenter
-        Width = 30
+        Width = 70
       end
       object StartAmount: TcxGridDBColumn
         Caption = #1053#1072#1095'. '#1086#1089#1090'. '#1082#1086#1083'.'
@@ -246,7 +271,7 @@ object Report_FuelForm: TReport_FuelForm
         Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 44
+        Width = 55
       end
       object StartSumm: TcxGridDBColumn
         Caption = #1053#1072#1095'. '#1086#1089#1090'.  '#1089#1091#1084#1084#1072
@@ -255,7 +280,7 @@ object Report_FuelForm: TReport_FuelForm
         Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 44
+        Width = 55
       end
       object IncomeAmount: TcxGridDBColumn
         Caption = #1055#1088#1080#1093#1086#1076' '#1082#1086#1083'.'
@@ -264,7 +289,7 @@ object Report_FuelForm: TReport_FuelForm
         Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 29
+        Width = 55
       end
       object IncomeSumm: TcxGridDBColumn
         Caption = #1055#1088#1080#1093#1086#1076' '#1089#1091#1084#1084#1072
@@ -272,22 +297,23 @@ object Report_FuelForm: TReport_FuelForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentVert = vaCenter
-        Width = 45
+        Width = 55
       end
       object RateAmount: TcxGridDBColumn
         Caption = #1056#1072#1089#1093#1086#1076' '#1082#1086#1083'.'
         DataBinding.FieldName = 'RateAmount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.AssignedValues.DisplayFormat = True
+        Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentVert = vaCenter
-        Width = 29
+        Width = 55
       end
       object RateSumm: TcxGridDBColumn
         Caption = #1056#1072#1089#1093#1086#1076' '#1089#1091#1084#1084#1072
         DataBinding.FieldName = 'RateSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentVert = vaCenter
-        Width = 45
+        Width = 55
       end
       object EndAmount: TcxGridDBColumn
         Caption = #1050#1086#1085'. '#1086#1089#1090'. '#1082#1086#1083'.'
@@ -295,7 +321,7 @@ object Report_FuelForm: TReport_FuelForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentVert = vaCenter
-        Width = 44
+        Width = 55
       end
       object EndSumm: TcxGridDBColumn
         Caption = #1050#1086#1085'. '#1086#1089#1090'. '#1089#1091#1084#1084#1072
@@ -303,7 +329,7 @@ object Report_FuelForm: TReport_FuelForm
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentVert = vaCenter
-        Width = 45
+        Width = 55
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -313,7 +339,7 @@ object Report_FuelForm: TReport_FuelForm
   object Panel1: TPanel
     Left = 0
     Top = 26
-    Width = 1329
+    Width = 988
     Height = 31
     Align = alTop
     TabOrder = 5
@@ -334,12 +360,12 @@ object Report_FuelForm: TReport_FuelForm
       Width = 85
     end
     object cxLabel2: TcxLabel
-      Left = 611
+      Left = 615
       Top = 6
-      Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
+      Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100':'
     end
     object edCar: TcxButtonEdit
-      Left = 676
+      Left = 684
       Top = 5
       Properties.Buttons = <
         item
@@ -352,10 +378,10 @@ object Report_FuelForm: TReport_FuelForm
     object cxLabel4: TcxLabel
       Left = 409
       Top = 6
-      Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
+      Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072':'
     end
     object ceFuel: TcxButtonEdit
-      Left = 477
+      Left = 481
       Top = 5
       Properties.Buttons = <
         item
