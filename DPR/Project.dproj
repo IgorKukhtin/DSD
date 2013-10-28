@@ -77,9 +77,10 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+			<VerInfo_Build>2</VerInfo_Build>
 			<VerInfo_MinorVer>2</VerInfo_MinorVer>
 			<VerInfo_Release>3</VerInfo_Release>
-			<VerInfo_Keys>CompanyName=;FileDescription=Управленческий учет - &quot;Project&quot;;FileVersion=1.2.3.1;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.1;Comments=</VerInfo_Keys>
+			<VerInfo_Keys>CompanyName=;FileDescription=Управленческий учет - &quot;Project&quot;;FileVersion=1.2.3.2;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.1;Comments=</VerInfo_Keys>
 			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
 			<VerInfo_Locale>1033</VerInfo_Locale>
 			<DCC_DcuOutput>..\DCU</DCC_DcuOutput>
@@ -179,14 +180,7 @@
 						<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
-					<Excluded_Packages>
-						<Excluded_Packages Name="D:\WORK\DSD\DSD\BIN\DSDComponent.bpl">File D:\WORK\DSD\DSD\BIN\DSDComponent.bpl not found</Excluded_Packages>
-						<Excluded_Packages Name="D:\WORK\DSD\DSD\BIN\DSDDesignComponent.bpl">File D:\WORK\DSD\DSD\BIN\DSDDesignComponent.bpl not found</Excluded_Packages>
-						<Excluded_Packages Name="C:\Program Files (x86)\FastReports\FastReport 4\LibD16\dclfsDB16.bpl">FastScript 1.9 DB Components</Excluded_Packages>
-						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\dcldxCoreD7.bpl">File C:\Users\Public\Documents\RAD Studio\9.0\Bpl\dcldxCoreD7.bpl not found</Excluded_Packages>
-						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\dacvcl160.bpl">Devart Data Access GUI related Components</Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl160.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>
-					</Excluded_Packages>
+					<Excluded_Packages/>
 					<Source>
 						<Source Name="MainSource">Project.dpr</Source>
 					</Source>
