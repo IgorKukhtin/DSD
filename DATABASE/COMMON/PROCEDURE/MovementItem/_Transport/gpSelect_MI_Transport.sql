@@ -59,7 +59,7 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_EndOdometre
                                          ON MIFloat_EndOdometre.MovementItemId = MovementItem.Id
                                         AND MIFloat_EndOdometre.DescId = zc_MIFloat_EndOdometre()
-             
+
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Freight
                                               ON MILinkObject_Freight.MovementItemId = MovementItem.Id 
                                              AND MILinkObject_Freight.DescId = zc_MILinkObject_Freight()
