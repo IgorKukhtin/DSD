@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_Unit_Tree()
 
--- DROP FUNCTION gpSelect_Object_Unit_Tree(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Unit_Tree(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Unit_Tree(
     IN inSession     TVarChar       -- сессия пользователя
@@ -14,16 +14,12 @@ BEGIN
 
    RETURN QUERY 
        SELECT 
-             Object_Unit.Id         AS Id
-           , Object_Unit.ObjectCode AS Code
-           , Object_Unit.ValueData  AS Name
-           , COALESCE(ObjectLink_Unit_Parent.ChildObjectId, 0) AS ParentId
-           , Object_Unit.isErased AS isErased
-       FROM Object AS Object_Unit
-           LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent
-                                ON ObjectLink_Unit_Parent.ObjectId = Object_Unit.Id
-                               AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
-       WHERE Object_Unit.DescId = zc_Object_Unit()
+             Object_Unit_View.Id
+           , Object_Unit_View.Code
+           , Object_Unit_View.Name
+           , Object_Unit_View.ParentId
+           , Object_Unit_View.isErased
+       FROM Object_Unit_View
        UNION SELECT
              0 AS Id,
              0 AS Code,

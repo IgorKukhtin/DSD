@@ -23,15 +23,12 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dsdAddOn;
+  dsdAddOn, DataModul, dxBarExtItems;
 
 type
   TSendForm = class(TParentForm)
     dsdFormParams: TdsdFormParams;
     spSelectMovementItem: TdsdStoredProc;
-    dxBarManager: TdxBarManager;
-    dxBarManagerBar: TdxBar;
-    bbRefresh: TdxBarButton;
     cxPropertiesStore: TcxPropertiesStore;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
@@ -73,7 +70,6 @@ type
     actUpdateDataSet: TdsdUpdateDataSet;
     spInsertUpdateMovementItem: TdsdStoredProc;
     actPrint: TdsdPrintAction;
-    bbPrint: TdxBarButton;
     frxDBDataset: TfrxDBDataset;
     colDebetAccountGroupCode: TcxGridDBColumn;
     colDebetAccountGroupName: TcxGridDBColumn;
@@ -104,7 +100,28 @@ type
     colPrice_comlete: TcxGridDBColumn;
     RefreshAddOn: TRefreshAddOn;
     dsdGridToExcel: TdsdGridToExcel;
-    bbGridToExcel: TdxBarButton;
+    StatusGuides: TdsdGuides;
+    StatusStoredProc: TdsdStoredProc;
+    cxLabel15: TcxLabel;
+    ceStatus: TcxButtonEdit;
+    UnCompleteMovement: TChangeGuidesStatus;
+    CompleteMovement: TChangeGuidesStatus;
+    DeleteMovement: TChangeGuidesStatus;
+    dxBarManager: TdxBarManager;
+    dxBarManagerBar: TdxBar;
+    bbRefresh: TdxBarButton;
+    bbPrint: TdxBarButton;
+    bbBooleanAction: TdxBarButton;
+    bbStatic: TdxBarStatic;
+    bbGridToExel: TdxBarButton;
+    bbEntryToGrid: TdxBarButton;
+    bbInsertUpdateMovement: TdxBarButton;
+    bbErased: TdxBarButton;
+    bbUnErased: TdxBarButton;
+    bbShowErased: TdxBarButton;
+    GuidesFiller: TGuidesFiller;
+    HeaderSaver: THeaderSaver;
+    spInsertUpdateMovement: TdsdStoredProc;
   private
   public
   end;

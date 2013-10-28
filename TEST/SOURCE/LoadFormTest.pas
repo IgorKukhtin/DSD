@@ -443,6 +443,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectFrom_byIncomeFuelForm'));
   TdsdFormStorageFactory.GetStorage.Load('TObjectFrom_byIncomeFuelForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TObject_StoragePlace'));
+  TdsdFormStorageFactory.GetStorage.Load('TObject_StoragePlace');
 end;
 
 procedure TLoadFormTest.LoadUnitFormTest;

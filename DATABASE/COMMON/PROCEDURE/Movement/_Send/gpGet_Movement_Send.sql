@@ -17,6 +17,25 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Send());
 
+     IF COALESCE (inMovementId, 0) = 0
+     THEN
+     RETURN QUERY 
+       SELECT
+             0 AS Id
+           , CAST (NEXTVAL ('Movement_Send_seq') AS TVarChar) AS InvNumber
+           , CAST (CURRENT_DATE AS TDateTime)      AS OperDate
+           , lfObject_Status.Code                  AS StatusCode
+           , lfObject_Status.Name                  AS StatusName
+                      
+           , 0::TFloat                   AS TotalCount
+          
+           , 0                           AS FromId
+           , ''::TVarChar                AS FromName
+           , 0                           AS ToId
+           , ''::TVarChar                AS ToName
+          FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status;
+     ELSE
+
      RETURN QUERY 
        SELECT
              Movement.Id
@@ -49,8 +68,8 @@ BEGIN
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
-       WHERE Movement.Id =  inMovementId
-         AND Movement.DescId = zc_Movement_Send();
+       WHERE Movement.Id =  inMovementId;
+       END IF;
   
 END;
 $BODY$
@@ -61,6 +80,7 @@ ALTER FUNCTION gpGet_Movement_Send (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.10.13                          * Дефолты для новых записей               
  15.07.13         * удалили колонки               
  09.07.13                                        * Красота
  08.07.13                                        * zc_MovementFloat_ChangePercent

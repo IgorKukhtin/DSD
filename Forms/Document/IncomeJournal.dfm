@@ -27,6 +27,7 @@ object IncomeJournalForm: TIncomeJournalForm
       Left = 106
       Top = 10
       EditValue = 41275d
+      Properties.ReadOnly = True
       TabOrder = 0
       Width = 85
     end
@@ -34,6 +35,7 @@ object IncomeJournalForm: TIncomeJournalForm
       Left = 323
       Top = 10
       EditValue = 41639d
+      Properties.ReadOnly = True
       Properties.ShowTime = False
       TabOrder = 1
       Width = 84
@@ -480,6 +482,7 @@ object IncomeJournalForm: TIncomeJournalForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'

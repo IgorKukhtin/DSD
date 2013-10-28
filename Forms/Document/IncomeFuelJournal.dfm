@@ -61,12 +61,9 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       DataController.Filter.TranslateLike = True
       DataController.Summary.DefaultGroupSummaryItems = <
         item
+          Format = ',0.####'
           Kind = skSum
-          Position = spFooter
-        end
-        item
-          Kind = skSum
-          Position = spFooter
+          Column = colTotalCount
         end
         item
           Format = ',0.00'
@@ -76,15 +73,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         item
           Format = ',0.00'
           Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Column = colTotalSummVAT
+          Column = colTotalSummPVAT
         end
         item
           Format = ',0.00'
@@ -94,16 +83,11 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         item
           Format = ',0.00'
           Kind = skSum
-          Column = colTotalSummPVAT
-        end
-        item
-          Format = ',0.###;-,0.###; ;'
-          Kind = skSum
-          Column = colTotalCount
+          Column = colTotalSummVAT
         end>
       DataController.Summary.FooterSummaryItems = <
         item
-          Format = ',0.###;-,0.###; ;'
+          Format = ',0.####'
           Kind = skSum
           Column = colTotalCount
         end
@@ -115,15 +99,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         item
           Format = ',0.00'
           Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Column = colTotalSummVAT
+          Column = colTotalSummPVAT
         end
         item
           Format = ',0.00'
@@ -133,7 +109,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         item
           Format = ',0.00'
           Kind = skSum
-          Column = colTotalSummPVAT
+          Column = colTotalSummVAT
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -478,6 +454,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'

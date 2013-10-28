@@ -245,7 +245,8 @@ uses
   AboutBoxUnit in '..\..\SOURCE\AboutBoxUnit.pas' {AboutBox},
   UnilWin in '..\..\SOURCE\UnilWin.pas',
   ModelServiceEdit in '..\..\Forms\ModelServiceEdit.pas' {ModelServiceEditForm: TParentForm},
-  Report_MovementTransport in '..\..\Forms\Report\Report_MovementTransport.pas' {Report_MovementTransportForm: TParentForm};
+  Report_MovementTransport in '..\..\Forms\Report\Report_MovementTransport.pas' {Report_MovementTransportForm: TParentForm},
+  Object_StoragePlace in '..\..\Forms\Object_StoragePlace.pas' {Object_StoragePlace: TParentForm};
 
 {$R *.RES}
 

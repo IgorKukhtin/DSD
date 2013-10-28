@@ -39,45 +39,23 @@ BEGIN
    ELSE
      RETURN QUERY 
      SELECT 
-           View_Personal.MemberId     AS MemberId
-         , View_Personal.PersonalCode AS MemberCode
-         , View_Personal.PersonalName AS MemberName
+           Object_Personal_View.PersonalId   AS Id
+         , Object_Personal_View.PersonalCode AS MemberCode
+         , Object_Personal_View.PersonalName AS MemberName
+
+         , Object_Personal_View.PositionId
+         , Object_Personal_View.PositionName
+
+         , Object_Personal_View.UnitId
+         , Object_Personal_View.UnitName
+
+         , Object_Personal_View.PersonalGroupId
+         , Object_Personal_View.PersonalGroupName
  
-         , Object_Position.Id         AS PositionId
-         , Object_Position.ValueData  AS PositionName
-
-         , Object_Unit.Id          AS UnitId
-         , Object_Unit.ValueData   AS UnitName
-
-         , Object_PersonalGroup.Id         AS PersonalGroupId
-         , Object_PersonalGroup.ValueData  AS PersonalGroupName
-
-         , ObjectDate_DateIn.ValueData   AS DateIn
-         , ObjectDate_DateOut.ValueData  AS DateOut
-     FROM Object_Personal_View AS View_Personal
-          LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
-                               ON ObjectLink_Personal_Position.ObjectId = View_Personal.PersonalId
-                              AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
-          LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Personal_Position.ChildObjectId
- 
-          LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
-                               ON ObjectLink_Personal_Unit.ObjectId = View_Personal.PersonalId
-                              AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
-          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Personal_Unit.ChildObjectId
-
-          LEFT JOIN ObjectLink AS ObjectLink_Personal_PersonalGroup
-                               ON ObjectLink_Personal_PersonalGroup.ObjectId = View_Personal.PersonalId
-                              AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
-          LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = ObjectLink_Personal_PersonalGroup.ChildObjectId
-           
-          LEFT JOIN ObjectDate AS ObjectDate_DateIn
-                               ON ObjectDate_DateIn.ObjectId = View_Personal.PersonalId
-                              AND ObjectDate_DateIn.DescId = zc_ObjectDate_Personal_In()
-          LEFT JOIN ObjectDate AS ObjectDate_DateOut
-                               ON ObjectDate_DateOut.ObjectId = View_Personal.PersonalId
-                              AND ObjectDate_DateOut.DescId = zc_ObjectDate_Personal_Out()          
-                
-     WHERE View_Personal.PersonalId = inId;
+         , Object_Personal_View.DateIn
+         , Object_Personal_View.DateOut
+     FROM Object_Personal_View
+    WHERE Object_Personal_View.PersonalId = inId;
 
   END IF;
   
@@ -90,6 +68,7 @@ ALTER FUNCTION gpGet_Object_Personal(Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 28.10.13                         * 
  30.09.13                                        * add Object_Personal_View
  25.09.13         * add _PersonalGroup; remove _Juridical, _Business
  03.09.14                        *                                

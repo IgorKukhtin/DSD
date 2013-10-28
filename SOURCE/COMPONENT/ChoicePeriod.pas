@@ -167,12 +167,12 @@ end;
 
 procedure TPeriodChoiceForm.seYearEnter(Sender: TObject);
 begin
-  rbYear.OnClick(Sender)
+  rbYear.Checked := true;
 end;
 
 procedure TPeriodChoiceForm.seYearPropertiesChange(Sender: TObject);
 begin
-  rbYear.Checked := true
+  rbYear.OnClick(Sender);
 end;
 
 { TPeriodChoice }

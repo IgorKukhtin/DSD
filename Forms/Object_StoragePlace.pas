@@ -1,4 +1,4 @@
-unit ObjectFrom_byIncomeFuel;
+unit Object_StoragePlace;
 
 interface
 
@@ -23,7 +23,7 @@ uses
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox;
 
 type
-  TObjectFrom_byIncomeFuelForm = class(TParentForm)
+  TObject_StoragePlace = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     clCode: TcxGridDBColumn;
@@ -46,16 +46,6 @@ type
     dsdChoiceGuides: TdsdChoiceGuides;
     clErased: TcxGridDBColumn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clJuridicalCode: TcxGridDBColumn;
-    clJuridicalName: TcxGridDBColumn;
-    clGoodsCode: TcxGridDBColumn;
-    clGoodsName: TcxGridDBColumn;
-    clFuelName: TcxGridDBColumn;
-    clItemName: TcxGridDBColumn;
-    clPaidKindName: TcxGridDBColumn;
-    clInvNumber: TcxGridDBColumn;
-    clChangePercent: TcxGridDBColumn;
-    clChangePrice: TcxGridDBColumn;
     FormParams: TdsdFormParams;
 
   private
@@ -70,5 +60,5 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TObjectFrom_byIncomeFuelForm);
+  RegisterClass(TObject_StoragePlace);
 end.

@@ -2,7 +2,7 @@ unit dsdGuides;
 
 interface
 
-uses Classes, Controls, dsdDB, VCL.Menus, VCL.ActnList;
+uses Classes, Controls, dsdDB, VCL.Menus, VCL.ActnList, Forms;
 
 type
 
@@ -49,7 +49,7 @@ type
   IChoiceCaller = interface
     ['{879D5206-590F-43CB-B992-26B096342EC2}']
     procedure SetOwner(Owner: TObject);
-    procedure AfterChoice(Params: TdsdParams);
+    procedure AfterChoice(Params: TdsdParams; Form: TForm);
     property Owner: TObject write SetOwner;
   end;
 
@@ -93,7 +93,7 @@ type
     destructor Destroy; override;
   protected
     // Вызыввем процедуру после выбора элемента из справочника
-    procedure AfterChoice(Params: TdsdParams); virtual; abstract;
+    procedure AfterChoice(Params: TdsdParams; Form: TForm); virtual; abstract;
   published
     // ключевое поле
     property KeyField: string read FKeyField write FKeyField;
@@ -111,7 +111,7 @@ type
     procedure SetLookupControl(const Value: TWinControl); override;
   protected
     // Вызыввем процедуру после выбора элемента из справочника
-    procedure AfterChoice(Params: TdsdParams); override;
+    procedure AfterChoice(Params: TdsdParams; Form: TForm); override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
@@ -138,7 +138,7 @@ type
     procedure SetStoredProcName(const Value: string);
   protected
     // Вызываем процедуру после выбора элемента из справочника
-    procedure AfterChoice(Params: TdsdParams); override;
+    procedure AfterChoice(Params: TdsdParams; Form: TForm); override;
   public
     constructor Create(AOwner: TComponent); override;
   published
@@ -192,7 +192,7 @@ type
 implementation
 
 uses cxDBLookupComboBox, cxButtonEdit, Variants, ParentForm, FormStorage, DB,
-     SysUtils, Forms, Dialogs, dsdAction;
+     SysUtils, Dialogs, dsdAction;
 
 procedure Register;
 begin
@@ -203,12 +203,12 @@ end;
 
 { TdsdGuides }
 
-procedure TdsdGuides.AfterChoice(Params: TdsdParams);
+procedure TdsdGuides.AfterChoice(Params: TdsdParams; Form: TForm);
 begin
   // Расставляем параметры по местам
   Self.Params.AssignParams(Params);
   if Assigned(FOnAfterChoice) then
-     FOnAfterChoice(Self);
+     FOnAfterChoice(Form);
 end;
 
 constructor TdsdGuides.Create(AOwner: TComponent);
@@ -350,6 +350,9 @@ begin
         for I := 0 to GuidesList.Count - 1 do
             if assigned(GuidesList[i].Guides) then
               if (GuidesList[i].Guides.Key = '0') or ((GuidesList[i].Guides.Key = '')) then begin
+                 // Закроем форму справочника
+                 if Sender is TForm then
+                    TForm(Sender).Close;
                  GuidesList[i].Guides.OpenGuides;
                  exit;
               end;
@@ -359,6 +362,9 @@ begin
           if Assigned(FActionItemList[i].Action) then
                if FActionItemList[i].Action.Enabled then
                   FActionItemList[i].Action.Execute;
+       // Если не возникло ошибок!!! закроем форму справочника
+       if Sender is TForm then
+          TForm(Sender).Close;
      end;
 end;
 
@@ -477,9 +483,8 @@ begin
   DataSet := Form.FindComponent(PositionDataSet) as TDataSet;
   if not Assigned(DataSet) then
      raise Exception.Create('Не правильно установлено свойство PositionDataSet для формы ' + FormName);
+  // Показали форму
   Form.Show;
-  // Нужен что бы успели перечитаться датасеты.
-  Application.ProcessMessages;
   if Key <> '' then
      DataSet.Locate(KeyField, Key, []);
 end;
@@ -558,7 +563,7 @@ end;
 
 { TChangeStatus }
 
-procedure TChangeStatus.AfterChoice(Params: TdsdParams);
+procedure TChangeStatus.AfterChoice(Params: TdsdParams; Form: TForm);
 begin
   // Вот прямо тут вызываем процедуру и если отработала,
   FProcedure.ParamByName('inMovementId').Value := IdParam.Value;

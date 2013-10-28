@@ -24,7 +24,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dxBarExtItems;
+  dxBarExtItems, ChoicePeriod, cxLabel;
 
 type
   TSendJournalForm = class(TParentForm)
@@ -53,23 +53,25 @@ type
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
     actComplete: TdsdChangeMovementStatus;
-    spMovementComplete: TdsdStoredProc;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
     bbComplete: TdxBarButton;
     actUnComplete: TdsdChangeMovementStatus;
-    spMovementUnComplete: TdsdStoredProc;
     bbUnComplete: TdxBarButton;
     N2: TMenuItem;
     bbDelete: TdxBarButton;
     actSetErased: TdsdChangeMovementStatus;
-    spMovementSetErased: TdsdStoredProc;
+    spMovementChangeStatus: TdsdStoredProc;
     colTotalCount: TcxGridDBColumn;
     dxBarStatic: TdxBarStatic;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
+    PeriodChoice: TPeriodChoice;
+    RefreshDispatcher: TRefreshDispatcher;
+    cxLabel1: TcxLabel;
+    cxLabel2: TcxLabel;
   private
   public
   end;

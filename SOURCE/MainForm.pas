@@ -271,6 +271,7 @@ begin
   cxLocalizer.Active:= True;
   cxLocalizer.Locale:= 1049;
   Application.OnException := OnException;
+  dsdUserSettingsStorageAddOn.LoadUserSettings;
 end;
 
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;

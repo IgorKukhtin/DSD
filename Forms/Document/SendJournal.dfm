@@ -18,25 +18,36 @@ object SendJournalForm: TSendJournalForm
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 26
+    Top = 0
     Width = 733
     Height = 41
     Align = alTop
-    Caption = 'Panel1'
     TabOrder = 1
     object deStart: TcxDateEdit
-      Left = 208
-      Top = 8
+      Left = 106
+      Top = 12
       EditValue = 41395d
+      Properties.ReadOnly = True
       TabOrder = 0
-      Width = 121
+      Width = 97
     end
     object deEnd: TcxDateEdit
-      Left = 352
-      Top = 8
+      Left = 325
+      Top = 11
       EditValue = 41395d
+      Properties.ReadOnly = True
       TabOrder = 1
-      Width = 121
+      Width = 91
+    end
+    object cxLabel1: TcxLabel
+      Left = 9
+      Top = 13
+      Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
+    end
+    object cxLabel2: TcxLabel
+      Left = 210
+      Top = 13
+      Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
   end
   object cxGrid: TcxGrid
@@ -64,7 +75,8 @@ object SendJournalForm: TSendJournalForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
-      OptionsView.HeaderHeight = 40
+      OptionsView.GroupByBox = False
+      OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object colStatus: TcxGridDBColumn
@@ -139,41 +151,6 @@ object SendJournalForm: TSendJournalForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = colFromName
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Width')
-      end
-      item
-        Component = colInvNumber
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Width')
-      end
-      item
-        Component = colOperDate
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Width')
-      end
-      item
-        Component = colStatus
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Width')
-      end
-      item
-        Component = colToName
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Width')
-      end
-      item
         Component = deEnd
         Properties.Strings = (
           'Date')
@@ -194,7 +171,7 @@ object SendJournalForm: TSendJournalForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 8
-    Top = 32
+    Top = 64
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -213,8 +190,8 @@ object SendJournalForm: TSendJournalForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 40
-    Top = 32
+    Left = 48
+    Top = 64
     DockControlHeights = (
       0
       0
@@ -314,8 +291,8 @@ object SendJournalForm: TSendJournalForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 72
-    Top = 32
+    Left = 80
+    Top = 56
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -327,6 +304,7 @@ object SendJournalForm: TSendJournalForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -361,10 +339,8 @@ object SendJournalForm: TSendJournalForm
     end
     object actUnComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
-      StoredProc = spMovementUnComplete
       StoredProcList = <
         item
-          StoredProc = spMovementUnComplete
         end>
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
@@ -374,10 +350,8 @@ object SendJournalForm: TSendJournalForm
     end
     object actComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
-      StoredProc = spMovementComplete
       StoredProcList = <
         item
-          StoredProc = spMovementComplete
         end>
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
@@ -387,10 +361,10 @@ object SendJournalForm: TSendJournalForm
     end
     object actSetErased: TdsdChangeMovementStatus
       Category = 'DSDLib'
-      StoredProc = spMovementSetErased
+      StoredProc = spMovementChangeStatus
       StoredProcList = <
         item
-          StoredProc = spMovementSetErased
+          StoredProc = spMovementChangeStatus
         end>
       Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
@@ -432,8 +406,19 @@ object SendJournalForm: TSendJournalForm
     Left = 24
     Top = 176
   end
-  object spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_Send'
+  object PopupMenu: TPopupMenu
+    Images = dmMain.ImageList
+    Left = 112
+    Top = 56
+    object N1: TMenuItem
+      Action = actComplete
+    end
+    object N2: TMenuItem
+      Action = actUnComplete
+    end
+  end
+  object spMovementChangeStatus: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Status_Send'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -444,56 +429,13 @@ object SendJournalForm: TSendJournalForm
         ParamType = ptInput
       end
       item
-        Name = 'inIsLastComplete'
-        Value = Null
-        DataType = ftBoolean
+        Name = 'inStatusCode'
+        Component = ClientDataSet
+        ComponentItem = 'StatusCode'
         ParamType = ptInput
       end>
-    Left = 64
+    Left = 72
     Top = 232
-  end
-  object PopupMenu: TPopupMenu
-    Images = dmMain.ImageList
-    Left = 104
-    Top = 32
-    object N1: TMenuItem
-      Action = actComplete
-    end
-    object N2: TMenuItem
-      Action = actUnComplete
-    end
-  end
-  object spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    Left = 72
-    Top = 272
-  end
-  object spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement'
-    DataSet = ClientDataSet
-    DataSets = <
-      item
-        DataSet = ClientDataSet
-      end>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    Left = 72
-    Top = 320
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 136
@@ -502,7 +444,10 @@ object SendJournalForm: TSendJournalForm
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
-    OnDblClickActionList = <>
+    OnDblClickActionList = <
+      item
+        Action = actUpdate
+      end>
     ActionItemList = <
       item
         Action = actUpdate
@@ -512,5 +457,20 @@ object SendJournalForm: TSendJournalForm
     OnlyEditingCellOnEnter = False
     Left = 168
     Top = 256
+  end
+  object PeriodChoice: TPeriodChoice
+    DateStart = deStart
+    DateEnd = deEnd
+    Left = 488
+    Top = 24
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end>
+    Left = 576
+    Top = 24
   end
 end

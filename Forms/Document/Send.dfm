@@ -22,13 +22,14 @@ object SendForm: TSendForm
     Left = 0
     Top = 0
     Width = 1028
-    Height = 84
+    Height = 49
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 27
+      Enabled = False
       TabOrder = 0
       Width = 121
     end
@@ -38,18 +39,18 @@ object SendForm: TSendForm
       Caption = #1053#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
     object edOperDate: TcxDateEdit
-      Left = 144
+      Left = 300
       Top = 27
       TabOrder = 2
       Width = 121
     end
     object cxLabel2: TcxLabel
-      Left = 144
+      Left = 300
       Top = 4
       Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
     object edFrom: TcxButtonEdit
-      Left = 288
+      Left = 427
       Top = 27
       Properties.Buttons = <
         item
@@ -57,10 +58,10 @@ object SendForm: TSendForm
           Kind = bkEllipsis
         end>
       TabOrder = 4
-      Width = 137
+      Width = 196
     end
     object edTo: TcxButtonEdit
-      Left = 440
+      Left = 630
       Top = 27
       Properties.Buttons = <
         item
@@ -68,29 +69,29 @@ object SendForm: TSendForm
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 145
+      Width = 209
     end
     object cxLabel3: TcxLabel
-      Left = 288
+      Left = 427
       Top = 4
       Caption = #1054#1090' '#1082#1086#1075#1086
     end
     object cxLabel4: TcxLabel
-      Left = 440
+      Left = 630
       Top = 4
       Caption = #1050#1086#1084#1091
     end
   end
   object cxPageControl1: TcxPageControl
     Left = 0
-    Top = 110
+    Top = 75
     Width = 1028
-    Height = 286
+    Height = 321
     Align = alClient
-    TabOrder = 5
+    TabOrder = 2
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 286
+    ClientRectBottom = 321
     ClientRectRight = 1028
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
@@ -100,7 +101,7 @@ object SendForm: TSendForm
         Left = 0
         Top = 0
         Width = 1028
-        Height = 262
+        Height = 297
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -155,44 +156,53 @@ object SendForm: TSendForm
               Kind = skSum
             end>
           DataController.Summary.SummaryGroups = <>
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
           OptionsView.ColumnAutoWidth = True
+          OptionsView.GroupByBox = False
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
-            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 58
           end
           object colName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsName'
-            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 200
           end
           object colGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
-            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 100
           end
           object colPartionGoods: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103
             DataBinding.FieldName = 'PartionGoods'
-            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 120
           end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
-            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
             Width = 80
           end
           object colHeadCount: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
-            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
           end
           object colAssetName: TcxGridDBColumn
             Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072
+            HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
           end
         end
@@ -208,7 +218,7 @@ object SendForm: TSendForm
         Left = 0
         Top = 0
         Width = 1028
-        Height = 262
+        Height = 297
         Align = alClient
         TabOrder = 0
         object cxGridEntryDBTableView: TcxGridDBTableView
@@ -399,6 +409,32 @@ object SendForm: TSendForm
       end
     end
   end
+  object cxLabel15: TcxLabel
+    Left = 141
+    Top = 5
+    Caption = #1057#1090#1072#1090#1091#1089
+  end
+  object ceStatus: TcxButtonEdit
+    Left = 142
+    Top = 27
+    Properties.Buttons = <
+      item
+        Action = CompleteMovement
+        Default = True
+        Kind = bkGlyph
+      end
+      item
+        Action = UnCompleteMovement
+        Kind = bkGlyph
+      end
+      item
+        Action = DeleteMovement
+        Kind = bkGlyph
+      end>
+    Properties.Images = dmMain.ImageList
+    TabOrder = 3
+    Width = 152
+  end
   object dsdFormParams: TdsdFormParams
     Params = <
       item
@@ -407,7 +443,7 @@ object SendForm: TSendForm
         ParamType = ptInputOutput
       end>
     Left = 40
-    Top = 56
+    Top = 88
   end
   object spSelectMovementItem: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Send'
@@ -426,114 +462,23 @@ object SendForm: TSendForm
       end
       item
         Name = 'inShowAll'
-        Value = Null
+        Value = False
+        Component = BooleanStoredProcAction
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = ShowErasedAction
         DataType = ftBoolean
         ParamType = ptInput
       end>
     Left = 88
     Top = 280
   end
-  object dxBarManager: TdxBarManager
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    Categories.Strings = (
-      'Default')
-    Categories.ItemsVisibles = (
-      2)
-    Categories.Visibles = (
-      True)
-    ImageOptions.Images = dmMain.ImageList
-    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
-    PopupMenuLinks = <>
-    ShowShortCutInHint = True
-    UseSystemFont = True
-    Left = 8
-    Top = 56
-    DockControlHeights = (
-      0
-      0
-      26
-      0)
-    object dxBarManagerBar: TdxBar
-      Caption = 'Custom'
-      CaptionButtons = <>
-      DockedDockingStyle = dsTop
-      DockedLeft = 0
-      DockedTop = 0
-      DockingStyle = dsTop
-      FloatLeft = 671
-      FloatTop = 8
-      FloatClientWidth = 51
-      FloatClientHeight = 71
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGridToExcel'
-        end>
-      OneOnRow = True
-      Row = 0
-      UseOwnFont = False
-      Visible = True
-      WholeRow = False
-    end
-    object bbRefresh: TdxBarButton
-      Action = actRefresh
-      Category = 0
-    end
-    object bbPrint: TdxBarButton
-      Action = actPrint
-      Category = 0
-    end
-    object bbGridToExcel: TdxBarButton
-      Action = dsdGridToExcel
-      Category = 0
-    end
-  end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
-      item
-        Component = colAmount
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
-      item
-        Component = colCode
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
-      item
-        Component = colDebetAccountName
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
-      item
-        Component = colName
-        Properties.Strings = (
-          'SortIndex'
-          'SortOrder'
-          'Visible'
-          'Width')
-      end
       item
         Component = Owner
         Properties.Strings = (
@@ -544,12 +489,92 @@ object SendForm: TSendForm
       end>
     StorageName = 'cxPropertiesStore'
     Left = 72
-    Top = 56
+    Top = 96
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 104
-    Top = 56
+    Top = 80
+    object EntryToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      Grid = cxGridEntry
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
+    end
+    object SetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+    end
+    object SetUnErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+    end
+    object actInsertUpdateMovement: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = spInsertUpdateMovement
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end>
+      Caption = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1057#1086#1093#1088#1072#1085#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 14
+      ShortCut = 113
+    end
+    object ShowErasedAction: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      StoredProc = spSelectMovementItem
+      StoredProcList = <
+        item
+          StoredProc = spSelectMovementItem
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
+    end
+    object BooleanStoredProcAction: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      StoredProc = spSelectMovementItem
+      StoredProcList = <
+        item
+          StoredProc = spSelectMovementItem
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
+    object actUpdateMasterDS: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = 'actUpdateMasterDS'
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spGet
@@ -567,6 +592,7 @@ object SendForm: TSendForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -595,6 +621,42 @@ object SendForm: TSendForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object UnCompleteMovement: TChangeGuidesStatus
+      Category = 'DSDLib'
+      StoredProc = StatusStoredProc
+      StoredProcList = <
+        item
+          StoredProc = StatusStoredProc
+        end>
+      Caption = 'UnCompleteMovement'
+      ImageIndex = 11
+      Status = mtUncomplete
+      Guides = StatusGuides
+    end
+    object CompleteMovement: TChangeGuidesStatus
+      Category = 'DSDLib'
+      StoredProc = StatusStoredProc
+      StoredProcList = <
+        item
+          StoredProc = StatusStoredProc
+        end>
+      Caption = 'CompleteMovement'
+      ImageIndex = 12
+      Status = mtComplete
+      Guides = StatusGuides
+    end
+    object DeleteMovement: TChangeGuidesStatus
+      Category = 'DSDLib'
+      StoredProc = StatusStoredProc
+      StoredProcList = <
+        item
+          StoredProc = StatusStoredProc
+        end>
+      Caption = 'DeleteMovement'
+      ImageIndex = 13
+      Status = mtDelete
+      Guides = StatusGuides
+    end
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
@@ -610,18 +672,44 @@ object SendForm: TSendForm
   object dsdGuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
-    FormName = 'TJuridicalForm'
-    PositionDataSet = 'GridDataSet'
-    Params = <>
-    Left = 304
+    FormName = 'TObject_StoragePlace'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = dsdGuidesFrom
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = dsdGuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 376
     Top = 56
   end
   object dsdGuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
-    FormName = 'TUnitForm'
-    PositionDataSet = 'GridDataSet'
-    Params = <>
+    FormName = 'TObject_StoragePlace'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = dsdGuidesTo
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = dsdGuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
     Left = 448
     Top = 56
   end
@@ -790,11 +878,251 @@ object SendForm: TSendForm
     Top = 216
   end
   object RefreshAddOn: TRefreshAddOn
+    FormName = 'SendJournalForm'
     DataSet = 'ClientDataSet'
     KeyField = 'Id'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
     Left = 552
     Top = 56
+  end
+  object StatusGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceStatus
+    PositionDataSet = 'ClientDataSet'
+    Params = <>
+    Left = 144
+    Top = 32
+  end
+  object StatusStoredProc: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Status_Send'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'StatusCode'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    Left = 176
+    Top = 32
+  end
+  object dxBarManager: TdxBarManager
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    Categories.Strings = (
+      'Default')
+    Categories.ItemsVisibles = (
+      2)
+    Categories.Visibles = (
+      True)
+    ImageOptions.Images = dmMain.ImageList
+    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
+    PopupMenuLinks = <>
+    ShowShortCutInHint = True
+    UseSystemFont = True
+    Left = 22
+    Top = 231
+    DockControlHeights = (
+      0
+      0
+      26
+      0)
+    object dxBarManagerBar: TdxBar
+      AllowClose = False
+      Caption = 'Custom'
+      CaptionButtons = <>
+      DockedDockingStyle = dsTop
+      DockedLeft = 0
+      DockedTop = 0
+      DockingStyle = dsTop
+      FloatLeft = 671
+      FloatTop = 8
+      FloatClientWidth = 51
+      FloatClientHeight = 71
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdateMovement'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBooleanAction'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEntryToGrid'
+        end>
+      OneOnRow = True
+      Row = 0
+      UseOwnFont = False
+      Visible = True
+      WholeRow = False
+    end
+    object bbRefresh: TdxBarButton
+      Action = actRefresh
+      Category = 0
+    end
+    object bbPrint: TdxBarButton
+      Action = actPrint
+      Category = 0
+    end
+    object bbBooleanAction: TdxBarButton
+      Action = BooleanStoredProcAction
+      Category = 0
+    end
+    object bbStatic: TdxBarStatic
+      Caption = '     '
+      Category = 0
+      Visible = ivAlways
+    end
+    object bbGridToExel: TdxBarButton
+      Action = dsdGridToExcel
+      Category = 0
+    end
+    object bbEntryToGrid: TdxBarButton
+      Action = EntryToExcel
+      Category = 0
+    end
+    object bbInsertUpdateMovement: TdxBarButton
+      Action = actInsertUpdateMovement
+      Category = 0
+    end
+    object bbErased: TdxBarButton
+      Action = SetErased
+      Category = 0
+    end
+    object bbUnErased: TdxBarButton
+      Action = SetUnErased
+      Category = 0
+    end
+    object bbShowErased: TdxBarButton
+      Action = ShowErasedAction
+      Category = 0
+    end
+  end
+  object GuidesFiller: TGuidesFiller
+    IdParam.Value = Null
+    IdParam.ComponentItem = 'Id'
+    GuidesList = <
+      item
+        Guides = dsdGuidesFrom
+      end
+      item
+        Guides = dsdGuidesTo
+      end>
+    ActionItemList = <
+      item
+        Action = actInsertUpdateMovement
+      end>
+    Left = 272
+    Top = 80
+  end
+  object HeaderSaver: THeaderSaver
+    IdParam.Value = Null
+    IdParam.ComponentItem = 'Id'
+    StoredProc = spInsertUpdateMovement
+    ControlList = <
+      item
+        Control = edOperDate
+      end
+      item
+        Control = ceStatus
+      end
+      item
+        Control = edFrom
+      end
+      item
+        Control = edTo
+      end>
+    GetStoredProc = spGet
+    Left = 320
+    Top = 89
+  end
+  object spInsertUpdateMovement: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_Send'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = dsdFormParams
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inInvNumber'
+        Value = ''
+        Component = edInvNumber
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = 0d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inFromId'
+        Value = ''
+        Component = dsdGuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inToId'
+        Value = ''
+        Component = dsdGuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    Left = 274
+    Top = 120
   end
 end

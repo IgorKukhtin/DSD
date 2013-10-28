@@ -223,7 +223,7 @@ type
   private
     // Вызыввем процедуру после выбора элемента из справочника
     procedure SetOwner(Owner: TObject);
-    procedure AfterChoice(Params: TdsdParams);
+    procedure AfterChoice(Params: TdsdParams; Form: TForm);
   end;
 
   TDSAction = class(TdsdCustomAction)
@@ -503,8 +503,9 @@ procedure TdsdDataSetRefresh.OnPageChanging(Sender: TObject;
   NewPage: TcxTabSheet; var AllowChange: Boolean);
 begin
   inherited;
-  if Enabled and RefreshOnTabSetChanges then
-     Execute;
+  if not(csDesigning in ComponentState) then
+     if Enabled and RefreshOnTabSetChanges then
+        Execute;
 end;
 
 { TdsdOpenForm }
@@ -791,10 +792,9 @@ end;
 function TdsdChoiceGuides.Execute: boolean;
 begin
   if Assigned(FParams.ParamByName('Key')) and Assigned(FParams.ParamByName('TextValue')) then
-     FChoiceCaller.AfterChoice(FParams)
+     FChoiceCaller.AfterChoice(FParams, TForm(Owner))
   else
      raise Exception.Create('Не определены параметры возврата значений при выборе из справочника');
-  TForm(Owner).Close;
 end;
 
 function TdsdChoiceGuides.GetDataSource: TDataSource;
@@ -856,7 +856,6 @@ end;
 function TdsdChangeMovementStatus.Execute: boolean;
 var lDataSet: TDataSet;
 begin
-  result := inherited Execute;
   if result and Assigned(DataSource) and Assigned(DataSource.DataSet) then begin
      lDataSet := DataSource.DataSet;
      // Что бы не вызывались события после на Post
@@ -869,6 +868,7 @@ begin
        DataSource.DataSet := lDataSet;
      end;
   end;
+  result := inherited Execute;
 end;
 
 function TdsdChangeMovementStatus.GetDataSource: TDataSource;
@@ -1144,7 +1144,7 @@ end;
 
 { TOpenChoiceForm }
 
-procedure TOpenChoiceForm.AfterChoice(Params: TdsdParams);
+procedure TOpenChoiceForm.AfterChoice(Params: TdsdParams; Form: TForm);
 begin
   // Расставляем параметры по местам
   Self.GuiParams.AssignParams(Params);
