@@ -274,6 +274,7 @@ begin
   ExecFile(ReportsPath + '_ProfitLoss\gpReport_ProfitLoss.sql', ZQuery);
   ExecFile(ReportsPath + '_HistoryCost\gpReport_HistoryCost.sql', ZQuery);
   ExecFile(ReportsPath + '_MotionGoods\gpReport_MotionGoods.sql', ZQuery);
+  ExecFile(ReportsPath + '_Transport\gpReport_MovementTransport.sql', ZQuery);
 end;
 
 initialization

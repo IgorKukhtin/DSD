@@ -698,7 +698,7 @@ end;
 
 function TRouteTest.InsertDefault: integer;
 begin
-  result := InsertUpdateRoute(0, -1, 'Маршрут-test');
+  result := InsertUpdateRoute(0, -111, 'Маршрут-test');
   inherited;
 end;
 
@@ -727,7 +727,7 @@ end;
 
 function TRouteSortingTest.InsertDefault: integer;
 begin
-  result := InsertUpdateRouteSorting(0, -1, 'Сортировка маршрутов');
+  result := InsertUpdateRouteSorting(0, -111, 'test Сортировка маршрутов');
   inherited;
 end;
 
@@ -944,7 +944,7 @@ begin
   try
     // Получение данных о сортировке маршрута
     with ObjectTest.GetRecord(Id) do
-      Check((FieldByName('Name').AsString = 'Сортировка маршрутов'), 'Не сходятся данные Id = ' + IntToStr(Id));
+      Check((FieldByName('Name').AsString = 'test Сортировка маршрутов'), 'Не сходятся данные Id = ' + IntToStr(Id));
 
   finally
     ObjectTest.Delete(Id);
@@ -1211,7 +1211,7 @@ end;
 
 function TBranchTest.InsertDefault: integer;
 begin
-  result := InsertUpdateBranch(0, -4, 'Филиал');
+  result := InsertUpdateBranch(0, -4, 'TEST Филиал');
   inherited;
 end;
 
@@ -1233,7 +1233,7 @@ begin
   // Получим список
   RecordCount := GetRecordCount(ObjectTest);
 
-  if ObjectTest.GetDataSet.Locate('Name', 'Филиал', []) then
+  if ObjectTest.GetDataSet.Locate('Name', 'TEST Филиал', []) then
      Id := ObjectTest.GetDataSet.FieldByName('Id').AsInteger
   else
      // Вставка Филиала
@@ -1242,7 +1242,7 @@ begin
   try
     // Получение данных о Филиале
     with ObjectTest.GetRecord(Id) do
-      Check((FieldByName('Name').AsString = 'Филиал'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+      Check((FieldByName('Name').AsString = 'TEST Филиал'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
   finally
     ObjectTest.Delete(Id);
   end;
