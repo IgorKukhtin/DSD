@@ -197,8 +197,6 @@ type
     actTicketFuel: TdsdOpenForm;
     bbCardFuel: TdxBarButton;
     bbTicketFuel: TdxBarButton;
-    actFrom_byIncomeFuel: TdsdOpenForm;
-    bbFrom_byIncomeFuel: TdxBarButton;
     frxXLSExport: TfrxXLSExport;
     frxXMLExport: TfrxXMLExport;
     frxRTFExport: TfrxRTFExport;
@@ -212,8 +210,8 @@ type
     bbModelService: TdxBarButton;
     actAbout: TAction;
     bbAbout: TdxBarButton;
-    actReport_MovementTransport: TdsdOpenForm;
-    bbReport_MovementTransport: TdxBarButton;
+    actReport_TransportHoursWork: TdsdOpenForm;
+    bbReport_TransportHoursWork: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

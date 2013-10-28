@@ -1,7 +1,7 @@
-object Report_MovementTransportForm: TReport_MovementTransportForm
+object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
   Left = 0
   Top = 0
-  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1074#1086#1076#1080#1090#1077#1083#1103#1084' - '#1088#1072#1073#1086#1095#1077#1077' '#1074#1088#1103#1084#1103
+  Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1074#1086#1076#1080#1090#1077#1083#1103#1084' ('#1088#1072#1073#1086#1095#1077#1077' '#1074#1088#1077#1084#1103')'
   ClientHeight = 395
   ClientWidth = 1189
   Color = clBtnFace
@@ -62,62 +62,59 @@ object Report_MovementTransportForm: TReport_MovementTransportForm
           Format = ',0.00'
           Kind = skSum
           Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Position = spFooter
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
           Column = clHoursWork
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Position = spFooter
           Column = clHoursAdd
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Position = spFooter
-          Column = clOperDate
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.00'
-          Position = spFooter
-        end
-        item
-          Format = ',0.00'
-          Position = spFooter
+          Column = clWeight
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -145,7 +142,7 @@ object Report_MovementTransportForm: TReport_MovementTransportForm
           Kind = skSum
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = clHoursWork
         end
@@ -154,7 +151,7 @@ object Report_MovementTransportForm: TReport_MovementTransportForm
           Kind = skSum
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = clHoursAdd
         end
@@ -177,7 +174,6 @@ object Report_MovementTransportForm: TReport_MovementTransportForm
         item
           Format = ',0.00'
           Kind = skSum
-          Column = clOperDate
         end
         item
           Format = ',0.00'
@@ -185,13 +181,14 @@ object Report_MovementTransportForm: TReport_MovementTransportForm
         end
         item
           Format = ',0.00'
+        end
+        item
+          Format = ',0.00'
+        end
+        item
+          Format = ',0.##'
           Kind = skSum
-        end
-        item
-          Format = ',0.00'
-        end
-        item
-          Format = ',0.00'
+          Column = clWeight
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -204,65 +201,94 @@ object Report_MovementTransportForm: TReport_MovementTransportForm
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
-      OptionsView.GroupFooters = gfAlwaysVisible
+      OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
+      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object clPersonalDriverName: TcxGridDBColumn
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100' '#1060#1048#1054
         DataBinding.FieldName = 'PersonalDriverName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 147
       end
       object clRouteName: TcxGridDBColumn
         Caption = #1052#1072#1088#1096#1088#1091#1090
         DataBinding.FieldName = 'RouteName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 132
       end
       object clRouteKindName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1084#1072#1088#1096#1088#1091#1090#1072
         DataBinding.FieldName = 'RouteKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 193
       end
       object clRouteKindFreightName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1075#1088#1091#1079#1072
         DataBinding.FieldName = 'RouteKindFreightName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 179
       end
       object clWeight: TcxGridDBColumn
         Caption = #1042#1077#1089' ('#1082#1075')'
         DataBinding.FieldName = 'Weight'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DisplayFormat = ',0.00;-,0.00'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 138
       end
       object clHoursWork: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1088#1072#1073#1086#1095#1080#1093' '#1095#1072#1089#1086#1074
+        Caption = #1050#1086#1083'-'#1074#1086' '#1095#1072#1089#1086#1074
         DataBinding.FieldName = 'HoursWork'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
-        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 91
       end
       object clHoursAdd: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1073#1072#1074#1083#1077#1085#1085#1099#1093' '#1088#1072#1073#1086#1095#1080#1093' '#1095#1072#1089#1086#1074
+        Caption = #1050#1086#1083'-'#1074#1086' '#1076#1086#1073#1072#1074#1083#1077#1085#1085#1099#1093' '#1095#1072#1089#1086#1074
         DataBinding.FieldName = 'HoursAdd'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 92
       end
       object clInvNumber: TcxGridDBColumn
         Caption = #1053#1086#1084#1077#1088' '#1087#1091#1090#1077#1074#1086#1075#1086
         DataBinding.FieldName = 'InvNumber'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 103
       end
       object clOperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1087#1091#1090#1077#1074#1086#1075#1086
         DataBinding.FieldName = 'OperDate'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Options.Editing = False
         Width = 100
       end
     end
@@ -323,6 +349,108 @@ object Report_MovementTransportForm: TReport_MovementTransportForm
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Align'
+          'AlignWithMargins'
+          'Anchors'
+          'AutoSize'
+          'BeepOnEnter'
+          'BiDiMode'
+          'Constraints'
+          'Cursor'
+          'CustomHint'
+          'Date'
+          'DragCursor'
+          'DragKind'
+          'DragMode'
+          'EditValue'
+          'Enabled'
+          'FakeStyleController'
+          'Height'
+          'HelpContext'
+          'HelpKeyword'
+          'HelpType'
+          'Hint'
+          'ImeMode'
+          'ImeName'
+          'Left'
+          'Margins'
+          'Name'
+          'ParentBiDiMode'
+          'ParentColor'
+          'ParentCustomHint'
+          'ParentFont'
+          'ParentShowHint'
+          'PopupMenu'
+          'Properties'
+          'RepositoryItem'
+          'ShowHint'
+          'Style'
+          'StyleDisabled'
+          'StyleFocused'
+          'StyleHot'
+          'TabOrder'
+          'TabStop'
+          'Tag'
+          'TextHint'
+          'Top'
+          'Touch'
+          'Visible'
+          'Width')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Align'
+          'AlignWithMargins'
+          'Anchors'
+          'AutoSize'
+          'BeepOnEnter'
+          'BiDiMode'
+          'Constraints'
+          'Cursor'
+          'CustomHint'
+          'Date'
+          'DragCursor'
+          'DragKind'
+          'DragMode'
+          'EditValue'
+          'Enabled'
+          'FakeStyleController'
+          'Height'
+          'HelpContext'
+          'HelpKeyword'
+          'HelpType'
+          'Hint'
+          'ImeMode'
+          'ImeName'
+          'Left'
+          'Margins'
+          'Name'
+          'ParentBiDiMode'
+          'ParentColor'
+          'ParentCustomHint'
+          'ParentFont'
+          'ParentShowHint'
+          'PopupMenu'
+          'Properties'
+          'RepositoryItem'
+          'ShowHint'
+          'Style'
+          'StyleDisabled'
+          'StyleFocused'
+          'StyleHot'
+          'TabOrder'
+          'TabStop'
+          'Tag'
+          'TextHint'
+          'Top'
+          'Touch'
+          'Visible'
+          'Width')
+      end
       item
         Component = Owner
         Properties.Strings = (
@@ -430,7 +558,7 @@ object Report_MovementTransportForm: TReport_MovementTransportForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpReport_MovementTransport'
+    StoredProcName = 'gpReport_TransportHoursWork'
     DataSet = ClientDataSet
     DataSets = <
       item

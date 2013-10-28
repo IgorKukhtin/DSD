@@ -676,10 +676,6 @@ object MainForm: TMainForm
         end
         item
           Visible = True
-          ItemName = 'bbFrom_byIncomeFuel'
-        end
-        item
-          Visible = True
           ItemName = 'bbTransportDocuments_Separator'
         end
         item
@@ -696,7 +692,7 @@ object MainForm: TMainForm
         end
         item
           Visible = True
-          ItemName = 'bbReport_MovementTransport'
+          ItemName = 'bbReport_TransportHoursWork'
         end>
     end
     object bbTransport: TdxBarButton
@@ -760,6 +756,10 @@ object MainForm: TMainForm
     end
     object bbReport_Fuel: TdxBarButton
       Action = actReport_Fuel
+      Category = 0
+    end
+    object bbReport_TransportHoursWork: TdxBarButton
+      Action = actReport_TransportHoursWork
       Category = 0
     end
     object bbAccountReport: TdxBarButton
@@ -851,10 +851,6 @@ object MainForm: TMainForm
       Action = actPersonalService
       Category = 0
     end
-    object bbFrom_byIncomeFuel: TdxBarButton
-      Action = actFrom_byIncomeFuel
-      Category = 0
-    end
     object bbPositionLevel: TdxBarButton
       Action = actPositionLevel
       Category = 0
@@ -873,10 +869,6 @@ object MainForm: TMainForm
     end
     object bbAbout: TdxBarButton
       Action = actAbout
-      Category = 0
-    end
-    object bbReport_MovementTransport: TdxBarButton
-      Action = actReport_MovementTransport
       Category = 0
     end
   end
@@ -991,14 +983,6 @@ object MainForm: TMainForm
       Category = #1054#1090#1095#1077#1090#1099
       Caption = #1041#1072#1083#1072#1085#1089
       FormName = 'TReport_BalanceForm'
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actReport_MovementTransport: TdsdOpenForm
-      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1042#1086#1076#1080#1090#1077#1083#1103#1084
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1042#1086#1076#1080#1090#1077#1083#1103#1084
-      FormName = 'TReport_MovementTransportForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -1447,6 +1431,14 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_Fuel: TdsdOpenForm
+      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1088#1072#1089#1093#1086#1076#1072' '#1090#1086#1087#1083#1080#1074#1072
+      Hint = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1088#1072#1089#1093#1086#1076#1072' '#1090#1086#1087#1083#1080#1074#1072
+      FormName = 'TReport_FuelForm'
+      GuiParams = <>
+      isShowModal = False
+    end
     object actReport_Transport: TdsdOpenForm
       Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1040#1074#1090#1086#1084#1086#1073#1080#1083#1103#1084
@@ -1455,11 +1447,11 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Fuel: TdsdOpenForm
+    object actReport_TransportHoursWork: TdsdOpenForm
       Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
-      Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1088#1072#1089#1093#1086#1076#1072' '#1090#1086#1087#1083#1080#1074#1072
-      Hint = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1088#1072#1089#1093#1086#1076#1072' '#1090#1086#1087#1083#1080#1074#1072
-      FormName = 'TReport_FuelForm'
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1074#1086#1076#1080#1090#1077#1083#1103#1084' ('#1088#1072#1073#1086#1095#1077#1077' '#1074#1088#1077#1084#1103')'
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1074#1086#1076#1080#1090#1077#1083#1103#1084' ('#1088#1072#1073#1086#1095#1077#1077' '#1074#1088#1077#1084#1103')'
+      FormName = 'TReport_TransportHoursWorkForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -1492,14 +1484,6 @@ object MainForm: TMainForm
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1091
       Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1091
       FormName = 'TReport_AccountForm'
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actFrom_byIncomeFuel: TdsdOpenForm
-      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
-      Caption = #1050#1090#1086' '#1079#1072#1087#1088#1072#1074#1083#1103#1083
-      Hint = #1050#1090#1086' '#1079#1072#1087#1088#1072#1074#1083#1103#1083
-      FormName = 'TFrom_byIncomeFuelForm'
       GuiParams = <>
       isShowModal = False
     end
