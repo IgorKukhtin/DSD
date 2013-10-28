@@ -93,4 +93,4 @@ ALTER FUNCTION gpReport_MovementTransport (TDateTime, TDateTime, Integer, TVarCh
 */
 
 -- тест
--- SELECT * FROM gpReport_Transport (inStartDate:= '01.01.2013', inEndDate:= '01.02.2013', inPersonalId:= 0, inSession:= '2') 
+-- SELECT * FROM gpReport_MovementTransport (inStartDate:= '01.01.2013', inEndDate:= '01.02.2013', inPersonalId:= 0, inSession:= '2') 
