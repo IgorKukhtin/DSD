@@ -929,12 +929,21 @@ begin
 end;
 
 procedure TdsdUpdateDataSet.UpdateData;
+var i: integer;
 begin
   // Убираем цикл
   if FAlreadyRun then
      exit;
   FAlreadyRun := true;
   try
+    // Ничего лучшего не нашел пока. Если ячейка грида находится в редиме редактирования
+    // и выполняется Post, то вот тут данных в датасете еще нифига нет!
+    // Поэтому надо дернуть грид и уговорить его поставить
+    for I := 0 to Owner.ComponentCount - 1 do
+        if Owner.Components[i] is TcxGridDBTableView then
+           with TcxGridDBTableView(Owner.Components[i]) do
+             DataController.UpdateData;
+    {}
     Execute;
   finally
     FAlreadyRun := false;

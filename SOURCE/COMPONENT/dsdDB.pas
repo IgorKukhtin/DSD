@@ -168,8 +168,9 @@ begin
       Assigned(DataSets[0]) and
       Assigned(DataSets[0].DataSet) then
    begin
-     if DataSets[0].DataSet.State in dsEditModes then
+     if DataSets[0].DataSet.State in dsEditModes then begin
         DataSets[0].DataSet.Post;
+     end;
      if DataSets[0].DataSet.Active and (DataSets[0].DataSet.RecordCount > 0) then
         B := DataSets[0].DataSet.GetBookmark;
      DataSets[0].DataSet.XMLData := TStorageFactory.GetStorage.ExecuteProc(GetXML);
