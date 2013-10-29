@@ -15,17 +15,25 @@ RETURNS TABLE (CarModelName TVarChar, CarId Integer, CarCode Integer, CarName TV
              , StartSumm TFloat, IncomeSumm TFloat, RateSumm TFloat, EndSumm TFloat
              )
 AS
-$BODY$BEGIN
+$BODY$
+  DECLARE vb_Kind_Fuel integer;
+  DECLARE vb_Kind_Money integer;
+  DECLARE vb_Kind_Ticket integer;
+BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
+
+  vb_Kind_Fuel   := 1;
+  vb_Kind_Money  := 2;
+  vb_Kind_Ticket := 3;
 
      -- Один запрос, который считает остаток и движение. 
      -- Главная задача - выбор контейнера. Выбираем контейнеры по группе счетов 20400 для топлива и 30500 для денежных средств
   RETURN QUERY  
            -- Получили все нужные нам суммовые контейнеры по определенным счетам
            -- Еще и ограничили их по топливу и авто
-           WITH ContainerSumm AS (SELECT Id, ParentId, DescId, Amount  -- здесь топливо
+           WITH ContainerSumm AS (SELECT Id, ParentId, DescId, Amount, vb_Kind_Fuel as KindId -- здесь топливо
                                  FROM Container 
                                 WHERE Container.ObjectId IN
                                       -- Получили список счетов
@@ -41,7 +49,7 @@ $BODY$BEGIN
                                        WHERE DescId = zc_ContainerLinkObject_Car() AND ObjectId = inCarId)) OR inCarId = 0)
 
                                 UNION -- а ниже денежные средства
-                               SELECT Container.Id, Container.ParentId, Container.DescId, Container.Amount 
+                               SELECT Container.Id, Container.ParentId, Container.DescId, Container.Amount, vb_Kind_Money as KindId 
                                  FROM Container 
                                -- Ограничили по авто, если надо
                                JOIN  ContainerLinkObject 
@@ -53,6 +61,8 @@ $BODY$BEGIN
                                       (SELECT  AccountId FROM Object_account_view
                                          WHERE AccountDirectionId = zc_Enum_AccountDirection_30500()
                                            AND InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400())
+                               -- UNION -- а ниже ТАЛОНЫ!!!
+
                                     )
                -- Конец. Получили все нужные нам суммовые контейнеры
 
