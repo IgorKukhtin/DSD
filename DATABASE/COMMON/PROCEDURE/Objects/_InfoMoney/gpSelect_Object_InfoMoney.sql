@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_InfoMoney(TVarChar)
 
---DROP FUNCTION gpSelect_Object_InfoMoney (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_InfoMoney (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_InfoMoney(
     IN inSession     TVarChar       -- сессия пользователя
@@ -42,8 +42,6 @@ ALTER FUNCTION gpSelect_Object_InfoMoney (TVarChar) OWNER TO postgres;
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  30.09.13                                        * Object_InfoMoney_View
  21.06.13          *    + все поля          
- 00.05.13                                        
-
 */
 
 -- тест

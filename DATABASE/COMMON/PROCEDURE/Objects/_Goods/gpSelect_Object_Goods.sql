@@ -9,9 +9,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsGroupId Integer, GoodsGroupName TVarChar
              , MeasureName TVarChar
              , TradeMarkName TVarChar
-             , InfoMoneyCode Integer, InfoMoneyName TVarChar
-             , InfoMoneyGroupName TVarChar
-             , InfoMoneyDestinationName TVarChar
+             , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyId Integer
              , BusinessName TVarChar
              , FuelName TVarChar
              , Weight TFloat, isPartionCount Boolean, isPartionSumm Boolean, isErased Boolean
@@ -35,12 +33,11 @@ BEGIN
 
          , Object_TradeMark.ValueData  AS TradeMarkName
 
-         , Object_InfoMoney.ObjectCode AS InfoMoneyCode
-         , Object_InfoMoney.ValueData  AS InfoMoneyName
-
-         , Object_InfoMoneyGroup.ValueData  AS InfoMoneyGroupName
-
-         , Object_InfoMoneyDestination.ValueData  AS InfoMoneyDestinationName
+         , Object_InfoMoney_View.InfoMoneyCode
+         , Object_InfoMoney_View.InfoMoneyGroupName
+         , Object_InfoMoney_View.InfoMoneyDestinationName
+         , Object_InfoMoney_View.InfoMoneyName
+         , Object_InfoMoney_View.InfoMoneyId
 
          , Object_Business.ValueData  AS BusinessName
 
@@ -82,29 +79,15 @@ BEGIN
                                  AND ObjectBoolean_PartionSumm.DescId = zc_ObjectBoolean_Goods_PartionSumm()
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                 ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
-                AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-          LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Goods_InfoMoney.ChildObjectId
-                                              AND Object_InfoMoney.DescId = zc_Object_InfoMoney()
-          
-          LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyGroup
-                 ON ObjectLink_InfoMoney_InfoMoneyGroup.ObjectId = Object_InfoMoney.Id 
-                AND ObjectLink_InfoMoney_InfoMoneyGroup.DescId = zc_ObjectLink_InfoMoney_InfoMoneyGroup()
-          LEFT JOIN Object AS Object_InfoMoneyGroup ON Object_InfoMoneyGroup.Id = ObjectLink_InfoMoney_InfoMoneyGroup.ChildObjectId    
-                                                   AND Object_InfoMoneyGroup.DescId = zc_Object_InfoMoneyGroup()
-      
-          LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyDestination
-                 ON ObjectLink_InfoMoney_InfoMoneyDestination.ObjectId = Object_InfoMoney.Id 
-                AND ObjectLink_InfoMoney_InfoMoneyDestination.DescId = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
-          LEFT JOIN Object AS Object_InfoMoneyDestination ON Object_InfoMoneyDestination.Id = ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId              
-                                                         AND Object_InfoMoneyDestination.DescId = zc_Object_InfoMoneyDestination()
+                               ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+                              AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
       
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Business
                  ON ObjectLink_Goods_Business.ObjectId = Object_Goods.Id 
                 AND ObjectLink_Goods_Business.DescId = zc_ObjectLink_Goods_Business()
           LEFT JOIN Object AS Object_Business ON Object_Business.Id = ObjectLink_Goods_Business.ChildObjectId    
                                              AND Object_Business.DescId = zc_Object_Business()
-                                                   
 
           LEFT JOIN ObjectLink AS ObjectLink_Goods_Fuel
                                ON ObjectLink_Goods_Fuel.ObjectId = Object_Goods.Id 
@@ -115,8 +98,7 @@ BEGIN
   
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_Goods (TVarChar) OWNER TO postgres;
 
 
@@ -124,6 +106,7 @@ ALTER FUNCTION gpSelect_Object_Goods (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 29.10.13                                        * add Object_InfoMoney_View
  02.10.13                                        * add GoodsGroupId
  29.09.13                                        * add zc_ObjectLink_Goods_Fuel
  01.09.13                                        * add zc_ObjectLink_Goods_Business
@@ -131,8 +114,6 @@ ALTER FUNCTION gpSelect_Object_Goods (TVarChar) OWNER TO postgres;
  04.07.13          * + TradeMark             
  21.06.13          *              
  11.06.13          *
- 03.06.13          
-
 */
 
 -- ÚÂÒÚ

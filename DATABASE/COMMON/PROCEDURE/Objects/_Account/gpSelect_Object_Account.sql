@@ -1,18 +1,17 @@
 -- Function: gpSelect_Object_Account(TVarChar)
 
--- DROP FUNCTION gpSelect_Object_Account(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Account (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Account(
     IN inSession     TVarChar       -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                AccountGroupId Integer, AccountGroupCode Integer, AccountGroupName TVarChar, 
-               AccountDirectionId Integer, AccountDirectionCode Integer, AccountDirectionName TVarChar, 
-               InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar, 
-               InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar, 
-               InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, 
-               AccountKindId Integer, AccountKindCode Integer, AccountKindName TVarChar,
-               onComplete boolean, isErased boolean)
+               AccountDirectionId Integer, AccountDirectionCode Integer, AccountDirectionName TVarChar
+             , InfoMoneyCode Integer, InfoMoneyDestinationCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+             , AccountKindId Integer, AccountKindCode Integer, AccountKindName TVarChar,
+               onComplete Boolean, isErased Boolean
+              )
 AS
 $BODY$
 BEGIN
@@ -33,17 +32,13 @@ BEGIN
            , Object_AccountDirection.ObjectCode AS AccountDirectionCode
            , Object_AccountDirection.ValueData  AS AccountDirectionName
            
-           , COALESCE (lfObject_InfoMoneyDestination.InfoMoneyGroupId, lfObject_InfoMoney.InfoMoneyGroupId)     AS InfoMoneyGroupId
-           , COALESCE (lfObject_InfoMoneyDestination.InfoMoneyGroupCode, lfObject_InfoMoney.InfoMoneyGroupCode) AS InfoMoneyGroupCode
-           , COALESCE (lfObject_InfoMoneyDestination.InfoMoneyGroupName, lfObject_InfoMoney.InfoMoneyGroupName) AS InfoMoneyGroupName
-
-           , COALESCE (lfObject_InfoMoneyDestination.InfoMoneyDestinationId, lfObject_InfoMoney.InfoMoneyDestinationId)     AS InfoMoneyDestinationId
-           , COALESCE (lfObject_InfoMoneyDestination.InfoMoneyDestinationCode, lfObject_InfoMoney.InfoMoneyDestinationCode) AS InfoMoneyDestinationCode
-           , COALESCE (lfObject_InfoMoneyDestination.InfoMoneyDestinationName, lfObject_InfoMoney.InfoMoneyDestinationName) AS InfoMoneyDestinationName
-
-           , lfObject_InfoMoney.InfoMoneyId     AS InfoMoneyId
-           , lfObject_InfoMoney.InfoMoneyCode   AS InfoMoneyCode
-           , lfObject_InfoMoney.InfoMoneyName   AS InfoMoneyName
+           , Object_InfoMoney_View.InfoMoneyCode
+           , COALESCE (Object_InfoMoneyDestination_View.InfoMoneyDestinationCode, Object_InfoMoney_View.InfoMoneyDestinationCode) AS InfoMoneyDestinationCode
+           , COALESCE (Object_InfoMoneyDestination_View.InfoMoneyGroupName, Object_InfoMoney_View.InfoMoneyGroupName) AS InfoMoneyGroupName
+           , COALESCE (Object_InfoMoneyDestination_View.InfoMoneyDestinationName, Object_InfoMoney_View.InfoMoneyDestinationName) AS InfoMoneyDestinationName
+           , Object_InfoMoney_View.InfoMoneyName
+           , COALESCE (Object_InfoMoneyDestination_View.InfoMoneyDestinationId, Object_InfoMoney_View.InfoMoneyDestinationId) AS InfoMoneyDestinationId
+           , Object_InfoMoney_View.InfoMoneyId
            
            , Object_AccountKind.Id          AS AccountKindId
            , Object_AccountKind.ObjectCode  AS AccountKindCode
@@ -70,8 +65,9 @@ BEGIN
                                  ON ObjectLink_Account_InfoMoney.ObjectId = Object_Account.Id
                                 AND ObjectLink_Account_InfoMoney.DescId = zc_ObjectLink_Account_InfoMoney()
          
-            LEFT JOIN lfSelect_Object_InfoMoneyDestination() AS lfObject_InfoMoneyDestination ON lfObject_InfoMoneyDestination.InfoMoneyDestinationId = ObjectLink_Account_InfoMoneyDestination.ChildObjectId
-            LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ObjectLink_Account_InfoMoneyDestination.ChildObjectId
+            LEFT JOIN Object_InfoMoneyDestination_View ON Object_InfoMoneyDestination_View.InfoMoneyDestinationId = ObjectLink_Account_InfoMoneyDestination.ChildObjectId
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Account_InfoMoney.ChildObjectId
+                                           AND Object_InfoMoneyDestination_View.InfoMoneyDestinationId IS NULL
 
             LEFT JOIN ObjectBoolean AS ObjectBoolean_onComplete
                                     ON ObjectBoolean_onComplete.ObjectId = Object_Account.Id 
@@ -86,14 +82,14 @@ BEGIN
 
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_Object_Account (TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 29.10.13                                        * add Object_InfoMoney_View
  04.07.13          * + onComplete... +AccountKind...
  03.07.13                                         *  1251Cyr
  24.06.13                                         *  errors

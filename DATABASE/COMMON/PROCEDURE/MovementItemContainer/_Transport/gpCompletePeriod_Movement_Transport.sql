@@ -53,10 +53,9 @@ BEGIN
 
 
      -- !!!Проводим Документы!!!
-     PERFORM lpComplete_Movement_Transport (inMovementId := _tmpMovement.MovementId
+     PERFORM lpComplete_Movement_Transport (inMovementId := tmp.MovementId
                                           , inUserId     := vbUserId)
-     FROM _tmpMovement
-     ORDER BY _tmpMovement.OperDate, _tmpMovement.MovementId;
+     FROM (SELECT _tmpMovement.MovementId FROM _tmpMovement ORDER BY _tmpMovement.OperDate, _tmpMovement.MovementId) AS tmp;
 
 
 END;
