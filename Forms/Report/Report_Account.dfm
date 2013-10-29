@@ -60,7 +60,6 @@ object Report_AccountForm: TReport_AccountForm
         end
         item
           Format = ',0.00'
-          Kind = skSum
           Position = spFooter
           Column = StartSumm
         end
@@ -71,7 +70,6 @@ object Report_AccountForm: TReport_AccountForm
         end
         item
           Format = ',0.00'
-          Kind = skSum
           Position = spFooter
           Column = InSumm
         end
@@ -97,7 +95,6 @@ object Report_AccountForm: TReport_AccountForm
         end
         item
           Format = ',0.00'
-          Kind = skSum
           Position = spFooter
           Column = EndSumm
         end
@@ -118,6 +115,11 @@ object Report_AccountForm: TReport_AccountForm
         item
           Format = ',0.00'
           Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Position = spFooter
+          Column = OutSumm
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -192,6 +194,11 @@ object Report_AccountForm: TReport_AccountForm
         end
         item
           Format = ',0.00'
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = OutSumm
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -206,46 +213,69 @@ object Report_AccountForm: TReport_AccountForm
       OptionsView.Footer = True
       OptionsView.GroupFooters = gfAlwaysVisible
       OptionsView.HeaderAutoHeight = True
+      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object PersonalCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'PersonalCode'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 32
       end
       object PersonalName: TcxGridDBColumn
         Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
         DataBinding.FieldName = 'PersonalName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 108
       end
       object InfoManeyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1089#1090#1072#1090#1100#1080
         DataBinding.FieldName = 'InfoManeyCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 64
-      end
-      object InfoManeyName: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1100#1103
-        DataBinding.FieldName = 'InfoManeyName'
-        Width = 119
       end
       object InfoMoneyGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1080#1089#1082#1080#1093' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1081
         DataBinding.FieldName = 'InfoMoneyGroupName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 175
+      end
+      object InfoManeyName: TcxGridDBColumn
+        Caption = #1057#1090#1072#1090#1100#1103
+        DataBinding.FieldName = 'InfoManeyName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 119
       end
       object InfoMoneyDestinationName: TcxGridDBColumn
         Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyDestinationName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 161
       end
       object CarCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'CarCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 44
       end
       object CarName: TcxGridDBColumn
         Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
         DataBinding.FieldName = 'CarName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 124
       end
       object StartSumm: TcxGridDBColumn
@@ -253,8 +283,9 @@ object Report_AccountForm: TReport_AccountForm
         DataBinding.FieldName = 'StartSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
-        HeaderAlignmentHorz = taRightJustify
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 82
       end
       object InSumm: TcxGridDBColumn
@@ -262,7 +293,9 @@ object Report_AccountForm: TReport_AccountForm
         DataBinding.FieldName = 'InSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 83
       end
       object OutSumm: TcxGridDBColumn
@@ -270,7 +303,9 @@ object Report_AccountForm: TReport_AccountForm
         DataBinding.FieldName = 'OutSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 93
       end
       object EndSumm: TcxGridDBColumn
@@ -278,7 +313,9 @@ object Report_AccountForm: TReport_AccountForm
         DataBinding.FieldName = 'EndSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DisplayFormat = ',0.00;-,0.00'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 90
       end
     end
@@ -339,6 +376,156 @@ object Report_AccountForm: TReport_AccountForm
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Align'
+          'AlignWithMargins'
+          'Anchors'
+          'AutoSize'
+          'BeepOnEnter'
+          'BiDiMode'
+          'Constraints'
+          'Cursor'
+          'CustomHint'
+          'Date'
+          'DragCursor'
+          'DragKind'
+          'DragMode'
+          'EditValue'
+          'Enabled'
+          'FakeStyleController'
+          'Height'
+          'HelpContext'
+          'HelpKeyword'
+          'HelpType'
+          'Hint'
+          'ImeMode'
+          'ImeName'
+          'Left'
+          'Margins'
+          'Name'
+          'ParentBiDiMode'
+          'ParentColor'
+          'ParentCustomHint'
+          'ParentFont'
+          'ParentShowHint'
+          'PopupMenu'
+          'Properties'
+          'RepositoryItem'
+          'ShowHint'
+          'Style'
+          'StyleDisabled'
+          'StyleFocused'
+          'StyleHot'
+          'TabOrder'
+          'TabStop'
+          'Tag'
+          'TextHint'
+          'Top'
+          'Touch'
+          'Visible'
+          'Width')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Align'
+          'AlignWithMargins'
+          'Anchors'
+          'AutoSize'
+          'BeepOnEnter'
+          'BiDiMode'
+          'Constraints'
+          'Cursor'
+          'CustomHint'
+          'Date'
+          'DragCursor'
+          'DragKind'
+          'DragMode'
+          'EditValue'
+          'Enabled'
+          'FakeStyleController'
+          'Height'
+          'HelpContext'
+          'HelpKeyword'
+          'HelpType'
+          'Hint'
+          'ImeMode'
+          'ImeName'
+          'Left'
+          'Margins'
+          'Name'
+          'ParentBiDiMode'
+          'ParentColor'
+          'ParentCustomHint'
+          'ParentFont'
+          'ParentShowHint'
+          'PopupMenu'
+          'Properties'
+          'RepositoryItem'
+          'ShowHint'
+          'Style'
+          'StyleDisabled'
+          'StyleFocused'
+          'StyleHot'
+          'TabOrder'
+          'TabStop'
+          'Tag'
+          'TextHint'
+          'Top'
+          'Touch'
+          'Visible'
+          'Width')
+      end
+      item
+        Component = edAccount
+        Properties.Strings = (
+          'Align'
+          'AlignWithMargins'
+          'Anchors'
+          'AutoSize'
+          'BeepOnEnter'
+          'Constraints'
+          'Cursor'
+          'CustomHint'
+          'DragCursor'
+          'DragKind'
+          'DragMode'
+          'Enabled'
+          'FakeStyleController'
+          'Height'
+          'HelpContext'
+          'HelpKeyword'
+          'HelpType'
+          'Hint'
+          'ImeMode'
+          'ImeName'
+          'Left'
+          'Margins'
+          'Name'
+          'ParentColor'
+          'ParentCustomHint'
+          'ParentFont'
+          'ParentShowHint'
+          'PopupMenu'
+          'Properties'
+          'RepositoryItem'
+          'ShowHint'
+          'Style'
+          'StyleDisabled'
+          'StyleFocused'
+          'StyleHot'
+          'TabOrder'
+          'TabStop'
+          'Tag'
+          'Text'
+          'TextHint'
+          'Top'
+          'Touch'
+          'Visible'
+          'Width')
+      end
       item
         Component = Owner
         Properties.Strings = (
@@ -434,6 +621,7 @@ object Report_AccountForm: TReport_AccountForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actExportToExcel: TdsdGridToExcel
       Category = 'DSDLib'

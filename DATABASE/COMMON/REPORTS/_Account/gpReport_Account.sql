@@ -51,7 +51,7 @@ BEGIN
                   , CAST (Container.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) AS TFloat) AS EndSumm
             
             FROM
-                (SELECT inAccountId AS AccountId) AS tmpAccount -- счет --(select Id as AccountId from Object where descId = zc_Object_Account() and objectcode in (30505,30508) ) as tmpAccount  -- (SELECT inAcountId AS AccountId) AS tmpAccount -- счет 
+                (SELECT inAccountId AS AccountId) AS tmpAccount -- счет --(select Id as AccountId from Object where descId = zc_Object_Account() and objectcode in (30505,30508) ) as tmpAccount  -- счет 
                   
                  JOIN Container ON Container.ObjectId = tmpAccount.AccountId
                                AND Container.DescId = zc_Container_Summ()
