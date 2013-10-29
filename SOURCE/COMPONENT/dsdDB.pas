@@ -124,7 +124,7 @@ implementation
 
 uses Storage, CommonData, TypInfo, UtilConvert, SysUtils, cxTextEdit, VCL.Forms,
      XMLDoc, XMLIntf, StrUtils, cxCurrencyEdit, dsdGuides, cxCheckBox, cxCalendar,
-     Variants, XSBuiltIns, UITypes, dsdAction, Defaults, UtilConst, Windows, Dialogs,
+     Variants, UITypes, dsdAction, Defaults, UtilConst, Windows, Dialogs,
      dsdAddOn, cxDBData, cxGridDBTableView;
 
 procedure Register;
@@ -595,13 +595,7 @@ begin
        else
          // в случае даты и если строка, то надо конвертить
          if (Field.DataType in [ftDateTime, ftDate, ftTime]) and (VarType(FValue) in [vtString, vtClass]) then begin
-            with TXSDateTime.Create() do
-            try
-              XSToNative(FValue); // convert from WideString
-              Field.Value := AsDateTime;//AsDateTime; // convert to TDateTime
-            finally
-              Free;
-            end;
+            Field.Value := gfXSStrToDate(FValue); // convert to TDateTime
          end
          else
             Field.Value := FValue;
@@ -637,13 +631,7 @@ begin
         if VarType(FValue) = vtObject then
           (Component as TcxDateEdit).Date := FValue
         else
-          with TXSDateTime.Create() do
-          try
-            XSToNative(FValue); // convert from WideString
-            (Component as TcxDateEdit).Date := AsUTCDateTime + HourOffset/24; // convert to TDateTime
-          finally
-            Free;
-          end;
+          (Component as TcxDateEdit).Date := gfXSStrToDate(FValue); // convert to TDateTime
      if Component is TCustomGuides then
         if LowerCase(ComponentItem) = 'textvalue' then begin
            (Component as TCustomGuides).TextValue := FValue
