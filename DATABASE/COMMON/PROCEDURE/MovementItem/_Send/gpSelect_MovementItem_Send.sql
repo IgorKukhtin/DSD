@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Send(
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
              , Amount TFloat, HeadCount TFloat, Count TFloat
-             , PartionGoods TVarChar, GoodsKindName  TVarChar
+             , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar
              , AssetId Integer, AssetName TVarChar
              , isErased Boolean
               )
@@ -39,6 +39,7 @@ BEGIN
 
            , CAST (NULL AS TVarChar) AS PartionGoods
 
+           , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
 
            , Object_Asset.Id         AS AssetId
@@ -79,6 +80,7 @@ BEGIN
 
            , MIString_PartionGoods.ValueData AS PartionGoods
 
+           , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
 
            , Object_Asset.Id         AS AssetId
@@ -128,6 +130,7 @@ BEGIN
 
            , MIString_PartionGoods.ValueData AS PartionGoods
 
+           , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
            
            , Object_Asset.Id         AS AssetId
@@ -175,6 +178,7 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar) 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 29.10.13                       *            add GoodsKindId
  22.07.13         * add Count                              
  18.07.13         * add Object_Asset               
  12.07.13         *
