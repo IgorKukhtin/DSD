@@ -58,10 +58,9 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_MI_Transport()
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_MI_TransportReport()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 4
-                                  , inName:= 'Строки документа <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Transport())||'(Итоги)> - получение данных.'
-                                  , inEnumName:= 'zc_Enum_Process_Select_MI_TransportReport');                                 
+                                  , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Transport())||'(Итоги)> - получение данных.'
+                                  , inEnumName:= 'zc_Enum_Process_Select_MI_TransportReport');                               
                                                                    
-
 -- Status_Transport
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_UnComplete_Transport()
                                   , inDescId:= zc_Object_Process()
