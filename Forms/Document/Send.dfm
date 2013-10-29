@@ -167,24 +167,28 @@ object SendForm: TSendForm
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 58
           end
           object colName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 200
           end
           object colGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
           end
           object colPartionGoods: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103
             DataBinding.FieldName = 'PartionGoods'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 120
           end
           object colAmount: TcxGridDBColumn
@@ -204,6 +208,7 @@ object SendForm: TSendForm
             Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
+            Options.Editing = False
           end
         end
         object cxGridLevel: TcxGridLevel
@@ -214,6 +219,9 @@ object SendForm: TSendForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
