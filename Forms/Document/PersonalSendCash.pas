@@ -57,7 +57,7 @@ type
     colAmount_20401: TcxGridDBColumn;
     colAmount_21201: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
-    spSelectMovementContainerItem: TdsdStoredProc;
+    spSelectMIContainer: TdsdStoredProc;
     cxGridEntryDBTableView: TcxGridDBTableView;
     cxGridEntryLevel: TcxGridLevel;
     cxGridEntry: TcxGrid;

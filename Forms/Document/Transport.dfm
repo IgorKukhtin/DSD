@@ -59,6 +59,7 @@
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 12
       Width = 150
     end
@@ -70,6 +71,7 @@
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 2
       Width = 100
     end
@@ -91,13 +93,14 @@
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 3
       Width = 119
     end
     object cxLabel5: TcxLabel
       Left = 182
       Top = 45
-      Caption = #1042#1086#1076#1080#1090#1077#1083#1100
+      Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
     end
     object edPersonalDriverMore: TcxButtonEdit
       Left = 691
@@ -107,6 +110,7 @@
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 11
       Width = 147
     end
@@ -123,6 +127,7 @@
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 10
       Width = 147
     end
@@ -250,6 +255,7 @@
           Kind = bkGlyph
         end>
       Properties.Images = dmMain.ImageList
+      Properties.ReadOnly = True
       TabOrder = 28
       Width = 152
     end
@@ -2045,20 +2051,6 @@
       Status = mtDelete
       Guides = StatusGuides
     end
-    object TotalRefresh: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      TabSheet = cxTabSheetReport
-      StoredProc = spSelectMiReport
-      StoredProcList = <
-        item
-          StoredProc = spSelectMiReport
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1086#1090#1095#1077#1090#1072
-      ImageIndex = 28
-      ShortCut = 116
-      RefreshOnTabSetChanges = True
-    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -2899,10 +2891,6 @@
         item
           Visible = True
           ItemName = 'bbEntryToGrid'
-        end
-        item
-          Visible = True
-          ItemName = 'bbTotalRefresh'
         end>
       OneOnRow = True
       Row = 0
@@ -2977,10 +2965,6 @@
     end
     object bbSetErasedIncome: TdxBarButton
       Action = actSetErasedIncome
-      Category = 0
-    end
-    object bbTotalRefresh: TdxBarButton
-      Action = TotalRefresh
       Category = 0
     end
   end

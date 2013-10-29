@@ -60,6 +60,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 2
       Width = 150
     end
@@ -91,6 +92,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
           Kind = bkGlyph
         end>
       Properties.Images = dmMain.ImageList
+      Properties.ReadOnly = True
       TabOrder = 7
       Width = 152
     end
@@ -751,7 +753,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
           StoredProc = spSelectMI
         end
         item
-          StoredProc = spSelectMovementContainerItem
+          StoredProc = spSelectMIContainer
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -920,8 +922,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
           StoredProc = StatusStoredProc
         end
         item
-        end
-        item
+          StoredProc = spSelectMIContainer
         end>
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
@@ -937,8 +938,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
           StoredProc = StatusStoredProc
         end
         item
-        end
-        item
+          StoredProc = spSelectMIContainer
         end>
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
@@ -954,8 +954,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
           StoredProc = StatusStoredProc
         end
         item
-        end
-        item
+          StoredProc = spSelectMIContainer
         end>
       Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
@@ -1008,7 +1007,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
       Action = actRefresh
     end
   end
-  object spSelectMovementContainerItem: TdsdStoredProc
+  object spSelectMIContainer: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItemContainer_Movement'
     DataSet = EntryCDS
     DataSets = <

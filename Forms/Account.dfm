@@ -376,7 +376,13 @@ object AccountForm: TAccountForm
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
-    OnDblClickActionList = <>
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+        Action = actUpdate
+      end>
     ActionItemList = <>
     OnlyEditingCellOnEnter = False
     Left = 160
