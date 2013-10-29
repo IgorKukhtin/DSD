@@ -30,68 +30,55 @@ BEGIN
          , Object_Car.ObjectCode     AS CarCode       
          , Object_Car.ValueData      AS CarName
 
-        , CAST ((tmpContainerLink.StartSumm) AS TFloat) AS StartSumm
-        , CAST ((tmpContainerLink.InSumm) AS TFloat) AS InSumm
-        , CAST ((tmpContainerLink.OutSumm) AS TFloat) AS OutSumm
-        , CAST ((tmpContainerLink.EndSumm) AS TFloat) AS EndSumm
+        , tmpContainerLink.StartSumm :: TFloat AS StartSumm
+        , tmpContainerLink.InSumm    :: TFloat AS InSumm
+        , tmpContainerLink.OutSumm   :: TFloat AS OutSumm
+        , tmpContainerLink.EndSumm   :: TFloat AS EndSumm
    FROM      
-       (SELECT ContainerLinkObject_Personal.ObjectId  as PersonalId
-             , ContainerLinkObject_InfoMoney.ObjectId as InfoMoneyId
-             , ContainerLinkObject_Car.ObjectId as CarId
-              
-             , CAST (sum (tmpContainer.StartSumm) AS TFloat) AS StartSumm
-             , CAST (sum (tmpContainer.InSumm) AS TFloat) AS InSumm
-             , CAST (sum (tmpContainer.OutSumm) AS TFloat) AS OutSumm
-             , CAST (sum (tmpContainer.EndSumm) AS TFloat) AS EndSumm
-         
-       FROM  
-	       (SELECT  Container.Id as ContainerId 
+       (SELECT ContainerLinkObject_Personal.ObjectId  AS PersonalId
+             , ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId
+             , ContainerLinkObject_Car.ObjectId AS CarId
+             , SUM (tmpContainer.StartSumm) AS StartSumm
+             , SUM (tmpContainer.InSumm)    AS InSumm
+             , SUM (tmpContainer.OutSumm)   AS OutSumm
+             , SUM (tmpContainer.EndSumm)   AS EndSumm
+        FROM
+            (SELECT Container.Id AS ContainerId 
                   , CAST (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS TFloat) AS StartSumm
                   , CAST (COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END), 0) AS TFloat) AS InSumm
-                  , CAST (COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 THEN MIContainer.Amount ELSE 0 END), 0) AS TFloat) AS OutSumm
+                  , CAST (COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END), 0) AS TFloat) AS OutSumm
                   , CAST (Container.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) AS TFloat) AS EndSumm
-            
-            FROM
-                (SELECT inAccountId AS AccountId) AS tmpAccount -- счет --(select Id as AccountId from Object where descId = zc_Object_Account() and objectcode in (30505,30508) ) as tmpAccount  -- счет 
-                  
+             FROM
+                 (SELECT inAccountId AS AccountId) AS tmpAccount -- счет --(select Id AS AccountId from Object where descId = zc_Object_Account() and objectcode in (30505,30508) ) AS tmpAccount  -- счет 
                  JOIN Container ON Container.ObjectId = tmpAccount.AccountId
                                AND Container.DescId = zc_Container_Summ()
-                                             
                  LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = Container.Id 
                                                                AND MIContainer.OperDate between inStartDate AND inEndDate
-  
-            GROUP BY Container.Id 
-
-            HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
-                OR (COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) <> 0)
-                OR (COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 THEN -MIContainer.Amount ELSE 0 END), 0) <> 0)
+             GROUP BY Container.Id 
+             HAVING (Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
+                 OR (COALESCE (SUM (CASE WHEN MIContainer.Amount > 0 THEN  MIContainer.Amount ELSE 0 END), 0) <> 0)
+                 OR (COALESCE (SUM (CASE WHEN MIContainer.Amount < 0 THEN -MIContainer.Amount ELSE 0 END), 0) <> 0)
         
-            ) AS tmpContainer
-
+           ) AS tmpContainer
             LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Personal ON ContainerLinkObject_Personal.ContainerId = tmpContainer.ContainerId
                                                                          AND ContainerLinkObject_Personal.DescId = zc_ContainerLinkObject_Personal()
-       
             LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoney ON ContainerLinkObject_InfoMoney.ContainerId = tmpContainer.ContainerId
                                                                           AND ContainerLinkObject_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-       
-             LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Car ON ContainerLinkObject_Car.ContainerId = tmpContainer.ContainerId 
-                                                                     AND ContainerLinkObject_Car.DescId = zc_ContainerLinkObject_Car()
-                                                                         
-             GROUP BY ContainerLinkObject_Personal.ObjectId      
-                    , ContainerLinkObject_InfoMoney.ObjectId
-                    , ContainerLinkObject_Car.ObjectId
-             
-       ) as tmpContainerLink 
-
-       LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId=tmpContainerLink.PersonalId
+            LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Car ON ContainerLinkObject_Car.ContainerId = tmpContainer.ContainerId
+                                                                    AND ContainerLinkObject_Car.DescId = zc_ContainerLinkObject_Car()
+        GROUP BY ContainerLinkObject_Personal.ObjectId      
+               , ContainerLinkObject_InfoMoney.ObjectId
+               , ContainerLinkObject_Car.ObjectId
+       ) AS tmpContainerLink 
+       LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = tmpContainerLink.PersonalId
        LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = tmpContainerLink.InfoMoneyId
-       LEFT JOIN Object AS Object_Car ON Object_Car.Id=tmpContainerLink.CarId
+       LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpContainerLink.CarId
        LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
                                                       AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
        LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
-
-;
-            
+    ;
+    
+        
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;

@@ -369,7 +369,7 @@ object Report_AccountForm: TReport_AccountForm
           Kind = bkEllipsis
         end>
       TabOrder = 3
-      Width = 200
+      Width = 300
     end
     object cxLabel1: TcxLabel
       Left = 10
@@ -685,7 +685,7 @@ object Report_AccountForm: TReport_AccountForm
         ParamType = ptInput
       end
       item
-        Name = 'TextValue'
+        Name = 'TextValueAll'
         Value = ''
         Component = AccountGuides
         ComponentItem = 'TextValue'
