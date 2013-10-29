@@ -114,7 +114,6 @@ type
     bbShowErased: TdxBarButton;
     RouteChoiceForm: TOpenChoiceForm;
     CarChoiceForm: TOpenChoiceForm;
-    ceStatus: TcxButtonEdit;
     cxLabel4: TcxLabel;
     ChangeStatus: TChangeStatus;
     spErasedMIMaster: TdsdStoredProc;
@@ -123,6 +122,12 @@ type
     colCarModelName: TcxGridDBColumn;
     colBusinessCode: TcxGridDBColumn;
     colBusinessName: TcxGridDBColumn;
+    ceStatus: TcxButtonEdit;
+    StatusGuides: TdsdGuides;
+    StatusStoredProc: TdsdStoredProc;
+    UnCompleteMovement: TChangeGuidesStatus;
+    CompleteMovement: TChangeGuidesStatus;
+    DeleteMovement: TChangeGuidesStatus;
   private
   public
   end;

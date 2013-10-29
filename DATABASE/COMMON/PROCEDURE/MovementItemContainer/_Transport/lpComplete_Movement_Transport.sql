@@ -414,7 +414,6 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpUnComplete_Movement (inMovementId:= 103, inSession:= '2')
--- CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
--- SELECT * FROM lpComplete_Movement_Transport (inMovementId:= 103, inUserId:= 2)
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 103, inSession:= '2')
+-- SELECT * FROM gpUnComplete_Movement (inMovementId:= 103, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM lpComplete_Movement_Transport (inMovementId:= 103, inUserId:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 103, inSession:= zfCalc_UserAdmin())

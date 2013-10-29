@@ -1048,9 +1048,6 @@
     object cxTabSheetReport: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridReport: TcxGrid
         Left = 0
         Top = 0
@@ -1197,9 +1194,6 @@
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -1932,6 +1926,15 @@
       StoredProcList = <
         item
           StoredProc = spMovementUnCompleteIncome
+        end
+        item
+          StoredProc = spSelectMIIncome
+        end
+        item
+          StoredProc = spSelectMiReport
+        end
+        item
+          StoredProc = spSelectMIContainer
         end>
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
@@ -1946,6 +1949,15 @@
       StoredProcList = <
         item
           StoredProc = spMovementCompleteIncome
+        end
+        item
+          StoredProc = spSelectMIIncome
+        end
+        item
+          StoredProc = spSelectMiReport
+        end
+        item
+          StoredProc = spSelectMIContainer
         end>
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
@@ -1960,6 +1972,15 @@
       StoredProcList = <
         item
           StoredProc = spMovementSetErasedIncome
+        end
+        item
+          StoredProc = spSelectMIIncome
+        end
+        item
+          StoredProc = spSelectMiReport
+        end
+        item
+          StoredProc = spSelectMIContainer
         end>
       Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
@@ -1976,6 +1997,9 @@
         end
         item
           StoredProc = spSelectMIContainer
+        end
+        item
+          StoredProc = spSelectMiReport
         end>
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
@@ -1992,6 +2016,9 @@
         end
         item
           StoredProc = spSelectMIContainer
+        end
+        item
+          StoredProc = spSelectMiReport
         end>
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
@@ -2008,6 +2035,9 @@
         end
         item
           StoredProc = spSelectMIContainer
+        end
+        item
+          StoredProc = spSelectMiReport
         end>
       Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
