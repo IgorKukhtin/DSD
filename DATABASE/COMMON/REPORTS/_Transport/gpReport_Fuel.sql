@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_Fuel(
     IN inCarId         Integer,    -- машина
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (CarModelName TVarChar, CarCode Integer, CarName TVarChar
+RETURNS TABLE (CarModelName TVarChar, CarId Integer, CarCode Integer, CarName TVarChar
              , FuelCode Integer, FuelName TVarChar
              , StartAmount TFloat, IncomeAmount TFloat, RateAmount TFloat, EndAmount TFloat
              , StartSumm TFloat, IncomeSumm TFloat, RateSumm TFloat, EndSumm TFloat
@@ -58,6 +58,7 @@ $BODY$BEGIN
 
     -- Добавили строковые данные. 
     SELECT Object_CarModel.ValueData AS CarModelName,
+           Object_Car.Id             AS CarId,
            Object_Car.ObjectCode     AS CarCode,  
            Object_Car.ValueData      AS CarName,
            Object_Fuel.ObjectCode    AS FuelCode,
@@ -93,7 +94,6 @@ $BODY$BEGIN
                      SUM (CASE WHEN MIContainer.OperDate < inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS IncomeAmount,
                      SUM (CASE WHEN MIContainer.OperDate < inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN - MIContainer.Amount ELSE 0 END ELSE 0 END) AS OutComeAmount,
                      ReportContainer.Amount - COALESCE(SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS EndAmount
-
               FROM
                     -- ReportContainer. Возвращаем список суммовых и количественных контейнеров по указанному в ContainerSumm счету
                     (SELECT Id, DescId, Amount, COALESCE(ParentId, Id) as KeyContainerId, 0 AS ObjectId 
@@ -103,7 +103,7 @@ $BODY$BEGIN
                      WHERE Container.Id = ContainerSumm.ParentId) AS ReportContainer
 
                  LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = ReportContainer.Id
-                                                               AND MIContainer.OperDate > inStartDate
+                                                               AND MIContainer.OperDate >= inStartDate
                 GROUP BY ReportContainer.Id, ReportContainer.DescId, ReportContainer.Amount, KeyContainerId, ObjectId) AS Report
                 -- Конец. Получаем оборотку по контейнерам.
 
@@ -134,6 +134,7 @@ ALTER FUNCTION gpReport_Fuel (TDateTime, TDateTime, Integer, Integer, TVarChar) 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.11.13                        * Ошибка с датой. Добавил талоны
  28.11.13                                        * add CarModelName
  14.11.13                        * add Денежные Средства
  11.11.13                        * 
