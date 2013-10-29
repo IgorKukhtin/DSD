@@ -21,6 +21,9 @@ $BODY$
   DECLARE vbPersonalId Integer;
 BEGIN
 
+     -- проверка прав пользователя на вызов процедуры
+     -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_MI_TransportReport());
+
      -- параметры из путевого
      SELECT OperDate, Movement.StatusId INTO vbOperDate, vbStatusId FROM Movement WHERE Id = inMovementId AND DescId = zc_Movement_Transport();
      vbCarId:= (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_Car());
