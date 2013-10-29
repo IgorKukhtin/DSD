@@ -14,17 +14,17 @@ BEGIN
      CASE inStatusCode
          WHEN zc_Enum_StatusCode_UnComplete() THEN
             -- проверка прав пользователя на вызов процедуры
-            PERFORM lpCheckRight (inSession, zc_Enum_Process_Update_Status_Income_UnComplete());
+            PERFORM lpCheckRight (inSession, zc_Enum_Process_UnComplete_Income());
             --
             PERFORM gpUnComplete_Movement (inMovementId, inSession);
          WHEN zc_Enum_StatusCode_Complete() THEN
             -- проверка прав пользователя на вызов процедуры
-            PERFORM lpCheckRight (inSession, zc_Enum_Process_Update_Status_Income_Complete());
+            PERFORM lpCheckRight (inSession, zc_Enum_Process_Complete_Income));
             --
             PERFORM gpComplete_Movement_Income (inMovementId, FALSE, inSession);
          WHEN zc_Enum_StatusCode_Erased() THEN
             -- проверка прав пользователя на вызов процедуры
-            PERFORM lpCheckRight (inSession, zc_Enum_Process_Update_Status_Income_Erased());
+            PERFORM lpCheckRight (inSession, zc_Enum_Process_SetErased_Income());
             --
             PERFORM gpSetErased_Movement (inMovementId, inSession);
          ELSE
@@ -39,6 +39,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.10.13         * rename zc_Enum_Process
  07.10.13                                        * add lpCheckRight
  06.10.13                                        *
 */
