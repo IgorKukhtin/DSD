@@ -1551,6 +1551,10 @@
         end
         item
           StoredProc = spSelectMIContainer
+        end
+        item
+          TabSheet = cxTabSheetReport
+          StoredProc = spSelectMiReport
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -2050,6 +2054,18 @@
       ImageIndex = 13
       Status = mtDelete
       Guides = StatusGuides
+    end
+    object TotalRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetReport
+      StoredProc = spSelectMiReport
+      StoredProcList = <
+        item
+          StoredProc = spSelectMiReport
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      RefreshOnTabSetChanges = True
     end
   end
   object MasterDS: TDataSource
@@ -2780,8 +2796,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')

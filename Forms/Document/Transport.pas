@@ -249,6 +249,7 @@ type
     spSelectMiReport: TdsdStoredProc;
     colRouteKindName_Freight: TcxGridDBColumn;
     RouteKindFreightChoiceForm: TOpenChoiceForm;
+    TotalRefresh: TdsdDataSetRefresh;
   private
   public
   end;

@@ -11,10 +11,14 @@ type
   TdsdStoredProcItem = class(TCollectionItem)
   private
     FStoredProc: TdsdStoredProc;
+    FTabSheet: TcxTabSheet;
     procedure SetStoredProc(const Value: TdsdStoredProc);
+    procedure SetTabSheet(const Value: TcxTabSheet);
   protected
     function GetDisplayName: string; override;
   published
+    // ѕри установке данного свойства процедура будет вызвана только если TabSheet активен
+    property TabSheet: TcxTabSheet read FTabSheet write SetTabSheet;
     property StoredProc: TdsdStoredProc read FStoredProc write SetStoredProc;
   end;
 
@@ -46,10 +50,17 @@ type
   private
     FOnPageChanging: TOnPageChanging;
     FTabSheet: TcxTabSheet;
+    FPostDataSetBeforeExecute: boolean;
     procedure SetTabSheet(const Value: TcxTabSheet); virtual;
   protected
+    property PostDataSetBeforeExecute: boolean read FPostDataSetBeforeExecute write FPostDataSetBeforeExecute;
+    // ƒелаем Post всем датасетам на форме где стоит Action
+    procedure PostDataSet;
     procedure OnPageChanging(Sender: TObject; NewPage: TcxTabSheet; var AllowChange: Boolean); virtual;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    function Execute: boolean; override;
   published
     // ѕри установке данного свойства Action будет активирован только если TabSheet активен
     property TabSheet: TcxTabSheet read FTabSheet write SetTabSheet;
@@ -433,11 +444,15 @@ end;
 function TdsdCustomDataSetAction.Execute: boolean;
 var i: integer;
 begin
-  result := true;
+  result := inherited Execute;
   for I := 0 to StoredProcList.Count - 1  do
       if Assigned(StoredProcList[i]) then
-         if Assigned(StoredProcList[i].StoredProc) then
-            StoredProcList[i].StoredProc.Execute
+         if Assigned(StoredProcList[i].StoredProc) then begin
+            // ≈сли табшит не установлен, но если установлен, то активен
+            if (not Assigned(StoredProcList[i].TabSheet))
+               or (Assigned(StoredProcList[i].TabSheet) and (StoredProcList[i].TabSheet.PageControl.ActivePage = StoredProcList[i].TabSheet)) then
+                  StoredProcList[i].StoredProc.Execute
+         end;
 end;
 
 
@@ -459,12 +474,19 @@ var i: integer;
 begin
   inherited;
   if csDesigning in ComponentState then
-    if (Operation = opRemove) and (AComponent is TdsdStoredProc) and Assigned(StoredProcList) then begin
-       for i := 0 to StoredProcList.Count - 1 do
-           if StoredProcList[i].StoredProc = AComponent then
-              StoredProcList[i].StoredProc := nil;
-       if StoredProc = AComponent then
-          StoredProc := nil
+    if (Operation = opRemove) and Assigned(StoredProcList) then begin
+       if AComponent is TdsdStoredProc then begin
+           for i := 0 to StoredProcList.Count - 1 do
+               if StoredProcList[i].StoredProc = AComponent then
+                  StoredProcList[i].StoredProc := nil;
+           if StoredProc = AComponent then
+              StoredProc := nil
+       end;
+       if AComponent is TcxTabSheet then begin
+           for i := 0 to StoredProcList.Count - 1 do
+               if StoredProcList[i].TabSheet = AComponent then
+                  StoredProcList[i].TabSheet := nil;
+       end;
     end;
 end;
 
@@ -1095,6 +1117,19 @@ end;
 
 { TdsdCustomAction }
 
+constructor TdsdCustomAction.Create(AOwner: TComponent);
+begin
+  inherited;
+  FPostDataSetBeforeExecute := false;
+end;
+
+function TdsdCustomAction.Execute: boolean;
+begin
+  result := true;
+  if PostDataSetBeforeExecute then
+     PostDataSet;
+end;
+
 procedure TdsdCustomAction.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
@@ -1111,6 +1146,16 @@ begin
      FOnPageChanging(Sender, NewPage, AllowChange);
   Enabled := TabSheet = NewPage;
   Visible := Enabled;
+end;
+
+procedure TdsdCustomAction.PostDataSet;
+var i: integer;
+begin
+  if Assigned(Owner) then
+     for i := 0 to Owner.ComponentCount - 1 do
+         if Owner.Components[i] is TDataSet then
+            if TDataSet(Owner.Components[i]).State in dsEditModes then
+               TDataSet(Owner.Components[i]).Post;
 end;
 
 procedure TdsdCustomAction.SetTabSheet(const Value: TcxTabSheet);
@@ -1140,6 +1185,11 @@ begin
         Value.FreeNotification(TComponent(Collection.Owner));
      FStoredProc := Value;
   end;
+end;
+
+procedure TdsdStoredProcItem.SetTabSheet(const Value: TcxTabSheet);
+begin
+  FTabSheet := Value;
 end;
 
 { TOpenChoiceForm }
@@ -1225,6 +1275,7 @@ constructor TCustomChangeStatus.Create(AOwner: TComponent);
 begin
   inherited;
   Status := mtUncomplete;
+  PostDataSetBeforeExecute := true;
 end;
 
 { TChangeGuidesStatus }

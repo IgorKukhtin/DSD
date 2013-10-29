@@ -219,9 +219,6 @@ object SendForm: TSendForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -839,39 +836,31 @@ object SendForm: TSendForm
         ParamType = ptInput
       end
       item
-        Name = 'inAmountPartner'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPrice'
-        Component = ClientDataSet
-        ComponentItem = 'Price'
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inCountForPrice'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inLiveWeight'
-        Value = Null
+        Name = 'inCount'
+        Value = '0'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inHeadCount'
-        Value = Null
+        Value = '0'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
+        Name = 'inPartionGoods'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
         Name = 'inGoodsKindId'
-        Value = Null
+        Component = ClientDataSet
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAssetId'
+        Value = '0'
         ParamType = ptInput
       end>
     Left = 520
@@ -1054,6 +1043,7 @@ object SendForm: TSendForm
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
+    IdParam.Component = dsdFormParams
     IdParam.ComponentItem = 'Id'
     GuidesList = <
       item
