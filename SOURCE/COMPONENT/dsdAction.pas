@@ -1148,6 +1148,7 @@ procedure TOpenChoiceForm.AfterChoice(Params: TdsdParams; Form: TForm);
 begin
   // Расставляем параметры по местам
   Self.GuiParams.AssignParams(Params);
+  Form.Close
 end;
 
 { TDataSetAction }
