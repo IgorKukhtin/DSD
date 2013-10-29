@@ -16,7 +16,8 @@ $BODY$
   DECLARE Cursor2 refcursor;
 BEGIN
 
-   --PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_MI_Transport());
+     -- проверка прав пользователя на вызов процедуры
+     -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_MI_Transport());
 
     OPEN Cursor1 FOR 
         SELECT 

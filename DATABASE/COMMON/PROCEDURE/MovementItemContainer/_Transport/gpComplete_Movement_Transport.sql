@@ -13,7 +13,7 @@ $BODY$
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Complete_Movement_Transport());
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Complete_Transport());
      vbUserId:=2; -- CAST (inSession AS Integer);
 
 

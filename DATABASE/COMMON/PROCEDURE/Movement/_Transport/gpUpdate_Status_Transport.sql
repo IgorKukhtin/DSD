@@ -13,11 +13,11 @@ BEGIN
 
      CASE inStatusCode
          WHEN zc_Enum_StatusCode_UnComplete() THEN
-            PERFORM gpUnComplete_Movement (inMovementId, inSession);
+            PERFORM gpUnComplete_Movement_Transport (inMovementId, inSession);
          WHEN zc_Enum_StatusCode_Complete() THEN
             PERFORM gpComplete_Movement_Transport (inMovementId, inSession);
          WHEN zc_Enum_StatusCode_Erased() THEN
-            PERFORM gpSetErased_Movement (inMovementId, inSession);
+            PERFORM gpSetErased_Movement_Transport (inMovementId, inSession);
          ELSE
             RAISE EXCEPTION 'Нет статуса с кодом <%>', inStatusCode;
      END CASE;
@@ -30,6 +30,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.10.13                                        *
  06.10.13                                        *
 */
 
