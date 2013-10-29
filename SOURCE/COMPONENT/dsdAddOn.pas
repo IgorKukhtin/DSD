@@ -685,9 +685,13 @@ procedure TdsdDBViewAddOn.OnGetContentStyle(Sender: TcxCustomGridTableView;
   out AStyle: TcxStyle);
 var Column: TcxGridColumn;
 begin
-  // работаем со свойством Удален
   if Assigned(FOnGetContentStyleEvent) then
      FOnGetContentStyleEvent(Sender, ARecord, AItem, AStyle);
+
+  if ARecord = nil then exit;
+  // Если это сгруппированная строка, то выходим
+  if not ARecord.IsData then exit;
+  // работаем со свойством Удален
 
   if (Sender is TcxGridDBTableView) then
       Column := TcxGridDBTableView(Sender).GetColumnByFieldName(FErasedFieldName);
@@ -695,8 +699,8 @@ begin
       Column := TcxGridDBBandedTableView(Sender).GetColumnByFieldName(FErasedFieldName);
   if Assigned(Column) then
      if not VarIsNull(ARecord.Values[Column.Index])
-        and ARecord.Values[Column.Index] then 
-            AStyle := FErasedStyle; 
+        and ARecord.Values[Column.Index] then
+            AStyle := FErasedStyle;
 end;
 
 procedure TdsdDBViewAddOn.OnKeyDown(Sender: TObject; var Key: Word;

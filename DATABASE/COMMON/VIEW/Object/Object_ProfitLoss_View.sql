@@ -1,6 +1,6 @@
 -- View: Object_ProfitLoss_View
 
-DROP VIEW IF EXISTS Object_ProfitLoss_View;
+-- DROP VIEW IF EXISTS Object_ProfitLoss_View;
 
 CREATE OR REPLACE VIEW Object_ProfitLoss_View AS
      SELECT 

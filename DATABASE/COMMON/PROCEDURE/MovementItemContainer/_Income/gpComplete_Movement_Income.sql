@@ -14,7 +14,7 @@ $BODY$
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Complete_Movement_Income());
+     -- vbUserId:=PERFORM lpCheckRight (inSession, zc_Enum_Process_Complete_Income());
      vbUserId:=2; -- CAST (inSession AS Integer);
 
 
@@ -59,6 +59,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.10.13         * rename process zc_Enum_Process_Complete_Income()
  21.10.13                                        * add TicketFuel
  12.10.13                                        * add lfCheck_Movement_ParentStatus
  06.10.13                                        *
