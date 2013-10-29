@@ -209,6 +209,9 @@ begin
   Self.Params.AssignParams(Params);
   if Assigned(FOnAfterChoice) then
      FOnAfterChoice(Form);
+  // Если форма не закрыта, то закрываем
+  if Form.Visible then
+     Form.Close;
 end;
 
 constructor TdsdGuides.Create(AOwner: TComponent);

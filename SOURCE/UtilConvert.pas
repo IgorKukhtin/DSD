@@ -16,6 +16,8 @@ uses DB;
    function gfDateToStr(const inDate: TDateTime): string; //tested
    {конвертаци€ строки в дату}
    function gfStrToDate(const inStr: string): TDateTime; //tested
+   {конвертаци€ строки в формате 8601 (2002-10-10T12:00:00+05:00) в дату}
+   function gfXSStrToDate(const inStr: string): TDateTime;
    {функции конвертации булевского значени€ в строку независимые от установок на локальных компьютерах.}
    function gfBooleanToStr(const inBool: Boolean): string; //tested
    {конвертаци€ строки в булевское значение}
@@ -46,7 +48,7 @@ uses DB;
    function gfStringToDataType(inType: String): TFieldType;  //tested
 
 implementation
-uses SysUtils, UtilConst, variants, StrUtils;
+uses XSBuiltIns, SysUtils, UtilConst, variants, StrUtils;
 {-----------------------------------------------------------------------------------------------}
 const
   cMainDecimalSeparator = '.';
@@ -108,6 +110,18 @@ begin
   {разбираем врем€ на составл€ющие}
   DecodeTime(pTime,Hour, Minute, Second, MSec);
   result :=gfFloatToStr(trunc(inDate)+EncodeTime(Hour, Minute, 0 ,0));
+end;
+{-----------------------------------------------------------------------------------------------}
+{конвертаци€ строки в формате 8601 (2002-10-10T12:00:00+05:00) в дату}
+function gfXSStrToDate(const inStr: string): TDateTime;
+begin
+  with TXSDateTime.Create() do
+  try
+    XSToNative(inStr); // convert from WideString
+    result := AsUTCDateTime + HourOffset/24; // convert to TDateTime
+  finally
+    Free;
+  end;
 end;
 {-----------------------------------------------------------------------------------------------}
 {функции конвертации строки в дату независимые от установок на локальных компьютерах.}
