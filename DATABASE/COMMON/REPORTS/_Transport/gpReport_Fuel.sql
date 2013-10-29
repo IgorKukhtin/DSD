@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_Fuel(
     IN inCarId         Integer,    -- машина
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (CarModelName TVarChar, CarCode Integer, CarName TVarChar
+RETURNS TABLE (CarModelName TVarChar, CarId Integer, CarCode Integer, CarName TVarChar
              , FuelCode Integer, FuelName TVarChar
              , StartAmount TFloat, IncomeAmount TFloat, RateAmount TFloat, EndAmount TFloat
              , StartSumm TFloat, IncomeSumm TFloat, RateSumm TFloat, EndSumm TFloat
@@ -58,6 +58,7 @@ $BODY$BEGIN
 
     -- Добавили строковые данные. 
     SELECT Object_CarModel.ValueData AS CarModelName,
+           Object_Car.Id             AS CarId,  
            Object_Car.ObjectCode     AS CarCode,  
            Object_Car.ValueData      AS CarName,
            Object_Fuel.ObjectCode    AS FuelCode,
@@ -134,6 +135,7 @@ ALTER FUNCTION gpReport_Fuel (TDateTime, TDateTime, Integer, Integer, TVarChar) 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.11.13                                        * restore CarId
  28.11.13                                        * add CarModelName
  14.11.13                        * add Денежные Средства
  11.11.13                        * 
