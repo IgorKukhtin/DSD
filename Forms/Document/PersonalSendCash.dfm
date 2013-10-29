@@ -27,7 +27,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
     BevelOuter = bvNone
     TabOrder = 0
     object edInvNumber: TcxTextEdit
-      Left = 144
+      Left = 172
       Top = 23
       Enabled = False
       Properties.ReadOnly = True
@@ -35,12 +35,12 @@ object PersonalSendCashForm: TPersonalSendCashForm
       Width = 121
     end
     object cxLabel1: TcxLabel
-      Left = 146
+      Left = 174
       Top = 5
       Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
     object edOperDate: TcxDateEdit
-      Left = 278
+      Left = 306
       Top = 23
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -48,41 +48,53 @@ object PersonalSendCashForm: TPersonalSendCashForm
       Width = 121
     end
     object cxLabel2: TcxLabel
-      Left = 278
+      Left = 306
       Top = 5
       Caption = #1044#1072#1090#1072
     end
     object edPersonal: TcxButtonEdit
-      Left = 424
+      Left = 439
       Top = 23
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 2
       Width = 150
     end
     object cxLabel3: TcxLabel
-      Left = 424
+      Left = 439
       Top = 5
       Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1054#1090' '#1082#1086#1075#1086')'
-    end
-    object ceStatus: TcxButtonEdit
-      Left = 8
-      Top = 23
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      TabOrder = 6
-      Width = 125
     end
     object cxLabel4: TcxLabel
       Left = 8
       Top = 5
       Caption = #1057#1090#1072#1090#1091#1089
+    end
+    object ceStatus: TcxButtonEdit
+      Left = 9
+      Top = 23
+      Properties.Buttons = <
+        item
+          Action = CompleteMovement
+          Kind = bkGlyph
+        end
+        item
+          Action = UnCompleteMovement
+          Default = True
+          Kind = bkGlyph
+        end
+        item
+          Action = DeleteMovement
+          Kind = bkGlyph
+        end>
+      Properties.Images = dmMain.ImageList
+      Properties.ReadOnly = True
+      TabOrder = 7
+      Width = 152
     end
   end
   object cxPageControl: TcxPageControl
@@ -516,8 +528,8 @@ object PersonalSendCashForm: TPersonalSendCashForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -741,12 +753,13 @@ object PersonalSendCashForm: TPersonalSendCashForm
           StoredProc = spSelectMI
         end
         item
-          StoredProc = spSelectMovementContainerItem
+          StoredProc = spSelectMIContainer
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -901,6 +914,54 @@ object PersonalSendCashForm: TPersonalSendCashForm
         end>
       isShowModal = True
     end
+    object UnCompleteMovement: TChangeGuidesStatus
+      Category = 'DSDLib'
+      StoredProc = StatusStoredProc
+      StoredProcList = <
+        item
+          StoredProc = StatusStoredProc
+        end
+        item
+          StoredProc = spSelectMIContainer
+        end>
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 11
+      Status = mtUncomplete
+      Guides = StatusGuides
+    end
+    object CompleteMovement: TChangeGuidesStatus
+      Category = 'DSDLib'
+      StoredProc = StatusStoredProc
+      StoredProcList = <
+        item
+          StoredProc = StatusStoredProc
+        end
+        item
+          StoredProc = spSelectMIContainer
+        end>
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 12
+      Status = mtComplete
+      Guides = StatusGuides
+    end
+    object DeleteMovement: TChangeGuidesStatus
+      Category = 'DSDLib'
+      StoredProc = StatusStoredProc
+      StoredProcList = <
+        item
+          StoredProc = StatusStoredProc
+        end
+        item
+          StoredProc = spSelectMIContainer
+        end>
+      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      ImageIndex = 13
+      Status = mtDelete
+      Guides = StatusGuides
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -946,7 +1007,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
       Action = actRefresh
     end
   end
-  object spSelectMovementContainerItem: TdsdStoredProc
+  object spSelectMIContainer: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItemContainer_Movement'
     DataSet = EntryCDS
     DataSets = <
@@ -1182,14 +1243,14 @@ object PersonalSendCashForm: TPersonalSendCashForm
       item
         Name = 'StatusCode'
         Value = ''
-        Component = ChangeStatus
+        Component = StatusGuides
         ComponentItem = 'Key'
         DataType = ftString
       end
       item
         Name = 'StatusName'
         Value = ''
-        Component = ChangeStatus
+        Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
@@ -1224,7 +1285,6 @@ object PersonalSendCashForm: TPersonalSendCashForm
   end
   object ChangeStatus: TChangeStatus
     KeyField = 'Code'
-    LookupControl = ceStatus
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
@@ -1285,5 +1345,35 @@ object PersonalSendCashForm: TPersonalSendCashForm
       end>
     Left = 630
     Top = 224
+  end
+  object StatusGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceStatus
+    PositionDataSet = 'ClientDataSet'
+    Params = <>
+    Left = 52
+    Top = 8
+  end
+  object StatusStoredProc: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Status_PersonalSendCash'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'StatusCode'
+        Value = ''
+        Component = StatusGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    Left = 76
+    Top = 8
   end
 end

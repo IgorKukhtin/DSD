@@ -1,20 +1,21 @@
-п»ї-- Function: gpSelect_Object_ProfitLoss(TVarChar)
+-- Function: gpSelect_Object_ProfitLoss(TVarChar)
 
---DROP FUNCTION gpSelect_Object_ProfitLoss(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ProfitLoss (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ProfitLoss(
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                ProfitLossGroupId Integer, ProfitLossGroupCode Integer, ProfitLossGroupName TVarChar, 
-               ProfitLossDirectionId Integer, ProfitLossDirectionCode Integer, ProfitLossDirectionName TVarChar,
-               InfoMoneyGroupId Integer, InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar,
-               InfoMoneyDestinationId Integer, InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar, 
-               InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, 
-               onComplete boolean, isErased boolean) AS
-$BODY$BEGIN
+               ProfitLossDirectionId Integer, ProfitLossDirectionCode Integer, ProfitLossDirectionName TVarChar
+             , InfoMoneyCode Integer, InfoMoneyDestinationCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+             , onComplete Boolean, isErased Boolean
+              )
+AS
+$BODY$
+BEGIN
 
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_ProfitLoss());
    
      RETURN QUERY 
@@ -31,17 +32,13 @@ $BODY$BEGIN
            , Object_ProfitLossDirection.ObjectCode  AS ProfitLossDirectionCode
            , Object_ProfitLossDirection.ValueData   AS ProfitLossDirectionName
 
-           , COALESCE (lfObject_InfoMoneyDestination.InfoMoneyGroupId, lfObject_InfoMoney.InfoMoneyGroupId)     AS InfoMoneyGroupId
-           , COALESCE (lfObject_InfoMoneyDestination.InfoMoneyGroupCode, lfObject_InfoMoney.InfoMoneyGroupCode) AS InfoMoneyGroupCode
-           , COALESCE (lfObject_InfoMoneyDestination.InfoMoneyGroupName, lfObject_InfoMoney.InfoMoneyGroupName) AS InfoMoneyGroupName
-
-           , COALESCE (lfObject_InfoMoneyDestination.InfoMoneyDestinationId, lfObject_InfoMoney.InfoMoneyDestinationId)     AS InfoMoneyDestinationId
-           , COALESCE (lfObject_InfoMoneyDestination.InfoMoneyDestinationCode, lfObject_InfoMoney.InfoMoneyDestinationCode) AS InfoMoneyDestinationCode
-           , COALESCE (lfObject_InfoMoneyDestination.InfoMoneyDestinationName, lfObject_InfoMoney.InfoMoneyDestinationName) AS InfoMoneyDestinationName
-
-           , lfObject_InfoMoney.InfoMoneyId     AS InfoMoneyId
-           , lfObject_InfoMoney.InfoMoneyCode   AS InfoMoneyCode
-           , lfObject_InfoMoney.InfoMoneyName   AS InfoMoneyName
+           , Object_InfoMoney_View.InfoMoneyCode
+           , COALESCE (Object_InfoMoneyDestination_View.InfoMoneyDestinationCode, Object_InfoMoney_View.InfoMoneyDestinationCode) AS InfoMoneyDestinationCode
+           , COALESCE (Object_InfoMoneyDestination_View.InfoMoneyGroupName, Object_InfoMoney_View.InfoMoneyGroupName) AS InfoMoneyGroupName
+           , COALESCE (Object_InfoMoneyDestination_View.InfoMoneyDestinationName, Object_InfoMoney_View.InfoMoneyDestinationName) AS InfoMoneyDestinationName
+           , Object_InfoMoney_View.InfoMoneyName
+           , COALESCE (Object_InfoMoneyDestination_View.InfoMoneyDestinationId, Object_InfoMoney_View.InfoMoneyDestinationId) AS InfoMoneyDestinationId
+           , Object_InfoMoney_View.InfoMoneyId
            
            , ObjectBoolean_onComplete.ValueData AS onComplete
            , Object_ProfitLoss.isErased          AS isErased
@@ -64,8 +61,9 @@ $BODY$BEGIN
                      ON ObjectLink_ProfitLoss_InfoMoney.ObjectId = Object_ProfitLoss.Id
                     AND ObjectLink_ProfitLoss_InfoMoney.DescId = zc_ObjectLink_ProfitLoss_InfoMoney()
             
-            LEFT JOIN lfSelect_Object_InfoMoneyDestination() AS lfObject_InfoMoneyDestination ON lfObject_InfoMoneyDestination.InfoMoneyDestinationId = ObjectLink_ProfitLoss_InfoMoneyDestination.ChildObjectId
-            LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ObjectLink_ProfitLoss_InfoMoneyDestination.ChildObjectId
+            LEFT JOIN Object_InfoMoneyDestination_View ON Object_InfoMoneyDestination_View.InfoMoneyDestinationId = ObjectLink_ProfitLoss_InfoMoneyDestination.ChildObjectId
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_ProfitLoss_InfoMoney.ChildObjectId
+                                           AND Object_InfoMoneyDestination_View.InfoMoneyDestinationId IS NULL
             
             LEFT JOIN ObjectBoolean AS ObjectBoolean_onComplete
                                     ON ObjectBoolean_onComplete.ObjectId = Object_ProfitLoss.Id 
@@ -75,21 +73,20 @@ $BODY$BEGIN
   
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_ProfitLoss (TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.10.13                                        * add Object_InfoMoney_View
  04.07.13          * + ObjectBoolean_onComplete               
  24.06.13                                         *  errors
- 21.06.13          * РїР»СЋСЃ РІСЃРµ РїРѕР»СЏ 
+ 21.06.13          * плюс все поля 
  18.06.13          *
- 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpSelect_Object_ProfitLoss('2')

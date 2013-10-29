@@ -16,9 +16,7 @@ RETURNS TABLE (InvNumberTransport Integer, OperDate TDateTime
              , FuelName TVarChar
              , DistanceFuel TFloat, RateFuelKindTax TFloat
              , StartOdometre TFloat, EndOdometre TFloat
---             , AmountCash_Start TFloat, AmountCash_In TFloat, AmountCash_Out TFloat, AmountCash_End TFloat
              , AmountFuel_Start TFloat, AmountFuel_In TFloat, AmountFuel_Out TFloat, AmountFuel_End TFloat
-             , AmountTicketFuel_Start TFloat, AmountTicketFuel_In TFloat, AmountTicketFuel_Out TFloat, AmountTicketFuel_End TFloat
              , ColdHour TFloat, ColdDistance TFloat
              , AmountFuel TFloat, AmountColdHour TFloat, AmountColdDistance TFloat
              , Amount_Distance_calc TFloat, Amount_ColdHour_calc TFloat, Amount_ColdDistance_calc TFloat
@@ -27,69 +25,38 @@ AS
 $BODY$
 BEGIN
 
-     -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Transport());
-/*
-     -- таблица - 
-RETURN QUERY 
-       SELECT cast ('01.01.2013' as TDateTime) 
-            , cast (1 as integer) as  RouteId, cast (1 as integer) as RouteCode, cast ('Маршрут' as TVarChar) as RouteName
-            , cast (1 as integer) as PersonalDriverId, cast (1 as integer) as PersonalDriverCode, cast('Водитель 111' as TVarChar) as PersonalDriverName
-            , cast (120 as Tfloat), cast (150 as Tfloat), cast (140 as Tfloat), cast (130 as Tfloat)
-            , cast (400 as Tfloat), cast (500 as Tfloat), cast (450 as Tfloat), cast (480 as Tfloat) 
-            , cast (450 as Tfloat), cast (480 as Tfloat) 
-            , cast ('InvNumberPersonalSendCash' as TVarChar) asInvNumberPersonalSendCash
-            , cast (120 as Tfloat), cast (120 as Tfloat), cast (120 as Tfloat)
-            , cast ('invNumberIncome' as TVarChar)
-            , cast (120 as Tfloat), cast (120 as Tfloat)
-*/
+      -- проверка прав пользователя на вызов процедуры
+      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Transport());
 
 
       RETURN QUERY 
-          -- Получили все Путевые листы
-     WITH tmpTransport AS (SELECT Movement.Id AS MovementId
-                                , Movement.InvNumber
-                                , Movement.OperDate
-                                , MovementLinkObject_Car.ObjectId AS CarId
-                                , MovementLinkObject_PersonalDriver.ObjectId AS PersonalDriverId
-                           FROM Movement
-                                LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
-                                                             ON MovementLinkObject_Car.MovementId = Movement.Id
-                                                            AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
-                                LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
-                                                             ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
-                                                            AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
-                           WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-                             AND Movement.DescId = zc_Movement_Transport()
-                             AND Movement.StatusId = zc_Enum_Status_Complete()
-                          )
-          -- Получили все Путевые листы по маршрутам
-       , tmpTransportRoute AS (SELECT Movement.Id AS MovementId
-                                    , Movement.InvNumber
-                                    , Movement.OperDate
-                                    , MovementLinkObject_Car.ObjectId AS CarId
-                                    , MovementLinkObject_PersonalDriver.ObjectId AS PersonalDriverId
-                                    , MovementItem.Id AS MovementItemId
-                                    , MovementItem.Amount AS DistanceFuelMaster
-                                    , MovementItem.ObjectId AS RouteId
-                                    , MILinkObject_RouteKind.ObjectId AS RouteKindId
-                               FROM Movement
-                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
-                                                                 ON MovementLinkObject_Car.MovementId = Movement.Id
-                                                                AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
-                                    LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
-                                                                 ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
-                                                                AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
-                                    LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                          AND MovementItem.DescId     = zc_MI_Master()
-                                                          AND MovementItem.isErased   = FALSE
-                                    LEFT JOIN MovementItemLinkObject AS MILinkObject_RouteKind
-                                                                     ON MILinkObject_RouteKind.MovementItemId = MovementItem.Id
-                                                                    AND MILinkObject_RouteKind.DescId = zc_MILinkObject_RouteKind()
-                               WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
-                                 AND Movement.DescId = zc_Movement_Transport()
-                                 AND Movement.StatusId = zc_Enum_Status_Complete()
-                              )
+           -- Получили все Путевые листы по маршрутам
+      WITH tmpTransport AS (SELECT Movement.Id AS MovementId
+                                 , Movement.InvNumber
+                                 , Movement.OperDate
+                                 , MovementLinkObject_Car.ObjectId AS CarId
+                                 , MovementLinkObject_PersonalDriver.ObjectId AS PersonalDriverId
+                                 , MovementItem.Id AS MovementItemId
+                                 , MovementItem.Amount AS DistanceFuelMaster
+                                 , MovementItem.ObjectId AS RouteId
+                                 , MILinkObject_RouteKind.ObjectId AS RouteKindId
+                            FROM Movement
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
+                                                              ON MovementLinkObject_Car.MovementId = Movement.Id
+                                                             AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
+                                 LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
+                                                              ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
+                                                             AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
+                                 LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                                       AND MovementItem.DescId     = zc_MI_Master()
+                                                       AND MovementItem.isErased   = FALSE
+                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_RouteKind
+                                                                  ON MILinkObject_RouteKind.MovementItemId = MovementItem.Id
+                                                                 AND MILinkObject_RouteKind.DescId = zc_MILinkObject_RouteKind()
+                            WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
+                              AND Movement.DescId = zc_Movement_Transport()
+                              AND Movement.StatusId = zc_Enum_Status_Complete()
+                           )
 
         SELECT zfConvert_StringToNumber (tmpFuel.InvNumber) AS InvNumberTransport
              , tmpFuel.OperDate
@@ -112,11 +79,6 @@ RETURN QUERY
              , SUM (tmpFuel.AmountFuel_Out)          :: TFloat AS AmountFuel_Out
              , SUM (tmpFuel.AmountFuel_Start + tmpFuel.AmountFuel_In - tmpFuel.AmountFuel_Out) :: TFloat AS AmountFuel_End
 
-             , SUM (tmpFuel.AmountTicketFuel_Start)        :: TFloat AS AmountTicketFuel_Start
-             , SUM (tmpFuel.AmountTicketFuel_In)           :: TFloat AS AmountTicketFuel_In
-             , SUM (tmpFuel.AmountTicketFuel_Out)          :: TFloat AS AmountTicketFuel_Out
-             , SUM (tmpFuel.AmountTicketFuel_Start + tmpFuel.AmountTicketFuel_In - tmpFuel.AmountTicketFuel_Out) :: TFloat AS AmountTicketFuel_End
-
              , SUM (tmpFuel.ColdHour)     :: TFloat AS ColdHour
              , SUM (tmpFuel.ColdDistance) :: TFloat AS ColdDistance
 
@@ -137,7 +99,7 @@ RETURN QUERY
                    , MAX (tmpAll.RouteId)         AS RouteId
                    , MAX (tmpAll.RouteKindId)     AS RouteKindId
                    , MAX (tmpAll.RateFuelKindId)  AS RateFuelKindId
-                   , MAX (tmpAll.FuelId)          AS FuelId
+                   , (tmpAll.FuelId)          AS FuelId
 
                    , SUM (tmpAll.DistanceFuel)    AS DistanceFuel
                    , MAX (tmpAll.RateFuelKindTax) AS RateFuelKindTax
@@ -149,11 +111,6 @@ RETURN QUERY
                    , SUM (tmpAll.AmountFuel_In)    AS AmountFuel_In
                    , SUM (tmpAll.AmountFuel_Out)   AS AmountFuel_Out
                    , SUM (tmpAll.AmountFuel_Start + tmpAll.AmountFuel_In - tmpAll.AmountFuel_Out) AS AmountFuel_End
-
-                   , SUM (tmpAll.AmountTicketFuel_Start) AS AmountTicketFuel_Start
-                   , SUM (tmpAll.AmountTicketFuel_In)    AS AmountTicketFuel_In
-                   , SUM (tmpAll.AmountTicketFuel_Out)   AS AmountTicketFuel_Out
-                   , SUM (tmpAll.AmountTicketFuel_Start + tmpAll.AmountTicketFuel_In - tmpAll.AmountTicketFuel_Out) AS AmountTicketFuel_End
 
                    , SUM (tmpAll.ColdHour)     AS ColdHour
                    , SUM (tmpAll.ColdDistance) AS ColdDistance
@@ -167,13 +124,13 @@ RETURN QUERY
                    , SUM (tmpAll.Amount_ColdDistance_calc) AS Amount_ColdDistance_calc
               FROM
               -- 1. Маршруты
-             (SELECT tmpTransportRoute.MovementId
-                   , tmpTransportRoute.InvNumber
-                   , tmpTransportRoute.OperDate
-                   , tmpTransportRoute.CarId
-                   , tmpTransportRoute.PersonalDriverId
-                   , tmpTransportRoute.RouteId
-                   , tmpTransportRoute.RouteKindId
+             (/*SELECT tmpTransport.MovementId
+                   , tmpTransport.InvNumber
+                   , tmpTransport.OperDate
+                   , tmpTransport.CarId
+                   , tmpTransport.PersonalDriverId
+                   , tmpTransport.RouteId
+                   , tmpTransport.RouteKindId
                    , 0 AS RateFuelKindId
                    , 0 AS FuelId
 
@@ -186,10 +143,6 @@ RETURN QUERY
                    , 0 AS AmountFuel_In
                    , 0 AS AmountFuel_Out
 
-                   , 0 AS AmountTicketFuel_Start
-                   , 0 AS AmountTicketFuel_In
-                   , 0 AS AmountTicketFuel_Out
-
                    , 0 AS ColdHour
                    , 0 AS ColdDistance
 
@@ -201,37 +154,37 @@ RETURN QUERY
                    , 0 AS Amount_ColdHour_calc
                    , 0 AS Amount_ColdDistance_calc
 
-              FROM tmpTransportRoute
+              FROM tmpTransport
                    LEFT JOIN MovementItemFloat AS MIFloat_StartOdometre
-                                               ON MIFloat_StartOdometre.MovementItemId = tmpTransportRoute.MovementItemId
+                                               ON MIFloat_StartOdometre.MovementItemId = tmpTransport.MovementItemId
                                               AND MIFloat_StartOdometre.DescId = zc_MIFloat_StartOdometre()
                    LEFT JOIN MovementItemFloat AS MIFloat_EndOdometre
-                                               ON MIFloat_EndOdometre.MovementItemId = tmpTransportRoute.MovementItemId
+                                               ON MIFloat_EndOdometre.MovementItemId = tmpTransport.MovementItemId
                                               AND MIFloat_EndOdometre.DescId = zc_MIFloat_EndOdometre()
-             UNION ALL
+             UNION ALL*/
               -- 2.1. Начальный остаток (!!!расчетный!!!) + Расход топлива
-              SELECT tmpTransportRoute.MovementId
-                   , tmpTransportRoute.InvNumber
-                   , tmpTransportRoute.OperDate
-                   , tmpTransportRoute.CarId
-                   , tmpTransportRoute.PersonalDriverId
-                   , tmpTransportRoute.RouteId
-                   , tmpTransportRoute.RouteKindId
+              SELECT tmpTransport.MovementId
+                   , tmpTransport.InvNumber
+                   , tmpTransport.OperDate
+                   , tmpTransport.CarId
+                   , tmpTransport.PersonalDriverId
+                   , tmpTransport.RouteId
+                   , tmpTransport.RouteKindId
                    , MILinkObject_RateFuelKind.ObjectId AS RateFuelKindId
                    , COALESCE (Container.ObjectId, MI.ObjectId) AS FuelId
 
-                   , CASE WHEN COALESCE (MIBoolean_MasterFuel.ValueData, FALSE) = TRUE THEN tmpTransportRoute.DistanceFuelMaster ELSE COALESCE (MIFloat_DistanceFuelChild.ValueData) END AS DistanceFuel
+                   , CASE WHEN COALESCE (MIBoolean_MasterFuel.ValueData, FALSE) = TRUE THEN tmpTransport.DistanceFuelMaster ELSE COALESCE (MIFloat_DistanceFuelChild.ValueData) END AS DistanceFuel
                    , COALESCE (MIFloat_RateFuelKindTax.ValueData, 0)  AS RateFuelKindTax
 
-                   , 0 AS StartOdometre
-                   , 0 AS EndOdometre
+--                   , 0 AS StartOdometre
+--                   , 0 AS EndOdometre
+
+                   , COALESCE (MIFloat_StartOdometre.ValueData, 0) AS StartOdometre
+                   , COALESCE (MIFloat_EndOdometre.ValueData, 0)   AS EndOdometre
+
                    , COALESCE (MIFloat_StartAmountFuel.ValueData, 0) AS AmountFuel_Start
                    , 0 AS AmountFuel_In
                    , -1 * COALESCE (MIContainer.Amount, 0) AS AmountFuel_Out
-
-                   , 0 AS AmountTicketFuel_Start
-                   , 0 AS AmountTicketFuel_In
-                   , 0 AS AmountTicketFuel_Out
 
                    , COALESCE (MIFloat_ColdHour.ValueData, 0)     AS ColdHour
                    , COALESCE (MIFloat_ColdDistance.ValueData, 0) AS ColdDistance
@@ -240,7 +193,7 @@ RETURN QUERY
                    , COALESCE (MIFloat_AmountColdHour.ValueData, 0)     AS AmountColdHour
                    , COALESCE (MIFloat_AmountColdDistance.ValueData, 0) AS AmountColdDistance
 
-                   , zfCalc_RateFuelValue_Distance     (inDistance           := CASE WHEN COALESCE (MIBoolean_MasterFuel.ValueData, FALSE) = TRUE  THEN tmpTransportRoute.DistanceFuelMaster     -- если "Основной" вид топлива
+                   , zfCalc_RateFuelValue_Distance     (inDistance           := CASE WHEN COALESCE (MIBoolean_MasterFuel.ValueData, FALSE) = TRUE  THEN tmpTransport.DistanceFuelMaster     -- если "Основной" вид топлива
                                                                                      WHEN COALESCE (MIBoolean_MasterFuel.ValueData, FALSE) = FALSE THEN MIFloat_DistanceFuelChild.ValueData -- если "Дополнительный" вид топлива
                                                                                      ELSE 0
                                                                                 END
@@ -258,8 +211,16 @@ RETURN QUERY
                                                       , inFuel_Ratio         := 1 -- !!!Коэффициент перевода нормы уже учтен!!!
                                                       , inRateFuelKindTax    := 0 -- !!!% дополнительного расхода в связи с сезоном/температурой уже учтен!!!
                                                        ) AS Amount_ColdDistance_calc
-              FROM tmpTransportRoute
-                   JOIN MovementItem AS MI ON MI.ParentId = tmpTransportRoute.MovementItemId
+              FROM tmpTransport
+                   LEFT JOIN MovementItemFloat AS MIFloat_StartOdometre
+                                               ON MIFloat_StartOdometre.MovementItemId = tmpTransport.MovementItemId
+                                              AND MIFloat_StartOdometre.DescId = zc_MIFloat_StartOdometre()
+                   LEFT JOIN MovementItemFloat AS MIFloat_EndOdometre
+                                               ON MIFloat_EndOdometre.MovementItemId = tmpTransport.MovementItemId
+                                              AND MIFloat_EndOdometre.DescId = zc_MIFloat_EndOdometre()
+
+
+                   JOIN MovementItem AS MI ON MI.ParentId = tmpTransport.MovementItemId
                                           AND MI.DescId   = zc_MI_Child()
                    LEFT JOIN MovementItemContainer AS MIContainer
                                                    ON MIContainer.MovementItemId = MI.Id
@@ -299,7 +260,7 @@ RETURN QUERY
                                               AND MIFloat_RateFuelKindTax.DescId = zc_MIFloat_RateFuelKindTax()
 
                    LEFT JOIN MovementItemFloat AS MIFloat_DistanceFuelChild
-                                               ON MIFloat_DistanceFuelChild.MovementItemId = tmpTransportRoute.MovementItemId
+                                               ON MIFloat_DistanceFuelChild.MovementItemId = tmpTransport.MovementItemId
                                               AND MIFloat_DistanceFuelChild.DescId = zc_MIFloat_DistanceFuelChild()
 --              WHERE 
              UNION ALL
@@ -322,10 +283,6 @@ RETURN QUERY
                    , 0 AS AmountFuel_Start
                    , MIContainer.Amount AS AmountFuel_In
                    , 0 AS AmountFuel_Out
-
-                   , 0 AS AmountTicketFuel_Start
-                   , 0 AS AmountTicketFuel_In
-                   , 0 AS AmountTicketFuel_Out
 
                    , 0 AS ColdHour
                    , 0 AS ColdDistance
@@ -362,52 +319,13 @@ RETURN QUERY
                 AND Movement.DescId = zc_Movement_Income()
                 AND Movement.StatusId = zc_Enum_Status_Complete()
 
-             UNION ALL
-              -- 3.1. Талоны - остаток
-              SELECT tmpTransport.MovementId
-                   , tmpTransport.InvNumber
-                   , tmpTransport.OperDate
-                   , tmpTransport.CarId
-                   , tmpTransport.PersonalDriverId
-                   , 0 AS RouteId
-                   , 0 AS RouteKindId
-                   , 0 AS RateFuelKindId
-                   , 0 AS FuelId
-
-                   , 0 AS DistanceFuel
-                   , 0 AS RateFuelKindTax
-
-                   , 0 AS StartOdometre
-                   , 0 AS EndOdometre
-                   , 0 AS AmountFuel_Start
-                   , 0 AS AmountFuel_In
-                   , 0 AS AmountFuel_Out
-
-                   , COALESCE (MFloat_StartAmountTicketFuel.ValueData, 0) AS AmountTicketFuel_Start
-                   , 0 AS AmountTicketFuel_In
-                   , 0 AS AmountTicketFuel_Out
-
-                   , 0 AS ColdHour
-                   , 0 AS ColdDistance
-
-                   , 0 AS AmountFuel
-                   , 0 AS AmountColdHour
-                   , 0 AS AmountColdDistance
-
-                   , 0 AS Amount_Distance_calc
-                   , 0 AS Amount_ColdHour_calc
-                   , 0 AS Amount_ColdDistance_calc
-
-              FROM tmpTransport
-                   LEFT JOIN MovementFloat AS MFloat_StartAmountTicketFuel
-                                           ON MFloat_StartAmountTicketFuel.MovementId = tmpTransport.MovementId
-                                          AND MFloat_StartAmountTicketFuel.DescId = zc_MovementFloat_StartAmountTicketFuel()
              ) AS tmpAll
               GROUP BY tmpAll.MovementId
                      , tmpAll.InvNumber
                      , tmpAll.OperDate
                      , tmpAll.CarId
                      , tmpAll.PersonalDriverId
+                     , tmpAll.FuelId
 
              ) AS tmpFuel
              LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpFuel.CarId
@@ -448,4 +366,4 @@ ALTER FUNCTION gpReport_Transport (TDateTime, TDateTime, Integer, TVarChar) OWNE
 */
 
 -- тест
--- SELECT * FROM gpReport_Transport (inStartDate:= '01.10.2013', inEndDate:= '31.10.2013', inCarId:= null, inSession:= '2');
+-- SELECT * FROM gpReport_Transport (inStartDate:= '01.10.2013', inEndDate:= '31.10.2013', inCarId:= null, inSession:= zfCalc_UserAdmin());

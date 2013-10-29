@@ -59,6 +59,7 @@ type
     clErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    clInfoMoneyGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public

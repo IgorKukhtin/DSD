@@ -14,7 +14,7 @@ $BODY$
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Complete_Movement_Transport());
+     -- vbUserId:= PERFORM lpCheckRight (inSession, zc_Enum_Process_CompletePeriod_Transport());
      vbUserId:=2; -- CAST (inSession AS Integer);
 
 
@@ -53,10 +53,9 @@ BEGIN
 
 
      -- !!!Проводим Документы!!!
-     PERFORM lpComplete_Movement_Transport (inMovementId := _tmpMovement.MovementId
+     PERFORM lpComplete_Movement_Transport (inMovementId := tmp.MovementId
                                           , inUserId     := vbUserId)
-     FROM _tmpMovement
-     ORDER BY _tmpMovement.OperDate, _tmpMovement.MovementId;
+     FROM (SELECT _tmpMovement.MovementId FROM _tmpMovement ORDER BY _tmpMovement.OperDate, _tmpMovement.MovementId) AS tmp;
 
 
 END;

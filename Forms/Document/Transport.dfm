@@ -59,6 +59,7 @@
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 12
       Width = 150
     end
@@ -70,6 +71,7 @@
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 2
       Width = 100
     end
@@ -91,13 +93,14 @@
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 3
       Width = 119
     end
     object cxLabel5: TcxLabel
       Left = 182
       Top = 45
-      Caption = #1042#1086#1076#1080#1090#1077#1083#1100
+      Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
     end
     object edPersonalDriverMore: TcxButtonEdit
       Left = 691
@@ -107,6 +110,7 @@
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 11
       Width = 147
     end
@@ -123,6 +127,7 @@
           Default = True
           Kind = bkEllipsis
         end>
+      Properties.ReadOnly = True
       TabOrder = 10
       Width = 147
     end
@@ -250,6 +255,7 @@
           Kind = bkGlyph
         end>
       Properties.Images = dmMain.ImageList
+      Properties.ReadOnly = True
       TabOrder = 28
       Width = 152
     end
@@ -1930,6 +1936,15 @@
       StoredProcList = <
         item
           StoredProc = spMovementUnCompleteIncome
+        end
+        item
+          StoredProc = spSelectMIIncome
+        end
+        item
+          StoredProc = spSelectMiReport
+        end
+        item
+          StoredProc = spSelectMIContainer
         end>
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
@@ -1944,6 +1959,15 @@
       StoredProcList = <
         item
           StoredProc = spMovementCompleteIncome
+        end
+        item
+          StoredProc = spSelectMIIncome
+        end
+        item
+          StoredProc = spSelectMiReport
+        end
+        item
+          StoredProc = spSelectMIContainer
         end>
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
@@ -1958,6 +1982,15 @@
       StoredProcList = <
         item
           StoredProc = spMovementSetErasedIncome
+        end
+        item
+          StoredProc = spSelectMIIncome
+        end
+        item
+          StoredProc = spSelectMiReport
+        end
+        item
+          StoredProc = spSelectMIContainer
         end>
       Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
@@ -1974,6 +2007,9 @@
         end
         item
           StoredProc = spSelectMIContainer
+        end
+        item
+          StoredProc = spSelectMiReport
         end>
       Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
@@ -1990,6 +2026,9 @@
         end
         item
           StoredProc = spSelectMIContainer
+        end
+        item
+          StoredProc = spSelectMiReport
         end>
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
@@ -2006,6 +2045,9 @@
         end
         item
           StoredProc = spSelectMIContainer
+        end
+        item
+          StoredProc = spSelectMiReport
         end>
       Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
@@ -2022,9 +2064,7 @@
           StoredProc = spSelectMiReport
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1086#1090#1095#1077#1090#1072
-      ImageIndex = 28
-      ShortCut = 116
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       RefreshOnTabSetChanges = True
     end
   end

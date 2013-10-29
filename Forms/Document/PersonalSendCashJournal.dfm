@@ -57,8 +57,6 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 67
-    ExplicitHeight = 360
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -356,6 +354,10 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
       Action = dsdGridToExcel
       Category = 0
     end
+    object bbReCompleteAll: TdxBarButton
+      Action = actReCompleteAll
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -451,6 +453,17 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
+    end
+    object actReCompleteAll: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = spMovementReCompleteAll
+      StoredProcList = <
+        item
+          StoredProc = spMovementReCompleteAll
+        end>
+      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      ImageIndex = 10
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -570,5 +583,27 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 240
     Top = 168
+  end
+  object spMovementReCompleteAll: TdsdStoredProc
+    StoredProcName = 'gpCompletePeriod_Movement_PersonalSendCash'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41275d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndtDate'
+        Value = 41639d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
+    Left = 240
+    Top = 288
   end
 end

@@ -59,11 +59,14 @@ type
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
     cxLabel2: TcxLabel;
-    InfoManeyCode: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
     InfoMoneyGroupName: TcxGridDBColumn;
     InfoMoneyDestinationName: TcxGridDBColumn;
     InfoManeyName: TcxGridDBColumn;
     AccountGuides: TdsdGuides;
+    cxLabel1: TcxLabel;
+    cxLabel3: TcxLabel;
+    CarModelName: TcxGridDBColumn;
   private
   public
   end;

@@ -259,7 +259,7 @@ object Report_FuelForm: TReport_FuelForm
         Width = 40
       end
       object FuelName: TcxGridDBColumn
-        Caption = #1058#1086#1087#1083#1080#1074#1086
+        Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
         DataBinding.FieldName = 'FuelName'
         HeaderAlignmentVert = vaCenter
         Width = 70

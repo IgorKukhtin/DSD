@@ -18,11 +18,13 @@ object Report_AccountForm: TReport_AccountForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 113
+    Top = 57
     Width = 1189
-    Height = 282
+    Height = 338
     Align = alClient
     TabOrder = 0
+    ExplicitTop = 113
+    ExplicitHeight = 282
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -60,66 +62,66 @@ object Report_AccountForm: TReport_AccountForm
         end
         item
           Format = ',0.00'
+          Kind = skSum
           Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Position = spFooter
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
           Column = StartSumm
         end
         item
           Format = ',0.00'
           Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.00'
-          Position = spFooter
           Column = InSumm
         end
         item
           Format = ',0.00'
           Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.00'
-          Position = spFooter
-          Column = EndSumm
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Format = ',0.00'
-          Position = spFooter
-        end
-        item
-          Format = ',0.00'
-          Position = spFooter
-        end
-        item
-          Format = ',0.00'
-          Position = spFooter
           Column = OutSumm
+        end
+        item
+          Format = ',0.00'
+          Kind = skSum
+          Column = EndSumm
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -211,64 +213,73 @@ object Report_AccountForm: TReport_AccountForm
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
-      OptionsView.GroupFooters = gfAlwaysVisible
+      OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object PersonalCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'PersonalCode'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 32
       end
       object PersonalName: TcxGridDBColumn
-        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
+        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
         DataBinding.FieldName = 'PersonalName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 108
       end
-      object InfoManeyCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1089#1090#1072#1090#1100#1080
-        DataBinding.FieldName = 'InfoManeyCode'
+      object InfoMoneyCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1059#1055' '#1089#1090'. '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 64
+        Width = 70
       end
       object InfoMoneyGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1080#1089#1082#1080#1093' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1081
+        Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyGroupName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 175
-      end
-      object InfoManeyName: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1100#1103
-        DataBinding.FieldName = 'InfoManeyName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 119
+        Width = 100
       end
       object InfoMoneyDestinationName: TcxGridDBColumn
-        Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'InfoMoneyDestinationName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 161
+        Width = 100
       end
-      object CarCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'CarCode'
+      object InfoManeyName: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoManeyName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 44
+        Width = 100
+      end
+      object CarModelName: TcxGridDBColumn
+        Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+        DataBinding.FieldName = 'CarModelName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object CarCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+        DataBinding.FieldName = 'CarCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 55
       end
       object CarName: TcxGridDBColumn
         Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
@@ -276,7 +287,7 @@ object Report_AccountForm: TReport_AccountForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 124
+        Width = 100
       end
       object StartSumm: TcxGridDBColumn
         Caption = #1053#1072#1095'. '#1086#1089#1090'.  '#1089#1091#1084#1084#1072
@@ -327,40 +338,50 @@ object Report_AccountForm: TReport_AccountForm
     Left = 0
     Top = 26
     Width = 1189
-    Height = 87
+    Height = 31
     Align = alTop
     TabOrder = 5
     object deStart: TcxDateEdit
-      Left = 16
-      Top = 8
+      Left = 101
+      Top = 5
       EditValue = 41548d
       Properties.ShowTime = False
       TabOrder = 0
-      Width = 121
+      Width = 85
     end
     object deEnd: TcxDateEdit
-      Left = 176
-      Top = 8
+      Left = 310
+      Top = 5
       EditValue = 41557d
       Properties.ShowTime = False
       TabOrder = 1
-      Width = 121
+      Width = 85
     end
     object cxLabel2: TcxLabel
-      Left = 373
-      Top = 9
-      Caption = #1057#1095#1077#1090
+      Left = 409
+      Top = 6
+      Caption = #1057#1095#1077#1090':'
     end
     object edAccount: TcxButtonEdit
-      Left = 400
-      Top = 8
+      Left = 442
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 3
-      Width = 233
+      Width = 200
+    end
+    object cxLabel1: TcxLabel
+      Left = 10
+      Top = 6
+      Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
+    end
+    object cxLabel3: TcxLabel
+      Left = 200
+      Top = 6
+      Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
   end
   object DataSource: TDataSource
@@ -542,8 +563,8 @@ object Report_AccountForm: TReport_AccountForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

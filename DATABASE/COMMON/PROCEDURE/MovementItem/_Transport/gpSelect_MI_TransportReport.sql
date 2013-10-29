@@ -352,4 +352,4 @@ ALTER FUNCTION gpSelect_MI_TransportReport (Integer, Boolean, Boolean, TVarChar)
 */
 
 -- тест
--- SELECT * FROM gpSelect_MI_TransportReport (inMovementId:= 492, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_MI_TransportReport (inMovementId:= 492, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())

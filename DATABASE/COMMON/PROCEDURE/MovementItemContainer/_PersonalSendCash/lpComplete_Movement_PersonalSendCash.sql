@@ -18,6 +18,12 @@ $BODY$
   DECLARE vbBusinessId Integer;
 BEGIN
 
+     -- !!!обязательно!!! очистили таблицу проводок
+     DELETE FROM _tmpMIContainer_insert;
+     -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     DELETE FROM _tmpItem;
+
+
      -- Эти параметры нужны для формирования Аналитик в проводках
      SELECT _tmp.OperDate
           , _tmp.PersonalId_From
@@ -49,17 +55,6 @@ BEGIN
              AND Movement.DescId = zc_Movement_PersonalSendCash()
           ) AS _tmp;
 
-
-     -- таблица - Проводки
-     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
-
-     -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItem (MovementItemId Integer, UnitId_ProfitLoss Integer
-                               , ContainerId_From Integer, AccountId_From Integer, ContainerId_To Integer, AccountId_To Integer, PersonalId_To Integer, CarId_To Integer
-                               , OperSumm TFloat
-                               , ProfitLossGroupId Integer, ProfitLossDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                               , BusinessId_Route Integer
-                                ) ON COMMIT DROP;
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementItemId, UnitId_ProfitLoss
@@ -350,6 +345,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.10.13                                        * add !!!обязательно!!! очистили таблицу...
  14.10.13                                        * add lpInsertUpdate_MovementItemLinkObject
  06.10.13                                        * add inUserId
  03.10.13                                        *
