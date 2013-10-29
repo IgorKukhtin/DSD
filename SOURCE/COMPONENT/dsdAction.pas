@@ -856,6 +856,7 @@ end;
 function TdsdChangeMovementStatus.Execute: boolean;
 var lDataSet: TDataSet;
 begin
+  result := inherited Execute;
   if result and Assigned(DataSource) and Assigned(DataSource.DataSet) then begin
      lDataSet := DataSource.DataSet;
      // Что бы не вызывались события после на Post
@@ -868,7 +869,6 @@ begin
        DataSource.DataSet := lDataSet;
      end;
   end;
-  result := inherited Execute;
 end;
 
 function TdsdChangeMovementStatus.GetDataSource: TDataSource;

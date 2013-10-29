@@ -15,17 +15,25 @@ RETURNS TABLE (CarModelName TVarChar, CarId Integer, CarCode Integer, CarName TV
              , StartSumm TFloat, IncomeSumm TFloat, RateSumm TFloat, EndSumm TFloat
              )
 AS
-$BODY$BEGIN
+$BODY$
+  DECLARE vb_Kind_Fuel integer;
+  DECLARE vb_Kind_Money integer;
+  DECLARE vb_Kind_Ticket integer;
+BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
+
+  vb_Kind_Fuel   := 1;
+  vb_Kind_Money  := 2;
+  vb_Kind_Ticket := 3;
 
      -- Один запрос, который считает остаток и движение. 
      -- Главная задача - выбор контейнера. Выбираем контейнеры по группе счетов 20400 для топлива и 30500 для денежных средств
   RETURN QUERY  
            -- Получили все нужные нам суммовые контейнеры по определенным счетам
            -- Еще и ограничили их по топливу и авто
-           WITH ContainerSumm AS (SELECT Id, ParentId, DescId, Amount  -- здесь топливо
+           WITH ContainerSumm AS (SELECT Id, ParentId, DescId, Amount, vb_Kind_Fuel as KindId -- здесь топливо
                                  FROM Container 
                                 WHERE Container.ObjectId IN
                                       -- Получили список счетов
@@ -41,7 +49,7 @@ $BODY$BEGIN
                                        WHERE DescId = zc_ContainerLinkObject_Car() AND ObjectId = inCarId)) OR inCarId = 0)
 
                                 UNION -- а ниже денежные средства
-                               SELECT Container.Id, Container.ParentId, Container.DescId, Container.Amount 
+                               SELECT Container.Id, Container.ParentId, Container.DescId, Container.Amount, vb_Kind_Money as KindId 
                                  FROM Container 
                                -- Ограничили по авто, если надо
                                JOIN  ContainerLinkObject 
@@ -53,12 +61,14 @@ $BODY$BEGIN
                                       (SELECT  AccountId FROM Object_account_view
                                          WHERE AccountDirectionId = zc_Enum_AccountDirection_30500()
                                            AND InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400())
+                               -- UNION -- а ниже ТАЛОНЫ!!!
+
                                     )
                -- Конец. Получили все нужные нам суммовые контейнеры
 
     -- Добавили строковые данные. 
     SELECT Object_CarModel.ValueData AS CarModelName,
-           Object_Car.Id             AS CarId,  
+           Object_Car.Id             AS CarId,
            Object_Car.ObjectCode     AS CarCode,  
            Object_Car.ValueData      AS CarName,
            Object_Fuel.ObjectCode    AS FuelCode,
@@ -94,7 +104,6 @@ $BODY$BEGIN
                      SUM (CASE WHEN MIContainer.OperDate < inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS IncomeAmount,
                      SUM (CASE WHEN MIContainer.OperDate < inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN - MIContainer.Amount ELSE 0 END ELSE 0 END) AS OutComeAmount,
                      ReportContainer.Amount - COALESCE(SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS EndAmount
-
               FROM
                     -- ReportContainer. Возвращаем список суммовых и количественных контейнеров по указанному в ContainerSumm счету
                     (SELECT Id, DescId, Amount, COALESCE(ParentId, Id) as KeyContainerId, 0 AS ObjectId 
@@ -104,7 +113,7 @@ $BODY$BEGIN
                      WHERE Container.Id = ContainerSumm.ParentId) AS ReportContainer
 
                  LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = ReportContainer.Id
-                                                               AND MIContainer.OperDate > inStartDate
+                                                               AND MIContainer.OperDate >= inStartDate
                 GROUP BY ReportContainer.Id, ReportContainer.DescId, ReportContainer.Amount, KeyContainerId, ObjectId) AS Report
                 -- Конец. Получаем оборотку по контейнерам.
 
@@ -135,7 +144,7 @@ ALTER FUNCTION gpReport_Fuel (TDateTime, TDateTime, Integer, Integer, TVarChar) 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 29.11.13                                        * restore CarId
+ 29.11.13                        * Ошибка с датой. Добавил талоны
  28.11.13                                        * add CarModelName
  14.11.13                        * add Денежные Средства
  11.11.13                        * 
