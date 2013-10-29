@@ -23,8 +23,6 @@ object Report_AccountForm: TReport_AccountForm
     Height = 338
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 113
-    ExplicitHeight = 282
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -257,9 +255,9 @@ object Report_AccountForm: TReport_AccountForm
         Options.Editing = False
         Width = 100
       end
-      object InfoManeyName: TcxGridDBColumn
+      object InfoMoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-        DataBinding.FieldName = 'InfoManeyName'
+        DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -493,54 +491,6 @@ object Report_AccountForm: TReport_AccountForm
           'TabOrder'
           'TabStop'
           'Tag'
-          'TextHint'
-          'Top'
-          'Touch'
-          'Visible'
-          'Width')
-      end
-      item
-        Component = edAccount
-        Properties.Strings = (
-          'Align'
-          'AlignWithMargins'
-          'Anchors'
-          'AutoSize'
-          'BeepOnEnter'
-          'Constraints'
-          'Cursor'
-          'CustomHint'
-          'DragCursor'
-          'DragKind'
-          'DragMode'
-          'Enabled'
-          'FakeStyleController'
-          'Height'
-          'HelpContext'
-          'HelpKeyword'
-          'HelpType'
-          'Hint'
-          'ImeMode'
-          'ImeName'
-          'Left'
-          'Margins'
-          'Name'
-          'ParentColor'
-          'ParentCustomHint'
-          'ParentFont'
-          'ParentShowHint'
-          'PopupMenu'
-          'Properties'
-          'RepositoryItem'
-          'ShowHint'
-          'Style'
-          'StyleDisabled'
-          'StyleFocused'
-          'StyleHot'
-          'TabOrder'
-          'TabStop'
-          'Tag'
-          'Text'
           'TextHint'
           'Top'
           'Touch'

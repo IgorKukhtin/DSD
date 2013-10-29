@@ -62,7 +62,7 @@ type
     InfoMoneyCode: TcxGridDBColumn;
     InfoMoneyGroupName: TcxGridDBColumn;
     InfoMoneyDestinationName: TcxGridDBColumn;
-    InfoManeyName: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
     AccountGuides: TdsdGuides;
     cxLabel1: TcxLabel;
     cxLabel3: TcxLabel;

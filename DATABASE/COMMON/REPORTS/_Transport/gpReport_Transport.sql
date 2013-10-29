@@ -353,8 +353,7 @@ BEGIN
 
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpReport_Transport (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
 
 
