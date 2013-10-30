@@ -93,7 +93,6 @@ object StaffListForm: TStaffListForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clFundPayMonth
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -142,17 +141,6 @@ object StaffListForm: TStaffListForm
         DataBinding.FieldName = 'PersonalCount'
         HeaderAlignmentVert = vaCenter
         Width = 61
-      end
-      object clFundPayMonth: TcxGridDBColumn
-        Caption = #1060#1086#1085#1076' '#1086#1087#1083#1072#1090#1099' ('#1079#1072' '#1084#1077#1089#1103#1094')'
-        DataBinding.FieldName = 'FundPayMonth'
-        HeaderAlignmentVert = vaCenter
-        Width = 99
-      end
-      object clFundPayTurn: TcxGridDBColumn
-        Caption = #1060#1086#1085#1076' '#1086#1087#1083#1072#1090#1099' ('#1079#1072' '#1076#1077#1085#1100')'
-        DataBinding.FieldName = 'FundPayTurn'
-        Width = 90
       end
       object clComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
@@ -403,6 +391,7 @@ object StaffListForm: TStaffListForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'

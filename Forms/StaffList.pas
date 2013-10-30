@@ -59,8 +59,6 @@ type
     clPositionLevelName: TcxGridDBColumn;
     clHoursPlan: TcxGridDBColumn;
     clPersonalCount: TcxGridDBColumn;
-    clFundPayMonth: TcxGridDBColumn;
-    clFundPayTurn: TcxGridDBColumn;
     clComment: TcxGridDBColumn;
     clsfIsErased: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
