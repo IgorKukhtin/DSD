@@ -16,7 +16,8 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
-   -- DECLARE vbCode Integer;   
+   DECLARE vbCode Integer;   
+   DECLARE vbName TVarChar;   
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
@@ -33,11 +34,14 @@ BEGIN
    -- проверка
    IF COALESCE (inMemberId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Ошибка.ФИО не выбрано.';
+       RAISE EXCEPTION 'Ошибка. ФИО не выбрано.';
    END IF;
 
+   SELECT ObjectCode, ValueData INTO vbCode, vbName FROM Object WHERE Id = inMemberId;   
+
+
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Personal(), 0, '');
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Personal(), vbCode, vbName);
    -- сохранили связь с <физ.лицом>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_Member(), ioId, inMemberId);
    -- сохранили связь с <должностью>

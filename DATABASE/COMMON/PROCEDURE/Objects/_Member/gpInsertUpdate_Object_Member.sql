@@ -44,6 +44,9 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_Comment(), ioId, inComment);
 
+   -- меняем имя у сотрудника
+   UPDATE Object SET ValueData = inName, ObjectCode = vbCode_calc
+    WHERE Id IN (SELECT ObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Personal_Member() AND ChildObjectId = ioId);  
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -56,6 +59,7 @@ ALTER FUNCTION gpInsertUpdate_Object_Member(Integer, Integer, TVarChar, TVarChar
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.10.13                         * меняем имя у всех сотрудников
  09.10.13                                        * пытаемся найти код
  01.10.13         *  add DriverCertificate, Comment              
  01.07.13         *

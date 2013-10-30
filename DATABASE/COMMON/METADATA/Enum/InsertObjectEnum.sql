@@ -111,6 +111,13 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_InAmount(),  inDescId:= zc_Object_SelectKind(), inCode:= 3, inName:= 'Кол-во приход',                    inEnumName:= 'zc_Enum_SelectKind_InAmount');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_OutAmount(), inDescId:= zc_Object_SelectKind(), inCode:= 4, inName:= 'Кол-во расход',                    inEnumName:= 'zc_Enum_SelectKind_OutAmount');
 
+     -- !!! Типы сумм для штатного расписания
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_Month(),                inDescId:= zc_Object_StaffListSummKind(), inCode:= 1, inName:= 'за месяц'                        , inEnumName:= 'zc_Enum_StaffListSummKind_Month');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_Turn(),                 inDescId:= zc_Object_StaffListSummKind(), inCode:= 2, inName:= 'за 1 смену'                      , inEnumName:= 'zc_Enum_StaffListSummKind_Turn');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_Personal(),             inDescId:= zc_Object_StaffListSummKind(), inCode:= 3, inName:= 'на 1 человека'                   , inEnumName:= 'zc_Enum_StaffListSummKind_Personal');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_RatioHours(),           inDescId:= zc_Object_StaffListSummKind(), inCode:= 4, inName:= 'в пропорции к отработанным часам', inEnumName:= 'zc_Enum_StaffListSummKind_RatioHours');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_MasterStaffListHours(), inDescId:= zc_Object_StaffListSummKind(), inCode:= 5, inName:= 'по фактической стоимости 1 часа из штатного расписания', inEnumName:= 'zc_Enum_StaffListSummKind_MasterStaffListHours');
+
 
      -- !!! 
      -- !!! Баланс: 1-уровень Управленческих Счетов
@@ -278,6 +285,7 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.10.13         * add Типы сумм для штатного расписания              
  07.10.13                                        * role...
  03.10.13                                        * add zc_Enum_InfoMoney_20901, zc_Enum_InfoMoney_30101
  01.10.13         * add Типы рабочего времени (6 шт)
