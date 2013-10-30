@@ -86,6 +86,18 @@ type
     bbModelServise: TdxBarButton;
     actUpdateStaffListCost: TdsdUpdateDataSet;
     clsfcisErased: TcxGridDBColumn;
+    cxGridStaffListSumm: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    clStaffListSummKindName: TcxGridDBColumn;
+    clValue: TcxGridDBColumn;
+    clslsummComment: TcxGridDBColumn;
+    clslsummisErased: TcxGridDBColumn;
+    cxGridLevel3: TcxGridLevel;
+    StaffListSummDS: TDataSource;
+    StaffListSummCDS: TClientDataSet;
+    spInsertUpdateObjectSLSumm: TdsdStoredProc;
+    spSelectStaffListSumm: TdsdStoredProc;
+    clStaffListMasterName: TcxGridDBColumn;
   private
     { Private declarations }
   public
