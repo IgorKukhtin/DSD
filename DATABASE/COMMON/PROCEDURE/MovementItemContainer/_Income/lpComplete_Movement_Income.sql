@@ -253,7 +253,7 @@ BEGIN
             , _tmp.OperCount
 
               -- промежуточная сумма по Контрагенту - с округлением до 2-х знаков
-            , _tmp.tmpOperSumm_Partner_ChangePrice
+            , _tmp.tmpOperSumm_Partner_ChangePrice AS tmpOperSumm_Partner
               -- конечная сумма по Контрагенту
             , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
                       -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки
@@ -442,8 +442,15 @@ BEGIN
         ;
 
 
+     -- проверка - если есть Суммы < 0, то <Ошибка>
+     IF EXISTS (SELECT MovementItemId FROM _tmpItem WHERE tmpOperSumm_Partner < 0 OR OperSumm_Partner < 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Есть элементы с отрицательной суммой.';
+     END IF;
+
+
      -- !!!
-     -- IF NOT EXISTS (SELECT MovementItemId FROM _tmpItem) THEN RETURN; END IF:
+     -- IF NOT EXISTS (SELECT MovementItemId FROM _tmpItem) THEN RETURN; END IF;
 
 
      SELECT -- Расчет Итоговой суммы по Контрагенту
@@ -962,6 +969,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.10.13                                        * add vbCardFuelId_From and vbTicketFuelId_From
  20.10.13                                        * add vbCardFuelId_From and vbTicketFuelId_From
  20.10.13                                        * add vbChangePrice
  06.10.13                                        * add StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
