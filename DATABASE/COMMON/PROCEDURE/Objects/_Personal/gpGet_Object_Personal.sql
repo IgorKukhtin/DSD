@@ -39,7 +39,7 @@ BEGIN
    ELSE
      RETURN QUERY 
      SELECT 
-           Object_Personal_View.PersonalId   AS Id
+           Object_Personal_View.MemberId     AS MemberId
          , Object_Personal_View.PersonalCode AS MemberCode
          , Object_Personal_View.PersonalName AS MemberName
 
@@ -68,7 +68,7 @@ ALTER FUNCTION gpGet_Object_Personal(Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 28.10.13                         * 
+ 28.10.13                         * return memberid
  30.09.13                                        * add Object_Personal_View
  25.09.13         * add _PersonalGroup; remove _Juridical, _Business
  03.09.14                        *                                

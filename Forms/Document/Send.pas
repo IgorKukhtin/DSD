@@ -122,6 +122,8 @@ type
     GuidesFiller: TGuidesFiller;
     HeaderSaver: THeaderSaver;
     spInsertUpdateMovement: TdsdStoredProc;
+    spErasedMIMaster: TdsdStoredProc;
+    spUnErasedMIMaster: TdsdStoredProc;
   private
   public
   end;
