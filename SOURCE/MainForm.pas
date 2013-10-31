@@ -212,6 +212,7 @@ type
     bbAbout: TdxBarButton;
     actReport_TransportHoursWork: TdsdOpenForm;
     bbReport_TransportHoursWork: TdxBarButton;
+    dsdOpenForm1: TdsdOpenForm;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

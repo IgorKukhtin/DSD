@@ -1396,6 +1396,18 @@ end;
 
 { TAddOnFormData }
 
+{procedure TAddOnFormData.Assign(Source: TPersistent);
+begin
+  inherited;
+  with TAddOnFormData(Source) do begin
+    Self.ChoiceAction := ChoiceAction;
+    Self.Params := Params;
+    Self.ExecuteDialogAction := ExecuteDialogAction;
+    Self.isSingle := isSingle;
+    Self.isAlwaysRefresh := isAlwaysRefresh;
+  end;
+end;    }
+
 constructor TAddOnFormData.Create;
 begin
   FisAlwaysRefresh := true;

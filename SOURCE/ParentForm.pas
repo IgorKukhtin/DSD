@@ -183,6 +183,12 @@ begin
     if (Operation = opRemove) then begin
       if AComponent = AddOnFormData.RefreshAction then
          AddOnFormData.RefreshAction := nil;
+      if AComponent = AddOnFormData.ChoiceAction then
+         AddOnFormData.ChoiceAction := nil;
+      if AComponent = AddOnFormData.ExecuteDialogAction then
+         AddOnFormData.ExecuteDialogAction := nil;
+      if AComponent = AddOnFormData.Params then
+         AddOnFormData.Params := nil;
     end;
 end;
 
@@ -275,6 +281,7 @@ initialization
   RegisterClass (TGuidesFiller);
   RegisterClass (THeaderSaver);
   RegisterClass (TInsertRecord);
+  RegisterClass (TMultiAction);
   RegisterClass (TOpenChoiceForm);
   RegisterClass (TPeriodChoice);
   RegisterClass (TRefreshAddOn);

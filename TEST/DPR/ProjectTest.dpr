@@ -219,7 +219,6 @@ uses
   PersonalSendCashTest in '..\SOURCE\Movement\All\PersonalSendCashTest.pas' {$R *.RES},
   WorkTimeKind in '..\..\Forms\WorkTimeKind.pas' {WorkTimeKindForm},
   SheetWorkTimeTest in '..\SOURCE\Movement\All\SheetWorkTimeTest.pas',
-  PaidKind in '..\..\Forms\PaidKind.pas' {PaidKindForm},
   Report_Fuel in '..\..\Forms\Report\Report_Fuel.pas' {Report_FuelForm},
   Report_Transport in '..\..\Forms\Report\Report_Transport.pas' {Report_TransportForm},
   CrossAddOnViewTestForm in '..\SOURCE\Component\CrossAddOnViewTestForm.pas' {CrossAddOnViewTest},
@@ -247,7 +246,9 @@ uses
   ModelServiceEdit in '..\..\Forms\ModelServiceEdit.pas' {ModelServiceEditForm: TParentForm},
   Object_StoragePlace in '..\..\Forms\Object_StoragePlace.pas' {Object_StoragePlace: TParentForm},
   Report_TransportHoursWork in '..\..\Forms\Report\Report_TransportHoursWork.pas' {Report_TransportHoursWorkForm: TParentForm},
-  StaffListChoice in '..\..\Forms\StaffListChoice.pas' {StaffListChoiceForm: TParentForm};
+  StaffListChoice in '..\..\Forms\StaffListChoice.pas' {StaffListChoiceForm: TParentForm},
+  Protocol in '..\..\Forms\System\Protocol.pas' {ProtocolForm: TParentForm},
+  AncestorEnum in '..\..\Forms\Ancestor\AncestorEnum.pas' {AncestorEnumForm: TParentForm};
 
 {$R *.RES}
 

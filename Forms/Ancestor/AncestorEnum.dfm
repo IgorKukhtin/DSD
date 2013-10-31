@@ -1,9 +1,8 @@
-object StatusForm: TStatusForm
+object AncestorEnumForm: TAncestorEnumForm
   Left = 0
   Top = 0
-  Caption = #1057#1090#1072#1090#1091#1089#1099' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-  ClientHeight = 194
-  ClientWidth = 362
+  ClientHeight = 287
+  ClientWidth = 322
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,8 +19,8 @@ object StatusForm: TStatusForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 362
-    Height = 168
+    Width = 322
+    Height = 261
     Align = alClient
     TabOrder = 0
     object cxGridDBTableView: TcxGridDBTableView
@@ -32,7 +31,6 @@ object StatusForm: TStatusForm
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
@@ -43,19 +41,6 @@ object StatusForm: TStatusForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'Code'
-        HeaderAlignmentHorz = taRightJustify
-        HeaderAlignmentVert = vaCenter
-      end
-      object clName: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1091#1089#1099
-        DataBinding.FieldName = 'Name'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 252
-      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
@@ -63,26 +48,21 @@ object StatusForm: TStatusForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 96
-    Top = 96
+    Left = 184
+    Top = 48
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 96
-    Top = 144
+    Left = 208
+    Top = 56
   end
   object cxPropertiesStore: TcxPropertiesStore
-    Components = <
-      item
-        Component = clName
-        Properties.Strings = (
-          'Width')
-      end>
+    Components = <>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 232
-    Top = 96
+    Left = 96
+    Top = 40
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -101,14 +81,14 @@ object StatusForm: TStatusForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 152
-    Top = 88
+    Left = 64
+    Top = 40
     DockControlHeights = (
       0
       0
       26
       0)
-    object dxBarManagerBar1: TdxBar
+    object dxBarManagerBar: TdxBar
       Caption = 'Custom'
       CaptionButtons = <>
       DockedDockingStyle = dsTop
@@ -155,8 +135,8 @@ object StatusForm: TStatusForm
     end
   end
   object ActionList: TActionList
-    Left = 232
-    Top = 144
+    Left = 128
+    Top = 40
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -175,7 +155,7 @@ object StatusForm: TStatusForm
         item
           Name = 'Key'
           Component = ClientDataSet
-          ComponentItem = 'Code'
+          ComponentItem = 'Id'
           DataType = ftString
         end
         item
@@ -186,22 +166,22 @@ object StatusForm: TStatusForm
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      DataSource = DataSource
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Status'
     DataSet = ClientDataSet
     DataSets = <
       item
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 152
-    Top = 152
+    Left = 240
+    Top = 64
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 216
-    Top = 200
+    Left = 80
+    Top = 120
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -217,7 +197,7 @@ object StatusForm: TStatusForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    Left = 152
-    Top = 240
+    Left = 176
+    Top = 136
   end
 end

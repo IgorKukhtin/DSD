@@ -671,6 +671,36 @@ object SendForm: TSendForm
       Status = mtDelete
       Guides = StatusGuides
     end
+    object MultiAction: TMultiAction
+      Category = 'DSDLib'
+      ActionList = <
+        item
+          Action = dsdFormClose
+        end
+        item
+          Action = actNewDocument
+        end>
+      Caption = #1053#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1053#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 29
+      ShortCut = 16462
+    end
+    object actNewDocument: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      Caption = #1053#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1053#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
+      FormName = 'TSendForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
+    object dsdFormClose: TdsdFormClose
+      Category = 'DSDLib'
+    end
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet

@@ -21,8 +21,8 @@ object MainForm: TMainForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1513,6 +1513,12 @@ object MainForm: TMainForm
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       Caption = #1054' '#1087#1088#1086#1075#1088#1072#1084#1084#1077'...'
       OnExecute = actAboutExecute
+    end
+    object dsdOpenForm1: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      Caption = 'dsdOpenForm1'
+      GuiParams = <>
+      isShowModal = False
     end
   end
   object cxLocalizer: TcxLocalizer

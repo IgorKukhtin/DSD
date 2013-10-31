@@ -24,7 +24,8 @@ uses
   MessagesUnit in '..\SOURCE\MessagesUnit.pas' {MessagesForm},
   Updater in '..\SOURCE\COMPONENT\Updater.pas',
   AboutBoxUnit in '..\SOURCE\AboutBoxUnit.pas' {AboutBox},
-  UnilWin in '..\SOURCE\UnilWin.pas';
+  UnilWin in '..\SOURCE\UnilWin.pas',
+  AncestorEnum in '..\Forms\Ancestor\AncestorEnum.pas' {AncestorEnumForm: TParentForm};
 
 {$R *.res}
 
@@ -37,8 +38,8 @@ begin
     //≈сли все хорошо создаем главную форму Application.CreateForm();
     if ShowModal = mrOk then begin
        TUpdater.AutomaticUpdateProgram;
-       Application.CreateForm(TMainForm, MainFormInstance);
-       Application.CreateForm(TdmMain, dmMain);
-    end;
+       Application.CreateForm(TMainFormInstance, MainFormInstance);
+  Application.CreateForm(TdmMain, dmMain);
+  end;
   Application.Run;
 end.

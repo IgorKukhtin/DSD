@@ -567,9 +567,6 @@
 				<Form>WorkTimeKindForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\SheetWorkTimeTest.pas"/>
-			<DCCReference Include="..\..\Forms\PaidKind.pas">
-				<Form>PaidKindForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_Fuel.pas">
 				<Form>Report_FuelForm</Form>
 			</DCCReference>
@@ -648,6 +645,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\StaffListChoice.pas">
 				<Form>StaffListChoiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\Protocol.pas">
+				<Form>ProtocolForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorEnum.pas">
+				<Form>AncestorEnumForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

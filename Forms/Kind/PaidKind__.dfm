@@ -1,9 +1,9 @@
-object StatusForm: TStatusForm
+object PaidKindForm: TPaidKindForm
   Left = 0
   Top = 0
-  Caption = #1057#1090#1072#1090#1091#1089#1099' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-  ClientHeight = 194
-  ClientWidth = 362
+  Caption = #1058#1080#1087#1099' '#1086#1087#1083#1072#1090
+  ClientHeight = 376
+  ClientWidth = 349
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,14 @@ object StatusForm: TStatusForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 362
-    Height = 168
+    Width = 349
+    Height = 350
     Align = alClient
     TabOrder = 0
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
+      DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
@@ -40,17 +41,11 @@ object StatusForm: TStatusForm
       OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
-      OptionsView.HeaderAutoHeight = True
+      OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'Code'
-        HeaderAlignmentHorz = taRightJustify
-        HeaderAlignmentVert = vaCenter
-      end
       object clName: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1091#1089#1099
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -175,7 +170,7 @@ object StatusForm: TStatusForm
         item
           Name = 'Key'
           Component = ClientDataSet
-          ComponentItem = 'Code'
+          ComponentItem = 'Id'
           DataType = ftString
         end
         item
@@ -189,7 +184,7 @@ object StatusForm: TStatusForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Status'
+    StoredProcName = 'gpSelect_Object_PaidKind'
     DataSet = ClientDataSet
     DataSets = <
       item
