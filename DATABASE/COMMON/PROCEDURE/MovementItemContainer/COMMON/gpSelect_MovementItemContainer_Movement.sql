@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItemContainer_Movement(
     IN inMovementId  Integer      , -- ключ Документа
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (AccountCode Integer, DebetAmount TFloat, DebetAccountGroupName TVarChar, DebetAccountDirectionName TVarChar, DebetAccountName TVarChar
+RETURNS TABLE (InvNumber Integer, OperDate TDateTime
+             , AccountCode Integer, DebetAmount TFloat, DebetAccountGroupName TVarChar, DebetAccountDirectionName TVarChar, DebetAccountName TVarChar
              , KreditAmount TFloat, KreditAccountGroupName TVarChar, KreditAccountDirectionName TVarChar, KreditAccountName  TVarChar
              , Price TFloat
              , AccountOnComplete Boolean, DirectionObjectCode Integer, DirectionObjectName TVarChar
@@ -26,7 +27,9 @@ BEGIN
 
      RETURN QUERY 
        SELECT
-             CAST (Object_Account_View.AccountCode AS Integer) AS AccountCode
+             zfConvert_StringToNumber (tmpMovementItemContainer.InvNumber) AS InvNumber
+           , tmpMovementItemContainer.OperDate
+           , CAST (Object_Account_View.AccountCode AS Integer) AS AccountCode
 
            , CAST (CASE WHEN tmpMovementItemContainer.isActive = TRUE THEN tmpMovementItemContainer.Amount ELSE 0 END AS TFloat) AS DebetAmount
            , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active() THEN Object_Account_View.AccountGroupName ELSE NULL END  AS TVarChar) AS DebetAccountGroupName
@@ -60,7 +63,9 @@ BEGIN
            , tmpMovementItemContainer.InfoMoneyName_Detail
        FROM 
            (SELECT 
-                  SUM (MovementItemContainer.Amount)  AS Amount
+                  Movement.InvNumber
+                , Movement.OperDate
+                , SUM (MovementItemContainer.Amount)  AS Amount
                 , MovementItemContainer.isActive
                 , Container.ObjectId
 
@@ -195,7 +200,9 @@ BEGIN
                                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                  LEFT JOIN Object AS Object_GoodsKind_Parent ON Object_GoodsKind_Parent.Id = MILinkObject_GoodsKind.ObjectId
 
-            GROUP BY Container.ObjectId
+            GROUP BY Movement.InvNumber
+                   , Movement.OperDate
+                   , Container.ObjectId
                    , MovementItemContainer.Id
                    , MovementItemContainer.isActive
                    , Object_Business.ObjectCode
@@ -236,6 +243,7 @@ ALTER FUNCTION gpSelect_MovementItemContainer_Movement (Integer, TVarChar) OWNER
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 31.10.13                                        * add InvNumber and OperDate
  21.10.13                                        * add zc_ContainerLinkObject_Business
  12.10.13                                        * rename to DirectionObject and DestinationObject
  06.10.13                                        * add ParentId = inMovementId

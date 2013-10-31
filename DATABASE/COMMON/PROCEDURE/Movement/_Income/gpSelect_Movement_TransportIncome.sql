@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_TransportIncome(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (MovementId Integer, InvNumber Integer, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , InvNumberPartner TVarChar
+             , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePrice TFloat
              , FromId Integer, FromCode Integer, FromName TVarChar, PaidKindId Integer, PaidKindName TVarChar, ContractId Integer, ContractName TVarChar
              , RouteId Integer, RouteName TVarChar
@@ -35,6 +35,7 @@ BEGIN
            , Object_Status.ObjectCode          AS StatusCode
            , Object_Status.ValueData           AS StatusName
 
+           , MovementDate_OperDatePartner.ValueData    AS OperDatePartner
            , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
 
            , MovementBoolean_PriceWithVAT.ValueData      AS PriceWithVAT
@@ -76,6 +77,9 @@ BEGIN
                          -- AND Movement.isErased = tmpIsErased.isErased !!!убрал т.к. удаляются только элементы!!!
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                   ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
@@ -161,6 +165,7 @@ ALTER FUNCTION gpSelect_Movement_TransportIncome (Integer, Boolean, Boolean, TVa
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 31.10.13                                        * add OperDatePartner
  26.10.13                                        * add MIContainer_Count.isActive = TRUE
  23.10.13                                        * add zfConvert_StringToNumber
  07.10.13                                        * add lpCheckRight

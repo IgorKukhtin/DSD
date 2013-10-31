@@ -86,6 +86,11 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
+    colOperDatePartner: TcxGridDBColumn;
+    colInvNumberPartner: TcxGridDBColumn;
+    actReCompleteAll: TdsdExecStoredProc;
+    bbReCompleteAll: TdxBarButton;
+    spMovementReCompleteAll: TdsdStoredProc;
   private
   public
   end;

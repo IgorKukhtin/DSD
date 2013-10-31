@@ -141,6 +141,10 @@ type
     colIsErased: TcxGridDBColumn;
     cxLabel11: TcxLabel;
     edChangePrice: TcxCurrencyEdit;
+    edOperDatePartner: TcxDateEdit;
+    cxLabel13: TcxLabel;
+    colInvNumber: TcxGridDBColumn;
+    colOperDate: TcxGridDBColumn;
   private
   public
   end;

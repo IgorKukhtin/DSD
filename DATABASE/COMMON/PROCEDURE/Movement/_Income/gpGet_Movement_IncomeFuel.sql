@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_IncomeFuel(
     IN inSession           TVarChar   -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , InvNumberPartner TVarChar
+             , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePrice TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, ToParentId Integer
              , PaidKindId Integer, PaidKindName TVarChar, ContractId Integer, ContractName TVarChar
@@ -33,6 +33,7 @@ BEGIN
              , Object_Status.Code               AS StatusCode
              , Object_Status.Name               AS StatusName
 
+             , CAST (CURRENT_DATE AS TDateTime) AS OperDatePartner
              , CAST ('' AS TVarChar) AS InvNumberPartner
 
              , CAST (TRUE AS Boolean) AS PriceWithVAT
@@ -62,6 +63,7 @@ BEGIN
              , Object_Status.ObjectCode          AS StatusCode
              , Object_Status.ValueData           AS StatusName
 
+             , MovementDate_OperDatePartner.ValueData    AS OperDatePartner
              , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
 
              , MovementBoolean_PriceWithVAT.ValueData      AS PriceWithVAT
@@ -84,6 +86,9 @@ BEGIN
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                   ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
@@ -140,6 +145,7 @@ ALTER FUNCTION gpGet_Movement_IncomeFuel (Integer, TVarChar) OWNER TO postgres;
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 31.10.13                                        * add OperDatePartner
  23.10.13                                        * add NEXTVAL
  20.10.13                                        * CURRENT_TIMESTAMP -> CURRENT_DATE
  19.10.13                                        * add ChangePrice

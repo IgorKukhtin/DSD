@@ -6,8 +6,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_IncomeFuel(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
     IN inParentId            Integer   , -- Ключ Master <Документ>
     IN inInvNumber           TVarChar  , -- Номер документа
-    IN inInvNumberPartner    TVarChar  , -- Номер чека
     IN inOperDate            TDateTime , -- Дата документа
+    IN inOperDatePartner     TDateTime , -- Дата накладной у контрагента
+    IN inInvNumberPartner    TVarChar  , -- Номер чека
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , -- % НДС
     IN inChangePrice         TFloat    , -- Скидка в цене
@@ -28,7 +29,7 @@ BEGIN
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Income(), inInvNumber, inOperDate, inParentId);
 
      -- сохранили свойство <Дата накладной у контрагента>
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDate);
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDatePartner);
      -- сохранили свойство <Номер накладной у контрагента>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);
 
@@ -69,6 +70,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 31.10.13                                        * add inOperDatePartner
  19.10.13                                        * add inChangePrice
  05.10.13                                        * add inInvNumberPartner
  04.10.13                                        *

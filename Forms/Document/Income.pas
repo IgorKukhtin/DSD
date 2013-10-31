@@ -146,6 +146,8 @@ type
     spErasedMIMaster: TdsdStoredProc;
     spUnErasedMIMaster: TdsdStoredProc;
     colIsErased: TcxGridDBColumn;
+    colInvNumber: TcxGridDBColumn;
+    colOperDate: TcxGridDBColumn;
   private
   public
   end;
