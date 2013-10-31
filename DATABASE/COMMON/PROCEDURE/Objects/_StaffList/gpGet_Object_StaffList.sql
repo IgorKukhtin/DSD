@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_StaffList(
     IN inId          Integer,       -- Составляющие рецептур 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer
+RETURNS TABLE (Id Integer, Code Integer
              , HoursPlan TFloat, PersonalCount TFloat, FundPayMonth TFloat, FundPayTurn TFloat
              , Comment TVarChar
              , UnitId Integer, UnitName TVarChar                
@@ -25,7 +25,8 @@ BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)   AS Id
-          
+           , lfGet_ObjectCode(0, zc_Object_StaffLis()) AS Code
+           
            , CAST (NULL as TFloat) AS HoursPlan
            , CAST (NULL as TFloat) AS PersonalCount
            , CAST (NULL as TFloat) AS FundPayMonth
@@ -49,8 +50,9 @@ BEGIN
    ELSE
      RETURN QUERY 
      SELECT 
-           Object_StaffList.Id        AS Id
- 
+           Object_StaffList.Id         AS Id
+         , Object_StaffList.ObjectCode AS Code
+         
          , ObjectFloat_HoursPlan.ValueData     AS HoursPlan  
          , ObjectFloat_PersonalCount.ValueData AS PersonalCount
          , ObjectFloat_FundPayMonth.ValueData  AS FundPayMonth
@@ -120,6 +122,7 @@ ALTER FUNCTION gpGet_Object_StaffList(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 31.10.13         * add Code 
  18.10.13         * add FundPayMonth, FundPayTurn, Comment                
  17.10.13         *              
 

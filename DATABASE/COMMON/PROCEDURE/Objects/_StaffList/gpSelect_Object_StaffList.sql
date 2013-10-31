@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_StaffList(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_StaffList(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer
+RETURNS TABLE (Id Integer, Code Integer
              , HoursPlan TFloat, PersonalCount TFloat, FundPayMonth TFloat, FundPayTurn TFloat
              , Comment TVarChar
              , UnitId Integer, UnitName TVarChar                
@@ -21,7 +21,8 @@ BEGIN
 
    RETURN QUERY 
      SELECT 
-           Object_StaffList.Id        AS Id
+           Object_StaffList.Id         AS Id
+         , Object_StaffList.ObjectCode AS Code
  
          , ObjectFloat_HoursPlan.ValueData     AS HoursPlan  
          , ObjectFloat_PersonalCount.ValueData AS PersonalCount
@@ -89,6 +90,7 @@ ALTER FUNCTION gpSelect_Object_StaffList (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 31.10.13         * add Code
  18.10.13         * add FundPayMonth, FundPayTurn, Comment  
  17.10.13         *
 */
