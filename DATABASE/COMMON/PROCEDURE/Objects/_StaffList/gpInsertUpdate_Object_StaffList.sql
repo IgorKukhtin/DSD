@@ -1,9 +1,10 @@
--- Function: gpInsertUpdate_Object_StaffList(Integer,  TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar)
+-- Function: gpInsertUpdate_Object_StaffList(Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_StaffList(Integer,  TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_StaffList(Integer,  Integer,  TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StaffList(
  INOUT ioId                  Integer   , -- ключ объекта <Штатное расписание>
+    IN inCode                Integer   , -- свойство <Код>
     IN inHoursPlan           TFloat    , -- План часов
     IN inPersonalCount       TFloat    , -- кол. человек
     IN inFundPayMonth        TFloat    , -- Фонд оплаты за месяц
@@ -17,14 +18,24 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StaffList(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbCode_calc Integer; 
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_StaffList()());
    vbUserId := inSession;
    
+      -- пытаемся найти код
+   IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
+
+   -- Если код не установлен, определяем его как последний+1
+   vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_StaffList());
+
+   -- проверка уникальности для свойства <Код>
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_StaffList(), vbCode_calc);
+   
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_StaffList(), 0, '');
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_StaffList(), vbCode_calc, '');
    
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StaffList_HoursPlan(), ioId, inHoursPlan);
@@ -44,8 +55,6 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_StaffList_PositionLevel(), ioId, inPositionLevelId);
 
 
-
-
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
@@ -53,12 +62,13 @@ END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_StaffList (Integer,  TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_StaffList (Integer, Integer,  TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
   
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 31.10.13         * add Code 
  18.10.13         * add FundPayMonth, FundPayTurn, Comment  
  17.10.13         * 
 

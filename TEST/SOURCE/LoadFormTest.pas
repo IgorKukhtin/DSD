@@ -609,9 +609,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPositionLevelForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionLevelEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPositionLevelEditForm');
-  //штатное расписание
+  //штатное расписание данные
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStaffListForm');
+   //штатное расписание выбор
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStaffListChoiceForm');
   //TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListEditForm'));
   //TdsdFormStorageFactory.GetStorage.Load('TStaffListEditForm');
   //Типы модели начисления
