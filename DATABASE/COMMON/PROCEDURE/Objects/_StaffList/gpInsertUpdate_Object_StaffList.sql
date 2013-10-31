@@ -1,14 +1,12 @@
--- Function: gpInsertUpdate_Object_StaffList(Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar)
+-- Function: gpInsertUpdate_Object_StaffList(Integer, Integer, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_StaffList(Integer,  Integer,  TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_StaffList(Integer,  Integer, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StaffList(
  INOUT ioId                  Integer   , -- ключ объекта <Штатное расписание>
     IN inCode                Integer   , -- свойство <Код>
     IN inHoursPlan           TFloat    , -- План часов
     IN inPersonalCount       TFloat    , -- кол. человек
-    IN inFundPayMonth        TFloat    , -- Фонд оплаты за месяц
-    IN inFundPayTurn         TFloat    , -- Фонд оплаты за день
     IN inComment             TVarChar  , -- комментарий
     IN inUnitId              Integer   , -- Подразделение
     IN inPositionId          Integer   , -- Должность
@@ -41,9 +39,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StaffList_HoursPlan(), ioId, inHoursPlan);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StaffList_PersonalCount(), ioId, inPersonalCount);
-   -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StaffList_FundPayMonth(), ioId, inFundPayMonth);
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StaffList_FundPayTurn(), ioId, inFundPayTurn);
+  
    -- сохранили свойство <>   
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_StaffList_Comment(), ioId, inComment);
    
@@ -62,7 +58,7 @@ END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_StaffList (Integer, Integer,  TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_StaffList (Integer, Integer, TFloat, TFloat, TVarChar, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
   
 /*---------------------------------------------------------------------------------------

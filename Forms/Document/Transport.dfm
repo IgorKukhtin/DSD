@@ -86,7 +86,7 @@
       Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' '
     end
     object edPersonalDriver: TcxButtonEdit
-      Left = 182
+      Left = 169
       Top = 63
       Properties.Buttons = <
         item
@@ -95,10 +95,10 @@
         end>
       Properties.ReadOnly = True
       TabOrder = 3
-      Width = 119
+      Width = 132
     end
     object cxLabel5: TcxLabel
-      Left = 182
+      Left = 169
       Top = 45
       Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
     end
@@ -763,9 +763,6 @@
     object cxTabSheetIncome: TcxTabSheet
       Caption = #1047#1072#1087#1088#1072#1074#1082#1072
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridIncome: TcxGrid
         Left = 0
         Top = 0
@@ -884,8 +881,8 @@
             Width = 45
           end
           object clincOperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072
-            DataBinding.FieldName = 'OperDate'
+            Caption = #1044#1072#1090#1072' '#1079#1072#1087#1088#1072#1074#1082#1080
+            DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
@@ -1057,9 +1054,6 @@
     object cxTabSheetReport: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridReport: TcxGrid
         Left = 0
         Top = 0
@@ -1206,9 +1200,6 @@
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -1249,6 +1240,20 @@
           OptionsView.Footer = True
           OptionsView.HeaderAutoHeight = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object colInvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object colOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object colAccountCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1089#1095#1077#1090#1072
             DataBinding.FieldName = 'AccountCode'
@@ -2806,8 +2811,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -3096,18 +3101,25 @@
         ParamType = ptInputOutput
       end
       item
+        Name = 'inOperDate'
+        Value = 0d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioOperDatePartner'
+        Component = IncomeCDS
+        ComponentItem = 'OperDatePartner'
+        DataType = ftDateTime
+        ParamType = ptInputOutput
+      end
+      item
         Name = 'inInvNumberPartner'
         Component = IncomeCDS
         ComponentItem = 'InvNumberPartner'
         DataType = ftString
         ParamType = ptInput
-      end
-      item
-        Name = 'ioOperDate'
-        Component = IncomeCDS
-        ComponentItem = 'OperDate'
-        DataType = ftDateTime
-        ParamType = ptInputOutput
       end
       item
         Name = 'ioPriceWithVAT'

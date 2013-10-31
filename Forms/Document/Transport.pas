@@ -250,6 +250,8 @@ type
     colRouteKindName_Freight: TcxGridDBColumn;
     RouteKindFreightChoiceForm: TOpenChoiceForm;
     TotalRefresh: TdsdDataSetRefresh;
+    colInvNumber: TcxGridDBColumn;
+    colOperDate: TcxGridDBColumn;
   private
   public
   end;

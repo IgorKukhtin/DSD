@@ -233,7 +233,7 @@ uses
   SheetWorkTimeJournal in '..\..\Forms\Document\SheetWorkTimeJournal.pas' {SheetWorkTimeJournalForm},
   PositionLevel in '..\..\Forms\PositionLevel.pas' {PositionLevelForm},
   PositionLevelEdit in '..\..\Forms\PositionLevelEdit.pas' {PositionLevelEditForm},
-  StaffList in '..\..\Forms\StaffList.pas' {StaffListForm},
+  StaffListData in '..\..\Forms\StaffListData.pas' {StaffListDataForm},
   StaffListEdit in '..\..\Forms\StaffListEdit.pas' {StaffListEditForm},
   PersonalTest in '..\SOURCE\Objects\All\PersonalTest.pas',
   SheetWorkTimeMovementItemTest in '..\SOURCE\MovementItem\All\SheetWorkTimeMovementItemTest.pas',
@@ -248,7 +248,9 @@ uses
   Report_TransportHoursWork in '..\..\Forms\Report\Report_TransportHoursWork.pas' {Report_TransportHoursWorkForm: TParentForm},
   StaffListChoice in '..\..\Forms\StaffListChoice.pas' {StaffListChoiceForm: TParentForm},
   Protocol in '..\..\Forms\System\Protocol.pas' {ProtocolForm: TParentForm},
-  AncestorEnum in '..\..\Forms\Ancestor\AncestorEnum.pas' {AncestorEnumForm: TParentForm};
+  AncestorEnum in '..\..\Forms\Ancestor\AncestorEnum.pas' {AncestorEnumForm: TParentForm},
+  StaffList in '..\..\Forms\StaffList.pas' {StaffListForm: TParentForm},
+  StaffListSummKind in '..\..\Forms\StaffListSummKind.pas' {StaffListSummKindForm: TParentForm};
 
 {$R *.RES}
 

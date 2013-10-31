@@ -797,7 +797,7 @@ object MainForm: TMainForm
         end
         item
           Visible = True
-          ItemName = 'bbStaffList'
+          ItemName = 'bbStaffListData'
         end
         item
           Visible = True
@@ -855,8 +855,8 @@ object MainForm: TMainForm
       Action = actPositionLevel
       Category = 0
     end
-    object bbStaffList: TdxBarButton
-      Action = actStaffList
+    object bbStaffListData: TdxBarButton
+      Action = actStaffListData
       Category = 0
     end
     object bbUpdateProgramm: TdxBarButton
@@ -931,11 +931,11 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actStaffList: TdsdOpenForm
+    object actStaffListData: TdsdOpenForm
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       Caption = #1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077
       Hint = #1096#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077
-      FormName = 'TStaffListForm'
+      FormName = 'TStaffListDataForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -1546,7 +1546,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.14'
+    Version = '4.12'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

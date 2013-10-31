@@ -225,6 +225,7 @@ object UnitForm: TUnitForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -312,8 +313,8 @@ object UnitForm: TUnitForm
     MasterFields = 'Id'
     PacketRecords = 0
     Params = <>
-    Left = 360
-    Top = 152
+    Left = 352
+    Top = 176
   end
   object spGrid: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Unit'
@@ -340,12 +341,12 @@ object UnitForm: TUnitForm
         ComponentItem = 'Name'
         DataType = ftString
       end>
-    Left = 344
-    Top = 232
+    Left = 408
+    Top = 296
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 304
-    Top = 240
+    Left = 232
+    Top = 288
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -368,7 +369,7 @@ object UnitForm: TUnitForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    Left = 216
-    Top = 232
+    Left = 176
+    Top = 200
   end
 end

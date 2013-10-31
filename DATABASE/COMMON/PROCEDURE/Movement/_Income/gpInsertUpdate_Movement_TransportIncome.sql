@@ -1,13 +1,16 @@
 -- Function: gpInsertUpdate_Movement_TransportIncome()
 
--- DROP FUNCTION gpInsertUpdate_Movement_TransportIncome();
+ DROP FUNCTION IF EXISTS gpinsertupdate_movement_transportincome (integer, integer, tvarchar, tvarchar, tdatetime, boolean, tfloat, integer, integer, integer, tvarchar, integer, tvarchar, integer, tvarchar, integer, integer, integer, integer, tvarchar, tvarchar, tfloat, tfloat, tfloat, tvarchar);
+ DROP FUNCTION IF EXISTS gpinsertupdate_movement_transportincome (integer, integer, tvarchar, tvarchar, tdatetime, boolean, tfloat, tfloat, integer, integer, integer, tvarchar, integer, tvarchar, integer, tvarchar, integer, integer, integer, integer, tvarchar, tvarchar, tfloat, tfloat, tfloat, tvarchar);
+ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransportIncome (integer, integer, tvarchar, tdatetime, tdatetime, tvarchar, boolean, tfloat, tfloat, integer, integer, integer, tvarchar, integer, tvarchar, integer, tvarchar, integer, integer, integer, integer, tvarchar, tvarchar, tfloat, tfloat, tfloat, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransportIncome(
     IN inParentId            Integer   , -- Ключ Master <Документ>
  INOUT ioMovementId          Integer   , -- Ключ объекта <Документ>
  INOUT ioInvNumber           TVarChar  , -- Номер документа
+    IN inOperDate            TDateTime , -- Дата документа
+ INOUT ioOperDatePartner     TDateTime , -- Дата накладной у контрагента
     IN inInvNumberPartner    TVarChar  , -- Номер чека
- INOUT ioOperDate            TDateTime , -- Дата документа
  INOUT ioPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
  INOUT ioVATPercent          TFloat    , -- % НДС
     IN inChangePrice         TFloat    , -- Скидка в цене
@@ -44,12 +47,18 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_TransportIncome());
 
      -- отбрасываем время
-     ioOperDate:= DATE_TRUNC ('DAY', ioOperDate);
+     inOperDate:= DATE_TRUNC ('DAY', inOperDate);
+     ioOperDatePartner:= DATE_TRUNC ('DAY', ioOperDatePartner);
 
      -- проверка
-     IF ioOperDate < '01.10.2012'
+     IF inOperDate < '01.10.2012'
      THEN
-         RAISE EXCEPTION 'Ошибка.<Дата документа> %.', ioOperDate;
+         RAISE EXCEPTION 'Ошибка.<Дата документа> %.', inOperDate;
+     END IF;
+     -- проверка
+     IF ioOperDatePartner < '01.10.2012'
+     THEN
+         RAISE EXCEPTION 'Ошибка.<Дата у поставщика> %.', ioOperDatePartner;
      END IF;
 
      -- проверка
@@ -202,8 +211,9 @@ BEGIN
      ioMovementId := lpInsertUpdate_Movement_IncomeFuel (ioId               := ioMovementId
                                                        , inParentId         := inParentId
                                                        , inInvNumber        := ioInvNumber
+                                                       , inOperDate         := inOperDate
+                                                       , inOperDatePartner  := ioOperDatePartner
                                                        , inInvNumberPartner := inInvNumberPartner
-                                                       , inOperDate         := ioOperDate
                                                        , inPriceWithVAT     := ioPriceWithVAT
                                                        , inVATPercent       := ioVATPercent
                                                        , inChangePrice      := inChangePrice
@@ -236,6 +246,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 31.10.13                                        * add ioOperDatePartner
  26.10.13                                        * отбрасываем время
  23.10.13                                        * add NEXTVAL
  19.10.13                                        * add inChangePrice

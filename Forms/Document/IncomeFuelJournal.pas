@@ -88,6 +88,10 @@ type
     colChangePrice: TcxGridDBColumn;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
+    colOperDatePartner: TcxGridDBColumn;
+    actReCompleteAll: TdsdExecStoredProc;
+    bbReCompleteAll: TdxBarButton;
+    spMovementReCompleteAll: TdsdStoredProc;
   private
   public
   end;

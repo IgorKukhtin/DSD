@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement (INOUT ioId Integer, IN inDes
 $BODY$
   DECLARE vbStatusId Integer;
 BEGIN
-  IF COALESCE(ioId, 0) = 0 THEN
+  IF COALESCE (ioId, 0) = 0 THEN
      INSERT INTO Movement (DescId, InvNumber, OperDate, StatusId, ParentId)
             VALUES (inDescId, inInvNumber, inOperDate, zc_Enum_Status_UnComplete(), inParentId) RETURNING Id INTO ioId;
   ELSE
@@ -16,9 +16,14 @@ BEGIN
             RETURNING StatusId INTO vbStatusId;
 
      --
-     IF vbStatusId <> zc_Enum_Status_UnComplete()
+     IF vbStatusId <> zc_Enum_Status_UnComplete() AND COALESCE (inParentId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
+         RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', inInvNumber, lfGet_Object_ValueData (vbStatusId);
+     END IF;
+     --
+     IF vbStatusId = zc_Enum_Status_Complete() AND COALESCE (inParentId, 0) <> 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', inInvNumber, lfGet_Object_ValueData (vbStatusId);
      END IF;
 
      --
@@ -38,6 +43,7 @@ ALTER FUNCTION lpInsertUpdate_Movement(Integer, Integer, tvarchar, tdatetime, In
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 31.10.13                                        * AND COALESCE (inParentId, 0) = 0
  06.10.13                                        * 1251Cyr
 */
 

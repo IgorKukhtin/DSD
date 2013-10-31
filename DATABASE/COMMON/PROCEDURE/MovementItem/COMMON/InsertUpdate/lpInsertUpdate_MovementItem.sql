@@ -13,6 +13,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem(
   RETURNS Integer AS
 $BODY$
   DECLARE vbStatusId Integer;
+  DECLARE vbInvNumber TVarChar;
 BEGIN
      -- меняем параметр
      IF inParentId = 0
@@ -28,11 +29,11 @@ BEGIN
 
 
      -- определяем <Статус>
-     vbStatusId := (SELECT StatusId FROM Movement WHERE Id = inMovementId);
+     SELECT StatusId, InvNumber INTO vbStatusId, vbInvNumber FROM Movement WHERE Id = inMovementId;
      -- проверка - проведенные/удаленные документы Изменять нельзя
      IF vbStatusId <> zc_Enum_Status_UnComplete()
      THEN
-         RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
+         RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData (vbStatusId);
      END IF;
 
 
@@ -60,6 +61,7 @@ ALTER FUNCTION lpInsertUpdate_MovementItem (Integer, Integer, Integer, Integer, 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 31.10.13                                        * add vbInvNumber
  06.10.13                                        * add vbStatusId
  09.08.13                                        * add inObjectId := NULL
  09.08.13                                        * add inObjectId := NULL

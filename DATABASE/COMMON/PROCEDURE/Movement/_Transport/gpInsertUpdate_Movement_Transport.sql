@@ -91,7 +91,8 @@ BEGIN
 
 
      -- Изменили свойства у подчиненных Документов
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), Movement.Id, inCarId)
+     PERFORM lpInsertUpdate_Movement (ioId:= Movement.Id, inDescId:=zc_Movement_Income(), inInvNumber:= Movement.InvNumber, inOperDate:= inOperDate, inParentId:= Movement.ParentId)
+           , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), Movement.Id, inCarId)
            , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalDriver(), Movement.Id, inPersonalDriverId)
      FROM Movement
      WHERE Movement.ParentId = ioId
@@ -121,6 +122,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 31.10.13                                        * add lpInsertUpdate_Movement - Изменили свойства у подчиненных Документов
  24.10.13                                        * add !!!с учетом добавленных!!!
  24.10.13                                        * add min to outHoursWork
  13.10.13                                        * add lpInsertUpdate_MI_Transport_Child_byMaster

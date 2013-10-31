@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_IncomeFuel(
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, InvNumberMaster TVarChar, OperDateMaster TDateTime, StatusCode Integer, StatusName TVarChar
-             , InvNumberPartner TVarChar
+             , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePrice TFloat
              , TotalCount TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummVAT TFloat
              , FromName TVarChar, ToName TVarChar
@@ -35,6 +35,7 @@ BEGIN
            , Object_Status.ObjectCode          AS StatusCode
            , Object_Status.ValueData           AS StatusName
 
+           , MovementDate_OperDatePartner.ValueData    AS OperDatePartner
            , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
 
            , MovementBoolean_PriceWithVAT.ValueData      AS PriceWithVAT
@@ -59,6 +60,9 @@ BEGIN
 
             LEFT JOIN Movement AS Movement_Master ON Movement_Master.Id = Movement.ParentId
 
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                   ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
@@ -128,6 +132,7 @@ ALTER FUNCTION gpSelect_Movement_IncomeFuel (TDateTime, TDateTime, TVarChar) OWN
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 31.10.13                                        * add OperDatePartner
  23.10.13                                        * add zfConvert_StringToNumber
  19.10.13                                        * add ChangePrice
  12.10.13                                        * add InvNumberMaster and OperDateMaster

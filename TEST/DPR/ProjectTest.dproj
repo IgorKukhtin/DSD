@@ -609,8 +609,8 @@
 			<DCCReference Include="..\..\Forms\PositionLevelEdit.pas">
 				<Form>PositionLevelEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\StaffList.pas">
-				<Form>StaffListForm</Form>
+			<DCCReference Include="..\..\Forms\StaffListData.pas">
+				<Form>StaffListDataForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\StaffListEdit.pas">
 				<Form>StaffListEditForm</Form>
@@ -643,8 +643,12 @@
 				<Form>Report_TransportHoursWorkForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\StaffListChoice.pas">
-				<Form>StaffListChoiceForm</Form>
+			<DCCReference Include="..\..\Forms\StaffList.pas">
+				<Form>StaffListForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\StaffListSummKind.pas">
+				<Form>StaffListSummKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\System\Protocol.pas">

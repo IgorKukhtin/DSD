@@ -59,8 +59,6 @@ object IncomeJournalForm: TIncomeJournalForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitTop = 67
-    ExplicitHeight = 360
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -199,6 +197,17 @@ object IncomeJournalForm: TIncomeJournalForm
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentVert = vaCenter
         Width = 59
+      end
+      object colInvNumberPartner: TcxGridDBColumn
+        Caption = #8470' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+        DataBinding.FieldName = 'InvNumberPartner'
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object colOperDatePartner: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+        DataBinding.FieldName = 'OperDatePartner'
+        HeaderAlignmentVert = vaCenter
       end
       object colFromName: TcxGridDBColumn
         Caption = #1054#1090' '#1082#1086#1075#1086
@@ -468,6 +477,10 @@ object IncomeJournalForm: TIncomeJournalForm
       Action = dsdGridToExcel
       Category = 0
     end
+    object bbReCompleteAll: TdxBarButton
+      Action = actReCompleteAll
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -485,6 +498,14 @@ object IncomeJournalForm: TIncomeJournalForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object dsdGridToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      Grid = cxGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -556,13 +577,16 @@ object IncomeJournalForm: TIncomeJournalForm
       Status = mtDelete
       DataSource = DataSource
     end
-    object dsdGridToExcel: TdsdGridToExcel
+    object actReCompleteAll: TdsdExecStoredProc
       Category = 'DSDLib'
-      Grid = cxGrid
-      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      ImageIndex = 6
-      ShortCut = 16472
+      StoredProc = spMovementReCompleteAll
+      StoredProcList = <
+        item
+          StoredProc = spMovementReCompleteAll
+        end>
+      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      ImageIndex = 10
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -688,5 +712,27 @@ object IncomeJournalForm: TIncomeJournalForm
       end>
     Left = 576
     Top = 24
+  end
+  object spMovementReCompleteAll: TdsdStoredProc
+    StoredProcName = 'gpCompletePeriod_Movement_Income'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41275d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndtDate'
+        Value = 41639d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
+    Left = 240
+    Top = 288
   end
 end
