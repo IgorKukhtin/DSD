@@ -91,7 +91,6 @@ type
     FParams: TdsdParams;
     FStoredProcName: string;
     FOutputType: TOutputType;
-    function GetXML: String;
     function FillParams: String;
     procedure FillOutputParams(XML: String);
     function GetDataSet: TClientDataSet;
@@ -99,6 +98,7 @@ type
     procedure DataSetRefresh;
     procedure MultiDataSetRefresh;
   protected
+    function GetXML: String;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
     function Execute: string;
@@ -196,6 +196,7 @@ function TdsdStoredProc.Execute;
 var TickCount: cardinal;
 begin
   result := '';
+  TickCount := 0;
   if gc_isShowTimeMode then
      TickCount := GetTickCount;
   Screen.Cursor := crHourGlass;
@@ -292,7 +293,6 @@ procedure TdsdStoredProc.MultiDataSetRefresh;
 var B: TBookMark;
     i: integer;
     XMLResult: OleVariant;
-    DataSet: TDataSet;
 begin
    for I := 0 to DataSets.Count - 1 do
        if DataSets[i].DataSet.State in [dsEdit, dsInsert] then

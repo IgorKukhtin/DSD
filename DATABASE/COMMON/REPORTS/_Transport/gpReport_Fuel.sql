@@ -50,7 +50,8 @@ BEGIN
                 AND ContainerLinkObject_Personal.ContainerId = Container.Id
                JOIN ObjectLink AS ObjectLink_Car_PersonalDriver 
                  ON ObjectLink_Car_PersonalDriver.ChildObjectId = ContainerLinkObject_Personal.ObjectId
-                AND ObjectLink_Car_PersonalDriver.DescId = zc_ObjectLink_Car_PersonalDriver()),
+                AND ObjectLink_Car_PersonalDriver.DescId = zc_ObjectLink_Car_PersonalDriver()
+                AND (ObjectLink_Car_PersonalDriver.ObjectId = inCarId OR inCarId = 0)),
            Fuel AS (
              SELECT Container.Id, 
                     Container.DescId, 

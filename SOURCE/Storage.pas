@@ -33,10 +33,12 @@ type
 
   end;
 
+  function ConvertXMLParamToStrings(XMLParam: String): String;
+
 implementation
 
 uses IdHTTP, Xml.XMLDoc, XMLIntf, Classes, ZLibEx, idGlobal, UtilConst, DBClient, Variants, UtilConvert,
-     Dialogs, StrUtils;
+     MessagesUnit, Dialogs, StrUtils;
 
 const
 
@@ -58,7 +60,7 @@ type
     Str: AnsiString;//RawByteString;
     XMLDocument: IXMLDocument;
     isArchive: boolean;
-    function PrepareStr: string;
+    function PrepareStr: AnsiString;
     function ExecuteProc(pData: String): Variant;
     procedure ProcessErrorCode(pData: String);
     function ProcessMultiDataSet: Variant;
@@ -93,7 +95,7 @@ begin
   NewInstance := Instance;
 end;
 
-function TStorage.PrepareStr: string;
+function TStorage.PrepareStr: AnsiString;
 begin
   if isArchive then
      result := ZDecompressStr(Str)
@@ -102,7 +104,6 @@ begin
 end;
 
 procedure TStorage.ProcessErrorCode(pData: String);
-var i: double;
 begin
   with LoadXMLData(pData).DocumentElement do
     if NodeName = gcError then
@@ -133,13 +134,40 @@ begin
   end;
 end;
 
+function PrepareValue(Value, DataType: string): string;
+begin
+  if (DataType = 'ftBlob') or (DataType = 'ftString') or (DataType = 'ftBoolean') then
+     result := chr(39) + Value + chr(39);
+  if (DataType = 'ftFloat') or (DataType = 'ftInteger') then
+     result := Value;
+  if (DataType = 'ftDateTime') then
+     result := '(' + chr(39) + Value + chr(39) + ')::TDateTime';
+end;
+
+function ConvertXMLParamToStrings(XMLParam: String): String;
+var i: integer;
+    Session: String;
+begin
+  result := '';
+  with LoadXMLData(XMLParam).DocumentElement do begin
+     Session := GetAttribute('Session');
+     with ChildNodes.First do begin
+       result := 'select * from ' + NodeName + '(';
+       for I := 0 to ChildNodes.Count - 1 do
+         with ChildNodes[i] do begin
+           result := result + NodeName + ' := ' + PrepareValue(GetAttribute('Value'), GetAttribute('DataType')) + ' , ';
+         end;
+       result := result + ' inSession := ' + chr(39) + Session + chr(39) + ');';
+     end;
+  end;
+end;
+
 function TStorage.ExecuteProc(pData: String): Variant;
 var
   ResultType: String;
 begin
-  if gc_isDebugMode then begin
-     ShowMessage(pData);
-  end;
+  if gc_isDebugMode then
+     TMessagesForm.Create(nil).Execute(ConvertXMLParamToStrings(pData), ConvertXMLParamToStrings(pData), true);
   FSendList.Clear;
   FSendList.Add('XML=' + '<?xml version="1.1" encoding="windows-1251"?>' + pData);
   FReceiveStream.Clear;

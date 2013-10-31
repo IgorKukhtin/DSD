@@ -54,8 +54,6 @@ uses
 {$R *.dfm}
 
 procedure TParentForm.AfterShow(var a : TWMSHOWWINDOW);
-var
-  i: integer;
 begin
   if csDesigning in ComponentState then
      exit;
@@ -87,8 +85,6 @@ begin
 end;
 
 function TParentForm.Execute(Sender: TComponent; Params: TdsdParams): boolean;
-var
-  i: integer;
 begin
   try
     // то перечитывать ли ее каждый раз определ€ет флаг

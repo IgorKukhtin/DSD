@@ -126,8 +126,6 @@
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
 					<Excluded_Packages>
-						<Excluded_Packages Name="D:\WORK\DSD\DSD\BIN\ProjectComponent.bpl">(untitled)</Excluded_Packages>
-						<Excluded_Packages Name="D:\WORK\DSD\DSD\BIN\ProjectDesignComponent.bpl">(untitled)</Excluded_Packages>
 						<Excluded_Packages Name="D:\WORK\DSD\DSD\BIN\DSDComponent.bpl">File D:\WORK\DSD\DSD\BIN\DSDComponent.bpl not found</Excluded_Packages>
 						<Excluded_Packages Name="D:\WORK\DSD\DSD\BIN\DSDDesignComponent.bpl">File D:\WORK\DSD\DSD\BIN\DSDDesignComponent.bpl not found</Excluded_Packages>
 						<Excluded_Packages Name="C:\Program Files (x86)\FastReports\FastReport 4\LibD16\dclfsDB16.bpl">FastScript 1.9 DB Components</Excluded_Packages>

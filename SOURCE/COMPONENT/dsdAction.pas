@@ -51,13 +51,18 @@ type
     FOnPageChanging: TOnPageChanging;
     FTabSheet: TcxTabSheet;
     FPostDataSetBeforeExecute: boolean;
+    FInfoAfterExecute: string;
+    FQuestionBeforeExecute: string;
     procedure SetTabSheet(const Value: TcxTabSheet); virtual;
   protected
+    property QuestionBeforeExecute: string read FQuestionBeforeExecute write FQuestionBeforeExecute;
+    property InfoAfterExecute: string read FInfoAfterExecute write FInfoAfterExecute;
     property PostDataSetBeforeExecute: boolean read FPostDataSetBeforeExecute write FPostDataSetBeforeExecute;
     // Делаем Post всем датасетам на форме где стоит Action
     procedure PostDataSet;
     procedure OnPageChanging(Sender: TObject; NewPage: TcxTabSheet; var AllowChange: Boolean); virtual;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    function LocalExecute: boolean; virtual; abstract;
   public
     constructor Create(AOwner: TComponent); override;
     function Execute: boolean; override;
@@ -88,8 +93,8 @@ type
     procedure DataSetChanged; virtual;
     procedure UpdateData;     virtual;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    function LocalExecute: boolean; override;
   public
-    function Execute: boolean; override;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
@@ -119,8 +124,8 @@ type
     FInsertUpdateAction: TCustomAction;
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    function LocalExecute: boolean; override;
   public
-    function Execute: boolean; override;
     property InsertUpdateAction: TCustomAction read FInsertUpdateAction write FInsertUpdateAction;
   end;
 
@@ -161,10 +166,11 @@ type
     procedure SetGuides(const Value: TdsdGuides);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
-  public
-    function Execute: boolean; override;
+    function LocalExecute: boolean; override;
   published
     property Guides: TdsdGuides read FGuides write SetGuides;
+    property QuestionBeforeExecute;
+    property InfoAfterExecute;
   end;
 
   // Изменяет статус документов в гриде
@@ -175,12 +181,14 @@ type
     function GetDataSource: TDataSource;
   protected
     procedure DataSetChanged; override;
+    function LocalExecute: boolean; override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    function Execute: boolean; override;
   published
     property DataSource: TDataSource read GetDataSource write SetDataSource;
+    property QuestionBeforeExecute;
+    property InfoAfterExecute;
   end;
 
   TdsdUpdateErased = class(TdsdCustomDataSetAction, IDataSetAction)
@@ -193,15 +201,17 @@ type
     procedure SetisSetErased(const Value: boolean);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    function LocalExecute: boolean; override;
   public
     procedure DataSetChanged; override;
-    function Execute: boolean; override;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
     property ErasedFieldName: string read FErasedFieldName write FErasedFieldName;
     property isSetErased: boolean read FisSetErased write SetisSetErased default true;
     property DataSource: TDataSource read GetDataSource write SetDataSource;
+    property QuestionBeforeExecute;
+    property InfoAfterExecute;
   end;
 
   TdsdOpenForm = class(TdsdCustomAction, IFormAction)
@@ -214,8 +224,8 @@ type
     procedure OnFormClose(Params: TdsdParams); virtual;
     function ShowForm: TForm;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    function LocalExecute: boolean; override;
   public
-    function Execute: boolean; override;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
@@ -244,8 +254,7 @@ type
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure ChangeDSState; virtual; abstract;
-  public
-    function Execute: boolean; override;
+    function LocalExecute: boolean; override;
   published
     property View: TcxGridDBTableView read FView write FView;
     property Action: TCustomAction read FAction write FAction;
@@ -293,8 +302,8 @@ type
 
 
   TdsdFormClose = class(TdsdCustomAction)
-  public
-    function Execute: boolean; override;
+  protected
+    function LocalExecute: boolean; override;
   end;
 
   // Действие выбора значения из справочника
@@ -312,9 +321,9 @@ type
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure DataSetChanged;
     procedure UpdateData;
+    function LocalExecute: boolean; override;
   public
     property ChoiceCaller: IChoiceCaller read FChoiceCaller write SetChoiceCaller;
-    function Execute: boolean; override;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
@@ -332,8 +341,8 @@ type
     FGrid: TcxGrid;
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    function LocalExecute: boolean; override;
   public
-    function Execute: boolean; override;
     constructor Create(AOwner: TComponent); override;
   published
     property Grid: TcxGrid read FGrid write FGrid;
@@ -350,8 +359,8 @@ type
     FParams: TdsdParams;
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    function LocalExecute: boolean; override;
   public
-    function Execute: boolean; override;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
@@ -379,8 +388,9 @@ type
     procedure SetCaptionTrue(const Value: String);
     procedure SetHintFalse(const Value: String);
     procedure SetHintTrue(const Value: String);
+  protected
+    function LocalExecute: boolean; override;
   public
-    function Execute: boolean; override;
     constructor Create(AOwner: TComponent); override;
   published
     property Value: Boolean read FValue write SetValue;
@@ -397,8 +407,8 @@ type
 implementation
 
 uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
-     Vcl.Controls, Menus, cxGridExportLink, ShellApi, frxClass, frxDesgn,
-     messages, ParentForm;
+     Vcl.Dialogs, Vcl.Controls, Menus, cxGridExportLink, ShellApi,
+     frxClass, frxDesgn, messages, ParentForm;
 
 procedure Register;
 begin
@@ -441,10 +451,9 @@ begin
   inherited;
 end;
 
-function TdsdCustomDataSetAction.Execute: boolean;
+function TdsdCustomDataSetAction.LocalExecute: boolean;
 var i: integer;
 begin
-  result := inherited Execute;
   for I := 0 to StoredProcList.Count - 1  do
       if Assigned(StoredProcList[i]) then
          if Assigned(StoredProcList[i].StoredProc) then begin
@@ -550,8 +559,10 @@ begin
   inherited;
 end;
 
-function TdsdOpenForm.Execute: boolean;
+function TdsdOpenForm.LocalExecute: boolean;
 begin
+  inherited;
+  result := true;
   ShowForm
 end;
 
@@ -587,8 +598,9 @@ end;
 
 { TdsdFormClose }
 
-function TdsdFormClose.Execute: boolean;
+function TdsdFormClose.LocalExecute: boolean;
 begin
+  result := true;
   if Owner is TForm then
      (Owner as TForm).Close;
 end;
@@ -712,10 +724,10 @@ begin
   inherited;
 end;
 
-function TdsdUpdateErased.Execute: boolean;
+function TdsdUpdateErased.LocalExecute: boolean;
 var lDataSet: TDataSet;
 begin
-  result := inherited Execute;
+  result := inherited LocalExecute;
   if result and Assigned(DataSource) and Assigned(DataSource.DataSet) then begin
      lDataSet := DataSource.DataSet;
      // Что бы не вызывались события после на Post
@@ -811,8 +823,9 @@ begin
   inherited;
 end;
 
-function TdsdChoiceGuides.Execute: boolean;
+function TdsdChoiceGuides.LocalExecute: boolean;
 begin
+  result := true;
   if Assigned(FParams.ParamByName('Key')) and Assigned(FParams.ParamByName('TextValue')) then
      FChoiceCaller.AfterChoice(FParams, TForm(Owner))
   else
@@ -875,10 +888,10 @@ begin
   inherited;
 end;
 
-function TdsdChangeMovementStatus.Execute: boolean;
+function TdsdChangeMovementStatus.LocalExecute: boolean;
 var lDataSet: TDataSet;
 begin
-  result := inherited Execute;
+  result := inherited LocalExecute;
   if result and Assigned(DataSource) and Assigned(DataSource.DataSet) then begin
      lDataSet := DataSource.DataSet;
      // Что бы не вызывались события после на Post
@@ -958,10 +971,12 @@ begin
   Caption := 'Выгрузка в Excel';
   Hint := 'Выгрузка в Excel';
   ShortCut := TextToShortCut('Ctrl+X');
+  PostDataSetBeforeExecute := true
 end;
 
-function TdsdGridToExcel.Execute: boolean;
+function TdsdGridToExcel.LocalExecute: boolean;
 begin
+  result := true;
   ExportGridToExcel('#$#$#$.xls', FGrid);
   ShellExecute(Application.Handle, 'open', PWideChar('#$#$#$.xls'), nil, nil, SW_SHOWNORMAL);
 end;
@@ -982,6 +997,7 @@ constructor TdsdPrintAction.Create(AOwner: TComponent);
 begin
   inherited;
   FParams := TdsdParams.Create(Self, TdsdParam);
+  PostDataSetBeforeExecute := true
 end;
 
 destructor TdsdPrintAction.Destroy;
@@ -990,11 +1006,12 @@ begin
   inherited;
 end;
 
-function TdsdPrintAction.Execute: boolean;
+function TdsdPrintAction.LocalExecute: boolean;
 var i: integer;
     Stream: TStringStream;
 begin
   inherited;
+  result := true;
   Stream := TStringStream.Create;
   try
     with TfrxReport.Create(nil) do begin
@@ -1038,9 +1055,10 @@ end;
 
 { TdsdInsertUpdateGuides }
 
-function TdsdInsertUpdateGuides.Execute: boolean;
+function TdsdInsertUpdateGuides.LocalExecute: boolean;
 begin
   inherited;
+  result := true;
   TParentForm(Owner).Close(Self);
 end;
 
@@ -1067,7 +1085,7 @@ begin
   FValue := false;
 end;
 
-function TBooleanStoredProcAction.Execute: boolean;
+function TBooleanStoredProcAction.LocalExecute: boolean;
 begin
   Value := not Value;
   result := inherited;
@@ -1134,9 +1152,15 @@ end;
 
 function TdsdCustomAction.Execute: boolean;
 begin
-  result := true;
+  result := false;
+  if QuestionBeforeExecute <> '' then
+     if MessageDlg(QuestionBeforeExecute, mtInformation, mbOKCancel, 0) <> mrOk  then
+        exit;
   if PostDataSetBeforeExecute then
      PostDataSet;
+  result := LocalExecute;
+  if InfoAfterExecute <> '' then
+     ShowMessage(InfoAfterExecute);
 end;
 
 procedure TdsdCustomAction.Notification(AComponent: TComponent;
@@ -1212,9 +1236,10 @@ end;
 
 { TDataSetAction }
 
-function TDSAction.Execute: boolean;
+function TDSAction.LocalExecute: boolean;
 var i: integer;
 begin
+  result := true;
   if Assigned(FView.Owner)
      and (FView.Owner is TForm) then
         TForm(FView.Owner).ActiveControl := FView.Control;
@@ -1289,7 +1314,7 @@ end;
 
 { TChangeGuidesStatus }
 
-function TChangeGuidesStatus.Execute: boolean;
+function TChangeGuidesStatus.LocalExecute: boolean;
 var OldKey: string;
 begin
   if Assigned(FGuides) then begin
@@ -1297,7 +1322,7 @@ begin
      FGuides.Key := IntToStr(Integer(Status) + 1);
   end;
   try
-    result := inherited Execute;
+    result := inherited LocalExecute;
     if Assigned(FGuides) then begin
        FGuides.Key := IntToStr(Integer(Status) + 1);
        FGuides.TextValue := MovementStatus[Status];

@@ -11,7 +11,7 @@ type
 
 implementation
 
-uses UnilWin, Dialogs, Controls, StdCtrls, FormStorage, SysUtils, forms, MessagesUnit;
+uses UnilWin, VCL.Dialogs, Controls, StdCtrls, FormStorage, SysUtils, forms, MessagesUnit;
 
 { TUpdater }
 

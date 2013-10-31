@@ -40,7 +40,7 @@ type
     m_stMessagePassword: string;
   public
     { Public declarations }
-    procedure Execute(inMessage, inFullMessage: string);
+    procedure Execute(inMessage, inFullMessage: string; ShowFullInfo: boolean = false);
   end;
 
 
@@ -67,7 +67,7 @@ begin
   end;
 end;
 {--------------------------------------------------------------------------------------------------}
-procedure TMessagesForm.Execute(inMessage, inFullMessage: string);
+procedure TMessagesForm.Execute(inMessage, inFullMessage: string; ShowFullInfo: boolean = false);
 begin
   m_stMessagePassword:='';
   fFullMessage:=inFullMessage;
@@ -84,7 +84,7 @@ begin
   meFullMessage.Visible := false;
   Height := Height - meFullMessage.Height;
   btnDetails.Caption := 'Подробно >>';
-  btnDetails.Visible:=c_ShowFullInfo;
+  btnDetails.Visible := ShowFullInfo;
   if btnDetails.Visible then
      btnDetailsClick(btnDetails);
   ShowModal;
