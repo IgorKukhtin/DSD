@@ -23,7 +23,6 @@ type
     procedure SetDateEnd(const Value: TcxDateEdit);
     procedure SetDateStart(const Value: TcxDateEdit);
     procedure OnDblClick(Sender: TObject);
-    procedure OnDateEditChange(Sender: TObject);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
@@ -232,20 +231,6 @@ begin
     end;
 end;
 
-procedure TPeriodChoice.OnDateEditChange(Sender: TObject);
-begin
-  if Sender = FDateStart then
-     if Assigned(FDateStartChange) then
-        FDateStartChange(Sender);
-  if Sender = FDateEnd then
-     if Assigned(FDateEndChange) then
-        FDateEndChange(Sender);
-   // Вызываем только если форма видима!!!
-   if (not FUpdateDateEdit) then
-      if Assigned(FOnChange) then
-         FOnChange(Sender);
-end;
-
 procedure TPeriodChoice.OnDblClick(Sender: TObject);
 begin
   Execute;
@@ -261,8 +246,6 @@ begin
   if Assigned(FDateEnd) then begin
      FDateEndDblClick := FDateEnd.OnDblClick;
      FDateEnd.OnDblClick := OnDblClick;
-//     FDateEndChange := FDateEnd.Properties.OnChange;
-//     FDateEnd.Properties.OnChange := OnDateEditChange;
   end;
 end;
 
@@ -272,8 +255,6 @@ begin
   if Assigned(FDateStart) then begin
      FDateStartDblClick := FDateStart.OnDblClick;
      FDateStart.OnDblClick := OnDblClick;
-//     FDateStartChange := FDateStart.Properties.OnChange;
-//     FDateStart.Properties.OnChange := OnDateEditChange;
   end;
 end;
 

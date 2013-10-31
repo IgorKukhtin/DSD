@@ -790,7 +790,6 @@ var
   TreeList: TcxDBTreeList;
   BarManager: TdxBarManager;
   FormName: string;
-  GridFooter: boolean;
 begin
   if gc_isSetDefault then
      exit;

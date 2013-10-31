@@ -520,6 +520,7 @@ object SendForm: TSendForm
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
     end
     object SetUnErased: TdsdUpdateErased
       Category = 'DSDLib'

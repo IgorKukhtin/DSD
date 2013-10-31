@@ -52,7 +52,6 @@ var
   R : boolean;
   ProcessInformation : TProcessInformation;
   StartupInfo : TStartupInfo;
-  ExCode : cardinal;
   S: string;
 //  ExCode : integer;
 begin
@@ -138,7 +137,6 @@ begin
 end;
 
 Function GetFileVersionString(const FileName:String):String;
-var  Hig, Low :Integer;
 begin
   result:='';
   with GetFileVersion(FileName) do begin

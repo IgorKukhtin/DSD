@@ -11,7 +11,7 @@ type
 
 implementation
 
-uses UnilWin, Dialogs, Controls, StdCtrls, FormStorage, SysUtils, forms, MessagesUnit;
+uses UnilWin, VCL.Dialogs, Controls, StdCtrls, FormStorage, SysUtils, forms, MessagesUnit;
 
 { TUpdater }
 
@@ -19,6 +19,7 @@ class procedure TUpdater.AutomaticUpdateProgram;
 var LocalVersionInfo, BaseVersionInfo: TVersionInfo;
 begin
   try
+    Application.ProcessMessages;
     BaseVersionInfo := TdsdFormStorageFactory.GetStorage.LoadFileVersion(ExtractFileName(ParamStr(0)));
     LocalVersionInfo := UnilWin.GetFileVersion(ParamStr(0));
     if (BaseVersionInfo.VerHigh > LocalVersionInfo.VerHigh) or
