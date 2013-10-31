@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_StaffList(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer
-             , HoursPlan TFloat, PersonalCount TFloat, FundPayMonth TFloat, FundPayTurn TFloat
+             , HoursPlan TFloat, PersonalCount TFloat
              , Comment TVarChar
              , UnitId Integer, UnitName TVarChar                
              , PositionId Integer, PositionName TVarChar                
@@ -26,8 +26,6 @@ BEGIN
  
          , ObjectFloat_HoursPlan.ValueData     AS HoursPlan  
          , ObjectFloat_PersonalCount.ValueData AS PersonalCount
-         , ObjectFloat_FundPayMonth.ValueData  AS FundPayMonth
-         , ObjectFloat_FundPayTurn.ValueData    AS FundPayTurn
          
          , ObjectString_Comment.ValueData      AS Comment
                                                         
@@ -66,14 +64,6 @@ BEGIN
                                 ON ObjectFloat_PersonalCount.ObjectId = Object_StaffList.Id 
                                AND ObjectFloat_PersonalCount.DescId = zc_ObjectFloat_StaffList_PersonalCount()
                                
-          LEFT JOIN ObjectFloat AS ObjectFloat_FundPayMonth
-                                ON ObjectFloat_FundPayMonth.ObjectId = Object_StaffList.Id 
-                               AND ObjectFloat_FundPayMonth.DescId = zc_ObjectFloat_StaffList_FundPayMonth()
-
-          LEFT JOIN ObjectFloat AS ObjectFloat_FundPayTurn
-                                ON ObjectFloat_FundPayTurn.ObjectId = Object_StaffList.Id 
-                               AND ObjectFloat_FundPayTurn.DescId = zc_ObjectFloat_StaffList_FundPayTurn()
-
           LEFT JOIN ObjectString AS ObjectString_Comment
                                  ON ObjectString_Comment.ObjectId = Object_StaffList.Id 
                                 AND ObjectString_Comment.DescId = zc_ObjectString_StaffList_Comment()

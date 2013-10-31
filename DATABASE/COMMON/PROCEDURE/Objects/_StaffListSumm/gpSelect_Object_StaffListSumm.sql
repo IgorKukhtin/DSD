@@ -9,7 +9,7 @@ RETURNS TABLE (Id Integer
              , Value TFloat
              , Comment TVarChar
              , StaffListId Integer, StaffListName TVarChar                
-             , StaffListMasterId Integer, StaffListMasterName TVarChar                
+             , StaffListMasterId Integer, StaffListMasterCode Integer                
              , StaffListSummKindId Integer, StaffListSummKindName TVarChar                
              , isErased boolean
              ) AS
@@ -29,8 +29,8 @@ BEGIN
          , Object_StaffList.Id          AS StaffListId
          , Object_StaffList.ValueData   AS StaffListName
 
-         , Object_StaffListMaster.Id         AS StaffListMasterId
-         , Object_StaffListMaster.ValueData  AS StaffListMasterName
+         , Object_StaffListMaster.Id          AS StaffListMasterId
+         , Object_StaffListMaster.ObjectCode  AS StaffListMasterCode
 
          , Object_StaffListSummKind.Id          AS StaffListSummKindId
          , Object_StaffListSummKind.ValueData   AS StaffListSummKindName

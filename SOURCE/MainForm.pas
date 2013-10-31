@@ -202,8 +202,8 @@ type
     frxRTFExport: TfrxRTFExport;
     actPositionLevel: TdsdOpenForm;
     bbPositionLevel: TdxBarButton;
-    actStaffList: TdsdOpenForm;
-    bbStaffList: TdxBarButton;
+    actStaffListData: TdsdOpenForm;
+    bbStaffListData: TdxBarButton;
     actUpdateProgram: TAction;
     bbUpdateProgramm: TdxBarButton;
     actModelService: TdsdOpenForm;

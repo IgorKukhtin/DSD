@@ -92,6 +92,7 @@ object StaffListChoiceForm: TStaffListChoiceForm
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
+    IndexFieldNames = 'Id'
     Params = <>
     Left = 48
     Top = 160
@@ -263,34 +264,43 @@ object StaffListChoiceForm: TStaffListChoiceForm
           Name = 'Key'
           Component = ClientDataSet
           ComponentItem = 'Id'
+        end
+        item
+          Name = 'Code'
+          Component = ClientDataSet
+          ComponentItem = 'Code'
+        end
+        item
+          Name = 'UnitId'
+          Component = ClientDataSet
+          ComponentItem = 'UnitId'
+        end
+        item
+          Name = 'UnitName'
+          Component = ClientDataSet
+          ComponentItem = 'UnitName'
           DataType = ftString
         end
         item
-          Name = 'TextValue'
+          Name = 'PositionId'
           Component = ClientDataSet
-          ComponentItem = 'Name'
+          ComponentItem = 'PositionId'
+        end
+        item
+          Name = 'PositionName'
+          Component = ClientDataSet
+          ComponentItem = 'PositionName'
           DataType = ftString
         end
         item
-          Name = 'PersonalDriverId'
+          Name = 'PositionLevelId'
           Component = ClientDataSet
-          ComponentItem = 'PersonalDriverId'
+          ComponentItem = 'PositionLevelId'
         end
         item
-          Name = 'PersonalDriverCode'
+          Name = 'PositionLevelName'
           Component = ClientDataSet
-          ComponentItem = 'PersonalDriverCode'
-        end
-        item
-          Name = 'PersonalDriverName'
-          Component = ClientDataSet
-          ComponentItem = 'PersonalDriverName'
-          DataType = ftString
-        end
-        item
-          Name = 'CarModelName'
-          Component = ClientDataSet
-          ComponentItem = 'CarModelName'
+          ComponentItem = 'PositionLevelName'
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

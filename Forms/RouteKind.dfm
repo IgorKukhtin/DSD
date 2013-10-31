@@ -97,8 +97,8 @@ object RouteKindForm: TRouteKindForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 224
-    Top = 144
+    Left = 240
+    Top = 88
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -117,8 +117,8 @@ object RouteKindForm: TRouteKindForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 264
-    Top = 80
+    Left = 152
+    Top = 88
     DockControlHeights = (
       0
       0
@@ -229,8 +229,8 @@ object RouteKindForm: TRouteKindForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 304
-    Top = 112
+    Left = 264
+    Top = 136
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -242,6 +242,7 @@ object RouteKindForm: TRouteKindForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -300,7 +301,7 @@ object RouteKindForm: TRouteKindForm
       end>
     Params = <>
     Left = 144
-    Top = 104
+    Top = 152
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -313,12 +314,12 @@ object RouteKindForm: TRouteKindForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 96
-    Top = 176
+    Left = 296
+    Top = 216
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 288
-    Top = 200
+    Left = 176
+    Top = 216
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -341,7 +342,7 @@ object RouteKindForm: TRouteKindForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    Left = 136
-    Top = 224
+    Left = 48
+    Top = 216
   end
 end

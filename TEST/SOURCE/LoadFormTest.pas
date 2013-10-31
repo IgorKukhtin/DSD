@@ -29,12 +29,10 @@ type
     procedure LoadContractFormTest;
     procedure LoadBusinessFormTest;
     procedure LoadBranchFormTest;
-    procedure LoadUnitFormTest;
     procedure LoadGoodsGroupFormTest;
     procedure LoadGoodsFormTest;
     procedure LoadGoodsKindFormTest;
     procedure LoadMeasureFormTest;
-    procedure LoadPriceListFormTest;
     procedure LoadGoodsPropertyFormTest;
     procedure LoadGoodsPropertyValueFormTest;
     procedure LoadCashFormTest;
@@ -48,6 +46,7 @@ type
     procedure LoadReturnInFormTest;
     procedure LoadLossFormTest;
     procedure LoadInventoryFormTest;
+    procedure LoadPriceListFormTest;
     procedure LoadProductionUnionFormTest;
     procedure LoadProductionSeparateFormTest;
     procedure LoadTransportFormTest;
@@ -79,6 +78,7 @@ type
     procedure LoadWorkTimeKindFormTest;
     procedure LoadSheetWorkTimeFormTest;
     procedure LoadUnionFormTest;
+    procedure LoadUnitFormTest;
   end;
 
 implementation
@@ -610,11 +610,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionLevelEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPositionLevelEditForm');
   //штатное расписание данные
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListDataForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStaffListDataForm');
+  //штатное расписание выбор
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStaffListForm');
-   //штатное расписание выбор
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListChoiceForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TStaffListChoiceForm');
+  //Типы сумм для штатного расписания
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListSummKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStaffListSummKindForm');
   //TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListEditForm'));
   //TdsdFormStorageFactory.GetStorage.Load('TStaffListEditForm');
   //Типы модели начисления

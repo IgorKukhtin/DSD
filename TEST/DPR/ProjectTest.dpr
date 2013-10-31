@@ -234,7 +234,7 @@ uses
   SheetWorkTimeJournal in '..\..\Forms\Document\SheetWorkTimeJournal.pas' {SheetWorkTimeJournalForm},
   PositionLevel in '..\..\Forms\PositionLevel.pas' {PositionLevelForm},
   PositionLevelEdit in '..\..\Forms\PositionLevelEdit.pas' {PositionLevelEditForm},
-  StaffList in '..\..\Forms\StaffList.pas' {StaffListForm},
+  StaffListData in '..\..\Forms\StaffListData.pas' {StaffListDataForm},
   StaffListEdit in '..\..\Forms\StaffListEdit.pas' {StaffListEditForm},
   PersonalTest in '..\SOURCE\Objects\All\PersonalTest.pas',
   SheetWorkTimeMovementItemTest in '..\SOURCE\MovementItem\All\SheetWorkTimeMovementItemTest.pas',
@@ -247,7 +247,8 @@ uses
   ModelServiceEdit in '..\..\Forms\ModelServiceEdit.pas' {ModelServiceEditForm: TParentForm},
   Object_StoragePlace in '..\..\Forms\Object_StoragePlace.pas' {Object_StoragePlace: TParentForm},
   Report_TransportHoursWork in '..\..\Forms\Report\Report_TransportHoursWork.pas' {Report_TransportHoursWorkForm: TParentForm},
-  StaffListChoice in '..\..\Forms\StaffListChoice.pas' {StaffListChoiceForm: TParentForm};
+  StaffList in '..\..\Forms\StaffList.pas' {StaffListForm: TParentForm},
+  StaffListSummKind in '..\..\Forms\StaffListSummKind.pas' {StaffListSummKindForm: TParentForm};
 
 {$R *.RES}
 
