@@ -84,9 +84,6 @@ object StaffListForm: TStaffListForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = 345
-    ExplicitWidth = 512
-    ExplicitHeight = 430
     object cxGridDBTableViewStaffLis: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = StaffListDS
@@ -106,6 +103,12 @@ object StaffListForm: TStaffListForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object clslCode: TcxGridDBColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'Code'
+        HeaderAlignmentVert = vaCenter
+        Width = 35
+      end
       object clPositionName: TcxGridDBColumn
         Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
         DataBinding.FieldName = 'PositionName'
@@ -117,8 +120,10 @@ object StaffListForm: TStaffListForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        FooterAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 155
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 178
       end
       object clPositionLevelName: TcxGridDBColumn
         Caption = #1056#1072#1079#1088#1103#1076
@@ -132,24 +137,25 @@ object StaffListForm: TStaffListForm
           end>
         Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
-        Width = 67
+        Width = 77
       end
       object clHoursPlan: TcxGridDBColumn
         Caption = #1055#1083#1072#1085' '#1095#1072#1089#1086#1074
         DataBinding.FieldName = 'HoursPlan'
         HeaderAlignmentVert = vaCenter
-        Width = 98
+        Width = 113
       end
       object clPersonalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'.'#1077#1076'.'
         DataBinding.FieldName = 'PersonalCount'
         HeaderAlignmentVert = vaCenter
-        Width = 61
+        Width = 71
       end
       object clComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
-        Width = 89
+        HeaderAlignmentVert = vaCenter
+        Width = 102
       end
       object clsfIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -173,11 +179,10 @@ object StaffListForm: TStaffListForm
     Width = 857
     Height = 144
     Align = alBottom
-    TabOrder = 6
+    TabOrder = 5
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = 306
     object cxGridDBTableViewStaffListCost: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = StaffListCostDS
@@ -235,9 +240,7 @@ object StaffListForm: TStaffListForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = -8
-    ExplicitTop = 408
-    object cxGridDBTableView1: TcxGridDBTableView
+    object cxGridDBTableStaffListSumm: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = StaffListCostDS
       DataController.Filter.Options = [fcoCaseInsensitive]
@@ -261,25 +264,32 @@ object StaffListForm: TStaffListForm
         Caption = #1058#1080#1087' '#1089#1091#1084#1084#1099' '#1096#1090#1072#1090#1085#1086#1075#1086' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1103
         DataBinding.FieldName = 'StaffListSummKindName'
         HeaderAlignmentVert = vaCenter
-        Width = 261
+        Width = 186
       end
       object clValue: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072',  '#1075#1088#1085'.'
         DataBinding.FieldName = 'Value'
         HeaderAlignmentVert = vaCenter
-        Width = 97
+        Width = 133
       end
       object clStaffListMasterName: TcxGridDBColumn
         Caption = #1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077' - '#1073#1072#1079#1086#1074#1086#1077
         DataBinding.FieldName = 'StaffListMasterName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = StaffListSummChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentVert = vaCenter
-        Width = 281
+        Width = 330
       end
       object clslsummComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentVert = vaCenter
-        Width = 164
+        Width = 192
       end
       object clslsummisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -289,7 +299,7 @@ object StaffListForm: TStaffListForm
       end
     end
     object cxGridLevel3: TcxGridLevel
-      GridView = cxGridDBTableView1
+      GridView = cxGridDBTableStaffListSumm
     end
   end
   object MasterDS: TDataSource
@@ -612,6 +622,24 @@ object StaffListForm: TStaffListForm
       Caption = 'actUpdateStaffListCost'
       DataSource = StaffListCostDS
     end
+    object StaffListSummChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'StaffListSummChoiceForm'
+      FormName = 'TStaffListChoiceForm'
+      GuiParams = <
+        item
+          Name = 'key'
+          Component = StaffListSummCDS
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'TextValue'
+          Component = StaffListSummCDS
+          ComponentItem = 'PositionName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
   end
   object spSelectMaster: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Unit'
@@ -700,6 +728,11 @@ object StaffListForm: TStaffListForm
         Component = StaffListCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'inCode'
+        Component = StaffListCDS
+        ComponentItem = 'Code'
       end
       item
         Name = 'inHoursPlan'

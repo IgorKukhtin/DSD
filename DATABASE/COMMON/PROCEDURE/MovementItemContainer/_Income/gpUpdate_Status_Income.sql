@@ -19,7 +19,7 @@ BEGIN
             PERFORM gpUnComplete_Movement (inMovementId, inSession);
          WHEN zc_Enum_StatusCode_Complete() THEN
             -- проверка прав пользователя на вызов процедуры
-            PERFORM lpCheckRight (inSession, zc_Enum_Process_Complete_Income));
+            PERFORM lpCheckRight (inSession, zc_Enum_Process_Complete_Income());
             --
             PERFORM gpComplete_Movement_Income (inMovementId, FALSE, inSession);
          WHEN zc_Enum_StatusCode_Erased() THEN
