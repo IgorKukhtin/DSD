@@ -19,7 +19,7 @@ object TransportJournalForm: TTransportJournalForm
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 26
+    Top = 0
     Width = 1276
     Height = 31
     Align = alTop
@@ -57,8 +57,6 @@ object TransportJournalForm: TTransportJournalForm
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
-    ExplicitTop = 67
-    ExplicitHeight = 360
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -264,8 +262,8 @@ object TransportJournalForm: TTransportJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
