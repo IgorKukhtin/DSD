@@ -256,16 +256,14 @@ uses
   AncestorEditDialog in '..\..\Forms\Ancestor\AncestorEditDialog.pas' {AncestorEditDialogForm: TParentForm},
   AncestorData in '..\..\Forms\Ancestor\AncestorData.pas' {AncestorDataForm: TParentForm},
   AncestorReport in '..\..\Forms\Ancestor\AncestorReport.pas' {AncestorReportForm: TParentForm},
-  Protocol in '..\..\Forms\System\Protocol.pas' {ProtocolForm: TParentForm};
+  Protocol in '..\..\Forms\System\Protocol.pas' {ProtocolForm: TParentForm},
+  AncestorDBGrid in '..\..\Forms\Ancestor\AncestorDBGrid.pas' {AncestorDBGridForm: TParentForm};
 
 {$R *.RES}
 
 begin
   Application.Initialize;
   Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TAncestorDataForm, AncestorDataForm);
-  Application.CreateForm(TAncestorReportForm, AncestorReportForm);
-  Application.CreateForm(TProtocolForm, ProtocolForm);
   Application.Run;
   DUnitTestRunner.RunRegisteredTests;
 end.
