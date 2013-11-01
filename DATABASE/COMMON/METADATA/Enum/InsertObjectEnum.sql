@@ -175,6 +175,7 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 40101, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_40101');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 40301, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_40301');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 100301, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_100301');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 110101, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_110101');
 
      -- !!! 
      -- !!! УП: 2-уровень Управленческих назначений
@@ -285,6 +286,7 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.11.13                                        * add zc_Enum_Account_110101
  30.10.13         * add Типы сумм для штатного расписания              
  07.10.13                                        * role...
  03.10.13                                        * add zc_Enum_InfoMoney_20901, zc_Enum_InfoMoney_30101

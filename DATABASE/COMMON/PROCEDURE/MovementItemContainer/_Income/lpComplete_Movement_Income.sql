@@ -786,7 +786,7 @@ BEGIN
                                                                                                       , inObjectId_4        := vbPaidKindId
                                                                                                        )
                                                                    END
-                                   , ContainerId_Transit = CASE WHEN AccountId_Transit = 0 THEN 0
+                                   , ContainerId_Transit = CASE WHEN _tmpItem_SummPartner.AccountId_Transit = 0 THEN 0
                                                                 ELSE
                                                                    CASE WHEN _tmpItem_SummPartner.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                                                          AND vbPersonalId_From = 0
@@ -836,7 +836,7 @@ BEGIN
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
        -- это обычная проводка
        SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, _tmpItem_SummPartner.ContainerId, 0 AS ParentId, -1 * _tmpItem_SummPartner.OperSumm_Partner
-            , CASE WHEN AccountId_Transit <> 0 THEN vbOperDatePartner ELSE vbOperDate END AS OperDate
+            , CASE WHEN _tmpItem_SummPartner.AccountId_Transit <> 0 THEN vbOperDatePartner ELSE vbOperDate END AS OperDate
             , FALSE
        FROM _tmpItem_SummPartner
        WHERE _tmpItem_SummPartner.OperSumm_Partner <> 0
@@ -852,7 +852,7 @@ BEGIN
      UNION ALL
        -- это расчеты с поставщиком за счет водителя
        SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, _tmpItem_SummPartner.ContainerId, 0 AS ParentId, 1 * _tmpItem_SummPartner.OperSumm_Partner
-            , CASE WHEN AccountId_Transit <> 0 THEN vbOperDatePartner ELSE vbOperDate END AS OperDate
+            , CASE WHEN _tmpItem_SummDriver.AccountId_Transit <> 0 THEN vbOperDatePartner ELSE vbOperDate END AS OperDate
             , TRUE
        FROM _tmpItem_SummDriver
             JOIN _tmpItem_SummPartner ON _tmpItem_SummPartner.InfoMoneyId = _tmpItem_SummDriver.InfoMoneyId
@@ -861,6 +861,7 @@ BEGIN
        -- это две проводки для счета Транзит
        SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, _tmpItem_SummPartner.ContainerId, 0 AS ParentId
             , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN 1 ELSE -1 END * _tmpItem_SummPartner.OperSumm_Partner
+            , tmpOperDate.OperDate
             , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN TRUE ELSE FALSE END AS IsActive
        FROM (SELECT vbOperDate AS OperDate UNION ALL SELECT vbOperDatePartner AS OperDate) AS tmpOperDate
             JOIN _tmpItem_SummPartner ON _tmpItem_SummPartner.OperSumm_Partner <> 0
@@ -937,7 +938,7 @@ BEGIN
                                                                         , inDescId_3          := zc_ContainerLinkObject_Car()
                                                                         , inObjectId_3        := vbCarId
                                                                         )
-                                  ,ContainerId_Transit = CASE WHEN AccountId_Transit = 0 THEN 0
+                                  ,ContainerId_Transit = CASE WHEN _tmpItem_SummDriver.AccountId_Transit = 0 THEN 0
                                                               ELSE
                                                   -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1) Сотрудники(поставщики) 3)Статьи назначения
                                                   lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -989,15 +990,15 @@ BEGIN
      FROM (SELECT _tmpItem.MovementItemId
                 , _tmpItem.OperSumm_Partner AS OperSumm
                 , tmpOperDate.OperDate
-                , CASE WHEN tmpOperDate = vbOperDate THEN _tmpItem.ContainerId_Summ ELSE _tmpItem_SummPartner.ContainerId_Transit END AS ActiveContainerId
-                , CASE WHEN tmpOperDate = vbOperDate AND _tmpItem_SummPartner.AccountId_Transit <> 0 THEN _tmpItem_SummPartner.ContainerId_Transit ELSE _tmpItem_SummPartner.ContainerId END AS PassiveContainerId
-                , CASE WHEN tmpOperDate = vbOperDate THEN _tmpItem.AccountId ELSE _tmpItem_SummPartner.AccountId_Transit END AS ActiveAccountId
-                , CASE WHEN tmpOperDate = vbOperDate AND _tmpItem_SummPartner.AccountId_Transit <> 0 THEN _tmpItem_SummPartner.AccountId_Transit ELSE _tmpItem_SummPartner.AccountId END AS PassiveAccountId
+                , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN _tmpItem.ContainerId_Summ ELSE _tmpItem_SummPartner.ContainerId_Transit END AS ActiveContainerId
+                , CASE WHEN tmpOperDate.OperDate = vbOperDate AND _tmpItem_SummPartner.AccountId_Transit <> 0 THEN _tmpItem_SummPartner.ContainerId_Transit ELSE _tmpItem_SummPartner.ContainerId END AS PassiveContainerId
+                , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN _tmpItem.AccountId ELSE _tmpItem_SummPartner.AccountId_Transit END AS ActiveAccountId
+                , CASE WHEN tmpOperDate.OperDate = vbOperDate AND _tmpItem_SummPartner.AccountId_Transit <> 0 THEN _tmpItem_SummPartner.AccountId_Transit ELSE _tmpItem_SummPartner.AccountId END AS PassiveAccountId
            FROM _tmpItem
                 LEFT JOIN _tmpItem_SummPartner ON _tmpItem_SummPartner.InfoMoneyId = _tmpItem.InfoMoneyId_Detail
                 LEFT JOIN (SELECT vbOperDate AS OperDate UNION ALL SELECT vbOperDatePartner AS OperDate) AS tmpOperDate ON tmpOperDate.OperDate = vbOperDate
                                                                                                                        OR  (tmpOperDate.OperDate = vbOperDatePartner
-                                                                                                                        AND _tmpItem_SummPartner.AccountId_Transit <> 0)
+                                                                                                                        AND COALESCE (_tmpItem_SummPartner.AccountId_Transit, 0) <> 0)
            WHERE _tmpItem.OperSumm_Partner <> 0
           ) AS tmpMIReport;
 
@@ -1057,16 +1058,16 @@ BEGIN
                 , tmpOperDate.OperDate
                 , _tmpItem.ContainerId_Summ
                 , _tmpItem.AccountId
-                , CASE WHEN tmpOperDate = vbOperDate THEN _tmpItem_SummPartner.ContainerId ELSE _tmpItem_SummDriver.ContainerId_Transit END AS ActiveContainerId
-                , CASE WHEN tmpOperDate = vbOperDate AND _tmpItem_SummPartner.AccountId_Transit <> 0 THEN _tmpItem_SummDriver.ContainerId_Transit ELSE _tmpItem_SummDriver.ContainerId END AS PassiveContainerId
-                , CASE WHEN tmpOperDate = vbOperDate THEN _tmpItem_SummPartner.AccountId ELSE _tmpItem_SummDriver.AccountId_Transit END AS ActiveAccountId
-                , CASE WHEN tmpOperDate = vbOperDate AND _tmpItem_SummPartner.AccountId_Transit <> 0 THEN _tmpItem_SummDriver.AccountId_Transit ELSE _tmpItem_SummDriver.AccountId END AS PassiveAccountId
+                , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN _tmpItem_SummPartner.ContainerId ELSE _tmpItem_SummDriver.ContainerId_Transit END AS ActiveContainerId
+                , CASE WHEN tmpOperDate.OperDate = vbOperDate AND _tmpItem_SummPartner.AccountId_Transit <> 0 THEN _tmpItem_SummDriver.ContainerId_Transit ELSE _tmpItem_SummDriver.ContainerId END AS PassiveContainerId
+                , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN _tmpItem_SummPartner.AccountId ELSE _tmpItem_SummDriver.AccountId_Transit END AS ActiveAccountId
+                , CASE WHEN tmpOperDate.OperDate = vbOperDate AND _tmpItem_SummPartner.AccountId_Transit <> 0 THEN _tmpItem_SummDriver.AccountId_Transit ELSE _tmpItem_SummDriver.AccountId END AS PassiveAccountId
            FROM _tmpItem
                 JOIN _tmpItem_SummDriver ON _tmpItem_SummDriver.InfoMoneyId = _tmpItem.InfoMoneyId
                 LEFT JOIN _tmpItem_SummPartner ON _tmpItem_SummPartner.InfoMoneyId = _tmpItem.InfoMoneyId
                 LEFT JOIN (SELECT vbOperDate AS OperDate UNION ALL SELECT vbOperDatePartner AS OperDate) AS tmpOperDate ON tmpOperDate.OperDate = vbOperDate
                                                                                                                        OR  (tmpOperDate.OperDate = vbOperDatePartner
-                                                                                                                        AND _tmpItem_SummDriver.AccountId_Transit <> 0)
+                                                                                                                        AND COALESCE (_tmpItem_SummDriver.AccountId_Transit, 0) <> 0)
            WHERE _tmpItem.OperSumm_Partner <> 0
           ) AS tmpMIReport;
 
@@ -1114,9 +1115,9 @@ LANGUAGE PLPGSQL VOLATILE;
 -- тест
 /*
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmpItem_SummPartner (ContainerId Integer, AccountId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, BusinessId Integer, PartionMovementId Integer, OperSumm_Partner TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpItem_SummPartner (ContainerId Integer, AccountId Integer, ContainerId_Transit Integer, AccountId_Transit Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, BusinessId Integer, PartionMovementId Integer, OperSumm_Partner TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpItem_SummPacker (ContainerId Integer, AccountId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, BusinessId Integer, OperSumm_Packer TFloat) ON COMMIT DROP;
-     CREATE TEMP TABLE _tmpItem_SummDriver (ContainerId Integer, AccountId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, BusinessId Integer, OperSumm_Driver TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpItem_SummDriver (ContainerId Integer, AccountId Integer, ContainerId_Transit Integer, AccountId_Transit Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, BusinessId Integer, OperSumm_Driver TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
                                , ContainerId_Summ Integer, ContainerId_Goods Integer, ContainerId_CountSupplier Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
                                , ContainerId_GoodsTicketFuel Integer, GoodsId_TicketFuel Integer
@@ -1125,7 +1126,7 @@ LANGUAGE PLPGSQL VOLATILE;
                                , BusinessId Integer
                                , isPartionCount Boolean, isPartionSumm Boolean, isCountSupplier Boolean
                                , PartionGoodsId Integer) ON COMMIT DROP;
--- SELECT * FROM lpUnComplete_Movement (inMovementId:= 219, inUserId:= 2)
--- SELECT * FROM lpComplete_Movement_Income (inMovementId:= 219, inUserId:= 2, inIsLastComplete:= FALSE)
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 219, inSession:= '2')
+-- SELECT * FROM lpUnComplete_Movement (inMovementId:= 1100 , inUserId:= zfCalc_UserAdmin() :: Integer)
+-- SELECT * FROM lpComplete_Movement_Income (inMovementId:= 1100 , inUserId:= zfCalc_UserAdmin() :: Integer, inIsLastComplete:= FALSE)
+-- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 1100 , inSession:= zfCalc_UserAdmin())
 */
