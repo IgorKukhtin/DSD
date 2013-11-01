@@ -126,8 +126,8 @@
     Width = 273
   end
   object ActionList: TActionList
-    Left = 296
-    Top = 72
+    Left = 16
+    Top = 32
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spGet
@@ -140,6 +140,7 @@
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object dsdFormClose1: TdsdFormClose
     end
@@ -212,8 +213,8 @@
         Value = Null
         ParamType = ptInputOutput
       end>
-    Left = 240
-    Top = 8
+    Left = 296
+    Top = 24
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Account'
@@ -287,8 +288,8 @@
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
       end>
-    Left = 192
-    Top = 88
+    Left = 328
+    Top = 80
   end
   object AccountGroupGuides: TdsdGuides
     KeyField = 'Id'
@@ -320,12 +321,12 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 136
-    Top = 40
+    Left = 16
+    Top = 64
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 344
-    Top = 48
+    Left = 48
+    Top = 136
   end
   object InfoMoneyDestinationGuides: TdsdGuides
     KeyField = 'Id'

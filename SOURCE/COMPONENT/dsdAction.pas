@@ -16,6 +16,8 @@ type
     procedure SetTabSheet(const Value: TcxTabSheet);
   protected
     function GetDisplayName: string; override;
+  public
+    procedure Assign(Source: TPersistent); override;
   published
     // При установке данного свойства процедура будет вызвана только если TabSheet активен
     property TabSheet: TcxTabSheet read FTabSheet write SetTabSheet;
@@ -107,6 +109,23 @@ type
     property SecondaryShortCuts;
   end;
 
+  TMultiAction = class(TdsdCustomAction)
+  private
+    FActionList: TOwnedCollection;
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    function LocalExecute: boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+  published
+    property ActionList: TOwnedCollection read FActionList write FActionList;
+    property Caption;
+    property Hint;
+    property ImageIndex;
+    property ShortCut;
+    property SecondaryShortCuts;
+  end;
+
   TdsdDataSetRefresh = class(TdsdCustomDataSetAction)
   private
     FRefreshOnTabSetChanges: boolean;
@@ -130,7 +149,9 @@ type
   end;
 
   TdsdExecStoredProc = class(TdsdCustomDataSetAction)
-
+  published
+    property QuestionBeforeExecute;
+    property InfoAfterExecute;
   end;
 
   TdsdUpdateDataSet = class(TdsdCustomDataSetAction)
@@ -427,6 +448,7 @@ begin
   RegisterActions('DSDLib', [TdsdUpdateErased], TdsdUpdateErased);
   RegisterActions('DSDLib', [TdsdUpdateDataSet], TdsdUpdateDataSet);
   RegisterActions('DSDLib', [TInsertRecord], TInsertRecord);
+  RegisterActions('DSDLib', [TMultiAction], TMultiAction);
   RegisterActions('DSDLib', [TOpenChoiceForm], TOpenChoiceForm);
   RegisterActions('DSDLib', [TUpdateRecord], TUpdateRecord);
 end;
@@ -454,6 +476,7 @@ end;
 function TdsdCustomDataSetAction.LocalExecute: boolean;
 var i: integer;
 begin
+  result := true;
   for I := 0 to StoredProcList.Count - 1  do
       if Assigned(StoredProcList[i]) then
          if Assigned(StoredProcList[i].StoredProc) then begin
@@ -1204,6 +1227,17 @@ end;
 
 { TdsdStoredProcItem }
 
+procedure TdsdStoredProcItem.Assign(Source: TPersistent);
+begin
+  if Source is TdsdStoredProcItem then
+     with TdsdStoredProcItem(Source) do begin
+          Self.TabSheet := TabSheet;
+          Self.StoredProc := StoredProc;
+     end
+  else
+    inherited Assign(Source);
+end;
+
 function TdsdStoredProcItem.GetDisplayName: string;
 begin
   result := inherited;
@@ -1356,6 +1390,35 @@ begin
      FOnChange := FGuides.OnChange;
      FGuides.OnChange := OnChange;
   end;
+end;
+
+{ TMultiAction }
+
+constructor TMultiAction.Create(AOwner: TComponent);
+begin
+  inherited;
+  FActionList := TOwnedCollection.Create(Self, TActionItem);
+end;
+
+function TMultiAction.LocalExecute: boolean;
+var i: integer;
+begin
+   for i := 0 to ActionList.Count - 1 do
+       if Assigned(TActionItem(ActionList.Items[i]).Action) then
+          TActionItem(ActionList.Items[i]).Action.Execute;
+end;
+
+procedure TMultiAction.Notification(AComponent: TComponent;
+  Operation: TOperation);
+var i: integer;
+begin
+  inherited;
+  if csDesigning in ComponentState then
+    if (Operation = opRemove) and Assigned(ActionList) then
+       if AComponent is TCustomAction then
+           for i := 0 to ActionList.Count - 1 do
+               if TActionItem(ActionList.Items[i]).Action = AComponent then
+                  TActionItem(ActionList.Items[i]).Action := nil;
 end;
 
 end.

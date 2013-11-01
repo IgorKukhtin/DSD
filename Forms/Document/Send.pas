@@ -124,6 +124,9 @@ type
     spInsertUpdateMovement: TdsdStoredProc;
     spErasedMIMaster: TdsdStoredProc;
     spUnErasedMIMaster: TdsdStoredProc;
+    MultiAction: TMultiAction;
+    actNewDocument: TdsdInsertUpdateAction;
+    dsdFormClose: TdsdFormClose;
   private
   public
   end;
