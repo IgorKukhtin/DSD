@@ -57,8 +57,6 @@ object TransportJournalForm: TTransportJournalForm
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
-    ExplicitTop = 67
-    ExplicitHeight = 360
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -187,7 +185,7 @@ object TransportJournalForm: TTransportJournalForm
         Width = 45
       end
       object StartRun: TcxGridDBColumn
-        Caption = ' '#1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1074#1099#1077#1079#1076#1072' '#1092#1072#1082#1090
+        Caption = #1044#1072#1090#1072'/'#1042#1088#1077#1084#1103' '#1074#1099#1077#1079#1076#1072' '#1092#1072#1082#1090
         DataBinding.FieldName = 'StartRun'
         HeaderAlignmentVert = vaCenter
         Width = 45

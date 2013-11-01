@@ -371,7 +371,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_ProfitLoss_40209() RETURNS Integer AS $BODY$B
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 30.10.13                                        * add zc_Enum_Account_110101
+ 31.10.13                                        * add zc_Enum_Account_110101
  30.10.13         * add Типы сумм для штатного расписания
  03.10.13                                        * add zc_Enum_InfoMoney_20901, zc_Enum_InfoMoney_30101
  01.10.13         * add  Типы рабочего времени

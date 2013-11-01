@@ -34,12 +34,12 @@ BEGIN
            , CAST (CASE WHEN tmpMovementItemContainer.isActive = TRUE THEN tmpMovementItemContainer.Amount ELSE 0 END AS TFloat) AS DebetAmount
            , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active() THEN Object_Account_View.AccountGroupName ELSE NULL END  AS TVarChar) AS DebetAccountGroupName
            , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active() THEN Object_Account_View.AccountDirectionName ELSE NULL END  AS TVarChar) AS DebetAccountDirectionName
-           , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active() THEN Object_Account_View.AccountGroupName || ' ' || Object_Account_View.AccountName ELSE NULL END  AS TVarChar) AS DebetAccountName
+           , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) = zc_Enum_AccountKind_Active() THEN Object_Account_View.AccountGroupName || CASE WHEN Object_Account_View.AccountDirectionName <> Object_Account_View.AccountGroupName THEN ' ' || Object_Account_View.AccountDirectionName ELSE '' END || CASE WHEN Object_Account_View.AccountName <> Object_Account_View.AccountDirectionName THEN ' ' || Object_Account_View.AccountName ELSE '' END ELSE NULL END  AS TVarChar) AS DebetAccountName
 
            , CAST (CASE WHEN tmpMovementItemContainer.isActive = FALSE THEN -1 * tmpMovementItemContainer.Amount ELSE 0 END AS TFloat) AS KreditAmount
            , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active() THEN Object_Account_View.AccountGroupName ELSE NULL END  AS TVarChar) AS KreditAccountGroupName
            , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active() THEN Object_Account_View.AccountDirectionName ELSE NULL END  AS TVarChar) AS KreditAccountDirectionName
-           , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active() THEN Object_Account_View.AccountGroupName || ' ' || Object_Account_View.AccountName ELSE NULL END  AS TVarChar) AS KreditAccountName
+           , CAST (CASE WHEN COALESCE (ObjectLink_AccountKind.ChildObjectId, 0) <> zc_Enum_AccountKind_Active() THEN Object_Account_View.AccountGroupName || CASE WHEN Object_Account_View.AccountDirectionName <> Object_Account_View.AccountGroupName THEN ' ' || Object_Account_View.AccountDirectionName ELSE '' END || CASE WHEN Object_Account_View.AccountName <> Object_Account_View.AccountDirectionName THEN ' ' || Object_Account_View.AccountName ELSE '' END ELSE NULL END  AS TVarChar) AS KreditAccountName
 
            , CAST (ABS(tmpMovementItemContainer.Price) AS TFloat) AS Price
            , Object_Account_View.onComplete AS AccountOnComplete
@@ -64,7 +64,7 @@ BEGIN
        FROM 
            (SELECT 
                   Movement.InvNumber
-                , Movement.OperDate
+                , MovementItemContainer.OperDate
                 , SUM (MovementItemContainer.Amount)  AS Amount
                 , MovementItemContainer.isActive
                 , Container.ObjectId
@@ -201,7 +201,7 @@ BEGIN
                  LEFT JOIN Object AS Object_GoodsKind_Parent ON Object_GoodsKind_Parent.Id = MILinkObject_GoodsKind.ObjectId
 
             GROUP BY Movement.InvNumber
-                   , Movement.OperDate
+                   , MovementItemContainer.OperDate
                    , Container.ObjectId
                    , MovementItemContainer.Id
                    , MovementItemContainer.isActive
@@ -243,6 +243,7 @@ ALTER FUNCTION gpSelect_MovementItemContainer_Movement (Integer, TVarChar) OWNER
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 01.11.13                                        * change DebetAccountName and KreditAccountName
  31.10.13                                        * add InvNumber and OperDate
  21.10.13                                        * add zc_ContainerLinkObject_Business
  12.10.13                                        * rename to DirectionObject and DestinationObject
