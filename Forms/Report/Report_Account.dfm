@@ -1,7 +1,7 @@
 object Report_AccountForm: TReport_AccountForm
   Left = 0
   Top = 0
-  Caption = #1054#1090#1095#1077#1090' '#1087#1086' c'#1095#1077#1090#1091
+  Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091'>'
   ClientHeight = 395
   ClientWidth = 1189
   Color = clBtnFace

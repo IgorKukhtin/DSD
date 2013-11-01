@@ -21,8 +21,8 @@ object MainForm: TMainForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1481,7 +1481,7 @@ object MainForm: TMainForm
     end
     object actReport_Account: TdsdOpenForm
       Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1091
+      Caption = #1054#1090#1095#1077#1090' '#1086#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091
       Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1091
       FormName = 'TReport_AccountForm'
       GuiParams = <>
