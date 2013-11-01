@@ -12,18 +12,19 @@ uses
   cxGridTableView, cxGridDBTableView, cxGrid;
 
 type
-  TAncestorEnumForm1 = class(TAncestorEnumForm)
+  TPaidKindForm = class(TAncestorEnumForm)
+    clName: TcxGridDBColumn;
   private
     { Private declarations }
   public
     { Public declarations }
   end;
 
-var
-  AncestorEnumForm1: TAncestorEnumForm1;
-
 implementation
 
 {$R *.dfm}
+
+initialization
+  RegisterClass(TPaidKindForm);
 
 end.

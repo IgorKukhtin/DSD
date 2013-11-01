@@ -12,8 +12,6 @@ object AncestorEnumForm: TAncestorEnumForm
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.isAlwaysRefresh = False
-  AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.ChoiceAction = dsdChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -56,13 +54,6 @@ object AncestorEnumForm: TAncestorEnumForm
     Params = <>
     Left = 208
     Top = 56
-  end
-  object cxPropertiesStore: TcxPropertiesStore
-    Components = <>
-    StorageName = 'cxPropertiesStore'
-    StorageType = stStream
-    Left = 96
-    Top = 40
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -119,9 +110,12 @@ object AncestorEnumForm: TAncestorEnumForm
       WholeRow = False
     end
     object bbRefresh: TdxBarButton
-      Action = actRefresh
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Category = 0
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Visible = ivAlways
       ImageIndex = 4
+      ShortCut = 116
     end
     object bbStatic: TdxBarStatic
       Caption = '     '
@@ -129,10 +123,44 @@ object AncestorEnumForm: TAncestorEnumForm
       Visible = ivAlways
     end
     object bbChoiceGuides: TdxBarButton
-      Action = dsdChoiceGuides
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Category = 0
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Visible = ivAlways
       ImageIndex = 7
     end
+  end
+  object dsdStoredProc: TdsdStoredProc
+    DataSet = ClientDataSet
+    DataSets = <
+      item
+        DataSet = ClientDataSet
+      end>
+    Params = <>
+    Left = 240
+    Top = 64
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView
+    OnDblClickActionList = <
+      item
+      end>
+    ActionItemList = <
+      item
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    Left = 176
+    Top = 136
+  end
+  object cxPropertiesStore: TcxPropertiesStore
+    Components = <>
+    StorageName = 'cxPropertiesStore'
+    StorageType = stStream
+    Left = 96
+    Top = 40
   end
   object ActionList: TActionList
     Left = 128
@@ -169,35 +197,8 @@ object AncestorEnumForm: TAncestorEnumForm
       DataSource = DataSource
     end
   end
-  object dsdStoredProc: TdsdStoredProc
-    DataSet = ClientDataSet
-    DataSets = <
-      item
-        DataSet = ClientDataSet
-      end>
-    Params = <>
-    Left = 240
-    Top = 64
-  end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 80
     Top = 120
-  end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
-    ErasedFieldName = 'isErased'
-    View = cxGridDBTableView
-    OnDblClickActionList = <
-      item
-        Action = dsdChoiceGuides
-      end>
-    ActionItemList = <
-      item
-        Action = dsdChoiceGuides
-        ShortCut = 13
-      end>
-    SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = False
-    Left = 176
-    Top = 136
   end
 end

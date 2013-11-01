@@ -161,12 +161,14 @@ type
   TdsdUserSettingsStorageAddOn = class(TComponent)
   private
     FOnDestroy: TNotifyEvent;
-    //FForm: TForm;
+    FActive: boolean;
     procedure OnDestroy(Sender: TObject);
     procedure SaveUserSettings;
   public
     procedure LoadUserSettings;
     constructor Create(AOwner: TComponent); override;
+  published
+    property Active: boolean read FActive write FActive default true;
   end;
 
   TControlListItem = class(TCollectionItem)
@@ -762,6 +764,8 @@ end;
 
 constructor TdsdUserSettingsStorageAddOn.Create(AOwner: TComponent);
 begin
+  // Значение по умолчанию
+  FActive := true;
   inherited;
   if csDesigning in ComponentState then
      exit;

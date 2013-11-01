@@ -16,6 +16,8 @@ type
     procedure SetTabSheet(const Value: TcxTabSheet);
   protected
     function GetDisplayName: string; override;
+  public
+    procedure Assign(Source: TPersistent); override;
   published
     // При установке данного свойства процедура будет вызвана только если TabSheet активен
     property TabSheet: TcxTabSheet read FTabSheet write SetTabSheet;
@@ -474,6 +476,7 @@ end;
 function TdsdCustomDataSetAction.LocalExecute: boolean;
 var i: integer;
 begin
+  result := true;
   for I := 0 to StoredProcList.Count - 1  do
       if Assigned(StoredProcList[i]) then
          if Assigned(StoredProcList[i].StoredProc) then begin
@@ -1223,6 +1226,17 @@ begin
 end;
 
 { TdsdStoredProcItem }
+
+procedure TdsdStoredProcItem.Assign(Source: TPersistent);
+begin
+  if Source is TdsdStoredProcItem then
+     with TdsdStoredProcItem(Source) do begin
+          Self.TabSheet := TabSheet;
+          Self.StoredProc := StoredProc;
+     end
+  else
+    inherited Assign(Source);
+end;
 
 function TdsdStoredProcItem.GetDisplayName: string;
 begin

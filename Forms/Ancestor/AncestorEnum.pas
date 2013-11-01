@@ -29,16 +29,18 @@ type
     cxGrid: TcxGrid;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
-    cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
     dxBarManagerBar: TdxBar;
-    ActionList: TActionList;
     bbRefresh: TdxBarButton;
     dsdStoredProc: TdsdStoredProc;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     bbStatic: TdxBarStatic;
     bbChoiceGuides: TdxBarButton;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    cxPropertiesStore: TcxPropertiesStore;
+    ActionList: TActionList;
+    actRefresh: TdsdDataSetRefresh;
+    dsdChoiceGuides: TdsdChoiceGuides;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
   private
     { Private declarations }
   public

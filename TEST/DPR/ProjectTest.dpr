@@ -250,13 +250,16 @@ uses
   Protocol in '..\..\Forms\System\Protocol.pas' {ProtocolForm: TParentForm},
   AncestorEnum in '..\..\Forms\Ancestor\AncestorEnum.pas' {AncestorEnumForm: TParentForm},
   StaffList in '..\..\Forms\StaffList.pas' {StaffListForm: TParentForm},
-  StaffListSummKind in '..\..\Forms\StaffListSummKind.pas' {StaffListSummKindForm: TParentForm};
+  StaffListSummKind in '..\..\Forms\StaffListSummKind.pas' {StaffListSummKindForm: TParentForm},
+  PaidKind in '..\..\Forms\Kind\PaidKind.pas' {PaidKindForm: TParentForm},
+  AncestorBase in '..\..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm};
 
 {$R *.RES}
 
 begin
   Application.Initialize;
   Application.CreateForm(TdmMain, dmMain);
+  Application.CreateForm(TAncestorBaseForm, AncestorBaseForm);
   Application.Run;
   DUnitTestRunner.RunRegisteredTests;
 end.

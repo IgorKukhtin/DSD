@@ -643,12 +643,8 @@
 				<Form>Report_TransportHoursWorkForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\StaffList.pas">
-				<Form>StaffListForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\StaffListSummKind.pas">
-				<Form>StaffListSummKindForm</Form>
+			<DCCReference Include="..\..\Forms\StaffListChoice.pas">
+				<Form>StaffListChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\System\Protocol.pas">
@@ -657,6 +653,24 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorEnum.pas">
 				<Form>AncestorEnumForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\StaffList.pas">
+				<Form>StaffListForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\StaffListSummKind.pas">
+				<Form>StaffListSummKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Kind\PaidKind.pas">
+				<Form>PaidKindForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorBase.pas">
+				<Form>AncestorBaseForm</Form>
+				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
