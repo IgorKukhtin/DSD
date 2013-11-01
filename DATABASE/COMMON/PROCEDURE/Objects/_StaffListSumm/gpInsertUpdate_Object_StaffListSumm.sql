@@ -20,6 +20,12 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_StaffListSumm()());
    vbUserId := inSession;
    
+    -- проверка
+   IF COALESCE (inStaffListId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка! Единица штатного расписания не установлена!';
+   END IF;
+   
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_StaffListSumm(), 0, '');
    
