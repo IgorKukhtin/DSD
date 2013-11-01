@@ -48,10 +48,10 @@ type
     CarName: TcxGridDBColumn;
     PersonalCode: TcxGridDBColumn;
     PersonalName: TcxGridDBColumn;
-    StartSumm: TcxGridDBColumn;
-    InSumm: TcxGridDBColumn;
-    EndSumm: TcxGridDBColumn;
-    OutSumm: TcxGridDBColumn;
+    SummStart: TcxGridDBColumn;
+    SummIn: TcxGridDBColumn;
+    SummEnd: TcxGridDBColumn;
+    SummOut: TcxGridDBColumn;
     PeriodChoice: TPeriodChoice;
     bbDialogForm: TdxBarButton;
     edAccount: TcxButtonEdit;
@@ -67,6 +67,22 @@ type
     cxLabel1: TcxLabel;
     cxLabel3: TcxLabel;
     CarModelName: TcxGridDBColumn;
+    InvNumber: TcxGridDBColumn;
+    OperDate: TcxGridDBColumn;
+    MovementDescName: TcxGridDBColumn;
+    PersonalCode_inf: TcxGridDBColumn;
+    PersonalName_inf: TcxGridDBColumn;
+    CarModelName_inf: TcxGridDBColumn;
+    CarCode_inf: TcxGridDBColumn;
+    CarName_inf: TcxGridDBColumn;
+    RouteCode_inf: TcxGridDBColumn;
+    RouteName_inf: TcxGridDBColumn;
+    UnitCode_inf: TcxGridDBColumn;
+    UnitName_inf: TcxGridDBColumn;
+    BranchName_inf: TcxGridDBColumn;
+    BranchCode_inf: TcxGridDBColumn;
+    BusinesCode_inf: TcxGridDBColumn;
+    BusinesName_inf: TcxGridDBColumn;
   private
   public
   end;

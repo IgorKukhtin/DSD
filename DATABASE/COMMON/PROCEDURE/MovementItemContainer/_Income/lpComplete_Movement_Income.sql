@@ -846,7 +846,7 @@ BEGIN
             , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN -1 ELSE 1 END * _tmpItem_SummPartner.OperSumm_Partner
             , tmpOperDate.OperDate
             , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN FALSE ELSE TRUE END AS IsActive
-       FROM (SELECT vbOperDate AS OperDate UNION ALL SELECT vbOperDatePartner AS OperDate) AS tmpOperDate
+       FROM (SELECT vbOperDate AS OperDate UNION SELECT vbOperDatePartner AS OperDate) AS tmpOperDate
             JOIN _tmpItem_SummPartner ON  _tmpItem_SummPartner.OperSumm_Partner <> 0
                                       AND _tmpItem_SummPartner.AccountId_Transit <> 0
      UNION ALL
@@ -863,7 +863,7 @@ BEGIN
             , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN 1 ELSE -1 END * _tmpItem_SummPartner.OperSumm_Partner
             , tmpOperDate.OperDate
             , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN TRUE ELSE FALSE END AS IsActive
-       FROM (SELECT vbOperDate AS OperDate UNION ALL SELECT vbOperDatePartner AS OperDate) AS tmpOperDate
+       FROM (SELECT vbOperDate AS OperDate UNION SELECT vbOperDatePartner AS OperDate) AS tmpOperDate
             JOIN _tmpItem_SummPartner ON _tmpItem_SummPartner.OperSumm_Partner <> 0
                                      AND _tmpItem_SummPartner.AccountId_Transit <> 0
             JOIN _tmpItem_SummDriver ON _tmpItem_SummDriver.InfoMoneyId = _tmpItem_SummPartner.InfoMoneyId
@@ -996,9 +996,9 @@ BEGIN
                 , CASE WHEN tmpOperDate.OperDate = vbOperDate AND _tmpItem_SummPartner.AccountId_Transit <> 0 THEN _tmpItem_SummPartner.AccountId_Transit ELSE _tmpItem_SummPartner.AccountId END AS PassiveAccountId
            FROM _tmpItem
                 LEFT JOIN _tmpItem_SummPartner ON _tmpItem_SummPartner.InfoMoneyId = _tmpItem.InfoMoneyId_Detail
-                LEFT JOIN (SELECT vbOperDate AS OperDate UNION ALL SELECT vbOperDatePartner AS OperDate) AS tmpOperDate ON tmpOperDate.OperDate = vbOperDate
-                                                                                                                       OR  (tmpOperDate.OperDate = vbOperDatePartner
-                                                                                                                        AND COALESCE (_tmpItem_SummPartner.AccountId_Transit, 0) <> 0)
+                LEFT JOIN (SELECT vbOperDate AS OperDate UNION SELECT vbOperDatePartner AS OperDate) AS tmpOperDate ON tmpOperDate.OperDate = vbOperDate
+                                                                                                                   OR  (tmpOperDate.OperDate = vbOperDatePartner
+                                                                                                                    AND COALESCE (_tmpItem_SummPartner.AccountId_Transit, 0) <> 0)
            WHERE _tmpItem.OperSumm_Partner <> 0
           ) AS tmpMIReport;
 
@@ -1065,9 +1065,9 @@ BEGIN
            FROM _tmpItem
                 JOIN _tmpItem_SummDriver ON _tmpItem_SummDriver.InfoMoneyId = _tmpItem.InfoMoneyId
                 LEFT JOIN _tmpItem_SummPartner ON _tmpItem_SummPartner.InfoMoneyId = _tmpItem.InfoMoneyId
-                LEFT JOIN (SELECT vbOperDate AS OperDate UNION ALL SELECT vbOperDatePartner AS OperDate) AS tmpOperDate ON tmpOperDate.OperDate = vbOperDate
-                                                                                                                       OR  (tmpOperDate.OperDate = vbOperDatePartner
-                                                                                                                        AND COALESCE (_tmpItem_SummDriver.AccountId_Transit, 0) <> 0)
+                LEFT JOIN (SELECT vbOperDate AS OperDate UNION SELECT vbOperDatePartner AS OperDate) AS tmpOperDate ON tmpOperDate.OperDate = vbOperDate
+                                                                                                                   OR  (tmpOperDate.OperDate = vbOperDatePartner
+                                                                                                                    AND COALESCE (_tmpItem_SummDriver.AccountId_Transit, 0) <> 0)
            WHERE _tmpItem.OperSumm_Partner <> 0
           ) AS tmpMIReport;
 
