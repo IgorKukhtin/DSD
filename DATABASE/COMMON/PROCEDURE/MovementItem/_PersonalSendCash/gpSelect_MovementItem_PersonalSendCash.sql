@@ -21,7 +21,7 @@ $BODY$
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_PersonalSendCash());
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_PersonalSendCash());
 
      RETURN QUERY 
        SELECT

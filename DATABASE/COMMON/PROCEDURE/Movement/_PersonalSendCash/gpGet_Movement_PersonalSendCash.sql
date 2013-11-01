@@ -18,7 +18,7 @@ BEGIN
 -- inEndDate:= '01.01.2100';
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PersonalSendCash());
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_PersonalSendCash());
 
      IF COALESCE (inMovementId, 0) = 0
      THEN

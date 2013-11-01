@@ -14,7 +14,7 @@ $BODY$
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Complete_Movement_PersonalSendCash());
+     -- vbUserId:= PERFORM lpCheckRight (inSession, zc_Enum_Process_Complete_PersonalSendCash());
      vbUserId:=2; -- CAST (inSession AS Integer);
 
 
