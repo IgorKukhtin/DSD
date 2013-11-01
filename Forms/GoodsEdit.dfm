@@ -195,6 +195,7 @@
       RefreshOnTabSetChanges = False
     end
     object dsdFormClose: TdsdFormClose
+      Category = 'DSDLib'
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'

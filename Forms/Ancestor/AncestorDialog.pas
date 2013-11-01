@@ -6,20 +6,18 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorBase, Vcl.ActnList, dsdAction,
   cxPropertiesStore, dsdAddOn, cxGraphics, cxLookAndFeels,
-  cxLookAndFeelPainters, Vcl.Menus, Vcl.StdCtrls, cxButtons;
+  cxLookAndFeelPainters, Vcl.Menus, Vcl.StdCtrls, cxButtons, dsdDB;
 
 type
   TAncestorDialogForm = class(TAncestorBaseForm)
-    cxButton1: TcxButton;
-    cxButton2: TcxButton;
+    bbOk: TcxButton;
+    bbCancel: TcxButton;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public
     { Public declarations }
   end;
-
-var
-  AncestorDialogForm: TAncestorDialogForm;
 
 implementation
 

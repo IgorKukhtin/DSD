@@ -647,10 +647,6 @@
 				<Form>StaffListChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\System\Protocol.pas">
-				<Form>ProtocolForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorEnum.pas">
 				<Form>AncestorEnumForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -675,6 +671,26 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorDialog.pas">
 				<Form>AncestorDialogForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorEditDialog.pas">
+				<Form>AncestorEditDialogForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorData.pas">
+				<Form>AncestorDataForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorReport.pas">
+				<Form>AncestorReportForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\Protocol.pas">
+				<Form>ProtocolForm</Form>
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>

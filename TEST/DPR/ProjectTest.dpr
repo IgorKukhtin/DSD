@@ -247,19 +247,25 @@ uses
   Object_StoragePlace in '..\..\Forms\Object_StoragePlace.pas' {Object_StoragePlace: TParentForm},
   Report_TransportHoursWork in '..\..\Forms\Report\Report_TransportHoursWork.pas' {Report_TransportHoursWorkForm: TParentForm},
   StaffListChoice in '..\..\Forms\StaffListChoice.pas' {StaffListChoiceForm: TParentForm},
-  Protocol in '..\..\Forms\System\Protocol.pas' {ProtocolForm: TParentForm},
   AncestorEnum in '..\..\Forms\Ancestor\AncestorEnum.pas' {AncestorEnumForm: TParentForm},
   StaffList in '..\..\Forms\StaffList.pas' {StaffListForm: TParentForm},
   StaffListSummKind in '..\..\Forms\StaffListSummKind.pas' {StaffListSummKindForm: TParentForm},
   PaidKind in '..\..\Forms\Kind\PaidKind.pas' {PaidKindForm: TParentForm},
   AncestorBase in '..\..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},
-  AncestorDialog in '..\..\Forms\Ancestor\AncestorDialog.pas' {AncestorDialogForm: TParentForm};
+  AncestorDialog in '..\..\Forms\Ancestor\AncestorDialog.pas' {AncestorDialogForm: TParentForm},
+  AncestorEditDialog in '..\..\Forms\Ancestor\AncestorEditDialog.pas' {AncestorEditDialogForm: TParentForm},
+  AncestorData in '..\..\Forms\Ancestor\AncestorData.pas' {AncestorDataForm: TParentForm},
+  AncestorReport in '..\..\Forms\Ancestor\AncestorReport.pas' {AncestorReportForm: TParentForm},
+  Protocol in '..\..\Forms\System\Protocol.pas' {ProtocolForm: TParentForm};
 
 {$R *.RES}
 
 begin
   Application.Initialize;
   Application.CreateForm(TdmMain, dmMain);
+  Application.CreateForm(TAncestorDataForm, AncestorDataForm);
+  Application.CreateForm(TAncestorReportForm, AncestorReportForm);
+  Application.CreateForm(TProtocolForm, ProtocolForm);
   Application.Run;
   DUnitTestRunner.RunRegisteredTests;
 end.

@@ -51,7 +51,4 @@ implementation
 
 {$R *.dfm}
 
-initialization
-  RegisterClass(TAncestorEnumForm);
-
 end.

@@ -245,6 +245,8 @@ type
     procedure OnChange(Sender: TObject);
   protected
     function GetDisplayName: string; override;
+  public
+    procedure Assign(Source: TPersistent); override;
   published
     property Component: TComponent read FComponent write SetComponent;
   end;
@@ -1212,6 +1214,16 @@ begin
 end;
 
 { TComponentListItem }
+
+procedure TComponentListItem.Assign(Source: TPersistent);
+begin
+  if Source is TComponentListItem then
+     with TComponentListItem(Source) do begin
+       Self.Component := Component;
+     end
+  else
+    inherited Assign(Source);
+end;
 
 function TComponentListItem.GetDisplayName: string;
 begin
