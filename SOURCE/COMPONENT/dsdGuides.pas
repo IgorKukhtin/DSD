@@ -17,6 +17,8 @@ type
     procedure SetAction(const Value: TCustomAction);
   protected
     function GetDisplayName: string; override;
+  public
+    procedure Assign(Source: TPersistent); override;
   published
     property Action: TCustomAction read FAction write SetAction;
   end;
@@ -29,12 +31,13 @@ type
     function GetSecondaryShortCuts: TShortCutList;
     procedure SetSecondaryShortCuts(const Value: TShortCutList);
     function IsSecondaryShortCutsStored: Boolean;
+  public
+    procedure Assign(Source: TPersistent); override;
   published
     property ShortCut: TShortCut read FShortCut write SetShortCut default 0;
     property SecondaryShortCuts: TShortCutList read GetSecondaryShortCuts
        write SetSecondaryShortCuts stored IsSecondaryShortCutsStored;
-    end;
-
+  end;
 
   TActionItemList = class(TOwnedCollection)
   private
@@ -208,10 +211,12 @@ begin
   // –асставл€ем параметры по местам
   Self.Params.AssignParams(Params);
   if Assigned(FOnAfterChoice) then
-     FOnAfterChoice(Form);
-  // ≈сли форма не закрыта, то закрываем
-  if Form.Visible then
-     Form.Close;
+     // «десь форму закроют
+     FOnAfterChoice(Form)
+  else
+    // ≈сли форма не закрыта, то закрываем
+    if Form.Visible then
+       Form.Close;
 end;
 
 constructor TdsdGuides.Create(AOwner: TComponent);
@@ -365,10 +370,10 @@ begin
           if Assigned(FActionItemList[i].Action) then
                if FActionItemList[i].Action.Enabled then
                   FActionItemList[i].Action.Execute;
-       // ≈сли не возникло ошибок!!! закроем форму справочника
-       if Sender is TForm then
-          TForm(Sender).Close;
      end;
+   // ≈сли не возникло ошибок!!! закроем форму справочника
+   if Sender is TForm then
+      TForm(Sender).Close;
 end;
 
 procedure TGuidesFiller.OnAfterShow(Sender: TObject);
@@ -389,12 +394,29 @@ begin
   end;
 end;
 
+procedure TActionItem.Assign(Source: TPersistent);
+begin
+  if Source is TActionItem then
+     Self.Action := TActionItem(Source).Action
+  else
+    inherited Assign(Source);
+end;
+
 function TActionItem.GetDisplayName: string;
 begin
   if Assigned(Action) then
      result := Action.Name
   else
      result := inherited;
+end;
+
+procedure TShortCutActionItem.Assign(Source: TPersistent);
+begin
+  inherited Assign(Source);
+  with TShortCutActionItem(Source) do begin
+    Self.ShortCut := ShortCut;
+    Self.SecondaryShortCuts.Assign(SecondaryShortCuts);
+  end;
 end;
 
 function TShortCutActionItem.GetSecondaryShortCuts: TShortCutList;

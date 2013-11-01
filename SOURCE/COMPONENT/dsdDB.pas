@@ -72,6 +72,8 @@ type
     procedure SetDataSet(const Value: TClientDataSet);
   protected
     function GetDisplayName: string; override;
+  public
+    procedure Assign(Source: TPersistent); override;
   published
     property DataSet: TClientDataSet read FDataSet write SetDataSet;
   end;
@@ -103,6 +105,7 @@ type
   public
     function Execute: string;
     function ParamByName(const Value: string): TdsdParam;
+    //procedure Assign(Source: TPersistent); override;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
@@ -153,6 +156,17 @@ end;
 
 { TdsdDataSetWrapper }
 
+{procedure TdsdStoredProc.Assign(Source: TPersistent);
+begin
+  inherited;
+  with TdsdStoredProc(Source) do begin
+    Self.Params.Assign(Params);
+    Self.StoredProcName := Self.StoredProcName;
+    Self.DataSets.Assign(DataSets);
+    Self.OutputType := OutputType;
+  end;
+end;
+ }
 constructor TdsdStoredProc.Create(AOwner: TComponent);
 begin
   inherited;
@@ -368,8 +382,9 @@ begin
   if Assigned(Source) then
     // не удаляем, а добавляем параметры
     for I := 0 to Source.Count - 1 do
-        if ParamByName(Source[i].Name) = nil then
+        if ParamByName(Source[i].Name) = nil then begin
            Add.AssignParam(Source[i])
+        end
         else
            ParamByName(Source[i].Name).Value := Source[i].Value
 end;
@@ -696,6 +711,14 @@ begin
 end;
 
 { TdsdDataSetLink }
+
+procedure TdsdDataSetLink.Assign(Source: TPersistent);
+begin
+  if Source is TdsdDataSetLink then
+     Self.DataSet := TdsdDataSetLink(Source).DataSet
+  else
+    inherited; //raises an exception
+end;
 
 function TdsdDataSetLink.GetDisplayName: string;
 begin
