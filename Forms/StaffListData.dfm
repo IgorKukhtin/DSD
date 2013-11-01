@@ -179,7 +179,7 @@ object StaffListDataForm: TStaffListDataForm
     Width = 857
     Height = 144
     Align = alBottom
-    TabOrder = 3
+    TabOrder = 2
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
@@ -794,10 +794,10 @@ object StaffListDataForm: TStaffListDataForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'inCode'
+        Name = 'ioCode'
         Component = StaffListCDS
         ComponentItem = 'Code'
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
         Name = 'inHoursPlan'
