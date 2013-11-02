@@ -21,10 +21,10 @@ RETURNS TABLE  (InvNumber Integer, OperDate TDateTime, MovementDescName TVarChar
               , SummStart TFloat, SummIn TFloat, SummOut TFloat, SummEnd TFloat
               , AccountGroupCode Integer, AccountGroupName TVarChar
               , AccountDirectionCode Integer, AccountDirectionName TVarChar
-              , AccountCode Integer, AccountName TVarChar
+              , AccountCode Integer, AccountName TVarChar, AccountName_All TVarChar
               , AccountGroupCode_inf Integer, AccountGroupName_inf TVarChar
               , AccountDirectionCode_inf Integer, AccountDirectionName_inf TVarChar
-              , AccountCode_inf Integer, AccountName_inf TVarChar
+              , AccountCode_inf Integer, AccountName_inf TVarChar, AccountName_All_inf TVarChar
               )  
 AS
 $BODY$
@@ -32,12 +32,12 @@ BEGIN
 
     RETURN QUERY
     WITH tmpContainer AS (SELECT Container.Id AS ContainerId, Container.ObjectId AS AccountId, Container.Amount
-                          FROM (SELECT AccountId FROM Object_Account_View WHERE Object_Account_View.AccountDirectionCode IN (30500)) AS tmpAccount -- счет 
+                          FROM (SELECT AccountId FROM Object_Account_View /*WHERE Object_Account_View.AccountDirectionCode IN (20500, 30500, 70100, 100300, 110000)*/) AS tmpAccount -- счет 
                                JOIN Container ON Container.ObjectId = tmpAccount.AccountId
                                              AND Container.DescId = zc_Container_Summ()
                          )
     SELECT zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
-         , Movement.OperDate
+         , tmpReport.OperDate
          , MovementDesc.ItemName AS MovementDescName
          , View_InfoMoney.InfoMoneyCode
          , View_InfoMoney.InfoMoneyGroupName
@@ -72,10 +72,20 @@ BEGIN
          , View_Account.AccountGroupCode, View_Account.AccountGroupName
          , View_Account.AccountDirectionCode, View_Account.AccountDirectionName
          , View_Account.AccountCode, View_Account.AccountName
+         , ('(' || CASE WHEN View_Account.AccountCode < 100000 THEN '0' ELSE '' END || View_Account.AccountCode :: TVarChar || ') '
+                || View_Account.AccountGroupName || ' '
+                || View_Account.AccountDirectionName || ' '
+                || View_Account.AccountName
+           ) :: TVarChar AS AccountName_All
 
          , View_Account_inf.AccountGroupCode AS AccountGroupCode_inf, View_Account_inf.AccountGroupName AS AccountGroupName_inf
          , View_Account_inf.AccountDirectionCode AS AccountDirectionCode_inf, View_Account_inf.AccountDirectionName AS AccountDirectionName_inf
          , View_Account_inf.AccountCode AS AccountCode_inf, View_Account_inf.AccountName AS AccountName_inf
+         , ('(' || CASE WHEN View_Account.AccountCode < 100000 THEN '0' ELSE '' END || View_Account_inf.AccountCode :: TVarChar || ') '
+                || View_Account_inf.AccountGroupName || ' '
+                || View_Account_inf.AccountDirectionName || ' '
+                || View_Account_inf.AccountName
+           ) :: TVarChar AS AccountName_All_inf
 
    FROM      
        (SELECT ContainerLO_InfoMoney.ObjectId AS InfoMoneyId
@@ -86,6 +96,7 @@ BEGIN
              , SUM (tmpReport_All.SummOut)    AS SummOut
              , SUM (tmpReport_All.SummEnd)    AS SummEnd
              , tmpReport_All.MovementId
+             , tmpReport_All.OperDate
              , tmpReport_All.AccountId
              , tmpReport_All.AccountId_inf
              , tmpReport_All.PersonalId_inf
@@ -102,6 +113,7 @@ BEGIN
                   , 0 AS SummIn
                   , 0 AS SummOut
                   , 0 AS MovementId
+                  , NULL :: TDateTime AS OperDate
                   , 0 AS PersonalId_inf
                   , 0 AS CarId_inf
                   , 0 AS AccountId_inf
@@ -123,6 +135,7 @@ BEGIN
                   , SUM (tmpMIReport.SummIn)  AS SummIn
                   , SUM (tmpMIReport.SummOut) AS SummOut
                   , tmpMIReport.MovementId
+                  , tmpMIReport.OperDate
                   , COALESCE (ContainerLO_Personal.ObjectId, MI.ObjectId)          AS PersonalId_inf
                   , COALESCE (ContainerLO_Car.ObjectId, MILinkObject_Car.ObjectId) AS CarId_inf
                   , tmpMIReport.AccountId_inf
@@ -152,6 +165,7 @@ BEGIN
                                       THEN MIReport.ActiveAccountId
                             END AS AccountId_inf
                           , MIReport.MovementId
+                          , MIReport.OperDate
                           , MIReport.MovementItemId
                           , MILinkObject_Route.ObjectId  AS RouteId_inf
                           , MILinkObject_Unit.ObjectId   AS UnitId_inf
@@ -180,10 +194,11 @@ BEGIN
                      LEFT JOIN ContainerLinkObject AS ContainerLO_Car ON ContainerLO_Car.ContainerId = tmpMIReport.ContainerId_inf
                                                                      AND ContainerLO_Car.DescId = zc_ContainerLinkObject_Car()
                      LEFT JOIN ContainerLinkObject AS ContainerLO_Busines ON ContainerLO_Busines.ContainerId = tmpMIReport.ContainerId_ProfitLoss
-                                                                         AND ContainerLO_Busines.DescId = zc_ContainerLinkObject_Personal()
+                                                                         AND ContainerLO_Busines.DescId = zc_ContainerLinkObject_Business()
              GROUP BY tmpMIReport.ContainerId
                     , tmpMIReport.AccountId
                     , tmpMIReport.MovementId
+                    , tmpMIReport.OperDate
                     , ContainerLO_Personal.ObjectId
                     , ContainerLO_Car.ObjectId
                     , MI.ObjectId
@@ -205,6 +220,7 @@ BEGIN
                , ContainerLO_InfoMoney.ObjectId
                , ContainerLO_Car.ObjectId
                , tmpReport_All.MovementId
+               , tmpReport_All.OperDate
                , tmpReport_All.AccountId
                , tmpReport_All.AccountId_inf
                , tmpReport_All.PersonalId_inf

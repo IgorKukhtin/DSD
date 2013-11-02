@@ -214,6 +214,28 @@ object Report_AccountForm: TReport_AccountForm
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object AccountCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1089#1095'.'
+        DataBinding.FieldName = 'AccountCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 50
+      end
+      object AccountName: TcxGridDBColumn
+        Caption = #1057#1095#1077#1090' '#1085#1072#1079#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'AccountName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object AccountName_All: TcxGridDBColumn
+        Caption = #1057#1095#1077#1090
+        DataBinding.FieldName = 'AccountName_All'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
       object PersonalCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'PersonalCode'
@@ -234,6 +256,7 @@ object Report_AccountForm: TReport_AccountForm
       object InfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055' '#1089#1090'. '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyCode'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -407,6 +430,91 @@ object Report_AccountForm: TReport_AccountForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 75
+      end
+      object AccountGroupCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' c'#1095'. '#1075#1088'.'
+        DataBinding.FieldName = 'AccountGroupCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 50
+      end
+      object AccountGroupName: TcxGridDBColumn
+        Caption = #1057#1095#1077#1090' '#1075#1088#1091#1087#1087#1072
+        DataBinding.FieldName = 'AccountGroupName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object AccountDirectionCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' c'#1095'. '#1085#1072#1087#1088'.'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 50
+      end
+      object AccountDirectionName: TcxGridDBColumn
+        Caption = #1057#1095#1077#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'AccountDirectionName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object AccountGroupCode_inf: TcxGridDBColumn
+        Caption = #1087#1088#1080#1084'. '#1050#1086#1076' c'#1095'. '#1075#1088'.'
+        DataBinding.FieldName = 'AccountGroupCode_inf'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 50
+      end
+      object AccountGroupName_inf: TcxGridDBColumn
+        Caption = #1087#1088#1080#1084'. '#1057#1095#1077#1090' '#1075#1088#1091#1087#1087#1072
+        DataBinding.FieldName = 'AccountGroupName_inf'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object AccountDirectionCode_inf: TcxGridDBColumn
+        Caption = #1087#1088#1080#1084'. '#1050#1086#1076' c'#1095'. '#1085#1072#1087#1088'.'
+        DataBinding.FieldName = 'AccountDirectionCode_inf'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 50
+      end
+      object AccountDirectionName_inf: TcxGridDBColumn
+        Caption = #1087#1088#1080#1084'. '#1057#1095#1077#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'AccountDirectionName_inf'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object AccountCode_inf: TcxGridDBColumn
+        Caption = #1087#1088#1080#1084'. '#1050#1086#1076' '#1089#1095'.'
+        DataBinding.FieldName = 'AccountCode_inf'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 50
+      end
+      object AccountName_inf: TcxGridDBColumn
+        Caption = #1087#1088#1080#1084'. '#1057#1095#1077#1090' '#1085#1072#1079#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'AccountName_inf'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object AccountName_All_inf: TcxGridDBColumn
+        Caption = #1087#1088#1080#1084'. '#1057#1095#1077#1090
+        DataBinding.FieldName = 'AccountName_All_inf'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 100
       end
       object SummStart: TcxGridDBColumn
         Caption = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1085#1072#1095#1072#1083#1086

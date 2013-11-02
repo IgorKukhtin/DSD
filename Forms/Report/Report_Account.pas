@@ -83,6 +83,20 @@ type
     BranchCode_inf: TcxGridDBColumn;
     BusinesCode_inf: TcxGridDBColumn;
     BusinesName_inf: TcxGridDBColumn;
+    AccountGroupCode: TcxGridDBColumn;
+    AccountGroupName: TcxGridDBColumn;
+    AccountDirectionCode: TcxGridDBColumn;
+    AccountDirectionName: TcxGridDBColumn;
+    AccountCode: TcxGridDBColumn;
+    AccountName: TcxGridDBColumn;
+    AccountGroupCode_inf: TcxGridDBColumn;
+    AccountGroupName_inf: TcxGridDBColumn;
+    AccountDirectionCode_inf: TcxGridDBColumn;
+    AccountDirectionName_inf: TcxGridDBColumn;
+    AccountCode_inf: TcxGridDBColumn;
+    AccountName_inf: TcxGridDBColumn;
+    AccountName_All: TcxGridDBColumn;
+    AccountName_All_inf: TcxGridDBColumn;
   private
   public
   end;

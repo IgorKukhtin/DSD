@@ -34,7 +34,8 @@ BEGIN
                   AND MovementItem.Id <> COALESCE (ioId, 0)
                )
      THEN
-         RAISE EXCEPTION 'Ошибка при добавлении.Сотрудник <%> уже есть в документе.', (SELECT ValueData FROM Object WHERE Id = inPersonalId);
+         -- RAISE EXCEPTION 'Ошибка при добавлении.Сотрудник <%> <%> <%> уже есть в документе.', inMovementId, inPersonalId, inInfoMoneyId;
+         RAISE EXCEPTION 'Ошибка при добавлении.Сотрудник <%> уже есть в документе.', (SELECT PersonalName FROM Object_Personal_View WHERE PersonalId = inPersonalId);
      END IF;
 
 
@@ -61,6 +62,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.11.13                                        * add Object_Personal_View
  06.10.13                                        * add check
  30.09.13                                        * 
 */

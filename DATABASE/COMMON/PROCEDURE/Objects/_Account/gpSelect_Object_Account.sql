@@ -25,7 +25,7 @@ BEGIN
            , Object_Account.ObjectCode       AS Code
            , Object_Account.ValueData        AS Name
 
-           , ('(' || Object_Account.ObjectCode :: TVarChar || ') '
+           , ('(' || CASE WHEN Object_Account.ObjectCode < 100000 THEN '0' ELSE '' END || Object_Account.ObjectCode :: TVarChar || ') '
                   || Object_AccountGroup.ValueData || ' '
                   || Object_AccountDirection.ValueData || ' '
                   || Object_Account.ValueData
