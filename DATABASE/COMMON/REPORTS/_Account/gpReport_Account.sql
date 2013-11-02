@@ -19,14 +19,20 @@ RETURNS TABLE  (InvNumber Integer, OperDate TDateTime, MovementDescName TVarChar
               , BranchCode_inf Integer, BranchName_inf TVarChar
               , BusinesCode_inf Integer, BusinesName_inf TVarChar
               , SummStart TFloat, SummIn TFloat, SummOut TFloat, SummEnd TFloat
+              , AccountGroupCode Integer, AccountGroupName TVarChar
+              , AccountDirectionCode Integer, AccountDirectionName TVarChar
+              , AccountCode Integer, AccountName TVarChar
+              , AccountGroupCode_inf Integer, AccountGroupName_inf TVarChar
+              , AccountDirectionCode_inf Integer, AccountDirectionName_inf TVarChar
+              , AccountCode_inf Integer, AccountName_inf TVarChar
               )  
 AS
 $BODY$
 BEGIN
 
     RETURN QUERY
-    WITH tmpContainer AS (SELECT Container.Id AS ContainerId, Container.Amount
-                          FROM (SELECT AccountId FROM Object_Account_View WHERE AccountDirectionCode IN (30500)) AS tmpAccount -- счет 
+    WITH tmpContainer AS (SELECT Container.Id AS ContainerId, Container.ObjectId AS AccountId, Container.Amount
+                          FROM (SELECT AccountId FROM Object_Account_View WHERE Object_Account_View.AccountDirectionCode IN (30500)) AS tmpAccount -- счет 
                                JOIN Container ON Container.ObjectId = tmpAccount.AccountId
                                              AND Container.DescId = zc_Container_Summ()
                          )
@@ -62,6 +68,15 @@ BEGIN
          , tmpReport.SummIn    :: TFloat AS SummIn
          , tmpReport.SummOut   :: TFloat AS SummOut
          , tmpReport.SummEnd   :: TFloat AS SummEnd
+
+         , View_Account.AccountGroupCode, View_Account.AccountGroupName
+         , View_Account.AccountDirectionCode, View_Account.AccountDirectionName
+         , View_Account.AccountCode, View_Account.AccountName
+
+         , View_Account_inf.AccountGroupCode AS AccountGroupCode_inf, View_Account_inf.AccountGroupName AS AccountGroupName_inf
+         , View_Account_inf.AccountDirectionCode AS AccountDirectionCode_inf, View_Account_inf.AccountDirectionName AS AccountDirectionName_inf
+         , View_Account_inf.AccountCode AS AccountCode_inf, View_Account_inf.AccountName AS AccountName_inf
+
    FROM      
        (SELECT ContainerLO_InfoMoney.ObjectId AS InfoMoneyId
              , ContainerLO_Personal.ObjectId  AS PersonalId
@@ -71,6 +86,8 @@ BEGIN
              , SUM (tmpReport_All.SummOut)    AS SummOut
              , SUM (tmpReport_All.SummEnd)    AS SummEnd
              , tmpReport_All.MovementId
+             , tmpReport_All.AccountId
+             , tmpReport_All.AccountId_inf
              , tmpReport_All.PersonalId_inf
              , tmpReport_All.CarId_inf
              , tmpReport_All.RouteId_inf
@@ -79,6 +96,7 @@ BEGIN
              , tmpReport_All.BusinesId_inf
         FROM
             (SELECT tmpContainer.ContainerId
+                  , tmpContainer.AccountId
                   , tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS SummStart
                   , tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) AS SummEnd
                   , 0 AS SummIn
@@ -86,6 +104,7 @@ BEGIN
                   , 0 AS MovementId
                   , 0 AS PersonalId_inf
                   , 0 AS CarId_inf
+                  , 0 AS AccountId_inf
                   , 0 AS RouteId_inf
                   , 0 AS UnitId_inf
                   , 0 AS BranchId_inf
@@ -93,11 +112,12 @@ BEGIN
              FROM tmpContainer
                   LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId
                                                                 AND MIContainer.OperDate >= inStartDate
-             GROUP BY tmpContainer.ContainerId, tmpContainer.Amount
+             GROUP BY tmpContainer.ContainerId, tmpContainer.AccountId, tmpContainer.Amount
              HAVING (tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
                  OR (tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) <> 0)
             UNION ALL
              SELECT tmpMIReport.ContainerId
+                  , tmpMIReport.AccountId
                   , 0 AS SummStart
                   , 0 AS SummEnd
                   , SUM (tmpMIReport.SummIn)  AS SummIn
@@ -105,11 +125,13 @@ BEGIN
                   , tmpMIReport.MovementId
                   , COALESCE (ContainerLO_Personal.ObjectId, MI.ObjectId)          AS PersonalId_inf
                   , COALESCE (ContainerLO_Car.ObjectId, MILinkObject_Car.ObjectId) AS CarId_inf
+                  , tmpMIReport.AccountId_inf
                   , tmpMIReport.RouteId_inf
                   , tmpMIReport.UnitId_inf
                   , tmpMIReport.BranchId_inf
                   , ContainerLO_Busines.ObjectId AS BusinesId_inf
                FROM (SELECT tmpContainer.ContainerId
+                          , tmpContainer.AccountId
                           , CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Active()  THEN MIReport.Amount ELSE 0 END AS SummIn
                           , CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Passive() THEN MIReport.Amount ELSE 0 END AS SummOut
                           , CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Active() AND MIReport.PassiveAccountId <> zc_Enum_Account_100301() -- прибыль текущего периода
@@ -124,6 +146,11 @@ BEGIN
                                       THEN MIReport.ActiveContainerId
                                  ELSE 0
                             END AS ContainerId_ProfitLoss
+                          , CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Active()
+                                      THEN MIReport.PassiveAccountId
+                                 WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Passive()
+                                      THEN MIReport.ActiveAccountId
+                            END AS AccountId_inf
                           , MIReport.MovementId
                           , MIReport.MovementItemId
                           , MILinkObject_Route.ObjectId  AS RouteId_inf
@@ -155,11 +182,13 @@ BEGIN
                      LEFT JOIN ContainerLinkObject AS ContainerLO_Busines ON ContainerLO_Busines.ContainerId = tmpMIReport.ContainerId_ProfitLoss
                                                                          AND ContainerLO_Busines.DescId = zc_ContainerLinkObject_Personal()
              GROUP BY tmpMIReport.ContainerId
+                    , tmpMIReport.AccountId
                     , tmpMIReport.MovementId
                     , ContainerLO_Personal.ObjectId
                     , ContainerLO_Car.ObjectId
                     , MI.ObjectId
                     , MILinkObject_Car.ObjectId
+                    , tmpMIReport.AccountId_inf
                     , tmpMIReport.RouteId_inf
                     , tmpMIReport.UnitId_inf
                     , tmpMIReport.BranchId_inf
@@ -176,6 +205,8 @@ BEGIN
                , ContainerLO_InfoMoney.ObjectId
                , ContainerLO_Car.ObjectId
                , tmpReport_All.MovementId
+               , tmpReport_All.AccountId
+               , tmpReport_All.AccountId_inf
                , tmpReport_All.PersonalId_inf
                , tmpReport_All.CarId_inf
                , tmpReport_All.RouteId_inf
@@ -205,6 +236,9 @@ BEGIN
        LEFT JOIN Movement ON Movement.Id = tmpReport.MovementId
        LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
 
+       LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = tmpReport.AccountId
+       LEFT JOIN Object_Account_View AS View_Account_inf ON View_Account_inf.AccountId = tmpReport.AccountId_inf
+
     ;
     
         
@@ -217,6 +251,7 @@ ALTER FUNCTION gpReport_Account (TDateTime, TDateTime, Integer, TVarChar) OWNER 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.11.13                                        * add Account...
  01.11.13                                        * all
  29.10.13                                        * err InfoManey
  07.10.13         *  

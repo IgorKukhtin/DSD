@@ -218,7 +218,8 @@ BEGIN
      -- !!!формируются расчитанные свойства в Подчиненых элементах документа!!!
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_StartAmountFuel(), tmp.MovementItemId, tmp.StartAmountFuel)
      FROM (SELECT _tmpItem_Transport.MovementItemId, _tmpPropertyRemains.Amount AS StartAmountFuel
-           FROM _tmpItem_Transport
+           FROM (SELECT MAX (MovementItemId) AS MovementItemId, GoodsId FROM _tmpItem_Transport GROUP BY GoodsId
+                ) AS _tmpItem_Transport
                 LEFT JOIN _tmpPropertyRemains ON _tmpPropertyRemains.FuelId = _tmpItem_Transport.GoodsId
                                              AND _tmpPropertyRemains.Kind = 3
           UNION ALL
@@ -244,7 +245,8 @@ BEGIN
                , tmp.StartAmountFuel
            FROM (SELECT _tmpPropertyRemains.FuelId, _tmpPropertyRemains.Amount AS StartAmountFuel
                  FROM _tmpPropertyRemains
-                      LEFT JOIN _tmpItem_Transport ON _tmpItem_Transport.GoodsId = _tmpPropertyRemains.FuelId
+                      LEFT JOIN (SELECT MAX (MovementItemId) AS MovementItemId, GoodsId FROM _tmpItem_Transport GROUP BY GoodsId
+                                ) AS _tmpItem_Transport ON _tmpItem_Transport.GoodsId = _tmpPropertyRemains.FuelId
                  WHERE _tmpPropertyRemains.Kind = 3
                    AND _tmpItem_Transport.GoodsId IS NULL
                 ) AS tmp
@@ -402,6 +404,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.11.13                                        * group AS _tmpItem_Transport
  27.10.13                                        * err zc_MovementFloat_StartAmountTicketFuel
  26.10.13                                        * add !!!обязательно!!! очистили таблицу...
  26.10.13                                        * err
@@ -413,6 +416,7 @@ $BODY$
  02.10.13                                        *
 */
 
+--     RAISE EXCEPTION '"%"      "%"    "%" ', vbCarId, vbPersonalDriverId, (select sum (Amount ) from _tmpPropertyRemains  where Kind=3);
 -- тест
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 103, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM lpComplete_Movement_Transport (inMovementId:= 103, inUserId:= zfCalc_UserAdmin())
