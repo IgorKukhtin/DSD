@@ -419,6 +419,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.11.13                                        * add zc_MILinkObject_Branch, zc_MILinkObject_UnitRoute, zc_MILinkObject_BranchRoute
  02.11.13                                        * group AS _tmpItem_Transport
  27.10.13                                        * err zc_MovementFloat_StartAmountTicketFuel
  26.10.13                                        * add !!!обязательно!!! очистили таблицу...

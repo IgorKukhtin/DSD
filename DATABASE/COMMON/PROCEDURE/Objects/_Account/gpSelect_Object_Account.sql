@@ -26,9 +26,9 @@ BEGIN
            , Object_Account.ValueData        AS Name
 
            , ('(' || CASE WHEN Object_Account.ObjectCode < 100000 THEN '0' ELSE '' END || Object_Account.ObjectCode :: TVarChar || ') '
-                  || Object_AccountGroup.ValueData || ' '
-                  || Object_AccountDirection.ValueData || ' '
-                  || Object_Account.ValueData
+                  || Object_AccountGroup.ValueData
+                  || CASE WHEN Object_AccountDirection.ValueData <> Object_AccountGroup.ValueData THEN ' ' || Object_AccountDirection.ValueData ELSE '' END
+                  || CASE WHEN Object_Account.ValueData <> Object_AccountDirection.ValueData THEN ' ' || Object_Account.ValueData ELSE '' END
              ) :: TVarChar AS AccountName_All
 
            , Object_AccountGroup.Id          AS AccountGroupId
@@ -96,6 +96,7 @@ ALTER FUNCTION gpSelect_Object_Account (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.11.13                                        * add Object_Account.ObjectCode < 100000
  29.10.13                                        * add Object_InfoMoney_View
  04.07.13          * + onComplete... +AccountKind...
  03.07.13                                         *  1251Cyr

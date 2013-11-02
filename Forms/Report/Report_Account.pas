@@ -97,6 +97,10 @@ type
     AccountName_inf: TcxGridDBColumn;
     AccountName_All: TcxGridDBColumn;
     AccountName_All_inf: TcxGridDBColumn;
+    JuridicalCode: TcxGridDBColumn;
+    JuridicalName: TcxGridDBColumn;
+    ContractName: TcxGridDBColumn;
+    PaidKindName: TcxGridDBColumn;
   private
   public
   end;

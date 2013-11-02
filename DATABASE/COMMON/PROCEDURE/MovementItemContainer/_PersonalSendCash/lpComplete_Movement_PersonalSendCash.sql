@@ -58,7 +58,7 @@ BEGIN
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementItemId, UnitId_ProfitLoss, BranchId_ProfitLoss, UnitId_Route, BranchId_Route
-                         , ContainerId_From, AccountId_From, ContainerId_To, AccountId_To, PersonalId_To, CarId_To
+                         , ContainerId_From, AccountId_From, ContainerId_To, AccountId_To, ContainerId_ProfitLoss, AccountId_ProfitLoss, PersonalId_To, CarId_To
                          , OperSumm
                          , ProfitLossGroupId, ProfitLossDirectionId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId_PersonalTo, BusinessId_Route
@@ -73,6 +73,8 @@ BEGIN
             , 0 AS AccountId_From   -- сформируем позже
             , 0 AS ContainerId_To   -- сформируем позже
             , 0 AS AccountId_To     -- сформируем позже
+            , 0 AS ContainerId_ProfitLoss   -- сформируем позже
+            , 0 AS AccountId_ProfitLoss     -- сформируем позже
             , _tmp.PersonalId_To
             , _tmp.CarId_To
             , _tmp.OperSumm
@@ -163,17 +165,14 @@ BEGIN
      -- !!! Ну а теперь - ПРОВОДКИ !!!
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-     -- 1.1. определяется Счет для проводок суммового учета по долг Сотрудника (Водитель) или по Прибыль
+     -- 1.1.1. определяется Счет для проводок суммового учета по счету долг Сотрудника (Водитель)
      UPDATE _tmpItem SET AccountId_To = _tmpItem_byAccount.AccountId
-     FROM (SELECT CASE WHEN _tmpItem_group.InfoMoneyId = zc_Enum_InfoMoney_20401() -- 20401; "ГСМ";
-                            THEN lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_30000() -- Дебиторы -- select * from gpSelect_Object_AccountGroup ('2') where Id in (zc_Enum_AccountGroup_30000())
-                                                            , inAccountDirectionId     := zc_Enum_AccountDirection_30500() -- сотрудники (подотчетные лица)
-                                                            , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId
-                                                            , inInfoMoneyId            := NULL
-                                                            , inUserId                 := inUserId
-                                                             )
-                       ELSE zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
-                  END AS AccountId
+     FROM (SELECT lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_30000() -- Дебиторы -- select * from gpSelect_Object_AccountGroup ('2') where Id in (zc_Enum_AccountGroup_30000())
+                                             , inAccountDirectionId     := zc_Enum_AccountDirection_30500() -- сотрудники (подотчетные лица)
+                                             , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId
+                                             , inInfoMoneyId            := NULL
+                                             , inUserId                 := inUserId
+                                              ) AS AccountId
                 , _tmpItem_group.InfoMoneyId
            FROM (SELECT _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId FROM _tmpItem GROUP BY _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId
                 ) AS _tmpItem_group
@@ -181,92 +180,100 @@ BEGIN
       WHERE _tmpItem.InfoMoneyId = _tmpItem_byAccount.InfoMoneyId;
 
 
-     -- 1.2. определяется ContainerId_To для проводок суммового учета по счету долг Сотрудника (Водитель) или по счету Прибыль
+     -- 1.1.2. определяется Счет для проводок суммового учета по счету Прибыль
+     UPDATE _tmpItem SET AccountId_ProfitLoss = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
+     WHERE _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_21201() -- 21201; "Коммандировочные";
+     ;
+
+
+     -- 1.2.1. определяется ContainerId_To для проводок суммового учета по счету долг Сотрудника (Водитель)
      UPDATE _tmpItem SET ContainerId_To = _tmpItem_byContainer.ContainerId
-     FROM (SELECT _tmpItem_byContainer_All.ContainerId
-                , _tmpItem.MovementItemId
-           FROM (SELECT lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
-                                              , inParentId          := NULL
-                                              , inObjectId          := _tmpItem_group.AccountId_To
-                                              , inJuridicalId_basis := vbJuridicalId_Basis
-                                              , inBusinessId        := vbBusinessId_PersonalFrom
-                                              , inObjectCostDescId  := NULL
-                                              , inObjectCostId      := NULL
-                                              , inDescId_1          := zc_ContainerLinkObject_Personal()
-                                              , inObjectId_1        := _tmpItem_group.PersonalId_To
-                                              , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
-                                              , inObjectId_2        := _tmpItem_group.InfoMoneyId
-                                              , inDescId_3          := zc_ContainerLinkObject_Car()
-                                              , inObjectId_3        := _tmpItem_group.CarId_To
-                                               ) AS ContainerId
-                      , _tmpItem_group.PersonalId_To
-                      , _tmpItem_group.CarId_To
-                      , _tmpItem_group.InfoMoneyId
-
-                 FROM (SELECT _tmpItem.AccountId_To
-                            , _tmpItem.PersonalId_To
-                            , _tmpItem.CarId_To
-                            , _tmpItem.InfoMoneyId
-                       FROM _tmpItem
-                       WHERE _tmpItem.AccountId_To <> zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
-                       GROUP BY _tmpItem.AccountId_To
-                              , _tmpItem.PersonalId_To
-                              , _tmpItem.CarId_To
-                              , _tmpItem.InfoMoneyId
-                      ) AS _tmpItem_group
-                ) AS _tmpItem_byContainer_All
-                JOIN _tmpItem ON _tmpItem.PersonalId_To = _tmpItem_byContainer_All.PersonalId_To
-                             AND _tmpItem.CarId_To      = _tmpItem_byContainer_All.CarId_To
-                             AND _tmpItem.InfoMoneyId   = _tmpItem_byContainer_All.InfoMoneyId
-          UNION ALL
-           SELECT _tmpItem_byContainer_All.ContainerId
-                , _tmpItem.MovementItemId
-           FROM (SELECT lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
-                                              , inParentId          := NULL
-                                              , inObjectId          := zc_Enum_Account_100301 () -- 100301; "прибыль текущего периода"
-                                              , inJuridicalId_basis := vbJuridicalId_Basis
-                                              , inBusinessId        := _tmpItem_byProfitLoss.BusinessId_Route -- !!!подставляем Бизнес для Прибыль!!!
-                                              , inObjectCostDescId  := NULL
-                                              , inObjectCostId      := NULL
-                                              , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
-                                              , inObjectId_1        := _tmpItem_byProfitLoss.ProfitLossId
-                                               ) AS ContainerId
-                      , _tmpItem_byProfitLoss.InfoMoneyDestinationId
-                      , _tmpItem_byProfitLoss.BusinessId_Route
-                 FROM (SELECT lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := _tmpItem_group.ProfitLossGroupId
-                                                            , inProfitLossDirectionId  := _tmpItem_group.ProfitLossDirectionId
-                                                            , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId
-                                                            , inInfoMoneyId            := NULL
-                                                            , inUserId                 := inUserId
-                                                             ) AS ProfitLossId
-                            , _tmpItem_group.InfoMoneyDestinationId
-                            , _tmpItem_group.BusinessId_Route
-                       FROM (SELECT _tmpItem.ProfitLossGroupId
-                                  , _tmpItem.ProfitLossDirectionId
-                                  , _tmpItem.InfoMoneyDestinationId
-                                  , _tmpItem.BusinessId_Route
-                             FROM _tmpItem
-                             WHERE _tmpItem.AccountId_To = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
-                             GROUP BY _tmpItem.ProfitLossGroupId
-                                    , _tmpItem.ProfitLossDirectionId
-                                    , _tmpItem.InfoMoneyDestinationId
-                                    , _tmpItem.BusinessId_Route
-                            ) AS _tmpItem_group
-                      ) AS _tmpItem_byProfitLoss
-                ) AS _tmpItem_byContainer_All
-                JOIN _tmpItem ON _tmpItem.InfoMoneyDestinationId = _tmpItem_byContainer_All.InfoMoneyDestinationId
-                             AND _tmpItem.BusinessId_Route       = _tmpItem_byContainer_All.BusinessId_Route
+     FROM (SELECT lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                        , inParentId          := NULL
+                                        , inObjectId          := _tmpItem_group.AccountId_To
+                                        , inJuridicalId_basis := vbJuridicalId_Basis
+                                        , inBusinessId        := vbBusinessId_PersonalFrom
+                                        , inObjectCostDescId  := NULL
+                                        , inObjectCostId      := NULL
+                                        , inDescId_1          := zc_ContainerLinkObject_Personal()
+                                        , inObjectId_1        := _tmpItem_group.PersonalId_To
+                                        , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
+                                        , inObjectId_2        := _tmpItem_group.InfoMoneyId
+                                        , inDescId_3          := zc_ContainerLinkObject_Car()
+                                        , inObjectId_3        := _tmpItem_group.CarId_To
+                                         ) AS ContainerId
+                , _tmpItem_group.PersonalId_To
+                , _tmpItem_group.CarId_To
+                , _tmpItem_group.InfoMoneyId
+           FROM (SELECT _tmpItem.AccountId_To
+                      , _tmpItem.PersonalId_To
+                      , _tmpItem.CarId_To
+                      , _tmpItem.InfoMoneyId
+                 FROM _tmpItem
+                 GROUP BY _tmpItem.AccountId_To
+                        , _tmpItem.PersonalId_To
+                        , _tmpItem.CarId_To
+                        , _tmpItem.InfoMoneyId
+                ) AS _tmpItem_group
           ) AS _tmpItem_byContainer
-      WHERE _tmpItem.MovementItemId = _tmpItem_byContainer.MovementItemId;
+      WHERE _tmpItem.PersonalId_To = _tmpItem_byContainer.PersonalId_To
+        AND _tmpItem.CarId_To      = _tmpItem_byContainer.CarId_To
+        AND _tmpItem.InfoMoneyId   = _tmpItem_byContainer.InfoMoneyId;
 
-     -- 1.3. формируются Проводки суммового учета по долг Сотрудника (Водитель) или Прибыль
+
+     -- 1.2.2. определяется ContainerId_ProfitLoss для проводок суммового учета по счету Прибыль
+     UPDATE _tmpItem SET ContainerId_ProfitLoss = _tmpItem_byContainer.ContainerId
+     FROM (SELECT lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                        , inParentId          := NULL
+                                        , inObjectId          := zc_Enum_Account_100301 () -- 100301; "прибыль текущего периода"
+                                        , inJuridicalId_basis := vbJuridicalId_Basis
+                                        , inBusinessId        := _tmpItem_byProfitLoss.BusinessId_Route -- !!!подставляем Бизнес для Прибыль!!!
+                                        , inObjectCostDescId  := NULL
+                                        , inObjectCostId      := NULL
+                                        , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
+                                        , inObjectId_1        := _tmpItem_byProfitLoss.ProfitLossId
+                                         ) AS ContainerId
+                , _tmpItem_byProfitLoss.InfoMoneyDestinationId
+                , _tmpItem_byProfitLoss.BusinessId_Route
+           FROM (SELECT lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := _tmpItem_group.ProfitLossGroupId
+                                                      , inProfitLossDirectionId  := _tmpItem_group.ProfitLossDirectionId
+                                                      , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId
+                                                      , inInfoMoneyId            := NULL
+                                                      , inUserId                 := inUserId
+                                                       ) AS ProfitLossId
+                      , _tmpItem_group.InfoMoneyDestinationId
+                      , _tmpItem_group.BusinessId_Route
+                 FROM (SELECT _tmpItem.ProfitLossGroupId
+                            , _tmpItem.ProfitLossDirectionId
+                            , _tmpItem.InfoMoneyDestinationId
+                            , _tmpItem.BusinessId_Route
+                       FROM _tmpItem
+                       WHERE _tmpItem.AccountId_ProfitLoss = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
+                       GROUP BY _tmpItem.ProfitLossGroupId
+                              , _tmpItem.ProfitLossDirectionId
+                              , _tmpItem.InfoMoneyDestinationId
+                              , _tmpItem.BusinessId_Route
+                      ) AS _tmpItem_group
+                ) AS _tmpItem_byProfitLoss
+          ) AS _tmpItem_byContainer
+      WHERE _tmpItem.InfoMoneyDestinationId = _tmpItem_byContainer.InfoMoneyDestinationId
+        AND _tmpItem.BusinessId_Route       = _tmpItem_byContainer.BusinessId_Route;
+
+     -- 1.3. формируются Проводки суммового учета
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
-       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, _tmpItem.MovementItemId, ContainerId_To, 0 AS ParentId, OperSumm, vbOperDate
-            , CASE WHEN AccountId_To = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
-                       THEN FALSE
-                   ELSE TRUE
-              END AS IsActive
-       FROM _tmpItem;
+       -- по счету долг Сотрудника (Водитель)
+       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, _tmpItem.MovementItemId, ContainerId_To, 0 AS ParentId, OperSumm, vbOperDate, TRUE AS IsActive FROM _tmpItem
+      UNION ALL
+       -- тут же списание с него по счету долг Сотрудника (Водитель) (!!!если Прибыль!!!)
+       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, _tmpItem.MovementItemId, ContainerId_To, 0 AS ParentId, -1 * OperSumm, vbOperDate, FALSE AS IsActive
+       FROM _tmpItem
+       WHERE AccountId_ProfitLoss = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
+      UNION ALL
+       -- по счету Прибыль
+       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, _tmpItem.MovementItemId, ContainerId_ProfitLoss, 0 AS ParentId, OperSumm, vbOperDate, FALSE AS IsActive
+       FROM _tmpItem
+       WHERE AccountId_ProfitLoss = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
+     ;
 
 
      -- 2.1. определяется Счет для проводок суммового учета по долг Сотрудника (От кого)
@@ -320,7 +327,7 @@ BEGIN
 
 
 
-     -- 3. формируются Проводки для отчета (Аналитики: Товар и Сотрудника (Водитель) или ОПиУ)
+     -- 3.1. формируются Проводки для отчета (Аналитики: Сотрудник (От кого) и Сотрудник (Водитель))
      PERFORM lpInsertUpdate_MovementItemReport (inMovementId         := inMovementId
                                               , inMovementItemId     := _tmpItem.MovementItemId
                                               , inActiveContainerId  := _tmpItem.ContainerId_To
@@ -347,6 +354,35 @@ BEGIN
      WHERE _tmpItem.OperSumm <> 0;
 
 
+     -- 3.2. формируются Проводки для отчета (Аналитики: Сотрудник (Водитель) и ОПиУ)
+     PERFORM lpInsertUpdate_MovementItemReport (inMovementId         := inMovementId
+                                              , inMovementItemId     := _tmpItem.MovementItemId
+                                              , inActiveContainerId  := _tmpItem.ContainerId_ProfitLoss
+                                              , inPassiveContainerId := _tmpItem.ContainerId_To
+                                              , inActiveAccountId    := _tmpItem.AccountId_ProfitLoss
+                                              , inPassiveAccountId   := _tmpItem.AccountId_To
+                                              , inReportContainerId  := lpInsertFind_ReportContainer (inActiveContainerId  := _tmpItem.ContainerId_ProfitLoss
+                                                                                                    , inPassiveContainerId := _tmpItem.ContainerId_To
+                                                                                                    , inActiveAccountId    := _tmpItem.AccountId_ProfitLoss
+                                                                                                    , inPassiveAccountId   := _tmpItem.AccountId_To
+                                                                                                     )
+                                              , inChildReportContainerId := lpInsertFind_ChildReportContainer (inActiveContainerId  := _tmpItem.ContainerId_ProfitLoss
+                                                                                                             , inPassiveContainerId := _tmpItem.ContainerId_To
+                                                                                                             , inActiveAccountId    := _tmpItem.AccountId_ProfitLoss
+                                                                                                             , inPassiveAccountId   := _tmpItem.AccountId_To
+                                                                                                             , inAccountKindId_1    := NULL
+                                                                                                             , inContainerId_1      := NULL
+                                                                                                             , inAccountId_1        := NULL
+                                                                                                     )
+                                              , inAmount   := _tmpItem.OperSumm
+                                              , inOperDate := vbOperDate
+                                               )
+     FROM _tmpItem
+     WHERE _tmpItem.OperSumm <> 0
+       AND AccountId_ProfitLoss = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
+     ;
+
+
      -- !!!4.1. формируются свойства в документе из данных для проводок!!!
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_JuridicalBasis(), inMovementId, vbJuridicalId_Basis);
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Business(), inMovementId, vbBusinessId_PersonalFrom);
@@ -358,12 +394,12 @@ BEGIN
            , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_BranchRoute(), tmp.MovementItemId, tmp.BranchId_Route)
      FROM (SELECT _tmpItem.MovementItemId, _tmpItem.UnitId_ProfitLoss, _tmpItem.BranchId_ProfitLoss, _tmpItem.UnitId_Route, _tmpItem.BranchId_Route
            FROM _tmpItem
-           WHERE AccountId_To = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
+           WHERE AccountId_ProfitLoss = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
            GROUP BY _tmpItem.MovementItemId, _tmpItem.UnitId_ProfitLoss, _tmpItem.BranchId_ProfitLoss, _tmpItem.UnitId_Route, _tmpItem.BranchId_Route
           UNION ALL
            SELECT _tmpItem.MovementItemId, 0 AS UnitId_ProfitLoss, 0 AS BranchId_ProfitLoss, 0 AS UnitId_Route, 0 AS BranchId_Route
            FROM _tmpItem
-           WHERE AccountId_To <> zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
+           WHERE AccountId_ProfitLoss <> zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
            GROUP BY _tmpItem.MovementItemId, _tmpItem.UnitId_ProfitLoss, _tmpItem.BranchId_ProfitLoss, _tmpItem.UnitId_Route, _tmpItem.BranchId_Route
           ) AS tmp;
 
@@ -382,6 +418,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.11.13                                        * идеологически правильный lpComplete_Movement_PersonalSendCash
  02.11.13                                        * add zc_MILinkObject_Branch, zc_MILinkObject_UnitRoute, zc_MILinkObject_BranchRoute
  29.10.13                                        * add !!!обязательно!!! очистили таблицу...
  14.10.13                                        * add lpInsertUpdate_MovementItemLinkObject

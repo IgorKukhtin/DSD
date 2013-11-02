@@ -961,7 +961,7 @@ BEGIN
             , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN TRUE ELSE FALSE END AS IsActive
        FROM (SELECT vbOperDate AS OperDate UNION SELECT vbOperDatePartner AS OperDate) AS tmpOperDate
             JOIN _tmpItem_SummDriver ON  _tmpItem_SummDriver.OperSumm_Driver <> 0
-                                    AND _tmpItem_SummDriver.AccountId_Transit <> 0
+                                     AND _tmpItem_SummDriver.AccountId_Transit <> 0
       ;
 
 
