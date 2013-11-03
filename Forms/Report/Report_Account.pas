@@ -101,6 +101,7 @@ type
     JuridicalName: TcxGridDBColumn;
     ContractName: TcxGridDBColumn;
     PaidKindName: TcxGridDBColumn;
+    ProfitLossName_All_inf: TcxGridDBColumn;
   private
   public
   end;

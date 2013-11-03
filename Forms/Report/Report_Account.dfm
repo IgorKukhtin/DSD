@@ -548,6 +548,14 @@ object Report_AccountForm: TReport_AccountForm
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
+      object ProfitLossName_All_inf: TcxGridDBColumn
+        Caption = #1087#1088#1080#1084'. '#1054#1055#1080#1059' '#1085#1072#1079#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'ProfitLossName_All_inf'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 90
+      end
       object SummStart: TcxGridDBColumn
         Caption = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1085#1072#1095#1072#1083#1086
         DataBinding.FieldName = 'SummStart'
@@ -611,7 +619,7 @@ object Report_AccountForm: TReport_AccountForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41557d
+      EditValue = 41578d
       Properties.ShowTime = False
       TabOrder = 1
       Width = 85
@@ -882,7 +890,7 @@ object Report_AccountForm: TReport_AccountForm
       end
       item
         Name = 'inEndDate'
-        Value = 41557d
+        Value = 41578d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

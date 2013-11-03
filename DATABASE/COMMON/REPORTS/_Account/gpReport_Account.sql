@@ -28,6 +28,7 @@ RETURNS TABLE  (InvNumber Integer, OperDate TDateTime, MovementDescName TVarChar
               , AccountGroupCode_inf Integer, AccountGroupName_inf TVarChar
               , AccountDirectionCode_inf Integer, AccountDirectionName_inf TVarChar
               , AccountCode_inf Integer, AccountName_inf TVarChar, AccountName_All_inf TVarChar
+              , ProfitLossName_All_inf TVarChar
               )  
 AS
 $BODY$
@@ -90,9 +91,15 @@ BEGIN
          , View_Account_inf.AccountCode AS AccountCode_inf, View_Account_inf.AccountName AS AccountName_inf
          , ('(' || CASE WHEN View_Account_inf.AccountCode < 100000 THEN '0' ELSE '' END || View_Account_inf.AccountCode :: TVarChar || ') '
                 || View_Account_inf.AccountGroupName
-                || CASE WHEN View_Account_inf.AccountDirectionName <> View_Account_inf.AccountGroupName THEN View_Account_inf.AccountDirectionName ELSE '' END
-                || CASE WHEN View_Account_inf.AccountName <> View_Account_inf.AccountDirectionName THEN View_Account_inf.AccountName ELSE '' END
+                || CASE WHEN View_Account_inf.AccountDirectionName <> View_Account_inf.AccountGroupName THEN ' ' || View_Account_inf.AccountDirectionName ELSE '' END
+                || CASE WHEN View_Account_inf.AccountName <> View_Account_inf.AccountDirectionName THEN ' ' || View_Account_inf.AccountName ELSE '' END
            ) :: TVarChar AS AccountName_All_inf
+
+         , ('(' || View_ProfitLoss_inf.ProfitLossCode :: TVarChar || ') '
+                || View_ProfitLoss_inf.ProfitLossGroupName
+                || CASE WHEN View_ProfitLoss_inf.ProfitLossDirectionName <> View_ProfitLoss_inf.ProfitLossGroupName THEN ' ' || View_ProfitLoss_inf.ProfitLossDirectionName ELSE '' END
+                || CASE WHEN View_ProfitLoss_inf.ProfitLossName <> View_ProfitLoss_inf.ProfitLossDirectionName THEN ' ' || View_ProfitLoss_inf.ProfitLossName ELSE '' END
+           ) :: TVarChar AS ProfitLossName_All_inf
 
    FROM      
        (SELECT ContainerLO_InfoMoney.ObjectId AS InfoMoneyId
@@ -118,6 +125,7 @@ BEGIN
              , tmpReport_All.UnitId_inf
              , tmpReport_All.BranchId_inf
              , tmpReport_All.BusinesId_inf
+             , tmpReport_All.ProfitLossId_inf
         FROM
             (SELECT tmpContainer.ContainerId
                   , tmpContainer.AccountId
@@ -136,6 +144,7 @@ BEGIN
                   , 0 AS UnitId_inf
                   , 0 AS BranchId_inf
                   , 0 AS BusinesId_inf
+                  , 0 AS ProfitLossId_inf
              FROM tmpContainer
                   LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId
                                                                 AND MIContainer.OperDate >= inStartDate
@@ -160,6 +169,7 @@ BEGIN
                   , tmpMIReport.UnitId_inf
                   , tmpMIReport.BranchId_inf
                   , ContainerLO_Busines.ObjectId AS BusinesId_inf
+                  , ContainerLO_ProfitLoss.ObjectId AS ProfitLossId_inf
                FROM (SELECT tmpContainer.ContainerId
                           , tmpContainer.AccountId
                           , CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Active() AND MIReport.ActiveAccountId <> zc_Enum_Account_100301() -- прибыль текущего периода
@@ -218,7 +228,7 @@ BEGIN
                      LEFT JOIN MovementLinkObject AS MovementLO_PersonalDriver
                                                   ON MovementLO_PersonalDriver.MovementId = Movement.Id
                                                  AND MovementLO_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
-                                                 AND MovementLO_PersonalDriver.ObjectId <> 0
+                                                 AND MovementLO_PersonalDriver.ObjectId > 0
 
                      LEFT JOIN MovementItem AS MI_Personal ON MI_Personal.Id = tmpMIReport.MovementItemId
                                                           AND Movement.DescId = zc_Movement_PersonalSendCash()
@@ -229,13 +239,16 @@ BEGIN
 
                      LEFT JOIN ContainerLinkObject AS ContainerLO_Personal ON ContainerLO_Personal.ContainerId = tmpMIReport.ContainerId_inf
                                                                           AND ContainerLO_Personal.DescId = zc_ContainerLinkObject_Personal()
-                                                                          AND ContainerLO_Personal.ObjectId <> 0
+                                                                          AND ContainerLO_Personal.ObjectId > 0
                      LEFT JOIN ContainerLinkObject AS ContainerLO_Car ON ContainerLO_Car.ContainerId = tmpMIReport.ContainerId_inf
                                                                      AND ContainerLO_Car.DescId = zc_ContainerLinkObject_Car()
-                                                                     AND ContainerLO_Car.ObjectId <> 0
+                                                                     AND ContainerLO_Car.ObjectId > 0
                      LEFT JOIN ContainerLinkObject AS ContainerLO_Busines ON ContainerLO_Busines.ContainerId = tmpMIReport.ContainerId_ProfitLoss
                                                                          AND ContainerLO_Busines.DescId = zc_ContainerLinkObject_Business()
-                                                                         AND ContainerLO_Busines.ObjectId <> 0
+                                                                         AND ContainerLO_Busines.ObjectId > 0
+                     LEFT JOIN ContainerLinkObject AS ContainerLO_ProfitLoss ON ContainerLO_ProfitLoss.ContainerId = tmpMIReport.ContainerId_ProfitLoss
+                                                                            AND ContainerLO_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss()
+                                                                            AND ContainerLO_ProfitLoss.ObjectId > 0
              GROUP BY tmpMIReport.ContainerId
                     , tmpMIReport.AccountId
                     , Movement.DescId
@@ -253,6 +266,7 @@ BEGIN
                     , tmpMIReport.UnitId_inf
                     , tmpMIReport.BranchId_inf
                     , ContainerLO_Busines.ObjectId
+                    , ContainerLO_ProfitLoss.ObjectId
 
             ) AS tmpReport_All
             LEFT JOIN ContainerLinkObject AS ContainerLO_Juridical ON ContainerLO_Juridical.ContainerId = tmpReport_All.ContainerId
@@ -285,7 +299,8 @@ BEGIN
                , tmpReport_All.UnitId_inf
                , tmpReport_All.BranchId_inf
                , tmpReport_All.BusinesId_inf
-       ) AS tmpReport 
+               , tmpReport_All.ProfitLossId_inf
+       ) AS tmpReport
 
        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpReport.JuridicalId
        LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpReport.PaidKindId
@@ -313,6 +328,7 @@ BEGIN
 
        LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = tmpReport.AccountId
        LEFT JOIN Object_Account_View AS View_Account_inf ON View_Account_inf.AccountId = tmpReport.AccountId_inf
+       LEFT JOIN Object_ProfitLoss_View AS View_ProfitLoss_inf ON View_ProfitLoss_inf.ProfitLossId = tmpReport.ProfitLossId_inf
 
     ;
     

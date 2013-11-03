@@ -26,14 +26,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 41275d
+      EditValue = 41548d
       TabOrder = 0
       Width = 85
     end
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41640d
+      EditValue = 41578d
       TabOrder = 1
       Width = 85
     end
@@ -57,13 +57,11 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     DataSource = DataSource
     Groups = <>
     TabOrder = 5
-    ExplicitTop = 67
-    ExplicitHeight = 328
     object clProfitLossGroupName: TcxDBPivotGridField
       Area = faRow
       AreaIndex = 0
       IsCaptionAssigned = True
-      Caption = #1043#1088#1091#1087#1087#1072' '#1054#1055#1080#1059
+      Caption = #1054#1055#1080#1059' '#1075#1088#1091#1087#1087#1072
       DataBinding.FieldName = 'ProfitLossGroupName'
       Visible = True
       UniqueName = #1043#1088#1091#1087#1087#1072' '#1054#1055#1080#1059
@@ -72,7 +70,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       Area = faRow
       AreaIndex = 1
       IsCaptionAssigned = True
-      Caption = #1053#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+      Caption = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
       DataBinding.FieldName = 'ProfitLossDirectionName'
       Visible = True
       UniqueName = #1053#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
@@ -81,58 +79,97 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       Area = faRow
       AreaIndex = 2
       IsCaptionAssigned = True
-      Caption = #1057#1090#1072#1090#1100#1103
+      Caption = #1054#1055#1080#1059' '#1089#1090#1072#1090#1100#1103
       DataBinding.FieldName = 'ProfitLossName'
       Visible = True
       UniqueName = #1057#1090#1072#1090#1100#1103
     end
     object clOnComplete: TcxDBPivotGridField
-      AreaIndex = 0
+      AreaIndex = 9
       IsCaptionAssigned = True
-      Caption = #1057#1086#1079#1076#1072#1085#1072
+      Caption = '***'
       DataBinding.FieldName = 'OnComplete'
       Visible = True
       UniqueName = #1057#1086#1079#1076#1072#1085#1072
     end
-    object clInfoMoneyName: TcxDBPivotGridField
-      AreaIndex = 1
-      IsCaptionAssigned = True
-      Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103
-      DataBinding.FieldName = 'InfoMoneyName'
-      Visible = True
-      UniqueName = #1059#1055' '#1089#1090#1072#1090#1100#1103
-    end
-    object clJuridicalBasis: TcxDBPivotGridField
-      Area = faColumn
-      AreaIndex = 0
-      IsCaptionAssigned = True
-      Caption = #1070#1088'. '#1083#1080#1094#1086
-      DataBinding.FieldName = 'JuridicalBasisName'
-      Visible = True
-      UniqueName = #1070#1088'. '#1083#1080#1094#1086
-    end
     object clBusiness: TcxDBPivotGridField
       Area = faColumn
-      AreaIndex = 1
+      AreaIndex = 0
       IsCaptionAssigned = True
       Caption = #1041#1080#1079#1085#1077#1089
       DataBinding.FieldName = 'BusinessName'
       Visible = True
       UniqueName = #1041#1080#1079#1085#1077#1089
     end
-    object clByObjectName: TcxDBPivotGridField
+    object clJuridicalBasis: TcxDBPivotGridField
+      AreaIndex = 8
+      IsCaptionAssigned = True
+      Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086
+      DataBinding.FieldName = 'JuridicalName_Basis'
+      Visible = True
+      UniqueName = #1070#1088'. '#1083#1080#1094#1086
+    end
+    object clBranchName_ProfitLoss: TcxDBPivotGridField
+      AreaIndex = 0
+      IsCaptionAssigned = True
+      Caption = #1060#1080#1083#1080#1072#1083
+      DataBinding.FieldName = 'BranchName_ProfitLoss'
+      Visible = True
+      UniqueName = #1060#1080#1083#1080#1072#1083
+    end
+    object clUnitName_ProfitLoss: TcxDBPivotGridField
+      AreaIndex = 1
+      IsCaptionAssigned = True
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      DataBinding.FieldName = 'UnitName_ProfitLoss'
+      Visible = True
+      UniqueName = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+    end
+    object clInfoMoneyCode: TcxDBPivotGridField
+      AreaIndex = 4
+      IsCaptionAssigned = True
+      Caption = #1050#1086#1076' '#1059#1055' '#1089#1090'.'
+      DataBinding.FieldName = 'InfoMoneyCode'
+      Visible = True
+      UniqueName = #1050#1086#1076' '#1059#1055' '#1089#1090'.'
+    end
+    object clInfoMoneyGroupName: TcxDBPivotGridField
+      AreaIndex = 5
+      IsCaptionAssigned = True
+      Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+      DataBinding.FieldName = 'InfoMoneyGroupName'
+      Visible = True
+      UniqueName = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    end
+    object clInfoMoneyDestinationName: TcxDBPivotGridField
+      AreaIndex = 6
+      IsCaptionAssigned = True
+      Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+      DataBinding.FieldName = 'InfoMoneyDestinationName'
+      Visible = True
+      UniqueName = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+    end
+    object clInfoMoneyName: TcxDBPivotGridField
+      AreaIndex = 7
+      IsCaptionAssigned = True
+      Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+      DataBinding.FieldName = 'InfoMoneyName'
+      Visible = True
+      UniqueName = #1059#1055' '#1089#1090#1072#1090#1100#1103
+    end
+    object clDirectionObjectName: TcxDBPivotGridField
       AreaIndex = 2
       IsCaptionAssigned = True
       Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
-      DataBinding.FieldName = 'ByObjectName'
+      DataBinding.FieldName = 'DirectionObjectName'
       Visible = True
       UniqueName = 'ByObjectName'
     end
-    object clGoodsName: TcxDBPivotGridField
+    object clDestinationObjectName: TcxDBPivotGridField
       AreaIndex = 3
       IsCaptionAssigned = True
-      Caption = ' '#1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
-      DataBinding.FieldName = 'GoodsName'
+      Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+      DataBinding.FieldName = 'DestinationObjectName'
       Visible = True
       UniqueName = #1058#1086#1074#1072#1088
     end
@@ -142,20 +179,22 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       IsCaptionAssigned = True
       Caption = #1057#1091#1084#1084#1072
       DataBinding.FieldName = 'Amount'
+      PropertiesClassName = 'TcxCurrencyEditProperties'
+      Properties.DisplayFormat = ',0.;-,0.'
       Visible = True
       UniqueName = #1057#1091#1084#1084#1072
     end
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 32
-    Top = 184
+    Left = 24
+    Top = 216
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 96
-    Top = 144
+    Left = 52
+    Top = 216
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -169,8 +208,8 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 232
-    Top = 96
+    Left = 352
+    Top = 280
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -189,8 +228,8 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 152
-    Top = 88
+    Left = 112
+    Top = 256
     DockControlHeights = (
       0
       0
@@ -234,8 +273,8 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 232
-    Top = 144
+    Left = 200
+    Top = 192
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -267,20 +306,20 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41275d
+        Value = 41548d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41640d
+        Value = 41578d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
       end>
-    Left = 152
-    Top = 152
+    Left = 120
+    Top = 192
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 232

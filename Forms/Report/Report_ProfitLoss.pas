@@ -48,13 +48,18 @@ type
     clProfitLossName: TcxDBPivotGridField;
     clOnComplete: TcxDBPivotGridField;
     clInfoMoneyName: TcxDBPivotGridField;
-    clByObjectName: TcxDBPivotGridField;
-    clGoodsName: TcxDBPivotGridField;
+    clDirectionObjectName: TcxDBPivotGridField;
+    clDestinationObjectName: TcxDBPivotGridField;
     clAmount: TcxDBPivotGridField;
     clBusiness: TcxDBPivotGridField;
     clJuridicalBasis: TcxDBPivotGridField;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
+    clBranchName_ProfitLoss: TcxDBPivotGridField;
+    clUnitName_ProfitLoss: TcxDBPivotGridField;
+    clInfoMoneyCode: TcxDBPivotGridField;
+    clInfoMoneyGroupName: TcxDBPivotGridField;
+    clInfoMoneyDestinationName: TcxDBPivotGridField;
   private
   public
   end;

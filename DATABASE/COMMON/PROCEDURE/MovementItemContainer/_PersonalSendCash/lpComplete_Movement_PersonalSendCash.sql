@@ -233,6 +233,7 @@ BEGIN
                                         , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
                                         , inObjectId_1        := _tmpItem_byProfitLoss.ProfitLossId
                                          ) AS ContainerId
+                , _tmpItem_byProfitLoss.ProfitLossDirectionId
                 , _tmpItem_byProfitLoss.InfoMoneyDestinationId
                 , _tmpItem_byProfitLoss.BusinessId_Route
            FROM (SELECT lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := _tmpItem_group.ProfitLossGroupId
@@ -241,6 +242,7 @@ BEGIN
                                                       , inInfoMoneyId            := NULL
                                                       , inUserId                 := inUserId
                                                        ) AS ProfitLossId
+                      , _tmpItem_group.ProfitLossDirectionId
                       , _tmpItem_group.InfoMoneyDestinationId
                       , _tmpItem_group.BusinessId_Route
                  FROM (SELECT _tmpItem.ProfitLossGroupId
@@ -256,7 +258,8 @@ BEGIN
                       ) AS _tmpItem_group
                 ) AS _tmpItem_byProfitLoss
           ) AS _tmpItem_byContainer
-      WHERE _tmpItem.InfoMoneyDestinationId = _tmpItem_byContainer.InfoMoneyDestinationId
+      WHERE _tmpItem.ProfitLossDirectionId  = _tmpItem_byContainer.ProfitLossDirectionId
+        AND _tmpItem.InfoMoneyDestinationId = _tmpItem_byContainer.InfoMoneyDestinationId
         AND _tmpItem.BusinessId_Route       = _tmpItem_byContainer.BusinessId_Route;
 
      -- 1.3. формируются Проводки суммового учета
@@ -418,6 +421,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.11.13                                        * err
  02.11.13                                        * идеологически правильный lpComplete_Movement_PersonalSendCash
  02.11.13                                        * add zc_MILinkObject_Branch, zc_MILinkObject_UnitRoute, zc_MILinkObject_BranchRoute
  29.10.13                                        * add !!!обязательно!!! очистили таблицу...

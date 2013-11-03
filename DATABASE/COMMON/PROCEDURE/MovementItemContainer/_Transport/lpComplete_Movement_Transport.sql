@@ -140,7 +140,7 @@ BEGIN
 
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItem_Transport (MovementItemId, MovementItemId_parent, UnitId_ProfitLoss, BranchId_ProfitLoss, UnitId_Route, BranchId_Route
+     INSERT INTO _tmpItem_Transport (MovementItemId, MovementItemId_parent, UnitId_ProfitLoss, BranchId_ProfitLoss, RouteId_ProfitLoss, UnitId_Route, BranchId_Route
                                    , ContainerId_Goods, GoodsId, AssetId
                                    , OperCount
                                    , ProfitLossGroupId, ProfitLossDirectionId, InfoMoneyDestinationId, InfoMoneyId
@@ -151,6 +151,7 @@ BEGIN
             , _tmp.MovementItemId_parent
             , _tmp.UnitId_ProfitLoss
             , _tmp.BranchId_ProfitLoss
+            , _tmp.RouteId_ProfitLoss
             , _tmp.UnitId_Route
             , _tmp.BranchId_Route
             , 0 AS ContainerId_Goods -- сформируем позже
@@ -171,6 +172,7 @@ BEGIN
                    , MovementItem.ParentId AS MovementItemId_parent
                    , COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0)       AS UnitId_ProfitLoss   -- сейчас затраты по принадлежности маршрута к подразделению, иначе надо изменить на vbUnitId_Car, тогда затраты будут по принадлежности авто к подразделению
                    , COALESCE (ObjectLink_UnitRoute_Branch.ChildObjectId, 0) AS BranchId_ProfitLoss -- сейчас затраты по принадлежности маршрута к подразделению, иначе надо изменить на vbBranchId_Car, тогда затраты будут по принадлежности авто к подразделению
+                   , COALESCE (MovementItem_Parent.ObjectId, 0)              AS RouteId_ProfitLoss
                    , COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0)       AS UnitId_Route
                    , COALESCE (ObjectLink_UnitRoute_Branch.ChildObjectId, 0) AS BranchId_Route
                      -- для Автомобиля это Вид топлива
@@ -352,8 +354,8 @@ BEGIN
                       ) AS _tmpItem_Transport_group
                 ) AS _tmpItem_Transport_byProfitLoss
           ) AS _tmpItem_Transport_byContainer ON _tmpItem_Transport_byContainer.ProfitLossDirectionId  = _tmpItem_Transport.ProfitLossDirectionId
-                                   AND _tmpItem_Transport_byContainer.InfoMoneyDestinationId = _tmpItem_Transport.InfoMoneyDestinationId
-                                   AND _tmpItem_Transport_byContainer.BusinessId_Route       = _tmpItem_Transport.BusinessId_Route
+                                             AND _tmpItem_Transport_byContainer.InfoMoneyDestinationId = _tmpItem_Transport.InfoMoneyDestinationId
+                                             AND _tmpItem_Transport_byContainer.BusinessId_Route       = _tmpItem_Transport.BusinessId_Route
      WHERE _tmpItem_TransportSumm_Transport.MovementItemId = _tmpItem_Transport.MovementItemId;
 
      -- 2.2. формируются Проводки - Прибыль
@@ -397,11 +399,12 @@ BEGIN
      -- !!!4. формируются свойства в элементах документа из данных для проводок!!!
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), tmp.MovementItemId, tmp.UnitId_ProfitLoss)
            , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), tmp.MovementItemId, tmp.BranchId_ProfitLoss)
+           , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Route(), tmp.MovementItemId, tmp.RouteId_ProfitLoss)
            , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_UnitRoute(), tmp.MovementItemId, tmp.UnitId_Route)
            , lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_BranchRoute(), tmp.MovementItemId, tmp.BranchId_Route)
-     FROM (SELECT _tmpItem_Transport.MovementItemId, _tmpItem_Transport.UnitId_ProfitLoss, _tmpItem_Transport.BranchId_ProfitLoss, _tmpItem_Transport.UnitId_Route, _tmpItem_Transport.BranchId_Route
+     FROM (SELECT _tmpItem_Transport.MovementItemId, _tmpItem_Transport.UnitId_ProfitLoss, _tmpItem_Transport.BranchId_ProfitLoss, _tmpItem_Transport.RouteId_ProfitLoss, _tmpItem_Transport.UnitId_Route, _tmpItem_Transport.BranchId_Route
            FROM _tmpItem_Transport
-           GROUP BY _tmpItem_Transport.MovementItemId, _tmpItem_Transport.UnitId_ProfitLoss, _tmpItem_Transport.BranchId_ProfitLoss, _tmpItem_Transport.UnitId_Route, _tmpItem_Transport.BranchId_Route
+           GROUP BY _tmpItem_Transport.MovementItemId, _tmpItem_Transport.UnitId_ProfitLoss, _tmpItem_Transport.BranchId_ProfitLoss, _tmpItem_Transport.RouteId_ProfitLoss, _tmpItem_Transport.UnitId_Route, _tmpItem_Transport.BranchId_Route
           ) AS tmp;
 
 
@@ -419,6 +422,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.11.13                                        * add zc_MILinkObject_Route
  02.11.13                                        * add zc_MILinkObject_Branch, zc_MILinkObject_UnitRoute, zc_MILinkObject_BranchRoute
  02.11.13                                        * group AS _tmpItem_Transport
  27.10.13                                        * err zc_MovementFloat_StartAmountTicketFuel
