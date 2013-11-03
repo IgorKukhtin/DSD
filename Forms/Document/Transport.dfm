@@ -1578,7 +1578,11 @@
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
-      StoredProcList = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
@@ -2380,10 +2384,10 @@
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'
     CloseDataSource = False
-    DataSet = MasterCDS
+    DataSet = PrintCDS
     BCDToCurrency = False
-    Left = 134
-    Top = 226
+    Left = 486
+    Top = 186
   end
   object ChildCDS: TClientDataSet
     Aggregates = <>
@@ -3489,5 +3493,29 @@
       end>
     Left = 106
     Top = 357
+  end
+  object PrintCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 428
+    Top = 186
+  end
+  object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Transport'
+    DataSet = PrintCDS
+    DataSets = <
+      item
+        DataSet = PrintCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    Left = 458
+    Top = 186
   end
 end

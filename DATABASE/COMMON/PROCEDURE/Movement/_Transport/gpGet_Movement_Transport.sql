@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StartRunPlan TDateTime, EndRunPlan TDateTime, StartRun TDateTime, EndRun TDateTime
              , HoursWork TFloat, HoursAdd TFloat
              , Comment TVarChar
-             , CarId Integer, CarName TVarChar
+             , CarId Integer, CarName TVarChar, CarModelName TVarChar
              , CarTrailerId Integer, CarTrailerName TVarChar
              , PersonalDriverId Integer, PersonalDriverName TVarChar
              , PersonalDriverMoreId Integer, PersonalDriverMoreName TVarChar
@@ -47,6 +47,7 @@ BEGIN
 
            , 0                     AS CarId
            , CAST ('' as TVarChar) AS CarName
+           , CAST ('' as TVarChar) AS CarModelName
 
            , 0                     AS CarTrailerId
            , CAST ('' as TVarChar) AS CarTrailerName
@@ -83,8 +84,9 @@ BEGIN
                       
            , MovementString_Comment.ValueData      AS Comment
 
-           , Object_Car.Id            AS CarId
-           , Object_Car.ValueData     AS CarName
+           , Object_Car.Id             AS CarId
+           , Object_Car.ValueData      AS CarName
+           , Object_CarModel.ValueData AS CarModelName
 
            , Object_CarTrailer.Id        AS CarTrailerId
            , Object_CarTrailer.ValueData AS CarTrailerName
@@ -133,6 +135,9 @@ BEGIN
                                          ON MovementLinkObject_Car.MovementId = Movement.Id
                                         AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
+                                                           AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
+            LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CarTrailer
                                          ON MovementLinkObject_CarTrailer.MovementId = Movement.Id
@@ -168,6 +173,7 @@ ALTER FUNCTION gpGet_Movement_Transport (Integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 03.11.13                                        * add CarModelName
  25.10.13                                        * add MINUTE
  23.10.13                                        * add NEXTVAL
  30.09.13                                        * add Object_Personal_View
