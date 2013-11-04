@@ -11,7 +11,6 @@ RETURNS VOID
 --  RETURNS TABLE (MovementItemId Integer, MovementId Integer, OperDate TDateTime, JuridicalId_From Integer, isCorporate Boolean, PersonalId_From Integer, UnitId Integer, BranchId_Unit Integer, PersonalId_Packer Integer, PaidKindId Integer, ContractId Integer, ContainerId_Goods Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, OperCount TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, tmpOperSumm_Packer TFloat, OperSumm_Packer TFloat, AccountDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, InfoMoneyDestinationId_isCorporate Integer, InfoMoneyId_isCorporate Integer, JuridicalId_basis Integer, BusinessId Integer, isPartionCount Boolean, isPartionSumm Boolean, PartionMovementId Integer, PartionGoodsId Integer)
 AS
 $BODY$
-  DECLARE vbOperDate TDateTime;
   DECLARE vbPersonalId_From Integer;
 
   DECLARE vbJuridicalId_Basis Integer;
@@ -25,14 +24,11 @@ BEGIN
 
 
      -- Эти параметры нужны для формирования Аналитик в проводках
-     SELECT _tmp.OperDate
-          , _tmp.PersonalId_From
+     SELECT _tmp.PersonalId_From
           , _tmp.JuridicalId_Basis, _tmp.BusinessId_PersonalFrom
-            INTO vbOperDate
-               , vbPersonalId_From
+            INTO vbPersonalId_From
                , vbJuridicalId_Basis, vbBusinessId_PersonalFrom -- эти аналитики берутся у подразделения за которым числится сотрудник (кто выдавал деньги)
-     FROM (SELECT Movement.OperDate
-                , COALESCE (MovementLinkObject_Personal.ObjectId, 0)    AS PersonalId_From
+     FROM (SELECT COALESCE (MovementLinkObject_Personal.ObjectId, 0)    AS PersonalId_From
                 , COALESCE (ObjectLink_Unit_Juridical.ChildObjectId, 0) AS JuridicalId_Basis
                 , COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0)  AS BusinessId_PersonalFrom
            FROM Movement
@@ -57,7 +53,7 @@ BEGIN
 
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItem (MovementItemId, UnitId_ProfitLoss, BranchId_ProfitLoss, UnitId_Route, BranchId_Route
+     INSERT INTO _tmpItem (MovementItemId, OperDate, UnitId_ProfitLoss, BranchId_ProfitLoss, UnitId_Route, BranchId_Route
                          , ContainerId_From, AccountId_From, ContainerId_To, AccountId_To, ContainerId_ProfitLoss, AccountId_ProfitLoss, PersonalId_To, CarId_To
                          , OperSumm
                          , ProfitLossGroupId, ProfitLossDirectionId, InfoMoneyDestinationId, InfoMoneyId
@@ -65,6 +61,7 @@ BEGIN
                           )
         SELECT
               _tmp.MovementItemId
+            , _tmp.OperDate
             , _tmp.UnitId_ProfitLoss
             , _tmp.BranchId_ProfitLoss
             , _tmp.UnitId_Route
@@ -89,6 +86,7 @@ BEGIN
 
         FROM (SELECT
                      MovementItem.Id AS MovementItemId
+                   , MIDate_OperDate.ValueData AS OperDate
                    , COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0)       AS UnitId_ProfitLoss   -- сейчас затраты по принадлежности маршрута к подразделению, иначе надо изменить на ObjectLink_Car_Unit, тогда затраты будут по принадлежности авто к подразделению
                    , COALESCE (ObjectLink_UnitRoute_Branch.ChildObjectId, 0) AS BranchId_ProfitLoss -- сейчас затраты по принадлежности маршрута к подразделению, иначе надо изменить на ObjectLink_UnitCar_Branch, тогда затраты будут по принадлежности авто к подразделению
                    , COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0)       AS UnitId_Route
@@ -111,6 +109,9 @@ BEGIN
 
               FROM Movement
                    JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
+                   LEFT JOIN MovementItemDate AS MIDate_OperDate
+                                              ON MIDate_OperDate.MovementItemId = MovementItem.Id
+                                             AND MIDate_OperDate.DescId = zc_MIDate_OperDate()
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Car
                                                     ON MILinkObject_Car.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_Car.DescId = zc_MILinkObject_Car()
@@ -265,15 +266,15 @@ BEGIN
      -- 1.3. формируются Проводки суммового учета
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
        -- по счету долг Сотрудника (Водитель)
-       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, _tmpItem.MovementItemId, ContainerId_To, 0 AS ParentId, OperSumm, vbOperDate, TRUE AS IsActive FROM _tmpItem
+       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, _tmpItem.MovementItemId, ContainerId_To, 0 AS ParentId, OperSumm, OperDate, TRUE AS IsActive FROM _tmpItem
       UNION ALL
        -- тут же списание с него по счету долг Сотрудника (Водитель) (!!!если Прибыль!!!)
-       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, _tmpItem.MovementItemId, ContainerId_To, 0 AS ParentId, -1 * OperSumm, vbOperDate, FALSE AS IsActive
+       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, _tmpItem.MovementItemId, ContainerId_To, 0 AS ParentId, -1 * OperSumm, OperDate, FALSE AS IsActive
        FROM _tmpItem
        WHERE AccountId_ProfitLoss = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
       UNION ALL
        -- по счету Прибыль
-       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, _tmpItem.MovementItemId, ContainerId_ProfitLoss, 0 AS ParentId, OperSumm, vbOperDate, FALSE AS IsActive
+       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, _tmpItem.MovementItemId, ContainerId_ProfitLoss, 0 AS ParentId, OperSumm, OperDate, FALSE AS IsActive
        FROM _tmpItem
        WHERE AccountId_ProfitLoss = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
      ;
@@ -321,11 +322,13 @@ BEGIN
 
      -- 2.3. формируются Проводки суммового учета по долг Сотрудника (От кого)
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
-       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, _tmpItem_group.ContainerId_From, 0 AS ParentId, -1 * OperSumm, vbOperDate, FALSE
+       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, _tmpItem_group.ContainerId_From, 0 AS ParentId, -1 * OperSumm, OperDate, FALSE
        FROM (SELECT _tmpItem.ContainerId_From
+                  , _tmpItem.OperDate
                   , SUM (_tmpItem.OperSumm) AS OperSumm
              FROM _tmpItem
              GROUP BY _tmpItem.ContainerId_From
+                    , _tmpItem.OperDate
             ) AS _tmpItem_group;
 
 
@@ -351,7 +354,7 @@ BEGIN
                                                                                                              , inAccountId_1        := NULL
                                                                                                      )
                                               , inAmount   := _tmpItem.OperSumm
-                                              , inOperDate := vbOperDate
+                                              , inOperDate := _tmpItem.OperDate
                                                )
      FROM _tmpItem
      WHERE _tmpItem.OperSumm <> 0;
@@ -378,7 +381,7 @@ BEGIN
                                                                                                              , inAccountId_1        := NULL
                                                                                                      )
                                               , inAmount   := _tmpItem.OperSumm
-                                              , inOperDate := vbOperDate
+                                              , inOperDate := _tmpItem.OperDate
                                                )
      FROM _tmpItem
      WHERE _tmpItem.OperSumm <> 0
@@ -421,6 +424,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.11.13                                        * add OperDate
  03.11.13                                        * err
  02.11.13                                        * идеологически правильный lpComplete_Movement_PersonalSendCash
  02.11.13                                        * add zc_MILinkObject_Branch, zc_MILinkObject_UnitRoute, zc_MILinkObject_BranchRoute

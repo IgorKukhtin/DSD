@@ -1,12 +1,14 @@
 -- Function: lpInsertUpdate_MovementItem_PersonalSendCash ()
 
--- DROP FUNCTION lpInsertUpdate_MovementItem_PersonalSendCash ();
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalSendCash (Integer, Integer, Integer, TFloat, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_PersonalSendCash (Integer, Integer, Integer, TFloat, TDateTime, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_PersonalSendCash(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- ключ Документа
     IN inPersonalId          Integer   , -- Сотрудник
     IN inAmount              TFloat    , -- Сумма
+    IN inOperDate            TDateTime , -- Дата выдачи
     IN inRouteId             Integer   , -- Маршрут
     IN inCarId               Integer   , -- Автомобиль
     IN inInfoMoneyId         Integer   , -- Статьи назначения
@@ -42,6 +44,9 @@ BEGIN
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inPersonalId, inMovementId, inAmount, NULL);
 
+     -- сохранили свойство <Дата выдачи>
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_OperDate(), ioId, inOperDate);
+
      -- сохранили связь с <Маршрут>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Route(), ioId, inRouteId);
 
@@ -56,12 +61,12 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.11.13                                        * add inOperDate
  02.11.13                                        * add Object_Personal_View
  06.10.13                                        * add check
  30.09.13                                        * 

@@ -93,7 +93,6 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       UniqueName = #1057#1086#1079#1076#1072#1085#1072
     end
     object clBusiness: TcxDBPivotGridField
-      Area = faColumn
       AreaIndex = 0
       IsCaptionAssigned = True
       Caption = #1041#1080#1079#1085#1077#1089
@@ -110,6 +109,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       UniqueName = #1070#1088'. '#1083#1080#1094#1086
     end
     object clBranchName_ProfitLoss: TcxDBPivotGridField
+      Area = faColumn
       AreaIndex = 0
       IsCaptionAssigned = True
       Caption = #1060#1080#1083#1080#1072#1083
