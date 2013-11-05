@@ -1,19 +1,7 @@
 inherited AncestorDBGridForm: TAncestorDBGridForm
-  Left = 0
-  Top = 0
-  ClientHeight = 308
-  ClientWidth = 575
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  KeyPreview = True
-  OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
-  object cxGrid: TcxGrid
+  object cxGrid: TcxGrid [0]
     Left = 0
     Top = 26
     Width = 575
@@ -45,34 +33,7 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
       GridView = cxGridDBTableView
     end
   end
-  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 43
-    Top = 264
-  end
-  object cxPropertiesStore: TcxPropertiesStore
-    Components = <>
-    StorageName = 'cxPropertiesStore'
-    StorageType = stStream
-    Left = 16
-    Top = 264
-  end
-  object ActionList: TActionList
-    Images = dmMain.ImageList
-    Left = 71
-    Top = 263
-    object actRefresh: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      StoredProc = spMainData
-      StoredProcList = <
-        item
-          StoredProc = spMainData
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
+  inherited ActionList: TActionList
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       Grid = cxGrid
@@ -82,62 +43,13 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
       ShortCut = 16472
     end
   end
-  object MainDataDS: TDataSource
-    DataSet = MainDataCDS
-    Left = 48
-    Top = 16
-  end
-  object MainDataCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 16
-    Top = 16
-  end
-  object spMainData: TdsdStoredProc
-    DataSet = MainDataCDS
-    DataSets = <
-      item
-        DataSet = MainDataCDS
-      end>
-    Params = <>
-    Left = 80
-    Top = 16
-  end
-  object BarManager: TdxBarManager
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    Categories.Strings = (
-      'Default')
-    Categories.ItemsVisibles = (
-      2)
-    Categories.Visibles = (
-      True)
-    ImageOptions.Images = dmMain.ImageList
-    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
-    PopupMenuLinks = <>
-    ShowShortCutInHint = True
-    UseSystemFont = True
-    Left = 120
-    Top = 16
+  inherited BarManager: TdxBarManager
     DockControlHeights = (
       0
       0
       26
       0)
-    object Bar: TdxBar
-      Caption = 'Custom'
-      CaptionButtons = <>
-      DockedDockingStyle = dsTop
-      DockedLeft = 0
-      DockedTop = 0
-      DockingStyle = dsTop
-      FloatLeft = 671
-      FloatTop = 8
-      FloatClientWidth = 0
-      FloatClientHeight = 0
+    inherited Bar: TdxBar
       ItemLinks = <
         item
           Visible = True
@@ -151,21 +63,6 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
-      OneOnRow = True
-      Row = 0
-      UseOwnFont = False
-      Visible = True
-      WholeRow = False
-    end
-    object bbRefresh: TdxBarButton
-      Action = actRefresh
-      Category = 0
-    end
-    object dxBarStatic: TdxBarStatic
-      Caption = '     '
-      Category = 0
-      Hint = '     '
-      Visible = ivAlways
     end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel

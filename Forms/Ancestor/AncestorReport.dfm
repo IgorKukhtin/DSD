@@ -4,6 +4,8 @@ inherited AncestorReportForm: TAncestorReportForm
   inherited cxGrid: TcxGrid
     Top = 57
     Height = 251
+    ExplicitTop = 57
+    ExplicitHeight = 251
     inherited cxGridDBTableView: TcxGridDBTableView
       Styles.Inactive = nil
       Styles.Selection = nil
@@ -13,13 +15,11 @@ inherited AncestorReportForm: TAncestorReportForm
   end
   object Panel: TPanel [1]
     Left = 0
-    Top = 26
+    Top = 0
     Width = 575
     Height = 31
     Align = alTop
     TabOrder = 5
-    ExplicitLeft = -754
-    ExplicitWidth = 1329
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -46,6 +46,23 @@ inherited AncestorReportForm: TAncestorReportForm
       Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
+  end
+  inherited spMainData: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41395d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = 41395d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
   end
   inherited BarManager: TdxBarManager
     DockControlHeights = (

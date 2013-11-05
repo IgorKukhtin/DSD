@@ -594,6 +594,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbProtocol'
+        end
+        item
+          Visible = True
           ItemName = 'bbGuides_Separator'
         end
         item
@@ -869,6 +873,10 @@ object MainForm: TMainForm
     end
     object bbAbout: TdxBarButton
       Action = actAbout
+      Category = 0
+    end
+    object bbProtocol: TdxBarButton
+      Action = actProtocol
       Category = 0
     end
   end
@@ -1514,9 +1522,11 @@ object MainForm: TMainForm
       Caption = #1054' '#1087#1088#1086#1075#1088#1072#1084#1084#1077'...'
       OnExecute = actAboutExecute
     end
-    object dsdOpenForm1: TdsdOpenForm
+    object actProtocol: TdsdOpenForm
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
-      Caption = 'dsdOpenForm1'
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083
+      Hint = #1055#1088#1086#1090#1086#1082#1086#1083
+      FormName = 'TProtocolForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -1546,7 +1556,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.12'
+    Version = '4.14'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

@@ -23,6 +23,7 @@ type
     function GetFromDataSet(const DataSet: TDataSet; const FieldName: string): Variant;
     procedure SetInCrossDBViewAddOn(const Value: Variant);
     function GetFromCrossDBViewAddOn: Variant;
+    function GetOwner: TComponent;
   protected
     function GetDisplayName: string; override;
     procedure AssignParam(Param: TdsdParam);
@@ -414,9 +415,17 @@ end;
 { TdsdParam }
 
 procedure TdsdParam.Assign(Source: TPersistent);
+var Owner: TComponent;
 begin
-  if Source is TdsdParam then
-     AssignParam(TdsdParam(Source))
+  if Source is TdsdParam then begin
+     AssignParam(TdsdParam(Source));
+     Owner := GetOwner;
+     Component := nil;
+     // доставляем еще свойств
+     if Assigned(TdsdParam(Source).Component) and Assigned(Owner) then
+        Component := Owner.FindComponent(TdsdParam(Source).Component.Name);
+     ComponentItem := TdsdParam(Source).ComponentItem;
+  end
   else
     inherited Assign(Source);
 end;
@@ -531,6 +540,19 @@ begin
       ftDateTime: Result := Now;
     end;
   end;
+end;
+
+function TdsdParam.GetOwner: TComponent;
+var Owner: TComponent;
+begin
+  if Assigned(Collection) then
+     Owner := TComponent(Collection.Owner);
+  while (Owner <> nil) do
+     if Owner is TCustomForm then
+        break
+     else
+        Owner := Owner.Owner;
+  result := Owner;
 end;
 
 function TdsdParam.GetValue: OleVariant;

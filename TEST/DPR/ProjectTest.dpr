@@ -247,7 +247,6 @@ uses
   Object_StoragePlace in '..\..\Forms\Object_StoragePlace.pas' {Object_StoragePlace: TParentForm},
   Report_TransportHoursWork in '..\..\Forms\Report\Report_TransportHoursWork.pas' {Report_TransportHoursWorkForm: TParentForm},
   StaffListChoice in '..\..\Forms\StaffListChoice.pas' {StaffListChoiceForm: TParentForm},
-  AncestorEnum in '..\..\Forms\Ancestor\AncestorEnum.pas' {AncestorEnumForm: TParentForm},
   StaffList in '..\..\Forms\StaffList.pas' {StaffListForm: TParentForm},
   StaffListSummKind in '..\..\Forms\StaffListSummKind.pas' {StaffListSummKindForm: TParentForm},
   PaidKind in '..\..\Forms\Kind\PaidKind.pas' {PaidKindForm: TParentForm},
@@ -257,7 +256,13 @@ uses
   AncestorData in '..\..\Forms\Ancestor\AncestorData.pas' {AncestorDataForm: TParentForm},
   AncestorReport in '..\..\Forms\Ancestor\AncestorReport.pas' {AncestorReportForm: TParentForm},
   Protocol in '..\..\Forms\System\Protocol.pas' {ProtocolForm: TParentForm},
-  AncestorDBGrid in '..\..\Forms\Ancestor\AncestorDBGrid.pas' {AncestorDBGridForm: TParentForm};
+  AncestorDBGrid in '..\..\Forms\Ancestor\AncestorDBGrid.pas' {AncestorDBGridForm: TParentForm},
+  AncestorJournal in '..\..\Forms\Ancestor\AncestorJournal.pas' {JournalForm: TParentForm},
+  AncestorGuides in '..\..\Forms\Ancestor\AncestorGuides.pas' {AncestorDBGridForm1: TParentForm},
+  ObjectDesc in '..\..\Forms\System\ObjectDesc.pas' {ObjectDescForm: TParentForm},
+  CommonObjectDescProcedureTest in '..\SOURCE\ObjectDesc\CommonObjectDescProcedureTest.pas',
+  AncestorEnum in '..\..\Forms\Ancestor\AncestorEnum.pas' {AncestorEnumForm: TParentForm},
+  Objects in '..\..\Forms\System\Objects.pas' {ObjectForm: TParentForm};
 
 {$R *.RES}
 

@@ -58,6 +58,7 @@ type
 
   TCustomGuides = class(TComponent, IChoiceCaller)
   private
+    FParams: TdsdParams;
     FKey: String;
     FParentId: String;
     FTextValue: String;
@@ -97,6 +98,8 @@ type
   protected
     // Вызыввем процедуру после выбора элемента из справочника
     procedure AfterChoice(Params: TdsdParams; Form: TForm); virtual; abstract;
+    // данные, получаемые после выбора из справочника. Например для передачи в другие контролы
+    property Params: TdsdParams read FParams write FParams;
   published
     // ключевое поле
     property KeyField: string read FKeyField write FKeyField;
@@ -107,7 +110,6 @@ type
   // Компонент работает со справочниками. Выбирает значение из элементов управления или форм
   TdsdGuides = class(TCustomGuides)
   private
-    FParams: TdsdParams;
     FOnAfterChoice: TNotifyEvent;
     FPopupMenu: TPopupMenu;
     procedure OnPopupClick(Sender: TObject);
@@ -128,8 +130,7 @@ type
     property PositionDataSet;
     // Где позиционируемся по ParentId
     property ParentDataSet;
-    // данные, получаемые после выбора из справочника. Например для передачи в другие контролы
-    property Params: TdsdParams read FParams write FParams;
+    property Params;
     property OnAfterChoice: TNotifyEvent read FOnAfterChoice write FOnAfterChoice;
   end;
 
@@ -495,7 +496,7 @@ begin
   if FormName = ''  then exit;
   Form := TdsdFormStorageFactory.GetStorage.Load(FormName);
   // Открыли форму
-  Form.Execute(Self, nil);
+  Form.Execute(Self, Params);
   // Спозиционировались на ParentData если он есть
   if ParentDataSet <> '' then begin
      DataSet := Form.FindComponent(ParentDataSet) as TDataSet;
