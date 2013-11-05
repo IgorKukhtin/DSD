@@ -81,9 +81,7 @@ type
     colDirectionObjectName: TcxGridDBColumn;
     colDestinationObjectName: TcxGridDBColumn;
     colAccountOnComplete: TcxGridDBColumn;
-    bbBooleanAction: TdxBarButton;
     bbStatic: TdxBarStatic;
-    BooleanStoredProcAction: TBooleanStoredProcAction;
     MasterViewAddOn: TdsdDBViewAddOn;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     EntryViewAddOn: TdsdDBViewAddOn;
@@ -128,6 +126,8 @@ type
     UnCompleteMovement: TChangeGuidesStatus;
     CompleteMovement: TChangeGuidesStatus;
     DeleteMovement: TChangeGuidesStatus;
+    colOperDate: TcxGridDBColumn;
+    clOperDate: TcxGridDBColumn;
   private
   public
   end;

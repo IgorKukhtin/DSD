@@ -192,7 +192,7 @@ BEGIN
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
 
      -- таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_ProfitLoss_40209 Integer, ContainerId_ProfitLoss_10500 Integer, ContainerId_ProfitLoss_10400 Integer, ContainerId Integer, AccountId Integer, OperSumm TFloat, OperSumm_ChangePercent TFloat, OperSumm_Partner TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_ProfitLoss_40208 Integer, ContainerId_ProfitLoss_10500 Integer, ContainerId_ProfitLoss_10400 Integer, ContainerId Integer, AccountId Integer, OperSumm TFloat, OperSumm_ChangePercent TFloat, OperSumm_Partner TFloat) ON COMMIT DROP;
 
      -- таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
@@ -530,10 +530,10 @@ BEGIN
 
 
      -- 1.3.1. самое интересное: заполняем таблицу - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItemSumm (MovementItemId, ContainerId_ProfitLoss_40209, ContainerId_ProfitLoss_10500, ContainerId_ProfitLoss_10400, ContainerId, AccountId, OperSumm, OperSumm_ChangePercent, OperSumm_Partner)
+     INSERT INTO _tmpItemSumm (MovementItemId, ContainerId_ProfitLoss_40208, ContainerId_ProfitLoss_10500, ContainerId_ProfitLoss_10400, ContainerId, AccountId, OperSumm, OperSumm_ChangePercent, OperSumm_Partner)
         SELECT
               _tmpItem.MovementItemId
-            , 0 AS ContainerId_ProfitLoss_40209 -- Счет - прибыль (ОПиУ - разница в весе : с/с2 - с/с3)
+            , 0 AS ContainerId_ProfitLoss_40208 -- Счет - прибыль (ОПиУ - разница в весе : с/с2 - с/с3)
             , 0 AS ContainerId_ProfitLoss_10500 -- Счет - прибыль (ОПиУ - скидки в весе : с/с1 - с/с2)
             , 0 AS ContainerId_ProfitLoss_10400 -- Счет - прибыль (ОПиУ - себестоимости реализации : с/с3)
             , COALESCE (lfContainerSumm_20901.ContainerId, COALESCE (Container_Summ.Id, 0)) AS ContainerId
@@ -578,7 +578,7 @@ BEGIN
 
 
      -- 2.1. создаем контейнеры для Проводки - Прибыль
-     UPDATE _tmpItemSumm SET ContainerId_ProfitLoss_40209 = _tmpItem_byDestination.ContainerId_ProfitLoss_40209 -- Счет - прибыль (ОПиУ - разница в весе : с/с2 - с/с3)
+     UPDATE _tmpItemSumm SET ContainerId_ProfitLoss_40208 = _tmpItem_byDestination.ContainerId_ProfitLoss_40208 -- Счет - прибыль (ОПиУ - разница в весе : с/с2 - с/с3)
                            , ContainerId_ProfitLoss_10500 = _tmpItem_byDestination.ContainerId_ProfitLoss_10500 -- Счет - прибыль (ОПиУ - скидки в весе : с/с1 - с/с2)
                            , ContainerId_ProfitLoss_10400 = _tmpItem_byDestination.ContainerId_ProfitLoss_10400 -- Счет - прибыль (ОПиУ - себестоимости реализации : с/с3)
      FROM _tmpItem
@@ -593,7 +593,7 @@ BEGIN
                                         , inObjectCostId      := NULL
                                         , inDescId_1          := zc_ContainerLinkObject_ProfitLoss()
                                         , inObjectId_1        := _tmpItem_byProfitLoss.ProfitLossId_CountChange
-                                         ) AS ContainerId_ProfitLoss_40209
+                                         ) AS ContainerId_ProfitLoss_40208
                   -- для учета скидки в весе : с/с1 - с/с2
                 , lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                         , inParentId          := NULL
@@ -620,9 +620,9 @@ BEGIN
            FROM (SELECT -- определяем ProfitLossId - для учета разница в весе : с/с2 - с/с3
                         CASE WHEN _tmpItem_group.ProfitLossGroupId = zc_Enum_ProfitLossGroup_10000() -- 10000; "Результат основной деятельности"
                               AND _tmpItem_group.InfoMoneyDestinationId_calc = zc_Enum_InfoMoneyDestination_20900()  -- Ирна      -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
-                                  THEN zc_Enum_ProfitLoss_40209() -- Содержание филиалов 40209; "Разница в весе"
+                                  THEN zc_Enum_ProfitLoss_40208() -- Содержание филиалов 40208; "Разница в весе"
                              WHEN _tmpItem_group.ProfitLossGroupId = zc_Enum_ProfitLossGroup_10000() -- 10000; "Результат основной деятельности"
-                                  THEN zc_Enum_ProfitLoss_40209() -- Содержание филиалов 40209; "Разница в весе"
+                                  THEN zc_Enum_ProfitLoss_40208() -- Содержание филиалов 40208; "Разница в весе"
                              ELSE lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := _tmpItem_group.ProfitLossGroupId
                                                                 , inProfitLossDirectionId  := _tmpItem_group.ProfitLossDirectionId
                                                                 , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId_calc
@@ -708,10 +708,10 @@ BEGIN
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
        -- Проводки по разнице в весе : с/с2 - с/с3
        SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, _tmpItem_group.ContainerId_ProfitLoss, 0 AS ParentId, _tmpItem_group.OperSumm, vbOperDate, FALSE
-       FROM (SELECT _tmpItemSumm.ContainerId_ProfitLoss_40209 AS ContainerId_ProfitLoss
+       FROM (SELECT _tmpItemSumm.ContainerId_ProfitLoss_40208 AS ContainerId_ProfitLoss
                   , SUM (_tmpItemSumm.OperSumm_ChangePercent - _tmpItemSumm.OperSumm_Partner) AS OperSumm
              FROM _tmpItemSumm
-             GROUP BY _tmpItemSumm.ContainerId_ProfitLoss_40209
+             GROUP BY _tmpItemSumm.ContainerId_ProfitLoss_40208
             ) AS _tmpItem_group
        WHERE _tmpItem_group.OperSumm <> 0
       UNION ALL
@@ -1029,7 +1029,7 @@ BEGIN
            FROM (SELECT _tmpItemSumm.MovementItemId
                       , _tmpItemSumm.ContainerId
                       , _tmpItemSumm.AccountId
-                      , _tmpItemSumm.ContainerId_ProfitLoss_40209 AS ContainerId_ProfitLoss
+                      , _tmpItemSumm.ContainerId_ProfitLoss_40208 AS ContainerId_ProfitLoss
                       , zc_Enum_Account_100301 () AS AccountId_ProfitLoss   -- 100301; "прибыль текущего периода"
                       , (_tmpItemSumm.OperSumm_ChangePercent - _tmpItemSumm.OperSumm_Partner) AS OperSumm -- !!!если>0, значит товар-кредит, т.е. у покупателя меньше чем отгрузка!!!
                  FROM _tmpItemSumm
@@ -1291,6 +1291,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.11.13                                        * rename zc_Enum_ProfitLoss_40209 -> zc_Enum_ProfitLoss_40208
  06.10.13                                        * add StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
  03.10.13                                        * add inCarId := NULL
  17.09.13                                        * add lpInsertUpdate_ContainerCount_Goods

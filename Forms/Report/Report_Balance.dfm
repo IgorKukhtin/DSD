@@ -26,14 +26,14 @@ object Report_BalanceForm: TReport_BalanceForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 41395d
+      EditValue = 41548d
       TabOrder = 0
       Width = 85
     end
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41395d
+      EditValue = 41578d
       TabOrder = 1
       Width = 85
     end
@@ -57,8 +57,6 @@ object Report_BalanceForm: TReport_BalanceForm
     DataSource = DataSource
     Groups = <>
     TabOrder = 5
-    ExplicitTop = 67
-    ExplicitHeight = 373
     object pvRootName: TcxDBPivotGridField
       Area = faRow
       AreaIndex = 0
@@ -323,14 +321,14 @@ object Report_BalanceForm: TReport_BalanceForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41395d
+        Value = 41548d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41395d
+        Value = 41578d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

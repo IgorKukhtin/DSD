@@ -31,7 +31,7 @@ type
     ceCode: TcxGridDBColumn;
     ceName: TcxGridDBColumn;
     ceBranchName: TcxGridDBColumn;
-    ceisErased: TcxGridDBColumn;
+    ceIsErased: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
@@ -56,6 +56,16 @@ type
     dsdFormParams: TdsdFormParams;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    ceBusinessName: TcxGridDBColumn;
+    ceJuridicalName: TcxGridDBColumn;
+    ceAccountDirectionCode: TcxGridDBColumn;
+    ceAccountDirectionName: TcxGridDBColumn;
+    ceAccountGroupCode: TcxGridDBColumn;
+    ceAccountGroupName: TcxGridDBColumn;
+    ceProfitLossGroupCode: TcxGridDBColumn;
+    ceProfitLossGroupName: TcxGridDBColumn;
+    ceProfitLossDirectionCode: TcxGridDBColumn;
+    ceProfitLossDirectionName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -2212,8 +2212,10 @@ begin
            +'                                                                               when _pgUnit_parent1.ObjectCode in (22000) then _pgUnit.ParentId'
            +'                                                                          end');
         Add('     left outer join dba._pgUnit as _pgUnit_Branch_byCode on _pgUnit_Branch_byCode.ObjectCode = case when _pgUnit.ObjectCode between 21010 and 21090'
-           +'                                                                                                          then _pgUnit.ObjectCode + 1000');
-        Add('                                                                                                END');
+           +'                                                                                                          then _pgUnit.ObjectCode + 1000'
+           +'                                                                                                     when _pgUnit.ObjectCode = 21100' //  -,+ 21100 - Транспорт мясное сырье
+           +'                                                                                                          then 22010' // ф Днепр
+           +'                                                                                                END');
         Add('     left outer join dba.Unit as Unit_Alan on Unit_Alan.Id = 3');// АЛАН
         Add('     left outer join dba._pgAccount on _pgAccount.ObjectCode = CASE WHEN _pgUnit_parent.ObjectCode in (22000,21000) or _pgUnit_parent1.ObjectCode in (22000) THEN 20701'); // Запасы + на филиалах
         Add('                                                                    WHEN (_pgUnit.ObjectCode between 31050 and 31056) or (_pgUnit.ObjectCode between 32010 and 32012) THEN 20201'); // Запасы + на складах

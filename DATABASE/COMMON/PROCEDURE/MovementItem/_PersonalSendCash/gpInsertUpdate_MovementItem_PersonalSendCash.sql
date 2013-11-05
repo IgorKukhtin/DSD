@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalSendCash (Integer, Integer, TFloat, TFloat, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalSendCash (Integer, Integer, Integer, Integer, TFloat, TFloat, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalSendCash (Integer, Integer, Integer, Integer, TFloat, TFloat, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalSendCash(
  INOUT ioMIId_20401          Integer   , -- ключ стоки - Статья назначения ГСМ
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalSendCash(
     IN inPersonalId          Integer   , -- Сотрудник
     IN inAmount_20401        TFloat    , -- Сумма - Статья назначения ГСМ
     IN inAmount_21201        TFloat    , -- Сумма - Статья назначения Коммандировочные
+ INOUT ioOperDate            TDateTime , -- Дата выдачи
     IN inRouteId             Integer   , -- Маршрут
     IN inCarId               Integer   , -- Автомобиль
     IN inSession             TVarChar    -- сессия пользователя
@@ -23,11 +25,21 @@ BEGIN
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalSendCash());
      vbUserId := inSession;
 
+     -- отбрасываем время
+     ioOperDate:= DATE_TRUNC ('DAY', ioOperDate);
+
+     -- проверка
+     IF ioOperDate < '01.10.2012'
+     THEN
+         RAISE EXCEPTION 'Ошибка.<Дата выдачи> %.', ioOperDate;
+     END IF;
+
      -- сохранили Элемент для Статья назначения ГСМ
      ioMIId_20401 := lpInsertUpdate_MovementItem_PersonalSendCash (ioId          := ioMIId_20401
                                                                  , inMovementId  := inMovementId
                                                                  , inPersonalId  := inPersonalId
                                                                  , inAmount      := inAmount_20401
+                                                                 , inOperDate    := ioOperDate
                                                                  , inRouteId     := inRouteId
                                                                  , inCarId       := inCarId
                                                                  , inInfoMoneyId := zc_Enum_InfoMoney_20401()
@@ -39,6 +51,7 @@ BEGIN
                                                                  , inMovementId  := inMovementId
                                                                  , inPersonalId  := inPersonalId
                                                                  , inAmount      := inAmount_21201
+                                                                 , inOperDate    := ioOperDate
                                                                  , inRouteId     := inRouteId
                                                                  , inCarId       := inCarId
                                                                  , inInfoMoneyId := zc_Enum_InfoMoney_21201()
@@ -55,6 +68,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.11.13                                        * add ioOperDate
  07.10.13                                        * add ioMIId_20401 and ioMIId_21201
  06.10.13                                        * add inUserId
  03.10.13                                        * err

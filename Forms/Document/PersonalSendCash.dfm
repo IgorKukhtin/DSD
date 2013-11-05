@@ -248,6 +248,12 @@ object PersonalSendCashForm: TPersonalSendCashForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
+          object colOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1074#1099#1076#1072#1095#1080
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object colAmount_21201: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1085#1072' '#1050#1086#1084#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1077
             DataBinding.FieldName = 'Amount_21201'
@@ -325,6 +331,14 @@ object PersonalSendCashForm: TPersonalSendCashForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object clOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object colAccountCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1089#1095#1077#1090#1072
             DataBinding.FieldName = 'AccountCode'
@@ -511,7 +525,6 @@ object PersonalSendCashForm: TPersonalSendCashForm
       item
         Name = 'inShowAll'
         Value = False
-        Component = BooleanStoredProcAction
         DataType = ftBoolean
         ParamType = ptInput
       end
@@ -571,10 +584,6 @@ object PersonalSendCashForm: TPersonalSendCashForm
           ItemName = 'bbShowErased'
         end
         item
-          Visible = True
-          ItemName = 'bbBooleanAction'
-        end
-        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
@@ -618,16 +627,20 @@ object PersonalSendCashForm: TPersonalSendCashForm
       Visible = True
       WholeRow = False
     end
+    object bbInsertUpdateMovement: TdxBarButton
+      Action = actInsertUpdateMovement
+      Category = 0
+    end
+    object bbShowErased: TdxBarButton
+      Action = ShowErasedAction
+      Category = 0
+    end
     object bbRefresh: TdxBarButton
       Action = actRefresh
       Category = 0
     end
     object bbPrint: TdxBarButton
       Action = actPrint
-      Category = 0
-    end
-    object bbBooleanAction: TdxBarButton
-      Action = BooleanStoredProcAction
       Category = 0
     end
     object bbStatic: TdxBarStatic
@@ -643,10 +656,6 @@ object PersonalSendCashForm: TPersonalSendCashForm
       Action = EntryToExcel
       Category = 0
     end
-    object bbInsertUpdateMovement: TdxBarButton
-      Action = actInsertUpdateMovement
-      Category = 0
-    end
     object bbInsert: TdxBarButton
       Action = InsertRecord
       Category = 0
@@ -657,10 +666,6 @@ object PersonalSendCashForm: TPersonalSendCashForm
     end
     object bbUnErased: TdxBarButton
       Action = SetUnErased
-      Category = 0
-    end
-    object bbShowErased: TdxBarButton
-      Action = ShowErasedAction
       Category = 0
     end
   end
@@ -712,25 +717,6 @@ object PersonalSendCashForm: TPersonalSendCashForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       ImageIndexTrue = 65
       ImageIndexFalse = 64
-    end
-    object BooleanStoredProcAction: TBooleanStoredProcAction
-      Category = 'DSDLib'
-      TabSheet = cxTabSheetMain
-      StoredProc = spSelectMI
-      StoredProcList = <
-        item
-          StoredProc = spSelectMI
-        end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 63
-      Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndexTrue = 62
-      ImageIndexFalse = 63
     end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -1079,6 +1065,13 @@ object PersonalSendCashForm: TPersonalSendCashForm
         ComponentItem = 'Amount_21201'
         DataType = ftFloat
         ParamType = ptInput
+      end
+      item
+        Name = 'ioOperDate'
+        Component = MasterCDS
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInputOutput
       end
       item
         Name = 'inRouteId'

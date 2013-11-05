@@ -28,6 +28,12 @@ BEGIN
          RAISE EXCEPTION 'Невозможно Сформировать проводку для отчета с inAmount<0 : "%", "%", "%", "%", "%", "%", "%", "%", "%", "%"', inMovementId, inMovementItemId, inActiveContainerId, inPassiveContainerId, inActiveAccountId, inPassiveAccountId, inReportContainerId, inChildReportContainerId, inAmount, inOperDate;
      END IF;
 
+     -- Проверка
+     IF inActiveAccountId = zc_Enum_Account_100301() AND inPassiveAccountId = zc_Enum_Account_100301()
+     THEN
+         RAISE EXCEPTION 'Невозможно Сформировать проводку для отчета с одинаковым счетом ОПиУ : "%", "%", "%", "%", "%", "%", "%", "%", "%", "%"', inMovementId, inMovementItemId, inActiveContainerId, inPassiveContainerId, inActiveAccountId, inPassiveAccountId, inReportContainerId, inChildReportContainerId, inAmount, inOperDate;
+     END IF;
+
      -- сохранили "Проводка для отчета"
      INSERT INTO MovementItemReport (MovementId, MovementItemId, ActiveContainerId, PassiveContainerId, ActiveAccountId, PassiveAccountId, ReportContainerId, ChildReportContainerId, Amount, OperDate)
                              VALUES (inMovementId, inMovementItemId, inActiveContainerId, inPassiveContainerId, inActiveAccountId, inPassiveAccountId, inReportContainerId, inChildReportContainerId, inAmount, inOperDate);
@@ -40,6 +46,7 @@ ALTER FUNCTION lpInsertUpdate_MovementItemReport (Integer, Integer, Integer, Int
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.11.13                                        * add zc_Enum_Account_100301
  29.08.13                                        *
 */
 

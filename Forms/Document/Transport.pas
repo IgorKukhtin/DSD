@@ -252,6 +252,8 @@ type
     TotalRefresh: TdsdDataSetRefresh;
     colInvNumber: TcxGridDBColumn;
     colOperDate: TcxGridDBColumn;
+    PrintCDS: TClientDataSet;
+    spSelectPrint: TdsdStoredProc;
   private
   public
   end;

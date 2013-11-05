@@ -849,24 +849,6 @@ BEGIN
        FROM (SELECT vbOperDate AS OperDate UNION SELECT vbOperDatePartner AS OperDate) AS tmpOperDate
             JOIN _tmpItem_SummPartner ON  _tmpItem_SummPartner.OperSumm_Partner <> 0
                                       AND _tmpItem_SummPartner.AccountId_Transit <> 0
-     UNION ALL
-       -- это расчеты с поставщиком за счет водителя
-       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, _tmpItem_SummPartner.ContainerId, 0 AS ParentId, 1 * _tmpItem_SummPartner.OperSumm_Partner
-            , CASE WHEN _tmpItem_SummDriver.AccountId_Transit <> 0 THEN vbOperDatePartner ELSE vbOperDate END AS OperDate
-            , TRUE
-       FROM _tmpItem_SummDriver
-            JOIN _tmpItem_SummPartner ON _tmpItem_SummPartner.InfoMoneyId = _tmpItem_SummDriver.InfoMoneyId
-       WHERE _tmpItem_SummPartner.OperSumm_Partner <> 0
-     UNION ALL
-       -- это две проводки для счета Транзит
-       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, _tmpItem_SummPartner.ContainerId, 0 AS ParentId
-            , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN 1 ELSE -1 END * _tmpItem_SummPartner.OperSumm_Partner
-            , tmpOperDate.OperDate
-            , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN TRUE ELSE FALSE END AS IsActive
-       FROM (SELECT vbOperDate AS OperDate UNION SELECT vbOperDatePartner AS OperDate) AS tmpOperDate
-            JOIN _tmpItem_SummPartner ON _tmpItem_SummPartner.OperSumm_Partner <> 0
-                                     AND _tmpItem_SummPartner.AccountId_Transit <> 0
-            JOIN _tmpItem_SummDriver ON _tmpItem_SummDriver.InfoMoneyId = _tmpItem_SummPartner.InfoMoneyId
       ;
 
 
@@ -957,11 +939,30 @@ BEGIN
                                                                         )
                                                          END;
 
-     -- 4.3. формируются Проводки -  расчеты с поставщиком Сотрудником (Водитель)
+     -- 4.3. формируются Проводки - расчеты с поставщиком Сотрудником (Водитель)
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
+       -- это списание с водителя
        SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, ContainerId, 0 AS ParentId, -1 * OperSumm_Driver, vbOperDate, FALSE
        FROM _tmpItem_SummDriver
-       WHERE OperSumm_Driver <> 0;
+       WHERE OperSumm_Driver <> 0
+     UNION ALL
+       -- это расчеты с поставщиком за счет водителя
+       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, _tmpItem_SummPartner.ContainerId, 0 AS ParentId, 1 * _tmpItem_SummDriver.OperSumm_Driver
+            , CASE WHEN _tmpItem_SummDriver.AccountId_Transit <> 0 THEN vbOperDatePartner ELSE vbOperDate END AS OperDate
+            , TRUE
+       FROM _tmpItem_SummDriver
+            JOIN _tmpItem_SummPartner ON _tmpItem_SummPartner.InfoMoneyId = _tmpItem_SummDriver.InfoMoneyId
+       WHERE _tmpItem_SummDriver.OperSumm_Driver <> 0
+     UNION ALL
+       -- это две проводки для счета Транзит
+       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, _tmpItem_SummDriver.ContainerId_Transit, 0 AS ParentId
+            , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN 1 ELSE -1 END * _tmpItem_SummDriver.OperSumm_Driver
+            , tmpOperDate.OperDate
+            , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN TRUE ELSE FALSE END AS IsActive
+       FROM (SELECT vbOperDate AS OperDate UNION SELECT vbOperDatePartner AS OperDate) AS tmpOperDate
+            JOIN _tmpItem_SummDriver ON  _tmpItem_SummDriver.OperSumm_Driver <> 0
+                                     AND _tmpItem_SummDriver.AccountId_Transit <> 0
+      ;
 
 
      -- 5.1. формируются Проводки для отчета (Аналитики: Товар и Поставщик или Сотрудник (подотчетные лица)) !!!связь по InfoMoneyId_Detail!!!

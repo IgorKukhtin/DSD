@@ -26,8 +26,8 @@ type
   TAccountForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
+    Code: TcxGridDBColumn;
+    Name: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -53,13 +53,16 @@ type
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clAccountGroup: TcxGridDBColumn;
-    clAccountDirection: TcxGridDBColumn;
-    clInfoMoneyDestination: TcxGridDBColumn;
-    clInfoMoney: TcxGridDBColumn;
-    clErased: TcxGridDBColumn;
+    AccountGroupName: TcxGridDBColumn;
+    AccountDirectionName: TcxGridDBColumn;
+    InfoMoneyDestinationName: TcxGridDBColumn;
+    InfoMoneyName: TcxGridDBColumn;
+    isErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
-    clInfoMoneyGroup: TcxGridDBColumn;
+    InfoMoneyGroupName: TcxGridDBColumn;
+    AccountGroupCode: TcxGridDBColumn;
+    AccountDirectionCode: TcxGridDBColumn;
+    AccountName_All: TcxGridDBColumn;
   private
     { Private declarations }
   public

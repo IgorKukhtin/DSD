@@ -63,21 +63,101 @@ object UnitForm: TUnitForm
         HeaderAlignmentVert = vaCenter
         SortIndex = 0
         SortOrder = soAscending
-        Width = 271
+        Width = 150
       end
       object ceBranchName: TcxGridDBColumn
         Caption = #1060#1080#1083#1080#1072#1083
         DataBinding.FieldName = 'BranchName'
         HeaderAlignmentVert = vaCenter
-        Width = 242
+        Width = 100
       end
-      object ceisErased: TcxGridDBColumn
+      object ceBusinessName: TcxGridDBColumn
+        Caption = #1041#1080#1079#1085#1077#1089
+        DataBinding.FieldName = 'BusinessName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object ceJuridicalName: TcxGridDBColumn
+        Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086
+        DataBinding.FieldName = 'JuridicalName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object ceAccountGroupCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' c'#1095'. '#1075#1088'.'
+        DataBinding.FieldName = 'AccountGroupCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 50
+      end
+      object ceAccountGroupName: TcxGridDBColumn
+        Caption = #1057#1095#1077#1090' '#1075#1088#1091#1087#1087#1072
+        DataBinding.FieldName = 'AccountGroupName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object ceAccountDirectionCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' c'#1095'. '#1085#1072#1087#1088'.'
+        DataBinding.FieldName = 'AccountDirectionCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 50
+      end
+      object ceAccountDirectionName: TcxGridDBColumn
+        Caption = #1057#1095#1077#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'AccountDirectionName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object ceProfitLossGroupCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1054#1055#1080#1059' '#1075#1088'.'
+        DataBinding.FieldName = 'ProfitLossGroupCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 50
+      end
+      object ceProfitLossGroupName: TcxGridDBColumn
+        Caption = #1054#1055#1080#1059' '#1075#1088#1091#1087#1087#1072
+        DataBinding.FieldName = 'ProfitLossGroupName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object ceProfitLossDirectionCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1054#1055#1080#1059' '#1085#1072#1087#1088'.'
+        DataBinding.FieldName = 'ProfitLossDirectionCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 50
+      end
+      object ceProfitLossDirectionName: TcxGridDBColumn
+        Caption = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'ProfitLossDirectionName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object ceIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 67
+        Width = 40
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -102,8 +182,8 @@ object UnitForm: TUnitForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

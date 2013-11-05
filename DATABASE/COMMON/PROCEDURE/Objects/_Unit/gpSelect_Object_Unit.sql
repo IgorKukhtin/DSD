@@ -10,8 +10,10 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                BusinessId Integer, BusinessName TVarChar, 
                BranchId Integer, BranchName TVarChar,
                JuridicalId Integer, JuridicalName TVarChar,
-               AccountDirectionId Integer, AccountDirectionName TVarChar,
-               ProfitLossDirectionId Integer, ProfitLossDirectionName TVarChar,
+               AccountGroupCode Integer, AccountGroupName TVarChar,
+               AccountDirectionCode Integer, AccountDirectionName TVarChar,
+               ProfitLossGroupCode Integer, ProfitLossGroupName TVarChar,
+               ProfitLossDirectionCode Integer, ProfitLossDirectionName TVarChar,
                isErased boolean, isLeaf boolean) AS
 $BODY$
 BEGIN
@@ -36,15 +38,22 @@ BEGIN
            , Object_Unit_View.JuridicalId
            , Object_Unit_View.JuridicalName
          
-           , Object_Unit_View.AccountDirectionId
-           , Object_Unit_View.AccountDirectionName
+           , View_AccountDirection.AccountGroupCode
+           , View_AccountDirection.AccountGroupName
+           , View_AccountDirection.AccountDirectionCode
+           , View_AccountDirection.AccountDirectionName
          
-           , Object_Unit_View.ProfitLossDirectionId
-           , Object_Unit_View.ProfitLossDirectionName
+           , lfObject_Unit_byProfitLossDirection.ProfitLossGroupCode
+           , lfObject_Unit_byProfitLossDirection.ProfitLossGroupName
+           , lfObject_Unit_byProfitLossDirection.ProfitLossDirectionCode
+           , lfObject_Unit_byProfitLossDirection.ProfitLossDirectionName
          
            , Object_Unit_View.isErased
            , Object_Unit_View.isLeaf
-       FROM Object_Unit_View;
+       FROM Object_Unit_View
+            LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = Object_Unit_View.Id
+            LEFT JOIN Object_AccountDirection_View AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
+      ;
   
 END;
 $BODY$
@@ -56,10 +65,10 @@ ALTER FUNCTION gpSelect_Object_Unit(TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.11.13                                        * add lfSelect_Object_Unit_byProfitLossDirection and Object_AccountDirection_View
  28.10.13                         * переход на View              
  04.07.13          * дополнение всеми реквизитами              
  03.06.13          
-
 */
 
 -- тест
