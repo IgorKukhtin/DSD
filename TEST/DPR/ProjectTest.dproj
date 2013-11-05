@@ -647,10 +647,6 @@
 				<Form>StaffListChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Ancestor\AncestorEnum.pas">
-				<Form>AncestorEnumForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\StaffList.pas">
 				<Form>StaffListForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -696,6 +692,32 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorDBGrid.pas">
 				<Form>AncestorDBGridForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorJournal.pas">
+				<Form>JournalForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorGuides.pas">
+				<Form>AncestorDBGridForm1</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\ObjectDesc.pas">
+				<Form>ObjectDescForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\ObjectDesc\CommonObjectDescProcedureTest.pas"/>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorEnum.pas">
+				<Form>AncestorEnumForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\Objects.pas">
+				<Form>ObjectForm</Form>
+				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

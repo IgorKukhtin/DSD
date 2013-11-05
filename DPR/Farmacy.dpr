@@ -17,7 +17,8 @@ uses
   FormStorage in '..\SOURCE\FormStorage.pas',
   ChoicePeriod in '..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm},
   Defaults in '..\SOURCE\COMPONENT\Defaults.pas',
-  UnilWin in '..\SOURCE\UnilWin.pas';
+  UnilWin in '..\SOURCE\UnilWin.pas',
+  MessagesUnit in '..\SOURCE\MessagesUnit.pas' {MessagesForm};
 
 {$R *.res}
 

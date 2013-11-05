@@ -2,7 +2,6 @@ unit CommonMovementItemProcedureTest;
 
 interface
 
-
 uses dbTest;
 
 type

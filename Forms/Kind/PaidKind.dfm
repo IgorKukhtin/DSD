@@ -17,15 +17,8 @@ inherited PaidKindForm: TPaidKindForm
       end
     end
   end
-  inherited dxBarManager: TdxBarManager
-    DockControlHeights = (
-      0
-      0
-      26
-      0)
-  end
   inherited ActionList: TActionList
-    inherited dsdChoiceGuides: TdsdChoiceGuides
+    inherited ChoiceGuides: TdsdChoiceGuides
       Params = <
         item
           Name = 'Key'
@@ -39,7 +32,14 @@ inherited PaidKindForm: TPaidKindForm
         end>
     end
   end
-  inherited dsdStoredProc: TdsdStoredProc
+  inherited spMainData: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_PaidKind'
+  end
+  inherited BarManager: TdxBarManager
+    DockControlHeights = (
+      0
+      0
+      26
+      0)
   end
 end

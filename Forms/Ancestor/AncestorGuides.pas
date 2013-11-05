@@ -1,4 +1,4 @@
-unit AncestorEnum;
+unit AncestorGuides;
 
 interface
 
@@ -12,9 +12,7 @@ uses
   cxGridTableView, cxGridDBTableView, cxGrid;
 
 type
-  TAncestorEnumForm = class(TAncestorDBGridForm)
-    ChoiceGuides: TdsdChoiceGuides;
-    bbChoice: TdxBarButton;
+  TAncestorDBGridForm1 = class(TAncestorDBGridForm)
   private
     { Private declarations }
   public
@@ -22,7 +20,7 @@ type
   end;
 
 var
-  AncestorEnumForm: TAncestorEnumForm;
+  AncestorDBGridForm1: TAncestorDBGridForm1;
 
 implementation
 

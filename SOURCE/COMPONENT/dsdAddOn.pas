@@ -689,6 +689,7 @@ procedure TdsdDBViewAddOn.OnGetContentStyle(Sender: TcxCustomGridTableView;
   out AStyle: TcxStyle);
 var Column: TcxGridColumn;
 begin
+exit;
   if Assigned(FOnGetContentStyleEvent) then
      FOnGetContentStyleEvent(Sender, ARecord, AItem, AStyle);
 

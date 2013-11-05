@@ -11,21 +11,36 @@ uses
   dsdDB, Datasnap.DBClient, Vcl.ActnList, dsdAction, cxPropertiesStore, cxLabel,
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid;
+  cxGrid, cxButtonEdit, dsdGuides, cxMemo;
 
 type
   TProtocolForm = class(TAncestorReportForm)
+    colDate: TcxGridDBColumn;
+    colUserName: TcxGridDBColumn;
+    colProtocolData: TcxGridDBColumn;
+    colObjectName: TcxGridDBColumn;
+    edUser: TcxButtonEdit;
+    edObjectDesc: TcxButtonEdit;
+    edObject: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    UserGuides: TdsdGuides;
+    cxLabel4: TcxLabel;
+    ObjectDescGuides: TdsdGuides;
+    ObjectGuides: TdsdGuides;
+    cxLabel5: TcxLabel;
+    colObjectTypeName: TcxGridDBColumn;
   private
     { Private declarations }
   public
     { Public declarations }
   end;
 
-var
-  ProtocolForm: TProtocolForm;
-
 implementation
 
 {$R *.dfm}
+
+initialization
+  RegisterClass(TProtocolForm);
+
 
 end.
