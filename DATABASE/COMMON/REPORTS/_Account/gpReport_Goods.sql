@@ -61,7 +61,7 @@ BEGIN
        from (SELECT tmpContainer.ContainerId
                   , tmpContainer.GoodsId
                   , tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS SummStart
-                  , tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate >'05.01.2013' THEN  MIContainer.Amount ELSE 0 END), 0) AS SummEnd
+                  , tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate >'2013.01.04' THEN  MIContainer.Amount ELSE 0 END), 0) AS SummEnd
                   , 0 AS SummIn
                   , 0 AS SummOut
                   , 0 AS MovementDescId
@@ -71,12 +71,12 @@ BEGIN
 
              FROM tmpContainer
                   LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId
-                                                                AND MIContainer.OperDate >= '01.01.2013'
+                                                                AND MIContainer.OperDate >= '2013.01.01'
                                                                 
              GROUP BY tmpContainer.ContainerId, tmpContainer.GoodsId, tmpContainer.Amount
              
              HAVING (tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
-                 OR (tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > '05.01.2013' THEN  MIContainer.Amount ELSE 0 END), 0) <> 0)
+                 OR (tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > '2013.01.04' THEN  MIContainer.Amount ELSE 0 END), 0) <> 0)
 
           union all
              select 
@@ -95,13 +95,13 @@ BEGIN
                          , tmpContainer.GoodsId
                          , 0 AS SummStart
                          , 0 AS SummEnd
-                         , case when MIContainer.isactive = true then tmpContainer.Amount else 0 end AS SummIn
-                         , case when MIContainer.isactive = false then tmpContainer.Amount else 0 end AS SummOut
+                         , case when MIContainer.isactive = true then MIContainer.Amount else 0 end AS SummIn
+                         , case when MIContainer.isactive = false then MIContainer.Amount else 0 end AS SummOut
                          , MIContainer.MovementId            
                     FROM tmpContainer
                      
                         LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId
-                                                                      AND MIContainer.OperDate between  '01.01.2013' and '06.01.2013'
+                                                                      AND MIContainer.OperDate between  '2013.01.01' and '2013.01.04'
 
                    ) AS tmpMIContainer
 
