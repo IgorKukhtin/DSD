@@ -5,17 +5,14 @@ DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, TVarChar)
 CREATE OR REPLACE FUNCTION gpReport_Goods (
     IN inStartDate    TDateTime ,  
     IN inEndDate      TDateTime ,
-    IN inAccountId    Integer   ,
+    IN inGoodsId    Integer   ,
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE  (InvNumber Integer, OperDate TDateTime, MovementDescName TVarChar
-
               , GoodsCode Integer, GoodsName TVarChar
- 
               , CarModelName TVarChar, CarCode Integer, CarName TVarChar
-
-    
-
+              , PersonalCode Integer, PersonalName TVarChar
+              , UnitCode Integer, UnitName TVarChar
               , SummStart TFloat, SummIn TFloat, SummOut TFloat, SummEnd TFloat
               )  
 AS
@@ -25,7 +22,7 @@ BEGIN
     RETURN QUERY
 
     WITH tmpContainer AS (SELECT Container.Id AS ContainerId, Container.ObjectId AS GoodsId, Container.Amount
-                          FROM (SELECT Id AS GoodsId FROM Object WHERE DescId = zc_Object_Goods()) AS tmpGoods 
+                          FROM (SELECT inGoodsId AS GoodsId) AS tmpGoods 
                                JOIN Container ON Container.ObjectId = tmpGoods.GoodsId
                                              AND Container.DescId = zc_Container_Count()
                          )
@@ -41,27 +38,35 @@ BEGIN
         , Object_Car.ObjectCode     AS CarCode
         , Object_Car.ValueData      AS CarName
         
+        , View_Object_Personal.PersonalCode  
+        , View_Object_Personal.PersonalName 
+
+        , Object_Unit.ObjectCode     AS UnitCode
+        , Object_Unit.ValueData      AS UnitName
+                
         , tmp_All.SummStart
         , tmp_All.SummIn
         , tmp_All.SummOut
         , tmp_All.SummEnd 
   from (
        select  ContainerLO_Car.ObjectId as CarId
-            , tmpContainer_All.ContainerId
-            , tmpContainer_All.GoodsId
-            , tmpContainer_All.MovementDescId
-            , tmpContainer_All.MovementId 
-            , tmpContainer_All.OperDate
-            , tmpContainer_All.InvNumber
-            , SUM (tmpContainer_All.SummStart) AS SummStart
-            , SUM (tmpContainer_All.SummEnd) AS SummEnd
-            , SUM (tmpContainer_All.SummIn)  AS SummIn
-            , SUM (tmpContainer_All.SummOut) AS SummOut
+             , ContainerLO_Unit.ObjectId as UnitId
+             , ContainerLO_Personal.ObjectId as PersonalId    
+             , tmpContainer_All.ContainerId
+             , tmpContainer_All.GoodsId
+             , tmpContainer_All.MovementDescId
+             , tmpContainer_All.MovementId 
+             , tmpContainer_All.OperDate
+             , tmpContainer_All.InvNumber
+             , SUM (tmpContainer_All.SummStart) AS SummStart
+             , SUM (tmpContainer_All.SummEnd) AS SummEnd
+             , SUM (tmpContainer_All.SummIn)  AS SummIn
+             , SUM (tmpContainer_All.SummOut) AS SummOut
        
        from (SELECT tmpContainer.ContainerId
                   , tmpContainer.GoodsId
                   , tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS SummStart
-                  , tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate >'2013.01.04' THEN  MIContainer.Amount ELSE 0 END), 0) AS SummEnd
+                  , tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate >inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) AS SummEnd
                   , 0 AS SummIn
                   , 0 AS SummOut
                   , 0 AS MovementDescId
@@ -71,12 +76,12 @@ BEGIN
 
              FROM tmpContainer
                   LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId
-                                                                AND MIContainer.OperDate >= '2013.01.01'
+                                                                AND MIContainer.OperDate >= inStartDate
                                                                 
              GROUP BY tmpContainer.ContainerId, tmpContainer.GoodsId, tmpContainer.Amount
              
              HAVING (tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
-                 OR (tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > '2013.01.04' THEN  MIContainer.Amount ELSE 0 END), 0) <> 0)
+                 OR (tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) <> 0)
 
           union all
              select 
@@ -101,7 +106,7 @@ BEGIN
                     FROM tmpContainer
                      
                         LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId
-                                                                      AND MIContainer.OperDate between  '2013.01.01' and '2013.01.04'
+                                                                      AND MIContainer.OperDate between  inStartDate and inEndDate
 
                    ) AS tmpMIContainer
 
@@ -117,9 +122,14 @@ BEGIN
     ) as tmpContainer_All
          
     LEFT JOIN ContainerLinkObject AS ContainerLO_Car ON ContainerLO_Car.ContainerId = tmpContainer_All.ContainerId
-                                                            AND ContainerLO_Car.DescId = zc_ContainerLinkObject_Car()
- 
+                                                    AND ContainerLO_Car.DescId = zc_ContainerLinkObject_Car()
+    LEFT JOIN ContainerLinkObject AS ContainerLO_Unit ON ContainerLO_Unit.ContainerId = tmpContainer_All.ContainerId
+                                                     AND ContainerLO_Unit.DescId = zc_ContainerLinkObject_Unit()                                                          
+    LEFT JOIN ContainerLinkObject AS ContainerLO_Personal ON ContainerLO_Personal.ContainerId = tmpContainer_All.ContainerId
+                                                         AND ContainerLO_Personal.DescId = zc_ContainerLinkObject_Personal()
     GROUP BY  ContainerLO_Car.ObjectId
+            , ContainerLO_Unit.ObjectId
+            , ContainerLO_Personal.ObjectId
             , tmpContainer_All.ContainerId
             , tmpContainer_All.GoodsId
             , tmpContainer_All.MovementDescId
@@ -131,10 +141,14 @@ BEGIN
 
       LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp_All.GoodsId
       LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmp_All.CarId
-
+ 
       LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
                                                      AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
       LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
+ 
+      LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmp_All.UnitId
+
+      LEFT JOIN Object_Personal_View AS View_Object_Personal ON View_Object_Personal.PersonalId = tmp_All.PersonalId     
       
       LEFT JOIN MovementDesc ON MovementDesc.Id = tmp_All.MovementDescId
 
@@ -155,4 +169,4 @@ ALTER FUNCTION gpReport_Goods (TDateTime, TDateTime, Integer, TVarChar) OWNER TO
 */
 
 -- тест
--- SELECT * FROM gpReport_Goods (inStartDate:= '01.10.2013', inEndDate:= '31.10.2013', inAccountId:= null, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_Goods (inStartDate:= '01.10.2013', inEndDate:= '31.10.2013', inGoodsId:= null, inSession:= zfCalc_UserAdmin());
