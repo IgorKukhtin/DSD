@@ -11,7 +11,7 @@ uses
   cxPropertiesStore, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGrid, cxContainer, Vcl.ComCtrls, dxCore,
   cxDateUtils, ChoicePeriod, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
-  cxCalendar, Vcl.ExtCtrls, cxPCdxBarPopupMenu, cxPC;
+  cxCalendar, Vcl.ExtCtrls, cxPCdxBarPopupMenu, cxPC, cxImageComboBox;
 
 type
   TAncestorJournalForm = class(TAncestorDBGridForm)

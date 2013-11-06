@@ -1,4 +1,4 @@
-﻿object ServiceEditForm: TServiceEditForm
+﻿object ServiceForm: TServiceForm
   Left = 0
   Top = 0
   Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077
@@ -185,6 +185,7 @@
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object dsdFormClose1: TdsdFormClose
     end

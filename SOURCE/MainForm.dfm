@@ -21,8 +21,8 @@ object MainForm: TMainForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -557,6 +557,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbIncomeCash'
+        end
+        item
+          Visible = True
+          ItemName = 'bbJuridicalService'
         end>
     end
     object bbIncomeCash: TdxBarButton
@@ -877,6 +881,10 @@ object MainForm: TMainForm
     end
     object bbProtocol: TdxBarButton
       Action = actProtocol
+      Category = 0
+    end
+    object bbJuridicalService: TdxBarButton
+      Action = actService
       Category = 0
     end
   end
@@ -1527,6 +1535,13 @@ object MainForm: TMainForm
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083
       Hint = #1055#1088#1086#1090#1086#1082#1086#1083
       FormName = 'TProtocolForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actService: TdsdOpenForm
+      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
+      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1091#1089#1083#1091#1075
+      FormName = 'TServiceJournalForm'
       GuiParams = <>
       isShowModal = False
     end

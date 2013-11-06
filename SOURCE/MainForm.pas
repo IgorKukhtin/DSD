@@ -214,6 +214,8 @@ type
     bbReport_TransportHoursWork: TdxBarButton;
     actProtocol: TdsdOpenForm;
     bbProtocol: TdxBarButton;
+    actService: TdsdOpenForm;
+    bbJuridicalService: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

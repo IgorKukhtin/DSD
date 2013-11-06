@@ -1,4 +1,4 @@
-unit ServiceEdit;
+unit Service;
 
 interface
 
@@ -22,7 +22,7 @@ uses
   cxTextEdit, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel;
 
 type
-  TServiceEditForm = class(TParentForm)
+  TServiceForm = class(TParentForm)
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
     cxButton2: TcxButton;
@@ -64,11 +64,10 @@ type
     { Public declarations }
   end;
 
-var
-  ServiceEditForm: TServiceEditForm;
-
 implementation
 
 {$R *.dfm}
+initialization
+  RegisterClass(TServiceForm);
 
 end.
