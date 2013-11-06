@@ -350,9 +350,6 @@
 			<DCCReference Include="..\..\Forms\Document\SendJournal.pas">
 				<Form>SendJournalForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Send.pas">
-				<Form>SendForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\SaleJournal.pas">
 				<Form>SaleJournalForm</Form>
 			</DCCReference>
@@ -695,12 +692,12 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorJournal.pas">
-				<Form>JournalForm</Form>
+				<Form>AncestorJournalForm</Form>
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorGuides.pas">
-				<Form>AncestorDBGridForm1</Form>
+				<Form>AncestorGuidesForm</Form>
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
@@ -717,6 +714,16 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\System\Objects.pas">
 				<Form>ObjectForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorDocument.pas">
+				<Form>AncestorDocumentForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Send.pas">
+				<Form>SendForm</Form>
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>

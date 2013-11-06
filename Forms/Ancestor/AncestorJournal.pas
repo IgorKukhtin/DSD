@@ -11,10 +11,10 @@ uses
   cxPropertiesStore, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGrid, cxContainer, Vcl.ComCtrls, dxCore,
   cxDateUtils, ChoicePeriod, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
-  cxCalendar, Vcl.ExtCtrls;
+  cxCalendar, Vcl.ExtCtrls, cxPCdxBarPopupMenu, cxPC;
 
 type
-  TJournalForm = class(TAncestorDBGridForm)
+  TAncestorJournalForm = class(TAncestorDBGridForm)
     Panel: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;

@@ -79,7 +79,7 @@ BEGIN
                                              ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
-                WHERE MovementItem.MovementId = 157
+                WHERE MovementItem.MovementId = inMovementId
                   AND MovementItem.DescId =  zc_MI_Master()
                  AND (MovementItem.isErased = FALSE OR inIsErased = TRUE)) AS MI_Master
             ON Goods.Id = MI_Master.GoodsId AND Goods.GoodsKindId = MI_Master.GoodsKindId;

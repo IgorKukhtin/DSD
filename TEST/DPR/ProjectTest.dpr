@@ -130,7 +130,6 @@ uses
   Personal in '..\..\Forms\Personal.pas' {PersonalForm},
   PersonalEdit in '..\..\Forms\PersonalEdit.pas' {PersonalEditForm},
   SendJournal in '..\..\Forms\Document\SendJournal.pas' {SendJournalForm},
-  Send in '..\..\Forms\Document\Send.pas' {SendForm},
   SaleJournal in '..\..\Forms\Document\SaleJournal.pas' {SaleJournalForm},
   Sale in '..\..\Forms\Document\Sale.pas' {SaleForm},
   ReturnOutJournal in '..\..\Forms\Document\ReturnOutJournal.pas' {ReturnOutJournalForm},
@@ -257,12 +256,14 @@ uses
   AncestorReport in '..\..\Forms\Ancestor\AncestorReport.pas' {AncestorReportForm: TParentForm},
   Protocol in '..\..\Forms\System\Protocol.pas' {ProtocolForm: TParentForm},
   AncestorDBGrid in '..\..\Forms\Ancestor\AncestorDBGrid.pas' {AncestorDBGridForm: TParentForm},
-  AncestorJournal in '..\..\Forms\Ancestor\AncestorJournal.pas' {JournalForm: TParentForm},
-  AncestorGuides in '..\..\Forms\Ancestor\AncestorGuides.pas' {AncestorDBGridForm1: TParentForm},
+  AncestorJournal in '..\..\Forms\Ancestor\AncestorJournal.pas' {AncestorJournalForm: TParentForm},
+  AncestorGuides in '..\..\Forms\Ancestor\AncestorGuides.pas' {AncestorGuidesForm: TParentForm},
   ObjectDesc in '..\..\Forms\System\ObjectDesc.pas' {ObjectDescForm: TParentForm},
   CommonObjectDescProcedureTest in '..\SOURCE\ObjectDesc\CommonObjectDescProcedureTest.pas',
   AncestorEnum in '..\..\Forms\Ancestor\AncestorEnum.pas' {AncestorEnumForm: TParentForm},
-  Objects in '..\..\Forms\System\Objects.pas' {ObjectForm: TParentForm};
+  Objects in '..\..\Forms\System\Objects.pas' {ObjectForm: TParentForm},
+  AncestorDocument in '..\..\Forms\Ancestor\AncestorDocument.pas' {AncestorDocumentForm: TParentForm},
+  Send in '..\..\Forms\Document\Send.pas' {SendForm: TParentForm};
 
 {$R *.RES}
 

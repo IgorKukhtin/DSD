@@ -12,15 +12,12 @@ uses
   cxGridTableView, cxGridDBTableView, cxGrid;
 
 type
-  TAncestorDBGridForm1 = class(TAncestorDBGridForm)
+  TAncestorGuidesForm = class(TAncestorDBGridForm)
   private
     { Private declarations }
   public
     { Public declarations }
   end;
-
-var
-  AncestorDBGridForm1: TAncestorDBGridForm1;
 
 implementation
 

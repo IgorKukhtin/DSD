@@ -1,29 +1,43 @@
-inherited JournalForm: TJournalForm
+inherited AncestorJournalForm: TAncestorJournalForm
   ClientHeight = 329
   ClientWidth = 717
-  ExplicitTop = 0
+  AddOnFormData.isSingle = False
   ExplicitWidth = 725
   ExplicitHeight = 356
   PixelsPerInch = 96
   TextHeight = 13
-  inherited cxGrid: TcxGrid
+  inherited PageControl: TcxPageControl
     Top = 57
     Width = 717
     Height = 272
-    ExplicitLeft = -32
-    ExplicitTop = 185
+    ExplicitLeft = 0
+    ExplicitTop = 57
     ExplicitWidth = 717
-    ExplicitHeight = 251
-    inherited cxGridDBTableView: TcxGridDBTableView
-      Styles.Inactive = nil
-      Styles.Selection = nil
-      Styles.Footer = nil
-      Styles.Header = nil
+    ExplicitHeight = 272
+    ClientRectBottom = 272
+    ClientRectRight = 717
+    inherited tsMain: TcxTabSheet
+      ExplicitTop = 0
+      ExplicitWidth = 717
+      ExplicitHeight = 272
+      inherited cxGrid: TcxGrid
+        Width = 717
+        Height = 272
+        ExplicitTop = 0
+        ExplicitWidth = 717
+        ExplicitHeight = 272
+        inherited cxGridDBTableView: TcxGridDBTableView
+          Styles.Inactive = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Header = nil
+        end
+      end
     end
   end
   object Panel: TPanel [1]
     Left = 0
-    Top = 26
+    Top = 0
     Width = 717
     Height = 31
     Align = alTop
@@ -74,11 +88,10 @@ inherited JournalForm: TJournalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TIncomeFuelForm'
       GuiParams = <
         item
           Name = 'Id'
-          Value = Null
+          Component = MainDataCDS
           ComponentItem = 'Id'
           ParamType = ptInput
         end>
@@ -98,23 +111,50 @@ inherited JournalForm: TJournalForm
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 11
       Status = mtUncomplete
+      DataSource = MainDataDS
     end
     object actComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
-      StoredProcList = <>
+      StoredProc = spMovementComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementComplete
+        end>
       Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 12
       Status = mtComplete
+      DataSource = MainDataDS
     end
     object actSetErased: TdsdChangeMovementStatus
       Category = 'DSDLib'
-      StoredProcList = <>
+      StoredProc = spMovementSetErased
+      StoredProcList = <
+        item
+          StoredProc = spMovementSetErased
+        end>
       Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       ImageIndex = 13
       Status = mtDelete
+      DataSource = MainDataDS
     end
+  end
+  inherited spMainData: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41275d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inEndDate'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
   end
   inherited BarManager: TdxBarManager
     DockControlHeights = (
@@ -205,7 +245,7 @@ inherited JournalForm: TJournalForm
     Params = <
       item
         Name = 'inMovementId'
-        Value = Null
+        Component = MainDataCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
@@ -218,7 +258,7 @@ inherited JournalForm: TJournalForm
     Params = <
       item
         Name = 'inMovementId'
-        Value = Null
+        Component = MainDataCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
@@ -231,7 +271,7 @@ inherited JournalForm: TJournalForm
     Params = <
       item
         Name = 'inMovementId'
-        Value = Null
+        Component = MainDataCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>

@@ -9,7 +9,8 @@ uses
   cxPropertiesStore, dsdAddOn, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxStyles, cxCustomData, cxFilter, cxData,
   cxDataStorage, cxEdit, cxDBData, cxGridLevel, cxGridCustomView,
-  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, DataModul;
+  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, DataModul,
+  cxPCdxBarPopupMenu, cxPC;
 
 type
   TAncestorDBGridForm = class(TAncestorDataForm)
@@ -17,8 +18,10 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     DBViewAddOn: TdsdDBViewAddOn;
-    dsdGridToExcel: TdsdGridToExcel;
+    actGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
+    PageControl: TcxPageControl;
+    tsMain: TcxTabSheet;
   private
     { Private declarations }
   public

@@ -1,5 +1,6 @@
-inherited AncestorDBGridForm1: TAncestorDBGridForm1
-  Caption = 'AncestorDBGridForm1'
+inherited AncestorGuidesForm: TAncestorGuidesForm
+  ExplicitWidth = 583
+  ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited cxGrid: TcxGrid

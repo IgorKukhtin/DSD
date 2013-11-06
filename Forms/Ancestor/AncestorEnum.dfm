@@ -1,8 +1,6 @@
 inherited AncestorEnumForm: TAncestorEnumForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.ChoiceAction = ChoiceGuides
-  ExplicitWidth = 583
-  ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited cxGrid: TcxGrid
@@ -11,6 +9,13 @@ inherited AncestorEnumForm: TAncestorEnumForm
       Styles.Selection = nil
       Styles.Footer = nil
       Styles.Header = nil
+    end
+  end
+  inherited PageControl: TcxPageControl
+    inherited tsMain: TcxTabSheet
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
   end
   inherited ActionList: TActionList
