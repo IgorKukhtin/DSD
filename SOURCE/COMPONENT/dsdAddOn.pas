@@ -177,6 +177,8 @@ type
     procedure SetControl(const Value: TControl);
   protected
     function GetDisplayName: string; override;
+  public
+    procedure Assign(Source: TPersistent); override;
   published
     property Control: TControl read FControl write SetControl;
   end;
@@ -698,7 +700,7 @@ begin
   // работаем со свойством Удален
 
   if (Sender is TcxGridDBTableView) then
-      Column := TcxGridDBTableView(Sender).GetColumnByFieldName(FErasedFieldName);
+      Column := TcxGridDBTableView(Sender).GetColumnByFieldName(AnsiUpperCase(FErasedFieldName));
   if (Sender is TcxGridDBBandedTableView) then
       Column := TcxGridDBBandedTableView(Sender).GetColumnByFieldName(FErasedFieldName);
   if Assigned(Column) then
@@ -1005,6 +1007,14 @@ begin
 end;
 
 { TControlListItem }
+
+procedure TControlListItem.Assign(Source: TPersistent);
+begin
+  if Source is TControlListItem then
+     Self.Control := TControlListItem(Source).Control
+  else
+    inherited; //raises an exception
+end;
 
 function TControlListItem.GetDisplayName: string;
 begin

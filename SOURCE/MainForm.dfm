@@ -21,8 +21,8 @@ object MainForm: TMainForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -594,6 +594,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbProtocol'
+        end
+        item
+          Visible = True
           ItemName = 'bbGuides_Separator'
         end
         item
@@ -692,6 +696,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbReport_Goods'
+        end
+        item
+          Visible = True
           ItemName = 'bbReport_TransportHoursWork'
         end>
     end
@@ -764,6 +772,10 @@ object MainForm: TMainForm
     end
     object bbAccountReport: TdxBarButton
       Action = actReport_Account
+      Category = 0
+    end
+    object bbReport_Goods: TdxBarButton
+      Action = actReport_Goods
       Category = 0
     end
     object bbPersonalDocuments: TdxBarSubItem
@@ -869,6 +881,10 @@ object MainForm: TMainForm
     end
     object bbAbout: TdxBarButton
       Action = actAbout
+      Category = 0
+    end
+    object bbProtocol: TdxBarButton
+      Action = actProtocol
       Category = 0
     end
   end
@@ -1487,6 +1503,14 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_Goods: TdsdOpenForm
+      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1091
+      FormName = 'TReport_GoodsForm'
+      GuiParams = <>
+      isShowModal = False
+    end
     object actPositionLevel: TdsdOpenForm
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       Caption = #1056#1072#1079#1088#1103#1076#1099' '#1076#1086#1083#1078#1085#1086#1089#1090#1077#1081' '
@@ -1514,9 +1538,11 @@ object MainForm: TMainForm
       Caption = #1054' '#1087#1088#1086#1075#1088#1072#1084#1084#1077'...'
       OnExecute = actAboutExecute
     end
-    object dsdOpenForm1: TdsdOpenForm
+    object actProtocol: TdsdOpenForm
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
-      Caption = 'dsdOpenForm1'
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083
+      Hint = #1055#1088#1086#1090#1086#1082#1086#1083
+      FormName = 'TProtocolForm'
       GuiParams = <>
       isShowModal = False
     end
