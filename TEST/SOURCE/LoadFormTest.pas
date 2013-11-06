@@ -442,6 +442,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportHoursWorkForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TransportHoursWorkForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsForm');
 end;
 
 procedure TLoadFormTest.LoadUnionFormTest;

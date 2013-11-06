@@ -263,7 +263,8 @@ uses
   AncestorEnum in '..\..\Forms\Ancestor\AncestorEnum.pas' {AncestorEnumForm: TParentForm},
   Objects in '..\..\Forms\System\Objects.pas' {ObjectForm: TParentForm},
   AncestorDocument in '..\..\Forms\Ancestor\AncestorDocument.pas' {AncestorDocumentForm: TParentForm},
-  Send in '..\..\Forms\Document\Send.pas' {SendForm: TParentForm};
+  Send in '..\..\Forms\Document\Send.pas' {SendForm: TParentForm},
+  Report_Goods in '..\..\Forms\Report\Report_Goods.pas' {Report_GoodsForm: TParentForm};
 
 {$R *.RES}
 
