@@ -13,9 +13,10 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Comment TVarChar
              , CarId Integer, CarName TVarChar, CarModelName TVarChar
              , CarTrailerId Integer, CarTrailerName TVarChar
-             , PersonalDriverId Integer, PersonalDriverName TVarChar
+             , PersonalDriverId Integer, PersonalDriverName TVarChar, DriverCertificate TVarChar
              , PersonalDriverMoreId Integer, PersonalDriverMoreName TVarChar
              , UnitForwardingId Integer, UnitForwardingName TVarChar
+             , JuridicalName TVarChar
              )
 AS
 $BODY$
@@ -54,6 +55,7 @@ BEGIN
 
            , 0                     AS PersonalDriverId
            , CAST ('' as TVarChar) AS PersonalDriverName
+           , CAST ('' as TVarChar) AS DriverCertificate
 
            , 0                     AS PersonalDriverMoreId
            , CAST ('' as TVarChar) AS PersonalDriverMoreName
@@ -61,7 +63,9 @@ BEGIN
            , Object_UnitForwarding.Id        AS UnitForwardingId
            , Object_UnitForwarding.ValueData AS UnitForwardingName
    
-          FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
+           , CAST ('' as TVarChar) AS JuridicalName
+
+       FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
                LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = zc_Branch_Basis();
 
      ELSE
@@ -93,12 +97,15 @@ BEGIN
 
            , View_PersonalDriver.PersonalId   AS PersonalDriverId
            , View_PersonalDriver.PersonalName AS PersonalDriverName
+           , ObjectString_DriverCertificate.ValueData AS DriverCertificate
 
            , View_PersonalDriverMore.PersonalId   AS PersonalDriverMoreId
            , View_PersonalDriverMore.PersonalName AS PersonalDriverMoreName
 
            , Object_UnitForwarding.Id        AS UnitForwardingId
            , Object_UnitForwarding.ValueData AS UnitForwardingName
+
+           , Object_Juridical.ValueData AS JuridicalName
    
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -138,6 +145,11 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
                                                            AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
             LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Car_Unit ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id
+                                                       AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
+            LEFT JOIN ObjectLink AS ObjectLink_UnitCar_Juridical ON ObjectLink_UnitCar_Juridical.ObjectId = ObjectLink_Car_Unit.ChildObjectId
+                                                                AND ObjectLink_UnitCar_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_UnitCar_Juridical.ChildObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_CarTrailer
                                          ON MovementLinkObject_CarTrailer.MovementId = Movement.Id
@@ -153,6 +165,9 @@ BEGIN
                                          ON MovementLinkObject_PersonalDriverMore.MovementId = Movement.Id
                                         AND MovementLinkObject_PersonalDriverMore.DescId = zc_MovementLinkObject_PersonalDriverMore()
             LEFT JOIN Object_Personal_View AS View_PersonalDriverMore ON View_PersonalDriverMore.PersonalId = MovementLinkObject_PersonalDriverMore.ObjectId
+            LEFT JOIN ObjectString AS ObjectString_DriverCertificate
+                                   ON ObjectString_DriverCertificate.ObjectId = View_PersonalDriverMore.MemberId 
+                                  AND ObjectString_DriverCertificate.DescId = zc_ObjectString_Member_DriverCertificate()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
                                          ON MovementLinkObject_UnitForwarding.MovementId = Movement.Id
@@ -173,6 +188,7 @@ ALTER FUNCTION gpGet_Movement_Transport (Integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 04.11.13                                        * add JuridicalName and DriverCertificate
  03.11.13                                        * add CarModelName
  25.10.13                                        * add MINUTE
  23.10.13                                        * add NEXTVAL
