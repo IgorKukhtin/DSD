@@ -29,6 +29,7 @@ type
     clSummIn: TcxGridDBColumn;
     clSummOut: TcxGridDBColumn;
     clSummEnd: TcxGridDBColumn;
+    clInvNumber: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -38,5 +39,7 @@ type
 implementation
 
 {$R *.dfm}
+initialization
+  RegisterClass(TReport_GoodsForm);
 
 end.
