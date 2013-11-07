@@ -174,7 +174,6 @@ uses
   TransportTest in '..\SOURCE\Movement\All\TransportTest.pas',
   PersonalServiceEdit in '..\..\Forms\PersonalServiceEdit.pas' {PersonalServiceEditForm},
   PersonalService in '..\..\Forms\PersonalService.pas' {PersonalServiceForm},
-  Service in '..\..\Forms\Document\Service.pas' {ServiceForm},
   Goods in '..\..\Forms\Goods.pas' {GoodsForm},
   Units in '..\..\Forms\Units.pas' {UnitForm},
   JuridicalTree in '..\..\Forms\JuridicalTree.pas' {JuridicalTreeForm},
@@ -263,7 +262,9 @@ uses
   Objects in '..\..\Forms\System\Objects.pas' {ObjectForm: TParentForm},
   AncestorDocument in '..\..\Forms\Ancestor\AncestorDocument.pas' {AncestorDocumentForm: TParentForm},
   Send in '..\..\Forms\Document\Send.pas' {SendForm: TParentForm},
-  ServiceJournal in '..\..\Forms\Document\ServiceJournal.pas' {ServiceJournalForm: TParentForm};
+  ServiceJournal in '..\..\Forms\Document\ServiceJournal.pas' {ServiceJournalForm: TParentForm},
+  Report_Goods in '..\..\Forms\Report\Report_Goods.pas' {Report_GoodsForm: TParentForm},
+  Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm};
 
 {$R *.RES}
 

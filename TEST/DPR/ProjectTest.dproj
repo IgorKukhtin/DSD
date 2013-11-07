@@ -452,9 +452,6 @@
 			<DCCReference Include="..\..\Forms\PersonalService.pas">
 				<Form>PersonalServiceForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Service.pas">
-				<Form>ServiceForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Goods.pas">
 				<Form>GoodsForm</Form>
 			</DCCReference>
@@ -727,6 +724,14 @@
 			<DCCReference Include="..\..\Forms\Document\ServiceJournal.pas">
 				<Form>ServiceJournalForm</Form>
 				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Goods.pas">
+				<Form>Report_GoodsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Service.pas">
+				<Form>ServiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

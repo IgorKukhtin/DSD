@@ -70,8 +70,8 @@ type
     colKreditAmount: TcxGridDBColumn;
     actUpdateMasterDS: TdsdUpdateDataSet;
     spInsertUpdateMIMaster: TdsdStoredProc;
-    actPrint: TdsdPrintAction;
-    frxDBDataset: TfrxDBDataset;
+    actPrintFrom: TdsdPrintAction;
+    frxDBDHeader: TfrxDBDataset;
     colDebetAccountGroupName: TcxGridDBColumn;
     colDebetAccountDirectionName: TcxGridDBColumn;
     colAccountCode: TcxGridDBColumn;
@@ -140,7 +140,7 @@ type
     dxBarManager: TdxBarManager;
     dxBarManagerBar: TdxBar;
     bbRefresh: TdxBarButton;
-    bbPrint: TdxBarButton;
+    bbPrintFrom: TdxBarButton;
     bbBooleanAction: TdxBarButton;
     bbStatic: TdxBarStatic;
     bbGridToExel: TdxBarButton;
@@ -252,8 +252,13 @@ type
     TotalRefresh: TdsdDataSetRefresh;
     colInvNumber: TcxGridDBColumn;
     colOperDate: TcxGridDBColumn;
-    PrintCDS: TClientDataSet;
-    spSelectPrint: TdsdStoredProc;
+    PrintHeaderCDS: TClientDataSet;
+    spSelectPrintHeader: TdsdStoredProc;
+    frxDBDMaster: TfrxDBDataset;
+    actPrintTo: TdsdPrintAction;
+    actPrintAdmin: TdsdPrintAction;
+    bbPrintTo: TdxBarButton;
+    bbPrintAdmin: TdxBarButton;
   private
   public
   end;

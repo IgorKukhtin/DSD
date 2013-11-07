@@ -1576,19 +1576,57 @@
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actPrint: TdsdPrintAction
+    object actPrintFrom: TdsdPrintAction
       Category = 'DSDLib'
-      StoredProc = spSelectPrint
+      StoredProc = spSelectPrintHeader
       StoredProcList = <
         item
-          StoredProc = spSelectPrint
+          StoredProc = spSelectPrintHeader
         end>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
+      Caption = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1052#1072#1088#1096#1088#1091#1090'-'#1054#1090' '#1082#1086#1075#1086
+      Hint = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1052#1072#1088#1096#1088#1091#1090'-'#1054#1090' '#1082#1086#1075#1086
+      ImageIndex = 3
+      ShortCut = 16464
+      Params = <
+        item
+          Name = 'isFrom'
+          Value = True
+          DataType = ftBoolean
+        end>
+      ReportName = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090' - '#1057#1073#1099#1090
+    end
+    object actPrintTo: TdsdPrintAction
+      Category = 'DSDLib'
+      StoredProc = spSelectPrintHeader
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintHeader
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1052#1072#1088#1096#1088#1091#1090'-'#1050#1086#1084#1091
+      Hint = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1052#1072#1088#1096#1088#1091#1090'-'#1050#1086#1084#1091
+      ImageIndex = 3
+      ShortCut = 16464
+      Params = <
+        item
+          Name = 'isFrom'
+          Value = False
+          DataType = ftBoolean
+        end>
+      ReportName = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090' - '#1057#1073#1099#1090
+    end
+    object actPrintAdmin: TdsdPrintAction
+      Category = 'DSDLib'
+      StoredProc = spSelectPrintHeader
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintHeader
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1040#1076#1084#1080#1085
+      Hint = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1040#1076#1084#1080#1085
       ImageIndex = 3
       ShortCut = 16464
       Params = <>
-      ReportName = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
+      ReportName = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090' - '#1040#1076#1084#1080#1085
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -2381,10 +2419,10 @@
     Left = 75
     Top = 226
   end
-  object frxDBDataset: TfrxDBDataset
-    UserName = 'frxDBDataset'
+  object frxDBDHeader: TfrxDBDataset
+    UserName = 'frxDBDHeader'
     CloseDataSource = False
-    DataSet = PrintCDS
+    DataSet = PrintHeaderCDS
     BCDToCurrency = False
     Left = 486
     Top = 186
@@ -2917,7 +2955,11 @@
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbPrintFrom'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintTo'
         end
         item
           Visible = True
@@ -2937,8 +2979,16 @@
       Action = actRefresh
       Category = 0
     end
-    object bbPrint: TdxBarButton
-      Action = actPrint
+    object bbPrintFrom: TdxBarButton
+      Action = actPrintFrom
+      Category = 0
+    end
+    object bbPrintTo: TdxBarButton
+      Action = actPrintTo
+      Category = 0
+    end
+    object bbPrintAdmin: TdxBarButton
+      Action = actPrintAdmin
       Category = 0
     end
     object bbBooleanAction: TdxBarButton
@@ -3494,18 +3544,18 @@
     Left = 106
     Top = 357
   end
-  object PrintCDS: TClientDataSet
+  object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 428
     Top = 186
   end
-  object spSelectPrint: TdsdStoredProc
+  object spSelectPrintHeader: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Transport'
-    DataSet = PrintCDS
+    DataSet = PrintHeaderCDS
     DataSets = <
       item
-        DataSet = PrintCDS
+        DataSet = PrintHeaderCDS
       end>
     Params = <
       item
@@ -3517,5 +3567,13 @@
       end>
     Left = 458
     Top = 186
+  end
+  object frxDBDMaster: TfrxDBDataset
+    UserName = 'frxDBDMaster'
+    CloseDataSource = False
+    DataSet = MasterCDS
+    BCDToCurrency = False
+    Left = 486
+    Top = 221
   end
 end

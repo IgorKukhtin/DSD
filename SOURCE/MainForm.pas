@@ -216,6 +216,8 @@ type
     bbProtocol: TdxBarButton;
     actService: TdsdOpenForm;
     bbJuridicalService: TdxBarButton;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

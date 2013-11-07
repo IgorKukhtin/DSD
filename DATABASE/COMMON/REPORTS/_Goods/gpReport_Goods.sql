@@ -8,11 +8,10 @@ CREATE OR REPLACE FUNCTION gpReport_Goods (
     IN inGoodsId    Integer   ,
     IN inSession      TVarChar    -- ñåññèÿ ïîëüçîâàòåëÿ
 )
-RETURNS TABLE  (InvNumber Integer, OperDate TDateTime, MovementDescName TVarChar
+RETURNS TABLE  (InvNumber TVarChar, OperDate TDateTime, MovementDescName TVarChar
               , GoodsCode Integer, GoodsName TVarChar
-              , CarModelName TVarChar, CarCode Integer, CarName TVarChar
-              , PersonalCode Integer, PersonalName TVarChar
-              , UnitCode Integer, UnitName TVarChar
+              , Unit_infCode Integer, Unit_infName TVarChar
+              , DirectionCode Integer, DirectionName TVarChar
               , SummStart TFloat, SummIn TFloat, SummOut TFloat, SummEnd TFloat
               )  
 AS
@@ -28,30 +27,26 @@ BEGIN
                          )
 
 
-  select  tmp_All.InvNumber
-        , tmp_All.OperDate
-        , MovementDesc.ItemName as MovementDescName
+  select  CAST(tmp_All.InvNumber AS TVarChar) AS InvNumber
+        , tmp_All.OperDate        AS OperDate
+        
+        , MovementDesc.ItemName   AS MovementDescName
         , Object_Goods.ObjectCode AS GoodsCode
         , Object_Goods.ValueData  AS GoodsName
         
-        , Object_CarModel.ValueData AS CarModelName
-        , Object_Car.ObjectCode     AS CarCode
-        , Object_Car.ValueData      AS CarName
-        
-        , View_Object_Personal.PersonalCode  
-        , View_Object_Personal.PersonalName 
+        , Object_Unit_inf.ObjectCode     AS Unit_infCode
+        , Object_Unit_inf.ValueData      AS Unit_infName
+       
+        , Object_Direction.ObjectCode     AS DirectionCode
+        , Object_Direction.ValueData      AS DirectionName
 
-        , Object_Unit.ObjectCode     AS UnitCode
-        , Object_Unit.ValueData      AS UnitName
                 
-        , tmp_All.SummStart
-        , tmp_All.SummIn
-        , tmp_All.SummOut
-        , tmp_All.SummEnd 
+        , CAST(tmp_All.SummStart AS TFloat) AS SummStart
+        , CAST(tmp_All.SummIn AS TFloat)    AS SummIn
+        , CAST(tmp_All.SummOut AS TFloat)   AS SummOut
+        , CAST(tmp_All.SummEnd AS TFloat)   AS SummEnd 
   from (
-       select  ContainerLO_Car.ObjectId as CarId
-             , ContainerLO_Unit.ObjectId as UnitId
-             , ContainerLO_Personal.ObjectId as PersonalId    
+       select  COALESCE(ContainerLO_Car.ObjectId, COALESCE(ContainerLO_Unit.ObjectId, ContainerLO_Personal.ObjectId)) as DirectionId
              , tmpContainer_All.ContainerId
              , tmpContainer_All.GoodsId
              , tmpContainer_All.MovementDescId
@@ -100,8 +95,8 @@ BEGIN
                          , tmpContainer.GoodsId
                          , 0 AS SummStart
                          , 0 AS SummEnd
-                         , case when MIContainer.isactive = true then MIContainer.Amount else 0 end AS SummIn
-                         , case when MIContainer.isactive = false then MIContainer.Amount else 0 end AS SummOut
+                         , case when MIContainer.isactive = true then COALESCE(MIContainer.Amount,0) else 0 end AS SummIn
+                         , case when MIContainer.isactive = false then COALESCE(MIContainer.Amount,0) else 0 end AS SummOut
                          , MIContainer.MovementId            
                     FROM tmpContainer
                      
@@ -127,9 +122,8 @@ BEGIN
                                                      AND ContainerLO_Unit.DescId = zc_ContainerLinkObject_Unit()                                                          
     LEFT JOIN ContainerLinkObject AS ContainerLO_Personal ON ContainerLO_Personal.ContainerId = tmpContainer_All.ContainerId
                                                          AND ContainerLO_Personal.DescId = zc_ContainerLinkObject_Personal()
-    GROUP BY  ContainerLO_Car.ObjectId
-            , ContainerLO_Unit.ObjectId
-            , ContainerLO_Personal.ObjectId
+                                                         
+    GROUP BY  COALESCE(ContainerLO_Car.ObjectId, COALESCE(ContainerLO_Unit.ObjectId, ContainerLO_Personal.ObjectId))
             , tmpContainer_All.ContainerId
             , tmpContainer_All.GoodsId
             , tmpContainer_All.MovementDescId
@@ -139,21 +133,17 @@ BEGIN
 
     ) as tmp_All
 
-      LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp_All.GoodsId
-      LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmp_All.CarId
- 
-      LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
-                                                     AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
-      LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
- 
-      LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = tmp_All.UnitId
+     LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp_All.GoodsId
+     LEFT JOIN MovementDesc ON MovementDesc.Id = tmp_All.MovementDescId
+     LEFT JOIN Object AS Object_Direction ON Object_Direction.Id = tmp_All.DirectionId
 
-      LEFT JOIN Object_Personal_View AS View_Object_Personal ON View_Object_Personal.PersonalId = tmp_All.PersonalId     
+     LEFT JOIN ObjectLink AS ObjectLink_Car_Unit ON ObjectLink_Car_Unit.ObjectId = tmp_All.DirectionId
+                                                AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
+     LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit ON ObjectLink_Personal_Unit.ObjectId = tmp_All.DirectionId
+                                                     AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+     LEFT JOIN Object AS Object_Unit_inf on Object_Unit_inf.Id = coalesce (ObjectLink_Car_Unit.ChildObjectId,ObjectLink_Personal_Unit.ChildObjectId)
       
-      LEFT JOIN MovementDesc ON MovementDesc.Id = tmp_All.MovementDescId
-
-
-    ;
+ ;
     
         
 END;
@@ -165,8 +155,9 @@ ALTER FUNCTION gpReport_Goods (TDateTime, TDateTime, Integer, TVarChar) OWNER TO
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+              
  05.11.13         *  
 */
 
 -- òåñò
--- SELECT * FROM gpReport_Goods (inStartDate:= '01.10.2013', inEndDate:= '31.10.2013', inGoodsId:= null, inSession:= zfCalc_UserAdmin());
+--  SELECT * FROM gpReport_Goods (inStartDate:= '01.01.2013', inEndDate:= '05.01.2013', inGoodsId:= 785, inSession:= zfCalc_UserAdmin());
