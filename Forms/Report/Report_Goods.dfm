@@ -52,6 +52,10 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Caption = #1044#1086#1082#1091#1084#1077#1085#1090
             DataBinding.FieldName = 'MovementDescName'
           end
+          object clInvNumber: TcxGridDBColumn
+            Caption = #1053#1086#1084#1077#1088' '#1076#1086#1082'-'#1090#1072
+            DataBinding.FieldName = 'InvNumber'
+          end
           object clSummStart: TcxGridDBColumn
             Caption = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1085#1072#1095#1072#1083#1086
             DataBinding.FieldName = 'SummStart'
@@ -95,28 +99,20 @@ inherited Report_GoodsForm: TReport_GoodsForm
       Width = 225
     end
   end
-  inherited ActionList: TActionList
-    inherited actRefresh: TdsdDataSetRefresh
-      StoredProc = nil
-      StoredProcList = <
-        item
-        end>
-    end
-  end
   inherited spMainData: TdsdStoredProc
     StoredProcName = 'gpReport_Goods'
-    DataSet = nil
-    DataSets = <>
     Params = <
       item
         Name = 'inStartDate'
         Value = 41395d
+        Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41395d
+        Value = 41399d
+        Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
       end
@@ -140,13 +136,14 @@ inherited Report_GoodsForm: TReport_GoodsForm
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 80
+    Top = 144
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
       item
       end>
-    Left = 152
-    Top = 112
+    Left = 184
+    Top = 136
   end
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
@@ -159,7 +156,6 @@ inherited Report_GoodsForm: TReport_GoodsForm
         Value = ''
         Component = GoodsGuides
         ComponentItem = 'Key'
-        DataType = ftString
         ParamType = ptInput
       end
       item
