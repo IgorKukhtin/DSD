@@ -1,6 +1,6 @@
 -- Function: gpGet_Movement_Service()
 
--- DROP FUNCTION gpGet_Movement_Service (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Service (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Service(
     IN inMovementId        Integer  , -- ключ Документа
