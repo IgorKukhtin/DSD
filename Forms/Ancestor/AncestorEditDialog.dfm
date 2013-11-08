@@ -4,6 +4,9 @@ inherited AncestorEditDialogForm: TAncestorEditDialogForm
   inherited bbOk: TcxButton
     Action = InsertUpdateGuides
   end
+  inherited bbCancel: TcxButton
+    Action = FormClose
+  end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh
       StoredProc = spGet

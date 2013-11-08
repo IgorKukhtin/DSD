@@ -3,29 +3,15 @@ unit Service;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, ParentForm, cxGraphics, cxControls,
-  cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit, dxSkinsCore,
-  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
-  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
-  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
-  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
-  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
-  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
-  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
-  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
-  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
-  dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, Vcl.Menus, Vcl.ComCtrls, dxCore,
-  cxDateUtils, dsdAddOn, cxPropertiesStore, dsdGuides, dsdDB, dsdAction,
-  Vcl.ActnList, cxDropDownEdit, cxCalendar, cxMaskEdit, cxButtonEdit,
-  cxTextEdit, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel;
+   AncestorEditDialog, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters,
+  Vcl.Menus, cxControls, cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
+  dsdGuides, cxDropDownEdit, cxCalendar, cxMaskEdit, cxButtonEdit, cxTextEdit,
+  cxCurrencyEdit, Vcl.Controls, cxLabel, dsdDB, dsdAction, System.Classes,
+  Vcl.ActnList, cxPropertiesStore, dsdAddOn, Vcl.StdCtrls, cxButtons;
 
 type
-  TServiceForm = class(TParentForm)
+  TServiceForm = class(TAncestorEditDialogForm)
     cxLabel1: TcxLabel;
-    cxButton1: TcxButton;
-    cxButton2: TcxButton;
     Код: TcxLabel;
     ceInvNumber: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
@@ -41,23 +27,15 @@ type
     cxLabel7: TcxLabel;
     ceBusiness: TcxButtonEdit;
     cxLabel9: TcxLabel;
-    ActionList: TActionList;
-    dsdDataSetRefresh: TdsdDataSetRefresh;
-    dsdFormClose1: TdsdFormClose;
-    dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
-    spInsertUpdate: TdsdStoredProc;
-    dsdFormParams: TdsdFormParams;
-    spGet: TdsdStoredProc;
     MainJuridicalGuides: TdsdGuides;
     PaidKindGuides: TdsdGuides;
-    cxPropertiesStore: TcxPropertiesStore;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     UnitGuides: TdsdGuides;
     InfoMoneyGuides: TdsdGuides;
     BusinessGuides: TdsdGuides;
     ceJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
     cxLabel6: TcxLabel;
+    GuidesFiller: TGuidesFiller;
   private
     { Private declarations }
   public

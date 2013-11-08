@@ -1,7 +1,6 @@
 program Project;
 
 uses
-  MidasLib,
   Vcl.Forms,
   Controls,
   Classes,
@@ -24,7 +23,8 @@ uses
   MessagesUnit in '..\SOURCE\MessagesUnit.pas' {MessagesForm},
   Updater in '..\SOURCE\COMPONENT\Updater.pas',
   AboutBoxUnit in '..\SOURCE\AboutBoxUnit.pas' {AboutBox},
-  UnilWin in '..\SOURCE\UnilWin.pas';
+  UnilWin in '..\SOURCE\UnilWin.pas',
+  UtilTimeLogger in '..\SOURCE\UtilTimeLogger.pas';
 
 {$R *.res}
 

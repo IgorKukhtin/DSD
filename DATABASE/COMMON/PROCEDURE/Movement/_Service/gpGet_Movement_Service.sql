@@ -23,6 +23,36 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Service());
 
+     IF COALESCE (inMovementId, 0) = 0
+     THEN
+
+     RETURN QUERY 
+       SELECT
+             0 AS Id
+           , CAST (NEXTVAL ('Movement_Service_seq') AS TVarChar) AS InvNumber
+           , CAST (CURRENT_DATE AS TDateTime) AS OperDate
+           , lfObject_Status.Code             AS StatusCode
+           , lfObject_Status.Name             AS StatusName
+           
+           , 0                                AS Amount
+
+           , 0                                AS JuridicalId
+           , CAST ('' as TVarChar)            AS JuridicalName
+           , 0                                AS MainJuridicalId
+           , CAST ('' as TVarChar)            AS MainJuridicalName
+           , 0                                AS BusinessId
+           , CAST ('' as TVarChar)            AS BusinessName
+           , 0                                AS PaidKindId
+           , CAST ('' as TVarChar)            AS PaidKindName
+           , 0                                AS InfoMoneyId
+           , CAST ('' as TVarChar)            AS InfoMoneyName
+           , 0                                AS UnitId
+           , CAST ('' as TVarChar)            AS UnitName
+
+       FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status;
+
+     ELSE
+
      RETURN QUERY 
        SELECT
              Movement.Id
@@ -63,7 +93,7 @@ BEGIN
             
             LEFT JOIN MovementLinkObject AS MovementLinkObject_MainJuridical
                                          ON MovementLinkObject_MainJuridical.MovementId = Movement.Id
-                                        AND MovementLinkObject_MainJuridical.DescId = zc_MovementLinkObject_MainJuridical()
+                                        AND MovementLinkObject_MainJuridical.DescId = zc_MovementLinkObject_JuridicalBasic()
             LEFT JOIN Object AS Object_MainJuridical ON Object_MainJuridical.Id = MovementLinkObject_MainJuridical.ObjectId
             
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Business
@@ -88,7 +118,7 @@ BEGIN
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Service();
-  
+   END IF;  
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
@@ -98,7 +128,7 @@ ALTER FUNCTION gpGet_Movement_Service (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-               
+ 07.11.13                         * -- Default on Get
  11.08.13         *
 
 */

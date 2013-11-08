@@ -8,12 +8,15 @@ inherited ServiceJournalForm: TServiceJournalForm
     Width = 884
     TabOrder = 3
     ExplicitLeft = 0
+    ExplicitWidth = 884
     ClientRectRight = 884
     inherited tsMain: TcxTabSheet
       ExplicitTop = 0
+      ExplicitWidth = 884
       inherited cxGrid: TcxGrid
         Width = 884
         ExplicitTop = 0
+        ExplicitWidth = 884
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -81,6 +84,15 @@ inherited ServiceJournalForm: TServiceJournalForm
   end
   inherited Panel: TPanel
     Width = 884
+    ExplicitWidth = 884
+  end
+  inherited ActionList: TActionList
+    inherited actInsert: TdsdInsertUpdateAction
+      FormName = 'TServiceForm'
+    end
+    inherited actUpdate: TdsdInsertUpdateAction
+      FormName = 'TServiceForm'
+    end
   end
   inherited MainDataDS: TDataSource
     Left = 56
@@ -96,8 +108,8 @@ inherited ServiceJournalForm: TServiceJournalForm
     Top = 96
   end
   inherited BarManager: TdxBarManager
-    Left = 168
-    Top = 120
+    Left = 160
+    Top = 128
     DockControlHeights = (
       0
       0
