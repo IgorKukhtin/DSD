@@ -365,6 +365,21 @@ object Report_AccountForm: TReport_AccountForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object ObjectCode_Destination: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1086#1073'.'#1085#1072#1079#1085'.'
+        DataBinding.FieldName = 'ObjectCode_Destination'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object ObjectName_Destination: TcxGridDBColumn
+        Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+        DataBinding.FieldName = 'ObjectName_Destination'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object PersonalCode_inf: TcxGridDBColumn
         Caption = #1087#1088#1080#1084'. '#1050#1086#1076' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
         DataBinding.FieldName = 'PersonalCode_inf'
@@ -595,6 +610,13 @@ object Report_AccountForm: TReport_AccountForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
+      end
+      object OperPrice: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072
+        DataBinding.FieldName = 'OperPrice'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
       end
     end
     object cxGridLevel: TcxGridLevel

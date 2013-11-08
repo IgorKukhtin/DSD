@@ -21,7 +21,8 @@ RETURNS TABLE  (InvNumber Integer, OperDate TDateTime, MovementDescName TVarChar
               , UnitCode_inf Integer, UnitName_inf TVarChar
               , BranchCode_inf Integer, BranchName_inf TVarChar
               , BusinesCode_inf Integer, BusinesName_inf TVarChar
-              , SummStart TFloat, SummIn TFloat, SummOut TFloat, SummEnd TFloat
+              , ObjectCode_Destination Integer, ObjectName_Destination TVarChar
+              , SummStart TFloat, SummIn TFloat, SummOut TFloat, SummEnd TFloat, OperPrice TFloat
               , AccountGroupCode Integer, AccountGroupName TVarChar
               , AccountDirectionCode Integer, AccountDirectionName TVarChar
               , AccountCode Integer, AccountName TVarChar, AccountName_All TVarChar
@@ -36,19 +37,20 @@ BEGIN
 
     RETURN QUERY
     WITH tmpContainer AS (SELECT Container.Id AS ContainerId, Container.ObjectId AS AccountId, Container.Amount
-                          FROM (SELECT AccountId FROM Object_Account_View /*WHERE Object_Account_View.AccountDirectionCode IN (20500, 30500, 70100, 100300, 110000)*/) AS tmpAccount -- счет 
+                          -- FROM (SELECT AccountId FROM Object_Account_View /*WHERE Object_Account_View.AccountDirectionCode IN (20500, 30500, 70100, 100300, 110000)*/) AS tmpAccount -- счет 
+                          FROM (SELECT Id AS AccountId FROM Object WHERE DescId = zc_Object_Account() AND ObjectCode IN ( 20503 /*, 30505, 30508, 70105, 100301, 110101*/)  /*WHERE Object_Account_View.AccountDirectionCode IN (20500, 30500, 70100, 100300, 110000)*/) AS tmpAccount -- счет 
                                JOIN Container ON Container.ObjectId = tmpAccount.AccountId
                                              AND Container.DescId = zc_Container_Summ()
                          )
     SELECT zfConvert_StringToNumber (tmpReport.InvNumber) AS InvNumber
          , tmpReport.OperDate
          , MovementDesc.ItemName AS MovementDescName
-         , View_InfoMoney.InfoMoneyCode
-         , View_InfoMoney.InfoMoneyGroupName
-         , View_InfoMoney.InfoMoneyDestinationName
-         , View_InfoMoney.InfoMoneyName
-         , View_Personal.PersonalCode
-         , View_Personal.PersonalName
+         , View_InfoMoney.ObjectCode             AS InfoMoneyCode
+         , Object_InfoMoneyGroup.ValueData       AS InfoMoneyGroupName
+         , Object_InfoMoneyDestination.ValueData AS InfoMoneyDestinationName
+         , View_InfoMoney.ValueData              AS InfoMoneyName
+         , View_Personal.ObjectCode AS PersonalCode
+         , View_Personal.ValueData  AS PersonalName
          , Object_Juridical.ObjectCode     AS JuridicalCode
          , Object_Juridical.ValueData      AS JuridicalName
          , Object_PaidKind.ValueData       AS PaidKindName
@@ -57,8 +59,8 @@ BEGIN
          , Object_Car.ObjectCode     AS CarCode
          , Object_Car.ValueData      AS CarName
 
-         , View_Personal_inf.PersonalCode AS PersonalCode_inf
-         , View_Personal_inf.PersonalName AS PersonalName_inf
+         , View_Personal_inf.ObjectCode   AS PersonalCode_inf
+         , View_Personal_inf.ValueData    AS PersonalName_inf
          , Object_CarModel_inf.ValueData  AS CarModelName_inf
          , Object_Car_inf.ObjectCode      AS CarCode_inf
          , Object_Car_inf.ValueData       AS CarName_inf
@@ -72,47 +74,53 @@ BEGIN
          , Object_Busines_inf.ObjectCode  AS BusinesCode_inf
          , Object_Busines_inf.ValueData   AS BusinesName_inf
 
+         , Object_Destination.ObjectCode AS ObjectCode_Destination
+         , Object_Destination.ValueData  AS ObjectName_Destination
+
          , tmpReport.SummStart :: TFloat AS SummStart
          , tmpReport.SummIn    :: TFloat AS SummIn
          , tmpReport.SummOut   :: TFloat AS SummOut
          , tmpReport.SummEnd   :: TFloat AS SummEnd
+         , tmpReport.OperPrice :: TFloat AS OperPrice
 
-         , View_Account.AccountGroupCode, View_Account.AccountGroupName
-         , View_Account.AccountDirectionCode, View_Account.AccountDirectionName
-         , View_Account.AccountCode, View_Account.AccountName
-         , ('(' || CASE WHEN View_Account.AccountCode < 100000 THEN '0' ELSE '' END || View_Account.AccountCode :: TVarChar || ') '
-                || View_Account.AccountGroupName
-                || CASE WHEN View_Account.AccountDirectionName <> View_Account.AccountGroupName THEN ' ' || View_Account.AccountDirectionName ELSE '' END
-                || CASE WHEN View_Account.AccountName <> View_Account.AccountDirectionName THEN ' ' || View_Account.AccountName ELSE '' END
+         , Object_AccountGroup.ObjectCode AS AccountGroupCode, Object_AccountGroup.ValueData AS AccountGroupName
+         , Object_AccountDirection.ObjectCode AS AccountDirectionCode, Object_AccountDirection.ValueData AS AccountDirectionName
+         , View_Account.ObjectCode AS AccountCode, View_Account.ValueData AS AccountName
+         , ('(' || CASE WHEN Object_AccountGroup.ObjectCode < 100000 THEN '0' ELSE '' END || View_Account.ObjectCode :: TVarChar || ') '
+                || Object_AccountGroup.ValueData
+                || CASE WHEN Object_AccountDirection.ValueData <> Object_AccountGroup.ValueData THEN ' ' || Object_AccountDirection.ValueData ELSE '' END
+                || CASE WHEN View_Account.ValueData <> Object_AccountDirection.ValueData THEN ' ' || View_Account.ValueData ELSE '' END
            ) :: TVarChar AS AccountName_All
 
-         , View_Account_inf.AccountGroupCode AS AccountGroupCode_inf, View_Account_inf.AccountGroupName AS AccountGroupName_inf
-         , View_Account_inf.AccountDirectionCode AS AccountDirectionCode_inf, View_Account_inf.AccountDirectionName AS AccountDirectionName_inf
-         , View_Account_inf.AccountCode AS AccountCode_inf, View_Account_inf.AccountName AS AccountName_inf
-         , ('(' || CASE WHEN View_Account_inf.AccountCode < 100000 THEN '0' ELSE '' END || View_Account_inf.AccountCode :: TVarChar || ') '
-                || View_Account_inf.AccountGroupName
-                || CASE WHEN View_Account_inf.AccountDirectionName <> View_Account_inf.AccountGroupName THEN ' ' || View_Account_inf.AccountDirectionName ELSE '' END
-                || CASE WHEN View_Account_inf.AccountName <> View_Account_inf.AccountDirectionName THEN ' ' || View_Account_inf.AccountName ELSE '' END
+         , Object_AccountGroup_inf.ObjectCode AS AccountGroupCode_inf, Object_AccountGroup_inf.ValueData AS AccountGroupName_inf
+         , Object_AccountDirection_inf.ObjectCode AS AccountDirectionCode_inf, Object_AccountDirection_inf.ValueData AS AccountDirectionName_inf
+         , View_Account_inf.ObjectCode AS AccountCode_inf, View_Account_inf.ValueData AS AccountName_inf
+         , ('(' || CASE WHEN Object_AccountGroup_inf.ObjectCode < 100000 THEN '0' ELSE '' END || View_Account_inf.ObjectCode :: TVarChar || ') '
+                || Object_AccountGroup_inf.ValueData
+                || CASE WHEN Object_AccountDirection_inf.ValueData <> Object_AccountGroup_inf.ValueData THEN ' ' || Object_AccountDirection_inf.ValueData ELSE '' END
+                || CASE WHEN View_Account_inf.ValueData <> Object_AccountDirection_inf.ValueData THEN ' ' || View_Account_inf.ValueData ELSE '' END
            ) :: TVarChar AS AccountName_All_inf
 
-         , ('(' || View_ProfitLoss_inf.ProfitLossCode :: TVarChar || ') '
-                || View_ProfitLoss_inf.ProfitLossGroupName
-                || CASE WHEN View_ProfitLoss_inf.ProfitLossDirectionName <> View_ProfitLoss_inf.ProfitLossGroupName THEN ' ' || View_ProfitLoss_inf.ProfitLossDirectionName ELSE '' END
-                || CASE WHEN View_ProfitLoss_inf.ProfitLossName <> View_ProfitLoss_inf.ProfitLossDirectionName THEN ' ' || View_ProfitLoss_inf.ProfitLossName ELSE '' END
+         , ('(' || View_ProfitLoss_inf.ObjectCode :: TVarChar || ') '
+                || Object_ProfitLossGroup_inf.ValueData
+                || CASE WHEN Object_ProfitLossDirection_inf.ValueData <> Object_ProfitLossGroup_inf.ValueData THEN ' ' || Object_ProfitLossDirection_inf.ValueData ELSE '' END
+                || CASE WHEN View_ProfitLoss_inf.ValueData <> Object_ProfitLossDirection_inf.ValueData THEN ' ' || View_ProfitLoss_inf.ValueData ELSE '' END
            ) :: TVarChar AS ProfitLossName_All_inf
 
    FROM      
-       (SELECT ContainerLO_InfoMoney.ObjectId AS InfoMoneyId
+       (SELECT COALESCE (ContainerLO_InfoMoney.ObjectId, tmpReport_All.InfoMoneyId_inf) AS InfoMoneyId
              , ContainerLO_Personal.ObjectId  AS PersonalId
              , ContainerLO_Car.ObjectId       AS CarId
              , ContainerLO_Juridical.ObjectId AS JuridicalId
              , ContainerLO_PaidKind.ObjectId  AS PaidKindId
              , ContainerLO_Contract.ObjectId  AS ContractId
+             , COALESCE (ContainerLO_Goods.ObjectId, tmpReport_All.GoodsId_inf) AS ObjectId_Destination
 
              , SUM (tmpReport_All.SummStart)  AS SummStart
              , SUM (tmpReport_All.SummIn)     AS SummIn
              , SUM (tmpReport_All.SummOut)    AS SummOut
              , SUM (tmpReport_All.SummEnd)    AS SummEnd
+             , tmpReport_All.OperPrice
              , tmpReport_All.MovementDescId
              , tmpReport_All.MovementId
              , tmpReport_All.OperDate
@@ -133,6 +141,7 @@ BEGIN
                   , tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) AS SummEnd
                   , 0 AS SummIn
                   , 0 AS SummOut
+                  , 0 AS OperPrice
                   , 0 AS MovementDescId
                   , 0 AS MovementId
                   , NULL :: TDateTime AS OperDate
@@ -145,6 +154,8 @@ BEGIN
                   , 0 AS BranchId_inf
                   , 0 AS BusinesId_inf
                   , 0 AS ProfitLossId_inf
+                  , 0 AS InfoMoneyId_inf
+                  , 0 AS GoodsId_inf
              FROM tmpContainer
                   LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId
                                                                 AND MIContainer.OperDate >= inStartDate
@@ -158,18 +169,21 @@ BEGIN
                   , 0 AS SummEnd
                   , SUM (tmpMIReport.SummIn)  AS SummIn
                   , SUM (tmpMIReport.SummOut) AS SummOut
+                  , tmpMIReport.OperPrice
                   , Movement.DescId AS MovementDescId
                   , tmpMIReport.MovementId
                   , tmpMIReport.OperDate
                   , Movement.InvNumber
-                  , COALESCE (ContainerLO_Personal.ObjectId, COALESCE (MI_Personal.ObjectId, MovementLO_PersonalDriver.ObjectId)) AS PersonalId_inf
-                  , COALESCE (ContainerLO_Car.ObjectId, MILinkObject_Car.ObjectId) AS CarId_inf
+                  , COALESCE (ContainerLO_Personal.ObjectId, MovementLO_PersonalDriver.ObjectId /*COALESCE (MI_Personal.ObjectId, MovementLO_PersonalDriver.ObjectId)*/) AS PersonalId_inf
+                  , COALESCE (ContainerLO_Car.ObjectId, 0 /*MILinkObject_Car.ObjectId*/) AS CarId_inf
                   , tmpMIReport.AccountId_inf
-                  , COALESCE (MI_Route.ObjectId, tmpMIReport.RouteId_inf) AS RouteId_inf
+                  , COALESCE (/*MI_Route.ObjectId,*/tmpMIReport.RouteId_inf, tmpMIReport.RouteId_inf) AS RouteId_inf
                   , tmpMIReport.UnitId_inf
                   , tmpMIReport.BranchId_inf
                   , ContainerLO_Busines.ObjectId AS BusinesId_inf
                   , ContainerLO_ProfitLoss.ObjectId AS ProfitLossId_inf
+                  , ContainerLO_InfoMoney.ObjectId AS InfoMoneyId_inf
+                  , ContainerLO_Goods.ObjectId     AS GoodsId_inf
                FROM (SELECT tmpContainer.ContainerId
                           , tmpContainer.AccountId
                           , CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Active() AND MIReport.ActiveAccountId <> zc_Enum_Account_100301() -- прибыль текущего периода
@@ -201,6 +215,7 @@ BEGIN
                                  WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Passive()
                                       THEN MIReport.ActiveAccountId
                             END AS AccountId_inf
+                          , CASE WHEN MIContainer_Count.Amount <> 0 THEN MIReport.Amount / ABS (MIContainer_Count.Amount) ELSE 0 END AS OperPrice
                           , MIReport.MovementId
                           , MIReport.OperDate
                           , MIReport.MovementItemId
@@ -220,23 +235,28 @@ BEGIN
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
                                                            ON MILinkObject_Branch.MovementItemId = MIReport.MovementItemId
                                                           AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
+                          LEFT JOIN MovementItemContainer AS MIContainer_Count ON MIContainer_Count.MovementItemId = MIReport.MovementItemId
+                                                                              AND MIContainer_Count.DescId = zc_MIContainer_Count()
+
                      ) AS tmpMIReport
                      LEFT JOIN Movement ON Movement.Id = tmpMIReport.MovementId
-                     LEFT JOIN MovementItem AS MI_Transport ON MI_Transport.Id = tmpMIReport.MovementItemId
+/*                     LEFT JOIN MovementItem AS MI_Transport ON MI_Transport.Id = tmpMIReport.MovementItemId
                                                            AND Movement.DescId = zc_Movement_Transport()
                      LEFT JOIN MovementItem AS MI_Route ON MI_Route.Id = MI_Transport.ParentId
+*/
+
                      LEFT JOIN MovementLinkObject AS MovementLO_PersonalDriver
                                                   ON MovementLO_PersonalDriver.MovementId = Movement.Id
                                                  AND MovementLO_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
                                                  AND MovementLO_PersonalDriver.ObjectId > 0
-
+/*
                      LEFT JOIN MovementItem AS MI_Personal ON MI_Personal.Id = tmpMIReport.MovementItemId
                                                           AND Movement.DescId = zc_Movement_PersonalSendCash()
                                                           -- AND tmpMIReport.ContainerId_inf = 0 -- если это прибыль текущего периода, тогда нужные аналитики берем у элемента
                      LEFT JOIN MovementItemLinkObject AS MILinkObject_Car
                                                       ON MILinkObject_Car.MovementItemId = MI_Personal.Id
                                                      AND MILinkObject_Car.DescId = zc_MILinkObject_Car()
-
+*/
                      LEFT JOIN ContainerLinkObject AS ContainerLO_Personal ON ContainerLO_Personal.ContainerId = tmpMIReport.ContainerId_inf
                                                                           AND ContainerLO_Personal.DescId = zc_ContainerLinkObject_Personal()
                                                                           AND ContainerLO_Personal.ObjectId > 0
@@ -249,48 +269,71 @@ BEGIN
                      LEFT JOIN ContainerLinkObject AS ContainerLO_ProfitLoss ON ContainerLO_ProfitLoss.ContainerId = tmpMIReport.ContainerId_ProfitLoss
                                                                             AND ContainerLO_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss()
                                                                             AND ContainerLO_ProfitLoss.ObjectId > 0
+
+                     LEFT JOIN ContainerLinkObject AS ContainerLO_InfoMoney ON ContainerLO_InfoMoney.ContainerId = tmpMIReport.ContainerId_inf
+                                                                           AND ContainerLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+                                                                           AND ContainerLO_InfoMoney.ObjectId > 0
+                                                                           AND tmpMIReport.ContainerId_ProfitLoss > 0
+                     LEFT JOIN ContainerLinkObject AS ContainerLO_Goods ON ContainerLO_Goods.ContainerId = tmpMIReport.ContainerId_inf
+                                                                       AND ContainerLO_Goods.DescId = zc_ContainerLinkObject_Goods()
+                                                                       AND ContainerLO_Goods.ObjectId > 0
+                                                                       AND tmpMIReport.ContainerId_ProfitLoss > 0
              GROUP BY tmpMIReport.ContainerId
                     , tmpMIReport.AccountId
                     , Movement.DescId
                     , tmpMIReport.MovementId
                     , tmpMIReport.OperDate
                     , Movement.InvNumber
+                    , tmpMIReport.OperPrice
                     , ContainerLO_Personal.ObjectId
-                    , MI_Personal.ObjectId
+--                    , MI_Personal.ObjectId
                     , MovementLO_PersonalDriver.ObjectId
                     , ContainerLO_Car.ObjectId
-                    , MILinkObject_Car.ObjectId
                     , tmpMIReport.AccountId_inf
-                    , MI_Route.ObjectId
+--                    , MILinkObject_Car.ObjectId
+--                    , MI_Route.ObjectId
                     , tmpMIReport.RouteId_inf
                     , tmpMIReport.UnitId_inf
                     , tmpMIReport.BranchId_inf
                     , ContainerLO_Busines.ObjectId
                     , ContainerLO_ProfitLoss.ObjectId
+                    , ContainerLO_InfoMoney.ObjectId
+                    , ContainerLO_Goods.ObjectId
 
             ) AS tmpReport_All
             LEFT JOIN ContainerLinkObject AS ContainerLO_Juridical ON ContainerLO_Juridical.ContainerId = tmpReport_All.ContainerId
                                                                   AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
+                                                                  AND ContainerLO_Juridical.ObjectId > 0
             LEFT JOIN ContainerLinkObject AS ContainerLO_PaidKind ON ContainerLO_PaidKind.ContainerId = tmpReport_All.ContainerId
                                                                  AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
+                                                                 AND ContainerLO_PaidKind.ObjectId > 0
             LEFT JOIN ContainerLinkObject AS ContainerLO_Contract ON ContainerLO_Contract.ContainerId = tmpReport_All.ContainerId
                                                                  AND ContainerLO_Contract.DescId = zc_ContainerLinkObject_Contract()
+                                                                 AND ContainerLO_Contract.ObjectId > 0
             LEFT JOIN ContainerLinkObject AS ContainerLO_Personal ON ContainerLO_Personal.ContainerId = tmpReport_All.ContainerId
                                                                  AND ContainerLO_Personal.DescId = zc_ContainerLinkObject_Personal()
-            LEFT JOIN ContainerLinkObject AS ContainerLO_InfoMoney ON ContainerLO_InfoMoney.ContainerId = tmpReport_All.ContainerId
-                                                                  AND ContainerLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+                                                                 AND ContainerLO_Personal.ObjectId > 0
             LEFT JOIN ContainerLinkObject AS ContainerLO_Car ON ContainerLO_Car.ContainerId = tmpReport_All.ContainerId
                                                             AND ContainerLO_Car.DescId = zc_ContainerLinkObject_Car()
+                                                            AND ContainerLO_Car.ObjectId > 0
+            LEFT JOIN ContainerLinkObject AS ContainerLO_InfoMoney ON ContainerLO_InfoMoney.ContainerId = tmpReport_All.ContainerId
+                                                                  AND ContainerLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+                                                                  AND ContainerLO_InfoMoney.ObjectId > 0
+            LEFT JOIN ContainerLinkObject AS ContainerLO_Goods ON ContainerLO_Goods.ContainerId = tmpReport_All.ContainerId
+                                                              AND ContainerLO_Goods.DescId = zc_ContainerLinkObject_Goods()
+                                                              AND ContainerLO_Goods.ObjectId > 0
         GROUP BY ContainerLO_Personal.ObjectId
                , ContainerLO_InfoMoney.ObjectId
                , ContainerLO_Car.ObjectId
                , ContainerLO_Juridical.ObjectId
                , ContainerLO_PaidKind.ObjectId
                , ContainerLO_Contract.ObjectId
+               , ContainerLO_Goods.ObjectId
                , tmpReport_All.MovementDescId
                , tmpReport_All.MovementId
                , tmpReport_All.OperDate
                , tmpReport_All.InvNumber
+               , tmpReport_All.OperPrice
                , tmpReport_All.AccountId
                , tmpReport_All.AccountId_inf
                , tmpReport_All.PersonalId_inf
@@ -300,21 +343,43 @@ BEGIN
                , tmpReport_All.BranchId_inf
                , tmpReport_All.BusinesId_inf
                , tmpReport_All.ProfitLossId_inf
+               , tmpReport_All.InfoMoneyId_inf
+               , tmpReport_All.GoodsId_inf
        ) AS tmpReport
 
        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpReport.JuridicalId
        LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpReport.PaidKindId
        LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpReport.ContractId
 
-       LEFT JOIN Object_Personal_View AS View_Personal_inf ON View_Personal_inf.PersonalId = tmpReport.PersonalId_inf
+       -- LEFT JOIN Object_Personal_View AS View_Personal_inf ON View_Personal_inf.PersonalId = tmpReport.PersonalId_inf
+       LEFT JOIN ObjectLink AS ObjectLink_Personal_Member_inf
+                            ON ObjectLink_Personal_Member_inf.ObjectId = tmpReport.PersonalId_inf
+                           AND ObjectLink_Personal_Member_inf.DescId = zc_ObjectLink_Personal_Member()
+       LEFT JOIN Object AS View_Personal_inf ON View_Personal_inf.Id = ObjectLink_Personal_Member_inf.ChildObjectId
+
        LEFT JOIN Object AS Object_Car_inf ON Object_Car_inf.Id = tmpReport.CarId_inf
        LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel_inf ON ObjectLink_Car_CarModel_inf.ObjectId = Object_Car_inf.Id
                                                       AND ObjectLink_Car_CarModel_inf.DescId = zc_ObjectLink_Car_CarModel()
        LEFT JOIN Object AS Object_CarModel_inf ON Object_CarModel_inf.Id = ObjectLink_Car_CarModel_inf.ChildObjectId
        LEFT JOIN Object AS Object_Route_inf ON Object_Route_inf.Id = tmpReport.RouteId_inf
 
-       LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpReport.InfoMoneyId
-       LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = tmpReport.PersonalId
+       -- LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpReport.InfoMoneyId
+       LEFT JOIN Object AS View_InfoMoney ON View_InfoMoney.Id = tmpReport.InfoMoneyId
+       LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyDestination
+                            ON ObjectLink_InfoMoney_InfoMoneyDestination.ObjectId = tmpReport.InfoMoneyId
+                           AND ObjectLink_InfoMoney_InfoMoneyDestination.DescId = zc_ObjectLink_InfoMoney_InfoMoneyDestination()
+       LEFT JOIN Object AS Object_InfoMoneyDestination ON Object_InfoMoneyDestination.Id = ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId
+       LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyGroup
+                            ON ObjectLink_InfoMoney_InfoMoneyGroup.ObjectId = tmpReport.InfoMoneyId
+                           AND ObjectLink_InfoMoney_InfoMoneyGroup.DescId = zc_ObjectLink_InfoMoney_InfoMoneyGroup()
+       LEFT JOIN Object AS Object_InfoMoneyGroup ON Object_InfoMoneyGroup.Id = ObjectLink_InfoMoney_InfoMoneyGroup.ChildObjectId
+
+       -- LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = tmpReport.PersonalId
+       LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                            ON ObjectLink_Personal_Member.ObjectId = tmpReport.PersonalId
+                           AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+       LEFT JOIN Object AS View_Personal ON View_Personal.Id = ObjectLink_Personal_Member.ChildObjectId
+
        LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpReport.CarId
        LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
                                                       AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
@@ -326,10 +391,40 @@ BEGIN
 
        LEFT JOIN MovementDesc ON MovementDesc.Id = tmpReport.MovementDescId
 
-       LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = tmpReport.AccountId
-       LEFT JOIN Object_Account_View AS View_Account_inf ON View_Account_inf.AccountId = tmpReport.AccountId_inf
-       LEFT JOIN Object_ProfitLoss_View AS View_ProfitLoss_inf ON View_ProfitLoss_inf.ProfitLossId = tmpReport.ProfitLossId_inf
+       -- LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = tmpReport.AccountId
+       LEFT JOIN Object AS View_Account ON View_Account.Id = tmpReport.AccountId
+       LEFT JOIN ObjectLink AS ObjectLink_Account_AccountGroup
+                            ON ObjectLink_Account_AccountGroup.ObjectId = tmpReport.AccountId
+                           AND ObjectLink_Account_AccountGroup.DescId = zc_ObjectLink_Account_AccountGroup()
+       LEFT JOIN Object AS Object_AccountGroup ON Object_AccountGroup.Id = ObjectLink_Account_AccountGroup.ChildObjectId
+       LEFT JOIN ObjectLink AS ObjectLink_Account_AccountDirection
+                            ON ObjectLink_Account_AccountDirection.ObjectId = tmpReport.AccountId
+                           AND ObjectLink_Account_AccountDirection.DescId = zc_ObjectLink_Account_AccountDirection()
+       LEFT JOIN Object AS Object_AccountDirection ON Object_AccountDirection.Id = ObjectLink_Account_AccountDirection.ChildObjectId
 
+       -- LEFT JOIN Object_Account_View AS View_Account_inf ON View_Account_inf.AccountId = tmpReport.AccountId_inf
+       LEFT JOIN Object AS View_Account_inf ON View_Account_inf.Id = tmpReport.AccountId_inf
+       LEFT JOIN ObjectLink AS ObjectLink_Account_AccountGroup_inf
+                            ON ObjectLink_Account_AccountGroup_inf.ObjectId = tmpReport.AccountId_inf
+                           AND ObjectLink_Account_AccountGroup_inf.DescId = zc_ObjectLink_Account_AccountGroup()
+       LEFT JOIN Object AS Object_AccountGroup_inf ON Object_AccountGroup_inf.Id = ObjectLink_Account_AccountGroup_inf.ChildObjectId
+       LEFT JOIN ObjectLink AS ObjectLink_Account_AccountDirection_inf
+                            ON ObjectLink_Account_AccountDirection_inf.ObjectId = tmpReport.AccountId_inf
+                           AND ObjectLink_Account_AccountDirection_inf.DescId = zc_ObjectLink_Account_AccountDirection()
+       LEFT JOIN Object AS Object_AccountDirection_inf ON Object_AccountDirection_inf.Id = ObjectLink_Account_AccountDirection_inf.ChildObjectId
+
+       -- LEFT JOIN Object_ProfitLoss_View AS View_ProfitLoss_inf ON View_ProfitLoss_inf.ProfitLossId = tmpReport.ProfitLossId_inf
+       LEFT JOIN Object AS View_ProfitLoss_inf ON View_ProfitLoss_inf.Id = tmpReport.ProfitLossId_inf
+       LEFT JOIN ObjectLink AS ObjectLink_ProfitLoss_ProfitLossGroup_inf
+                            ON ObjectLink_ProfitLoss_ProfitLossGroup_inf.ObjectId = tmpReport.ProfitLossId_inf
+                           AND ObjectLink_ProfitLoss_ProfitLossGroup_inf.DescId = zc_ObjectLink_ProfitLoss_ProfitLossGroup()
+       LEFT JOIN Object AS Object_ProfitLossGroup_inf ON Object_ProfitLossGroup_inf.Id = ObjectLink_ProfitLoss_ProfitLossGroup_inf.ChildObjectId
+       LEFT JOIN ObjectLink AS ObjectLink_ProfitLoss_ProfitLossDirection_inf
+                            ON ObjectLink_ProfitLoss_ProfitLossDirection_inf.ObjectId = tmpReport.ProfitLossId_inf
+                           AND ObjectLink_ProfitLoss_ProfitLossDirection_inf.DescId = zc_ObjectLink_ProfitLoss_ProfitLossDirection()
+       LEFT JOIN Object AS Object_ProfitLossDirection_inf ON Object_ProfitLossDirection_inf.Id = ObjectLink_ProfitLoss_ProfitLossDirection_inf.ChildObjectId
+
+       LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = tmpReport.ObjectId_Destination
     ;
     
         

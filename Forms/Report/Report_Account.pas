@@ -102,6 +102,9 @@ type
     ContractName: TcxGridDBColumn;
     PaidKindName: TcxGridDBColumn;
     ProfitLossName_All_inf: TcxGridDBColumn;
+    OperPrice: TcxGridDBColumn;
+    ObjectCode_Destination: TcxGridDBColumn;
+    ObjectName_Destination: TcxGridDBColumn;
   private
   public
   end;

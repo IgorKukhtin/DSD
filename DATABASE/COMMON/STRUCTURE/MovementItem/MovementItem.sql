@@ -26,6 +26,7 @@ CREATE TABLE MovementItem(
 
 /*                                  Индексы                                      */
 
+-- CREATE INDEX idx_MovementItem_Id ON MovementItem (Id);
 CREATE INDEX idx_MovementItem_ParentId ON MovementItem (ParentId);
 CREATE INDEX idx_MovementItem_MovementId ON MovementItem (MovementId);
 CREATE INDEX idx_MovementItem_ObjectId ON MovementItem (ObjectId); -- констрейнт
@@ -40,6 +41,7 @@ CLUSTER idx_MovementItem_MovementId ON MovementItem;
  ДАТА         АВТОР
  ----------------
                  Климентьев К.И.   Кухтин И.В.   
+06.11.13              * add idx_MovementItem_Id
 29.06.13              *
 
 */

@@ -254,16 +254,6 @@ object PersonalSendCashForm: TPersonalSendCashForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colAmount_21201: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1085#1072' '#1050#1086#1084#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1077
-            DataBinding.FieldName = 'Amount_21201'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00;'
-            Properties.ReadOnly = False
-            HeaderAlignmentHorz = taRightJustify
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
           object colAmount_20401: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1085#1072' '#1043#1057#1052
             DataBinding.FieldName = 'Amount_20401'
@@ -272,6 +262,16 @@ object PersonalSendCashForm: TPersonalSendCashForm
             Properties.DecimalPlaces = 2
             Properties.DisplayFormat = ',0.00;-,0.00;'
             Properties.UseDisplayFormatWhenEditing = True
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object colAmount_21201: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1085#1072' '#1050#1086#1084#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1077
+            DataBinding.FieldName = 'Amount_21201'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00;'
+            Properties.ReadOnly = False
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -294,6 +294,9 @@ object PersonalSendCashForm: TPersonalSendCashForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0

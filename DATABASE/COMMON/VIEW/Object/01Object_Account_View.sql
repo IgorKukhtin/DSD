@@ -16,13 +16,13 @@ CREATE OR REPLACE VIEW Object_Account_View AS
            , Object_Account.ObjectCode   AS AccountCode
            , Object_Account.ValueData    AS AccountName
           
-           , COALESCE (lfObject_InfoMoneyDestination.InfoMoneyGroupId, Object_InfoMoney_View.InfoMoneyGroupId)     AS InfoMoneyGroupId
-           , COALESCE (lfObject_InfoMoneyDestination.InfoMoneyGroupCode, Object_InfoMoney_View.InfoMoneyGroupCode) AS InfoMoneyGroupCode
-           , COALESCE (lfObject_InfoMoneyDestination.InfoMoneyGroupName, Object_InfoMoney_View.InfoMoneyGroupName) AS InfoMoneyGroupName
+           , COALESCE (View_InfoMoneyDestination.InfoMoneyGroupId, Object_InfoMoney_View.InfoMoneyGroupId)     AS InfoMoneyGroupId
+           , COALESCE (View_InfoMoneyDestination.InfoMoneyGroupCode, Object_InfoMoney_View.InfoMoneyGroupCode) AS InfoMoneyGroupCode
+           , COALESCE (View_InfoMoneyDestination.InfoMoneyGroupName, Object_InfoMoney_View.InfoMoneyGroupName) AS InfoMoneyGroupName
 
-           , COALESCE (lfObject_InfoMoneyDestination.InfoMoneyDestinationId, Object_InfoMoney_View.InfoMoneyDestinationId)     AS InfoMoneyDestinationId
-           , COALESCE (lfObject_InfoMoneyDestination.InfoMoneyDestinationCode, Object_InfoMoney_View.InfoMoneyDestinationCode) AS InfoMoneyDestinationCode
-           , COALESCE (lfObject_InfoMoneyDestination.InfoMoneyDestinationName, Object_InfoMoney_View.InfoMoneyDestinationName) AS InfoMoneyDestinationName
+           , COALESCE (View_InfoMoneyDestination.InfoMoneyDestinationId, Object_InfoMoney_View.InfoMoneyDestinationId)     AS InfoMoneyDestinationId
+           , COALESCE (View_InfoMoneyDestination.InfoMoneyDestinationCode, Object_InfoMoney_View.InfoMoneyDestinationCode) AS InfoMoneyDestinationCode
+           , COALESCE (View_InfoMoneyDestination.InfoMoneyDestinationName, Object_InfoMoney_View.InfoMoneyDestinationName) AS InfoMoneyDestinationName
 
            , Object_InfoMoney_View.InfoMoneyId     AS InfoMoneyId
            , Object_InfoMoney_View.InfoMoneyCode   AS InfoMoneyCode
@@ -52,7 +52,7 @@ CREATE OR REPLACE VIEW Object_Account_View AS
                                  ON ObjectLink_Account_InfoMoney.ObjectId = Object_Account.Id
                                 AND ObjectLink_Account_InfoMoney.DescId = zc_ObjectLink_Account_InfoMoney()
 
-            LEFT JOIN lfSelect_Object_InfoMoneyDestination() AS lfObject_InfoMoneyDestination ON lfObject_InfoMoneyDestination.InfoMoneyDestinationId = ObjectLink_Account_InfoMoneyDestination.ChildObjectId
+            LEFT JOIN Object_InfoMoneyDestination_View AS View_InfoMoneyDestination ON View_InfoMoneyDestination.InfoMoneyDestinationId = ObjectLink_Account_InfoMoneyDestination.ChildObjectId
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Account_InfoMoneyDestination.ChildObjectId
             
             LEFT JOIN ObjectBoolean AS ObjectBoolean_onComplete
@@ -75,6 +75,7 @@ ALTER TABLE Object_Account_View  OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 07.11.13                        * add Object_InfoMoneyDestination_View
  08.10.13                        *
 */
 
