@@ -1,4 +1,4 @@
-unit Send;
+unit SendTicketFuel;
 
 interface
 
@@ -16,13 +16,14 @@ uses
   dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
-  TSendForm = class(TAncestorDocumentForm)
+  TSendTicketFuelForm = class(TAncestorDocumentForm)
     cxLabel3: TcxLabel;
     edFrom: TcxButtonEdit;
     cxLabel4: TcxLabel;
     edTo: TcxButtonEdit;
     FromGuides: TdsdGuides;
     ToGuides: TdsdGuides;
+    colFuelName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -34,6 +35,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TSendForm);
+  RegisterClass(TSendTicketFuelForm);
 
 end.

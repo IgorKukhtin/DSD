@@ -2,22 +2,20 @@ inherited Report_GoodsForm: TReport_GoodsForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
   ClientHeight = 341
   ClientWidth = 754
-  ExplicitWidth = 762
-  ExplicitHeight = 375
+  ExplicitWidth = 770
+  ExplicitHeight = 376
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 754
     Height = 284
     TabOrder = 3
-    ExplicitLeft = 0
     ExplicitTop = 57
     ExplicitWidth = 754
     ExplicitHeight = 284
     ClientRectBottom = 284
     ClientRectRight = 754
     inherited tsMain: TcxTabSheet
-      ExplicitTop = 0
       ExplicitWidth = 754
       ExplicitHeight = 284
       inherited cxGrid: TcxGrid
@@ -99,7 +97,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       Width = 225
     end
   end
-  inherited spMainData: TdsdStoredProc
+  inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpReport_Goods'
     Params = <
       item

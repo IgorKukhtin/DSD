@@ -10,7 +10,8 @@ uses
   cxLookAndFeelPainters, cxStyles, cxCustomData, cxFilter, cxData,
   cxDataStorage, cxEdit, cxDBData, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, DataModul,
-  cxPCdxBarPopupMenu, cxPC;
+  cxPCdxBarPopupMenu, cxPC, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinsdxBarPainter, dxSkinscxPCPainter;
 
 type
   TAncestorDBGridForm = class(TAncestorDataForm)

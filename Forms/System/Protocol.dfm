@@ -3,59 +3,67 @@ inherited ProtocolForm: TProtocolForm
   ClientHeight = 323
   ClientWidth = 782
   AddOnFormData.RefreshAction = nil
-  ExplicitWidth = 790
-  ExplicitHeight = 350
+  ExplicitWidth = 798
+  ExplicitHeight = 358
   PixelsPerInch = 96
   TextHeight = 13
-  inherited cxGrid: TcxGrid
+  inherited PageControl: TcxPageControl
     Top = 82
     Width = 782
     Height = 241
-    TabOrder = 3
-    ExplicitTop = 82
-    ExplicitWidth = 782
-    ExplicitHeight = 241
-    inherited cxGridDBTableView: TcxGridDBTableView
-      OptionsView.CellAutoHeight = True
-      Styles.Inactive = nil
-      Styles.Selection = nil
-      Styles.Footer = nil
-      Styles.Header = nil
-      object colDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072
-        DataBinding.FieldName = 'OperDate'
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 54
-      end
-      object colObjectName: TcxGridDBColumn
-        Caption = #1054#1073#1098#1077#1082#1090
-        DataBinding.FieldName = 'ObjectName'
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 110
-      end
-      object colObjectTypeName: TcxGridDBColumn
-        Caption = #1058#1080#1087' '#1086#1073#1098#1077#1082#1090#1072
-        DataBinding.FieldName = 'ObjectTypeName'
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-      end
-      object colUserName: TcxGridDBColumn
-        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
-        DataBinding.FieldName = 'UserName'
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 99
-      end
-      object colProtocolData: TcxGridDBColumn
-        Caption = #1044#1072#1085#1085#1099#1077
-        DataBinding.FieldName = 'ProtocolData'
-        PropertiesClassName = 'TcxMemoProperties'
-        Properties.ScrollBars = ssVertical
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 505
+    ClientRectBottom = 241
+    ClientRectRight = 782
+    inherited tsMain: TcxTabSheet
+      inherited cxGrid: TcxGrid
+        Top = 0
+        Width = 782
+        Height = 241
+        ExplicitTop = 0
+        ExplicitWidth = 782
+        ExplicitHeight = 241
+        inherited cxGridDBTableView: TcxGridDBTableView
+          OptionsView.CellAutoHeight = True
+          Styles.Inactive = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Header = nil
+          object colDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 54
+          end
+          object colObjectName: TcxGridDBColumn
+            Caption = #1054#1073#1098#1077#1082#1090
+            DataBinding.FieldName = 'ObjectName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 110
+          end
+          object colObjectTypeName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1086#1073#1098#1077#1082#1090#1072
+            DataBinding.FieldName = 'ObjectTypeName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+          end
+          object colUserName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
+            DataBinding.FieldName = 'UserName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 99
+          end
+          object colProtocolData: TcxGridDBColumn
+            Caption = #1044#1072#1085#1085#1099#1077
+            DataBinding.FieldName = 'ProtocolData'
+            PropertiesClassName = 'TcxMemoProperties'
+            Properties.ScrollBars = ssVertical
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 505
+          end
+        end
       end
     end
   end
@@ -121,13 +129,13 @@ inherited ProtocolForm: TProtocolForm
       Caption = #1069#1083#1077#1084#1077#1085#1090' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072':'
     end
   end
-  inherited MainDataDS: TDataSource
+  inherited MasterDS: TDataSource
     Top = 55
   end
-  inherited MainDataCDS: TClientDataSet
+  inherited MasterCDS: TClientDataSet
     Top = 55
   end
-  inherited spMainData: TdsdStoredProc
+  inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Protocol'
     Params = <
       item

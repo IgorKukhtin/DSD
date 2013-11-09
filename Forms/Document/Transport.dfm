@@ -31,7 +31,7 @@
       Top = 23
       Enabled = False
       TabOrder = 0
-      Width = 95
+      Width = 92
     end
     object cxLabel1: TcxLabel
       Left = 8
@@ -39,20 +39,20 @@
       Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
     object edOperDate: TcxDateEdit
-      Left = 108
+      Left = 105
       Top = 23
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
-      Width = 88
+      Width = 90
     end
     object cxLabel2: TcxLabel
-      Left = 110
+      Left = 105
       Top = 5
       Caption = #1044#1072#1090#1072
     end
     object edUnitForwarding: TcxButtonEdit
-      Left = 844
+      Left = 845
       Top = 23
       Properties.Buttons = <
         item
@@ -64,7 +64,7 @@
       Width = 150
     end
     object edCar: TcxButtonEdit
-      Left = 201
+      Left = 200
       Top = 23
       Properties.Buttons = <
         item
@@ -76,17 +76,17 @@
       Width = 100
     end
     object cxLabel3: TcxLabel
-      Left = 844
+      Left = 845
       Top = 5
       Caption = #1052#1077#1089#1090#1086' '#1086#1090#1087#1088#1072#1074#1082#1080
     end
     object cxLabel4: TcxLabel
-      Left = 201
+      Left = 200
       Top = 5
       Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100' '
     end
     object edPersonalDriver: TcxButtonEdit
-      Left = 169
+      Left = 165
       Top = 63
       Properties.Buttons = <
         item
@@ -95,15 +95,15 @@
         end>
       Properties.ReadOnly = True
       TabOrder = 3
-      Width = 132
+      Width = 135
     end
     object cxLabel5: TcxLabel
-      Left = 169
+      Left = 165
       Top = 45
       Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
     end
     object edPersonalDriverMore: TcxButtonEdit
-      Left = 691
+      Left = 690
       Top = 63
       Properties.Buttons = <
         item
@@ -112,15 +112,15 @@
         end>
       Properties.ReadOnly = True
       TabOrder = 11
-      Width = 147
+      Width = 150
     end
     object cxLabel6: TcxLabel
-      Left = 691
+      Left = 690
       Top = 45
       Caption = #1042#1086#1076#1080#1090#1077#1083#1100', '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081
     end
     object edCarTrailer: TcxButtonEdit
-      Left = 691
+      Left = 690
       Top = 23
       Properties.Buttons = <
         item
@@ -129,15 +129,15 @@
         end>
       Properties.ReadOnly = True
       TabOrder = 10
-      Width = 147
+      Width = 150
     end
     object cxLabel7: TcxLabel
-      Left = 691
+      Left = 690
       Top = 5
       Caption = #1055#1088#1080#1094#1077#1087
     end
     object edStartRunPlan: TcxDateEdit
-      Left = 307
+      Left = 305
       Top = 23
       Properties.DateButtons = [btnClear, btnToday]
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
@@ -148,12 +148,12 @@
       Width = 145
     end
     object cxLabel8: TcxLabel
-      Left = 307
+      Left = 305
       Top = 5
       Caption = #1044#1072#1090#1072'/'#1042#1088'.'#1074#1099#1077#1079#1076#1072' '#1087#1083#1072#1085' '
     end
     object edEndRunPlan: TcxDateEdit
-      Left = 307
+      Left = 305
       Top = 63
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
@@ -162,52 +162,52 @@
       Width = 145
     end
     object cxLabel9: TcxLabel
-      Left = 307
+      Left = 305
       Top = 45
       Caption = #1044#1072#1090#1072'/'#1042#1088'.'#1074#1086#1079#1074#1088#1072#1097#1077#1085#1080#1103' '#1087#1083#1072#1085
     end
     object cxLabel10: TcxLabel
-      Left = 458
+      Left = 455
       Top = 5
       Caption = #1044#1072#1090#1072'/'#1042#1088'.'#1074#1099#1077#1079#1076#1072' '#1092#1072#1082#1090
     end
     object edStartRun: TcxDateEdit
-      Left = 458
+      Left = 455
       Top = 23
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
       Properties.InputKind = ikMask
       Properties.Kind = ckDateTime
       TabOrder = 6
-      Width = 147
+      Width = 150
     end
     object cxLabel11: TcxLabel
-      Left = 458
+      Left = 455
       Top = 45
       Caption = #1044#1072#1090#1072'/'#1042#1088'.'#1074#1086#1079#1074#1088#1072#1097#1077#1085#1080#1103' '#1092#1072#1082#1090
     end
     object edEndRun: TcxDateEdit
-      Left = 458
+      Left = 455
       Top = 63
       Properties.DisplayFormat = 'dd.mm.yyyy hh:mm'
       Properties.EditFormat = 'dd.mm.yyyy hh:mm'
       Properties.Kind = ckDateTime
       TabOrder = 7
-      Width = 147
+      Width = 150
     end
     object edComment: TcxTextEdit
-      Left = 844
+      Left = 845
       Top = 63
       TabOrder = 13
       Width = 150
     end
     object cxLabel12: TcxLabel
-      Left = 844
+      Left = 845
       Top = 45
       Caption = ' '#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '
     end
     object edHoursWork: TcxCurrencyEdit
-      Left = 612
+      Left = 610
       Top = 23
       Enabled = False
       Properties.Alignment.Horz = taRightJustify
@@ -215,25 +215,25 @@
       Properties.DecimalPlaces = 2
       Properties.DisplayFormat = ',0.####'
       TabOrder = 8
-      Width = 71
+      Width = 75
     end
     object cxLabel13: TcxLabel
-      Left = 612
+      Left = 610
       Top = 5
       Caption = #1050#1086#1083'-'#1074#1086' '#1095#1072#1089#1086#1074
     end
     object edHoursAdd: TcxCurrencyEdit
-      Left = 612
+      Left = 610
       Top = 63
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
       TabOrder = 9
-      Width = 71
+      Width = 75
     end
     object cxLabel14: TcxLabel
-      Left = 612
+      Left = 610
       Top = 45
       Caption = #1044#1086#1087'. '#1095#1072#1089#1099
     end

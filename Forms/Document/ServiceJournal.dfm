@@ -1,21 +1,18 @@
 inherited ServiceJournalForm: TServiceJournalForm
   Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1091#1089#1083#1091#1075
   ClientWidth = 884
-  ExplicitWidth = 892
+  ExplicitWidth = 900
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 884
     TabOrder = 3
-    ExplicitLeft = 0
     ExplicitWidth = 884
     ClientRectRight = 884
     inherited tsMain: TcxTabSheet
-      ExplicitTop = 0
       ExplicitWidth = 884
       inherited cxGrid: TcxGrid
         Width = 884
-        ExplicitTop = 0
         ExplicitWidth = 884
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
@@ -94,15 +91,15 @@ inherited ServiceJournalForm: TServiceJournalForm
       FormName = 'TServiceForm'
     end
   end
-  inherited MainDataDS: TDataSource
+  inherited MasterDS: TDataSource
     Left = 56
     Top = 96
   end
-  inherited MainDataCDS: TClientDataSet
+  inherited MasterCDS: TClientDataSet
     Left = 24
     Top = 104
   end
-  inherited spMainData: TdsdStoredProc
+  inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Service'
     Left = 96
     Top = 96

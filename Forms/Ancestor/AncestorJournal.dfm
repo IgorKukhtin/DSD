@@ -2,8 +2,8 @@ inherited AncestorJournalForm: TAncestorJournalForm
   ClientHeight = 329
   ClientWidth = 717
   AddOnFormData.isSingle = False
-  ExplicitWidth = 725
-  ExplicitHeight = 356
+  ExplicitWidth = 733
+  ExplicitHeight = 364
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -21,6 +21,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       inherited cxGrid: TcxGrid
         Width = 717
         Height = 272
+        PopupMenu = PopupMenu
         ExplicitWidth = 717
         ExplicitHeight = 272
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -52,7 +53,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
             HeaderAlignmentVert = vaCenter
           end
           object colInvNumber: TcxGridDBColumn
-            Caption = #1053#1086#1084#1077#1088
+            Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentVert = vaCenter
             Width = 75
@@ -69,7 +70,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
   end
   object Panel: TPanel [1]
     Left = 0
-    Top = 0
+    Top = 26
     Width = 717
     Height = 31
     Align = alTop
@@ -77,14 +78,14 @@ inherited AncestorJournalForm: TAncestorJournalForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 41275d
+      EditValue = 41579d
       TabOrder = 0
       Width = 85
     end
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41639d
+      EditValue = 41608d
       Properties.ShowTime = False
       TabOrder = 1
       Width = 85
@@ -100,7 +101,14 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
   end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Top = 227
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Top = 227
+  end
   inherited ActionList: TActionList
+    Top = 226
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
@@ -110,9 +118,14 @@ inherited AncestorJournalForm: TAncestorJournalForm
         item
           Name = 'Id'
           Value = Null
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
         end>
       isShowModal = False
-      DataSource = MainDataDS
+      DataSource = MasterDS
       DataSetRefresh = actRefresh
     end
     object actUpdate: TdsdInsertUpdateAction
@@ -123,13 +136,18 @@ inherited AncestorJournalForm: TAncestorJournalForm
       GuiParams = <
         item
           Name = 'Id'
-          Component = MainDataCDS
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
         end>
       isShowModal = False
       ActionType = acUpdate
-      DataSource = MainDataDS
+      DataSource = MasterDS
       DataSetRefresh = actRefresh
     end
     object actUnComplete: TdsdChangeMovementStatus
@@ -143,7 +161,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 11
       Status = mtUncomplete
-      DataSource = MainDataDS
+      DataSource = MasterDS
     end
     object actComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
@@ -156,7 +174,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 12
       Status = mtComplete
-      DataSource = MainDataDS
+      DataSource = MasterDS
     end
     object actSetErased: TdsdChangeMovementStatus
       Category = 'DSDLib'
@@ -169,27 +187,35 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
       ImageIndex = 13
       Status = mtDelete
-      DataSource = MainDataDS
+      DataSource = MasterDS
     end
   end
-  inherited spMainData: TdsdStoredProc
+  inherited MasterDS: TDataSource
+    Top = 99
+  end
+  inherited MasterCDS: TClientDataSet
+    Top = 99
+  end
+  inherited spSelect: TdsdStoredProc
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41275d
+        Value = 41579d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInputOutput
       end
       item
         Name = 'inEndDate'
-        Value = 41639d
+        Value = 41608d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
       end>
+    Top = 99
   end
   inherited BarManager: TdxBarManager
+    Top = 99
     DockControlHeights = (
       0
       0
@@ -258,14 +284,14 @@ inherited AncestorJournalForm: TAncestorJournalForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    Left = 504
-    Top = 208
+    Left = 224
+    Top = 200
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 488
-    Top = 24
+    Left = 184
+    Top = 136
   end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefresh
@@ -273,8 +299,8 @@ inherited AncestorJournalForm: TAncestorJournalForm
       item
         Component = PeriodChoice
       end>
-    Left = 576
-    Top = 24
+    Left = 272
+    Top = 136
   end
   object spMovementComplete: TdsdStoredProc
     DataSets = <>
@@ -282,7 +308,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
     Params = <
       item
         Name = 'inMovementId'
-        Component = MainDataCDS
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
@@ -295,7 +321,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
     Params = <
       item
         Name = 'inMovementId'
-        Component = MainDataCDS
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
@@ -308,11 +334,22 @@ inherited AncestorJournalForm: TAncestorJournalForm
     Params = <
       item
         Name = 'inMovementId'
-        Component = MainDataCDS
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
     Left = 56
     Top = 160
+  end
+  object PopupMenu: TPopupMenu
+    Images = dmMain.ImageList
+    Left = 164
+    Top = 100
+    object N1: TMenuItem
+      Action = actComplete
+    end
+    object N2: TMenuItem
+      Action = actUnComplete
+    end
   end
 end

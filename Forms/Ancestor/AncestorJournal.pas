@@ -11,7 +11,9 @@ uses
   cxPropertiesStore, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGrid, cxContainer, Vcl.ComCtrls, dxCore,
   cxDateUtils, ChoicePeriod, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
-  cxCalendar, Vcl.ExtCtrls, cxPCdxBarPopupMenu, cxPC, cxImageComboBox;
+  cxCalendar, Vcl.ExtCtrls, cxPCdxBarPopupMenu, cxPC, cxImageComboBox,
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  Vcl.Menus;
 
 type
   TAncestorJournalForm = class(TAncestorDBGridForm)
@@ -22,6 +24,9 @@ type
     cxLabel2: TcxLabel;
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
+    PopupMenu: TPopupMenu;
+    N1: TMenuItem;
+    N2: TMenuItem;
     actInsert: TdsdInsertUpdateAction;
     actUpdate: TdsdInsertUpdateAction;
     actComplete: TdsdChangeMovementStatus;

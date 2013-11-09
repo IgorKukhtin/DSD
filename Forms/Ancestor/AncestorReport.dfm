@@ -1,16 +1,27 @@
 inherited AncestorReportForm: TAncestorReportForm
+  ExplicitWidth = 320
+  ExplicitHeight = 240
   PixelsPerInch = 96
   TextHeight = 13
-  inherited cxGrid: TcxGrid
+  inherited PageControl: TcxPageControl
     Top = 57
     Height = 251
-    ExplicitTop = 57
-    ExplicitHeight = 251
-    inherited cxGridDBTableView: TcxGridDBTableView
-      Styles.Inactive = nil
-      Styles.Selection = nil
-      Styles.Footer = nil
-      Styles.Header = nil
+    ClientRectBottom = 251
+    inherited tsMain: TcxTabSheet
+      ExplicitWidth = 0
+      ExplicitHeight = 0
+      inherited cxGrid: TcxGrid
+        Top = 57
+        Height = 251
+        ExplicitTop = 57
+        ExplicitHeight = 251
+        inherited cxGridDBTableView: TcxGridDBTableView
+          Styles.Inactive = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Header = nil
+        end
+      end
     end
   end
   object Panel: TPanel [1]
@@ -47,7 +58,7 @@ inherited AncestorReportForm: TAncestorReportForm
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
   end
-  inherited spMainData: TdsdStoredProc
+  inherited spSelect: TdsdStoredProc
     Params = <
       item
         Name = 'inStartDate'

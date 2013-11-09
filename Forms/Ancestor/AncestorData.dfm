@@ -1,31 +1,33 @@
 inherited AncestorDataForm: TAncestorDataForm
+  ExplicitWidth = 591
+  ExplicitHeight = 343
   PixelsPerInch = 96
   TextHeight = 13
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh
-      StoredProc = spMainData
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = spMainData
+          StoredProc = spSelect
         end>
     end
   end
-  object MainDataDS: TDataSource
-    DataSet = MainDataCDS
+  object MasterDS: TDataSource
+    DataSet = MasterCDS
     Left = 48
     Top = 16
   end
-  object MainDataCDS: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 16
     Top = 16
   end
-  object spMainData: TdsdStoredProc
-    DataSet = MainDataCDS
+  object spSelect: TdsdStoredProc
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = MainDataCDS
+        DataSet = MasterCDS
       end>
     Params = <>
     Left = 80
@@ -34,8 +36,8 @@ inherited AncestorDataForm: TAncestorDataForm
   object BarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

@@ -1,6 +1,4 @@
 inherited AncestorDBGridForm: TAncestorDBGridForm
-  ExplicitWidth = 583
-  ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   object PageControl: TcxPageControl [0]
@@ -12,10 +10,6 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
     TabOrder = 4
     Properties.ActivePage = tsMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitLeft = 48
-    ExplicitTop = 72
-    ExplicitWidth = 289
-    ExplicitHeight = 193
     ClientRectBottom = 282
     ClientRectRight = 575
     ClientRectTop = 0
@@ -23,9 +17,6 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
       Caption = 'tsMain'
       ImageIndex = 0
       TabVisible = False
-      ExplicitTop = 24
-      ExplicitWidth = 289
-      ExplicitHeight = 169
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -33,11 +24,9 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
         Height = 282
         Align = alClient
         TabOrder = 0
-        ExplicitTop = 176
-        ExplicitHeight = 132
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = MainDataDS
+          DataController.DataSource = MasterDS
           DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <>
           DataController.Summary.FooterSummaryItems = <>

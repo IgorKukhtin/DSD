@@ -12,7 +12,8 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  cxCheckBox, cxImageComboBox;
+  cxCheckBox, cxImageComboBox, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.Menus;
 
 type
   TServiceJournalForm = class(TAncestorJournalForm)

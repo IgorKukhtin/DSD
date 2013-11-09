@@ -21,8 +21,8 @@ object MainForm: TMainForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -644,6 +644,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbSendTicketFuel'
+        end
+        item
+          Visible = True
           ItemName = 'bbTransportDocuments_Separator'
         end
         item
@@ -717,6 +721,10 @@ object MainForm: TMainForm
     end
     object bbPersonalSendCash: TdxBarButton
       Action = actPersonalSendCash
+      Category = 0
+    end
+    object bbSendTicketFuel: TdxBarButton
+      Action = actSendTicketFuel
       Category = 0
     end
     object bbTransportDocuments_Separator: TdxBarSeparator
@@ -899,6 +907,30 @@ object MainForm: TMainForm
   object ActionList: TActionList
     Left = 192
     Top = 48
+    object actTransport: TdsdOpenForm
+      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      Caption = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
+      Hint = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
+      FormName = 'TTransportJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actIncomeFuel: TdsdOpenForm
+      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086') '
+      Hint = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1079#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086') '
+      FormName = 'TIncomeFuelJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actPersonalSendCash: TdsdOpenForm
+      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      Caption = #1056#1072#1089#1093#1086#1076' '#1076#1077#1085#1077#1075' '#1089' '#1087#1086#1076#1086#1090#1095#1077#1090#1072' '#1085#1072' '#1087#1086#1076#1086#1090#1095#1077#1090
+      Hint = #1056#1072#1089#1093#1086#1076' '#1076#1077#1085#1077#1075' '#1089' '#1087#1086#1076#1086#1090#1095#1077#1090#1072' '#1085#1072' '#1087#1086#1076#1086#1090#1095#1077#1090
+      FormName = 'TPersonalSendCashJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
     object actPersonalGroup: TdsdOpenForm
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1080' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074' '
@@ -931,27 +963,11 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actTransport: TdsdOpenForm
+    object actSendTicketFuel: TdsdOpenForm
       Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
-      Caption = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
-      Hint = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
-      FormName = 'TTransportJournalForm'
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actIncomeFuel: TdsdOpenForm
-      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
-      Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086') '
-      Hint = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1079#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086') '
-      FormName = 'TIncomeFuelJournalForm'
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actPersonalSendCash: TdsdOpenForm
-      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
-      Caption = #1056#1072#1089#1093#1086#1076' '#1076#1077#1085#1077#1075' '#1089' '#1087#1086#1076#1086#1090#1095#1077#1090#1072' '#1085#1072' '#1087#1086#1076#1086#1090#1095#1077#1090
-      Hint = #1056#1072#1089#1093#1086#1076' '#1076#1077#1085#1077#1075' '#1089' '#1087#1086#1076#1086#1090#1095#1077#1090#1072' '#1085#1072' '#1087#1086#1076#1086#1090#1095#1077#1090
-      FormName = 'TPersonalSendCashJournalForm'
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' ('#1058#1072#1083#1086#1085#1099' '#1085#1072' '#1090#1086#1087#1083#1080#1074#1086')'
+      Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' ('#1058#1072#1083#1086#1085#1099' '#1085#1072' '#1090#1086#1087#1083#1080#1074#1086')'
+      FormName = 'TSendTicketFuelJournalForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -1587,7 +1603,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.14'
+    Version = '4.12'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

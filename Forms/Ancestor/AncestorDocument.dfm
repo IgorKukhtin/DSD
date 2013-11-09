@@ -3,41 +3,42 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
   ClientWidth = 782
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 790
-  ExplicitHeight = 348
+  ExplicitWidth = 798
+  ExplicitHeight = 356
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 75
+    Top = 86
     Width = 782
-    Height = 246
+    Height = 235
     TabOrder = 5
-    ExplicitTop = 75
+    ExplicitTop = 86
     ExplicitWidth = 782
-    ExplicitHeight = 246
-    ClientRectBottom = 246
+    ExplicitHeight = 235
+    ClientRectBottom = 235
     ClientRectRight = 782
     ClientRectTop = 24
     inherited tsMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       TabVisible = True
-      ExplicitTop = 24
       ExplicitWidth = 782
-      ExplicitHeight = 222
+      ExplicitHeight = 211
       inherited cxGrid: TcxGrid
         Width = 782
-        Height = 222
+        Height = 211
         ExplicitWidth = 782
-        ExplicitHeight = 222
+        ExplicitHeight = 211
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
           object colIsErased: TcxGridDBColumn
-            Caption = #1059#1076#1072#1083#1077#1085
+            Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
+            Visible = False
             Options.Editing = False
+            Width = 50
           end
         end
       end
@@ -49,7 +50,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         Left = 0
         Top = 0
         Width = 782
-        Height = 222
+        Height = 211
         Align = alClient
         TabOrder = 0
         object cxGridEntryDBTableView: TcxGridDBTableView
@@ -244,40 +245,41 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     Left = 0
     Top = 0
     Width = 782
-    Height = 49
+    Height = 60
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 4
     object edInvNumber: TcxTextEdit
-      Left = 8
-      Top = 27
+      Left = 170
+      Top = 23
+      Enabled = False
       TabOrder = 0
-      Width = 121
+      Width = 90
     end
     object cxLabel1: TcxLabel
-      Left = 8
+      Left = 170
       Top = 5
-      Caption = #1053#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
     object edOperDate: TcxDateEdit
-      Left = 300
-      Top = 27
+      Left = 270
+      Top = 23
       TabOrder = 2
-      Width = 121
+      Width = 100
     end
     object cxLabel2: TcxLabel
-      Left = 300
+      Left = 270
       Top = 5
-      Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Caption = #1044#1072#1090#1072
     end
     object cxLabel15: TcxLabel
-      Left = 137
+      Left = 8
       Top = 5
       Caption = #1057#1090#1072#1090#1091#1089
     end
     object ceStatus: TcxButtonEdit
-      Left = 138
-      Top = 27
+      Left = 8
+      Top = 23
       Properties.Buttons = <
         item
           Action = actCompleteMovement
@@ -305,7 +307,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
           StoredProc = spGet
         end
         item
-          StoredProc = spMainData
+          StoredProc = spSelect
         end>
     end
     inherited actGridToExcel: TdsdGridToExcel
@@ -331,7 +333,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
-      DataSource = MainDataDS
+      DataSource = MasterDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
     end
     object actMISetUnErased: TdsdUpdateErased
@@ -347,7 +349,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
-      DataSource = MainDataDS
+      DataSource = MasterDS
     end
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -363,10 +365,10 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     end
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
-      StoredProc = spMainData
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = spMainData
+          StoredProc = spSelect
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
@@ -381,10 +383,10 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     end
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
-      StoredProc = spMainData
+      StoredProc = spSelect
       StoredProcList = <
         item
-          StoredProc = spMainData
+          StoredProc = spSelect
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
@@ -399,13 +401,13 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     end
     object actUpdateMainDS: TdsdUpdateDataSet
       Category = 'DSDLib'
-      StoredProc = spInsertUpdateMI
+      StoredProc = spInsertUpdateMIMaster
       StoredProcList = <
         item
-          StoredProc = spInsertUpdateMI
+          StoredProc = spInsertUpdateMIMaster
         end>
       Caption = 'actUpdateMainDS'
-      DataSource = MainDataDS
+      DataSource = MasterDS
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -483,15 +485,15 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       Category = 'DSDLib'
     end
   end
-  inherited MainDataDS: TDataSource
+  inherited MasterDS: TDataSource
     Left = 40
-    Top = 88
+    Top = 150
   end
-  inherited MainDataCDS: TClientDataSet
+  inherited MasterCDS: TClientDataSet
     Left = 8
-    Top = 88
+    Top = 150
   end
-  inherited spMainData: TdsdStoredProc
+  inherited spSelect: TdsdStoredProc
     Params = <
       item
         Name = 'inMovementId'
@@ -503,7 +505,8 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       item
         Name = 'inShowAll'
         Value = False
-        Component = actShowAll
+        Component = FormParams
+        ComponentItem = 'ShowAll'
         DataType = ftBoolean
         ParamType = ptInput
       end
@@ -515,11 +518,11 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         ParamType = ptInput
       end>
     Left = 72
-    Top = 88
+    Top = 150
   end
   inherited BarManager: TdxBarManager
     Left = 104
-    Top = 72
+    Top = 149
     DockControlHeights = (
       0
       0
@@ -607,16 +610,20 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       Category = 0
     end
   end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    Left = 318
+    Top = 143
+  end
   object EntryCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 424
-    Top = 96
+    Left = 488
+    Top = 152
   end
   object EntryDS: TDataSource
     DataSet = EntryCDS
-    Left = 456
-    Top = 104
+    Left = 520
+    Top = 160
   end
   object spSelectMovementContainerItem: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItemContainer_Movement'
@@ -632,8 +639,8 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 392
-    Top = 88
+    Left = 456
+    Top = 144
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -647,6 +654,13 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'ShowAll'
+        Value = False
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInputOutput
       end>
     Left = 104
     Top = 264
@@ -657,7 +671,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     PositionDataSet = 'ClientDataSet'
     Params = <>
     Left = 136
-    Top = 88
+    Top = 150
   end
   object spChangeStatus: TdsdStoredProc
     DataSets = <>
@@ -678,7 +692,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         ParamType = ptInput
       end>
     Left = 168
-    Top = 88
+    Top = 150
   end
   object spGet: TdsdStoredProc
     DataSets = <>
@@ -753,8 +767,8 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     ActionItemList = <
       item
       end>
-    Left = 40
-    Top = 128
+    Left = 232
+    Top = 176
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -766,16 +780,16 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         Control = edOperDate
       end>
     GetStoredProc = spGet
-    Left = 56
-    Top = 137
+    Left = 248
+    Top = 185
   end
   object RefreshAddOn: TRefreshAddOn
     DataSet = 'ClientDataSet'
     KeyField = 'Id'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
-    Left = 64
-    Top = 152
+    Left = 256
+    Top = 200
   end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'
@@ -784,18 +798,18 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     Params = <
       item
         Name = 'inMovementItemId'
-        Component = MainDataCDS
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'outIsErased'
-        Component = MainDataCDS
+        Component = MasterCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
       end>
-    Left = 174
-    Top = 168
+    Left = 326
+    Top = 216
   end
   object spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetUnErased_MovementItem'
@@ -804,26 +818,26 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     Params = <
       item
         Name = 'inMovementItemId'
-        Component = MainDataCDS
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'outIsErased'
-        Component = MainDataCDS
+        Component = MasterCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
       end>
-    Left = 206
-    Top = 176
+    Left = 358
+    Top = 224
   end
-  object spInsertUpdateMI: TdsdStoredProc
+  object spInsertUpdateMIMaster: TdsdStoredProc
     DataSets = <>
     OutputType = otResult
     Params = <
       item
         Name = 'ioId'
-        Component = MainDataCDS
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
@@ -836,19 +850,19 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       end
       item
         Name = 'inGoodsId'
-        Component = MainDataCDS
+        Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
       end
       item
         Name = 'inAmount'
-        Component = MainDataCDS
+        Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
       end>
-    Left = 232
-    Top = 184
+    Left = 384
+    Top = 232
   end
   object EntryViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -857,7 +871,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    Left = 491
-    Top = 122
+    Left = 555
+    Top = 178
   end
 end

@@ -11,7 +11,8 @@ uses
   cxPropertiesStore, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGrid, cxContainer, Vcl.ComCtrls, dxCore,
   cxDateUtils, cxButtonEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel,
-  cxTextEdit, Vcl.ExtCtrls, cxPCdxBarPopupMenu, cxPC, dsdGuides, DataModul;
+  cxTextEdit, Vcl.ExtCtrls, cxPCdxBarPopupMenu, cxPC, dsdGuides, DataModul,
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TAncestorDocumentForm = class(TAncestorDBGridForm)
@@ -35,7 +36,7 @@ type
     RefreshAddOn: TRefreshAddOn;
     spErasedMIMaster: TdsdStoredProc;
     spUnErasedMIMaster: TdsdStoredProc;
-    spInsertUpdateMI: TdsdStoredProc;
+    spInsertUpdateMIMaster: TdsdStoredProc;
     EntryViewAddOn: TdsdDBViewAddOn;
     colIsErased: TcxGridDBColumn;
   private

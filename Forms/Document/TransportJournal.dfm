@@ -27,14 +27,14 @@ object TransportJournalForm: TTransportJournalForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 41275d
+      EditValue = 41579d
       TabOrder = 0
       Width = 85
     end
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41639d
+      EditValue = 41608d
       TabOrder = 1
       Width = 85
     end
@@ -500,14 +500,14 @@ object TransportJournalForm: TTransportJournalForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41275d
+        Value = 41579d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41639d
+        Value = 41608d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -615,14 +615,14 @@ object TransportJournalForm: TTransportJournalForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41275d
+        Value = 41579d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndtDate'
-        Value = 41639d
+        Value = 41608d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

@@ -229,6 +229,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSendForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendJournalForm');
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendTicketFuelForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendTicketFuelForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendTicketFuelJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendTicketFuelJournalForm');
 end;
 procedure TLoadFormTest.LoadSendOnPriceFormTest;
 begin

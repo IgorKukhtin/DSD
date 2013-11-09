@@ -27,33 +27,33 @@ object PersonalSendCashForm: TPersonalSendCashForm
     BevelOuter = bvNone
     TabOrder = 0
     object edInvNumber: TcxTextEdit
-      Left = 172
+      Left = 170
       Top = 23
       Enabled = False
       Properties.ReadOnly = True
       TabOrder = 0
-      Width = 121
+      Width = 90
     end
     object cxLabel1: TcxLabel
-      Left = 174
+      Left = 170
       Top = 5
       Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
     object edOperDate: TcxDateEdit
-      Left = 306
+      Left = 270
       Top = 23
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
-      Width = 121
+      Width = 100
     end
     object cxLabel2: TcxLabel
-      Left = 306
+      Left = 270
       Top = 5
       Caption = #1044#1072#1090#1072
     end
     object edPersonal: TcxButtonEdit
-      Left = 439
+      Left = 380
       Top = 23
       Properties.Buttons = <
         item
@@ -65,9 +65,9 @@ object PersonalSendCashForm: TPersonalSendCashForm
       Width = 150
     end
     object cxLabel3: TcxLabel
-      Left = 439
+      Left = 380
       Top = 5
-      Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1054#1090' '#1082#1086#1075#1086')'
+      Caption = #1054#1090' '#1082#1086#1075#1086' ('#1057#1086#1090#1088#1091#1076#1085#1080#1082')'
     end
     object cxLabel4: TcxLabel
       Left = 8
@@ -75,7 +75,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
       Caption = #1057#1090#1072#1090#1091#1089
     end
     object ceStatus: TcxButtonEdit
-      Left = 9
+      Left = 8
       Top = 23
       Properties.Buttons = <
         item
@@ -232,7 +232,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Width = 80
           end
           object colRouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090
@@ -246,7 +246,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 70
           end
           object colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1074#1099#1076#1072#1095#1080
@@ -264,7 +264,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             Properties.UseDisplayFormatWhenEditing = True
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 70
           end
           object colAmount_21201: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1085#1072' '#1050#1086#1084#1084#1072#1085#1076#1080#1088#1086#1074#1086#1095#1085#1099#1077
@@ -274,7 +274,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 90
           end
           object colIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
@@ -294,9 +294,6 @@ object PersonalSendCashForm: TPersonalSendCashForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0

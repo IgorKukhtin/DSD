@@ -3,7 +3,7 @@ object IncomeFuelForm: TIncomeFuelForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076' ('#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086')>'
   ClientHeight = 396
-  ClientWidth = 920
+  ClientWidth = 877
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object IncomeFuelForm: TIncomeFuelForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 920
+    Width = 877
     Height = 100
     Align = alTop
     BevelOuter = bvNone
@@ -32,7 +32,7 @@ object IncomeFuelForm: TIncomeFuelForm
       Enabled = False
       Properties.ReadOnly = True
       TabOrder = 0
-      Width = 95
+      Width = 112
     end
     object cxLabel1: TcxLabel
       Left = 8
@@ -40,20 +40,20 @@ object IncomeFuelForm: TIncomeFuelForm
       Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
     object edOperDate: TcxDateEdit
-      Left = 112
+      Left = 125
       Top = 23
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
-      Width = 108
+      Width = 100
     end
     object cxLabel2: TcxLabel
-      Left = 112
+      Left = 125
       Top = 5
       Caption = #1044#1072#1090#1072
     end
     object edFrom: TcxButtonEdit
-      Left = 227
+      Left = 230
       Top = 23
       Properties.Buttons = <
         item
@@ -64,7 +64,7 @@ object IncomeFuelForm: TIncomeFuelForm
       Width = 140
     end
     object edTo: TcxButtonEdit
-      Left = 374
+      Left = 375
       Top = 23
       Properties.Buttons = <
         item
@@ -75,44 +75,44 @@ object IncomeFuelForm: TIncomeFuelForm
       Width = 130
     end
     object cxLabel3: TcxLabel
-      Left = 227
+      Left = 230
       Top = 5
       Caption = #1054#1090' '#1082#1086#1075#1086' ('#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090')'
     end
     object cxLabel4: TcxLabel
-      Left = 374
+      Left = 375
       Top = 5
       Caption = #1050#1086#1084#1091' ('#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100')'
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 374
+      Left = 375
       Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 6
       Width = 130
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 512
+      Left = 510
       Top = 63
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
       TabOrder = 7
-      Width = 77
+      Width = 80
     end
     object cxLabel7: TcxLabel
-      Left = 512
+      Left = 510
       Top = 45
       Caption = '% '#1053#1044#1057
     end
     object cxLabel9: TcxLabel
-      Left = 598
+      Left = 595
       Top = 5
       Caption = #1053#1086#1084#1077#1088' '#1076#1086#1075#1086#1074#1086#1088#1072
     end
     object edContract: TcxButtonEdit
-      Left = 598
+      Left = 595
       Top = 23
       Enabled = False
       Properties.Buttons = <
@@ -121,15 +121,15 @@ object IncomeFuelForm: TIncomeFuelForm
           Kind = bkEllipsis
         end>
       TabOrder = 4
-      Width = 144
+      Width = 140
     end
     object cxLabel10: TcxLabel
-      Left = 512
+      Left = 510
       Top = 5
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKind: TcxButtonEdit
-      Left = 512
+      Left = 510
       Top = 23
       Enabled = False
       Properties.Buttons = <
@@ -138,15 +138,15 @@ object IncomeFuelForm: TIncomeFuelForm
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 77
+      Width = 80
     end
     object cxLabel12: TcxLabel
-      Left = 754
+      Left = 740
       Top = 45
       Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
     end
     object edDriver: TcxButtonEdit
-      Left = 754
+      Left = 740
       Top = 63
       Properties.Buttons = <
         item
@@ -157,7 +157,7 @@ object IncomeFuelForm: TIncomeFuelForm
       Width = 130
     end
     object edRoute: TcxButtonEdit
-      Left = 754
+      Left = 740
       Top = 23
       Properties.Buttons = <
         item
@@ -168,7 +168,7 @@ object IncomeFuelForm: TIncomeFuelForm
       Width = 130
     end
     object cxLabel5: TcxLabel
-      Left = 754
+      Left = 740
       Top = 5
       Caption = #1052#1072#1088#1096#1088#1091#1090
     end
@@ -178,7 +178,7 @@ object IncomeFuelForm: TIncomeFuelForm
       Caption = #8470' '#1095#1077#1082#1072
     end
     object edInvNumberPartner: TcxTextEdit
-      Left = 227
+      Left = 230
       Top = 63
       TabOrder = 20
       Width = 140
@@ -197,7 +197,7 @@ object IncomeFuelForm: TIncomeFuelForm
           Kind = bkEllipsis
         end>
       TabOrder = 22
-      Width = 95
+      Width = 112
     end
     object cxLabel11: TcxLabel
       Left = 595
@@ -205,7 +205,7 @@ object IncomeFuelForm: TIncomeFuelForm
       Caption = #1057#1082#1080#1076#1082#1072' '#1074' '#1094#1077#1085#1077', '#1075#1088#1085' '#1079#1072' 1'#1083'.'
     end
     object edChangePrice: TcxCurrencyEdit
-      Left = 598
+      Left = 595
       Top = 63
       Enabled = False
       Properties.Alignment.Horz = taRightJustify
@@ -213,18 +213,18 @@ object IncomeFuelForm: TIncomeFuelForm
       Properties.DecimalPlaces = 3
       Properties.DisplayFormat = ',0.###'
       TabOrder = 24
-      Width = 144
+      Width = 140
     end
     object edOperDatePartner: TcxDateEdit
-      Left = 112
+      Left = 125
       Top = 63
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 25
-      Width = 108
+      Width = 100
     end
     object cxLabel13: TcxLabel
-      Left = 112
+      Left = 125
       Top = 45
       Caption = #1044#1072#1090#1072' '#1079#1072#1087#1088#1072#1074#1082#1080
     end
@@ -232,14 +232,14 @@ object IncomeFuelForm: TIncomeFuelForm
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 126
-    Width = 920
+    Width = 877
     Height = 270
     Align = alClient
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 270
-    ClientRectRight = 920
+    ClientRectRight = 877
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -247,7 +247,7 @@ object IncomeFuelForm: TIncomeFuelForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 920
+        Width = 877
         Height = 246
         Align = alClient
         TabOrder = 0
@@ -388,6 +388,7 @@ object IncomeFuelForm: TIncomeFuelForm
           object colIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -405,7 +406,7 @@ object IncomeFuelForm: TIncomeFuelForm
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 920
+        Width = 877
         Height = 246
         Align = alClient
         TabOrder = 0

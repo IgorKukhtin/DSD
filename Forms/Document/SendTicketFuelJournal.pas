@@ -1,4 +1,4 @@
-unit SendJournal;
+unit SendTicketFuelJournal;
 
 interface
 
@@ -14,7 +14,7 @@ uses AncestorJournal, cxGraphics, cxControls, cxLookAndFeels,
   dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
-  TSendJournalForm = class(TAncestorJournalForm)
+  TSendTicketFuelJournalForm = class(TAncestorJournalForm)
     colFromName: TcxGridDBColumn;
     colToName: TcxGridDBColumn;
     colTotalCount: TcxGridDBColumn;
@@ -27,6 +27,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TSendJournalForm);
+  RegisterClass(TSendTicketFuelJournalForm);
 
 end.

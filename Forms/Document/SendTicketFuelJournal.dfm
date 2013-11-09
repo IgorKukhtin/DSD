@@ -1,5 +1,5 @@
-inherited SendJournalForm: TSendJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
+inherited SendTicketFuelJournalForm: TSendTicketFuelJournalForm
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' ('#1058#1072#1083#1086#1085#1099' '#1085#1072' '#1090#1086#1087#1083#1080#1074#1086')>'
   ClientHeight = 427
   ClientWidth = 733
   ExplicitWidth = 749
@@ -82,10 +82,10 @@ inherited SendJournalForm: TSendJournalForm
   end
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TSendForm'
+      FormName = 'TSendTicketFuelForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TSendForm'
+      FormName = 'TSendTicketFuelForm'
     end
   end
   inherited spSelect: TdsdStoredProc

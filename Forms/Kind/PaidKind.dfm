@@ -1,17 +1,12 @@
 inherited PaidKindForm: TPaidKindForm
-  ActiveControl = cxGrid
-  Caption = #1058#1080#1087#1099' '#1086#1087#1083#1072#1090
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1086#1088#1084#1099' '#1086#1087#1083#1072#1090'>'
+  ExplicitWidth = 591
+  ExplicitHeight = 343
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    ExplicitLeft = 0
-    ExplicitTop = 26
-    ExplicitWidth = 575
-    ExplicitHeight = 282
     inherited tsMain: TcxTabSheet
       inherited cxGrid: TcxGrid
-        ExplicitTop = 0
-        ExplicitHeight = 282
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -34,19 +29,19 @@ inherited PaidKindForm: TPaidKindForm
       Params = <
         item
           Name = 'Key'
-          Component = MainDataCDS
+          Value = Null
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
-          Component = MainDataCDS
+          Value = Null
           ComponentItem = 'Name'
           DataType = ftString
         end>
     end
   end
-  inherited spMainData: TdsdStoredProc
+  inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_PaidKind'
   end
   inherited BarManager: TdxBarManager

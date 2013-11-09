@@ -1,18 +1,18 @@
-inherited SendForm: TSendForm
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
-  ClientWidth = 851
-  ExplicitWidth = 867
+inherited SendTicketFuelForm: TSendTicketFuelForm
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' ('#1058#1072#1083#1086#1085#1099' '#1085#1072' '#1090#1086#1087#1083#1080#1074#1086')>'
+  ClientWidth = 701
+  ExplicitWidth = 717
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 851
-    ExplicitWidth = 851
-    ClientRectRight = 851
+    Width = 701
+    ExplicitWidth = 701
+    ClientRectRight = 701
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 851
+      ExplicitWidth = 701
       inherited cxGrid: TcxGrid
-        Width = 851
-        ExplicitWidth = 851
+        Width = 701
+        ExplicitWidth = 701
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -23,7 +23,7 @@ inherited SendForm: TSendForm
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 58
+            Width = 55
           end
           object colName: TcxGridDBColumn [1]
             Caption = #1058#1086#1074#1072#1088
@@ -32,50 +32,26 @@ inherited SendForm: TSendForm
             Options.Editing = False
             Width = 200
           end
-          object colGoodsKindName: TcxGridDBColumn [2]
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsKindName'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 100
+          object colFuelName: TcxGridDBColumn [2]
+            Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
+            DataBinding.FieldName = 'FuelName'
+            Width = 80
           end
-          object colPartionGoods: TcxGridDBColumn [3]
-            Caption = #1055#1072#1088#1090#1080#1103
-            DataBinding.FieldName = 'PartionGoods'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 120
-          end
-          object colAmount: TcxGridDBColumn [4]
+          object colAmount: TcxGridDBColumn [3]
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colHeadCount: TcxGridDBColumn [5]
-            Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
-            DataBinding.FieldName = 'HeadCount'
-            HeaderAlignmentHorz = taRightJustify
-            HeaderAlignmentVert = vaCenter
-          end
-          object colAssetName: TcxGridDBColumn [6]
-            Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Options.Editing = False
-            Width = 90
-          end
         end
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitTop = 0
-      ExplicitWidth = 851
-      ExplicitHeight = 0
+      ExplicitWidth = 701
       inherited cxGridEntry: TcxGrid
-        Width = 851
-        ExplicitWidth = 851
+        Width = 701
+        ExplicitWidth = 701
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -86,12 +62,12 @@ inherited SendForm: TSendForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 851
-    ExplicitWidth = 851
+    Width = 701
+    ExplicitWidth = 701
     object cxLabel3: TcxLabel
       Left = 380
       Top = 5
-      Caption = #1054#1090' '#1082#1086#1075#1086
+      Caption = #1054#1090' '#1082#1086#1075#1086' ('#1057#1086#1090#1088#1091#1076#1085#1080#1082')'
     end
     object edFrom: TcxButtonEdit
       Left = 380
@@ -107,7 +83,7 @@ inherited SendForm: TSendForm
     object cxLabel4: TcxLabel
       Left = 540
       Top = 5
-      Caption = #1050#1086#1084#1091
+      Caption = #1050#1086#1084#1091' ('#1057#1086#1090#1088#1091#1076#1085#1080#1082')'
     end
     object edTo: TcxButtonEdit
       Left = 540
@@ -123,7 +99,7 @@ inherited SendForm: TSendForm
   end
   inherited ActionList: TActionList
     inherited actNewDocument: TdsdInsertUpdateAction
-      FormName = 'TSendForm'
+      FormName = 'TSendTicketFuelForm'
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -238,20 +214,8 @@ inherited SendForm: TSendForm
         ParamType = ptInput
       end>
   end
-  inherited HeaderSaver: THeaderSaver
-    ControlList = <
-      item
-        Control = edOperDate
-      end
-      item
-        Control = edFrom
-      end
-      item
-        Control = edTo
-      end>
-  end
   inherited RefreshAddOn: TRefreshAddOn
-    FormName = 'SendJournalForm'
+    FormName = 'SendTicketFuelJournalForm'
     DataSet = 'MainDataCDS'
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
@@ -336,7 +300,7 @@ inherited SendForm: TSendForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 475
+    Left = 479
     Top = 24
   end
   object ToGuides: TdsdGuides

@@ -9,7 +9,9 @@ uses
   cxData, cxDataStorage, cxEdit, Data.DB, cxDBData, dsdAddOn, dxBarExtItems,
   dxBar, cxClasses, dsdDB, Datasnap.DBClient, dsdAction, Vcl.ActnList,
   cxPropertiesStore, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGrid;
+  cxGridTableView, cxGridDBTableView, cxGrid, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, cxPCdxBarPopupMenu,
+  dxSkinsdxBarPainter, cxPC;
 
 type
   TObjectDescForm = class(TAncestorEnumForm)

@@ -16,12 +16,22 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
               )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Goods());
+     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_Goods());
+     vbUserId := inSession;
 
-   RETURN QUERY 
-          SELECT 
+     RETURN QUERY 
+     WITH tmpUserTransport AS (SELECT ObjectLink_UserRole_User.ChildObjectId AS UserId
+                               FROM ObjectLink AS ObjectLink_UserRole_Role
+                                    JOIN ObjectLink AS ObjectLink_UserRole_User
+                                                    ON ObjectLink_UserRole_User.ObjectId = ObjectLink_UserRole_Role.ObjectId
+                                                   AND ObjectLink_UserRole_User.DescId = zc_ObjectLink_UserRole_User()
+                               WHERE ObjectLink_UserRole_Role.DescId = zc_ObjectLink_UserRole_Role() 
+                                 AND ObjectLink_UserRole_Role.ChildObjectId = zc_Enum_Role_Transport()
+                              )
+     SELECT 
            Object_Goods.Id             AS Id
          , Object_Goods.ObjectCode     AS Code
          , Object_Goods.ValueData      AS Name
@@ -48,7 +58,10 @@ BEGIN
          , ObjectBoolean_PartionSumm.ValueData  AS isPartionSumm 
          , Object_Goods.isErased       AS isErased
  
-    FROM Object AS Object_Goods
+    FROM (SELECT Object_Goods.* FROM ObjectLink AS ObjectLink_Goods_Fuel JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Fuel.ObjectId WHERE ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel() AND ObjectLink_Goods_Fuel.ChildObjectId > 0 AND vbUserId IN (SELECT UserId FROM tmpUserTransport)
+         UNION ALL
+          SELECT Object_Goods.* FROM Object AS Object_Goods WHERE Object_Goods.DescId = zc_Object_Goods() AND vbUserId NOT IN (SELECT UserId FROM tmpUserTransport)
+         ) AS Object_Goods
           LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                  ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
@@ -106,6 +119,7 @@ ALTER FUNCTION gpSelect_Object_Goods (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.11.13                                        * add tmpUserTransport
  29.10.13                                        * add Object_InfoMoney_View
  02.10.13                                        * add GoodsGroupId
  29.09.13                                        * add zc_ObjectLink_Goods_Fuel
@@ -117,4 +131,4 @@ ALTER FUNCTION gpSelect_Object_Goods (TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Goods('2')
+-- SELECT * FROM gpSelect_Object_Goods('9818')
