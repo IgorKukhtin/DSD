@@ -3,8 +3,8 @@
   ClientHeight = 271
   ClientWidth = 595
   AddOnFormData.isAlwaysRefresh = False
-  ExplicitWidth = 603
-  ExplicitHeight = 298
+  ExplicitWidth = 611
+  ExplicitHeight = 306
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -404,7 +404,7 @@
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
-    FormName = 'TUnitForm'
+    FormName = 'TObject_UnitForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

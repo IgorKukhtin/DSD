@@ -30,11 +30,11 @@ BEGIN
            , lfObject_Status.Code             AS StatusCode
            , lfObject_Status.Name             AS StatusName
 
-           , View_Personal.PersonalId
-           , View_Personal.PersonalName
+           , Object_Personal.Id               AS PersonalId
+           , Object_Personal.ValueData        AS PersonalName
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
-               LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId IN (SELECT MIN (Object_Personal_View.PersonalId) FROM Object_Personal_View WHERE PersonalCode = 2)
+               LEFT JOIN Object AS Object_Personal ON Object_Personal.Id IN (SELECT MIN (Object_Personal_View.PersonalId) FROM Object_Personal_View WHERE PersonalCode = 2)
        ;
      ELSE
      RETURN QUERY 
@@ -45,8 +45,8 @@ BEGIN
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
 
-           , View_Personal.PersonalId
-           , View_Personal.PersonalName
+           , Object_Personal.Id         AS PersonalId
+           , Object_Personal.ValueData  AS PersonalName
   
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -58,7 +58,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
                                          ON MovementLinkObject_Personal.MovementId = Movement.Id
                                         AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
-            LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = MovementLinkObject_Personal.ObjectId
+            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_PersonalSendCash();
@@ -75,6 +75,7 @@ ALTER FUNCTION gpGet_Movement_PersonalSendCash (Integer, TVarChar) OWNER TO post
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 09.11.13                                        * View_Personal -> Object_Personal
  23.10.13                                        * add NEXTVAL
  20.10.13                                        * CURRENT_TIMESTAMP -> CURRENT_DATE
  30.09.13                                        *

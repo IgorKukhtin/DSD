@@ -307,8 +307,8 @@ object ModelServiceForm: TModelServiceForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -446,6 +446,7 @@ object ModelServiceForm: TModelServiceForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -517,7 +518,7 @@ object ModelServiceForm: TModelServiceForm
     object UnitFromChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       Caption = 'UnitFromChoiceForm'
-      FormName = 'TUnitForm'
+      FormName = 'TObject_UnitForm'
       GuiParams = <
         item
           Name = 'Key'
@@ -580,7 +581,7 @@ object ModelServiceForm: TModelServiceForm
     object UnitFromChoiceFormMaster: TOpenChoiceForm
       Category = 'DSDLib'
       Caption = 'UnitFromChoiceFormMaster'
-      FormName = 'TUnitForm'
+      FormName = 'TObject_UnitForm'
       GuiParams = <
         item
           Name = 'Key'
@@ -598,7 +599,7 @@ object ModelServiceForm: TModelServiceForm
     object UnitFromChoiceFormChild: TOpenChoiceForm
       Category = 'DSDLib'
       Caption = 'UnitFromChoiceFormMasterTo'
-      FormName = 'TUnitForm'
+      FormName = 'TObject_UnitForm'
       GuiParams = <
         item
           Name = 'Key'

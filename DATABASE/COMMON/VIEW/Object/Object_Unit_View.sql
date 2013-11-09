@@ -5,6 +5,7 @@
 CREATE OR REPLACE VIEW Object_Unit_View AS 
        SELECT 
              Object_Unit.Id           AS Id
+           , Object_Unit.DescId
            , Object_Unit.ObjectCode   AS Code
            , Object_Unit.ValueData    AS Name
          
@@ -23,14 +24,6 @@ CREATE OR REPLACE VIEW Object_Unit_View AS
            , Object_Juridical.Id         AS JuridicalId
            , Object_Juridical.ObjectCode AS JuridicalCode
            , Object_Juridical.ValueData  AS JuridicalName
-         
-           , Object_AccountDirection.Id         AS AccountDirectionId
-           , Object_AccountDirection.ObjectCode AS AccountDirectionCode
-           , Object_AccountDirection.ValueData  AS AccountDirectionName
-         
-           , Object_ProfitLossDirection.Id         AS ProfitLossDirectionId
-           , Object_ProfitLossDirection.ObjectCode AS ProfitLossDirectionCode
-           , Object_ProfitLossDirection.ValueData  AS ProfitLossDirectionName
          
            , Object_Unit.isErased AS isErased
            , ObjectBoolean_isLeaf.ValueData AS isLeaf
@@ -60,10 +53,6 @@ CREATE OR REPLACE VIEW Object_Unit_View AS
                                AND ObjectLink_Unit_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()
            LEFT JOIN Object AS Object_AccountDirection ON Object_AccountDirection.Id = ObjectLink_Unit_AccountDirection.ChildObjectId
          
-           LEFT JOIN ObjectLink AS ObjectLink_Unit_ProfitLossDirection
-                                ON ObjectLink_Unit_ProfitLossDirection.ObjectId = Object_Unit.Id
-                               AND ObjectLink_Unit_ProfitLossDirection.DescId = zc_ObjectLink_Unit_ProfitLossDirection()
-           LEFT JOIN Object AS Object_ProfitLossDirection ON Object_ProfitLossDirection.Id = ObjectLink_Unit_ProfitLossDirection.ChildObjectId
            LEFT JOIN ObjectBoolean AS ObjectBoolean_isLeaf 
                                    ON ObjectBoolean_isLeaf.ObjectId = Object_Unit.Id
                                   AND ObjectBoolean_isLeaf.DescId = zc_ObjectBoolean_isLeaf()
@@ -71,3 +60,14 @@ CREATE OR REPLACE VIEW Object_Unit_View AS
 
 ALTER TABLE Object_Unit_View
   OWNER TO postgres;
+
+/*-------------------------------------------------------------------------------*/
+/*
+ »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
+               ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 09.11.13                                        * del AccountDirection
+ 09.11.13                                        * add DescId
+*/
+
+-- ÚÂÒÚ
+-- SELECT * FROM Object_Unit_View

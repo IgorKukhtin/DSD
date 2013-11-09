@@ -1,9 +1,10 @@
 -- View: Object_Personal_View
 
---DROP VIEW IF EXISTS Object_Personal_View;
+-- DROP VIEW IF EXISTS Object_Personal_View;
 
 CREATE OR REPLACE VIEW Object_Personal_View AS
   SELECT Object_Personal.Id                        AS PersonalId
+       , Object_Personal.DescId
        , ObjectLink_Personal_Member.ChildObjectId  AS MemberId
        , Object_Member.ObjectCode                  AS PersonalCode
        , Object_Member.ValueData                   AS PersonalName
@@ -60,6 +61,7 @@ ALTER TABLE Object_Personal_View  OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.11.13                                        * add DescId
  28.10.13                        *
  30.09.13                                        *
 */

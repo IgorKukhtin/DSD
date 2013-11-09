@@ -1168,32 +1168,10 @@ object PersonalSendCashForm: TPersonalSendCashForm
         Control = edInvNumber
       end
       item
-      end
-      item
         Control = edOperDate
       end
       item
-      end
-      item
         Control = edPersonal
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
-      end
-      item
       end>
     GetStoredProc = spGet
     Left = 306
@@ -1266,8 +1244,6 @@ object PersonalSendCashForm: TPersonalSendCashForm
     GuidesList = <
       item
         Guides = GuidesPersonal
-      end
-      item
       end>
     ActionItemList = <
       item

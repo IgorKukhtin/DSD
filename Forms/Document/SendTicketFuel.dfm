@@ -35,6 +35,7 @@ inherited SendTicketFuelForm: TSendTicketFuelForm
           object colFuelName: TcxGridDBColumn [2]
             Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
             DataBinding.FieldName = 'FuelName'
+            Options.Editing = False
             Width = 80
           end
           object colAmount: TcxGridDBColumn [3]
@@ -214,6 +215,27 @@ inherited SendTicketFuelForm: TSendTicketFuelForm
         ParamType = ptInput
       end>
   end
+  inherited GuidesFiller: TGuidesFiller
+    GuidesList = <
+      item
+        Guides = FromGuides
+      end
+      item
+        Guides = ToGuides
+      end>
+  end
+  inherited HeaderSaver: THeaderSaver
+    ControlList = <
+      item
+        Control = edOperDate
+      end
+      item
+        Control = edFrom
+      end
+      item
+        Control = edTo
+      end>
+  end
   inherited RefreshAddOn: TRefreshAddOn
     FormName = 'SendTicketFuelJournalForm'
     DataSet = 'MainDataCDS'
@@ -223,7 +245,7 @@ inherited SendTicketFuelForm: TSendTicketFuelForm
     Params = <
       item
         Name = 'ioId'
-        Value = Null
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
@@ -236,47 +258,47 @@ inherited SendTicketFuelForm: TSendTicketFuelForm
       end
       item
         Name = 'inGoodsId'
-        Value = Null
+        Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
       end
       item
         Name = 'inAmount'
-        Value = Null
+        Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inCount'
-        Value = Null
+        Component = MasterCDS
         ComponentItem = 'Count'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inHeadCount'
-        Value = Null
+        Component = MasterCDS
         ComponentItem = 'HeadCount'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inPartionGoods'
-        Value = Null
+        Component = MasterCDS
         ComponentItem = 'PartionGoods'
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inGoodsKindId'
-        Value = Null
+        Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
       end
       item
         Name = 'inAssetId'
-        Value = Null
+        Component = MasterCDS
         ComponentItem = 'AssetId'
         ParamType = ptInput
       end>

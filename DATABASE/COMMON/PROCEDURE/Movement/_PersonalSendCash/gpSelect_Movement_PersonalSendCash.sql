@@ -32,7 +32,7 @@ BEGIN
 
            , MovementFloat_TotalSumm.ValueData AS TotalSumm
                       
-           , View_Personal.PersonalName
+           , Object_Personal.ValueData AS PersonalName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -44,10 +44,10 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
                                          ON MovementLinkObject_Personal.MovementId = Movement.Id
                                         AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
-            LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = MovementLinkObject_Personal.ObjectId
+            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
 
       WHERE Movement.DescId = zc_Movement_PersonalSendCash()
-         AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
+        AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
   
 END;
 $BODY$
@@ -58,6 +58,7 @@ ALTER FUNCTION gpSelect_Movement_PersonalSendCash (TDateTime, TDateTime, TVarCha
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 09.11.13                                        * View_Personal -> Object_Personal
  23.10.13                                        * add zfConvert_StringToNumber
  30.09.13                                        *
 */

@@ -478,6 +478,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitTreeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitTreeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TObject_UnitForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TObject_UnitForm');
 end;
 
 {procedure TLoadFormTest.LoadUnitGroupFormTest;

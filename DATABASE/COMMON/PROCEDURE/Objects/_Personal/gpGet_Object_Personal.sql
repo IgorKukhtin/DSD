@@ -34,8 +34,8 @@ BEGIN
            , CAST (0 as Integer)   AS PersonalGroupId
            , CAST ('' as TVarChar) AS PersonalGroupName
 
-           , CAST (CURRENT_TIMESTAMP as TDateTime)   AS DateIn
-           , CAST (CURRENT_TIMESTAMP as TDateTime)   AS DateOut;
+           , CURRENT_DATE :: TDateTime AS DateIn
+           , CURRENT_DATE :: TDateTime AS DateOut;
    ELSE
      RETURN QUERY 
      SELECT 

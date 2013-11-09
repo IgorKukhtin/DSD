@@ -21,6 +21,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     inherited tsMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       TabVisible = True
+      ExplicitTop = 24
       ExplicitWidth = 782
       ExplicitHeight = 211
       inherited cxGrid: TcxGrid
@@ -71,12 +72,27 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
           OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object colDebetAccountGroupCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1044' '#1043#1088#1091#1087#1087#1072' '#1082#1086#1076
-            DataBinding.FieldName = 'DebetAccountGroupCode'
+          object colInvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'InvNumber'
             Visible = False
             HeaderAlignmentHorz = taCenter
-            Width = 40
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object colOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072
+            DataBinding.FieldName = 'OperDate'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object colAccountCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1089#1095#1077#1090#1072
+            DataBinding.FieldName = 'AccountCode'
+            HeaderAlignmentHorz = taCenter
+            Width = 60
           end
           object colDebetAccountGroupName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1044' '#1043#1088#1091#1087#1087#1072
@@ -85,13 +101,6 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
             HeaderAlignmentHorz = taCenter
             Width = 90
           end
-          object colDebetAccountDirectionCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1044' '#1053#1072#1087#1088#1072#1074#1083' '#1082#1086#1076
-            DataBinding.FieldName = 'DebetAccountDirectionCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            Width = 40
-          end
           object colDebetAccountDirectionName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1044' '#1053#1072#1087#1088#1072#1074#1083
             DataBinding.FieldName = 'DebetAccountDirectionName'
@@ -99,24 +108,11 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
             HeaderAlignmentHorz = taCenter
             Width = 90
           end
-          object colDebetAccountCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1044' '#1082#1086#1076
-            DataBinding.FieldName = 'DebetAccountCode'
-            HeaderAlignmentHorz = taCenter
-            Width = 40
-          end
           object colDebetAccountName: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1044
+            Caption = #1057#1095#1077#1090' '#1044#1077#1073#1077#1090
             DataBinding.FieldName = 'DebetAccountName'
             HeaderAlignmentHorz = taCenter
-            Width = 120
-          end
-          object colKreditAccountGroupCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1050' '#1043#1088#1091#1087#1087#1072' '#1082#1086#1076
-            DataBinding.FieldName = 'KreditAccountGroupCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            Width = 40
+            Width = 90
           end
           object colKreditAccountGroupName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1050' '#1043#1088#1091#1087#1087#1072
@@ -125,13 +121,6 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
             HeaderAlignmentHorz = taCenter
             Width = 80
           end
-          object colKreditAccountDirectionCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1050' '#1053#1072#1087#1088#1072#1074#1083' '#1082#1086#1076
-            DataBinding.FieldName = 'KreditAccountDirectionCode'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            Width = 40
-          end
           object colKreditAccountDirectionName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090' '#1050' '#1053#1072#1087#1088#1072#1074#1083
             DataBinding.FieldName = 'KreditAccountDirectionName'
@@ -139,28 +128,22 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
             HeaderAlignmentHorz = taCenter
             Width = 80
           end
-          object colKreditAccountCode: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1050' '#1082#1086#1076
-            DataBinding.FieldName = 'KreditAccountCode'
-            HeaderAlignmentHorz = taCenter
-            Width = 40
-          end
           object colKreditAccountName: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090' '#1050
+            Caption = #1057#1095#1077#1090' '#1050#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'KreditAccountName'
             HeaderAlignmentHorz = taCenter
-            Width = 120
+            Width = 90
           end
-          object colByObjectCode: TcxGridDBColumn
-            Caption = #1054#1073'.'#1082#1086#1076
-            DataBinding.FieldName = 'ByObjectCode'
+          object colDirectionObjectCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1086#1073'.'#1085#1072#1087#1088'.'
+            DataBinding.FieldName = 'DirectionObjectCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
             Width = 40
           end
-          object colByObjectName: TcxGridDBColumn
-            Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1074#1072#1085#1080#1077
-            DataBinding.FieldName = 'ByObjectName'
+          object colDirectionObjectName: TcxGridDBColumn
+            Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'DirectionObjectName'
             HeaderAlignmentHorz = taCenter
             Width = 80
           end
@@ -171,20 +154,23 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
             HeaderAlignmentHorz = taCenter
             Width = 80
           end
-          object colGoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1090#1086#1074'.'
-            DataBinding.FieldName = 'GoodsCode'
+          object colDestinationObjectCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1086#1073'.'#1085#1072#1079#1085'.'
+            DataBinding.FieldName = 'DestinationObjectCode'
+            Visible = False
             Width = 40
           end
-          object colGoodsName: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088
-            DataBinding.FieldName = 'GoodsName'
+          object colDestinationObjectName: TcxGridDBColumn
+            Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'DestinationObjectName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             Width = 80
           end
-          object colGoodsKindName_comlete: TcxGridDBColumn
+          object clenGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             Width = 60
           end
@@ -209,30 +195,20 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
           object colPrice_comlete: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
-            Width = 40
-          end
-          object colInfoMoneyCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1089#1090'. '#1085#1072#1079#1085#1072#1095'.'
-            DataBinding.FieldName = 'InfoMoneyCode'
+            Visible = False
             Width = 40
           end
           object colInfoMoneyName: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
+            Visible = False
             Width = 55
-          end
-          object colInfoMoneyCode_Detail: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1089#1090'. '#1085#1072#1079#1085#1072#1095'.'#1076#1077#1090'.'
-            DataBinding.FieldName = 'InfoMoneyCode_Detail'
-            Width = 40
           end
           object colInfoMoneyName_Detail: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' '#1076#1077#1090#1072#1083#1100#1085#1086
+            Caption = #1057#1090#1072#1090#1100#1103' '#1076#1077#1090#1072#1083#1100#1085#1086
             DataBinding.FieldName = 'InfoMoneyName_Detail'
+            Visible = False
             Width = 55
-          end
-          object colObjectCostId: TcxGridDBColumn
-            DataBinding.FieldName = 'ObjectCostId'
           end
         end
         object cxGridEntryLevel: TcxGridLevel
@@ -487,11 +463,11 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
   end
   inherited MasterDS: TDataSource
     Left = 40
-    Top = 150
+    Top = 176
   end
   inherited MasterCDS: TClientDataSet
     Left = 8
-    Top = 150
+    Top = 176
   end
   inherited spSelect: TdsdStoredProc
     Params = <
@@ -518,11 +494,11 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         ParamType = ptInput
       end>
     Left = 72
-    Top = 150
+    Top = 176
   end
   inherited BarManager: TdxBarManager
     Left = 104
-    Top = 149
+    Top = 175
     DockControlHeights = (
       0
       0
@@ -612,20 +588,20 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 318
-    Top = 143
+    Top = 169
   end
   object EntryCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 488
-    Top = 152
+    Left = 565
+    Top = 180
   end
   object EntryDS: TDataSource
     DataSet = EntryCDS
-    Left = 520
-    Top = 160
+    Left = 597
+    Top = 188
   end
-  object spSelectMovementContainerItem: TdsdStoredProc
+  object spSelectMIContainer: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItemContainer_Movement'
     DataSet = EntryCDS
     DataSets = <
@@ -639,8 +615,8 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 456
-    Top = 144
+    Left = 533
+    Top = 172
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -671,7 +647,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     PositionDataSet = 'ClientDataSet'
     Params = <>
     Left = 136
-    Top = 150
+    Top = 176
   end
   object spChangeStatus: TdsdStoredProc
     DataSets = <>
@@ -692,7 +668,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         ParamType = ptInput
       end>
     Left = 168
-    Top = 150
+    Top = 176
   end
   object spGet: TdsdStoredProc
     DataSets = <>
@@ -766,6 +742,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     GuidesList = <>
     ActionItemList = <
       item
+        Action = actInsertUpdateMovement
       end>
     Left = 232
     Top = 176
@@ -871,7 +848,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    Left = 555
-    Top = 178
+    Left = 632
+    Top = 206
   end
 end

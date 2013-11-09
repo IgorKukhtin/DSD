@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Send(
     IN inIsErased    Boolean      , -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
+RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, FuelCode Integer, FuelName TVarChar
              , Amount TFloat, HeadCount TFloat, Count TFloat
              , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar
              , AssetId Integer, AssetName TVarChar
@@ -17,21 +17,24 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
               )
 AS
 $BODY$
+  DECLARE vbUserId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Send());
-
-     -- inShowAll:= TRUE;
+     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Send());
+     vbUserId := inSession;
 
      IF inShowAll THEN 
 
      RETURN QUERY 
+       WITH tmpUserTransport AS (SELECT UserId FROM UserRole_View WHERE RoleId = zc_Enum_Role_Transport())
        SELECT
              MI_Master.Id
            , Goods.Id          AS GoodsId
            , Goods.GoodsCode
            , Goods.GoodsName
+           , Goods.FuelCode
+           , Goods.FuelName
            , MI_Master.Amount AS Amount
            , MI_Master.Count
            , MI_Master.HeadCount
@@ -44,11 +47,35 @@ BEGIN
        FROM (SELECT Object_Goods.Id 
                   , Object_Goods.ObjectCode  AS GoodsCode
                   , Object_Goods.ValueData   AS GoodsName
-                  , COALESCE(Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId  
+                  , Object_Fuel.ObjectCode   AS FuelCode
+                  , Object_Fuel.ValueData    AS FuelName
+                  , COALESCE (Object_GoodsByGoodsKind_View.GoodsKindId, 0) AS GoodsKindId  
                   , Object_GoodsByGoodsKind_View.GoodsKindName
-               FROM Object AS Object_Goods
-          LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
-              WHERE Object_Goods.DescId = zc_Object_Goods()) AS Goods
+             FROM Object AS Object_Goods
+                  LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = Object_Goods.Id
+                  LEFT JOIN ObjectLink AS ObjectLink_Goods_Fuel
+                                       ON ObjectLink_Goods_Fuel.ObjectId = Object_Goods.Id
+                                      AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
+                  LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = ObjectLink_Goods_Fuel.ChildObjectId
+             WHERE Object_Goods.DescId = zc_Object_Goods()
+               AND vbUserId NOT IN (SELECT UserId FROM tmpUserTransport)
+            UNION ALL
+             SELECT Object_Goods.Id 
+                  , Object_Goods.ObjectCode  AS GoodsCode
+                  , Object_Goods.ValueData   AS GoodsName
+                  , Object_Fuel.ObjectCode   AS FuelCode
+                  , Object_Fuel.ValueData    AS FuelName
+                  , 0 AS GoodsKindId  
+                  , '' :: TVarChar AS GoodsKindName
+             FROM ObjectLink AS ObjectLink_TicketFuel_Goods
+                  JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_TicketFuel_Goods.ChildObjectId
+                  LEFT JOIN ObjectLink AS ObjectLink_Goods_Fuel
+                                       ON ObjectLink_Goods_Fuel.ObjectId = Object_Goods.Id
+                                      AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
+                  LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = ObjectLink_Goods_Fuel.ChildObjectId
+             WHERE ObjectLink_TicketFuel_Goods.DescId = zc_ObjectLink_TicketFuel_Goods()
+               AND vbUserId IN (SELECT UserId FROM tmpUserTransport)
+            ) AS Goods
        FULL JOIN
             (SELECT MovementItem.Id
                   , MovementItem.ObjectId           AS GoodsId
@@ -92,6 +119,8 @@ BEGIN
            , Object_Goods.Id          AS GoodsId
            , Object_Goods.ObjectCode  AS GoodsCode
            , Object_Goods.ValueData   AS GoodsName
+           , Object_Fuel.ObjectCode   AS FuelCode
+           , Object_Fuel.ValueData    AS FuelName
            , MovementItem.Amount
            , MIFloat_Count.ValueData     AS Count
            , MIFloat_HeadCount.ValueData AS HeadCount
@@ -108,6 +137,10 @@ BEGIN
 
        FROM MovementItem
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Fuel ON ObjectLink_Goods_Fuel.ObjectId = MovementItem.ObjectId
+                                                         AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
+            LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = ObjectLink_Goods_Fuel.ChildObjectId
 
             LEFT JOIN MovementItemFloat AS MIFloat_Count
                                         ON MIFloat_Count.MovementItemId = MovementItem.Id
@@ -139,14 +172,14 @@ BEGIN
 
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.11.13                                        * add FuelName and tmpUserTransport
  30.10.13                       *            FULL JOIN
  29.10.13                       *            add GoodsKindId
  22.07.13         * add Count                              
@@ -156,5 +189,5 @@ ALTER FUNCTION gpSelect_MovementItem_Send (Integer, Boolean, Boolean, TVarChar) 
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_Send (inMovementId:= 25173, inShowAll:= TRUE, inSession:= '2')
--- SELECT * FROM gpSelect_MovementItem_Send (inMovementId:= 25173, inShowAll:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_Send (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= FALSE, inSession:= '9818')
+-- SELECT * FROM gpSelect_MovementItem_Send (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')

@@ -25,7 +25,7 @@ type
     ceStatus: TcxButtonEdit;
     EntryCDS: TClientDataSet;
     EntryDS: TDataSource;
-    spSelectMovementContainerItem: TdsdStoredProc;
+    spSelectMIContainer: TdsdStoredProc;
     FormParams: TdsdFormParams;
     StatusGuides: TdsdGuides;
     spChangeStatus: TdsdStoredProc;
@@ -39,6 +39,8 @@ type
     spInsertUpdateMIMaster: TdsdStoredProc;
     EntryViewAddOn: TdsdDBViewAddOn;
     colIsErased: TcxGridDBColumn;
+    colInvNumber: TcxGridDBColumn;
+    colOperDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

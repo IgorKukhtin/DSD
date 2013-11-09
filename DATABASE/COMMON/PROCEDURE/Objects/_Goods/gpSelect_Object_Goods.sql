@@ -16,98 +16,99 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
               )
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+  DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_Goods());
      vbUserId := inSession;
 
      RETURN QUERY 
-     WITH tmpUserTransport AS (SELECT ObjectLink_UserRole_User.ChildObjectId AS UserId
-                               FROM ObjectLink AS ObjectLink_UserRole_Role
-                                    JOIN ObjectLink AS ObjectLink_UserRole_User
-                                                    ON ObjectLink_UserRole_User.ObjectId = ObjectLink_UserRole_Role.ObjectId
-                                                   AND ObjectLink_UserRole_User.DescId = zc_ObjectLink_UserRole_User()
-                               WHERE ObjectLink_UserRole_Role.DescId = zc_ObjectLink_UserRole_Role() 
-                                 AND ObjectLink_UserRole_Role.ChildObjectId = zc_Enum_Role_Transport()
-                              )
-     SELECT 
-           Object_Goods.Id             AS Id
-         , Object_Goods.ObjectCode     AS Code
-         , Object_Goods.ValueData      AS Name
+       WITH tmpUserTransport AS (SELECT UserId FROM UserRole_View WHERE RoleId = zc_Enum_Role_Transport())
+       SELECT Object_Goods.Id             AS Id
+            , Object_Goods.ObjectCode     AS Code
+            , Object_Goods.ValueData      AS Name
 
-         , Object_GoodsGroup.Id         AS GoodsGroupId
-         , Object_GoodsGroup.ValueData  AS GoodsGroupName 
+            , Object_GoodsGroup.Id         AS GoodsGroupId
+            , Object_GoodsGroup.ValueData  AS GoodsGroupName 
 
-         , Object_Measure.ValueData     AS MeasureName
+            , Object_Measure.ValueData     AS MeasureName
 
-         , Object_TradeMark.ValueData  AS TradeMarkName
+            , Object_TradeMark.ValueData  AS TradeMarkName
 
-         , Object_InfoMoney_View.InfoMoneyCode
-         , Object_InfoMoney_View.InfoMoneyGroupName
-         , Object_InfoMoney_View.InfoMoneyDestinationName
-         , Object_InfoMoney_View.InfoMoneyName
-         , Object_InfoMoney_View.InfoMoneyId
+            , Object_InfoMoney_View.InfoMoneyCode
+            , Object_InfoMoney_View.InfoMoneyGroupName
+            , Object_InfoMoney_View.InfoMoneyDestinationName
+            , Object_InfoMoney_View.InfoMoneyName
+            , Object_InfoMoney_View.InfoMoneyId
 
-         , Object_Business.ValueData  AS BusinessName
+            , Object_Business.ValueData  AS BusinessName
 
-         , Object_Fuel.ValueData    AS FuelName
+            , Object_Fuel.ValueData    AS FuelName
 
-         , ObjectFloat_Weight.ValueData AS Weight
-         , ObjectBoolean_PartionCount.ValueData AS isPartionCount
-         , ObjectBoolean_PartionSumm.ValueData  AS isPartionSumm 
-         , Object_Goods.isErased       AS isErased
- 
-    FROM (SELECT Object_Goods.* FROM ObjectLink AS ObjectLink_Goods_Fuel JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Fuel.ObjectId WHERE ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel() AND ObjectLink_Goods_Fuel.ChildObjectId > 0 AND vbUserId IN (SELECT UserId FROM tmpUserTransport)
-         UNION ALL
-          SELECT Object_Goods.* FROM Object AS Object_Goods WHERE Object_Goods.DescId = zc_Object_Goods() AND vbUserId NOT IN (SELECT UserId FROM tmpUserTransport)
-         ) AS Object_Goods
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
-                 ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
-                AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
-          LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
-                                               AND Object_GoodsGroup.DescId = zc_Object_GoodsGroup()
+            , ObjectFloat_Weight.ValueData AS Weight
+            , ObjectBoolean_PartionCount.ValueData AS isPartionCount
+            , ObjectBoolean_PartionSumm.ValueData  AS isPartionSumm 
+            , Object_Goods.isErased       AS isErased
+
+       FROM (SELECT Object_Goods.*
+             FROM ObjectLink AS ObjectLink_Goods_Fuel
+                  JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Fuel.ObjectId
+                  LEFT JOIN ObjectLink AS ObjectLink_TicketFuel_Goods
+                                       ON ObjectLink_TicketFuel_Goods.ChildObjectId = Object_Goods.Id
+                                      AND ObjectLink_TicketFuel_Goods.DescId = zc_ObjectLink_TicketFuel_Goods()
+             WHERE ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
+               AND ObjectLink_Goods_Fuel.ChildObjectId > 0
+               AND ObjectLink_TicketFuel_Goods.ChildObjectId IS NULL
+               AND vbUserId IN (SELECT UserId FROM tmpUserTransport)
+            UNION ALL
+             SELECT Object_Goods.* FROM Object AS Object_Goods WHERE Object_Goods.DescId = zc_Object_Goods() AND vbUserId NOT IN (SELECT UserId FROM tmpUserTransport)
+            ) AS Object_Goods
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                                  ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                                 AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+             LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+                                                  AND Object_GoodsGroup.DescId = zc_Object_GoodsGroup()
                  
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
-                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-          LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-                                            AND Object_Measure.DescId = zc_Object_Measure()
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
+                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+                                               AND Object_Measure.DescId = zc_Object_Measure()
 
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
-                               ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id 
-                              AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
-          LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
-                                              AND Object_TradeMark.DescId = zc_Object_TradeMark()
-          
-          LEFT JOIN ObjectFloat AS ObjectFloat_Weight
-                                ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
-                               AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
-                
-          LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionCount
-                                  ON ObjectBoolean_PartionCount.ObjectId = Object_Goods.Id 
-                                 AND ObjectBoolean_PartionCount.DescId = zc_ObjectBoolean_Goods_PartionCount()
-          LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionSumm
-                                  ON ObjectBoolean_PartionSumm.ObjectId = Object_Goods.Id 
-                                 AND ObjectBoolean_PartionSumm.DescId = zc_ObjectBoolean_Goods_PartionSumm()
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
+                                  ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id 
+                                 AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
+             LEFT JOIN Object AS Object_TradeMark ON Object_TradeMark.Id = ObjectLink_Goods_TradeMark.ChildObjectId
+                                                 AND Object_TradeMark.DescId = zc_Object_TradeMark()
 
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                               ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
-                              AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+             LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                   ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
+                                  AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionCount
+                                     ON ObjectBoolean_PartionCount.ObjectId = Object_Goods.Id 
+                                    AND ObjectBoolean_PartionCount.DescId = zc_ObjectBoolean_Goods_PartionCount()
+             LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionSumm
+                                     ON ObjectBoolean_PartionSumm.ObjectId = Object_Goods.Id 
+                                    AND ObjectBoolean_PartionSumm.DescId = zc_ObjectBoolean_Goods_PartionSumm()
+
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                  ON ObjectLink_Goods_InfoMoney.ObjectId = Object_Goods.Id 
+                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
       
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_Business
-                 ON ObjectLink_Goods_Business.ObjectId = Object_Goods.Id 
-                AND ObjectLink_Goods_Business.DescId = zc_ObjectLink_Goods_Business()
-          LEFT JOIN Object AS Object_Business ON Object_Business.Id = ObjectLink_Goods_Business.ChildObjectId    
-                                             AND Object_Business.DescId = zc_Object_Business()
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Business
+                    ON ObjectLink_Goods_Business.ObjectId = Object_Goods.Id 
+                   AND ObjectLink_Goods_Business.DescId = zc_ObjectLink_Goods_Business()
+             LEFT JOIN Object AS Object_Business ON Object_Business.Id = ObjectLink_Goods_Business.ChildObjectId    
+                                                AND Object_Business.DescId = zc_Object_Business()
 
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_Fuel
-                               ON ObjectLink_Goods_Fuel.ObjectId = Object_Goods.Id 
-                              AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
-          LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = ObjectLink_Goods_Fuel.ChildObjectId    
-    WHERE Object_Goods.DescId = zc_Object_Goods()
-  ;
+             LEFT JOIN ObjectLink AS ObjectLink_Goods_Fuel
+                                  ON ObjectLink_Goods_Fuel.ObjectId = Object_Goods.Id 
+                                 AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
+             LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = ObjectLink_Goods_Fuel.ChildObjectId    
+       WHERE Object_Goods.DescId = zc_Object_Goods()
+      ;
   
 END;
 $BODY$
@@ -131,4 +132,5 @@ ALTER FUNCTION gpSelect_Object_Goods (TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Goods('9818')
+-- SELECT * FROM gpSelect_Object_Goods (inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Goods (inSession := '9818')

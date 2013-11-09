@@ -12,28 +12,32 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
               )
 AS
 $BODY$
+  DECLARE vbUserId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Send());
+     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Send());
+     vbUserId := inSession;
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
      RETURN QUERY 
+       WITH tmpUserTransport AS (SELECT UserId FROM UserRole_View WHERE RoleId = zc_Enum_Role_Transport())
        SELECT
              0 AS Id
-           , CAST (NEXTVAL ('Movement_Send_seq') AS TVarChar) AS InvNumber
-           , CAST (CURRENT_DATE AS TDateTime)      AS OperDate
-           , lfObject_Status.Code                  AS StatusCode
-           , lfObject_Status.Name                  AS StatusName
-                      
-           , 0::TFloat                   AS TotalCount
-          
-           , 0                           AS FromId
-           , ''::TVarChar                AS FromName
-           , 0                           AS ToId
-           , ''::TVarChar                AS ToName
-          FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status;
+           , NEXTVAL ('Movement_Send_seq') :: TVarChar AS InvNumber
+           , CURRENT_DATE :: TDateTime     AS OperDate
+           , lfObject_Status.Code          AS StatusCode
+           , lfObject_Status.Name          AS StatusName
+           , 0 :: TFloat                   AS TotalCount
+           , Object_Personal.Id            AS FromId
+           , Object_Personal.ValueData     AS FromName
+           , 0                             AS ToId
+           , '' :: TVarChar                AS ToName
+          FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
+               LEFT JOIN Object AS Object_Personal ON Object_Personal.Id IN (SELECT MIN (Object_Personal_View.PersonalId) FROM Object_Personal_View WHERE PersonalCode = 2)
+                                                  AND vbUserId IN (SELECT UserId FROM tmpUserTransport)
+       ;
      ELSE
 
      RETURN QUERY 
@@ -73,20 +77,20 @@ BEGIN
   
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpGet_Movement_Send (Integer, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.11.13                                        * add tmpUserTransport
  28.10.13                          * Дефолты для новых записей               
  15.07.13         * удалили колонки               
  09.07.13                                        * Красота
  08.07.13                                        * zc_MovementFloat_ChangePercent
  30.06.13                                        *
-
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Send (inMovementId:= 1, inSession:= '2')
+-- SELECT * FROM gpGet_Movement_Send (inMovementId:= 1, inSession:= '9818')

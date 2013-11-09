@@ -2629,7 +2629,7 @@
   object GuidesUnitForwarding: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnitForwarding
-    FormName = 'TUnitForm'
+    FormName = 'TObject_UnitForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

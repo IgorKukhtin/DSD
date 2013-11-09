@@ -1,13 +1,25 @@
--- View: userrole_view
+-- View: UserRole_View
 
--- DROP VIEW userrole_view;
+-- DROP VIEW IF EXISTS UserRole_View;
 
-CREATE OR REPLACE VIEW userrole_view AS 
- SELECT objectlink_userrole_role.childobjectid AS roleid, 
-    objectlink_userrole_user.childobjectid AS userid
-   FROM objectlink objectlink_userrole_role
-   JOIN objectlink objectlink_userrole_user ON objectlink_userrole_user.objectid = objectlink_userrole_role.objectid AND objectlink_userrole_user.descid = zc_objectlink_userrole_user()
-  WHERE objectlink_userrole_role.descid = zc_objectlink_userrole_role();
+CREATE OR REPLACE VIEW UserRole_View AS 
+   SELECT ObjectLink_UserRole_Role.ChildObjectId AS RoleId
+        , ObjectLink_UserRole_User.ChildObjectId AS UserId
+   FROM ObjectLink AS ObjectLink_UserRole_Role
+        JOIN ObjectLink AS ObjectLink_UserRole_User
+                        ON ObjectLink_UserRole_User.ObjectId = ObjectLink_UserRole_Role.ObjectId
+                       AND ObjectLink_UserRole_User.DescId = zc_ObjectLink_UserRole_User()
+   WHERE ObjectLink_UserRole_Role.DescId = zc_ObjectLink_UserRole_Role()
+  ;
 
-ALTER TABLE userrole_view
-  OWNER TO postgres;
+ALTER TABLE UserRole_View OWNER TO postgres;
+
+/*-------------------------------------------------------------------------------*/
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.11.13                                        *
+*/
+
+-- тест
+-- SELECT * FROM UserRole_View

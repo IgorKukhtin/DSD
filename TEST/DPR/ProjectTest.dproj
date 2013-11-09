@@ -455,8 +455,8 @@
 			<DCCReference Include="..\..\Forms\Goods.pas">
 				<Form>GoodsForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Units.pas">
-				<Form>UnitForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\Object_Unit.pas">
+				<Form>Object_UnitForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\JuridicalTree.pas">
 				<Form>JuridicalTreeForm</Form>
@@ -573,7 +573,7 @@
 			<DCCReference Include="..\..\SOURCE\MessagesUnit.pas">
 				<Form>MessagesForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\ObjectFrom_byIncomeFuel.pas">
+			<DCCReference Include="..\..\Forms\Guides\ObjectFrom_byIncomeFuel.pas">
 				<Form>From_byIncomeFuelForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\CardFuel.pas">
@@ -626,7 +626,7 @@
 				<Form>ModelServiceEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Object_StoragePlace.pas">
+			<DCCReference Include="..\..\Forms\Guides\Object_StoragePlace.pas">
 				<Form>Object_StoragePlace</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
@@ -740,6 +740,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\SendTicketFuelJournal.pas">
 				<Form>SendTicketFuelJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Units.pas">
+				<Form>UnitForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

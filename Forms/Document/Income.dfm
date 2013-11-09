@@ -1040,7 +1040,7 @@ object IncomeForm: TIncomeForm
   object dsdGuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
-    FormName = 'TUnitForm'
+    FormName = 'TObject_UnitForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

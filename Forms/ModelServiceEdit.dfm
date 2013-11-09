@@ -117,6 +117,7 @@
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
@@ -249,7 +250,7 @@
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnitName
-    FormName = 'TUnitForm'
+    FormName = 'TObject_UnitForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

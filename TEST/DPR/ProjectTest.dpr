@@ -175,7 +175,7 @@ uses
   PersonalServiceEdit in '..\..\Forms\PersonalServiceEdit.pas' {PersonalServiceEditForm},
   PersonalService in '..\..\Forms\PersonalService.pas' {PersonalServiceForm},
   Goods in '..\..\Forms\Goods.pas' {GoodsForm},
-  Units in '..\..\Forms\Units.pas' {UnitForm},
+  Object_Unit in '..\..\Forms\Guides\Object_Unit.pas' {Object_UnitForm},
   JuridicalTree in '..\..\Forms\JuridicalTree.pas' {JuridicalTreeForm},
   BankAccountTest in '..\SOURCE\Objects\All\BankAccountTest.pas',
   BusinessTest in '..\SOURCE\Objects\All\BusinessTest.pas',
@@ -221,7 +221,7 @@ uses
   CrossAddOnViewTestForm in '..\SOURCE\Component\CrossAddOnViewTestForm.pas' {CrossAddOnViewTest},
   Report_Account in '..\..\Forms\Report\Report_Account.pas' {Report_AccountForm},
   MessagesUnit in '..\..\SOURCE\MessagesUnit.pas' {MessagesForm},
-  ObjectFrom_byIncomeFuel in '..\..\Forms\ObjectFrom_byIncomeFuel.pas' {From_byIncomeFuelForm},
+  ObjectFrom_byIncomeFuel in '..\..\Forms\Guides\ObjectFrom_byIncomeFuel.pas' {From_byIncomeFuelForm},
   CardFuel in '..\..\Forms\CardFuel.pas' {CardFuelForm},
   TicketFuel in '..\..\Forms\TicketFuel.pas' {TicketFuelForm},
   TicketFuelEdit in '..\..\Forms\TicketFuelEdit.pas' {TicketFuelEditForm},
@@ -241,7 +241,7 @@ uses
   AboutBoxUnit in '..\..\SOURCE\AboutBoxUnit.pas' {AboutBox},
   UnilWin in '..\..\SOURCE\UnilWin.pas',
   ModelServiceEdit in '..\..\Forms\ModelServiceEdit.pas' {ModelServiceEditForm: TParentForm},
-  Object_StoragePlace in '..\..\Forms\Object_StoragePlace.pas' {Object_StoragePlace: TParentForm},
+  Object_StoragePlace in '..\..\Forms\Guides\Object_StoragePlace.pas' {Object_StoragePlace: TParentForm},
   Report_TransportHoursWork in '..\..\Forms\Report\Report_TransportHoursWork.pas' {Report_TransportHoursWorkForm: TParentForm},
   StaffListChoice in '..\..\Forms\StaffListChoice.pas' {StaffListChoiceForm: TParentForm},
   StaffList in '..\..\Forms\StaffList.pas' {StaffListForm: TParentForm},
@@ -266,7 +266,8 @@ uses
   Report_Goods in '..\..\Forms\Report\Report_Goods.pas' {Report_GoodsForm: TParentForm},
   Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm},
   SendTicketFuel in '..\..\Forms\Document\SendTicketFuel.pas' {SendTicketFuelForm: TParentForm},
-  SendTicketFuelJournal in '..\..\Forms\Document\SendTicketFuelJournal.pas' {SendTicketFuelJournalForm: TParentForm};
+  SendTicketFuelJournal in '..\..\Forms\Document\SendTicketFuelJournal.pas' {SendTicketFuelJournalForm: TParentForm},
+  Units in '..\..\Forms\Guides\Units.pas' {UnitForm: TParentForm};
 
 {$R *.RES}
 

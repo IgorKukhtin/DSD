@@ -24,12 +24,6 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Personal()());
    vbUserId := inSession;
    
-   --  Если код не установлен, определяем его как последний+1 
-   -- vbCode:=lfGet_ObjectCode (inCode, zc_Object_Personal());
-   
-   -- проверка уникальности <Код>
-   -- PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Personal(), vbCode);
-
 
    -- проверка
    IF COALESCE (inMemberId, 0) = 0
@@ -37,8 +31,8 @@ BEGIN
        RAISE EXCEPTION 'Ошибка. ФИО не выбрано.';
    END IF;
 
+   -- определяем параметры, т.к. значения должны быть синхронизированы с объектом <Физические лица>
    SELECT ObjectCode, ValueData INTO vbCode, vbName FROM Object WHERE Id = inMemberId;   
-
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Personal(), vbCode, vbName);
@@ -67,6 +61,7 @@ ALTER FUNCTION gpInsertUpdate_Object_Personal (Integer, Integer, Integer,Integer
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.11.13                                         * синхронизируем с объектом <Физические лица>
  28.10.13                                         * add RAISE...
  30.09.13                                         * del vbCode
  25.09.13         * add _PersonalGroup; remove _Juridical, _Business              

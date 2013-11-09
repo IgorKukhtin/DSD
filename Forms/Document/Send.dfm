@@ -70,9 +70,7 @@ inherited SendForm: TSendForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitTop = 0
       ExplicitWidth = 851
-      ExplicitHeight = 0
       inherited cxGridEntry: TcxGrid
         Width = 851
         ExplicitWidth = 851
@@ -238,6 +236,15 @@ inherited SendForm: TSendForm
         ParamType = ptInput
       end>
   end
+  inherited GuidesFiller: TGuidesFiller
+    GuidesList = <
+      item
+        Guides = FromGuides
+      end
+      item
+        Guides = ToGuides
+      end>
+  end
   inherited HeaderSaver: THeaderSaver
     ControlList = <
       item
@@ -259,7 +266,7 @@ inherited SendForm: TSendForm
     Params = <
       item
         Name = 'ioId'
-        Value = Null
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
@@ -272,47 +279,47 @@ inherited SendForm: TSendForm
       end
       item
         Name = 'inGoodsId'
-        Value = Null
+        Component = MasterCDS
         ComponentItem = 'GoodsId'
         ParamType = ptInput
       end
       item
         Name = 'inAmount'
-        Value = Null
+        Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inCount'
-        Value = Null
+        Component = MasterCDS
         ComponentItem = 'Count'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inHeadCount'
-        Value = Null
+        Component = MasterCDS
         ComponentItem = 'HeadCount'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inPartionGoods'
-        Value = Null
+        Component = MasterCDS
         ComponentItem = 'PartionGoods'
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inGoodsKindId'
-        Value = Null
+        Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
       end
       item
         Name = 'inAssetId'
-        Value = Null
+        Component = MasterCDS
         ComponentItem = 'AssetId'
         ParamType = ptInput
       end>

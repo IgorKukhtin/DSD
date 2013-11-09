@@ -19,11 +19,13 @@ object TransportJournalForm: TTransportJournalForm
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 0
+    Top = 26
     Width = 1276
     Height = 31
     Align = alTop
     TabOrder = 1
+    ExplicitLeft = -8
+    ExplicitTop = 32
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -322,6 +324,10 @@ object TransportJournalForm: TTransportJournalForm
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'bbReCompleteAll'
+        end
+        item
           Visible = True
           ItemName = 'bbBarStatic'
         end

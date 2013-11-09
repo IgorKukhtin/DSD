@@ -16,12 +16,12 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
               )
 AS
 $BODY$
+  DECLARE vbUserId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_IncomeFuel());
-
-     -- inShowAll:= TRUE;
+     vbUserId := inSession;
 
      IF inShowAll THEN 
 
@@ -44,6 +44,9 @@ BEGIN
        FROM ObjectLink AS ObjectLink_Goods_Fuel
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Fuel.ObjectId
             LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = ObjectLink_Goods_Fuel.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_TicketFuel_Goods
+                                 ON ObjectLink_TicketFuel_Goods.ChildObjectId = Object_Goods.Id
+                                AND ObjectLink_TicketFuel_Goods.DescId = zc_ObjectLink_TicketFuel_Goods()
             
             LEFT JOIN (SELECT MovementItem.ObjectId AS GoodsId
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -53,7 +56,8 @@ BEGIN
                       ) AS tmpMI ON tmpMI.GoodsId = ObjectLink_Goods_Fuel.ObjectId
 
        WHERE ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
-         AND ObjectLink_Goods_Fuel.ChildObjectId IS NOT NULL
+         AND ObjectLink_Goods_Fuel.ChildObjectId > 0
+         AND ObjectLink_TicketFuel_Goods.ChildObjectId IS NULL
          AND tmpMI.GoodsId IS NULL
 
       UNION ALL
@@ -152,6 +156,7 @@ ALTER FUNCTION gpSelect_MovementItem_IncomeFuel (Integer, Boolean, Boolean, TVar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.11.13                                        * add zc_ObjectLink_TicketFuel_Goods
  30.10.13                                        * add MIContainer_Count.isActive = TRUE
  04.10.13                                        * add inIsErased
  04.10.13                                        * add FuelName

@@ -392,6 +392,10 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'bbReCompleteAll'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item

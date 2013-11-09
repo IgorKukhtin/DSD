@@ -234,7 +234,7 @@
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
-    FormName = 'TUnitForm'
+    FormName = 'TObject_UnitForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

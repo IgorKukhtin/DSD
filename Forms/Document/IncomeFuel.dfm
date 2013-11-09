@@ -617,7 +617,7 @@ object IncomeFuelForm: TIncomeFuelForm
         ParamType = ptInputOutput
       end>
     Left = 216
-    Top = 296
+    Top = 327
   end
   object spSelectMI: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_IncomeFuel'
@@ -649,7 +649,7 @@ object IncomeFuelForm: TIncomeFuelForm
         ParamType = ptInput
       end>
     Left = 108
-    Top = 232
+    Top = 272
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -669,7 +669,7 @@ object IncomeFuelForm: TIncomeFuelForm
     ShowShortCutInHint = True
     UseSystemFont = True
     Left = 19
-    Top = 177
+    Top = 217
     DockControlHeights = (
       0
       0
@@ -794,12 +794,12 @@ object IncomeFuelForm: TIncomeFuelForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 78
-    Top = 179
+    Top = 219
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 49
-    Top = 177
+    Top = 217
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
       StoredProc = spInsertUpdateMovement
@@ -964,13 +964,13 @@ object IncomeFuelForm: TIncomeFuelForm
   object MasterDS: TDataSource
     DataSet = MasterCDS
     Left = 48
-    Top = 232
+    Top = 272
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 16
-    Top = 232
+    Top = 272
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -1025,7 +1025,7 @@ object IncomeFuelForm: TIncomeFuelForm
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
     Left = 216
-    Top = 248
+    Top = 279
     object N1: TMenuItem
       Action = actRefresh
     end
@@ -1046,18 +1046,18 @@ object IncomeFuelForm: TIncomeFuelForm
         ParamType = ptInput
       end>
     Left = 80
-    Top = 288
+    Top = 328
   end
   object EntryCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 17
-    Top = 288
+    Top = 328
   end
   object EntryDS: TDataSource
     DataSet = EntryCDS
     Left = 48
-    Top = 288
+    Top = 328
   end
   object spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementItem_IncomeFuel'
@@ -1111,7 +1111,7 @@ object IncomeFuelForm: TIncomeFuelForm
         DataType = ftFloat
       end>
     Left = 78
-    Top = 232
+    Top = 272
   end
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'
@@ -1119,7 +1119,7 @@ object IncomeFuelForm: TIncomeFuelForm
     DataSet = MasterCDS
     BCDToCurrency = False
     Left = 137
-    Top = 232
+    Top = 272
   end
   object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1133,11 +1133,11 @@ object IncomeFuelForm: TIncomeFuelForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     Left = 280
-    Top = 280
+    Top = 311
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 108
-    Top = 178
+    Top = 218
   end
   object EntryViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1147,7 +1147,7 @@ object IncomeFuelForm: TIncomeFuelForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     Left = 352
-    Top = 264
+    Top = 295
   end
   object spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_IncomeFuel'
@@ -1253,7 +1253,7 @@ object IncomeFuelForm: TIncomeFuelForm
         ParamType = ptInput
       end>
     Left = 378
-    Top = 189
+    Top = 232
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -1280,6 +1280,9 @@ object IncomeFuelForm: TIncomeFuelForm
         Control = edVATPercent
       end
       item
+        Control = edChangePrice
+      end
+      item
         Control = edFrom
       end
       item
@@ -1299,7 +1302,7 @@ object IncomeFuelForm: TIncomeFuelForm
       end>
     GetStoredProc = spGet
     Left = 296
-    Top = 207
+    Top = 252
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_IncomeFuel'
@@ -1449,7 +1452,7 @@ object IncomeFuelForm: TIncomeFuelForm
         DataType = ftString
       end>
     Left = 216
-    Top = 176
+    Top = 221
   end
   object RefreshAddOn: TRefreshAddOn
     FormName = 'IncomeJournalForm'
@@ -1458,7 +1461,7 @@ object IncomeFuelForm: TIncomeFuelForm
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'
     Left = 408
-    Top = 248
+    Top = 279
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
@@ -1482,7 +1485,7 @@ object IncomeFuelForm: TIncomeFuelForm
         Action = actInsertUpdateMovement
       end>
     Left = 248
-    Top = 192
+    Top = 237
   end
   object GuidesContract: TdsdGuides
     KeyField = 'Id'
@@ -1592,7 +1595,7 @@ object IncomeFuelForm: TIncomeFuelForm
     IdParam.ComponentItem = 'Id'
     StoredProcName = 'gpUpdate_Status_Income'
     Left = 432
-    Top = 168
+    Top = 211
   end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'
@@ -1612,7 +1615,7 @@ object IncomeFuelForm: TIncomeFuelForm
         DataType = ftBoolean
       end>
     Left = 510
-    Top = 192
+    Top = 212
   end
   object spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetUnErased_MovementItem'
@@ -1632,6 +1635,6 @@ object IncomeFuelForm: TIncomeFuelForm
         DataType = ftBoolean
       end>
     Left = 574
-    Top = 208
+    Top = 228
   end
 end
