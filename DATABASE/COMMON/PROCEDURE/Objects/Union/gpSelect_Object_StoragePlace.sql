@@ -27,13 +27,26 @@ BEGIN
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Unit_View.DescId
      WHERE vbUserId NOT IN (SELECT UserId FROM tmpUserTransport)
     UNION ALL
-     SELECT Object_Personal_View.PersonalId AS Id       
-          , Object_Personal_View.PersonalCode     
-          , Object_Personal_View.PersonalName
+     SELECT View_Personal.PersonalId AS Id       
+          , View_Personal.PersonalCode     
+          , View_Personal.PersonalName
           , ObjectDesc.ItemName
-          , Object_Personal_View.isErased
-     FROM Object_Personal_View
-          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Personal_View.DescId
+          , View_Personal.isErased
+     FROM Object_Personal_View AS View_Personal
+          LEFT JOIN ObjectDesc ON ObjectDesc.Id = View_Personal.DescId
+     WHERE vbUserId NOT IN (SELECT UserId FROM tmpUserTransport)
+    UNION ALL
+     SELECT View_Personal.PersonalId AS Id       
+          , View_Personal.PersonalCode     
+          , View_Personal.PersonalName
+          , ObjectDesc.ItemName
+          , View_Personal.isErased
+     FROM lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection
+          JOIN Object_Personal_View AS View_Personal ON View_Personal.UnitId = lfObject_Unit_byProfitLossDirection.UnitId
+          LEFT JOIN ObjectDesc ON ObjectDesc.Id = View_Personal.DescId
+     WHERE vbUserId IN (SELECT UserId FROM tmpUserTransport)
+       AND (lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId = zc_Enum_ProfitDirection_40100() -- Содержание транспорта
+         OR lfObject_Unit_byProfitLossDirection.UnitCode IN (23020)) -- Отдел логистики
     ;
 
 END;

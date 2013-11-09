@@ -347,7 +347,7 @@ object Report_FuelForm: TReport_FuelForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 41395d
+      EditValue = 41579d
       Properties.ShowTime = False
       TabOrder = 0
       Width = 85
@@ -355,7 +355,7 @@ object Report_FuelForm: TReport_FuelForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41395d
+      EditValue = 41608d
       Properties.ShowTime = False
       TabOrder = 1
       Width = 85
@@ -443,8 +443,8 @@ object Report_FuelForm: TReport_FuelForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -552,13 +552,13 @@ object Report_FuelForm: TReport_FuelForm
       Params = <
         item
           Name = 'PeriodStart'
-          Value = 41395d
+          Value = 41579d
           Component = deStart
           DataType = ftDateTime
         end
         item
           Name = 'PeriodEnd'
-          Value = 41395d
+          Value = 41608d
           Component = deEnd
           DataType = ftDateTime
         end
@@ -591,14 +591,14 @@ object Report_FuelForm: TReport_FuelForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41395d
+        Value = 41579d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41395d
+        Value = 41608d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

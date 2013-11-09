@@ -419,7 +419,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     object deStart: TcxDateEdit
       Left = 16
       Top = 8
-      EditValue = 41395d
+      EditValue = 41579d
       Properties.ShowTime = False
       TabOrder = 2
       Width = 121
@@ -427,7 +427,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     object deEnd: TcxDateEdit
       Left = 176
       Top = 8
-      EditValue = 41395d
+      EditValue = 41608d
       Properties.ShowTime = False
       TabOrder = 4
       Width = 121
@@ -515,8 +515,8 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -595,6 +595,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actExportToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -613,14 +614,14 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = 41395d
+          Value = 41579d
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
         end
         item
           Name = 'EndDate'
-          Value = 41395d
+          Value = 41608d
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
@@ -694,14 +695,14 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41395d
+        Value = 41579d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41395d
+        Value = 41608d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

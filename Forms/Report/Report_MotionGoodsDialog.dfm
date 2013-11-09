@@ -39,7 +39,7 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
   object deEnd: TcxDateEdit
     Left = 176
     Top = 24
-    EditValue = 41395d
+    EditValue = 41608d
     Properties.ShowTime = False
     TabOrder = 2
     Width = 121
@@ -47,7 +47,7 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
   object deStart: TcxDateEdit
     Left = 16
     Top = 24
-    EditValue = 41395d
+    EditValue = 41579d
     Properties.ShowTime = False
     TabOrder = 3
     Width = 121
@@ -153,14 +153,14 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
     Params = <
       item
         Name = 'StartDate'
-        Value = 41395d
+        Value = 41579d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'EndDate'
-        Value = 41395d
+        Value = 41608d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

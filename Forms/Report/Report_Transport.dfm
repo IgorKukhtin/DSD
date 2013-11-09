@@ -466,7 +466,7 @@ object Report_TransportForm: TReport_TransportForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 41395d
+      EditValue = 41579d
       Properties.ShowTime = False
       TabOrder = 0
       Width = 85
@@ -474,7 +474,7 @@ object Report_TransportForm: TReport_TransportForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41395d
+      EditValue = 41608d
       Properties.ShowTime = False
       TabOrder = 1
       Width = 85
@@ -725,14 +725,14 @@ object Report_TransportForm: TReport_TransportForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41395d
+        Value = 41579d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41395d
+        Value = 41608d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
