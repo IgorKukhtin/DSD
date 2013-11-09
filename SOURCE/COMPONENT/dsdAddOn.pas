@@ -68,6 +68,7 @@ type
   // 3. Обработка признака isErased
   TdsdDBViewAddOn = class(TCustomDBControlAddOn)
   private
+    FDataSource: TDataSource;
     FBackGroundStyle: TcxStyle;
     FView: TcxGridTableView;
     FonExit: TNotifyEvent;
@@ -77,6 +78,10 @@ type
     FGridEditKeyEvent: TcxGridEditKeyEvent;
     FOnGetContentStyleEvent: TcxGridGetCellStyleEvent;
     FErasedStyle: TcxStyle;
+    FBeforeOpen: TDataSetNotifyEvent;
+    FAfterOpen: TDataSetNotifyEvent;
+    procedure OnBeforeOpen(ADataSet: TDataSet);
+    procedure OnAfterOpen(ADataSet: TDataSet);
     procedure ActionOnlyEditingCellOnEnter;
     procedure GridEditKeyEvent(Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem;
                                 AEdit: TcxCustomEdit; var Key: Word; Shift: TShiftState);
@@ -477,6 +482,24 @@ begin
   FErasedStyle.TextColor := clRed;
 end;
 
+procedure TdsdDBViewAddOn.OnAfterOpen(ADataSet: TDataSet);
+begin
+  if Assigned(Self.FView) then
+     if Assigned(Self.FView.Control) then
+        TcxGrid(Self.FView.Control).EndUpdate;
+  if Assigned(FAfterOpen) then
+     FAfterOpen(ADataSet);
+end;
+
+procedure TdsdDBViewAddOn.OnBeforeOpen(ADataSet: TDataSet);
+begin
+  if Assigned(FBeforeOpen) then
+     FBeforeOpen(ADataSet);
+  if Assigned(Self.FView) then
+     if Assigned(Self.FView.Control) then
+        TcxGrid(Self.FView.Control).BeginUpdate;
+end;
+
 procedure TdsdDBViewAddOn.OnColumnHeaderClick(Sender: TcxGridTableView;
   AColumn: TcxGridColumn);
 begin
@@ -760,7 +783,11 @@ begin
        if Assigned(TcxDBDataController(FView.DataController).DataSource.DataSet) then begin
           FAfterInsert := TcxDBDataController(FView.DataController).DataSource.DataSet.AfterInsert;
           TcxDBDataController(FView.DataController).DataSource.DataSet.AfterInsert := OnAfterInsert;
-       end;
+          FBeforeOpen := TcxDBDataController(FView.DataController).DataSource.DataSet.BeforeOpen;
+          TcxDBDataController(FView.DataController).DataSource.DataSet.BeforeOpen := OnBeforeOpen;
+          FAfterOpen := TcxDBDataController(FView.DataController).DataSource.DataSet.AfterOpen;
+          TcxDBDataController(FView.DataController).DataSource.DataSet.AfterOpen := OnAfterOpen;
+     end;
   end;
 end;
 
@@ -799,6 +826,7 @@ var
   BarManager: TdxBarManager;
   FormName: string;
 begin
+exit;
   if gc_isSetDefault then
      exit;
   if Owner is TParentForm then
@@ -813,8 +841,8 @@ begin
       for I := 0 to ChildNodes.Count - 1 do begin
         if ChildNodes[i].NodeName = 'cxGridView' then begin
            GridView := Owner.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxCustomGridView;
-           if Assigned(GridView) then
-              GridView.RestoreFromStream(TStringStream.Create(gfStrXmlToStr(XMLToAnsi(ChildNodes[i].GetAttribute('data')))));
+//           if Assigned(GridView) then
+  //            GridView.RestoreFromStream(TStringStream.Create(gfStrXmlToStr(XMLToAnsi(ChildNodes[i].GetAttribute('data')))));
         end;
         if ChildNodes[i].NodeName = 'cxTreeList' then begin
            TreeList := Owner.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxDBTreeList;

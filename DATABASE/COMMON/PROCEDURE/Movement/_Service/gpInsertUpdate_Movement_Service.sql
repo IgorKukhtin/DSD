@@ -33,7 +33,7 @@ BEGIN
      -- сохранили связь с <Юр. лицо>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), ioId, inJuridicalId);
      -- сохранили связь с <Главное юр. лицо>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_MainJuridical(), ioId, inMainJuridicalId);
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_JuridicalBasis(), ioId, inMainJuridicalId);
 
      -- сохранили связь с <Бизнес>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Business(), ioId, inBusinessId);

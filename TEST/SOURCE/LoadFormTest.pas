@@ -71,6 +71,7 @@ type
     procedure LoadSendOnPriceFormTest;
     procedure LoadSaleFormTest;
     procedure LoadSheetWorkTimeFormTest;
+    procedure LoadServiceDocumentFormTest;
     procedure LoadServiceFormTest;
     procedure LoadTransportFormTest;
     procedure LoadTradeMarkFormTest;
@@ -235,6 +236,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSendOnPriceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPriceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendOnPriceJournalForm');
+end;
+
+procedure TLoadFormTest.LoadServiceDocumentFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TServiceJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TServiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TServiceForm');
 end;
 
 procedure TLoadFormTest.LoadServiceFormTest;

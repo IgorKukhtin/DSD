@@ -67,7 +67,7 @@ BEGIN
             
             LEFT JOIN MovementLinkObject AS MovementLinkObject_MainJuridical
                                          ON MovementLinkObject_MainJuridical.MovementId = Movement.Id
-                                        AND MovementLinkObject_MainJuridical.DescId = zc_MovementLinkObject_MainJuridical()
+                                        AND MovementLinkObject_MainJuridical.DescId = zc_MovementLinkObject_JuridicalBasis()
             LEFT JOIN Object AS Object_MainJuridical ON Object_MainJuridical.Id = MovementLinkObject_MainJuridical.ObjectId
             
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Business

@@ -26,41 +26,6 @@ inherited SendJournalForm: TSendJournalForm
       Styles.Selection = nil
       Styles.Footer = nil
       Styles.Header = nil
-      object colStatus: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1091#1089
-        DataBinding.FieldName = 'StatusCode'
-        PropertiesClassName = 'TcxImageComboBoxProperties'
-        Properties.Images = dmMain.ImageList
-        Properties.Items = <
-          item
-            Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
-            ImageIndex = 11
-            Value = 1
-          end
-          item
-            Description = #1055#1088#1086#1074#1077#1076#1077#1085
-            ImageIndex = 12
-            Value = 2
-          end
-          item
-            Description = #1059#1076#1072#1083#1077#1085
-            ImageIndex = 13
-            Value = 3
-          end>
-        HeaderAlignmentVert = vaCenter
-      end
-      object colInvNumber: TcxGridDBColumn
-        Caption = #1053#1086#1084#1077#1088
-        DataBinding.FieldName = 'InvNumber'
-        HeaderAlignmentVert = vaCenter
-        Width = 75
-      end
-      object colOperDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072
-        DataBinding.FieldName = 'OperDate'
-        HeaderAlignmentVert = vaCenter
-        Width = 47
-      end
       object colFromName: TcxGridDBColumn
         Caption = #1054#1090' '#1082#1086#1075#1086
         DataBinding.FieldName = 'FromName'

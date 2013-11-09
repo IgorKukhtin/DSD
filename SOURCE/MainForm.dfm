@@ -557,6 +557,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbIncomeCash'
+        end
+        item
+          Visible = True
+          ItemName = 'bbJuridicalService'
         end>
     end
     object bbIncomeCash: TdxBarButton
@@ -885,6 +889,10 @@ object MainForm: TMainForm
     end
     object bbProtocol: TdxBarButton
       Action = actProtocol
+      Category = 0
+    end
+    object bbJuridicalService: TdxBarButton
+      Action = actService
       Category = 0
     end
   end
@@ -1546,6 +1554,13 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actService: TdsdOpenForm
+      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
+      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1091#1089#1083#1091#1075
+      FormName = 'TServiceJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object cxLocalizer: TcxLocalizer
     StorageType = lstResource
@@ -1572,7 +1587,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.12'
+    Version = '4.14'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

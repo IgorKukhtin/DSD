@@ -10,20 +10,17 @@ inherited AncestorJournalForm: TAncestorJournalForm
     Top = 57
     Width = 717
     Height = 272
-    ExplicitLeft = 0
     ExplicitTop = 57
     ExplicitWidth = 717
     ExplicitHeight = 272
     ClientRectBottom = 272
     ClientRectRight = 717
     inherited tsMain: TcxTabSheet
-      ExplicitTop = 0
       ExplicitWidth = 717
       ExplicitHeight = 272
       inherited cxGrid: TcxGrid
         Width = 717
         Height = 272
-        ExplicitTop = 0
         ExplicitWidth = 717
         ExplicitHeight = 272
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -31,6 +28,41 @@ inherited AncestorJournalForm: TAncestorJournalForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object colStatus: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1091#1089
+            DataBinding.FieldName = 'StatusCode'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1053#1077' '#1087#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 11
+                Value = 1
+              end
+              item
+                Description = #1055#1088#1086#1074#1077#1076#1077#1085
+                ImageIndex = 12
+                Value = 2
+              end
+              item
+                Description = #1059#1076#1072#1083#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end>
+            HeaderAlignmentVert = vaCenter
+          end
+          object colInvNumber: TcxGridDBColumn
+            Caption = #1053#1086#1084#1077#1088
+            DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentVert = vaCenter
+            Width = 75
+          end
+          object colOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072
+            DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentVert = vaCenter
+            Width = 47
+          end
         end
       end
     end
@@ -151,7 +183,8 @@ inherited AncestorJournalForm: TAncestorJournalForm
       end
       item
         Name = 'inEndDate'
-        Value = Null
+        Value = 41639d
+        Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
       end>
@@ -223,6 +256,10 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Action = actSetErased
       Category = 0
     end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    Left = 504
+    Top = 208
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart

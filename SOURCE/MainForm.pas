@@ -214,6 +214,8 @@ type
     bbReport_TransportHoursWork: TdxBarButton;
     actProtocol: TdsdOpenForm;
     bbProtocol: TdxBarButton;
+    actService: TdsdOpenForm;
+    bbJuridicalService: TdxBarButton;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
     procedure FormCreate(Sender: TObject);
