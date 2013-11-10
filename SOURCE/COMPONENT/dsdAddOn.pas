@@ -826,7 +826,6 @@ var
   BarManager: TdxBarManager;
   FormName: string;
 begin
-exit;
   if gc_isSetDefault then
      exit;
   if Owner is TParentForm then

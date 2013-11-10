@@ -77,11 +77,11 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-			<VerInfo_Build>3</VerInfo_Build>
+			<VerInfo_Build>2</VerInfo_Build>
 			<Debugger_DebugSourcePath>D:\WORK\ExtLib\Components\FastReport 4.12\Source\ExportPack\;$(Debugger_DebugSourcePath)</Debugger_DebugSourcePath>
 			<VerInfo_MinorVer>2</VerInfo_MinorVer>
-			<VerInfo_Release>9</VerInfo_Release>
-			<VerInfo_Keys>CompanyName=;FileDescription=Управленческий учет - &quot;Project&quot;;FileVersion=1.2.9.3;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.1;Comments=</VerInfo_Keys>
+			<VerInfo_Release>10</VerInfo_Release>
+			<VerInfo_Keys>CompanyName=;FileDescription=Управленческий учет - &quot;Project&quot;;FileVersion=1.2.10.2;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.1;Comments=</VerInfo_Keys>
 			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
 			<VerInfo_Locale>1033</VerInfo_Locale>
 			<DCC_DcuOutput>..\DCU</DCC_DcuOutput>

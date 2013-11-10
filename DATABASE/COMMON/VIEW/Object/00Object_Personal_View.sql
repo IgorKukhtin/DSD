@@ -1,6 +1,6 @@
 -- View: Object_Personal_View
 
--- DROP VIEW IF EXISTS Object_Personal_View;
+DROP VIEW IF EXISTS Object_Personal_View;
 
 CREATE OR REPLACE VIEW Object_Personal_View AS
   SELECT Object_Personal.Id                        AS PersonalId
@@ -55,7 +55,6 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
 
 
 ALTER TABLE Object_Personal_View  OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------*/
 /*

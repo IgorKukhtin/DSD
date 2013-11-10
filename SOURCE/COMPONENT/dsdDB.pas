@@ -670,6 +670,8 @@ begin
           (Component as TcxDateEdit).Date := FValue
         else
           (Component as TcxDateEdit).Date := gfXSStrToDate(FValue); // convert to TDateTime
+     if Component is TBooleanStoredProcAction then
+        (Component as TBooleanStoredProcAction).Value := Value;
      if Component is TCustomGuides then
         if LowerCase(ComponentItem) = 'textvalue' then begin
            (Component as TCustomGuides).TextValue := FValue
