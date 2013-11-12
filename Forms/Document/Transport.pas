@@ -187,7 +187,7 @@ type
     clincAmountSumm: TcxGridDBColumn;
     clincAmountSummTotal: TcxGridDBColumn;
     InsertRecordIncome: TInsertRecord;
-    ObjectFrom_byIncomeFuelChoiceForm: TOpenChoiceForm;
+    SourceFuel_ObjectChoiceForm: TOpenChoiceForm;
     bbAddIncome: TdxBarButton;
     actUpdateIncomeDS: TdsdUpdateDataSet;
     ceStatus: TcxButtonEdit;

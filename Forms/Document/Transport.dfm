@@ -892,7 +892,7 @@
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = ObjectFrom_byIncomeFuelChoiceForm
+                Action = SourceFuel_ObjectChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -1804,7 +1804,7 @@
       Category = 'DSDLib'
       TabSheet = cxTabSheetIncome
       View = cxGridIncomeDBTableView
-      Action = ObjectFrom_byIncomeFuelChoiceForm
+      Action = SourceFuel_ObjectChoiceForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1088#1080#1093#1086#1076' ('#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086')>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1088#1080#1093#1086#1076' ('#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086')>'
       ShortCut = 45
@@ -1841,10 +1841,10 @@
       isSetErased = False
       DataSource = IncomeDS
     end
-    object ObjectFrom_byIncomeFuelChoiceForm: TOpenChoiceForm
+    object SourceFuel_ObjectChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       Caption = 'ObjectFrom_byIncomeFuelChoiceForm'
-      FormName = 'TObjectFrom_byIncomeFuelForm'
+      FormName = 'TSourceFuel_ObjectForm'
       GuiParams = <
         item
           Name = 'Key'
@@ -1941,7 +1941,7 @@
     object GoodsChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       Caption = 'GoodsChoiceForm'
-      FormName = 'TGoodsForm'
+      FormName = 'TGoods_ObjectForm'
       GuiParams = <
         item
           Name = 'Key'
@@ -2629,7 +2629,7 @@
   object GuidesUnitForwarding: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnitForwarding
-    FormName = 'TObject_UnitForm'
+    FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

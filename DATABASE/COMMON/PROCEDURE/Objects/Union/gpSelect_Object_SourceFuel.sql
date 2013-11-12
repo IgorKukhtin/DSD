@@ -1,8 +1,9 @@
--- Function: gpSelect_ObjectFrom_byIncomeFuel()
+-- Function: gpSelect_Object_SourceFuel()
 
 DROP FUNCTION IF EXISTS gpSelect_ObjectFrom_byIncomeFuel (TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_SourceFuel (TDateTime, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_ObjectFrom_byIncomeFuel(
+CREATE OR REPLACE FUNCTION gpSelect_Object_SourceFuel(
     IN inOperDate          TDateTime  , -- дата на которую показывается договор
     IN inSession           TVarChar     -- сессия пользователя
 )
@@ -164,15 +165,16 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_ObjectFrom_byIncomeFuel (TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_SourceFuel (TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.11.13                                        * rename to gpSelect_Object_SourceFuel
  20.10.13                                        * union
  14.10.13                                        *
 */
 
 -- тест
--- SELECT * FROM gpSelect_ObjectFrom_byIncomeFuel (inOperDate := CURRENT_DATE, inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_SourceFuel (inOperDate := CURRENT_DATE, inSession := zfCalc_UserAdmin())

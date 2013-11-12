@@ -225,7 +225,7 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
-    FormName = 'TGoodsForm'
+    FormName = 'TGoods_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

@@ -518,7 +518,7 @@ object ModelServiceForm: TModelServiceForm
     object UnitFromChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       Caption = 'UnitFromChoiceForm'
-      FormName = 'TObject_UnitForm'
+      FormName = 'TUnit_ObjectForm'
       GuiParams = <
         item
           Name = 'Key'
@@ -581,7 +581,7 @@ object ModelServiceForm: TModelServiceForm
     object UnitFromChoiceFormMaster: TOpenChoiceForm
       Category = 'DSDLib'
       Caption = 'UnitFromChoiceFormMaster'
-      FormName = 'TObject_UnitForm'
+      FormName = 'TUnit_ObjectForm'
       GuiParams = <
         item
           Name = 'Key'
@@ -599,7 +599,7 @@ object ModelServiceForm: TModelServiceForm
     object UnitFromChoiceFormChild: TOpenChoiceForm
       Category = 'DSDLib'
       Caption = 'UnitFromChoiceFormMasterTo'
-      FormName = 'TObject_UnitForm'
+      FormName = 'TUnit_ObjectForm'
       GuiParams = <
         item
           Name = 'Key'
@@ -660,7 +660,7 @@ object ModelServiceForm: TModelServiceForm
     object GoodsFromChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       Caption = 'GoodsFromChoiceForm'
-      FormName = 'TGoodsForm'
+      FormName = 'TGoods_ObjectForm'
       GuiParams = <
         item
           Name = 'key'
@@ -678,7 +678,7 @@ object ModelServiceForm: TModelServiceForm
     object GoodsToChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       Caption = 'GoodsToChoiceForm'
-      FormName = 'TGoodsForm'
+      FormName = 'TGoods_ObjectForm'
       GuiParams = <
         item
           Name = 'Key'

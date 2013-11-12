@@ -70,7 +70,9 @@ inherited SendForm: TSendForm
       end
     end
     inherited tsEntry: TcxTabSheet
+      ExplicitTop = 24
       ExplicitWidth = 851
+      ExplicitHeight = 211
       inherited cxGridEntry: TcxGrid
         Width = 851
         ExplicitWidth = 851
@@ -86,6 +88,9 @@ inherited SendForm: TSendForm
   inherited DataPanel: TPanel
     Width = 851
     ExplicitWidth = 851
+    inherited ceStatus: TcxButtonEdit
+      ExplicitHeight = 22
+    end
     object cxLabel3: TcxLabel
       Left = 380
       Top = 5
@@ -327,7 +332,7 @@ inherited SendForm: TSendForm
   object FromGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
-    FormName = 'TObject_StoragePlace'
+    FormName = 'TStoragePlace_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -349,7 +354,7 @@ inherited SendForm: TSendForm
   object ToGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
-    FormName = 'TObject_StoragePlace'
+    FormName = 'TStoragePlace_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

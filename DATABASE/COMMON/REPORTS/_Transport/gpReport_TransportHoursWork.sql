@@ -1,4 +1,4 @@
- -- Function: gpReport_TransportHoursWork()
+-- Function: gpReport_TransportHoursWork()
 
 -- DROP FUNCTION IF EXISTS gpReport_MovementTransport (TDateTime, TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_TransportHoursWork (TDateTime, TDateTime, Integer, TVarChar);
@@ -30,7 +30,7 @@ $BODY$BEGIN
                               )
 
         SELECT 
-	          View_PersonalDriver.PersonalName AS PersonalDriverName
+	      View_PersonalDriver.PersonalName AS PersonalDriverName
 
             , Object_Route.ValueData  AS RouteName
 
@@ -38,26 +38,39 @@ $BODY$BEGIN
 
             , Object_RouteKindFreight.ValueData AS RouteKindFreightName
 
-            , CAST (tmpMI.Weight AS TFloat) AS Weight
+            , (CASE WHEN tmpMovementAll.DescId_Personal = zc_MovementLinkObject_PersonalDriver() THEN tmpMI.Weight ELSE 0 END) :: TFloat AS Weight
             
-            , CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat) AS HoursWork
+            , (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0)) :: TFloat AS HoursWork
             , MovementFloat_HoursAdd.ValueData      AS HoursAdd
 
-           , zfConvert_StringToNumber (tmpMovement.InvNumber) AS InvNumber
-           , tmpMovement.OperDate
+            , zfConvert_StringToNumber (tmpMovementAll.InvNumber) AS InvNumber
+            , tmpMovementAll.OperDate
 
-        FROM tmpMovement
-             LEFT JOIN (SELECT MIN(MovementItem.Id) AS MovementItemId
-                             , SUM(MIFloat_Weight.ValueData) AS Weight
+        FROM (SELECT tmpMovement.Id, tmpMovement.OperDate, tmpMovement.InvNumber, MovementLinkObject_PersonalDriver.DescId AS DescId_Personal, MovementLinkObject_PersonalDriver.ObjectId AS PersonalId
+              FROM tmpMovement
+                   LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver ON MovementLinkObject_PersonalDriver.MovementId = tmpMovement.Id
+                                                                                    AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
+                   -- JOIN tmpPersonal ON tmpPersonal.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
+             UNION ALL
+              SELECT tmpMovement.Id, tmpMovement.OperDate, tmpMovement.InvNumber, MovementLinkObject_PersonalDriverMore.DescId AS DescId_Personal, MovementLinkObject_PersonalDriverMore.ObjectId AS PersonalId
+              FROM tmpMovement
+                   JOIN MovementLinkObject AS MovementLinkObject_PersonalDriverMore ON MovementLinkObject_PersonalDriverMore.MovementId = tmpMovement.Id
+                                                                                   AND MovementLinkObject_PersonalDriverMore.DescId = zc_MovementLinkObject_PersonalDriverMore()
+                                                                                   AND MovementLinkObject_PersonalDriverMore.ObjectId > 0
+                   -- JOIN tmpPersonal ON tmpPersonal.PersonalId = MovementLinkObject_PersonalDriverMore.ObjectId
+             ) AS tmpMovementAll
+
+             LEFT JOIN (SELECT MIN (MovementItem.Id) AS MovementItemId
+                             , SUM (MIFloat_Weight.ValueData) AS Weight
                              , MovementItem.MovementId
                         FROM tmpMovement
                              JOIN MovementItem ON MovementItem.MovementId = tmpMovement.Id
                                               AND MovementItem.DescId = zc_MI_Master()
                                               AND MovementItem.isErased = FALSE
-                            LEFT JOIN MovementItemFloat AS MIFloat_Weight ON MIFloat_Weight.MovementItemId = MovementItem.Id
-                                                                         AND MIFloat_Weight.DescId = zc_MIFloat_Weight()
+                             LEFT JOIN MovementItemFloat AS MIFloat_Weight ON MIFloat_Weight.MovementItemId = MovementItem.Id
+                                                                          AND MIFloat_Weight.DescId = zc_MIFloat_Weight()
                         GROUP BY MovementItem.MovementId
-                        ) AS tmpMI ON tmpMI.MovementId = tmpMovement.Id 
+                        ) AS tmpMI ON tmpMI.MovementId = tmpMovementAll.Id 
 
               LEFT JOIN MovementItem AS MI ON MI.Id = tmpMI.MovementItemId
               LEFT JOIN Object AS Object_Route ON Object_Route.Id = MI.ObjectId      
@@ -70,16 +83,13 @@ $BODY$BEGIN
                                                                                AND MILinkObject_RouteKindFreight.DescId = zc_MILinkObject_RouteKindFreight()
               LEFT JOIN Object AS Object_RouteKindFreight ON Object_RouteKindFreight.Id = MILinkObject_RouteKindFreight.ObjectId
               
-              LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver ON MovementLinkObject_PersonalDriver.MovementId = tmpMovement.Id
-                                                                               AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
-              JOIN tmpPersonal ON tmpPersonal.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
 
-              LEFT JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
+              LEFT JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = tmpMovementAll.PersonalId
               
-              LEFT JOIN MovementFloat AS MovementFloat_HoursWork ON MovementFloat_HoursWork.MovementId =  tmpMovement.Id
+              LEFT JOIN MovementFloat AS MovementFloat_HoursWork ON MovementFloat_HoursWork.MovementId =  tmpMovementAll.Id
                                                                 AND MovementFloat_HoursWork.DescId = zc_MovementFloat_HoursWork()
 
-              LEFT JOIN MovementFloat AS MovementFloat_HoursAdd ON MovementFloat_HoursAdd.MovementId =  tmpMovement.Id
+              LEFT JOIN MovementFloat AS MovementFloat_HoursAdd ON MovementFloat_HoursAdd.MovementId =  tmpMovementAll.Id
                                                                AND MovementFloat_HoursAdd.DescId = zc_MovementFloat_HoursAdd()
 ;
 
@@ -93,6 +103,7 @@ ALTER FUNCTION gpReport_TransportHoursWork (TDateTime, TDateTime, Integer, TVarC
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 12.11.13                                        * add zc_MovementLinkObject_PersonalDriverMore
  27.10.13         *
 */
 

@@ -367,7 +367,7 @@ object StaffListEditForm: TStaffListEditForm
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
-    FormName = 'TObject_UnitForm'
+    FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

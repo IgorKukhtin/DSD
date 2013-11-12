@@ -10,7 +10,6 @@ inherited Report_GoodsForm: TReport_GoodsForm
     Width = 754
     Height = 284
     TabOrder = 3
-    ExplicitTop = 57
     ExplicitWidth = 754
     ExplicitHeight = 284
     ClientRectBottom = 284
@@ -150,9 +149,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
     end
   end
   inherited Panel: TPanel
-    Top = 26
     Width = 754
-    ExplicitTop = 40
     ExplicitWidth = 754
     inherited deStart: TcxDateEdit
       EditValue = 41579d
@@ -237,7 +234,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
-    FormName = 'TGoodsForm'
+    FormName = 'TGoods_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

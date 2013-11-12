@@ -151,13 +151,13 @@
 			<DCCReference Include="..\..\Forms\PartnerEdit.pas">
 				<Form>PartnerEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\GoodsEdit.pas">
+			<DCCReference Include="..\..\Forms\Guides\GoodsEdit.pas">
 				<Form>GoodsEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\GoodsTree.pas">
+			<DCCReference Include="..\..\Forms\Guides\GoodsTree.pas">
 				<Form>GoodsTreeForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\UnitEdit.pas">
+			<DCCReference Include="..\..\Forms\Guides\UnitEdit.pas">
 				<Form>UnitEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\MeasureEdit.pas">
@@ -221,7 +221,7 @@
 				<Form>JuridicalForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdDB.pas"/>
-			<DCCReference Include="..\..\Forms\UnitTree.pas">
+			<DCCReference Include="..\..\Forms\Guides\UnitTree.pas">
 				<Form>UnitTreeForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\dbMovementItemTest.pas"/>
@@ -452,11 +452,11 @@
 			<DCCReference Include="..\..\Forms\PersonalService.pas">
 				<Form>PersonalServiceForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Goods.pas">
-				<Form>GoodsForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\Goods_Object.pas">
+				<Form>Goods_ObjectForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Object_Unit.pas">
-				<Form>Object_UnitForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\Unit_Object.pas">
+				<Form>Unit_ObjectForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\JuridicalTree.pas">
 				<Form>JuridicalTreeForm</Form>
@@ -573,8 +573,8 @@
 			<DCCReference Include="..\..\SOURCE\MessagesUnit.pas">
 				<Form>MessagesForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\ObjectFrom_byIncomeFuel.pas">
-				<Form>From_byIncomeFuelForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\SourceFuel_Object.pas">
+				<Form>SourceFuel_ObjectForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\CardFuel.pas">
 				<Form>CardFuelForm</Form>
@@ -626,8 +626,8 @@
 				<Form>ModelServiceEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Object_StoragePlace.pas">
-				<Form>Object_StoragePlace</Form>
+			<DCCReference Include="..\..\Forms\Guides\StoragePlace_Object.pas">
+				<Form>StoragePlace_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_TransportHoursWork.pas">
@@ -744,6 +744,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Units.pas">
 				<Form>UnitForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Goods.pas">
+				<Form>GoodsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

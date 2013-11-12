@@ -411,7 +411,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
-    FormName = 'TObject_UnitForm'
+    FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

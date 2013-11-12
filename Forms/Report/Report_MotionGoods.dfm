@@ -837,7 +837,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
-    FormName = 'TGoodsForm'
+    FormName = 'TGoods_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

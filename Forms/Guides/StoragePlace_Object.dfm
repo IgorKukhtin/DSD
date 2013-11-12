@@ -1,9 +1,9 @@
-object PriceListGoodsItemForm: TPriceListGoodsItemForm
+object StoragePlace_ObjectForm: TStoragePlace_ObjectForm
   Left = 0
   Top = 0
-  Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1077' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1072
-  ClientHeight = 398
-  ClientWidth = 497
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1052#1077#1089#1090#1072' '#1093#1088#1072#1085#1077#1085#1080#1103'>'
+  ClientHeight = 395
+  ClientWidth = 584
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,111 +12,87 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  AddOnFormData.isAlwaysRefresh = False
+  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 63
-    Width = 497
-    Height = 335
+    Top = 26
+    Width = 584
+    Height = 369
     Align = alClient
     TabOrder = 0
-    LookAndFeel.NativeStyle = True
-    LookAndFeel.SkinName = 'UserSkin'
+    LookAndFeel.Kind = lfStandard
+    LookAndFeel.NativeStyle = False
+    LookAndFeel.SkinName = ''
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
+      DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
+      OptionsBehavior.IncSearch = True
+      OptionsBehavior.IncSearchItem = clName
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
-      OptionsView.HeaderHeight = 40
+      OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clStartDate: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1089' '
-        DataBinding.FieldName = 'StartDate'
-        HeaderAlignmentVert = vaCenter
-        Width = 78
-      end
-      object clEndDate: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1087#1086
-        DataBinding.FieldName = 'EndDate'
-        HeaderAlignmentVert = vaCenter
-      end
-      object clPrice: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072
-        DataBinding.FieldName = 'ValuePrice'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+      object clCode: TcxGridDBColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
+        Width = 50
+      end
+      object clName: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'Name'
+        HeaderAlignmentVert = vaCenter
+        Width = 200
+      end
+      object clItemName: TcxGridDBColumn
+        Caption = #1069#1083#1077#1084#1077#1085#1090
+        DataBinding.FieldName = 'ItemName'
+        Width = 80
+      end
+      object clErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 63
       end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
     end
   end
-  object Panel: TPanel
-    Left = 0
-    Top = 26
-    Width = 497
-    Height = 37
-    Align = alTop
-    BevelOuter = bvNone
-    TabOrder = 1
-    object cxLabel1: TcxLabel
-      Left = 4
-      Top = 9
-      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090':'
-    end
-    object edPriceList: TcxButtonEdit
-      Left = 71
-      Top = 9
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      TabOrder = 1
-      Width = 182
-    end
-    object cxLabel4: TcxLabel
-      Left = 268
-      Top = 9
-      Caption = #1058#1086#1074#1072#1088':'
-    end
-    object edGoods: TcxButtonEdit
-      Left = 308
-      Top = 9
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      TabOrder = 3
-      Width = 182
-    end
-  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 40
-    Top = 104
+    Left = 48
+    Top = 96
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 24
-    Top = 144
+    Left = 40
+    Top = 152
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -130,8 +106,8 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 344
-    Top = 128
+    Left = 280
+    Top = 96
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -150,8 +126,8 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 224
-    Top = 128
+    Left = 160
+    Top = 96
     DockControlHeights = (
       0
       0
@@ -164,10 +140,10 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
       DockedLeft = 0
       DockedTop = 0
       DockingStyle = dsTop
-      FloatLeft = 416
-      FloatTop = 259
-      FloatClientWidth = 51
-      FloatClientHeight = 59
+      FloatLeft = 671
+      FloatTop = 8
+      FloatClientWidth = 0
+      FloatClientHeight = 0
       ItemLinks = <
         item
           Visible = True
@@ -175,9 +151,16 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         end
         item
           Visible = True
-          ItemName = 'bbToExcel'
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoiceGuides'
         end>
-      NotDocking = [dsLeft]
       OneOnRow = True
       Row = 0
       UseOwnFont = False
@@ -188,21 +171,25 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
       Action = actRefresh
       Category = 0
     end
-    object bbToExcel: TdxBarButton
+    object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
-      Caption = '       '
+      Caption = '     '
       Category = 0
-      Hint = '       '
+      Hint = '     '
       Visible = ivAlways
+    end
+    object bbChoiceGuides: TdxBarButton
+      Action = dsdChoiceGuides
+      Category = 0
     end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 304
-    Top = 112
+    Left = 280
+    Top = 152
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -216,6 +203,26 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object dsdChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      Params = <
+        item
+          Name = 'Key'
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          DataType = ftString
+        end
+        item
+          Name = 'TextValue'
+          Component = ClientDataSet
+          ComponentItem = 'Name'
+          DataType = ftString
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ImageIndex = 7
+      DataSource = DataSource
+    end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       Grid = cxGrid
@@ -226,88 +233,49 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_ObjectHistory_PriceListGoodsItem'
+    StoredProcName = 'gpSelect_Object_StoragePlace'
     DataSet = ClientDataSet
     DataSets = <
       item
         DataSet = ClientDataSet
       end>
-    Params = <
-      item
-        Name = 'inPriceListId'
-        Value = ''
-        Component = PriceListGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inGoodsId'
-        Value = ''
-        Component = GoodsGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end>
-    Left = 144
-    Top = 104
+    Params = <>
+    Left = 40
+    Top = 208
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 160
+    Top = 152
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
-    OnDblClickActionList = <>
-    ActionItemList = <>
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end>
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        ShortCut = 13
+      end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    Left = 184
-    Top = 240
-  end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 288
-    Top = 200
-  end
-  object PriceListGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edPriceList
-    FormName = 'TPriceListForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <>
-    Left = 136
-  end
-  object GoodsGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edGoods
-    FormName = 'TGoods_ObjectForm'
-    PositionDataSet = 'GridDataSet'
-    Params = <>
-    Left = 344
+    Left = 160
+    Top = 216
   end
   object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'PriceListId'
-        Value = ''
-        Component = PriceListGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PriceListName'
-        Value = ''
-        Component = PriceListGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'GoodsId'
-        Value = ''
-        Component = GoodsGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'GoodsName'
-        Value = ''
-        Component = GoodsGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
+        Name = 'inOperDate'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInput
       end>
-    Left = 264
+    Left = 168
+    Top = 272
   end
 end
