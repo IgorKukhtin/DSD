@@ -19,13 +19,13 @@ BEGIN
            , _tmpObject_Unit.UnitCode
            , _tmpObject_Unit.UnitName
           
-           , lfObject_ProfitLossDirection.ProfitLossGroupId
-           , lfObject_ProfitLossDirection.ProfitLossGroupCode
-           , lfObject_ProfitLossDirection.ProfitLossGroupName
+           , View_ProfitLossDirection.ProfitLossGroupId
+           , View_ProfitLossDirection.ProfitLossGroupCode
+           , View_ProfitLossDirection.ProfitLossGroupName
 
-           , lfObject_ProfitLossDirection.ProfitLossDirectionId
-           , lfObject_ProfitLossDirection.ProfitLossDirectionCode
-           , lfObject_ProfitLossDirection.ProfitLossDirectionName
+           , View_ProfitLossDirection.ProfitLossDirectionId
+           , View_ProfitLossDirection.ProfitLossDirectionCode
+           , View_ProfitLossDirection.ProfitLossDirectionName
 
            , Object_Unit_parent0.Id         AS UnitId_parent0
            , Object_Unit_parent0.ObjectCode AS UnitCode_parent0
@@ -48,7 +48,7 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Unit_ProfitLossDirection -- "Аналитика ОПиУ - направление" установлена !!!только!!! у следующего после самого верхнего уровня 
                                  ON ObjectLink_Unit_ProfitLossDirection.ObjectId = ObjectLink_Unit_Child.ObjectId
                                 AND ObjectLink_Unit_ProfitLossDirection.DescId = zc_ObjectLink_Unit_ProfitLossDirection()
-            LEFT JOIN lfSelect_Object_ProfitLossDirection() AS lfObject_ProfitLossDirection ON lfObject_ProfitLossDirection.ProfitLossDirectionId = ObjectLink_Unit_ProfitLossDirection.ChildObjectId
+            LEFT JOIN Object_ProfitLossDirection_View AS View_ProfitLossDirection ON View_ProfitLossDirection.ProfitLossDirectionId = ObjectLink_Unit_ProfitLossDirection.ChildObjectId
 
                        -- это все подразделения где ParentId_main - следующий уровень после самого верхнего
             LEFT JOIN (SELECT CASE WHEN ObjectLink_Unit_Parent8.ChildObjectId IS NULL
@@ -117,6 +117,7 @@ ALTER FUNCTION lfSelect_Object_Unit_byProfitLossDirection () OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.11.13                                        * add Object_ProfitLossDirection_View
  21.10.13                                        * err
  26.08.13                                        *
 */

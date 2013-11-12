@@ -45,4 +45,4 @@ ALTER TABLE Object_ProfitLoss_View  OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM Object_Contract_View
+-- SELECT * FROM Object_ProfitLoss_View

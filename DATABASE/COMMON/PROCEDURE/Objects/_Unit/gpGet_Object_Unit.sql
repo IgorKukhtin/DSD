@@ -65,15 +65,20 @@ BEGIN
            , Object_Unit_View.JuridicalId
            , Object_Unit_View.JuridicalName
          
-           , Object_Unit_View.AccountDirectionId
-           , Object_Unit_View.AccountDirectionName
+           , View_AccountDirection.AccountDirectionId
+           , View_AccountDirection.AccountDirectionName
          
-           , Object_Unit_View.ProfitLossDirectionId
-           , Object_Unit_View.ProfitLossDirectionName
+           , Object_ProfitLossDirection.Id        AS ProfitLossDirectionId
+           , Object_ProfitLossDirection.ValueData AS ProfitLossDirectionName
          
            , Object_Unit_View.isErased
            , Object_Unit_View.isLeaf
        FROM Object_Unit_View
+            LEFT JOIN Object_AccountDirection_View AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
+            LEFT JOIN ObjectLink AS ObjectLink_Unit_ProfitLossDirection -- "Аналитика ОПиУ - направление" установлена !!!только!!! у следующего после самого верхнего уровня 
+                                 ON ObjectLink_Unit_ProfitLossDirection.ObjectId = Object_Unit_View.Id
+                                AND ObjectLink_Unit_ProfitLossDirection.DescId = zc_ObjectLink_Unit_ProfitLossDirection()
+            LEFT JOIN Object AS Object_ProfitLossDirection ON Object_ProfitLossDirection.Id = ObjectLink_Unit_ProfitLossDirection.ChildObjectId
       WHERE Object_Unit_View.Id = inId;
    END IF;
   
@@ -87,10 +92,11 @@ ALTER FUNCTION gpGet_Object_Unit(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.11.13                                        * add Object_AccountDirection_View
  04.07.13          * + If...              
  11.06.13                        *
 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Unit('2')
+-- SELECT * FROM gpGet_Object_Unit (1, '2')
