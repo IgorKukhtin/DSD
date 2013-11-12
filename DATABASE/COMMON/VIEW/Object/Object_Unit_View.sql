@@ -1,6 +1,6 @@
 -- View: Object_Unit_View
 
-DROP VIEW IF EXISTS Object_Unit_View;
+-- DROP VIEW IF EXISTS Object_Unit_View;
 
 CREATE OR REPLACE VIEW Object_Unit_View AS 
        SELECT 
@@ -24,7 +24,9 @@ CREATE OR REPLACE VIEW Object_Unit_View AS
            , Object_Juridical.Id         AS JuridicalId
            , Object_Juridical.ObjectCode AS JuridicalCode
            , Object_Juridical.ValueData  AS JuridicalName
-         
+
+           , ObjectLink_Unit_AccountDirection.ChildObjectId AS AccountDirectionId
+
            , Object_Unit.isErased AS isErased
            , ObjectBoolean_isLeaf.ValueData AS isLeaf
        FROM Object AS Object_Unit
@@ -51,8 +53,7 @@ CREATE OR REPLACE VIEW Object_Unit_View AS
            LEFT JOIN ObjectLink AS ObjectLink_Unit_AccountDirection
                                 ON ObjectLink_Unit_AccountDirection.ObjectId = Object_Unit.Id
                                AND ObjectLink_Unit_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()
-           LEFT JOIN Object AS Object_AccountDirection ON Object_AccountDirection.Id = ObjectLink_Unit_AccountDirection.ChildObjectId
-         
+
            LEFT JOIN ObjectBoolean AS ObjectBoolean_isLeaf 
                                    ON ObjectBoolean_isLeaf.ObjectId = Object_Unit.Id
                                   AND ObjectBoolean_isLeaf.DescId = zc_ObjectBoolean_isLeaf()
@@ -65,7 +66,7 @@ ALTER TABLE Object_Unit_View
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 09.11.13                                        * del AccountDirection
+ 09.11.13                                        * del ProfitLossDirection
  09.11.13                                        * add DescId
 */
 
