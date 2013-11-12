@@ -75,16 +75,20 @@ var
 begin
   if not Assigned(Instance) then begin
     Instance := TStorage(inherited NewInstance);
-    AssignFile(F, ConnectionPath);
-    Reset(f);
-    readln(f, ConnectionString);
-    readln(f, ConnectionString);
-    readln(f, ConnectionString);
-    CloseFile(f);
-    // Вырезаем строку подключения
-    ConnectionString := Copy(ConnectionString, Pos('=', ConnectionString) + 3, maxint);
-    ConnectionString := Copy(ConnectionString, 1, length(ConnectionString) - 2);
-    ConnectionString := ReplaceStr(ConnectionString, ' ', #13#10);
+    try
+      AssignFile(F, ConnectionPath);
+      Reset(f);
+      readln(f, ConnectionString);
+      readln(f, ConnectionString);
+      readln(f, ConnectionString);
+      CloseFile(f);
+      // Вырезаем строку подключения
+      ConnectionString := Copy(ConnectionString, Pos('=', ConnectionString) + 3, maxint);
+      ConnectionString := Copy(ConnectionString, 1, length(ConnectionString) - 2);
+      ConnectionString := ReplaceStr(ConnectionString, ' ', #13#10);
+    except
+      ConnectionString := 'http://localhost/dsd/index.php';
+    end;
     Instance.FConnection := ConnectionString;
     Instance.IdHTTP := TIdHTTP.Create(nil);
     Instance.IdHTTP.Response.CharSet := 'windows-1251';// 'Content-Type: text/xml; charset=utf-8'

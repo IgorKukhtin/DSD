@@ -100,6 +100,7 @@ type
     procedure SetDataSet(const Value: TClientDataSet);
     procedure DataSetRefresh;
     procedure MultiDataSetRefresh;
+    procedure SetStoredProcName(const Value: String);
   protected
     function GetXML: String;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
@@ -111,7 +112,7 @@ type
     destructor Destroy; override;
   published
     // Название процедуры на сервере
-    property StoredProcName: String read FStoredProcName write FStoredProcName;
+    property StoredProcName: String read FStoredProcName write SetStoredProcName;
     // ДатаСет с данными. Введен для удобства, так как зачастую DataSet = DataSets[0]
     property DataSet: TClientDataSet read GetDataSet write SetDataSet;
     // Обновляемые ДатаСеты
@@ -129,7 +130,7 @@ implementation
 uses Storage, CommonData, TypInfo, UtilConvert, SysUtils, cxTextEdit, VCL.Forms,
      XMLDoc, XMLIntf, StrUtils, cxCurrencyEdit, dsdGuides, cxCheckBox, cxCalendar,
      Variants, UITypes, dsdAction, Defaults, UtilConst, Windows, Dialogs,
-     dsdAddOn, cxDBData, cxGridDBTableView;
+     dsdAddOn, cxDBData, cxGridDBTableView, Authentication;
 
 procedure Register;
 begin
@@ -286,16 +287,83 @@ begin
 end;
 
 
+procedure TdsdStoredProc.SetStoredProcName(const Value: String);
+  function PostgresDataTypeToDelphiDataType(PostgresType: string): TFieldType;
+  begin
+    if PostgresType = 'int4' then
+       result := ftInteger;
+    if PostgresType = 'tvarchar' then
+       result := ftString;
+    if PostgresType = 'tblob' then
+       result := ftBlob;
+    if PostgresType = 'tfloat' then
+       result := ftFloat;
+    if PostgresType = 'boolean' then
+       result := ftBoolean;
+  end;
+  function PostgresParamTypeToDelphiParamType(PostgresType: string): TParamType;
+  begin
+    if PostgresType = 'IN' then
+       result := ptInput;
+    if PostgresType = 'OUT' then
+       result := ptOutput;
+    if PostgresType = 'INOUT' then
+       result := ptInputOutput;
+  end;
+var lDataSet: TClientDataSet;
+const
+   pXML =
+  '<xml Session = "">' +
+    '<lfGetParams OutputType="otDataSet">' +
+       '<inStoredProcName DataType="ftString" Value="%s"/>' +
+    '</lfGetParams>' +
+  '</xml>';
+begin
+  {if not (csReading in ComponentState) and (csDesigning in ComponentState) then
+  begin
+     if Value <> FStoredProcName then
+     begin
+       FStoredProcName := Value;
+       Params.Clear;
+       lDataSet := TClientDataSet.Create(nil);
+       try
+         try
+           lDataSet.XMLData := TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [FStoredProcName]));
+         except
+         end;
+         if lDataSet.Active then begin
+           while not lDataSet.Eof do begin
+             // Добавляем OUT параметры только если тип otResult
+             // и это не сессия
+             if (lDataSet.FieldByName('Name').AsString <> 'insession')
+                and ((OutputType = otResult) or (PostgresParamTypeToDelphiParamType(lDataSet.FieldByName('Mode').AsString) <> ptOutput)) then
+                Params.AddParam(lDataSet.FieldByName('Name').AsString,
+                                PostgresDataTypeToDelphiDataType(lDataSet.FieldByName('TypeName').AsString),
+                                PostgresParamTypeToDelphiParamType(lDataSet.FieldByName('Mode').AsString), null);
+             lDataSet.Next;
+           end;
+         end;
+       finally
+         lDataSet.Free;
+       end;
+     end
+  end
+  else}
+    FStoredProcName := Value;
+end;
+
 function TdsdStoredProc.GetXML: String;
 var
   Session: string;
 begin
-  if Assigned(gc_User) then
-     Session := gc_User.Session
-  else
-     raise Exception.Create('Пользователь не установлен');
+  Session := '';
+  if not (csDesigning in ComponentState) then
+     if Assigned(gc_User) then
+        Session := gc_User.Session
+     else
+        raise Exception.Create('Пользователь не установлен');
   if trim(StoredProcName) = '' then
-     raise Exception.Create('Не указано название процедуры в объекте типа TdsdStoredProc');
+     raise Exception.Create('Не указано название процедуры в объекте ' + Name);
   Result :=
            '<xml Session = "' + Session + '" >' +
                 '<' + StoredProcName + ' OutputType = "' + GetEnumName(TypeInfo(TOutputType), ord(OutputType)) + '">' +

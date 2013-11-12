@@ -13,12 +13,13 @@ type
   published
     procedure ParamTest;
     procedure ShowStoredProcParamTest;
+    procedure SetParamToStoredProc;
   end;
 
 implementation
 
 uses dsdDB, SysUtils, DateUtils, cxCalendar, Storage, DB, Dialogs,
-     Authentication, CommonData;
+     Authentication, CommonData, DBClient;
 
 { TComponentDBTest }
 
@@ -44,7 +45,19 @@ end;
 type
   TAccessdsdStoredProc = class(TdsdStoredProc)
      function GetXML: string;
+     procedure SetDesigning(Value: Boolean; SetChildren: Boolean = True);
   end;
+
+procedure TComponentDBTest.SetParamToStoredProc;
+var lStoredProc: TAccessdsdStoredProc;
+    lDataSet: TClientDataSet;
+begin
+  lStoredProc := TAccessdsdStoredProc.Create(nil);
+  lDataSet := TClientDataSet.Create(nil);
+  lStoredProc.SetDesigning(true);
+  lStoredProc.StoredProcName := 'lfGetParams';
+  lStoredProc.StoredProcName := 'gpSelect_PeriodClose';
+end;
 
 procedure TComponentDBTest.ShowStoredProcParamTest;
 var SaveUserFormSettingsStoredProc: TdsdStoredProc;
@@ -63,6 +76,11 @@ end;
 function TAccessdsdStoredProc.GetXML: string;
 begin
   result := inherited GetXML;
+end;
+
+procedure TAccessdsdStoredProc.SetDesigning(Value, SetChildren: Boolean);
+begin
+  inherited;
 end;
 
 initialization
