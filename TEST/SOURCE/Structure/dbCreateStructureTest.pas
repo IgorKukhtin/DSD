@@ -21,6 +21,7 @@ type
     procedure CreateMovementItemReport;
     procedure CreateHistory;
     procedure CreateProtocol;
+    procedure CreatePeriodClose;
     procedure CreateIndexes;
   end;
 
@@ -151,6 +152,11 @@ begin
   ExecFile(StructurePath + 'ObjectCost\ContainerObjectCost.sql', ZQuery);
   ExecFile(StructurePath + 'ObjectCost\HistoryCost.sql', ZQuery);
   ExecFile(StructurePath + 'ObjectCost\ObjectCostSEQUENCE.sql', ZQuery);
+end;
+
+procedure TdbCreateStructureTest.CreatePeriodClose;
+begin
+  ExecFile(StructurePath + 'PeriodClose\PeriodClose.sql', ZQuery);
 end;
 
 procedure TdbCreateStructureTest.CreateProtocol;

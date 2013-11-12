@@ -267,7 +267,8 @@ uses
   Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm},
   SendTicketFuel in '..\..\Forms\Document\SendTicketFuel.pas' {SendTicketFuelForm: TParentForm},
   SendTicketFuelJournal in '..\..\Forms\Document\SendTicketFuelJournal.pas' {SendTicketFuelJournalForm: TParentForm},
-  Units in '..\..\Forms\Guides\Units.pas' {UnitForm: TParentForm};
+  Units in '..\..\Forms\Guides\Units.pas' {UnitForm: TParentForm},
+  CommonPeriodCloseProcedureTest in '..\SOURCE\PeriodClose\CommonPeriodCloseProcedureTest.pas';
 
 {$R *.RES}
 

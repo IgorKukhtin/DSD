@@ -9,7 +9,8 @@ uses
   cxData, cxDataStorage, cxEdit, Data.DB, cxDBData, cxCheckBox, dsdAddOn, dsdDB,
   dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses, cxPropertiesStore,
   Datasnap.DBClient, cxGridLevel, cxGridCustomTableView, cxGridTableView,
-  cxGridDBTableView, cxGridCustomView, cxGrid, cxButtonEdit, cxSplitter;
+  cxGridDBTableView, cxGridCustomView, cxGrid, cxButtonEdit, cxSplitter,
+  Vcl.ExtCtrls;
 
 type
   TUserForm = class(TParentForm)
@@ -43,7 +44,7 @@ type
     dsdStoredProc: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     spErasedUnErased: TdsdStoredProc;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     clMemberName: TcxGridDBColumn;
     RoleAddOn: TdsdDBViewAddOn;
     spUserRole: TdsdStoredProc;
@@ -57,6 +58,19 @@ type
     cxSplitter: TcxSplitter;
     UpdateDataSet: TdsdUpdateDataSet;
     OpenChoiceForm: TOpenChoiceForm;
+    Panel: TPanel;
+    colRoleName: TcxGridDBColumn;
+    colUnitName: TcxGridDBColumn;
+    colPeriod: TcxGridDBColumn;
+    ChoiceRole: TOpenChoiceForm;
+    PeriodCloseDS: TDataSource;
+    PeriodCloseCDS: TClientDataSet;
+    PeriodCloseViewAddOn: TdsdDBViewAddOn;
+    spPeriodClose: TdsdStoredProc;
+    spInsertUpdatePeriodClose: TdsdStoredProc;
+    HorSplitter: TcxSplitter;
+    ChoiceUnit: TOpenChoiceForm;
+    UpdatePeriodClose: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
