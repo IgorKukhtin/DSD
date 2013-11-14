@@ -272,7 +272,12 @@ uses
   BankStatementJournal in '..\..\Forms\Document\BankStatementJournal.pas' {BankStatementJournalForm: TParentForm},
   ClientBankLoad in '..\..\SOURCE\COMPONENT\ClientBankLoad.pas',
   MemDBFTable in '..\..\SOURCE\MemDBFTable.pas',
-  SimpleGauge in '..\..\SOURCE\SimpleGauge.pas' {SimpleGaugeForm};
+  SimpleGauge in '..\..\SOURCE\SimpleGauge.pas' {SimpleGaugeForm},
+  ContractStateKind in '..\..\Forms\Enum\ContractStateKind.pas' {ContractStateKindForm: TParentForm},
+  ContractArticleEdit in '..\..\Forms\Guides\ContractArticleEdit.pas' {ContractArticleEditForm: TParentForm},
+  ContractArticle in '..\..\Forms\Guides\ContractArticle.pas' {ContractArticleForm: TParentForm},
+  Area in '..\..\Forms\Guides\Area.pas' {AreaForm: TParentForm},
+  AreaEdit in '..\..\Forms\Guides\AreaEdit.pas' {AreaEditForm: TParentForm};
 
 {$R *.RES}
 

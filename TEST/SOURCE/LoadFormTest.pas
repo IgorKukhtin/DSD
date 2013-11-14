@@ -152,6 +152,19 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractEditForm');
+  // Состояние договора
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractStateKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractStateKindForm');
+  // Предмет договора
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractArticleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractArticleForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractArticleEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractArticleEditForm');
+  // Регионы
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAreaForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAreaEditForm');
 end;
 
 procedure TLoadFormTest.LoadContractKindFormTest;

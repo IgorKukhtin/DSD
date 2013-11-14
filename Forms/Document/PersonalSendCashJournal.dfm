@@ -75,7 +75,6 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
         end
         item
           Format = ',0.00'
-          Kind = skSum
           Column = colTotalSumm
         end
         item
@@ -109,7 +108,6 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
         end
         item
           Format = ',0.00'
-          Kind = skSum
           Column = colTotalSumm
         end
         item
@@ -141,7 +139,6 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
-      OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True

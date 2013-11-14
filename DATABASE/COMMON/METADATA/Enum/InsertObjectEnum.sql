@@ -128,6 +128,9 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_RatioHours(),           inDescId:= zc_Object_StaffListSummKind(), inCode:= 4, inName:= 'в пропорции к отработанным часам', inEnumName:= 'zc_Enum_StaffListSummKind_RatioHours');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_MasterStaffListHours(), inDescId:= zc_Object_StaffListSummKind(), inCode:= 5, inName:= 'по фактической стоимости 1 часа из штатного расписания', inEnumName:= 'zc_Enum_StaffListSummKind_MasterStaffListHours');
 
+     -- !!! Состояние договора
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractStateKind_Signed(), inDescId:= zc_Object_ContractStateKind(), inCode:= 1, inName:= 'Подписан' , inEnumName:= 'zc_Enum_ContractStateKind_Signed');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractStateKind_UnSigned(), inDescId:= zc_Object_ContractStateKind(), inCode:= 2, inName:= 'Не подписан' , inEnumName:= 'zc_Enum_ContractStateKind_UnSigned');
 
      -- !!! 
      -- !!! Баланс: 1-уровень Управленческих Счетов

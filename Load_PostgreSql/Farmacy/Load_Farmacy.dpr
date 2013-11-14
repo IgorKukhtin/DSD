@@ -17,7 +17,10 @@ uses
   ChoicePeriod in '..\..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm},
   Defaults in '..\..\SOURCE\COMPONENT\Defaults.pas',
   UnilWin in '..\..\SOURCE\UnilWin.pas',
-  MessagesUnit in '..\..\SOURCE\MessagesUnit.pas' {MessagesForm};
+  MessagesUnit in '..\..\SOURCE\MessagesUnit.pas' {MessagesForm},
+  MemDBFTable in '..\..\SOURCE\MemDBFTable.pas',
+  SimpleGauge in '..\..\SOURCE\SimpleGauge.pas' {SimpleGaugeForm},
+  ClientBankLoad in '..\..\SOURCE\COMPONENT\ClientBankLoad.pas';
 
 {$R *.res}
 
