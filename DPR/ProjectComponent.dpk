@@ -54,7 +54,7 @@ requires
   frxDB16,
   dxBarExtItemsRS16,
   cxPivotGridRS16,
-  ZLibEx;
+  VclSmp;
 
 contains
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
@@ -65,12 +65,15 @@ contains
   UtilConvert in '..\SOURCE\UtilConvert.pas',
   ParentForm in '..\SOURCE\ParentForm.pas' {ParentForm},
   dsdGuides in '..\SOURCE\COMPONENT\dsdGuides.pas',
-  Storage in '..\SOURCE\Storage.pas',
   FormStorage in '..\SOURCE\FormStorage.pas',
   dsdAddOn in '..\SOURCE\COMPONENT\dsdAddOn.pas',
   ChoicePeriod in '..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm},
   Defaults in '..\SOURCE\COMPONENT\Defaults.pas',
   UnilWin in '..\SOURCE\UnilWin.pas',
-  MessagesUnit in '..\SOURCE\MessagesUnit.pas' {MessagesForm};
+  MessagesUnit in '..\SOURCE\MessagesUnit.pas' {MessagesForm},
+  ClientBankLoad in '..\SOURCE\COMPONENT\ClientBankLoad.pas',
+  MemDBFTable in '..\SOURCE\MemDBFTable.pas',
+  Storage in '..\SOURCE\Storage.pas',
+  SimpleGauge in '..\SOURCE\SimpleGauge.pas' {SimpleGaugeForm};
 
 end.

@@ -5,6 +5,7 @@
 .project
 .metadata
 bin/
+Клиент-банк/
 tmp/
 *.tmp
 *.bak
@@ -125,3 +126,4 @@ pip-log.txt
 .DS_Store
 /DCU/
 /Picture/
+/Клиент-банк/

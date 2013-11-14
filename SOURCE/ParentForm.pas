@@ -49,7 +49,7 @@ uses
   StdActns, cxDBTL, cxCurrencyEdit, cxDropDownEdit, dsdGuides,
   cxDBLookupComboBox, DBGrids, cxCheckBox, cxCalendar, ExtCtrls,
   cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, frxDBSet, dxBarExtItems,
-  cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView, dsdAction;
+  cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView, dsdAction, ClientBankLoad;
 
 {$R *.dfm}
 
@@ -258,6 +258,7 @@ initialization
   RegisterClass (TBooleanStoredProcAction);
   RegisterClass (TChangeStatus);
   RegisterClass (TChangeGuidesStatus);
+  RegisterClass (TClientBankLoadAction);
   RegisterClass (TCrossDBViewAddOn);
   RegisterClass (TdsdChangeMovementStatus);
   RegisterClass (TdsdChoiceGuides);

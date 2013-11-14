@@ -561,6 +561,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbJuridicalService'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBankLoad'
         end>
     end
     object bbIncomeCash: TdxBarButton
@@ -901,6 +905,10 @@ object MainForm: TMainForm
     end
     object bbJuridicalService: TdxBarButton
       Action = actService
+      Category = 0
+    end
+    object bbBankLoad: TdxBarButton
+      Action = actBankLoad
       Category = 0
     end
   end
@@ -1574,6 +1582,13 @@ object MainForm: TMainForm
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1091#1089#1083#1091#1075
       FormName = 'TServiceJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actBankLoad: TdsdOpenForm
+      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1073#1072#1085#1082#1072
+      FormName = 'TBankStatementJournalForm'
       GuiParams = <>
       isShowModal = False
     end

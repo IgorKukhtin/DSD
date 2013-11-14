@@ -19,7 +19,7 @@ uses
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, dxSkinsdxBarPainter, dsdAddOn, cxPropertiesStore, frxClass,
   dsdDB, Data.DB, Datasnap.DBClient, frxExportRTF, frxExportPDF, frxExportXML,
-  frxExportXLS, Vcl.Grids, Vcl.DBGrids;
+  frxExportXLS;
 
 type
   TMainForm = class(TForm)
@@ -220,6 +220,8 @@ type
     bbReport_Goods: TdxBarButton;
     actSendTicketFuel: TdsdOpenForm;
     bbSendTicketFuel: TdxBarButton;
+    actBankLoad: TdsdOpenForm;
+    bbBankLoad: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

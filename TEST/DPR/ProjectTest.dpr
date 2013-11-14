@@ -268,7 +268,11 @@ uses
   SendTicketFuel in '..\..\Forms\Document\SendTicketFuel.pas' {SendTicketFuelForm: TParentForm},
   SendTicketFuelJournal in '..\..\Forms\Document\SendTicketFuelJournal.pas' {SendTicketFuelJournalForm: TParentForm},
   Units in '..\..\Forms\Guides\Units.pas' {UnitForm: TParentForm},
-  Goods in '..\..\Forms\Guides\Goods.pas' {GoodsForm: TParentForm};
+  Goods in '..\..\Forms\Guides\Goods.pas' {GoodsForm: TParentForm},
+  BankStatementJournal in '..\..\Forms\Document\BankStatementJournal.pas' {BankStatementJournalForm: TParentForm},
+  ClientBankLoad in '..\..\SOURCE\COMPONENT\ClientBankLoad.pas',
+  MemDBFTable in '..\..\SOURCE\MemDBFTable.pas',
+  SimpleGauge in '..\..\SOURCE\SimpleGauge.pas' {SimpleGaugeForm};
 
 {$R *.RES}
 
