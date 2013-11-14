@@ -268,7 +268,12 @@ uses
   SendTicketFuel in '..\..\Forms\Document\SendTicketFuel.pas' {SendTicketFuelForm: TParentForm},
   SendTicketFuelJournal in '..\..\Forms\Document\SendTicketFuelJournal.pas' {SendTicketFuelJournalForm: TParentForm},
   Units in '..\..\Forms\Guides\Units.pas' {UnitForm: TParentForm},
-  Goods in '..\..\Forms\Guides\Goods.pas' {GoodsForm: TParentForm};
+  Goods in '..\..\Forms\Guides\Goods.pas' {GoodsForm: TParentForm},
+  ContractStateKind in '..\..\Forms\Enum\ContractStateKind.pas' {ContractStateKindForm: TParentForm},
+  ContractArticleEdit in '..\..\Forms\Guides\ContractArticleEdit.pas' {ContractArticleEditForm: TParentForm},
+  ContractArticle in '..\..\Forms\Guides\ContractArticle.pas' {ContractArticleForm: TParentForm},
+  Area in '..\..\Forms\Guides\Area.pas' {AreaForm: TParentForm},
+  AreaEdit in '..\..\Forms\Guides\AreaEdit.pas' {AreaEditForm: TParentForm};
 
 {$R *.RES}
 
