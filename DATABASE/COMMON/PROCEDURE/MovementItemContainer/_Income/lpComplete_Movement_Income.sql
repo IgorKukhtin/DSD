@@ -1059,10 +1059,18 @@ BEGIN
                 , tmpOperDate.OperDate
                 , _tmpItem.ContainerId_Summ
                 , _tmpItem.AccountId
-                , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN _tmpItem_SummPartner.ContainerId ELSE _tmpItem_SummDriver.ContainerId_Transit END AS ActiveContainerId
-                , CASE WHEN tmpOperDate.OperDate = vbOperDate AND _tmpItem_SummPartner.AccountId_Transit <> 0 THEN _tmpItem_SummDriver.ContainerId_Transit ELSE _tmpItem_SummDriver.ContainerId END AS PassiveContainerId
-                , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN _tmpItem_SummPartner.AccountId ELSE _tmpItem_SummDriver.AccountId_Transit END AS ActiveAccountId
-                , CASE WHEN tmpOperDate.OperDate = vbOperDate AND _tmpItem_SummPartner.AccountId_Transit <> 0 THEN _tmpItem_SummDriver.AccountId_Transit ELSE _tmpItem_SummDriver.AccountId END AS PassiveAccountId
+                , CASE WHEN tmpOperDate.OperDate = vbOperDate AND _tmpItem_SummDriver.AccountId_Transit <> 0 THEN _tmpItem_SummDriver.ContainerId_Transit
+                       ELSE _tmpItem_SummPartner.ContainerId
+                  END AS ActiveContainerId
+                , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN _tmpItem_SummDriver.ContainerId
+                       ELSE _tmpItem_SummDriver.ContainerId_Transit
+                  END AS PassiveContainerId
+                , CASE WHEN tmpOperDate.OperDate = vbOperDate AND _tmpItem_SummDriver.AccountId_Transit <> 0 THEN _tmpItem_SummDriver.AccountId_Transit
+                       ELSE _tmpItem_SummPartner.AccountId
+                  END AS ActiveAccountId
+                , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN _tmpItem_SummDriver.AccountId
+                       ELSE _tmpItem_SummDriver.AccountId_Transit
+                  END AS PassiveAccountId
            FROM _tmpItem
                 JOIN _tmpItem_SummDriver ON _tmpItem_SummDriver.InfoMoneyId = _tmpItem.InfoMoneyId
                 LEFT JOIN _tmpItem_SummPartner ON _tmpItem_SummPartner.InfoMoneyId = _tmpItem.InfoMoneyId

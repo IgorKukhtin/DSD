@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION lpCheck_MovementItemReport(
     IN inStartDate   TDateTime , -- 
     IN inEndDate     TDateTime   --
 )
-  RETURNS TABLE (MovementId Integer, ContainerId Integer, AccountId Integer, Amount TFloat, Amount_check TFloat)
+  RETURNS TABLE (MovementId Integer, ContainerId Integer, AccountId Integer, OperDate TDateTime, Amount TFloat, Amount_check TFloat)
 AS
 $BODY$
 BEGIN
@@ -15,11 +15,13 @@ BEGIN
      SELECT _tmpMI.MovementId
           , _tmpMI.ContainerId
           , _tmpMI.AccountId
+          , _tmpMI.OperDate
           , CAST (SUM (_tmpMI.Amount) AS TFloat)       AS Amount
           , CAST (SUM (_tmpMI.Amount_check) AS TFloat) AS Amount_check
      FROM (SELECT _tmp.MovementId
                 , _tmp.ContainerId
                 , _tmp.AccountId
+                , _tmp.OperDate
                 , SUM (_tmp.Amount) AS Amount
                 , 0 AS Amount_check
            FROM (SELECT MIReport.MovementId
@@ -31,6 +33,7 @@ BEGIN
                         -- это вариант 2
                       , ReportContainerLink.ContainerId
                       , ReportContainerLink.AccountId
+                      , MIReport.OperDate
                       , CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Active()  THEN MIReport.Amount
                              WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Passive() THEN -1 * MIReport.Amount 
                              ELSE 0
@@ -54,15 +57,18 @@ BEGIN
            GROUP BY _tmp.MovementId
                   , _tmp.ContainerId
                   , _tmp.AccountId
+                  , _tmp.OperDate
           UNION ALL
            SELECT _tmp.MovementId
                 , _tmp.ContainerId
                 , _tmp.AccountId
+                , _tmp.OperDate
                 , 0 AS Amount_A
                 , SUM (_tmp.Amount) AS Amount
            FROM (SELECT MIContainer.MovementId
                       , MIContainer.ContainerId
                       , Container.ObjectId AS AccountId
+                      , MIContainer.OperDate
                       , MIContainer.Amount
                  FROM MovementItemContainer AS MIContainer
                       LEFT JOIN Container ON Container.Id = MIContainer.ContainerId
@@ -73,10 +79,12 @@ BEGIN
            GROUP BY _tmp.MovementId
                   , _tmp.ContainerId
                   , _tmp.AccountId
+                  , _tmp.OperDate
           ) AS _tmpMI
      GROUP BY _tmpMI.MovementId
             , _tmpMI.ContainerId
-            , _tmpMI.AccountId;
+            , _tmpMI.AccountId
+            , _tmpMI.OperDate;
 
 
 END;
@@ -92,4 +100,4 @@ ALTER FUNCTION lpCheck_MovementItemReport (TDateTime, TDateTime) OWNER TO postgr
 */
 
 -- тест
--- SELECT * FROM lpCheck_MovementItemReport ('01.01.2013', '31.01.2013') WHERE (Amount <> Amount_check) ORDER BY 2
+-- SELECT * FROM lpCheck_MovementItemReport ('01.10.2013', '31.10.2013') WHERE (Amount <> Amount_check) ORDER BY 2
