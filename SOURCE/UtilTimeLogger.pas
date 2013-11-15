@@ -8,7 +8,7 @@ type
  strict private
     class var
       Instance: TTimeLogger;
- private
+ protected
    class function NewInstance: TObject; override;
  public
    procedure Start;

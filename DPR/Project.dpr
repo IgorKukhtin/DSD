@@ -24,7 +24,10 @@ uses
   Updater in '..\SOURCE\COMPONENT\Updater.pas',
   AboutBoxUnit in '..\SOURCE\AboutBoxUnit.pas' {AboutBox},
   UnilWin in '..\SOURCE\UnilWin.pas',
-  UtilTimeLogger in '..\SOURCE\UtilTimeLogger.pas';
+  UtilTimeLogger in '..\SOURCE\UtilTimeLogger.pas',
+  ClientBankLoad in '..\SOURCE\COMPONENT\ClientBankLoad.pas',
+  MemDBFTable in '..\SOURCE\MemDBFTable.pas',
+  SimpleGauge in '..\SOURCE\SimpleGauge.pas';
 
 {$R *.res}
 

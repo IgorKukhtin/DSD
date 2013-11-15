@@ -319,7 +319,7 @@ const
     '</lfGetParams>' +
   '</xml>';
 begin
-  {if not (csReading in ComponentState) and (csDesigning in ComponentState) then
+  if not (csReading in ComponentState) and (csDesigning in ComponentState) then
   begin
      if Value <> FStoredProcName then
      begin
@@ -348,7 +348,7 @@ begin
        end;
      end
   end
-  else}
+  else
     FStoredProcName := Value;
 end;
 

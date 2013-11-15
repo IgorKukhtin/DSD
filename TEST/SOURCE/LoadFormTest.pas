@@ -24,6 +24,7 @@ type
     procedure LoadAssetFormTest;
     procedure LoadBankFormTest;
     procedure LoadBankAccountFormTest;
+    procedure LoadBankStatementFormTest;
     procedure LoadBranchFormTest;
     procedure LoadBusinessFormTest;
     procedure LoadCashFormTest;
@@ -113,6 +114,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TBankEditForm');
 end;
 
+procedure TLoadFormTest.LoadBankStatementFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankStatementJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBankStatementJournalForm');
+//  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBranchEditForm'));
+//  TdsdFormStorageFactory.GetStorage.Load('TBranchEditForm');
+end;
+
 procedure TLoadFormTest.LoadBranchFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBranchForm'));
@@ -143,6 +152,19 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractEditForm');
+  // Состояние договора
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractStateKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractStateKindForm');
+  // Предмет договора
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractArticleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractArticleForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractArticleEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractArticleEditForm');
+  // Регионы
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAreaForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAreaEditForm');
 end;
 
 procedure TLoadFormTest.LoadContractKindFormTest;

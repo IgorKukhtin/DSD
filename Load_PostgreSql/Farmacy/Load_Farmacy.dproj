@@ -106,6 +106,11 @@
 			<DCCReference Include="..\..\SOURCE\MessagesUnit.pas">
 				<Form>MessagesForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\MemDBFTable.pas"/>
+			<DCCReference Include="..\..\SOURCE\SimpleGauge.pas">
+				<Form>SimpleGaugeForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\ClientBankLoad.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

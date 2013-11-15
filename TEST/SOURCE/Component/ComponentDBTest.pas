@@ -14,14 +14,30 @@ type
     procedure ParamTest;
     procedure ShowStoredProcParamTest;
     procedure SetParamToStoredProc;
+    procedure DBFOpenTest;
   end;
 
 implementation
 
 uses dsdDB, SysUtils, DateUtils, cxCalendar, Storage, DB, Dialogs,
-     Authentication, CommonData, DBClient;
+     Authentication, CommonData, DBClient, MemDBFTable;
 
 { TComponentDBTest }
+
+procedure TComponentDBTest.DBFOpenTest;
+{var ZConnection : TZConnection;
+    ZTable : TZTable;}
+    var Table: TMemDBFTable;
+begin
+  {ZConnection := TZConnection.Create(nil);
+  ZConnection.Protocol := 'ado';
+  ZConnection.Database := 'Provider=MSDASQL.1;Persist Security Info=False;Data Source=dBASE Files;Initial Catalog=c:\';
+  ZConnection.Connected := true;
+  ZTable := TZTable.Create(nil);
+  ZTable.Connection := ZConnection;
+  ZTable.TableName := 'export';
+  ZTable.Open;}
+end;
 
 procedure TComponentDBTest.ParamTest;
 var param: TdsdParam;

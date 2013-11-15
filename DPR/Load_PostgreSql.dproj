@@ -108,6 +108,11 @@
 			<DCCReference Include="..\SOURCE\MessagesUnit.pas">
 				<Form>MessagesForm</Form>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\COMPONENT\ClientBankLoad.pas"/>
+			<DCCReference Include="..\SOURCE\MemDBFTable.pas"/>
+			<DCCReference Include="..\SOURCE\SimpleGauge.pas">
+				<Form>SimpleGaugeForm</Form>
+			</DCCReference>
 			<None Include="Load_PostgreSql.todo"/>
 			<BuildConfiguration Include="Debug">
 				<Key>Cfg_2</Key>

@@ -138,6 +138,9 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\UnilWin.pas"/>
 			<DCCReference Include="..\SOURCE\UtilTimeLogger.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\ClientBankLoad.pas"/>
+			<DCCReference Include="..\SOURCE\MemDBFTable.pas"/>
+			<DCCReference Include="..\SOURCE\SimpleGauge.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

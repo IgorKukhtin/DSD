@@ -1,21 +1,29 @@
 -- Function: gpInsertUpdate_Object_Contract()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
- INOUT ioId             Integer,       -- Ключ объекта <Договор>
-    IN inInvNumber      TVarChar,      -- Номер договора
-    IN inSigningDate    TDateTime,     -- свойство Дата заключения договора
-    IN inStartDate      TDateTime,     -- свойство Дата с которой действует договор
-    IN inEndDate        TDateTime,     -- свойство Дата до которой действует договор    
-    IN inChangePercent  TFloat   ,     -- (-)% Скидки (+)% Наценки 
-    IN inChangePrice    TFloat   ,     -- Скидка в цене
-    IN inComment        TVarChar,      -- Комментарий
-    IN inJuridicalId    Integer  ,     -- Юридическое лицо
-    IN inInfoMoneyId    Integer  ,     -- Статьи назначения
-    IN inContractKindId Integer  ,     -- Виды договоров
-    IN inPaidKindId     Integer  ,     -- Виды форм оплаты
-    IN inSession        TVarChar       -- сессия пользователя
+ INOUT ioId                  Integer,       -- Ключ объекта <Договор>
+    IN inCode                Integer,       -- Код
+    IN inInvNumber           TVarChar,      -- Номер договора
+    IN inInvNumberArchive    TVarChar,      -- Номер архивирования
+    IN inComment             TVarChar,      -- Комментарий
+    
+    IN inSigningDate         TDateTime,     -- свойство Дата заключения договора
+    IN inStartDate           TDateTime,     -- свойство Дата с которой действует договор
+    IN inEndDate             TDateTime,     -- свойство Дата до которой действует договор    
+    
+    IN inJuridicalId         Integer  ,     -- Юридическое лицо
+    IN inInfoMoneyId         Integer  ,     -- Статьи назначения
+    IN inContractKindId      Integer  ,     -- Виды договоров
+    IN inPaidKindId          Integer  ,     -- Виды форм оплаты
+    
+    IN inPersonalId          Integer  ,     -- Сотрудники (отвественное лицо)
+    IN inAreaId              Integer  ,     -- Регион
+    IN inContractArticleId   Integer  ,     -- Предмет договора
+    IN inContractStateKindId Integer  ,     -- Состояние договора
+    
+    IN inSession          TVarChar       -- сессия пользователя
 )
 RETURNS Integer AS
 $BODY$
@@ -51,10 +59,8 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_End(), ioId, inEndDate);
 
-   -- сохранили свойство <(-)% Скидки (+)% Наценки >
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Contract_ChangePercent(), ioId, inChangePercent);
-   -- сохранили свойство <Скидка в цене>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Contract_ChangePrice(), ioId, inChangePrice);
+   -- сохранили свойство <Номер архивирования>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_InvNumberArchive(), ioId, inInvNumberArchive);
 
    -- сохранили свойство <Комментарий>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_Comment(), ioId, inComment);
@@ -68,7 +74,15 @@ BEGIN
    -- сохранили связь с <Виды форм оплаты>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_PaidKind(), ioId, inPaidKindId);
 
-
+   -- сохранили связь с <Сотрудники (отвественное лицо)>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_Personal(), ioId, inPersonalId);
+   -- сохранили связь с <Регион>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_Area(), ioId, inAreaId);
+   -- сохранили связь с <Предмет договора>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_ContractArticle(), ioId, inContractArticleId);
+   -- сохранили связь с <Состояние договора>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_ContractStateKind(), ioId, inContractStateKindId);   
+   
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
@@ -80,6 +94,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.11.13         * add from redmaine               
  21.10.13                                        * add vbCode_calc
  20.10.13                                        * add from redmaine
  19.10.13                                        * del zc_ObjectString_Contract_InvNumber()
