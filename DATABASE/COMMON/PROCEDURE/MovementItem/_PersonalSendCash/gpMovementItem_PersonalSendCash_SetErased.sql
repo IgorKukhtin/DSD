@@ -36,6 +36,9 @@ BEGIN
     AND MovementItem.ObjectId = inPersonalId
     AND MovementItem.DescId = zc_MI_Master();
 
+  -- пересчитали Итоговые суммы по накладной
+  PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+
   -- !!! НЕ ПОНЯТНО - ПОЧЕМУ НАДО ВОЗВРАЩАТЬ НАОБОРОТ!!!
   -- outIsErased := FALSE;
 
@@ -48,6 +51,7 @@ ALTER FUNCTION gpMovementItem_PersonalSendCash_SetErased (Integer, Integer, TVar
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.11.13                                        * add lpInsertUpdate_MovementFloat_TotalSumm
  07.10.13                                        * add vbStatusId
  06.10.13                                        *
 */
