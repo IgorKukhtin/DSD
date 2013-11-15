@@ -55,7 +55,6 @@ type
     ContractKindGuides: TdsdGuides;
     edPaidKind: TcxButtonEdit;
     cxLabel10: TcxLabel;
-    PaidKindGuides: TdsdGuides;
     cxLabel11: TcxLabel;
     edCode: TcxCurrencyEdit;
     cxLabel12: TcxLabel;
@@ -72,6 +71,7 @@ type
     cxLabel14: TcxLabel;
     edContractStateKind: TcxButtonEdit;
     ContractStateKindGuides: TdsdGuides;
+    PaidKindGuides: TdsdGuides;
   private
     { Private declarations }
   public

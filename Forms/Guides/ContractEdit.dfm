@@ -364,7 +364,6 @@ object ContractEditForm: TContractEditForm
       item
         Name = 'inPaidKindId'
         Value = ''
-        Component = PaidKindGuides
         ParamType = ptInput
       end
       item
@@ -639,30 +638,6 @@ object ContractEditForm: TContractEditForm
     Left = 112
     Top = 135
   end
-  object PaidKindGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edPaidKind
-    FormName = 'TPaidKindForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 224
-    Top = 87
-  end
   object PersonalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonal
@@ -762,5 +737,30 @@ object ContractEditForm: TContractEditForm
       end>
     Left = 232
     Top = 223
+  end
+  object PaidKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPaidKind
+    FormName = 'TPaidKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 280
+    Top = 96
   end
 end
