@@ -1,4 +1,4 @@
-unit ContractArticle;
+unit ContractKind;
 
 interface
 
@@ -9,8 +9,7 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, cxGridLevel, cxClasses,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, Datasnap.DBClient, cxPropertiesStore, dxBar,
-  Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dsdAddOn, dxBarExtItems,
-  cxGridBandedTableView, cxGridDBBandedTableView, cxCheckBox, dxSkinsCore,
+  Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dsdAddOn, dxSkinsCore,
   dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
   dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
   dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
@@ -21,12 +20,15 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  dxBarExtItems;
 
 type
-  TContractArticleForm = class(TParentForm)
+  TContractKindForm = class(TParentForm)
+    cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
+    clName: TcxGridDBColumn;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -35,25 +37,25 @@ type
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
+    actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
     dsdStoredProc: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    bbSetErased: TdxBarButton;
-    bbSetUnErased: TdxBarButton;
-    dsdGridToExcel: TdsdGridToExcel;
-    bbToExcel: TdxBarButton;
-    dxBarStatic: TdxBarStatic;
-    spErasedUnErased: TdsdStoredProc;
-    bbChoice: TdxBarButton;
-    cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
     clErased: TcxGridDBColumn;
+    clCode: TcxGridDBColumn;
+    bbErased: TdxBarButton;
+    bbUnErased: TdxBarButton;
+    dsdSetErased: TdsdUpdateErased;
+    dsdSetUnErased: TdsdUpdateErased;
+    dsdGridToExcel: TdsdGridToExcel;
+    bbGridToExcel: TdxBarButton;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    actInsert: TdsdInsertUpdateAction;
+    dxBarStatic: TdxBarStatic;
+    bbChoiceGuides: TdxBarButton;
+    spErasedUnErased: TdsdStoredProc;
+    dsdChoiceGuides: TdsdChoiceGuides;
   private
     { Private declarations }
   public
@@ -65,6 +67,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TContractArticleForm);
+  RegisterClass(TContractKindForm);
 
 end.

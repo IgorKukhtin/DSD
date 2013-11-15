@@ -1,4 +1,4 @@
-unit ContractArticle;
+unit StaffListSummKind;
 
 interface
 
@@ -10,9 +10,8 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, Datasnap.DBClient, cxPropertiesStore, dxBar,
   Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dsdAddOn, dxBarExtItems,
-  cxGridBandedTableView, cxGridDBBandedTableView, cxCheckBox, dxSkinsCore,
-  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
-  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
+  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
   dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
   dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
   dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
@@ -24,9 +23,11 @@ uses
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
-  TContractArticleForm = class(TParentForm)
+  TStaffListSummKindForm = class(TParentForm)
+    cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
+    clName: TcxGridDBColumn;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -35,25 +36,13 @@ type
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
-    bbInsert: TdxBarButton;
     dsdStoredProc: TdsdStoredProc;
-    actUpdate: TdsdInsertUpdateAction;
-    bbEdit: TdxBarButton;
-    bbSetErased: TdxBarButton;
-    bbSetUnErased: TdxBarButton;
-    dsdGridToExcel: TdsdGridToExcel;
-    bbToExcel: TdxBarButton;
-    dxBarStatic: TdxBarStatic;
-    spErasedUnErased: TdsdStoredProc;
-    bbChoice: TdxBarButton;
-    cxGridDBTableView: TcxGridDBTableView;
-    clCode: TcxGridDBColumn;
-    clName: TcxGridDBColumn;
-    clErased: TcxGridDBColumn;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    bbStatic: TdxBarStatic;
+    bbChoiceGuides: TdxBarButton;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    actInsert: TdsdInsertUpdateAction;
+    clCode: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -65,6 +54,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TContractArticleForm);
+  RegisterClass(TStaffListSummKindForm);
 
 end.

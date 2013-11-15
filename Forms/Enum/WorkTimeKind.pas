@@ -1,4 +1,4 @@
-unit ContractArticle;
+unit WorkTimeKind;
 
 interface
 
@@ -24,7 +24,7 @@ uses
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
-  TContractArticleForm = class(TParentForm)
+  TWorkTimeKindForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -35,12 +35,7 @@ type
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
-    bbInsert: TdxBarButton;
     dsdStoredProc: TdsdStoredProc;
-    actUpdate: TdsdInsertUpdateAction;
-    bbEdit: TdxBarButton;
-    bbSetErased: TdxBarButton;
-    bbSetUnErased: TdxBarButton;
     dsdGridToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
@@ -53,7 +48,9 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    actInsert: TdsdInsertUpdateAction;
+    clShortName: TcxGridDBColumn;
+    spInsertUpdateObject: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
@@ -65,6 +62,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TContractArticleForm);
+  RegisterClass(TWorkTimeKindForm);
 
 end.

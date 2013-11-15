@@ -176,6 +176,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbArea'
+        end
+        item
+          Visible = True
           ItemName = 'bbGuides_Separator'
         end
         item
@@ -193,6 +197,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbContract'
+        end
+        item
+          Visible = True
+          ItemName = 'bbContractArticle'
         end
         item
           Visible = True
@@ -911,6 +919,14 @@ object MainForm: TMainForm
       Action = actBankLoad
       Category = 0
     end
+    object bbArea: TdxBarButton
+      Action = actArea
+      Category = 0
+    end
+    object bbContractArticle: TdxBarButton
+      Action = actContractArticle
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Left = 192
@@ -968,6 +984,14 @@ object MainForm: TMainForm
       Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
       Hint = #1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
       FormName = 'TMemberForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actContractArticle: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1055#1088#1077#1076#1084#1077#1090' '#1076#1086#1075#1086#1074#1086#1088#1072
+      Hint = #1055#1088#1077#1076#1084#1077#1090' '#1076#1086#1075#1086#1074#1086#1088#1072
+      FormName = 'TContractArticleForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -1144,6 +1168,14 @@ object MainForm: TMainForm
       Caption = #1044#1086#1075#1086#1074#1086#1088#1072
       Hint = #1044#1086#1075#1086#1074#1086#1088#1072
       FormName = 'TContractForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actArea: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1056#1077#1075#1080#1086#1085#1099
+      Hint = #1056#1077#1075#1080#1086#1085#1099
+      FormName = 'TAreaForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -1618,7 +1650,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.14'
+    Version = '4.12'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

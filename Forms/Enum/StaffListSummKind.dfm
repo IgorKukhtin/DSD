@@ -1,9 +1,9 @@
-object ContractArticleForm: TContractArticleForm
+object StaffListSummKindForm: TStaffListSummKindForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1088#1077#1076#1084#1077#1090' '#1076#1086#1075#1086#1074#1086#1088#1072'>'
-  ClientHeight = 376
-  ClientWidth = 390
+  Caption = #1058#1080#1087#1099' '#1089#1091#1084#1084' '#1076#1083#1103' '#1096#1090#1072#1090#1085#1086#1075#1086' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1103
+  ClientHeight = 265
+  ClientWidth = 533
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,29 +20,27 @@ object ContractArticleForm: TContractArticleForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 390
-    Height = 350
+    Width = 533
+    Height = 239
     Align = alClient
     TabOrder = 0
-    LookAndFeel.NativeStyle = True
-    LookAndFeel.SkinName = 'UserSkin'
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
-      DataController.Filter.Options = [fcoCaseInsensitive]
+      DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
-      Images = dmMain.SortImageList
-      OptionsCustomize.ColumnHiding = True
-      OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsBehavior.IncSearch = True
+      OptionsBehavior.IncSearchItem = clName
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
-      OptionsView.HeaderHeight = 40
+      OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object clCode: TcxGridDBColumn
@@ -50,24 +48,13 @@ object ContractArticleForm: TContractArticleForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 55
       end
       object clName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 243
-      end
-      object clErased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'isErased'
-        PropertiesClassName = 'TcxCheckBoxProperties'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 78
+        Width = 252
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -76,29 +63,26 @@ object ContractArticleForm: TContractArticleForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 40
-    Top = 96
+    Left = 48
+    Top = 56
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 24
-    Top = 144
+    Left = 48
+    Top = 120
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = Owner
+        Component = clName
         Properties.Strings = (
-          'Height'
-          'Left'
-          'Top'
           'Width')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 240
-    Top = 88
+    Left = 232
+    Top = 56
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -118,7 +102,7 @@ object ContractArticleForm: TContractArticleForm
     ShowShortCutInHint = True
     UseSystemFont = True
     Left = 152
-    Top = 88
+    Top = 56
     DockControlHeights = (
       0
       0
@@ -138,41 +122,15 @@ object ContractArticleForm: TContractArticleForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErased'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'bbRefresh'
         end
         item
           Visible = True
-          ItemName = 'bbToExcel'
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbChoice'
+          ItemName = 'bbChoiceGuides'
         end>
       OneOnRow = True
       Row = 0
@@ -183,65 +141,22 @@ object ContractArticleForm: TContractArticleForm
     object bbRefresh: TdxBarButton
       Action = actRefresh
       Category = 0
+      ImageIndex = 4
     end
-    object bbInsert: TdxBarButton
-      Action = actInsert
+    object bbStatic: TdxBarStatic
+      Caption = '     '
       Category = 0
-    end
-    object bbEdit: TdxBarButton
-      Action = actUpdate
-      Category = 0
-    end
-    object bbSetErased: TdxBarButton
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Category = 0
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      Visible = ivAlways
-      ImageIndex = 2
-      ShortCut = 46
-    end
-    object bbSetUnErased: TdxBarButton
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Category = 0
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      Visible = ivAlways
-      ImageIndex = 8
-      ShortCut = 32776
-    end
-    object bbToExcel: TdxBarButton
-      Action = dsdGridToExcel
-      Category = 0
-    end
-    object dxBarStatic: TdxBarStatic
-      Caption = '       '
-      Category = 0
-      Hint = '       '
       Visible = ivAlways
     end
-    object bbChoice: TdxBarButton
+    object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
       Category = 0
+      ImageIndex = 7
     end
   end
   object ActionList: TActionList
-    Images = dmMain.ImageList
-    Left = 264
-    Top = 136
-    object actInsert: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      ShortCut = 45
-      ImageIndex = 0
-      FormName = 'TContractArticleEditForm'
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-        end>
-      isShowModal = True
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-    end
+    Left = 328
+    Top = 64
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -251,28 +166,8 @@ object ContractArticleForm: TContractArticleForm
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
-    end
-    object actUpdate: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
-      ShortCut = 115
-      ImageIndex = 1
-      FormName = 'TContractArticleEditForm'
-      GuiParams = <
-        item
-          Name = 'Id'
-          Component = ClientDataSet
-          ComponentItem = 'Id'
-          ParamType = ptInput
-        end>
-      isShowModal = False
-      ActionType = acUpdate
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -281,6 +176,7 @@ object ContractArticleForm: TContractArticleForm
           Name = 'Key'
           Component = ClientDataSet
           ComponentItem = 'Id'
+          DataType = ftString
         end
         item
           Name = 'TextValue'
@@ -290,46 +186,22 @@ object ContractArticleForm: TContractArticleForm
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ImageIndex = 7
-      DataSource = DataSource
-    end
-    object dsdGridToExcel: TdsdGridToExcel
-      Category = 'DSDLib'
-      Grid = cxGrid
-      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      ImageIndex = 6
-      ShortCut = 16472
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ContractArticle'
+    StoredProcName = 'gpSelect_Object_StaffListSummKind'
     DataSet = ClientDataSet
     DataSets = <
       item
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 144
-    Top = 152
-  end
-  object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inObjectId'
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    Left = 296
-    Top = 216
+    Left = 152
+    Top = 128
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 176
-    Top = 216
+    Left = 288
+    Top = 112
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -337,22 +209,15 @@ object ContractArticleForm: TContractArticleForm
     OnDblClickActionList = <
       item
         Action = dsdChoiceGuides
-      end
-      item
-        Action = actUpdate
       end>
     ActionItemList = <
       item
         Action = dsdChoiceGuides
         ShortCut = 13
-      end
-      item
-        Action = actUpdate
-        ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    Left = 48
-    Top = 216
+    Left = 120
+    Top = 200
   end
 end

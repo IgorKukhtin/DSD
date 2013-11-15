@@ -222,6 +222,10 @@ type
     bbSendTicketFuel: TdxBarButton;
     actBankLoad: TdsdOpenForm;
     bbBankLoad: TdxBarButton;
+    actArea: TdsdOpenForm;
+    bbArea: TdxBarButton;
+    actContractArticle: TdsdOpenForm;
+    bbContractArticle: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
