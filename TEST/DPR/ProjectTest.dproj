@@ -193,10 +193,10 @@
 			<DCCReference Include="..\..\Forms\GoodsPropertyValue.pas">
 				<Form>GoodsPropertyValueForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\ContractKindEdit.pas">
+			<DCCReference Include="..\..\Forms\Guides\ContractKindEdit.pas">
 				<Form>ContractKindEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\ContractKind.pas">
+			<DCCReference Include="..\..\Forms\Guides\ContractKind.pas">
 				<Form>ContractKindForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\GoodsPropertyValueEdit.pas">
@@ -408,10 +408,10 @@
 			<DCCReference Include="..\..\Forms\Document\ProductionSeparate.pas">
 				<Form>ProductionSeparateForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Contract.pas">
+			<DCCReference Include="..\..\Forms\Guides\Contract.pas">
 				<Form>ContractForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\ContractEdit.pas">
+			<DCCReference Include="..\..\Forms\Guides\ContractEdit.pas">
 				<Form>ContractEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Measure.pas">
@@ -554,7 +554,7 @@
 			<DCCReference Include="..\SOURCE\Movement\All\PersonalSendCashTest.pas">
 				<Form>$R *.RES</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\WorkTimeKind.pas">
+			<DCCReference Include="..\..\Forms\Enum\WorkTimeKind.pas">
 				<Form>WorkTimeKindForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\SheetWorkTimeTest.pas"/>
@@ -611,7 +611,7 @@
 			<DCCReference Include="..\..\Forms\ModelService.pas">
 				<Form>ModelServiceForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\ModelServiceKind.pas">
+			<DCCReference Include="..\..\Forms\Enum\ModelServiceKind.pas">
 				<Form>ModelServiceKindForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\SelectKind.pas">
@@ -642,7 +642,7 @@
 				<Form>StaffListForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\StaffListSummKind.pas">
+			<DCCReference Include="..\..\Forms\Enum\StaffListSummKind.pas">
 				<Form>StaffListSummKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>

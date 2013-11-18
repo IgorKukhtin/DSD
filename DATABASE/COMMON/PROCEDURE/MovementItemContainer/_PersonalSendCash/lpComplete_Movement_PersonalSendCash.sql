@@ -336,57 +336,72 @@ BEGIN
      -- 3.1. формируются Проводки для отчета (Аналитики: Сотрудник (От кого) и Сотрудник (Водитель))
      PERFORM lpInsertUpdate_MovementItemReport (inMovementId         := inMovementId
                                               , inMovementItemId     := _tmpItem.MovementItemId
-                                              , inActiveContainerId  := _tmpItem.ContainerId_To
-                                              , inPassiveContainerId := _tmpItem.ContainerId_From
-                                              , inActiveAccountId    := _tmpItem.AccountId_To
-                                              , inPassiveAccountId   := _tmpItem.AccountId_From
-                                              , inReportContainerId  := lpInsertFind_ReportContainer (inActiveContainerId  := _tmpItem.ContainerId_To
-                                                                                                    , inPassiveContainerId := _tmpItem.ContainerId_From
-                                                                                                    , inActiveAccountId    := _tmpItem.AccountId_To
-                                                                                                    , inPassiveAccountId   := _tmpItem.AccountId_From
+                                              , inActiveContainerId  := _tmpItem.ActiveContainerId
+                                              , inPassiveContainerId := _tmpItem.PassiveContainerId
+                                              , inActiveAccountId    := _tmpItem.ActiveAccountId
+                                              , inPassiveAccountId   := _tmpItem.PassiveAccountId
+                                              , inReportContainerId  := lpInsertFind_ReportContainer (inActiveContainerId  := _tmpItem.ActiveContainerId
+                                                                                                    , inPassiveContainerId := _tmpItem.PassiveContainerId
+                                                                                                    , inActiveAccountId    := _tmpItem.ActiveAccountId
+                                                                                                    , inPassiveAccountId   := _tmpItem.PassiveAccountId
                                                                                                      )
-                                              , inChildReportContainerId := lpInsertFind_ChildReportContainer (inActiveContainerId  := _tmpItem.ContainerId_To
-                                                                                                             , inPassiveContainerId := _tmpItem.ContainerId_From
-                                                                                                             , inActiveAccountId    := _tmpItem.AccountId_To
-                                                                                                             , inPassiveAccountId   := _tmpItem.AccountId_From
+                                              , inChildReportContainerId := lpInsertFind_ChildReportContainer (inActiveContainerId  := _tmpItem.ActiveContainerId
+                                                                                                             , inPassiveContainerId := _tmpItem.PassiveContainerId
+                                                                                                             , inActiveAccountId    := _tmpItem.ActiveAccountId
+                                                                                                             , inPassiveAccountId   := _tmpItem.PassiveAccountId
                                                                                                              , inAccountKindId_1    := NULL
                                                                                                              , inContainerId_1      := NULL
                                                                                                              , inAccountId_1        := NULL
-                                                                                                     )
+                                                                                                              )
                                               , inAmount   := _tmpItem.OperSumm
                                               , inOperDate := _tmpItem.OperDate
                                                )
-     FROM _tmpItem
-     WHERE _tmpItem.OperSumm <> 0;
+     FROM (SELECT CASE WHEN _tmpItem.OperSumm > 0 THEN _tmpItem.ContainerId_To ELSE _tmpItem.ContainerId_From END AS ActiveContainerId
+                , CASE WHEN _tmpItem.OperSumm < 0 THEN _tmpItem.ContainerId_To ELSE _tmpItem.ContainerId_From END AS PassiveContainerId
+                , CASE WHEN _tmpItem.OperSumm > 0 THEN _tmpItem.AccountId_To ELSE _tmpItem.AccountId_From END AS ActiveAccountId
+                , CASE WHEN _tmpItem.OperSumm < 0 THEN _tmpItem.AccountId_To ELSE _tmpItem.AccountId_From END AS PassiveAccountId
+                , ABS (_tmpItem.OperSumm) AS OperSumm
+                , _tmpItem.MovementItemId
+                , _tmpItem.OperDate
+           FROM _tmpItem
+           WHERE _tmpItem.OperSumm <> 0
+          ) AS _tmpItem;
 
 
      -- 3.2. формируются Проводки для отчета (Аналитики: Сотрудник (Водитель) и ОПиУ)
      PERFORM lpInsertUpdate_MovementItemReport (inMovementId         := inMovementId
                                               , inMovementItemId     := _tmpItem.MovementItemId
-                                              , inActiveContainerId  := _tmpItem.ContainerId_ProfitLoss
-                                              , inPassiveContainerId := _tmpItem.ContainerId_To
-                                              , inActiveAccountId    := _tmpItem.AccountId_ProfitLoss
-                                              , inPassiveAccountId   := _tmpItem.AccountId_To
-                                              , inReportContainerId  := lpInsertFind_ReportContainer (inActiveContainerId  := _tmpItem.ContainerId_ProfitLoss
-                                                                                                    , inPassiveContainerId := _tmpItem.ContainerId_To
-                                                                                                    , inActiveAccountId    := _tmpItem.AccountId_ProfitLoss
-                                                                                                    , inPassiveAccountId   := _tmpItem.AccountId_To
+                                              , inActiveContainerId  := _tmpItem.ActiveContainerId
+                                              , inPassiveContainerId := _tmpItem.PassiveContainerId
+                                              , inActiveAccountId    := _tmpItem.ActiveAccountId
+                                              , inPassiveAccountId   := _tmpItem.PassiveAccountId
+                                              , inReportContainerId  := lpInsertFind_ReportContainer (inActiveContainerId  := _tmpItem.ActiveContainerId
+                                                                                                    , inPassiveContainerId := _tmpItem.PassiveContainerId
+                                                                                                    , inActiveAccountId    := _tmpItem.ActiveAccountId
+                                                                                                    , inPassiveAccountId   := _tmpItem.PassiveAccountId
                                                                                                      )
-                                              , inChildReportContainerId := lpInsertFind_ChildReportContainer (inActiveContainerId  := _tmpItem.ContainerId_ProfitLoss
-                                                                                                             , inPassiveContainerId := _tmpItem.ContainerId_To
-                                                                                                             , inActiveAccountId    := _tmpItem.AccountId_ProfitLoss
-                                                                                                             , inPassiveAccountId   := _tmpItem.AccountId_To
+                                              , inChildReportContainerId := lpInsertFind_ChildReportContainer (inActiveContainerId  := _tmpItem.ActiveContainerId
+                                                                                                             , inPassiveContainerId := _tmpItem.PassiveContainerId
+                                                                                                             , inActiveAccountId    := _tmpItem.ActiveAccountId
+                                                                                                             , inPassiveAccountId   := _tmpItem.PassiveAccountId
                                                                                                              , inAccountKindId_1    := NULL
                                                                                                              , inContainerId_1      := NULL
                                                                                                              , inAccountId_1        := NULL
-                                                                                                     )
+                                                                                                              )
                                               , inAmount   := _tmpItem.OperSumm
                                               , inOperDate := _tmpItem.OperDate
                                                )
-     FROM _tmpItem
-     WHERE _tmpItem.OperSumm <> 0
-       AND AccountId_ProfitLoss = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
-     ;
+     FROM (SELECT CASE WHEN _tmpItem.OperSumm > 0 THEN _tmpItem.ContainerId_ProfitLoss ELSE _tmpItem.ContainerId_To END AS ActiveContainerId
+                , CASE WHEN _tmpItem.OperSumm < 0 THEN _tmpItem.ContainerId_ProfitLoss ELSE _tmpItem.ContainerId_To END AS PassiveContainerId
+                , CASE WHEN _tmpItem.OperSumm > 0 THEN _tmpItem.AccountId_ProfitLoss ELSE _tmpItem.AccountId_To END AS ActiveAccountId
+                , CASE WHEN _tmpItem.OperSumm < 0 THEN _tmpItem.AccountId_ProfitLoss ELSE _tmpItem.AccountId_To END AS PassiveAccountId
+                , ABS (_tmpItem.OperSumm) AS OperSumm
+                , _tmpItem.MovementItemId
+                , _tmpItem.OperDate
+           FROM _tmpItem
+           WHERE _tmpItem.OperSumm <> 0
+             AND _tmpItem.AccountId_ProfitLoss = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
+          ) AS _tmpItem;
 
 
      -- !!!4.1. формируются свойства в документе из данных для проводок!!!
@@ -424,6 +439,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.11.13                                        * add calc ActiveContainerId and PassiveContainerId
  04.11.13                                        * add OperDate
  03.11.13                                        * err
  02.11.13                                        * идеологически правильный lpComplete_Movement_PersonalSendCash

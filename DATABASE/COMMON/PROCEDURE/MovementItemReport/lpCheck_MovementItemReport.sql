@@ -1,6 +1,6 @@
 -- Function: lpCheck_MovementItemReport (TDateTime, TDateTime)
 
--- DROP FUNCTION lpCheck_MovementItemReport (TDateTime, TDateTime);
+DROP FUNCTION IF EXISTS lpCheck_MovementItemReport (TDateTime, TDateTime);
 
 CREATE OR REPLACE FUNCTION lpCheck_MovementItemReport(
     IN inStartDate   TDateTime , -- 

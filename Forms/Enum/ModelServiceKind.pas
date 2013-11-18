@@ -1,4 +1,4 @@
-unit ContractArticle;
+unit ModelServiceKind;
 
 interface
 
@@ -24,7 +24,7 @@ uses
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
-  TContractArticleForm = class(TParentForm)
+  TModelServiceKindForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -37,7 +37,6 @@ type
     actRefresh: TdsdDataSetRefresh;
     bbInsert: TdxBarButton;
     dsdStoredProc: TdsdStoredProc;
-    actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
     bbSetErased: TdxBarButton;
     bbSetUnErased: TdxBarButton;
@@ -53,7 +52,7 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    actInsert: TdsdInsertUpdateAction;
+    spInsertUpdateObject: TdsdStoredProc;
   private
     { Private declarations }
   public
@@ -65,6 +64,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TContractArticleForm);
+  RegisterClass(TModelServiceKindForm);
 
 end.
