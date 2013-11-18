@@ -13,6 +13,10 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
        , ObjectLink_Contract_Juridical.ChildObjectId         AS JuridicalId
        , ObjectLink_Contract_PaidKind.ChildObjectId          AS PaidKindId
        , ObjectLink_Contract_InfoMoney.ChildObjectId         AS InfoMoneyId
+
+         -- !!!бпелеммн бняярюмнбхк!!!
+       , ObjectFloat_ChangePercent.ValueData         AS ChangePercent
+       , ObjectFloat_ChangePrice.ValueData           AS ChangePrice
        
   FROM Object AS Object_Contract
        LEFT JOIN ObjectDate AS ObjectDate_Start
@@ -35,6 +39,14 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
                             ON ObjectLink_Contract_InfoMoney.ObjectId = Object_Contract.Id 
                            AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
                            
+       -- !!!бпелеммн бняярюмнбхк!!!
+       LEFT JOIN ObjectFloat AS ObjectFloat_ChangePercent
+                             ON ObjectFloat_ChangePercent.ObjectId = Object_Contract.Id
+                            AND ObjectFloat_ChangePercent.DescId = zc_ObjectFloat_Contract_ChangePercent()  
+       LEFT JOIN ObjectFloat AS ObjectFloat_ChangePrice
+                             ON ObjectFloat_ChangePrice.ObjectId = Object_Contract.Id
+                             AND ObjectFloat_ChangePrice.DescId = zc_ObjectFloat_Contract_ChangePrice()  
+
   WHERE Object_Contract.DescId = zc_Object_Contract();
 
 
@@ -45,8 +57,9 @@ ALTER TABLE Object_Contract_View  OWNER TO postgres;
 /*
  хярнпхъ пюгпюанрйх: дюрю, юбрнп
                тЕКНМЧЙ х.б.   йСУРХМ х.б.   йКХЛЕМРЭЕБ й.х.
+ 18.11.13                                        * !!!бпелеммн бняярюмнбхк!!!
  14.11.13         * add ContractCode      
- 20.10.13                                       *
+ 20.10.13                                        *
 */
 
 -- РЕЯР
