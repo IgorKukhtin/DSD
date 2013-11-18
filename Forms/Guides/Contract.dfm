@@ -21,7 +21,7 @@ object ContractForm: TContractForm
     Left = 0
     Top = 26
     Width = 1170
-    Height = 447
+    Height = 303
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
@@ -95,7 +95,7 @@ object ContractForm: TContractForm
         DataBinding.FieldName = 'StartDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 40
       end
       object clEndDate: TcxGridDBColumn
         Caption = #1044#1077#1081#1089#1090#1074'. '#1076#1086
@@ -199,6 +199,64 @@ object ContractForm: TContractForm
       GridView = cxGridDBTableView
     end
   end
+  object cxGridContractCondition: TcxGrid
+    Left = 0
+    Top = 329
+    Width = 1170
+    Height = 144
+    Align = alBottom
+    TabOrder = 5
+    LookAndFeel.Kind = lfStandard
+    LookAndFeel.NativeStyle = False
+    LookAndFeel.SkinName = ''
+    object cxGridDBTableViewContractCondition: TcxGridDBTableView
+      Navigator.Buttons.CustomButtons = <>
+      DataController.DataSource = ContractConditionDS
+      DataController.Filter.Options = [fcoCaseInsensitive]
+      DataController.Filter.Active = True
+      DataController.Summary.DefaultGroupSummaryItems = <>
+      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.SummaryGroups = <>
+      Images = dmMain.SortImageList
+      OptionsBehavior.IncSearch = True
+      OptionsCustomize.ColumnHiding = True
+      OptionsCustomize.ColumnsQuickCustomization = True
+      OptionsData.Deleting = False
+      OptionsData.DeletingConfirmation = False
+      OptionsData.Inserting = False
+      OptionsView.ColumnAutoWidth = True
+      OptionsView.HeaderHeight = 40
+      OptionsView.Indicator = True
+      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object cContractConditionKindName: TcxGridDBColumn
+        Caption = #1058#1080#1087' '#1091#1089#1083#1086#1074#1080#1081' '#1076#1086#1075#1086#1074#1086#1088#1072
+        DataBinding.FieldName = 'ContractConditionKindName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = ContractConditionKindChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentVert = vaCenter
+        Width = 601
+      end
+      object clValue: TcxGridDBColumn
+        Caption = #1047#1085#1072#1095#1077#1085#1080#1077
+        DataBinding.FieldName = 'Value'
+        HeaderAlignmentVert = vaCenter
+        Width = 553
+      end
+      object clsfcisErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        Visible = False
+      end
+    end
+    object cxGridLevel2: TcxGridLevel
+      GridView = cxGridDBTableViewContractCondition
+    end
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 56
@@ -206,6 +264,7 @@ object ContractForm: TContractForm
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
+    MasterFields = 'Id'
     Params = <>
     Left = 64
     Top = 160
@@ -287,6 +346,10 @@ object ContractForm: TContractForm
           ItemName = 'dxBarStatic1'
         end
         item
+          Visible = True
+          ItemName = 'bbInsertRecCCK'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
@@ -343,6 +406,10 @@ object ContractForm: TContractForm
       Action = dsdChoiceGuides
       Category = 0
     end
+    object bbInsertRecCCK: TdxBarButton
+      Action = InsertRecordCCK
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -354,6 +421,9 @@ object ContractForm: TContractForm
       StoredProcList = <
         item
           StoredProc = dsdStoredProc
+        end
+        item
+          StoredProc = spSelectContractCondition
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -448,6 +518,42 @@ object ContractForm: TContractForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object ContractConditionKindChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'ContractConditionKindChoiceForm'
+      FormName = 'TContractConditionKindForm'
+      GuiParams = <
+        item
+          Name = 'key'
+          Component = ContractConditionCDS
+          ComponentItem = 'ContractConditionKindId'
+        end
+        item
+          Name = 'TextValue'
+          Component = ContractConditionCDS
+          ComponentItem = 'ContractConditionKindName'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
+    object InsertRecordCCK: TInsertRecord
+      Category = 'DSDLib'
+      View = cxGridDBTableViewContractCondition
+      Action = ContractConditionKindChoiceForm
+      Caption = 'InsertRecordCCK'
+      Hint = #1058#1080#1087' '#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+      ImageIndex = 0
+    end
+    object actContractCondition: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      StoredProc = spInsertUpdateContractCondition
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateContractCondition
+        end>
+      Caption = 'actUpdateDataSetCCK'
+      DataSource = ContractConditionDS
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Contract'
@@ -500,5 +606,64 @@ object ContractForm: TContractForm
     OnlyEditingCellOnEnter = False
     Left = 272
     Top = 184
+  end
+  object ContractConditionDS: TDataSource
+    DataSet = ContractConditionCDS
+    Left = 102
+    Top = 413
+  end
+  object ContractConditionCDS: TClientDataSet
+    Aggregates = <>
+    IndexFieldNames = 'ContractId'
+    MasterFields = 'Id'
+    MasterSource = DataSource
+    PacketRecords = 0
+    Params = <>
+    Left = 225
+    Top = 413
+  end
+  object spInsertUpdateContractCondition: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_ContractCondition'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Component = ContractConditionCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inValue'
+        Component = ContractConditionCDS
+        ComponentItem = 'Value'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractId'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractConditionKindId'
+        Component = ContractConditionCDS
+        ComponentItem = 'ContractConditionKindId'
+        ParamType = ptInput
+      end>
+    Left = 368
+    Top = 416
+  end
+  object spSelectContractCondition: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_ContractCondition'
+    DataSet = ContractConditionCDS
+    DataSets = <
+      item
+        DataSet = ContractConditionCDS
+      end>
+    Params = <>
+    Left = 514
+    Top = 397
   end
 end

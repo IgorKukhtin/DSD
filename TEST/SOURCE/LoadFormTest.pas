@@ -165,6 +165,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TAreaForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAreaEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAreaEditForm');
+  // Типы условий договоров
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractConditionKindForm');
+
 end;
 
 procedure TLoadFormTest.LoadContractKindFormTest;
