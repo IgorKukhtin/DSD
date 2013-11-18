@@ -22,7 +22,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dsdAddOn, dxBarExtItems;
+  dsdAddOn, dxBarExtItems, cxButtonEdit;
 
 type
   TContractForm = class(TParentForm)
@@ -75,6 +75,20 @@ type
     clAreaName: TcxGridDBColumn;
     clContractArticleName: TcxGridDBColumn;
     clContractStateKindName: TcxGridDBColumn;
+    cxGridContractCondition: TcxGrid;
+    cxGridDBTableViewContractCondition: TcxGridDBTableView;
+    cContractConditionKindName: TcxGridDBColumn;
+    clValue: TcxGridDBColumn;
+    clsfcisErased: TcxGridDBColumn;
+    cxGridLevel2: TcxGridLevel;
+    ContractConditionDS: TDataSource;
+    ContractConditionCDS: TClientDataSet;
+    spInsertUpdateContractCondition: TdsdStoredProc;
+    spSelectContractCondition: TdsdStoredProc;
+    ContractConditionKindChoiceForm: TOpenChoiceForm;
+    InsertRecordCCK: TInsertRecord;
+    bbInsertRecCCK: TdxBarButton;
+    actContractCondition: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
