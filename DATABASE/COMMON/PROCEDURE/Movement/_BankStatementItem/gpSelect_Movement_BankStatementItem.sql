@@ -1,10 +1,10 @@
 -- Function: gpSelect_Movement_BankStatementItem()
 
--- DROP FUNCTION gpSelect_Movement_BankStatementItem (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_BankStatementItem (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_BankStatementItem (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_BankStatementItem(
-    IN inStartDate   TDateTime , --
-    IN inEndDate     TDateTime , --
+    IN inMovementId  Integer, --
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
@@ -69,18 +69,18 @@ BEGIN
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
 
        WHERE Movement.DescId = zc_Movement_BankStatementItem()
-         AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
+         AND Movement.ParentId = inMovementId;
   
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement_BankStatementItem (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_BankStatementItem (Integer, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-               
+ 15.11.13                        *              
  13.08.13         *
 
 */

@@ -900,9 +900,11 @@ begin
 end;
 
 procedure TdsdChangeMovementStatus.DataSetChanged;
+var Field: TField;
 begin
-  Enabled := (DataSource.DataSet.RecordCount > 0)
-    and (DataSource.DataSet.FieldByName('StatusCode').AsInteger <> (Integer(Status) + 1));
+  Field := DataSource.DataSet.FindField('StatusCode');
+  Enabled := Assigned(Field) and (DataSource.DataSet.RecordCount > 0)
+    and (Field.AsInteger <> (Integer(Status) + 1));
 end;
 
 destructor TdsdChangeMovementStatus.Destroy;

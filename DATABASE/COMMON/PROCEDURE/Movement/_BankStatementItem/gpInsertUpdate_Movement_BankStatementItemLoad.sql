@@ -22,6 +22,10 @@ $BODY$
    DECLARE vbBankAccountFromId Integer;
    DECLARE vbBankAccountToId Integer;
    DECLARE vbMainBankAccountId integer;
+   DECLARE vbMainOKPO TVarChar;
+   DECLARE vbMainJuridicalName TVarChar;
+   DECLARE vbMovementId Integer;
+   DECLARE vbMovementItemId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -37,30 +41,61 @@ BEGIN
      FROM Object AS Object_BankAccount 
     WHERE Object_BankAccount.DescId = zc_Object_BankAccount() AND Object_BankAccount.ValueData = inBankAccountTo;
 
-   -- 3. Если такого счета нет, то выдать сообщение об ошибке и прервать выполнение загрузки
+   -- 2. Если такого счета нет, то выдать сообщение об ошибке и прервать выполнение загрузки
    IF (COALESCE(vbBankAccountFromId, 0) = 0) AND (COALESCE(vbBankAccountToId, 0) = 0) THEN
      -- vbMessage := ; 
       RAISE EXCEPTION 'Счет "%" и "%" не указаны в справочнике счетов.% Загрузка не возможна', inBankAccountFrom, inBankAccountTo, chr(13);
    END IF;
 
+--3. Если найден и счет кому и от кого, то "главным" считается счет "от кого".
 
+   IF COALESCE(vbBankAccountFromId, 0) <> 0 THEN
+      vbMainBankAccountId := vbBankAccountFromId;
+      vbMainOKPO := inOKPOTo;
+      vbMainJuridicalName := inJuridicalNameTo;
+   ELSE
+      vbMainBankAccountId := vbBankAccountToId;
+      vbMainOKPO := inOKPOFrom;
+      vbMainJuridicalName := inJuridicalNameFrom;
+   END IF;
 
+--  4. Найди документ zc_Movement_BankStatement по дате и расчетному счету. 
+   SELECT Movement.Id INTO vbMovementId 
+     FROM Movement
+     JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id AND MovementLinkObject.ObjectId = vbMainBankAccountId
+      AND MovementLinkObject.DescId = zc_MovementLinkObject_BankAccount()
+    WHERE Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_BankStatement();
+
+    IF COALESCE(vbMovementId, 0) = 0 THEN
+       -- 5. Если такого документа нет - создать его
+       -- сохранили <Документ>
+       vbMovementId := lpInsertUpdate_Movement (0, zc_Movement_BankStatement(), NEXTVAL ('Movement_BankStatement_seq') :: TVarChar, inOperDate, NULL);              
+       PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_BankAccount(), vbMovementId, vbMainBankAccountId);
+    END IF;
+
+    --6. Найти документ zc_Movement_BankStatementItem номеру. 
+    
+    SELECT Movement.Id INTO vbMovementItemId 
+     FROM Movement
+    WHERE Movement.ParentId = vbMovementId AND 
+          Movement.DescId = zc_Movement_BankStatementItem() AND Movement.InvNumber = inDocNumber;
+
+    IF COALESCE(vbMovementItemId, 0) = 0 THEN
+       -- 7. Если такого документа нет - создать его
+       -- сохранили <Документ>
+       vbMovementItemId := lpInsertUpdate_Movement (0, zc_Movement_BankStatementItem(), inDocNumber, inOperDate, vbMovementId);              
+    END IF;
+
+    -- сохранили свойство <Сумма операции>
+    PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), vbMovementItemId, inAmount);
+     -- сохранили свойство <ОКПО>
+    PERFORM lpInsertUpdate_MovementString (zc_MovementString_OKPO (), vbMovementItemId, vbMainOKPO);
+
+   
 /*
-4. Если найден и счет кому и от кого, то "главным" считается счет "от кого".
-5. Найди документ zc_Movement_BankStatement по дате и расчетному счету. 
-6. Если такого документа нет - создать его
-7. Найти документ zc_Movement_BankStatementItem номеру. 
-8. Если его нет - то создать
 9. Если есть - то изменить. */
 
-/*      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_BankStatementItem(), inInvNumber, inOperDate, NULL);
-
-     -- сохранили свойство <ОКПО>
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_OKPO (), ioId, inOKPO);
-     -- сохранили свойство <Сумма операции>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), ioId, inAmount);
-
+/*      
      -- сохранили связь с <Управленческие статьи>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_InfoMoney(), ioId, inInfoMoneyId);
      

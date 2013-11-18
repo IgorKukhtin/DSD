@@ -27,7 +27,8 @@ uses
   UtilTimeLogger in '..\SOURCE\UtilTimeLogger.pas',
   ClientBankLoad in '..\SOURCE\COMPONENT\ClientBankLoad.pas',
   MemDBFTable in '..\SOURCE\MemDBFTable.pas',
-  SimpleGauge in '..\SOURCE\SimpleGauge.pas';
+  SimpleGauge in '..\SOURCE\SimpleGauge.pas',
+  FastReportAddOn in '..\SOURCE\COMPONENT\FastReportAddOn.pas';
 
 {$R *.res}
 

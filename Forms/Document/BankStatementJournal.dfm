@@ -12,25 +12,37 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
           Styles.Footer = nil
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
+            Visible = False
+            Options.Editing = False
             Width = 95
           end
           inherited colInvNumber: TcxGridDBColumn
+            Options.Editing = False
             Width = 135
           end
           inherited colOperDate: TcxGridDBColumn
+            Options.Editing = False
             Width = 126
           end
           object colBankName: TcxGridDBColumn
             Caption = #1041#1072#1085#1082
+            DataBinding.FieldName = 'BankName'
+            Options.Editing = False
             Width = 175
           end
           object colBankAccount: TcxGridDBColumn
             Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
+            DataBinding.FieldName = 'BankAccountName'
+            Options.Editing = False
             Width = 172
           end
         end
       end
     end
+  end
+  inherited Panel: TPanel
+    Top = 0
+    ExplicitTop = 0
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -60,10 +72,26 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       item
         Component = BankVostokLoad
         Properties.Strings = (
-          'SecondaryShortCuts')
+          'InitializeDirectory')
+      end
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
       end>
   end
   inherited ActionList: TActionList
+    inherited actInsert: TdsdInsertUpdateAction
+      FormName = 'TBankStatementForm'
+    end
+    inherited actUpdate: TdsdInsertUpdateAction
+      FormName = 'TBankStatementForm'
+    end
     object BankPrivatLoad: TClientBankLoadAction
       Category = 'DSDLib'
       ClientBankType = cbPrivatBank
@@ -180,29 +208,21 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnComplete'
-        end
-        item
-          Visible = True
-          ItemName = 'bbDelete'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbRefresh'
         end
         item
           Visible = True
           ItemName = 'bbGridToExcel'
         end>
+    end
+    inherited bbComplete: TdxBarButton
+      Action = nil
+    end
+    inherited bbUnComplete: TdxBarButton
+      Action = nil
+    end
+    inherited bbDelete: TdxBarButton
+      Action = nil
     end
     object bbBankPrivat: TdxBarButton
       Action = BankPrivat
