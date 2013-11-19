@@ -279,7 +279,8 @@ uses
   Area in '..\..\Forms\Guides\Area.pas' {AreaForm: TParentForm},
   AreaEdit in '..\..\Forms\Guides\AreaEdit.pas' {AreaEditForm: TParentForm},
   BankStatement in '..\..\Forms\Document\BankStatement.pas' {BankStatementForm: TParentForm},
-  ContractChoice in '..\..\Forms\Guides\ContractChoice.pas' {ContractChoiceForm: TParentForm};
+  ContractChoice in '..\..\Forms\Guides\ContractChoice.pas' {ContractChoiceForm: TParentForm},
+  ContractConditionKind in '..\..\Forms\Enum\ContractConditionKind.pas' {ContractConditionKindForm: TParentForm};
 
 {$R *.RES}
 
