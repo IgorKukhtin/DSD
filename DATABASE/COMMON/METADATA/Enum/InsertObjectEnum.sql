@@ -122,11 +122,14 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_OutAmount(), inDescId:= zc_Object_SelectKind(), inCode:= 4, inName:= 'Кол-во расход',                    inEnumName:= 'zc_Enum_SelectKind_OutAmount');
 
      -- !!! Типы сумм для штатного расписания
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_Month(),                inDescId:= zc_Object_StaffListSummKind(), inCode:= 1, inName:= 'за месяц'                        , inEnumName:= 'zc_Enum_StaffListSummKind_Month');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_Turn(),                 inDescId:= zc_Object_StaffListSummKind(), inCode:= 2, inName:= 'за 1 смену'                      , inEnumName:= 'zc_Enum_StaffListSummKind_Turn');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_Personal(),             inDescId:= zc_Object_StaffListSummKind(), inCode:= 3, inName:= 'на 1 человека'                   , inEnumName:= 'zc_Enum_StaffListSummKind_Personal');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_RatioHours(),           inDescId:= zc_Object_StaffListSummKind(), inCode:= 4, inName:= 'в пропорции к отработанным часам', inEnumName:= 'zc_Enum_StaffListSummKind_RatioHours');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_MasterStaffListHours(), inDescId:= zc_Object_StaffListSummKind(), inCode:= 5, inName:= 'по фактической стоимости 1 часа из штатного расписания', inEnumName:= 'zc_Enum_StaffListSummKind_MasterStaffListHours');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_Month(),           inDescId:= zc_Object_StaffListSummKind(), inCode:= 1, inName:= 'Фонд за месяц'                                           , inEnumName:= 'zc_Enum_StaffListSummKind_Month');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_Day(),             inDescId:= zc_Object_StaffListSummKind(), inCode:= 2, inName:= 'Доплата за 1 день'                                       , inEnumName:= 'zc_Enum_StaffListSummKind_Day');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_Personal(),        inDescId:= zc_Object_StaffListSummKind(), inCode:= 3, inName:= 'Доплата за 1 день на человека'                           , inEnumName:= 'zc_Enum_StaffListSummKind_Personal');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_HoursPlan(),       inDescId:= zc_Object_StaffListSummKind(), inCode:= 4, inName:= 'Фонд за общий план часов в месяц на человека'            , inEnumName:= 'zc_Enum_StaffListSummKind_HoursPlan');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_HoursDay(),        inDescId:= zc_Object_StaffListSummKind(), inCode:= 5, inName:= 'Фонд за план часов в рабочие дни на человека'            , inEnumName:= 'zc_Enum_StaffListSummKind_HoursDay');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_HoursPlanConst(),  inDescId:= zc_Object_StaffListSummKind(), inCode:= 6, inName:= 'Фонд постоянный для общий план часов в месяц на человека', inEnumName:= 'zc_Enum_StaffListSummKind_HoursPlanConst');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_HoursDayConst(),   inDescId:= zc_Object_StaffListSummKind(), inCode:= 7, inName:= 'Фонд постоянный для план часов в рабочие дни на человека', inEnumName:= 'zc_Enum_StaffListSummKind_HoursDayConst');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_WorkHours(),       inDescId:= zc_Object_StaffListSummKind(), inCode:= 11,inName:= 'Количество рабочих часов в день'                         , inEnumName:= 'zc_Enum_StaffListSummKind_WorkHours');
 
      -- !!! Состояние договора
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractStateKind_Signed(), inDescId:= zc_Object_ContractStateKind(), inCode:= 1, inName:= 'Подписан' , inEnumName:= 'zc_Enum_ContractStateKind_Signed');
@@ -309,6 +312,11 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.11.13                                        * add zc_Enum_StaffListSummKind_HoursPlanConst and zc_Enum_StaffListSummKind_HoursDayConst
+ 18.11.13                                        * add zc_Enum_StaffListSummKind_HoursDay
+ 18.11.13                                        * replace zc_Enum_StaffListSummKind_RatioHours -> zc_Enum_StaffListSummKind_HoursPlan
+ 18.11.13                                        * replace zc_Enum_StaffListSummKind_Turn -> zc_Enum_StaffListSummKind_Day
+ 18.11.13                                        * replace zc_Enum_StaffListSummKind_MasterStaffListHours -> zc_Enum_StaffListSummKind_WorkHours
  09.11.13                                        * add zc_Enum_Role_Transport
  03.11.13                                        * rename zc_Enum_ProfitLoss_40209 -> zc_Enum_ProfitLoss_40208
  01.11.13                                        * add zc_Enum_Account_110101
