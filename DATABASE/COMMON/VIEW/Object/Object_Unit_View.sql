@@ -1,6 +1,6 @@
 -- View: Object_Unit_View
 
--- DROP VIEW IF EXISTS Object_Unit_View;
+DROP VIEW IF EXISTS Object_Unit_View;
 
 CREATE OR REPLACE VIEW Object_Unit_View AS 
        SELECT 

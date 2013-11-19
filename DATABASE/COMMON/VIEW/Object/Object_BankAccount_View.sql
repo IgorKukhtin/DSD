@@ -18,7 +18,7 @@ CREATE OR REPLACE VIEW Object_BankAccount_View AS
                                  ON ObjectLink_BankAccount_Bank.ObjectId = Object_BankAccount.Id
                                 AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
 
-            LEFT JOIN Object ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
+            LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
                                    
        WHERE Object_BankAccount.DescId = zc_Object_BankAccount();
 

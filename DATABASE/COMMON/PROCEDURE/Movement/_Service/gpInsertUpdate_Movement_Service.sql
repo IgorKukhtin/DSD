@@ -1,17 +1,20 @@
 -- Function: gpInsertUpdate_Movement_Service()
 
--- DROP FUNCTION gpInsertUpdate_Movement_Service();
+DROP FUNCTION IF EXISTS gpinsertupdate_movement_service(integer, tvarchar, tdatetime, tfloat, integer, integer, integer, integer, integer, integer, tvarchar);
+DROP FUNCTION IF EXISTS gpinsertupdate_movement_service(integer, tvarchar, tdatetime, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inAmount              TFloat    , -- Сумма операции 
-    IN inJuridicalId         Integer   , -- Юр. лицо	
-    IN inMainJuridicalId     Integer   , -- Главное юр. лицо	
+    IN inComment             TVarChar  , -- Комментарий
     IN inBusinessId          Integer   , -- Бизнес    
-    IN inPaidKindId          Integer   , -- Виды форм оплаты
+    IN inContractId          Integer   , -- Договор
     IN inInfoMoneyId         Integer   , -- Статьи назначения 
+    IN inJuridicalId         Integer   , -- Юр. лицо	
+    IN inJuridicalBasisId    Integer   , -- Главное юр. лицо	
+    IN inPaidKindId          Integer   , -- Виды форм оплаты
     IN inUnitId              Integer   , -- Подразделение
     IN inSession             TVarChar    -- сессия пользователя
 )                              
@@ -30,11 +33,16 @@ BEGIN
      -- сохранили свойство <Сумма операции>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), ioId, inAmount);
 
+     -- сохранили свойство <Комментарий>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+
      -- сохранили связь с <Юр. лицо>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), ioId, inJuridicalId);
      -- сохранили связь с <Главное юр. лицо>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_JuridicalBasis(), ioId, inMainJuridicalId);
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_JuridicalBasis(), ioId, inJuridicalBasisId);
 
+     -- сохранили связь с <Договор>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
      -- сохранили связь с <Бизнес>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Business(), ioId, inBusinessId);
      -- сохранили связь с <Виды форм оплаты >

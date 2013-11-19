@@ -9,6 +9,8 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Service(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , Amount TFloat 
+             , Comment TVarChar
+             , ContractId Integer, ContractInvNumber TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , MainJuridicalId Integer, MainJuridicalName TVarChar
              , BusinessId Integer, BusinessName TVarChar
@@ -34,12 +36,16 @@ BEGIN
            , lfObject_Status.Code             AS StatusCode
            , lfObject_Status.Name             AS StatusName
            
-           , 0                                AS Amount
+           , 0::TFloat                        AS Amount
 
+           , ''::TVarChar                     AS Comment
+           , 0                                AS ContractId
+           , ''::TVarChar                     AS ContractInvNumber
            , 0                                AS JuridicalId
            , CAST ('' as TVarChar)            AS JuridicalName
-           , 0                                AS MainJuridicalId
-           , CAST ('' as TVarChar)            AS MainJuridicalName
+           , zc_Juridical_Basis()             AS MainJuridicalId
+           , COALESCE((SELECT ValueData FROM Object WHERE Object.Id = zc_Juridical_Basis()), '')::TVarChar 
+                           AS MainJuridicalName
            , 0                                AS BusinessId
            , CAST ('' as TVarChar)            AS BusinessName
            , 0                                AS PaidKindId
@@ -62,6 +68,9 @@ BEGIN
            , Object_Status.ValueData    AS StatusName
                       
            , MovementFloat_Amount.ValueData   AS Amount
+           , MovementString_Comment.ValueData   AS Comment
+           , Object_Contract.Id               AS ContractId
+           , Object_Contract.ValueData        AS ContractInvNumber
 
            , Object_Juridical.Id              AS JuridicalId
            , Object_Juridical.ValueData       AS JuridicalName
@@ -93,7 +102,7 @@ BEGIN
             
             LEFT JOIN MovementLinkObject AS MovementLinkObject_MainJuridical
                                          ON MovementLinkObject_MainJuridical.MovementId = Movement.Id
-                                        AND MovementLinkObject_MainJuridical.DescId = zc_MovementLinkObject_JuridicalBasic()
+                                        AND MovementLinkObject_MainJuridical.DescId = zc_MovementLinkObject_JuridicalBasis()
             LEFT JOIN Object AS Object_MainJuridical ON Object_MainJuridical.Id = MovementLinkObject_MainJuridical.ObjectId
             
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Business
@@ -116,6 +125,13 @@ BEGIN
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
 
+            LEFT JOIN MovementString AS MovementString_Comment 
+                   ON MovementString_Comment.MovementId = Movement.Id AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract 
+                   ON MovementLinkObject_Contract.MovementId = Movement.Id AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Service();
    END IF;  
@@ -128,6 +144,7 @@ ALTER FUNCTION gpGet_Movement_Service (Integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 18.11.13                         * -- Add other properties
  07.11.13                         * -- Default on Get
  11.08.13         *
 

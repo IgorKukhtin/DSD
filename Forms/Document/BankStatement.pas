@@ -10,7 +10,8 @@ uses
   dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB, Datasnap.DBClient,
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  cxCurrencyEdit;
+  cxCurrencyEdit, Vcl.ExtCtrls, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils,
+  cxButtonEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, cxTextEdit, cxLabel;
 
 type
   TBankStatementForm = class(TAncestorDBGridForm)
@@ -21,6 +22,16 @@ type
     cxGridDBTableViewColumn4: TcxGridDBColumn;
     cxGridDBTableViewColumn5: TcxGridDBColumn;
     cxGridDBTableViewColumn6: TcxGridDBColumn;
+    Panel: TPanel;
+    cxLabel1: TcxLabel;
+    edInvNumber: TcxTextEdit;
+    cxLabel2: TcxLabel;
+    edOperDate: TcxDateEdit;
+    cxLabel3: TcxLabel;
+    cxLabel4: TcxLabel;
+    spGet: TdsdStoredProc;
+    edBankName: TcxTextEdit;
+    edBankAccount: TcxTextEdit;
   private
     { Private declarations }
   public

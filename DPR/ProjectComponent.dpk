@@ -54,8 +54,7 @@ requires
   frxDB16,
   dxBarExtItemsRS16,
   cxPivotGridRS16,
-  VclSmp,
-  ZLibEx;
+  VclSmp;
 
 contains
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',

@@ -1,7 +1,7 @@
 inherited ServiceJournalForm: TServiceJournalForm
   Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1091#1089#1083#1091#1075
   ClientWidth = 884
-  ExplicitWidth = 900
+  ExplicitWidth = 892
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -15,29 +15,50 @@ inherited ServiceJournalForm: TServiceJournalForm
         Width = 884
         ExplicitWidth = 884
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Position = spFooter
+              Column = clAmount
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = clAmount
+            end>
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
+            Options.Editing = False
             Width = 77
           end
           inherited colInvNumber: TcxGridDBColumn
+            Options.Editing = False
             Width = 64
           end
           inherited colOperDate: TcxGridDBColumn
+            Options.Editing = False
             Width = 54
           end
           object clAmount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1086#1087#1077#1088#1072#1094#1080#1080
             DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 121
           end
           object clFrom: TcxGridDBColumn
             Caption = #1070#1088'. '#1083#1080#1094#1086'.'
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 93
           end
           object clTo: TcxGridDBColumn
@@ -45,6 +66,7 @@ inherited ServiceJournalForm: TServiceJournalForm
             DataBinding.FieldName = 'MainJuridicalName'
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 86
           end
           object clPosition: TcxGridDBColumn
@@ -52,6 +74,7 @@ inherited ServiceJournalForm: TServiceJournalForm
             DataBinding.FieldName = 'BusinessName'
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 77
           end
           object clPaidKind: TcxGridDBColumn
@@ -59,6 +82,7 @@ inherited ServiceJournalForm: TServiceJournalForm
             DataBinding.FieldName = 'PaidKindName'
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 71
           end
           object clInfoMoney: TcxGridDBColumn
@@ -66,6 +90,7 @@ inherited ServiceJournalForm: TServiceJournalForm
             DataBinding.FieldName = 'InfoMoneyName'
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 63
           end
           object clUnit: TcxGridDBColumn
@@ -73,6 +98,7 @@ inherited ServiceJournalForm: TServiceJournalForm
             DataBinding.FieldName = 'UnitName'
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 58
           end
         end

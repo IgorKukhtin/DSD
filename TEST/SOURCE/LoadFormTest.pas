@@ -150,6 +150,9 @@ procedure TLoadFormTest.LoadContractFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractChoiceForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractEditForm');
   // Состояние договора
