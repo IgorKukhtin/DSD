@@ -505,6 +505,8 @@ begin
      if ParentId <> '' then
         DataSet.Locate('Id', ParentId, []);
   end;
+  if not (Form.FindComponent(PositionDataSet) is TDataSet) then
+     raise Exception.Create('Компонент ' + Name + '. Класс ' + PositionDataSet + ' не является TDataSet');
   // Спозиционировались на дата сете
   DataSet := Form.FindComponent(PositionDataSet) as TDataSet;
   if not Assigned(DataSet) then

@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                GoodsPropertyName TVarChar, 
                InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar, 
                InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar, 
-               InfoMoneyCode Integer, InfoMoneyName TVarChar, 
+               InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, 
                isErased Boolean
               )
 AS
@@ -22,36 +22,6 @@ BEGIN
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_Juridical());
 
    RETURN QUERY 
---   SELECT 
---         Object_JuridicalGroup.Id         AS Id 
---       , Object_JuridicalGroup.ObjectCode AS Code
---       , CAST ('' AS TVarChar)            AS Name
-       
---       , CAST ('' AS TVarChar)     AS GLNCode
---       , CAST (NULL AS Boolean)    AS isCorporate
-
---       , ObjectLink_JuridicalGroup_Parent.ChildObjectId AS JuridicalGroupId
- --      , Object_JuridicalGroup.ValueData                AS JuridicalGroupName
-       
---       , CAST (0 as Integer)    AS GoodsPropertyId 
-  --     , CAST ('' as TVarChar)  AS GoodsPropertyName 
-       
-    --   , CAST (0 as Integer)    AS InfoMoneyGroupId
-      -- , CAST ('' as TVarChar)  AS InfoMoneyGroupName
-
---       , CAST (0 as Integer)    AS InfoMoneyDestinationId
-  --     , CAST ('' as TVarChar)  AS InfoMoneyDestinationName
-
-    --   , CAST (0 as Integer)    AS InfoMoneyId
-      -- , CAST ('' as TVarChar)  AS InfoMoneyName
-       
---       , Object_JuridicalGroup.isErased   AS isErased
-  -- FROM Object AS Object_JuridicalGroup
-    --    LEFT JOIN ObjectLink AS ObjectLink_JuridicalGroup_Parent
-      --                       ON ObjectLink_JuridicalGroup_Parent.ObjectId = Object_JuridicalGroup.Id
-        --                    AND ObjectLink_JuridicalGroup_Parent.DescId = zc_ObjectLink_JuridicalGroup_Parent()
---   WHERE Object_JuridicalGroup.DescId = zc_Object_JuridicalGroup()
-  --UNION
    SELECT 
          Object_Juridical.Id             AS Id 
        , Object_Juridical.ObjectCode     AS Code
@@ -70,6 +40,7 @@ BEGIN
        , Object_InfoMoney_View.InfoMoneyGroupName
        , Object_InfoMoney_View.InfoMoneyDestinationCode
        , Object_InfoMoney_View.InfoMoneyDestinationName
+       , Object_InfoMoney_View.InfoMoneyId
        , Object_InfoMoney_View.InfoMoneyCode
        , Object_InfoMoney_View.InfoMoneyName
        

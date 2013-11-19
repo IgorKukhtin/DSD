@@ -1,21 +1,21 @@
 -- Function: gpGet_Movement_BankStatement()
 
--- DROP FUNCTION gpGet_Movement_BankStatement (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_BankStatement (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_BankStatement(
     IN inMovementId        Integer  , -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
-             , FileName TVarChar
              , BankAccountId Integer, BankAccountName TVarChar
+             , BankId Integer, BankName TVarChar
               )
 AS
 $BODY$
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_BankStatement());
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_BankStatement());
 
      RETURN QUERY 
        SELECT
@@ -23,25 +23,20 @@ BEGIN
            , Movement.InvNumber
            , Movement.OperDate
 
-           , MovementString_FileName.ValueData AS FileName
-
-           , Object_BankAccount.Id          AS BankAccountId
-           , Object_BankAccount.ValueData   AS BankAccountName
+           , Object_BankAccount_View.Id          AS BankAccountId
+           , Object_BankAccount_View.Name        AS BankAccountName
+           , Object_BankAccount_View.BankId
+           , Object_BankAccount_View.BankName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-            LEFT JOIN MovementString AS MovementString_FileName
-                                     ON MovementString_FileName.MovementId =  Movement.Id
-                                    AND MovementString_FileName.DescId = zc_MovementString_FileName()
-
             LEFT JOIN MovementLinkObject AS MovementLinkObject_BankAccount
                                          ON MovementLinkObject_BankAccount.MovementId = Movement.Id
                                         AND MovementLinkObject_BankAccount.DescId = zc_MovementLinkObject_BankAccount()
-            LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = MovementLinkObject_BankAccount.ObjectId
+            LEFT JOIN Object_BankAccount_View ON Object_BankAccount_View.Id = MovementLinkObject_BankAccount.ObjectId
 
-       WHERE Movement.Id =  inMovementId
-         AND Movement.DescId = zc_Movement_BankStatement();
+       WHERE Movement.Id =  inMovementId;
   
 END;
 $BODY$
@@ -52,7 +47,7 @@ ALTER FUNCTION gpGet_Movement_BankStatement (Integer, TVarChar) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-               
+ 18.11.13                        *              
  08.08.13         *
 */
 

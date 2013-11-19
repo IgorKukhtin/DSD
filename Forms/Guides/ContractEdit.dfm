@@ -364,6 +364,7 @@ object ContractEditForm: TContractEditForm
       item
         Name = 'inPaidKindId'
         Value = ''
+        Component = PaidKindGuides
         ParamType = ptInput
       end
       item

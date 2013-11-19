@@ -268,6 +268,7 @@ object JuridicalForm: TJuridicalForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -344,6 +345,17 @@ object JuridicalForm: TJuridicalForm
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyId'
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyId'
+        end
+        item
+          Name = 'InfoMoneyName'
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

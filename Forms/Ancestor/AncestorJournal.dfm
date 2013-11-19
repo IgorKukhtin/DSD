@@ -284,6 +284,15 @@ inherited AncestorJournalForm: TAncestorJournalForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = actUpdate
+      end>
+    ActionItemList = <
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
     Left = 224
     Top = 200
   end

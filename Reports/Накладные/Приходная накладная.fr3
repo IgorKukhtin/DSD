@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<TfrxReport Version="4.12" DotMatrixReport="False" IniFile="\Software\Fast Reports" PreviewOptions.Buttons="4095" PreviewOptions.Zoom="1" PrintOptions.Printer="По умолчанию" PrintOptions.PrintOnSheet="0" ReportOptions.CreateDate="41431,0237416551" ReportOptions.Description.Text="" ReportOptions.LastChange="41480,9232084028" ScriptLanguage="PascalScript" ScriptText.Text="begin&#13;&#10;&#13;&#10;end." PropData="0844617461736574730101063D20446174615365743D22496E636F6D65466F726D2E6672784442446174617365742220446174615365744E616D653D22667278444244617461736574220000095661726961626C65730101061C204E616D653D22496E764E756D626572222056616C75653D223135220001142F000000204E616D653D2246726F6D222056616C75653D22D093D180D183D0BFD0BFD0B020D18ED18020D0BBD0B8D1862031220000055374796C650100">
+<TfrxReport Version="4.14" DotMatrixReport="False" PreviewOptions.Buttons="4095" PreviewOptions.Zoom="1" PrintOptions.Printer="По умолчанию" PrintOptions.PrintOnSheet="0" ReportOptions.CreateDate="41431,0237416551" ReportOptions.Description.Text="" ReportOptions.LastChange="41595,5819983912" ScriptLanguage="PascalScript" ScriptText.Text="begin&#13;&#10;&#13;&#10;end." PropData="044C65667403980103546F7003A0000844617461736574730101063420446174615365743D224D6173746572446174615365742220446174615365744E616D653D224D617374657244617461536574220000095661726961626C65730101061C204E616D653D22496E764E756D626572222056616C75653D223135220001142F000000204E616D653D2246726F6D222056616C75653D22D093D180D183D0BFD0BFD0B020D18ED18020D0BBD0B8D1862031220000055374796C650100">
   <TfrxDataPage Name="" Height="1000" Left="0" Top="0" Width="1000"/>
   <TfrxReportPage Name="Page1" PaperWidth="210" PaperHeight="297" PaperSize="9" LeftMargin="10" RightMargin="10" TopMargin="10" BottomMargin="10" ColumnWidth="0" ColumnPositions.Text="" HGuides.Text="" VGuides.Text="">
     <TfrxMemoView Name="Memo3" Left="157" Top="85" Width="80" Height="16" ShowHint="False" Text="fffffffffffffff"/>
-    <TfrxMasterData Name="MasterData1" Height="20" Left="0" Top="140" Width="718,1107" ColumnWidth="0" ColumnGap="0" DataSet="IncomeForm.frxDBDataset" DataSetName="frxDBDataset" RowCount="0">
-      <TfrxMemoView Name="frxDBDatasetgoodsname" Left="0" Top="3" Width="400" Height="16" ShowHint="False" DataField="goodsname" DataSet="IncomeForm.frxDBDataset" DataSetName="frxDBDataset" Text="[frxDBDataset.&#34;goodsname&#34;]"/>
-      <TfrxMemoView Name="frxDBDatasetamount" Left="407" Top="4" Width="80" Height="16" ShowHint="False" DataField="amount" DataSet="IncomeForm.frxDBDataset" DataSetName="frxDBDataset" Text="[frxDBDataset.&#34;amount&#34;]"/>
-      <TfrxMemoView Name="frxDBDatasetprice" Left="511" Top="3" Width="80" Height="16" ShowHint="False" DataField="price" DataSet="IncomeForm.frxDBDataset" DataSetName="frxDBDataset" Text="[frxDBDataset.&#34;price&#34;]"/>
+    <TfrxMasterData Name="MasterData1" Height="20" Left="0" Top="143,62214" Width="718,1107" ColumnWidth="0" ColumnGap="0" DataSetName="frxDBDataset" RowCount="0">
+      <TfrxMemoView Name="frxDBDatasetgoodsname" Left="0" Top="3" Width="400" Height="16" ShowHint="False" DataField="goodsname" DataSetName="frxDBDataset" Text="[frxDBDataset.&#34;goodsname&#34;]"/>
+      <TfrxMemoView Name="frxDBDatasetamount" Left="407" Top="4" Width="80" Height="16" ShowHint="False" DataField="amount" DataSetName="frxDBDataset" Text="[frxDBDataset.&#34;amount&#34;]"/>
+      <TfrxMemoView Name="frxDBDatasetprice" Left="511" Top="3" Width="80" Height="16" ShowHint="False" DataField="price" DataSetName="frxDBDataset" Text="[frxDBDataset.&#34;price&#34;]"/>
     </TfrxMasterData>
-    <TfrxReportTitle Name="ReportTitle1" Height="64" Left="0" Top="16" Width="718,1107">
-      <TfrxMemoView Name="Memo1" Left="25" Top="13" Width="101" Height="16" ShowHint="False" DataSet="IncomeForm.frxDBDataset" DataSetName="frxDBDataset" Text="[InvNumber]"/>
-      <TfrxMemoView Name="Memo2" Left="296" Top="13" Width="101" Height="16" ShowHint="False" DataSet="IncomeForm.frxDBDataset" DataSetName="frxDBDataset" Text="[From]"/>
+    <TfrxReportTitle Name="ReportTitle1" Height="64" Left="0" Top="18,89765" Width="718,1107">
+      <TfrxMemoView Name="Memo1" Left="25" Top="13" Width="101" Height="16" ShowHint="False" DataSetName="frxDBDataset" Text="[InvNumber]"/>
+      <TfrxMemoView Name="Memo2" Left="296" Top="13" Width="101" Height="16" ShowHint="False" DataSetName="frxDBDataset" Text="[From]"/>
     </TfrxReportTitle>
   </TfrxReportPage>
 </TfrxReport>

@@ -71,7 +71,7 @@ begin
   lStoredProc := TAccessdsdStoredProc.Create(nil);
   lDataSet := TClientDataSet.Create(nil);
   lStoredProc.SetDesigning(true);
-  lStoredProc.StoredProcName := 'lfGetParams';
+  lStoredProc.StoredProcName := 'gpinsertupdate_movement_service';
   lStoredProc.StoredProcName := 'gpSelect_PeriodClose';
 end;
 

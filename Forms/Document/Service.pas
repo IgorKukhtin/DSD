@@ -37,6 +37,11 @@ type
     JuridicalGuides: TdsdGuides;
     cxLabel6: TcxLabel;
     GuidesFiller: TGuidesFiller;
+    ceContract: TcxButtonEdit;
+    cxLabel8: TcxLabel;
+    cxLabel10: TcxLabel;
+    ceComment: TcxTextEdit;
+    ContractGuides: TdsdGuides;
   private
     { Private declarations }
   public
