@@ -290,6 +290,8 @@ end;
 procedure TdsdStoredProc.SetStoredProcName(const Value: String);
   function PostgresDataTypeToDelphiDataType(PostgresType: string): TFieldType;
   begin
+    if PostgresType = 'tdatetime' then
+       result := ftDateTime;
     if PostgresType = 'int4' then
        result := ftInteger;
     if PostgresType = 'tvarchar' then
@@ -515,7 +517,7 @@ var i: Integer;
 begin
   Data := Value;
   if VarisNull(Data) then
-     Data := '';
+     Data := 'NULL';
   if varType(Data) in [varSingle, varDouble, varCurrency] then
      result := gfFloatToStr(Data)
   else

@@ -37,7 +37,7 @@ type
 
 implementation
 
-uses IdHTTP, Xml.XMLDoc, XMLIntf, Classes, ZLibEx, idGlobal, UtilConst, DBClient, Variants, UtilConvert,
+uses IdHTTP, Xml.XMLDoc, XMLIntf, Classes, ZLibEx, idGlobal, UtilConst, Variants, UtilConvert,
      MessagesUnit, Dialogs, StrUtils;
 
 const

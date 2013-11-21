@@ -1,6 +1,6 @@
 -- Function: gpSelect_Movement_BankAccount()
 
--- DROP FUNCTION gpSelect_Movement_Cash (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Cash (TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Cash(
     IN inStartDate   TDateTime , --
@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , InfoMoneyId Integer, InfoMoneyName TVarChar
              , ContractId Integer, ContractName TVarChar
              , UnitId Integer, UnitName TVarChar
-              )
+             , BusinessId Integer, BusinessName TVarChar)
 AS
 $BODY$
 BEGIN
@@ -40,16 +40,23 @@ BEGIN
            , Object_From.ValueData             AS FromName
            , Object_To.Id                      AS ToId
            , Object_To.ValueData               AS ToName
-           
            , Object_InfoMoney.Id               AS InfoMoneyId
            , Object_InfoMoney.ValueData        AS InfoMoneyName
            , Object_Contract.Id                AS ContractId
            , Object_Contract.ValueData         AS ContractName
            , Object_Unit.Id                    AS UnitId
            , Object_Unit.ValueData             AS UnitName
+           , Object_Business.Id                AS BusinessId
+           , Object_Business.ValueData         AS BusinessName
+
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Business
+                                         ON MovementLinkObject_Business.MovementId = Movement.Id
+                                        AND MovementLinkObject_Business.DescId = zc_MovementLinkObject_Business()
+            LEFT JOIN Object AS Object_Business ON Object_Business.Id = MovementLinkObject_Business.ObjectId
 
             LEFT JOIN MovementFloat AS MovementFloat_Amount
                                     ON MovementFloat_Amount.MovementId =  Movement.Id

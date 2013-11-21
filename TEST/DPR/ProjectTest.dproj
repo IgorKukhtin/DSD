@@ -690,11 +690,6 @@
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Ancestor\AncestorGuides.pas">
-				<Form>AncestorGuidesForm</Form>
-				<FormType>dfm</FormType>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\System\ObjectDesc.pas">
 				<Form>ObjectDescForm</Form>
 				<FormType>dfm</FormType>
@@ -721,8 +716,8 @@
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ServiceJournal.pas">
-				<Form>ServiceJournalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\CashJournal.pas">
+				<Form>CashJournalForm</Form>
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
@@ -730,8 +725,8 @@
 				<Form>Report_GoodsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Service.pas">
-				<Form>ServiceForm</Form>
+			<DCCReference Include="..\..\Forms\Document\CashOperation.pas">
+				<Form>CashOperationForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\SendTicketFuel.pas">
@@ -788,9 +783,27 @@
 			<DCCReference Include="..\..\Forms\Guides\ContractChoice.pas">
 				<Form>ContractChoiceForm</Form>
 				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Enum\ContractConditionKind.pas">
 				<Form>ContractConditionKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ServiceJournal.pas">
+				<Form>ServiceJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\MoneyPlace_Object.pas">
+				<Form>MoneyPlace_ObjectForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Service.pas">
+				<Form>ServiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorGuides.pas">
+				<Form>AncestorGuidesForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -7,14 +7,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash(
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inAmount              TFloat    , -- Сумма 
+    IN inComment             TVarChar  , -- Комментарий
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
-    IN inPaidKindId          Integer   , -- Виды форм оплаты 
-    IN inInfoMoneyId         Integer   , -- Управленческие статьи
+    IN inBusinessId          Integer   , -- Бизнес 
     IN inContractId          Integer   , -- Договора
-    IN inUnitId              Integer   , -- Подразделения
+    IN inInfoMoneyId         Integer   , -- Управленческие статьи
     IN inPositionId          Integer   , -- Должность
-    IN inAccrualDate         TDateTime , -- Дата начисления
+    IN inUnitId              Integer   , -- Подразделения
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
@@ -36,9 +36,11 @@ BEGIN
 
      -- сохранили свойство <Сумма операции>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), ioId, inAmount);
+     -- 
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
 
-     -- сохранили связь с <Виды форм оплаты >
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
+     -- сохранили связь с <Бизнес >
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Business(), ioId, inBusinessId);
      -- сохранили связь с <Управленческие статьи >
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_InfoMoney(), ioId, inInfoMoneyId);
      -- сохранили связь с <Договора>
@@ -49,7 +51,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Position(), ioId, inPositionId);
 
      -- сохранили <Дату начисления>
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_AccrualDate(), ioId, inAccrualDate);
+   --  PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_AccrualDate(), ioId, inAccrualDate);
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
@@ -62,6 +64,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.11.13                        *                
  06.08.13                        *                
 
 */

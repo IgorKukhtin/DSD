@@ -145,8 +145,7 @@ type
     actZakazInternal: TdsdOpenForm;
     bbFinanceDocuments: TdxBarSubItem;
     bbIncomeCash: TdxBarButton;
-    actIncomeCash: TdsdOpenForm;
-    actOutcomeCash: TdsdOpenForm;
+    actCashOperation: TdsdOpenForm;
     bbBankAccount: TdxBarButton;
     actReport_MotionGoods: TdsdOpenForm;
     bbReport_MotionGoods: TdxBarButton;

@@ -13,7 +13,7 @@
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = dsdDataSetRefresh
-  AddOnFormData.Params = dsdFormParams
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
@@ -140,6 +140,7 @@
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object dsdFormClose: TdsdFormClose
     end
@@ -161,7 +162,7 @@
       item
         Name = 'ioId'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
@@ -181,13 +182,13 @@
       item
         Name = 'inCurrencyId'
         Value = ''
-        Component = dsdCurrencyGuides
+        Component = CurrencyGuides
         ParamType = ptInput
       end
       item
         Name = 'inBranchId'
         Value = ''
-        Component = dsdBranchGuides
+        Component = BranchGuides
         ParamType = ptInput
       end
       item
@@ -207,7 +208,7 @@
     Left = 240
     Top = 48
   end
-  object dsdFormParams: TdsdFormParams
+  object FormParams: TdsdFormParams
     Params = <
       item
         Name = 'Id'
@@ -225,7 +226,7 @@
       item
         Name = 'Id'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
@@ -243,25 +244,25 @@
       item
         Name = 'BranchId'
         Value = ''
-        Component = dsdBranchGuides
+        Component = BranchGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'BranchName'
         Value = ''
-        Component = dsdBranchGuides
+        Component = BranchGuides
         ComponentItem = 'TextValue'
       end
       item
         Name = 'CurrencyId'
         Value = ''
-        Component = dsdCurrencyGuides
+        Component = CurrencyGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'CurrencyName'
         Value = ''
-        Component = dsdCurrencyGuides
+        Component = CurrencyGuides
         ComponentItem = 'TextValue'
       end
       item
@@ -294,21 +295,47 @@
     Left = 192
     Top = 88
   end
-  object dsdBranchGuides: TdsdGuides
+  object BranchGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceBranch
     FormName = 'TBranchForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
     Left = 256
     Top = 109
   end
-  object dsdCurrencyGuides: TdsdGuides
+  object CurrencyGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceCurrency
     FormName = 'TCurrencyForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = CurrencyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = CurrencyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
     Left = 256
     Top = 165
   end
@@ -327,7 +354,7 @@
     Left = 136
     Top = 40
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 80
     Top = 104
   end
@@ -336,7 +363,20 @@
     LookupControl = ceBusiness
     FormName = 'TBusinessForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BusinessGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BusinessGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
     Left = 248
     Top = 256
   end
@@ -344,8 +384,21 @@
     KeyField = 'Id'
     LookupControl = ceJuridical
     FormName = 'TJuridicalForm'
-    PositionDataSet = 'GridDataSet'
-    Params = <>
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
     Left = 264
     Top = 208
   end

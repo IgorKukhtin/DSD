@@ -56,7 +56,7 @@ const
   gcBasicProtein = 'BasicProtein';
   gc_BasicMilk = 3.4;
   gc_BasicProtein = 3;
-  
+
   {различные константы системы в алфавитном порядке
    на русском языке
   }
@@ -419,7 +419,6 @@ uses Windows;
     GetKeyboardState(State) ;
     Result := ((State[vk_Control] and 128) <> 0) ;
  end;
-
 
 initialization
   with FormatSettings do begin

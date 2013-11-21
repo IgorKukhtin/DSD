@@ -576,7 +576,7 @@ object MainForm: TMainForm
         end>
     end
     object bbIncomeCash: TdxBarButton
-      Action = actIncomeCash
+      Action = actCashOperation
       Category = 0
     end
     object bbBankAccount: TdxBarButton
@@ -1435,17 +1435,11 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actIncomeCash: TdsdOpenForm
+    object actCashOperation: TdsdOpenForm
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
-      Caption = #1055#1088#1080#1093#1086#1076#1085#1099#1081' '#1082#1072#1089#1089#1086#1074#1099#1081' '#1086#1088#1076#1077#1088
-      Hint = #1055#1088#1080#1093#1086#1076#1085#1099#1081' '#1082#1072#1089#1089#1086#1074#1099#1081' '#1086#1088#1076#1077#1088
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actOutcomeCash: TdsdOpenForm
-      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
-      Caption = #1056#1072#1089#1093#1086#1076#1085#1099#1081' '#1082#1072#1089#1089#1086#1074#1099#1081' '#1086#1088#1076#1077#1088
-      Hint = #1056#1072#1089#1093#1086#1076#1085#1099#1081' '#1082#1072#1089#1089#1086#1074#1099#1081' '#1086#1088#1076#1077#1088
+      Caption = #1054#1087#1077#1088#1072#1094#1080#1080' '#1089' '#1082#1072#1089#1089#1086#1081
+      Hint = #1054#1087#1077#1088#1072#1094#1080#1080' '#1089' '#1082#1072#1089#1089#1086#1081
+      FormName = 'TCashJournalForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -1650,7 +1644,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.12'
+    Version = '4.14'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
