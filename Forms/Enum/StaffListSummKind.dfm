@@ -56,6 +56,11 @@ object StaffListSummKindForm: TStaffListSummKindForm
         HeaderAlignmentVert = vaCenter
         Width = 252
       end
+      object clComment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        HeaderAlignmentVert = vaCenter
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView

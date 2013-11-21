@@ -788,6 +788,7 @@
 			<DCCReference Include="..\..\Forms\Guides\ContractChoice.pas">
 				<Form>ContractChoiceForm</Form>
 				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Enum\ContractConditionKind.pas">
 				<Form>ContractConditionKindForm</Form>

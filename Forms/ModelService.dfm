@@ -117,8 +117,6 @@ object ModelServiceForm: TModelServiceForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = 481
-    ExplicitWidth = 445
     object cxGridDBTableViewModelServiceItemMaster: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ModelServiceItemMasterDS
@@ -225,7 +223,6 @@ object ModelServiceForm: TModelServiceForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitWidth = 926
     object cxGridDBTableViewModelServiceItemChild: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ModelServiceItemChildDS
@@ -315,8 +312,8 @@ object ModelServiceForm: TModelServiceForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
