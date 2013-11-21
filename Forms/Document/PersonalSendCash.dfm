@@ -840,7 +840,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
     end
     object PersonalChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
-      FormName = 'TPersonalForm'
+      FormName = 'TPersonal_ObjectForm'
       GuiParams = <
         item
           Name = 'Key'
@@ -963,7 +963,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
   object GuidesPersonal: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonal
-    FormName = 'TPersonalForm'
+    FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

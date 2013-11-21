@@ -53,6 +53,9 @@ type
     MemberGuides: TdsdGuides;
     PersonalGroupGuides: TdsdGuides;
     PositionGuides: TdsdGuides;
+    cxLabel4: TcxLabel;
+    cePositionLevel: TcxButtonEdit;
+    PositionLevelGuides: TdsdGuides;
   private
     { Private declarations }
   public

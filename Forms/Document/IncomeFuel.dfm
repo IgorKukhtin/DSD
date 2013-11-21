@@ -1540,7 +1540,7 @@ object IncomeFuelForm: TIncomeFuelForm
   object GuidesPersonalDriver: TdsdGuides
     KeyField = 'Id'
     LookupControl = edDriver
-    FormName = 'TPersonalForm'
+    FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

@@ -27,10 +27,11 @@ BEGIN
    -- Если код не установлен, определяем его каи последний+1
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_PersonalGroup()); 
    
-   -- проверка  уникальности для свойства <Наименование> + <Подразделение>
-   IF EXISTS (SELECT PersonalGroupName FROM Object_PersonalGroup_View WHERE PersonalGroupName = inName AND UnitId = inUnitId AND PersonalGroupId <> COALESCE(ioId, 0) ) THEN
-      RAISE EXCEPTION 'Значение <%> для подразделения <%> не уникально в справочнике <%>.', inName, (SELECT ValueData FROM Object WHERE Id = inUnitId), (SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_PersonalGroup());
+   -- проверка  уникальности для свойств: <Наименование> + <Подразделение>
+   IF EXISTS (SELECT PersonalGroupName FROM Object_PersonalGroup_View WHERE PersonalGroupName = inName AND UnitId = inUnitId AND PersonalGroupId <> COALESCE(ioId, 0)) THEN
+      RAISE EXCEPTION 'Значение <%> для подразделения: <%> не уникально в справочнике <%>.', inName, (SELECT ValueData FROM Object WHERE Id = inUnitId), (SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_PersonalGroup());
    END IF; 
+
    -- проверка уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_PersonalGroup(), vbCode_calc);
  
@@ -53,7 +54,7 @@ ALTER FUNCTION gpInsertUpdate_Object_PersonalGroup (Integer,Integer,TVarChar,TFl
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 21.11.13                                        * Object_PersonalGroup_View
+ 21.11.13                                        * add проверка уникальности для свойств
  09.10.13                                        * пытаемся найти код
  30.09.13          *
 */

@@ -639,7 +639,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
   object PersonalDriverGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonalDriver
-    FormName = 'TPersonalForm'
+    FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

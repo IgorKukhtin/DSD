@@ -780,7 +780,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
   object LocationGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edLocation
-    FormName = 'TPersonalForm'
+    FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

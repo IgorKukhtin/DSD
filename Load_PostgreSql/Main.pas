@@ -528,14 +528,14 @@ begin
      if not fStop then pLoadGuide_ModelService;
      if not fStop then pLoadGuide_ModelServiceItemMaster;
      if not fStop then pLoadGuide_ModelServiceItemChild;
-     if not fStop then pLoadGuide_StaffList;
-     if not fStop then pLoadGuide_StaffListCost;
-     if not fStop then pLoadGuide_StaffListSumm;
-     if not fStop then pLoadGuide_Member_SheetWorkTime;
-     if not fStop then pLoadGuide_Personal_SheetWorkTime;
      if not fStop then pLoadGuide_Position_SheetWorkTime;
      if not fStop then pLoadGuide_PositionLevel_SheetWorkTime;
      if not fStop then pLoadGuide_PersonalGroup_SheetWorkTime;
+     if not fStop then pLoadGuide_Member_SheetWorkTime;
+     if not fStop then pLoadGuide_Personal_SheetWorkTime;
+     if not fStop then pLoadGuide_StaffList;
+     if not fStop then pLoadGuide_StaffListCost;
+     if not fStop then pLoadGuide_StaffListSumm;
 
      if not fStop then pLoadGuide_PersonalGroup;
      if not fStop then pLoadGuide_Position;
@@ -2969,17 +2969,11 @@ begin
         Add('     , FIO as ObjectName');
         Add('     , null as inDriverCertificate');
         Add('     , null as inINN');
-        Add('     , UnitCode_all');
-        Add('     , _pgUnit.Id_Postgres as inUnitId');
         Add('     , MemberId_pg as Id_Postgres');
-        Add('from (select max (isnull (_pgMember.MemberId_pg,0)) AS MemberId_pg, _pgMember.FIO'
-           +'           , '+FormatToVarCharServer_notNULL('-') + 'as Sep'
-           +'           , trim(_pgMember.UnitCode_all) as UnitCode_all'
-           +'           , zf_Calc_Word_bySeparate (UnitCode_all,Sep,Sep,1) as UnitCode'
+        Add('from (select max (isnull (_pgMember.MemberId_pg,0)) AS MemberId_pg, trim(_pgMember.FIO) AS FIO'
            +'      from dba._pgMemberSWT as _pgMember'
-           +'      group by FIO,UnitCode_all) as _pgMember');
-        Add('      left outer join dba._pgUnit on _pgUnit.ObjectCode = _pgMember.UnitCode');
-        Add('order by ObjectId');
+           +'      group by FIO) as _pgMember');
+        Add('order by ObjectId, ObjectName');
         Open;
         //
         fStop:=cbOnlyOpen.Checked;
@@ -3014,8 +3008,7 @@ begin
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba._pgMemberSWT set MemberId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
-                                 +' where FIO = '+FormatToVarCharServer_notNULL(FieldByName('ObjectName').AsString)
-                                 +'   and UnitCode_all = '+FormatToVarCharServer_notNULL(FieldByName('UnitCode_all').AsString));
+                                 +' where trim(FIO) = '+FormatToVarCharServer_notNULL(FieldByName('ObjectName').AsString));
              //
              Next;
              Application.ProcessMessages;
@@ -3030,6 +3023,87 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Personal_SheetWorkTime;
 begin
+     if (not cbMember_andPersonal_SheetWorkTime.Checked)or(not cbMember_andPersonal_SheetWorkTime.Enabled) then exit;
+     //
+     myEnabledCB(cbMember_andPersonal_SheetWorkTime);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select 0 as ObjectId');
+        Add('     , 0 as ObjectCode');
+        Add('     , UnitCode_all');
+        Add('     , _pgUnit.Id_Postgres as inUnitId');
+        Add('     , MemberId_pg as inMemberId');
+        Add('     , PositionId_pg as inPositionId');
+        Add('     , PositionLevelId_pg as inPositionLevelId');
+        Add('     , GroupId_pg as inPersonalGroupId');
+        Add('     , PersonalId_pg as Id_Postgres');
+        Add('from (select max (isnull (_pgMember.PersonalId_pg,0)) AS PersonalId_pg'
+           +'           , '+FormatToVarCharServer_notNULL('-') + 'as Sep'
+           +'           , trim(_pgMember.UnitCode_all)as UnitCode_all'
+           +'           , zf_Calc_Word_bySeparate (UnitCode_all,Sep,Sep,1) as UnitCode'
+           +'           , MemberId_pg'
+           +'           , PositionId_pg'
+           +'           , GroupId_pg'
+           +'           , isnull(PositionLevelId_pg,0) as PositionLevelId_pg'
+           +'      from dba._pgMemberSWT as _pgMember'
+           +'      where MemberId_pg<>0'
+           +'      group by UnitCode_all,MemberId_pg,PositionId_pg,PositionLevelId_pg,GroupId_pg) as _pgMember');
+        Add('      left outer join dba._pgUnit on _pgUnit.ObjectCode = _pgMember.UnitCode');
+        Add('order by ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_Personal';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inMemberId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPositionId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPositionLevelId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inUnitId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPersonalGroupId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inDateIn',ftDateTime,ptInput, 0);
+        toStoredProc.Params.AddParam ('inDateOut',ftDateTime,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+
+             // Member
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inMemberId').Value:=FieldByName('inMemberId').AsInteger;
+             toStoredProc.Params.ParamByName('inPositionId').Value:=FieldByName('inPositionId').AsInteger;
+             toStoredProc.Params.ParamByName('inPositionLevelId').Value:=FieldByName('inPositionLevelId').AsInteger;
+             toStoredProc.Params.ParamByName('inUnitId').Value:=FieldByName('inUnitId').AsInteger;
+             toStoredProc.Params.ParamByName('inPersonalGroupId').Value:=FieldByName('inPersonalGroupId').AsInteger;
+             toStoredProc.Params.ParamByName('inDateIn').Value:='01.01.2013';
+             toStoredProc.Params.ParamByName('inDateOut').Value:='01.01.2013';
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba._pgMemberSWT set PersonalId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
+                                 +' where MemberId_pg = '+FieldByName('inMemberId').AsString
+                                 +'   and PositionId_pg = '+FieldByName('inPositionId').AsString
+                                 +'   and PositionLevelId_pg = '+FieldByName('inPositionLevelId').AsString
+                                 +'   and trim (UnitCode_all) = '+FormatToVarCharServer_notNULL(FieldByName('UnitCode_all').AsString));
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        //EnableControls;
+     end;
+     //
+     myDisabledCB(cbMember_andPersonal_SheetWorkTime);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Position_SheetWorkTime;
@@ -3203,7 +3277,7 @@ begin
              if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba._pgMemberSWT set GroupId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
                                  +' where GroupName = '+FormatToVarCharServer_notNULL(FieldByName('ObjectName').AsString)
-                                 +'   and UnitCode_all = '+FormatToVarCharServer_notNULL(FieldByName('UnitCode_all').AsString));
+                                 +'   and trim(UnitCode_all) = '+FormatToVarCharServer_notNULL(FieldByName('UnitCode_all').AsString));
              //
              Next;
              Application.ProcessMessages;
@@ -3410,8 +3484,8 @@ begin
              toStoredProc_two.Params.ParamByName('inPositionId').Value:=FieldByName('PositionId_pg').AsInteger;
              toStoredProc_two.Params.ParamByName('inUnitId').Value:=FieldByName('UnitId_PG').AsInteger;
              toStoredProc_two.Params.ParamByName('inPersonalGroupId').Value:=FieldByName('GroupId_pg').AsInteger;
-             toStoredProc_two.Params.ParamByName('inDateIn').Value:='01.01.2013';
-             toStoredProc_two.Params.ParamByName('inDateOut').Value:='01.01.2013';
+             //toStoredProc_two.Params.ParamByName('inDateIn').Value:='01.01.2013';
+             //toStoredProc_two.Params.ParamByName('inDateOut').Value:='01.01.2013';
              //toStoredProc_two.Params.ParamByName('inDateIn').Value:=FieldByName('DateIn').AsDateTime;
              //toStoredProc_two.Params.ParamByName('inDateOut').Value:=FieldByName('DateOut').AsDateTime;
              if not myExecToStoredProc_two then ;//exit;

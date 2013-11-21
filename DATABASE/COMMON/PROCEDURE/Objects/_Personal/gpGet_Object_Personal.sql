@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Personal(
 )
 RETURNS TABLE (MemberId Integer, MemberCode Integer, MemberName TVarChar,
                PositionId Integer, PositionName TVarChar,
+               PositionLevelId Integer, PositionLevelName TVarChar,
                UnitId Integer, UnitName TVarChar,
                PersonalGroupId Integer, PersonalGroupName TVarChar,
                DateIn TDateTime, DateOut TDateTime) AS
@@ -28,6 +29,9 @@ BEGIN
            , CAST (0 as Integer)   AS PositionId
            , CAST ('' as TVarChar) AS PositionName
 
+           , CAST (0 as Integer)   AS PositionLevelId
+           , CAST ('' as TVarChar) AS PositionLevelName
+
            , CAST (0 as Integer)   AS UnitId
            , CAST ('' as TVarChar) AS UnitName
 
@@ -45,6 +49,9 @@ BEGIN
 
          , Object_Personal_View.PositionId
          , Object_Personal_View.PositionName
+
+         , Object_Personal_View.PositionLevelId
+         , Object_Personal_View.PositionLevelName
 
          , Object_Personal_View.UnitId
          , Object_Personal_View.UnitName
@@ -68,6 +75,7 @@ ALTER FUNCTION gpGet_Object_Personal(Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 21.11.13                                         * add PositionLevel...
  28.10.13                         * return memberid
  30.09.13                                        * add Object_Personal_View
  25.09.13         * add _PersonalGroup; remove _Juridical, _Business
