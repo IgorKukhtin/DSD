@@ -292,20 +292,6 @@ object Goods_ObjectForm: TGoods_ObjectForm
     Left = 40
     Top = 152
   end
-  object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inObjectId'
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    Left = 160
-    Top = 152
-  end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView

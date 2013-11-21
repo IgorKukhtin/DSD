@@ -54,7 +54,7 @@ type
     clName: TcxGridDBColumn;
     cxGridModelServiceItemMaster: TcxGrid;
     cxGridDBTableViewModelServiceItemMaster: TcxGridDBTableView;
-    clMovementDesc: TcxGridDBColumn;
+    clMovementDescName: TcxGridDBColumn;
     clRatio: TcxGridDBColumn;
     clFromName: TcxGridDBColumn;
     clToName: TcxGridDBColumn;

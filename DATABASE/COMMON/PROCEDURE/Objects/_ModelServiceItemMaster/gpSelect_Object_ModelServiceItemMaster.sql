@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ModelServiceItemMaster(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer
-             , MovementDesc TFloat, Ratio TFloat
+             , MovementDescId Integer, MovementDescName TVarChar, Ratio TFloat
              , Comment TVarChar
              , FromId Integer, FromName TVarChar                
              , ToId Integer, ToName TVarChar                
@@ -24,7 +24,8 @@ BEGIN
      SELECT 
            Object_ModelServiceItemMaster.Id    AS Id
  
-         , ObjectFloat_MovementDesc.ValueData  AS MovementDesc  
+         , MovementDesc.Id  AS MovementDescId
+         , MovementDesc.ItemName  AS MovementDescName
          , ObjectFloat_Ratio.ValueData         AS Ratio
          , ObjectString_Comment.ValueData      AS Comment
                                                         
@@ -66,6 +67,7 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_MovementDesc 
                                 ON ObjectFloat_MovementDesc.ObjectId = Object_ModelServiceItemMaster.Id 
                                AND ObjectFloat_MovementDesc.DescId = zc_ObjectFloat_ModelServiceItemMaster_MovementDesc()
+          LEFT JOIN MovementDesc ON MovementDesc.Id = ObjectFloat_MovementDesc.ValueData
           
           LEFT JOIN ObjectFloat AS ObjectFloat_Ratio 
                                 ON ObjectFloat_Ratio.ObjectId = Object_ModelServiceItemMaster.Id 
@@ -87,6 +89,7 @@ ALTER FUNCTION gpSelect_Object_ModelServiceItemMaster (TVarChar) OWNER TO postgr
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.11.13                                        * MovementDescName
  19.10.13         * 
 */
 

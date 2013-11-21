@@ -403,7 +403,7 @@
   object PersonalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePersonalDriver
-    FormName = 'TPersonalForm'
+    FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

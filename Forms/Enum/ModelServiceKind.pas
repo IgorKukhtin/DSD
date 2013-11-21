@@ -53,6 +53,7 @@ type
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     spInsertUpdateObject: TdsdStoredProc;
+    clComment: TcxGridDBColumn;
   private
     { Private declarations }
   public

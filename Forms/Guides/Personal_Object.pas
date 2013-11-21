@@ -1,4 +1,4 @@
-unit Personal;
+unit Personal_Object;
 
 interface
 
@@ -24,7 +24,7 @@ uses
   DataModul;
 
 type
-  TPersonalForm = class(TParentForm)
+  TPersonal_ObjectForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     clMemberCode: TcxGridDBColumn;
@@ -35,32 +35,24 @@ type
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
     bbRefresh: TdxBarButton;
-    bbInsert: TdxBarButton;
-    bbEdit: TdxBarButton;
-    bbErased: TdxBarButton;
-    bbUnErased: TdxBarButton;
     bbGridToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     bbChoiceGuides: TdxBarButton;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdInsertUpdateAction;
-    actUpdate: TdsdInsertUpdateAction;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     clDateIn: TcxGridDBColumn;
     clDateOut: TcxGridDBColumn;
     clMemberName: TcxGridDBColumn;
-    clPosition: TcxGridDBColumn;
-    clUnit: TcxGridDBColumn;
+    clPositionName: TcxGridDBColumn;
+    clUnitName: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     clErased: TcxGridDBColumn;
-    spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clPersonalGroupName: TcxGridDBColumn;
+    clPositionLevelName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -72,5 +64,5 @@ implementation
 
 {$R *.dfm}
  initialization
-  RegisterClass(TPersonalForm);
+  RegisterClass(TPersonal_ObjectForm);
 end.

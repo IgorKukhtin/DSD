@@ -1,9 +1,9 @@
-object ModelServiceKindForm: TModelServiceKindForm
+object PositionForm: TPositionForm
   Left = 0
   Top = 0
-  Caption = #1058#1080#1087#1099' '#1084#1086#1076#1077#1083#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
-  ClientHeight = 376
-  ClientWidth = 476
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1086#1083#1078#1085#1086#1089#1090#1080'>'
+  ClientHeight = 379
+  ClientWidth = 507
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,29 +12,39 @@ object ModelServiceKindForm: TModelServiceKindForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  AddOnFormData.isAlwaysRefresh = False
+  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.ChoiceAction = dsdChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 476
-    Height = 350
+    Width = 507
+    Height = 353
     Align = alClient
     TabOrder = 0
-    LookAndFeel.NativeStyle = True
-    LookAndFeel.SkinName = 'UserSkin'
+    LookAndFeel.Kind = lfStandard
+    LookAndFeel.NativeStyle = False
+    LookAndFeel.SkinName = ''
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
+      DataController.Filter.Options = [fcoCaseInsensitive]
+      DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
+      OptionsBehavior.IncSearch = True
+      OptionsBehavior.IncSearchItem = clName
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
-      OptionsData.Appending = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
+      OptionsData.Inserting = False
+      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -44,30 +54,20 @@ object ModelServiceKindForm: TModelServiceKindForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
+        Width = 61
       end
       object clName: TcxGridDBColumn
-        Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 178
-      end
-      object clComment: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-        DataBinding.FieldName = 'Comment'
-        HeaderAlignmentVert = vaCenter
-        Width = 189
+        Width = 214
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 38
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -76,13 +76,13 @@ object ModelServiceKindForm: TModelServiceKindForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 40
-    Top = 96
+    Left = 56
+    Top = 104
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 40
+    Left = 48
     Top = 160
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -97,14 +97,14 @@ object ModelServiceKindForm: TModelServiceKindForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 216
-    Top = 88
+    Left = 288
+    Top = 104
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -117,8 +117,8 @@ object ModelServiceKindForm: TModelServiceKindForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 128
-    Top = 96
+    Left = 168
+    Top = 104
     DockControlHeights = (
       0
       0
@@ -146,11 +146,11 @@ object ModelServiceKindForm: TModelServiceKindForm
         end
         item
           Visible = True
-          ItemName = 'bbSetErased'
+          ItemName = 'bbErased'
         end
         item
           Visible = True
-          ItemName = 'bbSetUnErased'
+          ItemName = 'bbUnErased'
         end
         item
           Visible = True
@@ -163,16 +163,15 @@ object ModelServiceKindForm: TModelServiceKindForm
         end
         item
           Visible = True
-          ItemName = 'bbToExcel'
+          ItemName = 'bbGridToExcel'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
           Visible = True
-          ItemName = 'bbChoice'
+          ItemName = 'bbChoiceGuides'
         end>
       OneOnRow = True
       Row = 0
@@ -185,55 +184,39 @@ object ModelServiceKindForm: TModelServiceKindForm
       Category = 0
     end
     object bbInsert: TdxBarButton
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Action = actInsert
       Category = 0
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
-      Visible = ivAlways
-      ImageIndex = 0
-      ShortCut = 45
     end
     object bbEdit: TdxBarButton
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Action = actUpdate
       Category = 0
-      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
-      Visible = ivAlways
-      ImageIndex = 1
-      ShortCut = 115
     end
-    object bbSetErased: TdxBarButton
-      Caption = #1059#1076#1072#1083#1080#1090#1100
+    object bbErased: TdxBarButton
+      Action = dsdSetErased
       Category = 0
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      Visible = ivAlways
-      ImageIndex = 2
-      ShortCut = 46
     end
-    object bbSetUnErased: TdxBarButton
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+    object bbUnErased: TdxBarButton
+      Action = dsdSetUnErased
       Category = 0
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      Visible = ivAlways
-      ImageIndex = 8
-      ShortCut = 32776
     end
-    object bbToExcel: TdxBarButton
+    object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
-      Caption = '       '
+      Caption = '     '
       Category = 0
-      Hint = '       '
+      Hint = '     '
       Visible = ivAlways
     end
-    object bbChoice: TdxBarButton
+    object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
       Category = 0
     end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 240
+    Left = 288
     Top = 160
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -247,6 +230,68 @@ object ModelServiceKindForm: TModelServiceKindForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actInsert: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 45
+      ImageIndex = 0
+      FormName = 'TPositionEditForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end>
+      isShowModal = True
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+    end
+    object actUpdate: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TPositionEditForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      ActionType = acUpdate
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+    end
+    object dsdSetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = DataSource
+    end
+    object dsdSetUnErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 32776
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = DataSource
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -278,15 +323,19 @@ object ModelServiceKindForm: TModelServiceKindForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ModelServiceKind'
+    StoredProcName = 'gpSelect_Object_Position'
     DataSet = ClientDataSet
     DataSets = <
       item
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 40
-    Top = 224
+    Left = 48
+    Top = 216
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 168
+    Top = 160
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -299,12 +348,8 @@ object ModelServiceKindForm: TModelServiceKindForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 224
-    Top = 224
-  end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 128
-    Top = 160
+    Left = 288
+    Top = 208
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -314,6 +359,7 @@ object ModelServiceKindForm: TModelServiceKindForm
         Action = dsdChoiceGuides
       end
       item
+        Action = actUpdate
       end>
     ActionItemList = <
       item
@@ -321,32 +367,12 @@ object ModelServiceKindForm: TModelServiceKindForm
         ShortCut = 13
       end
       item
+        Action = actUpdate
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    Left = 136
+    Left = 168
     Top = 224
-  end
-  object spInsertUpdateObject: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_WorkTimeKind'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'ioId'
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInputOutput
-      end
-      item
-        Name = 'inShortName'
-        Component = ClientDataSet
-        ComponentItem = 'ShortName'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 128
-    Top = 288
   end
 end

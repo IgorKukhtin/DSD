@@ -1591,7 +1591,7 @@ object IncomeForm: TIncomeForm
   object PackerGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPacker
-    FormName = 'TPersonalForm'
+    FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

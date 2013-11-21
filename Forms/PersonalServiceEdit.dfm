@@ -346,7 +346,7 @@
   object PersonalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePersonal
-    FormName = 'TPersonalForm'
+    FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <>
     Left = 488

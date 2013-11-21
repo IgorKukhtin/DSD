@@ -10,11 +10,15 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
        , Object_Member.ValueData                   AS PersonalName
        , Object_Personal.isErased                  AS isErased
 
-       , ObjectLink_Personal_Position.ChildObjectId AS PositionId
+       , COALESCE (ObjectLink_Personal_Position.ChildObjectId, 0) AS PositionId
        , Object_Position.ObjectCode                 AS PositionCode
        , Object_Position.ValueData                  AS PositionName
+       , COALESCE (ObjectLink_Personal_PositionLevel.ChildObjectId, 0) AS PositionLevelId
+       , Object_PositionLevel.ObjectCode                 AS PositionLevelCode
+       , Object_PositionLevel.ValueData                  AS PositionLevelName
 
-       , ObjectLink_Personal_Unit.ChildObjectId    AS UnitId
+
+       , COALESCE (ObjectLink_Personal_Unit.ChildObjectId, 0) AS UnitId
        , Object_Unit.ObjectCode                    AS UnitCode
        , Object_Unit.ValueData                     AS UnitName
 
@@ -35,6 +39,11 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
                            AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
        LEFT JOIN Object AS Object_Position ON Object_Position.Id = ObjectLink_Personal_Position.ChildObjectId
  
+       LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
+                            ON ObjectLink_Personal_PositionLevel.ObjectId = Object_Personal.Id
+                           AND ObjectLink_Personal_PositionLevel.DescId = zc_ObjectLink_Personal_PositionLevel()
+       LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = ObjectLink_Personal_PositionLevel.ChildObjectId
+
        LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
                             ON ObjectLink_Personal_Unit.ObjectId = Object_Personal.Id
                            AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
@@ -60,6 +69,7 @@ ALTER TABLE Object_Personal_View  OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 21.11.13                                        * add PositionLevel...
  09.11.13                                        * add DescId
  28.10.13                        *
  30.09.13                                        *

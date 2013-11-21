@@ -702,6 +702,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPersonalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonal_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonal_ObjectForm');
   // группировки сотрудников
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalGroupForm');

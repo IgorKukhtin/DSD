@@ -642,7 +642,7 @@ object ContractEditForm: TContractEditForm
   object PersonalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonal
-    FormName = 'TPersonalForm'
+    FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

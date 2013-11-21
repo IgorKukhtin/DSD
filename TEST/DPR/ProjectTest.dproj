@@ -332,19 +332,19 @@
 			<DCCReference Include="..\..\Forms\CarEdit.pas">
 				<Form>CarEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Position.pas">
+			<DCCReference Include="..\..\Forms\Guides\Position.pas">
 				<Form>PositionForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\PositionEdit.pas">
+			<DCCReference Include="..\..\Forms\Guides\PositionEdit.pas">
 				<Form>PositionEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\AssetEdit.pas">
 				<Form>AssetEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Personal.pas">
+			<DCCReference Include="..\..\Forms\Guides\Personal.pas">
 				<Form>PersonalForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\PersonalEdit.pas">
+			<DCCReference Include="..\..\Forms\Guides\PersonalEdit.pas">
 				<Form>PersonalEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\SendJournal.pas">
@@ -539,10 +539,10 @@
 			<DCCReference Include="..\..\Forms\RateFuel.pas">
 				<Form>RateFuelForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\PersonalGroup.pas">
+			<DCCReference Include="..\..\Forms\Guides\PersonalGroup.pas">
 				<Form>PersonalGroupForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\PersonalGroupEdit.pas">
+			<DCCReference Include="..\..\Forms\Guides\PersonalGroupEdit.pas">
 				<Form>PersonalGroupEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\PersonalSendCash.pas">
@@ -594,10 +594,10 @@
 			<DCCReference Include="..\..\Forms\Document\SheetWorkTimeJournal.pas">
 				<Form>SheetWorkTimeJournalForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\PositionLevel.pas">
+			<DCCReference Include="..\..\Forms\Guides\PositionLevel.pas">
 				<Form>PositionLevelForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\PositionLevelEdit.pas">
+			<DCCReference Include="..\..\Forms\Guides\PositionLevelEdit.pas">
 				<Form>PositionLevelEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\StaffListData.pas">
@@ -804,6 +804,9 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorGuides.pas">
 				<Form>AncestorGuidesForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Personal_Object.pas">
+				<Form>Personal_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

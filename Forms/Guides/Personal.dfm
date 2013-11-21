@@ -1,9 +1,9 @@
-object PositionForm: TPositionForm
+object PersonalForm: TPersonalForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1086#1083#1078#1085#1086#1089#1090#1080'>'
-  ClientHeight = 379
-  ClientWidth = 507
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080'>'
+  ClientHeight = 358
+  ClientWidth = 864
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,8 +20,8 @@ object PositionForm: TPositionForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 507
-    Height = 353
+    Width = 864
+    Height = 332
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -37,7 +37,6 @@ object PositionForm: TPositionForm
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -46,28 +45,66 @@ object PositionForm: TPositionForm
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
-      OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
+      object clMemberCode: TcxGridDBColumn
         Caption = #1050#1086#1076
-        DataBinding.FieldName = 'Code'
+        DataBinding.FieldName = 'MemberCode'
         HeaderAlignmentVert = vaCenter
-        Width = 61
+        Width = 50
       end
-      object clName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-        DataBinding.FieldName = 'Name'
+      object clMemberName: TcxGridDBColumn
+        Caption = #1060#1048#1054
+        DataBinding.FieldName = 'MemberName'
         HeaderAlignmentVert = vaCenter
-        Width = 214
+        Width = 90
+      end
+      object clPositionName: TcxGridDBColumn
+        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
+        DataBinding.FieldName = 'PositionName'
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object clPositionLevelName: TcxGridDBColumn
+        Caption = #1056#1072#1079#1088#1103#1076' '#1076#1086#1083#1078#1085#1086#1089#1090#1080
+        DataBinding.FieldName = 'PositionLevelName'
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object clPersonalGroupName: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
+        DataBinding.FieldName = 'PersonalGroupName'
+        Width = 80
+      end
+      object clUnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
+      object clDateIn: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
+        DataBinding.FieldName = 'DateIn'
+        Visible = False
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
+      object clDateOut: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
+        DataBinding.FieldName = 'DateOut'
+        Visible = False
+        HeaderAlignmentVert = vaCenter
+        Width = 60
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 35
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -103,8 +140,8 @@ object PositionForm: TPositionForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -229,19 +266,20 @@ object PositionForm: TPositionForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TPositionEditForm'
+      FormName = 'TPersonalEditForm'
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
         end>
-      isShowModal = True
+      isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
@@ -250,7 +288,7 @@ object PositionForm: TPositionForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TPositionEditForm'
+      FormName = 'TPersonalEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -258,7 +296,7 @@ object PositionForm: TPositionForm
           ComponentItem = 'Id'
           ParamType = ptInput
         end>
-      isShowModal = True
+      isShowModal = False
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
@@ -302,9 +340,14 @@ object PositionForm: TPositionForm
           DataType = ftString
         end
         item
+          Name = 'Code'
+          Component = ClientDataSet
+          ComponentItem = 'MemberCode'
+        end
+        item
           Name = 'TextValue'
           Component = ClientDataSet
-          ComponentItem = 'Name'
+          ComponentItem = 'MemberName'
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -322,7 +365,7 @@ object PositionForm: TPositionForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Position'
+    StoredProcName = 'gpSelect_Object_Personal'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -371,7 +414,7 @@ object PositionForm: TPositionForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    Left = 168
-    Top = 224
+    Left = 328
+    Top = 264
   end
 end

@@ -124,11 +124,11 @@ uses
   CarModelEdit in '..\..\Forms\CarModelEdit.pas' {CarModelEditForm},
   Car in '..\..\Forms\Car.pas' {CarForm},
   CarEdit in '..\..\Forms\CarEdit.pas' {CarEditForm},
-  Position in '..\..\Forms\Position.pas' {PositionForm},
-  PositionEdit in '..\..\Forms\PositionEdit.pas' {PositionEditForm},
+  Position in '..\..\Forms\Guides\Position.pas' {PositionForm},
+  PositionEdit in '..\..\Forms\Guides\PositionEdit.pas' {PositionEditForm},
   AssetEdit in '..\..\Forms\AssetEdit.pas' {AssetEditForm},
-  Personal in '..\..\Forms\Personal.pas' {PersonalForm},
-  PersonalEdit in '..\..\Forms\PersonalEdit.pas' {PersonalEditForm},
+  Personal in '..\..\Forms\Guides\Personal.pas' {PersonalForm},
+  PersonalEdit in '..\..\Forms\Guides\PersonalEdit.pas' {PersonalEditForm},
   SendJournal in '..\..\Forms\Document\SendJournal.pas' {SendJournalForm},
   SaleJournal in '..\..\Forms\Document\SaleJournal.pas' {SaleJournalForm},
   Sale in '..\..\Forms\Document\Sale.pas' {SaleForm},
@@ -209,8 +209,8 @@ uses
   RouteKind in '..\..\Forms\RouteKind.pas' {RouteKindForm},
   RouteKindEdit in '..\..\Forms\RouteKindEdit.pas' {RouteKindEditForm},
   RateFuel in '..\..\Forms\RateFuel.pas' {RateFuelForm},
-  PersonalGroup in '..\..\Forms\PersonalGroup.pas' {PersonalGroupForm},
-  PersonalGroupEdit in '..\..\Forms\PersonalGroupEdit.pas' {PersonalGroupEditForm},
+  PersonalGroup in '..\..\Forms\Guides\PersonalGroup.pas' {PersonalGroupForm},
+  PersonalGroupEdit in '..\..\Forms\Guides\PersonalGroupEdit.pas' {PersonalGroupEditForm},
   PersonalSendCash in '..\..\Forms\Document\PersonalSendCash.pas' {PersonalSendCashForm},
   PersonalSendCashJournal in '..\..\Forms\Document\PersonalSendCashJournal.pas' {PersonalSendCashJournalForm},
   PersonalSendCashTest in '..\SOURCE\Movement\All\PersonalSendCashTest.pas' {$R *.RES},
@@ -228,8 +228,8 @@ uses
   CardFuelEdit in '..\..\Forms\CardFuelEdit.pas' {CardFuelEditForm},
   SheetWorkTime in '..\..\Forms\Document\SheetWorkTime.pas' {SheetWorkTimeForm},
   SheetWorkTimeJournal in '..\..\Forms\Document\SheetWorkTimeJournal.pas' {SheetWorkTimeJournalForm},
-  PositionLevel in '..\..\Forms\PositionLevel.pas' {PositionLevelForm},
-  PositionLevelEdit in '..\..\Forms\PositionLevelEdit.pas' {PositionLevelEditForm},
+  PositionLevel in '..\..\Forms\Guides\PositionLevel.pas' {PositionLevelForm},
+  PositionLevelEdit in '..\..\Forms\Guides\PositionLevelEdit.pas' {PositionLevelEditForm},
   StaffListData in '..\..\Forms\StaffListData.pas' {StaffListDataForm},
   StaffListEdit in '..\..\Forms\StaffListEdit.pas' {StaffListEditForm},
   PersonalTest in '..\SOURCE\Objects\All\PersonalTest.pas',
@@ -283,7 +283,8 @@ uses
   ServiceJournal in '..\..\Forms\Document\ServiceJournal.pas' {ServiceJournalForm: TParentForm},
   MoneyPlace_Object in '..\..\Forms\Guides\MoneyPlace_Object.pas' {MoneyPlace_ObjectForm: TParentForm},
   Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm},
-  AncestorGuides in '..\..\Forms\Ancestor\AncestorGuides.pas' {AncestorGuidesForm: TParentForm};
+  AncestorGuides in '..\..\Forms\Ancestor\AncestorGuides.pas' {AncestorGuidesForm: TParentForm},
+  Personal_Object in '..\..\Forms\Guides\Personal_Object.pas' {Personal_ObjectForm: TParentForm};
 
 {$R *.RES}
 

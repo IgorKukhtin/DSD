@@ -2581,7 +2581,7 @@
   object GuidesPersonalDriver: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonalDriver
-    FormName = 'TPersonalForm'
+    FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -2605,7 +2605,7 @@
   object GuidesPersonalDriverMore: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonalDriverMore
-    FormName = 'TPersonalForm'
+    FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ModelServiceItemMaster(Integer,  T
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ModelServiceItemMaster(
  INOUT ioId                  Integer   , -- ключ объекта < Главные элементы Модели начисления>
-    IN inMovementDesc        TFloat    , -- Код документа
+    IN inMovementDescId      TFloat    , -- Код документа
     IN inRatio               TFloat    , -- Коэффициент для выбора данных
     IN inComment             TVarChar  , -- Примечание
     IN inModelServiceId      Integer   , -- Модели начисления
@@ -26,7 +26,7 @@ BEGIN
    ioId := lpInsertUpdate_Object (ioId, zc_Object_ModelServiceItemMaster(), 0, '');
    
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ModelServiceItemMaster_MovementDesc(), ioId, inMovementDesc);
+   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ModelServiceItemMaster_MovementDesc(), ioId, inMovementDescId);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ModelServiceItemMaster_Ratio(), ioId, inRatio);
    -- сохранили свойство <>   
@@ -55,6 +55,7 @@ ALTER FUNCTION gpInsertUpdate_Object_ModelServiceItemMaster (Integer,  TFloat, T
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.11.13                                        * inMovementDesc -> inMovementDescId
  19.10.13         * 
 
 */

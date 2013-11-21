@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Personal(
 )
 RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar,
                PositionId Integer, PositionCode Integer, PositionName TVarChar,
+               PositionLevelId Integer, PositionLevelCode Integer, PositionLevelName TVarChar,
                UnitId Integer, UnitCode Integer, UnitName TVarChar,
                PersonalGroupId Integer, PersonalGroupCode Integer, PersonalGroupName TVarChar,
                DateIn TDateTime, DateOut TDateTime,
@@ -26,6 +27,10 @@ BEGIN
          , Object_Personal_View.PositionId
          , Object_Personal_View.PositionCode
          , Object_Personal_View.PositionName
+
+         , Object_Personal_View.PositionLevelId
+         , Object_Personal_View.PositionLevelCode
+         , Object_Personal_View.PositionLevelName
 
          , Object_Personal_View.UnitId
          , Object_Personal_View.UnitCode
@@ -53,6 +58,7 @@ ALTER FUNCTION gpSelect_Object_Personal (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 21.11.13                                         * add PositionLevel...
  28.10.13                         * 
  30.09.13                                        * add Object_Personal_View
  25.09.13         * add _PersonalGroup; remove _Juridical, _Business             

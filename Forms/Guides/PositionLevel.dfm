@@ -1,9 +1,9 @@
-object PersonalForm: TPersonalForm
+object PositionLevelForm: TPositionLevelForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080'>'
-  ClientHeight = 358
-  ClientWidth = 864
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1056#1072#1079#1088#1103#1076#1099' '#1076#1086#1083#1078#1085#1086#1089#1090#1077#1081'>'
+  ClientHeight = 376
+  ClientWidth = 390
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,74 +20,43 @@ object PersonalForm: TPersonalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 864
-    Height = 332
+    Width = 390
+    Height = 350
     Align = alClient
     TabOrder = 0
-    LookAndFeel.Kind = lfStandard
-    LookAndFeel.NativeStyle = False
-    LookAndFeel.SkinName = ''
+    LookAndFeel.NativeStyle = True
+    LookAndFeel.SkinName = 'UserSkin'
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
-      DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
-      OptionsBehavior.IncSearch = True
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
+      OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clMemberCode: TcxGridDBColumn
+      object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
-        DataBinding.FieldName = 'MemberCode'
+        DataBinding.FieldName = 'Code'
+        HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 50
+        Width = 77
       end
-      object clMemberName: TcxGridDBColumn
-        Caption = #1060#1048#1054
-        DataBinding.FieldName = 'MemberName'
+      object clName: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 90
-      end
-      object clPosition: TcxGridDBColumn
-        Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
-        DataBinding.FieldName = 'PositionName'
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object clPersonalGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1072' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072
-        DataBinding.FieldName = 'PersonalGroupName'
-        Width = 80
-      end
-      object clUnit: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'UnitName'
-        HeaderAlignmentVert = vaCenter
-        Width = 100
-      end
-      object clDateIn: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1087#1088#1080#1077#1084#1072
-        DataBinding.FieldName = 'DateIn'
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object clDateOut: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1091#1074#1086#1083#1100#1085#1077#1085#1080#1103
-        DataBinding.FieldName = 'DateOut'
-        HeaderAlignmentVert = vaCenter
-        Width = 60
+        Width = 226
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -95,7 +64,7 @@ object PersonalForm: TPersonalForm
         PropertiesClassName = 'TcxCheckBoxProperties'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 35
+        Width = 73
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -104,14 +73,14 @@ object PersonalForm: TPersonalForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 56
-    Top = 104
+    Left = 40
+    Top = 96
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 48
-    Top = 160
+    Left = 24
+    Top = 144
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -125,14 +94,14 @@ object PersonalForm: TPersonalForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 288
-    Top = 104
+    Left = 344
+    Top = 128
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -145,8 +114,8 @@ object PersonalForm: TPersonalForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 168
-    Top = 104
+    Left = 264
+    Top = 80
     DockControlHeights = (
       0
       0
@@ -174,11 +143,11 @@ object PersonalForm: TPersonalForm
         end
         item
           Visible = True
-          ItemName = 'bbErased'
+          ItemName = 'bbSetErased'
         end
         item
           Visible = True
-          ItemName = 'bbUnErased'
+          ItemName = 'bbSetUnErased'
         end
         item
           Visible = True
@@ -191,15 +160,16 @@ object PersonalForm: TPersonalForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'bbToExcel'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
+          BeginGroup = True
           Visible = True
-          ItemName = 'bbChoiceGuides'
+          ItemName = 'bbChoice'
         end>
       OneOnRow = True
       Row = 0
@@ -219,33 +189,33 @@ object PersonalForm: TPersonalForm
       Action = actUpdate
       Category = 0
     end
-    object bbErased: TdxBarButton
+    object bbSetErased: TdxBarButton
       Action = dsdSetErased
       Category = 0
     end
-    object bbUnErased: TdxBarButton
+    object bbSetUnErased: TdxBarButton
       Action = dsdSetUnErased
       Category = 0
     end
-    object bbGridToExcel: TdxBarButton
+    object bbToExcel: TdxBarButton
       Action = dsdGridToExcel
       Category = 0
     end
     object dxBarStatic: TdxBarStatic
-      Caption = '     '
+      Caption = '       '
       Category = 0
-      Hint = '     '
+      Hint = '       '
       Visible = ivAlways
     end
-    object bbChoiceGuides: TdxBarButton
+    object bbChoice: TdxBarButton
       Action = dsdChoiceGuides
       Category = 0
     end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 288
-    Top = 160
+    Left = 304
+    Top = 112
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -257,13 +227,15 @@ object PersonalForm: TPersonalForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TPersonalEditForm'
+      FormName = 'TPositionLevelEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -276,9 +248,10 @@ object PersonalForm: TPersonalForm
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TPersonalEditForm'
+      FormName = 'TPositionLevelEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -330,14 +303,9 @@ object PersonalForm: TPersonalForm
           DataType = ftString
         end
         item
-          Name = 'Code'
-          Component = ClientDataSet
-          ComponentItem = 'MemberCode'
-        end
-        item
           Name = 'TextValue'
           Component = ClientDataSet
-          ComponentItem = 'MemberName'
+          ComponentItem = 'Name'
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -355,19 +323,15 @@ object PersonalForm: TPersonalForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Personal'
+    StoredProcName = 'gpSelect_Object_PositionLevel'
     DataSet = ClientDataSet
     DataSets = <
       item
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 48
-    Top = 216
-  end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 168
-    Top = 160
+    Left = 144
+    Top = 104
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -380,8 +344,12 @@ object PersonalForm: TPersonalForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    Left = 96
+    Top = 176
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 288
-    Top = 208
+    Top = 200
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -404,7 +372,7 @@ object PersonalForm: TPersonalForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    Left = 328
-    Top = 264
+    Left = 136
+    Top = 224
   end
 end
