@@ -45,22 +45,29 @@ object ModelServiceKindForm: TModelServiceKindForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 99
+        Width = 95
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 287
+        Width = 178
+      end
+      object clComment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        HeaderAlignmentVert = vaCenter
+        Width = 189
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 76
+        Width = 38
       end
     end
     object cxGridLevel: TcxGridLevel

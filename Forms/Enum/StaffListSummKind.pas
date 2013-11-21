@@ -43,6 +43,7 @@ type
     bbChoiceGuides: TdxBarButton;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clCode: TcxGridDBColumn;
+    clComment: TcxGridDBColumn;
   private
     { Private declarations }
   public
