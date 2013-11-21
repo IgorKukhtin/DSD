@@ -3,7 +3,7 @@ object ModelServiceForm: TModelServiceForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1052#1086#1076#1077#1083#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103'>'
   ClientHeight = 606
-  ClientWidth = 926
+  ClientWidth = 980
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object ModelServiceForm: TModelServiceForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 481
+    Width = 461
     Height = 358
     Align = alLeft
     TabOrder = 0
@@ -54,13 +54,13 @@ object ModelServiceForm: TModelServiceForm
         Width = 35
       end
       object clName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1052#1086#1076#1077#1083#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 109
+        Width = 70
       end
       object clModelServiceKindName: TcxGridDBColumn
-        Caption = #1058#1080#1087' '#1084#1086#1076#1077#1083#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+        Caption = #1058#1080#1087' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
         DataBinding.FieldName = 'ModelServiceKindName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -70,7 +70,7 @@ object ModelServiceForm: TModelServiceForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        Width = 90
+        Width = 55
       end
       object clUnitName: TcxGridDBColumn
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -83,17 +83,20 @@ object ModelServiceForm: TModelServiceForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        Width = 87
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object clmsComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
-        Width = 51
+        HeaderAlignmentVert = vaCenter
+        Width = 80
       end
       object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
@@ -105,15 +108,17 @@ object ModelServiceForm: TModelServiceForm
     end
   end
   object cxGridModelServiceItemMaster: TcxGrid
-    Left = 481
+    Left = 461
     Top = 26
-    Width = 445
+    Width = 519
     Height = 358
     Align = alClient
     TabOrder = 1
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitLeft = 481
+    ExplicitWidth = 445
     object cxGridDBTableViewModelServiceItemMaster: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ModelServiceItemMasterDS
@@ -135,7 +140,7 @@ object ModelServiceForm: TModelServiceForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object clFromName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1086#1090' '#1082#1086#1075#1086
+        Caption = #1054#1090' '#1082#1086#1075#1086
         DataBinding.FieldName = 'FromName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -146,10 +151,10 @@ object ModelServiceForm: TModelServiceForm
           end>
         Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
-        Width = 67
+        Width = 70
       end
       object clToName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' '#1082#1086#1084#1091
+        Caption = #1050#1086#1084#1091
         DataBinding.FieldName = 'ToName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -160,27 +165,22 @@ object ModelServiceForm: TModelServiceForm
           end>
         Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
-        Width = 59
+        Width = 70
       end
-      object clMovementDesc: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-        DataBinding.FieldName = 'MovementDesc'
+      object clMovementDescName: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+        DataBinding.FieldName = 'MovementDescName'
         HeaderAlignmentVert = vaCenter
-        Width = 76
+        Width = 55
       end
       object clRatio: TcxGridDBColumn
-        Caption = #1050#1086#1101#1092'. '#1074#1099#1073#1086#1088#1072' '#1076#1072#1085#1085#1099#1093
+        Caption = #1050#1086#1101#1092#1092'.'
         DataBinding.FieldName = 'Ratio'
         HeaderAlignmentVert = vaCenter
-        Width = 88
-      end
-      object clComment: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-        DataBinding.FieldName = 'Comment'
-        Width = 59
+        Width = 45
       end
       object clSelectKindName: TcxGridDBColumn
-        Caption = #1058#1080#1087' '#1074#1099#1073#1086#1088#1072' '#1076#1072#1085#1085#1099#1093
+        Caption = #1058#1080#1087' '#1074#1099#1073#1086#1088#1072
         DataBinding.FieldName = 'SelectKindName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -191,17 +191,24 @@ object ModelServiceForm: TModelServiceForm
           end>
         Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 45
       end
       object clmsimIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
         Options.Editing = False
         Width = 25
+      end
+      object clComment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        HeaderAlignmentVert = vaCenter
+        Width = 80
       end
     end
     object cxGridLevel1: TcxGridLevel
@@ -211,13 +218,14 @@ object ModelServiceForm: TModelServiceForm
   object cxGridStaffListCost: TcxGrid
     Left = 0
     Top = 384
-    Width = 926
+    Width = 980
     Height = 222
     Align = alBottom
     TabOrder = 6
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 926
     object cxGridDBTableViewModelServiceItemChild: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ModelServiceItemChildDS
@@ -783,9 +791,9 @@ object ModelServiceForm: TModelServiceForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'inMovementDesc'
+        Name = 'inMovementDescId'
         Component = ModelServiceItemMasterCDS
-        ComponentItem = 'MovementDesc'
+        ComponentItem = 'MovementDescId'
         DataType = ftFloat
         ParamType = ptInput
       end

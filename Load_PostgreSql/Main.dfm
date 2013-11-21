@@ -193,7 +193,7 @@ object MainForm: TMainForm
       Tag = 10
       Left = 15
       Top = 111
-      Width = 225
+      Width = 138
       Height = 17
       Caption = '2.1. '#1042#1080#1076#1099' '#1092#1086#1088#1084' '#1086#1087#1083#1072#1090#1099
       TabOrder = 5
@@ -211,7 +211,7 @@ object MainForm: TMainForm
       Tag = 10
       Left = 15
       Top = 131
-      Width = 225
+      Width = 138
       Height = 17
       Caption = '2.2. '#1042#1080#1076#1099' '#1076#1086#1075#1086#1074#1086#1088#1086#1074
       TabOrder = 7
@@ -220,7 +220,7 @@ object MainForm: TMainForm
       Tag = 10
       Left = 15
       Top = 151
-      Width = 225
+      Width = 138
       Height = 17
       Caption = '2.3. '#1044#1086#1075#1086#1074#1086#1088#1072
       Enabled = False
@@ -268,7 +268,7 @@ object MainForm: TMainForm
       Tag = 10
       Left = 15
       Top = 291
-      Width = 225
+      Width = 210
       Height = 17
       Caption = '4.3. '#1043#1088#1091#1087#1087#1099' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081' !!! '#1053#1045#1058' !!!'
       Enabled = False
@@ -287,7 +287,7 @@ object MainForm: TMainForm
       Tag = 10
       Left = 15
       Top = 361
-      Width = 225
+      Width = 146
       Height = 17
       Caption = '5.1. '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099
       TabOrder = 15
@@ -296,7 +296,7 @@ object MainForm: TMainForm
       Tag = 10
       Left = 15
       Top = 381
-      Width = 225
+      Width = 138
       Height = 17
       Caption = '5.2. '#1055#1088#1072#1081#1089' '#1083#1080#1089#1090#1099' - '#1094#1077#1085#1099
       TabOrder = 16
@@ -404,9 +404,9 @@ object MainForm: TMainForm
       Tag = 10
       Left = 15
       Top = 331
-      Width = 221
+      Width = 162
       Height = 17
-      Caption = '4.5. '#1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072' '#1080' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080
+      Caption = '4.5. '#1060#1080#1079' '#1083'. '#1080' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080
       TabOrder = 28
     end
     object cbTradeMark: TCheckBox
@@ -489,6 +489,51 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 35
+    end
+    object cbModelService: TCheckBox
+      Tag = 10
+      Left = 163
+      Top = 331
+      Width = 153
+      Height = 17
+      Caption = '4.9. '#1052#1086#1076#1077#1083#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 36
+    end
+    object cbStaffList: TCheckBox
+      Tag = 10
+      Left = 163
+      Top = 351
+      Width = 158
+      Height = 17
+      Caption = '4.10. '#1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 37
+    end
+    object cbMember_andPersonal_SheetWorkTime: TCheckBox
+      Tag = 10
+      Left = 163
+      Top = 371
+      Width = 160
+      Height = 17
+      Caption = '4.11. '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1080' '#1080#1079' '#1090#1072#1073#1077#1083#1103
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 38
     end
   end
   object DocumentPanel: TPanel
