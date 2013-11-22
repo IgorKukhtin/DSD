@@ -3044,22 +3044,44 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_StaffListSumm;
+var zc_Enum_StaffListSummKind_Month,zc_Enum_StaffListSummKind_Day,zc_Enum_StaffListSummKind_Personal:String;
+    zc_Enum_StaffListSummKind_HoursPlan,zc_Enum_StaffListSummKind_HoursDay,zc_Enum_StaffListSummKind_HoursPlanConst,zc_Enum_StaffListSummKind_HoursDayConst:String;
+    zc_Enum_StaffListSummKind_WorkHours:String;
 begin
      if (not cbStaffList.Checked)or(not cbStaffList.Enabled) then exit;
      //
      myEnabledCB(cbStaffList);
      //
+     fOpenSqToQuery ('select zc_Enum_StaffListSummKind_Month() AS KindId');
+     zc_Enum_StaffListSummKind_Month := toSqlQuery.FieldByName('KindId').AsString;
+     fOpenSqToQuery ('select zc_Enum_StaffListSummKind_Day() AS KindId');
+     zc_Enum_StaffListSummKind_Day := toSqlQuery.FieldByName('KindId').AsString;
+     fOpenSqToQuery ('select zc_Enum_StaffListSummKind_Personal() AS KindId');
+     zc_Enum_StaffListSummKind_Personal := toSqlQuery.FieldByName('KindId').AsString;
+
+     fOpenSqToQuery ('select zc_Enum_StaffListSummKind_HoursPlan() AS KindId');
+     zc_Enum_StaffListSummKind_HoursPlan := toSqlQuery.FieldByName('KindId').AsString;
+     fOpenSqToQuery ('select zc_Enum_StaffListSummKind_HoursDay() AS KindId');
+     zc_Enum_StaffListSummKind_HoursDay := toSqlQuery.FieldByName('KindId').AsString;
+     fOpenSqToQuery ('select zc_Enum_StaffListSummKind_HoursPlanConst() AS KindId');
+     zc_Enum_StaffListSummKind_HoursPlanConst := toSqlQuery.FieldByName('KindId').AsString;
+     fOpenSqToQuery ('select zc_Enum_StaffListSummKind_HoursDayConst() AS KindId');
+     zc_Enum_StaffListSummKind_HoursDayConst := toSqlQuery.FieldByName('KindId').AsString;
+
+     fOpenSqToQuery ('select zc_Enum_StaffListSummKind_WorkHours() AS KindId');
+     zc_Enum_StaffListSummKind_WorkHours := toSqlQuery.FieldByName('KindId').AsString;
+     //
      with fromQuery,Sql do begin
         Close;
         Clear;
         Add('select _pgStaffList.Id as ObjectId');
-        Add('     , case when trim(_pgStaffList.Summ_Month)='+FormatToVarCharServer_notNULL('')+' then 0 else _pgStaffList.Summ_Month end as Summ_Month'
-        Add('     , case when trim(_pgStaffList.Summ_Day)='+FormatToVarCharServer_notNULL('')+' then 0 else _pgStaffList.Summ_Day end as Summ_Day'
-        Add('     , case when trim(_pgStaffList.Summ_Personal)='+FormatToVarCharServer_notNULL('')+' then 0 else _pgStaffList.Summ_Personal end as Summ_Personal'
-        Add('     , case when trim(_pgStaffList.Summ_HoursPlan)='+FormatToVarCharServer_notNULL('')+' then 0 else _pgStaffList.Summ_HoursPlan end as Summ_HoursPlan'
-        Add('     , case when trim(_pgStaffList.Summ_HoursDay)='+FormatToVarCharServer_notNULL('')+' then 0 else _pgStaffList.Summ_HoursDay end as Summ_HoursDay'
-        Add('     , case when trim(_pgStaffList.Summ_HoursPlanConst)='+FormatToVarCharServer_notNULL('')+' then 0 else _pgStaffList.Summ_HoursPlanConst end as Summ_HoursPlanConst'
-        Add('     , case when trim(_pgStaffList.Summ_HoursDayConst)='+FormatToVarCharServer_notNULL('')+' then 0 else _pgStaffList.Summ_HoursDayConst end as Summ_HoursDayConst'
+        Add('     , case when trim(_pgStaffList.Summ_Month)='+FormatToVarCharServer_notNULL('')+' then 0 else _pgStaffList.Summ_Month end as Summ_Month');
+        Add('     , case when trim(_pgStaffList.Summ_Day)='+FormatToVarCharServer_notNULL('')+' then 0 else _pgStaffList.Summ_Day end as Summ_Day');
+        Add('     , case when trim(_pgStaffList.Summ_Personal)='+FormatToVarCharServer_notNULL('')+' then 0 else _pgStaffList.Summ_Personal end as Summ_Personal');
+        Add('     , case when trim(_pgStaffList.Summ_HoursPlan)='+FormatToVarCharServer_notNULL('')+' then 0 else _pgStaffList.Summ_HoursPlan end as Summ_HoursPlan');
+        Add('     , case when trim(_pgStaffList.Summ_HoursDay)='+FormatToVarCharServer_notNULL('')+' then 0 else _pgStaffList.Summ_HoursDay end as Summ_HoursDay');
+        Add('     , case when trim(_pgStaffList.Summ_HoursPlanConst)='+FormatToVarCharServer_notNULL('')+' then 0 else _pgStaffList.Summ_HoursPlanConst end as Summ_HoursPlanConst');
+        Add('     , case when trim(_pgStaffList.Summ_HoursDayConst)='+FormatToVarCharServer_notNULL('')+' then 0 else _pgStaffList.Summ_HoursDayConst end as Summ_HoursDayConst');
         Add('     , case when trim(_pgStaffList.HoursDay)='+FormatToVarCharServer_notNULL('')+' then 0 else _pgStaffList.HoursDay end as HoursDay'
            +'           , StaffListSumm_MonthId_pg'
            +'           , StaffListSumm_DayId_pg'
@@ -3069,7 +3091,7 @@ begin
            +'           , StaffListSumm_HoursPlanConstId_pg'
            +'           , StaffListSumm_HoursDayConstId_pg'
            +'           , StaffListSumm_HoursOnDayId_pg'
-        Add('     , StaffListId_pg');
+           +'     , StaffListId_pg as inStaffListId');
         Add('from (select _pgStaffList.Id, _pgStaffList.StaffListId_pg'
            +'           , StaffListSumm_MonthId_pg'
            +'           , StaffListSumm_DayId_pg'
@@ -3231,16 +3253,16 @@ begin
                                             +' where Id = '+FieldByName('ObjectId').AsString);
              end;
              //HoursDay
-             if (FieldByName('Summ_HoursDay').AsFloat<>0)or(FieldByName('StaffListSumm_HoursOnDayId_pg').AsInteger<>0)
+             if (FieldByName('HoursDay').AsFloat<>0)or(FieldByName('StaffListSumm_HoursOnDayId_pg').AsInteger<>0)
              then begin
                        //!!!
                        if fStop then begin exit;end;
                        toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('StaffListSumm_HoursOnDayId_pg').AsInteger;
-                       toStoredProc.Params.ParamByName('inValue').Value:=FieldByName('Summ_HoursDay').AsFloat;
+                       toStoredProc.Params.ParamByName('inValue').Value:=FieldByName('HoursDay').AsFloat;
                        toStoredProc.Params.ParamByName('inComment').Value:='';
                        toStoredProc.Params.ParamByName('inStaffListId').Value:=FieldByName('inStaffListId').AsInteger;
                        toStoredProc.Params.ParamByName('inStaffListMasterId').Value:=0;
-                       toStoredProc.Params.ParamByName('inStaffListSummKindId').Value:=StrToInt(zc_Enum_StaffListSummKind_HoursDay);
+                       toStoredProc.Params.ParamByName('inStaffListSummKindId').Value:=StrToInt(zc_Enum_StaffListSummKind_WorkHours);
                        if not myExecToStoredProc then ;//exit;
                        //
                        if (1=1)//or(FieldByName('Id_Postgres').AsInteger=0)
