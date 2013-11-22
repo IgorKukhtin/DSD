@@ -770,6 +770,11 @@ begin
      fExecSqFromQuery('update dba._pgCar set ModelId_pg = null, CarId_pg = null, MovementId_pg=null');
      fExecSqFromQuery('update dba._pgCardFuel set CardFuelId_pg = null');
 
+     fExecSqFromQuery('update dba._pgMemberSWT set GroupId_pg = null,MemberId_pg = null,PersonalId_pg = null,PositionId_pg = null,PositionLevelId_pg = null');
+     fExecSqFromQuery('update dba._pgModelService set ModelServiceId_pg = null,ModelServiceItemMasterId_pg = null,ModelServiceItemChildId_pg = null');
+     fExecSqFromQuery('update dba._pgStaffList set PositionId_pg = null,PositionLevelId_pg = null,StaffListSumm_MonthId_pg = null,StaffListSumm_DayId_pg = null,'+'StaffListSumm_PersonalId_pg = null, StaffListSumm_HoursPlanId_pg = null, StaffListSumm_HoursDayId_pg = null, StaffListSumm_HoursPlanConstId_pg = null, StaffListSumm_HoursDayConstId_pg = null, StaffListSumm_HoursOnDayId_pg = null, StaffListId_pg = null');
+     fExecSqFromQuery('update dba._pgStaffListCost set ModelServiceId_pg = null,StaffListId_pg = null,StaffListCostId_pg = null');
+
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pSetNullDocument_Id_Postgres;
@@ -2744,9 +2749,13 @@ begin
              if not myExecToStoredProc then ;//exit;
              //
              if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecSqFromQuery('update dba._pgModelService set ModelServiceId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
-                                 +' where trim(ModelServiceName) = '+FormatToVarCharServer_notNULL(FieldByName('ObjectName').AsString)
-                                 +'   and trim(UnitCode_all) = '+FormatToVarCharServer_notNULL(FieldByName('UnitCode_all').AsString));
+             then begin fExecSqFromQuery('update dba._pgModelService set ModelServiceId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
+                                       +' where trim(ModelServiceName) = '+FormatToVarCharServer_notNULL(FieldByName('ObjectName').AsString)
+                                       +'   and trim(UnitCode_all) = '+FormatToVarCharServer_notNULL(FieldByName('UnitCode_all').AsString));
+                        fExecSqFromQuery('update dba._pgStaffListCost set ModelServiceId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
+                                       +' where trim(ModelServiceName) = '+FormatToVarCharServer_notNULL(FieldByName('ObjectName').AsString)
+                                       +'   and trim(UnitCode_all) = '+FormatToVarCharServer_notNULL(FieldByName('UnitCode_all').AsString));
+             end;
              //
              Next;
              Application.ProcessMessages;
@@ -2945,6 +2954,89 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_StaffList;
 begin
+     if (not cbStaffList.Checked)or(not cbStaffList.Enabled) then exit;
+     //
+     myEnabledCB(cbStaffList);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select _pgStaffList.Id as ObjectId');
+        Add('     , 0 as ObjectCode');
+        Add('     , UnitCode_all,myNumber');
+        Add('     , case when trim(HoursPlan)='+FormatToVarCharServer_notNULL('')+' then 0 else HoursPlan end as inHoursPlan'
+          +'      , case when trim(PersonalCount)= '+FormatToVarCharServer_notNULL('')+' then 0 else PersonalCount end as inPersonalCount'
+          +'      , myComment as inComment');
+        Add('     , _pgUnit.Id_Postgres as inUnitId');
+        Add('     , PositionId_pg as inPositionId');
+        Add('     , PositionLevelId_pg as inPositionLevelId');
+        Add('     , StaffListId_pg as Id_Postgres');
+        Add('from (select _pgStaffList.Id, (isnull (_pgStaffList.StaffListId_pg,0)) AS StaffListId_pg'
+           +'           , '+FormatToVarCharServer_notNULL('-') + 'as Sep'
+           +'           , trim(_pgStaffList.UnitCode_all)as UnitCode_all'
+           +'           , zf_Calc_Word_bySeparate (UnitCode_all,Sep,Sep,1) as UnitCode'
+           +'           , _pgStaffList.myNumber, HoursPlan, PersonalCount,myComment'
+           +'           , isnull(_pgStaffList.PositionId_pg,0) as PositionId_pg'
+           +'           , isnull(_pgStaffList.PositionLevelId_pg,0) as PositionLevelId_pg'
+           +'      from dba._pgStaffList'
+           +'      where PositionId_pg<>0'
+//           +'      group by myNumber,UnitCode_all,PositionId_pg,PositionLevelId_pg,GroupId_pg
+            + '    ) as _pgStaffList');
+        Add('      left outer join dba._pgUnit on _pgUnit.ObjectCode = _pgStaffList.UnitCode');
+        Add('order by ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_StaffList';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inHoursPlan',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPersonalCount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inComment',ftString,ptInput, 0);
+        toStoredProc.Params.AddParam ('inUnitId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPositionId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPositionLevelId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+
+             // Member
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=0;
+             toStoredProc.Params.ParamByName('inHoursPlan').Value:=FieldByName('inHoursPlan').AsFloat;
+             toStoredProc.Params.ParamByName('inPersonalCount').Value:=FieldByName('inPersonalCount').AsFloat;
+             toStoredProc.Params.ParamByName('inComment').Value:=FieldByName('inComment').AsString;
+             toStoredProc.Params.ParamByName('inUnitId').Value:=FieldByName('inUnitId').AsInteger;
+             toStoredProc.Params.ParamByName('inPositionId').Value:=FieldByName('inPositionId').AsInteger;
+             toStoredProc.Params.ParamByName('inPositionLevelId').Value:=FieldByName('inPositionLevelId').AsInteger;
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then begin fExecSqFromQuery('update dba._pgStaffList set StaffListId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
+                                       +' where Id = '+FieldByName('ObjectId').AsString);
+                        fExecSqFromQuery('update dba._pgStaffListCost set StaffListId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
+                                        +' where trim (myNumber) = '+FormatToVarCharServer_notNULL(FieldByName('myNumber').AsString)
+                                        +'   and trim (UnitCode_all) = '+FormatToVarCharServer_notNULL(FieldByName('UnitCode_all').AsString));
+             end;
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        //EnableControls;
+     end;
+     //
+     myDisabledCB(cbStaffList);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_StaffListCost;
@@ -2952,7 +3044,242 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_StaffListSumm;
+var zc_Enum_StaffListSummKind_Month,zc_Enum_StaffListSummKind_Day,zc_Enum_StaffListSummKind_Personal:String;
+    zc_Enum_StaffListSummKind_HoursPlan,zc_Enum_StaffListSummKind_HoursDay,zc_Enum_StaffListSummKind_HoursPlanConst,zc_Enum_StaffListSummKind_HoursDayConst:String;
+    zc_Enum_StaffListSummKind_WorkHours:String;
 begin
+     if (not cbStaffList.Checked)or(not cbStaffList.Enabled) then exit;
+     //
+     myEnabledCB(cbStaffList);
+     //
+     fOpenSqToQuery ('select zc_Enum_StaffListSummKind_Month() AS KindId');
+     zc_Enum_StaffListSummKind_Month := toSqlQuery.FieldByName('KindId').AsString;
+     fOpenSqToQuery ('select zc_Enum_StaffListSummKind_Day() AS KindId');
+     zc_Enum_StaffListSummKind_Day := toSqlQuery.FieldByName('KindId').AsString;
+     fOpenSqToQuery ('select zc_Enum_StaffListSummKind_Personal() AS KindId');
+     zc_Enum_StaffListSummKind_Personal := toSqlQuery.FieldByName('KindId').AsString;
+
+     fOpenSqToQuery ('select zc_Enum_StaffListSummKind_HoursPlan() AS KindId');
+     zc_Enum_StaffListSummKind_HoursPlan := toSqlQuery.FieldByName('KindId').AsString;
+     fOpenSqToQuery ('select zc_Enum_StaffListSummKind_HoursDay() AS KindId');
+     zc_Enum_StaffListSummKind_HoursDay := toSqlQuery.FieldByName('KindId').AsString;
+     fOpenSqToQuery ('select zc_Enum_StaffListSummKind_HoursPlanConst() AS KindId');
+     zc_Enum_StaffListSummKind_HoursPlanConst := toSqlQuery.FieldByName('KindId').AsString;
+     fOpenSqToQuery ('select zc_Enum_StaffListSummKind_HoursDayConst() AS KindId');
+     zc_Enum_StaffListSummKind_HoursDayConst := toSqlQuery.FieldByName('KindId').AsString;
+
+     fOpenSqToQuery ('select zc_Enum_StaffListSummKind_WorkHours() AS KindId');
+     zc_Enum_StaffListSummKind_WorkHours := toSqlQuery.FieldByName('KindId').AsString;
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select _pgStaffList.Id as ObjectId');
+        Add('     , case when trim(_pgStaffList.Summ_Month)='+FormatToVarCharServer_notNULL('')+' then 0 else _pgStaffList.Summ_Month end as Summ_Month');
+        Add('     , case when trim(_pgStaffList.Summ_Day)='+FormatToVarCharServer_notNULL('')+' then 0 else _pgStaffList.Summ_Day end as Summ_Day');
+        Add('     , case when trim(_pgStaffList.Summ_Personal)='+FormatToVarCharServer_notNULL('')+' then 0 else _pgStaffList.Summ_Personal end as Summ_Personal');
+        Add('     , case when trim(_pgStaffList.Summ_HoursPlan)='+FormatToVarCharServer_notNULL('')+' then 0 else _pgStaffList.Summ_HoursPlan end as Summ_HoursPlan');
+        Add('     , case when trim(_pgStaffList.Summ_HoursDay)='+FormatToVarCharServer_notNULL('')+' then 0 else _pgStaffList.Summ_HoursDay end as Summ_HoursDay');
+        Add('     , case when trim(_pgStaffList.Summ_HoursPlanConst)='+FormatToVarCharServer_notNULL('')+' then 0 else _pgStaffList.Summ_HoursPlanConst end as Summ_HoursPlanConst');
+        Add('     , case when trim(_pgStaffList.Summ_HoursDayConst)='+FormatToVarCharServer_notNULL('')+' then 0 else _pgStaffList.Summ_HoursDayConst end as Summ_HoursDayConst');
+        Add('     , case when trim(_pgStaffList.HoursDay)='+FormatToVarCharServer_notNULL('')+' then 0 else _pgStaffList.HoursDay end as HoursDay'
+           +'           , StaffListSumm_MonthId_pg'
+           +'           , StaffListSumm_DayId_pg'
+           +'           , StaffListSumm_PersonalId_pg'
+           +'           , StaffListSumm_HoursPlanId_pg'
+           +'           , StaffListSumm_HoursDayId_pg'
+           +'           , StaffListSumm_HoursPlanConstId_pg'
+           +'           , StaffListSumm_HoursDayConstId_pg'
+           +'           , StaffListSumm_HoursOnDayId_pg'
+           +'     , StaffListId_pg as inStaffListId');
+        Add('from (select _pgStaffList.Id, _pgStaffList.StaffListId_pg'
+           +'           , StaffListSumm_MonthId_pg'
+           +'           , StaffListSumm_DayId_pg'
+           +'           , StaffListSumm_PersonalId_pg'
+           +'           , StaffListSumm_HoursPlanId_pg'
+           +'           , StaffListSumm_HoursDayId_pg'
+           +'           , StaffListSumm_HoursPlanConstId_pg'
+           +'           , StaffListSumm_HoursDayConstId_pg'
+           +'           , StaffListSumm_HoursOnDayId_pg'
+           +'           , Summ_Month'
+           +'           , Summ_Day'
+           +'           , Summ_Personal'
+           +'           , Summ_HoursPlan'
+           +'           , Summ_HoursDay'
+           +'           , Summ_HoursPlanConst'
+           +'           , Summ_HoursDayConst'
+           +'           , HoursDay'
+           +'      from dba._pgStaffList'
+           +'      where StaffListId_pg<>0'
+            + '    ) as _pgStaffList');
+        Add('order by ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_StaffListSumm';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inValue',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inComment',ftString,ptInput, 0);
+        toStoredProc.Params.AddParam ('inStaffListId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inStaffListMasterId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inStaffListSummKindId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //Summ_Month
+             if (FieldByName('Summ_Month').AsFloat<>0)or(FieldByName('StaffListSumm_MonthId_pg').AsInteger<>0)
+             then begin
+                       //!!!
+                       if fStop then begin exit;end;
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('StaffListSumm_MonthId_pg').AsInteger;
+                       toStoredProc.Params.ParamByName('inValue').Value:=FieldByName('Summ_Month').AsFloat;
+                       toStoredProc.Params.ParamByName('inComment').Value:='';
+                       toStoredProc.Params.ParamByName('inStaffListId').Value:=FieldByName('inStaffListId').AsInteger;
+                       toStoredProc.Params.ParamByName('inStaffListMasterId').Value:=0;
+                       toStoredProc.Params.ParamByName('inStaffListSummKindId').Value:=StrToInt(zc_Enum_StaffListSummKind_Month);
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=1)//or(FieldByName('Id_Postgres').AsInteger=0)
+                       then fExecSqFromQuery('update dba._pgStaffList set StaffListSumm_MonthId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
+                                            +' where Id = '+FieldByName('ObjectId').AsString);
+             end;
+             //Summ_Day
+             if (FieldByName('Summ_Day').AsFloat<>0)or(FieldByName('StaffListSumm_DayId_pg').AsInteger<>0)
+             then begin
+                       //!!!
+                       if fStop then begin exit;end;
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('StaffListSumm_DayId_pg').AsInteger;
+                       toStoredProc.Params.ParamByName('inValue').Value:=FieldByName('Summ_Day').AsFloat;
+                       toStoredProc.Params.ParamByName('inComment').Value:='';
+                       toStoredProc.Params.ParamByName('inStaffListId').Value:=FieldByName('inStaffListId').AsInteger;
+                       toStoredProc.Params.ParamByName('inStaffListMasterId').Value:=0;
+                       toStoredProc.Params.ParamByName('inStaffListSummKindId').Value:=StrToInt(zc_Enum_StaffListSummKind_Day);
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=1)//or(FieldByName('Id_Postgres').AsInteger=0)
+                       then fExecSqFromQuery('update dba._pgStaffList set StaffListSumm_DayId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
+                                            +' where Id = '+FieldByName('ObjectId').AsString);
+             end;
+             //Summ_Personal
+             if (FieldByName('Summ_Personal').AsFloat<>0)or(FieldByName('StaffListSumm_PersonalId_pg').AsInteger<>0)
+             then begin
+                       //!!!
+                       if fStop then begin exit;end;
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('StaffListSumm_PersonalId_pg').AsInteger;
+                       toStoredProc.Params.ParamByName('inValue').Value:=FieldByName('Summ_Personal').AsFloat;
+                       toStoredProc.Params.ParamByName('inComment').Value:='';
+                       toStoredProc.Params.ParamByName('inStaffListId').Value:=FieldByName('inStaffListId').AsInteger;
+                       toStoredProc.Params.ParamByName('inStaffListMasterId').Value:=0;
+                       toStoredProc.Params.ParamByName('inStaffListSummKindId').Value:=StrToInt(zc_Enum_StaffListSummKind_Personal);
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=1)//or(FieldByName('Id_Postgres').AsInteger=0)
+                       then fExecSqFromQuery('update dba._pgStaffList set StaffListSumm_PersonalId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
+                                            +' where Id = '+FieldByName('ObjectId').AsString);
+             end;
+             //Summ_HoursPlan
+             if (FieldByName('Summ_HoursPlan').AsFloat<>0)or(FieldByName('StaffListSumm_HoursPlanId_pg').AsInteger<>0)
+             then begin
+                       //!!!
+                       if fStop then begin exit;end;
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('StaffListSumm_HoursPlanId_pg').AsInteger;
+                       toStoredProc.Params.ParamByName('inValue').Value:=FieldByName('Summ_HoursPlan').AsFloat;
+                       toStoredProc.Params.ParamByName('inComment').Value:='';
+                       toStoredProc.Params.ParamByName('inStaffListId').Value:=FieldByName('inStaffListId').AsInteger;
+                       toStoredProc.Params.ParamByName('inStaffListMasterId').Value:=0;
+                       toStoredProc.Params.ParamByName('inStaffListSummKindId').Value:=StrToInt(zc_Enum_StaffListSummKind_HoursPlan);
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=1)//or(FieldByName('Id_Postgres').AsInteger=0)
+                       then fExecSqFromQuery('update dba._pgStaffList set StaffListSumm_HoursPlanId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
+                                            +' where Id = '+FieldByName('ObjectId').AsString);
+             end;
+             //Summ_HoursDay
+             if (FieldByName('Summ_HoursDay').AsFloat<>0)or(FieldByName('StaffListSumm_HoursDayId_pg').AsInteger<>0)
+             then begin
+                       //!!!
+                       if fStop then begin exit;end;
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('StaffListSumm_HoursDayId_pg').AsInteger;
+                       toStoredProc.Params.ParamByName('inValue').Value:=FieldByName('Summ_HoursDay').AsFloat;
+                       toStoredProc.Params.ParamByName('inComment').Value:='';
+                       toStoredProc.Params.ParamByName('inStaffListId').Value:=FieldByName('inStaffListId').AsInteger;
+                       toStoredProc.Params.ParamByName('inStaffListMasterId').Value:=0;
+                       toStoredProc.Params.ParamByName('inStaffListSummKindId').Value:=StrToInt(zc_Enum_StaffListSummKind_HoursDay);
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=1)//or(FieldByName('Id_Postgres').AsInteger=0)
+                       then fExecSqFromQuery('update dba._pgStaffList set StaffListSumm_HoursDayId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
+                                            +' where Id = '+FieldByName('ObjectId').AsString);
+             end;
+             //Summ_HoursPlanConst
+             if (FieldByName('Summ_HoursPlanConst').AsFloat<>0)or(FieldByName('StaffListSumm_HoursPlanConstId_pg').AsInteger<>0)
+             then begin
+                       //!!!
+                       if fStop then begin exit;end;
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('StaffListSumm_HoursPlanConstId_pg').AsInteger;
+                       toStoredProc.Params.ParamByName('inValue').Value:=FieldByName('Summ_HoursPlanConst').AsFloat;
+                       toStoredProc.Params.ParamByName('inComment').Value:='';
+                       toStoredProc.Params.ParamByName('inStaffListId').Value:=FieldByName('inStaffListId').AsInteger;
+                       toStoredProc.Params.ParamByName('inStaffListMasterId').Value:=0;
+                       toStoredProc.Params.ParamByName('inStaffListSummKindId').Value:=StrToInt(zc_Enum_StaffListSummKind_HoursPlanConst);
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=1)//or(FieldByName('Id_Postgres').AsInteger=0)
+                       then fExecSqFromQuery('update dba._pgStaffList set StaffListSumm_HoursPlanConstId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
+                                            +' where Id = '+FieldByName('ObjectId').AsString);
+             end;
+             //Summ_HoursDayConst
+             if (FieldByName('Summ_HoursDayConst').AsFloat<>0)or(FieldByName('StaffListSumm_HoursDayConstId_pg').AsInteger<>0)
+             then begin
+                       //!!!
+                       if fStop then begin exit;end;
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('StaffListSumm_HoursDayConstId_pg').AsInteger;
+                       toStoredProc.Params.ParamByName('inValue').Value:=FieldByName('Summ_HoursDayConst').AsFloat;
+                       toStoredProc.Params.ParamByName('inComment').Value:='';
+                       toStoredProc.Params.ParamByName('inStaffListId').Value:=FieldByName('inStaffListId').AsInteger;
+                       toStoredProc.Params.ParamByName('inStaffListMasterId').Value:=0;
+                       toStoredProc.Params.ParamByName('inStaffListSummKindId').Value:=StrToInt(zc_Enum_StaffListSummKind_HoursDayConst);
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=1)//or(FieldByName('Id_Postgres').AsInteger=0)
+                       then fExecSqFromQuery('update dba._pgStaffList set StaffListSumm_HoursDayConstId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
+                                            +' where Id = '+FieldByName('ObjectId').AsString);
+             end;
+             //HoursDay
+             if (FieldByName('HoursDay').AsFloat<>0)or(FieldByName('StaffListSumm_HoursOnDayId_pg').AsInteger<>0)
+             then begin
+                       //!!!
+                       if fStop then begin exit;end;
+                       toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('StaffListSumm_HoursOnDayId_pg').AsInteger;
+                       toStoredProc.Params.ParamByName('inValue').Value:=FieldByName('HoursDay').AsFloat;
+                       toStoredProc.Params.ParamByName('inComment').Value:='';
+                       toStoredProc.Params.ParamByName('inStaffListId').Value:=FieldByName('inStaffListId').AsInteger;
+                       toStoredProc.Params.ParamByName('inStaffListMasterId').Value:=0;
+                       toStoredProc.Params.ParamByName('inStaffListSummKindId').Value:=StrToInt(zc_Enum_StaffListSummKind_WorkHours);
+                       if not myExecToStoredProc then ;//exit;
+                       //
+                       if (1=1)//or(FieldByName('Id_Postgres').AsInteger=0)
+                       then fExecSqFromQuery('update dba._pgStaffList set StaffListSumm_HoursOnDayId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
+                                            +' where Id = '+FieldByName('ObjectId').AsString);
+             end;
+
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        //EnableControls;
+     end;
+     //
+     myDisabledCB(cbStaffList);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Member_SheetWorkTime;
@@ -3092,7 +3419,7 @@ begin
              then fExecSqFromQuery('update dba._pgMemberSWT set PersonalId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
                                  +' where MemberId_pg = '+FieldByName('inMemberId').AsString
                                  +'   and PositionId_pg = '+FieldByName('inPositionId').AsString
-                                 +'   and PositionLevelId_pg = '+FieldByName('inPositionLevelId').AsString
+                                 +'   and isnull(PositionLevelId_pg,0) = '+FieldByName('inPositionLevelId').AsString
                                  +'   and trim (UnitCode_all) = '+FormatToVarCharServer_notNULL(FieldByName('UnitCode_all').AsString));
              //
              Next;
