@@ -1,4 +1,4 @@
-unit ModelServiceKind;
+unit MovementDesc;
 
 interface
 
@@ -23,11 +23,11 @@ uses
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
-  TModelServiceKindForm = class(TParentForm)
+  TMovementDescForm = class(TParentForm)
     cxGridDBTableView: TcxGridDBTableView;
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
-    clName: TcxGridDBColumn;
+    clMovementDescName: TcxGridDBColumn;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -43,7 +43,6 @@ type
     bbChoiceGuides: TdxBarButton;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clCode: TcxGridDBColumn;
-    clComment: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -55,6 +54,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TModelServiceKindForm);
+  RegisterClass(TMovementDescForm);
 
 end.

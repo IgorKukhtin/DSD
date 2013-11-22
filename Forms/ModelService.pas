@@ -34,7 +34,6 @@ type
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
     bbRefresh: TdxBarButton;
-    bbEdit: TdxBarButton;
     bbErased: TdxBarButton;
     bbUnErased: TdxBarButton;
     bbGridToExcel: TdxBarButton;

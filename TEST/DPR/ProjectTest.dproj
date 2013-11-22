@@ -804,9 +804,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorGuides.pas">
 				<Form>AncestorGuidesForm</Form>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Personal_Object.pas">
 				<Form>Personal_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Kind\MovementDesc.pas">
+				<Form>MovementDescForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

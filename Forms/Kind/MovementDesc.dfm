@@ -1,7 +1,7 @@
-object ModelServiceKindForm: TModelServiceKindForm
+object MovementDescForm: TMovementDescForm
   Left = 0
   Top = 0
-  Caption = #1058#1080#1087#1099' '#1084#1086#1076#1077#1083#1077#1081' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+  Caption = #1058#1080#1087#1099' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
   ClientHeight = 265
   ClientWidth = 533
   Color = clBtnFace
@@ -32,7 +32,7 @@ object ModelServiceKindForm: TModelServiceKindForm
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = clMovementDescName
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
@@ -46,20 +46,16 @@ object ModelServiceKindForm: TModelServiceKindForm
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        Visible = False
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
       end
-      object clName: TcxGridDBColumn
+      object clMovementDescName: TcxGridDBColumn
         Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
-        DataBinding.FieldName = 'Name'
+        DataBinding.FieldName = 'MovementDescName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 252
-      end
-      object clComment: TcxGridDBColumn
-        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-        DataBinding.FieldName = 'Comment'
-        HeaderAlignmentVert = vaCenter
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -68,7 +64,7 @@ object ModelServiceKindForm: TModelServiceKindForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 216
+    Left = 48
     Top = 56
   end
   object ClientDataSet: TClientDataSet
@@ -80,7 +76,7 @@ object ModelServiceKindForm: TModelServiceKindForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = clName
+        Component = clMovementDescName
         Properties.Strings = (
           'Width')
       end>
@@ -180,12 +176,13 @@ object ModelServiceKindForm: TModelServiceKindForm
         item
           Name = 'Key'
           Component = ClientDataSet
-          ComponentItem = 'Id'
+          ComponentItem = 'MovementDescId'
+          DataType = ftString
         end
         item
           Name = 'TextValue'
           Component = ClientDataSet
-          ComponentItem = 'Name'
+          ComponentItem = 'MovementDescName'
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -193,7 +190,7 @@ object ModelServiceKindForm: TModelServiceKindForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ModelServiceKind'
+    StoredProcName = 'gpSelect_Object_MovementDesc'
     DataSet = ClientDataSet
     DataSets = <
       item
