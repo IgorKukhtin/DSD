@@ -2999,7 +2999,7 @@ begin
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inHoursPlan',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inPersonalCount',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inComment',ftString,ptInput, 0);
+        toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inUnitId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPositionId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPositionLevelId',ftInteger,ptInput, 0);
@@ -3041,6 +3041,69 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_StaffListCost;
 begin
+     if (not cbStaffList.Checked)or(not cbStaffList.Enabled) then exit;
+     //
+     myEnabledCB(cbStaffList);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select _pgStaffListCost.Id as ObjectId');
+        Add('     , 0 as ObjectCode');
+        Add('     , case when trim(Summ)='+FormatToVarCharServer_notNULL('')+' then 0 else Summ end as inPrice');
+        Add('     , ModelServiceId_pg as inModelServiceId');
+        Add('     , StaffListId_pg as inStaffListId');
+        Add('     , StaffListCostId_pg as Id_Postgres');
+        Add('from (select _pgStaffListCost.Id, _pgStaffListCost.ModelServiceId_pg, _pgStaffListCost.StaffListId_pg,_pgStaffListCost.StaffListCostId_pg'
+           +'           , Summ'
+           +'      from dba._pgStaffListCost'
+           +'      where StaffListId_pg<>0 and ModelServiceId_pg<>0'
+//           +'      group by myNumber,UnitCode_all,PositionId_pg,PositionLevelId_pg,GroupId_pg
+            + '    ) as _pgStaffListCost');
+        Add('order by ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_StaffListCost';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inPrice',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inStaffListId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inModelServiceId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+
+             // Member
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inPrice').Value:=FieldByName('inPrice').AsFloat;
+             toStoredProc.Params.ParamByName('inComment').Value:='';
+             toStoredProc.Params.ParamByName('inStaffListId').Value:=FieldByName('inStaffListId').AsInteger;
+             toStoredProc.Params.ParamByName('inModelServiceId').Value:=FieldByName('inModelServiceId').AsInteger;
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecSqFromQuery('update dba._pgStaffListCost set StaffListCostId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
+                                 +' where Id = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+        //EnableControls;
+     end;
+     //
+     myDisabledCB(cbStaffList);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_StaffListSumm;
@@ -3126,7 +3189,7 @@ begin
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inValue',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inComment',ftString,ptInput, 0);
+        toStoredProc.Params.AddParam ('inComment',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inStaffListId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inStaffListMasterId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inStaffListSummKindId',ftInteger,ptInput, 0);
