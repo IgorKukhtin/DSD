@@ -284,7 +284,8 @@ uses
   MoneyPlace_Object in '..\..\Forms\Guides\MoneyPlace_Object.pas' {MoneyPlace_ObjectForm: TParentForm},
   Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm},
   AncestorGuides in '..\..\Forms\Ancestor\AncestorGuides.pas' {AncestorGuidesForm: TParentForm},
-  Personal_Object in '..\..\Forms\Guides\Personal_Object.pas' {Personal_ObjectForm: TParentForm};
+  Personal_Object in '..\..\Forms\Guides\Personal_Object.pas' {Personal_ObjectForm: TParentForm},
+  MovementDesc in '..\..\Forms\Kind\MovementDesc.pas' {MovementDescForm: TParentForm};
 
 {$R *.RES}
 

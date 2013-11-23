@@ -351,14 +351,6 @@ object ModelServiceForm: TModelServiceForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -395,13 +387,6 @@ object ModelServiceForm: TModelServiceForm
     object bbRefresh: TdxBarButton
       Action = actRefresh
       Category = 0
-    end
-    object bbEdit: TdxBarButton
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      Category = 0
-      Visible = ivAlways
-      ImageIndex = 1
-      ShortCut = 115
     end
     object bbErased: TdxBarButton
       Action = dsdSetErased
@@ -465,7 +450,7 @@ object ModelServiceForm: TModelServiceForm
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
-      DataSource = ModelServiceItemMasterDS
+      DataSource = MasterDS
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
