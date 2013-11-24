@@ -16,8 +16,8 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdateService(const Id: integer; InvNumber: String;
-        OperDate: TDateTime; Amount: Double;
-        JuridicalId, MainJuridicalId, BusinessId, PaidKindId, InfoMoneyId, UnitId: integer): integer;
+        OperDate: TDateTime; Amount: Double;Comment:String;
+        BusinessId, ContractId, InfoMoneyId, JuridicalId, JuridicalBasisId, PaidKindId, UnitId: integer): integer;
     constructor Create; override;
   end;
 
@@ -40,37 +40,42 @@ var Id: Integer;
     InvNumber: String;
     OperDate: TDateTime;
     Amount: Double;
-    JuridicalId, MainJuridicalId, BusinessId, PaidKindId, InfoMoneyId, UnitId: Integer;
+    Comment:String;
+    BusinessId, ContractId, InfoMoneyId, JuridicalId, JuridicalBasisId, PaidKindId, UnitId: Integer;
 begin
   Id:=0;
   InvNumber:='1';
   OperDate:= Date;
-  JuridicalId := TJuridical.Create.GetDefault;
-  MainJuridicalId := TJuridical.Create.GetDefault;
-  BusinessId := 0;
-  InfoMoneyId := 0;
-  UnitId := 0;
   Amount := 265.68;
+  Comment:='';
+  BusinessId := 0;
+  ContractId:=0;
+  InfoMoneyId := 0;
+  JuridicalId := TJuridical.Create.GetDefault;
+  JuridicalBasisId := TJuridical.Create.GetDefault;
+  UnitId := 0;
   PaidKindId:=0;
 
-  result := InsertUpdateService(Id, InvNumber, OperDate, Amount,
-              JuridicalId, MainJuridicalId, BusinessId, PaidKindId, InfoMoneyId, UnitId);
+  result := InsertUpdateService(Id, InvNumber, OperDate, Amount,Comment,
+              BusinessId, ContractId,InfoMoneyId, JuridicalId, JuridicalBasisId, PaidKindId, UnitId);
 end;
 
 function TService.InsertUpdateService(const Id: integer; InvNumber: String;
-        OperDate: TDateTime; Amount: Double;
-        JuridicalId, MainJuridicalId, BusinessId, PaidKindId, InfoMoneyId, UnitId: integer): integer;
+        OperDate: TDateTime; Amount: Double;Comment:String;
+        BusinessId, ContractId, InfoMoneyId, JuridicalId, JuridicalBasisId, PaidKindId, UnitId: integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
   FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
   FParams.AddParam('inAmount', ftFloat, ptInput, Amount);
-  FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
-  FParams.AddParam('inMainJuridicalId', ftInteger, ptInput, MainJuridicalId);
+  FParams.AddParam('inComment', ftString, ptInput, Comment);
   FParams.AddParam('inBusinessId', ftInteger, ptInput, BusinessId);
-  FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
+  FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
   FParams.AddParam('inInfoMoneyId', ftInteger, ptInput, InfoMoneyId);
+  FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
+  FParams.AddParam('inJuridicalBasisId', ftInteger, ptInput, JuridicalBasisId);
+  FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
   FParams.AddParam('inUnitId', ftInteger, ptInput, UnitId);
 
   result := InsertUpdate(FParams);

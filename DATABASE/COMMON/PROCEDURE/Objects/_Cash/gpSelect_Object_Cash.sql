@@ -1,16 +1,16 @@
-п»ї-- Function: gpSelect_Object_Cash()
+-- Function: gpSelect_Object_Cash()
 
 --DROP FUNCTION gpSelect_Object_Cash();
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Cash(
-    IN inSession     TVarChar        -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inSession     TVarChar        -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
                CurrencyName TVarChar, BranchName TVarChar, JuridicalName TVarChar, 
                BusinessName TVarChar) AS
 $BODY$BEGIN
 
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
    RETURN QUERY 
@@ -54,12 +54,11 @@ ALTER FUNCTION gpSelect_Object_Cash(TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.11.13                                        * Cyr1251
  10.05.13          *
- 03.06.13          
-
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpSelect_Object_Cash('2')
