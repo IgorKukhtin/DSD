@@ -104,6 +104,7 @@ type
     InsertRecordSLS: TInsertRecord;
     bbStaffListSummKind: TdxBarButton;
     actStaffListSumm: TdsdUpdateDataSet;
+    clUnitName: TcxGridDBColumn;
   private
     { Private declarations }
   public
