@@ -61,7 +61,7 @@ type
     BandcolPersonalCode: TcxGridDBBandedColumn;
     BandcolPersonalName: TcxGridDBBandedColumn;
     BandcolPositionName: TcxGridDBBandedColumn;
-    BandcolUnitName: TcxGridDBBandedColumn;
+    BandcolPositionLevelName: TcxGridDBBandedColumn;
     BandcolPersonalGroupName: TcxGridDBBandedColumn;
     TemplateColumn: TcxGridDBBandedColumn;
     OpenWorkTimeKindForm: TOpenChoiceForm;

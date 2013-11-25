@@ -58,8 +58,8 @@ BEGIN
            , View_Personal.PersonalName AS PersonalName
            , Object_Position.Id         AS PositionId
            , Object_Position.ValueData  AS PositionName
-           , Object_Unit.Id          AS UnitId
-           , Object_Unit.ValueData   AS UnitName
+           , Object_PositionLevel.Id         AS PositionLevelId
+           , Object_PositionLevel.ValueData  AS PositionLevelName
            , Object_PersonalGroup.Id         AS PersonalGroupId
            , Object_PersonalGroup.ValueData  AS PersonalGroupName'
            || vbFieldNameText ||
@@ -68,7 +68,7 @@ BEGIN
 	''SELECT 
              ARRAY[COALESCE(Movement_Data.PersonalId, Object_Data.PersonalId)           ,--AS PersonalId,
                    COALESCE(Movement_Data.PositionId, Object_Data.PositionId)           ,--AS PositionId,
-                   COALESCE(Movement_Data.UnitId, Object_Data.UnitId)                   ,--AS UnitId,
+                   COALESCE(Movement_Data.PositionLevelId, Object_Data.PositionLevelId) ,--AS PositionLevelId,
                    COALESCE(Movement_Data.PersonalGroupId, Object_Data.PersonalGroupId)  --AS PersonalGroupId
                   ]::integer[],
              COALESCE(Movement_Data.OperDate, Object_Data.OperDate) AS OperDate,
@@ -79,8 +79,8 @@ BEGIN
             (SELECT tmpOperDate.operdate,
 	            MI_SheetWorkTime.Amount, 
 	            COALESCE(MI_SheetWorkTime.ObjectId, 0) AS PersonalId,
-	            COALESCE(MovementLinkObject_Unit.ObjectId, 0) UnitId, 
 	            COALESCE(MIObject_Position.ObjectId, 0) AS PositionId,
+	            COALESCE(MIObject_PositionLevel.ObjectId, 0) AS PositionLevelId,
 	            COALESCE(MIObject_PersonalGroup.ObjectId, 0) AS PersonalGroupId,
 	            MIObject_WorkTimeKind.ObjectId,
 	            ObjectString_WorkTimeKind_ShortName.ValueData AS ShortName
@@ -88,7 +88,7 @@ BEGIN
              JOIN Movement 
 	       ON Movement.operDate = tmpOperDate.OperDate
               AND Movement.DescId = zc_Movement_SheetWorkTime()
-        LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+             JOIN MovementLinkObject AS MovementLinkObject_Unit
                ON MovementLinkObject_Unit.MovementId = Movement.Id
               AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
              JOIN MovementItem AS MI_SheetWorkTime      
@@ -96,6 +96,9 @@ BEGIN
         LEFT JOIN MovementItemLinkObject AS MIObject_Position
                ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id 
               AND MIObject_Position.DescId = zc_MILinkObject_Position() 
+        LEFT JOIN MovementItemLinkObject AS MIObject_PositionLevel
+               ON MIObject_PositionLevel.MovementItemId = MI_SheetWorkTime.Id 
+              AND MIObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel() 
         LEFT JOIN MovementItemLinkObject AS MIObject_WorkTimeKind
                ON MIObject_WorkTimeKind.MovementItemId = MI_SheetWorkTime.Id 
               AND MIObject_WorkTimeKind.DescId = zc_MILinkObject_WorkTimeKind() 
@@ -109,7 +112,6 @@ BEGIN
     FULL JOIN  
           (SELECT tmpOperDate.operdate, 0, 
                   COALESCE(PersonalId, 0) AS PersonalId, 
-                  COALESCE(ObjectLink_Personal_Unit.ChildObjectId, 0) AS UnitId, 
                   COALESCE(ObjectLink_Personal_Position.ChildObjectId, 0) AS PositionId, 
                   COALESCE(ObjectLink_Personal_PositionLevel.ChildObjectId, 0) AS PositionLevelId, 
                   COALESCE(ObjectLink_Personal_PersonalGroup.ChildObjectId, 0)  AS PersonalGroupId  
@@ -118,8 +120,8 @@ BEGIN
                ON ObjectLink_Personal_Position.ObjectId = Object_Personal_View.PersonalId
               AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
         LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
-               ON ObjectLink_Personal_Position.ObjectId = Object_Personal_View.PersonalId
-              AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+               ON ObjectLink_Personal_PositionLevel.ObjectId = Object_Personal_View.PersonalId
+              AND ObjectLink_Personal_PositionLevel.DescId = zc_ObjectLink_Personal_PositionLevel()
         LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
                ON ObjectLink_Personal_Unit.ObjectId = Object_Personal_View.PersonalId
               AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
@@ -128,15 +130,15 @@ BEGIN
               AND ObjectLink_Personal_PersonalGroup.DescId = zc_ObjectLink_Personal_PersonalGroup()
             WHERE ObjectLink_Personal_Unit.ChildObjectId = '||inUnitId::TVarChar||') AS Object_Data
        ON Movement_Data.OperDate = Object_Data.OperDate
-      AND Movement_Data.UnitId = Object_Data.UnitId
       AND Movement_Data.PersonalId = Object_Data.PersonalId
       AND Movement_Data.PositionId = Object_Data.PositionId
+      AND Movement_Data.PositionLevelId = Object_Data.PositionLevelId
       AND Movement_Data.PersonalGroupId = Object_Data.PersonalGroupId'',
          ''SELECT OperDate FROM tmpOperDate'')
          AS ct('||vbCrossString||')) AS D
       LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = D.Key[1]
       LEFT JOIN Object AS Object_Position ON Object_Position.Id = D.Key[2]
-      LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = D.Key[3]
+      LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = D.Key[3]
       LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = D.Key[4]';
 
      OPEN cur2 FOR EXECUTE vbQueryText;  
@@ -150,6 +152,7 @@ ALTER FUNCTION gpSelect_MovementItem_SheetWorkTime (TDateTime, Integer, TVarChar
 /*   
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 25.11.13                         * Add PositionLevel
  25.10.13                         *
  19.10.13                         *
  05.10.13                         *

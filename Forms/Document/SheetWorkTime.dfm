@@ -134,9 +134,9 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Position.ColIndex = 2
         Position.RowIndex = 0
       end
-      object BandcolUnitName: TcxGridDBBandedColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'UnitName'
+      object BandcolPositionLevelName: TcxGridDBBandedColumn
+        Caption = #1056#1072#1079#1088#1103#1076
+        DataBinding.FieldName = 'PositionLevelName'
         HeaderAlignmentVert = vaCenter
         MinWidth = 64
         Options.Editing = False
@@ -236,8 +236,8 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -451,9 +451,16 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         ParamType = ptInput
       end
       item
-        Name = 'inUnitId'
+        Name = 'inPositionLevelId'
         Component = MasterCDS
-        ComponentItem = 'UnitId'
+        ComponentItem = 'PositionLevelId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item

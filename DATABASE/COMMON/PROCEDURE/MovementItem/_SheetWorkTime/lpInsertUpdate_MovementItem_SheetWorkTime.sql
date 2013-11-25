@@ -1,12 +1,15 @@
 -- Function: lpInsertUpdate_MovementItem_SheetWorkTime ()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SheetWorkTime (Integer, Integer, Integer, TFloat,Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SheetWorkTime (Integer, Integer, Integer, Integer, Integer, TFloat,Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SheetWorkTime (Integer, Integer, Integer, Integer, Integer, Integer, TFloat,Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_SheetWorkTime(
     IN inMovementItemId      Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- ключ Документа
     IN inPersonalId          Integer   , -- Сотрудник
     IN inPositionId          Integer   , -- Должность
+    IN inPositionLevelId     Integer   , -- Разряд
     IN inPersonalGroupId     Integer   , -- Группировка Сотрудника
     IN inAmount              TFloat    , -- Количество часов факт
     IN inWorkTimeKindId      Integer     -- Типы рабочего времени
@@ -22,6 +25,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PersonalGroup(), InMovementItemId, inPersonalGroupId);
      -- сохранили связь с <Должностью>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Position(), InMovementItemId, inPositionId);
+     -- сохранили связь с <Разряд>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PositionLevel(), InMovementItemId, inPositionLevelId);
      -- сохранили связь с <Типы рабочего времени>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_WorkTimeKind(), InMovementItemId, inWorkTimeKindId);
 
@@ -34,6 +39,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.11.13                         * 
  03.10.13         * 
 
 */

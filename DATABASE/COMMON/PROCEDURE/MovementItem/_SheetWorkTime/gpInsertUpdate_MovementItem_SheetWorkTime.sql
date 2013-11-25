@@ -1,10 +1,12 @@
 -- Function: gpInsertUpdate_MovementItem_SheetWorkTime()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(INTEGER, INTEGER, INTEGER, INTEGER, TDateTime, TVarChar, INTEGER, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, TDateTime, TVarChar, INTEGER, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SheetWorkTime(
  INOUT ioPersonalId          Integer   , -- Ключ Сотрудник
     IN inPositionId          Integer   , -- Должность
+    IN inPositionLevelId     Integer   , -- Разряд
     IN inUnitId              Integer   , -- Подразделение
     IN inPersonalGroupId     Integer   , -- Группировка Сотрудника
     IN inOperDate            TDateTime , -- дата установки часов
@@ -46,6 +48,10 @@ BEGIN
                               ON MIObject_Position.MovementItemId = MI_SheetWorkTime.Id 
                              AND ((MIObject_Position.ObjectId IS NULL) OR (MIObject_Position.ObjectId = inPositionId))
                              AND MIObject_Position.DescId = zc_MILinkObject_Position() 
+                            JOIN MovementItemLinkObject AS MIObject_PositionLevel
+                              ON MIObject_PositionLevel.MovementItemId = MI_SheetWorkTime.Id 
+                             AND ((MIObject_PositionLevel.ObjectId IS NULL) OR (MIObject_PositionLevel.ObjectId = inPositionLevelId))
+                             AND MIObject_PositionLevel.DescId = zc_MILinkObject_PositionLevel() 
                             JOIN MovementItemLinkObject AS MIObject_PersonalGroup
                               ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
                              AND ((MIObject_PersonalGroup.ObjectId IS NULL) OR (MIObject_PersonalGroup.ObjectId = inPersonalGroupId))
@@ -59,6 +65,7 @@ BEGIN
        inMovementId          := vbMovementId     , -- ключ Документа
        inPersonalId          := ioPersonalId     , -- Сотрудник
        inPositionId          := inPositionId     , -- Должность
+       inPositionLevelId     := inPositionLevelId, -- Разряд
        inPersonalGroupId     := inPersonalGroupId, -- Группировка Сотрудника
        inAmount              := ioValue::TFloat  , -- Количество часов факт
        inWorkTimeKindId      := inTypeId);        -- Типы рабочего времени
@@ -77,6 +84,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.11.13                         * Add inPositionLevelId
  17.10.13                         *
  03.10.13         *
 

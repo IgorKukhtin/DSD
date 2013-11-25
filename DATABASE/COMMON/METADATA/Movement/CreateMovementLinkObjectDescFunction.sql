@@ -70,6 +70,10 @@ CREATE OR REPLACE FUNCTION zc_MovementLinkObject_Position() RETURNS Integer AS $
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_Position', 'Должность' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_Position');
 
+CREATE OR REPLACE FUNCTION zc_MovementLinkObject_PositionLevel() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PositionLevel'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementLinkObjectDesc (Code, ItemName)
+  SELECT 'zc_MovementLinkObject_PositionLevel', 'Разряд' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_PositionLevel');
+
 CREATE OR REPLACE FUNCTION zc_MovementLinkObject_BankAccount() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_BankAccount'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   SELECT 'zc_MovementLinkObject_BankAccount', 'Расчетный счет' WHERE NOT EXISTS (SELECT * FROM MovementLinkObjectDesc WHERE Code = 'zc_MovementLinkObject_BankAccount');
