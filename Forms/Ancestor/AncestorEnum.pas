@@ -21,9 +21,6 @@ type
     { Public declarations }
   end;
 
-var
-  AncestorEnumForm: TAncestorEnumForm;
-
 implementation
 
 {$R *.dfm}

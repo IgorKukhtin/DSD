@@ -80,7 +80,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Personal (Integer, Integer, Integer,Integer,Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
   
 /*---------------------------------------------------------------------------------------

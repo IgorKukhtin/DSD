@@ -36,7 +36,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_Complete_TransportIncome() RETURNS In
 CREATE OR REPLACE FUNCTION zc_Enum_Process_CompletePeriod_TransportIncome() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_CompletePeriod_TransportIncome' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_SetErased_TransportIncome() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_SetErased_TransportIncome' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
-DO $$++++-
+DO $$
 
 
 BEGIN

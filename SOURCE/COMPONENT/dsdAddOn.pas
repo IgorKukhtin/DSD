@@ -30,6 +30,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
   published
+    // Имя поля отвечающее за отображение признака Удален
     property ErasedFieldName: string read FErasedFieldName write FErasedFieldName;
   end;
 

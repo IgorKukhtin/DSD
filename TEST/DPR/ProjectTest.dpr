@@ -214,7 +214,6 @@ uses
   PersonalSendCash in '..\..\Forms\Document\PersonalSendCash.pas' {PersonalSendCashForm},
   PersonalSendCashJournal in '..\..\Forms\Document\PersonalSendCashJournal.pas' {PersonalSendCashJournalForm},
   PersonalSendCashTest in '..\SOURCE\Movement\All\PersonalSendCashTest.pas' {$R *.RES},
-  WorkTimeKind in '..\..\Forms\Enum\WorkTimeKind.pas' {WorkTimeKindForm},
   SheetWorkTimeTest in '..\SOURCE\Movement\All\SheetWorkTimeTest.pas',
   Report_Fuel in '..\..\Forms\Report\Report_Fuel.pas' {Report_FuelForm},
   Report_Transport in '..\..\Forms\Report\Report_Transport.pas' {Report_TransportForm},
@@ -284,7 +283,8 @@ uses
   MoneyPlace_Object in '..\..\Forms\Guides\MoneyPlace_Object.pas' {MoneyPlace_ObjectForm: TParentForm},
   Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm},
   AncestorGuides in '..\..\Forms\Ancestor\AncestorGuides.pas' {AncestorGuidesForm: TParentForm},
-  Personal_Object in '..\..\Forms\Guides\Personal_Object.pas' {Personal_ObjectForm: TParentForm};
+  Personal_Object in '..\..\Forms\Guides\Personal_Object.pas' {Personal_ObjectForm: TParentForm},
+  WorkTimeKind in '..\..\Forms\Enum\WorkTimeKind.pas' {WorkTimeKindForm: TParentForm};
 
 {$R *.RES}
 

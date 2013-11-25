@@ -21,6 +21,8 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Unit());
 
    RETURN QUERY 
+      WITH Object_AccountDirection AS (SELECT * FROM Object_AccountDirection_View)
+
        SELECT 
              Object_Unit_View.Id     
            , Object_Unit_View.Code   
@@ -52,9 +54,8 @@ BEGIN
            , Object_Unit_View.isLeaf
        FROM Object_Unit_View
             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = Object_Unit_View.Id
-            LEFT JOIN Object_AccountDirection_View AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
-      ;
-  
+            LEFT JOIN Object_AccountDirection AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
+      ;  
 END;
 $BODY$
 
@@ -65,6 +66,7 @@ ALTER FUNCTION gpSelect_Object_Unit(TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.11.13                       * добавил WITH из-за неправильной оптимизации DISTINCT и GROUP BY в 9.3
  03.11.13                                        * add lfSelect_Object_Unit_byProfitLossDirection and Object_AccountDirection_View
  28.10.13                         * переход на View              
  04.07.13          * дополнение всеми реквизитами              

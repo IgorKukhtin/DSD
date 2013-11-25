@@ -111,9 +111,13 @@ BEGIN
                   COALESCE(PersonalId, 0) AS PersonalId, 
                   COALESCE(ObjectLink_Personal_Unit.ChildObjectId, 0) AS UnitId, 
                   COALESCE(ObjectLink_Personal_Position.ChildObjectId, 0) AS PositionId, 
+                  COALESCE(ObjectLink_Personal_PositionLevel.ChildObjectId, 0) AS PositionLevelId, 
                   COALESCE(ObjectLink_Personal_PersonalGroup.ChildObjectId, 0)  AS PersonalGroupId  
              FROM tmpOperDate, Object_Personal_View 
         LEFT JOIN ObjectLink AS ObjectLink_Personal_Position
+               ON ObjectLink_Personal_Position.ObjectId = Object_Personal_View.PersonalId
+              AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
+        LEFT JOIN ObjectLink AS ObjectLink_Personal_PositionLevel
                ON ObjectLink_Personal_Position.ObjectId = Object_Personal_View.PersonalId
               AND ObjectLink_Personal_Position.DescId = zc_ObjectLink_Personal_Position()
         LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit

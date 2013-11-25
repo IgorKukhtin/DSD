@@ -554,9 +554,6 @@
 			<DCCReference Include="..\SOURCE\Movement\All\PersonalSendCashTest.pas">
 				<Form>$R *.RES</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Enum\WorkTimeKind.pas">
-				<Form>WorkTimeKindForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\SheetWorkTimeTest.pas"/>
 			<DCCReference Include="..\..\Forms\Report\Report_Fuel.pas">
 				<Form>Report_FuelForm</Form>
@@ -804,9 +801,15 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorGuides.pas">
 				<Form>AncestorGuidesForm</Form>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Personal_Object.pas">
 				<Form>Personal_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Enum\WorkTimeKind.pas">
+				<Form>WorkTimeKindForm</Form>
+				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
