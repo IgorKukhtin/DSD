@@ -76,8 +76,6 @@ ALTER FUNCTION gpGet_Object_Cash (Integer, TVarChar) OWNER TO postgres;
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  11.06.13          *
- 03.06.13
-
 */
 
 -- тест

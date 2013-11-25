@@ -694,6 +694,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TModelServiceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TModelServiceEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TModelServiceEditForm');
+  //Типы документов
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementDescForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementDescForm');
 end;
 
 procedure TLoadFormTest.LoadPersonalFormTest;

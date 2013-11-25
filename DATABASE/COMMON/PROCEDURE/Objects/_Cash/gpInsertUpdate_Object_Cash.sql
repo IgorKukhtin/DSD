@@ -1,35 +1,35 @@
-п»ї-- Function: gpInsertUpdate_Object_Cash()
+-- Function: gpInsertUpdate_Object_Cash()
 
 -- DROP FUNCTION gpInsertUpdate_Object_Cash();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Cash(
- INOUT ioId	         Integer   ,   	-- РєР»СЋС‡ РѕР±СЉРµРєС‚Р° <РљР°СЃСЃР°> 
-    IN inCode            Integer   ,    -- РєРѕРґ РѕР±СЉРµРєС‚Р° <РљР°СЃСЃР°> 
-    IN inCashName        TVarChar  ,    -- РќР°Р·РІР°РЅРёРµ РѕР±СЉРµРєС‚Р° <РљР°СЃСЃР°> 
-    IN inCurrencyId      Integer   ,    -- Р’Р°Р»СЋС‚Р° РґР°РЅРЅРѕР№ РєР°СЃСЃС‹ 
-    IN inBranchId        Integer   ,    -- РљР°РєРѕРјСѓ С„РёР»РёР°Р»Сѓ РїСЂРёРЅР°РґР»РµР¶РёС‚ РєР°СЃСЃР° 
-    IN inMainJuridicalId Integer   ,    -- Р“Р»Р°РІРЅРѕРµ СЋСЂ Р›РёС†Рѕ
-    IN inBusinessId      Integer   ,    -- Р‘РёР·РЅРµСЃ
-    IN inSession         TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+ INOUT ioId	         Integer   ,   	-- ключ объекта <Касса> 
+    IN inCode            Integer   ,    -- код объекта <Касса> 
+    IN inCashName        TVarChar  ,    -- Название объекта <Касса> 
+    IN inCurrencyId      Integer   ,    -- Валюта данной кассы 
+    IN inBranchId        Integer   ,    -- Какому филиалу принадлежит касса 
+    IN inMainJuridicalId Integer   ,    -- Главное юр Лицо
+    IN inBusinessId      Integer   ,    -- Бизнес
+    IN inSession         TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
    DECLARE UserId Integer;
  BEGIN
  
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Cash());
    UserId := inSession;
 
-   -- Р•СЃР»Рё РєРѕРґ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ, РѕРїСЂРµРґРµР»СЏРµРј РµРіРѕ РєР°Рё РїРѕСЃР»РµРґРЅРёР№+1
-   inCode := lfGet_ObjectCode(zc_Object_Cash(), inCode);
+   -- Если код не установлен, определяем его каи последний+1
+   inCode := lfGet_ObjectCode (inCode, zc_Object_Cash());
     
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё РґР»СЏ СЃРІРѕР№СЃС‚РІР° <РќР°РёРјРµРЅРѕРІР°РЅРёРµ РљР°СЃСЃР°>  
+   -- проверка прав уникальности для свойства <Наименование Касса>  
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Cash(), inCashName);
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё РґР»СЏ СЃРІРѕР№СЃС‚РІР° <РљРѕРґ РљР°СЃСЃС‹>
+   -- проверка прав уникальности для свойства <Код Кассы>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Cash(), inCode);
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё <РћР±СЉРµРєС‚>
+   -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Cash(), inCode, inCashName);
 
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Cash_Currency(), ioId, inCurrencyId);
@@ -37,7 +37,7 @@ $BODY$
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Cash_MainJuridical(), ioId, inMainJuridicalId);
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Cash_Business(), ioId, inBusinessId);
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё РїСЂРѕС‚РѕРєРѕР»
+   -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, UserId);
    
 END;$BODY$
@@ -49,13 +49,14 @@ ALTER FUNCTION gpInsertUpdate_Object_Cash(Integer, Integer, TVarChar, Integer, I
   
  /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.11.13                                        * err lfGet_ObjectCode (zc_Object_Cash(), inCode)
+ 24.11.13                                        * Cyr1251
  10.06.13          *
- 03.06.13
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpInsertUpdate_Object_Cash()
   
 

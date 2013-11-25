@@ -284,7 +284,8 @@ uses
   Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm},
   AncestorGuides in '..\..\Forms\Ancestor\AncestorGuides.pas' {AncestorGuidesForm: TParentForm},
   Personal_Object in '..\..\Forms\Guides\Personal_Object.pas' {Personal_ObjectForm: TParentForm},
-  WorkTimeKind in '..\..\Forms\Enum\WorkTimeKind.pas' {WorkTimeKindForm: TParentForm};
+  WorkTimeKind in '..\..\Forms\Enum\WorkTimeKind.pas' {WorkTimeKindForm: TParentForm},
+  MovementDesc in '..\..\Forms\Kind\MovementDesc.pas' {MovementDescForm: TParentForm};
 
 {$R *.RES}
 

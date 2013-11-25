@@ -42,6 +42,7 @@ object ModelServiceForm: TModelServiceForm
       OptionsData.Appending = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.HeaderHeight = 40
@@ -168,6 +169,13 @@ object ModelServiceForm: TModelServiceForm
       object clMovementDescName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         DataBinding.FieldName = 'MovementDescName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = MovementDescChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
@@ -278,6 +286,11 @@ object ModelServiceForm: TModelServiceForm
         HeaderAlignmentVert = vaCenter
         Width = 283
       end
+      object isErasedChild: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        Visible = False
+      end
     end
     object cxGridLevel2: TcxGridLevel
       GridView = cxGridDBTableViewModelServiceItemChild
@@ -351,11 +364,7 @@ object ModelServiceForm: TModelServiceForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
+          ItemName = 'bbUpdate'
         end
         item
           Visible = True
@@ -368,6 +377,26 @@ object ModelServiceForm: TModelServiceForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErasedMaster'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErasedMaster'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErasedChild'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErasedChild'
         end
         item
           BeginGroup = True
@@ -396,13 +425,6 @@ object ModelServiceForm: TModelServiceForm
       Action = actRefresh
       Category = 0
     end
-    object bbEdit: TdxBarButton
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      Category = 0
-      Visible = ivAlways
-      ImageIndex = 1
-      ShortCut = 115
-    end
     object bbErased: TdxBarButton
       Action = dsdSetErased
       Category = 0
@@ -428,6 +450,30 @@ object ModelServiceForm: TModelServiceForm
     object bbModelService: TdxBarButton
       Action = InsertModelService
       Category = 0
+    end
+    object bbUpdate: TdxBarButton
+      Action = actUpdate
+      Category = 0
+    end
+    object bbErasedMaster: TdxBarButton
+      Action = dsdSetErasedMaster
+      Category = 0
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1075#1083#1072#1074#1085#1099#1081' '#1101#1083#1077#1084#1077#1085#1090
+    end
+    object bbUnErasedMaster: TdxBarButton
+      Action = dsdSetUnErasedMaster
+      Category = 0
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1075#1083#1072#1074#1085#1099#1081' '#1101#1083#1077#1084#1077#1085#1090
+    end
+    object bbErasedChild: TdxBarButton
+      Action = dsdSetErasedChild
+      Category = 0
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1087#1086#1076#1095#1080#1085#1077#1085#1085#1099#1081' '#1101#1083#1077#1084#1077#1085#1090
+    end
+    object bbUnErasedChild: TdxBarButton
+      Action = dsdSetUnErasedChild
+      Category = 0
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1086#1076#1095#1080#1085#1077#1085#1085#1099#1081' '#1101#1083#1077#1084#1077#1085#1090
     end
   end
   object ActionList: TActionList
@@ -465,7 +511,35 @@ object ModelServiceForm: TModelServiceForm
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
+      DataSource = MasterDS
+    end
+    object dsdSetErasedMaster: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProc = spErasedUnErasedMaster
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErasedMaster
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
       DataSource = ModelServiceItemMasterDS
+    end
+    object dsdSetErasedChild: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProc = spErasedUnErasedChild
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErasedChild
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = ModelServiceItemChildDS
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -481,6 +555,34 @@ object ModelServiceForm: TModelServiceForm
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
+    end
+    object dsdSetUnErasedMaster: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProc = spErasedUnErasedMaster
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErasedMaster
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = ModelServiceItemMasterDS
+    end
+    object dsdSetUnErasedChild: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProc = spErasedUnErasedChild
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErasedChild
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = ModelServiceItemChildDS
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -509,6 +611,24 @@ object ModelServiceForm: TModelServiceForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
+    end
+    object actUpdate: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TModelServiceEditForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
     end
     object actUpdateModelServiceItemMaster: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -694,6 +814,24 @@ object ModelServiceForm: TModelServiceForm
           Name = 'TextValue'
           Component = ModelServiceItemChildCDS
           ComponentItem = 'ToName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object MovementDescChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'MovementDescChoiceForm'
+      FormName = 'TMovementDescForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = ModelServiceItemMasterCDS
+          ComponentItem = 'MovementDescId'
+        end
+        item
+          Name = 'TextValue'
+          Component = ModelServiceItemMasterCDS
+          ComponentItem = 'MovementDescName'
           DataType = ftString
         end>
       isShowModal = True
@@ -899,5 +1037,77 @@ object ModelServiceForm: TModelServiceForm
       end>
     Left = 320
     Top = 488
+  end
+  object spErasedUnErasedMaster: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Component = ModelServiceItemMasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    Left = 528
+    Top = 288
+  end
+  object dsdDBViewAddOnMaster: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewModelServiceItemMaster
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+      end>
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    Left = 888
+    Top = 256
+  end
+  object dsdDBViewAddOnChild: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewModelServiceItemChild
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+      end>
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    Left = 816
+    Top = 472
+  end
+  object spErasedUnErasedChild: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioChildId'
+        Component = ModelServiceItemChildCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    Left = 400
+    Top = 552
   end
 end

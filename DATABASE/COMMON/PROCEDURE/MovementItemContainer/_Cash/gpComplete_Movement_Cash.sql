@@ -1,6 +1,6 @@
 -- Function: gpComplete_Movement_Cash()
 
--- DROP FUNCTION gpComplete_Movement_Cash(Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_Cash (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Cash(
     IN inMovementId        Integer              , -- ключ Документа
@@ -40,8 +40,8 @@ BEGIN
            , Object_To.DescId
            , MovementLinkObject_InfoMoney.ObjectId
            , MovementFloat_Amount.ValueData
-           , Object_InfoMoney.InfoMoneyGroupId 
-           , Object_InfoMoney.InfoMoneyDestinationId
+           , View_InfoMoney.InfoMoneyGroupId 
+           , View_InfoMoney.InfoMoneyDestinationId
            , MovementLinkObject_Contract.ObjectId
              INTO vbOperDate, vbFromId, vbToId, vbFromDescId, vbToDescId, vbInfoMoneyId, 
                   vbSumm, vbInfoMoneyGroupId, vbInfoMoneyDestinationId, vbContractId
@@ -63,7 +63,7 @@ BEGIN
           ON MovementLinkObject_Contract.MovementId = Movement.Id
          AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
    
-   LEFT JOIN lfGet_Object_InfoMoney(MovementLinkObject_InfoMoney.ObjectId) AS Object_InfoMoney ON 1=1
+   LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MovementLinkObject_InfoMoney.ObjectId
    LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
    WHERE Movement.Id = inMovementId;
@@ -228,6 +228,6 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-
+ 24.11.13                                        * add View_InfoMoney
  13.08.13                        *                
 */

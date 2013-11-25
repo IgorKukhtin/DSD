@@ -810,6 +810,9 @@
 			<DCCReference Include="..\..\Forms\Enum\WorkTimeKind.pas">
 				<Form>WorkTimeKindForm</Form>
 				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Kind\MovementDesc.pas">
+				<Form>MovementDescForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

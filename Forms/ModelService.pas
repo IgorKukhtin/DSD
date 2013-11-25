@@ -34,7 +34,6 @@ type
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
     bbRefresh: TdxBarButton;
-    bbEdit: TdxBarButton;
     bbErased: TdxBarButton;
     bbUnErased: TdxBarButton;
     bbGridToExcel: TdxBarButton;
@@ -94,6 +93,22 @@ type
     ModelServiceChoiceForm: TOpenChoiceForm;
     GoodsFromChoiceForm: TOpenChoiceForm;
     GoodsToChoiceForm: TOpenChoiceForm;
+    MovementDescChoiceForm: TOpenChoiceForm;
+    actUpdate: TdsdInsertUpdateAction;
+    bbUpdate: TdxBarButton;
+    spErasedUnErasedMaster: TdsdStoredProc;
+    dsdSetErasedMaster: TdsdUpdateErased;
+    bbErasedMaster: TdxBarButton;
+    dsdSetUnErasedMaster: TdsdUpdateErased;
+    bbUnErasedMaster: TdxBarButton;
+    dsdDBViewAddOnMaster: TdsdDBViewAddOn;
+    dsdDBViewAddOnChild: TdsdDBViewAddOn;
+    dsdSetErasedChild: TdsdUpdateErased;
+    spErasedUnErasedChild: TdsdStoredProc;
+    dsdSetUnErasedChild: TdsdUpdateErased;
+    bbErasedChild: TdxBarButton;
+    bbUnErasedChild: TdxBarButton;
+    isErasedChild: TcxGridDBColumn;
   private
     { Private declarations }
   public

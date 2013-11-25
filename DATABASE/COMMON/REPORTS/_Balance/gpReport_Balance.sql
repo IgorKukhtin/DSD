@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpReport_Balance(
     IN inEndDate     TDateTime , --
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (RootName TVarChar, AccountGroupName TVarChar, AccountDirectionName TVarChar, AccountName  TVarChar, 
+RETURNS TABLE (RootName TVarChar, AccountCode Integer, AccountGroupName TVarChar, AccountDirectionName TVarChar, AccountName  TVarChar, 
                AccountOnComplete Boolean, InfoMoneyName TVarChar, InfoMoneyName_Detail TVarChar
              , ByObjectName TVarChar, GoodsName TVarChar
              , AmountDebetStart TFloat, AmountKreditStart TFloat, AmountDebet TFloat, AmountKredit TFloat, AmountDebetEnd TFloat, AmountKreditEnd TFloat
@@ -23,6 +23,7 @@ $BODY$BEGIN
        SELECT
              CAST (CASE WHEN Object_Account_View.AccountCode >= 70000 THEN 'ПАССИВЫ' ELSE 'АКТИВЫ' END AS TVarChar) AS RootName
 
+           , Object_Account_View.AccountCode
            , (Object_Account_View.AccountGroupCode||' '||Object_Account_View.AccountGroupName)::TVarChar  AS AccountGroupName
            , (Object_Account_View.AccountDirectionCode||'  '||Object_Account_View.AccountDirectionName)::TVarChar      AS AccountDirectionName
            , (Object_Account_View.AccountCode||'  '||Object_Account_View.AccountName)::TVarChar                     AS AccountName
@@ -148,6 +149,7 @@ ALTER FUNCTION gpReport_Balance (TDateTime, TDateTime, TVarChar) OWNER TO postgr
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.11.13                                        * add AccountCode
  21.10.13                        * add Code
  24.08.13                                        * add count and goods
  11.07.13                                        * add optimize

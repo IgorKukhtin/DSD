@@ -40,8 +40,8 @@ BEGIN
            , Object_To.DescId
            , MovementLinkObject_InfoMoney.ObjectId
            , MovementFloat_Amount.ValueData
-           , Object_InfoMoney.InfoMoneyGroupId 
-           , Object_InfoMoney.InfoMoneyDestinationId
+           , View_InfoMoney.InfoMoneyGroupId 
+           , View_InfoMoney.InfoMoneyDestinationId
            , MovementLinkObject_Contract.ObjectId
            , MovementLinkObject_Business.ObjectId
              INTO vbOperDate, vbFromId, vbToId, vbFromDescId, vbToDescId, vbInfoMoneyId, 
@@ -67,7 +67,7 @@ BEGIN
           ON MovementLinkObject_Business.MovementId = Movement.Id
          AND MovementLinkObject_Business.DescId = zc_MovementLinkObject_Business()
    
-   LEFT JOIN lfGet_Object_InfoMoney(MovementLinkObject_InfoMoney.ObjectId) AS Object_InfoMoney ON 1=1
+   LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MovementLinkObject_InfoMoney.ObjectId
    LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
    WHERE Movement.Id = inMovementId;
@@ -199,6 +199,6 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
-
+ 24.11.13                                        * add View_InfoMoney
  26.08.13                        *                
 */

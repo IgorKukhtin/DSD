@@ -20,10 +20,11 @@ object StaffListDataForm: TStaffListDataForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 265
+    Width = 207
     Height = 286
     Align = alLeft
     TabOrder = 0
+    Visible = False
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
@@ -57,7 +58,7 @@ object StaffListDataForm: TStaffListDataForm
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 165
+        Width = 100
       end
       object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -75,15 +76,17 @@ object StaffListDataForm: TStaffListDataForm
     end
   end
   object cxGridStaffList: TcxGrid
-    Left = 265
+    Left = 207
     Top = 26
-    Width = 592
+    Width = 650
     Height = 286
     Align = alClient
     TabOrder = 1
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitLeft = 256
+    ExplicitWidth = 601
     object cxGridDBTableViewStaffLis: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = StaffListDS
@@ -103,6 +106,12 @@ object StaffListDataForm: TStaffListDataForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object clUnitName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'UnitName'
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
       object clslCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
@@ -123,7 +132,7 @@ object StaffListDataForm: TStaffListDataForm
         FooterAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         HeaderGlyphAlignmentHorz = taCenter
-        Width = 178
+        Width = 100
       end
       object clPositionLevelName: TcxGridDBColumn
         Caption = #1056#1072#1079#1088#1103#1076
@@ -137,25 +146,25 @@ object StaffListDataForm: TStaffListDataForm
           end>
         Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
-        Width = 77
+        Width = 70
       end
       object clHoursPlan: TcxGridDBColumn
         Caption = #1055#1083#1072#1085' '#1095#1072#1089#1086#1074
         DataBinding.FieldName = 'HoursPlan'
         HeaderAlignmentVert = vaCenter
-        Width = 113
+        Width = 55
       end
       object clPersonalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'.'#1077#1076'.'
         DataBinding.FieldName = 'PersonalCount'
         HeaderAlignmentVert = vaCenter
-        Width = 71
+        Width = 55
       end
       object clComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentVert = vaCenter
-        Width = 102
+        Width = 120
       end
       object clsfIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -346,8 +355,8 @@ object StaffListDataForm: TStaffListDataForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -758,10 +767,6 @@ object StaffListDataForm: TStaffListDataForm
   end
   object StaffListCDS: TClientDataSet
     Aggregates = <>
-    IndexFieldNames = 'UnitId'
-    MasterFields = 'Id'
-    MasterSource = MasterDS
-    PacketRecords = 0
     Params = <>
     Left = 497
     Top = 141
