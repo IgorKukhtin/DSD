@@ -93,6 +93,9 @@ type
     ModelServiceChoiceForm: TOpenChoiceForm;
     GoodsFromChoiceForm: TOpenChoiceForm;
     GoodsToChoiceForm: TOpenChoiceForm;
+    MovementDescChoiceForm: TOpenChoiceForm;
+    actUpdate: TdsdInsertUpdateAction;
+    bbUpdate: TdxBarButton;
   private
     { Private declarations }
   public

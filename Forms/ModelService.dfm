@@ -42,6 +42,7 @@ object ModelServiceForm: TModelServiceForm
       OptionsData.Appending = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.HeaderHeight = 40
@@ -168,6 +169,13 @@ object ModelServiceForm: TModelServiceForm
       object clMovementDescName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         DataBinding.FieldName = 'MovementDescName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = MovementDescChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
@@ -351,6 +359,10 @@ object ModelServiceForm: TModelServiceForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -412,6 +424,10 @@ object ModelServiceForm: TModelServiceForm
     end
     object bbModelService: TdxBarButton
       Action = InsertModelService
+      Category = 0
+    end
+    object bbUpdate: TdxBarButton
+      Action = actUpdate
       Category = 0
     end
   end
@@ -494,6 +510,24 @@ object ModelServiceForm: TModelServiceForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
+    end
+    object actUpdate: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TModelServiceEditForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
     end
     object actUpdateModelServiceItemMaster: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -679,6 +713,24 @@ object ModelServiceForm: TModelServiceForm
           Name = 'TextValue'
           Component = ModelServiceItemChildCDS
           ComponentItem = 'ToName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object MovementDescChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'MovementDescChoiceForm'
+      FormName = 'TMovementDescForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = ModelServiceItemMasterCDS
+          ComponentItem = 'MovementDescId'
+        end
+        item
+          Name = 'TextValue'
+          Component = ModelServiceItemMasterCDS
+          ComponentItem = 'MovementDescName'
           DataType = ftString
         end>
       isShowModal = True
