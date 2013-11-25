@@ -149,8 +149,8 @@ object RateFuelForm: TRateFuelForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -184,27 +184,6 @@ object RateFuelForm: TRateFuelForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -227,25 +206,6 @@ object RateFuelForm: TRateFuelForm
     end
     object bbRefresh: TdxBarButton
       Action = actRefresh
-      Category = 0
-    end
-    object bbInsert: TdxBarButton
-      Action = actInsert
-      Category = 0
-    end
-    object bbEdit: TdxBarButton
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      Category = 0
-      Visible = ivAlways
-      ImageIndex = 1
-      ShortCut = 115
-    end
-    object bbErased: TdxBarButton
-      Action = dsdSetErased
-      Category = 0
-    end
-    object bbUnErased: TdxBarButton
-      Action = dsdSetUnErased
       Category = 0
     end
     object bbGridToExcel: TdxBarButton
@@ -278,20 +238,7 @@ object RateFuelForm: TRateFuelForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
-    end
-    object actInsert: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      ShortCut = 45
-      ImageIndex = 0
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-        end>
-      isShowModal = True
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
+      RefreshOnTabSetChanges = False
     end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -301,35 +248,6 @@ object RateFuelForm: TRateFuelForm
           StoredProc = spInsertUpdateObject
         end>
       Caption = 'actUpdateDataSet'
-      DataSource = DataSource
-    end
-    object dsdSetErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 2
-      ShortCut = 46
-      ErasedFieldName = 'isErased'
-      DataSource = DataSource
-    end
-    object dsdSetUnErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 32776
-      ErasedFieldName = 'isErased'
-      isSetErased = False
       DataSource = DataSource
     end
     object dsdChoiceGuides: TdsdChoiceGuides
@@ -401,20 +319,6 @@ object RateFuelForm: TRateFuelForm
     OnlyEditingCellOnEnter = False
     Left = 168
     Top = 216
-  end
-  object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inObjectId'
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    Left = 288
-    Top = 208
   end
   object spInsertUpdateObject: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_RateFuel'

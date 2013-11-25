@@ -37,18 +37,11 @@ type
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
     bbRefresh: TdxBarButton;
-    bbInsert: TdxBarButton;
-    bbEdit: TdxBarButton;
-    bbErased: TdxBarButton;
-    bbUnErased: TdxBarButton;
     bbGridToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     bbChoiceGuides: TdxBarButton;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdInsertUpdateAction;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
@@ -56,7 +49,6 @@ type
     clAmountColdHour_Internal: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     clErased: TcxGridDBColumn;
-    spErasedUnErased: TdsdStoredProc;
     clAmountColdDistance_Internal: TcxGridDBColumn;
     clAmount_External: TcxGridDBColumn;
     clAmountColdHour_External: TcxGridDBColumn;
