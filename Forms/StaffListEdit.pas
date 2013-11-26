@@ -52,6 +52,8 @@ type
     edHoursPlan: TcxCurrencyEdit;
     edFundPayMonth: TcxCurrencyEdit;
     edFundPayTurn: TcxCurrencyEdit;
+    Код: TcxLabel;
+    ceCode: TcxCurrencyEdit;
 
   private
     { Private declarations }

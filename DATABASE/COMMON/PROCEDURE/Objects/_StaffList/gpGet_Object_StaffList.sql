@@ -25,7 +25,7 @@ BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)   AS Id
-           , lfGet_ObjectCode(0, zc_Object_StaffLis()) AS Code
+           , lfGet_ObjectCode(0, zc_Object_StaffList()) AS Code
            
            , CAST (NULL as TFloat) AS HoursPlan
            , CAST (NULL as TFloat) AS PersonalCount

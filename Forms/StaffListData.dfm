@@ -2,8 +2,8 @@ object StaffListDataForm: TStaffListDataForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077' ('#1076#1072#1085#1085#1099#1077')>'
-  ClientHeight = 600
-  ClientWidth = 857
+  ClientHeight = 545
+  ClientWidth = 937
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,15 +19,17 @@ object StaffListDataForm: TStaffListDataForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 67
     Width = 207
-    Height = 286
+    Height = 190
     Align = alLeft
     TabOrder = 0
     Visible = False
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitTop = 26
+    ExplicitHeight = 286
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -77,16 +79,17 @@ object StaffListDataForm: TStaffListDataForm
   end
   object cxGridStaffList: TcxGrid
     Left = 207
-    Top = 26
-    Width = 650
-    Height = 286
+    Top = 67
+    Width = 730
+    Height = 190
     Align = alClient
     TabOrder = 1
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = 256
-    ExplicitWidth = 601
+    ExplicitLeft = 213
+    ExplicitTop = 74
+    ExplicitHeight = 231
     object cxGridDBTableViewStaffLis: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = StaffListDS
@@ -184,14 +187,16 @@ object StaffListDataForm: TStaffListDataForm
   end
   object cxGridStaffListCost: TcxGrid
     Left = 0
-    Top = 312
-    Width = 857
+    Top = 257
+    Width = 937
     Height = 144
     Align = alBottom
     TabOrder = 2
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitTop = 312
+    ExplicitWidth = 857
     object cxGridDBTableViewStaffListCost: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = StaffListCostDS
@@ -249,14 +254,16 @@ object StaffListDataForm: TStaffListDataForm
   end
   object cxGridStaffListSumm: TcxGrid
     Left = 0
-    Top = 456
-    Width = 857
+    Top = 401
+    Width = 937
     Height = 144
     Align = alBottom
     TabOrder = 7
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitTop = 456
+    ExplicitWidth = 857
     object cxGridDBTableStaffListSumm: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = StaffListSummDS
@@ -326,6 +333,33 @@ object StaffListDataForm: TStaffListDataForm
       GridView = cxGridDBTableStaffListSumm
     end
   end
+  object Panel1: TPanel
+    Left = 0
+    Top = 26
+    Width = 937
+    Height = 41
+    Align = alTop
+    TabOrder = 8
+    ExplicitLeft = 400
+    ExplicitWidth = 321
+    object ceUnit: TcxButtonEdit
+      Left = 480
+      Top = 8
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 0
+      Width = 231
+    end
+    object cxLabel5: TcxLabel
+      Left = 380
+      Top = 8
+      Align = alCustom
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+    end
+  end
   object MasterDS: TDataSource
     DataSet = MasterCDS
     Left = 56
@@ -355,8 +389,8 @@ object StaffListDataForm: TStaffListDataForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -390,7 +424,7 @@ object StaffListDataForm: TStaffListDataForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
+          ItemName = 'bbInsertSL'
         end
         item
           Visible = True
@@ -485,6 +519,10 @@ object StaffListDataForm: TStaffListDataForm
       Category = 0
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1090#1080#1087' '#1089#1091#1084#1084#1099' '#1096#1090#1072#1090#1085#1086#1075#1086' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1103
     end
+    object bbInsertSL: TdxBarButton
+      Action = actInsert
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -492,11 +530,8 @@ object StaffListDataForm: TStaffListDataForm
     Top = 160
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
-      StoredProc = spSelectMaster
+      StoredProc = spSelectStaffList
       StoredProcList = <
-        item
-          StoredProc = spSelectMaster
-        end
         item
           StoredProc = spSelectStaffList
         end
@@ -539,7 +574,7 @@ object StaffListDataForm: TStaffListDataForm
       ShortCut = 32776
       ErasedFieldName = 'isErased'
       isSetErased = False
-      DataSource = MasterDS
+      DataSource = StaffListDS
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -572,7 +607,6 @@ object StaffListDataForm: TStaffListDataForm
     object InsertRecord: TInsertRecord
       Category = 'DSDLib'
       View = cxGridDBTableViewStaffLis
-      Action = PositionChoiceForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1096#1090'.'#1077#1076'.'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1096#1090'.'#1077#1076'.'
       ShortCut = 45
@@ -713,6 +747,17 @@ object StaffListDataForm: TStaffListDataForm
       Caption = 'actStaffListSumm'
       DataSource = StaffListSummDS
     end
+    object actInsert: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 45
+      ImageIndex = 0
+      FormName = 'TStaffListEditForm'
+      GuiParams = <>
+      isShowModal = False
+      DataSource = StaffListDS
+      DataSetRefresh = actRefresh
+    end
   end
   object spSelectMaster: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Unit'
@@ -731,7 +776,7 @@ object StaffListDataForm: TStaffListDataForm
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
-    View = cxGridDBTableView
+    View = cxGridDBTableViewStaffLis
     OnDblClickActionList = <
       item
         Action = dsdChoiceGuides
@@ -748,8 +793,8 @@ object StaffListDataForm: TStaffListDataForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    Left = 168
-    Top = 216
+    Left = 456
+    Top = 192
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -827,8 +872,8 @@ object StaffListDataForm: TStaffListDataForm
       end
       item
         Name = 'inUnitId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
+        Component = StaffListCDS
+        ComponentItem = 'UnitId'
         ParamType = ptInput
       end
       item
@@ -983,5 +1028,30 @@ object StaffListDataForm: TStaffListDataForm
     Params = <>
     Left = 506
     Top = 541
+  end
+  object UnitGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceUnit
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 727
+    Top = 31
   end
 end

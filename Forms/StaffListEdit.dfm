@@ -1,4 +1,4 @@
-object StaffListEditForm: TStaffListEditForm
+﻿object StaffListEditForm: TStaffListEditForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1064#1090#1072#1090#1085#1091#1102' '#1077#1076#1080#1085#1080#1094#1091'>'
@@ -17,13 +17,13 @@ object StaffListEditForm: TStaffListEditForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxLabel1: TcxLabel
-    Left = 192
-    Top = 19
+    Left = 183
+    Top = 55
     Caption = #1050#1086#1083'. '#1077#1076#1080#1085#1080#1094
   end
   object cxButton1: TcxButton
     Left = 64
-    Top = 353
+    Top = 365
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -33,7 +33,7 @@ object StaffListEditForm: TStaffListEditForm
   end
   object cxButton2: TcxButton
     Left = 205
-    Top = 353
+    Top = 365
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -44,22 +44,22 @@ object StaffListEditForm: TStaffListEditForm
   end
   object cxLabel2: TcxLabel
     Left = 35
-    Top = 19
+    Top = 55
     Caption = #1055#1083#1072#1085' '#1095#1072#1089#1086#1074
   end
   object cxLabel3: TcxLabel
-    Left = 34
-    Top = 69
+    Left = 35
+    Top = 105
     Caption = #1060#1086#1085#1076' '#1086#1087#1083#1072#1090#1099' ('#1079#1072' '#1084#1077#1089#1103#1094')'
   end
   object cxLabel5: TcxLabel
     Left = 35
-    Top = 131
+    Top = 155
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   object ceUnit: TcxButtonEdit
-    Left = 35
-    Top = 154
+    Left = 34
+    Top = 178
     Properties.Buttons = <
       item
         Default = True
@@ -70,12 +70,12 @@ object StaffListEditForm: TStaffListEditForm
   end
   object cxLabel6: TcxLabel
     Left = 35
-    Top = 181
+    Top = 205
     Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
   end
   object cePosition: TcxButtonEdit
     Left = 35
-    Top = 204
+    Top = 228
     Properties.Buttons = <
       item
         Default = True
@@ -85,13 +85,13 @@ object StaffListEditForm: TStaffListEditForm
     Width = 270
   end
   object cxLabel7: TcxLabel
-    Left = 35
-    Top = 231
+    Left = 34
+    Top = 255
     Caption = #1056#1072#1079#1088#1103#1076
   end
   object cePositionLevel: TcxButtonEdit
     Left = 34
-    Top = 254
+    Top = 278
     Properties.Buttons = <
       item
         Default = True
@@ -102,23 +102,23 @@ object StaffListEditForm: TStaffListEditForm
   end
   object cxLabel4: TcxLabel
     Left = 183
-    Top = 69
+    Top = 105
     Caption = #1060#1086#1085#1076' '#1086#1087#1083#1072#1090#1099' ('#1079#1072' '#1076#1077#1085#1100')'
   end
   object edComment: TcxTextEdit
-    Left = 35
-    Top = 312
+    Left = 34
+    Top = 328
     TabOrder = 12
     Width = 270
   end
   object cxLabel8: TcxLabel
-    Left = 35
-    Top = 289
+    Left = 34
+    Top = 305
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edPersonalCount: TcxCurrencyEdit
     Left = 181
-    Top = 42
+    Top = 78
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -128,7 +128,7 @@ object StaffListEditForm: TStaffListEditForm
   end
   object edHoursPlan: TcxCurrencyEdit
     Left = 35
-    Top = 42
+    Top = 78
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -137,8 +137,8 @@ object StaffListEditForm: TStaffListEditForm
     Width = 123
   end
   object edFundPayMonth: TcxCurrencyEdit
-    Left = 35
-    Top = 92
+    Left = 34
+    Top = 128
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
@@ -147,13 +147,26 @@ object StaffListEditForm: TStaffListEditForm
     Width = 123
   end
   object edFundPayTurn: TcxCurrencyEdit
-    Left = 181
-    Top = 92
+    Left = 182
+    Top = 128
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0'
     TabOrder = 17
+    Width = 123
+  end
+  object Код: TcxLabel
+    Left = 35
+    Top = 5
+    Caption = #1050#1086#1076
+  end
+  object ceCode: TcxCurrencyEdit
+    Left = 34
+    Top = 28
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 19
     Width = 123
   end
   object ActionList: TActionList
@@ -194,6 +207,12 @@ object StaffListEditForm: TStaffListEditForm
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'inCode'
+        Value = 0.000000000000000000
+        Component = ceCode
+        ParamType = ptInput
       end
       item
         Name = 'inHoursPlan'
@@ -258,8 +277,8 @@ object StaffListEditForm: TStaffListEditForm
         Value = Null
         ParamType = ptInputOutput
       end>
-    Left = 208
-    Top = 80
+    Left = 216
+    Top = 112
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_StaffList'
@@ -272,6 +291,11 @@ object StaffListEditForm: TStaffListEditForm
         Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+      end
+      item
+        Name = 'Code'
+        Value = 0.000000000000000000
+        Component = ceCode
       end
       item
         Name = 'HoursPlan'
@@ -358,10 +382,10 @@ object StaffListEditForm: TStaffListEditForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 128
-    Top = 80
+    Top = 128
   end
   object dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn
-    Left = 200
+    Left = 320
     Top = 8
   end
   object UnitGuides: TdsdGuides
@@ -386,8 +410,8 @@ object StaffListEditForm: TStaffListEditForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 167
-    Top = 135
+    Left = 175
+    Top = 175
   end
   object PositionGuides: TdsdGuides
     KeyField = 'Id'
@@ -411,8 +435,8 @@ object StaffListEditForm: TStaffListEditForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 207
-    Top = 191
+    Left = 215
+    Top = 223
   end
   object PositionLevelGuides: TdsdGuides
     KeyField = 'Id'
@@ -436,7 +460,7 @@ object StaffListEditForm: TStaffListEditForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 143
-    Top = 239
+    Left = 151
+    Top = 271
   end
 end

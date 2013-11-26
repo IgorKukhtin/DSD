@@ -678,11 +678,11 @@ begin
   //штатное расписание выбор
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStaffListForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStaffListEditForm');
   //Типы сумм для штатного расписания
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListSummKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TStaffListSummKindForm');
-  //TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListEditForm'));
-  //TdsdFormStorageFactory.GetStorage.Load('TStaffListEditForm');
   //Типы модели начисления
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TModelServiceKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TModelServiceKindForm');

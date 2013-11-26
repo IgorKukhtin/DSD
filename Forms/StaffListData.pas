@@ -21,7 +21,8 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul, cxButtonEdit, Vcl.Grids, Vcl.DBGrids;
+  DataModul, cxButtonEdit, Vcl.Grids, Vcl.DBGrids, cxContainer, dsdGuides,
+  cxTextEdit, cxMaskEdit, cxLabel, Vcl.ExtCtrls;
 
 type
   TStaffListDataForm = class(TParentForm)
@@ -105,6 +106,12 @@ type
     bbStaffListSummKind: TdxBarButton;
     actStaffListSumm: TdsdUpdateDataSet;
     clUnitName: TcxGridDBColumn;
+    UnitGuides: TdsdGuides;
+    actInsert: TdsdInsertUpdateAction;
+    bbInsertSL: TdxBarButton;
+    Panel1: TPanel;
+    ceUnit: TcxButtonEdit;
+    cxLabel5: TcxLabel;
   private
     { Private declarations }
   public
