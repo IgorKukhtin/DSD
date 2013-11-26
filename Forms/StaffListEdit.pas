@@ -35,7 +35,6 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
-    cxLabel3: TcxLabel;
     cxLabel5: TcxLabel;
     ceUnit: TcxButtonEdit;
     UnitGuides: TdsdGuides;
@@ -45,13 +44,10 @@ type
     cxLabel7: TcxLabel;
     cePositionLevel: TcxButtonEdit;
     PositionLevelGuides: TdsdGuides;
-    cxLabel4: TcxLabel;
     edComment: TcxTextEdit;
     cxLabel8: TcxLabel;
     edPersonalCount: TcxCurrencyEdit;
     edHoursPlan: TcxCurrencyEdit;
-    edFundPayMonth: TcxCurrencyEdit;
-    edFundPayTurn: TcxCurrencyEdit;
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
 

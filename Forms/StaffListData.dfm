@@ -19,17 +19,17 @@ object StaffListDataForm: TStaffListDataForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 67
+    Top = 49
     Width = 207
-    Height = 190
+    Height = 208
     Align = alLeft
     TabOrder = 0
     Visible = False
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = 26
-    ExplicitHeight = 286
+    ExplicitTop = 67
+    ExplicitHeight = 190
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = MasterDS
@@ -79,17 +79,16 @@ object StaffListDataForm: TStaffListDataForm
   end
   object cxGridStaffList: TcxGrid
     Left = 207
-    Top = 67
+    Top = 49
     Width = 730
-    Height = 190
+    Height = 208
     Align = alClient
     TabOrder = 1
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitLeft = 213
-    ExplicitTop = 74
-    ExplicitHeight = 231
+    ExplicitTop = 67
+    ExplicitHeight = 190
     object cxGridDBTableViewStaffLis: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = StaffListDS
@@ -104,6 +103,7 @@ object StaffListDataForm: TStaffListDataForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
+      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.HeaderHeight = 40
@@ -195,8 +195,6 @@ object StaffListDataForm: TStaffListDataForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = 312
-    ExplicitWidth = 857
     object cxGridDBTableViewStaffListCost: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = StaffListCostDS
@@ -258,12 +256,10 @@ object StaffListDataForm: TStaffListDataForm
     Width = 937
     Height = 144
     Align = alBottom
-    TabOrder = 7
+    TabOrder = 6
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = 456
-    ExplicitWidth = 857
     object cxGridDBTableStaffListSumm: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = StaffListSummDS
@@ -337,25 +333,23 @@ object StaffListDataForm: TStaffListDataForm
     Left = 0
     Top = 26
     Width = 937
-    Height = 41
+    Height = 23
     Align = alTop
     TabOrder = 8
-    ExplicitLeft = 400
-    ExplicitWidth = 321
     object ceUnit: TcxButtonEdit
-      Left = 480
-      Top = 8
+      Left = 471
+      Top = 0
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 0
-      Width = 231
+      Width = 258
     end
     object cxLabel5: TcxLabel
-      Left = 380
-      Top = 8
+      Left = 369
+      Top = 1
       Align = alCustom
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
@@ -482,11 +476,8 @@ object StaffListDataForm: TStaffListDataForm
       Category = 0
     end
     object bbEdit: TdxBarButton
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Action = actUpdate
       Category = 0
-      Visible = ivAlways
-      ImageIndex = 1
-      ShortCut = 115
     end
     object bbErased: TdxBarButton
       Action = dsdSetErased
@@ -758,6 +749,22 @@ object StaffListDataForm: TStaffListDataForm
       DataSource = StaffListDS
       DataSetRefresh = actRefresh
     end
+    object actUpdate: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      Caption = 'actUpdate'
+      ImageIndex = 1
+      FormName = 'TStaffListEditForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = StaffListCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end>
+      isShowModal = False
+      DataSource = StaffListDS
+      DataSetRefresh = actRefresh
+    end
   end
   object spSelectMaster: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Unit'
@@ -828,7 +835,14 @@ object StaffListDataForm: TStaffListDataForm
       item
         DataSet = StaffListCDS
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'UnitId'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'inUnitId'
+        ParamType = ptInput
+      end>
     Left = 578
     Top = 125
   end
@@ -1051,7 +1065,7 @@ object StaffListDataForm: TStaffListDataForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 727
-    Top = 31
+    Left = 743
+    Top = 15
   end
 end

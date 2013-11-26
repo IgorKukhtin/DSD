@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpSelect_Object_StaffList(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_StaffList(
+    IN inUnitId      Integer,       -- Подразделение
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer
@@ -44,7 +45,7 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_StaffList_Unit
                                ON ObjectLink_StaffList_Unit.ObjectId = Object_StaffList.Id
                               AND ObjectLink_StaffList_Unit.DescId = zc_ObjectLink_StaffList_Unit()
-          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_StaffList_Unit.ChildObjectId
+          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = inUnitId --ObjectLink_StaffList_Unit.ChildObjectId
  
           LEFT JOIN ObjectLink AS ObjectLink_StaffList_Position
                                ON ObjectLink_StaffList_Position.ObjectId = Object_StaffList.Id

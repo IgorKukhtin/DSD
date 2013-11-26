@@ -112,6 +112,7 @@ type
     Panel1: TPanel;
     ceUnit: TcxButtonEdit;
     cxLabel5: TcxLabel;
+    actUpdate: TdsdInsertUpdateAction;
   private
     { Private declarations }
   public
