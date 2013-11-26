@@ -19,6 +19,18 @@ BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_StaffList());
+  CREATE TEMP TABLE _tmpUnit (UnitId Integer) ON COMMIT DROP;
+    
+  IF inUnitId <> 0 
+  THEN 
+      INSERT INTO _tmpUnit(UnitId)
+                 SELECT inUnitId;
+  ELSE 
+      INSERT INTO _tmpUnit (UnitId)
+                 SELECT Id FROM OBJECT
+                 WHERE DescId = zc_Object_Unit();
+  END IF;
+ 
 
    RETURN QUERY 
      SELECT 
@@ -41,12 +53,14 @@ BEGIN
 
          , Object_StaffList.isErased AS isErased
          
-     FROM OBJECT AS Object_StaffList
+     FROM _tmpUnit
           LEFT JOIN ObjectLink AS ObjectLink_StaffList_Unit
-                               ON ObjectLink_StaffList_Unit.ObjectId = Object_StaffList.Id
+                               ON ObjectLink_StaffList_Unit.ChildObjectId = _tmpUnit.UnitId
                               AND ObjectLink_StaffList_Unit.DescId = zc_ObjectLink_StaffList_Unit()
-          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = inUnitId --ObjectLink_StaffList_Unit.ChildObjectId
- 
+          LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_StaffList_Unit.ChildObjectId
+                                
+          LEFT JOIN OBJECT AS Object_StaffList ON Object_StaffList.Id = ObjectLink_StaffList_Unit.ObjectId
+         
           LEFT JOIN ObjectLink AS ObjectLink_StaffList_Position
                                ON ObjectLink_StaffList_Position.ObjectId = Object_StaffList.Id
                               AND ObjectLink_StaffList_Position.DescId = zc_ObjectLink_StaffList_Position()
