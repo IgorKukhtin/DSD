@@ -235,7 +235,7 @@ uses
   SheetWorkTimeMovementItemTest in '..\SOURCE\MovementItem\All\SheetWorkTimeMovementItemTest.pas',
   ModelService in '..\..\Forms\ModelService.pas' {ModelServiceForm},
   ModelServiceKind in '..\..\Forms\Enum\ModelServiceKind.pas' {ModelServiceKindForm},
-  SelectKind in '..\..\Forms\SelectKind.pas' {SelectKindForm},
+  SelectKind in '..\..\Forms\Kind\SelectKind.pas' {SelectKindForm},
   UpdaterTest in '..\SOURCE\Component\UpdaterTest.pas',
   AboutBoxUnit in '..\..\SOURCE\AboutBoxUnit.pas' {AboutBox},
   UnilWin in '..\..\SOURCE\UnilWin.pas',
@@ -285,7 +285,8 @@ uses
   AncestorGuides in '..\..\Forms\Ancestor\AncestorGuides.pas' {AncestorGuidesForm: TParentForm},
   Personal_Object in '..\..\Forms\Guides\Personal_Object.pas' {Personal_ObjectForm: TParentForm},
   WorkTimeKind in '..\..\Forms\Enum\WorkTimeKind.pas' {WorkTimeKindForm: TParentForm},
-  MovementDesc in '..\..\Forms\Kind\MovementDesc.pas' {MovementDescForm: TParentForm};
+  MovementDesc in '..\..\Forms\Kind\MovementDesc.pas' {MovementDescForm: TParentForm},
+  WorkTimeKind_Object in '..\..\Forms\Enum\WorkTimeKind_Object.pas' {WorkTimeKind_ObjectForm: TParentForm};
 
 {$R *.RES}
 

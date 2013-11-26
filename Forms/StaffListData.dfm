@@ -17,78 +17,18 @@ object StaffListDataForm: TStaffListDataForm
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
-  object cxGrid: TcxGrid
+  object cxGridStaffList: TcxGrid
     Left = 0
     Top = 49
-    Width = 207
-    Height = 208
-    Align = alLeft
-    TabOrder = 0
-    Visible = False
-    LookAndFeel.Kind = lfStandard
-    LookAndFeel.NativeStyle = False
-    LookAndFeel.SkinName = ''
-    ExplicitTop = 67
-    ExplicitHeight = 190
-    object cxGridDBTableView: TcxGridDBTableView
-      Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = MasterDS
-      DataController.Filter.Options = [fcoCaseInsensitive]
-      DataController.Filter.Active = True
-      DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
-      DataController.Summary.SummaryGroups = <>
-      Images = dmMain.SortImageList
-      OptionsBehavior.IncSearch = True
-      OptionsCustomize.ColumnHiding = True
-      OptionsCustomize.ColumnsQuickCustomization = True
-      OptionsData.Deleting = False
-      OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
-      OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
-      OptionsView.HeaderHeight = 40
-      OptionsView.Indicator = True
-      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'Code'
-        HeaderAlignmentVert = vaCenter
-        Width = 33
-      end
-      object clName: TcxGridDBColumn
-        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'Name'
-        HeaderAlignmentVert = vaCenter
-        Width = 100
-      end
-      object clIsErased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'isErased'
-        PropertiesClassName = 'TcxCheckBoxProperties'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        HeaderGlyphAlignmentHorz = taCenter
-        Width = 43
-      end
-    end
-    object cxGridLevel: TcxGridLevel
-      GridView = cxGridDBTableView
-    end
-  end
-  object cxGridStaffList: TcxGrid
-    Left = 207
-    Top = 49
-    Width = 730
+    Width = 937
     Height = 208
     Align = alClient
-    TabOrder = 1
+    TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
-    ExplicitTop = 67
-    ExplicitHeight = 190
+    ExplicitLeft = 207
+    ExplicitWidth = 730
     object cxGridDBTableViewStaffLis: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = StaffListDS
@@ -106,6 +46,7 @@ object StaffListDataForm: TStaffListDataForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
+      OptionsView.Footer = True
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -191,7 +132,7 @@ object StaffListDataForm: TStaffListDataForm
     Width = 937
     Height = 144
     Align = alBottom
-    TabOrder = 2
+    TabOrder = 1
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
@@ -256,10 +197,12 @@ object StaffListDataForm: TStaffListDataForm
     Width = 937
     Height = 144
     Align = alBottom
-    TabOrder = 6
+    TabOrder = 4
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitLeft = -8
+    ExplicitTop = 393
     object cxGridDBTableStaffListSumm: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = StaffListSummDS
@@ -335,7 +278,7 @@ object StaffListDataForm: TStaffListDataForm
     Width = 937
     Height = 23
     Align = alTop
-    TabOrder = 8
+    TabOrder = 7
     object ceUnit: TcxButtonEdit
       Left = 471
       Top = 0
@@ -348,22 +291,11 @@ object StaffListDataForm: TStaffListDataForm
       Width = 258
     end
     object cxLabel5: TcxLabel
-      Left = 369
+      Left = 353
       Top = 1
       Align = alCustom
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
     end
-  end
-  object MasterDS: TDataSource
-    DataSet = MasterCDS
-    Left = 56
-    Top = 104
-  end
-  object MasterCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 48
-    Top = 160
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -397,8 +329,8 @@ object StaffListDataForm: TStaffListDataForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 168
-    Top = 104
+    Left = 176
+    Top = 128
     DockControlHeights = (
       0
       0
@@ -441,6 +373,30 @@ object StaffListDataForm: TStaffListDataForm
           ItemName = 'bbModelServise'
         end
         item
+          Visible = True
+          ItemName = 'bbErasedCost'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErasedCost'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStaffListSummKind'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErasedSumm'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErasedSumm'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbRefresh'
@@ -452,10 +408,6 @@ object StaffListDataForm: TStaffListDataForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStaffListSummKind'
         end
         item
           Visible = True
@@ -514,6 +466,22 @@ object StaffListDataForm: TStaffListDataForm
       Action = actInsert
       Category = 0
     end
+    object bbErasedCost: TdxBarButton
+      Action = dsdSetErasedCost
+      Category = 0
+    end
+    object bbUnErasedCost: TdxBarButton
+      Action = dsdSetUnErasedCost
+      Category = 0
+    end
+    object bbErasedSumm: TdxBarButton
+      Action = dsdSetErasedSumm
+      Category = 0
+    end
+    object bbUnErasedSumm: TdxBarButton
+      Action = dsdSetUnErasedSumm
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -552,6 +520,33 @@ object StaffListDataForm: TStaffListDataForm
       ErasedFieldName = 'isErased'
       DataSource = StaffListDS
     end
+    object dsdSetErasedCost: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProc = spErasedUnErasedCost
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErasedCost
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1084#1086#1076#1077#1083#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+      ImageIndex = 2
+      ErasedFieldName = 'isErased'
+      DataSource = StaffListCostDS
+    end
+    object dsdSetErasedSumm: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProc = spErasedUnErasedSumm
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErasedSumm
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1090#1080#1087#1099' '#1089#1091#1084#1084
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = StaffListSummDS
+    end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       StoredProc = spErasedUnErased
@@ -567,29 +562,54 @@ object StaffListDataForm: TStaffListDataForm
       isSetErased = False
       DataSource = StaffListDS
     end
+    object dsdSetUnErasedCost: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProc = spErasedUnErasedCost
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErasedCost
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1084#1086#1076#1077#1083#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
+      ImageIndex = 8
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = StaffListCostDS
+    end
+    object dsdSetUnErasedSumm: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProc = spErasedUnErasedSumm
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErasedSumm
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = StaffListSummDS
+    end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       Params = <
         item
           Name = 'Key'
-          Component = MasterCDS
-          ComponentItem = 'Id'
+          Value = Null
           DataType = ftString
         end
         item
           Name = 'TextValue'
-          Component = MasterCDS
-          ComponentItem = 'Name'
+          Value = Null
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
-      DataSource = MasterDS
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
-      Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -766,20 +786,9 @@ object StaffListDataForm: TStaffListDataForm
       DataSetRefresh = actRefresh
     end
   end
-  object spSelectMaster: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Unit'
-    DataSet = MasterCDS
-    DataSets = <
-      item
-        DataSet = MasterCDS
-      end>
-    Params = <>
-    Left = 48
-    Top = 216
-  end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 168
-    Top = 160
+    Top = 192
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -810,8 +819,7 @@ object StaffListDataForm: TStaffListDataForm
     Params = <
       item
         Name = 'inObjectId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
+        Value = Null
         ParamType = ptInput
       end>
     Left = 288
@@ -1067,5 +1075,77 @@ object StaffListDataForm: TStaffListDataForm
       end>
     Left = 743
     Top = 15
+  end
+  object dsdDBViewAddOnStaffListCost: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewStaffListCost
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+      end>
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    Left = 560
+    Top = 336
+  end
+  object dsdDBViewAddOnStaffListSumm: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableStaffListSumm
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+      end>
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    Left = 560
+    Top = 488
+  end
+  object spErasedUnErasedCost: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Component = StaffListCostCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    Left = 296
+    Top = 344
+  end
+  object spErasedUnErasedSumm: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Component = StaffListSummCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    Left = 304
+    Top = 472
   end
 end

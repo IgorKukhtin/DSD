@@ -1,4 +1,4 @@
-inherited WorkTimeKindForm: TWorkTimeKindForm
+inherited WorkTimeKind_ObjectForm: TWorkTimeKind_ObjectForm
   Caption = #1058#1080#1087#1099' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080
   ClientHeight = 376
   ClientWidth = 605
@@ -27,6 +27,7 @@ inherited WorkTimeKindForm: TWorkTimeKindForm
           OnKeyPress = nil
           OnCustomDrawCell = nil
           DataController.Filter.OnChanged = nil
+          OptionsData.Editing = False
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -52,6 +53,7 @@ inherited WorkTimeKindForm: TWorkTimeKindForm
             Caption = #1050#1088#1072#1090#1082#1086#1077' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'ShortName'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 165
           end
           object clErased: TcxGridDBColumn
@@ -66,7 +68,12 @@ inherited WorkTimeKindForm: TWorkTimeKindForm
       end
     end
   end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 59
+  end
   inherited ActionList: TActionList
+    Left = 95
+    Top = 279
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
       StoredProc = spInsertUpdateObject
