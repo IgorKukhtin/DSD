@@ -116,6 +116,7 @@ type
     dsdSetUnErasedSumm: TdsdUpdateErased;
     bbErasedSumm: TdxBarButton;
     bbUnErasedSumm: TdxBarButton;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public

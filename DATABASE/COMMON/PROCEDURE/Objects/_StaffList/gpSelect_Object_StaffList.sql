@@ -1,6 +1,7 @@
 -- Function: gpSelect_Object_StaffList()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_StaffList(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_StaffList(Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_StaffList(
     IN inUnitId      Integer,       -- Подразделение
@@ -27,8 +28,8 @@ BEGIN
                  SELECT inUnitId;
   ELSE 
       INSERT INTO _tmpUnit (UnitId)
-                 SELECT Id FROM OBJECT
-                 WHERE DescId = zc_Object_Unit();
+                 SELECT OBJECT.Id FROM OBJECT
+                 WHERE OBJECT.DescId = zc_Object_Unit();
   END IF;
  
 
@@ -89,7 +90,7 @@ END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Object_StaffList (TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_StaffList (Integer,TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
@@ -102,4 +103,4 @@ ALTER FUNCTION gpSelect_Object_StaffList (TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_StaffList ('2')
+-- SELECT * FROM gpSelect_Object_StaffList (0,'2')

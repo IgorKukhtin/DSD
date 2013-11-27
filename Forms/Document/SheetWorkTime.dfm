@@ -387,7 +387,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     end
     object OpenWorkTimeKindForm: TOpenChoiceForm
       Category = 'DSDLib'
-      FormName = 'TWorkTimeKindForm'
+      FormName = 'TWorkTimeKind_ObjectForm'
       GuiParams = <
         item
           Name = 'Key'
@@ -400,7 +400,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
   object MasterDS: TDataSource
     DataSet = MasterCDS
     Left = 342
-    Top = 191
+    Top = 159
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
@@ -510,14 +510,14 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'ValueField'
     TemplateColumn = TemplateColumn
-    Left = 360
-    Top = 208
+    Left = 384
+    Top = 272
   end
   object HeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 304
-    Top = 208
+    Left = 312
+    Top = 240
   end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefresh

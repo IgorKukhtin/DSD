@@ -44,7 +44,8 @@ BEGIN
            , CAST (NULL AS Boolean) AS isErased
 
        --FROM Object 
-       --WHERE Object.DescId = zc_Object_StaffList();
+       --WHERE Object.DescId = zc_Object_StaffList()
+;
    ELSE
      RETURN QUERY 
      SELECT 

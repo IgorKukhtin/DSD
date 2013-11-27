@@ -478,8 +478,8 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -626,15 +626,10 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
         Component = PeriodChoice
       end
       item
-      end
-      item
-      end
-      item
-      end
-      item
+        Component = PersonalDriverGuides
       end>
-    Left = 328
-    Top = 64
+    Left = 848
+    Top = 32
   end
   object PersonalDriverGuides: TdsdGuides
     KeyField = 'Id'
