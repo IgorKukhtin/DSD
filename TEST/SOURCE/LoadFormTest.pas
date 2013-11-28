@@ -658,6 +658,9 @@ procedure TLoadFormTest.LoadWorkTimeKindFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKindForm');
+  //форма выбора
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWorkTimeKind_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKind_ObjectForm');
 end;
 
 procedure TLoadFormTest.LoadPositionFormTest;

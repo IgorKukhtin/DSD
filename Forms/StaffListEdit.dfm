@@ -47,68 +47,58 @@
     Top = 55
     Caption = #1055#1083#1072#1085' '#1095#1072#1089#1086#1074
   end
-  object cxLabel3: TcxLabel
-    Left = 35
-    Top = 105
-    Caption = #1060#1086#1085#1076' '#1086#1087#1083#1072#1090#1099' ('#1079#1072' '#1084#1077#1089#1103#1094')'
-  end
   object cxLabel5: TcxLabel
     Left = 35
-    Top = 155
+    Top = 115
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   object ceUnit: TcxButtonEdit
-    Left = 34
-    Top = 178
+    Left = 35
+    Top = 138
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 6
+    TabOrder = 5
     Width = 270
   end
   object cxLabel6: TcxLabel
     Left = 35
-    Top = 205
+    Top = 181
     Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
   end
   object cePosition: TcxButtonEdit
     Left = 35
-    Top = 228
+    Top = 204
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 8
+    TabOrder = 7
     Width = 270
   end
   object cxLabel7: TcxLabel
-    Left = 34
-    Top = 255
+    Left = 35
+    Top = 239
     Caption = #1056#1072#1079#1088#1103#1076
   end
   object cePositionLevel: TcxButtonEdit
-    Left = 34
-    Top = 278
+    Left = 35
+    Top = 262
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 10
+    TabOrder = 9
     Width = 270
-  end
-  object cxLabel4: TcxLabel
-    Left = 183
-    Top = 105
-    Caption = #1060#1086#1085#1076' '#1086#1087#1083#1072#1090#1099' ('#1079#1072' '#1076#1077#1085#1100')'
   end
   object edComment: TcxTextEdit
     Left = 34
     Top = 328
-    TabOrder = 12
+    TabOrder = 10
     Width = 270
   end
   object cxLabel8: TcxLabel
@@ -123,7 +113,7 @@
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0'
-    TabOrder = 14
+    TabOrder = 12
     Width = 123
   end
   object edHoursPlan: TcxCurrencyEdit
@@ -133,27 +123,7 @@
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0'
-    TabOrder = 15
-    Width = 123
-  end
-  object edFundPayMonth: TcxCurrencyEdit
-    Left = 34
-    Top = 128
-    Properties.Alignment.Horz = taRightJustify
-    Properties.Alignment.Vert = taVCenter
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = ',0'
-    TabOrder = 16
-    Width = 123
-  end
-  object edFundPayTurn: TcxCurrencyEdit
-    Left = 182
-    Top = 128
-    Properties.Alignment.Horz = taRightJustify
-    Properties.Alignment.Vert = taVCenter
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = ',0'
-    TabOrder = 17
+    TabOrder = 13
     Width = 123
   end
   object Код: TcxLabel
@@ -166,7 +136,7 @@
     Top = 28
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    TabOrder = 19
+    TabOrder = 15
     Width = 123
   end
   object ActionList: TActionList
@@ -231,14 +201,12 @@
       item
         Name = 'inFundPayMonth'
         Value = 0.000000000000000000
-        Component = edFundPayMonth
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inFundPayTurn'
         Value = 0.000000000000000000
-        Component = edFundPayTurn
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -277,8 +245,8 @@
         Value = Null
         ParamType = ptInputOutput
       end>
-    Left = 216
-    Top = 112
+    Left = 256
+    Top = 8
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_StaffList'
@@ -312,13 +280,11 @@
       item
         Name = 'FundPayMonth'
         Value = 0.000000000000000000
-        Component = edFundPayMonth
         DataType = ftFloat
       end
       item
         Name = 'FundPayTurn'
         Value = 0.000000000000000000
-        Component = edFundPayTurn
         DataType = ftFloat
       end
       item
@@ -381,8 +347,8 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 128
-    Top = 128
+    Left = 200
+    Top = 8
   end
   object dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn
     Left = 320
@@ -410,8 +376,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 175
-    Top = 175
+    Left = 127
+    Top = 127
   end
   object PositionGuides: TdsdGuides
     KeyField = 'Id'
@@ -436,7 +402,7 @@
         ParamType = ptInput
       end>
     Left = 215
-    Top = 223
+    Top = 183
   end
   object PositionLevelGuides: TdsdGuides
     KeyField = 'Id'

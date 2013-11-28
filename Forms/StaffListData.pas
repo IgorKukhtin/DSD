@@ -26,11 +26,6 @@ uses
 
 type
   TStaffListDataForm = class(TParentForm)
-    cxGrid: TcxGrid;
-    cxGridDBTableView: TcxGridDBTableView;
-    cxGridLevel: TcxGridLevel;
-    MasterDS: TDataSource;
-    MasterCDS: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
@@ -47,13 +42,10 @@ type
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
-    spSelectMaster: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
-    clIsErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
-    clName: TcxGridDBColumn;
     cxGridStaffList: TcxGrid;
     cxGridDBTableViewStaffLis: TcxGridDBTableView;
     clPositionName: TcxGridDBColumn;
@@ -72,7 +64,6 @@ type
     StaffListCDS: TClientDataSet;
     StaffListDS: TDataSource;
     spSelectStaffList: TdsdStoredProc;
-    clCode: TcxGridDBColumn;
     spInsertUpdateObject: TdsdStoredProc;
     InsertRecord: TInsertRecord;
     PositionChoiceForm: TOpenChoiceForm;
@@ -112,6 +103,20 @@ type
     Panel1: TPanel;
     ceUnit: TcxButtonEdit;
     cxLabel5: TcxLabel;
+    actUpdate: TdsdInsertUpdateAction;
+    dsdDBViewAddOnStaffListCost: TdsdDBViewAddOn;
+    dsdDBViewAddOnStaffListSumm: TdsdDBViewAddOn;
+    spErasedUnErasedCost: TdsdStoredProc;
+    spErasedUnErasedSumm: TdsdStoredProc;
+    dsdSetErasedCost: TdsdUpdateErased;
+    dsdSetUnErasedCost: TdsdUpdateErased;
+    bbErasedCost: TdxBarButton;
+    bbUnErasedCost: TdxBarButton;
+    dsdSetErasedSumm: TdsdUpdateErased;
+    dsdSetUnErasedSumm: TdsdUpdateErased;
+    bbErasedSumm: TdxBarButton;
+    bbUnErasedSumm: TdxBarButton;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public

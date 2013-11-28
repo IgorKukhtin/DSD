@@ -43,6 +43,9 @@ CREATE OR REPLACE FUNCTION zc_ObjectDate_Contract_End() RETURNS Integer AS $BODY
 INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
   SELECT zc_Object_Contract(), 'zc_ObjectDate_Contract_End', 'Дата до которой действует договор' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Contract_End');
 
+CREATE OR REPLACE FUNCTION zc_ObjectDate_Calendar_Value() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Calendar_Value'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDateDesc (DescId, Code, ItemName)
+  SELECT zc_Object_Contract(), 'zc_ObjectDate_Calendar_Value', 'Дата' WHERE NOT EXISTS (SELECT * FROM ObjectDateDesc WHERE Code = 'zc_ObjectDate_Calendar_Value');
 
 
 /*-------------------------------------------------------------------------------

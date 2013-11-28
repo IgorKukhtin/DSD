@@ -233,7 +233,7 @@ uses
   SheetWorkTimeMovementItemTest in '..\SOURCE\MovementItem\All\SheetWorkTimeMovementItemTest.pas',
   ModelService in '..\..\Forms\ModelService.pas' {ModelServiceForm},
   ModelServiceKind in '..\..\Forms\Enum\ModelServiceKind.pas' {ModelServiceKindForm},
-  SelectKind in '..\..\Forms\SelectKind.pas' {SelectKindForm},
+  SelectKind in '..\..\Forms\Kind\SelectKind.pas' {SelectKindForm},
   UpdaterTest in '..\SOURCE\Component\UpdaterTest.pas',
   AboutBoxUnit in '..\..\SOURCE\AboutBoxUnit.pas' {AboutBox},
   UnilWin in '..\..\SOURCE\UnilWin.pas',
@@ -286,7 +286,8 @@ uses
   MovementDesc in '..\..\Forms\Kind\MovementDesc.pas' {MovementDescForm: TParentForm},
   JuridicalEdit in '..\..\Forms\JuridicalEdit.pas' {JuridicalEditForm: TParentForm},
   JuridicalDetailsTest in '..\SOURCE\ObjectHistory\All\JuridicalDetailsTest.pas',
-  PartnerEdit in '..\..\Forms\PartnerEdit.pas' {PartnerEditForm: TParentForm};
+  PartnerEdit in '..\..\Forms\PartnerEdit.pas' {PartnerEditForm: TParentForm},
+  WorkTimeKind_Object in '..\..\Forms\Enum\WorkTimeKind_Object.pas' {WorkTimeKind_ObjectForm: TParentForm};
 
 {$R *.RES}
 

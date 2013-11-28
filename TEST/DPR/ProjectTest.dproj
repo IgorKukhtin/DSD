@@ -605,7 +605,7 @@
 			<DCCReference Include="..\..\Forms\Enum\ModelServiceKind.pas">
 				<Form>ModelServiceKindForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\SelectKind.pas">
+			<DCCReference Include="..\..\Forms\Kind\SelectKind.pas">
 				<Form>SelectKindForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Component\UpdaterTest.pas"/>
@@ -817,6 +817,9 @@
 			<DCCReference Include="..\SOURCE\ObjectHistory\All\JuridicalDetailsTest.pas"/>
 			<DCCReference Include="..\..\Forms\PartnerEdit.pas">
 				<Form>PartnerEditForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Enum\WorkTimeKind_Object.pas">
+				<Form>WorkTimeKind_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
