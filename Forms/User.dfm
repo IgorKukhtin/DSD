@@ -494,7 +494,7 @@ object UserForm: TUserForm
         item
           Name = 'Key'
           Component = RoleCDS
-          ComponentItem = 'Id'
+          ComponentItem = 'UserRoleId'
         end
         item
           Name = 'TextValue'
@@ -641,7 +641,7 @@ object UserForm: TUserForm
       item
         Name = 'inroleid'
         Component = RoleCDS
-        ComponentItem = 'RoleId'
+        ComponentItem = 'UserRoleId'
         ParamType = ptInput
       end>
     Left = 520

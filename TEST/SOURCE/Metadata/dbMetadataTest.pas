@@ -19,7 +19,6 @@ type
     procedure CreateObjectDescFunction;
     procedure CreateContainerDescFunction;
     procedure CreateObjectHistoryDescFunction;
-    procedure InsertObjectHistoryDesc;
     procedure CreateMovementDescFunction;
     procedure CreateMovementItemDescFunction;
     procedure InsertMovementItemDesc;
@@ -35,12 +34,6 @@ implementation
 uses zLibUtil;
 
 { TdbMetaDataTest }
-
-procedure TdbMetaDataTest.InsertObjectHistoryDesc;
-begin
-  ExecFile(MetadataPath + 'ObjectHistory\InsertObjectHistoryDesc.sql', ZQuery);
-  ExecFile(MetadataPath + 'ObjectHistory\InsertObjectHistoryFloatDesc.sql', ZQuery);
-end;
 
 procedure TdbMetaDataTest.CreateContainerDescFunction;
 begin
@@ -103,6 +96,8 @@ procedure TdbMetaDataTest.CreateObjectHistoryDescFunction;
 begin
   ExecFile(MetadataPath + 'ObjectHistory\CreateObjectHistoryDescFunction.sql', ZQuery);
   ExecFile(MetadataPath + 'ObjectHistory\CreateObjectHistoryFloatDescFunction.sql', ZQuery);
+  ExecFile(MetadataPath + 'ObjectHistory\CreateObjectHistoryStringDescFunction.sql', ZQuery);
+  ExecFile(MetadataPath + 'ObjectHistory\CreateObjectHistoryLinkDescFunction.sql', ZQuery);
 end;
 
 procedure TdbMetaDataTest.SetUp;

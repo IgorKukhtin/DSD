@@ -1,97 +1,82 @@
-﻿object JuridicalEditForm: TJuridicalEditForm
-  Left = 0
-  Top = 0
+﻿inherited JuridicalEditForm: TJuridicalEditForm
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1075#1086' '#1083#1080#1094#1072
-  ClientHeight = 333
-  ClientWidth = 356
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  KeyPreview = True
-  OldCreateOrder = False
-  AddOnFormData.RefreshAction = dsdDataSetRefresh
-  AddOnFormData.Params = dsdFormParams
+  ClientHeight = 364
+  ClientWidth = 851
+  ExplicitWidth = 859
+  ExplicitHeight = 391
   PixelsPerInch = 96
   TextHeight = 13
-  object edName: TcxTextEdit
-    Left = 40
-    Top = 68
+  inherited bbOk: TcxButton
+    Left = 10
+    Top = 301
+    Action = InsertUpdateGuides
+    TabOrder = 7
+    ExplicitLeft = 10
+    ExplicitTop = 301
+  end
+  inherited bbCancel: TcxButton
+    Left = 105
+    Top = 301
+    Action = actFormClose
+    TabOrder = 8
+    ExplicitLeft = 105
+    ExplicitTop = 301
+  end
+  object edName: TcxTextEdit [2]
+    Left = 5
+    Top = 67
     TabOrder = 0
     Width = 273
   end
-  object cxLabel1: TcxLabel
-    Left = 40
-    Top = 48
+  object cxLabel1: TcxLabel [3]
+    Left = 5
+    Top = 47
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
-  object cxButton1: TcxButton
-    Left = 72
-    Top = 293
-    Width = 75
-    Height = 25
-    Action = InsertUpdateGuides
-    Default = True
-    ModalResult = 8
-    TabOrder = 6
-  end
-  object cxButton2: TcxButton
-    Left = 216
-    Top = 293
-    Width = 75
-    Height = 25
-    Action = dsdFormClose
-    Cancel = True
-    Caption = #1054#1090#1084#1077#1085#1072
-    ModalResult = 8
-    TabOrder = 7
-  end
-  object Код: TcxLabel
-    Left = 40
-    Top = 3
+  object Код: TcxLabel [4]
+    Left = 5
+    Top = 2
     Caption = #1050#1086#1076
   end
-  object ceCode: TcxCurrencyEdit
-    Left = 40
-    Top = 25
+  object ceCode: TcxCurrencyEdit [5]
+    Left = 5
+    Top = 24
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
-    TabOrder = 8
+    TabOrder = 6
     Width = 273
   end
-  object cxLabel2: TcxLabel
-    Left = 40
-    Top = 92
+  object cxLabel2: TcxLabel [6]
+    Left = 5
+    Top = 91
     Caption = #1050#1086#1076' GLN'
   end
-  object edGLNCode: TcxTextEdit
-    Left = 40
-    Top = 115
+  object edGLNCode: TcxTextEdit [7]
+    Left = 5
+    Top = 114
     TabOrder = 1
     Width = 153
   end
-  object cbisCorporate: TcxCheckBox
-    Left = 202
-    Top = 115
+  object cbisCorporate: TcxCheckBox [8]
+    Left = 167
+    Top = 114
     Caption = #1053#1072#1096#1077' '#1102#1088'. '#1083#1080#1094#1086
     TabOrder = 2
     Width = 111
   end
-  object cxLabel3: TcxLabel
-    Left = 40
-    Top = 139
+  object cxLabel3: TcxLabel [9]
+    Left = 5
+    Top = 138
     Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088'. '#1083#1080#1094
   end
-  object cxLabel4: TcxLabel
-    Left = 40
-    Top = 184
+  object cxLabel4: TcxLabel [10]
+    Left = 5
+    Top = 183
     Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
   end
-  object ceJuridicalGroup: TcxButtonEdit
-    Left = 40
-    Top = 162
+  object ceJuridicalGroup: TcxButtonEdit [11]
+    Left = 5
+    Top = 161
     Properties.Buttons = <
       item
         Default = True
@@ -101,9 +86,9 @@
     TabOrder = 3
     Width = 273
   end
-  object ceGoodsProperty: TcxButtonEdit
-    Left = 40
-    Top = 207
+  object ceGoodsProperty: TcxButtonEdit [12]
+    Left = 5
+    Top = 206
     Properties.Buttons = <
       item
         Default = True
@@ -113,14 +98,14 @@
     TabOrder = 4
     Width = 273
   end
-  object cxLabel5: TcxLabel
-    Left = 40
-    Top = 232
+  object cxLabel5: TcxLabel [13]
+    Left = 5
+    Top = 231
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
-  object ceInfoMoney: TcxButtonEdit
-    Left = 40
-    Top = 255
+  object ceInfoMoney: TcxButtonEdit [14]
+    Left = 5
+    Top = 254
     Properties.Buttons = <
       item
         Default = True
@@ -130,24 +115,237 @@
     TabOrder = 5
     Width = 273
   end
-  object ActionList: TActionList
-    Left = 296
-    Top = 72
-    object dsdDataSetRefresh: TdsdDataSetRefresh
-      Category = 'DSDLib'
+  object Panel: TPanel [15]
+    Left = 284
+    Top = 0
+    Width = 567
+    Height = 364
+    Align = alRight
+    BevelEdges = [beLeft]
+    BevelKind = bkTile
+    BevelOuter = bvNone
+    TabOrder = 15
+    object PageControl: TcxPageControl
+      Left = 0
+      Top = 0
+      Width = 565
+      Height = 364
+      Align = alClient
+      TabOrder = 0
+      Properties.ActivePage = JuridicalDetailTS
+      Properties.CustomButtons.Buttons = <>
+      ClientRectBottom = 364
+      ClientRectRight = 565
+      ClientRectTop = 24
+      object JuridicalDetailTS: TcxTabSheet
+        Caption = #1056#1077#1082#1074#1080#1079#1080#1090#1099
+        ImageIndex = 0
+        object edFullName: TcxDBTextEdit
+          Left = 16
+          Top = 19
+          DataBinding.DataField = 'FullName'
+          DataBinding.DataSource = JuridicalDetailsDS
+          TabOrder = 0
+          Width = 425
+        end
+        object edJuridicalAddress: TcxDBTextEdit
+          Left = 16
+          Top = 56
+          DataBinding.DataField = 'JuridicalAddress'
+          DataBinding.DataSource = JuridicalDetailsDS
+          TabOrder = 1
+          Width = 425
+        end
+        object edOKPO: TcxDBTextEdit
+          Left = 16
+          Top = 92
+          DataBinding.DataField = 'OKPO'
+          DataBinding.DataSource = JuridicalDetailsDS
+          TabOrder = 2
+          Width = 193
+        end
+        object JuridicalDetailsGrid: TcxGrid
+          Left = 455
+          Top = 0
+          Width = 110
+          Height = 340
+          Align = alRight
+          TabOrder = 3
+          object JuridicalDetailsGridDBTableView: TcxGridDBTableView
+            Navigator.Buttons.CustomButtons = <>
+            DataController.DataSource = JuridicalDetailsDS
+            DataController.Summary.DefaultGroupSummaryItems = <>
+            DataController.Summary.FooterSummaryItems = <>
+            DataController.Summary.SummaryGroups = <>
+            OptionsData.Appending = True
+            OptionsView.GroupByBox = False
+            Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+            object colJDData: TcxGridDBColumn
+              Caption = #1044#1072#1090#1072
+              DataBinding.FieldName = 'StartDate'
+              Width = 101
+            end
+          end
+          object JuridicalDetailsGridLevel: TcxGridLevel
+            GridView = JuridicalDetailsGridDBTableView
+          end
+        end
+        object edINN: TcxDBTextEdit
+          Left = 248
+          Top = 92
+          DataBinding.DataField = 'INN'
+          DataBinding.DataSource = JuridicalDetailsDS
+          TabOrder = 4
+          Width = 193
+        end
+        object edAccounterName: TcxDBTextEdit
+          Left = 248
+          Top = 130
+          DataBinding.DataField = 'AccounterName'
+          DataBinding.DataSource = JuridicalDetailsDS
+          TabOrder = 5
+          Width = 193
+        end
+        object edNumberVAT: TcxDBTextEdit
+          Left = 16
+          Top = 130
+          DataBinding.DataField = 'NumberVAT'
+          DataBinding.DataSource = JuridicalDetailsDS
+          TabOrder = 6
+          Width = 193
+        end
+        object edBankAccount: TcxDBTextEdit
+          Left = 248
+          Top = 174
+          DataBinding.DataField = 'BankAccount'
+          DataBinding.DataSource = JuridicalDetailsDS
+          TabOrder = 7
+          Width = 193
+        end
+      end
+      object PartnerTS: TcxTabSheet
+        Caption = #1058#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080
+        ImageIndex = 1
+        object PartnerDockControl: TdxBarDockControl
+          Left = 0
+          Top = 0
+          Width = 565
+          Height = 26
+          Align = dalTop
+          BarManager = dxBarManager
+        end
+        object PartnerGrid: TcxGrid
+          Left = 0
+          Top = 26
+          Width = 565
+          Height = 314
+          Align = alClient
+          TabOrder = 0
+          object PartnerGridDBTableView: TcxGridDBTableView
+            Navigator.Buttons.CustomButtons = <>
+            DataController.DataSource = PartnerDS
+            DataController.Summary.DefaultGroupSummaryItems = <>
+            DataController.Summary.FooterSummaryItems = <>
+            DataController.Summary.SummaryGroups = <>
+            OptionsView.ColumnAutoWidth = True
+            OptionsView.GroupByBox = False
+            Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+            object colPartnerCode: TcxGridDBColumn
+              Caption = #1050#1086#1076
+              DataBinding.FieldName = 'Code'
+              Options.Editing = False
+            end
+            object colPartnerAddress: TcxGridDBColumn
+              Caption = #1040#1076#1088#1077#1089
+              DataBinding.FieldName = 'Address'
+              Options.Editing = False
+              Width = 423
+            end
+            object colPartnerisErased: TcxGridDBColumn
+              Caption = #1059#1076#1072#1083#1077#1085
+              DataBinding.FieldName = 'isErased'
+              Visible = False
+              Options.Editing = False
+            end
+          end
+          object PartnerGridLevel: TcxGridLevel
+            GridView = PartnerGridDBTableView
+          end
+        end
+      end
+      object ContractTS: TcxTabSheet
+        Caption = #1044#1086#1075#1086#1074#1086#1088#1072
+        ImageIndex = 2
+        object ContractDockControl: TdxBarDockControl
+          Left = 0
+          Top = 0
+          Width = 565
+          Height = 26
+          Align = dalTop
+          BarManager = dxBarManager
+        end
+        object ContractGrid: TcxGrid
+          Left = 0
+          Top = 26
+          Width = 565
+          Height = 314
+          Align = alClient
+          TabOrder = 0
+          object ContractGridDBTableView: TcxGridDBTableView
+            Navigator.Buttons.CustomButtons = <>
+            DataController.Summary.DefaultGroupSummaryItems = <>
+            DataController.Summary.FooterSummaryItems = <>
+            DataController.Summary.SummaryGroups = <>
+            OptionsView.ColumnAutoWidth = True
+            OptionsView.GroupByBox = False
+            Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+            object clInvNumber: TcxGridDBColumn
+              Caption = #1053#1086#1084#1077#1088' '#1076#1086#1075#1086#1074#1086#1088#1072
+              DataBinding.FieldName = 'InvNumber'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 171
+            end
+            object clStartDate: TcxGridDBColumn
+              Caption = #1044#1077#1081#1089#1090#1074'. '#1089
+              DataBinding.FieldName = 'StartDate'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 129
+            end
+            object clContractKindName: TcxGridDBColumn
+              Caption = #1042#1080#1076' '#1076#1086#1075#1086#1074#1086#1088#1072
+              DataBinding.FieldName = 'ContractKindName'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 171
+            end
+            object clIsErased: TcxGridDBColumn
+              Caption = #1059#1076#1072#1083#1077#1085
+              DataBinding.FieldName = 'isErased'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 78
+            end
+          end
+          object ContractGridLevel: TcxGridLevel
+            GridView = ContractGridDBTableView
+          end
+        end
+      end
+    end
+  end
+  inherited ActionList: TActionList
+    Images = dmMain.ImageList
+    inherited actRefresh: TdsdDataSetRefresh
       StoredProc = spGet
       StoredProcList = <
         item
           StoredProc = spGet
         end
         item
-        end
-        item
+          StoredProc = spJuridicalDetails
         end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
     end
     object InsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
@@ -158,9 +356,128 @@
         end>
       Caption = 'Ok'
     end
-    object dsdFormClose: TdsdFormClose
+    object actFormClose: TdsdFormClose
       Category = 'DSDLib'
     end
+    object actPartnerInsert: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 45
+      ImageIndex = 0
+      FormName = 'TPartnerEditForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'JuridicalName'
+          Value = ''
+          Component = edName
+          DataType = ftString
+        end>
+      isShowModal = False
+      DataSource = PartnerDS
+      DataSetRefresh = actPartnerRefresh
+    end
+    object actPartnerUpdate: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TPartnerEditForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = PartnerCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'JuridicalName'
+          Value = ''
+          Component = edName
+          DataType = ftString
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = PartnerDS
+      DataSetRefresh = actPartnerRefresh
+    end
+    object actPartnerRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      TabSheet = PartnerTS
+      StoredProc = spPartner
+      StoredProcList = <
+        item
+          StoredProc = spPartner
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
+    object actContractRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      TabSheet = ContractTS
+      StoredProc = spContract
+      StoredProcList = <
+        item
+          StoredProc = spContract
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = True
+    end
+    object JuridicalDetailsUDS: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      StoredProc = spJuridicalDetailsIU
+      StoredProcList = <
+        item
+          StoredProc = spJuridicalDetailsIU
+        end>
+      DataSource = JuridicalDetailsDS
+    end
+  end
+  inherited FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'GroupId'
+        Value = ''
+        Component = JuridicalGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'GroupName'
+        Value = ''
+        Component = JuridicalGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 8
+    Top = 224
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Juridical'
@@ -170,7 +487,7 @@
       item
         Name = 'ioId'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
@@ -219,33 +536,8 @@
         Component = InfoMoneyGuides
         ParamType = ptInput
       end>
-    Left = 240
-    Top = 48
-  end
-  object dsdFormParams: TdsdFormParams
-    Params = <
-      item
-        Name = 'Id'
-        Value = Null
-        ParamType = ptInputOutput
-      end
-      item
-        Name = 'GroupId'
-        Value = ''
-        Component = JuridicalGroupGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'GroupName'
-        Value = ''
-        Component = JuridicalGroupGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 240
-    Top = 8
+    Left = 32
+    Top = 320
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Juridical'
@@ -255,7 +547,7 @@
       item
         Name = 'Id'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
@@ -319,8 +611,8 @@
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
       end>
-    Left = 192
-    Top = 88
+    Left = 64
+    Top = 320
   end
   object JuridicalGroupGuides: TdsdGuides
     KeyField = 'Id'
@@ -344,8 +636,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 224
-    Top = 152
+    Left = 144
+    Top = 144
   end
   object GoodsPropertyGuides: TdsdGuides
     KeyField = 'Id'
@@ -369,7 +661,7 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 288
+    Left = 184
     Top = 192
   end
   object InfoMoneyGuides: TdsdGuides
@@ -394,25 +686,323 @@
         DataType = ftString
         ParamType = ptInput
       end>
+    Left = 184
+    Top = 240
+  end
+  object dxBarManager: TdxBarManager
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    Categories.Strings = (
+      'Default')
+    Categories.ItemsVisibles = (
+      2)
+    Categories.Visibles = (
+      True)
+    ImageOptions.Images = dmMain.ImageList
+    PopupMenuLinks = <>
+    UseSystemFont = True
+    Left = 104
+    Top = 32
+    DockControlHeights = (
+      0
+      0
+      0
+      0)
+    object PartnerBar: TdxBar
+      Caption = 'Custom'
+      CaptionButtons = <>
+      DockControl = PartnerDockControl
+      DockedDockControl = PartnerDockControl
+      DockedLeft = 0
+      DockedTop = 0
+      FloatLeft = 528
+      FloatTop = 285
+      FloatClientWidth = 51
+      FloatClientHeight = 22
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPartnerInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPartnerEdit'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPartnerRefresh'
+        end>
+      OneOnRow = True
+      Row = 0
+      UseOwnFont = False
+      Visible = True
+      WholeRow = False
+    end
+    object ContractBar: TdxBar
+      Caption = 'ContractBar'
+      CaptionButtons = <>
+      DockControl = ContractDockControl
+      DockedDockControl = ContractDockControl
+      DockedLeft = 0
+      DockedTop = 0
+      FloatLeft = 877
+      FloatTop = 8
+      FloatClientWidth = 0
+      FloatClientHeight = 0
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbContractRefresh'
+        end>
+      OneOnRow = True
+      Row = 0
+      UseOwnFont = False
+      Visible = True
+      WholeRow = False
+    end
+    object bbPartnerRefresh: TdxBarButton
+      Action = actPartnerRefresh
+      Category = 0
+    end
+    object bbPartnerInsert: TdxBarButton
+      Action = actPartnerInsert
+      Category = 0
+    end
+    object bbPartnerEdit: TdxBarButton
+      Action = actPartnerUpdate
+      Category = 0
+    end
+    object bbContractRefresh: TdxBarButton
+      Action = actContractRefresh
+      Category = 0
+    end
+    object bbStatic: TdxBarStatic
+      Caption = '   '
+      Category = 0
+      Hint = '   '
+      Visible = ivAlways
+    end
+  end
+  object JuridicalDetailsDS: TDataSource
+    DataSet = JuridicalDetailsCDS
+    Left = 288
+    Top = 272
+  end
+  object JuridicalDetailsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 288
+    Top = 312
+  end
+  object PartnerDS: TDataSource
+    DataSet = PartnerCDS
+    Left = 352
+    Top = 248
+  end
+  object PartnerCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 352
+    Top = 296
+  end
+  object ContractDS: TDataSource
+    DataSet = ContractCDS
+    Left = 416
+    Top = 232
+  end
+  object ContractCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 416
+    Top = 272
+  end
+  object spJuridicalDetails: TdsdStoredProc
+    StoredProcName = 'gpSelect_ObjectHistory_JuridicalDetails'
+    DataSet = JuridicalDetailsCDS
+    DataSets = <
+      item
+        DataSet = JuridicalDetailsCDS
+      end>
+    Params = <
+      item
+        Name = 'injuridicalid'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
     Left = 288
     Top = 240
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 16
-    Top = 280
-  end
-  object cxPropertiesStore: TcxPropertiesStore
-    Components = <
+  object spPartner: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_PartnerJuridical'
+    DataSet = PartnerCDS
+    DataSets = <
       item
-        Component = Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Top'
-          'Width')
+        DataSet = PartnerCDS
       end>
-    StorageName = 'cxPropertiesStore'
-    Left = 304
-    Top = 120
+    Params = <
+      item
+        Name = 'injuridicalid'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    Left = 352
+    Top = 224
+  end
+  object spContract: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_ContractJuridical'
+    DataSet = ContractCDS
+    DataSets = <
+      item
+        DataSet = ContractCDS
+      end>
+    Params = <
+      item
+        Name = 'injuridicalid'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    Left = 416
+    Top = 208
+  end
+  object JuridicalDetailsAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = JuridicalDetailsGridDBTableView
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    Left = 288
+    Top = 200
+  end
+  object PartnerAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = PartnerGridDBTableView
+    OnDblClickActionList = <
+      item
+        Action = actPartnerUpdate
+      end>
+    ActionItemList = <
+      item
+        Action = actPartnerUpdate
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    Left = 352
+    Top = 184
+  end
+  object ContractAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = ContractGridDBTableView
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    Left = 416
+    Top = 168
+  end
+  object spJuridicalDetailsIU: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_ObjectHistory_JuridicalDetails'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioid'
+        Component = JuridicalDetailsCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'injuridicalid'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inoperdate'
+        Component = JuridicalDetailsCDS
+        ComponentItem = 'StartDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inbankid'
+        Component = JuridicalDetailsCDS
+        ComponentItem = 'BankId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'infullname'
+        Component = JuridicalDetailsCDS
+        ComponentItem = 'FullName'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'injuridicaladdress'
+        Component = JuridicalDetailsCDS
+        ComponentItem = 'JuridicalAddress'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inokpo'
+        Component = JuridicalDetailsCDS
+        ComponentItem = 'OKPO'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ininn'
+        Component = JuridicalDetailsCDS
+        ComponentItem = 'INN'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'innumbervat'
+        Component = JuridicalDetailsCDS
+        ComponentItem = 'NumberVAT'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inaccountername'
+        Component = JuridicalDetailsCDS
+        ComponentItem = 'AccounterName'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inbankaccount'
+        Component = JuridicalDetailsCDS
+        ComponentItem = 'BankAccount'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 288
+    Top = 160
+  end
+  object BankGuides: TdsdGuides
+    KeyField = 'Id'
+    FormName = 'TBankForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <>
+    Left = 464
+    Top = 160
   end
 end
