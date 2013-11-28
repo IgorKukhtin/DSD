@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Calendar(
     IN inEndDate           TDateTime , -- Дата окончания
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS void AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -47,9 +47,11 @@ BEGIN
         where Object_find.Value  is null) as tmpCalendar
      ;   
    
+   
    -- сохранили протокол
+   
    --PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
-
+   
 END;
 $BODY$
 
