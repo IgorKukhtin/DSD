@@ -332,6 +332,8 @@ begin
          try
            lDataSet.XMLData := TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [FStoredProcName]));
          except
+         //  on E: Exception do
+         //  ShowMessage(E.Message);
          end;
          if lDataSet.Active then begin
            while not lDataSet.Eof do begin

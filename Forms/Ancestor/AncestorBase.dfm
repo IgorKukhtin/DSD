@@ -26,7 +26,6 @@ object AncestorBaseForm: TAncestorBaseForm
     Top = 264
   end
   object ActionList: TActionList
-    Images = dmMain.ImageList
     Left = 71
     Top = 263
     object actRefresh: TdsdDataSetRefresh

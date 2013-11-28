@@ -7,11 +7,7 @@ RETURNS TVarChar AS
 $BODY$
 BEGIN
   WorkTimeKindName := COALESCE(WorkTimeKindName, '');
-  IF WorkHour > 0 THEN
-     RETURN (rtrim(to_char(WorkHour, 'fm9999999999999990.9999'),'.')||'/'||WorkTimeKindName)::TVarChar;
-  ELSE
-     RETURN ('')::TVarChar;
-  END IF;
+  RETURN to_char(WorkHour, WorkTimeKindName)::TVarChar;
 END;
 $BODY$
   LANGUAGE PLPGSQL IMMUTABLE;

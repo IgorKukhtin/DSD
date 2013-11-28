@@ -58,7 +58,6 @@ uses
   Bank in '..\..\Forms\Bank.pas' {CurrencyForm},
   GoodsGroup in '..\..\Forms\GoodsGroup.pas' {GoodsGroupForm},
   JuridicalGroup in '..\..\Forms\JuridicalGroup.pas' {JuridicalGroupForm},
-  PartnerEdit in '..\..\Forms\PartnerEdit.pas' {PartnerEditForm},
   GoodsEdit in '..\..\Forms\Guides\GoodsEdit.pas' {GoodsEditForm},
   GoodsTree in '..\..\Forms\Guides\GoodsTree.pas' {GoodsTreeForm},
   UnitEdit in '..\..\Forms\Guides\UnitEdit.pas' {UnitEditForm},
@@ -80,7 +79,6 @@ uses
   BankAccountEdit in '..\..\Forms\BankAccountEdit.pas' {BankAccountEditForm},
   BusinessEdit in '..\..\Forms\BusinessEdit.pas' {BusinessEditForm},
   Business in '..\..\Forms\Business.pas' {BusinessForm},
-  JuridicalEdit in '..\..\Forms\JuridicalEdit.pas' {JuridicalEditForm},
   Juridical in '..\..\Forms\Juridical.pas' {JuridicalForm},
   dsdDB in '..\..\SOURCE\COMPONENT\dsdDB.pas',
   UnitTree in '..\..\Forms\Guides\UnitTree.pas' {UnitTreeForm},
@@ -286,6 +284,9 @@ uses
   Personal_Object in '..\..\Forms\Guides\Personal_Object.pas' {Personal_ObjectForm: TParentForm},
   WorkTimeKind in '..\..\Forms\Enum\WorkTimeKind.pas' {WorkTimeKindForm: TParentForm},
   MovementDesc in '..\..\Forms\Kind\MovementDesc.pas' {MovementDescForm: TParentForm},
+  JuridicalEdit in '..\..\Forms\JuridicalEdit.pas' {JuridicalEditForm: TParentForm},
+  JuridicalDetailsTest in '..\SOURCE\ObjectHistory\All\JuridicalDetailsTest.pas',
+  PartnerEdit in '..\..\Forms\PartnerEdit.pas' {PartnerEditForm: TParentForm},
   WorkTimeKind_Object in '..\..\Forms\Enum\WorkTimeKind_Object.pas' {WorkTimeKind_ObjectForm: TParentForm};
 
 {$R *.RES}

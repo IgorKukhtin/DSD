@@ -3,38 +3,21 @@ unit JuridicalEdit;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxPropertiesStore,
-  cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
-  cxEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit, Vcl.ActnList,
-  Vcl.StdActns, cxCurrencyEdit, cxCheckBox,
-  Data.DB, Datasnap.DBClient, cxMaskEdit, cxDropDownEdit,
-  cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox, ParentForm, dsdGuides,
-  dsdDB, dsdAction, dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
-  dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
-  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
-  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
-  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
-  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
-  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
-  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
-  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
-  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, cxButtonEdit, dsdAddOn;
+  DataModul, AncestorDialog, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters, Vcl.Menus,
+  cxControls, cxContainer, cxEdit, dsdGuides, dsdDB, cxMaskEdit, cxButtonEdit,
+  cxCheckBox, cxCurrencyEdit, cxLabel, Vcl.Controls, cxTextEdit, System.Classes,
+  Vcl.ActnList, dsdAction, cxPropertiesStore, dsdAddOn, Vcl.StdCtrls, cxButtons,
+  cxPCdxBarPopupMenu, cxPC, Vcl.ExtCtrls, dxBar, cxClasses, cxDBEdit, cxStyles,
+  cxCustomData, cxFilter, cxData, cxDataStorage, Data.DB, cxDBData, cxGridLevel,
+  cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
+  cxGrid, Datasnap.DBClient, dxBarExtItems;
 
 type
-  TJuridicalEditForm = class(TParentForm)
+  TJuridicalEditForm = class(TAncestorDialogForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
-    cxButton1: TcxButton;
-    cxButton2: TcxButton;
-    ActionList: TActionList;
     spInsertUpdate: TdsdStoredProc;
-    dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
-    dsdDataSetRefresh: TdsdDataSetRefresh;
-    dsdFormClose: TdsdFormClose;
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
     cxLabel2: TcxLabel;
@@ -49,8 +32,54 @@ type
     cxLabel5: TcxLabel;
     ceInfoMoney: TcxButtonEdit;
     InfoMoneyGuides: TdsdGuides;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    cxPropertiesStore: TcxPropertiesStore;
+    JuridicalDetailTS: TcxTabSheet;
+    PartnerTS: TcxTabSheet;
+    Panel: TPanel;
+    dxBarManager: TdxBarManager;
+    PartnerBar: TdxBar;
+    PartnerDockControl: TdxBarDockControl;
+    edFullName: TcxDBTextEdit;
+    edJuridicalAddress: TcxDBTextEdit;
+    edOKPO: TcxDBTextEdit;
+    JuridicalDetailsGridDBTableView: TcxGridDBTableView;
+    JuridicalDetailsGridLevel: TcxGridLevel;
+    JuridicalDetailsGrid: TcxGrid;
+    JuridicalDetailsDS: TDataSource;
+    JuridicalDetailsCDS: TClientDataSet;
+    colJDData: TcxGridDBColumn;
+    PartnerDS: TDataSource;
+    PartnerCDS: TClientDataSet;
+    ContractDS: TDataSource;
+    ContractCDS: TClientDataSet;
+    PartnerGridDBTableView: TcxGridDBTableView;
+    PartnerGridLevel: TcxGridLevel;
+    PartnerGrid: TcxGrid;
+    ContractGridDBTableView: TcxGridDBTableView;
+    ContractGridLevel: TcxGridLevel;
+    ContractGrid: TcxGrid;
+    actPartnerRefresh: TdsdDataSetRefresh;
+    actContractRefresh: TdsdDataSetRefresh;
+    spJuridicalDetails: TdsdStoredProc;
+    spPartner: TdsdStoredProc;
+    spContract: TdsdStoredProc;
+    JuridicalDetailsAddOn: TdsdDBViewAddOn;
+    PartnerAddOn: TdsdDBViewAddOn;
+    ContractAddOn: TdsdDBViewAddOn;
+    PageControl: TcxPageControl;
+    bbPartnerRefresh: TdxBarButton;
+    bbContractRefresh: TdxBarButton;
+    ContractBar: TdxBar;
+    colPartnerCode: TcxGridDBColumn;
+    colPartnerAddress: TcxGridDBColumn;
+    colPartnerisErased: TcxGridDBColumn;
+    spJuridicalDetailsIU: TdsdStoredProc;
+    edINN: TcxDBTextEdit;
+    edAccounterName: TcxDBTextEdit;
+    edNumberVAT: TcxDBTextEdit;
+    BankGuides: TdsdGuides;
+    edBankAccount: TcxDBTextEdit;
+    JuridicalDetailsUDS: TdsdUpdateDataSet;
+    bbStatic: TdxBarStatic;
   private
     { Private declarations }
   public

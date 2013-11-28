@@ -148,9 +148,6 @@
 			<DCCReference Include="..\..\Forms\JuridicalGroup.pas">
 				<Form>JuridicalGroupForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\PartnerEdit.pas">
-				<Form>PartnerEditForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\GoodsEdit.pas">
 				<Form>GoodsEditForm</Form>
 			</DCCReference>
@@ -213,9 +210,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Business.pas">
 				<Form>BusinessForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\JuridicalEdit.pas">
-				<Form>JuridicalEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Juridical.pas">
 				<Form>JuridicalForm</Form>
@@ -815,6 +809,14 @@
 			<DCCReference Include="..\..\Forms\Kind\MovementDesc.pas">
 				<Form>MovementDescForm</Form>
 				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\JuridicalEdit.pas">
+				<Form>JuridicalEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\ObjectHistory\All\JuridicalDetailsTest.pas"/>
+			<DCCReference Include="..\..\Forms\PartnerEdit.pas">
+				<Form>PartnerEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Enum\WorkTimeKind_Object.pas">
 				<Form>WorkTimeKind_ObjectForm</Form>

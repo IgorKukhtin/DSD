@@ -3,9 +3,9 @@ unit ParentForm;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.ActnList, Vcl.Forms, Vcl.Dialogs, dsdDB, cxPropertiesStore,
-  frxClass, dsdAddOn;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.ActnList, Vcl.Forms,
+  Vcl.Dialogs, dsdDB, cxPropertiesStore, frxClass, dsdAddOn;
 
 const
   MY_MESSAGE = WM_USER + 1;
@@ -49,7 +49,8 @@ uses
   StdActns, cxDBTL, cxCurrencyEdit, cxDropDownEdit, dsdGuides,
   cxDBLookupComboBox, DBGrids, cxCheckBox, cxCalendar, ExtCtrls,
   cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, frxDBSet, dxBarExtItems,
-  cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView, dsdAction, ClientBankLoad;
+  cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView, dsdAction, ClientBankLoad,
+  cxDBEdit;
 
 {$R *.dfm}
 
@@ -223,15 +224,18 @@ initialization
   RegisterClass (TFileExit);
   RegisterClass (TPopupMenu);
   RegisterClass (TPanel);
-  // Библиотека DevExpress
 
+  // Библиотека DevExpress
+  RegisterClass (TdxBarDockControl);
   RegisterClass (TcxButton);
   RegisterClass (TcxButtonEdit);
   RegisterClass (TcxCheckBox);
   RegisterClass (TcxCurrencyEdit);
   RegisterClass (TcxDateEdit);
+  RegisterClass (TcxDBButtonEdit);
   RegisterClass (TcxDBPivotGrid);
   RegisterClass (TcxDBPivotGridField);
+  RegisterClass (TcxDBTextEdit);
   RegisterClass (TcxDBTreeList);
   RegisterClass (TcxDBTreeListColumn);
   RegisterClass (TcxGroupBox);
