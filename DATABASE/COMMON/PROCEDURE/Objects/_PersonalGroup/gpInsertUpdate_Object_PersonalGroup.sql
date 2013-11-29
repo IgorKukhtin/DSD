@@ -16,6 +16,10 @@ $BODY$
    DECLARE vbCode_calc Integer;   
 
 BEGIN
+   -- !!! это временно !!!
+   -- IF COALESCE(ioId, 0) = 0
+   -- THEN ioId := (SELECT PersonalGroupId FROM Object_PersonalGroup_View WHERE PersonalGroupName = inName AND UnitId = inUnitId);
+   -- END IF;
    
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_PersonalGroup());
