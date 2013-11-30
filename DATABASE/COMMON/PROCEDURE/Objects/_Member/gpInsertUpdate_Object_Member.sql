@@ -18,7 +18,11 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;   
 BEGIN
-   
+   -- !!! это временно !!!
+   -- IF COALESCE(ioId, 0) = 0
+   -- THEN ioId := (SELECT Id FROM Object WHERE ValueData = inName AND DescId = zc_Object_Member());
+   -- END IF;
+
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Member());
    vbUserId := inSession;
