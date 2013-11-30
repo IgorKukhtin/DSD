@@ -195,7 +195,7 @@ object StaffListDataForm: TStaffListDataForm
     Width = 937
     Height = 144
     Align = alBottom
-    TabOrder = 3
+    TabOrder = 2
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''

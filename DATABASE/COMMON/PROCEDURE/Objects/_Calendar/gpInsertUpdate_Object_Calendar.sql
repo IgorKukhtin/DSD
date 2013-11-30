@@ -2,8 +2,10 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Calendar(Integer, TDateTime, TDateTime, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Calendar( TDateTime, TDateTime, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Calendar(
-    IN inId                Integer   , -- ключ объекта <Календарь рабочих дней>
+   -- IN inId                Integer   , -- ключ объекта <Календарь рабочих дней>
     IN inStartDate         TDateTime , -- Дата начала
     IN inEndDate           TDateTime , -- Дата окончания
     IN inSession           TVarChar    -- сессия пользователя
@@ -56,7 +58,7 @@ END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Calendar (Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Calendar (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
   
 /*---------------------------------------------------------------------------------------

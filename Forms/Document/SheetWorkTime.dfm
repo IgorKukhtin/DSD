@@ -528,7 +528,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       item
         Component = GuidesUnit
       end>
-    Left = 248
-    Top = 48
+    Left = 344
+    Top = 16
   end
 end

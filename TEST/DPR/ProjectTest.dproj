@@ -817,9 +817,14 @@
 			<DCCReference Include="..\SOURCE\ObjectHistory\All\JuridicalDetailsTest.pas"/>
 			<DCCReference Include="..\..\Forms\PartnerEdit.pas">
 				<Form>PartnerEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Enum\WorkTimeKind_Object.pas">
 				<Form>WorkTimeKind_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Calendar.pas">
+				<Form>CalendarForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

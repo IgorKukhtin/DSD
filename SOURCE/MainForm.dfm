@@ -845,6 +845,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbCalendar'
+        end
+        item
+          Visible = True
           ItemName = 'bbSheetWorkTime'
         end
         item
@@ -927,6 +931,10 @@ object MainForm: TMainForm
       Action = actContractArticle
       Category = 0
     end
+    object bbCalendar: TdxBarButton
+      Action = actCalendar
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Left = 192
@@ -976,6 +984,14 @@ object MainForm: TMainForm
       Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1080' '
       Hint = #1044#1086#1083#1078#1085#1086#1089#1090#1080' '
       FormName = 'TPositionForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actCalendar: TdsdOpenForm
+      Category = #1055#1077#1088#1089#1086#1085#1072#1083
+      Caption = #1050#1072#1083#1077#1085#1076#1072#1088#1100' '#1088#1072#1073#1086#1095#1080#1093' '#1076#1085#1077#1081
+      Hint = #1050#1072#1083#1077#1085#1076#1072#1088#1100' '#1088#1072#1073#1086#1095#1080#1093' '#1076#1085#1077#1081
+      FormName = 'TCalendarForm'
       GuiParams = <>
       isShowModal = False
     end

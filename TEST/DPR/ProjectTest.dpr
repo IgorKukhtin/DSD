@@ -287,7 +287,8 @@ uses
   JuridicalEdit in '..\..\Forms\JuridicalEdit.pas' {JuridicalEditForm: TParentForm},
   JuridicalDetailsTest in '..\SOURCE\ObjectHistory\All\JuridicalDetailsTest.pas',
   PartnerEdit in '..\..\Forms\PartnerEdit.pas' {PartnerEditForm: TParentForm},
-  WorkTimeKind_Object in '..\..\Forms\Enum\WorkTimeKind_Object.pas' {WorkTimeKind_ObjectForm: TParentForm};
+  WorkTimeKind_Object in '..\..\Forms\Enum\WorkTimeKind_Object.pas' {WorkTimeKind_ObjectForm: TParentForm},
+  Calendar in '..\..\Forms\Guides\Calendar.pas' {CalendarForm: TParentForm};
 
 {$R *.RES}
 

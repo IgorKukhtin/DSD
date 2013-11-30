@@ -700,6 +700,9 @@ begin
   //Типы документов
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementDescForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementDescForm');
+  //Календарь рабочих дней
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCalendarForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCalendarForm');
 end;
 
 procedure TLoadFormTest.LoadPersonalFormTest;
