@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Calendar(
     IN inEndDate           TDateTime , -- Дата окончания
     IN inSession           TVarChar    -- сессия пользователя
 )
-RETURNS void AS
+RETURNS Integer AS   --void
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -51,7 +51,7 @@ BEGIN
    
    
    -- сохранили протокол
-   
+   return 0;
    --PERFORM lpInsert_ObjectProtocol (inId, vbUserId);
    
 END;
@@ -68,4 +68,4 @@ ALTER FUNCTION gpInsertUpdate_Object_Calendar (TDateTime, TDateTime, TVarChar) O
 */
 
 -- тест
--- SELECT * FROM lpInsertUpdate_Object_Calendar (0,  true, '12.11.2013', '2')
+-- SELECT * FROM gpInsertUpdate_Object_Calendar ('12.11.2013', '12.12.2013', '2')
