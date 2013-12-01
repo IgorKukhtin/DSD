@@ -117,6 +117,8 @@ type
     bbErasedSumm: TdxBarButton;
     bbUnErasedSumm: TdxBarButton;
     RefreshDispatcher: TRefreshDispatcher;
+    clHoursDay: TcxGridDBColumn;
+    clcsummSummKindComment: TcxGridDBColumn;
   private
     { Private declarations }
   public
