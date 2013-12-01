@@ -50,6 +50,7 @@ type
     procedure LoadLossFormTest;
     procedure LoadMeasureFormTest;
     procedure LoadMemberFormTest;
+    procedure LoadModelServiceFormTest;
     procedure LoadPartnerFormTest;
     procedure LoadPaidKindFormTest;
     procedure LoadPersonalSendCashFormTest;
@@ -74,6 +75,7 @@ type
     procedure LoadSheetWorkTimeFormTest;
     procedure LoadServiceDocumentFormTest;
     procedure LoadServiceFormTest;
+    procedure LoadStaffListFormTest;
     procedure LoadTransportFormTest;
     procedure LoadTradeMarkFormTest;
     procedure LoadUnionFormTest;
@@ -663,6 +665,42 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TWorkTimeKind_ObjectForm');
 end;
 
+procedure TLoadFormTest.LoadStaffListFormTest;
+begin
+  //штатное расписание данные
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListDataForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStaffListDataForm');
+  //штатное расписание выбор
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStaffListForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStaffListEditForm');
+  //Типы сумм для штатного расписания
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListSummKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStaffListSummKindForm');
+  //Календарь рабочих дней
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCalendarForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCalendarForm');
+end;
+
+procedure TLoadFormTest.LoadModelServiceFormTest;
+begin
+ //Типы модели начисления
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TModelServiceKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TModelServiceKindForm');
+  //Типы выбора данных
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TModelServiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TModelServiceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TModelServiceEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TModelServiceEditForm');
+  //Типы выбора данных
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSelectKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSelectKindForm');
+  //Типы документов
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementDescForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementDescForm');
+end;
+
 procedure TLoadFormTest.LoadPositionFormTest;
 begin
   // должности
@@ -675,34 +713,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPositionLevelForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPositionLevelEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPositionLevelEditForm');
-  //штатное расписание данные
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListDataForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TStaffListDataForm');
-  //штатное расписание выбор
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TStaffListForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TStaffListEditForm');
-  //Типы сумм для штатного расписания
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStaffListSummKindForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TStaffListSummKindForm');
-  //Типы модели начисления
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TModelServiceKindForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TModelServiceKindForm');
-  //Типы выбора данных
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSelectKindForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSelectKindForm');
-  //Типы выбора данных
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TModelServiceForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TModelServiceForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TModelServiceEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TModelServiceEditForm');
-  //Типы документов
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementDescForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TMovementDescForm');
-  //Календарь рабочих дней
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCalendarForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TCalendarForm');
 end;
 
 procedure TLoadFormTest.LoadPersonalFormTest;
