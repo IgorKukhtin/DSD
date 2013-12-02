@@ -87,6 +87,7 @@ type
     spMovementReCompleteAll: TdsdStoredProc;
     bbReCompleteAll: TdxBarButton;
     actReCompleteAll: TdsdExecStoredProc;
+    clPersonalName: TcxGridDBColumn;
   private
   public
   end;

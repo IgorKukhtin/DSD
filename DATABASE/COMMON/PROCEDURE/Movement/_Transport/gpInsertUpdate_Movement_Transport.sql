@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_Transport (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar)
 
--- DROP FUNCTION gpInsertUpdate_Movement_Transport (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Transport (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Transport (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TFloat,  TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Transport(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -21,7 +22,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Transport(
     IN inCarTrailerId         Integer   , -- Автомобиль (прицеп)
     IN inPersonalDriverId     Integer   , -- Сотрудник (водитель)
     IN inPersonalDriverMoreId Integer   , -- Сотрудник (водитель, дополнительный)
-    IN inPersonal             Integer   , -- Сотрудник (экспедитор)
+    IN inPersonalId           Integer   , -- Сотрудник (экспедитор)
     IN inUnitForwardingId     Integer   , -- Подразделение (Место отправки)
 
     IN inSession              TVarChar    -- сессия пользователя

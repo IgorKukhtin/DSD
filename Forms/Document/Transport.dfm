@@ -484,6 +484,7 @@
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentVert = vaCenter
+            Width = 20
           end
           object colIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
@@ -2461,6 +2462,13 @@
         Component = MasterCDS
         ComponentItem = 'RouteKindId'
         ParamType = ptInput
+      end
+      item
+        Name = 'inComment'
+        Component = MasterCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
       end>
     Left = 75
     Top = 226
@@ -2587,6 +2595,13 @@
         Name = 'inPersonalDriverMoreId'
         Value = ''
         Component = GuidesPersonalDriverMore
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalId'
+        Value = ''
+        Component = GuidesPersonal
         ComponentItem = 'Key'
         ParamType = ptInput
       end

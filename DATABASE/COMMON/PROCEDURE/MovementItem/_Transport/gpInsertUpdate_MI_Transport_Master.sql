@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MI_Transport_Master()
-
--- DROP FUNCTION gpInsertUpdate_MI_Transport_Master();
+DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat,Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat,Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Master(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
