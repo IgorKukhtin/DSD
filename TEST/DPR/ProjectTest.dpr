@@ -288,7 +288,8 @@ uses
   JuridicalDetailsTest in '..\SOURCE\ObjectHistory\All\JuridicalDetailsTest.pas',
   PartnerEdit in '..\..\Forms\PartnerEdit.pas' {PartnerEditForm: TParentForm},
   WorkTimeKind_Object in '..\..\Forms\Enum\WorkTimeKind_Object.pas' {WorkTimeKind_ObjectForm: TParentForm},
-  Calendar in '..\..\Forms\Guides\Calendar.pas' {CalendarForm: TParentForm};
+  Calendar in '..\..\Forms\Guides\Calendar.pas' {CalendarForm: TParentForm},
+  GoodsTree_Object in '..\..\Forms\Guides\GoodsTree_Object.pas' {GoodsTree_ObjectForm: TParentForm};
 
 {$R *.RES}
 

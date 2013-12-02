@@ -206,6 +206,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsTreeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoods_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoods_ObjectForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTree_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsTree_ObjectForm');
 end;
 
 procedure TLoadFormTest.LoadGoodsGroupFormTest;

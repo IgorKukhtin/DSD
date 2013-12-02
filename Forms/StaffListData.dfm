@@ -256,8 +256,8 @@ object StaffListDataForm: TStaffListDataForm
             Default = True
             Kind = bkEllipsis
           end>
+        Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 90
       end
       object clslsummComment: TcxGridDBColumn
@@ -327,8 +327,8 @@ object StaffListDataForm: TStaffListDataForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
