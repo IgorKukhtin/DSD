@@ -25,6 +25,7 @@ object GoodsTree_ObjectForm: TGoodsTree_ObjectForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = 180
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -66,19 +67,11 @@ object GoodsTree_ObjectForm: TGoodsTree_ObjectForm
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
-      object clTradeMark: TcxGridDBColumn
-        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
-        DataBinding.FieldName = 'TradeMarkName'
+      object clDescName: TcxGridDBColumn
+        Caption = #1069#1083#1077#1084#1077#1085#1090
+        DataBinding.FieldName = 'DescName'
         HeaderAlignmentVert = vaCenter
-        Width = 82
-      end
-      object clErased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'isErased'
-        PropertiesClassName = 'TcxCheckBoxProperties'
-        Visible = False
-        HeaderAlignmentVert = vaCenter
-        Width = 50
+        Width = 25
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -380,7 +373,7 @@ object GoodsTree_ObjectForm: TGoodsTree_ObjectForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Goods'
+    StoredProcName = 'gpSelect_Object_Goods_GoodsGroup'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -430,8 +423,8 @@ object GoodsTree_ObjectForm: TGoodsTree_ObjectForm
         DataSet = TreeDataSet
       end>
     Params = <>
-    Left = 96
-    Top = 144
+    Left = 112
+    Top = 152
   end
   object TreeDataSet: TClientDataSet
     Aggregates = <>
@@ -458,6 +451,6 @@ object GoodsTree_ObjectForm: TGoodsTree_ObjectForm
     SortImages = dmMain.SortImageList
     DBTreeList = cxDBTreeList
     Left = 48
-    Top = 160
+    Top = 232
   end
 end

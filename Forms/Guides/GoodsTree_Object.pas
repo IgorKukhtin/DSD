@@ -56,9 +56,7 @@ type
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clGoodsGroup: TcxGridDBColumn;
-    clTradeMark: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
-    clErased: TcxGridDBColumn;
     cxDBTreeList: TcxDBTreeList;
     ceParentName: TcxDBTreeListColumn;
     TreeDS: TDataSource;
@@ -66,6 +64,7 @@ type
     TreeDataSet: TClientDataSet;
     dsdDBTreeAddOn: TdsdDBTreeAddOn;
     cxSplitter: TcxSplitter;
+    clDescName: TcxGridDBColumn;
   private
     { Private declarations }
   public
