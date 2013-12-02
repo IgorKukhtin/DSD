@@ -259,6 +259,10 @@ type
     actPrintAdmin: TdsdPrintAction;
     bbPrintTo: TdxBarButton;
     bbPrintAdmin: TdxBarButton;
+    cxLabel16: TcxLabel;
+    edPersonal: TcxButtonEdit;
+    GuidesPersonal: TdsdGuides;
+    clComment: TcxGridDBColumn;
   private
   public
   end;

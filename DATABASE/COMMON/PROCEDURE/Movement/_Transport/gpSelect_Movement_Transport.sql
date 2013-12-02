@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , CarName TVarChar, CarModelName TVarChar, CarTrailerName TVarChar
              , PersonalDriverName TVarChar
              , PersonalDriverMoreName TVarChar
+             , PersonalName TVarChar
              , UnitForwardingName TVarChar
               )
 AS
@@ -51,6 +52,7 @@ BEGIN
 
            , View_PersonalDriver.PersonalName     AS PersonalDriverName
            , View_PersonalDriverMore.PersonalName AS PersonalDriverMoreName
+           , View_Personal.PersonalName           AS PersonalName
 
            , Object_UnitForwarding.ValueData AS UnitForwardingName
    
@@ -109,6 +111,11 @@ BEGIN
                                         AND MovementLinkObject_PersonalDriverMore.DescId = zc_MovementLinkObject_PersonalDriverMore()
             LEFT JOIN Object_Personal_View AS View_PersonalDriverMore ON View_PersonalDriverMore.PersonalId = MovementLinkObject_PersonalDriverMore.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
+                                         ON MovementLinkObject_Personal.MovementId = Movement.Id
+                                        AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
+            LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = MovementLinkObject_Personal.ObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
                                          ON MovementLinkObject_UnitForwarding.MovementId = Movement.Id
                                         AND MovementLinkObject_UnitForwarding.DescId = zc_MovementLinkObject_UnitForwarding()
@@ -126,6 +133,7 @@ ALTER FUNCTION gpSelect_Movement_Transport (TDateTime, TDateTime, TVarChar) OWNE
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 02.12.13         * add Personal (changes in wiki)
  23.10.13                                        * add zfConvert_StringToNumber
  18.10.13                                        * add CarModelName
  30.09.13                                        * add Object_Personal_View

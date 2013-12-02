@@ -3,7 +3,7 @@
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090'>'
   ClientHeight = 547
-  ClientWidth = 996
+  ClientWidth = 1200
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,12 @@
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 996
+    Width = 1200
     Height = 100
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 996
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 23
@@ -52,8 +53,8 @@
       Caption = #1044#1072#1090#1072
     end
     object edUnitForwarding: TcxButtonEdit
-      Left = 845
-      Top = 23
+      Left = 1037
+      Top = 63
       Properties.Buttons = <
         item
           Default = True
@@ -76,8 +77,8 @@
       Width = 100
     end
     object cxLabel3: TcxLabel
-      Left = 845
-      Top = 5
+      Left = 1037
+      Top = 50
       Caption = #1052#1077#1089#1090#1086' '#1086#1090#1087#1088#1072#1074#1082#1080
     end
     object cxLabel4: TcxLabel
@@ -196,14 +197,14 @@
       Width = 150
     end
     object edComment: TcxTextEdit
-      Left = 845
-      Top = 63
+      Left = 856
+      Top = 23
       TabOrder = 13
-      Width = 150
+      Width = 331
     end
     object cxLabel12: TcxLabel
-      Left = 845
-      Top = 45
+      Left = 846
+      Top = 0
       Caption = ' '#1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' '
     end
     object edHoursWork: TcxCurrencyEdit
@@ -264,29 +265,49 @@
       Top = 45
       Caption = #1057#1090#1072#1090#1091#1089
     end
+    object cxLabel16: TcxLabel
+      Left = 856
+      Top = 50
+      Caption = #1042#1086#1076#1080#1090#1077#1083#1100', '#1076#1086#1087#1086#1083#1085#1080#1090#1077#1083#1100#1085#1099#1081
+    end
+    object edPersonal: TcxButtonEdit
+      Left = 856
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      Properties.ReadOnly = True
+      TabOrder = 31
+      Width = 160
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 126
-    Width = 996
+    Width = 1200
     Height = 421
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 996
     ClientRectBottom = 421
-    ClientRectRight = 996
+    ClientRectRight = 1200
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 996
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 996
+        Width = 1200
         Height = 252
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 996
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -459,6 +480,11 @@
             Options.Editing = False
             Width = 70
           end
+          object clComment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentVert = vaCenter
+          end
           object colIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
@@ -476,10 +502,11 @@
       object cxGridChild: TcxGrid
         Left = 0
         Top = 257
-        Width = 996
+        Width = 1200
         Height = 140
         Align = alBottom
         TabOrder = 1
+        ExplicitWidth = 996
         object cxGridChildDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -754,22 +781,25 @@
       object cxSplitterChild: TcxSplitter
         Left = 0
         Top = 252
-        Width = 996
+        Width = 1200
         Height = 5
         AlignSplitter = salBottom
         Control = cxGridChild
+        ExplicitWidth = 996
       end
     end
     object cxTabSheetIncome: TcxTabSheet
       Caption = #1047#1072#1087#1088#1072#1074#1082#1072
       ImageIndex = 2
+      ExplicitWidth = 996
       object cxGridIncome: TcxGrid
         Left = 0
         Top = 0
-        Width = 996
+        Width = 1200
         Height = 397
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 996
         object cxGridIncomeDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = IncomeDS
@@ -1054,13 +1084,15 @@
     object cxTabSheetReport: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 3
+      ExplicitWidth = 996
       object cxGridReport: TcxGrid
         Left = 0
         Top = 0
-        Width = 996
+        Width = 1200
         Height = 397
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 996
         object cxGridReportDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ReportDS
@@ -1200,13 +1232,15 @@
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitWidth = 996
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 996
+        Width = 1200
         Height = 397
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 996
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -2232,6 +2266,18 @@
         ComponentItem = 'TextValue'
       end
       item
+        Name = 'PersonalId'
+        Value = ''
+        Component = GuidesPersonal
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PersonalName'
+        Value = ''
+        Component = GuidesPersonal
+        ComponentItem = 'TextValue'
+      end
+      item
         Name = 'UnitForwardingId'
         Value = ''
         Component = GuidesUnitForwarding
@@ -2647,8 +2693,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 898
-    Top = 83
+    Left = 1098
+    Top = 91
   end
   object spInsertUpdateMIChild: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_Transport_Child'
@@ -2853,8 +2899,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -3575,5 +3621,29 @@
     BCDToCurrency = False
     Left = 486
     Top = 221
+  end
+  object GuidesPersonal: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonal
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPersonal
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPersonal
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 922
+    Top = 75
   end
 end
