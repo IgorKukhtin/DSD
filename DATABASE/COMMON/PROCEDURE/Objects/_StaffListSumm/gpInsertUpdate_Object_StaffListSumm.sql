@@ -17,7 +17,7 @@ $BODY$
 BEGIN
 --raise exception '%', inStaffListId;
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_StaffListSumm()());
+   -- vbUserId := PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_StaffListSumm());
    vbUserId := inSession;
    
     -- проверка
