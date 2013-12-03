@@ -1,6 +1,6 @@
--- Function: gpSelect_Object_StaffListSumm(TVarChar)
+-- Function: gpSelect_Object_StaffListSumm (TVarChar)
 
-DROP FUNCTION IF EXISTS gpSelect_Object_StaffListSumm(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_StaffListSumm (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_StaffListSumm(
     IN inSession     TVarChar       -- сессия пользователя
@@ -9,8 +9,8 @@ RETURNS TABLE (Id Integer
              , Value TFloat
              , Comment TVarChar
              , StaffListId Integer, StaffListName TVarChar                
-             , StaffListMasterId Integer, StaffListMasterCode Integer                
-             , StaffListSummKindId Integer, StaffListSummKindName TVarChar                
+             , StaffListMasterId Integer, StaffListMasterCode Integer
+             , StaffListSummKindId Integer, StaffListSummKindName TVarChar, SummKindComment TVarChar
              , isErased boolean
              ) AS
 $BODY$
@@ -34,6 +34,7 @@ BEGIN
 
          , Object_StaffListSummKind.Id          AS StaffListSummKindId
          , Object_StaffListSummKind.ValueData   AS StaffListSummKindName
+         , ObjectString_StaffListSummKind_Comment.ValueData  AS SummKindComment
 
          , Object_StaffListSumm.isErased AS isErased
          
@@ -53,7 +54,10 @@ BEGIN
                                ON ObjectLink_StaffListSumm_StaffListSummKind.ObjectId = Object_StaffListSumm.Id
                               AND ObjectLink_StaffListSumm_StaffListSummKind.DescId = zc_ObjectLink_StaffListSumm_StaffListSummKind()
           LEFT JOIN Object AS Object_StaffListSummKind ON Object_StaffListSummKind.Id = ObjectLink_StaffListSumm_StaffListSummKind.ChildObjectId
-           
+
+          LEFT JOIN ObjectString AS ObjectString_StaffListSummKind_Comment ON ObjectString_StaffListSummKind_Comment.ObjectId = Object_StaffListSummKind.Id 
+                                                                          AND ObjectString_StaffListSummKind_Comment.DescId = zc_ObjectString_StaffListSummKind_Comment()   
+
           LEFT JOIN ObjectFloat AS ObjectFloat_Value 
                                 ON ObjectFloat_Value.ObjectId = Object_StaffListSumm.Id 
                                AND ObjectFloat_Value.DescId = zc_ObjectFloat_StaffListSumm_Value()
@@ -66,14 +70,13 @@ BEGIN
   
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_Object_StaffListSumm (TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.11.13                                        * add SummKindComment
  22.11.13                                        * Cyr1251
  30.10.13         *
 */

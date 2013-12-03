@@ -39,6 +39,8 @@ BEGIN
             , Object_RouteKindFreight.Id         AS RouteKindId_Freight
             , Object_RouteKindFreight.ValueData  AS RouteKindName_Freight
  
+            , MIString_Comment.ValueData   AS Comment
+            
             , MovementItem.isErased     AS isErased
             
         FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -60,6 +62,10 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_EndOdometre
                                          ON MIFloat_EndOdometre.MovementItemId = MovementItem.Id
                                         AND MIFloat_EndOdometre.DescId = zc_MIFloat_EndOdometre()
+
+             LEFT JOIN MovementItemString AS MIString_Comment
+                                          ON MIString_Comment.MovementItemId = MovementItem.Id 
+                                         AND MIString_Comment.DescId = zc_MIString_Comment()
 
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Freight
                                               ON MILinkObject_Freight.MovementItemId = MovementItem.Id 
@@ -358,6 +364,7 @@ ALTER FUNCTION gpSelect_MI_Transport (Integer, Boolean, Boolean, TVarChar) OWNER
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 02.12.13         * add Comment
  26.10.13                                        * add zc_MILinkObject_RouteKindFreight
  24.10.13                                        * add zfCalc_RateFuelValue_...
  13.10.13                                        * add ObjectLink_Car_FuelAll.ChildObjectId IS NOT NULL

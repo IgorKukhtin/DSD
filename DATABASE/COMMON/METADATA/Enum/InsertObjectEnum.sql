@@ -131,8 +131,8 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_HoursPlan(),       inDescId:= zc_Object_StaffListSummKind(), inCode:= 4, inName:= 'Фонд за общий план часов (постоянный) в месяц на человека', inEnumName:= 'zc_Enum_StaffListSummKind_HoursPlan');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_HoursDay(),        inDescId:= zc_Object_StaffListSummKind(), inCode:= 5, inName:= 'Фонд за план часов (расчетный) в месяц на человека'       , inEnumName:= 'zc_Enum_StaffListSummKind_HoursDay');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_HoursPlanConst(),  inDescId:= zc_Object_StaffListSummKind(), inCode:= 6, inName:= 'Фонд постоянный для факт часов в месяц на человека'       , inEnumName:= 'zc_Enum_StaffListSummKind_HoursPlanConst');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_HoursDayConst(),   inDescId:= zc_Object_StaffListSummKind(), inCode:= 7, inName:= '(не используется).Фонд постоянный для факт часов в рабочие дни на человека' , inEnumName:= 'zc_Enum_StaffListSummKind_HoursDayConst');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_WorkHours(),       inDescId:= zc_Object_StaffListSummKind(), inCode:= 11,inName:= 'Количество рабочих часов в день'                          , inEnumName:= 'zc_Enum_StaffListSummKind_WorkHours');
+     -- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_HoursDayConst(),   inDescId:= zc_Object_StaffListSummKind(), inCode:= 7, inName:= '(не используется).Фонд постоянный для факт часов в рабочие дни на человека' , inEnumName:= 'zc_Enum_StaffListSummKind_HoursDayConst');
+     -- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_StaffListSummKind_WorkHours(),       inDescId:= zc_Object_StaffListSummKind(), inCode:= 11,inName:= '(не используется).Количество рабочих часов в день'                          , inEnumName:= 'zc_Enum_StaffListSummKind_WorkHours');
 
 
      -- !!! Состояние договора
@@ -328,8 +328,8 @@ BEGIN
      PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_StaffListSummKind_Comment(), zc_Enum_StaffListSummKind_HoursPlan(),     '1-важно,2,3 не важны.За месяц расчетная(Цена часа=фонд/1-важно) сумма будет начислена из расчета "факт часов"*"Цена часа" каждому кто отмечен в табеле.(возможна переработка-слесаря).');
      PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_StaffListSummKind_Comment(), zc_Enum_StaffListSummKind_HoursDay(),      '2-важно,1,3 не важны.За месяц расчетная(Цена часа=фонд/2-важно*р.дн.)сумма будет начислена из расчета "факт часов"*"Цена часа" каждому кто отмечен в табеле.(возможна переработка-слесаря).');
      PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_StaffListSummKind_Comment(), zc_Enum_StaffListSummKind_HoursPlanConst(),'1,2,3 не важны.За месяц эта сумма будет начислена (распределяется в пропорции факт часов человека) каждому кто отмечен в табеле.');
-     PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_StaffListSummKind_Comment(), zc_Enum_StaffListSummKind_HoursDayConst(), '(не используется).За месяц эта сумма будет начислена в пропорции факт/план_часов*р.дн. каждому кто отмечен в табеле.');
-     PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_StaffListSummKind_Comment(), zc_Enum_StaffListSummKind_WorkHours(),     'Используется для расчета Фонда за план часов в рабочие дни на человека.');
+     -- PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_StaffListSummKind_Comment(), zc_Enum_StaffListSummKind_HoursDayConst(), '(не используется).За месяц эта сумма будет начислена в пропорции факт/план_часов*р.дн. каждому кто отмечен в табеле.');
+     -- PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_StaffListSummKind_Comment(), zc_Enum_StaffListSummKind_WorkHours(),     '(не используется).Используется для расчета Фонда за план часов в рабочие дни на человека.');
 END $$;
 
 
@@ -337,6 +337,7 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.11.13                                        * add del zc_Enum_StaffListSummKind_WorkHours and zc_Enum_StaffListSummKind_HoursDayConst
  28.11.13                                        * change comment
  28.11.13                                        * add zc_Enum_WorkTimeKind_Trainee50 and zc_Enum_WorkTimeKind_Quit and zc_Enum_WorkTimeKind_Trial
  19.11.13                                        * add zc_Enum_StaffListSummKind_HoursPlanConst and zc_Enum_StaffListSummKind_HoursDayConst

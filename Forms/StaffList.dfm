@@ -296,7 +296,12 @@ object StaffListForm: TStaffListForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = 0
+        ParamType = ptInput
+      end>
     Left = 48
     Top = 216
   end

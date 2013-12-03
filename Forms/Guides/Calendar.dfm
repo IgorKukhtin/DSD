@@ -493,6 +493,9 @@ object CalendarForm: TCalendarForm
       StoredProcList = <
         item
           StoredProc = dsdStoredProcInsCalendar
+        end
+        item
+          StoredProc = dsdStoredProc
         end>
       Caption = #1056#1072#1089#1096#1080#1088#1080#1090#1100' '#1082#1072#1083#1077#1085#1076#1072#1088#1100
     end

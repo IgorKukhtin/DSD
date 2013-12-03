@@ -30,7 +30,7 @@ type
     dsdDataSetRefresh: TdsdDataSetRefresh;
     dsdFormClose1: TdsdFormClose;
     spInsertUpdate: TdsdStoredProc;
-    dsdFormParams: TdsdFormParams;
+    FormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn;
@@ -50,6 +50,8 @@ type
     edHoursPlan: TcxCurrencyEdit;
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
+    cxLabel3: TcxLabel;
+    edHoursDay: TcxCurrencyEdit;
 
   private
     { Private declarations }

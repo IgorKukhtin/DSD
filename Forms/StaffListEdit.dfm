@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1064#1090#1072#1090#1085#1091#1102' '#1077#1076#1080#1085#1080#1094#1091'>'
-  ClientHeight = 398
-  ClientWidth = 355
+  ClientHeight = 369
+  ClientWidth = 342
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,17 +13,17 @@
   KeyPreview = True
   OldCreateOrder = False
   AddOnFormData.RefreshAction = dsdDataSetRefresh
-  AddOnFormData.Params = dsdFormParams
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxLabel1: TcxLabel
     Left = 183
-    Top = 55
-    Caption = #1050#1086#1083'. '#1077#1076#1080#1085#1080#1094
+    Top = 5
+    Caption = #1050#1086#1083'. '#1095#1077#1083#1086#1074#1077#1082
   end
   object cxButton1: TcxButton
-    Left = 64
-    Top = 365
+    Left = 76
+    Top = 334
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -32,8 +32,8 @@
     TabOrder = 1
   end
   object cxButton2: TcxButton
-    Left = 205
-    Top = 365
+    Left = 217
+    Top = 334
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -43,104 +43,119 @@
     TabOrder = 2
   end
   object cxLabel2: TcxLabel
-    Left = 35
+    Left = 18
     Top = 55
-    Caption = #1055#1083#1072#1085' '#1095#1072#1089#1086#1074
+    Caption = #1054#1073#1097'.'#1087#1083'.'#1095'.'#1074' '#1084#1077#1089'. '#1085#1072' '#1095#1077#1083#1086#1074#1077#1082#1072
   end
   object cxLabel5: TcxLabel
-    Left = 35
-    Top = 115
+    Left = 19
+    Top = 104
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   object ceUnit: TcxButtonEdit
-    Left = 35
-    Top = 138
+    Left = 19
+    Top = 127
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 5
-    Width = 270
+    Width = 305
   end
   object cxLabel6: TcxLabel
-    Left = 35
-    Top = 181
+    Left = 19
+    Top = 166
     Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
   end
   object cePosition: TcxButtonEdit
-    Left = 35
-    Top = 204
+    Left = 19
+    Top = 189
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 7
-    Width = 270
+    Width = 305
   end
   object cxLabel7: TcxLabel
-    Left = 35
-    Top = 239
+    Left = 19
+    Top = 221
     Caption = #1056#1072#1079#1088#1103#1076
   end
   object cePositionLevel: TcxButtonEdit
-    Left = 35
-    Top = 262
+    Left = 19
+    Top = 244
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 9
-    Width = 270
+    Width = 305
   end
   object edComment: TcxTextEdit
-    Left = 34
-    Top = 328
+    Left = 18
+    Top = 298
     TabOrder = 10
-    Width = 270
+    Width = 306
   end
   object cxLabel8: TcxLabel
-    Left = 34
-    Top = 305
+    Left = 18
+    Top = 275
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edPersonalCount: TcxCurrencyEdit
     Left = 181
-    Top = 78
+    Top = 28
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0'
     TabOrder = 12
-    Width = 123
+    Width = 143
   end
   object edHoursPlan: TcxCurrencyEdit
-    Left = 35
+    Left = 18
     Top = 78
     Properties.Alignment.Horz = taRightJustify
     Properties.Alignment.Vert = taVCenter
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = ',0'
     TabOrder = 13
-    Width = 123
+    Width = 153
   end
   object Код: TcxLabel
-    Left = 35
+    Left = 19
     Top = 5
     Caption = #1050#1086#1076
   end
   object ceCode: TcxCurrencyEdit
-    Left = 34
+    Left = 18
     Top = 28
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 15
-    Width = 123
+    Width = 153
+  end
+  object cxLabel3: TcxLabel
+    Left = 181
+    Top = 55
+    Caption = #1044#1085#1077#1074#1085#1086#1081' '#1087#1083'.'#1095'. '#1085#1072' '#1095#1077#1083#1086#1074#1077#1082#1072
+  end
+  object edHoursDay: TcxCurrencyEdit
+    Left = 181
+    Top = 78
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = ',0'
+    TabOrder = 17
+    Width = 143
   end
   object ActionList: TActionList
-    Left = 320
+    Left = 304
     Top = 96
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -174,7 +189,7 @@
       item
         Name = 'ioId'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
@@ -192,21 +207,16 @@
         ParamType = ptInput
       end
       item
+        Name = 'inHoursDay'
+        Value = 0.000000000000000000
+        Component = edHoursDay
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
         Name = 'inPersonalCount'
         Value = 0.000000000000000000
         Component = edPersonalCount
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inFundPayMonth'
-        Value = 0.000000000000000000
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inFundPayTurn'
-        Value = 0.000000000000000000
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -235,17 +245,17 @@
         Component = PositionLevelGuides
         ParamType = ptInput
       end>
-    Left = 320
+    Left = 304
     Top = 40
   end
-  object dsdFormParams: TdsdFormParams
+  object FormParams: TdsdFormParams
     Params = <
       item
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
       end>
-    Left = 256
+    Left = 240
     Top = 8
   end
   object spGet: TdsdStoredProc
@@ -256,7 +266,7 @@
       item
         Name = 'Id'
         Value = Null
-        Component = dsdFormParams
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
@@ -272,19 +282,15 @@
         DataType = ftFloat
       end
       item
+        Name = 'HoursDay'
+        Value = 0.000000000000000000
+        Component = edHoursDay
+        DataType = ftFloat
+      end
+      item
         Name = 'PersonalCount'
         Value = 0.000000000000000000
         Component = edPersonalCount
-        DataType = ftFloat
-      end
-      item
-        Name = 'FundPayMonth'
-        Value = 0.000000000000000000
-        DataType = ftFloat
-      end
-      item
-        Name = 'FundPayTurn'
-        Value = 0.000000000000000000
         DataType = ftFloat
       end
       item
@@ -332,7 +338,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 320
+    Left = 304
     Top = 160
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -347,11 +353,11 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 200
+    Left = 184
     Top = 8
   end
   object dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn
-    Left = 320
+    Left = 304
     Top = 8
   end
   object UnitGuides: TdsdGuides
@@ -376,7 +382,7 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 127
+    Left = 111
     Top = 127
   end
   object PositionGuides: TdsdGuides
@@ -401,7 +407,7 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 215
+    Left = 199
     Top = 183
   end
   object PositionLevelGuides: TdsdGuides
@@ -426,7 +432,7 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 151
+    Left = 135
     Top = 271
   end
 end

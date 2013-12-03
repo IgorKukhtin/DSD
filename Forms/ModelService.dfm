@@ -566,6 +566,7 @@ object ModelServiceForm: TModelServiceForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ModelServiceItemMasterDS
@@ -580,6 +581,7 @@ object ModelServiceForm: TModelServiceForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ModelServiceItemChildDS
@@ -785,7 +787,7 @@ object ModelServiceForm: TModelServiceForm
     object GoodsFromChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       Caption = 'GoodsFromChoiceForm'
-      FormName = 'TGoods_ObjectForm'
+      FormName = 'TGoodsTree_ObjectForm'
       GuiParams = <
         item
           Name = 'key'
@@ -803,7 +805,7 @@ object ModelServiceForm: TModelServiceForm
     object GoodsToChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       Caption = 'GoodsToChoiceForm'
-      FormName = 'TGoods_ObjectForm'
+      FormName = 'TGoodsTree_ObjectForm'
       GuiParams = <
         item
           Name = 'Key'

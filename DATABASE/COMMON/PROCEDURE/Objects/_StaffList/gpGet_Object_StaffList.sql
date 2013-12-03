@@ -1,13 +1,13 @@
-п»ї-- Function: gpGet_Object_StaffList(integer, TVarChar)
+-- Function: gpGet_Object_StaffList(Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpGet_Object_StaffList(integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_StaffList (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_StaffList(
-    IN inId          Integer,       -- РЎРѕСЃС‚Р°РІР»СЏСЋС‰РёРµ СЂРµС†РµРїС‚СѓСЂ 
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inId          Integer,       -- Составляющие рецептур 
+    IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer
-             , HoursPlan TFloat, PersonalCount TFloat
+             , HoursPlan TFloat, HoursDay TFloat, PersonalCount TFloat
              , Comment TVarChar
              , UnitId Integer, UnitName TVarChar                
              , PositionId Integer, PositionName TVarChar                
@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer, Code Integer
 $BODY$
 BEGIN
 
-     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+     -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_StaffList());
   
    IF COALESCE (inId, 0) = 0
@@ -28,6 +28,7 @@ BEGIN
            , lfGet_ObjectCode(0, zc_Object_StaffList()) AS Code
            
            , CAST (NULL as TFloat) AS HoursPlan
+           , CAST (NULL as TFloat) AS HoursDay
            , CAST (NULL as TFloat) AS PersonalCount
 
 		   , CAST ('' as TVarChar) AS Comment
@@ -52,7 +53,8 @@ BEGIN
            Object_StaffList.Id         AS Id
          , Object_StaffList.ObjectCode AS Code
          
-         , ObjectFloat_HoursPlan.ValueData     AS HoursPlan  
+         , ObjectFloat_HoursPlan.ValueData     AS HoursPlan
+         , ObjectFloat_HoursDay.ValueData      AS HoursDay
          , ObjectFloat_PersonalCount.ValueData AS PersonalCount
          
          , ObjectString_Comment.ValueData      AS Comment
@@ -87,6 +89,9 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_HoursPlan 
                                 ON ObjectFloat_HoursPlan.ObjectId = Object_StaffList.Id 
                                AND ObjectFloat_HoursPlan.DescId = zc_ObjectFloat_StaffList_HoursPlan()
+          LEFT JOIN ObjectFloat AS ObjectFloat_HoursDay
+                                ON ObjectFloat_HoursDay.ObjectId = Object_StaffList.Id 
+                               AND ObjectFloat_HoursDay.DescId = zc_ObjectFloat_StaffList_HoursDay()
           
           LEFT JOIN ObjectFloat AS ObjectFloat_PersonalCount 
                                 ON ObjectFloat_PersonalCount.ObjectId = Object_StaffList.Id 
@@ -102,20 +107,17 @@ BEGIN
   
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_StaffList(integer, TVarChar) OWNER TO postgres;
-
-
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpGet_Object_StaffList (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.11.13                                        * add zc_ObjectFloat_StaffList_HoursDay
  31.10.13         * add Code 
  18.10.13         * add FundPayMonth, FundPayTurn, Comment                
  17.10.13         *              
-
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpGet_Object_StaffList (100, '2')

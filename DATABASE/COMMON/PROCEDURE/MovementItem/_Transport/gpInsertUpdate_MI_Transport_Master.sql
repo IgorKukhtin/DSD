@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MI_Transport_Master()
-
--- DROP FUNCTION gpInsertUpdate_MI_Transport_Master();
+DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat,Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat,Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Master(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -14,6 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Master(
     IN inFreightId           Integer   , -- Название груза
     IN inRouteKindId_Freight Integer   , -- Типы маршрутов(груз)
     IN inRouteKindId         Integer   , -- Типы маршрутов
+    IN inComment             TVarChar  , -- Комментарий	
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer
@@ -91,6 +92,9 @@ BEGIN
 
    -- сохранили свойство <Спидометр конечное показание, км>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_EndOdometre(), ioId, inEndOdometre);
+   
+   -- сохранили свойство <Комментарий>
+   PERFORM lpInsertUpdate_MovementItemString(zc_MIString_Comment(), ioId, inComment);
 
    -- !!!обязательно!!! пересчитали Child
    PERFORM lpInsertUpdate_MI_Transport_Child_byMaster (inMovementId := inMovementId, inParentId := ioId, inRouteKindId:= inRouteKindId, inUserId := vbUserId);
@@ -104,6 +108,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.12.13         * add Comment
  26.10.13                                        * add inRouteKindId_Freight
  13.10.13                                        * add lpInsertUpdate_MI_Transport_Child_byMaster
  13.10.13                                        * add lpInsertUpdate_MI_Transport_Child_byMaster

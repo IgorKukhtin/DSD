@@ -1,14 +1,14 @@
 -- Function: gpSelect_Object_StaffList()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_StaffList(TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_StaffList(Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_StaffList (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_StaffList (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_StaffList(
     IN inUnitId      Integer,       -- Подразделение
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer
-             , HoursPlan TFloat, PersonalCount TFloat
+             , HoursPlan TFloat, HoursDay TFloat, PersonalCount TFloat
              , Comment TVarChar
              , UnitId Integer, UnitName TVarChar                
              , PositionId Integer, PositionName TVarChar                
@@ -39,6 +39,7 @@ BEGIN
          , Object_StaffList.ObjectCode AS Code
  
          , ObjectFloat_HoursPlan.ValueData     AS HoursPlan  
+         , ObjectFloat_HoursDay.ValueData      AS HoursDay
          , ObjectFloat_PersonalCount.ValueData AS PersonalCount
          
          , ObjectString_Comment.ValueData      AS Comment
@@ -75,6 +76,9 @@ BEGIN
           LEFT JOIN ObjectFloat AS ObjectFloat_HoursPlan 
                                 ON ObjectFloat_HoursPlan.ObjectId = Object_StaffList.Id 
                                AND ObjectFloat_HoursPlan.DescId = zc_ObjectFloat_StaffList_HoursPlan()
+          LEFT JOIN ObjectFloat AS ObjectFloat_HoursDay
+                                ON ObjectFloat_HoursDay.ObjectId = Object_StaffList.Id 
+                               AND ObjectFloat_HoursDay.DescId = zc_ObjectFloat_StaffList_HoursDay()
           
           LEFT JOIN ObjectFloat AS ObjectFloat_PersonalCount 
                                 ON ObjectFloat_PersonalCount.ObjectId = Object_StaffList.Id 
@@ -88,14 +92,13 @@ BEGIN
   
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_Object_StaffList (Integer,TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.11.13                                        * add zc_ObjectFloat_StaffList_HoursDay
  22.11.13                                        * Cyr1251
  31.10.13         * add Code
  18.10.13         * add FundPayMonth, FundPayTurn, Comment  

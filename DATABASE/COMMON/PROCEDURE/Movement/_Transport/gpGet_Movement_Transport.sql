@@ -1,26 +1,30 @@
--- Function: gpGet_Movement_Service()
+-- Function: gpGet_Movement_Transport()
 
-DROP FUNCTION IF EXISTS gpGet_Movement_Service (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Transport (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_Movement_Service(
+CREATE OR REPLACE FUNCTION gpGet_Movement_Transport(
     IN inMovementId        Integer  , -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
-             , Amount TFloat 
-             , JuridicalId Integer, JuridicalName TVarChar
-             , MainJuridicalId Integer, MainJuridicalName TVarChar
-             , BusinessId Integer, BusinessName TVarChar
-             , PaidKindId Integer, PaidKindName TVarChar
-             , InfoMoneyId Integer, InfoMoneyName TVarChar
-             , UnitId Integer, UnitName TVarChar
+             , StatusCode Integer, StatusName TVarChar
+             , StartRunPlan TDateTime, EndRunPlan TDateTime, StartRun TDateTime, EndRun TDateTime
+             , HoursWork TFloat, HoursAdd TFloat
+             , Comment TVarChar
+             , CarId Integer, CarName TVarChar, CarModelName TVarChar
+             , CarTrailerId Integer, CarTrailerName TVarChar
+             , PersonalDriverId Integer, PersonalDriverName TVarChar, DriverCertificate TVarChar
+             , PersonalDriverMoreId Integer, PersonalDriverMoreName TVarChar
+             , PersonalId Integer, PersonalName TVarChar
+             , UnitForwardingId Integer, UnitForwardingName TVarChar
+             , JuridicalName TVarChar
              )
 AS
 $BODY$
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Service());
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Transport());
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -28,23 +32,45 @@ BEGIN
      RETURN QUERY 
        SELECT
              0 AS Id
-           , CAST (NEXTVAL ('Movement_Service_seq') AS TVarChar) AS InvNumber
-           , CAST (CURRENT_DATE AS TDateTime) AS OperDate
+           , CAST (NEXTVAL ('Movement_Transport_seq') AS TVarChar) AS InvNumber
+           , CAST (CURRENT_DATE AS TDateTime)      AS OperDate
+           , lfObject_Status.Code                  AS StatusCode
+           , lfObject_Status.Name                  AS StatusName
            
-           , 0::TFloat                        AS Amount
+           , CAST (DATE_TRUNC ('MINUTE', CURRENT_TIMESTAMP) AS TDateTime) AS StartRunPlan 
+           , CAST (DATE_TRUNC ('MINUTE', CURRENT_TIMESTAMP) AS TDateTime) AS EndRunPlan
+           , CAST (DATE_TRUNC ('MINUTE', CURRENT_TIMESTAMP) AS TDateTime) AS StartRun 
+           , CAST (DATE_TRUNC ('MINUTE', CURRENT_TIMESTAMP) AS TDateTime) AS EndRun           
+          
+           , CAST (0 as TFloat)                    AS HoursWork
+           , CAST (0 as TFloat)                    AS HoursAdd
+                      
+           , CAST ('' as TVarChar) AS Comment
 
-           , 0                                AS JuridicalId
-           , CAST ('' as TVarChar)            AS JuridicalName
-           , 0                                AS MainJuridicalId
-           , CAST ('' as TVarChar)            AS MainJuridicalName
-           , 0                                AS BusinessId
-           , CAST ('' as TVarChar)            AS BusinessName
-           , 0                                AS PaidKindId
-           , CAST ('' as TVarChar)            AS PaidKindName
-           , 0                                AS InfoMoneyId
-           , CAST ('' as TVarChar)            AS InfoMoneyName
-           , 0                                AS UnitId
-           , CAST ('' as TVarChar)            AS UnitName;
+           , 0                     AS CarId
+           , CAST ('' as TVarChar) AS CarName
+           , CAST ('' as TVarChar) AS CarModelName
+
+           , 0                     AS CarTrailerId
+           , CAST ('' as TVarChar) AS CarTrailerName
+
+           , 0                     AS PersonalDriverId
+           , CAST ('' as TVarChar) AS PersonalDriverName
+           , CAST ('' as TVarChar) AS DriverCertificate
+
+           , 0                     AS PersonalDriverMoreId
+           , CAST ('' as TVarChar) AS PersonalDriverMoreName
+
+           , 0                     AS PersonalId
+           , CAST ('' as TVarChar) AS PersonalName
+
+           , Object_UnitForwarding.Id        AS UnitForwardingId
+           , Object_UnitForwarding.ValueData AS UnitForwardingName
+   
+           , CAST ('' as TVarChar) AS JuridicalName
+
+       FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
+               LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = zc_Branch_Basis();
 
      ELSE
 
@@ -55,78 +81,137 @@ BEGIN
            , Movement.OperDate
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
+           
+           , CAST (DATE_TRUNC ('MINUTE', MovementDate_StartRunPlan.ValueData) AS TDateTime) AS StartRunPlan
+           , CAST (DATE_TRUNC ('MINUTE', MovementDate_EndRunPlan.ValueData)   AS TDateTime) AS EndRunPlan
+           , CAST (DATE_TRUNC ('MINUTE', MovementDate_StartRun.ValueData)     AS TDateTime) AS StartRun
+           , CAST (DATE_TRUNC ('MINUTE', MovementDate_EndRun.ValueData)       AS TDateTime) AS EndRun
+          
+           , CAST (COALESCE (MovementFloat_HoursWork.ValueData, 0) + COALESCE (MovementFloat_HoursAdd.ValueData, 0) AS TFloat) AS HoursWork
+           , MovementFloat_HoursAdd.ValueData      AS HoursAdd
                       
-           , MovementFloat_Amount.ValueData   AS Amount
+           , MovementString_Comment.ValueData      AS Comment
 
-           , Object_Juridical.Id              AS JuridicalId
-           , Object_Juridical.ValueData       AS JuridicalName
-           , Object_MainJuridical.Id          AS MainJuridicalId
-           , Object_MainJuridical.ValueData   AS MainJuridicalName
+           , Object_Car.Id             AS CarId
+           , Object_Car.ValueData      AS CarName
+           , Object_CarModel.ValueData AS CarModelName
 
-           , Object_Business.Id               AS BusinessId
-           , Object_Business.ValueData        AS BusinessName
+           , Object_CarTrailer.Id        AS CarTrailerId
+           , Object_CarTrailer.ValueData AS CarTrailerName
 
-           , Object_PaidKind.Id               AS PaidKindId
-           , Object_PaidKind.ValueData        AS PaidKindName
+           , View_PersonalDriver.PersonalId   AS PersonalDriverId
+           , View_PersonalDriver.PersonalName AS PersonalDriverName
+           , ObjectString_DriverCertificate.ValueData AS DriverCertificate
+
+           , View_PersonalDriverMore.PersonalId   AS PersonalDriverMoreId
+           , View_PersonalDriverMore.PersonalName AS PersonalDriverMoreName
+
+           , View_Personal.PersonalId   AS PersonalId
+           , View_Personal.PersonalName AS PersonalName
+
+           , Object_UnitForwarding.Id        AS UnitForwardingId
+           , Object_UnitForwarding.ValueData AS UnitForwardingName
+
+           , Object_Juridical.ValueData AS JuridicalName
    
-           , Object_InfoMoney.Id              AS InfoMoneyId
-           , Object_InfoMoney.ValueData       AS InfoMoneyName
-           , Object_Unit.Id                   AS UnitId
-           , Object_Unit.ValueData            AS UnitName
-
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-            LEFT JOIN MovementFloat AS MovementFloat_Amount
-                                    ON MovementFloat_Amount.MovementId =  Movement.Id
-                                   AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+            LEFT JOIN MovementDate AS MovementDate_StartRunPlan
+                                   ON MovementDate_StartRunPlan.MovementId = Movement.Id
+                                  AND MovementDate_StartRunPlan.DescId = zc_MovementDate_StartRunPlan()
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
-                                         ON MovementLinkObject_Juridical.MovementId = Movement.Id
-                                        AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
-            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
+            LEFT JOIN MovementDate AS MovementDate_EndRunPlan
+                                   ON MovementDate_EndRunPlan.MovementId = Movement.Id
+                                  AND MovementDate_EndRunPlan.DescId = zc_MovementDate_EndRunPlan()
+
+            LEFT JOIN MovementDate AS MovementDate_StartRun
+                                   ON MovementDate_StartRun.MovementId = Movement.Id
+                                  AND MovementDate_StartRun.DescId = zc_MovementDate_StartRun()
+
+            LEFT JOIN MovementDate AS MovementDate_EndRun
+                                   ON MovementDate_EndRun.MovementId = Movement.Id
+                                  AND MovementDate_EndRun.DescId = zc_MovementDate_EndRun()
+
+            LEFT JOIN MovementFloat AS MovementFloat_HoursWork
+                                    ON MovementFloat_HoursWork.MovementId =  Movement.Id
+                                   AND MovementFloat_HoursWork.DescId = zc_MovementFloat_HoursWork()
             
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_MainJuridical
-                                         ON MovementLinkObject_MainJuridical.MovementId = Movement.Id
-                                        AND MovementLinkObject_MainJuridical.DescId = zc_MovementLinkObject_JuridicalBasic()
-            LEFT JOIN Object AS Object_MainJuridical ON Object_MainJuridical.Id = MovementLinkObject_MainJuridical.ObjectId
+            LEFT JOIN MovementFloat AS MovementFloat_HoursAdd
+                                    ON MovementFloat_HoursAdd.MovementId =  Movement.Id
+                                   AND MovementFloat_HoursAdd.DescId = zc_MovementFloat_HoursAdd()
+
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId =  Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
+                                         ON MovementLinkObject_Car.MovementId = Movement.Id
+                                        AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
+            LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
+                                                           AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
+            LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Car_Unit ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id
+                                                       AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
+            LEFT JOIN ObjectLink AS ObjectLink_UnitCar_Juridical ON ObjectLink_UnitCar_Juridical.ObjectId = ObjectLink_Car_Unit.ChildObjectId
+                                                                AND ObjectLink_UnitCar_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_UnitCar_Juridical.ChildObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CarTrailer
+                                         ON MovementLinkObject_CarTrailer.MovementId = Movement.Id
+                                        AND MovementLinkObject_CarTrailer.DescId = zc_MovementLinkObject_CarTrailer()
+            LEFT JOIN Object AS Object_CarTrailer ON Object_CarTrailer.Id = MovementLinkObject_CarTrailer.ObjectId
             
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Business
-                                         ON MovementLinkObject_Business.MovementId = Movement.Id
-                                        AND MovementLinkObject_Business.DescId = zc_MovementLinkObject_Business()
-            LEFT JOIN Object AS Object_Business ON Object_Business.Id = MovementLinkObject_Business.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
+                                         ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
+                                        AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
+            LEFT JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = MovementLinkObject_PersonalDriver.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
-                                        AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
-            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriverMore
+                                         ON MovementLinkObject_PersonalDriverMore.MovementId = Movement.Id
+                                        AND MovementLinkObject_PersonalDriverMore.DescId = zc_MovementLinkObject_PersonalDriverMore()
+            LEFT JOIN Object_Personal_View AS View_PersonalDriverMore ON View_PersonalDriverMore.PersonalId = MovementLinkObject_PersonalDriverMore.ObjectId
+ 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
+                                         ON MovementLinkObject_Personal.MovementId = Movement.Id
+                                        AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
+            LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = MovementLinkObject_Personal.ObjectId
+           
+            LEFT JOIN ObjectString AS ObjectString_DriverCertificate
+                                   ON ObjectString_DriverCertificate.ObjectId = View_PersonalDriverMore.MemberId 
+                                  AND ObjectString_DriverCertificate.DescId = zc_ObjectString_Member_DriverCertificate()
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_InfoMoney
-                                         ON MovementLinkObject_InfoMoney.MovementId = Movement.Id
-                                        AND MovementLinkObject_InfoMoney.DescId = zc_MovementLinkObject_InfoMoney()
-            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = MovementLinkObject_InfoMoney.ObjectId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
+                                         ON MovementLinkObject_UnitForwarding.MovementId = Movement.Id
+                                        AND MovementLinkObject_UnitForwarding.DescId = zc_MovementLinkObject_UnitForwarding()
+            LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = MovementLinkObject_UnitForwarding.ObjectId
 
        WHERE Movement.Id =  inMovementId
-         AND Movement.DescId = zc_Movement_Service();
-   END IF;  
+         AND Movement.DescId = zc_Movement_Transport();
+
+     END IF;
+  
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_Service (Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Movement_Transport (Integer, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 07.11.13                         * -- Default on Get
- 11.08.13         *
-
+ 02.12.13         * add Personal
+ 04.11.13                                        * add JuridicalName and DriverCertificate
+ 03.11.13                                        * add CarModelName
+ 25.10.13                                        * add MINUTE
+ 23.10.13                                        * add NEXTVAL
+ 30.09.13                                        * add Object_Personal_View
+ 26.09.13                                        * changes in wiki
+ 25.09.13         * changes in wiki              
+ 20.08.13         *
 */
 
+
 -- тест
--- SELECT * FROM gpGet_Movement_Service (inMovementId:= 1, inSession:= '2')
+-- SELECT * FROM gpGet_Movement_Transport (inMovementId:= 0, inSession:= '2')

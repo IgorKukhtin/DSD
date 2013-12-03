@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_Transport (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar)
 
--- DROP FUNCTION gpInsertUpdate_Movement_Transport (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+--DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Transport (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Transport (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TFloat,  TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Transport(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -21,6 +22,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Transport(
     IN inCarTrailerId         Integer   , -- Автомобиль (прицеп)
     IN inPersonalDriverId     Integer   , -- Сотрудник (водитель)
     IN inPersonalDriverMoreId Integer   , -- Сотрудник (водитель, дополнительный)
+    IN inPersonalId           Integer   , -- Сотрудник (экспедитор)
     IN inUnitForwardingId     Integer   , -- Подразделение (Место отправки)
 
     IN inSession              TVarChar    -- сессия пользователя
@@ -85,6 +87,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalDriver(), ioId, inPersonalDriverId);
      -- сохранили связь с <Сотрудник (водитель, дополнительный)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalDriverMore(), ioId, inPersonalDriverMoreId);
+     -- сохранили связь с <Сотрудник (экспедитор)>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Personal(), ioId, inPersonalId);
      
      -- сохранили связь с <Подразделение (Место отправки)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_UnitForwarding(), ioId, inUnitForwardingId);
@@ -122,6 +126,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.12.13         * add Personal (changes in wiki)
  31.10.13                                        * add lpInsertUpdate_Movement - Изменили свойства у подчиненных Документов
  24.10.13                                        * add !!!с учетом добавленных!!!
  24.10.13                                        * add min to outHoursWork
