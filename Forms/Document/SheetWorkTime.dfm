@@ -165,7 +165,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = OpenWorkTimeKindForm
+            Action = MultiAction
             Default = True
             Kind = bkEllipsis
           end>
@@ -394,7 +394,17 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           Component = CrossDBViewAddOn
           ComponentItem = 'TypeId'
         end>
-      isShowModal = False
+      isShowModal = True
+    end
+    object MultiAction: TMultiAction
+      Category = 'DSDLib'
+      ActionList = <
+        item
+          Action = OpenWorkTimeKindForm
+        end
+        item
+          Action = actUpdateMasterDS
+        end>
     end
   end
   object MasterDS: TDataSource

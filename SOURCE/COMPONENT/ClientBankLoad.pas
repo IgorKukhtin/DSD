@@ -17,13 +17,13 @@ type
     function GetOperSumm: real; virtual; abstract;
     function GetDocNumber: string; virtual; abstract;
     function GetOperDate: TDateTime; virtual; abstract;
-    function GetBankAccountFrom: string; virtual; abstract;
-    function GetOKPOFrom: string; virtual; abstract;
-    function GetBankAccountTo: string; virtual; abstract;
-    function GetBankMFOFrom: string; virtual; abstract;
-    function GetBankMFOTo: string; virtual; abstract;
-    function GetJuridicalNameFrom: string; virtual; abstract;
-    function GetJuridicalNameTo: string; virtual; abstract;
+    function GetBankAccountMain: string; virtual; abstract;
+    function GetOKPO: string; virtual; abstract;
+    function GetBankAccount: string; virtual; abstract;
+    function GetBankMFOMain: string; virtual; abstract;
+    function GetBankMFO: string; virtual; abstract;
+    function GetJuridicalName: string; virtual; abstract;
+    function GetBankName: string; virtual; abstract;
     function GetOKPOTo: string; virtual; abstract;
     function GetComment: string; virtual; abstract;
   public
@@ -38,15 +38,13 @@ type
     property DocNumber: string read GetDocNumber;
     property OperDate: TDateTime read GetOperDate;
     property OperSumm: real read GetOperSumm;
-
-    property BankAccountFrom: string read GetBankAccountFrom;
-    property BankMFOFrom: string read GetBankMFOFrom;
-    property OKPOFrom: string read GetOKPOFrom;
-    property JuridicalNameFrom: string read GetJuridicalNameFrom;
-    property BankAccountTo: string read GetBankAccountTo;
-    property BankMFOTo: string read GetBankMFOTo;
-    property OKPOTo: string read GetOKPOTo;
-    property JuridicalNameTo: string read GetJuridicalNameTo;
+    property BankAccountMain: string read GetBankAccountMain;
+    property BankMFOMain: string read GetBankMFOMain;
+    property OKPO: string read GetOKPO;
+    property JuridicalName: string read GetJuridicalName;
+    property BankAccount: string read GetBankAccount;
+    property BankMFO: string read GetBankMFO;
+    property BankName: string read GetBankName;
     property Comment: string read GetComment;
   end;
 
@@ -87,13 +85,13 @@ type
     function GetDocNumber: string; override;
     function GetOperDate: TDateTime; override;
 
-    function GetBankAccountFrom: string; override;
-    function GetOKPOFrom: string; override;
-    function GetBankAccountTo: string; override;
-    function GetBankMFOFrom: string; override;
-    function GetBankMFOTo: string; override;
-    function GetJuridicalNameFrom: string; override;
-    function GetJuridicalNameTo: string; override;
+    function GetBankAccountMain: string; override;
+    function GetOKPO: string; override;
+    function GetBankAccount: string; override;
+    function GetBankMFOMain: string; override;
+    function GetBankMFO: string; override;
+    function GetJuridicalName: string; override;
+    function GetBankName: string; override;
     function GetOKPOTo: string; override;
     function GetComment: string; override;
   end;
@@ -103,14 +101,13 @@ type
     function GetDocNumber: string; override;
     function GetOperDate: TDateTime; override;
 
-    function GetBankAccountFrom: string; override;
-    function GetOKPOFrom: string; override;
-    function GetBankAccountTo: string; override;
-    function GetBankMFOFrom: string; override;
-    function GetBankMFOTo: string; override;
-    function GetJuridicalNameFrom: string; override;
-    function GetJuridicalNameTo: string; override;
-    function GetOKPOTo: string; override;
+    function GetBankAccountMain: string; override;
+    function GetOKPO: string; override;
+    function GetBankAccount: string; override;
+    function GetBankMFOMain: string; override;
+    function GetBankMFO: string; override;
+    function GetJuridicalName: string; override;
+    function GetBankName: string; override;
     function GetComment: string; override;
   end;
 
@@ -119,14 +116,13 @@ type
     function GetDocNumber: string; override;
     function GetOperDate: TDateTime; override;
 
-    function GetBankAccountFrom: string; override;
-    function GetOKPOFrom: string; override;
-    function GetBankAccountTo: string; override;
-    function GetBankMFOFrom: string; override;
-    function GetBankMFOTo: string; override;
-    function GetJuridicalNameFrom: string; override;
-    function GetJuridicalNameTo: string; override;
-    function GetOKPOTo: string; override;
+    function GetBankAccountMain: string; override;
+    function GetOKPO: string; override;
+    function GetBankAccount: string; override;
+    function GetBankMFOMain: string; override;
+    function GetBankMFO: string; override;
+    function GetJuridicalName: string; override;
+    function GetBankName: string; override;
     function GetComment: string; override;
   end;
 
@@ -135,16 +131,16 @@ type
     function GetDocNumber: string; override;
     function GetOperDate: TDateTime; override;
 
-    function GetBankAccountFrom: string; override;
-    function GetOKPOFrom: string; override;
-    function GetBankAccountTo: string; override;
-    function GetBankMFOFrom: string; override;
-    function GetBankMFOTo: string; override;
-    function GetJuridicalNameFrom: string; override;
-    function GetJuridicalNameTo: string; override;
-    function GetOKPOTo: string; override;
+    function GetBankAccountMain: string; override;
+    function GetOKPO: string; override;
+    function GetBankAccount: string; override;
+    function GetBankMFOMain: string; override;
+    function GetBankMFO: string; override;
+    function GetJuridicalName: string; override;
+    function GetBankName: string; override;
     function GetComment: string; override;
   end;
+
 
 function TClientBankLoadAction.Execute: boolean;
 var
@@ -199,15 +195,15 @@ begin
   with result do begin
     Params.AddParam('inDocNumber', ftString, ptInput, null);
     Params.AddParam('inOperDate', ftDateTime, ptInput, null);
-    Params.AddParam('inBankAccountFrom', ftString, ptInput, null);
-    Params.AddParam('inBankMFOFrom', ftString, ptInput, null);
-    Params.AddParam('inOKPOFrom', ftString, ptInput, null);
-    Params.AddParam('inJuridicalNameFrom', ftString, ptInput, null);
-    Params.AddParam('inBankAccountTo', ftString, ptInput, null);
-    Params.AddParam('inBankMFOTo', ftString, ptInput, null);
-    Params.AddParam('inOKPOTo', ftString, ptInput, null);
-    Params.AddParam('inJuridicalNameTo', ftString, ptInput, null);
+    Params.AddParam('inBankAccountMain', ftString, ptInput, null);
+    Params.AddParam('inBankMFOMain', ftString, ptInput, null);
+    Params.AddParam('inOKPO', ftString, ptInput, null);
+    Params.AddParam('inJuridicalName', ftString, ptInput, null);
+    Params.AddParam('inBankAccount', ftString, ptInput, null);
+    Params.AddParam('inBankMFO', ftString, ptInput, null);
+    Params.AddParam('inBankName', ftString, ptInput, null);
     Params.AddParam('inAmount', ftFloat, ptInput, null);
+    Params.AddParam('inComment', ftString, ptInput, null);
   end;
 end;
 
@@ -217,15 +213,15 @@ begin
   with AStoredProc, AClientBankLoad do begin
     ParamByName('inDocNumber').Value := DocNumber;
     ParamByName('inOperDate').Value := OperDate;
-    ParamByName('inBankAccountFrom').Value := BankAccountFrom;
-    ParamByName('inBankMFOFrom').Value := BankMFOFrom;
-    ParamByName('inOKPOFrom').Value := OKPOFrom;
-    ParamByName('inJuridicalNameFrom').Value := JuridicalNameFrom;
-    ParamByName('inBankAccountTo').Value := BankAccountTo;
-    ParamByName('inBankMFOTo').Value := BankMFOTo;
-    ParamByName('inOKPOTo').Value := OKPOTo;
-    ParamByName('inJuridicalNameTo').Value := JuridicalNameTo;
+    ParamByName('inBankAccountMain').Value := BankAccountMain;
+    ParamByName('inBankMFOMain').Value := BankMFOMain;
+    ParamByName('inOKPO').Value := OKPO;
+    ParamByName('inJuridicalName').Value := JuridicalName;
+    ParamByName('inBankAccount').Value := BankAccount;
+    ParamByName('inBankMFO').Value := BankMFO;
+    ParamByName('inBankName').Value := BankName;
     ParamByName('inAmount').Value := OperSumm;
+    ParamByName('inComment').Value := Comment;
     Execute;
   end;
 end;
@@ -290,7 +286,7 @@ begin
   FOEM := true;
 end;
 
-function TPrivatBankLoad.GetBankAccountFrom: string;
+function TPrivatBankLoad.GetBankAccountMain: string;
 begin
   if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 0 then
      result := FDataSet.FieldByName('ACCOUNT_A').AsString
@@ -298,7 +294,7 @@ begin
      result := FDataSet.FieldByName('ACCOUNT_B').AsString
 end;
 
-function TPrivatBankLoad.GetBankAccountTo: string;
+function TPrivatBankLoad.GetBankAccount: string;
 begin
   if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 1 then
      result := FDataSet.FieldByName('ACCOUNT_A').AsString
@@ -306,7 +302,7 @@ begin
      result := FDataSet.FieldByName('ACCOUNT_B').AsString
 end;
 
-function TPrivatBankLoad.GetBankMFOFrom: string;
+function TPrivatBankLoad.GetBankMFOMain: string;
 begin
   if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 0 then
      result := FDataSet.FieldByName('MFO_A').AsString
@@ -314,7 +310,12 @@ begin
      result := FDataSet.FieldByName('MFO_B').AsString
 end;
 
-function TPrivatBankLoad.GetBankMFOTo: string;
+function TPrivatBankLoad.GetBankName: string;
+begin
+
+end;
+
+function TPrivatBankLoad.GetBankMFO: string;
 begin
   if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 1 then
      result := FDataSet.FieldByName('MFO_A').AsString
@@ -332,7 +333,7 @@ begin
   result := FDataSet.FieldByName('N_DOC').AsString
 end;
 
-function TPrivatBankLoad.GetJuridicalNameFrom: string;
+function TPrivatBankLoad.GetJuridicalName: string;
 begin
   if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 0 then
      result := FDataSet.FieldByName('NAME_A').AsString
@@ -340,15 +341,7 @@ begin
      result := FDataSet.FieldByName('NAME_B').AsString
 end;
 
-function TPrivatBankLoad.GetJuridicalNameTo: string;
-begin
-  if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 1 then
-     result := FDataSet.FieldByName('NAME_A').AsString
-  else
-     result := FDataSet.FieldByName('NAME_B').AsString
-end;
-
-function TPrivatBankLoad.GetOKPOFrom: string;
+function TPrivatBankLoad.GetOKPO: string;
 begin
   if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 0 then
      result := FDataSet.FieldByName('OKPO1_A').AsString
@@ -358,10 +351,7 @@ end;
 
 function TPrivatBankLoad.GetOKPOTo: string;
 begin
-  if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 1 then
-     result := FDataSet.FieldByName('OKPO1_A').AsString
-  else
-     result := FDataSet.FieldByName('OKPO2_B').AsString
+
 end;
 
 function TPrivatBankLoad.GetOperDate: TDateTime;
@@ -371,27 +361,30 @@ end;
 
 function TPrivatBankLoad.GetOperSumm: real;
 begin
-  result := FDataSet.FieldByName('SUM_DOC').AsFloat
+  if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 0 then
+     result := FDataSet.FieldByName('SUM_DOC').AsFloat
+  else
+     result := - FDataSet.FieldByName('SUM_DOC').AsFloat;
 end;
 
 { TForumBankLoad }
 
-function TForumBankLoad.GetBankAccountFrom: string;
+function TForumBankLoad.GetBankAccountMain: string;
 begin
   result := FDataSet.FieldByName('RR_DB').AsString
 end;
 
-function TForumBankLoad.GetBankAccountTo: string;
+function TForumBankLoad.GetBankAccount: string;
 begin
   result := FDataSet.FieldByName('RR_K').AsString
 end;
 
-function TForumBankLoad.GetBankMFOFrom: string;
+function TForumBankLoad.GetBankMFOMain: string;
 begin
   result := FDataSet.FieldByName('MFO_DB').AsString
 end;
 
-function TForumBankLoad.GetBankMFOTo: string;
+function TForumBankLoad.GetBankMFO: string;
 begin
   result := FDataSet.FieldByName('MFO_CR').AsString
 end;
@@ -406,22 +399,17 @@ begin
   result := FDataSet.FieldByName('N_DOC').AsString
 end;
 
-function TForumBankLoad.GetJuridicalNameFrom: string;
+function TForumBankLoad.GetJuridicalName: string;
 begin
   result := FDataSet.FieldByName('NAIM_D').AsString
 end;
 
-function TForumBankLoad.GetJuridicalNameTo: string;
+function TForumBankLoad.GetBankName: string;
 begin
   result := FDataSet.FieldByName('NAIM_K').AsString
 end;
 
-function TForumBankLoad.GetOKPOFrom: string;
-begin
-  result := FDataSet.FieldByName('OKPO_DB').AsString
-end;
-
-function TForumBankLoad.GetOKPOTo: string;
+function TForumBankLoad.GetOKPO: string;
 begin
   result := FDataSet.FieldByName('OKPO_CR').AsString
 end;
@@ -438,22 +426,22 @@ end;
 
 { TVostokBankLoad }
 
-function TVostokBankLoad.GetBankAccountFrom: string;
+function TVostokBankLoad.GetBankAccountMain: string;
 begin
   result := FDataSet.FieldByName('ACC_A').AsString
 end;
 
-function TVostokBankLoad.GetBankAccountTo: string;
+function TVostokBankLoad.GetBankAccount: string;
 begin
   result := FDataSet.FieldByName('ACC_B').AsString
 end;
 
-function TVostokBankLoad.GetBankMFOFrom: string;
+function TVostokBankLoad.GetBankMFOMain: string;
 begin
   result := FDataSet.FieldByName('R_MFO').AsString
 end;
 
-function TVostokBankLoad.GetBankMFOTo: string;
+function TVostokBankLoad.GetBankMFO: string;
 begin
   result := FDataSet.FieldByName('MFO').AsString
 end;
@@ -468,22 +456,17 @@ begin
   result := FDataSet.FieldByName('DOC_NO').AsString
 end;
 
-function TVostokBankLoad.GetJuridicalNameFrom: string;
+function TVostokBankLoad.GetJuridicalName: string;
 begin
   result := FDataSet.FieldByName('R_NAME').AsString
 end;
 
-function TVostokBankLoad.GetJuridicalNameTo: string;
+function TVostokBankLoad.GetBankName: string;
 begin
   result := FDataSet.FieldByName('NAME').AsString
 end;
 
-function TVostokBankLoad.GetOKPOFrom: string;
-begin
-  result := FDataSet.FieldByName('R_ZIP').AsString
-end;
-
-function TVostokBankLoad.GetOKPOTo: string;
+function TVostokBankLoad.GetOKPO: string;
 begin
   result := ''
 end;
@@ -500,22 +483,22 @@ end;
 
 { TFidoBankLoad }
 
-function TFidoBankLoad.GetBankAccountFrom: string;
+function TFidoBankLoad.GetBankAccountMain: string;
 begin
   result := FDataSet.FieldByName('KL_CHK').AsString
 end;
 
-function TFidoBankLoad.GetBankAccountTo: string;
+function TFidoBankLoad.GetBankAccount: string;
 begin
   result := FDataSet.FieldByName('KL_CHK_K').AsString
 end;
 
-function TFidoBankLoad.GetBankMFOFrom: string;
+function TFidoBankLoad.GetBankMFOMain: string;
 begin
   result := FDataSet.FieldByName('MFO').AsString
 end;
 
-function TFidoBankLoad.GetBankMFOTo: string;
+function TFidoBankLoad.GetBankMFO: string;
 begin
   result := FDataSet.FieldByName('MFO_K').AsString
 end;
@@ -530,24 +513,19 @@ begin
   result := FDataSet.FieldByName('ND').AsString
 end;
 
-function TFidoBankLoad.GetJuridicalNameFrom: string;
-begin
-  result := FDataSet.FieldByName('KL_NM').AsString
-end;
-
-function TFidoBankLoad.GetJuridicalNameTo: string;
+function TFidoBankLoad.GetJuridicalName: string;
 begin
   result := FDataSet.FieldByName('KL_NM_K').AsString
 end;
 
-function TFidoBankLoad.GetOKPOFrom: string;
+function TFidoBankLoad.GetBankName: string;
 begin
-  result := FDataSet.FieldByName('KL_OKP').AsString
+  result := FDataSet.FieldByName('MFO_NM_K').AsString
 end;
 
-function TFidoBankLoad.GetOKPOTo: string;
+function TFidoBankLoad.GetOKPO: string;
 begin
-  result := FDataSet.FieldByName('KL_OKP_K').AsString
+  result := FDataSet.FieldByName('KL_OKP').AsString
 end;
 
 function TFidoBankLoad.GetOperDate: TDateTime;
@@ -557,7 +535,10 @@ end;
 
 function TFidoBankLoad.GetOperSumm: real;
 begin
-  result := FDataSet.FieldByName('S').AsFloat
+  if FDataSet.FieldByName('DK').asInteger = 2 then
+     result := FDataSet.FieldByName('S').AsFloat
+  else
+     result := - FDataSet.FieldByName('S').AsFloat
 end;
 
 end.

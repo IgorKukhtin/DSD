@@ -22,6 +22,7 @@ type
     procedure CreateHistory;
     procedure CreateProtocol;
     procedure CreatePeriodClose;
+    procedure UpdateStructure;
     procedure CreateIndexes;
   end;
 
@@ -35,6 +36,7 @@ uses zLibUtil;
 
 const
   StructurePath = '..\DATABASE\COMMON\STRUCTURE\';
+  UpdateStructurePath = '..\DATABASE\COMMON\UPDATESTRUCTURE\';
 
 
 procedure TdbCreateStructureTest.CreateContainer;
@@ -179,6 +181,11 @@ begin
   end;
   ZQuery := TZQuery.Create(nil);
   ZQuery.Connection := ZConnection;
+end;
+
+procedure TdbCreateStructureTest.UpdateStructure;
+begin
+  DirectoryLoad(UpdateStructurePath);
 end;
 
 initialization

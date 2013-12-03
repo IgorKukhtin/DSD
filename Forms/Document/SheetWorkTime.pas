@@ -65,6 +65,7 @@ type
     BandcolPersonalGroupName: TcxGridDBBandedColumn;
     TemplateColumn: TcxGridDBBandedColumn;
     OpenWorkTimeKindForm: TOpenChoiceForm;
+    MultiAction: TMultiAction;
   private
   public
   end;

@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_BankStatementItem(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Amount TFloat
-             , OKPO TVarChar
+             , OKPO TVarChar, Juridicalname TVarChar, Comment TVarChar
              , InfoMoneyId  integer, InfoMoneyName  TVarChar
              , ContractId  integer, ContractName  TVarChar
              , UnitId  integer, UnitName  TVarChar
@@ -32,6 +32,8 @@ BEGIN
 
            , MovementFloat_Amount.ValueData AS Amount
            , MovementString_OKPO.ValueData  AS OKPO
+           , MovementString_JuridicalName.ValueData AS JuridicalName
+           , MovementString_Comment.ValueData AS Comment
 
            , Object_InfoMoney.Id          AS InfoMoneyId
            , Object_InfoMoney.ValueData   AS InfoMoneyName
@@ -52,6 +54,14 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_OKPO
                                      ON MovementString_OKPO.MovementId =  Movement.Id
                                     AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
+
+            LEFT JOIN MovementString AS MovementString_JuridicalName
+                                     ON MovementString_JuridicalName.MovementId =  Movement.Id
+                                    AND MovementString_JuridicalName.DescId = zc_MovementString_JuridicalName()
+
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId =  Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_InfoMoney
                                          ON MovementLinkObject_InfoMoney.MovementId = Movement.Id

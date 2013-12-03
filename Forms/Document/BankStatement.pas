@@ -11,17 +11,17 @@ uses
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxCurrencyEdit, Vcl.ExtCtrls, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils,
-  cxButtonEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, cxTextEdit, cxLabel;
+  cxButtonEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, cxTextEdit, cxLabel,
+  cxMemo;
 
 type
   TBankStatementForm = class(TAncestorDBGridForm)
     FormParams: TdsdFormParams;
     colDocNumber: TcxGridDBColumn;
     colOKPO: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
-    cxGridDBTableViewColumn4: TcxGridDBColumn;
-    cxGridDBTableViewColumn5: TcxGridDBColumn;
-    cxGridDBTableViewColumn6: TcxGridDBColumn;
+    colDebet: TcxGridDBColumn;
+    colJuridicalName: TcxGridDBColumn;
+    colLinkJuridicalName: TcxGridDBColumn;
     Panel: TPanel;
     cxLabel1: TcxLabel;
     edInvNumber: TcxTextEdit;
@@ -32,6 +32,11 @@ type
     spGet: TdsdStoredProc;
     edBankName: TcxTextEdit;
     edBankAccount: TcxTextEdit;
+    colInfoMoney: TcxGridDBColumn;
+    colComment: TcxGridDBColumn;
+    colContract: TcxGridDBColumn;
+    colCredit: TcxGridDBColumn;
+    colUnitName: TcxGridDBColumn;
   private
     { Private declarations }
   public

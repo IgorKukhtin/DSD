@@ -20,7 +20,7 @@ CREATE INDEX idx_Container_ParentId ON Container (ParentId);
  ----------------
                  Климентьев К.И.   Кухтин И.В.   
 10.10.13                              *
-19.09.02              * chage index
+19.09.02              * change index
 18.06.02                                         
 11.07.02                                         
 */
