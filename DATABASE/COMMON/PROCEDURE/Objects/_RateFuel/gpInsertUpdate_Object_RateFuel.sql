@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_RateFuel (nteger, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar)
 
--- DROP FUNCTION gpInsertUpdate_Object_RateFuel (nteger, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_RateFuel (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_RateFuel(
  INOUT ioId                             Integer   ,    -- ключ объекта <Машина>
@@ -20,7 +20,7 @@ $BODY$
 BEGIN
    
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_RateFuel());
+   -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_RateFuel());
    vbUserId := inSession;
        
        SELECT 

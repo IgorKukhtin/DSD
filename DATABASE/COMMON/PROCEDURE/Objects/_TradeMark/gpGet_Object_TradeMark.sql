@@ -1,6 +1,6 @@
 -- Function: gpGet_Object_TradeMark (Integer, TVarChar)
 
--- DROP FUNCTION gpGet_Object_TradeMark (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_TradeMark (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_TradeMark(
     IN inId             Integer,       -- ключ объекта <Маршрут>
@@ -10,7 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean) AS
 $BODY$BEGIN
 
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_TradeMark());
+   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Object_TradeMark());
 
    IF COALESCE (inId, 0) = 0
    THEN

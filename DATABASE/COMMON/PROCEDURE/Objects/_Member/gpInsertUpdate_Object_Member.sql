@@ -1,9 +1,9 @@
--- Function: gpInsertUpdate_Object_Member()
+-- Function: gpInsertUpdate_Object_Member(Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar)
 
--- DROP FUNCTION gpInsertUpdate_Object_Member();
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Member (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member(
- INOUT ioId	                 Integer   ,   	-- ключ объекта <Физические лица> 
+ INOUT ioId	             Integer   ,   	-- ключ объекта <Физические лица> 
     IN inCode                Integer   ,    -- код объекта 
     IN inName                TVarChar  ,    -- Название объекта <
 
@@ -24,7 +24,7 @@ BEGIN
    -- END IF;
 
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Member());
+   -- vbUserId := PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Member());
    vbUserId := inSession;
    
    -- пытаемся найти код

@@ -22,7 +22,7 @@ $BODY$
 BEGIN
 
      -- проверка прав пользовател€ на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_SheetWorkTime());
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_SheetWorkTime());
 
      vbStartDate := date_trunc('month', inDate)                                ;    -- первое число мес€ца
      vbEndDate := vbStartDate + interval '1 month' - interval '1 microseconds' ;    -- последнее число мес€ца

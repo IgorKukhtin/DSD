@@ -1,6 +1,6 @@
 -- Function: gpGet_Object_Fuel()
 
--- DROP FUNCTION gpGet_Object_Fuel(Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_Fuel(Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Fuel(
     IN inId          Integer,       -- ключ объекта <Автомобиль>
