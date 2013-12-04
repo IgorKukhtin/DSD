@@ -3,7 +3,7 @@ inherited WorkTimeKind_ObjectForm: TWorkTimeKind_ObjectForm
   ClientHeight = 376
   ClientWidth = 605
   ExplicitWidth = 613
-  ExplicitHeight = 403
+  ExplicitHeight = 410
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

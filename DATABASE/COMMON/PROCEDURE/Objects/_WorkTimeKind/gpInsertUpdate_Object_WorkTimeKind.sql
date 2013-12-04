@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_WorkTimeKind (Integer, TVarChar, TVarChar)
 
--- DROP FUNCTION gpInsertUpdate_Object_WorkTimeKind (Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_WorkTimeKind (Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_WorkTimeKind(
  INOUT ioId            Integer   ,    -- ключ объекта <>
@@ -13,7 +13,7 @@ $BODY$
 BEGIN
    
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_WorkTimeKind());
+   -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_WorkTimeKind());
    vbUserId := inSession;
 
    -- сохранили св-во <>
