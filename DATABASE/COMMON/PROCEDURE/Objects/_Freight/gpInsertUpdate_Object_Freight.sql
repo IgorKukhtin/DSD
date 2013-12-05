@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_Freight (Integer,Integer,TVarChar, TFloat,TVarChar)
 
--- DROP FUNCTION gpInsertUpdate_Object_Freight (Integer,Integer,TVarChar, TFloat,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Freight (Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Freight(
  INOUT ioId              Integer   ,    -- ключ объекта <Виды топлива>
@@ -15,7 +15,7 @@ $BODY$
 BEGIN
    
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Freight());
+   -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Freight());
    vbUserId := inSession;
 
    -- пытаемся найти код
@@ -35,7 +35,10 @@ BEGIN
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
-END;$BODY$ LANGUAGE plpgsql;
+END;
+$BODY$
+
+LANGUAGE plpgsql;
 ALTER FUNCTION gpInsertUpdate_Object_Freight(Integer,Integer,TVarChar, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/

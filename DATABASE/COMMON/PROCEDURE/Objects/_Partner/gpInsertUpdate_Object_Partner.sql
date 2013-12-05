@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_Partner()
 
--- DROP FUNCTION gpInsertUpdate_Object_Partner();
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
  INOUT ioId	                 Integer   ,   	-- ключ объекта <Контрагент> 
@@ -22,7 +22,7 @@ $BODY$
 BEGIN
    
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Partner());
+   -- vbUserId := PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Partner());
    vbUserId := inSession;
 
    -- Проверка установки значений

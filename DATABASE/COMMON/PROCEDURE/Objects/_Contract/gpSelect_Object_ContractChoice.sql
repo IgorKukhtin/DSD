@@ -19,7 +19,7 @@ $BODY$
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Contract());
+   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_Contract());
 
    RETURN QUERY 
    SELECT

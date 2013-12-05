@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_Goods()
 
--- DROP FUNCTION gpInsertUpdate_Object_Goods();
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, TFloat Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
  INOUT ioId                  Integer   , -- ключ объекта <Товар>
@@ -22,7 +22,7 @@ $BODY$
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Goods()());
+   -- vbUserId := PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Goods());
    vbUserId := inSession;
    
    -- !!! Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)

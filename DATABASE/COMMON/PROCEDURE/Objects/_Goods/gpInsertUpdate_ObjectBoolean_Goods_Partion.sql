@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_ObjectBoolean_Goods_Partion
 
--- DROP FUNCTION gpInsertUpdate_ObjectBoolean_Goods_Partion (Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_ObjectBoolean_Goods_Partion (Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectBoolean_Goods_Partion(
     IN inId             Integer   , -- ключ объекта <Товар>
@@ -14,7 +14,7 @@ $BODY$
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_ObjectString_Goods_Partion());
+   -- vbUserId := PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_ObjectString_Goods_Partion());
    vbUserId := inSession;
    
    -- сохранили свойство <Партии поставщика в учете количеств>
