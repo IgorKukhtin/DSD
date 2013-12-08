@@ -15,12 +15,9 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;   
- 
 BEGIN
- 
    -- проверка прав пользователя на вызов процедуры
-   -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Route());
-   vbUserId := inSession;
+   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Route());
 
    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
@@ -34,7 +31,11 @@ BEGIN
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Route(), vbCode_calc);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Route(), vbCode_calc, inName);
+   ioId := lpInsertUpdate_Object (ioId:= ioId, inDescId:= zc_Object_Route(), inObjectCode:= vbCode_calc, inValueData:= inName
+                                , inAccessKeyId:= CASE WHEN vbCode_calc BETWEEN 200 AND 299
+                                                            THEN zc_Enum_Process_AccessKey_TrasportKiev()
+                                                       ELSE zc_Enum_Process_AccessKey_TrasportDnepr()
+                                                  END);
 
    -- сохранили связь с <подразделением>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Route_Unit(), ioId, inUnitId);
@@ -48,8 +49,7 @@ BEGIN
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
@@ -57,6 +57,7 @@ ALTER FUNCTION gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Integer,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.12.13                                        * add inAccessKeyId
  09.10.13                                        * пытаемся найти код
  24.09.13          *  add Unit, RouteKind, Freight
  03.06.13          *

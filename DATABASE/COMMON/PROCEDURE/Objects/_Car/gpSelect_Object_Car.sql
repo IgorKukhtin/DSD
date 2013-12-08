@@ -14,10 +14,13 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , FuelChildId Integer, FuelChildCode Integer, FuelChildName TVarChar
              , isErased boolean
              ) AS
-$BODY$BEGIN
-   -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Car());
+$BODY$
+   DECLARE vbUserId Integer;
+BEGIN
+     -- проверка прав пользователя на вызов процедуры
+     vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_Car());
 
+     -- Результат
      RETURN QUERY 
        SELECT 
              Object_Car.Id          AS Id
@@ -49,6 +52,7 @@ $BODY$BEGIN
            , Object_Car.isErased    AS isErased
            
        FROM Object AS Object_Car
+            JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Object_Car.AccessKeyId
        
             LEFT JOIN ObjectString AS RegistrationCertificate ON RegistrationCertificate.ObjectId = Object_Car.Id 
                                                              AND RegistrationCertificate.DescId = zc_ObjectString_Car_RegistrationCertificate()
@@ -85,13 +89,15 @@ ALTER FUNCTION gpSelect_Object_Car(TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.12.13                                        * add Object_RoleAccessKey_View
  30.09.13                                        * add Object_Personal_View
  26.09.13          * del StartDateRate, EndDateRate, RateFuelKind               
  24.09.13          * add StartDateRate, EndDateRate, Unit, PersonalDriver, FuelMaster, FuelChild, RateFuelKind               
  10.06.13          * 
  03.06.13          
-
 */
-
+/*
+UPDATE Object SET AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr() WHERE DescId = zc_Object_Car() AND ObjectCode < 200;
+*/
 -- тест
--- SELECT * FROM gpSelect_Object_Car('2')
+-- SELECT * FROM gpSelect_Object_Car ('5')

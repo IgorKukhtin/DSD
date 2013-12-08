@@ -20,14 +20,12 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
               )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
-
--- inStartDate:= '01.01.2013';
--- inEndDate:= '01.01.2100';
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Transport());
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Transport());
 
+     -- Результат
      RETURN QUERY 
        SELECT
              Movement.Id
@@ -57,6 +55,8 @@ BEGIN
            , Object_UnitForwarding.ValueData AS UnitForwardingName
    
        FROM Movement
+            JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementDate AS MovementDate_StartRunPlan
@@ -122,11 +122,13 @@ BEGIN
             LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = MovementLinkObject_UnitForwarding.ObjectId
  
        WHERE Movement.DescId = zc_Movement_Transport()
-         AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
+         AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+         -- AND tmpRoleAccessKey.AccessKeyId IS NOT NULL
+      ;
   
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_Movement_Transport (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 

@@ -11,11 +11,13 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , FreightId Integer, FreightCode Integer, FreightName TVarChar
              , isErased Boolean
              ) AS
-$BODY$BEGIN
-
+$BODY$
+   DECLARE vbUserId Integer;
+BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_Route());
+   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_Route());
 
+   -- Результат
    RETURN QUERY 
    SELECT
          Object_Route.Id         AS Id 
@@ -37,6 +39,7 @@ $BODY$BEGIN
        , Object_Route.isErased   AS isErased
        
    FROM Object AS Object_Route
+        JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Object_Route.AccessKeyId
         LEFT JOIN ObjectLink AS ObjectLink_Route_Unit ON ObjectLink_Route_Unit.ObjectId = Object_Route.Id
                                                      AND ObjectLink_Route_Unit.DescId = zc_ObjectLink_Route_Unit()
         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Route_Unit.ChildObjectId
@@ -52,19 +55,19 @@ $BODY$BEGIN
    WHERE Object_Route.DescId = zc_Object_Route();
   
 END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_Route (TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.12.13                                        * add Object_RoleAccessKey_View
  24.09.13          *  add Unit, RouteKind, Freight
  03.06.13          *
-
 */
-
+/*
+UPDATE Object SET AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr() WHERE DescId = zc_Object_Route() AND ObjectCode < 200;
+*/
 -- тест
--- SELECT * FROM gpSelect_Object_Route('2')
+-- SELECT * FROM gpSelect_Object_Route ('5')

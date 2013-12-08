@@ -41,10 +41,12 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbAccessKeyId Integer;
 BEGIN
-
      -- проверка прав пользовател€ на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_TransportIncome());
+     -- определ€ем ключ доступа
+     vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_TransportIncome());
 
      -- отбрасываем врем€
      inOperDate:= DATE_TRUNC ('DAY', inOperDate);
@@ -223,7 +225,8 @@ BEGIN
                                                        , inContractId       := ioContractId
                                                        , inRouteId          := ioRouteId
                                                        , inPersonalDriverId := inPersonalDriverId
-                                                       , inUserId           := vbUserId 
+                                                       , inAccessKeyId      := vbAccessKeyId 
+                                                       , inUserId           := vbUserId
                                                         );
 
      -- сохранили <Ёлемент документа> и вернули параметры

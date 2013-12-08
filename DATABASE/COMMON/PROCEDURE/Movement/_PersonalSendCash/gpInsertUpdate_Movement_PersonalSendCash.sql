@@ -12,15 +12,15 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalSendCash(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbAccessKeyId Integer;
 BEGIN
-
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_PersonalSendCash());
-     vbUserId := inSession;
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_PersonalSendCash());
+     -- определяем ключ доступа
+     vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_PersonalSendCash());
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_PersonalSendCash(), inInvNumber, inOperDate, NULL);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_PersonalSendCash(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
 
      -- сохранили связь с <Сотрудник>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Personal(), ioId, inPersonalId);
@@ -39,6 +39,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.12.13                                        * add lpGetAccessKey
  30.09.13                                        *
 */
 

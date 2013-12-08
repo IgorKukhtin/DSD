@@ -25,10 +25,12 @@ RETURNS Integer
 AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbAccessKeyId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_IncomeFuel());
+     -- определяем ключ доступа
+     vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_IncomeFuel());
 
 
      -- проверка - связанные документы Изменять нельзя
@@ -50,6 +52,7 @@ BEGIN
                                                , inContractId       := inContractId
                                                , inRouteId          := inRouteId
                                                , inPersonalDriverId := inPersonalDriverId
+                                               , inAccessKeyId      := vbAccessKeyId 
                                                , inUserId           := vbUserId 
                                                 );
 END;
@@ -60,6 +63,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.12.13                                        * add lpGetAccess
  31.10.13                                        * add inOperDatePartner
  19.10.13                                        * add inChangePrice
  07.10.13                                        * add lpCheckRight

@@ -22,7 +22,7 @@ BEGIN
      IF COALESCE (inMovementId, 0) = 0
      THEN
      RETURN QUERY 
-       WITH tmpUserTransport AS (SELECT UserId FROM UserRole_View WHERE RoleId = zc_Enum_Role_Transport())
+       WITH tmpUserTransport AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Transport())
        SELECT
              0 AS Id
            , NEXTVAL ('Movement_Send_seq') :: TVarChar AS InvNumber
@@ -84,6 +84,7 @@ ALTER FUNCTION gpGet_Movement_Send (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.12.13                                        * rename UserRole_View -> ObjectLink_UserRole_View
  09.11.13                                        * add tmpUserTransport
  28.10.13                          * Дефолты для новых записей               
  15.07.13         * удалили колонки               

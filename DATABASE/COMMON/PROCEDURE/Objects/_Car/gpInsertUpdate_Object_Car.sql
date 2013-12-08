@@ -20,12 +20,9 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;   
 BEGIN
-   
    -- проверка прав пользователя на вызов процедуры
-   -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Car());
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Car());
    
-   vbUserId := inSession;
-
    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
 
@@ -40,7 +37,11 @@ BEGIN
    -- PERFORM lpCheckUnique_ObjectString_ValueData(ioId, zc_ObjectString_Car_RegistrationCertificate(), inRegistrationCertificate);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_Car(), vbCode_calc, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Car(), vbCode_calc, inName
+                                , inAccessKeyId:= CASE WHEN vbCode_calc BETWEEN 200 AND 299
+                                                            THEN zc_Enum_Process_AccessKey_TrasportKiev()
+                                                       ELSE zc_Enum_Process_AccessKey_TrasportDnepr()
+                                                  END);
    -- сохранили св-во <Техпаспорт>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Car_RegistrationCertificate(), ioId, inRegistrationCertificate);
 
@@ -60,13 +61,14 @@ BEGIN
    
 END;
 $BODY$
- LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 -- ALTER FUNCTION gpInsertUpdate_Object_Car (Integer,Integer,TVarChar,TVarChar,Integer,Integer,Integer,Integer,Integer,TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.12.13                                        * add inAccessKeyId
  09.10.13                                        * пытаемся найти код
  26.09.13          * del StartDateRate, EndDateRate, RateFuelKind 
  24.09.13          * add StartDateRate, EndDateRate, Unit, PersonalDriver, FuelMaster, FuelChild, RateFuelKind
