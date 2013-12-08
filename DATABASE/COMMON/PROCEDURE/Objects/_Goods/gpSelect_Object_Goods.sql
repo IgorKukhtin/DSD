@@ -23,7 +23,7 @@ BEGIN
      vbUserId := inSession;
 
      RETURN QUERY 
-       WITH tmpUserTransport AS (SELECT UserId FROM UserRole_View WHERE RoleId = zc_Enum_Role_Transport())
+       WITH tmpUserTransport AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Transport())
        SELECT Object_Goods.Id             AS Id
             , Object_Goods.ObjectCode     AS Code
             , Object_Goods.ValueData      AS Name
@@ -120,6 +120,7 @@ ALTER FUNCTION gpSelect_Object_Goods (TVarChar) OWNER TO postgres;
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 07.12.13                                        * rename UserRole_View -> ObjectLink_UserRole_View
  09.11.13                                        * add tmpUserTransport
  29.10.13                                        * add Object_InfoMoney_View
  02.10.13                                        * add GoodsGroupId

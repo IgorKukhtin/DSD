@@ -1,8 +1,8 @@
--- Function: gpInsertUpdate_Object_RateFuelKind(Integer,Integer,TVarChar, TFloat,TVarChar)
+-- Function: gpInsertUpdate_Object_RateFuelKind (Integer,Integer,TVarChar, TFloat,TVarChar)
 
--- DROP FUNCTION gpInsertUpdate_Object_RateFuelKind (Integer,Integer,TVarChar, TFloat,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_RateFuelKind (Integer,Integer,TVarChar, TFloat,TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_RateFuelKind(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_RateFuelKind (
  INOUT ioId              Integer   ,    -- ключ объекта <Виды норм для топлива>
     IN inCode            Integer   ,    -- Код объекта <>
     IN inName            TVarChar  ,    -- Название объекта <>
@@ -17,7 +17,7 @@ $BODY$
 BEGIN
    
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_RateFuelKind());
+   -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_RateFuelKind());
    vbUserId := inSession;
 
    -- Если код не установлен, определяем его каи последний+1
@@ -37,8 +37,11 @@ BEGIN
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
-END;$BODY$ LANGUAGE plpgsql;
-ALTER FUNCTION gpInsertUpdate_Object_RateFuelKind(Integer,Integer,TVarChar, TFloat,TVarChar) OWNER TO postgres;
+END;
+$BODY$ 
+
+LANGUAGE plpgsql;
+ALTER FUNCTION gpInsertUpdate_Object_RateFuelKind (Integer,Integer,TVarChar, TFloat,TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

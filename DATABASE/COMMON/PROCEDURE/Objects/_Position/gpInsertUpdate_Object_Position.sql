@@ -20,7 +20,7 @@ BEGIN
    -- END IF;
 
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Position());
+   -- vbUserId := PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Position());
    vbUserId := inSession;
    
    -- пытаемся найти код

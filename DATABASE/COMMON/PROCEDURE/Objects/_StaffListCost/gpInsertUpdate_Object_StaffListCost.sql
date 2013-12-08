@@ -16,9 +16,10 @@ $BODY$
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_StaffListCost()());
+   -- vbUserId := PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_StaffListCost());
    vbUserId := inSession;
-       -- проверка
+   
+    -- проверка
    IF COALESCE (inStaffListId, 0) = 0
    THEN
        RAISE EXCEPTION 'Ошибка! Единица штатного расписания не установлена!';

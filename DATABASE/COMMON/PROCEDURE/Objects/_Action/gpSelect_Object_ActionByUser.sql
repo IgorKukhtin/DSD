@@ -12,8 +12,8 @@ BEGIN
   -- Получаем пользователя
   vbUserId := lpGetUserBySession(inSession);
   -- Проверяем нет ли случайно у него прав Админа
-  PERFORM 1 FROM UserRole_View 
-           WHERE UserRole_View.UserId = vbUserId AND UserRole_View.RoleId = zc_Enum_Role_Admin();
+  PERFORM 1 FROM ObjectLink_UserRole_View 
+           WHERE ObjectLink_UserRole_View.UserId = vbUserId AND ObjectLink_UserRole_View.RoleId = zc_Enum_Role_Admin();
   IF FOUND THEN
      -- возвращаем все 
      RETURN QUERY 
@@ -26,9 +26,9 @@ BEGIN
      RETURN QUERY
      SELECT DISTINCT Object_Action.ValueData 
        FROM Object AS Object_Action
-       JOIN roleaction_view ON roleaction_view.ActionId = Object_Action.Id
-       JOIN userrole_view ON userrole_view.RoleId = roleaction_view.RoleId
-        AND userrole_view.UserId = vbUserId;
+       JOIN ObjectLink_RoleAction_View ON ObjectLink_RoleAction_View.ActionId = Object_Action.Id
+       JOIN ObjectLink_UserRole_View ON ObjectLink_UserRole_View.RoleId = ObjectLink_RoleAction_View.RoleId
+                                    AND ObjectLink_UserRole_View.UserId = vbUserId;
   END IF;
 END;$BODY$
 
@@ -42,8 +42,9 @@ ALTER FUNCTION gpSelect_Object_ActionByUser(TVarChar)
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.12.13                                        * rename RoleAction_View -> ObjectLink_RoleAction_View
+ 07.12.13                                        * rename UserRole_View -> ObjectLink_UserRole_View
  25.09.13                         *
-
 */
 
 -- тест

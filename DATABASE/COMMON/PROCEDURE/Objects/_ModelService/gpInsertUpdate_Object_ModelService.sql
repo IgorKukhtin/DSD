@@ -19,7 +19,7 @@ $BODY$
 BEGIN
    
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_ModelService());
+   -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ModelService());
    vbUserId := inSession;
 
    -- пытаемся найти код

@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_RouteSorting(Integer, Integer, TVarChar, TVarChar)
 
--- DROP FUNCTION gpInsertUpdate_Object_RouteSorting (Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_RouteSorting (Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_RouteSorting(
  INOUT ioId             Integer,       -- Ключ объекта <Сортировка маршрутов>
@@ -10,12 +10,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_RouteSorting(
 )
 RETURNS Integer AS
 $BODY$
-   DECLARE UserId Integer;
+   DECLARE vbUserId  Integer;
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_RouteSorting());
-   UserId := inSession;
+   -- vbUserId  := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_RouteSorting());
+   vbUserId  := inSession;
 
    -- проверка прав уникальности для свойства <Наименование Сортировки Маршрутов>
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_RouteSorting(), inName);
@@ -26,7 +26,7 @@ BEGIN
    ioId := lpInsertUpdate_Object (ioId, zc_Object_RouteSorting(), inCode, inName);
    
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId );
 
 END;$BODY$
 

@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_WorkTimeKind (TVarChar)
 
--- DROP FUNCTION gpSelect_Object_WorkTimeKind (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_WorkTimeKind (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_WorkTimeKind(
     IN inSession        TVarChar       -- сессия пользователя

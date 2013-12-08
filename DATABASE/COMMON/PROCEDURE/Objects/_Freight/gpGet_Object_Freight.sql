@@ -1,6 +1,6 @@
 -- Function: gpGet_Object_Freight()
 
--- DROP FUNCTION gpGet_Object_Freight();
+DROP FUNCTION IF EXISTS gpGet_Object_Freight (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Freight(
     IN inId          Integer,       -- ключ объекта <Автомобиль>

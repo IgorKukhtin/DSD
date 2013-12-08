@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_Transport (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar)
 
---DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Transport (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Transport (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Transport (Integer, TVarChar, TDateTime, TDateTime, TDateTime, TDateTime, TDateTime, TFloat,  TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Transport(
@@ -31,13 +31,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Transport(
 RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbAccessKeyId Integer;
    DECLARE vbChild_byMaster Boolean;
 BEGIN
-
-
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Transport());
-     vbUserId := inSession;
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Transport());
+     -- определяем ключ доступа
+     vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Transport());
+
 
      -- проверка
      IF inHoursAdd > 0
@@ -45,7 +46,7 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Проверьте знак для <Кол-во добавленных рабочих часов>.';
      END IF;
 
-     -- определяем - если Автомобиль изменился, надо в конце пересчитать Child
+     -- определяем - если Автомобиль изменился, надо в конце пересчитать Child - Заправка авто
      IF ioId <> 0 AND NOT EXISTS (SELECT MovementId FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_Car() AND ObjectId = inCarId)
      THEN vbChild_byMaster:= TRUE;
      ELSE vbChild_byMaster:= FALSE;
@@ -53,7 +54,7 @@ BEGIN
 
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Transport(), inInvNumber, inOperDate, NULL);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Transport(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
 
      -- сохранили связь с <Дата/Время выезда план>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartRunPlan(), ioId, inStartRunPlan);
@@ -126,6 +127,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.12.13                                        * add lpGetAccessKey
  02.12.13         * add Personal (changes in wiki)
  31.10.13                                        * add lpInsertUpdate_Movement - Изменили свойства у подчиненных Документов
  24.10.13                                        * add !!!с учетом добавленных!!!

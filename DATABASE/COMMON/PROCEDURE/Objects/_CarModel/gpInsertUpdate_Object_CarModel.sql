@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_CarModel()
 
--- DROP FUNCTION gpInsertUpdate_Object_CarModel();
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_CarModel (Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CarModel(
  INOUT ioId             Integer   ,     -- ключ объекта < Марки Автомобиля> 
@@ -15,7 +15,7 @@ $BODY$
 BEGIN
    
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_CarModel());
+   -- vbUserId := PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_CarModel());
    vbUserId := inSession;
 
    -- пытаемся найти код

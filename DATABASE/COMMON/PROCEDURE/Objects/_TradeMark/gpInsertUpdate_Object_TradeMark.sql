@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_TradeMark(Integer, Integer, TVarChar, TVarChar)
 
--- DROP FUNCTION gpInsertUpdate_Object_TradeMark (Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_TradeMark (Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_TradeMark(
  INOUT ioId             Integer,       -- Ключ объекта <маршрут>
@@ -10,14 +10,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_TradeMark(
 )
 RETURNS Integer AS
 $BODY$
-   DECLARE UserId Integer;
+   DECLARE vbUserId Integer;
    DECLARE Code_max Integer;   
  
 BEGIN
  
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_TradeMark());
-   UserId := inSession;
+   -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_TradeMark());
+   vbUserId := inSession;
 
    -- Если код не установлен, определяем его как последний+1
    IF COALESCE (inCode, 0) = 0
@@ -36,7 +36,7 @@ BEGIN
    ioId := lpInsertUpdate_Object (ioId, zc_Object_TradeMark(), Code_max, inName);
    
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
 

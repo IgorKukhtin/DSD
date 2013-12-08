@@ -21,8 +21,9 @@ $BODY$
    DECLARE vbMovementId Integer;
    DECLARE vbMovementItemId Integer;
 BEGIN
-	-- проверка прав пользователя на вызов процедуры
-    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_SheetWorkTime());
+    -- проверка прав пользователя на вызов процедуры
+    -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SheetWorkTime());
+    
     vbUserId := inSession;
 
     IF  COALESCE(inTypeId, 0) = 0 THEN

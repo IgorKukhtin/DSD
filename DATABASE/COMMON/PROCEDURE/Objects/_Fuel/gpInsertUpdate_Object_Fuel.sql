@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_Fuel (Integer,Integer,TVarChar, TFloat,TVarChar)
 
--- DROP FUNCTION gpInsertUpdate_Object_Fuel (Integer,Integer,TVarChar, TFloat, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Fuel (Integer,Integer,TVarChar, TFloat, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Fuel(
  INOUT ioId              Integer   ,    -- ключ объекта <Виды топлива>
@@ -18,7 +18,7 @@ $BODY$
 BEGIN
    
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Fuel());
+   -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Fuel());
    vbUserId := inSession;
 
    -- Если код не установлен, определяем его каи последний+1
@@ -41,7 +41,8 @@ BEGIN
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
-END;$BODY$ LANGUAGE plpgsql;
+END;
+$BODY$ LANGUAGE plpgsql;
 ALTER FUNCTION gpInsertUpdate_Object_Fuel(Integer,Integer,TVarChar, TFloat, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/

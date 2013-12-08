@@ -10,7 +10,7 @@ RETURNS TABLE (Code Integer, Name TVarChar) AS
 $BODY$BEGIN
 
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_RouteSorting());
+   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Object_RouteSorting());
 
    IF COALESCE (inId, 0) = 0
    THEN

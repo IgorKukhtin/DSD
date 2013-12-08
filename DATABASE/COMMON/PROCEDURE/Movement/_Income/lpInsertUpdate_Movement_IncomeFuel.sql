@@ -1,6 +1,8 @@
 -- Function: lpInsertUpdate_Movement_IncomeFuel()
 
--- DROP FUNCTION lpInsertUpdate_Movement_IncomeFuel();
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_IncomeFuel (Integer, Integer, TVarChar, TVarChar, TDateTime, boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_IncomeFuel (Integer, Integer, TVarChar, TDateTime, TDateTime, TVarChar, boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_IncomeFuel (Integer, Integer, TVarChar, TDateTime, TDateTime, TVarChar, boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_IncomeFuel(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -18,15 +20,15 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_IncomeFuel(
     IN inContractId          Integer   , -- Договора
     IN inRouteId             Integer   , -- Маршрут
     IN inPersonalDriverId    Integer   , -- Сотрудник (водитель)
+    IN inAccessKeyId         Integer   , -- 
     IN inUserId              Integer     -- Пользователь
 )                              
 RETURNS Integer
 AS
 $BODY$
 BEGIN
-
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Income(), inInvNumber, inOperDate, inParentId);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Income(), inInvNumber, inOperDate, inParentId, inAccessKeyId);
 
      -- сохранили свойство <Дата накладной у контрагента>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDatePartner);
@@ -36,9 +38,9 @@ BEGIN
      -- сохранили свойство <Цена с НДС (да/нет)>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), ioId, inPriceWithVAT);
      -- сохранили свойство <% НДС>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, inVATPercent);
+     PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_VATPercent(), ioId, inVATPercent);
      -- сохранили свойство <Скидка в цене>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePrice(), ioId, inChangePrice);
+     PERFORM lpInsertUpdate_MovemenTFloat (zc_MovemenTFloat_ChangePrice(), ioId, inChangePrice);
 
      -- сохранили связь с <От кого (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
@@ -57,19 +59,21 @@ BEGIN
 
 
      -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
+     PERFORM lpInsertUpdate_MovemenTFloat_TotalSumm (ioId);
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, inUserId);
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
+ALTER FUNCTION lpInsertUpdate_Movement_IncomeFuel (Integer, Integer, TVarChar, TDateTime, TDateTime, TVarChar, boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.12.13                                        * add inAccessKeyId
  31.10.13                                        * add inOperDatePartner
  19.10.13                                        * add inChangePrice
  05.10.13                                        * add inInvNumberPartner
@@ -77,4 +81,4 @@ LANGUAGE PLPGSQL VOLATILE;
 */
 
 -- тест
--- SELECT * FROM lpInsertUpdate_Movement_IncomeFuel (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePrice:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')
+-- SELECT * FROM lpInsertUpdate_Movement_IncomeFuel (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePrice:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inAccessKeyId:= 1, inSession:= '2')

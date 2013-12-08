@@ -1,6 +1,6 @@
 -- Function: gpGet_Object_CarModel()
 
---DROP FUNCTION gpGet_Object_CarModel();
+DROP FUNCTION IF EXISTS gpGet_Object_CarModel (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_CarModel(
     IN inId          Integer,       -- ключ объекта <Марки Автомобиля>
@@ -11,7 +11,7 @@ $BODY$
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_CarModel());
 
    IF COALESCE (inId, 0) = 0
    THEN

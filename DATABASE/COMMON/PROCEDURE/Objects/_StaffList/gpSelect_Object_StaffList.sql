@@ -20,6 +20,7 @@ BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_StaffList());
+
   CREATE TEMP TABLE _tmpUnit (UnitId Integer) ON COMMIT DROP;
     
   IF inUnitId <> 0 

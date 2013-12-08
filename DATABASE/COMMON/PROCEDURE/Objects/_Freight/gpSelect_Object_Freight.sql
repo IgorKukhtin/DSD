@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_Freight()
 
---DROP FUNCTION gpSelect_Object_Freight();
+DROP FUNCTION IF EXISTS gpSelect_Object_Freight(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Freight(
     IN inSession     TVarChar       -- сессия пользователя
@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Freight(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
              , isErased boolean
              ) AS
-$BODY$BEGIN
+$BODY$
+BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Freight());
 

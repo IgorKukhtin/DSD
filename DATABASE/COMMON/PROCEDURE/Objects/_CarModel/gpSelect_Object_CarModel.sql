@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_CarModel()
 
---DROP FUNCTION gpSelect_Object_CarModel();
+DROP FUNCTION IF EXISTS gpSelect_Object_CarModel(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_CarModel(
     IN inSession     TVarChar       -- сессия пользователя
@@ -9,7 +9,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
 $BODY$BEGIN
    
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_CarModel());
 
    RETURN QUERY 
    SELECT 

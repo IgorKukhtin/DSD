@@ -19,9 +19,10 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode Integer;   
    DECLARE vbName TVarChar;   
+   DECLARE vbAccessKeyId_calc Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Personal()());
+   -- vbUserId := PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Personal());
    vbUserId := inSession;
    
 
@@ -43,7 +44,7 @@ BEGIN
 
 
    -- определяем параметры, т.к. значения должны быть синхронизированы с объектом <Физические лица>
-   SELECT ObjectCode, ValueData INTO vbCode, vbName FROM Object WHERE Id = inMemberId;   
+   SELECT ObjectCode, ValueData, AccessKeyId INTO vbCode, vbName, vbAccessKeyId_calc FROM Object WHERE Id = inMemberId;   
 
    -- !!! это временно !!!
    -- IF COALESCE(ioId, 0) = 0
@@ -54,15 +55,15 @@ BEGIN
    IF EXISTS (SELECT PersonalName FROM Object_Personal_View WHERE PersonalName = vbName AND UnitId = inUnitId AND PositionId = COALESCE (inPositionId, 0) AND PositionLevelId = COALESCE (inPositionLevelId, 0) AND PersonalId <> COALESCE(ioId, 0)) THEN
       RAISE EXCEPTION 'Значение <%> для подразделения: <%> должность: <%> разряд должности: <%> не уникально в справочнике <%>.'
                     , vbName
-                    , (SELECT ValueData FROM Object WHERE Id = inUnitId)
-                    , (SELECT ValueData FROM Object WHERE Id = inPositionId)
-                    , COALESCE ((SELECT ValueData FROM Object WHERE Id = inPositionLevelId), '')
+                    , lfGet_Object_ValueData (inUnitId)
+                    , lfGet_Object_ValueData (inPositionId)
+                    , COALESCE (lfGet_Object_ValueData (inPositionLevelId), '')
                     , (SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Personal());
    END IF; 
 
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Personal(), vbCode, vbName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Personal(), vbCode, vbName, inAccessKeyId:= vbAccessKeyId_calc);
    -- сохранили связь с <физ.лицом>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_Member(), ioId, inMemberId);
    -- сохранили связь с <должностью>
@@ -90,6 +91,7 @@ ALTER FUNCTION gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Intege
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.12.13                                        * add inAccessKeyId берем у <Физические лица>
  21.11.13                                        * add проверка уникальности для свойств
  21.11.13                                        * add inPositionLevelId
  09.11.13                                        * синхронизируем с объектом <Физические лица>

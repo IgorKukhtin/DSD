@@ -22,7 +22,7 @@ BEGIN
    -- END IF;
    
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_PersonalGroup());
+   -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_PersonalGroup());
    vbUserId := inSession;
 
    -- пытаемся найти код
