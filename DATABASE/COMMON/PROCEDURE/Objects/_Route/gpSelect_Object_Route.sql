@@ -70,4 +70,4 @@ ALTER FUNCTION gpSelect_Object_Route (TVarChar) OWNER TO postgres;
 UPDATE Object SET AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr() WHERE DescId = zc_Object_Route() AND ObjectCode < 200;
 */
 -- тест
--- SELECT * FROM gpSelect_Object_Route ('5')
+-- SELECT * FROM gpSelect_Object_Route (zfCalc_UserAdmin())
