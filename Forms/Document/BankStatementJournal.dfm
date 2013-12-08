@@ -1,11 +1,16 @@
 inherited BankStatementJournalForm: TBankStatementJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1073#1072#1085#1082#1086#1074#1089#1082#1080#1093' '#1074#1099#1087#1080#1089#1086#1082
+  ClientWidth = 843
+  ExplicitWidth = 851
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Width = 843
     TabOrder = 3
+    ClientRectRight = 843
     inherited tsMain: TcxTabSheet
       inherited cxGrid: TcxGrid
+        Width = 843
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -27,14 +32,27 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
           object colBankName: TcxGridDBColumn
             Caption = #1041#1072#1085#1082
             DataBinding.FieldName = 'BankName'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 175
           end
           object colBankAccount: TcxGridDBColumn
             Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
             DataBinding.FieldName = 'BankAccountName'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 172
+          end
+          object colDebet: TcxGridDBColumn
+            Caption = #1044#1077#1073#1077#1090
+            HeaderAlignmentVert = vaCenter
+          end
+          object colKredit: TcxGridDBColumn
+            Caption = #1050#1088#1077#1076#1080#1090
+            HeaderAlignmentVert = vaCenter
+          end
+          object colAmount: TcxGridDBColumn
+            Caption = #1054#1073#1086#1088#1086#1090' '#1087#1086' '#1089#1095#1077#1090#1091
           end
         end
       end
@@ -42,6 +60,7 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
   end
   inherited Panel: TPanel
     Top = 0
+    Width = 843
     ExplicitTop = 0
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -99,6 +118,23 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     object BankForumLoad: TClientBankLoadAction
       Category = 'DSDLib'
       ClientBankType = cbForum
+    end
+    object BankOTPLoad: TClientBankLoadAction
+      Category = 'DSDLib'
+      ClientBankType = cbOTPBank
+    end
+    object BankOTP: TMultiAction
+      Category = 'DSDLib'
+      ActionList = <
+        item
+          Action = BankOTPLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1054#1058#1055' '#1073#1072#1085#1082#1072' '
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1054#1058#1055' '#1073#1072#1085#1082#1072' '
+      ImageIndex = 50
     end
     object BankVostokLoad: TClientBankLoadAction
       Category = 'DSDLib'
@@ -202,6 +238,10 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
           ItemName = 'bbBankErnst'
         end
         item
+          Visible = True
+          ItemName = 'bbOTPLoad'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
@@ -238,6 +278,10 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     end
     object bbBankErnst: TdxBarButton
       Action = BankFido
+      Category = 0
+    end
+    object bbOTPLoad: TdxBarButton
+      Action = BankOTP
       Category = 0
     end
   end

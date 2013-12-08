@@ -189,7 +189,7 @@ uses
   Action in '..\..\Forms\Action.pas' {ActionForm},
   User in '..\..\Forms\User.pas' {UserForm},
   UserEdit in '..\..\Forms\UserEdit.pas' {UserEditForm},
-  Process in '..\..\Forms\Process.pas' {ProcessForm},
+  Process in '..\..\Forms\Enum\Process.pas' {ProcessForm},
   ComponentAddOnTest in '..\SOURCE\Component\ComponentAddOnTest.pas',
   DefaultsTest in '..\SOURCE\Defaults\DefaultsTest.pas',
   Transport in '..\..\Forms\Document\Transport.pas' {TransportForm},
@@ -265,7 +265,7 @@ uses
   SendTicketFuelJournal in '..\..\Forms\Document\SendTicketFuelJournal.pas' {SendTicketFuelJournalForm: TParentForm},
   Units in '..\..\Forms\Guides\Units.pas' {UnitForm: TParentForm},
   Goods in '..\..\Forms\Guides\Goods.pas' {GoodsForm: TParentForm},
-  BankStatementJournal in '..\..\Forms\Document\BankStatementJournal.pas' {BankStatementJournalForm: TParentForm},
+  BankAccountJournal in '..\..\Forms\Document\BankAccountJournal.pas' {BankAccountJournalForm: TParentForm},
   ClientBankLoad in '..\..\SOURCE\COMPONENT\ClientBankLoad.pas',
   MemDBFTable in '..\..\SOURCE\MemDBFTable.pas',
   SimpleGauge in '..\..\SOURCE\SimpleGauge.pas' {SimpleGaugeForm},
@@ -289,13 +289,16 @@ uses
   PartnerEdit in '..\..\Forms\PartnerEdit.pas' {PartnerEditForm: TParentForm},
   WorkTimeKind_Object in '..\..\Forms\Enum\WorkTimeKind_Object.pas' {WorkTimeKind_ObjectForm: TParentForm},
   Calendar in '..\..\Forms\Guides\Calendar.pas' {CalendarForm: TParentForm},
-  GoodsTree_Object in '..\..\Forms\Guides\GoodsTree_Object.pas' {GoodsTree_ObjectForm: TParentForm};
+  GoodsTree_Object in '..\..\Forms\Guides\GoodsTree_Object.pas' {GoodsTree_ObjectForm: TParentForm},
+  BankStatementJournal in '..\..\Forms\Document\BankStatementJournal.pas' {BankStatementJournalForm: TParentForm},
+  BankAccountMovement in '..\..\Forms\Document\BankAccountMovement.pas' {BankAccountMovementForm: TParentForm};
 
 {$R *.RES}
 
 begin
   Application.Initialize;
   Application.CreateForm(TdmMain, dmMain);
+  Application.CreateForm(TBankAccountMovementForm, BankAccountMovementForm);
   Application.Run;
   DUnitTestRunner.RunRegisteredTests;
 end.

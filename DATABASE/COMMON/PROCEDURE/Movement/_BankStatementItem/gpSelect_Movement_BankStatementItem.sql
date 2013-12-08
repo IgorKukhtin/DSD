@@ -8,12 +8,16 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_BankStatementItem(
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
-             , Amount TFloat
+             , Debet TFloat, Kredit TFloat
              , OKPO TVarChar, Juridicalname TVarChar, Comment TVarChar
-             , InfoMoneyId  integer, InfoMoneyName  TVarChar
-             , ContractId  integer, ContractName  TVarChar
-             , UnitId  integer, UnitName  TVarChar
-              )
+             , LinkJuridicalId integer, LinkJuridicalName TVarChar
+             , InfoMoneyId integer, InfoMoneyName TVarChar
+             , ContractId integer, ContractName TVarChar
+             , UnitId integer, UnitName TVarChar, CurrencyName TVarChar
+             , BankAccount TVarChar, BankMFO TVarChar, BankName TVarChar
+             , BankAccountId Integer, BankAccountName TVarChar
+             , LinkBankId Integer, LinkBankName TVarChar
+)
 AS
 $BODY$
 BEGIN
@@ -29,20 +33,40 @@ BEGIN
              Movement.Id
            , Movement.InvNumber
            , Movement.OperDate
-
-           , MovementFloat_Amount.ValueData AS Amount
+           , CASE SIGN(MovementFloat_Amount.ValueData) 
+               WHEN 1
+                 THEN MovementFloat_Amount.ValueData
+               ELSE 
+                 0 
+             END::TFloat AS Debet
+           , CASE SIGN(MovementFloat_Amount.ValueData) 
+               WHEN 1
+                 THEN 0
+               ELSE 
+                 - MovementFloat_Amount.ValueData 
+             END::TFloat AS Kredit
            , MovementString_OKPO.ValueData  AS OKPO
            , MovementString_JuridicalName.ValueData AS JuridicalName
            , MovementString_Comment.ValueData AS Comment
 
+           , Object_Juridical.Id          AS LinkJuridicalId
+           , Object_Juridical.ValueData   AS LinkJuridicalName
            , Object_InfoMoney.Id          AS InfoMoneyId
            , Object_InfoMoney.ValueData   AS InfoMoneyName
-           
            , Object_Contract.Id           AS ContractId
            , Object_Contract.ValueData    AS ContractName          
-        
            , Object_Unit.Id               AS UnitId
            , Object_Unit.ValueData        AS UnitName
+           , Object_Currency.ValueData    AS CurrencyName
+
+           , MovementString_BankAccount.ValueData AS BankAccount
+           , MovementString_BankMFO.ValueData AS BankMFO
+           , MovementString_BankName.ValueData AS BankName
+
+           , Object_BankAccount_View.Id          AS BankAccountId
+           , Object_BankAccount_View.Name        AS BankAccountName
+           , Object_BankAccount_View.BankId      AS LinkBankId
+           , Object_BankAccount_View.BankName    AS LinkBankNameId
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -54,6 +78,18 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_OKPO
                                      ON MovementString_OKPO.MovementId =  Movement.Id
                                     AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
+
+            LEFT JOIN MovementString AS MovementString_BankAccount
+                                     ON MovementString_BankAccount.MovementId =  Movement.Id
+                                    AND MovementString_BankAccount.DescId = zc_MovementString_BankAccount()
+
+            LEFT JOIN MovementString AS MovementString_BankMFO
+                                     ON MovementString_BankMFO.MovementId =  Movement.Id
+                                    AND MovementString_BankMFO.DescId = zc_MovementString_BankMFO()
+
+            LEFT JOIN MovementString AS MovementString_BankName
+                                     ON MovementString_BankName.MovementId =  Movement.Id
+                                    AND MovementString_BankName.DescId = zc_MovementString_BankName()
 
             LEFT JOIN MovementString AS MovementString_JuridicalName
                                      ON MovementString_JuridicalName.MovementId =  Movement.Id
@@ -72,11 +108,26 @@ BEGIN
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
-           
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Currency
+                                         ON MovementLinkObject_Currency.MovementId = Movement.Id
+                                        AND MovementLinkObject_Currency.DescId = zc_MovementLinkObject_Currency()
+            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MovementLinkObject_Currency.ObjectId
+          
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
+                                         ON MovementLinkObject_Juridical.MovementId = Movement.Id
+                                        AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_BankAccount
+                                         ON MovementLinkObject_BankAccount.MovementId = Movement.Id
+                                        AND MovementLinkObject_BankAccount.DescId = zc_MovementLinkObject_BankAccount()
+            LEFT JOIN Object_BankAccount_View ON Object_BankAccount_View.Id = MovementLinkObject_BankAccount.ObjectId
 
        WHERE Movement.DescId = zc_Movement_BankStatementItem()
          AND Movement.ParentId = inMovementId;

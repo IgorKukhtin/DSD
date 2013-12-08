@@ -6,7 +6,7 @@ uses dsdAction, DB, dsdDb;
 
 type
 
-  TClientBankType = (cbPrivatBank, cbForum, cbVostok, cbFidoBank);
+  TClientBankType = (cbPrivatBank, cbForum, cbVostok, cbFidoBank, cbOTPBank);
 
   TClientBankLoad = class
   private
@@ -24,8 +24,9 @@ type
     function GetBankMFO: string; virtual; abstract;
     function GetJuridicalName: string; virtual; abstract;
     function GetBankName: string; virtual; abstract;
-    function GetOKPOTo: string; virtual; abstract;
     function GetComment: string; virtual; abstract;
+    function GetCurrencyCode: string; virtual; abstract;
+    function GetCurrencyName: string; virtual; abstract;
   public
     constructor Create; virtual;
     destructor Destroy;
@@ -45,6 +46,8 @@ type
     property BankAccount: string read GetBankAccount;
     property BankMFO: string read GetBankMFO;
     property BankName: string read GetBankName;
+    property CurrencyCode: string read GetCurrencyCode;
+    property CurrencyName: string read GetCurrencyName;
     property Comment: string read GetComment;
   end;
 
@@ -92,8 +95,9 @@ type
     function GetBankMFO: string; override;
     function GetJuridicalName: string; override;
     function GetBankName: string; override;
-    function GetOKPOTo: string; override;
     function GetComment: string; override;
+    function GetCurrencyCode: string; override;
+    function GetCurrencyName: string; override;
   end;
 
   TForumBankLoad = class(TClientBankLoad)
@@ -109,6 +113,8 @@ type
     function GetJuridicalName: string; override;
     function GetBankName: string; override;
     function GetComment: string; override;
+    function GetCurrencyCode: string; override;
+    function GetCurrencyName: string; override;
   end;
 
   TVostokBankLoad = class(TClientBankLoad)
@@ -124,6 +130,8 @@ type
     function GetJuridicalName: string; override;
     function GetBankName: string; override;
     function GetComment: string; override;
+    function GetCurrencyCode: string; override;
+    function GetCurrencyName: string; override;
   end;
 
   TFidoBankLoad = class(TClientBankLoad)
@@ -139,8 +147,26 @@ type
     function GetJuridicalName: string; override;
     function GetBankName: string; override;
     function GetComment: string; override;
+    function GetCurrencyCode: string; override;
+    function GetCurrencyName: string; override;
   end;
 
+  TOTPBankLoad = class(TClientBankLoad)
+    function GetOperSumm: real; override;
+    function GetDocNumber: string; override;
+    function GetOperDate: TDateTime; override;
+
+    function GetBankAccountMain: string; override;
+    function GetOKPO: string; override;
+    function GetBankAccount: string; override;
+    function GetBankMFOMain: string; override;
+    function GetBankMFO: string; override;
+    function GetJuridicalName: string; override;
+    function GetBankName: string; override;
+    function GetComment: string; override;
+    function GetCurrencyCode: string; override;
+    function GetCurrencyName: string; override;
+  end;
 
 function TClientBankLoadAction.Execute: boolean;
 var
@@ -186,6 +212,7 @@ begin
     cbForum: result := TForumBankLoad.Create;
     cbVostok: result := TVostokBankLoad.Create;
     cbFidoBank: result := TFidoBankLoad.Create;
+    cbOTPBank: result := TOTPBankLoad.Create;
   end;
 end;
 
@@ -202,6 +229,8 @@ begin
     Params.AddParam('inBankAccount', ftString, ptInput, null);
     Params.AddParam('inBankMFO', ftString, ptInput, null);
     Params.AddParam('inBankName', ftString, ptInput, null);
+    Params.AddParam('inCurrencyCode', ftString, ptInput, null);
+    Params.AddParam('inCurrencyName', ftString, ptInput, null);
     Params.AddParam('inAmount', ftFloat, ptInput, null);
     Params.AddParam('inComment', ftString, ptInput, null);
   end;
@@ -220,6 +249,8 @@ begin
     ParamByName('inBankAccount').Value := BankAccount;
     ParamByName('inBankMFO').Value := BankMFO;
     ParamByName('inBankName').Value := BankName;
+    ParamByName('inCurrencyCode').Value := CurrencyCode;
+    ParamByName('inCurrencyName').Value := CurrencyName;
     ParamByName('inAmount').Value := OperSumm;
     ParamByName('inComment').Value := Comment;
     Execute;
@@ -291,7 +322,8 @@ begin
   if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 0 then
      result := FDataSet.FieldByName('ACCOUNT_A').AsString
   else
-     result := FDataSet.FieldByName('ACCOUNT_B').AsString
+     result := FDataSet.FieldByName('ACCOUNT_B').AsString;
+  result := trim(result);
 end;
 
 function TPrivatBankLoad.GetBankAccount: string;
@@ -299,7 +331,8 @@ begin
   if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 1 then
      result := FDataSet.FieldByName('ACCOUNT_A').AsString
   else
-     result := FDataSet.FieldByName('ACCOUNT_B').AsString
+     result := FDataSet.FieldByName('ACCOUNT_B').AsString;
+  result := trim(result);
 end;
 
 function TPrivatBankLoad.GetBankMFOMain: string;
@@ -328,6 +361,16 @@ begin
   result := FDataSet.FieldByName('N_P').AsString
 end;
 
+function TPrivatBankLoad.GetCurrencyCode: string;
+begin
+  result := ''
+end;
+
+function TPrivatBankLoad.GetCurrencyName: string;
+begin
+  result := FDataSet.FieldByName('VAL').AsString
+end;
+
 function TPrivatBankLoad.GetDocNumber: string;
 begin
   result := FDataSet.FieldByName('N_DOC').AsString
@@ -335,7 +378,7 @@ end;
 
 function TPrivatBankLoad.GetJuridicalName: string;
 begin
-  if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 0 then
+  if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 1 then
      result := FDataSet.FieldByName('NAME_A').AsString
   else
      result := FDataSet.FieldByName('NAME_B').AsString
@@ -343,15 +386,10 @@ end;
 
 function TPrivatBankLoad.GetOKPO: string;
 begin
-  if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 0 then
+  if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 1 then
      result := FDataSet.FieldByName('OKPO1_A').AsString
   else
      result := FDataSet.FieldByName('OKPO2_B').AsString
-end;
-
-function TPrivatBankLoad.GetOKPOTo: string;
-begin
-
 end;
 
 function TPrivatBankLoad.GetOperDate: TDateTime;
@@ -361,7 +399,7 @@ end;
 
 function TPrivatBankLoad.GetOperSumm: real;
 begin
-  if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 0 then
+  if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 1 then
      result := FDataSet.FieldByName('SUM_DOC').AsFloat
   else
      result := - FDataSet.FieldByName('SUM_DOC').AsFloat;
@@ -371,27 +409,49 @@ end;
 
 function TForumBankLoad.GetBankAccountMain: string;
 begin
-  result := FDataSet.FieldByName('RR_DB').AsString
+  if FDataSet.FieldByName('OPERAT').AsInteger = 1 then
+     result := FDataSet.FieldByName('RR_DB').AsString
+  else
+     result := FDataSet.FieldByName('RR_K').AsString;
 end;
 
 function TForumBankLoad.GetBankAccount: string;
 begin
-  result := FDataSet.FieldByName('RR_K').AsString
+  if FDataSet.FieldByName('OPERAT').AsInteger = 2 then
+     result := FDataSet.FieldByName('RR_DB').AsString
+  else
+     result := FDataSet.FieldByName('RR_K').AsString;
 end;
 
 function TForumBankLoad.GetBankMFOMain: string;
 begin
-  result := FDataSet.FieldByName('MFO_DB').AsString
+  if FDataSet.FieldByName('OPERAT').AsInteger = 1 then
+     result := FDataSet.FieldByName('MFO_DB').AsString
+  else
+     result := FDataSet.FieldByName('MFO_CR').AsString;
 end;
 
 function TForumBankLoad.GetBankMFO: string;
 begin
-  result := FDataSet.FieldByName('MFO_CR').AsString
+  if FDataSet.FieldByName('OPERAT').AsInteger = 2 then
+     result := FDataSet.FieldByName('MFO_DB').AsString
+  else
+     result := FDataSet.FieldByName('MFO_CR').AsString;
 end;
 
 function TForumBankLoad.GetComment: string;
 begin
   result := FDataSet.FieldByName('PRIZN').AsString
+end;
+
+function TForumBankLoad.GetCurrencyCode: string;
+begin
+  result := FDataSet.FieldByName('KOD_VAL').AsString
+end;
+
+function TForumBankLoad.GetCurrencyName: string;
+begin
+  result := ''
 end;
 
 function TForumBankLoad.GetDocNumber: string;
@@ -401,17 +461,23 @@ end;
 
 function TForumBankLoad.GetJuridicalName: string;
 begin
-  result := FDataSet.FieldByName('NAIM_D').AsString
+  if FDataSet.FieldByName('OPERAT').AsInteger = 1 then
+     result := FDataSet.FieldByName('NAIM_K').AsString
+  else
+     result := FDataSet.FieldByName('NAIM_D').AsString
 end;
 
 function TForumBankLoad.GetBankName: string;
 begin
-  result := FDataSet.FieldByName('NAIM_K').AsString
+  result := ''
 end;
 
 function TForumBankLoad.GetOKPO: string;
 begin
-  result := FDataSet.FieldByName('OKPO_CR').AsString
+  if FDataSet.FieldByName('OPERAT').AsInteger = 2 then
+     result := FDataSet.FieldByName('OKPO_DB').AsString
+  else
+     result := FDataSet.FieldByName('OKPO_CR').AsString;
 end;
 
 function TForumBankLoad.GetOperDate: TDateTime;
@@ -421,7 +487,10 @@ end;
 
 function TForumBankLoad.GetOperSumm: real;
 begin
-  result := FDataSet.FieldByName('SUM').AsFloat
+  if FDataSet.FieldByName('OPERAT').AsInteger = 2 then
+     result := FDataSet.FieldByName('SUM').AsFloat
+  else
+     result := - FDataSet.FieldByName('SUM').AsFloat
 end;
 
 { TVostokBankLoad }
@@ -438,17 +507,27 @@ end;
 
 function TVostokBankLoad.GetBankMFOMain: string;
 begin
-  result := FDataSet.FieldByName('R_MFO').AsString
+  result := FDataSet.FieldByName('MFO').AsString
 end;
 
 function TVostokBankLoad.GetBankMFO: string;
 begin
-  result := FDataSet.FieldByName('MFO').AsString
+  result := FDataSet.FieldByName('R_MFO').AsString
 end;
 
 function TVostokBankLoad.GetComment: string;
 begin
   result := FDataSet.FieldByName('COMMENT').AsString
+end;
+
+function TVostokBankLoad.GetCurrencyCode: string;
+begin
+  result := FDataSet.FieldByName('CURRENCY').AsString
+end;
+
+function TVostokBankLoad.GetCurrencyName: string;
+begin
+  result := ''
 end;
 
 function TVostokBankLoad.GetDocNumber: string;
@@ -463,12 +542,12 @@ end;
 
 function TVostokBankLoad.GetBankName: string;
 begin
-  result := FDataSet.FieldByName('NAME').AsString
+  result := ''
 end;
 
 function TVostokBankLoad.GetOKPO: string;
 begin
-  result := ''
+  result := trim(FDataSet.FieldByName('CHAR_R_ZIP').AsString)
 end;
 
 function TVostokBankLoad.GetOperDate: TDateTime;
@@ -478,7 +557,10 @@ end;
 
 function TVostokBankLoad.GetOperSumm: real;
 begin
-  result := FDataSet.FieldByName('SUM').AsFloat
+  if FDataSet.FieldByName('FL_DK').AsInteger = 0 then
+     result := FDataSet.FieldByName('SUM').AsFloat
+  else
+     result := - FDataSet.FieldByName('SUM').AsFloat
 end;
 
 { TFidoBankLoad }
@@ -508,6 +590,16 @@ begin
   result := FDataSet.FieldByName('N_P').AsString
 end;
 
+function TFidoBankLoad.GetCurrencyCode: string;
+begin
+  result := FDataSet.FieldByName('CUR_ID').AsString
+end;
+
+function TFidoBankLoad.GetCurrencyName: string;
+begin
+  result := ''
+end;
+
 function TFidoBankLoad.GetDocNumber: string;
 begin
   result := FDataSet.FieldByName('ND').AsString
@@ -525,7 +617,7 @@ end;
 
 function TFidoBankLoad.GetOKPO: string;
 begin
-  result := FDataSet.FieldByName('KL_OKP').AsString
+  result := FDataSet.FieldByName('KL_OKP_K').AsString
 end;
 
 function TFidoBankLoad.GetOperDate: TDateTime;
@@ -539,6 +631,94 @@ begin
      result := FDataSet.FieldByName('S').AsFloat
   else
      result := - FDataSet.FieldByName('S').AsFloat
+end;
+
+{ TOTPBankLoad }
+
+function TOTPBankLoad.GetBankAccountMain: string;
+begin
+  if FDataSet.FieldByName('OPERAT').AsInteger = 1 then
+     result := FDataSet.FieldByName('RR_DB').AsString
+  else
+     result := FDataSet.FieldByName('RR_K').AsString;
+end;
+
+function TOTPBankLoad.GetBankAccount: string;
+begin
+  if FDataSet.FieldByName('OPERAT').AsInteger = 2 then
+     result := FDataSet.FieldByName('RR_DB').AsString
+  else
+     result := FDataSet.FieldByName('RR_K').AsString;
+end;
+
+function TOTPBankLoad.GetBankMFOMain: string;
+begin
+  if FDataSet.FieldByName('OPERAT').AsInteger = 1 then
+     result := FDataSet.FieldByName('MFO_DB').AsString
+  else
+     result := FDataSet.FieldByName('MFO_CR').AsString;
+end;
+
+function TOTPBankLoad.GetBankMFO: string;
+begin
+  if FDataSet.FieldByName('OPERAT').AsInteger = 2 then
+     result := FDataSet.FieldByName('MFO_DB').AsString
+  else
+     result := FDataSet.FieldByName('MFO_CR').AsString;
+end;
+
+function TOTPBankLoad.GetComment: string;
+begin
+  result := FDataSet.FieldByName('PRIZN').AsString
+end;
+
+function TOTPBankLoad.GetCurrencyCode: string;
+begin
+  result := FDataSet.FieldByName('KOD_VAL').AsString
+end;
+
+function TOTPBankLoad.GetCurrencyName: string;
+begin
+  result := ''
+end;
+
+function TOTPBankLoad.GetDocNumber: string;
+begin
+  result := FDataSet.FieldByName('N_DOC').AsString
+end;
+
+function TOTPBankLoad.GetJuridicalName: string;
+begin
+  if FDataSet.FieldByName('OPERAT').AsInteger = 1 then
+     result := FDataSet.FieldByName('NAIM_K').AsString
+  else
+     result := FDataSet.FieldByName('NAIM_D').AsString
+end;
+
+function TOTPBankLoad.GetBankName: string;
+begin
+  result := ''
+end;
+
+function TOTPBankLoad.GetOKPO: string;
+begin
+  if FDataSet.FieldByName('OPERAT').AsInteger = 2 then
+     result := FDataSet.FieldByName('OKPO_DB').AsString
+  else
+     result := FDataSet.FieldByName('OKPO_CR').AsString;
+end;
+
+function TOTPBankLoad.GetOperDate: TDateTime;
+begin
+  result := FDataSet.FieldByName('DAT').AsDateTime
+end;
+
+function TOTPBankLoad.GetOperSumm: real;
+begin
+  if FDataSet.FieldByName('OPERAT').AsInteger = 2 then
+     result := FDataSet.FieldByName('SUM').AsFloat
+  else
+     result := - FDataSet.FieldByName('SUM').AsFloat
 end;
 
 end.

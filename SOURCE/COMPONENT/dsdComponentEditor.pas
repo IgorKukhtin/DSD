@@ -74,31 +74,33 @@ end;
 function TComponentItemTextProperty.GetAttributes: TPropertyAttributes;
 begin
   Result := inherited GetAttributes + [paReadOnly];
-  with TdsdParam(GetComponent(0)) do
-       if Component <> nil then
-          if (Component is TDataSet) or (Component is TdsdFormParams)
-             or (Component is TdsdGuides) or (Component is TCrossDBViewAddOn) then
-             Result := Result + [paValueList] - [paReadOnly];
+  if Assigned(GetComponent(0)) then
+    with TdsdParam(GetComponent(0)) do
+         if Component <> nil then
+            if (Component is TDataSet) or (Component is TdsdFormParams)
+               or (Component is TdsdGuides) or (Component is TCrossDBViewAddOn) then
+               Result := Result + [paValueList] - [paReadOnly];
 end;
 
 procedure TComponentItemTextProperty.GetValues(Proc: TGetStrProc);
 var i: Integer;
 begin
   inherited;
-  with TdsdParam(GetComponent(0)) do
-       if Component <> nil then begin
-          if (Component is TDataSet) then;
-          if (Component is TdsdFormParams) then
-              with Component as TdsdFormParams do
-                for i := 0 to Params.Count - 1 do
-                  Proc(Params[i].Name);
-          if (Component is TCustomGuides) then
-          begin
-            Proc('Key');
-            Proc('TextValue');
-            Proc('ParentId');
-          end;
-       end
+  if Assigned(GetComponent(0)) then
+    with TdsdParam(GetComponent(0)) do
+         if Component <> nil then begin
+            if (Component is TDataSet) then;
+            if (Component is TdsdFormParams) then
+                with Component as TdsdFormParams do
+                  for i := 0 to Params.Count - 1 do
+                    Proc(Params[i].Name);
+            if (Component is TCustomGuides) then
+            begin
+              Proc('Key');
+              Proc('TextValue');
+              Proc('ParentId');
+            end;
+         end
 end;
 
 

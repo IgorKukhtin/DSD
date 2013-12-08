@@ -13,16 +13,12 @@ $BODY$BEGIN
 
    RETURN QUERY 
    SELECT 
-     Object.Id          AS Id
-   , Object.ObjectCode  AS Code
-   , Object.ValueData   AS Name
-   , Object.isErased    AS isErased
-   , ObjectString.ValueData AS InternalName
-   FROM Object
-   JOIN ObjectString
-     ON ObjectString.ObjectId = Object.Id
-    AND ObjectString.DescId = zc_objectString_Currency_InternalName()
-   WHERE Object.DescId = zc_Object_Currency();
+     Id
+   , Code
+   , Name
+   , isErased
+   , InternalName
+   FROM Object_Currency_View;
   
 END;$BODY$
 

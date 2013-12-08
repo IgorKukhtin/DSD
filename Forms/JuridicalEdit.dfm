@@ -2,6 +2,7 @@
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1075#1086' '#1083#1080#1094#1072
   ClientHeight = 364
   ClientWidth = 851
+  ExplicitTop = -43
   ExplicitWidth = 859
   ExplicitHeight = 391
   PixelsPerInch = 96
@@ -140,6 +141,7 @@
       object JuridicalDetailTS: TcxTabSheet
         Caption = #1056#1077#1082#1074#1080#1079#1080#1090#1099
         ImageIndex = 0
+        ExplicitLeft = 3
         object edFullName: TcxDBTextEdit
           Left = 16
           Top = 19
@@ -150,7 +152,7 @@
         end
         object edJuridicalAddress: TcxDBTextEdit
           Left = 16
-          Top = 56
+          Top = 63
           DataBinding.DataField = 'JuridicalAddress'
           DataBinding.DataSource = JuridicalDetailsDS
           TabOrder = 1
@@ -158,7 +160,7 @@
         end
         object edOKPO: TcxDBTextEdit
           Left = 16
-          Top = 92
+          Top = 110
           DataBinding.DataField = 'OKPO'
           DataBinding.DataSource = JuridicalDetailsDS
           TabOrder = 2
@@ -170,7 +172,7 @@
           Width = 110
           Height = 340
           Align = alRight
-          TabOrder = 3
+          TabOrder = 8
           object JuridicalDetailsGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = JuridicalDetailsDS
@@ -192,15 +194,15 @@
         end
         object edINN: TcxDBTextEdit
           Left = 248
-          Top = 92
+          Top = 110
           DataBinding.DataField = 'INN'
           DataBinding.DataSource = JuridicalDetailsDS
-          TabOrder = 4
+          TabOrder = 3
           Width = 193
         end
         object edAccounterName: TcxDBTextEdit
           Left = 248
-          Top = 130
+          Top = 158
           DataBinding.DataField = 'AccounterName'
           DataBinding.DataSource = JuridicalDetailsDS
           TabOrder = 5
@@ -208,19 +210,71 @@
         end
         object edNumberVAT: TcxDBTextEdit
           Left = 16
-          Top = 130
+          Top = 158
           DataBinding.DataField = 'NumberVAT'
           DataBinding.DataSource = JuridicalDetailsDS
-          TabOrder = 6
+          TabOrder = 4
           Width = 193
         end
         object edBankAccount: TcxDBTextEdit
           Left = 248
-          Top = 174
+          Top = 202
           DataBinding.DataField = 'BankAccount'
           DataBinding.DataSource = JuridicalDetailsDS
           TabOrder = 7
           Width = 193
+        end
+        object cxLabel6: TcxLabel
+          Left = 16
+          Top = -1
+          Caption = #1055#1086#1083#1085#1086#1077' '#1085#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+        end
+        object cxLabel7: TcxLabel
+          Left = 16
+          Top = 44
+          Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1081' '#1072#1076#1088#1077#1089
+        end
+        object cxLabel8: TcxLabel
+          Left = 16
+          Top = 88
+          Caption = #1054#1050#1055#1054
+        end
+        object cxLabel9: TcxLabel
+          Left = 248
+          Top = 88
+          Caption = #1048#1053#1053
+        end
+        object cxLabel10: TcxLabel
+          Left = 16
+          Top = 137
+          Caption = #8470' '#1089#1074#1080#1076#1077#1090#1077#1083#1100#1089#1090#1074#1072' '#1053#1044#1057
+        end
+        object cxLabel11: TcxLabel
+          Left = 248
+          Top = 137
+          Caption = #1060#1048#1054' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1072
+        end
+        object edBank: TcxButtonEdit
+          Left = 16
+          Top = 202
+          Properties.Buttons = <
+            item
+              Default = True
+              Kind = bkEllipsis
+            end>
+          TabOrder = 6
+          Text = 'edBank'
+          Width = 193
+        end
+        object cxLabel12: TcxLabel
+          Left = 16
+          Top = 182
+          Caption = #1041#1072#1085#1082
+        end
+        object cxLabel13: TcxLabel
+          Left = 248
+          Top = 182
+          Caption = #1057#1095#1077#1090
         end
       end
       object PartnerTS: TcxTabSheet
@@ -792,36 +846,36 @@
   end
   object JuridicalDetailsDS: TDataSource
     DataSet = JuridicalDetailsCDS
-    Left = 288
-    Top = 272
+    Left = 200
+    Top = 320
   end
   object JuridicalDetailsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 288
-    Top = 312
+    Left = 192
+    Top = 328
   end
   object PartnerDS: TDataSource
     DataSet = PartnerCDS
-    Left = 352
-    Top = 248
+    Left = 360
+    Top = 304
   end
   object PartnerCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 352
-    Top = 296
+    Top = 312
   end
   object ContractDS: TDataSource
     DataSet = ContractCDS
-    Left = 416
-    Top = 232
+    Left = 448
+    Top = 312
   end
   object ContractCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 416
-    Top = 272
+    Left = 432
+    Top = 312
   end
   object spJuridicalDetails: TdsdStoredProc
     StoredProcName = 'gpSelect_ObjectHistory_JuridicalDetails'
@@ -838,8 +892,8 @@
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 288
-    Top = 240
+    Left = 216
+    Top = 312
   end
   object spPartner: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_PartnerJuridical'
@@ -856,8 +910,8 @@
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 352
-    Top = 224
+    Left = 368
+    Top = 296
   end
   object spContract: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ContractJuridical'
@@ -874,8 +928,8 @@
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 416
-    Top = 208
+    Left = 464
+    Top = 304
   end
   object JuridicalDetailsAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -884,8 +938,8 @@
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    Left = 288
-    Top = 200
+    Left = 232
+    Top = 304
   end
   object PartnerAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -901,8 +955,8 @@
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    Left = 352
-    Top = 184
+    Left = 376
+    Top = 288
   end
   object ContractAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -911,8 +965,8 @@
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    Left = 416
-    Top = 168
+    Left = 480
+    Top = 296
   end
   object spJuridicalDetailsIU: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_ObjectHistory_JuridicalDetails'
@@ -994,15 +1048,29 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 288
-    Top = 160
+    Left = 248
+    Top = 152
   end
   object BankGuides: TdsdGuides
     KeyField = 'Id'
+    LookupControl = edBank
     FormName = 'TBankForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
-    Left = 464
-    Top = 160
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BankGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BankGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 432
+    Top = 216
   end
 end

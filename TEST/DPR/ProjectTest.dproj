@@ -487,7 +487,7 @@
 			<DCCReference Include="..\..\Forms\UserEdit.pas">
 				<Form>UserEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Process.pas">
+			<DCCReference Include="..\..\Forms\Enum\Process.pas">
 				<Form>ProcessForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Component\ComponentAddOnTest.pas"/>
@@ -736,8 +736,8 @@
 				<Form>GoodsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\BankStatementJournal.pas">
-				<Form>BankStatementJournalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\BankAccountJournal.pas">
+				<Form>BankAccountJournalForm</Form>
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
@@ -829,6 +829,15 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\GoodsTree_Object.pas">
 				<Form>GoodsTree_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\BankStatementJournal.pas">
+				<Form>BankStatementJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\BankAccountMovement.pas">
+				<Form>BankAccountMovementForm</Form>
+				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

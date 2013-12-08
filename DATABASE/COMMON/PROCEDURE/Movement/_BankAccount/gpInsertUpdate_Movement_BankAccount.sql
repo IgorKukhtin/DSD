@@ -1,6 +1,10 @@
 -- Function: gpInsertUpdate_Movement_BankAccount()
 
--- DROP FUNCTION gpInsertUpdate_Movement_BankAccount();
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, Integer,
+                      Integer, Integer, Integer, Integer, Integer, TVarChar);
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, Integer,
+                      Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -8,8 +12,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount(
     IN inOperDate            TDateTime , -- Дата документа
     IN inAmount              TFloat    , -- Сумма операции 
 
-    IN inFromId              Integer   , -- От кого (в документе) -- Юридическое лицо, Расчетный счет 	
-    IN inToId                Integer   , -- Кому (в документе)  -- Юридическое лицо, Расчетный счет 	
+    IN inBankAccountId       Integer   , -- От кого (в документе) -- Юридическое лицо, Расчетный счет 	
+    IN inJuridicalId         Integer   , -- Кому (в документе)  -- Юридическое лицо, Расчетный счет 	
+    IN inCurrencyId          Integer   , -- Валюта 
     IN inInfoMoneyId         Integer   , -- Статьи назначения 
     IN inBusinessId          Integer   , -- Бизнесс
     IN inContractId          Integer   , -- Договора
@@ -25,25 +30,8 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankAccount());
      vbUserId := inSession;
 
-     -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_BankAccount(), inInvNumber, inOperDate, NULL);
-
-     -- сохранили свойство <Сумма операции>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), ioId, inAmount);
-
-     -- сохранили связь с <От кого (в документе)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
-     -- сохранили связь с <Кому (в документе)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
-
-     -- сохранили связь с <Статьи назначения>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_InfoMoney(), ioId, inInfoMoneyId);
-     -- сохранили связь с <Бизнесом>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Business(), ioId, inBusinessId);
-     -- сохранили связь с <Договора>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
-     -- сохранили связь с <Подразделение>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
+     PERFORM lpInsertUpdate_Movement_BankAccount(ioId, inInvNumber, inOperDate, inAmount, 
+             inBankAccountId,  inJuridicalId, inCurrencyId, inInfoMoneyId, inBusinessId, inContractId, inUnitId);
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
@@ -56,6 +44,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.12.13                          *
  09.08.13         *
 
 */

@@ -101,6 +101,7 @@
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
@@ -214,8 +215,21 @@
     KeyField = 'Id'
     LookupControl = edJuridical
     FormName = 'TJuridicalForm'
-    PositionDataSet = 'GridDataSet'
-    Params = <>
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = dsdJuridicalGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = dsdJuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
     Left = 312
     Top = 141
   end

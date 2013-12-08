@@ -2,8 +2,8 @@ object RoleForm: TRoleForm
   Left = 0
   Top = 0
   Caption = #1056#1086#1083#1080' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
-  ClientHeight = 370
-  ClientWidth = 752
+  ClientHeight = 527
+  ClientWidth = 765
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,11 +21,12 @@ object RoleForm: TRoleForm
     Left = 0
     Top = 26
     Width = 385
-    Height = 344
+    Height = 501
     Align = alLeft
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitHeight = 344
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -75,26 +76,30 @@ object RoleForm: TRoleForm
     Left = 385
     Top = 26
     Width = 8
-    Height = 344
+    Height = 501
     Control = cxGrid
+    ExplicitHeight = 344
   end
   object Panel1: TPanel
     Left = 393
     Top = 26
-    Width = 359
-    Height = 344
+    Width = 372
+    Height = 501
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 6
+    ExplicitWidth = 359
+    ExplicitHeight = 344
     object UserGrid: TcxGrid
       Left = 0
-      Top = 252
-      Width = 359
-      Height = 92
-      Align = alClient
+      Top = 248
+      Width = 372
+      Height = 125
+      Align = alTop
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitTop = 252
       object UserView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = UserDS
@@ -141,12 +146,13 @@ object RoleForm: TRoleForm
     object ActionGrid: TcxGrid
       Left = 0
       Top = 0
-      Width = 359
+      Width = 372
       Height = 105
       Align = alTop
       TabOrder = 1
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitWidth = 359
       object ActionGridView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ActionDS
@@ -184,13 +190,15 @@ object RoleForm: TRoleForm
     end
     object ProcessGrid: TcxGrid
       Left = 0
-      Top = 113
-      Width = 359
+      Top = 111
+      Width = 372
       Height = 131
       Align = alTop
       TabOrder = 2
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
+      ExplicitLeft = -2
+      ExplicitTop = 54
       object ProcessView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ProcessDS
@@ -209,7 +217,7 @@ object RoleForm: TRoleForm
         OptionsView.Indicator = True
         Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
         object cxGridDBColumn8: TcxGridDBColumn
-          Caption = #1055#1088#1086#1094#1077#1089#1089
+          Caption = #1055#1088#1086#1094#1077#1089#1089' '#1080#1079#1084#1077#1085#1077#1085#1080#1077
           DataBinding.FieldName = 'Name'
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
@@ -233,19 +241,71 @@ object RoleForm: TRoleForm
     end
     object cxSplitterTop: TcxSplitter
       Left = 0
-      Top = 105
-      Width = 359
-      Height = 8
+      Top = 242
+      Width = 372
+      Height = 6
       AlignSplitter = salTop
       Control = ActionGrid
     end
     object cxSplitterClient: TcxSplitter
       Left = 0
-      Top = 244
-      Width = 359
-      Height = 8
+      Top = 105
+      Width = 372
+      Height = 6
       AlignSplitter = salTop
       Control = ProcessGrid
+    end
+    object AccessGrid: TcxGrid
+      Left = 0
+      Top = 373
+      Width = 372
+      Height = 128
+      Align = alClient
+      TabOrder = 5
+      LookAndFeel.NativeStyle = True
+      LookAndFeel.SkinName = 'UserSkin'
+      ExplicitLeft = -16
+      ExplicitTop = 107
+      ExplicitHeight = 131
+      object AccessGridDBTableView: TcxGridDBTableView
+        Navigator.Buttons.CustomButtons = <>
+        DataController.DataSource = ProcessDS
+        DataController.Summary.DefaultGroupSummaryItems = <>
+        DataController.Summary.FooterSummaryItems = <>
+        DataController.Summary.SummaryGroups = <>
+        Images = dmMain.SortImageList
+        OptionsCustomize.ColumnHiding = True
+        OptionsCustomize.ColumnsQuickCustomization = True
+        OptionsData.Appending = True
+        OptionsData.Deleting = False
+        OptionsSelection.InvertSelect = False
+        OptionsView.ColumnAutoWidth = True
+        OptionsView.GroupByBox = False
+        OptionsView.HeaderAutoHeight = True
+        OptionsView.Indicator = True
+        Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+        object cxGridDBColumn3: TcxGridDBColumn
+          Caption = #1055#1088#1086#1094#1077#1089#1089' '#1076#1086#1089#1090#1091#1087
+          DataBinding.FieldName = 'Name'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Action = ProcessChoiceForm
+              Default = True
+              Kind = bkEllipsis
+            end>
+          HeaderAlignmentVert = vaCenter
+          Width = 100
+        end
+        object cxGridDBColumn4: TcxGridDBColumn
+          Caption = 'EnumName'
+          DataBinding.FieldName = 'Process_EnumName'
+          Width = 100
+        end
+      end
+      object AccessGridLevel: TcxGridLevel
+        GridView = AccessGridDBTableView
+      end
     end
   end
   object DataSource: TDataSource
@@ -418,6 +478,7 @@ object RoleForm: TRoleForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -832,5 +893,67 @@ object RoleForm: TRoleForm
       end>
     Left = 544
     Top = 208
+  end
+  object dsdDBViewAddOn1: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = ProcessView
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    Left = 600
+    Top = 464
+  end
+  object ClientDataSet1: TClientDataSet
+    Aggregates = <>
+    IndexFieldNames = 'RoleId'
+    MasterFields = 'Id'
+    MasterSource = DataSource
+    PacketRecords = 0
+    Params = <>
+    Left = 616
+    Top = 432
+  end
+  object DataSource1: TDataSource
+    DataSet = ClientDataSet1
+    Left = 664
+    Top = 416
+  end
+  object dsdStoredProc1: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_RoleProcess'
+    DataSet = ClientDataSet1
+    DataSets = <
+      item
+        DataSet = ClientDataSet1
+      end>
+    Params = <>
+    Left = 648
+    Top = 464
+  end
+  object dsdStoredProc2: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_RoleProcess'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Component = ClientDataSet1
+        ComponentItem = 'RoleProcessId'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inRoleId'
+        Component = ClientDataSet1
+        ComponentItem = 'RoleId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inProcessId'
+        Component = ClientDataSet1
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    Left = 712
+    Top = 464
   end
 end

@@ -53,7 +53,8 @@ BEGIN
     FROM ObjectHistory
    WHERE ObjectHistory.DescId = inDescId 
      AND ObjectHistory.ObjectId = inObjectId
-     AND ObjectHistory.StartDate > inOperDate;
+     AND ObjectHistory.StartDate > inOperDate
+     AND ObjectHistory.Id <> ioId;
 
   lEndDate := COALESCE(lEndDate, zc_DateEnd());
 

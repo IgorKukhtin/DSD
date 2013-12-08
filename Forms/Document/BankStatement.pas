@@ -12,7 +12,7 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxCurrencyEdit, Vcl.ExtCtrls, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxButtonEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, cxTextEdit, cxLabel,
-  cxMemo;
+  cxMemo, cxSplitter;
 
 type
   TBankStatementForm = class(TAncestorDBGridForm)
@@ -35,8 +35,25 @@ type
     colInfoMoney: TcxGridDBColumn;
     colComment: TcxGridDBColumn;
     colContract: TcxGridDBColumn;
-    colCredit: TcxGridDBColumn;
+    colKredit: TcxGridDBColumn;
     colUnitName: TcxGridDBColumn;
+    colBankAccount: TcxGridDBColumn;
+    colBankName: TcxGridDBColumn;
+    colBankMFO: TcxGridDBColumn;
+    actChoiceUnit: TOpenChoiceForm;
+    actChoiceJuridical: TOpenChoiceForm;
+    actChoiceInfoMoney: TOpenChoiceForm;
+    actChoiceContract: TOpenChoiceForm;
+    spUpdate: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    cxSplitter: TcxSplitter;
+    BottomPanel: TPanel;
+    dxBarDockControl: TdxBarDockControl;
+    cxDetailGridDBTableView: TcxGridDBTableView;
+    cxDetailGridLevel: TcxGridLevel;
+    cxDetailGrid: TcxGrid;
+    BarManagerBar1: TdxBar;
+    colCurrency: TcxGridDBColumn;
   private
     { Private declarations }
   public

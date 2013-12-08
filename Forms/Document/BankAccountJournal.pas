@@ -1,4 +1,4 @@
-unit BankStatementJournal;
+unit BankAccountJournal;
 
 interface
 
@@ -15,27 +15,16 @@ uses
   cxGrid, cxPC, ClientBankLoad;
 
 type
-  TBankStatementJournalForm = class(TAncestorJournalForm)
+  TBankAccountJournalForm = class(TAncestorJournalForm)
     colBankName: TcxGridDBColumn;
     colBankAccount: TcxGridDBColumn;
-    BankPrivatLoad: TClientBankLoadAction;
-    BankForumLoad: TClientBankLoadAction;
-    BankVostokLoad: TClientBankLoadAction;
-    BankFidoLoad: TClientBankLoadAction;
-    bbBankPrivat: TdxBarButton;
-    bbBankVostok: TdxBarButton;
-    bbBankForum: TdxBarButton;
-    bbBankErnst: TdxBarButton;
-    BankPrivat: TMultiAction;
-    BankForum: TMultiAction;
-    BankVostok: TMultiAction;
-    BankFido: TMultiAction;
-    colAmount: TcxGridDBColumn;
+    colJuridical: TcxGridDBColumn;
+    colBusiness: TcxGridDBColumn;
+    colInfoMoney: TcxGridDBColumn;
+    colUnit: TcxGridDBColumn;
+    colContract: TcxGridDBColumn;
     colDebet: TcxGridDBColumn;
     colKredit: TcxGridDBColumn;
-    BankOTPLoad: TClientBankLoadAction;
-    BankOTP: TMultiAction;
-    bbOTPLoad: TdxBarButton;
   private
     { Private declarations }
   public
@@ -47,6 +36,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TBankStatementJournalForm);
+  RegisterClass(TBankAccountJournalForm);
 
 end.

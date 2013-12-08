@@ -80,6 +80,15 @@ type
     edBankAccount: TcxDBTextEdit;
     JuridicalDetailsUDS: TdsdUpdateDataSet;
     bbStatic: TdxBarStatic;
+    cxLabel6: TcxLabel;
+    cxLabel7: TcxLabel;
+    cxLabel8: TcxLabel;
+    cxLabel9: TcxLabel;
+    cxLabel10: TcxLabel;
+    cxLabel11: TcxLabel;
+    edBank: TcxButtonEdit;
+    cxLabel12: TcxLabel;
+    cxLabel13: TcxLabel;
   private
     { Private declarations }
   public

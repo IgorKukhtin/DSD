@@ -25,16 +25,13 @@ BEGIN
    ELSE
        RETURN QUERY 
        SELECT 
-             Object.Id              AS Id
-           , Object.ObjectCode      AS Code
-           , Object.ValueData       AS Name
-           , Object.isErased        AS isErased
-           , ObjectString.ValueData AS InternalName
-       FROM Object
-       JOIN ObjectString
-         ON ObjectString.ObjectId = Object.Id
-        AND ObjectString.DescId = zc_objectString_Currency_InternalName()
-       WHERE Object.Id = inId;
+            Id
+          , Code
+          , Name
+          , isErased
+          , InternalName
+       FROM Object_Currency_View
+      WHERE Object_Currency_View.Id = inId;
    END IF;
     
 END;
@@ -46,6 +43,7 @@ ALTER FUNCTION gpGet_Object_Currency(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.12.13                         *
  11.06.13          *
  03.06.13          
 
