@@ -95,16 +95,18 @@ type
     ProcessUpdateDataSet: TdsdUpdateDataSet;
     spInsertUpdateRoleProcess: TdsdStoredProc;
     clProcess_EnumName: TcxGridDBColumn;
-    dsdDBViewAddOn1: TdsdDBViewAddOn;
-    ClientDataSet1: TClientDataSet;
-    DataSource1: TDataSource;
-    dsdStoredProc1: TdsdStoredProc;
-    dsdStoredProc2: TdsdStoredProc;
+    ProcessAccessViewAddOn: TdsdDBViewAddOn;
+    ProcessAccessCDS: TClientDataSet;
+    ProcessAccessDS: TDataSource;
+    spProcessAccess: TdsdStoredProc;
+    spInsertUpdateProcessAccess: TdsdStoredProc;
     AccessGrid: TcxGrid;
     AccessGridDBTableView: TcxGridDBTableView;
     cxGridDBColumn3: TcxGridDBColumn;
     cxGridDBColumn4: TcxGridDBColumn;
     AccessGridLevel: TcxGridLevel;
+    ProcessAccessChoiceForm: TOpenChoiceForm;
+    ProcessAccessUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

@@ -298,7 +298,6 @@ uses
 begin
   Application.Initialize;
   Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TBankAccountMovementForm, BankAccountMovementForm);
   Application.Run;
   DUnitTestRunner.RunRegisteredTests;
 end.

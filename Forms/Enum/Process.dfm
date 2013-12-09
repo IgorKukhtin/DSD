@@ -2,6 +2,7 @@ inherited ProcessForm: TProcessForm
   Caption = #1055#1088#1086#1094#1077#1089#1089#1099
   ClientHeight = 457
   ClientWidth = 859
+  ExplicitTop = -65
   ExplicitWidth = 867
   ExplicitHeight = 484
   PixelsPerInch = 96
@@ -38,24 +39,28 @@ inherited ProcessForm: TProcessForm
             DataBinding.FieldName = 'Code'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 20
           end
           object clName: TcxGridDBColumn
             Caption = #1055#1088#1086#1094#1077#1089#1089#1099
             DataBinding.FieldName = 'Name'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 100
-          end
-          object clEnumName: TcxGridDBColumn
-            DataBinding.FieldName = 'EnumName'
-            HeaderAlignmentVert = vaCenter
-            Width = 80
           end
           object clId: TcxGridDBColumn
             DataBinding.FieldName = 'Id'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 30
+          end
+          object clEnumName: TcxGridDBColumn
+            DataBinding.FieldName = 'EnumName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
           end
         end
       end

@@ -10,6 +10,7 @@ inherited AncestorEnumForm: TAncestorEnumForm
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         inherited cxGridDBTableView: TcxGridDBTableView
+          OptionsBehavior.GoToNextCellOnEnter = False
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil

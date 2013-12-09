@@ -26,7 +26,6 @@ object RoleForm: TRoleForm
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
-    ExplicitHeight = 344
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -78,7 +77,6 @@ object RoleForm: TRoleForm
     Width = 8
     Height = 501
     Control = cxGrid
-    ExplicitHeight = 344
   end
   object Panel1: TPanel
     Left = 393
@@ -88,8 +86,6 @@ object RoleForm: TRoleForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 6
-    ExplicitWidth = 359
-    ExplicitHeight = 344
     object UserGrid: TcxGrid
       Left = 0
       Top = 248
@@ -99,7 +95,6 @@ object RoleForm: TRoleForm
       TabOrder = 0
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitTop = 252
       object UserView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = UserDS
@@ -152,7 +147,6 @@ object RoleForm: TRoleForm
       TabOrder = 1
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitWidth = 359
       object ActionGridView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ActionDS
@@ -197,8 +191,6 @@ object RoleForm: TRoleForm
       TabOrder = 2
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitLeft = -2
-      ExplicitTop = 54
       object ProcessView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         DataController.DataSource = ProcessDS
@@ -264,12 +256,9 @@ object RoleForm: TRoleForm
       TabOrder = 5
       LookAndFeel.NativeStyle = True
       LookAndFeel.SkinName = 'UserSkin'
-      ExplicitLeft = -16
-      ExplicitTop = 107
-      ExplicitHeight = 131
       object AccessGridDBTableView: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
-        DataController.DataSource = ProcessDS
+        DataController.DataSource = ProcessAccessDS
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
@@ -290,7 +279,7 @@ object RoleForm: TRoleForm
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
             item
-              Action = ProcessChoiceForm
+              Action = ProcessAccessChoiceForm
               Default = True
               Kind = bkEllipsis
             end>
@@ -473,6 +462,9 @@ object RoleForm: TRoleForm
         end
         item
           StoredProc = spRoleUser
+        end
+        item
+          StoredProc = spProcessAccess
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -598,6 +590,24 @@ object RoleForm: TRoleForm
         end>
       DataSource = UserDS
     end
+    object ProcessAccessChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'ProcessChoiceForm'
+      FormName = 'TProcessForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = ProcessAccessCDS
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'TextValue'
+          Component = ProcessAccessCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
     object ProcessChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       Caption = 'ProcessChoiceForm'
@@ -633,6 +643,16 @@ object RoleForm: TRoleForm
           DataType = ftString
         end>
       isShowModal = False
+    end
+    object ProcessAccessUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      StoredProc = spInsertUpdateProcessAccess
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateProcessAccess
+        end>
+      Caption = 'ActionUpdateDataSet'
+      DataSource = ProcessAccessDS
     end
     object ProcessUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -894,7 +914,7 @@ object RoleForm: TRoleForm
     Left = 544
     Top = 208
   end
-  object dsdDBViewAddOn1: TdsdDBViewAddOn
+  object ProcessAccessViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = ProcessView
     OnDblClickActionList = <>
@@ -904,7 +924,7 @@ object RoleForm: TRoleForm
     Left = 600
     Top = 464
   end
-  object ClientDataSet1: TClientDataSet
+  object ProcessAccessCDS: TClientDataSet
     Aggregates = <>
     IndexFieldNames = 'RoleId'
     MasterFields = 'Id'
@@ -914,42 +934,42 @@ object RoleForm: TRoleForm
     Left = 616
     Top = 432
   end
-  object DataSource1: TDataSource
-    DataSet = ClientDataSet1
+  object ProcessAccessDS: TDataSource
+    DataSet = ProcessAccessCDS
     Left = 664
     Top = 416
   end
-  object dsdStoredProc1: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_RoleProcess'
-    DataSet = ClientDataSet1
+  object spProcessAccess: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_RoleProcessAccess'
+    DataSet = ProcessAccessCDS
     DataSets = <
       item
-        DataSet = ClientDataSet1
+        DataSet = ProcessAccessCDS
       end>
     Params = <>
     Left = 648
     Top = 464
   end
-  object dsdStoredProc2: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_RoleProcess'
+  object spInsertUpdateProcessAccess: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_RoleProcessAccess'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
-        Component = ClientDataSet1
+        Name = 'ioid'
+        Component = ProcessAccessCDS
         ComponentItem = 'RoleProcessId'
         ParamType = ptInputOutput
       end
       item
-        Name = 'inRoleId'
-        Component = ClientDataSet1
+        Name = 'inroleid'
+        Component = ProcessAccessCDS
         ComponentItem = 'RoleId'
         ParamType = ptInput
       end
       item
-        Name = 'inProcessId'
-        Component = ClientDataSet1
+        Name = 'inprocessid'
+        Component = ProcessAccessCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
