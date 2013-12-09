@@ -1,6 +1,9 @@
 -- Function: gpInsertUpdate_MI_Transport_Master()
 DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat,Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat,Integer, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS  gpInsertUpdate_MI_Transport_Master(Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat,Integer, Integer, Integer, TVarChar, TVarChar);
+
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Master(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -8,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MI_Transport_Master(
     IN inRouteId             Integer   , -- Маршрут
     IN inAmount	             TFloat    , -- Пробег, км (основной вид топлива)
     IN inDistanceFuelChild   TFloat    , -- Пробег, км (дополнительный вид топлива)
-    IN inWeight	             TFloat    , -- Вес груза
+    IN inWeight	             TFloat    , -- Вес груза, кг (разгрузка)
+    IN inWeightTransport	 TFloat    , -- Вес груза, кг (перевезено)
     IN inStartOdometre       TFloat    , -- Спидометр начальное показание, км
     IN inEndOdometre         TFloat    , -- Спидометр конечное показание, км
     IN inFreightId           Integer   , -- Название груза
@@ -86,6 +90,8 @@ BEGIN
 
    -- сохранили свойство <Вес груза>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Weight(), ioId, inWeight);
+   -- сохранили свойство <Вес груза>
+   PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_WeightTransport(), ioId, inWeightTransport);
 
    -- сохранили свойство <Спидометр начальное показание, км>
    PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_StartOdometre(), ioId, inStartOdometre);
@@ -108,6 +114,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.12.13         * add WeightTransport
  02.12.13         * add Comment
  26.10.13                                        * add inRouteKindId_Freight
  13.10.13                                        * add lpInsertUpdate_MI_Transport_Child_byMaster
