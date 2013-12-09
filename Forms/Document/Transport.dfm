@@ -340,6 +340,16 @@
               Format = ',0.00'
               Kind = skSum
               Column = colWeight
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colWeightTranspor
+            end
+            item
+              Kind = skSum
+              Position = spFooter
+              Column = colWeightTranspor
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -365,6 +375,11 @@
               Format = ',0.00'
               Kind = skSum
               Column = colDistanceFuelChild
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colWeightTranspor
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsBehavior.GoToNextCellOnEnter = True
@@ -455,7 +470,7 @@
           end
           object colWeightTranspor: TcxGridDBColumn
             Caption = #1042#1077#1089' '#1075#1088#1091#1079#1072', '#1082#1075' ('#1087#1077#1088#1077#1074#1077#1079#1077#1085#1086')'
-            DataBinding.FieldName = 'WeightTranspor'
+            DataBinding.FieldName = 'WeightTransport'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 84
@@ -2480,7 +2495,7 @@
     CloseDataSource = False
     DataSet = PrintHeaderCDS
     BCDToCurrency = False
-    Left = 486
+    Left = 502
     Top = 186
   end
   object ChildCDS: TClientDataSet
@@ -2711,7 +2726,7 @@
         ParamType = ptInput
       end>
     Left = 1098
-    Top = 91
+    Top = 59
   end
   object spInsertUpdateMIChild: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_Transport_Child'
@@ -3628,7 +3643,7 @@
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 458
+    Left = 466
     Top = 186
   end
   object frxDBDMaster: TfrxDBDataset
