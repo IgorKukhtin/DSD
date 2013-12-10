@@ -3,7 +3,7 @@ inherited ContractChoiceForm: TContractChoiceForm
   ClientHeight = 496
   ClientWidth = 853
   ExplicitWidth = 861
-  ExplicitHeight = 523
+  ExplicitHeight = 530
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -81,6 +81,7 @@ inherited ContractChoiceForm: TContractChoiceForm
             Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 30
           end
         end
       end

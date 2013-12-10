@@ -49,6 +49,7 @@ object MovementDescForm: TMovementDescForm
         Visible = False
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
+        Width = 45
       end
       object clMovementDescName: TcxGridDBColumn
         Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077

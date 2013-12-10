@@ -46,6 +46,7 @@ object PriceListItemForm: TPriceListItemForm
         Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsCode'
         HeaderAlignmentVert = vaCenter
+        Width = 60
       end
       object clName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
@@ -63,6 +64,7 @@ object PriceListItemForm: TPriceListItemForm
         Caption = #1062#1077#1085#1072' '#1087#1086
         DataBinding.FieldName = 'EndDate'
         HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object clPrice: TcxGridDBColumn
         Caption = #1062#1077#1085#1072
@@ -71,6 +73,7 @@ object PriceListItemForm: TPriceListItemForm
         Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -245,6 +248,7 @@ object PriceListItemForm: TPriceListItemForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'

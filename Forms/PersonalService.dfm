@@ -77,7 +77,7 @@ object PersonalServiceForm: TPersonalServiceForm
         Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'FromName'
         HeaderAlignmentVert = vaCenter
-        Width = 64
+        Width = 80
       end
       object clTo: TcxGridDBColumn
         Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082#1080
@@ -289,6 +289,7 @@ object PersonalServiceForm: TPersonalServiceForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'

@@ -62,6 +62,7 @@ object AccountGroupForm: TAccountGroupForm
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -224,6 +225,7 @@ object AccountGroupForm: TAccountGroupForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
