@@ -1,6 +1,6 @@
 -- Function: lfReport_MotionContainer_CountList ()
 
--- DROP FUNCTION lfReport_MotionContainer_CountList ();
+DROP FUNCTION IF EXISTS lfReport_MotionContainer_CountList (TDateTime, TDateTime);
                            
 CREATE OR REPLACE FUNCTION lfReport_MotionContainer_CountList (
     IN inStartDate    TDateTime ,  

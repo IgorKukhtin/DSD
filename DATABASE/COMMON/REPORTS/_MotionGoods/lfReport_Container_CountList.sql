@@ -1,6 +1,6 @@
 -- Function: lfReport_Container_CountList ()
 
--- DROP FUNCTION lfReport_Container_CountList ();
+DROP FUNCTION IF EXISTS lfReport_Container_CountList ();
 
 CREATE OR REPLACE FUNCTION lfReport_Container_CountList ()
 RETURNS TABLE  (ContainerId_Goods Integer, LocationId Integer, GoodsId Integer, Amount TFloat)  
