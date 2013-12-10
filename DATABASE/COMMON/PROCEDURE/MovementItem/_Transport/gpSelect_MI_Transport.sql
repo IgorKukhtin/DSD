@@ -29,6 +29,7 @@ BEGIN
             , MovementItem.Amount
             , MIFloat_DistanceFuelChild.ValueData AS DistanceFuelChild
             , MIFloat_Weight.ValueData            AS Weight
+            , MIFloat_WeightTransport.ValueData   AS WeightTransport
             , MIFloat_StartOdometre.ValueData     AS StartOdometre
             , MIFloat_EndOdometre.ValueData       AS EndOdometre
            
@@ -56,6 +57,10 @@ BEGIN
              LEFT JOIN MovementItemFloat AS MIFloat_Weight
                                          ON MIFloat_Weight.MovementItemId = MovementItem.Id
                                         AND MIFloat_Weight.DescId = zc_MIFloat_Weight()
+             LEFT JOIN MovementItemFloat AS MIFloat_WeightTransport
+                                         ON MIFloat_WeightTransport.MovementItemId = MovementItem.Id
+                                        AND MIFloat_WeightTransport.DescId = zc_MIFloat_WeightTransport()
+                                                                   
              LEFT JOIN MovementItemFloat AS MIFloat_StartOdometre
                                          ON MIFloat_StartOdometre.MovementItemId = MovementItem.Id
                                         AND MIFloat_StartOdometre.DescId = zc_MIFloat_StartOdometre()

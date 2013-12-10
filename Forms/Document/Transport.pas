@@ -263,6 +263,7 @@ type
     edPersonal: TcxButtonEdit;
     GuidesPersonal: TdsdGuides;
     clComment: TcxGridDBColumn;
+    colWeightTranspor: TcxGridDBColumn;
   private
   public
   end;
