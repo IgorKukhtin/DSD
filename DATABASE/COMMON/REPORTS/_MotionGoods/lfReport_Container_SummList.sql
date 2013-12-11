@@ -1,6 +1,6 @@
 -- Function: lfReport_Container_SummList ()
 
--- DROP FUNCTION lfReport_Container_SummList ();
+DROP FUNCTION IF EXISTS lfReport_Container_SummList ();
 
 CREATE OR REPLACE FUNCTION lfReport_Container_SummList ()
 RETURNS TABLE  (ContainerId Integer, AccountId Integer, ContainerId_Goods Integer, LocationId Integer, GoodsId Integer, Amount TFloat)  

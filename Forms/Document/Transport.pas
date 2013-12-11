@@ -264,6 +264,7 @@ type
     GuidesPersonal: TdsdGuides;
     clComment: TcxGridDBColumn;
     colWeightTranspor: TcxGridDBColumn;
+    colDistanceWeightTransport: TcxGridDBColumn;
   private
   public
   end;

@@ -52,6 +52,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         Caption = #1062#1077#1085#1072' '#1087#1086
         DataBinding.FieldName = 'EndDate'
         HeaderAlignmentVert = vaCenter
+        Width = 80
       end
       object clPrice: TcxGridDBColumn
         Caption = #1062#1077#1085#1072
@@ -60,6 +61,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
         Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
+        Width = 80
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -136,8 +138,8 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')

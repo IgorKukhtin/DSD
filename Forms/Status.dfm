@@ -48,6 +48,7 @@ object StatusForm: TStatusForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
+        Width = 60
       end
       object clName: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089#1099

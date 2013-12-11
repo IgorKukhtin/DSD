@@ -350,6 +350,11 @@
               Kind = skSum
               Position = spFooter
               Column = colWeightTranspor
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colDistanceWeightTransport
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -380,6 +385,11 @@
               Format = ',0.00'
               Kind = skSum
               Column = colWeightTranspor
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colDistanceWeightTransport
             end>
           DataController.Summary.SummaryGroups = <>
           OptionsBehavior.GoToNextCellOnEnter = True
@@ -446,6 +456,13 @@
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 82
+          end
+          object colDistanceWeightTransport: TcxGridDBColumn
+            Caption = #1055#1088#1086#1073#1077#1075', '#1082#1084' ('#1089' '#1075#1088#1091#1079#1086#1084', '#1087#1077#1088#1077#1074#1077#1079#1077#1085#1086')'
+            DataBinding.FieldName = 'DistanceWeightTransport'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 86
           end
           object colStartOdometre: TcxGridDBColumn
             Caption = #1057#1087#1080#1076#1086#1084#1077#1090#1088' '#1085#1072#1095'. '#1087#1086#1082#1072#1079#1072#1085#1080#1077', '#1082#1084
@@ -2435,6 +2452,13 @@
         ParamType = ptInput
       end
       item
+        Name = 'inDistanceWeightTransport'
+        Component = MasterCDS
+        ComponentItem = 'DistanceWeightTransport'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
         Name = 'inWeight'
         Component = MasterCDS
         ComponentItem = 'Weight'
@@ -2495,8 +2519,8 @@
     CloseDataSource = False
     DataSet = PrintHeaderCDS
     BCDToCurrency = False
-    Left = 502
-    Top = 186
+    Left = 510
+    Top = 210
   end
   object ChildCDS: TClientDataSet
     Aggregates = <>
@@ -3625,8 +3649,8 @@
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 428
-    Top = 186
+    Left = 420
+    Top = 210
   end
   object spSelectPrintHeader: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Transport'
@@ -3643,8 +3667,8 @@
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 466
-    Top = 186
+    Left = 458
+    Top = 202
   end
   object frxDBDMaster: TfrxDBDataset
     UserName = 'frxDBDMaster'

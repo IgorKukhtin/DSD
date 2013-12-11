@@ -50,6 +50,7 @@ object GoodsKindForm: TGoodsKindForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
+        Width = 45
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -62,6 +63,7 @@ object GoodsKindForm: TGoodsKindForm
         DataBinding.FieldName = 'isErased'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 60
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -228,6 +230,7 @@ object GoodsKindForm: TGoodsKindForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'

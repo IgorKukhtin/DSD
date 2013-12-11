@@ -246,10 +246,12 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       object MeasureName: TcxGridDBColumn
         Caption = #1045#1076'.'#1080#1079#1084'.'
         DataBinding.FieldName = 'MeasureName'
+        Width = 70
       end
       object Weight: TcxGridDBColumn
         Caption = #1042#1077#1089
         DataBinding.FieldName = 'Weight'
+        Width = 50
       end
       object StartCount_Sh: TcxGridDBColumn
         DataBinding.FieldName = 'StartCount_Sh'
@@ -292,6 +294,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       object SendInCount_Sh: TcxGridDBColumn
         DataBinding.FieldName = 'SendInCount_Sh'
         FooterAlignmentHorz = taRightJustify
+        Width = 75
       end
       object SendInCount: TcxGridDBColumn
         DataBinding.FieldName = 'SendInCount'
@@ -515,8 +518,8 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')

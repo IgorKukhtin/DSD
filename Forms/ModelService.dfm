@@ -290,6 +290,7 @@ object ModelServiceForm: TModelServiceForm
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         Visible = False
+        Width = 60
       end
     end
     object cxGridLevel2: TcxGridLevel
