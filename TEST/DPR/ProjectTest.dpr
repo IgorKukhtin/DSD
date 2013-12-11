@@ -17,8 +17,9 @@ program ProjectTest;
 uses
   DUnitTestRunner,
   dbCreateStructureTest in '..\SOURCE\STRUCTURE\dbCreateStructureTest.pas',
-  dbCreateViewTest in '..\SOURCE\View\dbCreateViewTest.pas',
   dbMetadataTest in '..\SOURCE\Metadata\dbMetadataTest.pas',
+  ProcessTest in '..\SOURCE\Process\ProcessTest.pas',
+  dbCreateViewTest in '..\SOURCE\View\dbCreateViewTest.pas',
   dbProcedureTest in '..\SOURCE\dbProcedureTest.pas',
   dbEnumTest in '..\SOURCE\dbEnumTest.pas',
   AuthenticationTest in '..\SOURCE\AuthenticationTest.pas',

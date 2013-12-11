@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_BankAccount(
     IN inBusinessId          Integer   , -- Бизнесс
     IN inContractId          Integer   , -- Договора
     IN inUnitId              Integer   , -- Подразделение
-    IN inParentId            Integer   DEFAULT = NULL
+    IN inParentId            Integer   DEFAULT  NULL
 )                              
 RETURNS Integer AS
 $BODY$

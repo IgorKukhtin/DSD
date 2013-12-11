@@ -1,6 +1,6 @@
 -- View: Object_BankAccount_View
 
--- DROP VIEW IF EXISTS Object_BankAccount_View;
+DROP VIEW IF EXISTS Object_BankAccount_View;
 
 CREATE OR REPLACE VIEW Object_BankAccount_View AS
          SELECT 
@@ -20,7 +20,7 @@ CREATE OR REPLACE VIEW Object_BankAccount_View AS
         AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
   LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
   LEFT JOIN ObjectLink AS BankAccount_Currency
-         ON BankAccount_Currency.ObjectId = Object.Id 
+         ON BankAccount_Currency.ObjectId = Object_BankAccount.Id 
         AND BankAccount_Currency.DescId = zc_ObjectLink_BankAccount_Currency()
   LEFT JOIN Object AS Currency  ON Currency.Id = BankAccount_Currency.ChildObjectId
                                

@@ -17,7 +17,7 @@ BEGIN
     
      -- Выбираем все данные и сразу вызываем процедуры
 
-     PERFORM  SELECT
+/*     PERFORM  SELECT
              
        lpInsertUpdate_Movement_BankAccount(ioId, 
                inInvNumber, 
@@ -63,7 +63,7 @@ BEGIN
  
        WHERE Movement.DescId = zc_Movement_BankStatementItem()
          AND Movement.ParentId = inMovementId;
-
+ */
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 

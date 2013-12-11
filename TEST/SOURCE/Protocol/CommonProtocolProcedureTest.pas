@@ -19,7 +19,6 @@ uses UtilConst, TestFramework;
 
 procedure TProtocolProcedure.ProcedureLoad;
 begin
-  inherited;
   ScriptDirectory := ProcedurePath + 'Protocol\';
   inherited;
 end;

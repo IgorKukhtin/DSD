@@ -81,8 +81,9 @@
 				<MainSource>MainSource</MainSource>
 			</DelphiCompile>
 			<DCCReference Include="..\SOURCE\STRUCTURE\dbCreateStructureTest.pas"/>
-			<DCCReference Include="..\SOURCE\View\dbCreateViewTest.pas"/>
 			<DCCReference Include="..\SOURCE\Metadata\dbMetadataTest.pas"/>
+			<DCCReference Include="..\SOURCE\Process\ProcessTest.pas"/>
+			<DCCReference Include="..\SOURCE\View\dbCreateViewTest.pas"/>
 			<DCCReference Include="..\SOURCE\dbProcedureTest.pas"/>
 			<DCCReference Include="..\SOURCE\dbEnumTest.pas"/>
 			<DCCReference Include="..\SOURCE\AuthenticationTest.pas"/>
@@ -639,37 +640,30 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Kind\PaidKind.pas">
 				<Form>PaidKindForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorBase.pas">
 				<Form>AncestorBaseForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorDialog.pas">
 				<Form>AncestorDialogForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorEditDialog.pas">
 				<Form>AncestorEditDialogForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorData.pas">
 				<Form>AncestorDataForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorReport.pas">
 				<Form>AncestorReportForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\System\Protocol.pas">
 				<Form>ProtocolForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorDBGrid.pas">
@@ -678,38 +672,31 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorJournal.pas">
 				<Form>AncestorJournalForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\System\ObjectDesc.pas">
 				<Form>ObjectDescForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\ObjectDesc\CommonObjectDescProcedureTest.pas"/>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorEnum.pas">
 				<Form>AncestorEnumForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\System\Objects.pas">
 				<Form>ObjectForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorDocument.pas">
 				<Form>AncestorDocumentForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\Send.pas">
 				<Form>SendForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\CashJournal.pas">
 				<Form>CashJournalForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_Goods.pas">
@@ -738,7 +725,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\BankAccountJournal.pas">
 				<Form>BankAccountJournalForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\ClientBankLoad.pas"/>
@@ -768,12 +754,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\BankStatement.pas">
 				<Form>BankStatementForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\ContractChoice.pas">
 				<Form>ContractChoiceForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Enum\ContractConditionKind.pas">
@@ -786,7 +770,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\MoneyPlace_Object.pas">
 				<Form>MoneyPlace_ObjectForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\Service.pas">
@@ -803,7 +786,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Enum\WorkTimeKind.pas">
 				<Form>WorkTimeKindForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Kind\MovementDesc.pas">
@@ -837,7 +819,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\BankAccountMovement.pas">
 				<Form>BankAccountMovementForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\Document.pas"/>

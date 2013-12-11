@@ -732,6 +732,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalGroupEditForm');
 end;
+
 procedure TLoadFormTest.LoadCarFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCarForm'));
