@@ -196,7 +196,7 @@ type
 implementation
 
 uses cxDBLookupComboBox, cxButtonEdit, Variants, ParentForm, FormStorage, DB,
-     SysUtils, Dialogs, dsdAction;
+     SysUtils, Dialogs, dsdAction, cxDBEdit;
 
 procedure Register;
 begin
@@ -474,6 +474,8 @@ begin
   TAccessControl(FLookupControl).OnDblClick := OnDblClick;
   if FLookupControl is TcxButtonEdit then
      (LookupControl as TcxButtonEdit).Properties.OnButtonClick := OnButtonClick;
+  if FLookupControl is TcxDBButtonEdit then
+     (LookupControl as TcxDBButtonEdit).Properties.OnButtonClick := OnButtonClick;
 end;
 
 procedure TCustomGuides.SetOwner(Owner: TObject);
@@ -485,6 +487,9 @@ procedure TCustomGuides.OnButtonClick(Sender: TObject; AButtonIndex: Integer);
 begin
   if Sender is TcxButtonEdit then
      if not Assigned(TcxButtonEdit(Sender).Properties.Buttons[AButtonIndex].Action) then
+        OnDblClick(Sender);
+  if Sender is TcxDBButtonEdit then
+     if not Assigned(TcxDBButtonEdit(Sender).Properties.Buttons[AButtonIndex].Action) then
         OnDblClick(Sender);
 end;
 
@@ -586,6 +591,8 @@ begin
         (LookupControl as TcxLookupComboBox).Text := Value;
      if LookupControl is TcxButtonEdit then
         (LookupControl as TcxButtonEdit).Text := Value;
+     if LookupControl is TcxDBButtonEdit then
+        (LookupControl as TcxDBButtonEdit).Text := Value;
   end;
 end;
 

@@ -1083,6 +1083,8 @@ end;
 function TdsdInsertUpdateGuides.LocalExecute: boolean;
 begin
   inherited;
+  // Делаем post всем
+  PostDataSet;
   result := true;
   TParentForm(Owner).Close(Self);
 end;

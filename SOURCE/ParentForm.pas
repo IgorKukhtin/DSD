@@ -50,7 +50,7 @@ uses
   cxDBLookupComboBox, DBGrids, cxCheckBox, cxCalendar, ExtCtrls,
   cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, frxDBSet, dxBarExtItems,
   cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView, dsdAction, ClientBankLoad,
-  cxDBEdit;
+  cxDBEdit, cxDBVGrid, Document;
 
 {$R *.dfm}
 
@@ -233,11 +233,13 @@ initialization
   RegisterClass (TcxCurrencyEdit);
   RegisterClass (TcxDateEdit);
   RegisterClass (TcxDBButtonEdit);
+  RegisterClass (TcxDBEditorRow);
   RegisterClass (TcxDBPivotGrid);
   RegisterClass (TcxDBPivotGridField);
   RegisterClass (TcxDBTextEdit);
   RegisterClass (TcxDBTreeList);
   RegisterClass (TcxDBTreeListColumn);
+  RegisterClass (TcxDBVerticalGrid);
   RegisterClass (TcxGroupBox);
   RegisterClass (TcxGridDBBandedTableView);
   RegisterClass (TcxGridDBTableView);
@@ -264,6 +266,7 @@ initialization
   RegisterClass (TChangeGuidesStatus);
   RegisterClass (TClientBankLoadAction);
   RegisterClass (TCrossDBViewAddOn);
+  RegisterClass (TDocument);
   RegisterClass (TdsdChangeMovementStatus);
   RegisterClass (TdsdChoiceGuides);
   RegisterClass (TdsdDataSetRefresh);

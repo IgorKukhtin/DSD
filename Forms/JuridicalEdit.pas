@@ -10,7 +10,7 @@ uses
   cxPCdxBarPopupMenu, cxPC, Vcl.ExtCtrls, dxBar, cxClasses, cxDBEdit, cxStyles,
   cxCustomData, cxFilter, cxData, cxDataStorage, Data.DB, cxDBData, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, Datasnap.DBClient, dxBarExtItems;
+  cxGrid, Datasnap.DBClient, dxBarExtItems, cxCalendar;
 
 type
   TJuridicalEditForm = class(TAncestorDialogForm)
@@ -76,7 +76,6 @@ type
     edINN: TcxDBTextEdit;
     edAccounterName: TcxDBTextEdit;
     edNumberVAT: TcxDBTextEdit;
-    BankGuides: TdsdGuides;
     edBankAccount: TcxDBTextEdit;
     JuridicalDetailsUDS: TdsdUpdateDataSet;
     bbStatic: TdxBarStatic;
@@ -86,9 +85,16 @@ type
     cxLabel9: TcxLabel;
     cxLabel10: TcxLabel;
     cxLabel11: TcxLabel;
-    edBank: TcxButtonEdit;
+    edBank: TcxDBButtonEdit;
     cxLabel12: TcxLabel;
     cxLabel13: TcxLabel;
+    cxButton1: TcxButton;
+    actSave: TdsdExecStoredProc;
+    actChoiceBank: TOpenChoiceForm;
+    actContractInsert: TdsdInsertUpdateAction;
+    actContractUpdate: TdsdInsertUpdateAction;
+    bbContractInsert: TdxBarButton;
+    bbContractUpdate: TdxBarButton;
   private
     { Private declarations }
   public

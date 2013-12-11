@@ -1,6 +1,7 @@
 inherited AncestorDialogForm: TAncestorDialogForm
-  ClientHeight = 318
-  ClientWidth = 376
+  BorderStyle = bsDialog
+  ClientHeight = 320
+  ClientWidth = 378
   AddOnFormData.Params = FormParams
   ExplicitWidth = 384
   ExplicitHeight = 345

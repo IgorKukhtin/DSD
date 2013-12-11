@@ -355,11 +355,14 @@ CREATE OR REPLACE FUNCTION zc_Object_RoleProcessAccess() RETURNS Integer AS $BOD
 INSERT INTO ObjectDesc (Code, ItemName)
   SELECT 'zc_Object_RoleProcessAccess', 'Связь ролей и процессов доступа' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_RoleProcessAccess');
 
- 
+CREATE OR REPLACE FUNCTION zc_Object_ContractDocument() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_ContractDocument'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_ContractDocument', 'Связь контрактов и документов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_ContractDocument');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.12.13                       * add zc_Object_ContractDocument
  16.11.13         * add zc_Object_ContractConditionKind, zc_Object_ContractCondition
  14.11.13         * add zc_Object_ContractStateKind, zc_Object_ContractArticle, zc_Object_Area    
  30.10.13         * add zc_object_stafflistsummkind, zc_Object_StaffListSumm

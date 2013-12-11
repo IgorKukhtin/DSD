@@ -15,9 +15,13 @@ BEGIN
 
      -- Выбираем данные
      RETURN QUERY 
+       WITH ObjectHistory_JuridicalDetails AS 
+                        (SELECT * FROM ObjectHistory 
+                          WHERE ObjectHistory.ObjectId = inJuridicalId
+                            AND ObjectHistory.DescId = zc_ObjectHistory_JuridicalDetails())
        SELECT
              ObjectHistory_JuridicalDetails.Id
-           , ObjectHistory_JuridicalDetails.StartDate
+           , COALESCE(ObjectHistory_JuridicalDetails.StartDate, Empty.StartDate) AS StartDate
            , Object_Bank.ValueData AS BankName
            , Object_Bank.Id        AS BankId
            , ObjectHistoryString_JuridicalDetails_FullName.ValueData AS FullName
@@ -27,8 +31,9 @@ BEGIN
            , ObjectHistoryString_JuridicalDetails_NumberVAT.ValueData AS NumberVAT
            , ObjectHistoryString_JuridicalDetails_AccounterName.ValueData AS AccounterName
            , ObjectHistoryString_JuridicalDetails_BankAccount.ValueData AS BankAccount
-
-       FROM ObjectHistory AS ObjectHistory_JuridicalDetails
+       FROM ObjectHistory_JuridicalDetails
+  FULL JOIN (SELECT zc_DateStart() AS StartDate, inJuridicalId AS ObjectId ) AS Empty
+         ON Empty.ObjectId = ObjectHistory_JuridicalDetails.ObjectID
 
   LEFT JOIN ObjectHistoryLink AS ObjectHistoryLink_JuridicalDetails_Bank
          ON ObjectHistoryLink_JuridicalDetails_Bank.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
@@ -54,11 +59,7 @@ BEGIN
         AND ObjectHistoryString_JuridicalDetails_AccounterName.DescId = zc_ObjectHistoryString_JuridicalDetails_AccounterName()
   LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_BankAccount
          ON ObjectHistoryString_JuridicalDetails_BankAccount.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
-        AND ObjectHistoryString_JuridicalDetails_BankAccount.DescId = zc_ObjectHistoryString_JuridicalDetails_BankAccount()
-
-       WHERE ObjectHistory_JuridicalDetails.ObjectId = inJuridicalId
-         AND ObjectHistory_JuridicalDetails.DescId = zc_ObjectHistory_JuridicalDetails()
-;
+        AND ObjectHistoryString_JuridicalDetails_BankAccount.DescId = zc_ObjectHistoryString_JuridicalDetails_BankAccount();
 
 END;
 $BODY$

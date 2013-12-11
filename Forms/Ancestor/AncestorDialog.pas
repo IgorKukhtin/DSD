@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorBase, Vcl.ActnList, dsdAction,
   cxPropertiesStore, dsdAddOn, cxGraphics, cxLookAndFeels,
   cxLookAndFeelPainters, Vcl.Menus, Vcl.StdCtrls, cxButtons, dsdDB, dxSkinsCore,
-  dxSkinsDefaultPainters;
+  dxSkinsDefaultPainters, DataModul;
 
 type
   TAncestorDialogForm = class(TAncestorBaseForm)

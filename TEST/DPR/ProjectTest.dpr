@@ -291,7 +291,8 @@ uses
   Calendar in '..\..\Forms\Guides\Calendar.pas' {CalendarForm: TParentForm},
   GoodsTree_Object in '..\..\Forms\Guides\GoodsTree_Object.pas' {GoodsTree_ObjectForm: TParentForm},
   BankStatementJournal in '..\..\Forms\Document\BankStatementJournal.pas' {BankStatementJournalForm: TParentForm},
-  BankAccountMovement in '..\..\Forms\Document\BankAccountMovement.pas' {BankAccountMovementForm: TParentForm};
+  BankAccountMovement in '..\..\Forms\Document\BankAccountMovement.pas' {BankAccountMovementForm: TParentForm},
+  Document in '..\..\SOURCE\COMPONENT\Document.pas';
 
 {$R *.RES}
 

@@ -425,7 +425,7 @@
     KeyField = 'Id'
     LookupControl = cePaidKind
     FormName = 'TPaidKindForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

@@ -2,9 +2,8 @@
   Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1075#1086' '#1083#1080#1094#1072
   ClientHeight = 364
   ClientWidth = 851
-  ExplicitTop = -43
-  ExplicitWidth = 859
-  ExplicitHeight = 391
+  ExplicitWidth = 857
+  ExplicitHeight = 389
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -133,7 +132,7 @@
       Height = 364
       Align = alClient
       TabOrder = 0
-      Properties.ActivePage = JuridicalDetailTS
+      Properties.ActivePage = ContractTS
       Properties.CustomButtons.Buttons = <>
       ClientRectBottom = 364
       ClientRectRight = 565
@@ -141,7 +140,6 @@
       object JuridicalDetailTS: TcxTabSheet
         Caption = #1056#1077#1082#1074#1080#1079#1080#1090#1099
         ImageIndex = 0
-        ExplicitLeft = 3
         object edFullName: TcxDBTextEdit
           Left = 16
           Top = 19
@@ -185,6 +183,11 @@
             object colJDData: TcxGridDBColumn
               Caption = #1044#1072#1090#1072
               DataBinding.FieldName = 'StartDate'
+              PropertiesClassName = 'TcxDateEditProperties'
+              Properties.InputKind = ikRegExpr
+              Properties.SaveTime = False
+              Properties.ShowTime = False
+              Properties.WeekNumbers = True
               Width = 101
             end
           end
@@ -254,16 +257,18 @@
           Top = 137
           Caption = #1060#1048#1054' '#1073#1091#1093#1075#1072#1083#1090#1077#1088#1072
         end
-        object edBank: TcxButtonEdit
+        object edBank: TcxDBButtonEdit
           Left = 16
           Top = 202
+          DataBinding.DataField = 'BankName'
+          DataBinding.DataSource = JuridicalDetailsDS
           Properties.Buttons = <
             item
+              Action = actChoiceBank
               Default = True
               Kind = bkEllipsis
             end>
           TabOrder = 6
-          Text = 'edBank'
           Width = 193
         end
         object cxLabel12: TcxLabel
@@ -389,8 +394,15 @@
       end
     end
   end
+  object cxButton1: TcxButton [16]
+    Left = 194
+    Top = 301
+    Width = 83
+    Height = 25
+    Action = actSave
+    TabOrder = 20
+  end
   inherited ActionList: TActionList
-    Images = dmMain.ImageList
     inherited actRefresh: TdsdDataSetRefresh
       StoredProc = spGet
       StoredProcList = <
@@ -412,6 +424,63 @@
     end
     object actFormClose: TdsdFormClose
       Category = 'DSDLib'
+    end
+    object actContractInsert: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 45
+      ImageIndex = 0
+      FormName = 'TContractEditForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'JuridicalName'
+          Value = ''
+          Component = edName
+          DataType = ftString
+        end>
+      isShowModal = False
+      DataSource = ContractDS
+      DataSetRefresh = actContractRefresh
+    end
+    object actContractUpdate: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TContractEditForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = ContractCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'JuridicalName'
+          Value = ''
+          Component = edName
+          DataType = ftString
+        end>
+      isShowModal = False
+      ActionType = acUpdate
+      DataSource = ContractDS
+      DataSetRefresh = actContractRefresh
     end
     object actPartnerInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -473,8 +542,11 @@
     object actPartnerRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       TabSheet = PartnerTS
-      StoredProc = spPartner
+      StoredProc = spInsertUpdate
       StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end
         item
           StoredProc = spPartner
         end>
@@ -487,8 +559,11 @@
     object actContractRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       TabSheet = ContractTS
-      StoredProc = spContract
+      StoredProc = spInsertUpdate
       StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end
         item
           StoredProc = spContract
         end>
@@ -506,6 +581,36 @@
           StoredProc = spJuridicalDetailsIU
         end>
       DataSource = JuridicalDetailsDS
+    end
+    object actSave: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
+      Hint = #1057#1086#1093#1088#1072#1085#1080#1090#1100
+      ImageIndex = 14
+      ShortCut = 113
+    end
+    object actChoiceBank: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'actChoiceBank'
+      FormName = 'TBankForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = JuridicalDetailsCDS
+          ComponentItem = 'BankId'
+        end
+        item
+          Name = 'TextValue'
+          Component = JuridicalDetailsCDS
+          ComponentItem = 'BankName'
+          DataType = ftString
+        end>
+      isShowModal = False
     end
   end
   inherited FormParams: TdsdFormParams
@@ -813,6 +918,18 @@
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbContractInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbContractUpdate'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbContractRefresh'
         end>
       OneOnRow = True
@@ -843,17 +960,25 @@
       Hint = '   '
       Visible = ivAlways
     end
+    object bbContractInsert: TdxBarButton
+      Action = actContractInsert
+      Category = 0
+    end
+    object bbContractUpdate: TdxBarButton
+      Action = actContractUpdate
+      Category = 0
+    end
   end
   object JuridicalDetailsDS: TDataSource
     DataSet = JuridicalDetailsCDS
-    Left = 200
-    Top = 320
+    Left = 184
+    Top = 336
   end
   object JuridicalDetailsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 192
-    Top = 328
+    Left = 200
+    Top = 320
   end
   object PartnerDS: TDataSource
     DataSet = PartnerCDS
@@ -892,8 +1017,8 @@
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 216
-    Top = 312
+    Left = 224
+    Top = 304
   end
   object spPartner: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_PartnerJuridical'
@@ -938,8 +1063,8 @@
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    Left = 232
-    Top = 304
+    Left = 256
+    Top = 288
   end
   object PartnerAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1048,29 +1173,7 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 248
-    Top = 152
-  end
-  object BankGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edBank
-    FormName = 'TBankForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = BankGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = BankGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end>
-    Left = 432
+    Left = 280
     Top = 216
   end
 end
