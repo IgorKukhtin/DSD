@@ -49,10 +49,10 @@
 			<DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base_Win64)'!=''">
-			<DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;dxBarExtItemsRS16;cxPivotGridRS16;VclSmp;$(DCC_UsePackage)</DCC_UsePackage>
+			<DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;dxBarExtItemsRS16;cxPivotGridRS16;VclSmp;cxVerticalGridRS16;$(DCC_UsePackage)</DCC_UsePackage>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base_Win32)'!=''">
-			<DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;cxDataRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;fs16;frx16;frxDB16;dxBarExtItemsRS16;cxPivotGridRS16;zlibEx;VclSmp;$(DCC_UsePackage)</DCC_UsePackage>
+			<DCC_UsePackage>vclimg;vcldb;dxCoreRS16;cxLibraryRS16;dxGDIPlusRS16;dxThemeRS16;cxDataRS16;dxBarRS16;dxComnRS16;cxEditorsRS16;cxPageControlRS16;cxGridRS16;cxTreeListRS16;fs16;frx16;frxDB16;dxBarExtItemsRS16;cxPivotGridRS16;zlibEx;VclSmp;cxVerticalGridRS16;$(DCC_UsePackage)</DCC_UsePackage>
 			<VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
 			<DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
 			<VerInfo_Locale>1033</VerInfo_Locale>
@@ -109,6 +109,7 @@
 			<DCCReference Include="dxBarExtItemsRS16.dcp"/>
 			<DCCReference Include="cxPivotGridRS16.dcp"/>
 			<DCCReference Include="VclSmp.dcp"/>
+			<DCCReference Include="cxVerticalGridRS16.dcp"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
 			<DCCReference Include="..\SOURCE\UtilConst.pas"/>
 			<DCCReference Include="..\SOURCE\CommonData.pas"/>

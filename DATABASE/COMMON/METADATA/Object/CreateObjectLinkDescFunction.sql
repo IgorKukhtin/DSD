@@ -506,7 +506,7 @@ SELECT 'zc_ObjectLink_RoleProcessAccess_Role', '—сылка на роль в справочнике ука
                                          
 CREATE OR REPLACE FUNCTION zc_ObjectLink_ContractDocument_Contract() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContractDocument_Contract'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
-SELECT 'zc_ObjectLink_ContractDocument_Contract', '—сылка на договор в справочнике документов договоров', zc_Object_RoleProcessAccess(), zc_Object_Process() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_RoleProcessAccess_Process');
+SELECT 'zc_ObjectLink_ContractDocument_Contract', '—сылка на договор в справочнике документов договоров', zc_Object_ContractDocument(), zc_Object_Contract() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContractDocument_Contract');
 
 
 /*-------------------------------------------------------------------------------

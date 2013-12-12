@@ -251,6 +251,7 @@ inherited ContractEditForm: TContractEditForm
       LookAndFeel.SkinName = ''
       object cxGridDBTableViewContractCondition: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
+        DataController.DataSource = ContractConditionDS
         DataController.Filter.Options = [fcoCaseInsensitive]
         DataController.Filter.Active = True
         DataController.Summary.DefaultGroupSummaryItems = <>
@@ -274,6 +275,7 @@ inherited ContractEditForm: TContractEditForm
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <
             item
+              Action = ContractConditionKindChoiceForm
               Default = True
               Kind = bkEllipsis
             end>
@@ -319,7 +321,10 @@ inherited ContractEditForm: TContractEditForm
       Height = 170
       Align = alClient
       Images = dmMain.ImageList
-      OptionsView.RowHeaderWidth = 94
+      LayoutStyle = lsMultiRecordView
+      OptionsView.RowHeaderWidth = 109
+      OptionsView.RowHeight = 60
+      OptionsView.ValueWidth = 104
       OptionsData.Editing = False
       OptionsData.Appending = False
       OptionsData.Deleting = False
@@ -337,6 +342,10 @@ inherited ContractEditForm: TContractEditForm
         Properties.HeaderAlignmentHorz = taCenter
         Properties.HeaderAlignmentVert = vaCenter
         Properties.ImageIndex = 28
+        Properties.EditPropertiesClassName = 'TcxLabelProperties'
+        Properties.EditProperties.Alignment.Horz = taCenter
+        Properties.EditProperties.Alignment.Vert = taVCenter
+        Properties.EditProperties.WordWrap = True
         Properties.DataBinding.FieldName = 'FileName'
         Properties.Options.Editing = False
         ID = 0
@@ -357,6 +366,63 @@ inherited ContractEditForm: TContractEditForm
   inherited ActionList: TActionList
     Left = 159
     Top = 343
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spDocumentSelect
+        end
+        item
+          StoredProc = spSelectContractCondition
+        end>
+    end
+    object actConditionRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object ContractConditionKindChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'ContractConditionKindChoiceForm'
+      FormName = 'TContractConditionKindForm'
+      GuiParams = <
+        item
+          Name = 'key'
+          Component = ContractConditionCDS
+          ComponentItem = 'ContractConditionKindId'
+        end
+        item
+          Name = 'TextValue'
+          Component = ContractConditionCDS
+          ComponentItem = 'ContractConditionKindName'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
+    object InsertRecordCCK: TInsertRecord
+      Category = 'DSDLib'
+      View = cxGridDBTableViewContractCondition
+      Action = ContractConditionKindChoiceForm
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1090#1080#1087' '#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+      Hint = #1058#1080#1087' '#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+      ImageIndex = 0
+    end
+    object actContractCondition: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      StoredProc = spInsertUpdateContractCondition
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateContractCondition
+        end>
+      Caption = 'actUpdateDataSetCCK'
+      DataSource = ContractConditionDS
+    end
     object actInsertDocument: TdsdExecStoredProc
       Category = 'DSDLib'
       StoredProc = spInsertDocument
@@ -366,6 +432,38 @@ inherited ContractEditForm: TContractEditForm
         end>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 0
+    end
+    object DocumentRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      StoredProc = spDocumentSelect
+      StoredProcList = <
+        item
+          StoredProc = spDocumentSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
+    object DocumentOpenAction: TDocumentOpenAction
+      Category = 'DSDLib'
+      Document = Document
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 60
+    end
+    object MultiAction: TMultiAction
+      Category = 'DSDLib'
+      ActionList = <
+        item
+          Action = actInsertDocument
+        end
+        item
+          Action = DocumentRefresh
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 0
     end
   end
@@ -397,6 +495,7 @@ inherited ContractEditForm: TContractEditForm
       item
         Name = 'ioId'
         Value = Null
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
@@ -505,6 +604,7 @@ inherited ContractEditForm: TContractEditForm
       item
         Name = 'Id'
         Value = Null
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
@@ -878,6 +978,7 @@ inherited ContractEditForm: TContractEditForm
       item
         Name = 'inContractId'
         Value = Null
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
@@ -934,7 +1035,11 @@ inherited ContractEditForm: TContractEditForm
       FloatTop = 8
       FloatClientWidth = 0
       FloatClientHeight = 0
-      ItemLinks = <>
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertCondition'
+        end>
       OneOnRow = True
       Row = 0
       UseOwnFont = False
@@ -956,6 +1061,18 @@ inherited ContractEditForm: TContractEditForm
         item
           Visible = True
           ItemName = 'bbAddDocument'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenDocument'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefreshDoc'
         end>
       OneOnRow = True
       Row = 0
@@ -964,7 +1081,26 @@ inherited ContractEditForm: TContractEditForm
       WholeRow = False
     end
     object bbAddDocument: TdxBarButton
-      Action = actInsertDocument
+      Action = MultiAction
+      Category = 0
+    end
+    object bbRefreshDoc: TdxBarButton
+      Action = DocumentRefresh
+      Category = 0
+    end
+    object bbStatic: TdxBarStatic
+      Caption = '   '
+      Category = 0
+      Enabled = False
+      Hint = '   '
+      Visible = ivAlways
+    end
+    object bbOpenDocument: TdxBarButton
+      Action = DocumentOpenAction
+      Category = 0
+    end
+    object bbInsertCondition: TdxBarButton
+      Action = InsertRecordCCK
       Category = 0
     end
   end
@@ -998,6 +1134,7 @@ inherited ContractEditForm: TContractEditForm
     Top = 280
   end
   object Document: TDocument
+    GetBlobProcedure = spGetDocument
     Left = 520
     Top = 240
   end
@@ -1013,6 +1150,7 @@ inherited ContractEditForm: TContractEditForm
       end
       item
         Name = 'indocumentname'
+        Value = ''
         Component = Document
         ComponentItem = 'Name'
         DataType = ftString
@@ -1027,6 +1165,7 @@ inherited ContractEditForm: TContractEditForm
       end
       item
         Name = 'incontractdocumentdata'
+        Value = '789C535018D10000F1E01FE1'
         Component = Document
         ComponentItem = 'Data'
         DataType = ftBlob
@@ -1036,9 +1175,16 @@ inherited ContractEditForm: TContractEditForm
     Top = 288
   end
   object spGetDocument: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_ContractDocument'
     DataSets = <>
     OutputType = otBlob
-    Params = <>
+    Params = <
+      item
+        Name = 'incontractdocumentid'
+        Component = DocumentCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
     Left = 584
     Top = 232
   end
