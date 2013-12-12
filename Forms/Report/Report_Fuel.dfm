@@ -23,8 +23,6 @@ object Report_FuelForm: TReport_FuelForm
     Height = 341
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 988
-    ExplicitHeight = 338
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -352,7 +350,6 @@ object Report_FuelForm: TReport_FuelForm
     Height = 31
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 988
     object deStart: TcxDateEdit
       Left = 101
       Top = 5

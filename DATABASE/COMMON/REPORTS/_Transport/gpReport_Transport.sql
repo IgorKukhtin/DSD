@@ -1,14 +1,17 @@
 -- Function: gpReport_Transport ()
 
 DROP FUNCTION IF EXISTS gpReport_Transport (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Transport (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Transport(
     IN inStartDate     TDateTime , -- 
     IN inEndDate       TDateTime , --
     IN inCarId         Integer   , --
+    IN inBranchId      Integer   , -- филиал
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (InvNumberTransport Integer, OperDate TDateTime
+             , BranchName TVarChar
              , CarModelName TVarChar, CarName TVarChar
              , PersonalDriverName TVarChar
              , RouteName TVarChar, RouteKindName TVarChar
@@ -60,6 +63,7 @@ BEGIN
 
         SELECT zfConvert_StringToNumber (tmpFuel.InvNumber) AS InvNumberTransport
              , tmpFuel.OperDate
+             , ViewObject_Unit.BranchName
              , Object_CarModel.ValueData        AS CarModelName
              , Object_Car.ValueData             AS CarName
              , View_PersonalDriver.PersonalName AS PersonalDriverName
@@ -338,6 +342,14 @@ BEGIN
              LEFT JOIN Object AS Object_RateFuelKind ON Object_RateFuelKind.Id = tmpFuel.RateFuelKindId
              LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = tmpFuel.FuelId
 
+             -- ограничиваем по филиалу, если нужно
+             LEFT JOIN ObjectLink AS ObjectLink_Car_Unit 
+                                  ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id
+                                 AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
+             LEFT JOIN Object_Unit_View AS ViewObject_Unit
+                                        ON ViewObject_Unit.Id = ObjectLink_Car_Unit.ChildObjectId
+                                       AND (ViewObject_Unit.BranchId = inBranchId OR inBranchId = 0)
+
         GROUP BY tmpFuel.MovementId
                , tmpFuel.InvNumber
                , tmpFuel.OperDate
@@ -348,18 +360,20 @@ BEGIN
                , Object_RouteKind.ValueData
                , Object_RateFuelKind.ValueData
                , Object_Fuel.ValueData
+               , ViewObject_Unit.BranchName
        ;
 
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpReport_Transport (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_Transport (TDateTime, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.12.13         * add inBranchId     
  28.10.13                                        *
  05.10.13         *
 */

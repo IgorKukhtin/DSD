@@ -238,7 +238,7 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 46
       end
       object clInvNumberTransport: TcxGridDBColumn
         Caption = #8470
@@ -246,14 +246,14 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 45
+        Width = 37
       end
       object cxGridDBTableViewColumn1: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
         DataBinding.FieldName = 'FuelName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 58
       end
       object clCarModelName: TcxGridDBColumn
         Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
@@ -261,7 +261,7 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 85
+        Width = 71
       end
       object clCarName: TcxGridDBColumn
         Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
@@ -269,7 +269,13 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 85
+        Width = 70
+      end
+      object colBranchName: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083
+        DataBinding.FieldName = 'BranchName'
+        HeaderAlignmentVert = vaCenter
+        Width = 53
       end
       object PersonalDriverName: TcxGridDBColumn
         Caption = #1042#1086#1076#1080#1090#1077#1083#1100
@@ -277,7 +283,7 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 58
       end
       object clRouteName: TcxGridDBColumn
         Caption = #1052#1072#1088#1096#1088#1091#1090
@@ -285,7 +291,7 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 57
       end
       object clRouteKindName: TcxGridDBColumn
         Caption = #1058#1080#1087' '#1084#1072#1088#1096#1088#1091#1090#1072
@@ -293,7 +299,7 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 57
       end
       object clStartOdometre: TcxGridDBColumn
         Caption = #1053#1072#1095'. '#1087#1086#1082#1072#1079'.'#1082#1084
@@ -303,7 +309,7 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 58
       end
       object clEndOdometre: TcxGridDBColumn
         Caption = #1050#1086#1085#1077#1095'. '#1087#1086#1082#1072#1079'.'#1082#1084
@@ -313,7 +319,7 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 57
       end
       object clDistanceFuel: TcxGridDBColumn
         Caption = #1055#1088#1086#1073#1077#1075', '#1082#1084
@@ -323,7 +329,7 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 60
+        Width = 49
       end
       object clAmountFuel_Start: TcxGridDBColumn
         Caption = #1053#1072#1095'. '#1086#1089#1090', '#1083'.'
@@ -333,7 +339,7 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 60
+        Width = 50
       end
       object clAmountFuel_In: TcxGridDBColumn
         Caption = #1047#1072#1087#1088#1072#1074#1082#1072', '#1083'.'
@@ -343,7 +349,7 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 60
+        Width = 50
       end
       object clAmountFuel_Out: TcxGridDBColumn
         Caption = #1056#1072#1089#1093#1086#1076', '#1083'.'
@@ -353,7 +359,7 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 60
+        Width = 50
       end
       object clAmountFuel_End: TcxGridDBColumn
         Caption = #1050#1086#1085#1077#1095'. '#1086#1089#1090'., '#1083'.'
@@ -363,7 +369,7 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 60
+        Width = 46
       end
       object clColdHour: TcxGridDBColumn
         Caption = #1063#1072#1089#1086#1074' '#1092#1072#1082#1090', '#1093#1086#1083#1086#1076
@@ -371,7 +377,7 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 58
       end
       object clColdDistance: TcxGridDBColumn
         Caption = #1050#1084'. '#1092#1072#1082#1090', '#1093#1086#1083#1086#1076
@@ -379,7 +385,7 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 59
       end
       object clRateFuelKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1085#1086#1088#1084#1099
@@ -405,7 +411,7 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 49
+        Width = 39
       end
       object clAmountColdHour: TcxGridDBColumn
         Caption = #1053#1086#1088#1084#1072' '#1085#1072' '#1093#1086#1083#1086#1076', '#1074' '#1095#1072#1089
@@ -413,7 +419,7 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 73
+        Width = 60
       end
       object clAmountColdDistance: TcxGridDBColumn
         Caption = #1053#1086#1088#1084#1072' '#1085#1072' '#1093#1086#1083#1086#1076', '#1079#1072' 100 '#1082#1084
@@ -421,7 +427,7 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 72
+        Width = 60
       end
       object clAmount_Distance_calc: TcxGridDBColumn
         Caption = #1056#1072#1089#1095#1077#1090' '#1085#1072' '#1087#1088#1086#1073#1077#1075
@@ -431,7 +437,7 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 57
       end
       object clAmount_ColdHour_calc: TcxGridDBColumn
         Caption = #1056#1072#1089#1095#1077#1090' '#1085#1072' '#1093#1086#1083#1086#1076' '#1095'.'
@@ -441,7 +447,7 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 57
       end
       object clAmount_ColdDistance_calc: TcxGridDBColumn
         Caption = #1056#1072#1089#1095#1077#1090' '#1085#1072' '#1093#1086#1083#1086#1076' '#1082#1084'.'
@@ -451,7 +457,7 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 58
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -490,6 +496,22 @@ object Report_TransportForm: TReport_TransportForm
       Left = 200
       Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
+    end
+    object cxLabel5: TcxLabel
+      Left = 424
+      Top = 7
+      Caption = #1060#1080#1083#1080#1072#1083':'
+    end
+    object edBranch: TcxButtonEdit
+      Left = 473
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 5
+      Width = 138
     end
   end
   object DataSource: TDataSource
@@ -743,6 +765,13 @@ object Report_TransportForm: TReport_TransportForm
         Name = 'inCarId'
         Value = 0
         ParamType = ptInput
+      end
+      item
+        Name = 'inBranchId'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 152
     Top = 248
@@ -774,14 +803,41 @@ object Report_TransportForm: TReport_TransportForm
         Component = PeriodChoice
       end
       item
+        Component = deStart
       end
       item
+        Component = deEnd
       end
       item
+        Component = BranchGuides
       end
       item
       end>
-    Left = 288
-    Top = 64
+    Left = 232
+  end
+  object BranchGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBranch
+    FormName = 'TBranchForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 520
+    Top = 27
   end
 end

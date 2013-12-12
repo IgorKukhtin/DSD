@@ -76,6 +76,10 @@ type
     cxGridDBTableViewColumn1: TcxGridDBColumn;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
+    cxLabel5: TcxLabel;
+    edBranch: TcxButtonEdit;
+    BranchGuides: TdsdGuides;
+    colBranchName: TcxGridDBColumn;
   private
   public
   end;

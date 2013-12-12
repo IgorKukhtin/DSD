@@ -391,7 +391,7 @@
     PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'ClientDataSet'
     Params = <>
-    Left = 160
+    Left = 152
     Top = 64
   end
   object BranchGuides: TdsdGuides
