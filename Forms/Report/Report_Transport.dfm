@@ -636,6 +636,9 @@ object Report_TransportForm: TReport_TransportForm
           'Left'
           'Top'
           'Width')
+      end
+      item
+        Component = BranchGuides
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
