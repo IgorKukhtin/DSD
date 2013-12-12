@@ -1,16 +1,19 @@
 -- Function: gpReport_Fuel()
 
 DROP FUNCTION IF EXISTS gpReport_Fuel (TDateTime, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Fuel (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Fuel(
     IN inStartDate     TDateTime , -- 
     IN inEndDate       TDateTime , --
     IN inFuelId        Integer,    -- топливо  
     IN inCarId         Integer,    -- машина
-    IN inSession     TVarChar    -- сессия пользователя
+    IN inBranchId      Integer,    -- филиал
+    IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (CarModelName TVarChar, CarId Integer, CarCode Integer, CarName TVarChar
              , FuelCode Integer, FuelName TVarChar, KindId Integer
+             , BranchId Integer, BranchName TVarChar
              , StartAmount TFloat, IncomeAmount TFloat, RateAmount TFloat, EndAmount TFloat
              , StartSumm TFloat, IncomeSumm TFloat, RateSumm TFloat, EndSumm TFloat
              )
@@ -68,6 +71,7 @@ BEGIN
                 AND ContainerLinkObject_Car.ContainerId = Container.Id
                 AND (ContainerLinkObject_Car.ObjectId = inCarId OR inCarId = 0))
          -- Конец WITH. Начало запроса
+        
          SELECT Container.Id, Container.DescId, Container.Amount, TicketFuel.ObjectId, TicketFuel.CarId, vb_Kind_Ticket as KindId -- здесь талоны деньги
            FROM Container 
            JOIN TicketFuel on Container.ParentId = TicketFuel.id
@@ -97,7 +101,8 @@ BEGIN
          JOIN ContainerLinkObject AS ContainerLinkObject_Car 
            ON Container.iD = ContainerId AND ContainerLinkObject_Car.DescId = zc_ContainerLinkObject_Car() 
           AND COALESCE(ContainerLinkObject_Car.ObjectId, 0) <> 0
-          AND (ContainerLinkObject_Car.ObjectId = inCarId OR inCarId = 0))
+          AND (ContainerLinkObject_Car.ObjectId = inCarId OR inCarId = 0) )
+
                -- Конец. Получили все нужные нам контейнеры
 
     -- Добавили строковые данные. 
@@ -110,8 +115,13 @@ BEGIN
                 ELSE Object.ValueData          
            END AS FuelName, 
            Report.KindId,
+           
+           ViewObject_Unit.BranchId,
+           ViewObject_Unit.BranchName,
+           
            StartCount::TFloat, IncomeCount::TFloat, OutcomeCount::TFloat, EndCount::TFloat,
            Report.StartSumm::TFloat, Report.IncomeSumm::TFloat, Report.OutcomeSumm::TFloat, Report.EndSumm::TFloat
+           
     FROM
         -- Получили оборотку, развернутую на количество и сумму, cгруппированную по топливу и автомобилю
        (SELECT Report.CarId, Report.ObjectId, Report.KindId,
@@ -146,6 +156,13 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
                                                             AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
              LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
+             
+             -- Ограничили по Филиалу, если надо
+             LEFT JOIN ObjectLink AS ObjectLink_Car_Unit ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id
+                                                        AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
+             LEFT JOIN Object_Unit_View AS ViewObject_Unit ON ViewObject_Unit.Id = ObjectLink_Car_Unit.ChildObjectId
+                                                          AND (ViewObject_Unit.BranchId = inBranchId OR inBranchId = 0)
+             
     ;
     -- Конец. Добавили строковые данные. 
     -- КОНЕЦ ЗАПРОСА
@@ -154,12 +171,13 @@ END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpReport_Fuel (TDateTime, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_Fuel (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.12.13         * add inBranchId              
  30.11.13                        * Изменил подход к формированию
  29.11.13                        * Ошибка с датой. Добавил талоны
  28.11.13                                        * add CarModelName
@@ -169,5 +187,5 @@ ALTER FUNCTION gpReport_Fuel (TDateTime, TDateTime, Integer, Integer, TVarChar) 
 */
 
 -- тест
--- SELECT * FROM gpReport_Fuel (inStartDate:= '01.01.2013', inEndDate:= '01.02.2013', inFuelId:= null, inCarId:= null, inSession:= '2'); 
+-- SELECT * FROM gpReport_Fuel (inStartDate:= '01.01.2013', inEndDate:= '01.02.2013', inFuelId:= null, inCarId:= null, inBranchId:= null,inSession:= '2'); 
                                                                 
