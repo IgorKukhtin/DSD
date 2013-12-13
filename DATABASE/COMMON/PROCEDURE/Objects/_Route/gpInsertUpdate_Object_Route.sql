@@ -1,12 +1,14 @@
 -- Function: gpInsertUpdate_Object_Route(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Route(
  INOUT ioId             Integer   , -- Ключ объекта <маршрут>
     IN inCode           Integer   , -- свойство <Код маршрута>
     IN inName           TVarChar  , -- свойство <Наименование маршрута>
     IN inUnitId         Integer   , -- ссылка на Подразделение
+    IN inBranchId       Integer   , -- ссылка на Филиал
     IN inRouteKindId    Integer   , -- ссылка на Типы маршрутов
     IN inFreightId      Integer   , -- ссылка на Название груза
     IN inSession        TVarChar    -- сессия пользователя
@@ -39,7 +41,11 @@ BEGIN
 
    -- сохранили связь с <подразделением>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Route_Unit(), ioId, inUnitId);
-      -- сохранили связь с <Типы маршрутов>
+
+   -- сохранили связь с <Филиалом>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Route_Branch(), ioId, inBranchId);
+
+   -- сохранили связь с <Типы маршрутов>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Route_RouteKind(), ioId, inRouteKindId);
    -- сохранили связь с <Название груза>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Route_Freight(), ioId, inFreightId);
@@ -50,17 +56,18 @@ BEGIN
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Route (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.12.13         * add inBranchId              
  08.12.13                                        * add inAccessKeyId
  09.10.13                                        * пытаемся найти код
- 24.09.13          *  add Unit, RouteKind, Freight
- 03.06.13          *
+ 24.09.13         * add Unit, RouteKind, Freight
+ 03.06.13         *
 */
 
 -- тест
