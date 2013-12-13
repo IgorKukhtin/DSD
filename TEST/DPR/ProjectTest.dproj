@@ -297,16 +297,16 @@
 			<DCCReference Include="..\..\Forms\Asset.pas">
 				<Form>AssetForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Route.pas">
+			<DCCReference Include="..\..\Forms\Guides\Route.pas">
 				<Form>RouteForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\RouteEdit.pas">
+			<DCCReference Include="..\..\Forms\Guides\RouteEdit.pas">
 				<Form>RouteEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\RouteSorting.pas">
+			<DCCReference Include="..\..\Forms\Guides\RouteSorting.pas">
 				<Form>RouteSortingForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\RouteSortingEdit.pas">
+			<DCCReference Include="..\..\Forms\Guides\RouteSortingEdit.pas">
 				<Form>RouteSortingEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Member.pas">
@@ -525,10 +525,10 @@
 			<DCCReference Include="..\..\Forms\FreightEdit.pas">
 				<Form>FreightEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\RouteKind.pas">
+			<DCCReference Include="..\..\Forms\Guides\RouteKind.pas">
 				<Form>RouteKindForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\RouteKindEdit.pas">
+			<DCCReference Include="..\..\Forms\Guides\RouteKindEdit.pas">
 				<Form>RouteKindEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\RateFuel.pas">
