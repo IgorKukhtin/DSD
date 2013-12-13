@@ -267,6 +267,7 @@ initialization
   RegisterClass (TClientBankLoadAction);
   RegisterClass (TCrossDBViewAddOn);
   RegisterClass (TDocument);
+  RegisterClass (TDocumentOpenAction);
   RegisterClass (TdsdChangeMovementStatus);
   RegisterClass (TdsdChoiceGuides);
   RegisterClass (TdsdDataSetRefresh);

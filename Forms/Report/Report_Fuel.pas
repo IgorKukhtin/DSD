@@ -73,6 +73,10 @@ type
     cxLabel1: TcxLabel;
     cxLabel3: TcxLabel;
     CarModelName: TcxGridDBColumn;
+    cxLabel5: TcxLabel;
+    edBranch: TcxButtonEdit;
+    BranchGuides: TdsdGuides;
+    colBranchName: TcxGridDBColumn;
   private
   public
   end;

@@ -1,9 +1,9 @@
-object BranchForm: TBranchForm
+object RouteKindForm: TRouteKindForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1083#1080#1072#1083#1099'>'
-  ClientHeight = 374
-  ClientWidth = 601
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1080#1087#1099' '#1084#1072#1088#1096#1088#1091#1090#1072'>'
+  ClientHeight = 376
+  ClientWidth = 390
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,28 +20,26 @@ object BranchForm: TBranchForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 601
-    Height = 348
+    Width = 390
+    Height = 350
     Align = alClient
     TabOrder = 0
-    LookAndFeel.NativeStyle = False
+    LookAndFeel.NativeStyle = True
+    LookAndFeel.SkinName = 'UserSkin'
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
       DataController.Filter.Options = [fcoCaseInsensitive]
-      DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
-      OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      Images = dmMain.SortImageList
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
@@ -50,20 +48,26 @@ object BranchForm: TBranchForm
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 84
+        Options.Editing = False
+        Width = 55
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 246
+        Options.Editing = False
+        Width = 243
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
+        PropertiesClassName = 'TcxCheckBoxProperties'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 57
+        Options.Editing = False
+        Width = 78
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -72,13 +76,13 @@ object BranchForm: TBranchForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 96
+    Left = 40
     Top = 96
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 96
+    Left = 24
     Top = 144
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -90,16 +94,11 @@ object BranchForm: TBranchForm
           'Left'
           'Top'
           'Width')
-      end
-      item
-        Component = clName
-        Properties.Strings = (
-          'Width')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 232
-    Top = 96
+    Left = 240
+    Top = 88
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -147,11 +146,11 @@ object BranchForm: TBranchForm
         end
         item
           Visible = True
-          ItemName = 'bbErased'
+          ItemName = 'bbSetErased'
         end
         item
           Visible = True
-          ItemName = 'bbUnErased'
+          ItemName = 'bbSetUnErased'
         end
         item
           Visible = True
@@ -164,15 +163,16 @@ object BranchForm: TBranchForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'bbToExcel'
         end
         item
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
+          BeginGroup = True
           Visible = True
-          ItemName = 'bbChoiceGuides'
+          ItemName = 'bbChoice'
         end>
       OneOnRow = True
       Row = 0
@@ -185,40 +185,52 @@ object BranchForm: TBranchForm
       Category = 0
     end
     object bbInsert: TdxBarButton
-      Action = actInsert
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Category = 0
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
+      Visible = ivAlways
+      ImageIndex = 0
+      ShortCut = 45
     end
     object bbEdit: TdxBarButton
       Action = actUpdate
       Category = 0
     end
-    object bbErased: TdxBarButton
-      Action = dsdSetErased
+    object bbSetErased: TdxBarButton
+      Caption = #1059#1076#1072#1083#1080#1090#1100
       Category = 0
-    end
-    object bbUnErased: TdxBarButton
-      Action = dsdSetUnErased
-      Category = 0
-    end
-    object dxBarStatic: TdxBarStatic
-      Caption = '     '
-      Category = 0
-      Hint = '     '
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       Visible = ivAlways
+      ImageIndex = 2
+      ShortCut = 46
     end
-    object bbGridToExcel: TdxBarButton
+    object bbSetUnErased: TdxBarButton
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Category = 0
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Visible = ivAlways
+      ImageIndex = 8
+      ShortCut = 32776
+    end
+    object bbToExcel: TdxBarButton
       Action = dsdGridToExcel
       Category = 0
     end
-    object bbChoiceGuides: TdxBarButton
+    object dxBarStatic: TdxBarStatic
+      Caption = '       '
+      Category = 0
+      Hint = '       '
+      Visible = ivAlways
+    end
+    object bbChoice: TdxBarButton
       Action = dsdChoiceGuides
       Category = 0
     end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 232
-    Top = 144
+    Left = 264
+    Top = 136
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -232,73 +244,24 @@ object BranchForm: TBranchForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object actInsert: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      ShortCut = 45
-      ImageIndex = 0
-      FormName = 'TBranchEditForm'
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-        end>
-      isShowModal = True
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-    end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TBranchEditForm'
+      FormName = 'TRouteKindEditForm'
       GuiParams = <
         item
           Name = 'Id'
           Component = ClientDataSet
+          ComponentItem = 'Id'
           ParamType = ptInput
         end>
-      isShowModal = True
+      isShowModal = False
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
-    end
-    object dsdSetErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 2
-      ShortCut = 46
-      ErasedFieldName = 'isErased'
-      DataSource = DataSource
-    end
-    object dsdSetUnErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 32776
-      ErasedFieldName = 'isErased'
-      isSetErased = False
-      DataSource = DataSource
-    end
-    object dsdGridToExcel: TdsdGridToExcel
-      Category = 'DSDLib'
-      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      ImageIndex = 6
-      ShortCut = 16472
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -307,6 +270,7 @@ object BranchForm: TBranchForm
           Name = 'Key'
           Component = ClientDataSet
           ComponentItem = 'Id'
+          DataType = ftString
         end
         item
           Name = 'TextValue'
@@ -317,22 +281,27 @@ object BranchForm: TBranchForm
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
+      DataSource = DataSource
+    end
+    object dsdGridToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      Grid = cxGrid
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Branch'
+    StoredProcName = 'gpSelect_Object_RouteKind'
     DataSet = ClientDataSet
     DataSets = <
       item
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 200
-    Top = 192
-  end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 120
-    Top = 224
+    Left = 144
+    Top = 152
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -345,8 +314,12 @@ object BranchForm: TBranchForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 288
-    Top = 208
+    Left = 296
+    Top = 216
+  end
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 176
+    Top = 216
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -369,7 +342,7 @@ object BranchForm: TBranchForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    Left = 216
-    Top = 240
+    Left = 48
+    Top = 216
   end
 end

@@ -132,7 +132,7 @@
       Height = 364
       Align = alClient
       TabOrder = 0
-      Properties.ActivePage = ContractTS
+      Properties.ActivePage = JuridicalDetailTS
       Properties.CustomButtons.Buttons = <>
       ClientRectBottom = 364
       ClientRectRight = 565
@@ -352,6 +352,7 @@
           TabOrder = 0
           object ContractGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
+            DataController.DataSource = ContractDS
             DataController.Summary.DefaultGroupSummaryItems = <>
             DataController.Summary.FooterSummaryItems = <>
             DataController.Summary.SummaryGroups = <>
@@ -363,6 +364,7 @@
               DataBinding.FieldName = 'InvNumber'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
+              Options.Editing = False
               Width = 171
             end
             object clStartDate: TcxGridDBColumn
@@ -370,6 +372,7 @@
               DataBinding.FieldName = 'StartDate'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
+              Options.Editing = False
               Width = 129
             end
             object clContractKindName: TcxGridDBColumn
@@ -377,6 +380,7 @@
               DataBinding.FieldName = 'ContractKindName'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
+              Options.Editing = False
               Width = 171
             end
             object clIsErased: TcxGridDBColumn
@@ -384,6 +388,7 @@
               DataBinding.FieldName = 'isErased'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
+              Options.Editing = False
               Width = 78
             end
           end
@@ -1053,8 +1058,8 @@
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 464
-    Top = 304
+    Left = 456
+    Top = 256
   end
   object JuridicalDetailsAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'

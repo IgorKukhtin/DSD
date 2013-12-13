@@ -1,12 +1,14 @@
 ﻿-- Function: gpSelect_Object_Branch(TVarChar)
 
---DROP FUNCTION gpSelect_Object_Branch(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Branch(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Branch(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
-$BODY$BEGIN
+
+$BODY$
+BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    --PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
@@ -20,12 +22,12 @@ $BODY$BEGIN
      FROM Object
     WHERE Object.DescId = zc_Object_Branch();
   
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 100;
-ALTER FUNCTION gpSelect_Object_Branch(TVarChar)
-  OWNER TO postgres;
+END;
+$BODY$
+
+LANGUAGE plpgsql VOLATILE;
+
+ALTER FUNCTION gpSelect_Object_Branch(TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/

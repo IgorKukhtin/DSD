@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Route(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
+             , BranchId Integer, BranchCode Integer, BranchName TVarChar
              , RouteKindId Integer, RouteKindCode Integer, RouteKindName TVarChar
              , FreightId Integer, FreightCode Integer, FreightName TVarChar
              , isErased Boolean
@@ -28,6 +29,10 @@ BEGIN
        , Object_Unit.ObjectCode AS UnitCode
        , Object_Unit.ValueData  AS UnitName
 
+       , Object_Branch.Id         AS BranchId 
+       , Object_Branch.ObjectCode AS BranchCode
+       , Object_Branch.ValueData  AS BranchName
+
        , Object_RouteKind.Id         AS RouteKindId 
        , Object_RouteKind.ObjectCode AS RouteKindCode
        , Object_RouteKind.ValueData AS RouteKindName
@@ -40,9 +45,14 @@ BEGIN
        
    FROM Object AS Object_Route
         JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Object_Route.AccessKeyId
+        
         LEFT JOIN ObjectLink AS ObjectLink_Route_Unit ON ObjectLink_Route_Unit.ObjectId = Object_Route.Id
                                                      AND ObjectLink_Route_Unit.DescId = zc_ObjectLink_Route_Unit()
         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Route_Unit.ChildObjectId
+        
+        LEFT JOIN ObjectLink AS ObjectLink_Route_Branch ON ObjectLink_Route_Branch.ObjectId = Object_Route.Id
+                                                     AND ObjectLink_Route_Branch.DescId = zc_ObjectLink_Route_Branch()
+        LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Route_Branch.ChildObjectId
           
         LEFT JOIN ObjectLink AS ObjectLink_Route_RouteKind ON ObjectLink_Route_RouteKind.ObjectId = Object_Route.Id
                                                           AND ObjectLink_Route_RouteKind.DescId = zc_ObjectLink_Route_RouteKind()
@@ -62,9 +72,10 @@ ALTER FUNCTION gpSelect_Object_Route (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 13.12.13         * add Branch             
  08.12.13                                        * add Object_RoleAccessKey_View
- 24.09.13          *  add Unit, RouteKind, Freight
- 03.06.13          *
+ 24.09.13         *  add Unit, RouteKind, Freight
+ 03.06.13         *
 */
 /*
 UPDATE Object SET AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr() WHERE DescId = zc_Object_Route() AND ObjectCode < 200;

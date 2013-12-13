@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Route(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , UnitId Integer, UnitCode Integer, UnitName TVarChar
+             , BranchId Integer, BranchCode Integer, BranchName TVarChar
              , RouteKindId Integer, RouteKindCode Integer, RouteKindName TVarChar
              , FreightId Integer, FreightCode Integer, FreightName TVarChar
              , isErased Boolean
@@ -28,6 +29,11 @@ $BODY$BEGIN
            , CAST (0 as Integer)   AS UnitId 
            , CAST (0 as Integer)   AS UnitCode
            , CAST ('' as TVarChar) AS UnitName
+           
+           , CAST (0 as Integer)   AS BranchId 
+           , CAST (0 as Integer)   AS BranchCode
+           , CAST ('' as TVarChar) AS BranchName
+
 
            , CAST (0 as Integer)   AS RouteKindId 
            , CAST (0 as Integer)   AS RouteKindCode
@@ -50,6 +56,10 @@ $BODY$BEGIN
            , Object_Unit.ObjectCode AS UnitCode
            , Object_Unit.ValueData  AS UnitName
 
+           , Object_Branch.Id         AS BranchId 
+           , Object_Branch.ObjectCode AS BranchCode
+           , Object_Branch.ValueData  AS BranchName
+           
            , Object_RouteKind.Id         AS RouteKindId 
            , Object_RouteKind.ObjectCode AS RouteKindCode
            , Object_RouteKind.ValueData AS RouteKindName
@@ -64,7 +74,11 @@ $BODY$BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Route_Unit ON ObjectLink_Route_Unit.ObjectId = Object_Route.Id
                                                          AND ObjectLink_Route_Unit.DescId = zc_ObjectLink_Route_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_Route_Unit.ChildObjectId
-            
+
+            LEFT JOIN ObjectLink AS ObjectLink_Route_Branch ON ObjectLink_Route_Branch.ObjectId = Object_Route.Id
+                                                           AND ObjectLink_Route_Branch.DescId = zc_ObjectLink_Route_Branch()
+            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Route_Branch.ChildObjectId
+                       
             LEFT JOIN ObjectLink AS ObjectLink_Route_RouteKind ON ObjectLink_Route_RouteKind.ObjectId = Object_Route.Id
                                                               AND ObjectLink_Route_RouteKind.DescId = zc_ObjectLink_Route_RouteKind()
             LEFT JOIN Object AS Object_RouteKind ON Object_RouteKind.Id = ObjectLink_Route_RouteKind.ChildObjectId
@@ -86,8 +100,9 @@ ALTER FUNCTION gpGet_Object_Route (Integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 24.09.13          *  add Unit, RouteKind, Freight            
- 03.06.13          *
+ 13.12.13         * add             
+ 24.09.13         * add Unit, RouteKind, Freight            
+ 03.06.13         *
 
 */
 

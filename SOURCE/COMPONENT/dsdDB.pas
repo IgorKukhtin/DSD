@@ -130,7 +130,7 @@ implementation
 uses Storage, CommonData, TypInfo, UtilConvert, SysUtils, cxTextEdit, VCL.Forms,
      XMLDoc, XMLIntf, StrUtils, cxCurrencyEdit, dsdGuides, cxCheckBox, cxCalendar,
      Variants, UITypes, dsdAction, Defaults, UtilConst, Windows, Dialogs,
-     dsdAddOn, cxDBData, cxGridDBTableView, Authentication;
+     dsdAddOn, cxDBData, cxGridDBTableView, Authentication, Document;
 
 procedure Register;
 begin
@@ -667,6 +667,12 @@ begin
         Result := (Component as TBooleanStoredProcAction).Value;
      if Component is TDefaultKey then
         Result := (Component as TDefaultKey).Key;
+     if Component is TDocument then begin
+        if LowerCase(ComponentItem) = 'name' then
+           result := TDocument(Component).GetName
+        else
+           result := TDocument(Component).GetData;
+     end;
   end
   else
     Result := FValue

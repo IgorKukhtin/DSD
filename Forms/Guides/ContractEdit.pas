@@ -12,7 +12,7 @@ uses
   cxCurrencyEdit, cxDropDownEdit, cxCalendar, cxMaskEdit, cxLabel, Vcl.Controls,
   cxTextEdit, dsdDB, dsdAction, System.Classes, Vcl.ActnList, cxPropertiesStore,
   dsdAddOn, Vcl.StdCtrls, cxButtons, cxInplaceContainer, cxVGrid, cxDBVGrid,
-  Document;
+  Document, dxBarExtItems;
 
 type
   TContractEditForm = class(TAncestorEditDialogForm)
@@ -80,6 +80,13 @@ type
     colFileName: TcxDBEditorRow;
     actInsertDocument: TdsdExecStoredProc;
     bbAddDocument: TdxBarButton;
+    DocumentRefresh: TdsdDataSetRefresh;
+    bbRefreshDoc: TdxBarButton;
+    bbStatic: TdxBarStatic;
+    DocumentOpenAction: TDocumentOpenAction;
+    bbOpenDocument: TdxBarButton;
+    bbInsertCondition: TdxBarButton;
+    MultiAction: TMultiAction;
   private
     { Private declarations }
   public

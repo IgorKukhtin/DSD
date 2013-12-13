@@ -2,8 +2,8 @@ object Report_FuelForm: TReport_FuelForm
   Left = 0
   Top = 0
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1088#1072#1089#1093#1086#1076#1091' '#1090#1086#1087#1083#1080#1074#1072
-  ClientHeight = 395
-  ClientWidth = 988
+  ClientHeight = 398
+  ClientWidth = 1004
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,8 +19,8 @@ object Report_FuelForm: TReport_FuelForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 988
-    Height = 338
+    Width = 1004
+    Height = 341
     Align = alClient
     TabOrder = 0
     object cxGridDBTableView: TcxGridDBTableView
@@ -233,6 +233,12 @@ object Report_FuelForm: TReport_FuelForm
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object colBranchName: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083
+        DataBinding.FieldName = 'BranchName'
+        HeaderAlignmentVert = vaCenter
+        Width = 50
+      end
       object CarModelName: TcxGridDBColumn
         Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
         DataBinding.FieldName = 'CarModelName'
@@ -340,7 +346,7 @@ object Report_FuelForm: TReport_FuelForm
   object Panel1: TPanel
     Left = 0
     Top = 26
-    Width = 988
+    Width = 1004
     Height = 31
     Align = alTop
     TabOrder = 5
@@ -361,12 +367,12 @@ object Report_FuelForm: TReport_FuelForm
       Width = 85
     end
     object cxLabel2: TcxLabel
-      Left = 615
+      Left = 599
       Top = 6
       Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100':'
     end
     object edCar: TcxButtonEdit
-      Left = 684
+      Left = 667
       Top = 5
       Properties.Buttons = <
         item
@@ -377,12 +383,12 @@ object Report_FuelForm: TReport_FuelForm
       Width = 150
     end
     object cxLabel4: TcxLabel
-      Left = 409
+      Left = 401
       Top = 6
       Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072':'
     end
     object ceFuel: TcxButtonEdit
-      Left = 481
+      Left = 473
       Top = 5
       Properties.Buttons = <
         item
@@ -401,6 +407,22 @@ object Report_FuelForm: TReport_FuelForm
       Left = 200
       Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
+    end
+    object cxLabel5: TcxLabel
+      Left = 824
+      Top = 7
+      Caption = #1060#1080#1083#1080#1072#1083':'
+    end
+    object edBranch: TcxButtonEdit
+      Left = 872
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 9
+      Width = 126
     end
   end
   object DataSource: TDataSource
@@ -438,13 +460,13 @@ object Report_FuelForm: TReport_FuelForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 8
-    Top = 64
+    Top = 48
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -458,7 +480,7 @@ object Report_FuelForm: TReport_FuelForm
     ShowShortCutInHint = True
     UseSystemFont = True
     Left = 72
-    Top = 64
+    Top = 48
     DockControlHeights = (
       0
       0
@@ -522,7 +544,7 @@ object Report_FuelForm: TReport_FuelForm
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 40
-    Top = 64
+    Top = 40
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -616,6 +638,13 @@ object Report_FuelForm: TReport_FuelForm
         Component = CarGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inBranchId'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 432
     Top = 232
@@ -661,8 +690,8 @@ object Report_FuelForm: TReport_FuelForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 760
-    Top = 147
+    Left = 712
+    Top = 27
   end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefresh
@@ -675,9 +704,11 @@ object Report_FuelForm: TReport_FuelForm
       end
       item
         Component = CarGuides
+      end
+      item
+        Component = BranchGuides
       end>
-    Left = 232
-    Top = 65528
+    Left = 256
   end
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'
@@ -709,7 +740,32 @@ object Report_FuelForm: TReport_FuelForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 463
-    Top = 135
+    Left = 511
+    Top = 23
+  end
+  object BranchGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBranch
+    FormName = 'TBranchForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 920
+    Top = 27
   end
 end

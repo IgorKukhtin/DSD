@@ -278,8 +278,8 @@
         Value = Null
         ParamType = ptInputOutput
       end>
-    Left = 16
-    Top = 216
+    Left = 24
+    Top = 112
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Unit'
@@ -321,13 +321,13 @@
         Name = 'BranchId'
         Value = ''
         Component = BranchGuides
-        ComponentItem = 'Id'
+        ComponentItem = 'Key'
       end
       item
         Name = 'BranchName'
         Value = ''
         Component = BranchGuides
-        ComponentItem = 'Name'
+        ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
@@ -353,6 +353,7 @@
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
+        DataType = ftString
       end
       item
         Name = 'AccountDirectionId'
@@ -365,6 +366,7 @@
         Value = ''
         Component = AccountDirectionGuides
         ComponentItem = 'TextValue'
+        DataType = ftString
       end
       item
         Name = 'ProfitLossDirectionId'
@@ -377,9 +379,10 @@
         Value = ''
         Component = ProfitLossDirectionGuides
         ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 16
-    Top = 240
+    Top = 176
   end
   object ParentGuides: TdsdGuides
     KeyField = 'Id'
@@ -388,7 +391,7 @@
     PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'ClientDataSet'
     Params = <>
-    Left = 160
+    Left = 152
     Top = 64
   end
   object BranchGuides: TdsdGuides

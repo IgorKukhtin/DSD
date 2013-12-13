@@ -123,6 +123,9 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
+    property Key;
+    // Текстовое значение
+    property TextValue;
     property FormName;
     // Родитель для древовидных справочников
     property ParentId;
