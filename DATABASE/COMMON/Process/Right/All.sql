@@ -12,35 +12,35 @@ BEGIN
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_TrasportDnepr()
                                    , inDescId:= zc_Object_Process()
                                    , inCode:= 1
-                                   , inName:= 'Транспорт Днепр (доступ просмотра).'
+                                   , inName:= 'Транспорт Днепр (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_TrasportDnepr');
 
  -- Movement, zc_Object_Route, zc_Object_Car, zc_Object_CardFuel, zc_Object_Personal, zc_Object_Member
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_TrasportKiev()
                                    , inDescId:= zc_Object_Process()
                                    , inCode:= 1
-                                   , inName:= 'Транспорт Киев (доступ просмотра).'
+                                   , inName:= 'Транспорт Киев (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_TrasportKiev');
                                    
  -- zc_Object_Route
 /* PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_TrasportDneprNot()
                                    , inDescId:= zc_Object_Process()
                                    , inCode:= 1
-                                   , inName:= 'Транспорт все кроме Днепр (доступ просмотра).'
+                                   , inName:= 'Транспорт все кроме Днепр (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_TrasportDneprNot');*/
   
  -- zc_Object_Goods
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_TrasportAll()
                                    , inDescId:= zc_Object_Process()
                                    , inCode:= 1
-                                   , inName:= 'Транспорт все (доступ просмотра).'
+                                   , inName:= 'Транспорт все (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_TrasportAll');
 
  -- zc_Object_Personal
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_PersonalAll()
                                    , inDescId:= zc_Object_Process()
                                    , inCode:= 1
-                                   , inName:= 'Отдел кадров (доступ просмотра).'
+                                   , inName:= 'Отдел кадров все (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_PersonalAll');
 
 /*

@@ -35,13 +35,13 @@ BEGIN
 
 
      -- !!!обязательно!!! пересчитали Child - нормы
-     PERFORM lpInsertUpdate_MI_Transport_Child_byMaster (inMovementId := inMovementId, inParentId := MovementItem.Id, inRouteKindId:= MILinkObject_RouteKind.ObjectId, inUserId := inUserId)
+     /*PERFORM lpInsertUpdate_MI_Transport_Child_byMaster (inMovementId := inMovementId, inParentId := MovementItem.Id, inRouteKindId:= MILinkObject_RouteKind.ObjectId, inUserId := inUserId)
      FROM MovementItem
           LEFT JOIN MovementItemLinkObject AS MILinkObject_RouteKind
                                            ON MILinkObject_RouteKind.MovementItemId = MovementItem.Id 
                                           AND MILinkObject_RouteKind.DescId = zc_MILinkObject_RouteKind()
      WHERE MovementItem.MovementId = inMovementId
-       AND MovementItem.DescId = zc_MI_Master();
+       AND MovementItem.DescId = zc_MI_Master();*/
 
 
      -- Эти параметры нужны для формирования Аналитик в проводках
@@ -422,6 +422,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.12.13                                        * убрал пересчитали Child - нормы
  03.11.13                                        * add zc_MILinkObject_Route
  02.11.13                                        * add zc_MILinkObject_Branch, zc_MILinkObject_UnitRoute, zc_MILinkObject_BranchRoute
  02.11.13                                        * group AS _tmpItem_Transport

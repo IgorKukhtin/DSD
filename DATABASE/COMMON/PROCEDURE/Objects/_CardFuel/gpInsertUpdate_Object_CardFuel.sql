@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_CardFuel(
  INOUT ioId                Integer   , -- Ключ объекта <Топливные карты>
     IN inCode              Integer   , -- свойство <Код >
     IN inName              TVarChar  , -- свойство <Наименование>
-    IN inLimit             TFloat    , -- Лимит
+--    IN inLimit             TFloat    , -- Лимит
     IN inPersonalDriverId  Integer   , -- ссылка на сотрудника
     IN inCarId             Integer   , -- ссылка на авто
     IN inPaidKindId        Integer   , -- ссылка на Виды форм оплаты
@@ -39,8 +39,8 @@ BEGIN
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_CardFuel(), vbCode_calc, inName);
 
-   -- сохранили свойство <Лимит>
-   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CardFuel_Limit(), ioId, inLimit);
+--   -- сохранили свойство <Лимит>
+--   PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_CardFuel_Limit(), ioId, inLimit);
 
    -- сохранили связь с <сотрудником>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_CardFuel_PersonalDriver(), ioId, inPersonalDriverId);
