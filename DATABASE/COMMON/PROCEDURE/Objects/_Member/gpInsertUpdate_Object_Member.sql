@@ -15,7 +15,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Member(
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;
-   DECLARE vbAccessKeyId_calc Integer;
 BEGIN
    -- !!! это временно !!!
    -- IF COALESCE(ioId, 0) = 0
@@ -36,12 +35,8 @@ BEGIN
    -- проверка уникальности <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Member(), vbCode_calc);
 
-   vbAccessKeyId_calc:= CASE WHEN vbCode_calc BETWEEN 2000 AND 2999
-                                  THEN zc_Enum_Process_AccessKey_TrasportKiev()
-                             ELSE zc_Enum_Process_AccessKey_TrasportDnepr()
-                        END;
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Member(), vbCode_calc, inName, inAccessKeyId:= vbAccessKeyId_calc);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Member(), vbCode_calc, inName, inAccessKeyId:= NULL);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_INN(), ioId, inINN);
@@ -65,6 +60,7 @@ ALTER FUNCTION gpInsertUpdate_Object_Member(Integer, Integer, TVarChar, TVarChar
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.12.13                                        * del inAccessKeyId
  08.12.13                                        * add inAccessKeyId
  30.10.13                         * синхронизируем <Физические лица> и <Сотрудники>
  09.10.13                                        * пытаемся найти код

@@ -28,7 +28,6 @@ BEGIN
          , Object_Member.isErased   AS isErased
          
      FROM Object AS Object_Member
-          JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Object_Member.AccessKeyId
           LEFT JOIN ObjectString AS ObjectString_INN
                                  ON ObjectString_INN.ObjectId = Object_Member.Id 
                                 AND ObjectString_INN.DescId = zc_ObjectString_Member_INN()
@@ -49,12 +48,10 @@ ALTER FUNCTION gpSelect_Object_Member (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.12.13                                        * del Object_RoleAccessKey_View
  08.12.13                                        * add Object_RoleAccessKey_View
  01.10.13         *  add DriverCertificate, Comment             
  01.07.13         *              
-*/
-/*
-UPDATE Object SET AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr() WHERE DescId = zc_Object_Member() AND ObjectCode < 2000;
 */
 -- тест
 -- SELECT * FROM gpSelect_Object_Member('2')
