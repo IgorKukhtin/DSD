@@ -17,7 +17,8 @@ $BODY$
    DECLARE vbAccessKeyAll Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_Route());
+   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_Route());
+   vbUserId:= lpGetUserBySession (inSession);
    -- определяется - может ли пользовать видеть весь справочник
    vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
 

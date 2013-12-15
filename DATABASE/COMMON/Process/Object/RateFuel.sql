@@ -7,13 +7,13 @@ BEGIN
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_Object_RateFuel()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 1
-                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_RateFuel())||'> - сохранение данных.'
+                                  , inName:= 'сохранение данных - справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_RateFuel())||'>.'
                                   , inEnumName:= 'zc_Enum_Process_InsertUpdate_Object_RateFuel');
 
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_Object_RateFuel()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 2
-                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_RateFuel())||'> - получение данных.'
+                                  , inName:= 'получение данных - справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_RateFuel())||'>.'
                                   , inEnumName:= 'zc_Enum_Process_Select_Object_RateFuel');
                                   
  -- заливка прав - InsertUpdate

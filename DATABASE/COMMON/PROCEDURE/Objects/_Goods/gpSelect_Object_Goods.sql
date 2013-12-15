@@ -53,7 +53,10 @@ BEGIN
             , ObjectBoolean_PartionSumm.ValueData  AS isPartionSumm 
             , Object_Goods.isErased       AS isErased
 
-       FROM (SELECT Object_Goods.* FROM Object_RoleAccessKey_View JOIN Object AS Object_Goods ON Object_Goods.AccessKeyId = Object_RoleAccessKey_View.AccessKeyId AND Object_Goods.DescId = zc_Object_Goods() WHERE Object_RoleAccessKey_View.UserId = vbUserId AND vbAccessKeyRight = TRUE
+       FROM (SELECT Object_Goods.*
+             FROM (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey
+                  JOIN Object AS Object_Goods ON Object_Goods.AccessKeyId = tmpRoleAccessKey.AccessKeyId AND Object_Goods.DescId = zc_Object_Goods()
+             WHERE vbAccessKeyRight = TRUE
             UNION ALL
              SELECT Object_Goods.* FROM Object AS Object_Goods WHERE Object_Goods.DescId = zc_Object_Goods() AND vbAccessKeyRight = FALSE
             ) AS Object_Goods

@@ -22,7 +22,8 @@ $BODY$
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_IncomeFuel());
+     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_IncomeFuel());
+     vbUserId:= lpGetUserBySession (inSession);
 
 
      RETURN QUERY 
@@ -56,6 +57,7 @@ BEGIN
            , Object_Route.ValueData            AS RouteName
            , View_PersonalDriver.PersonalName  AS PersonalDriverName
        FROM Movement
+            JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN Movement AS Movement_Master ON Movement_Master.Id = Movement.ParentId
@@ -132,6 +134,7 @@ ALTER FUNCTION gpSelect_Movement_IncomeFuel (TDateTime, TDateTime, TVarChar) OWN
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.12.13                                        * add Object_RoleAccessKey_View
  31.10.13                                        * add OperDatePartner
  23.10.13                                        * add zfConvert_StringToNumber
  19.10.13                                        * add ChangePrice

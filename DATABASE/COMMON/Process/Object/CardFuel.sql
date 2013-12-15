@@ -9,25 +9,25 @@ BEGIN
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_Object_CardFuel()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 1
-                                  , inName:= '—правочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_CardFuel())||'> - сохранение данных.'
+                                  , inName:= 'сохранение данных - справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_CardFuel())||'>.'
                                   , inEnumName:= 'zc_Enum_Process_InsertUpdate_Object_CardFuel');
 
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Get_Object_CardFuel()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 2
-                                  , inName:= '—правочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_CardFuel())||'> - выбор данных.'
+                                  , inName:= 'выбор данных - справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_CardFuel())||'>.'
                                   , inEnumName:= 'zc_Enum_Process_Get_Object_CardFuel');
 
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_Object_CardFuel()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 3
-                                  , inName:= '—правочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_CardFuel())||'> - получение данных.'
+                                  , inName:= 'получение данных - справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_CardFuel())||'>.'
                                   , inEnumName:= 'zc_Enum_Process_Select_Object_CardFuel');
                                   
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_Object_SourceFuel()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 4
-                                  , inName:= '—правочник <»сточник заправки> - получение данных.'
+                                  , inName:= 'получение данных - справочник <»сточник заправки>.'
                                   , inEnumName:= 'zc_Enum_Process_Select_Object_SourceFuel');
 
  -- заливка прав - InsertUpdate

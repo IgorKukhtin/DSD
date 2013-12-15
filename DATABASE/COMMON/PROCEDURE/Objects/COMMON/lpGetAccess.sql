@@ -20,9 +20,9 @@ BEGIN
   ELSE
 
   -- проверка - должен быть только "один" процесс (доступ просмотра)
-  IF EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = inUserId /*AND AccessKeyId <> zc_Enum_Process_AccessKey_TrasportDneprNot()*/ HAVING Count (*) = 1)
+  IF EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = inUserId AND AccessKeyId <> zc_Enum_Process_AccessKey_TrasportAll() HAVING Count (*) = 1)
   THEN
-      vbValueId := (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = inUserId /*AND AccessKeyId <> zc_Enum_Process_AccessKey_TrasportDneprNot()*/);
+      vbValueId := (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = inUserId AND AccessKeyId <> zc_Enum_Process_AccessKey_TrasportAll());
   ELSE
       RAISE EXCEPTION 'У пользователя <%> нельзя определить значение для доступа просмотра.', lfGet_Object_ValueData (inUserId);
   END IF;  
@@ -45,10 +45,9 @@ ALTER FUNCTION lpGetAccessKey (Integer, Integer)  OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.12.13                                        * add zc_Enum_Process_AccessKey_TrasportAll
  07.12.13                                        *
 */
-/*
-UPDATE Movement SET AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr()
-*/
+
 -- тест
 -- SELECT * FROM lpGetAccessKey (zfCalc_UserAdmin() :: Integer, null)

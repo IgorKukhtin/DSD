@@ -13,12 +13,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_RateFuelKind (
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;   
-
 BEGIN
-   
    -- проверка прав пользователя на вызов процедуры
-   -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_RateFuelKind());
-   vbUserId := inSession;
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_RateFuelKind());
 
    -- Если код не установлен, определяем его каи последний+1
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_RateFuelKind()); 
@@ -48,7 +45,6 @@ ALTER FUNCTION gpInsertUpdate_Object_RateFuelKind (Integer,Integer,TVarChar, TFl
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  26.09.13          * 
-
 */
 
 -- тест

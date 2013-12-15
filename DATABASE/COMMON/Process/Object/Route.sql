@@ -8,19 +8,19 @@ BEGIN
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_Object_Route()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 1
-                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Route())||'> - сохранение данных.'
+                                  , inName:= 'сохранение данных - справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Route())||'>.'
                                   , inEnumName:= 'zc_Enum_Process_InsertUpdate_Object_Route');
 
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Get_Object_Route()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 2
-                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Route())||'> - выбор данных.'
+                                  , inName:= 'выбор данных - справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Route())||'>.'
                                   , inEnumName:= 'zc_Enum_Process_Get_Object_Route');
 
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_Object_Route()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 3
-                                  , inName:= 'Справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Route())||'> - получение данных.'
+                                  , inName:= 'получение данных - справочник <'||(SELECT ItemName FROM ObjectDesc WHERE Id = zc_Object_Route())||'>.'
                                   , inEnumName:= 'zc_Enum_Process_Select_Object_Route');
                                   
  -- заливка прав - InsertUpdate

@@ -20,7 +20,8 @@ $BODY$
    DECLARE vbAccessKeyAll Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_Unit());
+   -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_Unit());
+   vbUserId:= lpGetUserBySession (inSession);
    -- определяется - может ли пользовать видеть весь справочник
    vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
 
@@ -59,6 +60,7 @@ BEGIN
        FROM Object_Unit_View
             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = Object_Unit_View.Id
             LEFT JOIN Object_AccountDirection AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
+       WHERE vbAccessKeyAll = TRUE
       ;
 
 END;

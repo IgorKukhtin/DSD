@@ -46,7 +46,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Member_Comment(), ioId, inComment);
 
    -- синхронизируем <Физические лица> и <Сотрудники>
-   UPDATE Object SET ValueData = inName, ObjectCode = vbCode_calc, AccessKeyId = vbAccessKeyId_calc
+   UPDATE Object SET ValueData = inName, ObjectCode = vbCode_calc
    WHERE Id IN (SELECT ObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Personal_Member() AND ChildObjectId = ioId);  
 
    -- сохранили протокол
