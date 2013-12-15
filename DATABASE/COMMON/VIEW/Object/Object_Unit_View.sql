@@ -27,6 +27,7 @@ CREATE OR REPLACE VIEW Object_Unit_View AS
 
            , ObjectLink_Unit_AccountDirection.ChildObjectId AS AccountDirectionId
 
+           , Object_Unit.AccessKeyId
            , Object_Unit.isErased AS isErased
            , ObjectBoolean_isLeaf.ValueData AS isLeaf
        FROM Object AS Object_Unit

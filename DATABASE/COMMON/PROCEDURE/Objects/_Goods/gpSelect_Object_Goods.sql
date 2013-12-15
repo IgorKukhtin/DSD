@@ -17,13 +17,16 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
 AS
 $BODY$
   DECLARE vbUserId Integer;
+  DECLARE vbAccessKeyRight Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_Goods());
-     vbUserId := inSession;
+     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Object_Goods());
+     vbUserId:= lpGetUserBySession (inSession);
+     -- определяется - есть ли ограничения
+     vbAccessKeyRight:= NOT zfCalc_AccessKey_GuideAll (vbUserId) AND EXISTS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId);
+
 
      RETURN QUERY 
-       WITH tmpUserTransport AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Transport())
        SELECT Object_Goods.Id             AS Id
             , Object_Goods.ObjectCode     AS Code
             , Object_Goods.ValueData      AS Name
@@ -50,18 +53,9 @@ BEGIN
             , ObjectBoolean_PartionSumm.ValueData  AS isPartionSumm 
             , Object_Goods.isErased       AS isErased
 
-       FROM (SELECT Object_Goods.*
-             FROM ObjectLink AS ObjectLink_Goods_Fuel
-                  JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_Fuel.ObjectId
-                  LEFT JOIN ObjectLink AS ObjectLink_TicketFuel_Goods
-                                       ON ObjectLink_TicketFuel_Goods.ChildObjectId = Object_Goods.Id
-                                      AND ObjectLink_TicketFuel_Goods.DescId = zc_ObjectLink_TicketFuel_Goods()
-             WHERE ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
-               AND ObjectLink_Goods_Fuel.ChildObjectId > 0
-               AND ObjectLink_TicketFuel_Goods.ChildObjectId IS NULL
-               AND vbUserId IN (SELECT UserId FROM tmpUserTransport)
+       FROM (SELECT Object_Goods.* FROM Object_RoleAccessKey_View JOIN Object AS Object_Goods ON Object_Goods.AccessKeyId = Object_RoleAccessKey_View.AccessKeyId AND Object_Goods.DescId = zc_Object_Goods() WHERE Object_RoleAccessKey_View.UserId = vbUserId AND vbAccessKeyRight = TRUE
             UNION ALL
-             SELECT Object_Goods.* FROM Object AS Object_Goods WHERE Object_Goods.DescId = zc_Object_Goods() AND vbUserId NOT IN (SELECT UserId FROM tmpUserTransport)
+             SELECT Object_Goods.* FROM Object AS Object_Goods WHERE Object_Goods.DescId = zc_Object_Goods() AND vbAccessKeyRight = FALSE
             ) AS Object_Goods
              LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                   ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
@@ -120,6 +114,7 @@ ALTER FUNCTION gpSelect_Object_Goods (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.12.13                                        * add inAccessKeyId
  07.12.13                                        * rename UserRole_View -> ObjectLink_UserRole_View
  09.11.13                                        * add tmpUserTransport
  29.10.13                                        * add Object_InfoMoney_View

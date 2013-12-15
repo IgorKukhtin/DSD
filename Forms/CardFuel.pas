@@ -61,6 +61,7 @@ type
     clJuridicalName: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
     clCarModelName: TcxGridDBColumn;
+    clCardFuelLimit: TcxGridDBColumn;
 
   private
     { Private declarations }

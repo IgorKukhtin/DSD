@@ -14,10 +14,14 @@ RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar,
                isErased Boolean) AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbAccessKeyAll Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_Personal());
+   -- определяется - может ли пользовать видеть весь справочник
+   vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
 
+   -- Результат
    RETURN QUERY 
      SELECT 
            Object_Personal_View.PersonalId   AS Id
@@ -45,7 +49,8 @@ BEGIN
          
          , Object_Personal_View.isErased
      FROM Object_Personal_View
-          JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Object_Personal_View.AccessKeyId
+          LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Object_Personal_View.AccessKeyId
+     WHERE tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll
     ;
   
 END;
@@ -57,6 +62,7 @@ ALTER FUNCTION gpSelect_Object_Personal (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.12.13                                        * add vbAccessKeyAll
  08.12.13                                        * add Object_RoleAccessKey_View
  21.11.13                                        * add PositionLevel...
  28.10.13                         * 
@@ -67,7 +73,8 @@ ALTER FUNCTION gpSelect_Object_Personal (TVarChar) OWNER TO postgres;
  01.07.13         *              
 */
 /*
-UPDATE Object SET AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr() WHERE DescId = zc_Object_Personal() AND ObjectCode < 2000;
+UPDATE Object SET AccessKeyId = COALESCE (Object_Branch.AccessKeyId, (SELECT zc_Enum_Process_AccessKey_TrasportDnepr() WHERE EXISTS (SELECT 1 FROM ObjectLink as ObjectLink_ch WHERE ObjectLink_ch.DescId = zc_ObjectLink_Car_Unit() AND ObjectLink_ch.ChildObjectId = ObjectLink.ChildObjectId)))
+FROM ObjectLink LEFT JOIN ObjectLink AS ObjectLink2 ON ObjectLink2.ObjectId = ObjectLink.ChildObjectId AND ObjectLink2.DescId = zc_ObjectLink_Unit_Branch() LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink2.ChildObjectId WHERE ObjectLink.ObjectId = Object.Id AND ObjectLink.DescId = zc_ObjectLink_Personal_Unit() AND Object.DescId = zc_Object_Personal();
 */
 -- тест
 -- SELECT * FROM gpSelect_Object_Personal (zfCalc_UserAdmin())

@@ -16,9 +16,13 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              ) AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbAccessKeyAll Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_Car());
+     -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_Car());
+     vbUserId:= lpGetUserBySession (inSession);
+     -- определяется - может ли пользовать видеть весь справочник
+     vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
 
      -- Результат
      RETURN QUERY 
@@ -52,7 +56,7 @@ BEGIN
            , Object_Car.isErased    AS isErased
            
        FROM Object AS Object_Car
-            JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Object_Car.AccessKeyId
+            LEFT JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON NOT vbAccessKeyAll AND tmpRoleAccessKey.AccessKeyId = Object_Car.AccessKeyId
        
             LEFT JOIN ObjectString AS RegistrationCertificate ON RegistrationCertificate.ObjectId = Object_Car.Id 
                                                              AND RegistrationCertificate.DescId = zc_ObjectString_Car_RegistrationCertificate()
@@ -77,18 +81,19 @@ BEGIN
                                                             AND ObjectLink_Car_FuelChild.DescId = zc_ObjectLink_Car_FuelChild()
             LEFT JOIN Object AS Object_FuelChild ON Object_FuelChild.Id = ObjectLink_Car_FuelChild.ChildObjectId
 
-     WHERE Object_Car.DescId = zc_Object_Car();
-  
+     WHERE Object_Car.DescId = zc_Object_Car()
+       AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
+    ;
+
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_Car(TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.12.13                                        * add vbAccessKeyAll
  08.12.13                                        * add Object_RoleAccessKey_View
  30.09.13                                        * add Object_Personal_View
  26.09.13          * del StartDateRate, EndDateRate, RateFuelKind               
@@ -97,7 +102,7 @@ ALTER FUNCTION gpSelect_Object_Car(TVarChar) OWNER TO postgres;
  03.06.13          
 */
 /*
-UPDATE Object SET AccessKeyId = zc_Enum_Process_AccessKey_TrasportDnepr() WHERE DescId = zc_Object_Car() AND ObjectCode < 200;
+UPDATE Object SET AccessKeyId = COALESCE (Object_Branch.AccessKeyId, zc_Enum_Process_AccessKey_TrasportDnepr()) FROM ObjectLink LEFT JOIN ObjectLink AS ObjectLink2 ON ObjectLink2.ObjectId = ObjectLink.ChildObjectId AND ObjectLink2.DescId = zc_ObjectLink_Unit_Branch() LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink2.ChildObjectId WHERE ObjectLink.ObjectId = Object.Id AND ObjectLink.DescId = zc_ObjectLink_Car_Unit() AND Object.DescId = zc_Object_Car();
 */
 -- тест
--- SELECT * FROM gpSelect_Object_Car ('5')
+-- SELECT * FROM gpSelect_Object_Car (zfCalc_UserAdmin())

@@ -23,7 +23,8 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Transport());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Transport());
+     vbUserId:= lpGetUserBySession (inSession);
 
      -- Результат
      RETURN QUERY 
@@ -135,6 +136,7 @@ ALTER FUNCTION gpSelect_Movement_Transport (TDateTime, TDateTime, TVarChar) OWNE
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.12.13                                        * add lpGetUserBySession
  02.12.13         * add Personal (changes in wiki)
  23.10.13                                        * add zfConvert_StringToNumber
  18.10.13                                        * add CarModelName

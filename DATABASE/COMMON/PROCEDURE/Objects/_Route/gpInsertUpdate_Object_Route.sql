@@ -34,10 +34,7 @@ BEGIN
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId:= ioId, inDescId:= zc_Object_Route(), inObjectCode:= vbCode_calc, inValueData:= inName
-                                , inAccessKeyId:= CASE WHEN vbCode_calc BETWEEN 200 AND 299
-                                                            THEN zc_Enum_Process_AccessKey_TrasportKiev()
-                                                       ELSE zc_Enum_Process_AccessKey_TrasportDnepr()
-                                                  END);
+                                , inAccessKeyId:= (SELECT Object_Branch.AccessKeyId FROM Object AS Object_Branch WHERE Object_Branch.Id = inBranchId));
 
    -- сохранили связь с <подразделением>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Route_Unit(), ioId, inUnitId);
@@ -50,7 +47,6 @@ BEGIN
    -- сохранили связь с <Название груза>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Route_Freight(), ioId, inFreightId);
 
-   
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 

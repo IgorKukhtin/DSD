@@ -52,6 +52,8 @@ type
     cxLabel5: TcxLabel;
     ceJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
+    ceLimit: TcxCurrencyEdit;
+    cxLabel6: TcxLabel;
 
   private
     { Private declarations }

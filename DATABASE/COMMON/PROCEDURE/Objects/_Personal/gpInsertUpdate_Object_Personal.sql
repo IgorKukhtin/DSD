@@ -19,12 +19,9 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode Integer;   
    DECLARE vbName TVarChar;   
-   DECLARE vbAccessKeyId_calc Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- vbUserId := PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Personal());
-   vbUserId := inSession;
-   
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Personal());
 
    -- проверка
    IF COALESCE (inMemberId, 0) = 0
@@ -42,9 +39,8 @@ BEGIN
        RAISE EXCEPTION 'Ошибка. <Должность> не выбрана.';
    END IF;
 
-
    -- определяем параметры, т.к. значения должны быть синхронизированы с объектом <Физические лица>
-   SELECT ObjectCode, ValueData, AccessKeyId INTO vbCode, vbName, vbAccessKeyId_calc FROM Object WHERE Id = inMemberId;   
+   SELECT ObjectCode, ValueData INTO vbCode, vbName FROM Object WHERE Id = inMemberId;   
 
    -- !!! это временно !!!
    -- IF COALESCE(ioId, 0) = 0
@@ -63,7 +59,12 @@ BEGIN
 
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Personal(), vbCode, vbName, inAccessKeyId:= vbAccessKeyId_calc);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Personal(), vbCode, vbName
+                                , inAccessKeyId:= COALESCE ((SELECT Object_Branch.AccessKeyId FROM ObjectLink LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink.ChildObjectId WHERE ObjectLink.ObjectId = inUnitId AND ObjectLink.DescId = zc_ObjectLink_Unit_Branch())
+                                                            -- если это "транспортное" подразделение
+                                                          , (SELECT zc_Enum_Process_AccessKey_TrasportDnepr() WHERE EXISTS (SELECT 1 FROM ObjectLink WHERE DescId = zc_ObjectLink_Car_Unit() AND ChildObjectId = inUnitId))
+                                                           )
+                                 );
    -- сохранили связь с <физ.лицом>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Personal_Member(), ioId, inMemberId);
    -- сохранили связь с <должностью>
@@ -91,6 +92,7 @@ ALTER FUNCTION gpInsertUpdate_Object_Personal (Integer, Integer, Integer, Intege
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.12.13                                        * add inAccessKeyId берем по другому
  08.12.13                                        * add inAccessKeyId берем у <Физические лица>
  21.11.13                                        * add проверка уникальности для свойств
  21.11.13                                        * add inPositionLevelId
