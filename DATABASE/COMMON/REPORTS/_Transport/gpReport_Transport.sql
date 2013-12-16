@@ -343,12 +343,12 @@ BEGIN
              LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = tmpFuel.FuelId
 
              -- ограничиваем по филиалу, если нужно
-             LEFT JOIN ObjectLink AS ObjectLink_Car_Unit 
-                                  ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id
-                                 AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
-             LEFT JOIN Object_Unit_View AS ViewObject_Unit
-                                        ON ViewObject_Unit.Id = ObjectLink_Car_Unit.ChildObjectId
-                                       AND (ViewObject_Unit.BranchId = inBranchId OR inBranchId = 0)
+             JOIN ObjectLink AS ObjectLink_Car_Unit 
+                             ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id
+                            AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
+             JOIN Object_Unit_View AS ViewObject_Unit
+                                   ON ViewObject_Unit.Id = ObjectLink_Car_Unit.ChildObjectId
+                                  AND (ViewObject_Unit.BranchId = inBranchId OR inBranchId = 0)
 
         GROUP BY tmpFuel.MovementId
                , tmpFuel.InvNumber
