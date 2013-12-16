@@ -230,7 +230,7 @@
         Name = 'inParentId'
         Value = ''
         Component = ParentGuides
-        ComponentItem = 'Key'
+        ComponentItem = 'ParentId'
         ParamType = ptInput
       end
       item
@@ -308,13 +308,13 @@
         Name = 'ParentId'
         Value = ''
         Component = ParentGuides
-        ComponentItem = 'Id'
+        ComponentItem = 'Key'
       end
       item
         Name = 'ParentName'
         Value = ''
         Component = ParentGuides
-        ComponentItem = 'Name'
+        ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
@@ -362,17 +362,17 @@
         ComponentItem = 'Key'
       end
       item
+        Name = 'ProfitLossDirectionId'
+        Value = ''
+        Component = ProfitLossDirectionGuides
+        ComponentItem = 'Key'
+      end
+      item
         Name = 'AccountDirectionName'
         Value = ''
         Component = AccountDirectionGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-      end
-      item
-        Name = 'ProfitLossDirectionId'
-        Value = ''
-        Component = ProfitLossDirectionGuides
-        ComponentItem = 'Key'
       end
       item
         Name = 'ProfitLossDirectionName'
@@ -387,11 +387,25 @@
   object ParentGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceParent
-    FormName = 'TUnitForm'
+    FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'ClientDataSet'
-    ParentDataSet = 'ClientDataSet'
-    Params = <>
-    Left = 152
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ParentGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ParentGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 160
     Top = 64
   end
   object BranchGuides: TdsdGuides
@@ -399,8 +413,22 @@
     LookupControl = ceBranch
     FormName = 'TBranchForm'
     PositionDataSet = 'ClientDataSet'
-    ParentDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
     Left = 384
     Top = 64
   end
@@ -419,7 +447,22 @@
     LookupControl = ceJuridical
     FormName = 'TJuridicalForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
     Left = 384
     Top = 112
   end
@@ -439,7 +482,22 @@
     FormName = 'TProfitLossDirectionForm'
     PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ProfitLossDirectionGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ProfitLossDirectionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
     Left = 384
     Top = 168
   end

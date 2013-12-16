@@ -65,6 +65,8 @@ type
     ceTreeState: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    bbUnitChoiceForm: TdxBarButton;
+    dsdOpenUnitForm: TdsdOpenForm;
   private
     { Private declarations }
   public
