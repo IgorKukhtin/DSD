@@ -15,8 +15,6 @@ BEGIN
      -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_Goods());
      vbUserId := inSession;
    
-     PERFORM pg_sleep(0.02);
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

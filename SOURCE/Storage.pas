@@ -227,6 +227,8 @@ begin
     IdHTTPWork.FExecOnServer := false;
     idHTTP.Disconnect;
   end;
+//  if pExecOnServer then
+
   // Определяем тип возвращаемого результата
   ResultType := trim(Copy(FReceiveStream.DataString, 1, ResultTypeLenght));
   isArchive := trim(lowercase(Copy(FReceiveStream.DataString, ResultTypeLenght + 1, IsArchiveLenght))) = 't';

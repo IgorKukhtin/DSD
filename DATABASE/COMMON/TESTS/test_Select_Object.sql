@@ -16,7 +16,7 @@ BEGIN
 
      RETURN QUERY 
        SELECT Object.Id             
-       FROM Object;
+       FROM Object LIMIT 100;
   
 END;
 $BODY$
