@@ -11,7 +11,7 @@ uses
   cxDataStorage, cxEdit, cxDBData, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, DataModul,
   cxPCdxBarPopupMenu, cxPC, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinsdxBarPainter, dxSkinscxPCPainter;
+  dxSkinsdxBarPainter, dxSkinscxPCPainter, Vcl.Menus;
 
 type
   TAncestorDBGridForm = class(TAncestorDataForm)
@@ -23,6 +23,9 @@ type
     bbGridToExcel: TdxBarButton;
     PageControl: TcxPageControl;
     tsMain: TcxTabSheet;
+    PopupMenu: TPopupMenu;
+    Excel1: TMenuItem;
+    N1: TMenuItem;
   private
     { Private declarations }
   public

@@ -10,7 +10,8 @@ uses
   Vcl.ActnList, dxBarExtItems, dxBar, cxClasses, cxPropertiesStore,
   Datasnap.DBClient, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGrid, cxPCdxBarPopupMenu, cxPC,
-  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  Vcl.Menus;
 
 type
   TPaidKindForm = class(TAncestorEnumForm)

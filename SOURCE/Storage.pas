@@ -22,7 +22,10 @@ type
     ///	<param name="pData">
     ///	  XML структура, хранящая данные для обработки на сервере
     ///	</param>
-    function ExecuteProc(pData: String): Variant;
+    ///	<param name="pExecOnServer">
+    ///	  если true, то процедуры выполняются в цикле на среднем уровне
+    ///	</param>
+    function ExecuteProc(pData: String; pExecOnServer: boolean = false): Variant;
   end;
 
   TStorageFactory = class
@@ -38,7 +41,7 @@ type
 implementation
 
 uses IdHTTP, Xml.XMLDoc, XMLIntf, Classes, ZLibEx, idGlobal, UtilConst, Variants, UtilConvert,
-     MessagesUnit, Dialogs, StrUtils;
+     MessagesUnit, Dialogs, StrUtils, IDComponent, SimpleGauge, Forms;
 
 const
 
@@ -61,12 +64,22 @@ type
     XMLDocument: IXMLDocument;
     isArchive: boolean;
     function PrepareStr: AnsiString;
-    function ExecuteProc(pData: String): Variant;
+    function ExecuteProc(pData: String; pExecOnServer: boolean = false): Variant;
     procedure ProcessErrorCode(pData: String);
     function ProcessMultiDataSet: Variant;
   public
     class function NewInstance: TObject; override;
   end;
+
+  TIdHTTPWork = class
+    FExecOnServer: boolean;
+    Gauge: IGauge;
+    procedure IdHTTPWork(ASender: TObject; AWorkMode: TWorkMode; AWorkCount: Int64);
+    procedure IdHTTPWorkBegin(ASender: TObject; AWorkMode: TWorkMode; AWorkCountMax: Int64);
+  end;
+
+  var
+    IdHTTPWork: TIdHTTPWork;
 
 class function TStorage.NewInstance: TObject;
 var
@@ -92,11 +105,34 @@ begin
     Instance.FConnection := ConnectionString;
     Instance.IdHTTP := TIdHTTP.Create(nil);
     Instance.IdHTTP.Response.CharSet := 'windows-1251';// 'Content-Type: text/xml; charset=utf-8'
+    Instance.IdHTTP.OnWorkBegin := IdHTTPWork.IdHTTPWorkBegin;
+    Instance.IdHTTP.OnWork := IdHTTPWork.IdHTTPWork;
     Instance.FSendList := TStringList.Create;
     Instance.FReceiveStream := TStringStream.Create('');
     Instance.XMLDocument := TXMLDocument.Create(nil);
   end;
   NewInstance := Instance;
+end;
+
+procedure TIdHTTPWork.IdHTTPWork(ASender: TObject; AWorkMode: TWorkMode;
+  AWorkCount: Int64);
+begin
+  if not FExecOnServer then
+     exit;
+  if AWorkMode = wmRead then
+     Gauge.IncProgress(1);
+end;
+
+procedure TIdHTTPWork.IdHTTPWorkBegin(ASender: TObject; AWorkMode: TWorkMode;
+  AWorkCountMax: Int64);
+begin
+  if not FExecOnServer then
+     exit;
+  if AWorkMode = wmWrite then begin
+     TIdHTTP(ASender).IOHandler.RecvBufferSize := 1;
+     Gauge := TGaugeFactory.GetGauge('Выполнение процедуры на сервере', 1, 100);
+     Gauge.Start;
+  end;
 end;
 
 function TStorage.PrepareStr: AnsiString;
@@ -166,7 +202,14 @@ begin
   end;
 end;
 
-function TStorage.ExecuteProc(pData: String): Variant;
+function TStorage.ExecuteProc(pData: String; pExecOnServer: boolean = false): Variant;
+  function GetAddConnectString(pExecOnServer: boolean): Ansistring;
+  begin
+    if pExecOnServer then
+       result := 'server.php'
+    else
+       result := '';
+  end;
 var
   ResultType: String;
 begin
@@ -175,7 +218,15 @@ begin
   FSendList.Clear;
   FSendList.Add('XML=' + '<?xml version="1.1" encoding="windows-1251"?>' + pData);
   FReceiveStream.Clear;
-  idHTTP.Post(FConnection, FSendList, FReceiveStream, TIdTextEncoding.GetEncoding(1251));
+  IdHTTPWork.FExecOnServer := pExecOnServer;
+  try
+    idHTTP.Post(FConnection + GetAddConnectString(pExecOnServer), FSendList, FReceiveStream, TIdTextEncoding.GetEncoding(1251));
+  finally
+    if IdHTTPWork.FExecOnServer then
+       IdHTTPWork.Gauge.Finish;
+    IdHTTPWork.FExecOnServer := false;
+    idHTTP.Disconnect;
+  end;
   // Определяем тип возвращаемого результата
   ResultType := trim(Copy(FReceiveStream.DataString, 1, ResultTypeLenght));
   isArchive := trim(lowercase(Copy(FReceiveStream.DataString, ResultTypeLenght + 1, IsArchiveLenght))) = 't';
@@ -197,5 +248,7 @@ begin
   result := TStorage(TStorage.NewInstance);
 end;
 
+initialization
+  IdHTTPWork := TIdHTTPWork.Create;
 
 end.

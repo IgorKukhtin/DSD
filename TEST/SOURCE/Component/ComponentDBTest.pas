@@ -10,17 +10,20 @@ type
   TComponentDBTest = class (TTestCase)
   private
   protected
+    // подготавливаем данные для тестирования
+    procedure SetUp; override;
   published
     procedure ParamTest;
     procedure ShowStoredProcParamTest;
     procedure SetParamToStoredProc;
     procedure DBFOpenTest;
+    procedure ExecuteStoredProcOnServerTest;
   end;
 
 implementation
 
 uses dsdDB, SysUtils, DateUtils, cxCalendar, Storage, DB, Dialogs,
-     Authentication, CommonData, DBClient, MemDBFTable;
+     Authentication, CommonData, DBClient, MemDBFTable, dsdAction;
 
 { TComponentDBTest }
 
@@ -37,6 +40,33 @@ begin
   ZTable.Connection := ZConnection;
   ZTable.TableName := 'export';
   ZTable.Open;}
+end;
+
+procedure TComponentDBTest.ExecuteStoredProcOnServerTest;
+var
+   MasterStoredProc: TdsdStoredProc;
+   ClientStoredProc: TdsdStoredProc;
+   SecondClientStoredProc: TdsdStoredProc;
+   ExecServerStoredProc: TExecServerStoredProc;
+begin
+  // формируем процедуры для вызовов. Одна - получит рекордсет. Вторая - будет запускаться по его результатам
+  MasterStoredProc := TdsdStoredProc.Create(nil);
+  ClientStoredProc := TdsdStoredProc.Create(nil);
+  SecondClientStoredProc := TdsdStoredProc.Create(nil);
+  ExecServerStoredProc := TExecServerStoredProc.Create(nil);
+  //
+  MasterStoredProc.StoredProcName := 'test_Select_Object';
+  ClientStoredProc.StoredProcName := 'test_Execute_Sleep';
+  SecondClientStoredProc.StoredProcName := 'test_Execute_Sleep';
+  ClientStoredProc.Params.AddParam('inId', ftInteger, ptInput, 0).ComponentItem := 'Id';
+  SecondClientStoredProc.Params.AddParam('inId', ftInteger, ptInput, 0).ComponentItem := 'Id';
+
+  ExecServerStoredProc.MasterProcedure := MasterStoredProc;
+  ExecServerStoredProc.StoredProc := ClientStoredProc;
+  ExecServerStoredProc.StoredProcList.Add.StoredProc := SecondClientStoredProc;
+
+  ExecServerStoredProc.Execute;
+
 end;
 
 procedure TComponentDBTest.ParamTest;
@@ -73,6 +103,12 @@ begin
   lStoredProc.SetDesigning(true);
   lStoredProc.StoredProcName := 'gpinsertupdate_movement_service';
   lStoredProc.StoredProcName := 'gpSelect_PeriodClose';
+end;
+
+procedure TComponentDBTest.SetUp;
+begin
+  inherited;
+  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
 end;
 
 procedure TComponentDBTest.ShowStoredProcParamTest;

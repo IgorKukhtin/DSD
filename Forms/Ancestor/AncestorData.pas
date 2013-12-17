@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorBase, Vcl.ActnList, dsdAction,
   cxPropertiesStore, dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB, Data.DB,
-  Datasnap.DBClient, dxSkinsCore, dxSkinsDefaultPainters, dxSkinsdxBarPainter;
+  Datasnap.DBClient, Vcl.Menus;
 
 type
   TAncestorDataForm = class(TAncestorBaseForm)

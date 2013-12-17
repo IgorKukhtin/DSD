@@ -1,6 +1,4 @@
 inherited AncestorDBGridForm: TAncestorDBGridForm
-  ExplicitWidth = 583
-  ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   object PageControl: TcxPageControl [0]
@@ -25,6 +23,7 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
         Width = 575
         Height = 282
         Align = alClient
+        PopupMenu = PopupMenu
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
@@ -99,5 +98,16 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
     OnlyEditingCellOnEnter = False
     Left = 520
     Top = 264
+  end
+  object PopupMenu: TPopupMenu
+    Images = dmMain.ImageList
+    Left = 112
+    Top = 264
+    object N1: TMenuItem
+      Action = actRefresh
+    end
+    object Excel1: TMenuItem
+      Action = actGridToExcel
+    end
   end
 end

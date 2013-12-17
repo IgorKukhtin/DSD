@@ -21,7 +21,6 @@ inherited AncestorJournalForm: TAncestorJournalForm
       inherited cxGrid: TcxGrid
         Width = 717
         Height = 272
-        PopupMenu = PopupMenu
         ExplicitWidth = 717
         ExplicitHeight = 272
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -70,7 +69,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
   end
   object Panel: TPanel [1]
     Left = 0
-    Top = 26
+    Top = 0
     Width = 717
     Height = 31
     Align = alTop
@@ -189,6 +188,45 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Status = mtDelete
       DataSource = MasterDS
     end
+    object actCompleteList: TMultiAction
+      Category = 'DSDLib'
+      ActionList = <
+        item
+          Action = actComplete
+        end>
+      DataSource = MasterDS
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1088#1086#1074#1077#1076#1077#1085#1099
+      Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      ImageIndex = 12
+    end
+    object actUnCompleteList: TMultiAction
+      Category = 'DSDLib'
+      ActionList = <
+        item
+          Action = actUnComplete
+        end>
+      DataSource = MasterDS
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1088#1072#1089#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1088#1072#1089#1087#1088#1086#1074#1077#1076#1077#1085#1099
+      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      ImageIndex = 11
+    end
+    object actSetErasedList: TMultiAction
+      Category = 'DSDLib'
+      ActionList = <
+        item
+          Action = actSetErased
+        end>
+      DataSource = MasterDS
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1091#1076#1072#1083#1077#1085#1099
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      ImageIndex = 13
+    end
   end
   inherited MasterDS: TDataSource
     Top = 99
@@ -296,6 +334,42 @@ inherited AncestorJournalForm: TAncestorJournalForm
     Left = 224
     Top = 200
   end
+  inherited PopupMenu: TPopupMenu
+    object N3: TMenuItem [0]
+      Action = actInsert
+    end
+    object N2: TMenuItem [1]
+      Action = actUpdate
+    end
+    object N4: TMenuItem [2]
+      Caption = '-'
+    end
+    object N5: TMenuItem [3]
+      Action = actComplete
+    end
+    object N7: TMenuItem [4]
+      Action = actUnComplete
+    end
+    object N8: TMenuItem [5]
+      Action = actSetErased
+    end
+    object N9: TMenuItem [6]
+      Caption = '-'
+    end
+    object N10: TMenuItem [7]
+      Action = actCompleteList
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+    end
+    object N11: TMenuItem [8]
+      Action = actUnCompleteList
+    end
+    object N12: TMenuItem [9]
+      Action = actSetErasedList
+    end
+    object N6: TMenuItem [10]
+      Caption = '-'
+    end
+  end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
@@ -349,16 +423,5 @@ inherited AncestorJournalForm: TAncestorJournalForm
       end>
     Left = 56
     Top = 160
-  end
-  object PopupMenu: TPopupMenu
-    Images = dmMain.ImageList
-    Left = 164
-    Top = 100
-    object N1: TMenuItem
-      Action = actComplete
-    end
-    object N2: TMenuItem
-      Action = actUnComplete
-    end
   end
 end
