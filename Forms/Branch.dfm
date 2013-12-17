@@ -3,7 +3,7 @@ object BranchForm: TBranchForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1080#1083#1080#1072#1083#1099'>'
   ClientHeight = 374
-  ClientWidth = 601
+  ClientWidth = 363
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,11 +20,12 @@ object BranchForm: TBranchForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 601
+    Width = 363
     Height = 348
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 601
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -62,6 +63,7 @@ object BranchForm: TBranchForm
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
+        Visible = False
         HeaderAlignmentVert = vaCenter
         Width = 57
       end
@@ -104,8 +106,8 @@ object BranchForm: TBranchForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -257,6 +259,7 @@ object BranchForm: TBranchForm
         item
           Name = 'Id'
           Component = ClientDataSet
+          ComponentItem = 'Id'
           ParamType = ptInput
         end>
       isShowModal = True

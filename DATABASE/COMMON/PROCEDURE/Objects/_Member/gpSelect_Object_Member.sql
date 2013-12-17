@@ -12,7 +12,8 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_Member());
+   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_Member());
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- Результат
    RETURN QUERY 

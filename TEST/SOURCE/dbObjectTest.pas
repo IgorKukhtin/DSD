@@ -710,6 +710,7 @@ begin
   FParams.AddParam('inCode', ftInteger, ptInput, Code);
   FParams.AddParam('inName', ftString, ptInput, Name);
   FParams.AddParam('inUnitId', ftInteger, ptInput, 0);
+  FParams.AddParam('inBranchId', ftInteger, ptInput, 0);
   FParams.AddParam('inRouteKindId', ftInteger, ptInput, 0);
   FParams.AddParam('inFreightId', ftInteger, ptInput, 0);
 

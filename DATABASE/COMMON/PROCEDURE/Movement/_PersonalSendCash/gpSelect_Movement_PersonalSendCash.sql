@@ -14,14 +14,13 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
               )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
-
--- inStartDate:= '01.01.2013';
--- inEndDate:= '01.01.2100';
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PersonalSendCash());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PersonalSendCash());
+     vbUserId:= lpGetUserBySession (inSession);
 
+     -- Результат
      RETURN QUERY 
        SELECT
              Movement.Id
@@ -35,6 +34,7 @@ BEGIN
            , Object_Personal.ValueData AS PersonalName
 
        FROM Movement
+            JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
@@ -58,10 +58,11 @@ ALTER FUNCTION gpSelect_Movement_PersonalSendCash (TDateTime, TDateTime, TVarCha
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.12.13                                        * add Object_RoleAccessKey_View
  09.11.13                                        * View_Personal -> Object_Personal
  23.10.13                                        * add zfConvert_StringToNumber
  30.09.13                                        *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_PersonalSendCash (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_PersonalSendCash (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= zfCalc_UserAdmin())

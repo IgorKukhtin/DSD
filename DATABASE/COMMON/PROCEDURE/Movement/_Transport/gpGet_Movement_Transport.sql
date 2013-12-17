@@ -21,10 +21,12 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Transport());
+     vbUserId:= lpGetUserBySession (inSession);
+
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -70,7 +72,7 @@ BEGIN
            , CAST ('' as TVarChar) AS JuridicalName
 
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
-               LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = zc_Branch_Basis();
+            LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = lpGetAccessKey (vbUserId, zc_Enum_Process_Get_Movement_Transport()));
 
      ELSE
 
@@ -201,6 +203,7 @@ ALTER FUNCTION gpGet_Movement_Transport (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.12.13                                        * add lpGetAccessKey
  02.12.13         * add Personal
  04.11.13                                        * add JuridicalName and DriverCertificate
  03.11.13                                        * add CarModelName

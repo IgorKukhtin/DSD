@@ -2,15 +2,17 @@
 
 -- DROP FUNCTION IF EXISTS gpReport_MovementTransport (TDateTime, TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_TransportHoursWork (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_TransportHoursWork (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_TransportHoursWork(
     IN inStartDate    TDateTime , -- 
     IN inEndDate      TDateTime , --
-    IN inPersonalId   Integer,    -- водитель
-    
-    IN inSession     TVarChar    -- сессия пользователя
+    IN inPersonalId   Integer   , -- водитель
+    IN inBranchId     Integer   , -- филиал
+    IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (PersonalDriverName TVarChar
+             , BranchName TVarChar
              , RouteName TVarChar
              , RouteKindName TVarChar
              , RouteKindFreightName TVarChar
@@ -30,9 +32,11 @@ $BODY$BEGIN
                               )
 
         SELECT 
-	      View_PersonalDriver.PersonalName AS PersonalDriverName
+   	          View_PersonalDriver.PersonalName AS PersonalDriverName
+   	        
+   	        , ViewObject_Unit.BranchName  AS BranchName
 
-            , Object_Route.ValueData  AS RouteName
+            , Object_Route.ValueData      AS RouteName
 
             , Object_RouteKind.ValueData  AS RouteKindName
 
@@ -91,18 +95,22 @@ $BODY$BEGIN
 
               LEFT JOIN MovementFloat AS MovementFloat_HoursAdd ON MovementFloat_HoursAdd.MovementId =  tmpMovementAll.Id
                                                                AND MovementFloat_HoursAdd.DescId = zc_MovementFloat_HoursAdd()
+              -- ограничиваем по Филиалу
+              join Object_Unit_View AS ViewObject_Unit ON ViewObject_Unit.Id = View_PersonalDriver.UnitId
+                                   AND (ViewObject_Unit.BranchId = inBranchId OR inBranchId = 0)
 ;
 
 END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpReport_TransportHoursWork (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_TransportHoursWork (TDateTime, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.12.13         * add inBranchId             
  12.11.13                                        * add zc_MovementLinkObject_PersonalDriverMore
  27.10.13         *
 */

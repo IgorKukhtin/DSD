@@ -3,7 +3,7 @@ object CardFuelForm: TCardFuelForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1086#1087#1083#1080#1074#1085#1099#1077' '#1082#1072#1088#1090#1099'>'
   ClientHeight = 395
-  ClientWidth = 703
+  ClientWidth = 857
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object CardFuelForm: TCardFuelForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 703
+    Width = 857
     Height = 369
     Align = alClient
     TabOrder = 0
@@ -84,7 +84,7 @@ object CardFuelForm: TCardFuelForm
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'PaidKindName'
         HeaderAlignmentVert = vaCenter
-        Width = 58
+        Width = 55
       end
       object clJuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
@@ -93,17 +93,24 @@ object CardFuelForm: TCardFuelForm
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
+      object clCardFuelLimit: TcxGridDBColumn
+        Caption = #1051#1080#1084#1080#1090
+        DataBinding.FieldName = 'CardFuelLimit'
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
       object clGoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
         DataBinding.FieldName = 'GoodsName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 66
+        Width = 80
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -142,8 +149,8 @@ object CardFuelForm: TCardFuelForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -268,6 +275,7 @@ object CardFuelForm: TCardFuelForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'

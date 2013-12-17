@@ -240,6 +240,14 @@ object UnitTreeForm: TUnitTreeForm
         end
         item
           Visible = True
+          ItemName = 'bbUnitChoiceForm'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end>
       OneOnRow = True
@@ -282,11 +290,17 @@ object UnitTreeForm: TUnitTreeForm
       Category = 0
       Visible = ivAlways
     end
+    object bbUnitChoiceForm: TdxBarButton
+      Action = dsdOpenUnitForm
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1089#1087#1080#1089#1086#1082
+      Category = 0
+      ImageIndex = 28
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 232
-    Top = 144
+    Left = 240
+    Top = 176
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spTree
@@ -377,6 +391,13 @@ object UnitTreeForm: TUnitTreeForm
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = TreeDS
+    end
+    object dsdOpenUnitForm: TdsdOpenForm
+      Category = 'DSDLib'
+      Caption = 'dsdOpenUnitForm'
+      FormName = 'TUnitForm'
+      GuiParams = <>
+      isShowModal = False
     end
   end
   object spTree: TdsdStoredProc

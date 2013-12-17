@@ -20,11 +20,11 @@
     Left = 32
     Top = 88
     TabOrder = 0
-    Width = 273
+    Width = 209
   end
   object cxLabel1: TcxLabel
     Left = 32
-    Top = 63
+    Top = 68
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
@@ -141,6 +141,19 @@
     TabOrder = 15
     Width = 273
   end
+  object ceLimit: TcxCurrencyEdit
+    Left = 256
+    Top = 88
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 16
+    Width = 49
+  end
+  object cxLabel6: TcxLabel
+    Left = 256
+    Top = 68
+    Caption = #1051#1080#1084#1080#1090
+  end
   object ActionList: TActionList
     Left = 320
     Top = 96
@@ -191,6 +204,13 @@
         Value = ''
         Component = edName
         DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCardFuelLimit'
+        Value = 0.000000000000000000
+        Component = ceLimit
+        DataType = ftFloat
         ParamType = ptInput
       end
       item
@@ -323,6 +343,12 @@
         Component = GoodsGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'CardFuelLimit'
+        Value = 0.000000000000000000
+        Component = ceLimit
+        DataType = ftFloat
       end>
     Left = 320
     Top = 160

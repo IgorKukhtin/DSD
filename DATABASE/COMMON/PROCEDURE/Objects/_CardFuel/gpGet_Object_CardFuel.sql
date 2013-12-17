@@ -7,6 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_CardFuel(
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , CardFuelLimit TFloat
              , PersonalDriverId Integer, PersonalDriverName TVarChar
              , CarId Integer, CarName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -14,8 +15,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsId Integer, GoodsName TVarChar
              , isErased Boolean
              ) AS
-$BODY$BEGIN
-
+$BODY$
+BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_CardFuel());
 
@@ -27,6 +28,8 @@ $BODY$BEGIN
            , lfGet_ObjectCode(0, zc_Object_CardFuel()) AS Code
            , CAST ('' as TVarChar)  AS Name
                       
+           , 0 :: TFloat AS CardFuelLimit
+
            , CAST (0 as Integer)   AS PersonalDriverId 
            , CAST ('' as TVarChar) AS PersonalDriverName
 
@@ -51,6 +54,8 @@ $BODY$BEGIN
            , Object_CardFuel.ObjectCode AS Code
            , Object_CardFuel.ValueData  AS NAME
                       
+           , ObjectFloat_CardFuel_Limit.ValueData AS CardFuelLimit
+
            , View_PersonalDriver.PersonalId   AS PersonalDriverId 
            , View_PersonalDriver.PersonalName AS PersonalDriverName
 
@@ -69,6 +74,10 @@ $BODY$BEGIN
            , Object_CardFuel.isErased   AS isErased
            
        FROM Object AS Object_CardFuel
+
+            LEFT JOIN ObjectFloat AS ObjectFloat_CardFuel_Limit ON ObjectFloat_CardFuel_Limit.ObjectId = Object_CardFuel.Id
+                                                               AND ObjectFloat_CardFuel_Limit.DescId = zc_ObjectFloat_CardFuel_Limit()
+
             LEFT JOIN ObjectLink AS ObjectLink_CardFuel_PersonalDriver ON ObjectLink_CardFuel_PersonalDriver.ObjectId = Object_CardFuel.Id
                                                                       AND ObjectLink_CardFuel_PersonalDriver.DescId = zc_ObjectLink_CardFuel_PersonalDriver()
             LEFT JOIN Object_Personal_View AS View_PersonalDriver ON View_PersonalDriver.PersonalId = ObjectLink_CardFuel_PersonalDriver.ChildObjectId
@@ -102,8 +111,8 @@ ALTER FUNCTION gpGet_Object_CardFuel (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 14.10.13          *         
-
+ 14.12.13                                        * add CardFuelLimit
+ 14.10.13          *
 */
 
 -- тест

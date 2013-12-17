@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_Unit()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Unit(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Unit (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Unit(
     IN inSession     TVarChar       -- сессия пользователя
@@ -16,13 +16,18 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                ProfitLossDirectionCode Integer, ProfitLossDirectionName TVarChar,
                isErased boolean, isLeaf boolean) AS
 $BODY$
+   DECLARE vbUserId Integer;
+   DECLARE vbAccessKeyAll Boolean;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Unit());
+   -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_Select_Object_Unit());
+   vbUserId:= lpGetUserBySession (inSession);
+   -- определяется - может ли пользовать видеть весь справочник
+   vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
 
+   -- Результат
    RETURN QUERY 
-      WITH Object_AccountDirection AS (SELECT * FROM Object_AccountDirection_View)
-
+     WITH Object_AccountDirection AS (SELECT * FROM Object_AccountDirection_View)
        SELECT 
              Object_Unit_View.Id     
            , Object_Unit_View.Code   
@@ -55,12 +60,13 @@ BEGIN
        FROM Object_Unit_View
             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = Object_Unit_View.Id
             LEFT JOIN Object_AccountDirection AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
-      ;  
+       WHERE vbAccessKeyAll = TRUE
+      ;
+
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Unit(TVarChar) OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpSelect_Object_Unit (TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -74,4 +80,4 @@ ALTER FUNCTION gpSelect_Object_Unit(TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Unit ('2')
+-- SELECT * FROM gpSelect_Object_Unit (zfCalc_UserAdmin())

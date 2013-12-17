@@ -1,6 +1,6 @@
 -- View: Object_Currency_View
 
-DROP VIEW IF EXISTS Object_Currency_View;
+-- DROP VIEW IF EXISTS Object_Currency_View;
 
 CREATE OR REPLACE VIEW Object_Currency_View AS
    SELECT 

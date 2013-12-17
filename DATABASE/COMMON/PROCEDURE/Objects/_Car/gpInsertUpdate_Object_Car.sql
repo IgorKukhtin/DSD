@@ -38,10 +38,7 @@ BEGIN
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Car(), vbCode_calc, inName
-                                , inAccessKeyId:= CASE WHEN vbCode_calc BETWEEN 200 AND 299
-                                                            THEN zc_Enum_Process_AccessKey_TrasportKiev()
-                                                       ELSE zc_Enum_Process_AccessKey_TrasportDnepr()
-                                                  END);
+                                , inAccessKeyId:= COALESCE ((SELECT Object_Branch.AccessKeyId FROM ObjectLink LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink.ChildObjectId WHERE ObjectLink.ObjectId = inUnitId AND ObjectLink.DescId = zc_ObjectLink_Unit_Branch()), zc_Enum_Process_AccessKey_TrasportDnepr()));
    -- сохранили св-во <Техпаспорт>
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Car_RegistrationCertificate(), ioId, inRegistrationCertificate);
 

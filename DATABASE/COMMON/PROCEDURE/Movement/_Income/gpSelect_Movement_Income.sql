@@ -21,7 +21,8 @@ $BODY$
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
+     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
+     vbUserId:= lpGetUserBySession (inSession);
 
 
      RETURN QUERY 
@@ -54,6 +55,7 @@ BEGIN
            , Object_Contract.ValueData         AS ContractName
            , View_PersonalPacker.PersonalName  AS PersonalPackerName
        FROM Movement
+            -- JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
@@ -128,6 +130,8 @@ ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, TVarChar) OWNER T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.12.13                                        * del Object_RoleAccessKey_View
+ 14.12.13                                        * add Object_RoleAccessKey_View
  23.10.13                                        * add zfConvert_StringToNumber
  07.10.13                                        * add lpCheckRight
  30.09.13                                        * add Object_Personal_View
