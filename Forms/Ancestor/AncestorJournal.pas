@@ -24,9 +24,6 @@ type
     cxLabel2: TcxLabel;
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
-    PopupMenu: TPopupMenu;
-    N1: TMenuItem;
-    N2: TMenuItem;
     actInsert: TdsdInsertUpdateAction;
     actUpdate: TdsdInsertUpdateAction;
     actComplete: TdsdChangeMovementStatus;
@@ -40,6 +37,20 @@ type
     spMovementComplete: TdsdStoredProc;
     spMovementUnComplete: TdsdStoredProc;
     spMovementSetErased: TdsdStoredProc;
+    N3: TMenuItem;
+    N4: TMenuItem;
+    N6: TMenuItem;
+    N2: TMenuItem;
+    N5: TMenuItem;
+    N7: TMenuItem;
+    N8: TMenuItem;
+    N9: TMenuItem;
+    N10: TMenuItem;
+    N11: TMenuItem;
+    N12: TMenuItem;
+    actCompleteList: TMultiAction;
+    actUnCompleteList: TMultiAction;
+    actSetErasedList: TMultiAction;
   private
     { Private declarations }
   public

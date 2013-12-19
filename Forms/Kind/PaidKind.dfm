@@ -6,6 +6,8 @@ inherited PaidKindForm: TPaidKindForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     inherited tsMain: TcxTabSheet
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       inherited cxGrid: TcxGrid
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
@@ -22,23 +24,6 @@ inherited PaidKindForm: TPaidKindForm
           end
         end
       end
-    end
-  end
-  inherited ActionList: TActionList
-    inherited ChoiceGuides: TdsdChoiceGuides
-      Params = <
-        item
-          Name = 'Key'
-          Component = MasterCDS
-          ComponentItem = 'Id'
-        end
-        item
-          Name = 'TextValue'
-          Component = MasterCDS
-          ComponentItem = 'Name'
-          DataType = ftString
-        end>
-      DataSource = MasterDS
     end
   end
   inherited MasterDS: TDataSource

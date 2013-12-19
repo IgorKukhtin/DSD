@@ -94,6 +94,7 @@ type
     FParams: TdsdParams;
     FStoredProcName: string;
     FOutputType: TOutputType;
+    // Возвращает XML строку заполненных параметров
     function FillParams: String;
     procedure FillOutputParams(XML: String);
     function GetDataSet: TClientDataSet;
@@ -102,11 +103,12 @@ type
     procedure MultiDataSetRefresh;
     procedure SetStoredProcName(const Value: String);
   protected
-    function GetXML: String;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
     function Execute: string;
     function ParamByName(const Value: string): TdsdParam;
+    // XML для вызова на сервере
+    function GetXML: String;
     //procedure Assign(Source: TPersistent); override;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;

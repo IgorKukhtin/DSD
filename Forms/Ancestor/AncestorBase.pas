@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, ParentForm, dsdAddOn, Vcl.ActnList,
-  dsdAction, cxPropertiesStore, DataModul;
+  dsdAction, cxPropertiesStore, DataModul, Vcl.Menus;
 
 type
   TAncestorBaseForm = class(TParentForm)

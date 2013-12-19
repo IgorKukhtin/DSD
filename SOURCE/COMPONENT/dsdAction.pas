@@ -109,9 +109,22 @@ type
     property SecondaryShortCuts;
   end;
 
+  // Выполняет несколько Action подряд. В случае установки св-ва DataSource выполняет
+  // Актионы для всех записей DataSource
+  // В случае, если указаны  QuestionBeforeExecute, InfoAfterExecute то данные вопросы в Action игнорируются
+
   TMultiAction = class(TdsdCustomAction)
   private
     FActionList: TOwnedCollection;
+    FDataSource: TDataSource;
+    FQuestionBeforeExecuteList: TStringList;
+    FInfoAfterExecuteList: TStringList;
+    procedure ListExecute;
+    procedure DataSourceExecute;
+    procedure SaveQuestionBeforeExecute;
+    procedure SaveInfoAfterExecute;
+    procedure RestoreQuestionBeforeExecute;
+    procedure RestoreInfoAfterExecute;
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     function LocalExecute: boolean; override;
@@ -119,6 +132,9 @@ type
     constructor Create(AOwner: TComponent); override;
   published
     property ActionList: TOwnedCollection read FActionList write FActionList;
+    property DataSource: TDataSource read FDataSource write FDataSource;
+    property QuestionBeforeExecute;
+    property InfoAfterExecute;
     property Caption;
     property Hint;
     property ImageIndex;
@@ -150,6 +166,21 @@ type
 
   TdsdExecStoredProc = class(TdsdCustomDataSetAction)
   published
+    property QuestionBeforeExecute;
+    property InfoAfterExecute;
+  end;
+
+  // Вызывает процедуры на среднем уровне. Для этого сначала будет вызвана процедура ListProcedure.
+  // которая вернет рекордсет параметров. А потом по результатам ее вызова будут вызываться процедуры из StoredProcList
+  TExecServerStoredProc = class(TdsdExecStoredProc)
+  private
+    FMasterProcedure: TdsdStoredProc;
+    function GetXML(StoredProc: TdsdStoredProc): string;
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    function LocalExecute: boolean; override;
+  published
+    property MasterProcedure: TdsdStoredProc read FMasterProcedure write FMasterProcedure;
     property QuestionBeforeExecute;
     property InfoAfterExecute;
   end;
@@ -429,7 +460,7 @@ implementation
 
 uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
      Vcl.Dialogs, Vcl.Controls, Menus, cxGridExportLink, ShellApi,
-     frxClass, frxDesgn, messages, ParentForm;
+     frxClass, frxDesgn, messages, ParentForm, SimpleGauge, TypInfo;
 
 procedure Register;
 begin
@@ -1404,12 +1435,58 @@ begin
   FActionList := TOwnedCollection.Create(Self, TActionItem);
 end;
 
-function TMultiAction.LocalExecute: boolean;
+procedure TMultiAction.DataSourceExecute;
+var B: TBookmark;
+begin
+  if Assigned(DataSource.DataSet) and DataSource.DataSet.Active and (DataSource.DataSet.RecordCount > 0) then begin
+     B := DataSource.DataSet.Bookmark;
+     DataSource.DataSet.DisableControls;
+     try
+       DataSource.DataSet.First;
+       with TGaugeFactory.GetGauge(Caption, 0, DataSource.DataSet.RecordCount) do
+         try
+           while not DataSource.DataSet.Eof do begin
+             ListExecute;
+             IncProgress(1);
+             Application.ProcessMessages;
+             DataSource.DataSet.Next;
+           end;
+         finally
+           Free;
+         end;
+     finally
+       DataSource.DataSet.GotoBookmark(B);
+       DataSource.DataSet.FreeBookmark(B);
+       DataSource.DataSet.EnableControls;
+     end;
+  end;
+end;
+
+procedure TMultiAction.ListExecute;
 var i: integer;
 begin
-   for i := 0 to ActionList.Count - 1 do
-       if Assigned(TActionItem(ActionList.Items[i]).Action) then
-          TActionItem(ActionList.Items[i]).Action.Execute;
+  for i := 0 to ActionList.Count - 1 do
+      if Assigned(TActionItem(ActionList.Items[i]).Action) then
+         TActionItem(ActionList.Items[i]).Action.Execute;
+end;
+
+function TMultiAction.LocalExecute: boolean;
+begin
+  if QuestionBeforeExecute <> '' then
+     SaveQuestionBeforeExecute;
+  if InfoAfterExecute <> '' then
+     SaveInfoAfterExecute;
+  try
+    if Assigned(DataSource) then
+       DataSourceExecute
+    else
+       ListExecute;
+  finally
+    if QuestionBeforeExecute <> '' then
+       RestoreQuestionBeforeExecute;
+    if InfoAfterExecute <> '' then
+       RestoreInfoAfterExecute;
+  end;
 end;
 
 procedure TMultiAction.Notification(AComponent: TComponent;
@@ -1423,6 +1500,105 @@ begin
            for i := 0 to ActionList.Count - 1 do
                if TActionItem(ActionList.Items[i]).Action = AComponent then
                   TActionItem(ActionList.Items[i]).Action := nil;
+end;
+
+procedure TMultiAction.RestoreInfoAfterExecute;
+var i: integer;
+begin
+  try
+    for i := 0 to ActionList.Count - 1 do
+      if Assigned(TActionItem(ActionList.Items[i]).Action) then
+         TdsdCustomAction(TActionItem(ActionList.Items[i]).Action).InfoAfterExecute := FInfoAfterExecuteList.Strings[i];
+  finally
+    FInfoAfterExecuteList.Free;
+  end;
+end;
+
+procedure TMultiAction.RestoreQuestionBeforeExecute;
+var i: integer;
+begin
+  try
+    for i := 0 to ActionList.Count - 1 do
+      if Assigned(TActionItem(ActionList.Items[i]).Action) then
+         TdsdCustomAction(TActionItem(ActionList.Items[i]).Action).QuestionBeforeExecute := FQuestionBeforeExecuteList.Strings[i];
+  finally
+    FQuestionBeforeExecuteList.Free;
+  end;
+end;
+
+procedure TMultiAction.SaveInfoAfterExecute;
+var i: integer;
+begin
+  FInfoAfterExecuteList := TStringList.Create;
+  for i := 0 to ActionList.Count - 1 do
+      if Assigned(TActionItem(ActionList.Items[i]).Action) then begin
+         FInfoAfterExecuteList.Add(TdsdCustomAction(TActionItem(ActionList.Items[i]).Action).InfoAfterExecute);
+         TdsdCustomAction(TActionItem(ActionList.Items[i]).Action).InfoAfterExecute := '';
+      end
+      else
+         FInfoAfterExecuteList.Add('');
+end;
+
+procedure TMultiAction.SaveQuestionBeforeExecute;
+var i: integer;
+begin
+  FQuestionBeforeExecuteList := TStringList.Create;
+  for i := 0 to ActionList.Count - 1 do
+      if Assigned(TActionItem(ActionList.Items[i]).Action) then begin
+         FQuestionBeforeExecuteList.Add(TdsdCustomAction(TActionItem(ActionList.Items[i]).Action).QuestionBeforeExecute);
+         TdsdCustomAction(TActionItem(ActionList.Items[i]).Action).QuestionBeforeExecute := '';
+      end
+      else
+         FQuestionBeforeExecuteList.Add('');
+end;
+
+{ TExecServerStoredProc }
+
+function TExecServerStoredProc.GetXML(StoredProc: TdsdStoredProc): string;
+var
+  i: integer;
+begin
+  Result := '';
+  with StoredProc do begin
+    for I := 0 to Params.Count - 1 do
+        with Params[i] do
+          if ParamType in [ptInput, ptInputOutput] then
+             Result := Result + '<' + Name +
+                   '  DataType="' + GetEnumName(TypeInfo(TFieldType), ord(DataType)) + '" '+
+                   '  Value="' + ComponentItem + '" />';
+    Result :=
+             '<xml Session = "" >' +
+                  '<' + StoredProcName + ' OutputType = "' + GetEnumName(TypeInfo(TOutputType), ord(OutputType)) + '">' +
+                     Result +
+                  '</' + StoredProcName + '>' +
+             '</xml>';
+  end;
+
+end;
+
+function TExecServerStoredProc.LocalExecute: boolean;
+var XML: String;
+    i: integer;
+begin
+  // Формируем XML для запуска на сервере
+  XML := '<xml>';
+    XML := XML + '<master>' + MasterProcedure.GetXML + '</master>';
+    XML := XML + '<list>';
+      for i := 0 to StoredProcList.Count - 1 do
+        if Assigned(StoredProcList[i].StoredProc) then
+           XML := XML + GetXML(StoredProcList[i].StoredProc);
+    XML := XML + '</list>';
+  XML := XML + '</xml>';
+  TStorageFactory.GetStorage.ExecuteProc(XML, true);
+end;
+
+procedure TExecServerStoredProc.Notification(AComponent: TComponent;
+  Operation: TOperation);
+begin
+  inherited;
+  if csDesigning in ComponentState then
+    if (Operation = opRemove) and (MasterProcedure = AComponent) then
+       MasterProcedure := nil
 end;
 
 end.

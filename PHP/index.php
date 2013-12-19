@@ -9,6 +9,7 @@
    global $isArchive;
    if ($isArchive)
    {
+ 
      return 't ' . gzcompress($str);
    }
    else

@@ -65,6 +65,7 @@ end;
 procedure TSimpleGaugeForm.Start;
 begin
   Show;
+  Gauge.Progress := Gauge.MinValue;
 end;
 
 { TGaugeFactory }

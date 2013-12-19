@@ -63,6 +63,10 @@ type
     PersonalDriverGuides: TdsdGuides;
     cxLabel1: TcxLabel;
     cxLabel3: TcxLabel;
+    cxLabel5: TcxLabel;
+    edBranch: TcxButtonEdit;
+    BranchGuides: TdsdGuides;
+    clBranchName: TcxGridDBColumn;
   private
   public
   end;
