@@ -11,20 +11,32 @@ type
   // Возвращает ключ для дефолтных значений
   TDefaultKey = class(TComponent)
   private
-    FParam: TdsdParam;
+    FParams: TdsdParams;
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
     function Key: string;
     function JSONKey: string;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
-    property Param: TdsdParam read FParam write FParam;
+    property Params: TdsdParams read FParams write FParams;
   end;
 
   //
   function GetDefaultJSON(DefaultType: TDefaultType; DefaultValue: Variant): string;
 
+  procedure Register;
+
 implementation
+
+uses SysUtils;
+
+
+procedure Register;
+begin
+   RegisterComponents('DSDComponent', [TDefaultKey]);
+end;
 
 function GetDefaultJSON(DefaultType: TDefaultType; DefaultValue: Variant): string;
 begin
@@ -36,34 +48,50 @@ end;
 constructor TDefaultKey.Create(AOwner: TComponent);
 begin
   inherited;
-  FParam := TdsdParam.Create(nil);
+  FParams := TdsdParams.Create(Self, TdsdParam);
 end;
 
 destructor TDefaultKey.Destroy;
 begin
-  FParam.Free;
+  FreeAndNil(FParams);
   inherited;
 end;
 
 function TDefaultKey.JSONKey: string;
-var FormClass: string;
+var Param: TCollectionItem;
 begin
-  if Assigned(Owner) then
-     FormClass := Owner.ClassName
-  else
-     FormClass := '';
-  result := '{"FormClass":"' + FormClass + '",' +
-            ' "Param":"' + Param.Value + '"' +
-            '}';
+  result := '{';
+  for Param in Params do
+      with TdsdParam(Param) do
+         if Value <> '' then begin
+            if result <> '' then result := result + ',';
+            result := result + '"' + Name + '":"' + Value +'"';
+         end;
+  result := result + '}';
 end;
 
 function TDefaultKey.Key: string;
+var Param: TCollectionItem;
 begin
   result := '';
-  if Assigned(Owner) then
-     result := Owner.ClassName;
-  if Param.Value <> '' then
-     result := result + ';' + Param.Value
+  for Param in Params do
+      with TdsdParam(Param) do
+         if Value <> '' then begin
+            if result <> '' then result := result + ';';
+            result := result + Value
+         end;
+end;
+
+procedure TDefaultKey.Notification(AComponent: TComponent;
+  Operation: TOperation);
+var i: integer;
+begin
+  inherited;
+  if csDesigning in ComponentState then
+    if (Operation = opRemove) and Assigned(Params) then
+       for I := 0 to Params.Count - 1 do
+           if Params[i].Component = AComponent then
+              Params[i].Component := nil;
 end;
 
 end.

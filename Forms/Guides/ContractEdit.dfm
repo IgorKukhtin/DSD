@@ -372,10 +372,10 @@ inherited ContractEditForm: TContractEditForm
           StoredProc = spGet
         end
         item
-          StoredProc = spDocumentSelect
+          StoredProc = spSelectContractCondition
         end
         item
-          StoredProc = spSelectContractCondition
+          StoredProc = spDocumentSelect
         end>
     end
     object actConditionRefresh: TdsdDataSetRefresh
@@ -454,17 +454,41 @@ inherited ContractEditForm: TContractEditForm
       Hint = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 60
     end
-    object MultiAction: TMultiAction
+    object MultiActionInsertContractCondition: TMultiAction
       Category = 'DSDLib'
       ActionList = <
+        item
+          Action = spInserUpdateContract
+        end
+        item
+          Action = InsertRecordCCK
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+      ImageIndex = 0
+    end
+    object MultiActionInsertDocument: TMultiAction
+      Category = 'DSDLib'
+      ActionList = <
+        item
+          Action = spInserUpdateContract
+        end
         item
           Action = actInsertDocument
         end
         item
           Action = DocumentRefresh
         end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
       ImageIndex = 0
+    end
+    object spInserUpdateContract: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = 'spInserUpdateContract'
     end
   end
   inherited FormParams: TdsdFormParams
@@ -950,8 +974,6 @@ inherited ContractEditForm: TContractEditForm
   end
   object ContractConditionCDS: TClientDataSet
     Aggregates = <>
-    IndexFieldNames = 'ContractId'
-    MasterFields = 'Id'
     PacketRecords = 0
     Params = <>
     Left = 433
@@ -992,13 +1014,20 @@ inherited ContractEditForm: TContractEditForm
     Top = 88
   end
   object spSelectContractCondition: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ContractCondition'
+    StoredProcName = 'gpSelect_Object_ContractConditionByContract'
     DataSet = ContractConditionCDS
     DataSets = <
       item
         DataSet = ContractConditionCDS
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'incontractid'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
     Left = 418
     Top = 117
   end
@@ -1039,6 +1068,14 @@ inherited ContractEditForm: TContractEditForm
         item
           Visible = True
           ItemName = 'bbInsertCondition'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbConditionRefresh'
         end>
       OneOnRow = True
       Row = 0
@@ -1081,7 +1118,7 @@ inherited ContractEditForm: TContractEditForm
       WholeRow = False
     end
     object bbAddDocument: TdxBarButton
-      Action = MultiAction
+      Action = actInsertDocument
       Category = 0
     end
     object bbRefreshDoc: TdxBarButton
@@ -1100,7 +1137,11 @@ inherited ContractEditForm: TContractEditForm
       Category = 0
     end
     object bbInsertCondition: TdxBarButton
-      Action = InsertRecordCCK
+      Action = MultiActionInsertContractCondition
+      Category = 0
+    end
+    object bbConditionRefresh: TdxBarButton
+      Action = actConditionRefresh
       Category = 0
     end
   end

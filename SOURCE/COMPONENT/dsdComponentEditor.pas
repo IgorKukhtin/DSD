@@ -37,7 +37,7 @@ type
 implementation
 
 uses dsdDB, TypInfo, Db, dsdGuides, cxTextEdit, cxCurrencyEdit, cxCheckBox,
-     cxCalendar, cxButtonEdit, dsdAction, ChoicePeriod, ParentForm, Document;
+     cxCalendar, cxButtonEdit, dsdAction, ChoicePeriod, ParentForm, Document, Defaults;
 
 procedure Register;
 begin
@@ -66,6 +66,7 @@ begin
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxCheckBox)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TBooleanStoredProcAction)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TDocument)), Proc);
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TDefaultKey)), Proc);
   // и даже такой. ѕриходитс€ использовать дл€ кросса
   Designer.GetComponentNames(GetTypeData(TypeInfo(TCrossDBViewAddOn)), Proc);
 end;
@@ -79,7 +80,8 @@ begin
     with TdsdParam(GetComponent(0)) do
          if Component <> nil then
             if (Component is TDataSet) or (Component is TdsdFormParams)
-               or (Component is TDocument) or (Component is TdsdGuides) or (Component is TCrossDBViewAddOn) then
+               or (Component is TDocument) or (Component is TdsdGuides)
+               or (Component is TDefaultKey) or (Component is TCrossDBViewAddOn) then
                Result := Result + [paValueList] - [paReadOnly];
 end;
 
@@ -105,6 +107,11 @@ begin
             begin
               Proc('Name');
               Proc('Data');
+            end;
+            if (Component is TDefaultKey) then
+            begin
+              Proc('Key');
+              Proc('JSONKey');
             end;
          end
 end;

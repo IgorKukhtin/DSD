@@ -88,7 +88,6 @@ type
     edBank: TcxDBButtonEdit;
     cxLabel12: TcxLabel;
     cxLabel13: TcxLabel;
-    cxButton1: TcxButton;
     actSave: TdsdExecStoredProc;
     actChoiceBank: TOpenChoiceForm;
     actContractInsert: TdsdInsertUpdateAction;

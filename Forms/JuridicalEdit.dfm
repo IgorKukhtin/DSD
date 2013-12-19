@@ -7,19 +7,19 @@
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 10
+    Left = 42
     Top = 301
     Action = InsertUpdateGuides
     TabOrder = 7
-    ExplicitLeft = 10
+    ExplicitLeft = 42
     ExplicitTop = 301
   end
   inherited bbCancel: TcxButton
-    Left = 105
+    Left = 153
     Top = 301
     Action = actFormClose
     TabOrder = 8
-    ExplicitLeft = 105
+    ExplicitLeft = 153
     ExplicitTop = 301
   end
   object edName: TcxTextEdit [2]
@@ -398,14 +398,6 @@
         end
       end
     end
-  end
-  object cxButton1: TcxButton [16]
-    Left = 194
-    Top = 301
-    Width = 83
-    Height = 25
-    Action = actSave
-    TabOrder = 20
   end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh

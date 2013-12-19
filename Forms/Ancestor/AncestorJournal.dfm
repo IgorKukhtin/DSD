@@ -104,6 +104,17 @@ inherited AncestorJournalForm: TAncestorJournalForm
     Top = 227
   end
   inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end>
     Top = 227
   end
   inherited ActionList: TActionList

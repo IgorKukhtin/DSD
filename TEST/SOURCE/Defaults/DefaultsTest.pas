@@ -55,7 +55,9 @@ var DefaultKey: TDefaultKey;
 begin
   DefaultKey := TDefaultKey.Create(TForm.Create(nil));
   // Проверяем результат создания ключа и JSON
-  DefaultKey.Param.Value := 'miIncome';
+  DefaultKey.Params.AddParam('FormClass', ftString, ptInput, 'TForm');
+  DefaultKey.Params.AddParam('MenuItem', ftString, ptInput, 'miIncome');
+
   FStoredProc := TdsdStoredProc.Create(nil);
   FStoredProc.OutputType := otResult;
   // Мы добавляем новый ключ в базу

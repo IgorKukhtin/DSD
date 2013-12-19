@@ -227,6 +227,8 @@ type
     bbContractArticle: TdxBarButton;
     actCalendar: TdsdOpenForm;
     bbCalendar: TdxBarButton;
+    actSetUserDefaults: TdsdOpenForm;
+    bbSetUserDefaults: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

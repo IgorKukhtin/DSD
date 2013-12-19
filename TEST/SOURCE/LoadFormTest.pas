@@ -33,6 +33,7 @@ type
     procedure LoadContractKindFormTest;
     procedure LoadContractFormTest;
     procedure LoadCurrencyFormTest;
+    procedure LoadDefaultFormTest;
     procedure LoadFreightFormTest;
     procedure LoadFuelFormTest;
     procedure LoadGoodsPropertyFormTest;
@@ -196,6 +197,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCurrencyEditForm');
 end;
 
+procedure TLoadFormTest.LoadDefaultFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSetUserDefaultsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSetUserDefaultsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDefaultsKeyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDefaultsKeyForm');
+end;
+
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
@@ -309,6 +318,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TObjectDescForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TObjectForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TFormsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TFormsForm');
 end;
 
 procedure TLoadFormTest.LoadSheetWorkTimeFormTest;
