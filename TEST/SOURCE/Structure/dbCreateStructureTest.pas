@@ -22,6 +22,7 @@ type
     procedure CreateHistory;
     procedure CreateProtocol;
     procedure CreatePeriodClose;
+    procedure CreateDefaults;
     procedure UpdateStructure;
     procedure CreateIndexes;
   end;
@@ -60,6 +61,12 @@ begin
 
   end;
   ExecFile(CreateStructurePath + 'CreateDataBase.sql', ZQuery);
+end;
+
+procedure TdbCreateStructureTest.CreateDefaults;
+begin
+  ExecFile(StructurePath + 'Default\DefaultKeys.sql', ZQuery);
+  ExecFile(StructurePath + 'Default\DefaultValue.sql', ZQuery);
 end;
 
 procedure TdbCreateStructureTest.CreateHistory;

@@ -3,14 +3,17 @@ inherited ProtocolForm: TProtocolForm
   ClientHeight = 323
   ClientWidth = 782
   AddOnFormData.RefreshAction = nil
-  ExplicitWidth = 798
-  ExplicitHeight = 358
+  ExplicitWidth = 790
+  ExplicitHeight = 350
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 82
     Width = 782
     Height = 241
+    ExplicitTop = 82
+    ExplicitWidth = 782
+    ExplicitHeight = 241
     ClientRectBottom = 241
     ClientRectRight = 782
     inherited tsMain: TcxTabSheet
