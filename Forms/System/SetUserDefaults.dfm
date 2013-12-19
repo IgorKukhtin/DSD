@@ -22,30 +22,83 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
         ExplicitWidth = 847
         ExplicitHeight = 369
         inherited cxGridDBTableView: TcxGridDBTableView
+          OptionsData.Appending = True
+          OptionsData.Inserting = True
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
           object colDefaultKey: TcxGridDBColumn
             Caption = #1050#1083#1102#1095
-            Width = 92
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = OpenDefaultsKeyForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Width = 192
           end
-          object cxGridDBTableViewColumn1: TcxGridDBColumn
-            Width = 140
+          object colFormClassName: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072
+            DataBinding.FieldName = 'FormClassName'
+            Width = 122
           end
-          object cxGridDBTableViewColumn2: TcxGridDBColumn
-            Width = 114
+          object colDescName: TcxGridDBColumn
+            Caption = #1044#1045#1057#1050
+            DataBinding.FieldName = 'DescName'
+            Width = 97
           end
           object colUserKey: TcxGridDBColumn
             Caption = #1056#1086#1083#1100'/'#1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
-            Width = 243
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Width = 211
           end
           object colValue: TcxGridDBColumn
             Caption = #1047#1085#1072#1095#1077#1085#1080#1077
-            Width = 244
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Width = 211
           end
         end
       end
+    end
+  end
+  inherited ActionList: TActionList
+    object OpenDefaultsKeyForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'OpenDefaultsKeyForm'
+      FormName = 'TDefaultsKeyForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+        end
+        item
+          Value = Null
+        end>
+      isShowModal = False
+    end
+    object OpenChoiceForm2: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'OpenChoiceForm2'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object OpenChoiceForm3: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'OpenChoiceForm3'
+      GuiParams = <>
+      isShowModal = False
     end
   end
   inherited MasterDS: TDataSource

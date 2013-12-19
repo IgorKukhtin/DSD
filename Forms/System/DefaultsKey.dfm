@@ -1,43 +1,61 @@
 inherited DefaultsKeyForm: TDefaultsKeyForm
   Caption = #1050#1083#1102#1095#1080' '#1076#1077#1092#1086#1083#1090#1086#1074
-  ExplicitWidth = 583
-  ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 575
-      ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         inherited cxGridDBTableView: TcxGridDBTableView
+          OptionsData.Appending = True
+          OptionsData.Inserting = True
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
           object colKey: TcxGridDBColumn
             Caption = #1050#1083#1102#1095
+            DataBinding.FieldName = 'Key'
           end
           object colFormClassName: TcxGridDBColumn
             Caption = #1050#1083#1072#1089#1089' '#1092#1086#1088#1084#1099
             DataBinding.FieldName = 'FormClassName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = OpenFormsForm
+                Default = True
+                Kind = bkEllipsis
+              end>
           end
           object colDescName: TcxGridDBColumn
             Caption = #1044#1045#1057#1050
             DataBinding.FieldName = 'DescName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = OpenUnionDescForm
+                Default = True
+                Kind = bkEllipsis
+              end>
           end
         end
       end
     end
   end
   inherited ActionList: TActionList
-    object InsertUpdateKey: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      StoredProc = spInsertUpdateKey
-      StoredProcList = <
+    inherited ChoiceGuides: TdsdChoiceGuides
+      Params = <
         item
-          StoredProc = spInsertUpdateKey
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'Key'
+          DataType = ftString
         end>
-      DataSource = MasterDS
     end
     object OpenFormsForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -52,6 +70,15 @@ inherited DefaultsKeyForm: TDefaultsKeyForm
           ParamType = ptInput
         end>
       isShowModal = False
+    end
+    object InsertUpdateKey: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      StoredProc = spInsertUpdateKey
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateKey
+        end>
+      DataSource = MasterDS
     end
     object OpenUnionDescForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -85,6 +112,7 @@ inherited DefaultsKeyForm: TDefaultsKeyForm
         Component = MasterCDS
         ComponentItem = 'FormClassName'
         DataType = ftString
+        ParamType = ptInput
       end
       item
         Name = 'DescName'

@@ -10,15 +10,18 @@ uses
   Vcl.Menus, dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB,
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, cxPC;
+  cxGrid, cxPC, cxButtonEdit;
 
 type
   TSetUserDefaultsForm = class(TAncestorDBGridForm)
     colDefaultKey: TcxGridDBColumn;
     colUserKey: TcxGridDBColumn;
     colValue: TcxGridDBColumn;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
-    cxGridDBTableViewColumn2: TcxGridDBColumn;
+    colFormClassName: TcxGridDBColumn;
+    colDescName: TcxGridDBColumn;
+    OpenDefaultsKeyForm: TOpenChoiceForm;
+    OpenChoiceForm2: TOpenChoiceForm;
+    OpenChoiceForm3: TOpenChoiceForm;
   private
     { Private declarations }
   public

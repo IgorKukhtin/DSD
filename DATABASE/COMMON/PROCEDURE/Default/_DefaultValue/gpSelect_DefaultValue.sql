@@ -5,8 +5,8 @@ DROP FUNCTION IF EXISTS gpSelect_DefaultValue (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_DefaultValue(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Key TVarChar, FormClassName TVarChar, DescName TVarChar,
-               UserName TVarChar, ObjectCode TVarChar, ObjectName TVarChar)
+RETURNS TABLE (Id Integer, KeyId Integer, Key TVarChar, FormClassName TVarChar, DescName TVarChar,
+               UserName TVarChar, ObjectCode Integer, ObjectName TVarChar)
 AS
 $BODY$
 BEGIN
@@ -15,9 +15,10 @@ BEGIN
    
      RETURN QUERY 
        SELECT DefaultValue.Id,
+              DefaultKeys.Id AS KeyId, 
               DefaultKeys.Key, 
-              (DefaultKeys.KeyData::json)->>'FormClassName' AS FormClassName, 
-              (DefaultKeys.KeyData::json)->>'DescName' AS DescName,
+              ((DefaultKeys.KeyData::json)->>'FormClassName')::TVarChar AS FormClassName, 
+              ((DefaultKeys.KeyData::json)->>'DescName')::TVarChar AS DescName,
               Object_User.ValueData AS UserName, 
               Object.ObjectCode AS ObjectCode,
               Object.ValueData AS ObjectName 

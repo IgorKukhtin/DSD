@@ -94,6 +94,8 @@ type
     actContractUpdate: TdsdInsertUpdateAction;
     bbContractInsert: TdxBarButton;
     bbContractUpdate: TdxBarButton;
+    actMultiContractInsert: TMultiAction;
+    actMultiPartnerInsert: TMultiAction;
   private
     { Private declarations }
   public

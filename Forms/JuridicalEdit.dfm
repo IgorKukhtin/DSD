@@ -408,6 +408,12 @@
         end
         item
           StoredProc = spJuridicalDetails
+        end
+        item
+          StoredProc = spContract
+        end
+        item
+          StoredProc = spPartner
         end>
     end
     object InsertUpdateGuides: TdsdInsertUpdateGuides
@@ -539,11 +545,8 @@
     object actPartnerRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       TabSheet = PartnerTS
-      StoredProc = spInsertUpdate
+      StoredProc = spPartner
       StoredProcList = <
-        item
-          StoredProc = spInsertUpdate
-        end
         item
           StoredProc = spPartner
         end>
@@ -551,16 +554,13 @@
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
-      RefreshOnTabSetChanges = True
+      RefreshOnTabSetChanges = False
     end
     object actContractRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       TabSheet = ContractTS
-      StoredProc = spInsertUpdate
+      StoredProc = spContract
       StoredProcList = <
-        item
-          StoredProc = spInsertUpdate
-        end
         item
           StoredProc = spContract
         end>
@@ -568,7 +568,7 @@
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
-      RefreshOnTabSetChanges = True
+      RefreshOnTabSetChanges = False
     end
     object JuridicalDetailsUDS: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -608,6 +608,34 @@
           DataType = ftString
         end>
       isShowModal = False
+    end
+    object actMultiContractInsert: TMultiAction
+      Category = 'DSDLib'
+      TabSheet = ContractTS
+      ActionList = <
+        item
+          Action = actSave
+        end
+        item
+          Action = actContractInsert
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      ImageIndex = 0
+      ShortCut = 45
+    end
+    object actMultiPartnerInsert: TMultiAction
+      Category = 'DSDLib'
+      TabSheet = PartnerTS
+      ActionList = <
+        item
+          Action = actSave
+        end
+        item
+          Action = actPartnerInsert
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      ImageIndex = 0
+      ShortCut = 45
     end
   end
   inherited FormParams: TdsdFormParams
@@ -940,7 +968,7 @@
       Category = 0
     end
     object bbPartnerInsert: TdxBarButton
-      Action = actPartnerInsert
+      Action = actMultiPartnerInsert
       Category = 0
     end
     object bbPartnerEdit: TdxBarButton
@@ -958,7 +986,7 @@
       Visible = ivAlways
     end
     object bbContractInsert: TdxBarButton
-      Action = actContractInsert
+      Action = actMultiContractInsert
       Category = 0
     end
     object bbContractUpdate: TdxBarButton

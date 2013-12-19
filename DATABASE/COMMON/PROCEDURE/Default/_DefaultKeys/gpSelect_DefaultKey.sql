@@ -15,8 +15,8 @@ BEGIN
      RETURN QUERY 
        SELECT DefaultKeys.Id,
               DefaultKeys.Key, 
-              (DefaultKeys.KeyData::json)->>'FormClassName' AS FormClassName, 
-              (DefaultKeys.KeyData::json)->>'DescName' AS DescName 
+              ((DefaultKeys.KeyData::json)->>'FormClassName')::TVarChar AS FormClassName, 
+              ((DefaultKeys.KeyData::json)->>'DescName')::TVarChar AS DescName 
          FROM DefaultKeys;
 
 END;
