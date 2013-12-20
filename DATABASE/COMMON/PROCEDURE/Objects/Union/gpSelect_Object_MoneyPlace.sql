@@ -33,19 +33,20 @@ BEGIN
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Cash.DescId
      WHERE Object_Cash.DescId = zc_Object_Cash()
     UNION ALL
-     SELECT View_Personal.PersonalId AS Id       
-          , View_Personal.PersonalCode     
-          , View_Personal.PersonalName
+     SELECT Object_Member.Id       
+          , Object_Member.ObjectCode     
+          , Object_Member.ValueData
           , ObjectDesc.ItemName
-          , View_Personal.isErased
+          , Object_Member.isErased
           , 0::Integer
           , ''::TVarChar
           , 0::Integer
           , ''::TVarChar
           , NULL::TDateTime
           , ''::TVarChar
-     FROM Object_Personal_View AS View_Personal
-          LEFT JOIN ObjectDesc ON ObjectDesc.Id = View_Personal.DescId
+     FROM Object AS Object_Member
+          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Member.DescId
+    WHERE Object_Member.DescId = zc_Object_Member()
     UNION ALL
      SELECT Object_Juridical.Id
           , Object_Juridical.ObjectCode     
@@ -79,6 +80,7 @@ ALTER FUNCTION gpSelect_Object_MoneyPlace (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 18.12.13                         *
  20.11.13                         *
 */
 

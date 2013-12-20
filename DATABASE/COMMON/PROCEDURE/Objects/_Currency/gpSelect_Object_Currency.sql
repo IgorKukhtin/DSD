@@ -13,11 +13,11 @@ $BODY$BEGIN
 
    RETURN QUERY 
    SELECT 
-     Id
-   , Code
-   , Name
-   , isErased
-   , InternalName
+     Object_Currency_View.Id
+   , Object_Currency_View.Code
+   , Object_Currency_View.Name
+   , Object_Currency_View.isErased
+   , Object_Currency_View.InternalName
    FROM Object_Currency_View;
   
 END;$BODY$
@@ -29,6 +29,7 @@ ALTER FUNCTION gpSelect_Object_Currency(TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.12.13                         *
  11.06.13          *
  03.06.13          
 

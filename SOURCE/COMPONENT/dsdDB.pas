@@ -775,8 +775,7 @@ end;
 
 destructor TdsdFormParams.Destroy;
 begin
-  FParams.Free;
-  FParams := nil;
+  FreeAndNil(FParams);
   inherited;
 end;
 

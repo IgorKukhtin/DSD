@@ -86,7 +86,10 @@ type
     DocumentOpenAction: TDocumentOpenAction;
     bbOpenDocument: TdxBarButton;
     bbInsertCondition: TdxBarButton;
-    MultiAction: TMultiAction;
+    MultiActionInsertDocument: TMultiAction;
+    MultiActionInsertContractCondition: TMultiAction;
+    bbConditionRefresh: TdxBarButton;
+    spInserUpdateContract: TdsdExecStoredProc;
   private
     { Private declarations }
   public

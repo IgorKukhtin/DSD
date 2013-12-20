@@ -1,15 +1,13 @@
 inherited AncestorReportForm: TAncestorReportForm
-  ExplicitWidth = 320
-  ExplicitHeight = 240
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 57
     Height = 251
+    ExplicitTop = 57
+    ExplicitHeight = 251
     ClientRectBottom = 251
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       inherited cxGrid: TcxGrid
         Top = 57
         Height = 251

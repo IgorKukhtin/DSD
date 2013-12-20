@@ -17,7 +17,7 @@ type
 
 implementation
 
-uses dsdDB, DBXJSON, Defaults, Forms, CrossAddOnViewTestForm, SysUtils;
+uses DB, dsdDB, DBXJSON, Defaults, Forms, CrossAddOnViewTestForm, SysUtils;
 
 { TComponentAddOnTest }
 
@@ -51,12 +51,10 @@ var DefaultKey: TDefaultKey;
 begin
   DefaultKey := TDefaultKey.Create(TForm.Create(nil));
   // Проверяем результат создания ключа и JSON
-  DefaultKey.Param.Value := 'miIncome';
-
-  KeyParam := TdsdParam.Create(nil);
-  KeyParam.Component := DefaultKey;
-
-  Check(KeyParam.Value = 'TForm;miIncome', 'Значение KeyParam.Value = "' + KeyParam.Value + '" вместо "TForm;miIncome"');
+  DefaultKey.Params.AddParam('FormClass', ftString, ptInput, 'TForm');
+  DefaultKey.Params.AddParam('MenuItem', ftString, ptInput, 'miIncome');
+ 
+  Check(DefaultKey.Key = 'TForm;miIncome', 'Значение KeyParam.Value = "' + DefaultKey.Key + '" вместо "TForm;miIncome"');
 
   FJSONObject := TJSONObject.ParseJSONValue(DefaultKey.JSONKey) as TJSONObject;
   if not Assigned(FJSONObject) then

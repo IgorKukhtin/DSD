@@ -181,7 +181,7 @@ BEGIN
             LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = MovementLinkObject_Personal.ObjectId
            
             LEFT JOIN ObjectString AS ObjectString_DriverCertificate
-                                   ON ObjectString_DriverCertificate.ObjectId = View_PersonalDriverMore.MemberId 
+                                   ON ObjectString_DriverCertificate.ObjectId = View_PersonalDriver.MemberId 
                                   AND ObjectString_DriverCertificate.DescId = zc_ObjectString_Member_DriverCertificate()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
@@ -196,13 +196,13 @@ BEGIN
   
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpGet_Movement_Transport (Integer, TVarChar) OWNER TO postgres;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.12.13                                        * err on DriverCertificate
  15.12.13                                        * add lpGetAccessKey
  02.12.13         * add Personal
  04.11.13                                        * add JuridicalName and DriverCertificate

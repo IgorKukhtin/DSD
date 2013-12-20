@@ -88,13 +88,14 @@ type
     edBank: TcxDBButtonEdit;
     cxLabel12: TcxLabel;
     cxLabel13: TcxLabel;
-    cxButton1: TcxButton;
     actSave: TdsdExecStoredProc;
     actChoiceBank: TOpenChoiceForm;
     actContractInsert: TdsdInsertUpdateAction;
     actContractUpdate: TdsdInsertUpdateAction;
     bbContractInsert: TdxBarButton;
     bbContractUpdate: TdxBarButton;
+    actMultiContractInsert: TMultiAction;
+    actMultiPartnerInsert: TMultiAction;
   private
     { Private declarations }
   public

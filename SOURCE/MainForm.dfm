@@ -610,6 +610,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbSetUserDefaults'
+        end
+        item
+          Visible = True
           ItemName = 'bbProtocol'
         end
         item
@@ -933,6 +937,10 @@ object MainForm: TMainForm
     end
     object bbCalendar: TdxBarButton
       Action = actCalendar
+      Category = 0
+    end
+    object bbSetUserDefaults: TdxBarButton
+      Action = actSetUserDefaults
       Category = 0
     end
   end
@@ -1634,6 +1642,14 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actSetUserDefaults: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      Caption = #1044#1077#1092#1086#1083#1090#1099' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081
+      Hint = #1044#1077#1092#1086#1083#1090#1099' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081
+      FormName = 'TSetUserDefaultsForm'
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object cxLocalizer: TcxLocalizer
     StorageType = lstResource
@@ -1660,7 +1676,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.12'
+    Version = '4.14'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
