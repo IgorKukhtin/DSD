@@ -30,6 +30,7 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
           Styles.Header = nil
           object colDefaultKey: TcxGridDBColumn
             Caption = #1050#1083#1102#1095
+            DataBinding.FieldName = 'Key'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -51,22 +52,28 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
           end
           object colUserKey: TcxGridDBColumn
             Caption = #1056#1086#1083#1100'/'#1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
+            DataBinding.FieldName = 'UserName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
+                Action = OpenUserKeyForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             Width = 211
           end
           object colValue: TcxGridDBColumn
             Caption = #1047#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'ObjectName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
+                Action = OpenObjectForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
             Width = 211
           end
         end
@@ -82,23 +89,62 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
         item
           Name = 'Key'
           Component = MasterCDS
+          ComponentItem = 'KeyId'
+          ParamType = ptInput
         end
         item
-          Value = Null
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'Key'
+          DataType = ftString
         end>
       isShowModal = False
     end
-    object OpenChoiceForm2: TOpenChoiceForm
+    object OpenUserKeyForm: TOpenChoiceForm
       Category = 'DSDLib'
-      Caption = 'OpenChoiceForm2'
-      GuiParams = <>
+      Caption = 'OpenUserKeyForm'
+      FormName = 'TUserKeyForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'UserId'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'UserName'
+          DataType = ftString
+        end>
       isShowModal = False
     end
-    object OpenChoiceForm3: TOpenChoiceForm
+    object OpenObjectForm: TOpenChoiceForm
       Category = 'DSDLib'
-      Caption = 'OpenChoiceForm3'
-      GuiParams = <>
+      Caption = 'OpenObjectForm'
+      FormName = 'TObjectForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'ObjectId'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'ObjectName'
+          DataType = ftString
+        end>
       isShowModal = False
+    end
+    object UpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = 'UpdateDataSet'
+      DataSource = MasterDS
     end
   end
   inherited MasterDS: TDataSource
@@ -121,5 +167,38 @@ inherited SetUserDefaultsForm: TSetUserDefaultsForm
       0
       26
       0)
+  end
+  object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_DefaultValue'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioid'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'indefaultkeyid'
+        Component = MasterCDS
+        ComponentItem = 'KeyId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inuserkey'
+        Component = MasterCDS
+        ComponentItem = 'UserId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'indefaultvalue'
+        Component = MasterCDS
+        ComponentItem = 'ObjectId'
+        DataType = ftBlob
+        ParamType = ptInput
+      end>
+    Left = 456
+    Top = 264
   end
 end

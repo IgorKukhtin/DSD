@@ -20,8 +20,10 @@ type
     colFormClassName: TcxGridDBColumn;
     colDescName: TcxGridDBColumn;
     OpenDefaultsKeyForm: TOpenChoiceForm;
-    OpenChoiceForm2: TOpenChoiceForm;
-    OpenChoiceForm3: TOpenChoiceForm;
+    OpenUserKeyForm: TOpenChoiceForm;
+    OpenObjectForm: TOpenChoiceForm;
+    spInsertUpdate: TdsdStoredProc;
+    UpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

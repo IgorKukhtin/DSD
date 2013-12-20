@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_DefaultValue(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, KeyId Integer, Key TVarChar, FormClassName TVarChar, DescName TVarChar,
-               UserName TVarChar, ObjectCode Integer, ObjectName TVarChar)
+               UserId Integer, UserName TVarChar, ObjectId Integer, ObjectCode Integer, ObjectName TVarChar)
 AS
 $BODY$
 BEGIN
@@ -19,7 +19,9 @@ BEGIN
               DefaultKeys.Key, 
               ((DefaultKeys.KeyData::json)->>'FormClassName')::TVarChar AS FormClassName, 
               ((DefaultKeys.KeyData::json)->>'DescName')::TVarChar AS DescName,
+              Object_User.Id AS UserId, 
               Object_User.ValueData AS UserName, 
+              Object.Id AS ObjectId,
               Object.ObjectCode AS ObjectCode,
               Object.ValueData AS ObjectName 
          FROM DefaultValue

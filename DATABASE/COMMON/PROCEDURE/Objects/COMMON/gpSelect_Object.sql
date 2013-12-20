@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object(
     IN inDescId      Integer,      -- сессия пользователя
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, DescName TVarChar) AS
 $BODY$BEGIN
 
    -- проверка прав пользователя на вызов процедуры
@@ -16,8 +16,11 @@ $BODY$BEGIN
    SELECT 
         Object.Id,
         Object.ObjectCode,
-        Object.ValueData 
-   FROM Object WHERE (DescId = inDescId AND 0 <> inDescId);
+        Object.ValueData, 
+        ObjectDesc.ItemName
+   FROM Object 
+   JOIN ObjectDesc ON ObjectDesc.Id = Object.DescId
+  WHERE (Object.DescId = inDescId OR 0 = inDescId);
 
   
 END;$BODY$
@@ -31,6 +34,7 @@ ALTER FUNCTION gpSelect_Object(Integer, TVarChar)
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.12.13                         *
  04.11.13                         *
 
 */

@@ -1,7 +1,5 @@
 inherited FormsForm: TFormsForm
   Caption = #1060#1086#1088#1084#1099' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1103
-  ExplicitWidth = 583
-  ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -15,6 +13,7 @@ inherited FormsForm: TFormsForm
           object colName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1092#1086#1088#1084
             DataBinding.FieldName = 'Name'
+            Options.Editing = False
           end
         end
       end

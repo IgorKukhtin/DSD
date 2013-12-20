@@ -317,6 +317,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TProcessForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserKeyForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUserKeyForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUserEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TStatusForm'));
@@ -329,6 +331,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TFormsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TFormsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnionDescForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnionDescForm');
 end;
 
 procedure TLoadFormTest.LoadSheetWorkTimeFormTest;

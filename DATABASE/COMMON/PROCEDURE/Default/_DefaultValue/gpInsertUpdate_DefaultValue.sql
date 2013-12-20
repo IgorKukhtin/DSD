@@ -1,23 +1,24 @@
 ﻿-- Function: gpInsertUpdate_DefaultValue()
 
--- DROP FUNCTION gpInsertUpdate_DefaultValue();
+DROP FUNCTION IF EXISTS gpInsertUpdate_DefaultValue(Integer, Integer, Integer, TBlob, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_DefaultValue(Integer, Integer, TBlob, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_DefaultValue(TVarChar, Integer, TBlob, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_DefaultValue(
-    IN inDefaultKey      TVarChar   ,   -- Ключ дефолта
+ INOUT ioId              Integer   , 
+    IN inDefaultKeyId    Integer   ,    -- Ключ дефолта
     IN inUserKey         Integer   ,    -- Ключ 
     IN inDefaultValue    TBlob     ,    -- Данные дефолта
     IN inSession         TVarChar       -- сессия пользователя
 )
-  RETURNS void 
+  RETURNS Integer 
   AS
 $BODY$
-  DECLARE vbDefaultKeyId Integer;
 BEGIN
-  vbDefaultKeyId := (SELECT Id FROM DefaultKeys WHERE Key = inDefaultKey);
 
-  UPDATE DefaultValue SET DefaultValue = inDefaultValue WHERE DefaultKeyId = vbDefaultKeyId AND UserKeyId = inUserKey;
+  UPDATE DefaultValue SET DefaultValue = inDefaultValue, DefaultKeyId = inDefaultKeyId, UserKeyId = inUserKey WHERE Id = ioId;
   IF NOT FOUND THEN 
-     INSERT INTO DefaultValue(DefaultKeyId, UserKeyId, DefaultValue) VALUES(vbDefaultKeyId, inUserKey, inDefaultValue);
+     INSERT INTO DefaultValue(DefaultKeyId, UserKeyId, DefaultValue) VALUES(inDefaultKeyId, inUserKey, inDefaultValue) RETURNING Id INTO ioId;
   END IF;
  
 END;$BODY$

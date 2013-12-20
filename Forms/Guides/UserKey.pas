@@ -1,4 +1,4 @@
-unit UnionDesc;
+unit UserKey;
 
 interface
 
@@ -13,7 +13,8 @@ uses
   cxGrid, cxPC;
 
 type
-  TUnionDescForm = class(TAncestorEnumForm)
+  TUserKeyForm = class(TAncestorEnumForm)
+    colDescName: TcxGridDBColumn;
     colCode: TcxGridDBColumn;
     colName: TcxGridDBColumn;
   private
@@ -22,12 +23,12 @@ type
     { Public declarations }
   end;
 
+
 implementation
 
 {$R *.dfm}
 
 initialization
-  RegisterClass(TUnionDescForm);
-
+  RegisterClass(TUserKeyForm);
 
 end.
