@@ -54,6 +54,7 @@ type
     procedure LoadModelServiceFormTest;
     procedure LoadPartnerFormTest;
     procedure LoadPaidKindFormTest;
+    procedure LoadPersonalAccountFormTest;
     procedure LoadPersonalSendCashFormTest;
     procedure LoadPriceListFormTest;
     procedure LoadProductionUnionFormTest;
@@ -250,6 +251,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyValueForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsPropertyValueEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsPropertyValueEditForm');
+end;
+
+procedure TLoadFormTest.LoadPersonalAccountFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalAccountForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalAccountForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalAccountJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalAccountJournalForm');
 end;
 
 procedure TLoadFormTest.LoadPersonalSendCashFormTest;

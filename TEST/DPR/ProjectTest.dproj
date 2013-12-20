@@ -842,9 +842,12 @@
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\UserKey.pas">
-				<Form>UserKeyForm</Form>
-				<FormType>dfm</FormType>
+			<DCCReference Include="..\..\Forms\Document\PersonalAccount.pas">
+				<Form>PersonalAccountForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\PersonalAccountJournal.pas">
+				<Form>PersonalAccountJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

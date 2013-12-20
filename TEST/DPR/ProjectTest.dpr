@@ -298,7 +298,8 @@ uses
   DefaultsKey in '..\..\Forms\System\DefaultsKey.pas' {DefaultsKeyForm: TParentForm},
   FormsUnit in '..\..\Forms\System\FormsUnit.pas' {FormsForm: TParentForm},
   UnionDesc in '..\..\Forms\System\UnionDesc.pas' {UnionDescForm: TParentForm},
-  UserKey in '..\..\Forms\Guides\UserKey.pas' {UserKeyForm: TParentForm};
+  PersonalAccount in '..\..\Forms\Document\PersonalAccount.pas' {PersonalAccountForm: TParentForm},
+  PersonalAccountJournal in '..\..\Forms\Document\PersonalAccountJournal.pas' {PersonalAccountJournalForm: TParentForm};
 
 {$R *.RES}
 
