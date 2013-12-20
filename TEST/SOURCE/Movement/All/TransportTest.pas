@@ -17,7 +17,7 @@ type
   public
     function InsertUpdateTransport(const Id: integer; InvNumber: String;
         OperDate, StartRunPlan, EndRunPlan, StartRun, EndRun: TDateTime; HoursAdd : Double;
-        Comment:String; CarId, CarTrailerId, PersonalDriverId, PersonalDriverMoreId, UnitForwardingId: integer): integer;
+        Comment:String; CarId, CarTrailerId, PersonalDriverId, PersonalDriverMoreId, PersonalId, UnitForwardingId: integer): integer;
     constructor Create; override;
   end;
 
@@ -41,7 +41,7 @@ var Id: Integer;
     OperDate, StartRunPlan, EndRunPlan, StartRun, EndRun: TDateTime;
     HoursAdd: Double;
     Comment:String;
-    CarId, CarTrailerId, PersonalDriverId, PersonalDriverMoreId, UnitForwardingId: Integer;
+    CarId, CarTrailerId, PersonalDriverId, PersonalDriverMoreId, PersonalId, UnitForwardingId: Integer;
 begin
   Id:=0;
   InvNumber:='1';
@@ -56,16 +56,17 @@ begin
   CarTrailerId:=0;
   PersonalDriverId := 0;
   PersonalDriverMoreId := 0;
+  PersonalId := 0;
   UnitForwardingId := 0;
 
   result := InsertUpdateTransport(Id, InvNumber, OperDate, StartRunPlan, EndRunPlan, StartRun, EndRun,
               HoursAdd, Comment,
-              CarId, CarTrailerId, PersonalDriverId, PersonalDriverMoreId, UnitForwardingId);
+              CarId, CarTrailerId, PersonalDriverId, PersonalDriverMoreId, PersonalId, UnitForwardingId);
 end;
 
 function TTransport.InsertUpdateTransport(const Id: integer; InvNumber: String;
         OperDate, StartRunPlan, EndRunPlan, StartRun, EndRun: TDateTime; HoursAdd : Double;
-        Comment:String; CarId, CarTrailerId, PersonalDriverId, PersonalDriverMoreId, UnitForwardingId: integer): integer;
+        Comment:String; CarId, CarTrailerId, PersonalDriverId, PersonalDriverMoreId, PersonalId, UnitForwardingId: integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -77,12 +78,14 @@ begin
   FParams.AddParam('inEndRun', ftDateTime, ptInput, EndRun);
 
   FParams.AddParam('inHoursAdd', ftFloat, ptInput, HoursAdd);
+  FParams.AddParam('outHoursWork', ftFloat, ptOutput, 0);
   FParams.AddParam('inComment', ftString, ptInput, Comment);
 
   FParams.AddParam('inCarId', ftInteger, ptInput, CarId);
   FParams.AddParam('inCarTrailerId', ftInteger, ptInput, CarTrailerId);
   FParams.AddParam('inPersonalDriverId', ftInteger, ptInput, PersonalDriverId);
   FParams.AddParam('inPersonalDriverMoreId', ftInteger, ptInput, PersonalDriverMoreId);
+  FParams.AddParam('inPersonalId', ftInteger, ptInput, PersonalId);
   FParams.AddParam('inUnitForwardingId', ftInteger, ptInput, UnitForwardingId);
 
   result := InsertUpdate(FParams);

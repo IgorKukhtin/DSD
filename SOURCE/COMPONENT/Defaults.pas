@@ -30,7 +30,7 @@ type
 
 implementation
 
-uses SysUtils;
+uses SysUtils, utilConvert;
 
 
 procedure Register;
@@ -60,14 +60,15 @@ end;
 function TDefaultKey.JSONKey: string;
 var Param: TCollectionItem;
 begin
-  result := '{';
+  result := '';
   for Param in Params do
       with TdsdParam(Param) do
          if Value <> '' then begin
             if result <> '' then result := result + ',';
             result := result + '"' + Name + '":"' + Value +'"';
          end;
-  result := result + '}';
+  result := '{' + result + '}';
+  result := gfStrToXmlStr (result);
 end;
 
 function TDefaultKey.Key: string;

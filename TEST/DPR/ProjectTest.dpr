@@ -297,7 +297,8 @@ uses
   SetUserDefaults in '..\..\Forms\System\SetUserDefaults.pas' {SetUserDefaultsForm: TParentForm},
   DefaultsKey in '..\..\Forms\System\DefaultsKey.pas' {DefaultsKeyForm: TParentForm},
   FormsUnit in '..\..\Forms\System\FormsUnit.pas' {FormsForm: TParentForm},
-  UnionDesc in '..\..\Forms\System\UnionDesc.pas' {UnionDescForm: TParentForm};
+  UnionDesc in '..\..\Forms\System\UnionDesc.pas' {UnionDescForm: TParentForm},
+  UserKey in '..\..\Forms\Guides\UserKey.pas' {UserKeyForm: TParentForm};
 
 {$R *.RES}
 

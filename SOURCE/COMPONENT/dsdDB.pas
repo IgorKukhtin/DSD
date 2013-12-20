@@ -667,13 +667,17 @@ begin
      end;
      if Component is TBooleanStoredProcAction then
         Result := (Component as TBooleanStoredProcAction).Value;
-     if Component is TDefaultKey then
-        Result := (Component as TDefaultKey).Key;
      if Component is TDocument then begin
         if LowerCase(ComponentItem) = 'name' then
            result := TDocument(Component).GetName
         else
            result := TDocument(Component).GetData;
+     end;
+     if Component is TDefaultKey then begin
+        if LowerCase(ComponentItem) = 'key' then
+           result := TDefaultKey(Component).Key
+        else
+           result := TDefaultKey(Component).JSONKey;
      end;
   end
   else

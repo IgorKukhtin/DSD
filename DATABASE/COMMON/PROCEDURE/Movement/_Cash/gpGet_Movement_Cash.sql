@@ -19,10 +19,12 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              )
 AS
 $BODY$
+  DECLARE vbUserId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_BankAccount());
+     vbUserId := lpGetUserBySession (inSession);
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -31,30 +33,34 @@ BEGIN
        SELECT
              0 AS Id
            , CAST (NEXTVAL ('Movement_Service_seq') AS TVarChar) AS InvNumber
-           , CAST (CURRENT_DATE AS TDateTime) AS OperDate
-           , lfObject_Status.Code             AS StatusCode
-           , lfObject_Status.Name             AS StatusName
+           , CAST (CURRENT_DATE AS TDateTime)                  AS OperDate
+           , lfObject_Status.Code                              AS StatusCode
+           , lfObject_Status.Name                              AS StatusName
            
-           , 0::TFloat                        AS Amount
+           , 0::TFloat                                         AS Amount
 
-           , ''::TVarChar                     AS Comment
-           , 0                                AS FromId
-           , CAST ('' as TVarChar)            AS FromName
-           , 0                                AS ToId
-           , CAST ('' as TVarChar)            AS ToName
-           , 0                                AS BusinessId
-           , CAST ('' as TVarChar)            AS BusinessName
-           , 0                                AS InfoMoneyId
-           , CAST ('' as TVarChar)            AS InfoMoneyName
-           , 0                                AS ContractId
-           , ''::TVarChar                     AS ContractInvNumber
-           , 0                                AS UnitId
-           , CAST ('' as TVarChar)            AS UnitName
+           , ''::TVarChar                                      AS Comment
+           , COALESCE(Object_From.Id, 0)                       AS FromId
+           , COALESCE(Object_From.ValueData, '')::TVarChar     AS FromName
+           , 0                                                 AS ToId
+           , CAST ('' as TVarChar)                             AS ToName
+           , COALESCE(Object_Business.Id, 0)                   AS BusinessId
+           , COALESCE(Object_Business.ValueData, '')::TVarChar AS BusinessName
+           , 0                                                 AS InfoMoneyId
+           , CAST ('' as TVarChar)                             AS InfoMoneyName
+           , 0                                                 AS ContractId
+           , ''::TVarChar                                      AS ContractInvNumber
+           , 0                                                 AS UnitId
+           , CAST ('' as TVarChar)                             AS UnitName
 
-       FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status;
-
+       FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
+  LEFT JOIN Object AS Object_Business
+         ON Object_Business.Id = lpGet_DefaultValue(lpGetMovementLinkObjectCodeById(zc_MovementLinkObject_Business()), vbUserId)::Integer
+  LEFT JOIN Object AS Object_From
+         ON Object_From.Id = lpGet_DefaultValue(lpGetMovementLinkObjectCodeById(zc_MovementLinkObject_From()), vbUserId)::Integer;
+     
      ELSE
-
+     
      RETURN QUERY 
        SELECT
              Movement.Id

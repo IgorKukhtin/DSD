@@ -15,6 +15,7 @@ inherited DefaultsKeyForm: TDefaultsKeyForm
           object colKey: TcxGridDBColumn
             Caption = #1050#1083#1102#1095
             DataBinding.FieldName = 'Key'
+            Options.Editing = False
           end
           object colFormClassName: TcxGridDBColumn
             Caption = #1050#1083#1072#1089#1089' '#1092#1086#1088#1084#1099
@@ -26,6 +27,7 @@ inherited DefaultsKeyForm: TDefaultsKeyForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
           end
           object colDescName: TcxGridDBColumn
             Caption = #1044#1045#1057#1050
@@ -37,6 +39,7 @@ inherited DefaultsKeyForm: TDefaultsKeyForm
                 Default = True
                 Kind = bkEllipsis
               end>
+            Properties.ReadOnly = True
           end
         end
       end
@@ -129,6 +132,12 @@ inherited DefaultsKeyForm: TDefaultsKeyForm
     DataSets = <>
     OutputType = otResult
     Params = <
+      item
+        Name = 'ioid'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
       item
         Name = 'inkey'
         Value = ''

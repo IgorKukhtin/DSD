@@ -1,6 +1,7 @@
 ﻿-- Function: gpInsertUpdate_DefaultKey()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_DefaultKey();
+DROP FUNCTION IF EXISTS gpInsertUpdate_DefaultKey(TVarChar, TBlob, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_DefaultKey(Integer, TVarChar, TBlob, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_DefaultKey(
  INOUT ioId          Integer   , 
@@ -15,7 +16,7 @@ BEGIN
 
   UPDATE DefaultKeys SET KeyData = inKeyData, Key = inKey WHERE Id = ioId;
   IF NOT FOUND THEN 
-     INSERT INTO DefaultKeys(Key, KeyData) VALUES(inKey, inKeyData)  RETURNING Id INTO ioId;
+     INSERT INTO DefaultKeys(Key, KeyData) VALUES(inKey, inKeyData) RETURNING Id INTO ioId;
   END IF;
  
 END;$BODY$
