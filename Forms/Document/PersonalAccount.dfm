@@ -1072,8 +1072,8 @@ object PersonalAccountForm: TPersonalAccountForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
-    Left = 304
-    Top = 288
+    Left = 328
+    Top = 312
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 120
