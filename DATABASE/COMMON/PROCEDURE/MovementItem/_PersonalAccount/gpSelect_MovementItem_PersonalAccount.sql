@@ -10,7 +10,8 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PersonalAccount(
 )
 RETURNS TABLE (Id Integer, OperDate TDateTime
              , InfoMoneyId Integer, InfoMoneyName TVarChar
-             , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
+             , ContractId Integer, ContractName TVarChar
+             , JuridicalId Integer, JuridicalName TVarChar
              , RouteId Integer, RouteName TVarChar
              , CarId Integer, CarName TVarChar, CarModelName TVarChar
              , Amount TFloat
@@ -30,9 +31,11 @@ BEGIN
             , View_InfoMoney.InfoMoneyId
             , View_InfoMoney.InfoMoneyName
             
-            , MovementItem.ObjectId       AS PersonalId
-            , View_Personal.PersonalCode
-            , View_Personal.PersonalName
+            , Object_Contract.Id          AS ContractId
+            , Object_Contract.ValueData   AS ContractName           
+            
+            , Object_Juridical.Id         AS JuridicalId
+            , Object_Juridical.ValueData  AS JuridicalName
                   
             , Object_Route.Id             AS RouteId
             , Object_Route.ValueData      AS RouteName
@@ -59,6 +62,11 @@ BEGIN
                                               ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                              AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
+             
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                              ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MILinkObject_Contract.ObjectId
                  
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
                                               ON MILinkObject_Route.MovementItemId = MovementItem.Id
@@ -70,7 +78,7 @@ BEGIN
                                              AND MILinkObject_Car.DescId = zc_MILinkObject_Car()
              LEFT JOIN Object AS Object_Car ON Object_Car.Id = MILinkObject_Car.ObjectId
                                                   
-             LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId =MovementItem.ObjectId
+             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id =MovementItem.ObjectId
 
              LEFT JOIN ObjectLink AS Car_CarModel ON Car_CarModel.ObjectId = Object_Car.Id
                                                  AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
