@@ -51,7 +51,7 @@
       Top = 5
       Caption = #1044#1072#1090#1072
     end
-    object edUnitForwarding: TcxButtonEdit
+    object edBranchForwarding: TcxButtonEdit
       Left = 1011
       Top = 63
       Properties.Buttons = <
@@ -827,9 +827,6 @@
     object cxTabSheetIncome: TcxTabSheet
       Caption = #1047#1072#1087#1088#1072#1074#1082#1072
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridIncome: TcxGrid
         Left = 0
         Top = 0
@@ -1121,9 +1118,6 @@
     object cxTabSheetReport: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridReport: TcxGrid
         Left = 0
         Top = 0
@@ -1270,9 +1264,6 @@
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -2319,13 +2310,13 @@
       item
         Name = 'UnitForwardingId'
         Value = ''
-        Component = GuidesUnitForwarding
+        Component = GuidesBranchForwarding
         ComponentItem = 'Key'
       end
       item
         Name = 'UnitForwardingName'
         Value = ''
-        Component = GuidesUnitForwarding
+        Component = GuidesBranchForwarding
         ComponentItem = 'TextValue'
       end
       item
@@ -2660,7 +2651,7 @@
       item
         Name = 'inUnitForwardingId'
         Value = ''
-        Component = GuidesUnitForwarding
+        Component = GuidesBranchForwarding
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -2739,23 +2730,23 @@
     Left = 778
     Top = 91
   end
-  object GuidesUnitForwarding: TdsdGuides
+  object GuidesBranchForwarding: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edUnitForwarding
-    FormName = 'TUnit_ObjectForm'
+    LookupControl = edBranchForwarding
+    FormName = 'TBranch_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesUnitForwarding
+        Component = GuidesBranchForwarding
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesUnitForwarding
+        Component = GuidesBranchForwarding
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -2908,7 +2899,7 @@
         Guides = GuidesPersonalDriver
       end
       item
-        Guides = GuidesUnitForwarding
+        Guides = GuidesBranchForwarding
       end>
     ActionItemList = <
       item
@@ -2954,7 +2945,7 @@
         Control = edPersonalDriverMore
       end
       item
-        Control = edUnitForwarding
+        Control = edBranchForwarding
       end
       item
         Control = edComment

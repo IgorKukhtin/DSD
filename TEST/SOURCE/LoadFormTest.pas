@@ -130,6 +130,8 @@ procedure TLoadFormTest.LoadBranchFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBranchForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBranchForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBranch_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBranch_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBranchEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBranchEditForm');
 end;

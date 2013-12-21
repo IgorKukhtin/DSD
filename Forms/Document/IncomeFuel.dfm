@@ -1428,12 +1428,14 @@ object IncomeFuelForm: TIncomeFuelForm
       end
       item
         Name = 'RouteId'
-        Component = edRoute
+        Value = ''
+        Component = GuidesRoute
         ComponentItem = 'Key'
       end
       item
         Name = 'RouteName'
-        Component = edRoute
+        Value = ''
+        Component = GuidesRoute
         ComponentItem = 'TextValue'
         DataType = ftString
       end

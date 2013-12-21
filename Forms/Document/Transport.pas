@@ -41,7 +41,7 @@ type
     cxLabel1: TcxLabel;
     edOperDate: TcxDateEdit;
     cxLabel2: TcxLabel;
-    edUnitForwarding: TcxButtonEdit;
+    edBranchForwarding: TcxButtonEdit;
     edCar: TcxButtonEdit;
     cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
@@ -126,7 +126,7 @@ type
     GuidesCarTrailer: TdsdGuides;
     GuidesPersonalDriver: TdsdGuides;
     GuidesPersonalDriverMore: TdsdGuides;
-    GuidesUnitForwarding: TdsdGuides;
+    GuidesBranchForwarding: TdsdGuides;
     colñhColdHour: TcxGridDBColumn;
     colñhColdDistance: TcxGridDBColumn;
     colñhAmountColdHour: TcxGridDBColumn;
