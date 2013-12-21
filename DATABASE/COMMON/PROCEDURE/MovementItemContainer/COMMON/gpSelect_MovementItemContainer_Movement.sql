@@ -130,11 +130,10 @@ BEGIN
                                                ON ContainerLinkObject_Juridical.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
                                               AND ContainerLinkObject_Juridical.DescId = zc_ContainerLinkObject_Juridical()
                                               AND ContainerLinkObject_Juridical.ObjectId <> 0
-                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Personal
-                                               ON ContainerLinkObject_Personal.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
-                                              AND ContainerLinkObject_Personal.DescId = zc_ContainerLinkObject_Personal()
-                                              AND ContainerLinkObject_Personal.ObjectId <> 0
-                 LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ContainerLinkObject_Personal.ObjectId
+                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Member
+                                               ON ContainerLinkObject_Member.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
+                                              AND ContainerLinkObject_Member.DescId = zc_ContainerLinkObject_Member()
+                                              AND ContainerLinkObject_Member.ObjectId <> 0
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Unit
                                                ON ContainerLinkObject_Unit.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
                                               AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
@@ -143,7 +142,7 @@ BEGIN
                                                ON ContainerLinkObject_Car.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
                                               AND ContainerLinkObject_Car.DescId = zc_ContainerLinkObject_Car()
                                               AND ContainerLinkObject_Car.ObjectId <> 0
-                 LEFT JOIN Object AS Object_Direction ON Object_Direction.Id = COALESCE (ContainerLinkObject_ProfitLoss.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, COALESCE (Object_Personal_View.MemberId, COALESCE (ContainerLinkObject_Car.ObjectId, ContainerLinkObject_Unit.ObjectId))))
+                 LEFT JOIN Object AS Object_Direction ON Object_Direction.Id = COALESCE (ContainerLinkObject_ProfitLoss.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, COALESCE (ContainerLinkObject_Member.ObjectId, COALESCE (ContainerLinkObject_Car.ObjectId, ContainerLinkObject_Unit.ObjectId))))
 
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Business
                                                ON ContainerLinkObject_Business.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
@@ -243,6 +242,7 @@ ALTER FUNCTION gpSelect_MovementItemContainer_Movement (Integer, TVarChar) OWNER
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 21.12.13                                        * Personal -> Member
  01.11.13                                        * change DebetAccountName and KreditAccountName
  31.10.13                                        * add InvNumber and OperDate
  21.10.13                                        * add zc_ContainerLinkObject_Business

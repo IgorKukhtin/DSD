@@ -54,6 +54,10 @@ CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_Personal() RETURNS Integer AS 
 INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
   SELECT 'zc_ContainerLinkObject_Personal', 'Сотрудники', zc_Object_Personal() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_Personal');
 
+CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_Member() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_Member'); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
+  SELECT 'zc_ContainerLinkObject_Member', 'Физические лица', zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_Member');
+
 -- CREATE OR REPLACE FUNCTION zc_ContainerLinkObject_PersonalStore() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_PersonalStore'); END;  $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 -- INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
 --   SELECT 'zc_ContainerLinkObject_PersonalStore', 'Сотрудники(экспедиторы)', zc_Object_() WHERE NOT EXISTS (SELECT * FROM ContainerLinkObjectDesc WHERE Code = 'zc_ContainerLinkObject_PersonalStore');
@@ -102,6 +106,7 @@ INSERT INTO ContainerLinkObjectDesc (Code, ItemName, ObjectDescId)
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.12.13                                        * add zc_ContainerLinkObject_Member
  15.09.13                                        * add zc_ContainerLinkObject_BankAccount and zc_ContainerLinkObject_Partner
  13.07.13                                        * restore zc_ContainerLinkObject_Goods
  11.07.13                                        * НОВАЯ СХЕМА2 - Create and Insert

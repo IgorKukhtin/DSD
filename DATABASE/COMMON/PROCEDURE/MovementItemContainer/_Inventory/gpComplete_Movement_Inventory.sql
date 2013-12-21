@@ -19,7 +19,7 @@ $BODY$
   DECLARE vbOperDate TDateTime;
   DECLARE vbUnitId Integer;
   DECLARE vbCarId Integer;
-  DECLARE vbPersonalId Integer;
+  DECLARE vbMemberId Integer;
   DECLARE vbBranchId Integer;
   DECLARE vbAccountDirectionId Integer;
   DECLARE vbIsPartionDate_Unit Boolean;
@@ -41,7 +41,7 @@ BEGIN
           , Movement.OperDate
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN MovementLinkObject_From.ObjectId ELSE 0 END, 0) AS UnitId
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Car() THEN MovementLinkObject_From.ObjectId ELSE 0 END, 0) AS CarId
-          , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Personal() THEN MovementLinkObject_From.ObjectId ELSE 0 END, 0) AS PersonalId
+          , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_PersonalFrom_Member.ChildObjectId ELSE 0 END, 0) AS MemberId
           , COALESCE (ObjectLink_ObjectFrom_Branch.ChildObjectId, 0) AS BranchId
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit()
                                 THEN ObjectLink_UnitFrom_AccountDirection.ChildObjectId
@@ -58,7 +58,7 @@ BEGIN
           , COALESCE (ObjectLink_PersonalFrom_Unit.ChildObjectId, 0) AS vbUnitId_Personal
 
             INTO vbStatusId, vbOperDate
-               , vbUnitId, vbCarId, vbPersonalId, vbBranchId, vbAccountDirectionId, vbIsPartionDate_Unit, vbJuridicalId_Basis, vbBusinessId
+               , vbUnitId, vbCarId, vbMemberId, vbBranchId, vbAccountDirectionId, vbIsPartionDate_Unit, vbJuridicalId_Basis, vbBusinessId
                , vbUnitId_Car, vbUnitId_Personal
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
@@ -75,6 +75,10 @@ BEGIN
                                  AND ObjectBoolean_PartionDate_From.DescId = zc_ObjectBoolean_Unit_PartionDate()
                                  AND Object_From.DescId = zc_Object_Unit()
 
+          LEFT JOIN ObjectLink AS ObjectLink_PersonalFrom_Member
+                               ON ObjectLink_PersonalFrom_Member.ObjectId = MovementLinkObject_From.ObjectId
+                              AND ObjectLink_PersonalFrom_Member.DescId = zc_ObjectLink_Personal_Member()
+                              AND Object_From.DescId = zc_Object_Personal()
           LEFT JOIN ObjectLink AS ObjectLink_PersonalFrom_Unit
                                ON ObjectLink_PersonalFrom_Unit.ObjectId = MovementLinkObject_From.ObjectId
                               AND ObjectLink_PersonalFrom_Unit.DescId = zc_ObjectLink_Personal_Unit()
@@ -280,7 +284,7 @@ BEGIN
      UPDATE _tmpItem SET ContainerId_Goods = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
                                                                                 , inUnitId                 := vbUnitId
                                                                                 , inCarId                  := vbCarId
-                                                                                , inPersonalId             := vbPersonalId
+                                                                                , inMemberId               := vbMemberId
                                                                                 , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                                 , inGoodsId                := _tmpItem.GoodsId
                                                                                 , inGoodsKindId            := _tmpItem.GoodsKindId
@@ -300,7 +304,7 @@ BEGIN
                    , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS OperCount
               FROM (SELECT ContainerLinkObject.ContainerId FROM ContainerLinkObject WHERE ContainerLinkObject.ObjectId =  vbUnitId AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Unit() AND vbUnitId <> 0
                    UNION
-                    SELECT ContainerLinkObject.ContainerId FROM ContainerLinkObject WHERE ContainerLinkObject.ObjectId =  vbPersonalId AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Personal() AND vbPersonalId <> 0
+                    SELECT ContainerLinkObject.ContainerId FROM ContainerLinkObject WHERE ContainerLinkObject.ObjectId =  vbMemberId AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Member() AND vbMemberId <> 0
                    UNION
                     SELECT ContainerLinkObject.ContainerId FROM ContainerLinkObject WHERE ContainerLinkObject.ObjectId =  vbCarId AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Car() AND vbCarId <> 0
                    ) AS tmpContainerLinkObject_From
@@ -332,7 +336,7 @@ BEGIN
                    , Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS OperSumm
               FROM (SELECT ContainerLinkObject.ContainerId FROM ContainerLinkObject WHERE ContainerLinkObject.ObjectId =  vbUnitId AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Unit() AND vbUnitId <> 0
                    UNION
-                    SELECT ContainerLinkObject.ContainerId FROM ContainerLinkObject WHERE ContainerLinkObject.ObjectId =  vbPersonalId AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Personal() AND vbPersonalId <> 0
+                    SELECT ContainerLinkObject.ContainerId FROM ContainerLinkObject WHERE ContainerLinkObject.ObjectId =  vbMemberId AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Member() AND vbMemberId <> 0
                    UNION
                     SELECT ContainerLinkObject.ContainerId FROM ContainerLinkObject WHERE ContainerLinkObject.ObjectId =  vbCarId AND ContainerLinkObject.DescId = zc_ContainerLinkObject_Car() AND vbCarId <> 0
                    ) AS tmpContainerLinkObject_From
@@ -423,7 +427,7 @@ BEGIN
 
 
      -- для теста-1
-     -- RETURN QUERY SELECT CAST (vbProfitLossGroupId AS Integer) AS ProfitLossGroupId, CAST (vbProfitLossDirectionId AS Integer) AS ProfitLossDirectionId, _tmpItem.MovementItemId, inMovementId, vbOperDate, vbUnitId, vbPersonalId, vbBranchId, _tmpItem.ContainerId_Goods, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.AssetId, _tmpItem.PartionGoods, _tmpItem.PartionGoodsDate, _tmpItem.OperCount, _tmpItem.OperSumm, _tmpItem.AccountDirectionId, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId, vbJuridicalId_Basis, _tmpItem.BusinessId, _tmpItem.isPartionCount, _tmpItem.isPartionSumm, _tmpItem.isPartionDate, _tmpItem.PartionGoodsId FROM _tmpItem;
+     -- RETURN QUERY SELECT CAST (vbProfitLossGroupId AS Integer) AS ProfitLossGroupId, CAST (vbProfitLossDirectionId AS Integer) AS ProfitLossDirectionId, _tmpItem.MovementItemId, inMovementId, vbOperDate, vbUnitId, vbMemberId, vbBranchId, _tmpItem.ContainerId_Goods, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.AssetId, _tmpItem.PartionGoods, _tmpItem.PartionGoodsDate, _tmpItem.OperCount, _tmpItem.OperSumm, _tmpItem.AccountDirectionId, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId, vbJuridicalId_Basis, _tmpItem.BusinessId, _tmpItem.isPartionCount, _tmpItem.isPartionSumm, _tmpItem.isPartionDate, _tmpItem.PartionGoodsId FROM _tmpItem;
      -- return;
 
 
@@ -474,7 +478,7 @@ BEGIN
           JOIN (SELECT lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_20000() -- Запасы -- select * from gpSelect_Object_AccountGroup ('2') where Id = zc_Enum_AccountGroup_20000()
                                                   , inAccountDirectionId     := CASE WHEN tmpItem_group.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- 20500; "Оборотная тара"
                                                                                           THEN zc_Enum_AccountDirection_20900() -- 20900; "Оборотная тара"
-                                                                                     WHEN vbPersonalId <> 0
+                                                                                     WHEN vbMemberId <> 0
                                                                                       AND tmpItem_group.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100() -- "Основное сырье"; 10100; "Мясное сырье"
                                                                                                                                   , zc_Enum_InfoMoneyDestination_20700() -- "Общефирменные"; 20700; "Товары"
                                                                                                                                   , zc_Enum_InfoMoneyDestination_20900() -- "Общефирменные"; 20900; "Ирна"
@@ -508,7 +512,7 @@ BEGIN
      UPDATE _tmpItemSumm SET ContainerId = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
                                                                              , inUnitId                 := vbUnitId
                                                                              , inCarId                  := vbCarId
-                                                                             , inPersonalId             := vbPersonalId
+                                                                             , inMemberId             := vbMemberId
                                                                              , inBranchId               := vbBranchId
                                                                              , inJuridicalId_basis      := vbJuridicalId_Basis
                                                                              , inBusinessId             := _tmpItem.BusinessId
@@ -640,6 +644,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.12.13                                        * Personal -> Member
  13.10.13                                        * add vbCarId
  06.10.13                                        * add StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
  03.10.13                                        * add inCarId := NULL

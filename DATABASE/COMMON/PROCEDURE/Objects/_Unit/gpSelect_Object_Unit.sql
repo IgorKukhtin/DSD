@@ -33,7 +33,7 @@ BEGIN
            , Object_Unit_View.Code   
            , Object_Unit_View.Name
          
-           , Object_Unit_View.ParentId 
+           , COALESCE (Object_Unit_View.ParentId, 0) AS ParentId
            , Object_Unit_View.ParentName 
 
            , Object_Unit_View.BusinessId
@@ -72,6 +72,7 @@ ALTER FUNCTION gpSelect_Object_Unit (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.12.13                                        * ParentId
  21.11.13                       * добавил WITH из-за неправильной оптимизации DISTINCT и GROUP BY в 9.3
  03.11.13                                        * add lfSelect_Object_Unit_byProfitLossDirection and Object_AccountDirection_View
  28.10.13                         * переход на View              

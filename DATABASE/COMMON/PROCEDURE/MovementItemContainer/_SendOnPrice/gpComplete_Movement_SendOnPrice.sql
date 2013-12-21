@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpComplete_Movement_SendOnPrice(
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )                              
  RETURNS VOID
---  RETURNS TABLE (OperSumm_Partner_byItem TFloat, OperSumm_Partner TFloat, OperSumm_Partner_ChangePercent_byItem TFloat, OperSumm_Partner_ChangePercent TFloat, PriceWithVAT Boolean, VATPercent TFloat, DiscountPercent TFloat, ExtraChargesPercent TFloat, UnitId_From Integer, PersonalId_From Integer, BranchId_From Integer, AccountDirectionId_From Integer, isPartionDate Boolean, JuridicalId_To Integer, IsCorporate Boolean, PersonalId_To Integer, InfoMoneyDestinationId_isCorporate Integer, InfoMoneyId_isCorporate Integer, InfoMoneyDestinationId_Contract Integer, InfoMoneyId_Contract Integer, PaidKindId Integer, ContractId Integer, JuridicalId_basis Integer)
+--  RETURNS TABLE (OperSumm_Partner_byItem TFloat, OperSumm_Partner TFloat, OperSumm_Partner_ChangePercent_byItem TFloat, OperSumm_Partner_ChangePercent TFloat, PriceWithVAT Boolean, VATPercent TFloat, DiscountPercent TFloat, ExtraChargesPercent TFloat, MemberId_From Integer, PersonalId_From Integer, BranchId_From Integer, AccountDirectionId_From Integer, isPartionDate Boolean, JuridicalId_To Integer, IsCorporate Boolean, MemberId_To Integer, InfoMoneyDestinationId_isCorporate Integer, InfoMoneyId_isCorporate Integer, InfoMoneyDestinationId_Contract Integer, InfoMoneyId_Contract Integer, PaidKindId Integer, ContractId Integer, JuridicalId_basis Integer)
 --  RETURNS TABLE (MovementItemId Integer, MovementId Integer, OperDate TDateTime, ContainerId_Goods Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime, OperCount TFloat, tmpOperSumm_PriceList TFloat, OperSumm_PriceList TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, OperSumm_Partner_ChangePercent TFloat, AccountId_Partner Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, BusinessId Integer, isPartionCount Boolean, isPartionSumm Boolean, PartionGoodsId Integer)
 AS
 $BODY$
@@ -31,7 +31,7 @@ $BODY$
   DECLARE vbExtraChargesPercent TFloat;
 
   DECLARE vbOperDate TDateTime;
-  DECLARE vbUnitId_From Integer;
+  DECLARE vbMemberId_From Integer;
   DECLARE vbPersonalId_From Integer;
   DECLARE vbBranchId_From Integer;
   DECLARE vbAccountDirectionId_From Integer;
@@ -40,7 +40,7 @@ $BODY$
   DECLARE vbBusinessId_From Integer;
 
   DECLARE vbUnitId_To Integer;
-  DECLARE vbPersonalId_To Integer;
+  DECLARE vbMemberId_To Integer;
   DECLARE vbBranchId_To Integer;
   DECLARE vbAccountDirectionId_To Integer;
   DECLARE vbIsPartionDate_UnitTo Boolean;
@@ -67,14 +67,14 @@ BEGIN
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END
 
           , Movement.OperDate
-          , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN MovementLinkObject_From.ObjectId ELSE 0 END, 0) AS UnitId_From
-          , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Personal() THEN MovementLinkObject_From.ObjectId ELSE 0 END, 0) AS vbPersonalId_From
+          , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN MovementLinkObject_From.ObjectId ELSE 0 END, 0) AS MemberId_From
+          , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_PersonalFrom_Member.ChildObjectId ELSE 0 END, 0) AS PersonalId_From
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN ObjectLink_UnitFrom_Branch.ChildObjectId WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalFrom_Branch.ChildObjectId ELSE 0 END, 0) AS BranchId_From
           , COALESCE (ObjectLink_UnitFrom_AccountDirection.ChildObjectId, 0) AS AccountDirectionId_From -- Аналитики счетов - направления !!!нужны только для подразделения!!!
           , COALESCE (ObjectBoolean_PartionDate_From.ValueData, FALSE) AS isPartionDate_UnitFrom
 
           , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN MovementLinkObject_To.ObjectId ELSE 0 END, 0) AS UnitId_To
-          , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Personal() THEN MovementLinkObject_To.ObjectId ELSE 0 END, 0) AS vbPersonalId_To
+          , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_PersonalTo_Member.ChildObjectId ELSE 0 END, 0) AS MemberId_To
           , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Branch.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Branch.ChildObjectId ELSE 0 END, 0) AS BranchId_To
           , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit()
                                 THEN ObjectLink_UnitTo_AccountDirection.ChildObjectId
@@ -89,8 +89,8 @@ BEGIN
           , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Business.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Business.ChildObjectId ELSE 0 END, 0) AS BusinessId_To
 
             INTO vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
-               , vbOperDate, vbUnitId_From, vbPersonalId_From, vbBranchId_From, vbAccountDirectionId_From, vbIsPartionDate_UnitFrom
-               , vbUnitId_To, vbPersonalId_To, vbBranchId_To, vbAccountDirectionId_To, vbIsPartionDate_UnitTo
+               , vbOperDate, vbMemberId_From, vbPersonalId_From, vbBranchId_From, vbAccountDirectionId_From, vbIsPartionDate_UnitFrom
+               , vbUnitId_To, vbMemberId_To, vbBranchId_To, vbAccountDirectionId_To, vbIsPartionDate_UnitTo
                , vbJuridicalId_Basis_From, vbBusinessId_From
                , vbJuridicalId_Basis_To, vbBusinessId_To
      FROM Movement
@@ -130,6 +130,10 @@ BEGIN
                               AND ObjectLink_UnitFrom_Business.DescId = zc_ObjectLink_Unit_Business()
                               AND Object_From.DescId = zc_Object_Unit()
 
+          LEFT JOIN ObjectLink AS ObjectLink_PersonalFrom_Member
+                               ON ObjectLink_PersonalFrom_Member.ObjectId = MovementLinkObject_From.ObjectId
+                              AND ObjectLink_PersonalFrom_Member.DescId = zc_ObjectLink_Personal_Member()
+                              AND Object_From.DescId = zc_Object_Personal()
           LEFT JOIN ObjectLink AS ObjectLink_PersonalFrom_Unit
                                ON ObjectLink_PersonalFrom_Unit.ObjectId = MovementLinkObject_From.ObjectId
                               AND ObjectLink_PersonalFrom_Unit.DescId = zc_ObjectLink_Personal_Unit()
@@ -173,6 +177,10 @@ BEGIN
                               AND ObjectLink_UnitTo_Business.DescId = zc_ObjectLink_Unit_Business()
                               AND Object_To.DescId = zc_Object_Unit()
 
+          LEFT JOIN ObjectLink AS ObjectLink_PersonalTo_Member
+                               ON ObjectLink_PersonalTo_Member.ObjectId = MovementLinkObject_To.ObjectId
+                              AND ObjectLink_PersonalTo_Member.DescId = zc_ObjectLink_Personal_Member()
+                              AND Object_To.DescId = zc_Object_Personal()
           LEFT JOIN ObjectLink AS ObjectLink_PersonalTo_Unit
                                ON ObjectLink_PersonalTo_Unit.ObjectId = MovementLinkObject_To.ObjectId
                               AND ObjectLink_PersonalTo_Unit.DescId = zc_ObjectLink_Personal_Unit()
@@ -480,7 +488,7 @@ BEGIN
 
 
      -- для теста - Заголовок
-     -- RETURN QUERY SELECT CAST (vbOperSumm_Partner_byItem AS TFloat) AS OperSumm_Partner_byItem, CAST (vbOperSumm_Partner AS TFloat) AS OperSumm_Partner, CAST (vbOperSumm_Partner_ChangePercent_byItem AS TFloat) AS OperSumm_Partner_ChangePercent_byItem, CAST (vbOperSumm_Partner_ChangePercent AS TFloat) AS OperSumm_Partner_ChangePercent, CAST (vbPriceWithVAT AS Boolean) AS PriceWithVAT, CAST (vbVATPercent AS TFloat) AS VATPercent, CAST (vbDiscountPercent AS TFloat) AS DiscountPercent, CAST (vbExtraChargesPercent AS TFloat) AS ExtraChargesPercent, CAST (vbUnitId_From AS Integer) AS UnitId_From, CAST (vbPersonalId_From AS Integer) AS PersonalId_From, CAST (vbBranchId_From AS Integer) AS BranchId_From, CAST (vbAccountDirectionId_From AS Integer) AS AccountDirectionId_From, CAST (vbIsPartionDate_Unit AS Boolean) AS isPartionDate, CAST (vbJuridicalId_To AS Integer) AS JuridicalId_To, CAST (vbIsCorporate_To AS Boolean) AS IsCorporate_To, CAST (vbPersonalId_To AS Integer) AS PersonalId_To, CAST (vbInfoMoneyDestinationId_isCorporate AS Integer) AS InfoMoneyDestinationId_isCorporate, CAST (vbInfoMoneyId_isCorporate AS Integer) AS InfoMoneyId_isCorporate, CAST (vbInfoMoneyDestinationId_Contract AS Integer) AS InfoMoneyDestinationId_Contract, CAST (vbInfoMoneyId_Contract AS Integer) AS InfoMoneyId_Contract, CAST (vbPaidKindId AS Integer) AS PaidKindId, CAST (vbContractId AS Integer) AS ContractId, CAST (vbJuridicalId_Basis_From AS Integer) AS JuridicalId_Basis_From;
+     -- RETURN QUERY SELECT CAST (vbOperSumm_Partner_byItem AS TFloat) AS OperSumm_Partner_byItem, CAST (vbOperSumm_Partner AS TFloat) AS OperSumm_Partner, CAST (vbOperSumm_Partner_ChangePercent_byItem AS TFloat) AS OperSumm_Partner_ChangePercent_byItem, CAST (vbOperSumm_Partner_ChangePercent AS TFloat) AS OperSumm_Partner_ChangePercent, CAST (vbPriceWithVAT AS Boolean) AS PriceWithVAT, CAST (vbVATPercent AS TFloat) AS VATPercent, CAST (vbDiscountPercent AS TFloat) AS DiscountPercent, CAST (vbExtraChargesPercent AS TFloat) AS ExtraChargesPercent, CAST (vbMemberId_From AS Integer) AS MemberId_From, CAST (vbPersonalId_From AS Integer) AS PersonalId_From, CAST (vbBranchId_From AS Integer) AS BranchId_From, CAST (vbAccountDirectionId_From AS Integer) AS AccountDirectionId_From, CAST (vbIsPartionDate_Unit AS Boolean) AS isPartionDate, CAST (vbJuridicalId_To AS Integer) AS JuridicalId_To, CAST (vbIsCorporate_To AS Boolean) AS IsCorporate_To, CAST (vbMemberId_To AS Integer) AS MemberId_To, CAST (vbInfoMoneyDestinationId_isCorporate AS Integer) AS InfoMoneyDestinationId_isCorporate, CAST (vbInfoMoneyId_isCorporate AS Integer) AS InfoMoneyId_isCorporate, CAST (vbInfoMoneyDestinationId_Contract AS Integer) AS InfoMoneyDestinationId_Contract, CAST (vbInfoMoneyId_Contract AS Integer) AS InfoMoneyId_Contract, CAST (vbPaidKindId AS Integer) AS PaidKindId, CAST (vbContractId AS Integer) AS ContractId, CAST (vbJuridicalId_Basis_From AS Integer) AS JuridicalId_Basis_From;
      -- для теста
      -- RETURN QUERY SELECT _tmpItem.MovementItemId, inMovementId, vbOperDate, _tmpItem.ContainerId_Goods, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.AssetId, _tmpItem.PartionGoods, _tmpItem.PartionGoodsDate, _tmpItem.OperCount, _tmpItem.tmpOperSumm_PriceList, _tmpItem.OperSumm_PriceList, _tmpItem.tmpOperSumm_Partner, _tmpItem.OperSumm_Partner, _tmpItem.OperSumm_Partner_ChangePercent, _tmpItem.AccountId_Partner, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId, _tmpItem.BusinessId_From, _tmpItem.isPartionCount, _tmpItem.isPartionSumm, _tmpItem.PartionGoodsId FROM _tmpItem;
      -- return;
@@ -492,9 +500,9 @@ BEGIN
 
      -- 1.1.1. определяется для количественного учета
      UPDATE _tmpItem SET ContainerId_GoodsFrom = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
-                                                                                    , inUnitId                 := vbUnitId_From
+                                                                                    , inUnitId                 := vbMemberId_From
                                                                                     , inCarId                  := NULL
-                                                                                    , inPersonalId             := vbPersonalId_From
+                                                                                    , inMemberId               := vbPersonalId_From
                                                                                     , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                                     , inGoodsId                := _tmpItem.GoodsId
                                                                                     , inGoodsKindId            := _tmpItem.GoodsKindId
@@ -505,7 +513,7 @@ BEGIN
                        , ContainerId_GoodsTo   = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
                                                                                     , inUnitId                 := vbUnitId_To
                                                                                     , inCarId                  := NULL
-                                                                                    , inPersonalId             := vbPersonalId_To
+                                                                                    , inMemberId               := vbMemberId_To
                                                                                     , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                                     , inGoodsId                := _tmpItem.GoodsId
                                                                                     , inGoodsKindId            := _tmpItem.GoodsKindId
@@ -656,7 +664,7 @@ BEGIN
      UPDATE _tmpItemSumm SET ContainerId_To = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
                                                                                 , inUnitId                 := vbUnitId_To
                                                                                 , inCarId                  := NULL
-                                                                                , inPersonalId             := vbPersonalId_To
+                                                                                , inMemberId               := vbMemberId_To
                                                                                 , inBranchId               := vbBranchId_To
                                                                                 , inJuridicalId_basis      := vbJuridicalId_Basis_To
                                                                                 , inBusinessId             := _tmpItem.BusinessId_To
@@ -778,7 +786,7 @@ BEGIN
      UPDATE _tmpItemSumm SET AccountId_60000 = _tmpItem_byAccount.AccountId
      FROM _tmpItem
           JOIN (SELECT lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_60000() -- Прибыль будущих периодов -- select * from gpSelect_Object_AccountGroup ('2') where Id = zc_Enum_AccountGroup_60000()
-                                                  , inAccountDirectionId     := CASE WHEN vbPersonalId_To <> 0
+                                                  , inAccountDirectionId     := CASE WHEN vbMemberId_To <> 0
                                                                                           THEN zc_Enum_AccountDirection_60100() -- "Прибыль будущих периодов"; 60100; "сотрудники (экспедиторы)"
                                                                                      ELSE zc_Enum_AccountDirection_60200() -- "Прибыль будущих периодов"; 60200; "на филиалах"
                                                                                 END
@@ -801,7 +809,7 @@ BEGIN
      UPDATE _tmpItemSumm SET ContainerId_60000 = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := vbOperDate
                                                                                    , inUnitId                 := vbUnitId_To
                                                                                    , inCarId                  := NULL
-                                                                                   , inPersonalId             := vbPersonalId_To
+                                                                                   , inMemberId             := vbMemberId_To
                                                                                    , inBranchId               := vbBranchId_To
                                                                                    , inJuridicalId_basis      := vbJuridicalId_Basis_To
                                                                                    , inBusinessId             := _tmpItem.BusinessId_To
@@ -1117,11 +1125,12 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.12.13                                        * Personal -> Member
  03.11.13                                        * rename zc_Enum_ProfitLoss_40209 -> zc_Enum_ProfitLoss_40208
  06.10.13                                        * add StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
  17.09.13                                        * add lpInsertUpdate_ContainerCount_Goods

@@ -16,7 +16,7 @@ $BODY$
   DECLARE vbOperDate TDateTime;
   DECLARE vbCarId Integer;
   DECLARE vbUnitId Integer;
-  DECLARE vbPersonalId Integer;
+  DECLARE vbMemberId Integer;
   DECLARE vbBranchId Integer;
   DECLARE vbAccountDirectionId_Unit Integer;
   DECLARE vbIsPartionDate_Unit Boolean;
@@ -33,13 +33,13 @@ BEGIN
 
      -- Эти параметры нужны для формирования Аналитик в проводках
      SELECT _tmp.OperDate
-          , _tmp.CarId, _tmp.PersonalId, _tmp.UnitId, _tmp.BranchId, _tmp.AccountDirectionId_Unit, _tmp.isPartionDate_Unit
+          , _tmp.CarId, _tmp.MemberId, _tmp.UnitId, _tmp.BranchId, _tmp.AccountDirectionId_Unit, _tmp.isPartionDate_Unit
             INTO vbOperDate
-               , vbCarId, vbPersonalId, vbUnitId, vbBranchId, vbAccountDirectionId_Unit, vbIsPartionDate_Unit
+               , vbCarId, vbMemberId, vbUnitId, vbBranchId, vbAccountDirectionId_Unit, vbIsPartionDate_Unit
                , vbJuridicalId_Basis, vbBusinessId
      FROM (SELECT Movement.OperDate
                 , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Car() THEN Object_From.Id ELSE 0 END, 0) AS CarId
-                , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Personal() THEN Object_From.Id ELSE 0 END, 0) AS PersonalId
+                , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_Personal_Member.ChildObjectId ELSE 0 END, 0) AS MemberId
                 , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN Object_From.Id ELSE 0 END, 0) AS UnitId
                 , COALESCE (ObjectLink_Branch.ChildObjectId, 0) AS BranchId
                 , COALESCE (ObjectLink_Unit_AccountDirection.ChildObjectId, 0) AS AccountDirectionId_Unit -- Аналитики счетов - направления !!!нужны только для подразделения!!!
@@ -69,6 +69,9 @@ BEGIN
                 LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
                                      ON ObjectLink_Personal_Unit.ObjectId = MovementLinkObject_From.ObjectId
                                     AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
+                LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                     ON ObjectLink_Personal_Member.ObjectId = MovementLinkObject_From.ObjectId
+                                    AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
 
                 -- в документе устанавливается что-то одно - или Автомобиль или От кого (Автомобиль или Сотрудник или Подразделение)
                 LEFT JOIN ObjectLink AS ObjectLink_Branch
@@ -217,7 +220,7 @@ BEGIN
      UPDATE _tmpItem SET ContainerId_Goods = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
                                                                                 , inUnitId                 := vbUnitId
                                                                                 , inCarId                  := vbCarId
-                                                                                , inPersonalId             := vbPersonalId
+                                                                                , inMemberId               := vbMemberId
                                                                                 , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                                 , inGoodsId                := _tmpItem.GoodsId
                                                                                 , inGoodsKindId            := _tmpItem.GoodsKindId
@@ -302,7 +305,7 @@ BEGIN
 
                       , _tmpItem_group.InfoMoneyDestinationId
                       , _tmpItem_group.BusinessId_From
-                 FROM (SELECT CASE WHEN vbPersonalId_To = 0
+                 FROM (SELECT CASE WHEN vbMemberId_To = 0
                                     AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100())  -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                         THEN zc_Enum_ProfitLossGroup_10000() -- 10000; "Результат основной деятельности"
                                    WHEN _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Ирна      -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
@@ -311,13 +314,13 @@ BEGIN
                                    ELSE zc_Enum_ProfitLossGroup_70000() -- 70000; "Дополнительная прибыль"
                               END AS ProfitLossGroupId
 
-                            , CASE WHEN vbPersonalId_To = 0
+                            , CASE WHEN vbMemberId_To = 0
                                     AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100())  -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                         THEN zc_Enum_ProfitDirection_10400() -- 10400; "Себестоимость реализации"
                                    WHEN _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Ирна      -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
                                                                           , zc_Enum_InfoMoneyDestination_30100()) -- Продукция -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()
                                         THEN zc_Enum_ProfitDirection_10400() -- 10400; "Себестоимость реализации"
-                                   WHEN vbPersonalId_To <> 0
+                                   WHEN vbMemberId_To <> 0
                                         THEN zc_Enum_ProfitDirection_70300() -- 70300; "сотрудники (недостачи, порча)"
                                    WHEN vbIsCorporate_To = TRUE
                                         THEN zc_Enum_ProfitDirection_70100() -- 70300; "Реализация нашим компаниям"
@@ -438,13 +441,14 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.12.13                                        * Personal -> Member
  03.11.13                                        * rename zc_Enum_ProfitLoss_40209 -> zc_Enum_ProfitLoss_40208
- 30.09.13                                        * add vbCarId and vbPersonalId_Driver
+ 30.09.13                                        * add vbCarId and vbMemberId_Driver
  17.09.13                                        * add lpInsertUpdate_ContainerCount_Goods and lpInsertUpdate_ContainerSumm_Goods
  15.09.13                                        * all
  14.09.13                                        * add vbBusinessId_To + isCountSupplier

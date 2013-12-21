@@ -1,13 +1,13 @@
-п»ї-- Function: gpInsertUpdate_Object_Currency()
+-- Function: gpInsertUpdate_Object_Currency()
 
--- DROP FUNCTION gpInsertUpdate_Object_Currency();
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Currency (Integer, Integer, TVarChar, TVarChar, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Currency(
- INOUT ioId                  Integer   ,   	-- РєР»СЋС‡ РѕР±СЉРµРєС‚Р° <Р’Р°Р»СЋС‚Р°>
-    IN inCode                Integer   ,    -- РњРµР¶РґСѓРЅР°СЂРѕРґРЅС‹Р№ РєРѕРґ РѕР±СЉРµРєС‚Р° <Р’Р°Р»СЋС‚Р°> 
-    IN inName                TVarChar  ,    -- РќР°Р·РІР°РЅРёРµ РѕР±СЉРµРєС‚Р° <Р’Р°Р»СЋС‚Р°> 
-    IN inInternalName        TVarChar  ,    -- РњРµР¶РґСѓРЅР°СЂРѕРґРЅРѕРµ РЅР°РёРјРµРЅРѕРІР°РЅРёРµ РѕР±СЉРµРєС‚Р° <Р’Р°Р»СЋС‚Р°> 
-    IN inSession             TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+ INOUT ioId                  Integer   ,   	-- ключ объекта <Валюта>
+    IN inCode                Integer   ,    -- Международный код объекта <Валюта> 
+    IN inName                TVarChar  ,    -- Название объекта <Валюта> 
+    IN inInternalName        TVarChar  ,    -- Международное наименование объекта <Валюта> 
+    IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS integer AS
 $BODY$
@@ -15,11 +15,11 @@ $BODY$
    DECLARE Code_max Integer;   
 BEGIN
 
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Currency());
    UserId := inSession;
 
-   -- Р•СЃР»Рё РєРѕРґ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ, РѕРїСЂРµРґРµР»СЏРµРј РµРіРѕ РєР°Рё РїРѕСЃР»РµРґРЅРёР№+1
+   -- Если код не установлен, определяем его каи последний+1
    IF COALESCE (inCode, 0) = 0
    THEN 
        SELECT MAX (ObjectCode) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_Currency();
@@ -27,33 +27,31 @@ BEGIN
        Code_max := inCode;
    END IF;
 
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё РґР»СЏ СЃРІРѕР№СЃС‚РІР° <РќР°РёРјРµРЅРѕРІР°РЅРёРµ Р’Р°Р»СЋС‚С‹>
+   -- проверка прав уникальности для свойства <Наименование Валюты>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Currency(), inName);
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё РґР»СЏ СЃРІРѕР№СЃС‚РІР° <РљРѕРґ Р’Р°Р»СЋС‚С‹>
+   -- проверка прав уникальности для свойства <Код Валюты>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Currency(), Code_max);
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё <РћР±СЉРµРєС‚>
+   -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Currency(), Code_max, inName);
    
    PERFORM lpInsertUpdate_ObjectString(zc_objectString_Currency_InternalName(), ioId, inInternalName);
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё РїСЂРѕС‚РѕРєРѕР»
+   -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, UserId);
 
 END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Currency(Integer, Integer, TVarChar, TVarChar, tvarchar) OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpInsertUpdate_Object_Currency (Integer, Integer, TVarChar, TVarChar, tvarchar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.12.13                                        *Cyr1251
  11.06.13          *
- 03.06.13          
-
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpInsertUpdate_Object_Currency()       

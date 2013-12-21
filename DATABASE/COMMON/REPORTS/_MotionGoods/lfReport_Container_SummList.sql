@@ -22,7 +22,7 @@ BEGIN
               JOIN ContainerLinkObject AS ContainerLinkObject_Location ON ContainerLinkObject_Location.ObjectId = _tmpLocation.LocationId
               JOIN (SELECT zc_ContainerLinkObject_Unit() AS DescId 
                     UNION ALL
-                    SELECT zc_ContainerLinkObject_Personal() AS DescId
+                    SELECT zc_ContainerLinkObject_Member() AS DescId
                     ) AS tmpDesc ON tmpDesc.DescId = ContainerLinkObject_Location.DescId
          ) AS tmpContainerLocation
                                 -- список количественных контейнеров (начали с ограниечения ТОВАРЫ)
@@ -36,24 +36,24 @@ BEGIN
 
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION lfReport_Container_SummList () OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.12.13                                        * Personal -> Member
  13.09.13         *  
 */
+
 -- тест
 /*
 CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
 CREATE TEMP TABLE _tmpLocation (LocationId Integer) ON COMMIT DROP;
 
 INSERT INTO _tmpGoods (GoodsId) SELECT Id FROM Object WHERE DescId = zc_Object_Goods();
-INSERT INTO _tmpLocation (LocationId) SELECT Id FROM Object WHERE DescId = zc_Object_Unit() UNION ALL SELECT Id FROM Object WHERE DescId = zc_Object_Personal();
+INSERT INTO _tmpLocation (LocationId) SELECT Id FROM Object WHERE DescId = zc_Object_Unit() UNION ALL SELECT Id FROM Object WHERE DescId = zc_Object_Member();
 
 SELECT * FROM lfReport_Container_SummList () as lfContainer_SummList
 left join object as object_Goods on object_Goods.Id = lfContainer_SummList.GoodsId 

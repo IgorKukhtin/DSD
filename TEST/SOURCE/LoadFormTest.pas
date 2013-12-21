@@ -148,6 +148,8 @@ procedure TLoadFormTest.LoadCashFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCash_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCash_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashEditForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashJournalForm'));

@@ -11,7 +11,7 @@ RETURNS VOID
 AS
 $BODY$
   DECLARE vbOperDate TDateTime;
-  DECLARE vbPersonalDriverId Integer;
+  DECLARE vbMemberDriverId Integer;
   DECLARE vbCarId Integer;
   DECLARE vbUnitId_Car Integer;
   DECLARE vbBranchId_Car Integer;
@@ -46,18 +46,18 @@ BEGIN
 
      -- Эти параметры нужны для формирования Аналитик в проводках
      SELECT _tmp.OperDate
-          , _tmp.PersonalDriverId, _tmp.CarId, _tmp.UnitId_Car, _tmp.BranchId_Car
+          , _tmp.MemberDriverId, _tmp.CarId, _tmp.UnitId_Car, _tmp.BranchId_Car
           , _tmp.JuridicalId_Basis, _tmp.BusinessId_Car
             INTO vbOperDate
-               , vbPersonalDriverId, vbCarId, vbUnitId_Car, vbBranchId_Car
+               , vbMemberDriverId, vbCarId, vbUnitId_Car, vbBranchId_Car
                , vbJuridicalId_Basis, vbBusinessId_Car -- эти аналитики берутся у подразделения за которым числится Автомобиль
      FROM (SELECT Movement.OperDate
-                , COALESCE (MovementLinkObject_PersonalDriver.ObjectId, 0) AS PersonalDriverId
-                , COALESCE (MovementLinkObject_Car.ObjectId, 0)            AS CarId
-                , COALESCE (ObjectLink_Car_Unit.ChildObjectId, 0)          AS UnitId_Car
-                , COALESCE (ObjectLink_UnitCar_Branch.ChildObjectId, 0)    AS BranchId_Car
-                , COALESCE (ObjectLink_UnitCar_Juridical.ChildObjectId, 0) AS JuridicalId_Basis
-                , COALESCE (ObjectLink_UnitCar_Business.ChildObjectId, 0)  AS BusinessId_Car
+                , COALESCE (ObjectLink_PersonalDriver_Member.ChildObjectId, 0) AS MemberDriverId
+                , COALESCE (MovementLinkObject_Car.ObjectId, 0)                AS CarId
+                , COALESCE (ObjectLink_Car_Unit.ChildObjectId, 0)              AS UnitId_Car
+                , COALESCE (ObjectLink_UnitCar_Branch.ChildObjectId, 0)        AS BranchId_Car
+                , COALESCE (ObjectLink_UnitCar_Juridical.ChildObjectId, 0)     AS JuridicalId_Basis
+                , COALESCE (ObjectLink_UnitCar_Business.ChildObjectId, 0)      AS BusinessId_Car
            FROM Movement
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
                                              ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
@@ -65,6 +65,9 @@ BEGIN
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
                                              ON MovementLinkObject_Car.MovementId = Movement.Id
                                             AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
+                LEFT JOIN ObjectLink AS ObjectLink_PersonalDriver_Member
+                                     ON ObjectLink_PersonalDriver_Member.ObjectId = MovementLinkObject_PersonalDriver.ObjectId
+                                    AND ObjectLink_PersonalDriver_Member.DescId = zc_ObjectLink_Personal_Member()
                 LEFT JOIN ObjectLink AS ObjectLink_Car_Unit
                                      ON ObjectLink_Car_Unit.ObjectId = MovementLinkObject_Car.ObjectId
                                     AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
@@ -99,7 +102,7 @@ BEGIN
                                                -- ограничили списком товаров: (20400)ГСМ
                             WHERE ObjectId IN (SELECT GoodsId FROM Object_Goods_View WHERE InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400())
                                           -- Ограничили по Аналитике <Сотрудник>
-                              AND Id IN (SELECT ContainerId FROM ContainerLinkObject WHERE DescId = zc_ContainerLinkObject_Personal() AND ObjectId = vbPersonalDriverId)
+                              AND Id IN (SELECT ContainerId FROM ContainerLinkObject WHERE DescId = zc_ContainerLinkObject_Member() AND ObjectId = vbMemberDriverId)
                               AND DescId = zc_Container_Count()
                            UNION
                             SELECT Id, Amount, Container.ObjectId AS FuelId, 3 AS Kind
@@ -269,7 +272,7 @@ BEGIN
      UPDATE _tmpItem_Transport SET ContainerId_Goods = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
                                                                                           , inUnitId                 := NULL
                                                                                           , inCarId                  := vbCarId
-                                                                                          , inPersonalId             := NULL
+                                                                                          , inMemberId               := NULL
                                                                                           , inInfoMoneyDestinationId := _tmpItem_Transport.InfoMoneyDestinationId
                                                                                           , inGoodsId                := _tmpItem_Transport.GoodsId
                                                                                           , inGoodsKindId            := 0
@@ -417,11 +420,12 @@ BEGIN
 
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.12.13                                        * Personal -> Member
  11.12.13                                        * убрал пересчитали Child - нормы
  03.11.13                                        * add zc_MILinkObject_Route
  02.11.13                                        * add zc_MILinkObject_Branch, zc_MILinkObject_UnitRoute, zc_MILinkObject_BranchRoute
@@ -437,7 +441,6 @@ $BODY$
  02.10.13                                        *
 */
 
---     RAISE EXCEPTION '"%"      "%"    "%" ', vbCarId, vbPersonalDriverId, (select sum (Amount ) from _tmpPropertyRemains  where Kind=3);
 -- тест
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 103, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM lpComplete_Movement_Transport (inMovementId:= 103, inUserId:= zfCalc_UserAdmin())

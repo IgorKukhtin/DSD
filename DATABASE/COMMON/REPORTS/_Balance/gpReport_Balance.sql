@@ -56,7 +56,7 @@ $BODY$BEGIN
            (SELECT tmpMIContainer_Remains.AccountId
                  , ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId
                  , ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail
-                 , ContainerLinkObject_Personal.ObjectId AS PersonalId
+                 , ContainerLinkObject_Member.ObjectId AS MemberId
                  , ContainerLinkObject_Juridical.ObjectId AS JuridicalId
                  , ContainerLinkObject_Unit.ObjectId AS UnitId
                  , ContainerLinkObject_Goods.ObjectId AS GoodsId
@@ -116,9 +116,9 @@ $BODY$BEGIN
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Juridical
                                               ON ContainerLinkObject_Juridical.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-                LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Personal
-                                              ON ContainerLinkObject_Personal.ContainerId = tmpMIContainer_Remains.ContainerId
-                                             AND ContainerLinkObject_Personal.DescId = zc_ContainerLinkObject_Personal()
+                LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Member
+                                              ON ContainerLinkObject_Member.ContainerId = tmpMIContainer_Remains.ContainerId
+                                             AND ContainerLinkObject_Member.DescId = zc_ContainerLinkObject_Member()
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Unit
                                               ON ContainerLinkObject_Unit.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
@@ -128,27 +128,27 @@ $BODY$BEGIN
             GROUP BY tmpMIContainer_Remains.AccountId
                    , ContainerLinkObject_InfoMoney.ObjectId
                    , ContainerLinkObject_InfoMoneyDetail.ObjectId
-                   , ContainerLinkObject_Personal.ObjectId
+                   , ContainerLinkObject_Member.ObjectId
                    , ContainerLinkObject_Juridical.ObjectId
                    , ContainerLinkObject_Unit.ObjectId
                    , ContainerLinkObject_Goods.ObjectId
            ) AS tmpReportOperation ON tmpReportOperation.AccountId = Object_Account_View.AccountId
            LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = tmpReportOperation.InfoMoneyId
            LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View_Detail ON Object_InfoMoney_View_Detail.InfoMoneyId = CASE WHEN COALESCE (tmpReportOperation.InfoMoneyId_Detail, 0) = 0 THEN tmpReportOperation.InfoMoneyId ELSE tmpReportOperation.InfoMoneyId_Detail END
-           LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (JuridicalId, COALESCE (PersonalId, UnitId))
+           LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (JuridicalId, COALESCE (MemberId, UnitId))
            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = GoodsId
           ;
   
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpReport_Balance (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 21.12.13                                        * Personal -> Member
  24.11.13                                        * add AccountCode
  21.10.13                        * add Code
  24.08.13                                        * add count and goods

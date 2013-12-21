@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpComplete_Movement_Send(
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )                              
 RETURNS VOID
--- RETURNS TABLE (MovementItemId Integer, MovementId Integer, OperDate TDateTime, UnitId_From Integer, PersonalId_From Integer, UnitId_To Integer, PersonalId_To Integer, BranchId_To Integer, ContainerId_GoodsFrom Integer, ContainerId_GoodsTo Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate_From TDateTime, PartionGoodsDate_To TDateTime, OperCount TFloat, AccountDirectionId_From Integer, AccountDirectionId_To Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, JuridicalId_basis_To Integer, BusinessId_To Integer, isPartionCount Boolean, isPartionSumm Boolean, isPartionDate_From Boolean, isPartionDate_To Boolean, PartionGoodsId_From Integer, PartionGoodsId_To Integer)
+-- RETURNS TABLE (MovementItemId Integer, MovementId Integer, OperDate TDateTime, UnitId_From Integer, MemberId_From Integer, UnitId_To Integer, MemberId_To Integer, BranchId_To Integer, ContainerId_GoodsFrom Integer, ContainerId_GoodsTo Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate_From TDateTime, PartionGoodsDate_To TDateTime, OperCount TFloat, AccountDirectionId_From Integer, AccountDirectionId_To Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, JuridicalId_basis_To Integer, BusinessId_To Integer, isPartionCount Boolean, isPartionSumm Boolean, isPartionDate_From Boolean, isPartionDate_To Boolean, PartionGoodsId_From Integer, PartionGoodsId_To Integer)
 -- RETURNS TABLE (MovementItemId Integer, MIContainerId_To Integer, ContainerId_From Integer, InfoMoneyId_Detail_From Integer, OperSumm TFloat)
 AS
 $BODY$
@@ -31,7 +31,7 @@ BEGIN
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
 
      -- таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItem (MovementItemId Integer, MovementId Integer, OperDate TDateTime, UnitId_From Integer, PersonalId_From Integer, UnitId_To Integer, PersonalId_To Integer, BranchId_To Integer
+     CREATE TEMP TABLE _tmpItem (MovementItemId Integer, MovementId Integer, OperDate TDateTime, UnitId_From Integer, MemberId_From Integer, UnitId_To Integer, MemberId_To Integer, BranchId_To Integer
                                , MIContainerId_To Integer, ContainerId_GoodsFrom Integer, ContainerId_GoodsTo Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate_From TDateTime, PartionGoodsDate_To TDateTime
                                , OperCount TFloat
                                , AccountDirectionId_From Integer, AccountDirectionId_To Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
@@ -42,7 +42,7 @@ BEGIN
      CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, MIContainerId_To Integer, ContainerId_To Integer, AccountId_To Integer, ContainerId_From Integer, AccountId_From Integer, InfoMoneyId_Detail_From Integer, OperSumm TFloat) ON COMMIT DROP;
 
      -- заполняем таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItem (MovementItemId, MovementId, OperDate, UnitId_From, PersonalId_From, UnitId_To, PersonalId_To, BranchId_To
+     INSERT INTO _tmpItem (MovementItemId, MovementId, OperDate, UnitId_From, MemberId_From, UnitId_To, MemberId_To, BranchId_To
                          , MIContainerId_To, ContainerId_GoodsFrom, ContainerId_GoodsTo, GoodsId, GoodsKindId, AssetId, PartionGoods, PartionGoodsDate_From, PartionGoodsDate_To
                          , OperCount
                          , AccountDirectionId_From, AccountDirectionId_To, InfoMoneyDestinationId, InfoMoneyId
@@ -54,9 +54,9 @@ BEGIN
             , _tmp.MovementId
             , _tmp.OperDate
             , _tmp.UnitId_From
-            , _tmp.PersonalId_From
+            , _tmp.MemberId_From
             , _tmp.UnitId_To
-            , _tmp.PersonalId_To
+            , _tmp.MemberId_To
             , _tmp.BranchId_To
 
             , 0 AS MIContainerId_To
@@ -96,9 +96,9 @@ BEGIN
                   , MovementItem.MovementId
                   , Movement.OperDate
                   , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN MovementLinkObject_From.ObjectId ELSE 0 END, 0) AS UnitId_From
-                  , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Personal() THEN MovementLinkObject_From.ObjectId ELSE 0 END, 0) AS PersonalId_From
+                  , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_PersonalFrom_Member.ChildObjectId ELSE 0 END, 0) AS MemberId_From
                   , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN MovementLinkObject_To.ObjectId ELSE 0 END, 0) AS UnitId_To
-                  , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Personal() THEN MovementLinkObject_To.ObjectId ELSE 0 END, 0) AS PersonalId_To
+                  , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_PersonalTo_Member.ChildObjectId ELSE 0 END, 0) AS MemberId_To
                   , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Branch.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Branch.ChildObjectId ELSE 0 END, 0) AS BranchId_To
 
                   , MovementItem.ObjectId AS GoodsId
@@ -176,16 +176,19 @@ BEGIN
                                                AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                    LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
-                   LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                                ON MovementLinkObject_To.MovementId = MovementItem.MovementId
-                                               AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                   LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-
-
+                   LEFT JOIN ObjectLink AS ObjectLink_PersonalFrom_Member
+                                        ON ObjectLink_PersonalFrom_Member.ObjectId = MovementLinkObject_From.ObjectId
+                                       AND ObjectLink_PersonalFrom_Member.DescId = zc_ObjectLink_Personal_Member()
+                                       AND Object_From.DescId = zc_Object_Personal()
                    LEFT JOIN ObjectLink AS ObjectLink_UnitFrom_AccountDirection
                                         ON ObjectLink_UnitFrom_AccountDirection.ObjectId = MovementLinkObject_From.ObjectId
                                        AND ObjectLink_UnitFrom_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()
                                        AND Object_From.DescId = zc_Object_Unit()
+
+                   LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                ON MovementLinkObject_To.MovementId = MovementItem.MovementId
+                                               AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                   LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
                    LEFT JOIN ObjectLink AS ObjectLink_UnitTo_AccountDirection
                                         ON ObjectLink_UnitTo_AccountDirection.ObjectId = MovementLinkObject_To.ObjectId
@@ -204,6 +207,10 @@ BEGIN
                                        AND ObjectLink_UnitTo_Business.DescId = zc_ObjectLink_Unit_Business()
                                        AND Object_To.DescId = zc_Object_Unit()
 
+                   LEFT JOIN ObjectLink AS ObjectLink_PersonalTo_Member
+                                        ON ObjectLink_PersonalTo_Member.ObjectId = MovementLinkObject_To.ObjectId
+                                       AND ObjectLink_PersonalTo_Member.DescId = zc_ObjectLink_Personal_Member()
+                                       AND Object_To.DescId = zc_Object_Personal()
                    LEFT JOIN ObjectLink AS ObjectLink_PersonalTo_Unit
                                         ON ObjectLink_PersonalTo_Unit.ObjectId = MovementLinkObject_To.ObjectId
                                        AND ObjectLink_PersonalTo_Unit.DescId = zc_ObjectLink_Personal_Unit()
@@ -272,7 +279,7 @@ BEGIN
 
 
      -- для теста
-     -- RETURN QUERY SELECT _tmpItem.MovementItemId, _tmpItem.MovementId, _tmpItem.OperDate, _tmpItem.UnitId_From, _tmpItem.PersonalId_From, _tmpItem.UnitId_To, _tmpItem.PersonalId_To, _tmpItem.BranchId_To, _tmpItem.ContainerId_GoodsFrom, _tmpItem.ContainerId_GoodsTo, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.AssetId, _tmpItem.PartionGoods, _tmpItem.PartionGoodsDate_From, _tmpItem.PartionGoodsDate_To, _tmpItem.OperCount, _tmpItem.AccountDirectionId_From, _tmpItem.AccountDirectionId_To, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId, _tmpItem.JuridicalId_basis_To, _tmpItem.BusinessId_To, _tmpItem.isPartionCount, _tmpItem.isPartionSumm, _tmpItem.isPartionDate_From, _tmpItem.isPartionDate_To, _tmpItem.PartionGoodsId_From, _tmpItem.PartionGoodsId_To FROM _tmpItem;
+     -- RETURN QUERY SELECT _tmpItem.MovementItemId, _tmpItem.MovementId, _tmpItem.OperDate, _tmpItem.UnitId_From, _tmpItem.MemberId_From, _tmpItem.UnitId_To, _tmpItem.MemberId_To, _tmpItem.BranchId_To, _tmpItem.ContainerId_GoodsFrom, _tmpItem.ContainerId_GoodsTo, _tmpItem.GoodsId, _tmpItem.GoodsKindId, _tmpItem.AssetId, _tmpItem.PartionGoods, _tmpItem.PartionGoodsDate_From, _tmpItem.PartionGoodsDate_To, _tmpItem.OperCount, _tmpItem.AccountDirectionId_From, _tmpItem.AccountDirectionId_To, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId, _tmpItem.JuridicalId_basis_To, _tmpItem.BusinessId_To, _tmpItem.isPartionCount, _tmpItem.isPartionSumm, _tmpItem.isPartionDate_From, _tmpItem.isPartionDate_To, _tmpItem.PartionGoodsId_From, _tmpItem.PartionGoodsId_To FROM _tmpItem;
 
 
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -284,7 +291,7 @@ BEGIN
      UPDATE _tmpItem SET ContainerId_GoodsFrom = lpInsertUpdate_ContainerCount_Goods (inOperDate               := _tmpItem.OperDate
                                                                                     , inUnitId                 := _tmpItem.UnitId_From
                                                                                     , inCarId                  := NULL
-                                                                                    , inPersonalId             := _tmpItem.PersonalId_From
+                                                                                    , inMemberId               := _tmpItem.MemberId_From
                                                                                     , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                                     , inGoodsId                := _tmpItem.GoodsId
                                                                                     , inGoodsKindId            := _tmpItem.GoodsKindId
@@ -295,7 +302,7 @@ BEGIN
                        , ContainerId_GoodsTo   = lpInsertUpdate_ContainerCount_Goods (inOperDate               := _tmpItem.OperDate
                                                                                     , inUnitId                 := _tmpItem.UnitId_To
                                                                                     , inCarId                  := NULL
-                                                                                    , inPersonalId             := _tmpItem.PersonalId_To
+                                                                                    , inMemberId               := _tmpItem.MemberId_To
                                                                                     , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                                     , inGoodsId                := _tmpItem.GoodsId
                                                                                     , inGoodsKindId            := _tmpItem.GoodsKindId
@@ -387,7 +394,7 @@ BEGIN
      UPDATE _tmpItemSumm SET ContainerId_To = lpInsertUpdate_ContainerSumm_Goods (inOperDate               := _tmpItem.OperDate
                                                                                 , inUnitId                 := _tmpItem.UnitId_To
                                                                                 , inCarId                  := NULL
-                                                                                , inPersonalId             := _tmpItem.PersonalId_To
+                                                                                , inMemberId               := _tmpItem.MemberId_To
                                                                                 , inBranchId               := _tmpItem.BranchId_To
                                                                                 , inJuridicalId_basis      := _tmpItem.JuridicalId_Basis_To
                                                                                 , inBusinessId             := _tmpItem.BusinessId_To
@@ -463,11 +470,12 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.12.13                                        * Personal -> Member
  06.10.13                                        * add StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
  03.10.13                                        * add inCarId := NULL
  17.09.13                                        * add lpInsertUpdate_ContainerCount_Goods and lpInsertUpdate_ContainerSumm_Goods

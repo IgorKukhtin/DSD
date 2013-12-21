@@ -37,8 +37,8 @@ BEGIN
 
     RETURN QUERY
     WITH tmpContainer AS (SELECT Container.Id AS ContainerId, Container.ObjectId AS AccountId, Container.Amount
-                          -- FROM (SELECT AccountId FROM Object_Account_View /*WHERE Object_Account_View.AccountDirectionCode IN (20500, 30500, 70100, 100300, 110000)*/) AS tmpAccount -- ñ÷åò 
-                          FROM (SELECT Id AS AccountId FROM Object WHERE DescId = zc_Object_Account() AND ObjectCode IN (20503 /*, 30505, 30508, 70105, 100301, 110101*/)  /*WHERE Object_Account_View.AccountDirectionCode IN (20500, 30500, 70100, 100300, 110000)*/) AS tmpAccount -- ñ÷åò 
+                           FROM (SELECT AccountId FROM Object_Account_View /*WHERE Object_Account_View.AccountDirectionCode IN (20500, 30500, 70100, 100300, 110000)*/) AS tmpAccount -- ñ÷åò 
+                          -- FROM (SELECT Id AS AccountId FROM Object WHERE DescId = zc_Object_Account() AND ObjectCode IN (20503 /*30505, 30508, 70105, 100301, 110101*/)  /*WHERE Object_Account_View.AccountDirectionCode IN (20500, 30500, 70100, 100300, 110000)*/) AS tmpAccount -- ñ÷åò 
                                JOIN Container ON Container.ObjectId = tmpAccount.AccountId
                                              AND Container.DescId = zc_Container_Summ()
                          )
@@ -49,8 +49,8 @@ BEGIN
          , Object_InfoMoneyGroup.ValueData       AS InfoMoneyGroupName
          , Object_InfoMoneyDestination.ValueData AS InfoMoneyDestinationName
          , View_InfoMoney.ValueData              AS InfoMoneyName
-         , View_Personal.ObjectCode AS PersonalCode
-         , View_Personal.ValueData  AS PersonalName
+         , Object_Member.ObjectCode AS PersonalCode
+         , Object_Member.ValueData  AS PersonalName
          , Object_Juridical.ObjectCode     AS JuridicalCode
          , Object_Juridical.ValueData      AS JuridicalName
          , Object_PaidKind.ValueData       AS PaidKindName
@@ -59,8 +59,8 @@ BEGIN
          , Object_Car.ObjectCode     AS CarCode
          , Object_Car.ValueData      AS CarName
 
-         , View_Personal_inf.ObjectCode   AS PersonalCode_inf
-         , View_Personal_inf.ValueData    AS PersonalName_inf
+         , Object_Member_inf.ObjectCode   AS PersonalCode_inf
+         , Object_Member_inf.ValueData    AS PersonalName_inf
          , Object_CarModel_inf.ValueData  AS CarModelName_inf
          , Object_Car_inf.ObjectCode      AS CarCode_inf
          , Object_Car_inf.ValueData       AS CarName_inf
@@ -109,7 +109,7 @@ BEGIN
 
    FROM      
        (SELECT COALESCE (ContainerLO_InfoMoney.ObjectId, tmpReport_All.InfoMoneyId_inf) AS InfoMoneyId
-             , ContainerLO_Personal.ObjectId  AS PersonalId
+             , ContainerLO_Member.ObjectId    AS MemberId
              , ContainerLO_Car.ObjectId       AS CarId
              , ContainerLO_Juridical.ObjectId AS JuridicalId
              , ContainerLO_PaidKind.ObjectId  AS PaidKindId
@@ -127,7 +127,7 @@ BEGIN
              , tmpReport_All.InvNumber
              , tmpReport_All.AccountId
              , tmpReport_All.AccountId_inf
-             , tmpReport_All.PersonalId_inf
+             , tmpReport_All.MemberId_inf
              , tmpReport_All.CarId_inf
              , tmpReport_All.RouteId_inf
              , tmpReport_All.UnitId_inf
@@ -146,7 +146,7 @@ BEGIN
                   , 0 AS MovementId
                   , NULL :: TDateTime AS OperDate
                   , '' AS InvNumber
-                  , 0 AS PersonalId_inf
+                  , 0 AS MemberId_inf
                   , 0 AS CarId_inf
                   , 0 AS AccountId_inf
                   , 0 AS RouteId_inf
@@ -174,7 +174,7 @@ BEGIN
                   , tmpMIReport.MovementId
                   , tmpMIReport.OperDate
                   , Movement.InvNumber
-                  , COALESCE (ContainerLO_Personal.ObjectId, MovementLO_PersonalDriver.ObjectId /*COALESCE (MI_Personal.ObjectId, MovementLO_PersonalDriver.ObjectId)*/) AS PersonalId_inf
+                  , COALESCE (ContainerLO_Member.ObjectId, MovementLO_PersonalDriver.ObjectId /*COALESCE (MI_Personal.ObjectId, MovementLO_PersonalDriver.ObjectId)*/) AS MemberId_inf
                   , COALESCE (ContainerLO_Car.ObjectId, 0 /*MILinkObject_Car.ObjectId*/) AS CarId_inf
                   , tmpMIReport.AccountId_inf
                   , COALESCE (/*MI_Route.ObjectId,*/tmpMIReport.RouteId_inf, tmpMIReport.RouteId_inf) AS RouteId_inf
@@ -257,9 +257,9 @@ BEGIN
                                                       ON MILinkObject_Car.MovementItemId = MI_Personal.Id
                                                      AND MILinkObject_Car.DescId = zc_MILinkObject_Car()
 */
-                     LEFT JOIN ContainerLinkObject AS ContainerLO_Personal ON ContainerLO_Personal.ContainerId = tmpMIReport.ContainerId_inf
-                                                                          AND ContainerLO_Personal.DescId = zc_ContainerLinkObject_Personal()
-                                                                          AND ContainerLO_Personal.ObjectId > 0
+                     LEFT JOIN ContainerLinkObject AS ContainerLO_Member ON ContainerLO_Member.ContainerId = tmpMIReport.ContainerId_inf
+                                                                        AND ContainerLO_Member.DescId = zc_ContainerLinkObject_Member()
+                                                                        AND ContainerLO_Member.ObjectId > 0
                      LEFT JOIN ContainerLinkObject AS ContainerLO_Car ON ContainerLO_Car.ContainerId = tmpMIReport.ContainerId_inf
                                                                      AND ContainerLO_Car.DescId = zc_ContainerLinkObject_Car()
                                                                      AND ContainerLO_Car.ObjectId > 0
@@ -285,7 +285,7 @@ BEGIN
                     , tmpMIReport.OperDate
                     , Movement.InvNumber
                     , tmpMIReport.OperPrice
-                    , ContainerLO_Personal.ObjectId
+                    , ContainerLO_Member.ObjectId
 --                    , MI_Personal.ObjectId
                     , MovementLO_PersonalDriver.ObjectId
                     , ContainerLO_Car.ObjectId
@@ -310,9 +310,9 @@ BEGIN
             LEFT JOIN ContainerLinkObject AS ContainerLO_Contract ON ContainerLO_Contract.ContainerId = tmpReport_All.ContainerId
                                                                  AND ContainerLO_Contract.DescId = zc_ContainerLinkObject_Contract()
                                                                  AND ContainerLO_Contract.ObjectId > 0
-            LEFT JOIN ContainerLinkObject AS ContainerLO_Personal ON ContainerLO_Personal.ContainerId = tmpReport_All.ContainerId
-                                                                 AND ContainerLO_Personal.DescId = zc_ContainerLinkObject_Personal()
-                                                                 AND ContainerLO_Personal.ObjectId > 0
+            LEFT JOIN ContainerLinkObject AS ContainerLO_Member ON ContainerLO_Member.ContainerId = tmpReport_All.ContainerId
+                                                               AND ContainerLO_Member.DescId = zc_ContainerLinkObject_Member()
+                                                               AND ContainerLO_Member.ObjectId > 0
             LEFT JOIN ContainerLinkObject AS ContainerLO_Car ON ContainerLO_Car.ContainerId = tmpReport_All.ContainerId
                                                             AND ContainerLO_Car.DescId = zc_ContainerLinkObject_Car()
                                                             AND ContainerLO_Car.ObjectId > 0
@@ -322,7 +322,7 @@ BEGIN
             LEFT JOIN ContainerLinkObject AS ContainerLO_Goods ON ContainerLO_Goods.ContainerId = tmpReport_All.ContainerId
                                                               AND ContainerLO_Goods.DescId = zc_ContainerLinkObject_Goods()
                                                               AND ContainerLO_Goods.ObjectId > 0
-        GROUP BY ContainerLO_Personal.ObjectId
+        GROUP BY ContainerLO_Member.ObjectId
                , ContainerLO_InfoMoney.ObjectId
                , ContainerLO_Car.ObjectId
                , ContainerLO_Juridical.ObjectId
@@ -336,7 +336,7 @@ BEGIN
                , tmpReport_All.OperPrice
                , tmpReport_All.AccountId
                , tmpReport_All.AccountId_inf
-               , tmpReport_All.PersonalId_inf
+               , tmpReport_All.MemberId_inf
                , tmpReport_All.CarId_inf
                , tmpReport_All.RouteId_inf
                , tmpReport_All.UnitId_inf
@@ -351,11 +351,11 @@ BEGIN
        LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpReport.PaidKindId
        LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpReport.ContractId
 
-       -- LEFT JOIN Object_Personal_View AS View_Personal_inf ON View_Personal_inf.PersonalId = tmpReport.PersonalId_inf
-       LEFT JOIN ObjectLink AS ObjectLink_Personal_Member_inf
-                            ON ObjectLink_Personal_Member_inf.ObjectId = tmpReport.PersonalId_inf
-                           AND ObjectLink_Personal_Member_inf.DescId = zc_ObjectLink_Personal_Member()
-       LEFT JOIN Object AS View_Personal_inf ON View_Personal_inf.Id = ObjectLink_Personal_Member_inf.ChildObjectId
+       -- LEFT JOIN Object_Personal_View AS Object_Member_inf ON Object_Member_inf.PersonalId = tmpReport.PersonalId_inf
+       -- LEFT JOIN ObjectLink AS ObjectLink_Personal_Member_inf
+       --                      ON ObjectLink_Personal_Member_inf.ObjectId = tmpReport.MemberId_inf
+       --                     AND ObjectLink_Personal_Member_inf.DescId = zc_ObjectLink_Personal_Member()
+       LEFT JOIN Object AS Object_Member_inf ON Object_Member_inf.Id = tmpReport.MemberId_inf -- ObjectLink_Personal_Member_inf.ChildObjectId
 
        LEFT JOIN Object AS Object_Car_inf ON Object_Car_inf.Id = tmpReport.CarId_inf
        LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel_inf ON ObjectLink_Car_CarModel_inf.ObjectId = Object_Car_inf.Id
@@ -374,11 +374,11 @@ BEGIN
                            AND ObjectLink_InfoMoney_InfoMoneyGroup.DescId = zc_ObjectLink_InfoMoney_InfoMoneyGroup()
        LEFT JOIN Object AS Object_InfoMoneyGroup ON Object_InfoMoneyGroup.Id = ObjectLink_InfoMoney_InfoMoneyGroup.ChildObjectId
 
-       -- LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = tmpReport.PersonalId
-       LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
-                            ON ObjectLink_Personal_Member.ObjectId = tmpReport.PersonalId
-                           AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
-       LEFT JOIN Object AS View_Personal ON View_Personal.Id = ObjectLink_Personal_Member.ChildObjectId
+       -- LEFT JOIN Object_Personal_View AS Object_Member ON Object_Member.PersonalId = tmpReport.PersonalId
+       -- LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+       --                      ON ObjectLink_Personal_Member.ObjectId = tmpReport.MemberId
+       --                     AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+       LEFT JOIN Object AS Object_Member ON Object_Member.Id = tmpReport.MemberId -- ObjectLink_Personal_Member.ChildObjectId
 
        LEFT JOIN Object AS Object_Car ON Object_Car.Id = tmpReport.CarId
        LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
@@ -430,13 +430,14 @@ BEGIN
         
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpReport_Account (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 21.12.13                                        * Personal -> Member
  02.11.13                                        * add Account...
  01.11.13                                        * all
  29.10.13                                        * err InfoManey

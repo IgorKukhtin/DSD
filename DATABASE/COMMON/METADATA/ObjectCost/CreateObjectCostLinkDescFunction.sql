@@ -36,21 +36,26 @@ INSERT INTO ObjectCostLinkDesc (Code, ItemName, ObjectDescId)
 
 CREATE OR REPLACE FUNCTION zc_ObjectCostLink_Personal() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ObjectCostLinkDesc WHERE Code = 'zc_ObjectCostLink_Personal'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectCostLinkDesc (Code, ItemName, ObjectDescId)
-  SELECT 'zc_ObjectCostLink_Personal', 'Сотрудники(экспедиторы)', zc_Object_Branch() WHERE NOT EXISTS (SELECT * FROM ObjectCostLinkDesc WHERE Code = 'zc_ObjectCostLink_Personal');
+  SELECT 'zc_ObjectCostLink_Personal', 'Сотрудники', zc_Object_Personal() WHERE NOT EXISTS (SELECT * FROM ObjectCostLinkDesc WHERE Code = 'zc_ObjectCostLink_Personal');
+
+CREATE OR REPLACE FUNCTION zc_ObjectCostLink_Member() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ObjectCostLinkDesc WHERE Code = 'zc_ObjectCostLink_Member'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectCostLinkDesc (Code, ItemName, ObjectDescId)
+  SELECT 'zc_ObjectCostLink_Member', 'Физические лица', zc_Object_Member() WHERE NOT EXISTS (SELECT * FROM ObjectCostLinkDesc WHERE Code = 'zc_ObjectCostLink_Member');
 
 CREATE OR REPLACE FUNCTION zc_ObjectCostLink_AssetTo() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ObjectCostLinkDesc WHERE Code = 'zc_ObjectCostLink_AssetTo'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectCostLinkDesc (Code, ItemName, ObjectDescId)
-  SELECT 'zc_ObjectCostLink_AssetTo', 'Основные средства(для которого закуплено ТМЦ)', zc_Object_Branch() WHERE NOT EXISTS (SELECT * FROM ObjectCostLinkDesc WHERE Code = 'zc_ObjectCostLink_AssetTo');
+  SELECT 'zc_ObjectCostLink_AssetTo', 'Основные средства(для которого закуплено ТМЦ)', zc_Object_Asset() WHERE NOT EXISTS (SELECT * FROM ObjectCostLinkDesc WHERE Code = 'zc_ObjectCostLink_AssetTo');
 
 CREATE OR REPLACE FUNCTION zc_ObjectCostLink_Account() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id AS Id FROM ObjectCostLinkDesc WHERE Code = 'zc_ObjectCostLink_Account'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectCostLinkDesc (Code, ItemName, ObjectDescId)
-  SELECT 'zc_ObjectCostLink_Account', 'Счет', zc_Object_Branch() WHERE NOT EXISTS (SELECT * FROM ObjectCostLinkDesc WHERE Code = 'zc_ObjectCostLink_Account');
-
+  SELECT 'zc_ObjectCostLink_Account', 'Счет', zc_Object_Account() WHERE NOT EXISTS (SELECT * FROM ObjectCostLinkDesc WHERE Code = 'zc_ObjectCostLink_Account');
+  
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.12.13                                        * add zc_ObjectCostLink_Member
  20.09.13                                        * add zc_ObjectCostLink_Account
  16.07.13                                        * add zc_ObjectCostLink_Personal and zc_ObjectCostLink_AssetTo
  11.07.13                                        *

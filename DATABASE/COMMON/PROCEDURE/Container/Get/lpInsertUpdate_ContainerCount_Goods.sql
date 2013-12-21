@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_ContainerCount_Goods (
     IN inOperDate               TDateTime, 
     IN inUnitId                 Integer , 
     IN inCarId                  Integer , 
-    IN inPersonalId             Integer , 
+    IN inMemberId               Integer , 
     IN inInfoMoneyDestinationId Integer , 
     IN inGoodsId                Integer , 
     IN inGoodsKindId            Integer , 
@@ -32,8 +32,8 @@ BEGIN
                                                  , inObjectCostId      := NULL
                                                  , inDescId_1          := zc_ContainerLinkObject_PartionGoods()
                                                  , inObjectId_1        := CASE WHEN inIsPartionCount THEN inPartionGoodsId ELSE 0 END
-                                                 , inDescId_2          := CASE WHEN COALESCE (inPersonalId, 0) <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Unit() END
-                                                 , inObjectId_2        := CASE WHEN COALESCE (inPersonalId, 0) <> 0 THEN inPersonalId ELSE COALESCE (inUnitId, 0) END
+                                                 , inDescId_2          := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
+                                                 , inObjectId_2        := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN inMemberId ELSE COALESCE (inUnitId, 0) END
                                                    );
      ELSE
      IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100()  -- Çàï÷àñòè è Ðåìîíòû -- select * from lfSelect_Object_InfoMoney() where inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100()
@@ -47,8 +47,8 @@ BEGIN
                                                  , inBusinessId        := NULL
                                                  , inObjectCostDescId  := NULL
                                                  , inObjectCostId      := NULL
-                                                 , inDescId_1          := CASE WHEN COALESCE (inCarId, 0) <> 0 THEN zc_ContainerLinkObject_Car() WHEN COALESCE (inPersonalId, 0) <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Unit() END
-                                                 , inObjectId_1        := CASE WHEN COALESCE (inCarId, 0) <> 0 THEN inCarId WHEN COALESCE (inPersonalId, 0) <> 0 THEN inPersonalId ELSE COALESCE (inUnitId, 0) END
+                                                 , inDescId_1          := CASE WHEN COALESCE (inCarId, 0) <> 0 THEN zc_ContainerLinkObject_Car() WHEN COALESCE (inMemberId, 0) <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
+                                                 , inObjectId_1        := CASE WHEN COALESCE (inCarId, 0) <> 0 THEN inCarId WHEN COALESCE (inMemberId, 0) <> 0 THEN inMemberId ELSE COALESCE (inUnitId, 0) END
                                                  , inDescId_2          := zc_ContainerLinkObject_AssetTo()
                                                  , inObjectId_2        := inAssetId
                                                    );
@@ -68,8 +68,8 @@ BEGIN
                                                                 , inObjectCostId      := NULL
                                                                 , inDescId_1          := zc_ContainerLinkObject_PartionGoods()
                                                                 , inObjectId_1        := inPartionGoodsId
-                                                                , inDescId_2          := CASE WHEN COALESCE (inPersonalId, 0) <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Unit() END
-                                                                , inObjectId_2        := CASE WHEN COALESCE (inPersonalId, 0) <> 0 THEN inPersonalId ELSE COALESCE (inUnitId, 0) END
+                                                                , inDescId_2          := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
+                                                                , inObjectId_2        := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN inMemberId ELSE COALESCE (inUnitId, 0) END
                                                                 , inDescId_3          := zc_ContainerLinkObject_GoodsKind()
                                                                 , inObjectId_3        := inGoodsKindId
                                                                  )
@@ -80,8 +80,8 @@ BEGIN
                                                            , inBusinessId        := NULL
                                                            , inObjectCostDescId  := NULL
                                                            , inObjectCostId      := NULL
-                                                           , inDescId_1          := CASE WHEN COALESCE (inPersonalId, 0) <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Unit() END
-                                                           , inObjectId_1        := CASE WHEN COALESCE (inPersonalId, 0) <> 0 THEN inPersonalId ELSE COALESCE (inUnitId, 0) END
+                                                           , inDescId_1          := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
+                                                           , inObjectId_1        := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN inMemberId ELSE COALESCE (inUnitId, 0) END
                                                            , inDescId_2          := zc_ContainerLinkObject_GoodsKind()
                                                            , inObjectId_2        := inGoodsKindId
                                                             )
@@ -95,8 +95,8 @@ BEGIN
                                                  , inBusinessId        := NULL
                                                  , inObjectCostDescId  := NULL
                                                  , inObjectCostId      := NULL
-                                                 , inDescId_1          := CASE WHEN COALESCE (inPersonalId, 0) <> 0 THEN zc_ContainerLinkObject_Personal() ELSE zc_ContainerLinkObject_Unit() END
-                                                 , inObjectId_1        := CASE WHEN COALESCE (inPersonalId, 0) <> 0 THEN inPersonalId ELSE COALESCE (inUnitId, 0) END
+                                                 , inDescId_1          := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
+                                                 , inObjectId_1        := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN inMemberId ELSE COALESCE (inUnitId, 0) END
                                                    );
      END IF;
      END IF;
@@ -114,6 +114,7 @@ ALTER FUNCTION lpInsertUpdate_ContainerCount_Goods (TDateTime, Integer, Integer,
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 21.12.13                                        * Personal -> Member
  11.10.13                                        * add zc_Enum_InfoMoneyDestination_20400
  30.09.13                                        * add inCarId
  19.09.13                                        * sort by optimize
