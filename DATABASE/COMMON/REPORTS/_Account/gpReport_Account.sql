@@ -132,7 +132,7 @@ BEGIN
              , tmpReport_All.RouteId_inf
              , tmpReport_All.UnitId_inf
              , tmpReport_All.BranchId_inf
-             , tmpReport_All.BusinesId_inf
+             , ContainerLO_Busines.ObjectId AS BusinesId_inf -- tmpReport_All.BusinesId_inf
              , tmpReport_All.ProfitLossId_inf
         FROM
             (SELECT tmpContainer.ContainerId
@@ -301,6 +301,9 @@ BEGIN
                     , ContainerLO_Goods.ObjectId
 
             ) AS tmpReport_All
+            LEFT JOIN ContainerLinkObject AS ContainerLO_Busines ON ContainerLO_Busines.ContainerId = tmpReport_All.ContainerId
+                                                                AND ContainerLO_Busines.DescId = zc_ContainerLinkObject_Business()
+                                                                AND ContainerLO_Busines.ObjectId > 0
             LEFT JOIN ContainerLinkObject AS ContainerLO_Juridical ON ContainerLO_Juridical.ContainerId = tmpReport_All.ContainerId
                                                                   AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
                                                                   AND ContainerLO_Juridical.ObjectId > 0
@@ -325,6 +328,7 @@ BEGIN
         GROUP BY ContainerLO_Member.ObjectId
                , ContainerLO_InfoMoney.ObjectId
                , ContainerLO_Car.ObjectId
+               , ContainerLO_Busines.ObjectId
                , ContainerLO_Juridical.ObjectId
                , ContainerLO_PaidKind.ObjectId
                , ContainerLO_Contract.ObjectId
