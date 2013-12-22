@@ -98,9 +98,15 @@ CREATE OR REPLACE FUNCTION zc_Movement_PersonalAccount() RETURNS Integer AS $BOD
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_PersonalAccount', 'Расчеты подотчета с юр.лицом' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PersonalAccount');
 
+CREATE OR REPLACE FUNCTION zc_Movement_TrasportService() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_TrasportService'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_TrasportService', 'Начисления наемный транспорт' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_TrasportService');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.12.13         * add  zc_Movement_PersonalAccount, zc_Movement_TrasportService               
  01.10.13         * add  zc_Movement_SheetWorkTime            
  30.09.13                                        * add zc_Movement_PersonalSendCash
  20.08.13         * add  zc_Movement_Transport
