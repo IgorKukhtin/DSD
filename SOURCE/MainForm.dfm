@@ -660,6 +660,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbPersonalAccount'
+        end
+        item
+          Visible = True
           ItemName = 'bbSendTicketFuel'
         end
         item
@@ -943,6 +947,10 @@ object MainForm: TMainForm
       Action = actSetUserDefaults
       Category = 0
     end
+    object bbPersonalAccount: TdxBarButton
+      Action = actPersonalAccount
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Left = 192
@@ -1000,6 +1008,14 @@ object MainForm: TMainForm
       Caption = #1050#1072#1083#1077#1085#1076#1072#1088#1100' '#1088#1072#1073#1086#1095#1080#1093' '#1076#1085#1077#1081
       Hint = #1050#1072#1083#1077#1085#1076#1072#1088#1100' '#1088#1072#1073#1086#1095#1080#1093' '#1076#1085#1077#1081
       FormName = 'TCalendarForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actPersonalAccount: TdsdOpenForm
+      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      Caption = #1056#1072#1089#1095#1077#1090#1099' '#1087#1086#1076#1086#1090#1095#1077#1090#1072' '#1089' '#1102#1088'.'#1083#1080#1094#1086#1084
+      Hint = #1056#1072#1089#1095#1077#1090#1099' '#1087#1086#1076#1086#1090#1095#1077#1090#1072' '#1089' '#1102#1088'.'#1083#1080#1094#1086#1084
+      FormName = 'TPersonalAccountJournalForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -1676,7 +1692,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.14'
+    Version = '4.12'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
