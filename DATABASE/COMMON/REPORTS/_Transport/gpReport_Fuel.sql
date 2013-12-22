@@ -37,39 +37,48 @@ BEGIN
            -- Получили все нужные нам контейнеры по талонам, топливу и деньгам, в разрезе авто и топлива
            -- Еще и ограничили их по топливу и авто
         WITH tmpContainer AS (
-             WITH TicketFuel AS (
-               SELECT Container.Id, 
+             WITH TicketFuel AS
+              (SELECT Container.Id, 
                       Container.DescId, 
                       Container.Amount, 
                       Container.ObjectId AS ObjectID, 
-                      ObjectLink_Car_PersonalDriver.ObjectId AS CarId -- здесь талоны в разрезе авто
-               FROM Container 
-               JOIN ObjectLink AS ObjectLink_TicketFuel_Goods
-                 ON ObjectLink_TicketFuel_Goods.DescId = zc_ObjectLink_TicketFuel_Goods()
-                AND ObjectLink_TicketFuel_Goods.ChildObjectId = Container.ObjectId 
-                AND (ObjectLink_TicketFuel_Goods.ObjectId = inFuelId OR inFuelId = 0) 
-               JOIN ContainerLinkObject AS ContainerLinkObject_Personal 
-                 ON ContainerLinkObject_Personal.DescId = zc_ContainerLinkObject_Personal()
-                AND ContainerLinkObject_Personal.ContainerId = Container.Id
-               JOIN ObjectLink AS ObjectLink_Car_PersonalDriver 
-                 ON ObjectLink_Car_PersonalDriver.ChildObjectId = ContainerLinkObject_Personal.ObjectId
-                AND ObjectLink_Car_PersonalDriver.DescId = zc_ObjectLink_Car_PersonalDriver()
-                AND (ObjectLink_Car_PersonalDriver.ObjectId = inCarId OR inCarId = 0)),
-           Fuel AS (
-             SELECT Container.Id, 
-                    Container.DescId, 
-                    Container.Amount, 
-                    Container.ObjectId AS ObjectID, 
-                    ContainerLinkObject_Car.ObjectId AS CarId-- здесь топливо в разрезе авто
-               FROM Container 
-               JOIN Object AS Object_Fuel
-                 ON Object_Fuel.DescId = zc_Object_Fuel()
-                AND Object_Fuel.Id = Container.ObjectId 
-                AND (Object_Fuel.Id = inFuelId OR inFuelId = 0) 
-               JOIN ContainerLinkObject AS ContainerLinkObject_Car
-                 ON ContainerLinkObject_Car.DescId = zc_ContainerLinkObject_Car()
-                AND ContainerLinkObject_Car.ContainerId = Container.Id
-                AND (ContainerLinkObject_Car.ObjectId = inCarId OR inCarId = 0))
+                      tmpMemberCar.CarId -- здесь талоны в разрезе авто
+               FROM Container
+                    JOIN ObjectLink AS ObjectLink_TicketFuel_Goods
+                                    ON ObjectLink_TicketFuel_Goods.DescId = zc_ObjectLink_TicketFuel_Goods()
+                                   AND ObjectLink_TicketFuel_Goods.ChildObjectId = Container.ObjectId 
+                                   AND (ObjectLink_TicketFuel_Goods.ObjectId = inFuelId OR inFuelId = 0) 
+                    JOIN ContainerLinkObject AS ContainerLinkObject_Member
+                                             ON ContainerLinkObject_Member.DescId = zc_ContainerLinkObject_Member()
+                                            AND ContainerLinkObject_Member.ContainerId = Container.Id
+                    LEFT JOIN (SELECT MAX (ObjectLink_Car_PersonalDriver.ObjectId) AS CarId
+                                    , ObjectLink_Personal_Member.ChildObjectId AS MemberId
+                               FROM ObjectLink AS ObjectLink_Car_PersonalDriver
+                                    LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                                         ON ObjectLink_Personal_Member.ObjectId = ObjectLink_Car_PersonalDriver.ChildObjectId
+                                                        AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
+                                WHERE ObjectLink_Car_PersonalDriver.DescId = zc_ObjectLink_Car_PersonalDriver()
+                                 AND (ObjectLink_Car_PersonalDriver.ObjectId = inCarId OR inCarId = 0)
+                                GROUP BY ObjectLink_Personal_Member.ChildObjectId
+                               ) AS tmpMemberCar
+                                 ON tmpMemberCar.MemberId = ContainerLinkObject_Member.ObjectId
+              ),
+              Fuel AS
+              (SELECT Container.Id, 
+                      Container.DescId, 
+                      Container.Amount, 
+                      Container.ObjectId AS ObjectID, 
+                      ContainerLinkObject_Car.ObjectId AS CarId-- здесь топливо в разрезе авто
+                FROM Container 
+                     JOIN Object AS Object_Fuel
+                                 ON Object_Fuel.DescId = zc_Object_Fuel()
+                                AND Object_Fuel.Id = Container.ObjectId 
+                                AND (Object_Fuel.Id = inFuelId OR inFuelId = 0) 
+                     JOIN ContainerLinkObject AS ContainerLinkObject_Car
+                                              ON ContainerLinkObject_Car.DescId = zc_ContainerLinkObject_Car()
+                                             AND ContainerLinkObject_Car.ContainerId = Container.Id
+                                             AND (ContainerLinkObject_Car.ObjectId = inCarId OR inCarId = 0)
+              )
          -- Конец WITH. Начало запроса
         
          SELECT Container.Id, Container.DescId, Container.Amount, TicketFuel.ObjectId, TicketFuel.CarId, vb_Kind_Ticket as KindId -- здесь талоны деньги
@@ -169,14 +178,13 @@ BEGIN
 
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpReport_Fuel (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.12.13                                        * Personal -> Member
  11.12.13         * add inBranchId              
  30.11.13                        * Изменил подход к формированию
  29.11.13                        * Ошибка с датой. Добавил талоны

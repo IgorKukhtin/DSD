@@ -11,7 +11,7 @@ RETURNS VOID
 --  RETURNS TABLE (MovementItemId Integer, MovementId Integer, OperDate TDateTime, JuridicalId_From Integer, isCorporate Boolean, PersonalId_From Integer, UnitId Integer, BranchId_Unit Integer, PersonalId_Packer Integer, PaidKindId Integer, ContractId Integer, ContainerId_Goods Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, OperCount TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, tmpOperSumm_Packer TFloat, OperSumm_Packer TFloat, AccountDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, InfoMoneyDestinationId_isCorporate Integer, InfoMoneyId_isCorporate Integer, JuridicalId_basis Integer, BusinessId Integer, isPartionCount Boolean, isPartionSumm Boolean, PartionMovementId Integer, PartionGoodsId Integer)
 AS
 $BODY$
-  DECLARE vbPersonalId_From Integer;
+  DECLARE vbMemberId_From Integer;
 
   DECLARE vbJuridicalId_Basis Integer;
   DECLARE vbBusinessId_PersonalFrom Integer;
@@ -24,13 +24,13 @@ BEGIN
 
 
      -- Эти параметры нужны для формирования Аналитик в проводках
-     SELECT _tmp.PersonalId_From
+     SELECT _tmp.MemberId_From
           , _tmp.JuridicalId_Basis, _tmp.BusinessId_PersonalFrom
-            INTO vbPersonalId_From
+            INTO vbMemberId_From
                , vbJuridicalId_Basis, vbBusinessId_PersonalFrom -- эти аналитики берутся у подразделения за которым числится сотрудник (кто выдавал деньги)
-     FROM (SELECT COALESCE (MovementLinkObject_Personal.ObjectId, 0)    AS PersonalId_From
-                , COALESCE (ObjectLink_Unit_Juridical.ChildObjectId, 0) AS JuridicalId_Basis
-                , COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0)  AS BusinessId_PersonalFrom
+     FROM (SELECT COALESCE (ObjectLink_Personal_Member.ChildObjectId, 0) AS MemberId_From
+                , COALESCE (ObjectLink_Unit_Juridical.ChildObjectId, 0)  AS JuridicalId_Basis
+                , COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0)   AS BusinessId_PersonalFrom
            FROM Movement
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
                                              ON MovementLinkObject_Personal.MovementId = Movement.Id
@@ -38,6 +38,9 @@ BEGIN
                 LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
                                      ON ObjectLink_Personal_Unit.ObjectId = MovementLinkObject_Personal.ObjectId
                                     AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Car_Unit()
+                LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                     ON ObjectLink_Personal_Member.ObjectId = MovementLinkObject_Personal.ObjectId
+                                    AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
 
                 LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                      ON ObjectLink_Unit_Juridical.ObjectId = ObjectLink_Personal_Unit.ChildObjectId
@@ -54,7 +57,7 @@ BEGIN
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementItemId, OperDate, UnitId_ProfitLoss, BranchId_ProfitLoss, UnitId_Route, BranchId_Route
-                         , ContainerId_From, AccountId_From, ContainerId_To, AccountId_To, ContainerId_ProfitLoss, AccountId_ProfitLoss, PersonalId_To, CarId_To
+                         , ContainerId_From, AccountId_From, ContainerId_To, AccountId_To, ContainerId_ProfitLoss, AccountId_ProfitLoss, MemberId_To, CarId_To
                          , OperSumm
                          , ProfitLossGroupId, ProfitLossDirectionId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId_PersonalTo, BusinessId_Route
@@ -72,7 +75,7 @@ BEGIN
             , 0 AS AccountId_To     -- сформируем позже
             , 0 AS ContainerId_ProfitLoss   -- сформируем позже
             , 0 AS AccountId_ProfitLoss     -- сформируем позже
-            , _tmp.PersonalId_To
+            , _tmp.MemberId_To
             , _tmp.CarId_To
             , _tmp.OperSumm
             , _tmp.ProfitLossGroupId      -- Группы ОПиУ
@@ -91,8 +94,8 @@ BEGIN
                    , COALESCE (ObjectLink_UnitRoute_Branch.ChildObjectId, 0) AS BranchId_ProfitLoss -- сейчас затраты по принадлежности маршрута к подразделению, иначе надо изменить на ObjectLink_UnitCar_Branch, тогда затраты будут по принадлежности авто к подразделению
                    , COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0)       AS UnitId_Route
                    , COALESCE (ObjectLink_UnitRoute_Branch.ChildObjectId, 0) AS BranchId_Route
-                   , MovementItem.ObjectId                     AS PersonalId_To
-                   , COALESCE (MILinkObject_Car.ObjectId, 0)   AS CarId_To
+                   , COALESCE (ObjectLink_Personal_Member.ChildObjectId, 0)  AS MemberId_To
+                   , COALESCE (MILinkObject_Car.ObjectId, 0)                 AS CarId_To
                    , MovementItem.Amount AS OperSumm
                      -- Группы ОПиУ
                    , COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossGroupId, 0) AS ProfitLossGroupId
@@ -125,6 +128,9 @@ BEGIN
                                         ON ObjectLink_UnitCar_Branch.ObjectId = ObjectLink_Car_Unit.ChildObjectId
                                        AND ObjectLink_UnitCar_Branch.DescId = zc_ObjectLink_Unit_Branch()
 
+                   LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
+                                        ON ObjectLink_Personal_Member.ObjectId = MovementItem.ObjectId
+                                       AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()
                    LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
                                         ON ObjectLink_Personal_Unit.ObjectId = MovementItem.ObjectId
                                        AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
@@ -196,28 +202,28 @@ BEGIN
                                         , inBusinessId        := vbBusinessId_PersonalFrom
                                         , inObjectCostDescId  := NULL
                                         , inObjectCostId      := NULL
-                                        , inDescId_1          := zc_ContainerLinkObject_Personal()
-                                        , inObjectId_1        := _tmpItem_group.PersonalId_To
+                                        , inDescId_1          := zc_ContainerLinkObject_Member()
+                                        , inObjectId_1        := _tmpItem_group.MemberId_To
                                         , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
                                         , inObjectId_2        := _tmpItem_group.InfoMoneyId
                                         , inDescId_3          := zc_ContainerLinkObject_Car()
                                         , inObjectId_3        := _tmpItem_group.CarId_To
                                          ) AS ContainerId
-                , _tmpItem_group.PersonalId_To
+                , _tmpItem_group.MemberId_To
                 , _tmpItem_group.CarId_To
                 , _tmpItem_group.InfoMoneyId
            FROM (SELECT _tmpItem.AccountId_To
-                      , _tmpItem.PersonalId_To
+                      , _tmpItem.MemberId_To
                       , _tmpItem.CarId_To
                       , _tmpItem.InfoMoneyId
                  FROM _tmpItem
                  GROUP BY _tmpItem.AccountId_To
-                        , _tmpItem.PersonalId_To
+                        , _tmpItem.MemberId_To
                         , _tmpItem.CarId_To
                         , _tmpItem.InfoMoneyId
                 ) AS _tmpItem_group
           ) AS _tmpItem_byContainer
-      WHERE _tmpItem.PersonalId_To = _tmpItem_byContainer.PersonalId_To
+      WHERE _tmpItem.MemberId_To = _tmpItem_byContainer.MemberId_To
         AND _tmpItem.CarId_To      = _tmpItem_byContainer.CarId_To
         AND _tmpItem.InfoMoneyId   = _tmpItem_byContainer.InfoMoneyId;
 
@@ -303,8 +309,8 @@ BEGIN
                                         , inBusinessId        := vbBusinessId_PersonalFrom
                                         , inObjectCostDescId  := NULL
                                         , inObjectCostId      := NULL
-                                        , inDescId_1          := zc_ContainerLinkObject_Personal()
-                                        , inObjectId_1        := vbPersonalId_From
+                                        , inDescId_1          := zc_ContainerLinkObject_Member()
+                                        , inObjectId_1        := vbMemberId_From
                                         , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
                                         , inObjectId_2        := _tmpItem_group.InfoMoneyId
                                         , inDescId_3          := zc_ContainerLinkObject_Car()
@@ -434,11 +440,12 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.12.13                                        * Personal -> Member
  14.11.13                                        * add calc ActiveContainerId and PassiveContainerId
  04.11.13                                        * add OperDate
  03.11.13                                        * err

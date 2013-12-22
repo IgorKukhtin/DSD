@@ -17,14 +17,14 @@ BEGIN
              Object_Unit_View.Id
            , Object_Unit_View.Code
            , Object_Unit_View.Name
-           , Object_Unit_View.ParentId
+           , COALESCE (Object_Unit_View.ParentId, 0) AS ParentId
            , Object_Unit_View.isErased
        FROM Object_Unit_View
        UNION SELECT
              0 AS Id,
              0 AS Code,
              CAST('ВСЕ' AS TVarChar) AS Name,
-             NULL AS ParentId,
+             0 AS ParentId,
              false AS isErased;
   
 END;
@@ -37,6 +37,7 @@ ALTER FUNCTION gpSelect_Object_Unit(TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.12.13                                        * ParentId
  04.07.13          * дополнение всеми реквизитами              
  03.06.13          
 

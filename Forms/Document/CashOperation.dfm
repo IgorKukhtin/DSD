@@ -4,8 +4,8 @@
   ClientHeight = 317
   ClientWidth = 595
   AddOnFormData.isSingle = False
-  ExplicitWidth = 603
-  ExplicitHeight = 344
+  ExplicitWidth = 601
+  ExplicitHeight = 342
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -389,7 +389,7 @@
   object CashGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceCash
-    FormName = 'TCashForm'
+    FormName = 'TCash_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item

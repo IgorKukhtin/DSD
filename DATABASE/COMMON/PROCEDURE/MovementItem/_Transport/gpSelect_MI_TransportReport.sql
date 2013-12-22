@@ -19,12 +19,14 @@ $BODY$
   DECLARE vbStatusId Integer;
   DECLARE vbCarId Integer;
   DECLARE vbPersonalId Integer;
+  DECLARE vbMemberId Integer;
 BEGIN
 
      -- параметры из путевого
      SELECT OperDate, Movement.StatusId INTO vbOperDate, vbStatusId FROM Movement WHERE Id = inMovementId AND DescId = zc_Movement_Transport();
      vbCarId:= (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_Car());
      vbPersonalId:= (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_PersonalDriver());
+     vbMemberId:= (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = vbPersonalId AND DescId = zc_ObjectLink_Personal_Member());
 
      --
      RETURN QUERY 
@@ -43,12 +45,12 @@ BEGIN
 
              -- 1. Денежные средства
        FROM (SELECT -1 AS KindId
-                  , tmpPersonalMoney.StatusId
-                  , SUM (tmpPersonalMoney.Amount_20401) AS Amount_20401
-                  , SUM (tmpPersonalMoney.Amount_Start) AS Amount_Start
-                  , SUM (tmpPersonalMoney.Amount_In)    AS Amount_In
-                  , SUM (tmpPersonalMoney.Amount_Out)   AS Amount_Out
-                  , SUM (tmpPersonalMoney.Amount_Start + tmpPersonalMoney.Amount_In - tmpPersonalMoney.Amount_Out) AS Amount_End
+                  , tmpMemberMoney.StatusId
+                  , SUM (tmpMemberMoney.Amount_20401) AS Amount_20401
+                  , SUM (tmpMemberMoney.Amount_Start) AS Amount_Start
+                  , SUM (tmpMemberMoney.Amount_In)    AS Amount_In
+                  , SUM (tmpMemberMoney.Amount_Out)   AS Amount_Out
+                  , SUM (tmpMemberMoney.Amount_Start + tmpMemberMoney.Amount_In - tmpMemberMoney.Amount_Out) AS Amount_End
 
                    -- Проводки суммовые - Приход денег Автомобиль(Подотчет) !!!это документ - Расход денег с подотчета на подотчет!!!
              FROM (SELECT zc_Enum_Status_Complete() AS StatusId
@@ -64,10 +66,10 @@ BEGIN
                                                  ON ContainerLinkObject_Car.ContainerId = MIContainer.ContainerId
                                                 AND ContainerLinkObject_Car.DescId      = zc_ContainerLinkObject_Car()
                                                 AND ContainerLinkObject_Car.ObjectId    = vbCarId
-                        JOIN ContainerLinkObject AS ContainerLinkObject_Personal
-                                                 ON ContainerLinkObject_Personal.ContainerId = MIContainer.ContainerId
-                                                AND ContainerLinkObject_Personal.DescId      = zc_ContainerLinkObject_Personal()
-                                                AND ContainerLinkObject_Personal.ObjectId    = vbPersonalId
+                        JOIN ContainerLinkObject AS ContainerLinkObject_Member
+                                                 ON ContainerLinkObject_Member.ContainerId = MIContainer.ContainerId
+                                                AND ContainerLinkObject_Member.DescId      = zc_ContainerLinkObject_Member()
+                                                AND ContainerLinkObject_Member.ObjectId    = vbMemberId
                         JOIN Container ON Container.Id = MIContainer.ContainerId
                                                                  -- Ограничили списком счетов: (30500) Дебиторы + сотрудники (подотчетные лица) + (20400) Общефирменные + ГСМ
                                       AND Container.ObjectId IN (SELECT AccountId FROM Object_Account_View WHERE AccountDirectionId = zc_Enum_AccountDirection_30500() AND InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400())
@@ -146,8 +148,8 @@ BEGIN
                      AND Movement.StatusId = zc_Enum_Status_Complete()
                    HAVING SUM (MIContainer.Amount) <> 0 
 
-                  ) AS tmpPersonalMoney
-             GROUP BY tmpPersonalMoney.StatusId
+                  ) AS tmpMemberMoney
+             GROUP BY tmpMemberMoney.StatusId
 
             UNION ALL
              -- 2. Топливо
@@ -271,10 +273,10 @@ BEGIN
                                                  ON ContainerLinkObject_Asset.ContainerId = Container.Id
                                                 AND ContainerLinkObject_Asset.DescId      = zc_ContainerLinkObject_Car()
                                                 AND ContainerLinkObject_Asset.ObjectId    = vbCarId
-                        JOIN ContainerLinkObject AS ContainerLinkObject_Personal
-                                                 ON ContainerLinkObject_Personal.ContainerId = Container.Id
-                                                AND ContainerLinkObject_Personal.DescId      = zc_ContainerLinkObject_Personal()
-                                                AND ContainerLinkObject_Personal.ObjectId    = vbPersonalId
+                        JOIN ContainerLinkObject AS ContainerLinkObject_Member
+                                                 ON ContainerLinkObject_Member.ContainerId = Container.Id
+                                                AND ContainerLinkObject_Member.DescId      = zc_ContainerLinkObject_Member()
+                                                AND ContainerLinkObject_Member.ObjectId    = vbMemberId
 
                         LEFT JOIN MovementItemContainer AS MIContainer
                                                         ON MIContainer.ContainerId = Container.Id
@@ -341,13 +343,14 @@ BEGIN
 
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_MI_TransportReport (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.12.13                                        * Personal -> Member
  26.10.13                                        *
 */
 

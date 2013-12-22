@@ -46,7 +46,7 @@ BEGIN
         , CAST(tmp_All.SummOut AS TFloat)   AS SummOut
         , CAST(tmp_All.SummEnd AS TFloat)   AS SummEnd 
   from (
-       select  COALESCE(ContainerLO_Car.ObjectId, COALESCE(ContainerLO_Unit.ObjectId, ContainerLO_Personal.ObjectId)) as DirectionId
+       select  COALESCE(ContainerLO_Car.ObjectId, COALESCE(ContainerLO_Unit.ObjectId, ContainerLO_Member.ObjectId)) AS DirectionId
              , tmpContainer_All.ContainerId
              , tmpContainer_All.GoodsId
              , tmpContainer_All.MovementDescId
@@ -114,16 +114,16 @@ BEGIN
                    , Movement.OperDate
                    , Movement.InvNumber
 
-    ) as tmpContainer_All
+    ) AS tmpContainer_All
          
     LEFT JOIN ContainerLinkObject AS ContainerLO_Car ON ContainerLO_Car.ContainerId = tmpContainer_All.ContainerId
                                                     AND ContainerLO_Car.DescId = zc_ContainerLinkObject_Car()
     LEFT JOIN ContainerLinkObject AS ContainerLO_Unit ON ContainerLO_Unit.ContainerId = tmpContainer_All.ContainerId
                                                      AND ContainerLO_Unit.DescId = zc_ContainerLinkObject_Unit()                                                          
-    LEFT JOIN ContainerLinkObject AS ContainerLO_Personal ON ContainerLO_Personal.ContainerId = tmpContainer_All.ContainerId
-                                                         AND ContainerLO_Personal.DescId = zc_ContainerLinkObject_Personal()
+    LEFT JOIN ContainerLinkObject AS ContainerLO_Member ON ContainerLO_Member.ContainerId = tmpContainer_All.ContainerId
+                                                       AND ContainerLO_Member.DescId = zc_ContainerLinkObject_Member()
                                                          
-    GROUP BY  COALESCE(ContainerLO_Car.ObjectId, COALESCE(ContainerLO_Unit.ObjectId, ContainerLO_Personal.ObjectId))
+    GROUP BY  COALESCE(ContainerLO_Car.ObjectId, COALESCE(ContainerLO_Unit.ObjectId, ContainerLO_Member.ObjectId))
             , tmpContainer_All.ContainerId
             , tmpContainer_All.GoodsId
             , tmpContainer_All.MovementDescId
@@ -131,7 +131,7 @@ BEGIN
             , tmpContainer_All.OperDate
             , tmpContainer_All.InvNumber
 
-    ) as tmp_All
+    ) AS tmp_All
 
      LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp_All.GoodsId
      LEFT JOIN MovementDesc ON MovementDesc.Id = tmp_All.MovementDescId
@@ -141,21 +141,20 @@ BEGIN
                                                 AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
      LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit ON ObjectLink_Personal_Unit.ObjectId = tmp_All.DirectionId
                                                      AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
-     LEFT JOIN Object AS Object_Unit_inf on Object_Unit_inf.Id = coalesce (ObjectLink_Car_Unit.ChildObjectId,ObjectLink_Personal_Unit.ChildObjectId)
+     LEFT JOIN Object AS Object_Unit_inf on Object_Unit_inf.Id = COALESCE (ObjectLink_Car_Unit.ChildObjectId, ObjectLink_Personal_Unit.ChildObjectId)
       
  ;
     
         
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpReport_Goods (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------
  ÈÑÒÎĞÈß ĞÀÇĞÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎĞ
                Ôåëîíşê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
-              
+ 21.12.13                                        * Personal -> Member
  05.11.13         *  
 */
 

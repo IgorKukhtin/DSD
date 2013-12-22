@@ -20,10 +20,12 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              )
 AS
 $BODY$
+  DECLARE vbUserId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Service());
+     vbUserId := lpGetUserBySession (inSession);
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -46,8 +48,8 @@ BEGIN
            , zc_Juridical_Basis()             AS MainJuridicalId
            , COALESCE((SELECT ValueData FROM Object WHERE Object.Id = zc_Juridical_Basis()), '')::TVarChar 
                            AS MainJuridicalName
-           , 0                                AS BusinessId
-           , CAST ('' as TVarChar)            AS BusinessName
+           , COALESCE(Object_Business.Id, 0)                   AS BusinessId
+           , COALESCE(Object_Business.ValueData, '')::TVarChar AS BusinessName
            , 0                                AS PaidKindId
            , CAST ('' as TVarChar)            AS PaidKindName
            , 0                                AS InfoMoneyId
@@ -55,7 +57,9 @@ BEGIN
            , 0                                AS UnitId
            , CAST ('' as TVarChar)            AS UnitName
 
-       FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status;
+       FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
+  LEFT JOIN Object AS Object_Business
+         ON Object_Business.Id = lpGet_DefaultValue(lpGetMovementLinkObjectCodeById(zc_MovementLinkObject_Business()), vbUserId)::Integer;
 
      ELSE
 
