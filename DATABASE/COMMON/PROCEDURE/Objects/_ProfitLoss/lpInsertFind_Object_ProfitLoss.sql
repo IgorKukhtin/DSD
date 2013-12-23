@@ -1,13 +1,15 @@
 -- Function: lpInsertFind_Object_ProfitLoss (Integer, Integer, Integer, Integer, Integer)
 
--- DROP FUNCTION lpInsertFind_Object_ProfitLoss (Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertFind_Object_ProfitLoss (Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertFind_Object_ProfitLoss (Integer, Integer, Integer, Integer, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertFind_Object_ProfitLoss(
     IN inProfitLossGroupId      Integer  , -- Группа ОПиУ
     IN inProfitLossDirectionId  Integer  , -- Аналитика ОПиУ - направление
     IN inInfoMoneyDestinationId Integer  , -- Управленческие назначения
     IN inInfoMoneyId            Integer  , -- Статьи назначения
-    IN inUserId                 Integer    -- Пользователь
+    IN inInsert                 Boolean  DEFAULT TRUE , -- 
+    IN inUserId                 Integer  DEFAULT NULL   -- Пользователь
 )
   RETURNS Integer AS
 $BODY$
@@ -20,19 +22,24 @@ $BODY$
 BEGIN
 
    -- Проверки
+   IF COALESCE (inUserId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Невозможно определить Пользователя : <%>, <%>, <%>, <%>', inProfitLossGroupId, inProfitLossDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
+   END IF;
+
    IF COALESCE (inProfitLossGroupId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Невозможно определить Статью ОПиУ т.к. не установлено <Группа ОПиУ> : "%", "%", "%", "%"', inProfitLossGroupId, inProfitLossDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
+       RAISE EXCEPTION 'Невозможно определить Статью ОПиУ т.к. не установлено <Группа ОПиУ> : <%>, <%>, <%>, <%>', inProfitLossGroupId, inProfitLossDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
    END IF;
 
    IF COALESCE (inProfitLossDirectionId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Невозможно определить Статью ОПиУ т.к. не установлено <Аналитика ОПиУ - направление> : "%", "%", "%", "%"', inProfitLossGroupId, inProfitLossDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
+       RAISE EXCEPTION 'Невозможно определить Статью ОПиУ т.к. не установлено <Аналитика ОПиУ - направление> : <%>, <%>, <%>, <%>', inProfitLossGroupId, inProfitLossDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
    END IF;
 
    IF COALESCE (inInfoMoneyDestinationId, 0) = 0 AND COALESCE (inInfoMoneyId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Невозможно определить Статью ОПиУ т.к. не установлено <Управленческое назначение> : "%", "%", "%", "%"', inProfitLossGroupId, inProfitLossDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
+       RAISE EXCEPTION 'Невозможно определить Статью ОПиУ т.к. не установлено <Управленческое назначение> : <%>, <%>, <%>, <%>', inProfitLossGroupId, inProfitLossDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
    END IF;
 
 
@@ -45,6 +52,12 @@ BEGIN
    -- Создаем новую статью ОПиУ
    IF COALESCE (vbProfitLossId, 0) = 0 
    THEN
+       -- для некоторых случаев блокируем создание новой статьи ОПиУ
+       IF inInsert = FALSE
+       THEN
+           RAISE EXCEPTION 'В данном документе невозможно создать новую статью ОПиУ с параметрами: <%>, <%>, <%>, <%>', lfGet_Object_ValueData (inProfitLossGroupId), lfGet_Object_ValueData (inProfitLossDirectionId), lfGet_Object_ValueData (inInfoMoneyDestinationId), lfGet_Object_ValueData (inInfoMoneyId);
+       END IF;
+
        -- Определяем Id 2-ий уровень по <Группа ОПиУ> и <Аналитика ОПиУ - направление>
        SELECT ProfitLossDirectionId INTO vbProfitLossDirectionId FROM lfSelect_Object_ProfitLossDirection() WHERE ProfitLossGroupId = inProfitLossGroupId AND ProfitLossDirectionId = inProfitLossDirectionId;
 
@@ -114,15 +127,15 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
-ALTER FUNCTION lpInsertFind_Object_ProfitLoss (Integer, Integer, Integer, Integer, Integer)  OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION lpInsertFind_Object_ProfitLoss (Integer, Integer, Integer, Integer, Boolean, Integer)  OWNER TO postgres;
 
   
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.12.13                                        * add inInsert
  26.08.13                                        *
 */
 
