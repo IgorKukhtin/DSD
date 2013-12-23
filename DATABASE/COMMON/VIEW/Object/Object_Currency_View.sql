@@ -28,4 +28,4 @@ ALTER TABLE Object_Currency_View  OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM Object_BankAccount_View
+-- SELECT * FROM Object_Currency_View

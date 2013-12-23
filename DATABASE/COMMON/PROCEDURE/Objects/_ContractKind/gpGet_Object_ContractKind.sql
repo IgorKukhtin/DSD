@@ -1,10 +1,10 @@
-п»ї-- Function: gpGet_Object_ContractKind()
+-- Function: gpGet_Object_ContractKind()
 
 --DROP FUNCTION gpGet_Object_ContractKind();
 
 CREATE OR REPLACE FUNCTION gpGet_Object_ContractKind(
-    IN inId          Integer,       -- Р’РёРґС‹ РґРѕРіРѕРІРѕСЂРѕРІ
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ 
+    IN inId          Integer,       -- Виды договоров
+    IN inSession     TVarChar       -- сессия пользователя 
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
 $BODY$
@@ -35,17 +35,14 @@ BEGIN
   
 END;
 $BODY$
-  
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_ContractKind(integer, TVarChar) OWNER TO postgres;
-
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpGet_Object_ContractKind (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.12.13                                        * Cyr1251
  11.06.13          *
- 03.06.13          
-
 */
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpSelect_ContractKind('2')

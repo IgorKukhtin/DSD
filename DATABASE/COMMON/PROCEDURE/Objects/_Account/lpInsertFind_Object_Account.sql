@@ -1,13 +1,15 @@
--- Function: lpInsertFind_Object_Account (Integer, Integer, Integer, Integer, Integer)
+-- Function: lpInsertFind_Object_Account (Integer, Integer, Integer, Integer, Boolean, Integer)
 
--- DROP FUNCTION lpInsertFind_Object_Account (Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertFind_Object_Account (Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertFind_Object_Account (Integer, Integer, Integer, Integer, Boolean, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertFind_Object_Account(
-    IN inAccountGroupId         Integer  , -- Группа счетов
-    IN inAccountDirectionId     Integer  , -- Аналитики счетов - направления
-    IN inInfoMoneyDestinationId Integer  , -- Управленческие назначения
-    IN inInfoMoneyId            Integer  , -- Статьи назначения
-    IN inUserId                 Integer    -- Пользователь
+    IN inAccountGroupId         Integer               , -- Группа счетов
+    IN inAccountDirectionId     Integer               , -- Аналитики счетов - направления
+    IN inInfoMoneyDestinationId Integer               , -- Управленческие назначения
+    IN inInfoMoneyId            Integer               , -- Статьи назначения
+    IN inInsert                 Boolean  DEFAULT TRUE , -- 
+    IN inUserId                 Integer  DEFAULT NULL   -- Пользователь
 )
   RETURNS Integer AS
 $BODY$
@@ -21,24 +23,29 @@ $BODY$
 BEGIN
 
    -- Проверки
+   IF COALESCE (inUserId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Невозможно определить Пользователя : <%>, <%>, <%>, <%>', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
+   END IF;
+
    IF COALESCE (inAccountGroupId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Невозможно определить Счет т.к. не установлено <Группа счета> : "%", "%", "%", "%"', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
+       RAISE EXCEPTION 'Невозможно определить Счет т.к. не установлено <Группа счета> : <%>, <%>, <%>, <%>', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
    END IF;
 
    IF COALESCE (inAccountDirectionId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Невозможно определить Счет т.к. не установлено <Аналитика счета - направление> : "%", "%", "%", "%"', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
+       RAISE EXCEPTION 'Невозможно определить Счет т.к. не установлено <Аналитика счета - направление> : <%>, <%>, <%>, <%>', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
    END IF;
 
    IF COALESCE (inInfoMoneyDestinationId, 0) = 0 AND COALESCE (inInfoMoneyId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Невозможно определить Счет т.к. не установлено <Управленческое назначение> : "%", "%", "%", "%"', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
+       RAISE EXCEPTION 'Невозможно определить Счет т.к. не установлено <Управленческое назначение> : <%>, <%>, <%>, <%>', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
    END IF;
 
    IF COALESCE (inInfoMoneyDestinationId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Невозможно определить Счет т.к. не установлено <Управленческое назначение> : "%", "%", "%", "%"', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
+       RAISE EXCEPTION 'Невозможно определить Счет т.к. не установлено <Управленческое назначение> : <%>, <%>, <%>, <%>', inAccountGroupId, inAccountDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
    END IF;
 
 
@@ -51,6 +58,12 @@ BEGIN
    -- Создаем новый счет
    IF COALESCE (vbAccountId, 0) = 0 
    THEN
+       -- для некоторых случаев блокируем создание счета
+       IF inInsert = FALSE
+       THEN
+           RAISE EXCEPTION 'В данном документе невозможно создать новый Счет с параметрами: <%>, <%>, <%>, <%>', lfGet_Object_ValueData (inAccountGroupId), lfGet_Object_ValueData (inAccountDirectionId), lfGet_Object_ValueData (inInfoMoneyDestinationId), lfGet_Object_ValueData (inInfoMoneyId);
+       END IF;
+
        -- Определяем Id 2-ий уровень по <Группа счетов> и <Аналитики счетов - направления>
        SELECT AccountDirectionId INTO vbAccountDirectionId FROM lfSelect_Object_AccountDirection() WHERE AccountGroupId = inAccountGroupId AND AccountDirectionId = inAccountDirectionId;
 
@@ -126,22 +139,19 @@ BEGIN
 
    END IF;
 
-
    -- Возвращаем значение
    RETURN (vbAccountId);
 
-
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
-ALTER FUNCTION lpInsertFind_Object_Account (Integer, Integer, Integer, Integer, Integer)  OWNER TO postgres;
-
+  LANGUAGE PLPGSQL VOLATILE;
+ALTER FUNCTION lpInsertFind_Object_Account (Integer, Integer, Integer, Integer, Boolean, Integer)  OWNER TO postgres;
   
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.12.13                                        * add inInsert
  26.08.13                                        * error - vbAccountDirectionId
  08.07.13                                        * add vbAccountKindId and zc_ObjectBoolean_Account_onComplete
  02.07.13                                        *

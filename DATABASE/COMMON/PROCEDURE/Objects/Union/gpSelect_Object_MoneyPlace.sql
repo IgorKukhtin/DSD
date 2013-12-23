@@ -84,3 +84,5 @@ ALTER FUNCTION gpSelect_Object_MoneyPlace (TVarChar) OWNER TO postgres;
  20.11.13                         *
 */
 
+-- тест
+-- SELECT * FROM gpSelect_Object_MoneyPlace (inSession:= '2')
