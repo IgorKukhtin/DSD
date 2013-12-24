@@ -167,12 +167,6 @@
 			<DCCReference Include="..\..\Forms\Partner.pas">
 				<Form>PartnerForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\CashEdit.pas">
-				<Form>CashEditForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Cash.pas">
-				<Form>CashForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Currency.pas">
 				<Form>CurrencyForm</Form>
 			</DCCReference>
@@ -854,6 +848,18 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Branch_Object.pas">
 				<Form>Branch_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Cash.pas">
+				<Form>CashForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\CashEdit.pas">
+				<Form>CashEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Cash_Object.pas">
+				<Form>Cash_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

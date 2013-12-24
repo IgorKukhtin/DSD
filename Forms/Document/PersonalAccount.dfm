@@ -291,6 +291,7 @@ object PersonalAccountForm: TPersonalAccountForm
                 Kind = bkEllipsis
               end>
             HeaderAlignmentVert = vaCenter
+            Width = 60
           end
           object colIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
@@ -310,9 +311,6 @@ object PersonalAccountForm: TPersonalAccountForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -533,7 +531,27 @@ object PersonalAccountForm: TPersonalAccountForm
       item
         DataSet = MasterCDS
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inShowAll'
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = ShowErasedAction
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
     Left = 116
     Top = 224
   end
@@ -873,7 +891,7 @@ object PersonalAccountForm: TPersonalAccountForm
     end
     object ContractChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
-      FormName = 'TContractNameForm'
+      FormName = 'TContractForm'
       GuiParams = <
         item
           Name = 'Key'
@@ -1054,7 +1072,64 @@ object PersonalAccountForm: TPersonalAccountForm
     StoredProcName = 'gpInsertUpdate_MovementItem_PersonalAccount'
     DataSets = <>
     OutputType = otResult
-    Params = <>
+    Params = <
+      item
+        Name = 'ioId'
+        Component = MasterCDS
+        ComponentItem = 'id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalId'
+        Component = MasterCDS
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmount'
+        Component = MasterCDS
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = 0d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractId'
+        Component = MasterCDS
+        ComponentItem = 'ContractId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inRouteId'
+        Component = MasterCDS
+        ComponentItem = 'RouteId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCarId'
+        Component = MasterCDS
+        ComponentItem = 'CarId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Component = MasterCDS
+        ComponentItem = 'InfoMoneyId'
+        ParamType = ptInput
+      end>
     Left = 86
     Top = 224
   end
@@ -1096,7 +1171,35 @@ object PersonalAccountForm: TPersonalAccountForm
     StoredProcName = 'gpInsertUpdate_Movement_PersonalAccount'
     DataSets = <>
     OutputType = otResult
-    Params = <>
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInvNumber'
+        Value = ''
+        Component = edInvNumber
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = 0d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalId'
+        Value = ''
+        Component = GuidesPersonal
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
     Left = 387
     Top = 177
   end
@@ -1123,7 +1226,14 @@ object PersonalAccountForm: TPersonalAccountForm
     StoredProcName = 'gpGet_Movement_PersonalAccount'
     DataSets = <>
     OutputType = otResult
-    Params = <>
+    Params = <
+      item
+        Name = 'inId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
     Left = 216
     Top = 168
   end

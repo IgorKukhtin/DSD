@@ -98,9 +98,9 @@ CREATE OR REPLACE FUNCTION zc_Movement_PersonalAccount() RETURNS Integer AS $BOD
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_PersonalAccount', 'Расчеты подотчета с юр.лицом' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PersonalAccount');
 
-CREATE OR REPLACE FUNCTION zc_Movement_TrasportService() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_TrasportService'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Movement_TransportService() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_TransportService'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementDesc (Code, ItemName)
-  SELECT 'zc_Movement_TrasportService', 'Начисления наемный транспорт' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_TrasportService');
+  SELECT 'zc_Movement_TransportService', 'Начисления наемный транспорт' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_TransportService');
 
 
 /*-------------------------------------------------------------------------------

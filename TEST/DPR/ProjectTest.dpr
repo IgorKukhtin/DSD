@@ -65,8 +65,6 @@ uses
   MeasureEdit in '..\..\Forms\MeasureEdit.pas' {MeasureEditForm},
   Status in '..\..\Forms\Status.pas' {StatusForm},
   Partner in '..\..\Forms\Partner.pas' {PartnerForm},
-  CashEdit in '..\..\Forms\CashEdit.pas' {CashEditForm},
-  Cash in '..\..\Forms\Cash.pas' {CashForm},
   Currency in '..\..\Forms\Currency.pas' {CurrencyForm},
   BankEdit in '..\..\Forms\BankEdit.pas' {BankEditForm},
   PriceListGoodsItem in '..\..\Forms\PriceListGoodsItem.pas' {PriceListGoodsItemForm},
@@ -300,7 +298,10 @@ uses
   PersonalAccountJournal in '..\..\Forms\Document\PersonalAccountJournal.pas' {PersonalAccountJournalForm: TParentForm},
   BranchEdit in '..\..\Forms\Guides\BranchEdit.pas' {BranchEditForm: TParentForm},
   Branch in '..\..\Forms\Guides\Branch.pas' {BranchForm: TParentForm},
-  Branch_Object in '..\..\Forms\Guides\Branch_Object.pas' {Branch_ObjectForm: TParentForm};
+  Branch_Object in '..\..\Forms\Guides\Branch_Object.pas' {Branch_ObjectForm: TParentForm},
+  Cash in '..\..\Forms\Guides\Cash.pas' {CashForm: TParentForm},
+  CashEdit in '..\..\Forms\Guides\CashEdit.pas' {CashEditForm: TParentForm},
+  Cash_Object in '..\..\Forms\Guides\Cash_Object.pas' {Cash_ObjectForm: TParentForm};
 
 {$R *.RES}
 
