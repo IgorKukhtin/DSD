@@ -1,11 +1,10 @@
--- Function: gpSelect_Movement_TrasportService()
+-- Function: gpGet_Movement_TrasportService()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_TrasportService (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_TrasportService (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_TrasportService(
-    IN inStartDate   TDateTime , --
-    IN inEndDate     TDateTime , --
-    IN inSession     TVarChar    -- сессия пользователя
+CREATE OR REPLACE FUNCTION gpGet_Movement_TrasportService(
+    IN inMovementId        Integer  , -- ключ Документа
+    IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
@@ -19,16 +18,61 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , CarId Integer, CarName TVarChar
              , CarModelId Integer, CarModelName TVarChar
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar
-              )
+             )
 AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_TrasportService());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Get_Movement_TrasportService());
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- Результат
+
+     IF COALESCE (inMovementId, 0) = 0
+     THEN
+
+     RETURN QUERY 
+       SELECT
+             0 AS Id
+           , CAST (NEXTVAL ('Movement_TrasportService_seq') AS TVarChar) AS InvNumber
+           , CAST (CURRENT_DATE AS TDateTime) AS OperDate
+           , lfObject_Status.Code             AS StatusCode
+           , lfObject_Status.Name             AS StatusName
+           
+           , 0::TFloat                        AS Amount
+           , 0::TFloat                        AS Distance
+           , 0::TFloat                        AS Price
+           , 0::TFloat                        AS CountPoint
+           , 0::TFloat                        AS TrevelTime
+
+           , ''::TVarChar                     AS Comment
+           
+           , 0                                AS ContractId
+           , ''::TVarChar                     AS ContractName
+
+           , 0                                AS InfoMoneyId
+           , CAST ('' as TVarChar)            AS InfoMoneyName
+           
+           , 0                                AS JuridicalId
+           , CAST ('' as TVarChar)            AS JuridicalName
+           
+           , 0                                AS PaidKindId
+           , CAST ('' as TVarChar)            AS PaidKindName
+  
+           , 0                                AS CarId
+           , CAST ('' as TVarChar)            AS CarName
+           , 0                                AS CarModelId
+           , CAST ('' as TVarChar)            AS CarModelName
+
+           , 0                                AS ContractConditionKindId
+           , CAST ('' as TVarChar)            AS ContractConditionKindName
+
+       FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
+  LEFT JOIN Object AS Object_Business
+         ON Object_Business.Id = lpGet_DefaultValue(lpGetMovementLinkObjectCodeById(zc_MovementLinkObject_Business()), vbUserId)::Integer;
+
+     ELSE
+
      RETURN QUERY 
        SELECT
              Movement.Id
@@ -36,6 +80,7 @@ BEGIN
            , Movement.OperDate
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
+           
            --------------- 
            , MovementItem.Amount            AS Amount
            , MIFloat_Distance.ValueData     AS Distance
@@ -132,24 +177,21 @@ BEGIN
                                              ON MILinkObject_ContractConditionKind.MovementItemId = MovementItem.Id 
                                             AND MILinkObject_ContractConditionKind.DescId = zc_MILinkObject_ContractConditionKind()
             LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = MILinkObject_ContractConditionKind.ObjectId
-
-       WHERE Movement.DescId = zc_Movement_TrasportService()
-         AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-         -- AND tmpRoleAccessKey.AccessKeyId IS NOT NULL
-      ;
-  
+    
+       WHERE Movement.Id =  inMovementId
+         AND Movement.DescId = zc_Movement_TrasportService();
+   END IF;  
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement_TrasportService (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+LANGUAGE PLPGSQL VOLATILE;
+ALTER FUNCTION gpGet_Movement_TrasportService (Integer, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 22.12.13         *
-
-*/
+ 23.12.13         *
+ */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_TrasportService (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Movement_TrasportService (inMovementId:= 1, inSession:= '2')

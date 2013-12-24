@@ -144,7 +144,7 @@ BEGIN
 
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION lpInsertFind_Object_Account (Integer, Integer, Integer, Integer, Boolean, Integer)  OWNER TO postgres;
   
 /*-------------------------------------------------------------------------------*/
