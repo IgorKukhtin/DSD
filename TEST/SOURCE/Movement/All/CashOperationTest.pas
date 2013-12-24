@@ -16,9 +16,8 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdateCashOperation(const Id: integer; InvNumber: String;
-        OperDate: TDateTime; Amount: Double;
-        FromId, ToId, PaidKindId, InfoMoneyId, ContractId, UnitId, PositionId: integer;
-        AccrualsDate: TDateTime): integer;
+        OperDate: TDateTime; Amount: Double; Comment: string;
+        CashId, ObjectId, ContractId, InfoMoneyId, UnitId: integer): integer;
     constructor Create; override;
   end;
 
@@ -43,16 +42,16 @@ var Id: Integer;
     InvNumber: String;
     OperDate: TDateTime;
     Amount: Double;
-    FromId, ToId, PaidKindId, InfoMoneyId, ContractId, UnitId, PositionId: Integer;
+    CashId, ObjectId, PaidKindId, InfoMoneyId, ContractId, UnitId, PositionId: Integer;
     AccrualsDate: TDateTime;
 begin
   Id:=0;
   InvNumber:='1';
   OperDate:= Date;
   // Выбираем кассу
-  FromId := TCash.Create.GetDefault;
+  CashId := TCash.Create.GetDefault;
   // Выбираем Юр лицо
-  ToId := TJuridical.Create.GetDefault;
+  ObjectId := TJuridical.Create.GetDefault;
   PaidKindId := 0;
   ContractId := 0;
   InfoMoneyId := 0;
@@ -66,29 +65,28 @@ begin
   PositionId := 0;
   AccrualsDate := Date;
 
-  result := InsertUpdateCashOperation(Id, InvNumber, OperDate, Amount,
-              FromId, ToId, PaidKindId, InfoMoneyId, ContractId, UnitId, PositionId, AccrualsDate);
+  result := InsertUpdateCashOperation(Id, InvNumber,
+        OperDate, Amount, 'Это комментарий',
+        CashId, ObjectId, ContractId, InfoMoneyId, UnitId);
+;
 end;
 
 function TCashOperation.InsertUpdateCashOperation(const Id: integer; InvNumber: String;
-        OperDate: TDateTime; Amount: Double;
-        FromId, ToId, PaidKindId, InfoMoneyId, ContractId, UnitId, PositionId: integer;
-        AccrualsDate: TDateTime): integer;
+        OperDate: TDateTime; Amount: Double; Comment: string;
+        CashId, ObjectId, ContractId, InfoMoneyId, UnitId: integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
   FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
-  FParams.AddParam('inAmount', ftFloat, ptInput, Amount);
-
-  FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
-  FParams.AddParam('inToId', ftInteger, ptInput, ToId);
-  FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
-  FParams.AddParam('inInfoMoneyId', ftInteger, ptInput, InfoMoneyId);
+  FParams.AddParam('inAmountIn', ftFloat, ptInput, Amount);
+  FParams.AddParam('inAmountOut', ftFloat, ptInput, 0);
+  FParams.AddParam('inComment', ftString, ptInput, Comment);
+  FParams.AddParam('inCashId', ftInteger, ptInput, CashId);
+  FParams.AddParam('inObjectId', ftInteger, ptInput, ObjectId);
   FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
+  FParams.AddParam('inInfoMoneyId', ftInteger, ptInput, InfoMoneyId);
   FParams.AddParam('inUnitId', ftInteger, ptInput, UnitId);
-  FParams.AddParam('inPositionId', ftInteger, ptInput, PositionId);
-  FParams.AddParam('inAccrualsDate', ftDateTime, ptInput, AccrualsDate);
 
   result := InsertUpdate(FParams);
 

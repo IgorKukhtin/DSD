@@ -51,6 +51,8 @@ type
     actCompleteList: TMultiAction;
     actUnCompleteList: TMultiAction;
     actSetErasedList: TMultiAction;
+    actMovementItemContainer: TdsdOpenForm;
+    bbMovementItemContainer: TdxBarButton;
   private
     { Private declarations }
   public

@@ -220,7 +220,7 @@ object IncomeForm: TIncomeForm
     Height = 336
     Align = alClient
     TabOrder = 2
-    Properties.ActivePage = cxTabSheetMain
+    Properties.ActivePage = cxTabSheetEntry
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 336
     ClientRectRight = 971
@@ -694,8 +694,8 @@ object IncomeForm: TIncomeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1226,8 +1226,8 @@ object IncomeForm: TIncomeForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    Left = 364
-    Top = 320
+    Left = 108
+    Top = 384
   end
   object spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Income'

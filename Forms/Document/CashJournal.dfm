@@ -1,18 +1,19 @@
 inherited CashJournalForm: TCashJournalForm
   Caption = #1054#1087#1077#1088#1072#1094#1080#1080' '#1089' '#1082#1072#1089#1089#1086#1081
-  ClientWidth = 884
-  ExplicitWidth = 892
+  ClientWidth = 900
+  ExplicitLeft = -43
+  ExplicitWidth = 908
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 884
+    Width = 900
     TabOrder = 3
     ExplicitWidth = 884
-    ClientRectRight = 884
+    ClientRectRight = 900
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 884
       inherited cxGrid: TcxGrid
-        Width = 884
+        Width = 900
         ExplicitWidth = 884
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -20,13 +21,24 @@ inherited CashJournalForm: TCashJournalForm
               Format = ',0.00'
               Kind = skSum
               Position = spFooter
-              Column = clAmount
+              Column = clAmountIn
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Position = spFooter
+              Column = clAmountOut
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00'
               Kind = skSum
-              Column = clAmount
+              Column = clAmountIn
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = clAmountOut
             end>
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -34,47 +46,48 @@ inherited CashJournalForm: TCashJournalForm
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             Options.Editing = False
-            Width = 77
+            Width = 105
           end
           inherited colInvNumber: TcxGridDBColumn
             Options.Editing = False
-            Width = 64
+            Width = 86
           end
           inherited colOperDate: TcxGridDBColumn
             Options.Editing = False
-            Width = 54
+            Width = 73
           end
-          object clFrom: TcxGridDBColumn
+          object clCash: TcxGridDBColumn
             Caption = #1050#1072#1089#1089#1072
-            DataBinding.FieldName = 'FromName'
+            DataBinding.FieldName = 'CashName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 93
+            Width = 127
           end
-          object clTo: TcxGridDBColumn
+          object clMoneyPlace: TcxGridDBColumn
             Caption = #1054#1073#1098#1077#1082#1090
-            DataBinding.FieldName = 'ToName'
+            DataBinding.FieldName = 'MoneyPlaceName'
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 86
+            Width = 116
           end
-          object clAmount: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1086#1087#1077#1088#1072#1094#1080#1080
-            DataBinding.FieldName = 'Amount'
+          object clAmountIn: TcxGridDBColumn
+            Caption = #1055#1088#1080#1093#1086#1076
+            DataBinding.FieldName = 'AmountIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 121
+            Width = 72
           end
-          object clPosition: TcxGridDBColumn
-            Caption = #1041#1080#1079#1085#1077#1089
-            DataBinding.FieldName = 'BusinessName'
-            FooterAlignmentHorz = taCenter
+          object clAmountOut: TcxGridDBColumn
+            Caption = #1056#1072#1089#1093#1086#1076
+            DataBinding.FieldName = 'AmountOut'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 77
+            Width = 67
           end
           object clInfoMoney: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -82,7 +95,7 @@ inherited CashJournalForm: TCashJournalForm
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 63
+            Width = 125
           end
           object clUnit: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -90,14 +103,14 @@ inherited CashJournalForm: TCashJournalForm
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 58
+            Width = 115
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 884
+    Width = 900
     ExplicitWidth = 884
   end
   inherited ActionList: TActionList

@@ -238,6 +238,21 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       ImageIndex = 13
     end
+    object actMovementItemContainer: TdsdOpenForm
+      Category = 'DSDLib'
+      Caption = #1055#1088#1086#1074#1086#1076#1082#1080
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1087#1088#1086#1074#1086#1076#1082#1080' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091
+      ImageIndex = 57
+      FormName = 'TMovementItemContainerForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 99
@@ -304,6 +319,10 @@ inherited AncestorJournalForm: TAncestorJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -329,6 +348,10 @@ inherited AncestorJournalForm: TAncestorJournalForm
     end
     object bbDelete: TdxBarButton
       Action = actSetErased
+      Category = 0
+    end
+    object bbMovementItemContainer: TdxBarButton
+      Action = actMovementItemContainer
       Category = 0
     end
   end

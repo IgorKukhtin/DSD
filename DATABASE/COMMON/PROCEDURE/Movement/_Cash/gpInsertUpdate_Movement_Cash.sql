@@ -1,57 +1,69 @@
 -- Function: gpInsertUpdate_Movement_Cash()
 
--- DROP FUNCTION gpInsertUpdate_Movement_Cash();
+DROP FUNCTION IF EXISTS 
+   gpInsertUpdate_Movement_Cash(Integer, TVarChar, TdateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
-    IN inAmount              TFloat    , -- Сумма 
+    IN inAmountIn            TFloat    , -- Сумма прихода
+    IN inAmountOut           TFloat    , -- Сумма расхода
     IN inComment             TVarChar  , -- Комментарий
-    IN inFromId              Integer   , -- От кого (в документе)
-    IN inToId                Integer   , -- Кому (в документе)
-    IN inBusinessId          Integer   , -- Бизнес 
+    IN inCashId              Integer   , -- Касса
+    IN inMoneyPlaceId        Integer   , -- Объекты работы с деньгами 
     IN inContractId          Integer   , -- Договора
     IN inInfoMoneyId         Integer   , -- Управленческие статьи
-    IN inPositionId          Integer   , -- Должность
     IN inUnitId              Integer   , -- Подразделения
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbAmount TFloat;
+   DECLARE vbMovementItemId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash());
-     vbUserId := inSession;
+     vbUserId := lpGetUserBySession(inSession);
+   
+     IF (COALESCE(inAmountIn, 0) = 0) AND (COALESCE(inAmountOut, 0) = 0) THEN
+        RAISE EXCEPTION 'Укажите сумму прихода или расхода';
+     END IF;
+
+     IF (COALESCE(inAmountIn, 0) <> 0) AND (COALESCE(inAmountOut, 0) <> 0) THEN
+        RAISE EXCEPTION 'Указана сумма прихода и расхода. Укажите что-то одно';
+     END IF;
+
+     IF inAmountIn > 0 THEN
+        vbAmount := inAmountIn;
+     ELSE
+        vbAmount := - inAmountOut;
+     END IF;
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Cash(), inInvNumber, inOperDate, NULL);
 
-     -- сохранили связь с <От кого (в документе)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
-     -- сохранили связь с <Кому (в документе)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
+     SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem 
+      WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
 
-     -- сохранили свойство <Сумма операции>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), ioId, inAmount);
-     -- 
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+        -- сохранили <Элемент документа>
+     vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inCashId, ioId, vbAmount, NULL);
 
-     -- сохранили связь с <Бизнес >
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Business(), ioId, inBusinessId);
+
+     -- сохранили связь с <Объект>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_MoneyPlace(), vbMovementItemId, inMoneyPlaceId);
+    
+     -- Комментарий
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
+
      -- сохранили связь с <Управленческие статьи >
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_InfoMoney(), ioId, inInfoMoneyId);
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), vbMovementItemId, inInfoMoneyId);
      -- сохранили связь с <Договора>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), vbMovementItemId, inContractId);
      -- сохранили связь с <Подразделением>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
-     -- сохранили связь с <Должность>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Position(), ioId, inPositionId);
-
-     -- сохранили <Дату начисления>
-   --  PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_AccrualDate(), ioId, inAccrualDate);
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbMovementItemId, inUnitId);
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
@@ -64,6 +76,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.12.13                        *                
  19.11.13                        *                
  06.08.13                        *                
 

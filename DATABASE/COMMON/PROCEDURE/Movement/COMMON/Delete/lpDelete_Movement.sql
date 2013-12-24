@@ -8,6 +8,10 @@ IN Session tvarchar)
   RETURNS void AS
 $BODY$BEGIN
 
+  DELETE FROM MovementItemString WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE MovementId = inId);
+  DELETE FROM MovementItemFloat WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE MovementId = inId);
+  DELETE FROM MovementItemLinkObject WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE MovementId = inId);
+  DELETE FROM MovementItem WHERE MovementId = inId;
   DELETE FROM MovementLinkObject WHERE MovementId = inId;
   DELETE FROM MovementString WHERE MovementId = inId;
   DELETE FROM MovementDate WHERE MovementId = inId;

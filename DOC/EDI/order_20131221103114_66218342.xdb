@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xdb="http://www.borland.com/schemas/delphi/10.0/XMLDataBinding">
+  <element xmlns="http://www.w3.org/2001/XMLSchema" name="ORDER" type="ORDERType"/>
+  <complexType xmlns="http://www.w3.org/2001/XMLSchema" name="ORDERType"><annotation>
+      <appinfo xdb:docElement="ORDER"/>
+    </annotation>
+    <sequence>
+      <element name="DOCUMENTNAME" type="xs:integer"/>
+      <element name="NUMBER" type="xs:integer"/>
+      <element name="DATE" type="xs:string"/>
+      <element name="DELIVERYDATE" type="xs:string"/>
+      <element name="DELIVERYTIME" type="xs:string"/>
+      <element name="CURRENCY" type="xs:string"/>
+      <element name="INFO" type="xs:string"/>
+      <element name="HEAD" type="HEADType"/>
+    </sequence>
+  </complexType>
+  <complexType xmlns="http://www.w3.org/2001/XMLSchema" name="HEADType">
+    <sequence>
+      <element name="SUPPLIER" type="xs:integer"/>
+      <element name="BUYER" type="xs:integer"/>
+      <element name="DELIVERYPLACE" type="xs:integer"/>
+      <element name="RECIPIENT" type="xs:integer"/>
+      <element name="SENDER" type="xs:integer"/>
+      <element name="INVOICEPARTNER" type="xs:integer"/>
+      <element name="POSITION" type="POSITIONType" maxOccurs="unbounded"/>
+    </sequence>
+  </complexType>
+  <complexType xmlns="http://www.w3.org/2001/XMLSchema" name="POSITIONType"><annotation>
+      <appinfo xdb:repeated="True"/>
+    </annotation>
+    <sequence>
+      <element name="POSITIONNUMBER" type="xs:integer"/>
+      <element name="PRODUCT" type="xs:integer"/>
+      <element name="PRODUCTIDBUYER" type="xs:integer"/>
+      <element name="ORDEREDQUANTITY" type="xs:integer"/>
+      <element name="ORDERUNIT" type="xs:string"/>
+      <element name="ORDERPRICE" type="xs:string"/>
+      <element name="CHARACTERISTIC" type="CHARACTERISTICType"/>
+    </sequence>
+  </complexType>
+  <complexType xmlns="http://www.w3.org/2001/XMLSchema" name="CHARACTERISTICType">
+    <sequence>
+      <element name="DESCRIPTION" type="xs:string"/>
+    </sequence>
+  </complexType>
+</xs:schema>

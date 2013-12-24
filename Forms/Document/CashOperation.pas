@@ -22,14 +22,11 @@ type
     ceUnit: TcxButtonEdit;
     ceInfoMoney: TcxButtonEdit;
     ceOperDate: TcxDateEdit;
-    ceAmount: TcxCurrencyEdit;
+    ceAmountIn: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
-    ceBusiness: TcxButtonEdit;
-    cxLabel9: TcxLabel;
     CashGuides: TdsdGuides;
     UnitGuides: TdsdGuides;
     InfoMoneyGuides: TdsdGuides;
-    BusinessGuides: TdsdGuides;
     ceObject: TcxButtonEdit;
     ObjectlGuides: TdsdGuides;
     cxLabel6: TcxLabel;
@@ -39,6 +36,8 @@ type
     cxLabel8: TcxLabel;
     ceContract: TcxButtonEdit;
     ContractGuides: TdsdGuides;
+    cxLabel3: TcxLabel;
+    ceAmountOut: TcxCurrencyEdit;
   private
     { Private declarations }
   public
