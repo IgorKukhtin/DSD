@@ -179,12 +179,6 @@
 			<DCCReference Include="..\..\Forms\BankEdit.pas">
 				<Form>BankEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\BranchEdit.pas">
-				<Form>BranchEditForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Branch.pas">
-				<Form>BranchForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\PriceListGoodsItem.pas">
 				<Form>PriceListGoodsItemForm</Form>
 			</DCCReference>
@@ -848,6 +842,18 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\PersonalAccountJournal.pas">
 				<Form>PersonalAccountJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\BranchEdit.pas">
+				<Form>BranchEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Branch.pas">
+				<Form>BranchForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Branch_Object.pas">
+				<Form>Branch_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

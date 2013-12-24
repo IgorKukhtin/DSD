@@ -69,8 +69,6 @@ uses
   Cash in '..\..\Forms\Cash.pas' {CashForm},
   Currency in '..\..\Forms\Currency.pas' {CurrencyForm},
   BankEdit in '..\..\Forms\BankEdit.pas' {BankEditForm},
-  BranchEdit in '..\..\Forms\BranchEdit.pas' {BranchEditForm},
-  Branch in '..\..\Forms\Branch.pas' {BranchForm},
   PriceListGoodsItem in '..\..\Forms\PriceListGoodsItem.pas' {PriceListGoodsItemForm},
   GoodsPropertyValue in '..\..\Forms\GoodsPropertyValue.pas' {GoodsPropertyValueForm},
   ContractKindEdit in '..\..\Forms\Guides\ContractKindEdit.pas' {ContractKindEditForm},
@@ -299,7 +297,10 @@ uses
   FormsUnit in '..\..\Forms\System\FormsUnit.pas' {FormsForm: TParentForm},
   UnionDesc in '..\..\Forms\System\UnionDesc.pas' {UnionDescForm: TParentForm},
   PersonalAccount in '..\..\Forms\Document\PersonalAccount.pas' {PersonalAccountForm: TParentForm},
-  PersonalAccountJournal in '..\..\Forms\Document\PersonalAccountJournal.pas' {PersonalAccountJournalForm: TParentForm};
+  PersonalAccountJournal in '..\..\Forms\Document\PersonalAccountJournal.pas' {PersonalAccountJournalForm: TParentForm},
+  BranchEdit in '..\..\Forms\Guides\BranchEdit.pas' {BranchEditForm: TParentForm},
+  Branch in '..\..\Forms\Guides\Branch.pas' {BranchForm: TParentForm},
+  Branch_Object in '..\..\Forms\Guides\Branch_Object.pas' {Branch_ObjectForm: TParentForm};
 
 {$R *.RES}
 
