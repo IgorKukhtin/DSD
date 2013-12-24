@@ -17,6 +17,7 @@ uses
 
 type
   TCashJournalForm = class(TAncestorJournalForm)
+    clAmountOut: TcxGridDBColumn;
   private
     { Private declarations }
   public
