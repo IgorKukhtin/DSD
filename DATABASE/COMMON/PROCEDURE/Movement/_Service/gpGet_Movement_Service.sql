@@ -10,13 +10,11 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , Amount TFloat 
              , Comment TVarChar
-             , ContractId Integer, ContractInvNumber TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
-             , MainJuridicalId Integer, MainJuridicalName TVarChar
-             , BusinessId Integer, BusinessName TVarChar
-             , PaidKindId Integer, PaidKindName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
+             , ContractId Integer, ContractInvNumber TVarChar
              , UnitId Integer, UnitName TVarChar
+             , PaidKindId Integer, PaidKindName TVarChar
              )
 AS
 $BODY$
@@ -41,25 +39,18 @@ BEGIN
            , 0::TFloat                        AS Amount
 
            , ''::TVarChar                     AS Comment
-           , 0                                AS ContractId
-           , ''::TVarChar                     AS ContractInvNumber
            , 0                                AS JuridicalId
            , CAST ('' as TVarChar)            AS JuridicalName
-           , zc_Juridical_Basis()             AS MainJuridicalId
-           , COALESCE((SELECT ValueData FROM Object WHERE Object.Id = zc_Juridical_Basis()), '')::TVarChar 
-                           AS MainJuridicalName
-           , COALESCE(Object_Business.Id, 0)                   AS BusinessId
-           , COALESCE(Object_Business.ValueData, '')::TVarChar AS BusinessName
-           , 0                                AS PaidKindId
-           , CAST ('' as TVarChar)            AS PaidKindName
            , 0                                AS InfoMoneyId
            , CAST ('' as TVarChar)            AS InfoMoneyName
+           , 0                                AS ContractId
+           , ''::TVarChar                     AS ContractInvNumber
            , 0                                AS UnitId
            , CAST ('' as TVarChar)            AS UnitName
+           , 0                                AS PaidKindId
+           , CAST ('' as TVarChar)            AS PaidKindName
 
-       FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
-  LEFT JOIN Object AS Object_Business
-         ON Object_Business.Id = lpGet_DefaultValue(lpGetMovementLinkObjectCodeById(zc_MovementLinkObject_Business()), vbUserId)::Integer;
+       FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status;
 
      ELSE
 
@@ -71,22 +62,16 @@ BEGIN
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
                       
-           , MovementFloat_Amount.ValueData   AS Amount
-           , MovementString_Comment.ValueData   AS Comment
-           , Object_Contract.Id               AS ContractId
-           , Object_Contract.ValueData        AS ContractInvNumber
+           , MovementItem.Amount   AS Amount
+           , MIString_Comment.ValueData   AS Comment
 
            , Object_Juridical.Id              AS JuridicalId
            , Object_Juridical.ValueData       AS JuridicalName
-           , Object_MainJuridical.Id          AS MainJuridicalId
-           , Object_MainJuridical.ValueData   AS MainJuridicalName
-
-           , Object_Business.Id               AS BusinessId
-           , Object_Business.ValueData        AS BusinessName
 
            , Object_PaidKind.Id               AS PaidKindId
            , Object_PaidKind.ValueData        AS PaidKindName
-   
+           , Object_Contract.Id               AS ContractId
+           , Object_Contract.ValueData        AS ContractInvNumber
            , Object_InfoMoney.Id              AS InfoMoneyId
            , Object_InfoMoney.ValueData       AS InfoMoneyName
            , Object_Unit.Id                   AS UnitId
@@ -95,49 +80,39 @@ BEGIN
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-            LEFT JOIN MovementFloat AS MovementFloat_Amount
-                                    ON MovementFloat_Amount.MovementId =  Movement.Id
-                                   AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+                 JOIN MovementItem ON MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
-                                         ON MovementLinkObject_Juridical.MovementId = Movement.Id
-                                        AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
-            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
+                 JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId
+ 
+            LEFT JOIN MovementItemString AS MIString_Comment 
+                   ON MIString_Comment.MovementItemId = MovementItem.Id AND MIString_Comment.DescId = zc_MIString_Comment()
             
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_MainJuridical
-                                         ON MovementLinkObject_MainJuridical.MovementId = Movement.Id
-                                        AND MovementLinkObject_MainJuridical.DescId = zc_MovementLinkObject_JuridicalBasis()
-            LEFT JOIN Object AS Object_MainJuridical ON Object_MainJuridical.Id = MovementLinkObject_MainJuridical.ObjectId
-            
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Business
-                                         ON MovementLinkObject_Business.MovementId = Movement.Id
-                                        AND MovementLinkObject_Business.DescId = zc_MovementLinkObject_Business()
-            LEFT JOIN Object AS Object_Business ON Object_Business.Id = MovementLinkObject_Business.ObjectId
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                         ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                        AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+            LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = MILinkObject_MoneyPlace.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
-                                        AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
-            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                         ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                        AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = MILinkObject_InfoMoney.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_InfoMoney
-                                         ON MovementLinkObject_InfoMoney.MovementId = Movement.Id
-                                        AND MovementLinkObject_InfoMoney.DescId = zc_MovementLinkObject_InfoMoney()
-            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = MovementLinkObject_InfoMoney.ObjectId
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                         ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                        AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MILinkObject_Contract.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                         ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                        AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
 
-            LEFT JOIN MovementString AS MovementString_Comment 
-                   ON MovementString_Comment.MovementId = Movement.Id AND MovementString_Comment.DescId = zc_MovementString_Comment()
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
+                                         ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
+                                        AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MILinkObject_PaidKind.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract 
-                   ON MovementLinkObject_Contract.MovementId = Movement.Id AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
-
-       WHERE Movement.Id =  inMovementId
-         AND Movement.DescId = zc_Movement_Service();
+       WHERE Movement.Id =  inMovementId;
    END IF;  
 END;
 $BODY$
@@ -148,6 +123,7 @@ ALTER FUNCTION gpGet_Movement_Service (Integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 24.12.13                         * -- MovItem
  18.11.13                         * -- Add other properties
  07.11.13                         * -- Default on Get
  11.08.13         *

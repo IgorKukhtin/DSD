@@ -1,6 +1,6 @@
 DO $$
 BEGIN
-  IF (SELECT COUNT(*) from pg_statio_all_sequences where relname = 'movement_PersonalAccount_seq') = 0 THEN 
+  IF (SELECT COUNT(*) from pg_statio_all_sequences where relname = 'movement_personalaccount_seq') = 0 THEN 
     CREATE SEQUENCE Movement_PersonalAccount_seq 
     INCREMENT 1
     MINVALUE 1

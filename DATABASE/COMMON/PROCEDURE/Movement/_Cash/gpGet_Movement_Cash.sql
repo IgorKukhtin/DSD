@@ -79,7 +79,8 @@ BEGIN
                       0
                   END::TFloat AS AmountOut
 
-           , MIString_Comment.ValueData        AS Comment
+           --, MIString_Comment.ValueData        AS Comment
+           , ''::TVarChar                     AS Comment
 
            , Object_Cash.Id                    AS CashId
            , Object_Cash.ValueData             AS CashName

@@ -21,40 +21,41 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbMovementItemId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Service());
-     vbUserId := inSession;
+     vbUserId := lpGetUserBySession(inSession);
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Service(), inInvNumber, inOperDate, NULL);
 
-     -- сохранили свойство <Сумма операции>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), ioId, inAmount);
+     SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem 
+      WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
 
-     -- сохранили свойство <Комментарий>
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+        -- сохранили <Элемент документа>
+     vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inJuridicalId, ioId, inAmount, NULL);
+    
+     -- Комментарий
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
 
-     -- сохранили связь с <Юр. лицо>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), ioId, inJuridicalId);
-     -- сохранили связь с <Главное юр. лицо>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_JuridicalBasis(), ioId, inJuridicalBasisId);
-
-     -- сохранили связь с <Договор>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
-     -- сохранили связь с <Бизнес>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Business(), ioId, inBusinessId);
-     -- сохранили связь с <Виды форм оплаты >
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
-
-     -- сохранили связь с <Статьи назначения>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_InfoMoney(), ioId, inInfoMoneyId);
-     -- сохранили связь с <Подразделение>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
+     -- сохранили связь с <Виды форм оплаты>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PaidKind(), vbMovementItemId, inPaidKindId);
+     -- сохранили связь с <Управленческие статьи >
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), vbMovementItemId, inInfoMoneyId);
+     -- сохранили связь с <Договора>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), vbMovementItemId, inContractId);
+     -- сохранили связь с <Подразделением>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbMovementItemId, inUnitId);
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+     -- сохранили связь с <Главное юр. лицо>
+--     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_JuridicalBasis(), ioId, inJuridicalBasisId);
+
+     -- сохранили связь с <Бизнес>
+--     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Business(), ioId, inBusinessId);
 
 END;
 $BODY$
@@ -64,6 +65,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.12.13                        *
  11.08.13         *
 
 */
