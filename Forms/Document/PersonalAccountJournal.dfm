@@ -33,7 +33,7 @@ object PersonalAccountJournalForm: TPersonalAccountJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41608d
+      EditValue = 41639d
       Properties.ShowTime = False
       TabOrder = 1
       Width = 85
@@ -381,7 +381,7 @@ object PersonalAccountJournalForm: TPersonalAccountJournalForm
       Category = 'DSDLib'
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
-      FormName = 'TPersonalSendCashForm'
+      FormName = 'TPersonalAccountForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -395,7 +395,7 @@ object PersonalAccountJournalForm: TPersonalAccountJournalForm
       Category = 'DSDLib'
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      FormName = 'TPersonalSendCashForm'
+      FormName = 'TPersonalAccountForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -476,7 +476,21 @@ object PersonalAccountJournalForm: TPersonalAccountJournalForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41579d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = 41639d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
     Left = 24
     Top = 176
   end

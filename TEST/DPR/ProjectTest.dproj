@@ -167,23 +167,11 @@
 			<DCCReference Include="..\..\Forms\Partner.pas">
 				<Form>PartnerForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\CashEdit.pas">
-				<Form>CashEditForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Cash.pas">
-				<Form>CashForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Currency.pas">
 				<Form>CurrencyForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\BankEdit.pas">
 				<Form>BankEditForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\BranchEdit.pas">
-				<Form>BranchEditForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Branch.pas">
-				<Form>BranchForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\PriceListGoodsItem.pas">
 				<Form>PriceListGoodsItemForm</Form>
@@ -850,17 +838,28 @@
 				<Form>PersonalAccountJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\System\MovementItemContainer.pas">
-				<Form>MovementItemContainerForm</Form>
-				<FormType>dfm</FormType>
+			<DCCReference Include="..\..\Forms\Guides\BranchEdit.pas">
+				<Form>BranchEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Branch.pas">
+				<Form>BranchForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Branch_Object.pas">
+				<Form>Branch_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Cash.pas">
+				<Form>CashForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\CashEdit.pas">
+				<Form>CashEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Cash_Object.pas">
 				<Form>Cash_ObjectForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\UserKey.pas">
-				<Form>UserKeyForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

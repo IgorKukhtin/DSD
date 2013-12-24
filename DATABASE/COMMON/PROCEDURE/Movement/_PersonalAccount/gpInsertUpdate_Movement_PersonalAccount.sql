@@ -15,9 +15,10 @@ $BODY$
    DECLARE vbAccessKeyId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_PersonalAccount());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_PersonalAccount());
+     vbUserId:= inSession;
      -- определяем ключ доступа
-     vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_PersonalAccount());
+     -- vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_PersonalAccount());
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_PersonalAccount(), inInvNumber, inOperDate, NULL, vbAccessKeyId);

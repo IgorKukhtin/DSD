@@ -1,8 +1,9 @@
--- Function: gpGet_Movement_TrasportService()
+-- Function: gpGet_Movement_TransportService()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_TrasportService (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_TransportService (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpGet_Movement_TrasportService(
+CREATE OR REPLACE FUNCTION gpGet_Movement_TransportService(
     IN inMovementId        Integer  , -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
@@ -24,7 +25,7 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Get_Movement_TrasportService());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Get_Movement_TransportService());
      vbUserId:= lpGetUserBySession (inSession);
 
 
@@ -34,7 +35,7 @@ BEGIN
      RETURN QUERY 
        SELECT
              0 AS Id
-           , CAST (NEXTVAL ('Movement_TrasportService_seq') AS TVarChar) AS InvNumber
+           , CAST (NEXTVAL ('Movement_TransportService_seq') AS TVarChar) AS InvNumber
            , CAST (CURRENT_DATE AS TDateTime) AS OperDate
            , lfObject_Status.Code             AS StatusCode
            , lfObject_Status.Name             AS StatusName
@@ -179,12 +180,12 @@ BEGIN
             LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = MILinkObject_ContractConditionKind.ObjectId
     
        WHERE Movement.Id =  inMovementId
-         AND Movement.DescId = zc_Movement_TrasportService();
+         AND Movement.DescId = zc_Movement_TransportService();
    END IF;  
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_TrasportService (Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Movement_TransportService (Integer, TVarChar) OWNER TO postgres;
 
 
 /*
@@ -194,4 +195,4 @@ ALTER FUNCTION gpGet_Movement_TrasportService (Integer, TVarChar) OWNER TO postg
  */
 
 -- тест
--- SELECT * FROM gpGet_Movement_TrasportService (inMovementId:= 1, inSession:= '2')
+-- SELECT * FROM gpGet_Movement_TransportService (inMovementId:= 1, inSession:= '2')

@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_MovementItem_PersonalAccount ()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalAccount (Integer, Integer, Integer, TFloat, TDateTime, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalAccount (Integer, Integer, Integer, TFloat, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalAccount(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -12,11 +14,16 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalAccount(
     IN inRouteId             Integer   , -- Маршрут
     IN inCarId               Integer   , -- Автомобиль
     IN inInfoMoneyId         Integer   , -- Статьи назначения
-    IN inUserId              Integer     -- Пользователь
+    IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
+
+     -- проверка прав пользователя на вызов процедуры
+     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalAccount());
+     vbUserId := inSession;
 
      -- проверка
      IF COALESCE (inJuridicalId, 0) = 0
@@ -60,7 +67,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), ioId, inInfoMoneyId);
 
      -- сохранили протокол
-     -- PERFORM lpInsert_MovementItemProtocol (ioId, inUserId);
+     -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserIdd);
 
 END;
 $BODY$

@@ -1,8 +1,9 @@
--- Function: gpSelect_Movement_TrasportService()
+-- Function: gpSelect_Movement_TransportService()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_TrasportService (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_TransportService (TDateTime, TDateTime, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_TrasportService(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_TransportService(
     IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
     IN inSession     TVarChar    -- сессия пользователя
@@ -25,7 +26,7 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_TrasportService());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_TransportService());
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Результат
@@ -133,7 +134,7 @@ BEGIN
                                             AND MILinkObject_ContractConditionKind.DescId = zc_MILinkObject_ContractConditionKind()
             LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = MILinkObject_ContractConditionKind.ObjectId
 
-       WHERE Movement.DescId = zc_Movement_TrasportService()
+       WHERE Movement.DescId = zc_Movement_TransportService()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
          -- AND tmpRoleAccessKey.AccessKeyId IS NOT NULL
       ;
@@ -141,7 +142,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement_TrasportService (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_TransportService (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*
@@ -152,4 +153,4 @@ ALTER FUNCTION gpSelect_Movement_TrasportService (TDateTime, TDateTime, TVarChar
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_TrasportService (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_TransportService (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= zfCalc_UserAdmin())
