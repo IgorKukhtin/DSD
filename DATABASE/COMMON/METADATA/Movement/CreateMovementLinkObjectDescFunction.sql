@@ -109,6 +109,7 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 22.12.13         * add zc_MovementLinkObject_ContractConditionKind   
  03.10.13                                         * rename MainJuridical -> JuridicalBasis
  25.09.13         * del zc_MovementLinkObject_Member; add UnitForwarding, CarTrailer
  20.08.13         * add zc_MovementLinkObject_Member
