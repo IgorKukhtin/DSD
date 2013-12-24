@@ -16,8 +16,11 @@ BEGIN
      vbUserId := 2; -- CAST (inSession AS Integer);
 
 
+     -- таблица - Проводки
+     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
+
      -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItem (OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat
+     CREATE TEMP TABLE _tmpItem (myId Integer, OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat
                                , ContainerId Integer
                                , AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer
                                , ProfitLossGroupId Integer, ProfitLossDirectionId Integer
@@ -29,7 +32,7 @@ BEGIN
 
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItem (OperDate, ObjectId, ObjectDescId, OperSumm
+     INSERT INTO _tmpItem (myId, OperDate, ObjectId, ObjectDescId, OperSumm
                          , ContainerId
                          , AccountGroupId, AccountDirectionId, AccountId
                          , ProfitLossGroupId, ProfitLossDirectionId
@@ -38,7 +41,8 @@ BEGIN
                          , UnitId, ContractId, PaidKindId
                          , IsActive
                           )
-        SELECT Movement.OperDate
+        SELECT 1 AS myId
+             , Movement.OperDate
              , COALESCE (MovementLinkObject_From.ObjectId, 0) AS ObjectId
              , COALESCE (Object.DescId, 0) AS ObjectDescId
              , COALESCE (MovementFloat_Amount.ValueData, 0) AS OperSumm
@@ -102,7 +106,7 @@ BEGIN
        ;
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItem (OperDate, ObjectId, ObjectDescId, OperSumm
+     INSERT INTO _tmpItem (myId, OperDate, ObjectId, ObjectDescId, OperSumm
                          , ContainerId
                          , AccountGroupId, AccountDirectionId, AccountId
                          , ProfitLossGroupId, ProfitLossDirectionId
@@ -111,7 +115,8 @@ BEGIN
                          , UnitId, ContractId, PaidKindId
                          , IsActive
                           )
-        SELECT _tmpItem.OperDate
+        SELECT 2 AS myId
+             , _tmpItem.OperDate
              , COALESCE (MovementLinkObject_To.ObjectId, 0) AS ObjectId
              , Object.DescId AS ObjectDescId
              , _tmpItem.OperSumm
@@ -256,6 +261,7 @@ BEGIN
                                                                   , inInsert                 := FALSE
                                                                   , inUserId                 := vbUserId
                                                                    )
+                      , IsActive = FALSE -- !!!всегда по Кредиту!!!
      WHERE _tmpItem.AccountId = zc_Enum_Account_100301(); -- прибыль текущего периода
 
 
@@ -297,12 +303,100 @@ BEGIN
                                                                             , inDescId_3          := zc_ContainerLinkObject_Car()
                                                                             , inObjectId_3        := 0 -- для Сотрудники(подотчетные лица) !!!имеено здесь последняя аналитика всегда значение = 0!!!
                                                                              )
+                                            WHEN _tmpItem.ObjectDescId = zc_Object_Juridical()
+                                             AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье
+                                                      -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения 5)Партии накладной
+                                                 THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                                            , inParentId          := NULL
+                                                                            , inObjectId          := _tmpItem.AccountId
+                                                                            , inJuridicalId_basis := _tmpItem.JuridicalId_Basis
+                                                                            , inBusinessId        := _tmpItem.BusinessId
+                                                                            , inObjectCostDescId  := NULL
+                                                                            , inObjectCostId      := NULL
+                                                                            , inDescId_1          := zc_ContainerLinkObject_Juridical()
+                                                                            , inObjectId_1        := _tmpItem.ObjectId
+                                                                            , inDescId_2          := zc_ContainerLinkObject_PaidKind()
+                                                                            , inObjectId_2        := _tmpItem.PaidKindId
+                                                                            , inDescId_3          := zc_ContainerLinkObject_Contract()
+                                                                            , inObjectId_3        := _tmpItem.ContractId
+                                                                            , inDescId_4          := zc_ContainerLinkObject_InfoMoney()
+                                                                            , inObjectId_4        := _tmpItem.InfoMoneyId
+                                                                            , inDescId_5          := zc_ContainerLinkObject_PartionMovement()
+                                                                            , inObjectId_5        := 0 -- !!!по этой аналитике учет пока не ведем!!!
+                                                                             )
+                                            WHEN _tmpItem.ObjectDescId = zc_Object_Juridical()
+                                                      -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения
+                                                 THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                                            , inParentId          := NULL
+                                                                            , inObjectId          := _tmpItem.AccountId
+                                                                            , inJuridicalId_basis := _tmpItem.JuridicalId_Basis
+                                                                            , inBusinessId        := _tmpItem.BusinessId
+                                                                            , inObjectCostDescId  := NULL
+                                                                            , inObjectCostId      := NULL
+                                                                            , inDescId_1          := zc_ContainerLinkObject_Juridical()
+                                                                            , inObjectId_1        := _tmpItem.ObjectId
+                                                                            , inDescId_2          := zc_ContainerLinkObject_PaidKind()
+                                                                            , inObjectId_2        := _tmpItem.PaidKindId
+                                                                            , inDescId_3          := zc_ContainerLinkObject_Contract()
+                                                                            , inObjectId_3        := _tmpItem.ContractId
+                                                                            , inDescId_4          := zc_ContainerLinkObject_InfoMoney()
+                                                                            , inObjectId_4        := _tmpItem.InfoMoneyId
+                                                                             )
                                        END;
+
+
+     -- 3. формируются Проводки 
+     INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
+       -- это обычная проводка
+       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, _tmpItem.ContainerId, 0 AS ParentId
+            , CASE WHEN _tmpItem.myId = 1 THEN -1 ELSE 1 END * _tmpItem.OperSumm
+            , _tmpItem.OperDate
+            , _tmpItem.IsActive
+       FROM _tmpItem;
+
+/*
+     -- 4. формируются Проводки для отчета
+     PERFORM lpInsertUpdate_MovementItemReport (inMovementId         := inMovementId
+                                              , inMovementItemId     := _tmpItem.MovementItemId
+                                              , inActiveContainerId  := _tmpItem.ActiveContainerId
+                                              , inPassiveContainerId := _tmpItem.PassiveContainerId
+                                              , inActiveAccountId    := _tmpItem.ActiveAccountId
+                                              , inPassiveAccountId   := _tmpItem.PassiveAccountId
+                                              , inReportContainerId  := lpInsertFind_ReportContainer (inActiveContainerId  := _tmpItem.ActiveContainerId
+                                                                                                    , inPassiveContainerId := _tmpItem.PassiveContainerId
+                                                                                                    , inActiveAccountId    := _tmpItem.ActiveAccountId
+                                                                                                    , inPassiveAccountId   := _tmpItem.PassiveAccountId
+                                                                                                     )
+                                              , inChildReportContainerId := lpInsertFind_ChildReportContainer (inActiveContainerId  := _tmpItem.ActiveContainerId
+                                                                                                             , inPassiveContainerId := _tmpItem.PassiveContainerId
+                                                                                                             , inActiveAccountId    := _tmpItem.ActiveAccountId
+                                                                                                             , inPassiveAccountId   := _tmpItem.PassiveAccountId
+                                                                                                             , inAccountKindId_1    := NULL
+                                                                                                             , inContainerId_1      := NULL
+                                                                                                             , inAccountId_1        := NULL
+                                                                                                              )
+                                              , inAmount   := _tmpItem.OperSumm
+                                              , inOperDate := _tmpItem.OperDate
+                                               )
+     FROM (SELECT NULL :: Integer AS MovementItemId
+                , _tmpItem_Passive.OperSumm, _tmpItem_Passive.OperDate
+                , _tmpItem_Active.ContainerId AS ActiveContainerId, _tmpItem_Active.AccountId AS ActiveAccountId
+                , _tmpItem_Passive.ContainerId AS PassiveContainerId, _tmpItem_Passive.AccountId AS PassiveAccountId
+           FROM _tmpItem AS _tmpItem_Passive
+                LEFT JOIN _tmpItem AS _tmpItem_Active ON _tmpItem_Active.myId = 2
+           WHERE _tmpItem_Passive.myId = 1 
+          ) AS _tmpItem
+    ;*/
+
 
      -- для теста
      RETURN QUERY SELECT _tmpItem.OperDate, _tmpItem.ObjectId, _tmpItem.ObjectDescId, _tmpItem.OperSumm, _tmpItem.ContainerId, _tmpItem.AccountGroupId, _tmpItem.AccountDirectionId, _tmpItem.AccountId, _tmpItem.ProfitLossGroupId, _tmpItem.ProfitLossDirectionId, _tmpItem.InfoMoneyGroupId, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId, _tmpItem.BusinessId, _tmpItem.JuridicalId_Basis, _tmpItem.UnitId, _tmpItem.ContractId, _tmpItem.PaidKindId, _tmpItem.IsActive FROM _tmpItem;
 
+     -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
+     PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
 
+     -- 5.2. ФИНИШ - Обязательно меняем статус документа
+     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_Income() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
 
 END;$BODY$
@@ -312,11 +406,11 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 22.12.13                                        * all
+ 23.12.13                                        * all
  24.11.13                                        * add View_InfoMoney
  13.08.13                        *                
 */
 
 -- тест
 -- SELECT * FROM gpComplete_Movement_Cash (inMovementId:= 3538, inSession:= zfCalc_UserAdmin())
-
+-- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 3538 , inSession:= zfCalc_UserAdmin())
