@@ -90,8 +90,6 @@ type
     spGet: TdsdStoredProc;
     RefreshAddOn: TRefreshAddOn;
     colDestinationObjectCode: TcxGridDBColumn;
-    colInfoMoneyName: TcxGridDBColumn;
-    colInfoMoneyName_Detail: TcxGridDBColumn;
     GridToExcel: TdsdGridToExcel;
     bbGridToExel: TdxBarButton;
     EntryToExcel: TdsdGridToExcel;

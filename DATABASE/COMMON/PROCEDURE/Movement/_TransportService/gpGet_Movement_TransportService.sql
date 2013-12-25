@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_TransportService(
     IN inMovementId        Integer  , -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
+RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , Amount TFloat, Distance TFloat, Price TFloat, CountPoint TFloat, TrevelTime TFloat
              , Comment TVarChar
@@ -60,6 +60,9 @@ BEGIN
            , 0                                AS PaidKindId
            , CAST ('' as TVarChar)            AS PaidKindName
   
+           , 0                                AS RouteId
+           , CAST ('' as TVarChar)            AS RouteName
+           
            , 0                                AS CarId
            , CAST ('' as TVarChar)            AS CarName
            , 0                                AS CarModelId
@@ -69,8 +72,9 @@ BEGIN
            , CAST ('' as TVarChar)            AS ContractConditionKindName
 
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
-  LEFT JOIN Object AS Object_Business
-         ON Object_Business.Id = lpGet_DefaultValue(lpGetMovementLinkObjectCodeById(zc_MovementLinkObject_Business()), vbUserId)::Integer;
+ -- LEFT JOIN Object AS Object_Business
+ --        ON Object_Business.Id = lpGet_DefaultValue(lpGetMovementLinkObjectCodeById(zc_MovementLinkObject_Business()), vbUserId)::Integer
+;
 
      ELSE
 

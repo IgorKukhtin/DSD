@@ -17,22 +17,22 @@ type
     ceInvNumber: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
     cxLabel2: TcxLabel;
-    cxLabel4: TcxLabel;
+    cxLabel67: TcxLabel;
     cxLabel5: TcxLabel;
-    ceMainJuridical: TcxButtonEdit;
+    ceContractConditionKind: TcxButtonEdit;
     cePaidKind: TcxButtonEdit;
-    ceUnit: TcxButtonEdit;
+    ceRoute: TcxButtonEdit;
     ceInfoMoney: TcxButtonEdit;
     ceOperDate: TcxDateEdit;
     ceAmount: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
-    ceBusiness: TcxButtonEdit;
+    ceCar: TcxButtonEdit;
     cxLabel9: TcxLabel;
-    MainJuridicalGuides: TdsdGuides;
+    ContractConditionKindGuides: TdsdGuides;
     PaidKindGuides: TdsdGuides;
-    UnitGuides: TdsdGuides;
+    RouteGuides: TdsdGuides;
     InfoMoneyGuides: TdsdGuides;
-    BusinessGuides: TdsdGuides;
+    CarGuides: TdsdGuides;
     ceJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
     cxLabel6: TcxLabel;
@@ -42,6 +42,17 @@ type
     cxLabel10: TcxLabel;
     ceComment: TcxTextEdit;
     ContractGuides: TdsdGuides;
+    cxLabel4: TcxLabel;
+    ceDistance: TcxCurrencyEdit;
+    cxLabel11: TcxLabel;
+    cePrice: TcxCurrencyEdit;
+    cxLabel12: TcxLabel;
+    ceCountPoint: TcxCurrencyEdit;
+    cxLabel13: TcxLabel;
+    ceTrevelTime: TcxCurrencyEdit;
+    cxLabel14: TcxLabel;
+    ceCarModel: TcxButtonEdit;
+    CarModelGuides: TdsdGuides;
   private
     { Private declarations }
   public

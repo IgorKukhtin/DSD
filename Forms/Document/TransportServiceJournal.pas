@@ -17,6 +17,12 @@ uses
 
 type
   TTransportServiceJournalForm = class(TAncestorJournalForm)
+    clDistance: TcxGridDBColumn;
+    clPrice: TcxGridDBColumn;
+    clCountPoint: TcxGridDBColumn;
+    clTrevelTime: TcxGridDBColumn;
+    clRouteName: TcxGridDBColumn;
+    clContractConditionKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -79,6 +79,7 @@ type
     procedure LoadServiceFormTest;
     procedure LoadStaffListFormTest;
     procedure LoadTransportFormTest;
+    procedure LoadTransportServiceFormTest;
     procedure LoadTradeMarkFormTest;
     procedure LoadUnionFormTest;
     procedure LoadUnitFormTest;
@@ -452,12 +453,21 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionJournalForm');
 end;
+
 procedure TLoadFormTest.LoadTransportFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportJournalForm');
+end;
+
+procedure TLoadFormTest.LoadTransportServiceFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportServiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTransportServiceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportServiceJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTransportServiceJournalForm');
 end;
 
 procedure TLoadFormTest.LoadJuridicalGroupFormTest;

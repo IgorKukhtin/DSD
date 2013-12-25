@@ -231,6 +231,8 @@ type
     bbSetUserDefaults: TdxBarButton;
     actPersonalAccount: TdsdOpenForm;
     bbPersonalAccount: TdxBarButton;
+    actTransportService: TdsdOpenForm;
+    bbTransportService: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

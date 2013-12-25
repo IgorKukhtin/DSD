@@ -668,6 +668,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbTransportService'
+        end
+        item
+          Visible = True
           ItemName = 'bbTransportDocuments_Separator'
         end
         item
@@ -951,6 +955,10 @@ object MainForm: TMainForm
       Action = actPersonalAccount
       Category = 0
     end
+    object bbTransportService: TdxBarButton
+      Action = actTransportService
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Left = 192
@@ -1024,6 +1032,14 @@ object MainForm: TMainForm
       Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
       Hint = #1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
       FormName = 'TMemberForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actTransportService: TdsdOpenForm
+      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1085#1072#1077#1084#1085#1099#1081' '#1090#1088#1072#1085#1089#1087#1086#1088#1090
+      Hint = #1056#1072#1089#1095#1077#1090#1099' '#1087#1086#1076#1086#1090#1095#1077#1090#1072' '#1089' '#1102#1088'.'#1083#1080#1094#1086#1084
+      FormName = 'TTransportServiceJournalForm'
       GuiParams = <>
       isShowModal = False
     end
