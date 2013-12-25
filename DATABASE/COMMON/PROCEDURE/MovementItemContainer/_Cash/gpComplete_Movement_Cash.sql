@@ -20,8 +20,8 @@ BEGIN
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
 
      -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItem (myId Integer, OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat
-                               , ContainerId Integer
+     CREATE TEMP TABLE _tmpItem (OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat
+                               , MovementItemId Integer, ContainerId Integer
                                , AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer
                                , ProfitLossGroupId Integer, ProfitLossDirectionId Integer
                                , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
@@ -32,8 +32,8 @@ BEGIN
 
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItem (myId, OperDate, ObjectId, ObjectDescId, OperSumm
-                         , ContainerId
+     INSERT INTO _tmpItem (OperDate, ObjectId, ObjectDescId, OperSumm
+                         , MovementItemId, ContainerId
                          , AccountGroupId, AccountDirectionId, AccountId
                          , ProfitLossGroupId, ProfitLossDirectionId
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
@@ -41,11 +41,11 @@ BEGIN
                          , UnitId, ContractId, PaidKindId
                          , IsActive
                           )
-        SELECT 1 AS myId
-             , Movement.OperDate
-             , COALESCE (MovementLinkObject_From.ObjectId, 0) AS ObjectId
+        SELECT Movement.OperDate
+             , COALESCE (MovementItem.ObjectId, 0) AS ObjectId
              , COALESCE (Object.DescId, 0) AS ObjectDescId
-             , COALESCE (MovementFloat_Amount.ValueData, 0) AS OperSumm
+             , MovementItem.Amount AS OperSumm
+             , MovementItem.Id AS MovementItemId
              , 0 AS ContainerId                                               -- сформируем позже
              , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId   -- сформируем позже
                -- Группы ОПиУ
@@ -58,56 +58,58 @@ BEGIN
              , COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) AS InfoMoneyDestinationId
                -- Управленческие статьи назначения
              , COALESCE (View_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
-               -- Бизнес: если это касса, тогда из кассы или по св-ву документа, иначе по св-ву документа
-             , COALESCE (CASE WHEN Object.DescId = zc_Object_Cash()
-                                   THEN COALESCE (ObjectLink_Cash_Business.ChildObjectId, MovementLinkObject_Business.ObjectId)
-                              ELSE MovementLinkObject_Business.ObjectId
-                         END, 0) AS BusinessId
+               -- Бизнес: из кассы или по св-ву ObjectLink_Unit_Business
+             , COALESCE (ObjectLink_Cash_Business.ChildObjectId, COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0)) AS BusinessId
                -- Главное Юр.лицо всегда из кассы
              , COALESCE (ObjectLink_Cash_MainJuridical.ChildObjectId, 0) AS JuridicalId_Basis
-             , COALESCE (MovementLinkObject_Unit.ObjectId, 0) AS UnitId
-             , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
+             , COALESCE (MILinkObject_Unit.ObjectId, 0) AS UnitId
+             , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
              , zc_Enum_PaidKind_SecondForm() AS PaidKindId
-             , FALSE
+             , CASE WHEN MovementItem.Amount >= 0 THEN TRUE ELSE FALSE END
         FROM Movement
-             LEFT JOIN MovementFloat AS MovementFloat_Amount 
-                                     ON MovementFloat_Amount.MovementId = Movement.Id
-                                    AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                          ON MovementLinkObject_From.MovementId = Movement.Id
-                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                          ON MovementLinkObject_To.MovementId = Movement.Id
-                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_InfoMoney
-                                          ON MovementLinkObject_InfoMoney.MovementId = Movement.Id
-                                         AND MovementLinkObject_InfoMoney.DescId = zc_MovementLinkObject_InfoMoney()
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_Business
-                                          ON MovementLinkObject_Business.MovementId = Movement.Id
-                                         AND MovementLinkObject_Business.DescId = zc_MovementLinkObject_Business()
+             JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 
-             LEFT JOIN Object ON Object.Id = MovementLinkObject_From.ObjectId
-             LEFT JOIN ObjectLink AS ObjectLink_Cash_Business ON ObjectLink_Cash_Business.ObjectId = CASE WHEN Object.DescId = zc_Object_Cash() THEN Object.Id ELSE MovementLinkObject_To.ObjectId END
-                                                             AND ObjectLink_Cash_Business.DescId = zc_ObjectLink_Cash_Business()
-             LEFT JOIN ObjectLink AS ObjectLink_Cash_MainJuridical ON ObjectLink_Cash_MainJuridical.ObjectId = CASE WHEN Object.DescId = zc_Object_Cash() THEN Object.Id ELSE MovementLinkObject_To.ObjectId END
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                              ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+
+             LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
+             LEFT JOIN ObjectLink AS ObjectLink_Cash_MainJuridical ON ObjectLink_Cash_MainJuridical.ObjectId = MovementItem.ObjectId
                                                                   AND ObjectLink_Cash_MainJuridical.DescId = zc_ObjectLink_Cash_MainJuridical()
-
-             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MovementLinkObject_InfoMoney.ObjectId
-             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = MovementLinkObject_Unit.ObjectId
+             LEFT JOIN ObjectLink AS ObjectLink_Cash_Business ON ObjectLink_Cash_Business.ObjectId = MovementItem.ObjectId
+                                                             AND ObjectLink_Cash_Business.DescId = zc_ObjectLink_Cash_Business()
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Business ON ObjectLink_Unit_Business.ObjectId = MILinkObject_Unit.ObjectId
+                                                             AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
+             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = MILinkObject_Unit.ObjectId
+             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
         WHERE Movement.Id = inMovementId
           AND Movement.DescId = zc_Movement_Cash()
           AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
        ;
 
+
+     -- проверка
+     IF EXISTS (SELECT _tmpItem.ObjectId FROM _tmpItem WHERE _tmpItem.ObjectId = 0)
+     THEN
+         RAISE EXCEPTION 'В документе не определена касса. Проведение невозможно.';
+     END IF;
+   
+     -- проверка
+     IF EXISTS (SELECT _tmpItem.JuridicalId_Basis FROM _tmpItem WHERE _tmpItem.JuridicalId_Basis = 0)
+     THEN
+         RAISE EXCEPTION 'У кассы не установлено главное юр лицо. Проведение невозможно.';
+     END IF;
+
+
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     INSERT INTO _tmpItem (myId, OperDate, ObjectId, ObjectDescId, OperSumm
-                         , ContainerId
+     INSERT INTO _tmpItem (OperDate, ObjectId, ObjectDescId, OperSumm
+                         , MovementItemId, ContainerId
                          , AccountGroupId, AccountDirectionId, AccountId
                          , ProfitLossGroupId, ProfitLossDirectionId
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
@@ -115,47 +117,30 @@ BEGIN
                          , UnitId, ContractId, PaidKindId
                          , IsActive
                           )
-        SELECT 2 AS myId
-             , _tmpItem.OperDate
-             , COALESCE (MovementLinkObject_To.ObjectId, 0) AS ObjectId
-             , Object.DescId AS ObjectDescId
-             , _tmpItem.OperSumm
-             , _tmpItem.ContainerId
-             , _tmpItem.AccountGroupId, _tmpItem.AccountDirectionId, _tmpItem.AccountId
+        SELECT _tmpItem.OperDate
+             , COALESCE (MILinkObject_MoneyPlace.ObjectId, 0) AS ObjectId
+             , COALESCE (Object.DescId, 0) AS ObjectDescId
+             , -1 * _tmpItem.OperSumm
+             , _tmpItem.MovementItemId
+             , 0 AS ContainerId                                               -- сформируем позже
+             , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId   -- сформируем позже
              , _tmpItem.ProfitLossGroupId, _tmpItem.ProfitLossDirectionId
              , _tmpItem.InfoMoneyGroupId, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId
-               -- Бизнес: если это касса, тогда из кассы, иначе по св-ву документа
-             , COALESCE (ObjectLink_Cash_Business.ChildObjectId, MovementLinkObject_Business.ObjectId) AS BusinessId
+               -- Бизнес: если это ОПиУ, тогда из ObjectLink_Unit_Business, иначе из кассы
+             , CASE WHEN Object.Id IS NULL THEN COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0) ELSE _tmpItem.BusinessId END AS BusinessId
                -- Главное Юр.лицо всегда из кассы
-             , COALESCE (ObjectLink_Cash_MainJuridical.ChildObjectId, _tmpItem.JuridicalId_Basis) AS JuridicalId_Basis
+             , _tmpItem.JuridicalId_Basis
              , _tmpItem.UnitId, _tmpItem.ContractId, _tmpItem.PaidKindId
-             , TRUE AS IsActive
+             , NOT _tmpItem.IsActive
         FROM _tmpItem
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                          ON MovementLinkObject_To.MovementId = inMovementId
-                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_Business
-                                          ON MovementLinkObject_Business.MovementId = inMovementId
-                                         AND MovementLinkObject_Business.DescId = zc_MovementLinkObject_Business()
-             LEFT JOIN Object ON Object.Id = MovementLinkObject_To.ObjectId
-             LEFT JOIN ObjectLink AS ObjectLink_Cash_Business ON ObjectLink_Cash_Business.ObjectId = Object.Id
-                                                             AND ObjectLink_Cash_Business.DescId = zc_ObjectLink_Cash_Business()
-             LEFT JOIN ObjectLink AS ObjectLink_Cash_MainJuridical ON ObjectLink_Cash_MainJuridical.ObjectId = Object.Id
-                                                                  AND ObjectLink_Cash_MainJuridical.DescId = zc_ObjectLink_Cash_MainJuridical()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                              ON MILinkObject_MoneyPlace.MovementItemId = _tmpItem.MovementItemId
+                                             AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+             LEFT JOIN Object ON Object.Id = MILinkObject_MoneyPlace.ObjectId
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Business ON ObjectLink_Unit_Business.ObjectId = _tmpItem.UnitId
+                                                             AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
        ;
 
-/*
-     -- проверка
-     IF COALESCE (vbFromDescId, 0) = zc_Object_Cash()  
-         RAISE EXCEPTION 'В документе не определена касса. Проведение невозможно';
-     END IF;
-   
-     -- проверка
-     IF COALESCE (vbMainJuridicalId, 0) = 0 
-     THEN
-         RAISE EXCEPTION 'У кассы не установлено главное юр лицо. Проведение невозможно';
-     END IF;
-*/
 
 
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -235,7 +220,7 @@ BEGIN
      FROM Object_AccountDirection_View AS View_AccountDirection
      WHERE View_AccountDirection.AccountDirectionId = _tmpItem.AccountDirectionId;
 
-     -- 1.1.2. определяется Счет для проводок суммового учета
+     -- 1.1.3. определяется Счет для проводок суммового учета
      UPDATE _tmpItem SET AccountId = CASE WHEN _tmpItem.ObjectDescId = 0
                                                THEN zc_Enum_Account_100301() -- прибыль текущего периода
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40300() -- рассчетный счет
@@ -261,6 +246,7 @@ BEGIN
                                                                   , inInsert                 := FALSE
                                                                   , inUserId                 := vbUserId
                                                                    )
+                      , OperSumm = CASE WHEN _tmpItem.IsActive = TRUE THEN -1 ELSE 1 END * _tmpItem.OperSumm
                       , IsActive = FALSE -- !!!всегда по Кредиту!!!
      WHERE _tmpItem.AccountId = zc_Enum_Account_100301(); -- прибыль текущего периода
 
@@ -347,14 +333,13 @@ BEGIN
 
      -- 3. формируются Проводки 
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
-       -- это обычная проводка
-       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, _tmpItem.ContainerId, 0 AS ParentId
-            , CASE WHEN _tmpItem.myId = 1 THEN -1 ELSE 1 END * _tmpItem.OperSumm
+       SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, _tmpItem.MovementItemId, _tmpItem.ContainerId, 0 AS ParentId
+            , _tmpItem.OperSumm
             , _tmpItem.OperDate
             , _tmpItem.IsActive
        FROM _tmpItem;
 
-/*
+
      -- 4. формируются Проводки для отчета
      PERFORM lpInsertUpdate_MovementItemReport (inMovementId         := inMovementId
                                               , inMovementItemId     := _tmpItem.MovementItemId
@@ -378,25 +363,25 @@ BEGIN
                                               , inAmount   := _tmpItem.OperSumm
                                               , inOperDate := _tmpItem.OperDate
                                                )
-     FROM (SELECT NULL :: Integer AS MovementItemId
-                , _tmpItem_Passive.OperSumm, _tmpItem_Passive.OperDate
+     FROM (SELECT _tmpItem_Active.MovementItemId
+                , _tmpItem_Active.OperSumm, _tmpItem_Active.OperDate
                 , _tmpItem_Active.ContainerId AS ActiveContainerId, _tmpItem_Active.AccountId AS ActiveAccountId
                 , _tmpItem_Passive.ContainerId AS PassiveContainerId, _tmpItem_Passive.AccountId AS PassiveAccountId
-           FROM _tmpItem AS _tmpItem_Passive
-                LEFT JOIN _tmpItem AS _tmpItem_Active ON _tmpItem_Active.myId = 2
-           WHERE _tmpItem_Passive.myId = 1 
+           FROM _tmpItem AS _tmpItem_Active
+                LEFT JOIN _tmpItem AS _tmpItem_Passive ON _tmpItem_Passive.IsActive = FALSE AND _tmpItem_Passive.MovementItemId = _tmpItem_Active.MovementItemId
+           WHERE _tmpItem_Active.IsActive = TRUE
           ) AS _tmpItem
-    ;*/
+    ;
 
 
      -- для теста
-     RETURN QUERY SELECT _tmpItem.OperDate, _tmpItem.ObjectId, _tmpItem.ObjectDescId, _tmpItem.OperSumm, _tmpItem.ContainerId, _tmpItem.AccountGroupId, _tmpItem.AccountDirectionId, _tmpItem.AccountId, _tmpItem.ProfitLossGroupId, _tmpItem.ProfitLossDirectionId, _tmpItem.InfoMoneyGroupId, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId, _tmpItem.BusinessId, _tmpItem.JuridicalId_Basis, _tmpItem.UnitId, _tmpItem.ContractId, _tmpItem.PaidKindId, _tmpItem.IsActive FROM _tmpItem;
+     -- RETURN QUERY SELECT _tmpItem.OperDate, _tmpItem.ObjectId, _tmpItem.ObjectDescId, _tmpItem.OperSumm, _tmpItem.ContainerId, _tmpItem.AccountGroupId, _tmpItem.AccountDirectionId, _tmpItem.AccountId, _tmpItem.ProfitLossGroupId, _tmpItem.ProfitLossDirectionId, _tmpItem.InfoMoneyGroupId, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId, _tmpItem.BusinessId, _tmpItem.JuridicalId_Basis, _tmpItem.UnitId, _tmpItem.ContractId, _tmpItem.PaidKindId, _tmpItem.IsActive FROM _tmpItem;
 
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
 
      -- 5.2. ФИНИШ - Обязательно меняем статус документа
-     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_Income() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
+     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_Cash() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
 
 END;$BODY$
@@ -412,5 +397,6 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM gpComplete_Movement_Cash (inMovementId:= 3538, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 3538 , inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM lpUnComplete_Movement (inMovementId:= 3581, inUserId:= zfCalc_UserAdmin() :: Integer)
+-- SELECT * FROM gpComplete_Movement_Cash (inMovementId:= 3581, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 3581, inSession:= zfCalc_UserAdmin())
