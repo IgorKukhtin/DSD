@@ -301,7 +301,9 @@ uses
   Branch_Object in '..\..\Forms\Guides\Branch_Object.pas' {Branch_ObjectForm: TParentForm},
   Cash in '..\..\Forms\Guides\Cash.pas' {CashForm: TParentForm},
   CashEdit in '..\..\Forms\Guides\CashEdit.pas' {CashEditForm: TParentForm},
-  Cash_Object in '..\..\Forms\Guides\Cash_Object.pas' {Cash_ObjectForm: TParentForm};
+  Cash_Object in '..\..\Forms\Guides\Cash_Object.pas' {Cash_ObjectForm: TParentForm},
+  UserKey in '..\..\Forms\Guides\UserKey.pas' {UserKeyForm: TParentForm},
+  MovementItemContainer in '..\..\Forms\System\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm};
 
 {$R *.RES}
 
