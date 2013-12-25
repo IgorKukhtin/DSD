@@ -284,7 +284,7 @@
         Name = 'iomiid'
         Value = '0'
         Component = FormParams
-        ComponentItem = 'miid'
+        ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
@@ -299,6 +299,13 @@
         Value = 0d
         Component = ceOperDate
         DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmount'
+        Value = 0.000000000000000000
+        Component = ceAmount
+        DataType = ftFloat
         ParamType = ptInput
       end
       item

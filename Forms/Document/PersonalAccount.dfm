@@ -42,6 +42,7 @@ object PersonalAccountForm: TPersonalAccountForm
     object edOperDate: TcxDateEdit
       Left = 270
       Top = 23
+      EditValue = 0d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -311,9 +312,6 @@ object PersonalAccountForm: TPersonalAccountForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -1031,8 +1029,8 @@ object PersonalAccountForm: TPersonalAccountForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 448
-    Top = 24
+    Left = 440
+    Top = 16
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
