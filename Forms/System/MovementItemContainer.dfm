@@ -2,6 +2,7 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
   Caption = #1055#1088#1086#1074#1086#1076#1082#1080' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091
   ClientHeight = 368
   ClientWidth = 854
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 862
   ExplicitHeight = 395
   PixelsPerInch = 96
@@ -9,19 +10,43 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
   inherited PageControl: TcxPageControl
     Width = 854
     Height = 342
-    ExplicitWidth = 606
-    ExplicitHeight = 297
+    ExplicitWidth = 854
+    ExplicitHeight = 342
     ClientRectBottom = 342
     ClientRectRight = 854
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 606
-      ExplicitHeight = 297
+      ExplicitWidth = 854
+      ExplicitHeight = 342
       inherited cxGrid: TcxGrid
         Width = 854
         Height = 342
-        ExplicitWidth = 606
-        ExplicitHeight = 297
+        ExplicitWidth = 854
+        ExplicitHeight = 342
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Position = spFooter
+              Column = colDebetAmount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Position = spFooter
+              Column = colKreditAmount
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colDebetAmount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colKreditAmount
+            end>
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
