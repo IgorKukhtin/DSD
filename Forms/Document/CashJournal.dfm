@@ -1,20 +1,20 @@
 inherited CashJournalForm: TCashJournalForm
   Caption = #1054#1087#1077#1088#1072#1094#1080#1080' '#1089' '#1082#1072#1089#1089#1086#1081
   ClientWidth = 900
-  ExplicitLeft = -43
   ExplicitWidth = 908
+  ExplicitHeight = 356
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 900
     TabOrder = 3
-    ExplicitWidth = 884
+    ExplicitWidth = 900
     ClientRectRight = 900
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 884
+      ExplicitWidth = 900
       inherited cxGrid: TcxGrid
         Width = 900
-        ExplicitWidth = 884
+        ExplicitWidth = 900
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -111,7 +111,7 @@ inherited CashJournalForm: TCashJournalForm
   end
   inherited Panel: TPanel
     Width = 900
-    ExplicitWidth = 884
+    ExplicitWidth = 900
   end
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
@@ -161,5 +161,35 @@ inherited CashJournalForm: TCashJournalForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 472
     Top = 248
+  end
+  inherited spMovementComplete: TdsdStoredProc
+    StoredProcName = 'gpComplete_Movement_Cash'
+    Params = <
+      item
+        Name = 'inmovementid'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+  end
+  inherited spMovementUnComplete: TdsdStoredProc
+    StoredProcName = 'gpUnComplete_Movement'
+    Params = <
+      item
+        Name = 'inmovementid'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+  end
+  inherited spMovementSetErased: TdsdStoredProc
+    StoredProcName = 'gpSetErased_Movement'
+    Params = <
+      item
+        Name = 'inmovementid'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
   end
 end

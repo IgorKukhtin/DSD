@@ -104,18 +104,18 @@
   end
   object ceObject: TcxButtonEdit [14]
     Left = 8
-    Top = 134
+    Top = 186
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 5
+    TabOrder = 6
     Width = 273
   end
   object cxLabel6: TcxLabel [15]
     Left = 8
-    Top = 111
+    Top = 163
     Caption = #1054#1073#1098#1077#1082#1090' '
   end
   object cxLabel10: TcxLabel [16]
@@ -131,18 +131,18 @@
   end
   object cxLabel8: TcxLabel [18]
     Left = 8
-    Top = 165
+    Top = 111
     Caption = #1044#1086#1075#1086#1074#1086#1088
   end
   object ceContract: TcxButtonEdit [19]
     Left = 8
-    Top = 188
+    Top = 134
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 6
+    TabOrder = 5
     Width = 273
   end
   object cxLabel3: TcxLabel [20]
@@ -286,13 +286,13 @@
         DataType = ftDateTime
       end
       item
-        Name = 'AmountIn'
+        Name = 'amountin'
         Value = 0.000000000000000000
         Component = ceAmountIn
         DataType = ftFloat
       end
       item
-        Name = 'AmountOut'
+        Name = 'amountout'
         Value = 0.000000000000000000
         Component = ceAmountOut
         DataType = ftFloat
@@ -304,26 +304,26 @@
         DataType = ftString
       end
       item
-        Name = 'fromid'
+        Name = 'cashid'
         Value = ''
         Component = CashGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'fromname'
+        Name = 'cashname'
         Value = ''
         Component = CashGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
-        Name = 'toid'
+        Name = 'moneyplaceid'
         Value = ''
         Component = ObjectlGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'toname'
+        Name = 'moneyplacename'
         Value = ''
         Component = ObjectlGuides
         ComponentItem = 'TextValue'
@@ -538,19 +538,6 @@
         Name = 'JuridicalName'
         Value = ''
         Component = ObjectlGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-        Component = CashGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        Component = CashGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end

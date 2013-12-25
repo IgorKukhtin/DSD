@@ -2,6 +2,7 @@ inherited ServiceJournalForm: TServiceJournalForm
   Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1091#1089#1083#1091#1075
   ClientWidth = 884
   ExplicitWidth = 892
+  ExplicitHeight = 356
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -125,5 +126,44 @@ inherited ServiceJournalForm: TServiceJournalForm
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 472
     Top = 248
+  end
+  inherited spMovementComplete: TdsdStoredProc
+    StoredProcName = 'gpComplete_Movement_Service'
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+      end>
+    Left = 16
+    Top = 152
+  end
+  inherited spMovementUnComplete: TdsdStoredProc
+    StoredProcName = 'gpUnComplete_Movement'
+    Params = <
+      item
+        Name = 'inmovementid'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    Top = 160
+  end
+  inherited spMovementSetErased: TdsdStoredProc
+    StoredProcName = 'gpSetErased_Movement'
+    DataSet = MasterCDS
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end>
+    Params = <
+      item
+        Name = 'inmovementid'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    Left = 80
+    Top = 176
   end
 end

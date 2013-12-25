@@ -303,7 +303,9 @@ uses
   CashEdit in '..\..\Forms\Guides\CashEdit.pas' {CashEditForm: TParentForm},
   Cash_Object in '..\..\Forms\Guides\Cash_Object.pas' {Cash_ObjectForm: TParentForm},
   TransportService in '..\..\Forms\Document\TransportService.pas' {TransportServiceForm: TParentForm},
-  TransportServiceJournal in '..\..\Forms\Document\TransportServiceJournal.pas' {TransportServiceJournalForm: TParentForm};
+  TransportServiceJournal in '..\..\Forms\Document\TransportServiceJournal.pas' {TransportServiceJournalForm: TParentForm},
+  UserKey in '..\..\Forms\Guides\UserKey.pas' {UserKeyForm: TParentForm},
+  MovementItemContainer in '..\..\Forms\System\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm};
 
 {$R *.RES}
 
