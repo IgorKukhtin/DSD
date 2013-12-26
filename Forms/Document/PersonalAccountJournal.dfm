@@ -386,6 +386,11 @@ object PersonalAccountJournalForm: TPersonalAccountJournalForm
         item
           Name = 'Id'
           Value = Null
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
         end>
       isShowModal = False
       DataSource = DataSource
@@ -402,6 +407,11 @@ object PersonalAccountJournalForm: TPersonalAccountJournalForm
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
         end>
       isShowModal = False
       ActionType = acUpdate

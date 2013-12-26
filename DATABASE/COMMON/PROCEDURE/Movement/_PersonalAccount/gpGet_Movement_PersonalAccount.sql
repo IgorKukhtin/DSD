@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_PersonalAccount(
     IN inMovementId        Integer  , -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , PersonalId Integer, PersonalName TVarChar
               )
@@ -25,7 +25,7 @@ BEGIN
      RETURN QUERY 
        SELECT
              0 AS Id
-           , CAST (NEXTVAL ('Movement_PersonalAccount_seq') AS TVarChar) AS InvNumber
+           , CAST (NEXTVAL ('Movement_PersonalAccount_seq') as Integer) AS InvNumber
            , CAST (CURRENT_DATE as TDateTime) AS OperDate
            , lfObject_Status.Code             AS StatusCode
            , lfObject_Status.Name             AS StatusName
@@ -40,7 +40,7 @@ BEGIN
      RETURN QUERY 
        SELECT
              Movement.Id
-           , Movement.InvNumber
+           , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
            , Movement.OperDate
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName

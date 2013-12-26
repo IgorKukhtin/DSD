@@ -67,7 +67,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), ioId, inInfoMoneyId);
 
      -- сохранили протокол
-     -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserIdd);
+     -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
 
 END;
 $BODY$

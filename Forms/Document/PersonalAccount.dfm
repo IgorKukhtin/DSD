@@ -32,6 +32,7 @@ object PersonalAccountForm: TPersonalAccountForm
       Enabled = False
       Properties.ReadOnly = True
       TabOrder = 0
+      Text = '0'
       Width = 90
     end
     object cxLabel1: TcxLabel
@@ -519,8 +520,12 @@ object PersonalAccountForm: TPersonalAccountForm
     Params = <
       item
         Name = 'Id'
-        Value = Null
         ParamType = ptInputOutput
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptInput
       end>
     Left = 240
     Top = 304
@@ -535,14 +540,13 @@ object PersonalAccountForm: TPersonalAccountForm
     Params = <
       item
         Name = 'inMovementId'
-        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inShowAll'
-        Value = 'False'
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
       end
@@ -775,7 +779,7 @@ object PersonalAccountForm: TPersonalAccountForm
       Params = <
         item
           Name = 'InvNumber'
-          Value = ''
+          Value = '0'
           Component = edInvNumber
           DataType = ftString
           ParamType = ptInput
@@ -1050,7 +1054,6 @@ object PersonalAccountForm: TPersonalAccountForm
     Params = <
       item
         Name = 'inMovementId'
-        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -1082,7 +1085,6 @@ object PersonalAccountForm: TPersonalAccountForm
       end
       item
         Name = 'inMovementId'
-        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -1175,14 +1177,13 @@ object PersonalAccountForm: TPersonalAccountForm
     Params = <
       item
         Name = 'ioId'
-        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inInvNumber'
-        Value = ''
+        Value = '0'
         Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
@@ -1205,7 +1206,6 @@ object PersonalAccountForm: TPersonalAccountForm
     Top = 177
   end
   object HeaderSaver: THeaderSaver
-    IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
     StoredProc = spInsertUpdateMovement
@@ -1229,14 +1229,52 @@ object PersonalAccountForm: TPersonalAccountForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inId'
-        Value = Null
+        Name = 'inMovementId'
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+      end
+      item
+        Name = 'inId'
+        Component = FormParams
+        ComponentItem = 'Id'
+      end
+      item
+        Name = 'Invnumber'
+        Value = '0'
+        Component = edInvNumber
+      end
+      item
+        Name = 'Operdate'
+        Value = 0d
+        Component = edOperDate
+      end
+      item
+        Name = 'Statuscode'
+        Value = ''
+        Component = FormParams
+      end
+      item
+        Name = 'statusname'
+        Value = ''
+        Component = FormParams
+        DataType = ftString
+      end
+      item
+        Name = 'PersonalId'
+        Value = ''
+        Component = GuidesPersonal
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PersonalName'
+        Value = ''
+        Component = GuidesPersonal
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
-    Left = 216
-    Top = 168
+    Left = 608
+    Top = 16
   end
   object RefreshAddOn: TRefreshAddOn
     FormName = 'PersonalAccountJournalForm'
@@ -1248,7 +1286,6 @@ object PersonalAccountForm: TPersonalAccountForm
     Top = 253
   end
   object GuidesFiller: TGuidesFiller
-    IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
     GuidesList = <
@@ -1264,7 +1301,6 @@ object PersonalAccountForm: TPersonalAccountForm
   end
   object ChangeStatus: TChangeStatus
     KeyField = 'Code'
-    IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
     StoredProcName = 'gpUpdate_Status_PersonalAccount'
