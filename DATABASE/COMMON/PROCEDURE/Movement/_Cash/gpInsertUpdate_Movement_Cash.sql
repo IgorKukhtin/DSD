@@ -20,36 +20,48 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbAccessKeyId Integer;
    DECLARE vbAmount TFloat;
    DECLARE vbMovementItemId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash());
-     vbUserId := lpGetUserBySession(inSession);
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash());
+     -- определяем ключ доступа
+     vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Cash());
    
+     -- проверка
      IF (COALESCE(inAmountIn, 0) = 0) AND (COALESCE(inAmountOut, 0) = 0) THEN
-        RAISE EXCEPTION 'Укажите сумму прихода или расхода';
+        RAISE EXCEPTION 'Введите сумму прихода или расхода';
      END IF;
 
+     -- проверка
      IF (COALESCE(inAmountIn, 0) <> 0) AND (COALESCE(inAmountOut, 0) <> 0) THEN
-        RAISE EXCEPTION 'Указана сумма прихода и расхода. Укажите что-то одно';
+        RAISE EXCEPTION 'Должна быть введена только одна сумма - или прихода или расхода.';
      END IF;
 
+     -- расчет
      IF inAmountIn > 0 THEN
         vbAmount := inAmountIn;
      ELSE
         vbAmount := - inAmountOut;
      END IF;
 
+
+     -- 1. Распроводим Документ
+     IF ioId > 0 AND vbUserId = lpCheckRight (inSession, zc_Enum_Process_UnComplete_Cash())
+     THEN
+         PERFORM lpUnComplete_Movement (inMovementId := ioId
+                                      , inUserId     := vbUserId);
+     END IF;
+
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Cash(), inInvNumber, inOperDate, NULL);
 
-     SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem 
-      WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
+     -- определяем <Элемент документа>
+     SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
 
-        -- сохранили <Элемент документа>
-     vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inCashId, ioId, vbAmount, NULL);
+     -- сохранили <Элемент документа>
+     vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inCashId, ioId, vbAmount, NULL, vbAccessKeyId);
 
 
      -- сохранили связь с <Объект>
@@ -65,21 +77,42 @@ BEGIN
      -- сохранили связь с <Подразделением>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbMovementItemId, inUnitId);
 
+
+     -- 5.1. таблица - Проводки
+     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
+     -- 5.2. таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     CREATE TEMP TABLE _tmpItem (OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat
+                               , MovementItemId Integer, ContainerId Integer
+                               , AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer
+                               , ProfitLossGroupId Integer, ProfitLossDirectionId Integer
+                               , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                               , BusinessId Integer, JuridicalId_Basis Integer
+                               , UnitId Integer, ContractId Integer, PaidKindId Integer
+                               , IsActive Boolean
+                                ) ON COMMIT DROP;
+
+     -- 5.3. проводим Документ
+     IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_Complete_Cash())
+     THEN
+          PERFORM lpComplete_Movement_Cash (inMovementId := ioId
+                                          , inUserId     := vbUserId);
+     END IF;
+
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.12.13                                        * add lpComplete_Movement_Cash
+ 26.12.13                                        * add lpGetAccessKey
  23.12.13                        *                
  19.11.13                        *                
  06.08.13                        *                
-
 */
 
 -- тест

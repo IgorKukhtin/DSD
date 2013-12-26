@@ -10,7 +10,8 @@ uses
   cxPCdxBarPopupMenu, cxPC, Vcl.ExtCtrls, dxBar, cxClasses, cxDBEdit, cxStyles,
   cxCustomData, cxFilter, cxData, cxDataStorage, Data.DB, cxDBData, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, Datasnap.DBClient, dxBarExtItems, cxCalendar;
+  cxGrid, Datasnap.DBClient, dxBarExtItems, cxCalendar, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TJuridicalEditForm = class(TAncestorDialogForm)

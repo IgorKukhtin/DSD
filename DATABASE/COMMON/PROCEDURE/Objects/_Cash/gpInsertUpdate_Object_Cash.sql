@@ -30,7 +30,8 @@ $BODY$
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Cash(), inCode);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_Cash(), inCode, inCashName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Cash(), inCode, inCashName
+                                , inAccessKeyId:= CASE WHEN COALESCE (inBranchId, 0) = 0 THEN zc_Enum_Process_AccessKey_CashDnepr() ELSE (SELECT Object_Branch.AccessKeyId FROM Object AS Object_Branch WHERE Object_Branch.Id = inBranchId) END);
 
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Cash_Currency(), ioId, inCurrencyId);
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Cash_Branch(), ioId, inBranchId);
@@ -41,16 +42,14 @@ $BODY$
    PERFORM lpInsert_ObjectProtocol (ioId, UserId);
    
 END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Cash(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, tvarchar)
-  OWNER TO postgres;
-  
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpInsertUpdate_Object_Cash(Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, tvarchar) OWNER TO postgres;
   
  /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.12.13                                        * add inAccessKeyId
  24.11.13                                        * err lfGet_ObjectCode (zc_Object_Cash(), inCode)
  24.11.13                                        * Cyr1251
  10.06.13          *

@@ -87,12 +87,12 @@ uses
   Report_Balance in '..\..\Forms\Report\Report_Balance.pas' {Report_BalanceForm},
   LoadReportTest in '..\SOURCE\LoadReportTest.pas',
   PriceListItemTest in '..\SOURCE\ObjectHistory\All\PriceListItemTest.pas',
-  InfoMoneyGroup in '..\..\Forms\InfoMoneyGroup.pas' {InfoMoneyGroupForm},
-  InfoMoneyGroupEdit in '..\..\Forms\InfoMoneyGroupEdit.pas' {InfoMoneyGroupEditForm},
-  InfoMoneyDestination in '..\..\Forms\InfoMoneyDestination.pas' {InfoMoneyDestinationForm},
-  InfoMoneyDestinationEdit in '..\..\Forms\InfoMoneyDestinationEdit.pas' {InfoMoneyDestinationEditForm},
-  InfoMoney in '..\..\Forms\InfoMoney.pas' {InfoMoneyForm},
-  InfoMoneyEdit in '..\..\Forms\InfoMoneyEdit.pas' {InfoMoneyEditForm},
+  InfoMoneyGroup in '..\..\Forms\Guides\InfoMoneyGroup.pas' {InfoMoneyGroupForm},
+  InfoMoneyGroupEdit in '..\..\Forms\Guides\InfoMoneyGroupEdit.pas' {InfoMoneyGroupEditForm},
+  InfoMoneyDestination in '..\..\Forms\Guides\InfoMoneyDestination.pas' {InfoMoneyDestinationForm},
+  InfoMoneyDestinationEdit in '..\..\Forms\Guides\InfoMoneyDestinationEdit.pas' {InfoMoneyDestinationEditForm},
+  InfoMoney_Object in '..\..\Forms\Guides\InfoMoney_Object.pas' {InfoMoney_ObjectForm},
+  InfoMoneyEdit in '..\..\Forms\Guides\InfoMoneyEdit.pas' {InfoMoneyEditForm},
   AccountGroup in '..\..\Forms\AccountGroup.pas' {AccountGroupForm},
   AccountGroupEdit in '..\..\Forms\AccountGroupEdit.pas' {AccountGroupEditForm},
   AccountDirection in '..\..\Forms\AccountDirection.pas' {AccountDirectionForm},
@@ -305,7 +305,8 @@ uses
   TransportService in '..\..\Forms\Document\TransportService.pas' {TransportServiceForm: TParentForm},
   TransportServiceJournal in '..\..\Forms\Document\TransportServiceJournal.pas' {TransportServiceJournalForm: TParentForm},
   UserKey in '..\..\Forms\Guides\UserKey.pas' {UserKeyForm: TParentForm},
-  MovementItemContainer in '..\..\Forms\System\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm};
+  MovementItemContainer in '..\..\Forms\System\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm},
+  InfoMoney in '..\..\Forms\Guides\InfoMoney.pas' {InfoMoneyForm: TParentForm};
 
 {$R *.RES}
 

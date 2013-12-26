@@ -12,7 +12,8 @@ uses
   cxCurrencyEdit, cxDropDownEdit, cxCalendar, cxMaskEdit, cxLabel, Vcl.Controls,
   cxTextEdit, dsdDB, dsdAction, System.Classes, Vcl.ActnList, cxPropertiesStore,
   dsdAddOn, Vcl.StdCtrls, cxButtons, cxInplaceContainer, cxVGrid, cxDBVGrid,
-  Document, dxBarExtItems;
+  Document, dxBarExtItems, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TContractEditForm = class(TAncestorEditDialogForm)

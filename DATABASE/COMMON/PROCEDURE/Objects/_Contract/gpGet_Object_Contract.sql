@@ -85,11 +85,7 @@ BEGIN
            , Object_PaidKind.ValueData     AS PaidKindName
 
            , Object_InfoMoney_View.InfoMoneyId
-           , (   '(' || Object_InfoMoney_View.InfoMoneyCode :: TVarChar
-              || ') '|| Object_InfoMoney_View.InfoMoneyGroupName
-              || ' ' || Object_InfoMoney_View.InfoMoneyDestinationName
-              || ' ' || Object_InfoMoney_View.InfoMoneyName
-             ) :: TVarChar AS InfoMoneyName
+           , Object_InfoMoney_View.InfoMoneyName_all AS InfoMoneyName
 
            , Object_Personal_View.PersonalId    AS PersonalId
            , Object_Personal_View.PersonalName  AS PersonalName

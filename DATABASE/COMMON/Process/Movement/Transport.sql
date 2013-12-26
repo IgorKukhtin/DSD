@@ -83,7 +83,7 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_SetErased_Transport()
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_CompletePeriod_Transport()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 4
-                                  , inName:= 'Проведение за период - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Transport())||'>.'
+                                  , inName:= 'Проведение за период - документы <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Transport())||'>.'
                                   , inEnumName:= 'zc_Enum_Process_CompletePeriod_Transport');
 
 

@@ -20,14 +20,13 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
 )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
-
--- inStartDate:= '01.01.2013';
--- inEndDate:= '01.01.2100';
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_BankAccount());
+     vbUserId:= lpGetUserBySession (inSession);
 
+     -- Результат
      RETURN QUERY 
        SELECT
              Movement.Id
@@ -52,6 +51,7 @@ BEGIN
            , Object_Contract.ValueData         AS ContractInvNumber
            , Object_Unit.ValueData             AS UnitName
        FROM Movement
+            JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
                  JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
@@ -86,16 +86,16 @@ BEGIN
   
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_Movement_Cash (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.12.13                                        * add Object_RoleAccessKey_View
  23.12.13                          *
  09.08.13         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Cash (inStartDate:= '30.01.2013', inEndDate:= '01.01.2014', inSession:= zfCalc_UserAdmin())

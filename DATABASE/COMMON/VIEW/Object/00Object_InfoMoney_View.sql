@@ -12,6 +12,13 @@ CREATE OR REPLACE VIEW Object_InfoMoney_View AS
        , Object_InfoMoney.Id                    AS InfoMoneyId
        , Object_InfoMoney.ObjectCode            AS InfoMoneyCode
        , Object_InfoMoney.ValueData             AS InfoMoneyName
+
+       , (   '(' || Object_InfoMoney.ObjectCode :: TVarChar
+          || ') '|| Object_InfoMoneyGroup.ValueData
+          || ' ' || Object_InfoMoneyDestination.ValueData
+          || CASE WHEN Object_InfoMoneyDestination.ValueData <> Object_InfoMoney.ValueData THEN ' ' || Object_InfoMoney.ValueData ELSE '' END
+         ) :: TVarChar AS InfoMoneyName_all
+
        , Object_InfoMoney.isErased              AS isErased
   FROM Object AS Object_InfoMoney
        LEFT JOIN ObjectLink AS ObjectLink_InfoMoney_InfoMoneyDestination
@@ -34,6 +41,7 @@ ALTER TABLE Object_InfoMoney_View  OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.09.13                                        * add InfoMoneyName_all
  30.09.13                                        *
 */
 

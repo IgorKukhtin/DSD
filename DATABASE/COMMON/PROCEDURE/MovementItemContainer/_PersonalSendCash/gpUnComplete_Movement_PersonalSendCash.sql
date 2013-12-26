@@ -11,24 +11,19 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= PERFORM lpCheckRight(inSession, zc_Enum_Process_UnComplete_PersonalSendCash());
-     vbUserId:=2;
-
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_UnComplete_PersonalSendCash());
 
      -- проверка - если <Master> Удален, то <Ошибка>
      PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_UnComplete(), inComment:= 'распровести');
-
 
      -- Распроводим Документ
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId
                                   , inUserId     := vbUserId);
 
-
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

@@ -4,31 +4,48 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_TrasportKiev() RETURNS Inte
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_TrasportAll() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_TrasportAll' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_GuideAll() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_GuideAll' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashDnepr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashDnepr' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashKiev() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashKiev' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+
 DO $$
 BEGIN
 
- -- zc_Object_Branch
+ -- zc_Object_Branch, по Филиалу ограничиваются Документы и Справочники для Транспорта
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_TrasportDnepr()
                                    , inDescId:= zc_Object_Process()
                                    , inCode:= 1
                                    , inName:= 'Транспорт Днепр (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_TrasportDnepr');
 
- -- zc_Object_Branch
+ -- zc_Object_Branch, по Филиалу ограничиваются Документы и Справочники для Транспорта
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_TrasportKiev()
                                    , inDescId:= zc_Object_Process()
                                    , inCode:= 2
                                    , inName:= 'Транспорт Киев (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_TrasportKiev');
                                    
- -- zc_Object_Goods
+ -- zc_Object_Goods, для Транспорта ограничивается Справочник Товаров
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_TrasportAll()
                                    , inDescId:= zc_Object_Process()
                                    , inCode:= 3
                                    , inName:= 'Транспорт все (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_TrasportAll');
 
- -- ALL
+ -- zc_Object_Goods, по Филиалу ограничиваются Документы для Кассы
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_CashDnepr()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 21
+                                   , inName:= 'Касса Днепр (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_CashDnepr');
+
+ -- zc_Object_Goods, по Филиалу ограничиваются Документы для Кассы
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_CashKiev()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 22
+                                   , inName:= 'Касса Днепр (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_CashKiev');
+
+ -- ALL, нет ограничения в справочниках
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_GuideAll()
                                    , inDescId:= zc_Object_Process()
                                    , inCode:= 101
@@ -66,6 +83,7 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 14.11.13                                        * add zc_Enum_Process_AccessKey_GuideAll
- 07.11.13                                        *
+ 26.12.13                                        * add zc_Enum_Process_AccessKey_Cash...
+ 14.12.13                                        * add zc_Enum_Process_AccessKey_GuideAll
+ 07.12.13                                        *
 */

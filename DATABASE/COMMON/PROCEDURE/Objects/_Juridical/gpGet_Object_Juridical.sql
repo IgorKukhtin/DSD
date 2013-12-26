@@ -13,9 +13,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                InfoMoneyId Integer, InfoMoneyName TVarChar) AS
 $BODY$
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_Juridical());
+   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Object_Juridical());
      
    IF COALESCE (inId, 0) = 0
    THEN
@@ -53,11 +52,7 @@ BEGIN
            , Object_GoodsProperty.ValueData  AS GoodsPropertyName
            
            , Object_InfoMoney_View.InfoMoneyId
-           , (   '(' || Object_InfoMoney_View.InfoMoneyCode :: TVarChar
-              || ') '|| Object_InfoMoney_View.InfoMoneyGroupName
-              || ' ' || Object_InfoMoney_View.InfoMoneyDestinationName
-              || ' ' || Object_InfoMoney_View.InfoMoneyName
-             ) :: TVarChar AS InfoMoneyName
+           , Object_InfoMoney_View.InfoMoneyName_all AS InfoMoneyName
 
        FROM Object AS Object_Juridical
            LEFT JOIN ObjectString AS ObjectString_GLNCode 
@@ -87,9 +82,8 @@ BEGIN
   
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_Juridical(integer, TVarChar) OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpGet_Object_Juridical (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

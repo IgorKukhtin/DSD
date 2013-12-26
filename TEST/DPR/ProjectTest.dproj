@@ -221,22 +221,22 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\LoadReportTest.pas"/>
 			<DCCReference Include="..\SOURCE\ObjectHistory\All\PriceListItemTest.pas"/>
-			<DCCReference Include="..\..\Forms\InfoMoneyGroup.pas">
+			<DCCReference Include="..\..\Forms\Guides\InfoMoneyGroup.pas">
 				<Form>InfoMoneyGroupForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\InfoMoneyGroupEdit.pas">
+			<DCCReference Include="..\..\Forms\Guides\InfoMoneyGroupEdit.pas">
 				<Form>InfoMoneyGroupEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\InfoMoneyDestination.pas">
+			<DCCReference Include="..\..\Forms\Guides\InfoMoneyDestination.pas">
 				<Form>InfoMoneyDestinationForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\InfoMoneyDestinationEdit.pas">
+			<DCCReference Include="..\..\Forms\Guides\InfoMoneyDestinationEdit.pas">
 				<Form>InfoMoneyDestinationEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\InfoMoney.pas">
-				<Form>InfoMoneyForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\InfoMoney_Object.pas">
+				<Form>InfoMoney_ObjectForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\InfoMoneyEdit.pas">
+			<DCCReference Include="..\..\Forms\Guides\InfoMoneyEdit.pas">
 				<Form>InfoMoneyEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\AccountGroup.pas">
@@ -876,6 +876,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\System\MovementItemContainer.pas">
 				<Form>MovementItemContainerForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\InfoMoney.pas">
+				<Form>InfoMoneyForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

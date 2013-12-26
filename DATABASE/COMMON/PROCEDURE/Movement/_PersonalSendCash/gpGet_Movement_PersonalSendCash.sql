@@ -82,4 +82,4 @@ ALTER FUNCTION gpGet_Movement_PersonalSendCash (Integer, TVarChar) OWNER TO post
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_PersonalSendCash (inMovementId:= 0, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpGet_Movement_PersonalSendCash (inMovementId:= 0, inSession:= zfCalc_UserAdmin());

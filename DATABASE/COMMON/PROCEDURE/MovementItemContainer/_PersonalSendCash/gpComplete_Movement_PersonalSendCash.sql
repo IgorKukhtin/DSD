@@ -12,11 +12,8 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= PERFORM lpCheckRight (inSession, zc_Enum_Process_Complete_PersonalSendCash());
-     vbUserId:=2; -- CAST (inSession AS Integer);
-
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_PersonalSendCash());
 
      -- таблица - Проводки
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
@@ -27,7 +24,6 @@ BEGIN
                                , ProfitLossGroupId Integer, ProfitLossDirectionId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                , BusinessId_PersonalTo Integer, BusinessId_Route Integer
                                 ) ON COMMIT DROP;
-
 
      -- проводим Документ
      PERFORM lpComplete_Movement_PersonalSendCash (inMovementId := inMovementId

@@ -795,7 +795,7 @@ inherited ContractEditForm: TContractEditForm
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edInfoMoney
-    FormName = 'TInfoMoneyForm'
+    FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1034,8 +1034,8 @@ inherited ContractEditForm: TContractEditForm
   object BarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

@@ -392,7 +392,7 @@
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
-    FormName = 'TInfoMoneyForm'
+    FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <>
     Left = 488

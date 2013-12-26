@@ -21,9 +21,8 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_BankAccount());
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Cash());
      vbUserId := lpGetUserBySession (inSession);
 
      IF COALESCE (inMovementId, 0) = 0
@@ -41,10 +40,8 @@ BEGIN
            , 0::TFloat                                         AS AmountOut
 
            , ''::TVarChar                                      AS Comment
---           , COALESCE(Object_Cash.Id, 0)                     AS CashId
---           , COALESCE(Object_Cash.ValueData, '')::TVarChar   AS CashName
-           , 0::Integer                                        AS CashId
-           , ''::TVarChar                                      AS CashName
+           , COALESCE (Object_Cash.Id, 0)                      AS CashId
+           , COALESCE (Object_Cash.ValueData, '') :: TVarChar  AS CashName
            , 0                                                 AS MoneyPlaceId
            , CAST ('' as TVarChar)                             AS MoneyPlaceName
            , 0                                                 AS InfoMoneyId
@@ -54,10 +51,9 @@ BEGIN
            , 0                                                 AS UnitId
            , CAST ('' as TVarChar)                             AS UnitName
 
-       FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status;
---  LEFT JOIN Object AS Object_Cash
-  --       ON Object_Cash.Id = lpGet_DefaultValue(lpGetMovementLinkObjectCodeById(zc_MovementLinkObject_From()), vbUserId)::Integer;
-     
+       FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
+             LEFT JOIN Object AS Object_Cash ON Object_Cash.Id IN (SELECT MIN (Object.Id) FROM Object WHERE Object.AccessKeyId IN (SELECT MIN (lpGetAccessKey) FROM lpGetAccessKey (vbUserId, zc_Enum_Process_Get_Movement_Cash())))
+      ;
      ELSE
      
      RETURN QUERY 
@@ -86,8 +82,8 @@ BEGIN
            , Object_Cash.ValueData             AS CashName
            , Object_MoneyPlace.Id              AS MoneyPlaceId
            , Object_MoneyPlace.ValueData       AS MoneyPlaceName
-           , Object_InfoMoney.Id               AS InfoMoneyId
-           , Object_InfoMoney.ValueData        AS InfoMoneyName
+           , View_InfoMoney.InfoMoneyId
+           , View_InfoMoney.InfoMoneyName_all  AS InfoMoneyName
            , Object_Contract.Id                AS ContractId
            , Object_Contract.ValueData         AS ContractInvNumber
            , Object_Unit.Id                    AS UnitId
@@ -110,7 +106,7 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                          ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                         AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = MILinkObject_InfoMoney.ObjectId
+            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                          ON MILinkObject_Contract.MovementItemId = MovementItem.Id
@@ -140,4 +136,4 @@ ALTER FUNCTION gpGet_Movement_Cash (Integer, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_BankAccount (inMovementId:= 1, inSession:= '2')
+-- SELECT * FROM gpGet_Movement_Cash (inMovementId:= 1, inSession:= zfCalc_UserAdmin());
