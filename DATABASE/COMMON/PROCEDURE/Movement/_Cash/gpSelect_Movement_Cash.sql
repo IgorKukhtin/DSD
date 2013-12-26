@@ -14,7 +14,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Comment TVarChar
              , CashName TVarChar
              , MoneyPlaceName TVarChar
-             , InfoMoneyName TVarChar
+             , InfoMoneyGroupName TVarChar
+             , InfoMoneyDestinationName TVarChar
+             , InfoMoneyCode Integer, InfoMoneyName TVarChar
              , ContractInvNumber TVarChar
              , UnitName TVarChar
 )
@@ -47,7 +49,10 @@ BEGIN
            , MIString_Comment.ValueData        AS Comment
            , Object_Cash.ValueData             AS CashName
            , Object_MoneyPlace.ValueData       AS MoneyPlaceName
-           , Object_InfoMoney.ValueData        AS InfoMoneyName
+           , Object_InfoMoney_View.InfoMoneyGroupName
+           , Object_InfoMoney_View.InfoMoneyDestinationName
+           , Object_InfoMoney_View.InfoMoneyCode
+           , Object_InfoMoney_View.InfoMoneyName
            , Object_Contract.ValueData         AS ContractInvNumber
            , Object_Unit.ValueData             AS UnitName
        FROM Movement
@@ -59,7 +64,7 @@ BEGIN
                  JOIN Object AS Object_Cash ON Object_Cash.Id = MovementItem.ObjectId
  
             LEFT JOIN MovementItemString AS MIString_Comment 
-                   ON MIString_Comment.MovementItemId = MovementItem.Id AND MIString_Comment.DescId = zc_MIString_Comment()
+                                         ON MIString_Comment.MovementItemId = MovementItem.Id AND MIString_Comment.DescId = zc_MIString_Comment()
             
             LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
                                          ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
@@ -69,7 +74,7 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                          ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                         AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = MILinkObject_InfoMoney.ObjectId
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                          ON MILinkObject_Contract.MovementItemId = MovementItem.Id
@@ -92,6 +97,7 @@ ALTER FUNCTION gpSelect_Movement_Cash (TDateTime, TDateTime, TVarChar) OWNER TO 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 26.12.13                                        * add Object_InfoMoney_View
  26.12.13                                        * add Object_RoleAccessKey_View
  23.12.13                          *
  09.08.13         *

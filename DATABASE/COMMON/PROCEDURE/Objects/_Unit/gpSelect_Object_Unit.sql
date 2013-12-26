@@ -60,7 +60,7 @@ BEGIN
        FROM Object_Unit_View
             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = Object_Unit_View.Id
             LEFT JOIN Object_AccountDirection AS View_AccountDirection ON View_AccountDirection.AccountDirectionId = Object_Unit_View.AccountDirectionId
-       WHERE vbAccessKeyAll = TRUE
+       -- WHERE vbAccessKeyAll = TRUE
       ;
 
 END;

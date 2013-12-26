@@ -1,6 +1,6 @@
 ﻿inherited ServiceForm: TServiceForm
   ActiveControl = ceAmount
-  Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1091#1089#1083#1091#1075'>'
   ClientHeight = 265
   ClientWidth = 593
   AddOnFormData.isSingle = False
@@ -422,7 +422,7 @@
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
-    FormName = 'TInfoMoneyForm'
+    FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

@@ -45,7 +45,7 @@ inherited ContractEditForm: TContractEditForm
   object cxLabel5: TcxLabel [7]
     Left = 16
     Top = 302
-    Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edContractKind: TcxButtonEdit [8]
     Left = 16

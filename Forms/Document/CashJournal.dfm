@@ -1,20 +1,20 @@
 inherited CashJournalForm: TCashJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
-  ClientWidth = 900
-  ExplicitWidth = 916
+  ClientWidth = 982
+  ExplicitWidth = 998
   ExplicitHeight = 364
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 900
+    Width = 982
     TabOrder = 3
-    ExplicitWidth = 900
-    ClientRectRight = 900
+    ExplicitWidth = 982
+    ClientRectRight = 982
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 900
+      ExplicitWidth = 982
       inherited cxGrid: TcxGrid
-        Width = 900
-        ExplicitWidth = 900
+        Width = 982
+        ExplicitWidth = 982
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -40,36 +40,38 @@ inherited CashJournalForm: TCashJournalForm
               Kind = skSum
               Column = clAmountOut
             end>
+          OptionsView.GroupByBox = True
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             Options.Editing = False
-            Width = 105
+            Width = 50
           end
           inherited colInvNumber: TcxGridDBColumn
+            Visible = False
             Options.Editing = False
-            Width = 86
+            Width = 55
           end
           inherited colOperDate: TcxGridDBColumn
             Options.Editing = False
-            Width = 73
+            Width = 50
           end
           object clCash: TcxGridDBColumn
             Caption = #1050#1072#1089#1089#1072
             DataBinding.FieldName = 'CashName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 127
+            Width = 70
           end
           object clMoneyPlace: TcxGridDBColumn
-            Caption = #1054#1073#1098#1077#1082#1090
+            Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091
             DataBinding.FieldName = 'MoneyPlaceName'
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 116
+            Width = 80
           end
           object clAmountIn: TcxGridDBColumn
             Caption = #1055#1088#1080#1093#1086#1076
@@ -78,7 +80,7 @@ inherited CashJournalForm: TCashJournalForm
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 72
+            Width = 55
           end
           object clAmountOut: TcxGridDBColumn
             Caption = #1056#1072#1089#1093#1086#1076
@@ -87,15 +89,34 @@ inherited CashJournalForm: TCashJournalForm
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 67
+            Width = 55
           end
-          object clInfoMoney: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+          object clInfoMoneyCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055
+            DataBinding.FieldName = 'InfoMoneyCode'
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object clInfoMoneyGroupName: TcxGridDBColumn
+            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyGroupName'
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object clInfoMoneyDestinationName: TcxGridDBColumn
+            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'InfoMoneyDestinationName'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object clInfoMoneyName: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 125
+            Width = 70
           end
           object clUnit: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -103,15 +124,28 @@ inherited CashJournalForm: TCashJournalForm
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 115
+            Width = 80
+          end
+          object clContractInvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractInvNumber'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object clComment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 900
-    ExplicitWidth = 900
+    Width = 982
+    ExplicitWidth = 982
   end
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
@@ -164,32 +198,11 @@ inherited CashJournalForm: TCashJournalForm
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Cash'
-    Params = <
-      item
-        Name = 'inmovementid'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement'
-    Params = <
-      item
-        Name = 'inmovementid'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
+    StoredProcName = 'gpUnComplete_Movement_Cash'
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement'
-    Params = <
-      item
-        Name = 'inmovementid'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
+    StoredProcName = 'gpSetErased_Movement_Cash'
   end
 end

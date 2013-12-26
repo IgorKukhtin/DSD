@@ -47,10 +47,10 @@ object InfoMoneyForm: TInfoMoneyForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object clCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
+        Caption = #1050#1086#1076' '#1059#1055
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 86
+        Width = 55
       end
       object clInfoMoneyGroup: TcxGridDBColumn
         Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103

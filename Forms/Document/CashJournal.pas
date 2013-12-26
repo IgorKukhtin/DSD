@@ -18,6 +18,11 @@ uses
 type
   TCashJournalForm = class(TAncestorJournalForm)
     clAmountOut: TcxGridDBColumn;
+    clInfoMoneyCode: TcxGridDBColumn;
+    clInfoMoneyGroupName: TcxGridDBColumn;
+    clInfoMoneyDestinationName: TcxGridDBColumn;
+    clComment: TcxGridDBColumn;
+    clContractInvNumber: TcxGridDBColumn;
   private
     { Private declarations }
   public

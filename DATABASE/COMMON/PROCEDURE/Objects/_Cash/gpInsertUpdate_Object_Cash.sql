@@ -14,12 +14,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Cash(
 )
   RETURNS integer AS
 $BODY$
-   DECLARE UserId Integer;
+   DECLARE vbUserId Integer;
  BEGIN
- 
    -- проверка прав пользовател€ на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Cash());
-   UserId := inSession;
+   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Object_Cash());
+   vbUserId:= lpGetUserBySession (inSession);
 
    -- ≈сли код не установлен, определ€ем его каи последний+1
    inCode := lfGet_ObjectCode (inCode, zc_Object_Cash());
@@ -39,7 +38,7 @@ $BODY$
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Cash_Business(), ioId, inBusinessId);
 
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -57,7 +56,3 @@ ALTER FUNCTION gpInsertUpdate_Object_Cash(Integer, Integer, TVarChar, Integer, I
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Object_Cash()
-  
-
-  
-                            
