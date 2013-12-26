@@ -13,6 +13,8 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
       ExplicitWidth = 884
       inherited cxGrid: TcxGrid
         Width = 884
+        ExplicitLeft = 144
+        ExplicitTop = -176
         ExplicitWidth = 884
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -142,14 +144,36 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
     Top = 274
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TTransportServiceForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+        end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TTransportServiceForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+        end>
     end
   end
   inherited MasterDS: TDataSource
-    Left = 64
-    Top = 112
+    Left = 80
+    Top = 120
   end
   inherited MasterCDS: TClientDataSet
     Left = 24

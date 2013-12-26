@@ -45,7 +45,7 @@ BEGIN
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_TransportService(), inInvNumber, inOperDate, NULL);--, vbAccessKeyId
 
      -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inJuridicalId, ioMIId, inAmount, NULL);
+     ioMIId := lpInsertUpdate_MovementItem (ioMIId, zc_MI_Master(), inJuridicalId, ioId, inAmount, NULL);
 
      -- сохранили свойство <Пробег факт, км>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Distance(), ioMIId, inDistance);

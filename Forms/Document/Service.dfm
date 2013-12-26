@@ -5,7 +5,7 @@
   ClientWidth = 593
   AddOnFormData.isSingle = False
   ExplicitWidth = 599
-  ExplicitHeight = 290
+  ExplicitHeight = 297
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -254,8 +254,8 @@
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
-    Left = 320
-    Top = 168
+    Left = 336
+    Top = 160
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Service'
@@ -372,7 +372,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 288
+    Left = 272
     Top = 152
   end
   object PaidKindGuides: TdsdGuides

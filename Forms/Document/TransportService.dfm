@@ -267,6 +267,11 @@
     end
   end
   inherited FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        ParamType = ptInput
+      end>
     Left = 136
     Top = 294
   end
@@ -275,7 +280,6 @@
     Params = <
       item
         Name = 'ioid'
-        Value = '0'
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -284,7 +288,7 @@
         Name = 'iomiid'
         Value = '0'
         Component = FormParams
-        ComponentItem = 'Id'
+        ComponentItem = 'MIId'
         ParamType = ptInputOutput
       end
       item
@@ -399,16 +403,21 @@
     StoredProcName = 'gpGet_Movement_TransportService'
     Params = <
       item
-        Name = 'inmovementid'
-        Value = '0'
+        Name = 'inMovementId'
         Component = FormParams
-        ComponentItem = 'movementid'
+        ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'id'
+        Component = FormParams
+        ComponentItem = 'Id'
+      end
+      item
+        Name = 'MIId'
         Value = '0'
         Component = FormParams
+        ComponentItem = 'MIId'
       end
       item
         Name = 'Invnumber'
@@ -721,7 +730,6 @@
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Name = 'Id'
-    IdParam.Value = '0'
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
     GuidesList = <
