@@ -127,12 +127,6 @@ object PersonalAccountForm: TPersonalAccountForm
           DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <
             item
-              Format = ',0.00;-,0.00;'
-              Kind = skSum
-              Position = spFooter
-              Column = colInfoMoneyName1
-            end
-            item
               Kind = skSum
               Position = spFooter
             end
@@ -154,11 +148,6 @@ object PersonalAccountForm: TPersonalAccountForm
               Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.00;-,0.00;'
-              Kind = skSum
-              Column = colInfoMoneyName1
-            end
             item
               Kind = skSum
             end
@@ -520,6 +509,7 @@ object PersonalAccountForm: TPersonalAccountForm
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end
       item
@@ -540,6 +530,7 @@ object PersonalAccountForm: TPersonalAccountForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -1054,6 +1045,7 @@ object PersonalAccountForm: TPersonalAccountForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -1085,6 +1077,7 @@ object PersonalAccountForm: TPersonalAccountForm
       end
       item
         Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -1177,6 +1170,7 @@ object PersonalAccountForm: TPersonalAccountForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -1206,6 +1200,7 @@ object PersonalAccountForm: TPersonalAccountForm
     Top = 177
   end
   object HeaderSaver: THeaderSaver
+    IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
     StoredProc = spInsertUpdateMovement
@@ -1230,12 +1225,14 @@ object PersonalAccountForm: TPersonalAccountForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
       end
@@ -1286,6 +1283,7 @@ object PersonalAccountForm: TPersonalAccountForm
     Top = 253
   end
   object GuidesFiller: TGuidesFiller
+    IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
     GuidesList = <
@@ -1301,6 +1299,7 @@ object PersonalAccountForm: TPersonalAccountForm
   end
   object ChangeStatus: TChangeStatus
     KeyField = 'Code'
+    IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
     StoredProcName = 'gpUpdate_Status_PersonalAccount'
@@ -1335,8 +1334,22 @@ object PersonalAccountForm: TPersonalAccountForm
     StoredProcName = 'gpUpdate_Status_PersonalAccount'
     DataSets = <>
     OutputType = otResult
-    Params = <>
-    Left = 76
-    Top = 8
+    Params = <
+      item
+        Name = 'Id'
+        Value = ''
+        Component = StatusGuides
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'StatusCode'
+        Value = ''
+        Component = StatusGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    Left = 156
+    Top = 16
   end
 end
