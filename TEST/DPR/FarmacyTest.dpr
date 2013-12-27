@@ -36,7 +36,8 @@ uses
   MessagesUnit in '..\..\SOURCE\MessagesUnit.pas' {MessagesForm},
   MemDBFTable in '..\..\SOURCE\MemDBFTable.pas',
   SimpleGauge in '..\..\SOURCE\SimpleGauge.pas' {SimpleGaugeForm},
-  ClientBankLoad in '..\..\SOURCE\COMPONENT\ClientBankLoad.pas';
+  ClientBankLoad in '..\..\SOURCE\COMPONENT\ClientBankLoad.pas',
+  Document in '..\..\SOURCE\COMPONENT\Document.pas';
 
 {$R *.res}
 

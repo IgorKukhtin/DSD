@@ -35,6 +35,7 @@ BEGIN
                                JOIN MovementLinkObject AS MovementLinkObject_Unit 
                                  ON MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
                                 AND MovementLinkObject_Unit.MovementId = Movement_SheetWorkTime.Id  
+                                AND MovementLinkObject_Unit.ObjectId = inUnitId 
                            WHERE Movement_SheetWorkTime.DescId = zc_Movement_SheetWorkTime() AND Movement_SheetWorkTime.OperDate::Date = inOperDate::Date);
  
      IF COALESCE(vbMovementId, 0) = 0 THEN
@@ -58,8 +59,12 @@ BEGIN
                              AND ((MIObject_PersonalGroup.ObjectId IS NULL) OR (MIObject_PersonalGroup.ObjectId = inPersonalGroupId))
                              AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup() 
                            WHERE MI_SheetWorkTime.ObjectId = ioPersonalId AND MI_SheetWorkTime.MovementId = vbMovementId);
-
-    ioValue := zfConvert_ViewWorkHourToHour(ioValue);
+    IF ioValue = '0' THEN
+       inTypeId := 0;
+       ioValue := '0';
+    ELSE
+      ioValue := zfConvert_ViewWorkHourToHour(ioValue);
+    END IF;
 
     PERFORM lpInsertUpdate_MovementItem_SheetWorkTime(
        inMovementItemId      := vbMovementItemId , -- Ключ объекта <Элемент документа>

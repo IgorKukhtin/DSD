@@ -1,8 +1,8 @@
 inherited ServiceJournalForm: TServiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1091#1089#1083#1091#1075'>'
   ClientWidth = 884
-  ExplicitWidth = 900
-  ExplicitHeight = 364
+  ExplicitWidth = 892
+  ExplicitHeight = 356
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -21,13 +21,24 @@ inherited ServiceJournalForm: TServiceJournalForm
               Format = ',0.00'
               Kind = skSum
               Position = spFooter
-              Column = clAmount
+              Column = clAmountIn
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Position = spFooter
+              Column = colAmountOut
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00'
               Kind = skSum
-              Column = clAmount
+              Column = clAmountIn
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colAmountOut
             end>
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -35,31 +46,40 @@ inherited ServiceJournalForm: TServiceJournalForm
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             Options.Editing = False
-            Width = 77
+            Width = 101
           end
           inherited colInvNumber: TcxGridDBColumn
             Options.Editing = False
-            Width = 64
+            Width = 83
           end
           inherited colOperDate: TcxGridDBColumn
             Options.Editing = False
-            Width = 54
+            Width = 71
           end
-          object clAmount: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1086#1087#1077#1088#1072#1094#1080#1080
-            DataBinding.FieldName = 'Amount'
+          object clAmountIn: TcxGridDBColumn
+            Caption = #1059#1089#1083#1091#1075#1072' '#1087#1086#1083#1091#1095#1077#1085#1085#1072#1103
+            DataBinding.FieldName = 'AmountIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 121
+            Width = 85
+          end
+          object colAmountOut: TcxGridDBColumn
+            Caption = #1059#1089#1083#1091#1075#1072' '#1086#1082#1072#1079#1072#1085#1085#1072#1103
+            DataBinding.FieldName = 'AmountOut'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taRightJustify
+            Width = 92
           end
           object clFrom: TcxGridDBColumn
             Caption = #1070#1088'. '#1083#1080#1094#1086'.'
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 93
+            Width = 144
           end
           object clPaidKind: TcxGridDBColumn
             Caption = #1042#1080#1076#1099' '#1092#1086#1088#1084' '#1086#1087#1083#1072#1090#1099
@@ -67,7 +87,7 @@ inherited ServiceJournalForm: TServiceJournalForm
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 71
+            Width = 109
           end
           object clInfoMoney: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -75,7 +95,7 @@ inherited ServiceJournalForm: TServiceJournalForm
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 63
+            Width = 96
           end
           object clUnit: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -83,7 +103,7 @@ inherited ServiceJournalForm: TServiceJournalForm
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 58
+            Width = 89
           end
         end
       end

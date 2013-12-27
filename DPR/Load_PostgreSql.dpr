@@ -20,7 +20,8 @@ uses
   MessagesUnit in '..\SOURCE\MessagesUnit.pas' {MessagesForm},
   ClientBankLoad in '..\SOURCE\COMPONENT\ClientBankLoad.pas',
   MemDBFTable in '..\SOURCE\MemDBFTable.pas',
-  SimpleGauge in '..\SOURCE\SimpleGauge.pas' {SimpleGaugeForm};
+  SimpleGauge in '..\SOURCE\SimpleGauge.pas' {SimpleGaugeForm},
+  Document in '..\SOURCE\COMPONENT\Document.pas';
 
 {$R *.res}
 

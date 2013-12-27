@@ -17,6 +17,7 @@ uses
 
 type
   TServiceJournalForm = class(TAncestorJournalForm)
+    colAmountOut: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Service(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , Amount TFloat 
+             , AmountIn TFloat, AmountOut TFloat 
              , Comment TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
@@ -36,7 +36,8 @@ BEGIN
            , lfObject_Status.Code             AS StatusCode
            , lfObject_Status.Name             AS StatusName
            
-           , 0::TFloat                        AS Amount
+           , 0::TFloat                        AS AmountIn
+           , 0::TFloat                        AS AmountOut
 
            , ''::TVarChar                     AS Comment
            , 0                                AS JuridicalId
@@ -62,7 +63,16 @@ BEGIN
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
                       
-           , MovementItem.Amount   AS Amount
+           , CASE WHEN MovementItem.Amount < 0 THEN
+                       - MovementItem.Amount
+                  ELSE
+                      0
+                  END::TFloat AS AmountIn
+           , CASE WHEN MovementItem.Amount > 0 THEN
+                       MovementItem.Amount
+                  ELSE
+                      0
+                  END::TFloat AS AmountOut
            , MIString_Comment.ValueData   AS Comment
 
            , Object_Juridical.Id              AS JuridicalId

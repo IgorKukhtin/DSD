@@ -1,11 +1,11 @@
 ﻿inherited ServiceForm: TServiceForm
-  ActiveControl = ceAmount
+  ActiveControl = ceAmountIn
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1091#1089#1083#1091#1075'>'
   ClientHeight = 265
   ClientWidth = 593
   AddOnFormData.isSingle = False
   ExplicitWidth = 599
-  ExplicitHeight = 297
+  ExplicitHeight = 290
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -73,7 +73,7 @@
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 9
+    TabOrder = 10
     Width = 273
   end
   object ceInfoMoney: TcxButtonEdit [10]
@@ -84,7 +84,7 @@
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 8
+    TabOrder = 9
     Width = 273
   end
   object ceOperDate: TcxDateEdit [11]
@@ -93,18 +93,18 @@
     TabOrder = 3
     Width = 129
   end
-  object ceAmount: TcxCurrencyEdit [12]
+  object ceAmountIn: TcxCurrencyEdit [12]
     Left = 312
     Top = 34
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 7
-    Width = 273
+    Width = 130
   end
   object cxLabel7: TcxLabel [13]
     Left = 312
     Top = 11
-    Caption = #1057#1091#1084#1084#1072' '#1086#1087#1077#1088#1072#1094#1080#1080
+    Caption = #1059#1089#1083#1091#1075#1080' '#1087#1086#1083#1091#1095#1077#1085#1085#1099#1077
   end
   object ceJuridical: TcxButtonEdit [14]
     Left = 8
@@ -146,8 +146,21 @@
   object ceComment: TcxTextEdit [19]
     Left = 7
     Top = 184
-    TabOrder = 10
+    TabOrder = 11
     Width = 578
+  end
+  object ceAmountOut: TcxCurrencyEdit [20]
+    Left = 455
+    Top = 34
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 8
+    Width = 130
+  end
+  object cxLabel3: TcxLabel [21]
+    Left = 455
+    Top = 11
+    Caption = #1059#1089#1083#1091#1075#1080' '#1086#1082#1072#1079#1072#1085#1085#1099#1077
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
@@ -196,9 +209,16 @@
         ParamType = ptInput
       end
       item
-        Name = 'inamount'
+        Name = 'inamountIn'
         Value = 0.000000000000000000
-        Component = ceAmount
+        Component = ceAmountIn
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inamountOut'
+        Value = 0.000000000000000000
+        Component = ceAmountOut
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -279,9 +299,15 @@
         DataType = ftDateTime
       end
       item
-        Name = 'Amount'
+        Name = 'AmountIn'
         Value = 0.000000000000000000
-        Component = ceAmount
+        Component = ceAmountIn
+        DataType = ftFloat
+      end
+      item
+        Name = 'AmountOut'
+        Value = 0.000000000000000000
+        Component = ceAmountOut
         DataType = ftFloat
       end
       item

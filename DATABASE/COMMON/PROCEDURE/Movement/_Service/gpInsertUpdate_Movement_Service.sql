@@ -2,12 +2,14 @@
 
 DROP FUNCTION IF EXISTS gpinsertupdate_movement_service(integer, tvarchar, tdatetime, tfloat, integer, integer, integer, integer, integer, integer, tvarchar);
 DROP FUNCTION IF EXISTS gpinsertupdate_movement_service(integer, tvarchar, tdatetime, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, tvarchar);
+DROP FUNCTION IF EXISTS gpinsertupdate_movement_service(integer, tvarchar, tdatetime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
-    IN inAmount              TFloat    , -- Сумма операции 
+    IN inAmountIn            TFloat    , -- Сумма операции 
+    IN inAmountOut           TFloat    , -- Сумма операции 
     IN inComment             TVarChar  , -- Комментарий
     IN inBusinessId          Integer   , -- Бизнес    
     IN inContractId          Integer   , -- Договор
@@ -22,11 +24,30 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbMovementItemId Integer;
+   DECLARE vbAmount TFloat;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Service());
      vbUserId := lpGetUserBySession(inSession);
+
+     -- проверка
+     IF (COALESCE(inAmountIn, 0) = 0) AND (COALESCE(inAmountOut, 0) = 0) THEN
+        RAISE EXCEPTION 'Введите сумму полученных или оказанных услуг';
+     END IF;
+
+     -- проверка
+     IF (COALESCE(inAmountIn, 0) <> 0) AND (COALESCE(inAmountOut, 0) <> 0) THEN
+        RAISE EXCEPTION 'Должна быть введена только одна сумма - полученных или оказанных услуг.';
+     END IF;
+
+     -- расчет
+     IF inAmountIn > 0 THEN
+        vbAmount := - inAmountIn;
+     ELSE
+        vbAmount := inAmountOut;
+     END IF;
+
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Service(), inInvNumber, inOperDate, NULL);
@@ -35,7 +56,7 @@ BEGIN
       WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
 
         -- сохранили <Элемент документа>
-     vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inJuridicalId, ioId, inAmount, NULL);
+     vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inJuridicalId, ioId, vbAmount, NULL);
     
      -- Комментарий
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
