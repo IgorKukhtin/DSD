@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Service(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , Amount TFloat 
+             , AmountIn TFloat, AmountOut TFloat
              , JuridicalName TVarChar
              , InfoMoneyName TVarChar
              , ContractInvNumber TVarChar
@@ -34,7 +34,16 @@ BEGIN
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
                       
-           , MovementItem.Amount   AS Amount
+           , CASE WHEN MovementItem.Amount < 0 THEN
+                       - MovementItem.Amount
+                  ELSE
+                      0
+                  END::TFloat AS AmountIn
+           , CASE WHEN MovementItem.Amount > 0 THEN
+                       MovementItem.Amount
+                  ELSE
+                      0
+                  END::TFloat AS AmountOut
  --          , MIString_Comment.ValueData   AS Comment
 
            , Object_Juridical.ValueData       AS JuridicalName
@@ -90,7 +99,7 @@ ALTER FUNCTION gpSelect_Movement_Service (TDateTime, TDateTime, TVarChar) OWNER 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-               
+ 27.12.13                         *
  11.08.13         *
 */
 
