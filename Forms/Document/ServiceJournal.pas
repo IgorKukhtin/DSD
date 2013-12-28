@@ -18,6 +18,12 @@ uses
 type
   TServiceJournalForm = class(TAncestorJournalForm)
     colAmountOut: TcxGridDBColumn;
+    clInfoMoneyCode: TcxGridDBColumn;
+    clInfoMoneyGroupName: TcxGridDBColumn;
+    clInfoMoneyDestinationName: TcxGridDBColumn;
+    clComment: TcxGridDBColumn;
+    clContractInvNumber: TcxGridDBColumn;
+    clJuridicalCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

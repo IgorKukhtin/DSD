@@ -8,10 +8,10 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                GLNCode TVarChar, isCorporate Boolean,
                JuridicalGroupId Integer, JuridicalGroupName TVarChar,
-               GoodsPropertyName TVarChar, 
                InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar, 
                InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar, 
-               InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar, 
+               InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar,
+               OKPO TVarChar,
                isErased Boolean
               )
 AS
@@ -25,17 +25,14 @@ BEGIN
    SELECT 
          Object_Juridical.Id             AS Id 
        , Object_Juridical.ObjectCode     AS Code
-       , Object_Juridical.ValueData      AS NAME
+       , Object_Juridical.ValueData      AS Name
 
        , ObjectString_GLNCode.ValueData      AS GLNCode
        , ObjectBoolean_isCorporate.ValueData AS isCorporate
 
-
-       , COALESCE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId, 0) AS JuridicalGroupId
+       , COALESCE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId, 0)  AS JuridicalGroupId
        , Object_JuridicalGroup.ValueData  AS JuridicalGroupName
-    
-       , Object_GoodsProperty.ValueData  AS GoodsPropertyName
-       
+
        , Object_InfoMoney_View.InfoMoneyGroupCode
        , Object_InfoMoney_View.InfoMoneyGroupName
        , Object_InfoMoney_View.InfoMoneyDestinationCode
@@ -43,8 +40,10 @@ BEGIN
        , Object_InfoMoney_View.InfoMoneyId
        , Object_InfoMoney_View.InfoMoneyCode
        , Object_InfoMoney_View.InfoMoneyName
-       
-       , Object_Juridical.isErased        AS isErased
+
+       , ObjectHistory_JuridicalDetails_View.OKPO
+
+       , Object_Juridical.isErased AS isErased
    FROM Object AS Object_Juridical
         LEFT JOIN ObjectString AS ObjectString_GLNCode 
                                ON ObjectString_GLNCode.ObjectId = Object_Juridical.Id 
@@ -58,15 +57,12 @@ BEGIN
                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
         LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
 
-        LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
-                             ON ObjectLink_Juridical_GoodsProperty.ObjectId = Object_Juridical.Id 
-                            AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
-        LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = ObjectLink_Juridical_GoodsProperty.ChildObjectId
-
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_InfoMoney
                              ON ObjectLink_Juridical_InfoMoney.ObjectId = Object_Juridical.Id
                             AND ObjectLink_Juridical_InfoMoney.DescId = zc_ObjectLink_Juridical_InfoMoney()
         LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Juridical_InfoMoney.ChildObjectId
+
+        LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
 
    WHERE Object_Juridical.DescId = zc_Object_Juridical();
   
@@ -79,10 +75,10 @@ ALTER FUNCTION gpSelect_Object_Juridical (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 28.12.13                                         * add ObjectHistory_JuridicalDetails_View
  20.10.13                                         * add Object_InfoMoney_View
  03.07.13         * +GoodsProperty, InfoMoney               
  14.05.13                                        *
-
 */
 
 -- ÚÂÒÚ

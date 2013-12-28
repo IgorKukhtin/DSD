@@ -58,7 +58,7 @@ uses
   GoodsKind in '..\..\Forms\GoodsKind.pas' {GoodsKindForm},
   Bank in '..\..\Forms\Bank.pas' {CurrencyForm},
   GoodsGroup in '..\..\Forms\GoodsGroup.pas' {GoodsGroupForm},
-  JuridicalGroup in '..\..\Forms\JuridicalGroup.pas' {JuridicalGroupForm},
+  JuridicalGroup in '..\..\Forms\Guides\JuridicalGroup.pas' {JuridicalGroupForm},
   GoodsEdit in '..\..\Forms\Guides\GoodsEdit.pas' {GoodsEditForm},
   GoodsTree in '..\..\Forms\Guides\GoodsTree.pas' {GoodsTreeForm},
   UnitEdit in '..\..\Forms\Guides\UnitEdit.pas' {UnitEditForm},
@@ -76,7 +76,7 @@ uses
   BankAccountEdit in '..\..\Forms\BankAccountEdit.pas' {BankAccountEditForm},
   BusinessEdit in '..\..\Forms\BusinessEdit.pas' {BusinessEditForm},
   Business in '..\..\Forms\Business.pas' {BusinessForm},
-  Juridical in '..\..\Forms\Juridical.pas' {JuridicalForm},
+  Juridical_Object in '..\..\Forms\Guides\Juridical_Object.pas' {Juridical_ObjectForm},
   dsdDB in '..\..\SOURCE\COMPONENT\dsdDB.pas',
   UnitTree in '..\..\Forms\Guides\UnitTree.pas' {UnitTreeForm},
   dbMovementItemTest in '..\SOURCE\dbMovementItemTest.pas',
@@ -129,7 +129,7 @@ uses
   Sale in '..\..\Forms\Document\Sale.pas' {SaleForm},
   ReturnOutJournal in '..\..\Forms\Document\ReturnOutJournal.pas' {ReturnOutJournalForm},
   ReturnOut in '..\..\Forms\Document\ReturnOut.pas' {ReturnOutForm},
-  JuridicalGroupEdit in '..\..\Forms\JuridicalGroupEdit.pas' {JuridicalGroupEditForm},
+  JuridicalGroupEdit in '..\..\Forms\Guides\JuridicalGroupEdit.pas' {JuridicalGroupEditForm},
   JuridicalTest in '..\SOURCE\Objects\All\JuridicalTest.pas',
   SendOnPriceJournal in '..\..\Forms\Document\SendOnPriceJournal.pas' {SendOnPriceJournalForm},
   SendOnPrice in '..\..\Forms\Document\SendOnPrice.pas' {SendOnPriceForm},
@@ -171,7 +171,7 @@ uses
   PersonalService in '..\..\Forms\PersonalService.pas' {PersonalServiceForm},
   Goods_Object in '..\..\Forms\Guides\Goods_Object.pas' {Goods_ObjectForm},
   Unit_Object in '..\..\Forms\Guides\Unit_Object.pas' {Unit_ObjectForm},
-  JuridicalTree in '..\..\Forms\JuridicalTree.pas' {JuridicalTreeForm},
+  JuridicalTree in '..\..\Forms\Guides\JuridicalTree.pas' {JuridicalTreeForm},
   BankAccountTest in '..\SOURCE\Objects\All\BankAccountTest.pas',
   BusinessTest in '..\SOURCE\Objects\All\BusinessTest.pas',
   CommonMovementItemReportProcedureTest in '..\SOURCE\MovementItemReport\CommonMovementItemReportProcedureTest.pas',
@@ -281,7 +281,7 @@ uses
   Personal_Object in '..\..\Forms\Guides\Personal_Object.pas' {Personal_ObjectForm: TParentForm},
   WorkTimeKind in '..\..\Forms\Enum\WorkTimeKind.pas' {WorkTimeKindForm: TParentForm},
   MovementDesc in '..\..\Forms\Kind\MovementDesc.pas' {MovementDescForm: TParentForm},
-  JuridicalEdit in '..\..\Forms\JuridicalEdit.pas' {JuridicalEditForm: TParentForm},
+  JuridicalEdit in '..\..\Forms\Guides\JuridicalEdit.pas' {JuridicalEditForm: TParentForm},
   JuridicalDetailsTest in '..\SOURCE\ObjectHistory\All\JuridicalDetailsTest.pas',
   PartnerEdit in '..\..\Forms\PartnerEdit.pas' {PartnerEditForm: TParentForm},
   WorkTimeKind_Object in '..\..\Forms\Enum\WorkTimeKind_Object.pas' {WorkTimeKind_ObjectForm: TParentForm},
@@ -306,7 +306,8 @@ uses
   TransportServiceJournal in '..\..\Forms\Document\TransportServiceJournal.pas' {TransportServiceJournalForm: TParentForm},
   UserKey in '..\..\Forms\Guides\UserKey.pas' {UserKeyForm: TParentForm},
   MovementItemContainer in '..\..\Forms\System\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm},
-  InfoMoney in '..\..\Forms\Guides\InfoMoney.pas' {InfoMoneyForm: TParentForm};
+  InfoMoney in '..\..\Forms\Guides\InfoMoney.pas' {InfoMoneyForm: TParentForm},
+  Juridical in '..\..\Forms\Guides\Juridical.pas' {JuridicalForm: TParentForm};
 
 {$R *.RES}
 

@@ -110,10 +110,10 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
  22.12.13         * add zc_MovementLinkObject_ContractConditionKind   
- 03.10.13                                         * rename MainJuridical -> JuridicalBasis
+ 03.10.13                                         * rename to JuridicalBasis
  25.09.13         * del zc_MovementLinkObject_Member; add UnitForwarding, CarTrailer
  20.08.13         * add zc_MovementLinkObject_Member
- 12.08.13         * add zc_MovementLinkObject_BankAccount, Juridical, MainJuridical              
+ 12.08.13         * add zc_MovementLinkObject_BankAccount, Juridical, JuridicalBasis
  29.07.13         * ÕŒ¬¿ﬂ —’≈Ã¿ 2, add zc_MovementLinkObject_Personal
  30.06.13                                        * ÕŒ¬¿ﬂ —’≈Ã¿
 */

@@ -1,4 +1,4 @@
-unit Juridical;
+unit Juridical_Object;
 
 interface
 
@@ -24,7 +24,7 @@ uses
   cxGrid, cxSplitter;
 
 type
-  TJuridicalForm = class(TParentForm)
+  TJuridical_ObjectForm = class(TParentForm)
     cxSplitter: TcxSplitter;
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
@@ -36,26 +36,17 @@ type
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
     bbRefresh: TdxBarButton;
-    bbInsert: TdxBarButton;
-    bbEdit: TdxBarButton;
-    bbErased: TdxBarButton;
-    bbUnErased: TdxBarButton;
     bbChoiceGuides: TdxBarButton;
     bbGridToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdInsertUpdateAction;
-    actUpdate: TdsdInsertUpdateAction;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdGridToExcel: TdsdGridToExcel;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     GridDS: TDataSource;
     ClientDataSet: TClientDataSet;
     GridStoredProc: TdsdStoredProc;
-    spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clInfoMoneyGroupCode: TcxGridDBColumn;
     clInfoMoneyGroupName: TcxGridDBColumn;
@@ -63,6 +54,10 @@ type
     clInfoMoneyDestinationName: TcxGridDBColumn;
     clInfoMoneyCode: TcxGridDBColumn;
     clInfoMoneyName: TcxGridDBColumn;
+    clGLNCode: TcxGridDBColumn;
+    clOKPO: TcxGridDBColumn;
+    clIsCorporate: TcxGridDBColumn;
+    clJuridicalGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -74,5 +69,5 @@ implementation
 
 {$R *.dfm}
  initialization
-  RegisterClass(TJuridicalForm);
+  RegisterClass(TJuridical_ObjectForm);
 end.

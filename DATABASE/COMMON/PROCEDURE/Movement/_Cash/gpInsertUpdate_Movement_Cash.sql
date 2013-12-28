@@ -1,7 +1,6 @@
 -- Function: gpInsertUpdate_Movement_Cash()
 
-DROP FUNCTION IF EXISTS 
-   gpInsertUpdate_Movement_Cash(Integer, TVarChar, TdateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash(Integer, TVarChar, TdateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -21,8 +20,8 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAccessKeyId Integer;
-   DECLARE vbAmount TFloat;
    DECLARE vbMovementItemId Integer;
+   DECLARE vbAmount TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Cash());
@@ -43,7 +42,7 @@ BEGIN
      IF inAmountIn > 0 THEN
         vbAmount := inAmountIn;
      ELSE
-        vbAmount := - inAmountOut;
+        vbAmount := -1 * inAmountOut;
      END IF;
 
 
@@ -63,14 +62,13 @@ BEGIN
      -- сохранили <Элемент документа>
      vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inCashId, ioId, vbAmount, NULL);
 
-
      -- сохранили связь с <Объект>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_MoneyPlace(), vbMovementItemId, inMoneyPlaceId);
     
      -- Комментарий
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
 
-     -- сохранили связь с <Управленческие статьи >
+     -- сохранили связь с <Управленческие статьи>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), vbMovementItemId, inInfoMoneyId);
      -- сохранили связь с <Договора>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), vbMovementItemId, inContractId);

@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_Cash()
 
--- DROP FUNCTION gpSelect_Object_Cash();
+DROP FUNCTION IF EXISTS gpSelect_Object_Cash();
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Cash(
     IN inSession     TVarChar        -- сессия пользователя
@@ -27,7 +27,7 @@ BEGIN
    , Object.isErased    AS isErased
    , Currency.ValueData AS CurrencyName
    , Branch.ValueData   AS BranchName
-   , MainJuridical.ValueData  AS JuridicalName
+   , JuridicalBasis.ValueData  AS JuridicalName
    , Business.ValueData AS BusinessName
 
    FROM Object
@@ -41,10 +41,10 @@ BEGIN
                              ON Cash_Branch.ObjectId = Object.Id
                             AND Cash_Branch.DescId = zc_ObjectLink_Cash_Branch()
            LEFT JOIN Object AS Branch ON Branch.Id = Cash_Branch.ChildObjectId
-           LEFT JOIN ObjectLink AS Cash_MainJuridical
-                                ON Cash_MainJuridical.ObjectId = Object.Id
-                               AND Cash_MainJuridical.DescId = zc_ObjectLink_Cash_MainJuridical()
-           LEFT JOIN Object AS MainJuridical ON MainJuridical.Id = Cash_MainJuridical.ChildObjectId
+           LEFT JOIN ObjectLink AS Cash_JuridicalBasis
+                                ON Cash_JuridicalBasis.ObjectId = Object.Id
+                               AND Cash_JuridicalBasis.DescId = zc_ObjectLink_Cash_JuridicalBasis()
+           LEFT JOIN Object AS JuridicalBasis ON JuridicalBasis.Id = Cash_JuridicalBasis.ChildObjectId
            LEFT JOIN ObjectLink AS Cash_Business
                                 ON Cash_Business.ObjectId = Object.Id
                                AND Cash_Business.DescId = zc_ObjectLink_Cash_Business()
@@ -62,9 +62,10 @@ ALTER FUNCTION gpSelect_Object_Cash (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 24.11.13                                        * Cyr1251
+ 28.12.13                                        * rename to zc_ObjectLink_Cash_JuridicalBasis
+ 24.12.13                                        * Cyr1251
  10.05.13          *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Cash('2')
+-- SELECT * FROM gpSelect_Object_Cash (zfCalc_UserAdmin())

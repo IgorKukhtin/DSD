@@ -1,72 +1,72 @@
 -- Документ <Расход денег с подотчета на подотчет>
-CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_Movement_Cash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_Movement_Cash' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Enum_Process_Get_Movement_Cash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Get_Movement_Cash' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Enum_Process_Select_Movement_Cash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Select_Movement_Cash' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_Movement_Service() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_Movement_Service' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Get_Movement_Service() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Get_Movement_Service' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Select_Movement_Service() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Select_Movement_Service' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 -- Status
-CREATE OR REPLACE FUNCTION zc_Enum_Process_UnComplete_Cash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_UnComplete_Cash' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Enum_Process_Complete_Cash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Complete_Cash' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Enum_Process_SetErased_Cash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_SetErased_Cash' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Enum_Process_CompletePeriod_Cash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_CompletePeriod_Cash' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_UnComplete_Service() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_UnComplete_Service' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Complete_Service() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Complete_Service' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_SetErased_Service() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_SetErased_Service' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_CompletePeriod_Service() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_CompletePeriod_Service' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 DO $$
 BEGIN
 
 -- Документ <Транспорт>
-PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_Movement_Cash()
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_Movement_Service()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 1
-                                  , inName:= 'сохранение данных - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Cash())||'>.'
-                                  , inEnumName:= 'zc_Enum_Process_InsertUpdate_Movement_Cash');
+                                  , inName:= 'сохранение данных - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Service())||'>.'
+                                  , inEnumName:= 'zc_Enum_Process_InsertUpdate_Movement_Service');
 
-PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Get_Movement_Cash()
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Get_Movement_Service()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 2
-                                  , inName:= 'выбор данных - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Cash())||'>.'
-                                  , inEnumName:= 'zc_Enum_Process_Get_Movement_Cash');
+                                  , inName:= 'выбор данных - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Service())||'>.'
+                                  , inEnumName:= 'zc_Enum_Process_Get_Movement_Service');
 
-PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_Movement_Cash()
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_Movement_Service()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 3
-                                  , inName:= 'получение данных - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Cash())||'>.'
-                                  , inEnumName:= 'zc_Enum_Process_Select_Movement_Cash');
+                                  , inName:= 'получение данных - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Service())||'>.'
+                                  , inEnumName:= 'zc_Enum_Process_Select_Movement_Service');
                                   
--- Status_Cash
-PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_UnComplete_Cash()
+-- Status_Service
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_UnComplete_Service()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 1
-                                  , inName:= 'Распроведение - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Cash())||'>.'
-                                  , inEnumName:= 'zc_Enum_Process_UnComplete_Cash');
+                                  , inName:= 'Распроведение - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Service())||'>.'
+                                  , inEnumName:= 'zc_Enum_Process_UnComplete_Service');
 
-PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Complete_Cash()
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Complete_Service()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 2
-                                  , inName:= 'Проведение - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Cash())||'>.'
-                                  , inEnumName:= 'zc_Enum_Process_Complete_Cash');
+                                  , inName:= 'Проведение - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Service())||'>.'
+                                  , inEnumName:= 'zc_Enum_Process_Complete_Service');
 
-PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_SetErased_Cash()
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_SetErased_Service()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 3
-                                  , inName:= 'Удаление - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Cash())||'>.'
-                                  , inEnumName:= 'zc_Enum_Process_SetErased_Cash');
+                                  , inName:= 'Удаление - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Service())||'>.'
+                                  , inEnumName:= 'zc_Enum_Process_SetErased_Service');
 
-PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_CompletePeriod_Cash()
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_CompletePeriod_Service()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 4
-                                  , inName:= 'Проведение за период - документы <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Cash())||'>.'
-                                  , inEnumName:= 'zc_Enum_Process_CompletePeriod_Cash');
+                                  , inName:= 'Проведение за период - документы <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Service())||'>.'
+                                  , inEnumName:= 'zc_Enum_Process_CompletePeriod_Service');
 
 
  -- Документ <Транспорт>
- -- заливка прав - InsertUpdate_Movement_Cash + Get_Movement_Cash
+ -- заливка прав - InsertUpdate_Movement_Service + Get_Movement_Service
  PERFORM gpInsertUpdate_Object_RoleProcess (ioId        := tmpData.RoleRightId
                                           , inRoleId    := tmpRole.RoleId
                                           , inProcessId := tmpProcess.ProcessId
                                           , inSession   := zfCalc_UserAdmin())
  -- select  tmpData.RoleRightId, tmpRole.RoleId, tmpProcess.ProcessId
  FROM (SELECT Id AS RoleId FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode in (-1)) AS tmpRole
-      JOIN (SELECT zc_Enum_Process_InsertUpdate_Movement_Cash() AS ProcessId
+      JOIN (SELECT zc_Enum_Process_InsertUpdate_Movement_Service() AS ProcessId
            UNION ALL
-            SELECT zc_Enum_Process_Get_Movement_Cash() AS ProcessId
+            SELECT zc_Enum_Process_Get_Movement_Service() AS ProcessId
            ) AS tmpProcess ON 1=1
 
       -- находим уже существующие права
@@ -82,14 +82,14 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_CompletePeriod_Cash()
  WHERE tmpData.RoleId IS NULL
 ;
  
-  -- заливка прав - Select_Movement_Cash
+  -- заливка прав - Select_Movement_Service
  PERFORM gpInsertUpdate_Object_RoleProcess (ioId        := tmpData.RoleRightId
                                           , inRoleId    := tmpRole.RoleId
                                           , inProcessId := tmpProcess.ProcessId
                                           , inSession   := zfCalc_UserAdmin())
  -- select  tmpData.RoleRightId, tmpRole.RoleId, tmpProcess.ProcessId
  FROM (SELECT Id AS RoleId FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode in (-1)) AS tmpRole
-      JOIN (SELECT zc_Enum_Process_Select_Movement_Cash() AS ProcessId
+      JOIN (SELECT zc_Enum_Process_Select_Movement_Service() AS ProcessId
            ) AS tmpProcess ON 1=1
 
       -- находим уже существующие права
@@ -105,21 +105,21 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_CompletePeriod_Cash()
  WHERE tmpData.RoleId IS NULL
 ;
  
- -- Status_Cash
- -- заливка прав - Cash_UnComplete +  Cash_Complete + Cash_Erased
+ -- Status_Service
+ -- заливка прав - Service_UnComplete +  Service_Complete + Service_Erased
  PERFORM gpInsertUpdate_Object_RoleProcess (ioId        := tmpData.RoleRightId
                                           , inRoleId    := tmpRole.RoleId
                                           , inProcessId := tmpProcess.ProcessId
                                           , inSession   := zfCalc_UserAdmin())
  -- select  tmpData.RoleRightId, tmpRole.RoleId, tmpProcess.ProcessId
  FROM (SELECT Id AS RoleId FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode in (-1)) AS tmpRole
-      JOIN (SELECT zc_Enum_Process_UnComplete_Cash() AS ProcessId
+      JOIN (SELECT zc_Enum_Process_UnComplete_Service() AS ProcessId
           UNION ALL
-            SELECT zc_Enum_Process_SetErased_Cash() AS ProcessId
+            SELECT zc_Enum_Process_SetErased_Service() AS ProcessId
           UNION ALL
-            SELECT zc_Enum_Process_Complete_Cash() AS ProcessId
+            SELECT zc_Enum_Process_Complete_Service() AS ProcessId
           UNION ALL
-            SELECT zc_Enum_Process_CompletePeriod_Cash() AS ProcessId
+            SELECT zc_Enum_Process_CompletePeriod_Service() AS ProcessId
            ) AS tmpProcess ON 1=1
 
       -- находим уже существующие права
@@ -141,5 +141,5 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 26.12.13                                        *
+ 28.12.13                                        *
 */

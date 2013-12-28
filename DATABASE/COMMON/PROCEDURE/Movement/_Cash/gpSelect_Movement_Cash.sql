@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , AmountOut TFloat 
              , Comment TVarChar
              , CashName TVarChar
-             , MoneyPlaceName TVarChar
+             , MoneyPlaceCode Integer, MoneyPlaceName TVarChar
              , InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar
@@ -25,7 +25,7 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_BankAccount());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Cash());
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Результат
@@ -48,6 +48,7 @@ BEGIN
                   END::TFloat AS AmountOut
            , MIString_Comment.ValueData        AS Comment
            , Object_Cash.ValueData             AS CashName
+           , Object_MoneyPlace.ObjectCode      AS MoneyPlaceCode
            , Object_MoneyPlace.ValueData       AS MoneyPlaceName
            , Object_InfoMoney_View.InfoMoneyGroupName
            , Object_InfoMoney_View.InfoMoneyDestinationName
@@ -59,9 +60,8 @@ BEGIN
             JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-                 JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
-
-                 JOIN Object AS Object_Cash ON Object_Cash.Id = MovementItem.ObjectId
+            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+            LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = MovementItem.ObjectId
  
             LEFT JOIN MovementItemString AS MIString_Comment 
                                          ON MIString_Comment.MovementItemId = MovementItem.Id AND MIString_Comment.DescId = zc_MIString_Comment()

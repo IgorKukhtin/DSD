@@ -107,7 +107,20 @@ BEGIN
                                                                            )
                                      END;
 
-     -- 1.2. определяется ObjectId для проводок суммового учета по счету Прибыль
+     -- 1.2.1. определяется ProfitLossDirectionId для проводок суммового учета по счету Прибыль
+     UPDATE _tmpItem SET ProfitLossDirectionId = CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
+                                                       AND _tmpItem.UnitId = 0
+                                                           THEN zc_Enum_ProfitLossDirection_11100() -- Результат основной деятельности + Маркетинг
+                                                      ELSE _tmpItem.ProfitLossDirectionId
+                                                 END
+     WHERE _tmpItem.AccountId = zc_Enum_Account_100301(); -- прибыль текущего периода
+
+     -- 1.2.2. определяется ProfitLossGroupId для проводок суммового учета по счету Прибыль
+     UPDATE _tmpItem SET ProfitLossGroupId = View_ProfitLossDirection.ProfitLossGroupId
+     FROM Object_ProfitLossDirection_View AS View_ProfitLossDirection
+     WHERE View_ProfitLossDirection.ProfitLossDirectionId = _tmpItem.ProfitLossDirectionId;
+
+     -- 1.2.3. определяется ObjectId для проводок суммового учета по счету Прибыль
      UPDATE _tmpItem SET ObjectId = lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := _tmpItem.ProfitLossGroupId
                                                                   , inProfitLossDirectionId  := _tmpItem.ProfitLossDirectionId
                                                                   , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
