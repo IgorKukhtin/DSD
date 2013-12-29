@@ -24,7 +24,7 @@ BEGIN
                          , ProfitLossGroupId, ProfitLossDirectionId
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId, JuridicalId_Basis
-                         , UnitId, ContractId, PaidKindId
+                         , UnitId, BranchId, ContractId, PaidKindId
                          , IsActive
                           )
         SELECT Movement.OperDate
@@ -49,6 +49,8 @@ BEGIN
                -- √лавное ёр.лицо всегда из кассы
              , COALESCE (ObjectLink_Cash_JuridicalBasis.ChildObjectId, 0) AS JuridicalId_Basis
              , COALESCE (MILinkObject_Unit.ObjectId, 0) AS UnitId
+               -- ‘илиал: всегда по подразделению
+             , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) AS BranchId
              , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
              , zc_Enum_PaidKind_SecondForm() AS PaidKindId
              , CASE WHEN MovementItem.Amount >= 0 THEN TRUE ELSE FALSE END
@@ -72,6 +74,8 @@ BEGIN
                                                              AND ObjectLink_Cash_Business.DescId = zc_ObjectLink_Cash_Business()
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Business ON ObjectLink_Unit_Business.ObjectId = MILinkObject_Unit.ObjectId
                                                              AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = MILinkObject_Unit.ObjectId
+                                                           AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
              LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = MILinkObject_Unit.ObjectId
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
         WHERE Movement.Id = inMovementId
@@ -100,7 +104,7 @@ BEGIN
                          , ProfitLossGroupId, ProfitLossDirectionId
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId, JuridicalId_Basis
-                         , UnitId, ContractId, PaidKindId
+                         , UnitId, BranchId, ContractId, PaidKindId
                          , IsActive
                           )
         SELECT _tmpItem.OperDate
@@ -116,7 +120,10 @@ BEGIN
              , CASE WHEN Object.Id IS NULL THEN COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0) ELSE _tmpItem.BusinessId END AS BusinessId
                -- √лавное ёр.лицо всегда из кассы
              , _tmpItem.JuridicalId_Basis
-             , _tmpItem.UnitId, _tmpItem.ContractId, _tmpItem.PaidKindId
+             , _tmpItem.UnitId
+               -- ‘илиал: всегда по подразделению
+             , _tmpItem.BranchId
+             , _tmpItem.ContractId, _tmpItem.PaidKindId
              , NOT _tmpItem.IsActive
         FROM _tmpItem
              LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace

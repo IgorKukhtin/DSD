@@ -118,11 +118,11 @@ BEGIN
      THEN
          -- такие для Автомобиля/Сотрудника/Подразделения (по филиалу)
          vbProfitLossGroupId := zc_Enum_ProfitLossGroup_40000(); -- 40000 Расходы на сбыт
-         vbProfitLossDirectionId := zc_Enum_ProfitDirection_40400(); -- 40400; "Прочие потери (Списание+инвентаризация)
+         vbProfitLossDirectionId := zc_Enum_ProfitLossDirection_40400(); -- 40400; "Прочие потери (Списание+инвентаризация)
      ELSE
          -- такие для Автомобиля/Сотрудника/Подразделения (не филиал)
          vbProfitLossGroupId := zc_Enum_ProfitLossGroup_20000(); -- 20000; "Общепроизводственные расходы"
-         vbProfitLossDirectionId := zc_Enum_ProfitDirection_20500(); -- 20500; "Прочие потери (Списание+инвентаризация)
+         vbProfitLossDirectionId := zc_Enum_ProfitLossDirection_20500(); -- 20500; "Прочие потери (Списание+инвентаризация)
      END IF;
 
 

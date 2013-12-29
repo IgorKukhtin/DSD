@@ -7,7 +7,6 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_Finance(
     IN inUserId            Integer    -- Пользователь
 )                              
 RETURNS void
---  RETURNS TABLE (OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat, ContainerId Integer, AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer, ProfitLossGroupId Integer, ProfitLossDirectionId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, BusinessId Integer, JuridicalId_Basis Integer, UnitId Integer, ContractId Integer, PaidKindId Integer, IsActive Boolean)
 AS
 $BODY$
 BEGIN
@@ -89,6 +88,7 @@ BEGIN
      FROM Object_AccountDirection_View AS View_AccountDirection
      WHERE View_AccountDirection.AccountDirectionId = _tmpItem.AccountDirectionId;
 
+
      -- 1.1.3. определяется Счет для проводок суммового учета
      UPDATE _tmpItem SET AccountId = CASE WHEN _tmpItem.ObjectDescId = 0
                                                THEN zc_Enum_Account_100301() -- прибыль текущего периода
@@ -111,14 +111,48 @@ BEGIN
      UPDATE _tmpItem SET ProfitLossDirectionId = CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
                                                        AND _tmpItem.UnitId = 0
                                                            THEN zc_Enum_ProfitLossDirection_11100() -- Результат основной деятельности + Маркетинг
+
+                                                      WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30400() -- услуги предоставленные
+                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40500() -- Ссуды
+                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40600() -- Депозиты
+                                                           THEN zc_Enum_ProfitLossDirection_70200() -- Дополнительная прибыль + Прочее
+
+                                                      WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40400() -- проценты по кредитам
+                                                        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40700() -- Лиол
+                                                           THEN zc_Enum_ProfitLossDirection_80100() -- Расходы с прибыли + Финансовая деятельность
+
+                                                      WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_50100() -- Налоговые платежи по ЗП
+                                                           THEN zc_Enum_ProfitLossDirection_50400() -- Налоговые платежи по ЗП
+                                                      WHEN _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_50201() -- Налог на прибыль
+                                                           THEN zc_Enum_ProfitLossDirection_50100() -- Налог на прибыль
+                                                      WHEN _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_50202() -- НДС
+                                                           THEN zc_Enum_ProfitLossDirection_50200() -- НДС
+                                                      WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_50300() -- Налоговые платежи (прочие)
+                                                           THEN zc_Enum_ProfitLossDirection_50300() -- Налоговые платежи (прочие)
+                                                      WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_50400() -- штрафы в бюджет
+                                                           THEN zc_Enum_ProfitLossDirection_50500() -- штрафы в бюджет
+
                                                       ELSE _tmpItem.ProfitLossDirectionId
                                                  END
+                       , ObjectId = CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
+                                          AND _tmpItem.UnitId = 0
+                                              THEN zc_Enum_ProfitLoss_11101() -- Результат основной деятельности + Маркетинг + Продукция
+                                         WHEN _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_50201() -- Налог на прибыль
+                                              THEN zc_Enum_ProfitLoss_50101() -- Налоги + Налог на прибыль + Налог на прибыль
+                                         WHEN _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_50202() -- НДС
+                                              THEN zc_Enum_ProfitLoss_50201() -- Налоги + НДС + НДС
+                                         ELSE _tmpItem.ObjectId
+                                    END
+                      , IsActive = FALSE -- !!!всегда по Кредиту!!!
      WHERE _tmpItem.AccountId = zc_Enum_Account_100301(); -- прибыль текущего периода
 
      -- 1.2.2. определяется ProfitLossGroupId для проводок суммового учета по счету Прибыль
      UPDATE _tmpItem SET ProfitLossGroupId = View_ProfitLossDirection.ProfitLossGroupId
      FROM Object_ProfitLossDirection_View AS View_ProfitLossDirection
      WHERE View_ProfitLossDirection.ProfitLossDirectionId = _tmpItem.ProfitLossDirectionId;
+
+     -- для теста
+     -- return;
 
      -- 1.2.3. определяется ObjectId для проводок суммового учета по счету Прибыль
      UPDATE _tmpItem SET ObjectId = lpInsertFind_Object_ProfitLoss (inProfitLossGroupId      := _tmpItem.ProfitLossGroupId
@@ -128,10 +162,9 @@ BEGIN
                                                                   , inInsert                 := FALSE
                                                                   , inUserId                 := inUserId
                                                                    )
-                      , OperSumm = CASE WHEN _tmpItem.IsActive = TRUE THEN -1 ELSE 1 END * _tmpItem.OperSumm
-                      , IsActive = FALSE -- !!!всегда по Кредиту!!!
-     WHERE _tmpItem.AccountId = zc_Enum_Account_100301(); -- прибыль текущего периода
-
+     WHERE _tmpItem.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
+       AND _tmpItem.ObjectId = 0
+    ;
 
      -- 2. определяется ContainerId для проводок суммового учета
      UPDATE _tmpItem SET ContainerId = CASE WHEN _tmpItem.AccountGroupId = zc_Enum_AccountGroup_40000() -- Денежные средства
@@ -250,17 +283,23 @@ BEGIN
                 , _tmpItem_Active.ContainerId AS ActiveContainerId, _tmpItem_Active.AccountId AS ActiveAccountId
                 , _tmpItem_Passive.ContainerId AS PassiveContainerId, _tmpItem_Passive.AccountId AS PassiveAccountId
            FROM _tmpItem AS _tmpItem_Active
-                LEFT JOIN _tmpItem AS _tmpItem_Passive ON _tmpItem_Passive.IsActive = FALSE AND _tmpItem_Passive.MovementItemId = _tmpItem_Active.MovementItemId
-           WHERE _tmpItem_Active.IsActive = TRUE
+                LEFT JOIN _tmpItem AS _tmpItem_Passive ON _tmpItem_Passive.OperSumm < 0 AND _tmpItem_Passive.MovementItemId = _tmpItem_Active.MovementItemId
+           WHERE _tmpItem_Active.OperSumm > 0
           ) AS _tmpItem
     ;
 
 
-     -- для теста
-     -- RETURN QUERY SELECT _tmpItem.OperDate, _tmpItem.ObjectId, _tmpItem.ObjectDescId, _tmpItem.OperSumm, _tmpItem.ContainerId, _tmpItem.AccountGroupId, _tmpItem.AccountDirectionId, _tmpItem.AccountId, _tmpItem.ProfitLossGroupId, _tmpItem.ProfitLossDirectionId, _tmpItem.InfoMoneyGroupId, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId, _tmpItem.BusinessId, _tmpItem.JuridicalId_Basis, _tmpItem.UnitId, _tmpItem.ContractId, _tmpItem.PaidKindId, _tmpItem.IsActive FROM _tmpItem;
+     -- !!!5. формируются свойства в элементах документа из данных для проводок!!!
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), tmp.MovementItemId, tmp.BranchId)
+     FROM (SELECT _tmpItem.MovementItemId, _tmpItem.BranchId
+           FROM _tmpItem
+           WHERE AccountId = zc_Enum_Account_100301() -- 100301; "прибыль текущего периода"
+          ) AS tmp;
 
-     -- 5. ФИНИШ - Обязательно сохраняем Проводки
+
+     -- 6. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable();
+
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -269,6 +308,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 29.12.13                                        *
  26.12.13                                        *
 */
 

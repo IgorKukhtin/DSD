@@ -24,13 +24,13 @@ BEGIN
                                , ProfitLossGroupId Integer, ProfitLossDirectionId Integer
                                , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                , BusinessId Integer, JuridicalId_Basis Integer
-                               , UnitId Integer, ContractId Integer, PaidKindId Integer
+                               , UnitId Integer, BranchId Integer, ContractId Integer, PaidKindId Integer
                                , IsActive Boolean
                                 ) ON COMMIT DROP;
 
      -- проводим Документ
      PERFORM lpComplete_Movement_Service (inMovementId := inMovementId
-                                     , inUserId     := vbUserId);
+                                        , inUserId     := vbUserId);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;

@@ -24,7 +24,7 @@ BEGIN
                          , ProfitLossGroupId, ProfitLossDirectionId
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId, JuridicalId_Basis
-                         , UnitId, ContractId, PaidKindId
+                         , UnitId, BranchId, ContractId, PaidKindId
                          , IsActive
                           )
         SELECT Movement.OperDate
@@ -44,11 +44,13 @@ BEGIN
              , COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) AS InfoMoneyDestinationId
                -- Управленческие статьи назначения
              , COALESCE (View_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
-               -- Бизнес: из ObjectLink_Unit_Business
+               -- Бизнес: всегда по подразделению
              , COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0) AS BusinessId
                -- Главное Юр.лицо всегда из договора
              , COALESCE (ObjectLink_Contract_JuridicalBasis.ChildObjectId, 0) AS JuridicalId_Basis
              , COALESCE (MILinkObject_Unit.ObjectId, 0) AS UnitId
+               -- Филиал: всегда по подразделению
+             , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) AS BranchId
              , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
              , MILinkObject_PaidKind.ObjectId AS PaidKindId
              , CASE WHEN MovementItem.Amount >= 0 THEN TRUE ELSE FALSE END
@@ -73,6 +75,8 @@ BEGIN
                                                                        AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Business ON ObjectLink_Unit_Business.ObjectId = MILinkObject_Unit.ObjectId
                                                              AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = MILinkObject_Unit.ObjectId
+                                                           AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
              LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = MILinkObject_Unit.ObjectId
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
         WHERE Movement.Id = inMovementId
@@ -101,7 +105,7 @@ BEGIN
                          , ProfitLossGroupId, ProfitLossDirectionId
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId, JuridicalId_Basis
-                         , UnitId, ContractId, PaidKindId
+                         , UnitId, BranchId, ContractId, PaidKindId
                          , IsActive
                           )
         SELECT _tmpItem.OperDate
@@ -113,11 +117,14 @@ BEGIN
              , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId   -- сформируем позже
              , _tmpItem.ProfitLossGroupId, _tmpItem.ProfitLossDirectionId
              , _tmpItem.InfoMoneyGroupId, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId
-               -- Бизнес: из ObjectLink_Unit_Business
+               -- Бизнес: всегда по подразделению
              , _tmpItem.BusinessId
                -- Главное Юр.лицо всегда из договора
              , _tmpItem.JuridicalId_Basis
-             , _tmpItem.UnitId, _tmpItem.ContractId, _tmpItem.PaidKindId
+             , _tmpItem.UnitId
+               -- Филиал: всегда по подразделению
+             , _tmpItem.BranchId
+             , _tmpItem.ContractId, _tmpItem.PaidKindId
              , NOT _tmpItem.IsActive
         FROM _tmpItem
        ;
@@ -127,6 +134,9 @@ BEGIN
      PERFORM lpComplete_Movement_Finance (inMovementId := inMovementId
                                         , inUserId     := inUserId);
 
+     -- для теста
+     -- RETURN QUERY SELECT _tmpItem.OperDate, _tmpItem.ObjectId, _tmpItem.ObjectDescId, _tmpItem.OperSumm, _tmpItem.ContainerId, _tmpItem.AccountGroupId, _tmpItem.AccountDirectionId, _tmpItem.AccountId, _tmpItem.ProfitLossGroupId, _tmpItem.ProfitLossDirectionId, _tmpItem.InfoMoneyGroupId, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId, _tmpItem.BusinessId, _tmpItem.JuridicalId_Basis, _tmpItem.UnitId, _tmpItem.ContractId, _tmpItem.PaidKindId, _tmpItem.IsActive FROM _tmpItem;
+     -- return;
 
      -- 5. ФИНИШ - Обязательно меняем статус документа
      UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_Service() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
@@ -143,6 +153,20 @@ END;$BODY$
 */
 
 -- тест
--- SELECT * FROM lpUnComplete_Movement (inMovementId:= 3581, inUserId:= zfCalc_UserAdmin() :: Integer)
--- SELECT * FROM gpComplete_Movement_Service (inMovementId:= 3581, inSession:= zfCalc_UserAdmin())
--- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 3581, inSession:= zfCalc_UserAdmin())
+/*
+     -- таблица - Проводки
+     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
+     -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     CREATE TEMP TABLE _tmpItem (OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat
+                               , MovementItemId Integer, ContainerId Integer
+                               , AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer
+                               , ProfitLossGroupId Integer, ProfitLossDirectionId Integer
+                               , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                               , BusinessId Integer, JuridicalId_Basis Integer
+                               , UnitId Integer, ContractId Integer, PaidKindId Integer
+                               , IsActive Boolean
+                                ) ON COMMIT DROP;
+ SELECT * FROM lpComplete_Movement_Service (inMovementId:= 4139, inUserId:= zfCalc_UserAdmin() :: Integer)
+*/
+-- SELECT * FROM lpUnComplete_Movement (inMovementId:= 4139, inUserId:= zfCalc_UserAdmin() :: Integer)
+-- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 4139, inSession:= zfCalc_UserAdmin())

@@ -145,7 +145,7 @@ BEGIN
                  LEFT JOIN Object AS Object_Direction ON Object_Direction.Id = COALESCE (ContainerLinkObject_ProfitLoss.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, COALESCE (ContainerLinkObject_Member.ObjectId, COALESCE (ContainerLinkObject_Car.ObjectId, ContainerLinkObject_Unit.ObjectId))))
 
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Business
-                                               ON ContainerLinkObject_Business.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
+                                               ON ContainerLinkObject_Business.ContainerId = MovementItemContainer.ContainerId -- COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
                                               AND ContainerLinkObject_Business.DescId = zc_ContainerLinkObject_Business()
                                               AND ContainerLinkObject_Business.ObjectId <> 0
                  LEFT JOIN Object AS Object_Business ON Object_Business.Id = ContainerLinkObject_Business.ObjectId

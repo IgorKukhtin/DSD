@@ -77,7 +77,6 @@ BEGIN
      -- сохранили связь с <Подразделением>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbMovementItemId, inUnitId);
 
-
      -- 5.1. таблица - Проводки
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
      -- 5.2. таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
@@ -87,7 +86,7 @@ BEGIN
                                , ProfitLossGroupId Integer, ProfitLossDirectionId Integer
                                , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                , BusinessId Integer, JuridicalId_Basis Integer
-                               , UnitId Integer, ContractId Integer, PaidKindId Integer
+                               , UnitId Integer, BranchId Integer, ContractId Integer, PaidKindId Integer
                                , IsActive Boolean
                                 ) ON COMMIT DROP;
 

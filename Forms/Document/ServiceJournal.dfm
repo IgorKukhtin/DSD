@@ -190,12 +190,6 @@ inherited ServiceJournalForm: TServiceJournalForm
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Service'
-    Params = <
-      item
-        Name = 'inMovementId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-      end>
     Left = 16
     Top = 152
   end

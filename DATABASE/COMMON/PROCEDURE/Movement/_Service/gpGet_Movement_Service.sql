@@ -78,14 +78,14 @@ BEGIN
            , Object_Juridical.Id              AS JuridicalId
            , Object_Juridical.ValueData       AS JuridicalName
 
-           , Object_PaidKind.Id               AS PaidKindId
-           , Object_PaidKind.ValueData        AS PaidKindName
-           , Object_Contract.Id               AS ContractId
-           , Object_Contract.ValueData        AS ContractInvNumber
            , View_InfoMoney.InfoMoneyId
            , View_InfoMoney.InfoMoneyName_all AS InfoMoneyName
+           , Object_Contract.Id               AS ContractId
+           , Object_Contract.ValueData        AS ContractInvNumber
            , Object_Unit.Id                   AS UnitId
            , Object_Unit.ValueData            AS UnitName
+           , Object_PaidKind.Id               AS PaidKindId
+           , Object_PaidKind.ValueData        AS PaidKindName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
