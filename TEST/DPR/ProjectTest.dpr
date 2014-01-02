@@ -166,7 +166,7 @@ uses
   AccountTest in '..\SOURCE\Objects\All\AccountTest.pas',
   CashTest in '..\SOURCE\Objects\All\CashTest.pas',
   InfoMoneyTest in '..\SOURCE\Objects\All\InfoMoneyTest.pas',
-  TransportTest in '..\SOURCE\Movement\All\TransportTest.pas',
+  TransportServiceTest in '..\SOURCE\Movement\All\TransportServiceTest.pas',
   PersonalServiceEdit in '..\..\Forms\PersonalServiceEdit.pas' {PersonalServiceEditForm},
   PersonalService in '..\..\Forms\PersonalService.pas' {PersonalServiceForm},
   Goods_Object in '..\..\Forms\Guides\Goods_Object.pas' {Goods_ObjectForm},
@@ -208,7 +208,7 @@ uses
   PersonalGroupEdit in '..\..\Forms\Guides\PersonalGroupEdit.pas' {PersonalGroupEditForm},
   PersonalSendCash in '..\..\Forms\Document\PersonalSendCash.pas' {PersonalSendCashForm},
   PersonalSendCashJournal in '..\..\Forms\Document\PersonalSendCashJournal.pas' {PersonalSendCashJournalForm},
-  PersonalSendCashTest in '..\SOURCE\Movement\All\PersonalSendCashTest.pas' {$R *.RES},
+  PersonalAccountTest in '..\SOURCE\Movement\All\PersonalAccountTest.pas' {$R *.RES},
   SheetWorkTimeTest in '..\SOURCE\Movement\All\SheetWorkTimeTest.pas',
   Report_Fuel in '..\..\Forms\Report\Report_Fuel.pas' {Report_FuelForm},
   Report_Transport in '..\..\Forms\Report\Report_Transport.pas' {Report_TransportForm},
@@ -307,7 +307,9 @@ uses
   UserKey in '..\..\Forms\Guides\UserKey.pas' {UserKeyForm: TParentForm},
   MovementItemContainer in '..\..\Forms\System\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm},
   InfoMoney in '..\..\Forms\Guides\InfoMoney.pas' {InfoMoneyForm: TParentForm},
-  Juridical in '..\..\Forms\Guides\Juridical.pas' {JuridicalForm: TParentForm};
+  Juridical in '..\..\Forms\Guides\Juridical.pas' {JuridicalForm: TParentForm},
+  PersonalSendCashTest in '..\SOURCE\Movement\All\PersonalSendCashTest.pas',
+  TransportTest in '..\SOURCE\Movement\All\TransportTest.pas';
 
 {$R *.RES}
 

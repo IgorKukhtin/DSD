@@ -428,7 +428,7 @@
 			<DCCReference Include="..\SOURCE\Objects\All\AccountTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\CashTest.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\All\InfoMoneyTest.pas"/>
-			<DCCReference Include="..\SOURCE\Movement\All\TransportTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\TransportServiceTest.pas"/>
 			<DCCReference Include="..\..\Forms\PersonalServiceEdit.pas">
 				<Form>PersonalServiceEditForm</Form>
 			</DCCReference>
@@ -534,7 +534,7 @@
 			<DCCReference Include="..\..\Forms\Document\PersonalSendCashJournal.pas">
 				<Form>PersonalSendCashJournalForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\Movement\All\PersonalSendCashTest.pas">
+			<DCCReference Include="..\SOURCE\Movement\All\PersonalAccountTest.pas">
 				<Form>$R *.RES</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\SheetWorkTimeTest.pas"/>
@@ -886,6 +886,8 @@
 				<Form>JuridicalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\Movement\All\PersonalSendCashTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\TransportTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
