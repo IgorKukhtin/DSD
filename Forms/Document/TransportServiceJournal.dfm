@@ -76,33 +76,61 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
           object clInfoMoney: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = InfoMoneyChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 52
           end
           object clPaidKind: TcxGridDBColumn
             Caption = #1042#1080#1076#1099' '#1092#1086#1088#1084' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = PaidKindChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 58
           end
           object clRouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090
             DataBinding.FieldName = 'RouteName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = RouteChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 70
           end
           object clCarName: TcxGridDBColumn
             Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
             DataBinding.FieldName = 'CarName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = CarChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 63
           end
           object clCarModelName: TcxGridDBColumn
@@ -116,13 +144,20 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
           object clContractConditionKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1091#1089#1083#1086#1074#1080#1081' '#1076#1086#1075#1086#1074#1086#1088#1072
             DataBinding.FieldName = 'ContractConditionKindName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = ContractConditionKindChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             Width = 56
           end
           object clComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 61
           end
         end
@@ -143,8 +178,99 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TTransportServiceForm'
     end
+    object CarChoiceForm: TOpenChoiceForm [3]
+      Category = 'DSDLib'
+      FormName = 'TCarForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'CarId'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'CarName'
+          DataType = ftString
+        end
+        item
+          Name = 'CarModelName'
+          Component = MasterCDS
+          ComponentItem = 'CarModelName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object ContractConditionKindChoiceForm: TOpenChoiceForm [4]
+      Category = 'DSDLib'
+      FormName = 'TContractConditionKindForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'ContractConditionKindId'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'ContractConditionKindName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object RouteChoiceForm: TOpenChoiceForm [5]
+      Category = 'DSDLib'
+      FormName = 'TRouteForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'RouteId'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'RouteName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TTransportServiceForm'
+    end
+    object PaidKindChoiceForm: TOpenChoiceForm [8]
+      Category = 'DSDLib'
+      FormName = 'TPaidKindForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'PaidKindId'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'PaidKindName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object InfoMoneyChoiceForm: TOpenChoiceForm [9]
+      Category = 'DSDLib'
+      FormName = 'TInfoMoneyForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyId'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+        end>
+      isShowModal = True
     end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
