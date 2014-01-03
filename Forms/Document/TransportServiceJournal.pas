@@ -23,6 +23,8 @@ type
     clTrevelTime: TcxGridDBColumn;
     clRouteName: TcxGridDBColumn;
     clContractConditionKindName: TcxGridDBColumn;
+    spInsertUpdate: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

@@ -36,7 +36,7 @@ BEGIN
        SELECT
              0 AS Id
            , 0 AS MIId  
-           , NEXTVAL ('Movement_TransportService_seq') AS InvNumber
+           , CAST (NEXTVAL ('Movement_PersonalAccount_seq') as Integer) AS InvNumber
            , CAST (CURRENT_DATE AS TDateTime) AS OperDate
            , lfObject_Status.Code             AS StatusCode
            , lfObject_Status.Name             AS StatusName
