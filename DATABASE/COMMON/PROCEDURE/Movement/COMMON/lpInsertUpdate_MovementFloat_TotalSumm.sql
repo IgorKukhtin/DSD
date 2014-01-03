@@ -175,7 +175,7 @@ BEGIN
      -- SELECT vbOperCount_Master;
      -- return;
 
-     IF vbMovementDescId = zc_Movement_PersonalSendCash()
+     IF vbMovementDescId = zc_Movement_PersonalSendCash() OR vbMovementDescId = zc_Movement_PersonalAccount()
      THEN
          -- Сохранили свойство <Итого сумма по накладной (с учетом НДС и скидки)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSumm(), inMovementId, vbOperCount_Master);
