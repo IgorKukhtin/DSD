@@ -1,5 +1,6 @@
 -- Function: gpComplete_Movement_PersonalAccount (Integer, TVarChar)
 
+DROP FUNCTION IF EXISTS gpComplete_Movement_PersonalAccount ( TVarChar);
 DROP FUNCTION IF EXISTS gpComplete_Movement_PersonalAccount (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_PersonalAccount(

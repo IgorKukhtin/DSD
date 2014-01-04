@@ -2,8 +2,8 @@ object ContractConditionKindForm: TContractConditionKindForm
   Left = 0
   Top = 0
   Caption = #1058#1080#1087#1099' '#1091#1089#1083#1086#1074#1080#1081' '#1076#1086#1075#1086#1074#1086#1088#1086#1074
-  ClientHeight = 265
-  ClientWidth = 533
+  ClientHeight = 380
+  ClientWidth = 599
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,6 +12,7 @@ object ContractConditionKindForm: TContractConditionKindForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  Position = poDesigned
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
@@ -20,10 +21,12 @@ object ContractConditionKindForm: TContractConditionKindForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 533
-    Height = 239
+    Width = 599
+    Height = 354
     Align = alClient
     TabOrder = 0
+    ExplicitLeft = 8
+    ExplicitTop = 18
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -195,7 +198,14 @@ object ContractConditionKindForm: TContractConditionKindForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inContractId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'inContractId'
+        ParamType = ptInput
+      end>
     Left = 144
     Top = 120
   end
@@ -219,5 +229,15 @@ object ContractConditionKindForm: TContractConditionKindForm
     OnlyEditingCellOnEnter = False
     Left = 120
     Top = 200
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'inContractId'
+        Value = Null
+        ParamType = ptInput
+      end>
+    Left = 424
+    Top = 152
   end
 end

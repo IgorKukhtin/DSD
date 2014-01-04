@@ -294,10 +294,10 @@
         ParamType = ptInput
       end
       item
-        Name = 'inAmount'
+        Name = 'ioAmount'
         Value = 0.000000000000000000
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
         Name = 'indistance'
@@ -589,9 +589,15 @@
         Component = ContractConditionKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'inContractId'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'Id'
       end>
-    Left = 168
-    Top = 106
+    Left = 160
+    Top = 114
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'

@@ -508,7 +508,13 @@ object PersonalAccountJournalForm: TPersonalAccountJournalForm
     StoredProcName = 'gpComplete_Movement_PersonalAccount'
     DataSets = <>
     OutputType = otResult
-    Params = <>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
     Left = 64
     Top = 232
   end

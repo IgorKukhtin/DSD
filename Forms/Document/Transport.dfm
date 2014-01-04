@@ -3669,8 +3669,8 @@
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 458
-    Top = 202
+    Left = 466
+    Top = 194
   end
   object frxDBDMaster: TfrxDBDataset
     UserName = 'frxDBDMaster'

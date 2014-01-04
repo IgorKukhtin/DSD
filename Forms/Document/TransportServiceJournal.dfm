@@ -1,18 +1,23 @@
 inherited TransportServiceJournalForm: TTransportServiceJournalForm
   Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1085#1072#1077#1084#1085#1099#1081' '#1090#1088#1072#1085#1089#1087#1086#1088#1090
-  ClientWidth = 884
-  ExplicitWidth = 892
+  ClientHeight = 336
+  ClientWidth = 990
+  ExplicitWidth = 998
+  ExplicitHeight = 370
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 884
+    Width = 990
+    Height = 279
     TabOrder = 3
     ExplicitWidth = 884
-    ClientRectRight = 884
+    ClientRectBottom = 279
+    ClientRectRight = 990
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 884
       inherited cxGrid: TcxGrid
-        Width = 884
+        Width = 990
+        Height = 279
         ExplicitWidth = 884
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -34,11 +39,11 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             Options.Editing = False
-            Width = 63
+            Width = 44
           end
           inherited colInvNumber: TcxGridDBColumn
             Options.Editing = False
-            Width = 51
+            Width = 53
           end
           inherited colOperDate: TcxGridDBColumn
             Options.Editing = False
@@ -51,27 +56,54 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 99
+            Width = 59
           end
           object clDistance: TcxGridDBColumn
             Caption = #1055#1088#1086#1073#1077#1075' '#1092#1072#1082#1090', '#1082#1084
             DataBinding.FieldName = 'Distance'
-            Width = 52
+            Width = 59
           end
           object clPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072' ('#1090#1086#1087#1083#1080#1074#1072')'
             DataBinding.FieldName = 'Price'
-            Width = 51
+            Width = 54
           end
           object clCountPoint: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1090#1086#1095#1077#1082
             DataBinding.FieldName = 'CountPoint'
-            Width = 52
+            Width = 57
           end
           object clTrevelTime: TcxGridDBColumn
             Caption = #1042#1088#1077#1084#1103' '#1074' '#1087#1091#1090#1080', '#1095#1072#1089#1086#1074
             DataBinding.FieldName = 'TrevelTime'
-            Width = 51
+            Width = 56
+          end
+          object clContractName: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088
+            DataBinding.FieldName = 'ContractName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = ContractChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
+            Width = 71
+          end
+          object clContractConditionKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1091#1089#1083#1086#1074#1080#1081' '#1076#1086#1075#1086#1074#1086#1088#1072
+            DataBinding.FieldName = 'ContractConditionKindName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = ContractConditionKindChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            Width = 93
           end
           object clInfoMoney: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -86,7 +118,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             Properties.ReadOnly = True
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 52
+            Width = 70
           end
           object clPaidKind: TcxGridDBColumn
             Caption = #1042#1080#1076#1099' '#1092#1086#1088#1084' '#1086#1087#1083#1072#1090#1099
@@ -101,7 +133,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             Properties.ReadOnly = True
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 58
+            Width = 56
           end
           object clRouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090
@@ -116,7 +148,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             Properties.ReadOnly = True
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 67
           end
           object clCarName: TcxGridDBColumn
             Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
@@ -131,7 +163,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             Properties.ReadOnly = True
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 63
+            Width = 57
           end
           object clCarModelName: TcxGridDBColumn
             Caption = #1052#1072#1088#1082#1072' '#1072#1074#1090#1086
@@ -139,38 +171,25 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 47
-          end
-          object clContractConditionKindName: TcxGridDBColumn
-            Caption = #1058#1080#1087' '#1091#1089#1083#1086#1074#1080#1081' '#1076#1086#1075#1086#1074#1086#1088#1072
-            DataBinding.FieldName = 'ContractConditionKindName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = ContractConditionKindChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            Width = 56
+            Width = 50
           end
           object clComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentVert = vaCenter
-            Width = 61
+            Width = 86
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 884
+    Width = 990
     ExplicitWidth = 884
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 75
-    Top = 211
+    Left = 99
+    Top = 187
   end
   inherited ActionList: TActionList
     Left = 47
@@ -215,6 +234,12 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
           Component = MasterCDS
           ComponentItem = 'ContractConditionKindName'
           DataType = ftString
+        end
+        item
+          Name = 'inContractId'
+          Component = MasterCDS
+          ComponentItem = 'ContractId'
+          ParamType = ptInput
         end>
       isShowModal = True
     end
@@ -238,7 +263,46 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TTransportServiceForm'
     end
-    object PaidKindChoiceForm: TOpenChoiceForm [8]
+    object ContractChoiceForm: TOpenChoiceForm [8]
+      Category = 'DSDLib'
+      FormName = 'TContractChoiceForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'ContractId'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'ContractName'
+          DataType = ftString
+        end
+        item
+          Name = 'JuridicalId'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'JuridicalName'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyId'
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyId'
+        end
+        item
+          Name = 'InfoMoneyName'
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object PaidKindChoiceForm: TOpenChoiceForm [9]
       Category = 'DSDLib'
       FormName = 'TPaidKindForm'
       GuiParams = <
@@ -255,7 +319,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         end>
       isShowModal = True
     end
-    object InfoMoneyChoiceForm: TOpenChoiceForm [9]
+    object InfoMoneyChoiceForm: TOpenChoiceForm [10]
       Category = 'DSDLib'
       FormName = 'TInfoMoneyForm'
       GuiParams = <
@@ -278,6 +342,9 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdate
+        end
+        item
+          StoredProc = spSelect
         end>
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
@@ -339,13 +406,21 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
     Left = 328
     Top = 104
   end
+  inherited spMovementComplete: TdsdStoredProc
+    StoredProcName = 'gpComplete_Movement_TransportService'
+    Params = <>
+    Left = 640
+    Top = 136
+  end
   inherited spMovementUnComplete: TdsdStoredProc
-    Left = 208
-    Top = 232
+    StoredProcName = 'gpUnComplete_Movement'
+    Left = 640
+    Top = 184
   end
   inherited spMovementSetErased: TdsdStoredProc
-    Left = 160
-    Top = 168
+    StoredProcName = 'gpSetErased_Movement'
+    Left = 640
+    Top = 232
   end
   object spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TransportService'
@@ -379,11 +454,11 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         ParamType = ptInput
       end
       item
-        Name = 'inAmount'
+        Name = 'ioAmount'
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
         Name = 'indistance'

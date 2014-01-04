@@ -31,6 +31,8 @@ type
     RouteChoiceForm: TOpenChoiceForm;
     ContractConditionKindChoiceForm: TOpenChoiceForm;
     PaidKindChoiceForm: TOpenChoiceForm;
+    clContractName: TcxGridDBColumn;
+    ContractChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
