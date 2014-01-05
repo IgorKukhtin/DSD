@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransportService(
     IN inInvNumber                TVarChar  , -- Номер документа
     IN inOperDate                 TDateTime , -- Дата документа
 
-    IN inAmount                   TFloat    , -- Сумма
+ INOUT ioAmount                   TFloat    , -- Сумма
     IN inDistance                 TFloat    , -- Пробег факт, км
     IN inPrice                    TFloat    , -- Цена (топлива)
     IN inCountPoint               TFloat    , -- Кол-во точек
@@ -41,11 +41,14 @@ BEGIN
      -- определяем ключ доступа
      --vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_TransportService());
 
+     -- Расчитываем норму за все
+     ioAmount := (inDistance * inPrice);
+ 
       -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_TransportService(), inInvNumber, inOperDate, NULL);--, vbAccessKeyId
 
      -- сохранили <Элемент документа>
-     ioMIId := lpInsertUpdate_MovementItem (ioMIId, zc_MI_Master(), inJuridicalId, ioId, inAmount, NULL);
+     ioMIId := lpInsertUpdate_MovementItem (ioMIId, zc_MI_Master(), inJuridicalId, ioId, ioAmount, NULL);
 
      -- сохранили свойство <Пробег факт, км>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Distance(), ioMIId, inDistance);

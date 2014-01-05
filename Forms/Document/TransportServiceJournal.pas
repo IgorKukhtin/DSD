@@ -13,7 +13,8 @@ uses
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxCheckBox, cxImageComboBox, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.Menus, cxCurrencyEdit;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.Menus, cxCurrencyEdit,
+  cxButtonEdit;
 
 type
   TTransportServiceJournalForm = class(TAncestorJournalForm)
@@ -23,6 +24,15 @@ type
     clTrevelTime: TcxGridDBColumn;
     clRouteName: TcxGridDBColumn;
     clContractConditionKindName: TcxGridDBColumn;
+    spInsertUpdate: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    InfoMoneyChoiceForm: TOpenChoiceForm;
+    CarChoiceForm: TOpenChoiceForm;
+    RouteChoiceForm: TOpenChoiceForm;
+    ContractConditionKindChoiceForm: TOpenChoiceForm;
+    PaidKindChoiceForm: TOpenChoiceForm;
+    clContractName: TcxGridDBColumn;
+    ContractChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
