@@ -55,22 +55,22 @@ BEGIN
           , Object_Juridical.isErased
           , Object_InfoMoney_View.InfoMoneyId
           , Object_InfoMoney_View.InfoMoneyName
-          , Object_Contract_View.ContractId 
-          , Object_Contract_View.InvNumber
-          , Object_Contract_View.StartDate
+          , View_Contract.ContractId 
+          , View_Contract.InvNumber
+          , View_Contract.StartDate
           , Object_ContractKind.ValueData AS ContractKindName
      FROM Object AS Object_Juridical
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Juridical.DescId
-          LEFT JOIN ObjectLink AS ObjectLink_Juridical_InfoMoney
-                               ON ObjectLink_Juridical_InfoMoney.ObjectId = Object_Juridical.Id
-                              AND ObjectLink_Juridical_InfoMoney.DescId = zc_ObjectLink_Juridical_InfoMoney()
-          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Juridical_InfoMoney.ChildObjectId
-          LEFT JOIN Object_Contract_View ON Object_Contract_View.JuridicalId = Object_Juridical.Id 
+          LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.JuridicalId = Object_Juridical.Id 
           LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
-                               ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
+                               ON ObjectLink_Contract_ContractKind.ObjectId = View_Contract.ContractId
                               AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
           LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
-     WHERE Object_Juridical.DescId = zc_Object_Juridical();
+          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
+     WHERE Object_Juridical.DescId = zc_Object_Juridical()
+       -- AND COALESCE (View_Contract.PaidKindId, zc_Enum_PaidKind_SecondForm()) = zc_Enum_PaidKind_SecondForm();
+       AND View_Contract.PaidKindId = zc_Enum_PaidKind_SecondForm();
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -80,6 +80,8 @@ ALTER FUNCTION gpSelect_Object_MoneyPlace (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 05.01.14                                        * add zc_Enum_PaidKind_SecondForm
+ 05.01.14                                        * View_Contract.InfoMoneyId
  18.12.13                         *
  20.11.13                         *
 */

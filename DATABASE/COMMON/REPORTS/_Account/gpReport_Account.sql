@@ -449,4 +449,4 @@ ALTER FUNCTION gpReport_Account (TDateTime, TDateTime, Integer, TVarChar) OWNER 
 */
 
 -- тест
--- SELECT * FROM gpReport_Account (inStartDate:= '01.10.2013', inEndDate:= '31.10.2013', inAccountId:= null, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_Account (inStartDate:= '01.12.2013', inEndDate:= '31.12.2013', inAccountId:= null, inSession:= zfCalc_UserAdmin());

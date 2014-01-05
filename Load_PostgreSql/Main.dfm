@@ -223,7 +223,6 @@ object MainForm: TMainForm
       Width = 138
       Height = 17
       Caption = '2.3. '#1044#1086#1075#1086#1074#1086#1088#1072
-      Enabled = False
       TabOrder = 8
     end
     object cbJuridical: TCheckBox
@@ -1017,7 +1016,7 @@ object MainForm: TMainForm
   object fromADOConnection: TADOConnection
     ConnectionString = 
       'Provider=MSDASQL.1;Password=qazqazint;Persist Security Info=True' +
-      ';User ID=dba;Data Source=v9_tmpProfiMeatingDS'
+      ';User ID=dba;Data Source=v9ProfiMeatingDS'
     LoginPrompt = False
     Provider = 'MSDASQL.1'
     Left = 344
@@ -1036,7 +1035,7 @@ object MainForm: TMainForm
     Connection = fromADOConnection
     Parameters = <>
     Left = 384
-    Top = 304
+    Top = 320
   end
   object toSqlQuery: TZQuery
     Connection = toZConnection
@@ -1082,5 +1081,29 @@ object MainForm: TMainForm
     Protocol = 'postgresql-9'
     Left = 144
     Top = 360
+  end
+  object fromFlADOConnection: TADOConnection
+    ConnectionString = 
+      'Provider=MSDASQL.1;Password=qazqazflo;Persist Security Info=True' +
+      ';User ID=dba;Data Source=v9_2ProfiMeatingDS'
+    LoginPrompt = False
+    Provider = 'MSDASQL.1'
+    Left = 320
+    Top = 72
+  end
+  object fromFlQuery: TADOQuery
+    Connection = fromFlADOConnection
+    CursorType = ctStatic
+    Parameters = <>
+    SQL.Strings = (
+      'select * from Goods where HasChildren<>-1 order by 1 desc')
+    Left = 312
+    Top = 128
+  end
+  object fromFlSqlQuery: TADOQuery
+    Connection = fromFlADOConnection
+    Parameters = <>
+    Left = 376
+    Top = 118
   end
 end
