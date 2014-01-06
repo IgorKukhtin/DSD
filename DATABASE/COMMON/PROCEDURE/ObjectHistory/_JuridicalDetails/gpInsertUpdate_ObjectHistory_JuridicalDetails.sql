@@ -45,7 +45,7 @@ BEGIN
    END IF;
 
    -- проверка уникальность <Юр. лицо полное наименование>
-   IF inFullName <> '' AND inJuridicalId NOT IN (14888, 14887, 14886, 14885, 14884)
+   IF inFullName <> '' AND inFullName <> 'ДП "Придніпровська залізниця"'
    THEN
        -- находим Юр. лицо
        SELECT MAX (ObjectHistory.ObjectId) INTO vbJuridicalId_find
