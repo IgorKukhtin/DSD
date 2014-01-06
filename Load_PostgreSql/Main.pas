@@ -1814,8 +1814,9 @@ begin
                   Add('select 0 as ObjectId');
                   Add('     , 0 as ObjectCode');
                   Add('     , trim(_pgPartner.Name) as ObjectName');
-                  Add('     , case when _pgPartner.NumberSheet=1 then '+ParentId_PG_out); // 03-ПОКУПАТЕЛИ
-                  Add('            when _pgPartner.NumberSheet=2 then '+ParentId_PG_service); //04-Услуги
+                  Add('     , case when _pgInfoMoney.Id3_Postgres in (8952) then '+ParentId_PG_service); // 'Общефирменные','Маркетинг','Реклама'
+                  Add('            when _pgPartner.NumberSheet in (1,2) or _pgInfoMoney.Id1_Postgres in (8854) then '+ParentId_PG_out); // Доходы
+                  Add('            when _pgPartner.NumberSheet=3 and (_pgInfoMoney.Id1_Postgres in (8855, 8856) or _pgInfoMoney.Id2_Postgres in (8875, 8877) ) then '+ParentId_PG_service); //Финансовая деятельность OR Расчеты с бюджетом OR услуги полученные OR Коммунальные услуги
                   Add('            when _pgPartner.NumberSheet=3 then '+ParentId_PG_in); //02-Поставщики
                   Add('       end as ParentId_Postgres');
                   Add('     , null as GoodsPropertyId_PG');
@@ -1828,6 +1829,7 @@ begin
                   Add('     , case when trim(isnull(KodSvid,NSvid)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(KodSvid,NSvid)) else trim(NSvid) end as inNumberVAT');
                   Add('     , case when trim(isnull(FioBuh,FioB)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(FioBuh,FioB)) else trim(FioB) end as inAccounterName');
                   Add('     , null as inBankAccount');
+                  Add('     , _pgPartner_find.Id, _pgPartner_find_two.Id as Id_two');
                   Add('     , _pgPartner_find.OKPO as inOKPO');
                   Add('     , _pgPartner_find.JuridicalDetailsId_pg as JuridicalDetailsId_Postgres');
                   Add('     , _pgPartner_find.JuridicalId_pg as Id_Postgres');
@@ -2072,6 +2074,8 @@ begin
 
                   Add('     left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = _pgPartner_find.CodeIM');
                   //Add('where inInvNumber <> '+FormatToVarCharServer_notNULL(''));
+                  Add('where _pgPartner_find.OKPO <> '+FormatToVarCharServer_notNULL('37121835')
+                    + '  and _pgPartner_find.OKPO <> '+FormatToVarCharServer_notNULL('37425075'));
                   Add('union all');
                   Add('select 0 as ObjectId');
                   Add('     , 0 as ObjectCode');
@@ -2144,6 +2148,8 @@ begin
 
                   Add('     left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = _pgPartner_find.CodeIM');
                   //Add('where inInvNumber <> '+FormatToVarCharServer_notNULL(''));
+                  Add('where _pgPartner_find.OKPO <> '+FormatToVarCharServer_notNULL('37121835')
+                    + '  and _pgPartner_find.OKPO <> '+FormatToVarCharServer_notNULL('37425075'));
                   Add('order by _pgPartner_my.Name, inInvNumber,_pgPartner.Name, ObjectId');
         Open;
         cbContract.Caption:='2.3. ('+IntToStr(RecordCount)+') Договора';

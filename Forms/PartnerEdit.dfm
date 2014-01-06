@@ -2,8 +2,8 @@
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
   ClientHeight = 333
   ClientWidth = 371
-  ExplicitWidth = 379
-  ExplicitHeight = 360
+  ExplicitWidth = 377
+  ExplicitHeight = 358
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -15,7 +15,7 @@
     Top = 284
     ExplicitTop = 284
   end
-  object edName: TcxTextEdit [2]
+  object edAddress: TcxTextEdit [2]
     Left = 40
     Top = 71
     TabOrder = 0
@@ -188,9 +188,9 @@
         ParamType = ptInput
       end
       item
-        Name = 'inName'
+        Name = 'inAddress'
         Value = ''
-        Component = edName
+        Component = edAddress
         DataType = ftString
         ParamType = ptInput
       end
@@ -253,9 +253,9 @@
         ParamType = ptInput
       end
       item
-        Name = 'Name'
+        Name = 'Address'
         Value = ''
-        Component = edName
+        Component = edAddress
         DataType = ftString
       end
       item

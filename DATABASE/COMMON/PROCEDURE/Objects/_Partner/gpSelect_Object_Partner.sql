@@ -5,13 +5,14 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Partner (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_Partner(
     IN inSession           TVarChar            -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Address TVarChar,
                GLNCode TVarChar,  PrepareDayCount TFloat, DocumentDayCount TFloat,
                JuridicalGroupId Integer, JuridicalGroupCode Integer, JuridicalGroupName TVarChar,
                JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, 
                RouteId Integer, RouteCode Integer, RouteName TVarChar,
                RouteSortingId Integer, RouteSortingCode Integer, RouteSortingName TVarChar,
                PersonalTakeId Integer, PersonalTakeCode Integer, PersonalTakeName TVarChar,
+               OKPO TVarChar,
                isErased Boolean
               )
 AS
@@ -25,8 +26,9 @@ BEGIN
      SELECT 
            Object_JuridicalGroup.Id          AS Id 
          , Object_JuridicalGroup.ObjectCode  AS Code
-         , CAST('' AS TVarChar)              AS NAME
-         
+         , CAST('' AS TVarChar)              AS Name
+         , CAST('' AS TVarChar)              AS Address
+
          , CAST('' AS TVarChar) AS GLNCode
          , CAST(0 as TFloat)   AS PrepareDayCount
          , CAST(0 as TFloat)   AS DocumentDayCount
@@ -51,6 +53,8 @@ BEGIN
          , CAST (0 as Integer)    AS PersonalTakeCode
          , CAST ('' as TVarChar)  AS PersonalTakeName
                   
+         , CAST ('' as TVarChar)  AS OKPO
+
          , Object_JuridicalGroup.isErased AS isErased
          
      FROM Object AS Object_JuridicalGroup
@@ -61,10 +65,11 @@ BEGIN
       AND 1=0 -- !!!первого запроса быть не должно!!!
    UNION
      SELECT 
-           Object_Partner.Id             AS Id
-         , Object_Partner.ObjectCode     AS Code
-         , Object_Partner.ValueData      AS NAME
-         
+           Object_Partner.Id               AS Id
+         , Object_Partner.ObjectCode       AS Code
+         , Object_Partner.ValueData        AS Name
+         , ObjectString_Address.ValueData  AS Address
+
          , ObjectString_GLNCode.ValueData     AS GLNCode
          
          , Partner_PrepareDayCount.ValueData  AS PrepareDayCount
@@ -90,12 +95,17 @@ BEGIN
          , View_PersonalTake.PersonalCode AS PersonalTakeCode
          , View_PersonalTake.PersonalName AS PersonalTakeName
                   
+         , ObjectHistory_JuridicalDetails_View.OKPO
+
          , Object_Partner.isErased   AS isErased
          
      FROM Object AS Object_Partner
-         LEFT JOIN ObjectString AS ObjectString_GLNCode 
-                                ON ObjectString_GLNCode.ObjectId = Object_Partner.Id 
-                               AND ObjectString_GLNCode.DescId = zc_ObjectString_Partner_GLNCode()
+          LEFT JOIN ObjectString AS ObjectString_GLNCode 
+                                 ON ObjectString_GLNCode.ObjectId = Object_Partner.Id 
+                                AND ObjectString_GLNCode.DescId = zc_ObjectString_Partner_GLNCode()
+          LEFT JOIN ObjectString AS ObjectString_Address
+                                 ON ObjectString_Address.ObjectId = Object_Partner.Id
+                                AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
 
          LEFT JOIN ObjectFloat AS Partner_PrepareDayCount 
                                ON Partner_PrepareDayCount.ObjectId = Object_Partner.Id
@@ -129,6 +139,8 @@ BEGIN
                              AND ObjectLink_Partner_PersonalTake.DescId = zc_ObjectLink_Partner_PersonalTake()
          LEFT JOIN Object_Personal_View AS View_PersonalTake ON View_PersonalTake.PersonalId = ObjectLink_Partner_PersonalTake.ChildObjectId
          
+         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
+
     WHERE Object_Partner.DescId = zc_Object_Partner();
   
 END;
@@ -140,6 +152,7 @@ ALTER FUNCTION gpSelect_Object_Partner (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.01.14                                        * add zc_ObjectString_Partner_Address
  12.10.13                                        * !!!первого запроса быть не должно!!!
  30.09.13                                        * add Object_Personal_View
  29.07.13         *  + PersonalTakeId, PrepareDayCount, DocumentDayCount                      

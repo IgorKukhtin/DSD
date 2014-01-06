@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Partner(
     IN inId          Integer,        -- Контрагенты 
     IN inSession     TVarChar        -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Address TVarChar,
                GLNCode TVarChar, PrepareDayCount TFloat, DocumentDayCount TFloat,
                JuridicalId Integer, JuridicalName TVarChar, 
                RouteId Integer, RouteName TVarChar,
@@ -24,7 +24,8 @@ BEGIN
        SELECT
              CAST (0 as Integer)    AS Id
            , lfGet_ObjectCode(0, zc_Object_Partner()) AS Code
-           , CAST ('' as TVarChar)  AS NAME
+           , CAST ('' as TVarChar)  AS Name
+           , CAST ('' as TVarChar)  AS Address
            
            , CAST ('' as TVarChar)  AS GLNCode
            
@@ -45,9 +46,10 @@ BEGIN
    ELSE
        RETURN QUERY 
        SELECT 
-             Object_Partner.Id          AS Id
-           , Object_Partner.ObjectCode  AS Code
-           , Object_Partner.ValueData   AS NAME
+             Object_Partner.Id               AS Id
+           , Object_Partner.ObjectCode       AS Code
+           , Object_Partner.ValueData        AS Name
+           , ObjectString_Address.ValueData  AS Address
            
            , Partner_GLNCode.ValueData  AS GLNCode
            , Partner_PrepareDayCount.ValueData  AS PrepareDayCount
@@ -69,6 +71,9 @@ BEGIN
            LEFT JOIN ObjectString AS Partner_GLNCode 
                                   ON Partner_GLNCode.ObjectId = Object_Partner.Id
                                  AND Partner_GLNCode.DescId = zc_ObjectString_Partner_GLNCode()
+           LEFT JOIN ObjectString AS ObjectString_Address
+                                  ON ObjectString_Address.ObjectId = Object_Partner.Id
+                                 AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
                                  
            LEFT JOIN ObjectFloat AS Partner_PrepareDayCount 
                                  ON Partner_PrepareDayCount.ObjectId = Object_Partner.Id
@@ -112,6 +117,7 @@ ALTER FUNCTION gpGet_Object_Partner(integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.01.14                                        * add zc_ObjectString_Partner_Address
  30.09.13                                        * add Object_Personal_View
  03.09.13                        *
  29.07.13          *  + PersonalTakeId, PrepareDayCount, DocumentDayCount                

@@ -75,6 +75,12 @@ object ContractForm: TContractForm
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
+      object clOKPO: TcxGridDBColumn
+        Caption = #1054#1050#1055#1054
+        DataBinding.FieldName = 'OKPO'
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object clPaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'PaidKindName'
@@ -232,7 +238,6 @@ object ContractForm: TContractForm
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
@@ -248,13 +253,13 @@ object ContractForm: TContractForm
             Kind = bkEllipsis
           end>
         HeaderAlignmentVert = vaCenter
-        Width = 601
+        Width = 300
       end
       object clValue: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'Value'
         HeaderAlignmentVert = vaCenter
-        Width = 553
+        Width = 100
       end
       object clsfcisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -302,8 +307,8 @@ object ContractForm: TContractForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

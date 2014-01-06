@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_JuridicalDetails(
     IN inOperDate               TDateTime,  -- Дата действия прайс-листа
 
     IN inBankId                 Integer,    -- Банк
-    IN inFullName               TVarChar,   -- Юр. лицо полное название
+    IN inFullName               TVarChar,   -- Юр. лицо полное наименование
     IN inJuridicalAddress	TVarChar,   -- Юридический адрес
     IN inOKPO                   TVarChar,   -- ОКПО
     IN inINN	                TVarChar,   -- ИНН
@@ -44,6 +44,24 @@ BEGIN
        END IF;
    END IF;
 
+   -- проверка уникальность <Юр. лицо полное наименование>
+   IF inFullName <> '' AND inJuridicalId NOT IN (14888, 14887, 14886, 14885, 14884)
+   THEN
+       -- находим Юр. лицо
+       SELECT MAX (ObjectHistory.ObjectId) INTO vbJuridicalId_find
+       FROM ObjectHistoryString
+            JOIN ObjectHistory ON ObjectHistory.Id = ObjectHistoryString.ObjectHistoryId
+                              AND ObjectHistory.ObjectId <> inJuridicalId
+                              AND ObjectHistory.DescId = zc_ObjectHistory_JuridicalDetails()
+       WHERE ObjectHistoryString.ValueData = inFullName
+         AND ObjectHistoryString.DescId = zc_ObjectHistoryString_JuridicalDetails_FullName();
+       --
+       IF vbJuridicalId_find > 0
+       THEN
+           RAISE EXCEPTION 'Ошибка. Значение полное наименование <%> уже установлено у <%>.', inFullName, lfGet_Object_ValueData (vbJuridicalId_find);
+       END IF;
+   END IF;
+
    -- Вставляем или меняем объект историю
    ioId := lpInsertUpdate_ObjectHistory(ioId, zc_ObjectHistory_JuridicalDetails(), inJuridicalId, inOperDate);
 
@@ -72,6 +90,7 @@ END;$BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.01.14                                        * add проверка уникальность  <Юр. лицо полное наименование>
  05.01.14                                        * add проверка уникальность <ОКПО>
  03.01.14                                        *Cyr1251
  28.11.13                        *

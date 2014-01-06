@@ -7,11 +7,11 @@ uses
   Vcl.Menus, cxControls, cxContainer, cxEdit, dsdGuides, cxMaskEdit,
   cxButtonEdit, cxCurrencyEdit, cxLabel, Vcl.Controls, cxTextEdit, dsdDB,
   dsdAction, System.Classes, Vcl.ActnList, cxPropertiesStore, dsdAddOn,
-  Vcl.StdCtrls, cxButtons;
+  Vcl.StdCtrls, cxButtons, dxSkinsCore, dxSkinsDefaultPainters;
 
 type
   TPartnerEditForm = class(TAncestorEditDialogForm)
-    edName: TcxTextEdit;
+    edAddress: TcxTextEdit;
     cxLabel1: TcxLabel;
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;

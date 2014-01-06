@@ -89,6 +89,7 @@ type
     InsertRecordCCK: TInsertRecord;
     bbInsertRecCCK: TdxBarButton;
     actContractCondition: TdsdUpdateDataSet;
+    clOKPO: TcxGridDBColumn;
   private
     { Private declarations }
   public

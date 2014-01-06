@@ -13,27 +13,29 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
     IN inInfoMoneyId         Integer   ,    -- Статьи назначения
     IN inSession             TVarChar       -- текущий пользователь
 )
-  RETURNS integer AS
+  RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode_calc Integer;  
+   DECLARE vbCode Integer;  
 BEGIN
-   
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_Juridical());
    vbUserId := inSession;
 
    -- !!! Если код не установлен, определяем его каи последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
-   -- !!! vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Juridical());
-   IF COALESCE (inCode, 0) = 0  THEN vbCode_calc := 0; ELSE vbCode_calc := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
+   -- !!! vbCode:= lfGet_ObjectCode (inCode, zc_Object_Juridical());
+   IF COALESCE (inCode, 0) = 0  THEN vbCode := 0; ELSE vbCode := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
    
-   -- !!! проверка уникальность <Наименование>
-   -- !!! PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Juridical(), inName);
-   -- !!! проверка уникальности <Код>
-   -- !!! PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Juridical(), Code_max);
+   -- проверка уникальность <Наименование>
+   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Juridical(), inName);
+   -- проверка уникальности <Код>
+   IF vbCode <> 0
+   THEN
+       PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Juridical(), vbCode);
+   END IF;
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_Juridical(), vbCode_calc, inName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_Juridical(), vbCode, inName);
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectString(zc_objectString_Juridical_GLNCode(), ioId, inGLNCode);
    -- сохранили свойство <>
@@ -50,15 +52,16 @@ BEGIN
    
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Juridical(Integer, Integer, TVarChar, TVarChar, Boolean, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, Boolean, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
   
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.01.14                                        * add проверка уникальность <Код>
+ 06.01.14                                        * add проверка уникальность <Наименование>
  20.10.13                                        * vbCode_calc:=0
  03.07.13          * + InfoMoney              
  12.05.13                                        * rem lpCheckUnique_Object_ValueData
