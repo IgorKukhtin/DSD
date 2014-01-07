@@ -306,7 +306,8 @@ uses
   TransportServiceJournal in '..\..\Forms\Document\TransportServiceJournal.pas' {TransportServiceJournalForm: TParentForm},
   UserKey in '..\..\Forms\Guides\UserKey.pas' {UserKeyForm: TParentForm},
   MovementItemContainer in '..\..\Forms\System\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm},
-  InfoMoney in '..\..\Forms\Guides\InfoMoney.pas' {InfoMoneyForm: TParentForm};
+  InfoMoney in '..\..\Forms\Guides\InfoMoney.pas' {InfoMoneyForm: TParentForm},
+  SalaryCalculation in '..\SOURCE\Calculation\SalaryCalculation.pas';
 
 {$R *.RES}
 

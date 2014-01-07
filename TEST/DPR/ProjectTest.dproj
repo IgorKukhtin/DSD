@@ -882,6 +882,7 @@
 				<Form>InfoMoneyForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\Calculation\SalaryCalculation.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
