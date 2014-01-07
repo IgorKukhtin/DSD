@@ -25,10 +25,8 @@ LEFT JOIN ObjectLink
     WHERE Object.DescId = zc_Object_JuridicalGroup();
   
 END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_JuridicalGroup(TVarChar)
-  OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpSelect_Object_JuridicalGroup(TVarChar);
 
 
 /*-------------------------------------------------------------------------------*/

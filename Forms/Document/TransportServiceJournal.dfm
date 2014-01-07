@@ -2,23 +2,26 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
   Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1085#1072#1077#1084#1085#1099#1081' '#1090#1088#1072#1085#1089#1087#1086#1088#1090
   ClientHeight = 336
   ClientWidth = 990
-  ExplicitWidth = 998
-  ExplicitHeight = 370
+  ExplicitWidth = 1006
+  ExplicitHeight = 371
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 990
     Height = 279
     TabOrder = 3
-    ExplicitWidth = 884
+    ExplicitWidth = 990
+    ExplicitHeight = 279
     ClientRectBottom = 279
     ClientRectRight = 990
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 884
+      ExplicitWidth = 990
+      ExplicitHeight = 279
       inherited cxGrid: TcxGrid
         Width = 990
         Height = 279
-        ExplicitWidth = 884
+        ExplicitWidth = 990
+        ExplicitHeight = 279
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -133,6 +136,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             Properties.ReadOnly = True
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 56
           end
           object clRouteName: TcxGridDBColumn
@@ -150,6 +154,14 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 67
           end
+          object clCarModelName: TcxGridDBColumn
+            Caption = #1052#1072#1088#1082#1072' '#1072#1074#1090#1086
+            DataBinding.FieldName = 'CarModelName'
+            FooterAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
           object clCarName: TcxGridDBColumn
             Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
             DataBinding.FieldName = 'CarName'
@@ -165,14 +177,6 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 57
           end
-          object clCarModelName: TcxGridDBColumn
-            Caption = #1052#1072#1088#1082#1072' '#1072#1074#1090#1086
-            DataBinding.FieldName = 'CarModelName'
-            FooterAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 50
-          end
           object clComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
@@ -185,7 +189,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
   end
   inherited Panel: TPanel
     Width = 990
-    ExplicitWidth = 884
+    ExplicitWidth = 990
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 99
@@ -408,7 +412,6 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_TransportService'
-    Params = <>
     Left = 640
     Top = 136
   end

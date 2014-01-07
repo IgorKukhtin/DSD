@@ -214,7 +214,7 @@
   object dsdJuridicalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridical
-    FormName = 'TJuridicalForm'
+    FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
